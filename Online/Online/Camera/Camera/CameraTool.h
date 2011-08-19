@@ -338,7 +338,7 @@ private:
    * \return std::string Returns the corresponding text suited for PVSS messages.
    *
    */
-  std::string NumToTextMessage(MessageLevel l);
+  std::string NumToTextMessage(const MessageLevel l);
   /*!
    * Replaces m_msgLev, m_who and m_what with the 3 parameters.
    *
@@ -348,7 +348,9 @@ private:
    * \param  what One line message summary to send, briefly describing reason for the message.
    *
    */
-  void ReplaceMessageParameters(MessageLevel l, std::string who, std::string what);
+  void ReplaceMessageParameters(const MessageLevel l, 
+                                const std::string& who, 
+                                const std::string& what);
   /*!
    * Replaces m_msgLev, m_who, m_what with, m_PVSSmsgLev, m_PVSSwho and m_what with the 6 parameters
    * \param  l Message level. 1, 2, 3 represent info, warning, error messages respectively.
@@ -360,7 +362,12 @@ private:
    *           submitting algorithm.
    * \param  PVSSwhat One line message summary to send, briefly describing reason for the message.
    */
-  void ReplaceMessageParameters(MessageLevel l, std::string who, std::string what, MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat);
+  void ReplaceMessageParameters(const MessageLevel l, 
+                                const std::string& who, 
+                                const std::string& what, 
+                                const MessageLevel PVSSl, 
+                                const std::string& PVSSwho, 
+                                const std::string& PVSSwhat);
   /*!
    * Replaces m_PVSSmsgLev, m_PVSSwho and m_PVSSwhat with the 3 parameters
    * \param  PVSSl Message level. 4, 5 represent warning_PVSS, error_PVSS messages respectively.
@@ -368,7 +375,9 @@ private:
    *           submitting algorithm.
    * \param  PVSSwhat One line message summary to send, briefly describing reason for the message.
    */
-  void ReplacePVSSMessageParameters(MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat);
+  void ReplacePVSSMessageParameters(const MessageLevel PVSSl, 
+                                    const std::string& PVSSwho, 
+                                    const std::string& PVSSwhat);
   /*!
    * Given a Camera message level (between 1 and 3) returns a PVSS message level based on
    * m_WarningPVSS and m_ErrorPVSS.
@@ -377,7 +386,7 @@ private:
    * \return int Returns 0 if l is != m_WarningPVSS or m_ErrorPVSS, otherwise return 1.
    *
    */
-  int CameraToPVSSMessageLevel(MessageLevel l);
+  int CameraToPVSSMessageLevel(const MessageLevel l);
   /*!
    * Handles the message sending to both Camera and PVSS
    *
@@ -390,7 +399,10 @@ private:
    * \param  what One line message summary to send, briefly describing reason for the message.
    * \return int Returns 1.
    */
-  int CameraToPVSS(MessageLevel l, std::string who, std::string what, int messagePeriod = 0);
+  int CameraToPVSS(const MessageLevel l,
+                   const std::string& who,
+                   const std::string& what, 
+                   const int messagePeriod = 0);
   /*!
    * Sends the message to PVSS. This function is used internally, the users should use SendAndClear or
    * SendAndClearTS. The parameters are m_PVSSmsgLev, m_PVSSwho and m_PVSSwhat.

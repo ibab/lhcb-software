@@ -219,7 +219,7 @@ StatusCode CameraTool::finalize()
 
 //=============================================================================
 
-std::string CameraTool::NumToTextMessage(MessageLevel l)
+std::string CameraTool::NumToTextMessage(const MessageLevel l)
 {
   std::string txtMessage = "NONE";
   switch (l) {
@@ -254,7 +254,10 @@ std::string CameraTool::NumToTextMessage(MessageLevel l)
 
 //=============================================================================
 
-void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::string what){
+void CameraTool::ReplaceMessageParameters(const MessageLevel l, 
+                                          const std::string& who, 
+                                          const std::string& what)
+{
   m_msgLev = l;
   m_who = who;
   m_what = what;
@@ -262,8 +265,13 @@ void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::
 
 //=============================================================================
 
-void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::string what,
-                                          MessageLevel PVSSl, std::string PVSSwho, std::string PVSSwhat){
+void CameraTool::ReplaceMessageParameters(const MessageLevel l, 
+                                          const std::string& who, 
+                                          const std::string& what,
+                                          const MessageLevel PVSSl,
+                                          const std::string& PVSSwho, 
+                                          const std::string& PVSSwhat)
+{
   m_msgLev = l;
   m_who = who;
   m_what = what;
@@ -274,8 +282,10 @@ void CameraTool::ReplaceMessageParameters(MessageLevel l, std::string who, std::
 
 //=============================================================================
 
-void CameraTool::ReplacePVSSMessageParameters(MessageLevel PVSSl, std::string PVSSwho,
-                                              std::string PVSSwhat){
+void CameraTool::ReplacePVSSMessageParameters(const MessageLevel PVSSl, 
+                                              const std::string& PVSSwho,
+                                              const std::string& PVSSwhat)
+{
   m_PVSSmsgLev = PVSSl;
   m_PVSSwho = PVSSwho;
   m_PVSSwhat = PVSSwhat;
@@ -283,7 +293,7 @@ void CameraTool::ReplacePVSSMessageParameters(MessageLevel PVSSl, std::string PV
 
 //=============================================================================
 
-int CameraTool::CameraToPVSSMessageLevel(MessageLevel l)
+int CameraTool::CameraToPVSSMessageLevel(const MessageLevel l)
 {
   if(m_WarningPVSS == l) return ICameraTool::WARNING_PVSS;
   else if(m_ErrorPVSS == l) return ICameraTool::ERROR_PVSS;
@@ -293,8 +303,10 @@ int CameraTool::CameraToPVSSMessageLevel(MessageLevel l)
 
 //=============================================================================
 
-int CameraTool::CameraToPVSS(MessageLevel l, std::string who, std::string what,
-                             int messagePeriod)
+int CameraTool::CameraToPVSS(const MessageLevel l,
+                             const std::string& who, 
+                             const std::string& what,
+                             const int messagePeriod)
 {
   // Check if the message format is the standard Camera messages format:
   if( (l != ICameraTool::WARNING_PVSS) && (l != ICameraTool::ERROR_PVSS) )
@@ -382,7 +394,7 @@ int CameraTool::SetCameraToPVSSConfig(bool sendMessagesToPVSS,
 
 std::string CameraTool::StripMessage(const std::string &what)
 {
-  boost::regex rePattern("[\\d]*"); // Pattern to search and eliminate (all numbers).
+  const boost::regex rePattern("[\\d]*"); // Pattern to search and eliminate (all numbers).
   return boost::regex_replace(what, rePattern, std::string(""));
 }
 
