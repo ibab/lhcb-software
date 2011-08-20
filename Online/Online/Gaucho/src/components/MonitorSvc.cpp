@@ -271,7 +271,7 @@ StatusCode MonitorSvc::i_start()
   {
     m_MonSys->start();
     DimServer::autoStartOn();
-    DimServer::start();
+//    DimServer::start();
     return StatusCode::SUCCESS;
   }
   if (m_CntrSubSys != 0)
