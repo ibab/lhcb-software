@@ -6,17 +6,6 @@
 // ============================================================================
 #include "LbOniaPairs/OniaPairs.h"
 // ============================================================================
-/** @file
- *  Implementation of helper fiunctions for Onia Pairs Production
- *  @author Alexey Novoselov 
- *  @author Alexey Nososelov Alexey.Novoselov@cern.ch
- *  @date 2011-05-30
- *  
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
- */
-// ============================================================================
 extern "C" 
 {
 #ifdef WIN32
@@ -30,7 +19,7 @@ extern "C"
 #define opsetpar     oniapairssetpar_ 
 #define opgetpar     oniapairsgetpar_ 
 #endif
-} 
+} ;
 // ============================================================================
 bool OniaPairs::SetPar ( std::string n , double value )
 {
@@ -40,7 +29,7 @@ bool OniaPairs::SetPar ( std::string n , double value )
   // jump into FORTRAN
   opsetpar ( &value , n.c_str() , n.size() ) ;
   return _value == OniaPairs::GetPar ( n ) ;
-} 
+} ;
 // ============================================================================
 double OniaPairs::GetPar ( std::string n ) 
 {

@@ -1,15 +1,4 @@
-C $Id: HidValley.inc,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $
-C =====================================================================
-C  @file 
-C  Onia pairs production 
-C
-C  @author:  Alexey Novoselov Alexey.Novoselov@cern.ch
-C  @date: 2011-05-30
-C
-C  $Revision$
-C  Last Modification $Date$
-C  by $Author$
-C ===================================================================== 
+
       SUBROUTINE ONIAPAIRS_UPEVNT 
 
 C...No more this implicit trash
@@ -27,19 +16,19 @@ C...Local arrays and parameters.
       LOGICAL IREJ
       INTEGER I,J
       DOUBLE PRECISION AEM,ALPS,Q2
-      DOUBLE PRECISION BETA,SINTHE,COSTHE,PABS,GAMM,
-     &pe3,pe4,pz3,pz4,phi
-      DOUBLE PRECISION XPP1,XPP2
-      DIMENSION XPP1(-25:25),XPP2(-25:25)
-      DOUBLE PRECISION MPSI,M1,M2
+      DOUBLE PRECISION BETA,SINTHE,COSTHE,PABS,GAMM
+      DOUBLE PRECISION pe3,pe4,pz3,pz4,phi
+      DOUBLE PRECISION XPP1(-25:25),XPP2(-25:25)
       DOUBLE PRECISION XMIN,X,Y,X1,X2,SHAT,THAT,UHAT
       DOUBLE PRECISION UHTMIN,UHTMAX
-      DOUBLE PRECISION PI, CONV, PSI0
+      DOUBLE PRECISION MPSI,m1,m2,PSI0,Kk
       DOUBLE PRECISION PHSPV, DSIGDT
-      DATA PI/3.141592653589793D0/
+      DOUBLE PRECISION PI,CONV
       DATA CONV/0.3894D9/
 
 C-----------------------------------------------------------------
+
+      PI=PARU(1)
 
       IF ( FIRST ) THEN 
         WRITE(*,*)'LbOniaPairsProduction: ONIAPAIRS_UPEVNT: First call'
@@ -65,19 +54,58 @@ C...Define number of partons - two incoming and two outgoing.
 C...Flavour codes for entries. 
       IDUP(1)=21
       IDUP(2)=21
-      if (IDPRUP.EQ.1001) then
+      if (IDPRUP.EQ.1) then 
+c   psi-psi
         IDUP(3)=443
         IDUP(4)=443
-        PSI0 = PSI01S  
-      elseif (IDPRUP.EQ.1002) then
+        PSI0 = PSI01S
+      elseif (IDPRUP.EQ.2) then
+c   psi2s-psi2s
+        IDUP(3)=100443
+        IDUP(4)=100443
+        PSI0 = PSI02S
+      elseif (IDPRUP.EQ.3) then
+c   psi-psi2s
         IDUP(3)=443
         IDUP(4)=100443
         PSI0 = DSQRT(PSI01S*PSI02S)
-      elseif (IDPRUP.EQ.1003) then
+      elseif (IDPRUP.EQ.11) then
+c   ups-ups
         IDUP(3)=553
         IDUP(4)=553
         PSI0 = UPS01S  
+      elseif (IDPRUP.EQ.12) then
+c   ups2s-ups2s
+        IDUP(3)=100553
+        IDUP(4)=100553
+        PSI0 = UPS02S  
+      elseif (IDPRUP.EQ.13) then
+c   ups3s-ups3s
+        IDUP(3)=200553
+        IDUP(4)=200553
+        PSI0 = UPS03S  
+      elseif (IDPRUP.EQ.14) then
+c   ups-ups2s
+        IDUP(3)=553
+        IDUP(4)=100553
+        PSI0 = DSQRT(UPS01S*UPS02S)
+      elseif (IDPRUP.EQ.15) then
+c   ups-ups3s
+        IDUP(3)=553
+        IDUP(4)=200553
+        PSI0 = DSQRT(UPS01S*UPS03S)
+      elseif (IDPRUP.EQ.16) then
+c   ups2s-ups3s
+        IDUP(3)=100553
+        IDUP(4)=200553
+        PSI0 = DSQRT(UPS02S*UPS03S)
       endif
+
+      IF (IDUP(3).eq.IDUP(4)) THEN
+        Kk=Kfct(IDPRUP)
+      ELSE
+        Kk=2D0*Kfct(IDPRUP)
+      ENDIF
 
 C...Status codes.
       ISTUP(1)=-1
@@ -105,12 +133,16 @@ C...Colour flow.
       ICOLUP(1,4)=0
       ICOLUP(2,4)=0
 
-      M1 = PYMASS(IDUP(3))
-      M2 = PYMASS(IDUP(4))
+C-----------------------------------------------------------------
 
-      MPSI = 0.5D0*(M1 + M2)
+C...The second step is to decide how the phase space should be sampled.
 
-      XMIN=(M1 + M2)**2/ECM**2  
+      m1 = PYMASS(IDUP(3))
+      m2 = PYMASS(IDUP(4))
+
+      MPSI = 0.5D0*(m1 + m2)
+
+      XMIN=(m1 + m2)**2/ECM**2  
 
       IF(.NOT.INIT) THEN
 C...Normally select a phase space point at random
@@ -130,11 +162,14 @@ C...likely to represent maximum cross section.
         X1=DSQRT(XMIN)
         X2=DSQRT(XMIN)
 
-        SHAT=(M1 + M2)**2
+        SHAT=(m1 + m2)**2
       ENDIF
 
-C...Absolute momentum of the outgoing partons in 
-C...the subsystem frame.
+c      UHTMIN=0.5D0*(M1**2 + M2**2 - SHAT - 
+c     &DSQRT((M1**2 - M2**2)**2 + SHAT*(SHAT - 2d0*M1**2 - 2d0*M2**2)))
+c      UHTMAX=0.5D0*(M1**2 + M2**2 - SHAT + 
+c     &DSQRT((M1**2 - M2**2)**2 + SHAT*(SHAT - 2d0*M1**2 - 2d0*M2**2)))
+
       PABS=0.5D0*DSQRT(MAX(0D0,(m1**2-m2**2)**2/shat +
      &                        shat - 2D0*m1**2 - 2D0*m2**2))
 
@@ -190,7 +225,7 @@ C...correction factors from our choice of phase space sampling.
 
 C-----------------------------------------------------------------
 
-C...The second step is to evaluate the cross section in the 
+C...The third step is to evaluate the cross section in the 
 C...phase space point selected above.
 
 C...Pick Q2 scale (which involves some arbitrariness) 
@@ -219,7 +254,7 @@ C...Evaluate matrix element d(sigma-hat)/d(t-hat)
      &20405*UHAT**4)))/(1296.*MPSI**2*SHAT**8*(MPSI**2 - THAT)**4
      &*(MPSI**2 - UHAT)**4)
 
-      IF(IDPRUP.EQ.1002) DSIGDT=2D0*DSIGDT*0.59D0
+      DSIGDT = Kk*DSIGDT
 
       IF(DSIGDT.LT.0) THEN
         WRITE(*,*) 'LbOniaPairsProduction: ONIAPAIRS_UPINIT: ',
@@ -233,10 +268,13 @@ C...Parton distributions (multiplied by x) of protons.
 
 C...Now possible to define the XWGTUP return value.
 C...The CONV factor converts from GeV**(-2) to pb.
-      IF(.NOT.IREJ) XWGTUP=CONV*PHSPV*DSIGDT*XPP1(21)*XPP2(21)
-
+      IF (.NOT.IREJ) XWGTUP=CONV*PHSPV*DSIGDT*XPP1(21)*XPP2(21)
+ 
 C...Done when initializing for maximum cross section.
-      IF(INIT) RETURN
+      IF (INIT) RETURN
+
+      Nexec(IDPRUP)=Nexec(IDPRUP)+1
+      CSsum(IDPRUP)=CSsum(IDPRUP)+XWGTUP
 
 C...Store scale choice etc.
       SCALUP=DSQRT(Q2)
@@ -245,8 +283,10 @@ C...Store scale choice etc.
 
 C-----------------------------------------------------------------
 
+C...The forth step is to set the kinematical variables
+
 C...Reset momenta to zero.
-      DO 130 I=1,4
+      DO 130 I=1,8
         DO 120 J=1,5
           PUP(J,I) = 0D0
   120   CONTINUE
@@ -262,6 +302,11 @@ C...Four-momenta of the incoming partons simple.
       PUP(3,1)=PUP(4,1)
       PUP(4,2)=0.5D0*X2*ECM
       PUP(3,2)=-PUP(4,2)
+
+C...Absolute momentum of the outgoing partons in 
+C...the subsystem frame.
+      PABS=0.5D0*DSQRT(MAX(0D0,(m1**2-m2**2)**2/shat +
+     &                        shat - 2D0*m1**2 - 2D0*m2**2))
 
 C...Subsystem scattering angle
       IF (PABS.ne.0) COSTHE=(that-m1**2)/(dsqrt(shat)*pabs) 

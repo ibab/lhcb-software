@@ -1,15 +1,4 @@
-C $Id: HidValley.inc,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $
-C =====================================================================
-C  @file 
-C  Onia pairs production 
-C
-C  @author:  Alexey Novoselov Alexey.Novoselov@cern.ch
-C  @date: 2011-05-30
-C
-C  $Revision$
-C  Last Modification $Date$
-C  by $Author$
-C ===================================================================== 
+
       SUBROUTINE ONIAPAIRS_UPINIT ( IISET )
 
 C...No more this implicit trash
@@ -23,13 +12,12 @@ C...Local arrays and parameters.
       LOGICAL FIRST
       DATA FIRST /.TRUE./
       SAVE FIRST 
-      INTEGER iproc,ii,IDC
+      INTEGER ii
 
 C-----------------------------------------------------------------
 
       IF ( FIRST.AND.IISET.EQ.1 ) THEN 
         WRITE(*,*)'LbOniaPairsProduction: ONIAPAIRS_UPINIT: First call'
-C        CALL PYLIST(12)
       ENDIF         
 
 C-----------------------------------------------------------------
@@ -40,28 +28,15 @@ C...Set up incoming beams.
       EBMUP(1) = 0.5D0*ECM 
       EBMUP(2) = 0.5D0*ECM
 
-      upsel = 1 + 2
-
-      IF (IISET.EQ.1) THEN
 C...Number of users processes. 
-        NPRUP = 0
+      NPRUP = 0
 C...Set up the external processes.
-        do ii=1,4
-          if (mod(upsel,2).eq.1) then
-            NPRUP = NPRUP + 1
-            if (ii.eq.1) then
-              LPRUP(NPRUP) = 1001
-            elseif (ii.eq.2) then
-              LPRUP(NPRUP) = 1002
-            elseif (ii.eq.3) then
-              LPRUP(NPRUP) = 1003
-            elseif (ii.eq.4) then
-              LPRUP(NPRUP) = 1004
-            endif          
-          endif
-          upsel=upsel/2;
-        enddo
-      ENDIF
+      do ii=1,20
+        if (SwOn(ii)) then
+          NPRUP = NPRUP + 1
+          LPRUP(NPRUP) = ii
+        endif
+      enddo
 
 C...Decide on weighting strategy: unweighted on input.
       IDWTUP   = 1
@@ -70,24 +45,31 @@ C...Find some reasonable maximum for external process.
 C...(This is done by a cheating call to UPEVNT with special switch.)
       IF ( FIRST ) THEN 
         INIT=.TRUE.
-        DO iproc=1,NPRUP
-          IDPRUP = LPRUP(iproc)
+        DO ii=1,NPRUP
+          IDPRUP = LPRUP(ii)
           CALL UPEVNT
-          XMAXUP(iproc) = XWGTUP
+          XMAXUP(ii) = XWGTUP
           IF (IISET.EQ.2) THEN
-            Wtmax(iproc) = XWGTUP
+            Wtmax(ii) = XWGTUP
             WRITE (*,*)
      &           'LbOniaPairsProduction: ONIAPAIRS_UPINIT: XMAXUP(',
      &            IDPRUP, ') = ', XWGTUP
           ENDIF
         ENDDO 
         INIT=.FALSE.
-        IF (IISET.EQ.2) FIRST = .FALSE.
       ELSE
-        DO iproc=1,NPRUP
-          XMAXUP(iproc) = Wtmax(iproc)
+        DO ii=1,NPRUP
+          XMAXUP(ii) = Wtmax(ii)
         ENDDO 
       ENDIF
+
+C-----------------------------------------------------------------
+
+      IF ( FIRST.AND.IISET.EQ.2 ) THEN 
+        FIRST = .FALSE.
+      ENDIF         
+
+C-----------------------------------------------------------------
 
       RETURN
       END

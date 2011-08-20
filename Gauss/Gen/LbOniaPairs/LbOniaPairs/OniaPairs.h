@@ -10,6 +10,16 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
 // ============================================================================
+/** @namespace ObniaPairs 
+ *
+ *  The main namespace to keep code related to production of Onia-Pairs 
+ *
+ *  @author Alexey NONOSELOV Alexey.Novoselov@cern.ch
+ *
+ *                     $Revision$
+ *  Last modiffication $Date$
+ *                  by $Author$
+ */
 namespace OniaPairs 
 {
   // ==========================================================================

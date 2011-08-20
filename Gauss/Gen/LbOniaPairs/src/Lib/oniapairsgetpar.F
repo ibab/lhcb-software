@@ -17,6 +17,24 @@ C ======================================================================
       
       IF     ( 'ECM'   .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
         oniapairsgetpar = ECM 
+      ELSEIF ( 'PSI1S1S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(1)
+      ELSEIF ( 'PSI2S2S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(2)
+      ELSEIF ( 'PSI1S2S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(3)
+      ELSEIF ( 'UPS1S1S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(11)
+      ELSEIF ( 'UPS2S2S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(12)
+      ELSEIF ( 'UPS3S3S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(13)
+      ELSEIF ( 'UPS1S2S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(14)
+      ELSEIF ( 'UPS1S3S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(15)
+      ELSEIF ( 'UPS2S3S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        oniapairsgetpar = Kfct(16)
 c      ELSEIF ( 'NRUNS' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
 c        oniapairsgetpar = NRUNS 
       ELSE 
