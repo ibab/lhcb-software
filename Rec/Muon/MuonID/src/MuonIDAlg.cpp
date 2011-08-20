@@ -1344,7 +1344,6 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     // bin 2 M1.and.M2.and.M3.and.M4.and.M5
 
     std::vector<int> stations;
-    bool w[5];
     for(int ist=1;ist<5;ist++){
       if (m_occupancy[ist]>0) stations.push_back(ist);
     }
