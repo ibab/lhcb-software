@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-21 - V. Gligorov
+ - StrippingB2XTau : update and tighten cuts to meet rate requirements.
+
 ! 2011-08-19 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  - added one line for charmless decays to pairs of light resonances with 2 neutrals
