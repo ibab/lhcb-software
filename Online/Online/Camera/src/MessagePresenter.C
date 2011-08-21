@@ -975,6 +975,7 @@ void MessagePresenter::messageloop( const char * host, const char * file )
 
     cachefileName  = getCacheFilename();
     xcachefileName = getXCacheFilename();
+    checkCacheFileLength();
     readCacheFile();
 
     while (1)
@@ -1118,7 +1119,7 @@ void MessagePresenter::checkCacheFileLength()
   }
   else
   {
-    const unsigned int maxSize = 5000;
+    const unsigned int maxSize = fNumberEntry670->GetIntNumber();
     char cstr[1512];
     std::vector<std::string> lines;
     while (fgets(cstr,1511,F))
@@ -1145,10 +1146,14 @@ void MessagePresenter::writeCacheFile(const bool force)
 {
   if ( writeCacheON && !cachedWarnings.empty() )
   {
-    static time_t lastWrite = time(NULL);
+    static time_t lastWrite       = time(NULL);
+    static time_t lastLengthCheck = time(NULL);
 
+    // get the time now
     const time_t timeNow = time(NULL);
-    if ( force || cachedWarnings.size() >= 50 || (timeNow-lastWrite) >= 30 )
+
+    // time to write out messages ?
+    if ( force || cachedWarnings.size() >= 250 || (timeNow-lastWrite) >= 60 )
     {
       lastWrite = timeNow;
 
@@ -1163,9 +1168,18 @@ void MessagePresenter::writeCacheFile(const bool force)
         //cout << "   " << *i << endl;
       }
 
+      // close the file
       file.close();
 
+      // clear the list of messages to write out
       cachedWarnings.clear();      
+
+      // every now and then, check the cache file length
+      if ( (timeNow-lastLengthCheck) >= 15*60 )
+      {
+        checkCacheFileLength();
+        lastLengthCheck = timeNow;
+      }
 
     }
   }

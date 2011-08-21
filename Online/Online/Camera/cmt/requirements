@@ -18,6 +18,7 @@ branches   cmt doc Camera src python python/Camera scripts scripts/etc
 use GaudiPolicy       v*
 use GaudiAlg          v*
 use ROOT              v*    LCG_Interfaces  -no_auto_imports
+use Boost             v*    LCG_Interfaces 
 
 # to publish own DIM service (without MonitorSvc) and to get UTGID
 use DIM               v*    Online

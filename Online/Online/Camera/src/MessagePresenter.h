@@ -8,29 +8,17 @@
 #include "container_ROOT.h"
 
 #include "TApplication.h"
-
 #include <TGMdiMainFrame.h>
 #include <TGButton.h>
 #include <TGListBox.h>
-
-
 #include <TGStatusBar.h>
-
-
-// Must be here such that we can compile the dictionary. Forward declaration is not enough.
-//#ifdef _WIN32
-//#include "TClient.h"
-//#endif
-
-
-//#ifndef _WIN32
-//#include "client.h"
-//#endif
-
-
 #include "display.h"
 #include <TString.h>
-class MessagePresenter: public  TGMainFrame
+
+// boost
+//#include <boost/circular_buffer.hpp>
+
+class MessagePresenter: public TGMainFrame
 {
 
 private:
