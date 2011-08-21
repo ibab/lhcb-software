@@ -12,27 +12,30 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
                     'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
                     'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
                     #
-                    'PT_MU'                         : '500',  # MeV
+                    'PT_MU'                         : '800',  # MeV
                     'P_MU'                          : '6000', # MeV 
-                    'IPCHI2_MU'                     : '9',    # MeV   
+                    'IPCHI2_MU'                     : '16',    # MeV   
                     #
                     'PT_B_TT'                       : '5000', # MeV
+                    'PT_B_TT_HIGH'                  : '10000', # MeV 
                     'PT_B_TM'                       : '2000', # MeV
+                    'PT_B_TM_HIGH'                  : '7500', # MeV  
                     'VCHI2_B'                       : '100',  # dimensionless
                     'FDCHI2_B'                      : '144',  # dimensionless
                     'DIRA_B'                        : '0.99', # dimensionless
                     'MASS_LOW_B'                    : '2000', # MeV  
-                    'MASS_HIGH_B'                   : '6000', # MeV
+                    'MASS_HIGH_B'                   : '5750', # MeV
                     'MCOR_LOW_B'                    : '4000', # MeV
                     'MCOR_HIGH_B'                   : '7000', # MeV
                     'MIPCHI2_B'                     : '150',  # dimensionless 
+                    'MIPCHI2_B_HIGH'                : '36',   # dimensionless  
                     #
                     'PT_TAU'                        : '1500', # MeV
                     'VCHI2_TAU'                     : '20',   # dimensionless
                     'IPCHI2_TAU'                    : '9',    # dimensionless
                     'FDCHI2_TAU'                    : '144',  # dimensionless
-                    'MASS_LOW_TAU'                  : '800',  # MeV
-                    'MASS_HIGH_TAU'                 : '1700', # MeV
+                    'MASS_LOW_TAU'                  : '700',  # MeV
+                    'MASS_HIGH_TAU'                 : '1800', # MeV
                     #
                     'PT_B_CHILD_BEST'               : '1800', # MeV
                     'P_B_CHILD_BEST'                : '10000',# MeV
@@ -41,7 +44,7 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
                     'IPCHI2_B_TAU_CHILD_BEST'       : '16',   # dimensionless
                     #
                     'MASS_LOW_D'                    : '1800', # MeV
-                    'MASS_HIGH_D'                   : '2050', # MeV  
+                    'MASS_HIGH_D'                   : '2030', # MeV  
                     #
                     'B2TauTau_TOSLinePrescale'          : 1,
                     'B2TauTau_TOSLinePostscale'         : 1,
@@ -57,8 +60,8 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
                     'B2DD_TISLinePostscale'             : 1,
                     'B2TauMu_TISLinePrescale'           : 1,
                     'B2TauMu_TISLinePostscale'          : 1,
-                    'B2DMu_TISLinePrescale'             : 1,
-                    'B2DMu_TISLinePostscale'            : 1}
+                    'B2DMu_TISLinePrescale'             : 0.2,
+                    'B2DMu_TISLinePostscale'            : 1.}
 
 __all__ = ('B2XTauConf')
 
@@ -72,7 +75,10 @@ from StandardParticles import StdLoosePions,StdTightPions
 from StandardParticles import StdLooseKaons
 
 name = "B2XTau"
-HLT_DECISIONS = "Hlt2(Topo|SingleMuon).*Decision"
+HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
+HLT_DECISIONS_MUON  = "Hlt2(TopoMu|SingleMuon).*Decision"
+HLT1_DECISIONS_TIS  = "Hlt1TrackAllL0Decision"
+HLT2_DECISIONS_TIS  = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
 
 class B2XTauConf(LineBuilder) :
     """
@@ -99,7 +105,9 @@ class B2XTauConf(LineBuilder) :
                                 'IPCHI2_MU',
                                 #   
                                 'PT_B_TT',
+                                'PT_B_TT_HIGH',
                                 'PT_B_TM',
+                                'PT_B_TM_HIGH',
                                 'VCHI2_B' ,
                                 'FDCHI2_B',
                                 'DIRA_B',
@@ -108,6 +116,7 @@ class B2XTauConf(LineBuilder) :
                                 'MCOR_LOW_B',
                                 'MCOR_HIGH_B',
                                 'MIPCHI2_B',
+                                'MIPCHI2_B_HIGH',
                                 #   
                                 'PT_TAU',
                                 'VCHI2_TAU',
@@ -245,6 +254,9 @@ class B2XTauConf(LineBuilder) :
         _bcut    = "(VFASPF(VCHI2PDOF)  <   "   + config['VCHI2_B']       + ") & "\
                    "(BPVDIRA            >   "   + config['DIRA_B']        + ") & "\
                    "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & "\
+                   "(BPVIPCHI2()        <   "   + config['MIPCHI2_B']     + ") & "\
+                   "((PT                >   "   + config['PT_B_TT_HIGH']  + "*MeV) | \
+                     (BPVIPCHI2()       <   "   + config['MIPCHI2_B_HIGH']+ ")) &"\
                    "(INGENERATION((PT   >   "   + config['PT_B_TAU_CHILD_BEST']+ "*MeV),1)) & "\
                    "(INGENERATION((MIPCHI2DV(PRIMARY) >" + config['IPCHI2_B_TAU_CHILD_BEST'] + "),1)) & "\
                    "(INGENERATION((PT   >   "   + config['PT_B_CHILD_BEST']+ "*MeV),2)) & "\
@@ -283,6 +295,8 @@ class B2XTauConf(LineBuilder) :
                    "(BPVDIRA            >   "   + config['DIRA_B']        + ") & "\
                    "(BPVVDCHI2          >   "   + config['FDCHI2_B']      + ") & "\
                    "(BPVIPCHI2()        <   "   + config['MIPCHI2_B']     + ") & "\
+                   "((PT                >   "   + config['PT_B_TM_HIGH']  + "*MeV) | \
+                     (BPVIPCHI2()       <   "   + config['MIPCHI2_B_HIGH']+ "))&"\
                    "(in_range("+config['MCOR_LOW_B']+"*MeV,MCOR,"+config['MCOR_HIGH_B']+"*MeV))"    
     
         _CombineTau = CombineParticles( DecayDescriptors = ["[B0 -> tau+ mu-]cc"],
@@ -347,7 +361,7 @@ class B2XTauConf(LineBuilder) :
         """
         Pion selection
         """
-        _code = self._hadFinalStateKinematicCuts(config) + " & (PIDp < 5) & (PIDe < 5)"
+        _code = self._hadFinalStateKinematicCuts(config) +"& ~(ISMUON)"#+ " & (PIDp < 5) & (PIDe < 5)"
 
         _Filter = FilterDesktop(Code = _code)
     
@@ -360,7 +374,7 @@ class B2XTauConf(LineBuilder) :
         """ 
         Kaon selection
         """
-        _code = self._hadFinalStateKinematicCuts(config) + " & ((PIDK-PIDe) > -5)" 
+        _code = self._hadFinalStateKinematicCuts(config) +"& ~(ISMUON)"#+ " & ((PIDK-PIDe) > -5)" 
 
         _Filter = FilterDesktop(Code = _code)
     
@@ -419,11 +433,14 @@ class B2XTauConf(LineBuilder) :
     
     def _makeTOS(self, name, sel):
         ''' TOS filters selections'''
-        tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS+'%TOS':0})
+        if ((name.find('TauMu') > -1) or (name.find('DMu') > -1)):
+            tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS_MUON+'%TOS':0})
+        else :
+            tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS_HAD+'%TOS':0})
         return Selection(name, Algorithm=tisTosFilter, RequiredSelections=[sel])
     
     def _makeTIS(self, name, sel):
         ''' TIS filters selections'''
         tisTosFilter = self._makeTISTOSFilter(name,
-                                        {'Hlt1Global%TIS':0,'Hlt2Global%TIS':0})
+                                        {HLT1_DECISIONS_TIS+'%TIS':0,HLT2_DECISIONS_TIS+'%TIS':0})
         return Selection(name, Algorithm=tisTosFilter, RequiredSelections=[sel])
