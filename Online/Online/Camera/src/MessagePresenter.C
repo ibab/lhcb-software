@@ -974,6 +974,7 @@ void MessagePresenter::messageloop( const char * host, const char * file )
 
     cachefileName  = getCacheFilename();
     xcachefileName = getXCacheFilename();
+    checkCacheFileLength();
     readCacheFile();
 
     while (1)
@@ -1127,6 +1128,7 @@ void MessagePresenter::checkCacheFileLength()
       cstr[s-1] = '\0';
       const std::string sstr = cstr;
       lines.push_back(sstr);
+      //cout << "Read " << sstr << " from cache file" << endl;
     }
     if ( lines.size() > maxSize )
     {
@@ -1189,7 +1191,6 @@ void MessagePresenter::readCacheFile()
 {
   if ( writeCacheON )
   {
-    checkCacheFileLength();
     //cout << "Reading messages from " << cachefileName << endl;
     std::ofstream file(cachefileName.c_str(),std::ios::app);
     file.close(); // just to 'touch' the file incase it is not there
