@@ -3,6 +3,11 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2011-08-22 - V. Gligorov
+ - Remove Hlt2DiProtonTF and Hlt2DiProtonLowMultTF from Hadrons_July2011
+ - Increase D0->hh sideband mass window by 50*MeV. 
+
 !========================== HltSettings v5r14p1 2011-08-03 ===================
 ! 2011-08-03 - Gerhard Raven
  - create Aug2011 from Jul2011: 
