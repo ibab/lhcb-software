@@ -121,7 +121,8 @@ StatusCode MuonRec::execute() {
           error()
               << "Failed to map digits to coords in a one to one manner"
               << endmsg;
-          return sc;
+          put( coords, LHCb::MuonCoordLocation::MuonCoords );
+          return StatusCode::SUCCESS;
         }
       }else{
         // need to cross the input strips to get output strips
@@ -130,7 +131,8 @@ StatusCode MuonRec::execute() {
         if(!sc.isSuccess()){error()
               << "Failed to map digits to coords by crossing strips"
               << endmsg;
-          return sc;
+         put( coords, LHCb::MuonCoordLocation::MuonCoords );
+         return StatusCode::SUCCESS;
         }
       }
     }    

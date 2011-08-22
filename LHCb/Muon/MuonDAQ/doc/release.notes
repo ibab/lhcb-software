@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-08-22 - Alessia Satta
+ - Fix  coverity defects (MuonRawBuffer and MuonRec)
+
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR coverity defects
  - Improve protection against failures in initialization

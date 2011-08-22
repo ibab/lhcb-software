@@ -1161,7 +1161,7 @@ StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
       err()<<"bank_size "<<bank_size<<"read data "<<read_data<<" hit size to read "<<pp_cnt*2<<endmsg;
       err()<< "so muon bank "<<tell1Number<<" is too short in hit part "<<endmsg;   
       m_status.addStatus(tell1Number,RawBankReadoutStatus::Incomplete);
-      break;
+      //break;
       
       return StatusCode::FAILURE;
     }
