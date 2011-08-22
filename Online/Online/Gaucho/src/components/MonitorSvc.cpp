@@ -364,6 +364,7 @@ StatusCode MonitorSvc::finalize()
     }
     m_MonSys->stop();
   }
+  dim_unlock();
   deletePtr(m_HistSubSys);
   deletePtr(m_CntrSubSys);
   deletePtr(m_RateMgr);
@@ -372,7 +373,6 @@ StatusCode MonitorSvc::finalize()
   msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
   //printf("MonitorSvc: UNLocking DIM\n");
-  dim_unlock();
   return Service::finalize();
 }
 
