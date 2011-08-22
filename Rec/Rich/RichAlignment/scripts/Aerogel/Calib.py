@@ -173,17 +173,17 @@ def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
                     
         print "  -> Using", histID
     
-        
-
-
         # fit
         result = fit(hist)
         printCanvas()
         
         if result['OK'] :
             N = newN(nzero,result['shift'])
+            
             # Update condition
             cond.addParam("CurrentAerogel_nAtFixedLambda",N)
+
+            print "   -> Shift =", result['shift'], "oldN =", nzero, "newN =", N
 
         # Write out the new condition
         newXML += cond.toXml() + '\n' + '\n' 
@@ -196,7 +196,6 @@ def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
             
     printCanvas(']')
     file.Close()
-        
 
 def fit(hist):
 
