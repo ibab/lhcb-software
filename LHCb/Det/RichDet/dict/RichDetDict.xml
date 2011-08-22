@@ -1,16 +1,17 @@
 <lcgdict>
   <class name="DeRichBase"                />
+  <class name="DeRich"                    />
   <class name="DeRich1"                   />
   <class name="DeRich2"                   />
-  <class name="DeRichAerogelRadiator"     />
   <class name="DeRichBeamPipe"            />
-  <class name="DeRichGasRadiator"         />
-  <class name="DeRich"                    />
   <class name="DeRichHPD"                 />
   <class name="DeRichHPDPanel"            />
-  <class name="DeRichMultiSolidRadiator"  />
   <class name="DeRichRadiator"            />
+  <class name="DeRichRadiator::Vector"    />
   <class name="DeRichSingleSolidRadiator" />
+  <class name="DeRichGasRadiator"         />
+  <class name="DeRichAerogelRadiator"     />
+  <class name="DeRichMultiSolidRadiator"  />
   <class name="DeRichSphMirror"           />
   <class name="DeRichSystem"              />
   <class name="Rich::TabulatedFunction1D" />

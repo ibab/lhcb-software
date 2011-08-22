@@ -806,3 +806,9 @@ std::string DeRichSystem::getDeHPDLocation ( const LHCb::RichSmartID smartID ) c
   return loc + "/HPD:" + std::string(cNumber);
 }
 //===========================================================================
+
+const Rich::DAQ::Level1LogicalID 
+DeRichSystem::level1LogicalID( const LHCb::RichSmartID smartID ) const
+{
+  return level1LogicalID( level1HardwareID(smartID) );
+}

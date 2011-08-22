@@ -168,6 +168,12 @@ public:
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DetectorType rich,
                                                       const Rich::DAQ::Level1LogicalID logID ) const;
 
+  /** Obtain the Level1 logical ID number for a given HPD RichSmartID
+   *  @param smartID The RichSmartID for the HPD
+   *  @return The corresponding Level1 logical ID
+   */
+  const Rich::DAQ::Level1LogicalID level1LogicalID( const LHCb::RichSmartID smartID ) const;
+
   /** Obtain the Level1 logical ID number for a Level1 hardware ID
    *  @param hardID The hardware ID for the HPD
    *  @return The corresponding HPD Level1 logical ID

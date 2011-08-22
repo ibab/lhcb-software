@@ -422,7 +422,7 @@ StatusCode DeRichHPD::updateGeometry()
     m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winInR));
 
   // from silicon sensor to HPD including misalignment
-  m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
+  m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse(); 
 
   return StatusCode::SUCCESS;
 }
@@ -574,7 +574,7 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 
   if ( coeff_rec.size() < 8 )
   {
-    error() << "coeff_rec.size()<8"<<endmsg;
+    error() << "coeff_rec.size()<8" << endmsg;
     return StatusCode::FAILURE;
   }
   const double& r_a0   = coeff_rec.at(0);
