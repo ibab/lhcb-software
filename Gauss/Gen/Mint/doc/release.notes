@@ -5,6 +5,13 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+! 19-08-2011 - Jonas Rademacker
+ - Modified SpinFactors4 so the spin factors actually print themselves 
+   correctly upon construction 
+ - there were problems with inherited spin factors previously, 
+   who thought they were their own parents. 
+ - I also added KKpipiAmpFit/ampFit.cpp again
+
 ! 19-08-2011 - Matt Coombes
  - Moved header files back into exported directory Mint/
    with flat directory structure so that include statements are simple

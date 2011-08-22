@@ -97,27 +97,18 @@ void ParticlePropertiesList::fillDirList(){
     }
   }
 
-////   Get directory to MINTROOT
-//  system("echo $MINTROOT > MINTROOT.txt");
-//  std::string MintRoot;
-//  ifstream file("MINTROOT.txt");
-//  std::string line;
-//  while ( getline(file, line))
-//	{
-//	  MintRoot= line;
-//	}
-
-  // Get Env
-
+//   Get directory to MINTROOT
   char * Mintevn;
   Mintevn = getenv ("MINTROOT");
-//  if (Mintevn!=NULL)
+  if (Mintevn==NULL)
+  {
+	  Mintevn = "UNKNOWN";
+  }
 	//  printf ("The current path is: %s",pPath);
-//  std::string MINTROOT = System::getEnv( "MINTROOT" );
 
   std::string MintRoot = Mintevn;
+  _dirList.push_back("");
   _dirList.push_back("./");
-//  _dirList.push_back(MintRoot+"/src/Mojito/ParticleProperties/src/");
   _dirList.push_back(MintRoot+"/src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../../Mojito/ParticleProperties/src/");
   _dirList.push_back("../../ParticleProperties/src/");
