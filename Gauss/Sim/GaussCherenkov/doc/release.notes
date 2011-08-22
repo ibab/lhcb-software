@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+!2011-08-22 - Sajan Easo
+ - Comment out the obsolete G4MultipleScattering.hh which caused compilation issues
 !========================= GaussCherenkov v1r0 2011-07-24 ====================
 !2011-06-15 -Sajan Easo
  - Made the adaptations needed for the new Radiator number scheme setup in 
