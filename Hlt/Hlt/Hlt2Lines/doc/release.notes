@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-22 - Jibo He
+ - Hlt2InclusiveDiProtonLines.py
+  . Tighten the PID cuts of DiProton, DiProtonLowMult to offline cuts
+
 !==========================================================================
 ! 2011-08-04 - Sam Gregson
  - Re-optimised D2KS0H Hlt2Lines 

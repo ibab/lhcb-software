@@ -47,8 +47,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   , 'TFCCbarPT'          :  6500.   # MeV, after Vtx fit 
                   , 'TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
-                  , 'TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
-                  , 'TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)
+                  , 'TFRichProtonPIDppi'   :  20.   # CombDLL(p-pi)
+                  , 'TFRichProtonPIDpK'    :  10.   # CombDLL(p-K)
 
                   , 'LowMult_SpdMult'            :    20.
                   , 'DiProtonLowMult_Hlt1Req'    :  "HLT_PASS('Hlt1DiProtonLowMultDecision')"
@@ -59,8 +59,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                   , 'LowMult_TFLowerMass'        :  2800.   # MeV, after Vtx fit
                   , 'LowMult_TFVtxCHI2'          :     9.   # dimensionless
                   # Track Fitted & RichPID
-                  , 'LowMult_TFRichProtonPIDppi'   :   5.   # CombDLL(p-pi)
-                  , 'LowMult_TFRichProtonPIDpK'    :   0.   # CombDLL(p-K)                
+                  , 'LowMult_TFRichProtonPIDppi'   :  10.   # CombDLL(p-pi)
+                  , 'LowMult_TFRichProtonPIDpK'    :   5.   # CombDLL(p-K)                
                   
                   
                   , 'HltANNSvcID'      : {  'DiProton'                   : 51000
