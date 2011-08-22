@@ -620,7 +620,6 @@ void MessagePresenter::setup()
 void MessagePresenter::DoClose()
 {
   writeCacheFile(true);
-  checkCacheFileLength();
 
   //  close all active sockets
   for(unsigned int i = 0;i<socklist.size();++i)
@@ -975,7 +974,6 @@ void MessagePresenter::messageloop( const char * host, const char * file )
 
     cachefileName  = getCacheFilename();
     xcachefileName = getXCacheFilename();
-    checkCacheFileLength();
     readCacheFile();
 
     while (1)
@@ -1120,6 +1118,7 @@ void MessagePresenter::checkCacheFileLength()
   else
   {
     const unsigned int maxSize = fNumberEntry670->GetIntNumber();
+    //cout << "Checking cache file size " << maxSize << endl;
     char cstr[1512];
     std::vector<std::string> lines;
     while (fgets(cstr,1511,F))
@@ -1175,7 +1174,7 @@ void MessagePresenter::writeCacheFile(const bool force)
       cachedWarnings.clear();      
 
       // every now and then, check the cache file length
-      if ( (timeNow-lastLengthCheck) >= 15*60 )
+      if ( force || (timeNow-lastLengthCheck) >= 15*60 )
       {
         checkCacheFileLength();
         lastLengthCheck = timeNow;
@@ -1190,6 +1189,7 @@ void MessagePresenter::readCacheFile()
 {
   if ( writeCacheON )
   {
+    checkCacheFileLength();
     //cout << "Reading messages from " << cachefileName << endl;
     std::ofstream file(cachefileName.c_str(),std::ios::app);
     file.close(); // just to 'touch' the file incase it is not there
