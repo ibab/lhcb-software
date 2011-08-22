@@ -66,14 +66,9 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
-dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
-dbFileName = "2011MirrorAlign"
-
-# Mirror alignment with new field map
-#upAlign    = "/usera/jonesc/NFS/DetDB/2011MirrorsNewFieldMap/MagUp"
-#dnAlign    = "/usera/jonesc/NFS/DetDB/2011MirrorsNewFieldMap/MagDown"
-#dbFileName = "2011MirrorAlignNewFieldMap"
+#upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
+#dbFileName = "2011MirrorAlign"
 
 # Move HPD Occupancies
 #upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
@@ -95,10 +90,10 @@ dbFileName = "2011MirrorAlign"
 #dnAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
 #dbFileName = "OldHPDOccs"
 
-# Aero sub tiles
-#upAlign = "/usera/jonesc/tmp/tar_Aerogel"
-#dnAlign = "/usera/jonesc/tmp/tar_Aerogel"
-#dbFileName = "AeroSubTiles"
+# Aerogel calibration
+upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+dbFileName = "AerogelCalib"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -137,13 +132,13 @@ field[ datetime.datetime(  2011,   4,   15,    2,   40,   0  ) ] = upAlign
 field[ datetime.datetime(  2011,   4,   26,   23,   20,   0  ) ] = dnAlign
 field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
 field[ datetime.datetime(  2011,   7,   27,    0,   30,   0  ) ] = dnAlign
+field[ datetime.datetime(  2011,   8,   17,   11,    0,   0  ) ] = upAlign
 
 # End of 2011
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
-#stop = cool.ValidityKeyMax
 
 # Open a new DB file
 fulDBname = dbFileName + "-" + dateString() + ".db"

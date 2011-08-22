@@ -84,13 +84,13 @@ else:
       type = 90000000 # FULL Stream
   
     # Raw files
-    bkDict = {'ConfigName'           : 'LHCb',
-              'ConfigVersion'        : ConfigV,
-              'ProcessingPass'       : procpass,
-              'FileType'             : 'ALL',
-              'StartRun'             : run,
-              'EndRun'               : run,
-              'EventType'            : type }
+    bkDict = { 'ConfigName'           : 'LHCb',
+               'ConfigVersion'        : ConfigV,
+               'ProcessingPass'       : procpass,
+               'FileType'             : 'ALL',
+               'StartRun'             : run,
+               'EndRun'               : run,
+               'EventType'            : type }
     resultB = database.getFilesWithGivenDataSets(bkDict)
     if not resultB['OK']:
       print resultB['Message']

@@ -157,11 +157,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     dbFiles = [ ]
 
     # Corrections
-    #dbFiles += ["2011MirrorAlign-01082011"]
-    #dbFiles += ["RefInCalib-2011_BR-v40r0-02082011"]
-    #dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1hours-HPDAlign-02082011"]
-    #dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-02082011"]
- 
+    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-07082011"]
+    dbFiles += ["2011MirrorAlign-22082011"]
+     
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
@@ -169,7 +167,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["RefInCalib-2011-V1_BR-v40r0-13062011"]
+        dbFiles += ["RefInCalib-2011_BR-v40r1-09082011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -307,9 +305,9 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # Keep tabs on min and max values (for plots)
     minMaxScale = [999.0,-999.0]
     if 'Rich1Gas' == rad :
-        minMaxCKRes = (0.0013,0.0020)
+        minMaxCKRes = (0.0014,0.00185)
     else:
-        minMaxCKRes = (0.00065,0.00075)
+        minMaxCKRes = (0.00063,0.00075)
 
     # Raw mean and sigma
     ckmeans  = { }
@@ -857,11 +855,11 @@ def getControlJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     # As of RICH S/W meeting 3/9/2010
-    #slope = 38.2388535346
-    #if rad == 'Rich2Gas': slope = 68.2
+    slope = 38.2388535346
+    if rad == 'Rich2Gas': slope = 68.2
     # Test values
-    slope = 38.25
-    if rad == 'Rich2Gas': slope = 68.19
+    #slope = 38.25
+    #if rad == 'Rich2Gas': slope = 68.19
     # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
     error  = shift['Mean'][1]*slope
