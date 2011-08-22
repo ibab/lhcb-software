@@ -85,7 +85,7 @@ class CharmHadronLines :
                         , 'Sig_M_MIN'                : 1815.0 * MeV
                         , 'Sig_M_MAX'                : 1915.0 * MeV
                         , 'WideMass_M_MIN'           : 1715.0 * MeV
-                        , 'WideMass_M_MAX'           : 2015.0 * MeV
+                        , 'WideMass_M_MAX'           : 2065.0 * MeV
                         ## 2-body inclusive!
                         , 'Inc_Trk_PT_MIN'           : 500.0 * MeV
                         , 'Inc_Trk_P_MIN'            : 5.0 * GeV
