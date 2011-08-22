@@ -46,9 +46,9 @@ class Hadrons_July2011 :
             'Hlt2B2HHLTUnbiasedDetached',
             # DiProtons
             'Hlt2DiProton',
-            'Hlt2DiProtonTF',   
-            'Hlt2DiProtonLowMult',
-            'Hlt2DiProtonLowMultTF'
+            #'Hlt2DiProtonTF',   
+            'Hlt2DiProtonLowMult'#,
+            #'Hlt2DiProtonLowMultTF'
             ]
 
         # For inclusive phi extend using Albert's new setting
