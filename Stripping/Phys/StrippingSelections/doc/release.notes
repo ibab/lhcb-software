@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-22 - Jibo He for Paul Schaack, Michal Kreps
+ - StrippingB2XMuMu
+  . Updated to include Lambda_b -> Lambda(1520) mu mu decay
+
 ! 2011-08-22 - Jibo He
  - StrippingDiElectronNew
    . Required Hlt1,2 TIS for prompt line to reduce rate
