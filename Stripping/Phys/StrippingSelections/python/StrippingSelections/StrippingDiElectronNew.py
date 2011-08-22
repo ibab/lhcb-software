@@ -47,7 +47,8 @@ config_default= {
         'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
-        'DiElectron_PT'                                 :  2000.  ,  # MeV, no cut now 
+        'DiElectron_PT'                                 :  2000.  ,  # MeV
+        'DiElectron_TisTosSpecs'                        : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 },
 
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     0.04,
@@ -100,7 +101,8 @@ config_default= {
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    :  2000.     # MeV
+        'Jpsi2ee_PT'                                    :  2000.  ,  # MeV
+        'Jpsi2ee_TisTosSpecs'                           : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         }
 
 
@@ -119,6 +121,7 @@ config_microDST= {
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
         'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
+        'DiElectron_TisTosSpecs'                        : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 },
 
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     1.  ,
@@ -171,7 +174,8 @@ config_microDST= {
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    : -1500.0    # MeV
+        'Jpsi2ee_PT'                                    : -1500.0 ,  # MeV
+        'Jpsi2ee_TisTosSpecs'                           : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         }
     
 
@@ -199,6 +203,7 @@ class DiElectronConf(LineBuilder):
         'DiElectron_MinMass',
         'DiElectron_VCHI2PDOF',
         'DiElectron_PT',
+        'DiElectron_TisTosSpecs',    
         
         # DiElectron Low Mass line
         'DiElectronLowMass_Prescale',
@@ -251,7 +256,8 @@ class DiElectronConf(LineBuilder):
         'Jpsi2ee_MinMass',
         'Jpsi2ee_MaxMass',
         'Jpsi2ee_VCHI2PDOF',
-        'Jpsi2ee_PT'    
+        'Jpsi2ee_PT',
+        'Jpsi2ee_TisTosSpecs'
         )
     
 
@@ -276,11 +282,16 @@ class DiElectronConf(LineBuilder):
                                                eePT              = config['DiElectron_PT']
                                                )
 
+        self.HltTisDiElectron = filterTisTos( name + "DiElectron",
+                                              DiElectronInput = self.SelDiElectron,
+                                              myTisTosSpecs = config['DiElectron_TisTosSpecs']
+                                              )
+
         self.DiElectronLine = StrippingLine( name + 'IncDiElectron' + 'Line',
                                              prescale  = config['DiElectron_Prescale'],
                                              postscale = config['DiElectron_Postscale'],
                                              checkPV   = config['DiElectron_checkPV'],
-                                             selection = self.SelDiElectron
+                                             selection = self.HltTisDiElectron
                                              )
 
 
@@ -357,12 +368,18 @@ class DiElectronConf(LineBuilder):
                                          eeMaxMass         = config['Jpsi2ee_MaxMass'],
                                          eeVCHI2PDOF       = config['Jpsi2ee_VCHI2PDOF'],
                                          eePT              = config['Jpsi2ee_PT']
-                                             )
+                                         )
+
+        self.HltTisJpsi2ee = filterTisTos( name + "Jpsi2ee",
+                                           DiElectronInput = self.SelJpsi2ee,
+                                           myTisTosSpecs = config['Jpsi2ee_TisTosSpecs']
+                                           )
+        
         self.Jpsi2eeLine = StrippingLine( name + 'Jpsi2ee' + 'Line',
                                           prescale  = config['Jpsi2ee_Prescale'],
                                           postscale = config['Jpsi2ee_Postscale'],
                                           checkPV   = config['Jpsi2ee_checkPV'],
-                                          selection = self.SelJpsi2ee
+                                          selection = self.HltTisJpsi2ee
                                           )
         
         if config['MicroDST']:
@@ -410,7 +427,7 @@ def filterDiElectron( name,
     eeCut = "(MM > %(eeMinMass)s) & (VFASPF(VCHI2PDOF)< %(eeVCHI2PDOF)s) & (PT > %(eePT)s)" % locals()
     
     _ee = FilterDesktop( Code = ElectronCut + " & " + eeCut )
-
+    
     return Selection( name + "_Selee",
                       Algorithm = _ee,
                       RequiredSelections = [ _StdLooseDiElectron ]
@@ -476,4 +493,21 @@ def filterJpsi2ee( name,
                       )
 
 
+def filterTisTos(name,
+                 DiElectronInput,
+                 myTisTosSpecs ) :
+    from Configurables import TisTosParticleTagger
+    
+    myTagger = TisTosParticleTagger(name + "_TisTosTagger")
+    myTagger.TisTosSpecs = myTisTosSpecs
+    
+    # To speed it up, TisTos only with tracking system)
+    myTagger.ProjectTracksToCalo = False
+    myTagger.CaloClustForCharged = False
+    myTagger.CaloClustForNeutral = False
+    myTagger.TOSFrac = { 4:0.0, 5:0.0 }
+    
+    return Selection(name + "_SelTisTos",
+                     Algorithm = myTagger,
+                     RequiredSelections = [ DiElectronInput ] )
 

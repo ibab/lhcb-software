@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-22 - Jibo He
+ - StrippingDiElectronNew
+   . Required Hlt1,2 TIS for prompt line to reduce rate
+
 ! 2011-08-21 - V. Gligorov
  - StrippingB2XTau : update and tighten cuts to meet rate requirements.
 
