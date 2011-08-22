@@ -15,7 +15,7 @@
 #include "G4Material.hh"
 #include "G4ios.hh"
 #include "G4Transportation.hh"
-#include "G4MultipleScattering.hh"
+// #include "G4MultipleScattering.hh"
 #include "G4LossTableManager.hh"
 
 // local
