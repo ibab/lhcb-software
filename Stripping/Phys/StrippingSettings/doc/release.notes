@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-23 - Ulrich Kerzel
+- add second dictionary for B2HH lifetime unbiased: one with prescale and no lifetime cut, one with
+  lifetime cut
+
 ! 2011-08-04 - Thomas Blake
  - Added Ks 2 mu mu lines missing from LineConfigDictionaris_RDWG
  - Added ntrack cut in B2nbody lines from LineConfigDictionaries_GTWG 

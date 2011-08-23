@@ -63,6 +63,29 @@ B2hhLTUnbiased = {
                 , 'PrescaleNB'            :    1.0
                 , 'PostscaleNB'           :    1.0
                 , 'NetCut'                :    0.9
+                , 'BLifetime'             : -999.0
+                },
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs'    : ['GammaFromLoops']
+    }
+
+B2hhLTUnbiasedDetached= {
+    'BUILDERTYPE' : 'StrippingB2hhLTUnbiasedConf' ,
+    'CONFIG' : {'TrackChi2'               :    5.0
+                , 'DaughterPtMin'         :    1.5 # GeV
+                , 'DaughterPtMax'         :    2.0 # GeV
+                , 'DaughterPMin'          :   10.0 # GeV
+                , 'DaughterPIDKMax'       :    0.1
+                , 'BMassMin'              :    5.0 # GeV
+                , 'BMassMax'              :    6.0 # GeV
+                , 'DOCA'                  :    0.07
+                , 'VertexChi2'            :   25.0
+                , 'PrescaleLoose'         :    0.005
+                , 'PostscaleLoose'        :    1.0
+                , 'PrescaleNB'            :    1.0
+                , 'PostscaleNB'           :    1.0
+                , 'NetCut'                :    0.9
+                , 'BLifetime'             :    0.3
                 },
     'STREAMS' : [ 'Bhadron' ],
     'WGs'    : ['GammaFromLoops']
