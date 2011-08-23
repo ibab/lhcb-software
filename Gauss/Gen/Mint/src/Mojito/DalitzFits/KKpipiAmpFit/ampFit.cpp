@@ -149,6 +149,14 @@ int ampFit(){
   cout << " got event pattern: " << pdg << endl;
   DalitzEventList eventList;
 
+
+  bool doIntegTest=true;
+  if(doIntegTest){
+    FitAmpSum fas(pdg);
+    DalitzBWBoxSet boxes(fas.makeBWBoxes());
+    boxes.am_I_generating_what_I_think_I_am_generating(1000000);
+  }
+
   if(! generateNew){
     cout << "reading events from file " << InputFileName << endl;
     eventList.fromFile(InputFileName);
@@ -159,6 +167,8 @@ int ampFit(){
     SignalGenerator sg(pdg);
     sg.FillEventList(eventList, Nevents);
   }
+
+
   
   DalitzHistoSet datH = eventList.histoSet();
   datH.save("plotsFromEventList.root");
@@ -171,6 +181,8 @@ int ampFit(){
                           , &fitMPS
                           );
 
+
+
   Neg2LL<IDalitzEvent> fcn(&amps, &eventList, &fitMPS);
 
   /*
@@ -181,7 +193,8 @@ int ampFit(){
   Minimiser mini(&fcn);
   mini.doFit();
   mini.printResultVsInput();
-  
+
+
   DalitzHistoSet fitH = amps.histoSet(); 
   fitH.save("plotsFromIntegrator.root");
   amps.saveEachAmpsHistograms("singleAmpHistos");

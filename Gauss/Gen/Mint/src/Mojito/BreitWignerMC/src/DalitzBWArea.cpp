@@ -890,7 +890,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight
     counted_ptr<DalitzEvent> thisEvent(new DalitzEvent(patMapped, p4_finalMapped));
     if(thisEvent->makeCalculate4BodyProps().phaseSpaceFactor() <= 0.0){
       Calculate4BodyProps c4bp = thisEvent->makeCalculate4BodyProps();
-      cout << "WARNING in DalitzBWArea::try4EventWithPhaseSpace:"
+      cout << "WARNING in DalitzBWArea::try4EventWithPhaseSpace (0):"
 	   << "\n made 'good' event with bad phase space "
 	   << c4bp.showPhaseSpaceFactorCalculation()
 	   << "\n"  << *thisEvent
@@ -1019,6 +1019,10 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight
       cout << " compare " << s123 << ", " << thisEvent->t(4,0)
 	   << " compare " << s12  << ", " << thisEvent->s(1,2)
 	   << endl;
+      cout << "compare mapping: " << endl;
+      for(unsigned int i=0; i < p4_final.size() && i < p4_finalMapped.size(); i++){
+	cout << "premapping " << p4_final[i] << "  post: " << p4_finalMapped[i] << endl;
+      }
       return nullEvtPtr;
     }
     thisEvent->setWeight(w);

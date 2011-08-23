@@ -78,8 +78,10 @@ class DalitzBWArea{
 				     , std::vector<TLorentzVector>& v_out
 				     ) const{
     unsigned int n = v_in.size();
-    if(mapping.isUnity()) v_out = v_in;
-    return v_out;
+    if(mapping.isUnity()){
+      v_out = v_in;
+      return v_out;
+    }
 
     v_out.resize(n); 
     for(unsigned int i=0; i < n; i++){

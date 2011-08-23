@@ -94,7 +94,10 @@ class DalitzHistogram{
   bool drawWithFit(const DalitzHistogram& fit
 		   , const std::string& baseName=""
 		   , const std::string& format="eps"
+		   , const std::string& fitDrawOpt="HIST C SAME"
 		   ) const;
+
+  double integral() const;
 
   DalitzHistogram& operator=(const DalitzHistogram& other);
 };

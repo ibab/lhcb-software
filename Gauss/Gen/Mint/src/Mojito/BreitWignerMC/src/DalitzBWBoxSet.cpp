@@ -127,18 +127,19 @@ bool DalitzBWBoxSet::am_I_generating_what_I_think_I_am_generating(int Nevents){
   datGen.save("generated_approxPDF_histos.root");
   datGen.draw("generated_approxPDF_histos");
 
-  for(int i=0; i < Nevents; i++){
+  int rwfactor=1;
+  for(int i=0; i < Nevents*rwfactor; i++){
     counted_ptr<DalitzEvent> evtPtr(phaseSpaceEvent());
     evtPtr->setWeight(evtPtr->getWeight()*genValueNoPs(*evtPtr));
     generatedFlat_weighted_approxPDF_events.Add(*evtPtr);
-    if(0 == i%printEvery) cout << "done event " << i << endl;
+    if(0 == i%(printEvery*rwfactor)) cout << "done event " << i << endl;
   }
   cout << "generated generatedFlat_weighted_approxPDF_events" << endl;
   generatedFlat_weighted_approxPDF_events.save();;
   DalitzHistoSet datWeight = generatedFlat_weighted_approxPDF_events.weightedHistoSet();
   datWeight.save("generatedFlat_weighted_approxPDF_histos.root");
   datWeight.draw("generatedFlat_weighted_approxPDF_histos");
-  datGen.drawWithFitNorm(datWeight, "genDotsWeightLine_");
+  datGen.drawWithFitNorm(datWeight, "genDotsWeightLine_", "eps", "E1 SAME");
   
   cout << "am_I_generating_what_I_think_I_am_generating: all done" << endl;
 
@@ -368,7 +369,11 @@ void DalitzBWBoxSet::makeVolumeProbIntervals(){
   for(unsigned int i=0; i < this->size(); i++){
     //    (*this)[i].height() *= 1./totalVolume;
     sum += (*this)[i].volume()/totalVolume;
-    if(dbThis) cout << " volume probs [" << i <<"] = " << sum << endl;
+    if(dbThis){
+      // cout << " with height " << (*this)[i].height();
+      cout << " + " << (*this)[i].volume()/totalVolume;
+      cout << " = \t volume probs [" << i <<"] = " << sum << endl;
+    }
     _volumeProbs[i] = sum;
   }
 }

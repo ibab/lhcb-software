@@ -316,6 +316,7 @@ bool DalitzHistoSet::draw(const std::string& baseName
 bool DalitzHistoSet::drawWithFit(const DalitzHistoSet& fit
 				 , const std::string& baseName // =""
 				 , const std::string& format // ="eps"
+				 , const std::string& fitDrawOpt // ="HIST C SAME"
 				 ) const{
   bool sc=true;
   for(map< DalitzCoordSet, DalitzHistogram>::const_iterator 
@@ -325,21 +326,25 @@ bool DalitzHistoSet::drawWithFit(const DalitzHistoSet& fit
     map< DalitzCoordSet, DalitzHistogram >::const_iterator jt 
       = fit.find(it->first);
     if(jt == fit.end()) continue;
-    sc &= it->second.drawWithFit(jt->second, baseName, format);
+    sc &= it->second.drawWithFit(jt->second, baseName, format, fitDrawOpt);
   } 
   return sc;
 }
 bool DalitzHistoSet::drawWithFitNorm(const DalitzHistoSet& fit
 				     , const std::string& baseName // =""
 				     , const std::string& format // ="eps"
+				     , const std::string& fitDrawOpt // ="HIST C SAME"
 				     ) const{
   DalitzHistoSet me(*this);
   DalitzHistoSet you(fit);
-  me.setNormFactor(1);
-  you.setNormFactor(1);
-  return me.drawWithFit(you, baseName, format);
+  if(0 != me.integral())  me  /= me.integral();
+  if(0 != you.integral()) you /= you.integral();
+  return me.drawWithFit(you, baseName, format, fitDrawOpt);
 }
-
+double DalitzHistoSet::integral() const{
+  if(this->empty()) return 0;
+  return this->begin()->second.integral(); // should all be the same.
+}
 // operators 
 DalitzHistoSet& DalitzHistoSet::operator*=(double sf){
   this->scale(sf);

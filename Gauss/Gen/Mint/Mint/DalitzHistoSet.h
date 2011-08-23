@@ -49,16 +49,20 @@ class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
   bool drawWithFit(const DalitzHistoSet& fit
 		   , const std::string& baseName=""
 		   , const std::string& format="eps"
+		   , const std::string& fitDrawOpt="HIST C SAME"
 		   ) const;
   bool drawWithFitNorm(const DalitzHistoSet& fit
 		       , const std::string& baseName=""
 		       , const std::string& format="eps"
+		       , const std::string& fitDrawOpt="HIST C SAME"
 		       ) const;
   
 
   void setTitle(const std::string& title);
   void setFillColour(Color_t fcolor);
   void setLineColour(Color_t fcolor);
+
+  double integral() const;
 
   DalitzHistoSet& operator*=(double sf);
   DalitzHistoSet operator*(double sf) const;

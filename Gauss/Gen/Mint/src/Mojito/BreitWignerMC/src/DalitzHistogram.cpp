@@ -559,6 +559,7 @@ bool DalitzHistogram::retrieveHisto(const std::string& fromDir
 bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
 				  , const std::string& baseName // =""
 				  , const std::string& format
+				  , const std::string& fitDrawOpt
 				  ) const{
   if(0 == _h) return false;
   string fname = baseName + _c.nameFileSave() + "." + format;
@@ -577,10 +578,16 @@ bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
 
   fit_c->SetLineWidth(3);
   fit_c->SetLineColor(2);
+  fit_c->SetMarkerColor(2);
 
-  fit_c->Draw("HIST C SAME");
+  fit_c->Draw(fitDrawOpt.c_str());
   can.Print(fname.c_str());
   return true;
+}
+
+double DalitzHistogram::integral() const{
+  if(0 == _h) return 0;
+  return _h->Integral();
 }
 
 void DalitzCoordSet::print(std::ostream& os) const{
