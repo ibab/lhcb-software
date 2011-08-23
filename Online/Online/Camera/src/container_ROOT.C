@@ -17,17 +17,15 @@
 
 using namespace std;
 
-container_ROOT::container_ROOT():container(){
-  numHistos=0;
-
-  numFuncs=0;
-
-}
+container_ROOT::container_ROOT() 
+  : container(), numHistos(0), numFuncs(0) { }
 
 void container_ROOT::reset(){
 
-  for (unsigned int i =0;i<objlist.size();++i){
-    if (object(i) != NULL){
+  for (unsigned int i =0;i<objlist.size();++i)
+  {
+    if (object(i) != NULL)
+    {
       std::string nma =  name(i);
       std::size_t pos = nma.find('.');
       std::string nm = nma.substr(0,pos);
@@ -328,16 +326,20 @@ int container_ROOT::convert(){
         TH2F * v = new TH2F(buf,"2D Histogram",binsx,x0,x1,binsy,y0,y1);
 
         int   iData = 8;
-        for (int i=0; i<= binsx+1; ++i) {
-          for (int j=0; j <= binsy+1; ++j) {
+        for (int i=0; i<= binsx+1; ++i)
+        {
+          for (int j=0; j <= binsy+1; ++j) 
+          {
             float data = (float) fbuf[iData];
             v -> SetBinContent(i,j,data);
             iData ++;
           } //for j
         } //for i
 
-        for (int i=0; i<= binsx+1; ++i) {
-          for (int j=0; j <= binsy+1; ++j) {
+        for (int i=0; i<= binsx+1; ++i) 
+        {
+          for (int j=0; j <= binsy+1; ++j) 
+          {
             float data = (float) fbuf[iData];
             v -> SetBinError(i,j,data);
             iData ++;

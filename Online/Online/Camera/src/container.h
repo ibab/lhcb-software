@@ -23,8 +23,8 @@ class  container{
   int fromfile(const char *);
   int fromstream(std::stringstream &){std::cout << "Not yet."<<std::endl;return 0;}
   
-  void add(std::string,std::string);
-  void add(std::string,void *,int sz);
+  void add(const std::string& name ,const std::string& content);
+  void add(const std::string& name ,void *,int sz);
   
   int entries(){return sizelist.size();}
   

@@ -521,51 +521,7 @@ int MessagePresenter::GetXtra(const std::string & str,
 
 void MessagePresenter::setup()
 {
-  const int colNum     = 1024;   // Number of colors in the palette
-  int       startIndex =  1000;    // starting index of allocated colors
-  int       palette[colNum];
-  float     val;
-  int       iCount     =    0;
-  const int iStep      =    1;
-  std::vector<TColor*>          m_RootColourVector;
-  m_RootColourVector.reserve(colNum);
-
-  // blue(0,0,255) -> cyan(0,255,255)
-  for (int i=0; i < 256; i += iStep) {
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 0, val, 1);
-    m_RootColourVector.push_back(color);
-    palette[iCount ] = startIndex + iCount;
-    iCount++;
-  }
-
-  // cyan (0,255,255) -> green (0,255,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
-
-  //green (0,255,0) -> yellow (255,255,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, val, 1, 0);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
-
-  // yellow (255,255,0) -> red (255,0,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
-  // define and set style
+  // define and set root style
 
   gStyle->SetCanvasBorderMode(0);
   gStyle->SetCanvasColor(10);
@@ -577,20 +533,45 @@ void MessagePresenter::setup()
   gStyle->SetPaperSize(18,24);
   gStyle->SetLabelSize(0.04f,"XY");
   gStyle->SetLabelOffset(0.01f,"Y");
-  gStyle->SetTitleOffset(1.1f,"XY");
+
+  //gStyle->SetTitleOffset(1.1f,"XY");
+  //gStyle->SetTitleOffset(0,"XY");
   gStyle->SetTitleSize(0.06f,"XY");
+  gStyle->SetTitleX(0.16);
+  gStyle->SetTitleY(0.995);
+  gStyle->SetTitleBorderSize(0);
+  gStyle->SetTitleTextColor(kBlack);
+  gStyle->SetTitleColor(kBlack);
+  gStyle->SetTitleBorderSize(1);
+  gStyle->SetTitleFont(62);
+  gStyle->SetTitleFontSize(0.06f);
+  gStyle->SetTitleColor(10);
+
   gStyle->SetStatFont(42);
   gStyle->SetStatBorderSize(1);
   gStyle->SetStatColor(10);
   gStyle->SetStatFontSize(0.08f);
-  gStyle->SetTitleBorderSize(1);
-  gStyle->SetTitleFont(62);
-  gStyle->SetTitleFontSize(0.06f);
-
-  gStyle->SetTitleColor(10);
   gStyle->SetOptStat(10);
+  gStyle->SetStatX(0.97);
+  gStyle->SetStatY(1.0);
 
-  gStyle->SetPalette(colNum, palette);
+  // Style for 2D zcol plots
+  const Int_t NRGBs = 5;
+  const Int_t NCont = 255;
+  Double_t stops[NRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
+  Double_t red[NRGBs]   = { 0.00, 0.00, 0.87, 1.00, 0.51 };
+  Double_t green[NRGBs] = { 0.00, 0.81, 1.00, 0.20, 0.00 };
+  Double_t blue[NRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
+  TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
+  gStyle->SetNumberContours(NCont); 
+
+  // put tick marks on top and RHS of plots
+  gStyle->SetPadTickX(1);
+  gStyle->SetPadTickY(1);
+  
+  // histogram divisions: only 5 in x to avoid label overlaps
+  //gStyle->SetNdivisions(505,"x");
+  //gStyle->SetNdivisions(510,"y");
 
   fTextButton659->SetState(kButtonDown);
   fTextButton699->SetState(kButtonDown);

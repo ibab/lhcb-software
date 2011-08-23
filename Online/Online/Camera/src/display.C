@@ -13,26 +13,26 @@
 
 #include <iostream>
 
-
 InfoWindow::InfoWindow(int * inalive):TGMainFrame()
 {
   //std::cout <<"Made me"<<std::endl;
-  
   alive = inalive;
   lines=0;
   *alive =1;
 }
 
-InfoWindow::~InfoWindow(){
+InfoWindow::~InfoWindow()
+{
   *alive =0;
   cont.reset();
   //  std::cerr << "I am no more" << std::endl;
-  
 }
-void InfoWindow::ShowCont(std::string ins){
+
+void InfoWindow::ShowCont(const std::string& ins)
+{
   //std::cout << "in ShowCont"<<std::endl;
-   SetBit(kDontCallClose);
-  std::string cfile =ins;
+  SetBit(kDontCallClose);
+  const std::string& cfile = ins;
 
   this->textclear();
   this ->canvas()->Clear();
@@ -48,15 +48,14 @@ void InfoWindow::ShowCont(std::string ins){
     cont.convert();
     int nrHistos=0;
 
+    for (int i=0;i<cont.entries();++i)
+    {
 
-
-    for (int i=0;i<cont.entries();++i){
-      
       std::size_t pos = cont.name(i).find('.');
       std::string cn, cna;
       cn = cont.name(i);
       cna = "";
-      
+
       if (pos!=std::string::npos) cn = cont.name(i).substr(0,pos);
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
 
@@ -71,8 +70,8 @@ void InfoWindow::ShowCont(std::string ins){
     //  InfoWindow * iw = new InfoWindow(&dummy);
     if ((*alive) < 2)
       this->display();
-    
-    
+
+
     int HistoCnt = 1;
 
     if (nrHistos>1){
@@ -94,7 +93,7 @@ void InfoWindow::ShowCont(std::string ins){
 
     numGraphs = 0;
     numTexts = 0;
-    
+
 
     for (int i=0;i<cont.entries();++i){
       if (cont.object(i) == NULL) continue;
@@ -109,9 +108,9 @@ void InfoWindow::ShowCont(std::string ins){
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
 
       if (cn=="EVAL"){
-        
+
         numGraphs++;
-        
+
         char * v = (char *)cont.object(i);
 
         gROOT->ProcessLine(v);
@@ -174,12 +173,12 @@ void InfoWindow::ShowCont(std::string ins){
         // this->appendline("Text: ");
         this->appendline((char*)cont.object(i));
         numTexts++;
-        
+
       }
       if (cont.name(i)=="CTIME"){
         // this->appendline("Date/Time: ");
         numTexts++;
-        
+
         this->appendline((char *)cont.object(i));
       }
 
@@ -235,17 +234,17 @@ void InfoWindow::ShowCont(std::string ins){
         sprintf(buf,"GaudiMonitor.exe histo %s &",(char *)cont.object(i));
         system(buf);
       }
-      
-    } // for entries
-    
-    this->Layout();
-     
 
-    
-    
+    } // for entries
+
+    this->Layout();
+
+
+
+
   }// empty block
-  
-  
+
+
   //  new TCanvas;
 }
 
@@ -255,34 +254,34 @@ TCanvas * InfoWindow::canvas(){
 }
 
 void InfoWindow::textclear(){
- 
+
   if (fTextEdit532!=NULL){
-    
+
     fTextEdit532->GetText()->Clear();
-    
+
     fTextEdit532->Clear();
-    
+
     //fTextEdit532->GetText()->Clear();
-    
+
     //fTextEdit532->Update();
-    
+
     //fTextEdit532->Layout();
     //    this->Layout();
-    
+
   }
-  
+
 
   lines=0;
 }
 void InfoWindow::appendline(const char * fn){
   if (fTextEdit532!=NULL){
     fTextEdit532->GetText()->InsLine(lines,fn);
-    lines++; 
+    lines++;
   }
   //  only once, please.
-  // fTextEdit532->Update(); 
-  //fTextEdit532->Layout(); 
-} 
+  // fTextEdit532->Update();
+  //fTextEdit532->Layout();
+}
 
 
 
@@ -301,46 +300,46 @@ void InfoWindow::raise(){
 
 }
 void InfoWindow::Layout(){
-  
-  
+
+
   unsigned int textsize=100;
   int fWidth,fHeight;
-  
-  if (fMainFrame892){ 
+
+  if (fMainFrame892){
     fWidth =  fMainFrame892->GetWidth();
     fHeight =  fMainFrame892->GetHeight();
-    
+
     if (3*textsize>=fMainFrame892->GetHeight())
       textsize=fMainFrame892->GetHeight()/3;
-    
+
     if (textsize>=fMainFrame892->GetHeight())
       textsize=0;
-    
+
     if (numTexts > 0){
       if (numGraphs <1){
-      textsize = fHeight-24;
+        textsize = fHeight-24;
       }
     }
     else{
       textsize = 10;
     }
-  
-  //std::cout <<" Layout " << textsize<< " "<<numGraphs <<std::endl;
-  
+
+    //std::cout <<" Layout " << textsize<< " "<<numGraphs <<std::endl;
 
 
-  if (*alive>1)  fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
-  if (*alive>1) fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
-  if (*alive>1)  fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
-  fTextEdit532->Update();
-  fTextEdit532->Layout();
-  
+
+    if (*alive>1)  fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
+    if (*alive>1) fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
+    if (*alive>1)  fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+    fTextEdit532->Update();
+    fTextEdit532->Layout();
+
   }
   //std::cout << this->kDontCallClose<<std::endl;
- SetBit(kDontCallClose,false);
- 
- //this->kDontCallClose = 0;
-  
+  SetBit(kDontCallClose,false);
+
+  //this->kDontCallClose = 0;
+
 
   //  fMainFrame892->CallClose();
 }
@@ -392,7 +391,7 @@ void InfoWindow::display(int x,int y)
   fMainFrame892->Resize(x,y);
   //fStatusBar528->SetText("Ready");
   //std::cout << "Ready"<<std::endl;
-  
+
   *alive = 2;
 }
 

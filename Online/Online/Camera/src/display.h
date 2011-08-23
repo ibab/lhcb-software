@@ -114,7 +114,8 @@
 using namespace std;
 #include "container_ROOT.h"
 
-class InfoWindow:public TGMainFrame{
+class InfoWindow:public TGMainFrame
+{
   
   TGMainFrame * fMainFrame892;
   TRootEmbeddedCanvas *fRootEmbeddedCanvas514; 
@@ -135,7 +136,7 @@ public:
   InfoWindow(int *);
   ~InfoWindow();
   
-  void ShowCont(std::string ins);
+  void ShowCont(const std::string& ins);
 
   void textclear();
   void appendline(const char * fn);

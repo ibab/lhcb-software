@@ -4,29 +4,31 @@
 #include <cstdlib>
 #include <cstring>
 
-container::container(){
-}
+container::container(){ }
 
-void container::reset(){
+void container::reset()
+{
   contentlist.clear();
   sizelist.clear();
   namelist.clear();
-  for (unsigned int i =0;i<objlist.size();++i){
-    if (object(i) != NULL){
+  for (unsigned int i =0;i<objlist.size();++i)
+  {
+    if (object(i) != NULL)
+    {
       free(object(i));
     }
   }
   objlist.clear();
 }
 
-void container::add(std::string name ,std::string content){
+void container::add(const std::string& name ,const std::string& content){
   int sz = content.size();
   sizelist.push_back(sz);
   namelist.push_back(name);
   contentlist.push_back(content);
 }
 
-void container::add(std::string name , void * content,int sz){
+void container::add(const std::string& name , void * content,int sz){
 
   sizelist.push_back(sz);
   namelist.push_back(name);
@@ -106,7 +108,7 @@ int container::fromfile(const char * fname){
   FILE * F = fopen(fname,"rb");
   int cnt=0;
   while (!feof(F)){
-    cnt++;	
+    cnt++;
     // std::cout <<cnt++<<std::endl ;
     if (fgets(buf,1023,F)==NULL){
       // fprintf(stderr,"no more headers\n");
