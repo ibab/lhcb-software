@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-08-23 - Rob Lambert
+ - Prepare DstConf for new entries in the SDST, the raw banks for Trigger and Muon
+
 !========================= GaudiConf v14r1 2011-07-25 =========================
 ! 2011-07-25 - Rob Lambert
  - Plug a hole in IOHelper which was trying to convertSelector on a strange type

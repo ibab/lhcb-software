@@ -174,7 +174,17 @@ class DstConf(LHCbConfigurableUser):
                             # Add the MCHits (from Gauss) and links to them (from Boole)
                             SimConf().addSubDetSimInfo(writer)
                             DigiConf().addMCHitLinks(writer)
-
+            
+            if dType == "SDST" and pType != "MDF":
+                #From Brunel v41r0 onwards...
+                #Raw events exist for Trigger and Muon
+                writer.OptItemList += [
+                            # Links to MCParticles created in Brunel
+                    "/Event/Trigger/DAQ/RawEvent#1",
+                    "/Event/Muon/DAQ/RawEvent#1"
+                    ]
+                #does this work??
+    
     def _doWritePOOL( self, items, optItems ):
         """
         Write a DST (or RDST, SDST, XDST) in POOL format
