@@ -26,6 +26,7 @@ double EcalMinimizer::fcn( const double *par ){
     sumw = sumw + correction * bkg * w;
     sum = sum + correction * bkg * w * massdiff * massdiff;
   }
+  if ( gDebug ) std::cout << abs((sum/sumw)) << std::endl;
   return abs((sum/sumw));
 }
 

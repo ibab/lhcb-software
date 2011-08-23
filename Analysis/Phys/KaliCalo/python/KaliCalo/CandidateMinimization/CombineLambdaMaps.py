@@ -12,6 +12,7 @@ __author__ = "Albert Puig (albert.puig@cern.ch)"
 from optparse import OptionParser
 import os
 import sys
+import glob
 
 from KaliCalo.Kali.LambdaMap import LambdaMap
 
@@ -32,8 +33,16 @@ if __name__ == '__main__':
   (options, args) = parser.parse_args()
   if not args:
     (options, args) = parser.parse_args(sys.stdin.readline().split())
-  newL = combineLambdaMaps([arg for arg in args if os.path.exists(arg)])
+  lambdaMaps = []
+  for arg in args:
+    for f in glob.glob(arg):
+      l = LambdaMap()
+      l.read(f)
+      lambdaMaps.append(l)
+  print "Found %s maps to combine" % len(lambdaMaps)
+  newL = combineLambdaMaps(*lambdaMaps)
   if options.outputFile:
     newL.save(options.outputFile)
+  sys.exit(0)
 
 # EOF

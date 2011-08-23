@@ -47,23 +47,38 @@ int CellCutter::addCell( int cellID, TString filename ){
   return int( m_fileMap.insert( std::pair<int, TString>( cellID, filename ) ).second );
 }
 
-int CellCutter::cut(){
+int CellCutter::cut( float prsMax ){
+  std::map<int, TString> tempMap ;
+  int nElements = 1 ;
+  for (std::map<int, TString>::const_iterator iter = m_fileMap.begin(); iter != m_fileMap.end(); iter++) {
+    tempMap.insert( std::pair<int, TString>( iter->first, iter->second ) ) ; 
+    if ( nElements == m_maxOpenFiles ){
+      cut(prsMax, tempMap) ;
+      nElements = 0 ;
+      tempMap.clear() ;
+    }
+    nElements++ ;
+  }
+}
+
+
+int CellCutter::cut( float prsMax, std::map<int, TString> fileMap ){
   // Checks
-  if (!m_chain) return 0;
-  if (!m_cut) return 0;
-  if (!m_files) return 0;
+  if (!m_chain) return 1;
+  if (!m_files) return 1;
   // Configure cut formula
-  if ( !m_cut.Empty() ) m_cutFormula = new TTreeFormula("cut", m_cut, m_chain);
+  //if ( !m_cut.IsNull() ) m_cutFormula = new TTreeFormula("cut", m_cut, m_chain);
   // Let's rock
   for ( int i=0; m_chain->GetEntry(i); i++ ){
+    if ( 0 == (i%1000000) ) std::cout << "Entry " << i << std::endl;
     if ( m_m12 > 250.0 ) continue; // cut on mass
-    if ( m_cutFormula && (!m_cutFormula->EvalInstance()) ) continue; // apply user's cuts
-    if (m_cell1 != 0 && m_cell2 != 0) {
-      if (m_fileMap.count(m_cell1)>0){
-        fillTree( m_fileMap[m_cell1] );
+    if ( max(m_prs1, m_prs2) > prsMax ) continue ; // Cut on PrS energy
+    if ( m_cell1 != 0 && m_cell2 != 0 ) {
+      if (fileMap.count(m_cell1)>0){
+        fillTree( fileMap[m_cell1] );
       }
-      if (m_fileMap.count(m_cell2)>0){
-        fillTree( m_fileMap[m_cell2] );
+      if (fileMap.count(m_cell2)>0){
+        fillTree( fileMap[m_cell2] );
       }
     } 
   }
@@ -80,7 +95,7 @@ int CellCutter::fillTree(TString filename)
 {
   TFile *input = (TFile*) m_files->FindObject(filename);
   TTree *newtree;
-  if (input == 0) {
+  if ( !input ) {
     // Check if we have space.
     int alreadyOpened = m_files->GetEntries();
     if (alreadyOpened > m_maxOpenFiles) {

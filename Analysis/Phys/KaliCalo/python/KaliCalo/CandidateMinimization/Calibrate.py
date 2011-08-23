@@ -108,6 +108,8 @@ if __name__ == '__main__':
                     dest="outputDir", action="store", type="string", default="",
                     help="DIR where to store output constants", metavar="DIR")
   (options, args) = parser.parse_args()
+  if not args:
+    options, args = parser.parse_args(sys.stdin.readline().split())
   # Check the lambdas dir and join lambdas (if any)
   lambdas = LambdaMap.LambdaMap()
   lambdaFile = options.lambdaFile
@@ -147,9 +149,8 @@ if __name__ == '__main__':
   # Get ntuples
   ntuples = []
   for arg in args:
-    if os.path.exists(arg):
-      execfile(arg)
-      ntuples.extend([castorDir+t for t in tup])
+    #if os.path.exists(arg):
+      ntuples.append(arg)
   if 0 == len(ntuples):
     print "No valid ntuples found"
     sys.exit(1)
@@ -215,7 +216,7 @@ if __name__ == '__main__':
         l = newLambdas[cell]
         l[-1] = calib
   print "We have %s new calibrations" % len(newLambdas.lambdas())
-  fileName = "%s.gz" % '-'.join([str(c.index()) for c in cellsToCalibrate.keys()])
+  fileName = "%s.gz" % '-'.join([str(c.all()) for c in cellsToCalibrate.keys()])
   outputDir = os.path.abspath(options.outputDir)
   if not os.path.exists(outputDir):
     os.makedirs(outputDir)
@@ -228,5 +229,6 @@ if __name__ == '__main__':
   with open(lambdasFile, 'a') as f:
     f.write(" %s " % fileName)
   print "Done!"
+  sys.exit(0)
 
 # EOF

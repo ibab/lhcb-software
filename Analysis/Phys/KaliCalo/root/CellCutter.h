@@ -33,6 +33,7 @@ private:
   std::map<int, TString>            m_fileMap;
   TList*                            m_files;
   // Methods
+  int cut( float, std::map<int, TString> );
   TChain* configureChain();
   int fillTree( TString );
 public:
@@ -44,7 +45,7 @@ public:
   // Methods
   int addFile( TString );
   int addCell( int, TString );
-  int cut();
+  int cut( float=1000 );
   //
   ClassDef( CellCutter , 1 );
 };
