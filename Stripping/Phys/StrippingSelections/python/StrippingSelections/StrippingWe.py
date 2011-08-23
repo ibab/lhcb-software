@@ -16,7 +16,7 @@ confdict_We={
     ,  'WeLinePrescale_ps'    : .1 
     ,  'ptcut' : 20.
     ,  'ptcut_ps' : 15.
-    ,  'trkpchi2' : 0.001
+    ,  'trkpchi2' : 0.0
     ,  'HCalMax' : 0.05
     ,  'ECalMin' : 0.1
     ,  'PrsCalMin' : 50.
@@ -45,8 +45,8 @@ class WeConf(LineBuilder) :
         self._myname = name
         
         #Define the cuts
-        _ecut= '((PT>%(ptcut)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(TRGHOSTPROB<%(trkghostprob)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
-        _ecut_ps= '((PT>%(ptcut_ps)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
+        _ecut= '((PT>%(ptcut)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(TRGHOSTPROB<%(trkghostprob)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
+        _ecut_ps= '((PT>%(ptcut_ps)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
 
         
         self.selWe = makeWe(self._myname+'We', 

@@ -30,7 +30,8 @@ confdict_DY2ee={
     ,  'ptcut2' : 2.
     ,  'ptcut3' : 5.
     ,  'ePID'   : 1.
-    ,  'trkpchi2' : 0.001
+    ,  'trkpchi2' : 0.0#0.001
+    ,  'trkpchi2a' : 0.0#0.001
     ,  'HCalMax' : 0.05
     ,  'ECalMin' : 0.1
     ,  'PrsCalMin' : 50.
@@ -59,6 +60,7 @@ class DY2eeConf(LineBuilder) :
                                   'ptcut3',
                                   'ePID',
                                   'trkpchi2',
+                                  'trkpchi2a',
                                   'HCalMax',
                                   'ECalMin',
                                   'PrsCalMin',
@@ -73,7 +75,7 @@ class DY2eeConf(LineBuilder) :
         #Define the cuts
         _ecuta= '((PT>%(ptcut1)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(mipdvchi2ratio)s)&(PIDe>%(ePID)s))'%config
         _ecutb= '((PT>%(ptcut2)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(mipdvchi2ratio)s)&(PIDe>%(ePID)s))'%config
-        _ecutc= '((PT>%(ptcut3)s*GeV)&(TRPCHI2>%(trkpchi2)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(mipdvchi2ratio)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,0)<P*%(HCalMax)s))'%config
+        _ecutc= '((PT>%(ptcut3)s*GeV)&(TRPCHI2>%(trkpchi2a)s)&(MIPDV(PRIMARY)/MIPCHI2DV(PRIMARY)<%(mipdvchi2ratio)s)&(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s)&(PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s))'%config
         _DY1MassCut = '(MM>%(DY1MinMass)s*GeV)&(MM<%(DY1MaxMass)s*GeV)'%config
         _DY2MassCut = '(MM>%(DY2MinMass)s*GeV)&(MM<%(DY2MaxMass)s*GeV)'%config
         _DY3MassCut = '(MM>%(DY3MinMass)s*GeV)&(MM<%(DY3MaxMass)s*GeV)'%config
