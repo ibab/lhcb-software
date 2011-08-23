@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-08-23 - Rob Lambert
+ - Suppress duplication of RecHeader and RecSummary, add in the
+   'usual locations' for the Header/Summary to the stripped micro DST
+   See bug #85944
+
+! 2011-08-23 - Rob Lambert
  - Supress items for Stripping17, all GEC are now in RecHeader :)
  - Supress ODIN and raw banks, instead copy to MicroDST from new
    raw bank locations: Event/Trigger/RawEvent, Event/Muon/RawEvent

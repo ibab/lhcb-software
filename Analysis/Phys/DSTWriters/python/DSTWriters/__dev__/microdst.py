@@ -80,9 +80,7 @@ def stripMicroDSTElements() :
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
-    return [CloneRecHeader(),
-            CloneRecSummary(),
-            #GlobalEventCounters(configGenerator=_gecConfig), #not required any more
+    return [#GlobalEventCounters(configGenerator=_gecConfig), #not required any more
             ClonePVs(),
             CloneParticleTrees(copyProtoParticles = True),
             ClonePVRelations("Particle2VertexRelations", True),
@@ -95,6 +93,7 @@ def stripMicroDSTStreamConf() :
                             fileExtension = '.mdst',
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
+                                          '/Event/Rec/Summary#1',
                                           '/Event/Strip/Phys/DecReports#1',
                                           "/Event/Trigger/RawEvent#1"
                                           ])
@@ -104,6 +103,7 @@ def stripCalibMicroDSTStreamConf() :
                             fileExtension = '.mdst',
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
+                                          '/Event/Rec/Summary#1',
                                           '/Event/Strip/Phys/DecReports#1',
                                           "/Event/Trigger/RawEvent#1",
                                           "/Event/Muon/RawEvent#1"
