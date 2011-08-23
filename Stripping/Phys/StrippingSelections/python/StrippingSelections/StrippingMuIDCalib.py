@@ -10,20 +10,17 @@ from StrippingSelections.StrippingMuIDCalib import MuIDCalibConf as builder
 from StrippingSelections.StrippingMuIDCalib import config_params as config_params
 lb = builder( 'MuIDCalib', config_params )
 
-First set of config_params (the commented one) are for mDST and second one for fullDST.
-The stripping report with config_params as full DST is:
-
 '''
 
 __author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes', 'MuID Team' ]
-__date__    = '20/07/2011'
-__version__ = '$Revision: 1.4 $'
+__date__    = '23/08/2011'
+__version__ = '$Revision: 1.5 $'
 
 
 config_params = {    
     'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
     'DetachedPrescale'         : 1.,
-    'DetachedNoMIPPrescale'    : 0.3,
+    'DetachedNoMIPPrescale'    : 0.8, #0.3,
     'DetachedNoMIPHiPPrescale' : 1.,
     'DetachedNoMIPKPrescale'   : 1.,
     'FromLambdacPrescale'      : 1.,
@@ -42,7 +39,8 @@ __all__     = ( 'MuIDCalibConf',
                 'makeDetachedNoMIPNoPCutSelection', 
                 'makeDetachedNoMIPHiPSelection', 
                 'makeDetachedNoMIPKSelection',
-                'makeLambdacSelection'
+                'makeLambdacSelection',
+                'makeTISTOS'
                 )
 
 from Gaudi.Configuration import *
@@ -58,18 +56,18 @@ from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsMuons, StdAllNoPIDs
 
 default_name = 'MuIDCalib'
 class MuIDCalibConf( LineBuilder ):
-    __configuration_keys__ = ('PromptPrescale',           #0.08  #0.3 or more
-                              'DetachedPrescale',         #1.    #0.
-                              'DetachedNoMIPPrescale',    #0.25  #1.
-                              'DetachedNoMIPHiPPrescale', #1.    #0.
-                              'DetachedNoMIPKPrescale',   #1.    #0.
-                              'FromLambdacPrescale',            #1.    #0.
-                              'KFromLambdacPrescale',            #1.    #0.
-                              'PiFromLambdacPrescale',          #1.    #0.
-                              'PFromLambdacPrescale',            #1.    #0.
-                              'KISMUONFromLambdacPrescale',            #1.    #0.
-                              'PiISMUONFromLambdacPrescale',          #1.    #0.
-                              'PISMUONFromLambdacPrescale'            #1.    #0.
+    __configuration_keys__ = ('PromptPrescale',           
+                              'DetachedPrescale',         
+                              'DetachedNoMIPPrescale',    
+                              'DetachedNoMIPHiPPrescale', 
+                              'DetachedNoMIPKPrescale',   
+                              'FromLambdacPrescale',      
+                              'KFromLambdacPrescale',     
+                              'PiFromLambdacPrescale',        
+                              'PFromLambdacPrescale',         
+                              'KISMUONFromLambdacPrescale',   
+                              'PiISMUONFromLambdacPrescale',  
+                              'PISMUONFromLambdacPrescale'    
                               )
 
     def __init__( self, name, config ) :
@@ -78,15 +76,20 @@ class MuIDCalibConf( LineBuilder ):
 
         self.selStdAllNoPIDMuons = StdAllNoPIDsMuons 
         self.selStdNoPIDMuons    = StdNoPIDsMuons 
+        #self.selStdNoPIDMuons_L0   = makeTISTOS( name + "muons_L0"  , self.selStdNoPIDMuons   ,   "L0.*Physics.*Decision%TIS"   )
+        #self.selStdNoPIDMuons_Hlt1 = makeTISTOS( name + "muons_Hlt1", self.selStdNoPIDMuons_L0,   "Hlt1.*Physics.*Decision%TIS" )
+        #self.selStdNoPIDMuons_Hlt2 = makeTISTOS( name + "muons_Hlt2", self.selStdNoPIDMuons_Hlt1, "Hlt2.*Physics.*Decision%TIS" )
+
         self.selStdNoPIDKaons    = StdNoPIDsKaons 
         self.selStdNoPIDPions    = StdNoPIDsPions
         self.selStdNoPIDProtons  = StdNoPIDsProtons
 
-
+        #Prompt line
         self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdAllNoPIDMuons )
         self.line_Prompt = StrippingLine( name + '_JpsiNoPID', prescale = config[ 'PromptPrescale' ], selection = self.sel_Prompt ) 
 
-        self.sel_Detached  = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons )
+        #Detached
+        self.sel_Detached       = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons)
         self.line_Detached = StrippingLine( name + '_JpsiFromBNoPID', prescale = config[ 'DetachedPrescale' ], selection = self.sel_Detached ) 
 
         self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
@@ -101,6 +104,7 @@ class MuIDCalibConf( LineBuilder ):
         self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', 
                                                   prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
 
+        #lambda_c
         self.sel_Lambdac = makeLambdacSelection( name + '_FromLambdac', "", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_Lambdac = StrippingLine( name + '_FromLambdacDecay', prescale = config[ 'FromLambdacPrescale' ], selection = self.sel_Lambdac ) 
 
@@ -272,7 +276,6 @@ def makeDetachedNoMIPKSelection( name, jpsis, kaons ):
 
 
 def makeLambdacSelection( name, line, pions, kaons, protons ) :
-#    daucuts  = "( PT>500*MeV ) & ( P>3*GeV ) & ( MIPCHI2DV(PRIMARY)>8. ) & ( TRPCHI2>0.0001 )"
     daucuts = "( PT>250*MeV ) & ( P>2*GeV ) & ( MIPCHI2DV(PRIMARY)>8. ) & ( TRPCHI2>0.0001 )"
     kcuts   = daucuts
     picuts  = daucuts
@@ -318,6 +321,17 @@ def makeLambdacSelection( name, line, pions, kaons, protons ) :
                       RequiredSelections = [ pions, kaons, protons ] )
 
 
-
+def makeTISTOS( name, sel, trigger ) :
+    from Configurables import TisTosParticleTagger
+    tisTosFilter = TisTosParticleTagger( name + "_Tagger" )
+    tisTosFilter.TisTosSpecs = { trigger : 0 }
+    tisTosFilter.ProjectTracksToCalo = False
+    tisTosFilter.CaloClustForCharged = False
+    tisTosFilter.CaloClustForNeutral = False
+    #tisTosFilter.TOSFrac = { 4:0.0, 5:0.0 }
+    return Selection( name,
+                      Algorithm = tisTosFilter,
+                      RequiredSelections = [ sel ]
+                      )
 
 
