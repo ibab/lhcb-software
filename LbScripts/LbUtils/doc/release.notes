@@ -1,15 +1,19 @@
-2011-08-12 - Rob Lambert
- * Fixed typo in Parse.py module 
+2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v3r4p1
+
+2011-08-12 Rob Lambert
+
+	* Fixed typo in Parse.py module
 
 2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v3r4
 
-2011-07-29 - Rob Lambert
- * python/LbUtils/Thread.py
- * new module for threading methods in scripts
- * python/LbUtils/CMT/Parse.py
- * new module for parsing files created or needed by cmt
+2011-07-29 Rob Lambert
+
+	* python/LbUtils/Thread.py: new module for threading methods in scripts
+	* python/LbUtils/CMT/Parse.py: new module for parsing files created or needed by cmt
 
 2011-07-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

@@ -1,6 +1,34 @@
+2011-08-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/requirements: release of version v6r4p1
+
+	LbConfiguration:
+	* scripts/doxygen: added protection to avoid infinite recursion (if the target executable is not
+	found)
+	* python/LbConfiguration/Platform.py: changed default compiler to gcc45 for slc6.
+
+	LbUtils:
+	* Fixed typo in Parse.py module (Rob)
+
 2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v6r4
+
+	LbConfiguration:
+	* scripts/generateLogin: fixed the SP_PROMPT present by mistake in the generated cache.
+	* python/LbConfiguration/Platform.py: added support for gcc45 for both slc6 and slc5. Only for CERN
+	for the moment. It is not available in the distributed ones yet.
+	* python/LbConfiguration/SetupProject.py: fixed pyLint errors.
+	* python/LbConfiguration/Project.py: added proper XML encoding (UTF-8).
+	* scripts/eclipse (args): do not set $JYTHONPATH (done in the requirements of the Eclipse package).
+	Added a hack to set the user name to the full name instead of the login name.
+	Fixed the infinite recursion occurring when the Eclipse package is not correctly installed (Marco Cl.).
+
+	LbUtils:
+	* python/LbUtils/Thread.py: new module for threading methods in scripts (Rob)
+	* python/LbUtils/CMT/Parse.py: new module for parsing files created or needed by cmt (Rob)
+	* python/LbUtils/Terminal.py: added TermException to be used in that module.
+
 
 2011-06-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

@@ -1,17 +1,21 @@
+2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v4r4p1
+
 2011-07-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmt/requirements: release of version v4r4
 
-! 2011-07-30 - Rob Lambert
- - Added svnCheckTags and svnDiffTags script using new svn modules
-   svnCheckTags: verify that the used tags of a package/project exist
-                 --diffs, same as cmpPackageWithTrunk
-   svnDiffTags:  compare any two versions of packages and projects
+2011-07-30 Rob Lambert
 
-! 2011-07-30 - Rob Lambert
- - Added SvnTools module, with Package and Project sub-modules
-   handle interfacing with SVN to understand the CMT structure
+	* Added svnCheckTags and svnDiffTags script using new svn modules svnCheckTags:
+	verify that the used tags of a package/project exist --diffs, same as cmpPackageWithTrunk
+	svnDiffTags:  compare any two versions of packages and projects
 
+2011-07-30 Rob Lambert
+
+	* Added SvnTools module, with Package and Project sub-modules
+	handle interfacing with SVN to understand the CMT structure
 
 2011-07-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
