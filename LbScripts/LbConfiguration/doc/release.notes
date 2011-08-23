@@ -1,3 +1,7 @@
+2011-08-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/eclipse: do not set python.home (leftover of a test)
+
 2011-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/doxygen: added protection to avoid infinite recursion (if the target executable is not

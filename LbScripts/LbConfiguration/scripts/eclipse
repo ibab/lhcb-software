@@ -37,4 +37,4 @@ if [ $0 == $(which eclipse) ] ; then
     exit 1
 fi
 
-eclipse "${args[@]}" -vmargs -Dpython.home="__pyclasspath__" -Duser.name="$un"
+eclipse "${args[@]}" -vmargs -Duser.name="$un"
