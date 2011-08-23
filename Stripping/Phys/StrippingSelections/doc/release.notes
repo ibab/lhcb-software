@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-23 - Mike Williams
+- Updates to Beauty2Charm for Stripping17
+
 ! 2011-08-23 - Ulrich Kerzel
 - introduce cut on lifetime for B2hh lifetime unbiased lines
 - update test/TestCPGammaLoop.py
