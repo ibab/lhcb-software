@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2011-08-23 - Rob Lambert
+ - Create new Raw events for adding to the SDST, see task #21716
+
 </PRE><H1><A NAME=v40r1>2011-07-29 Brunel v40r1</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5,
  Rec v11r6 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

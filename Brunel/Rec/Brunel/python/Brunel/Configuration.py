@@ -434,6 +434,33 @@ class Brunel(LHCbConfigurableUser):
                 # Allow multiple files open at once (SIM,DST,DIGI etc.)
                 IODataManager().AgeLimit += 1
 
+
+            if dstType == "SDST":
+                #repack certain raw banks for the stripping
+                
+                #first the Trigger Raw Event
+                from Configurables import RawEventSelectiveCopy
+                trigRawBankCopy = RawEventSelectiveCopy('TriggerRawBank')
+                trigRawBankCopy.RawBanksToCopy =[ 'ODIN',
+                                                  'HltSelReports' ,
+                                                  'HltDecReports',
+                                                  'L0Calo',
+                                                  'L0CaloFull',
+                                                  'L0DU',
+                                                  'L0Muon',
+                                                  'L0MuonProcCand',
+                                                  'L0PU'
+                                                  ]
+                trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
+                GaudiSequencer("OutputDSTSeq").Members +=[trigRawBankCopy]
+                
+                #then the Muon Raw Event
+                muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
+                muonRawBankCopy.RawBanksToCopy =[ 'Muon' ]
+                muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
+                GaudiSequencer("OutputDSTSeq").Members +=[muonRawBankCopy]
+                
+                
             from Configurables import TrackToDST
             if dstType == "RDST":
                 # Sequence for altering content of rDST compared to DST
