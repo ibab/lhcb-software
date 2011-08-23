@@ -64,6 +64,7 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
         , 'PrescaleNB'
         , 'PostscaleNB'   
         , 'NetCut'                 #   -1.0
+        , 'BLifetime'             #   -999.0 
         )
     
 
@@ -85,7 +86,8 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
                                               DaughterPMin    = config['DaughterPMin'],
                                               DaughterPIDKMax = config['DaughterPIDKMax'],
                                               DOCA            = config['DaughterPIDKMax'],
-                                              VertexChi2      = config['VertexChi2']
+                                              VertexChi2      = config['VertexChi2'],
+                                              BLifetime       = config['BLifetime']
                                               )
         
         self.SelB2hhNB       = self.B2hhNeuroBayes (NB_name,
@@ -111,13 +113,13 @@ class StrippingB2hhLTUnbiasedConf(LineBuilder):
     #
     def B2hhLoose( self, Name, BMassMin, BMassMax, TrackChi2,
                    DaughterPtMin, DaughterPtMax, DaughterPMin, DaughterPIDKMax,
-                   DOCA, VertexChi2 ) :
+                   DOCA, VertexChi2, BLifetime ) :
         from GaudiKernel.SystemOfUnits import GeV
         
         
-        kaonCut   = "(ISLONG) & (HASRICH) & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s*GeV) & (P> %(DaughterPMin)s*GeV)"                              % locals()
-        combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s)"                                                % locals()
-        motherCut = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s)"   % locals()
+        kaonCut   = "(ISLONG) & (HASRICH) & (PPCUT(PP_RICHTHRES_K)) & (TRCHI2DOF < %(TrackChi2)s) & (PT > %(DaughterPtMin)s*GeV) & (P> %(DaughterPMin)s*GeV)" % locals()
+        combCut   = "(AM > %(BMassMin)s *GeV) & (AM < %(BMassMax)s *GeV) & (AMAXDOCA('LoKi::DistanceCalculator') < %(DOCA)s)"                                 % locals()
+        motherCut = "(VFASPF(VCHI2/VDOF) < %(VertexChi2)s) & (MAXTREE(('K+'==ABSID) ,PT) > %(DaughterPtMax)s*GeV) & (MAXTREE(('K+'==ABSID) , PIDK) > %(DaughterPIDKMax)s) & (BPVLTIME()>%(BLifetime)s*ps)"   % locals()
             
             
         from StandardParticles import StdAllNoPIDsKaons

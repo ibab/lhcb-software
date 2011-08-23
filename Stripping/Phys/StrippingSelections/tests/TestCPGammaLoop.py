@@ -53,11 +53,24 @@ stream.appendLines(confBhh.lines())
 ## B->hh (lifetime unbiased)
 ##
 from StrippingSelections import StrippingB2hhLTUnbiased
-paramBhhUnbiased = lineBuilderConfiguration('stripping13', 'B2hhLTUnbiased' )['CONFIG']
-#paramBhhUnbiased['NetCut'] = (0.85 + 1.0)/2.0
-print "NetCut %lf" % paramBhhUnbiased['NetCut']
 
-
+paramBhhUnbiased ={
+    'TrackChi2'               :    5.0
+ , 'DaughterPtMin'         :    1.5 # GeV
+ , 'DaughterPtMax'         :    2.0 # GeV
+ , 'DaughterPMin'          :   10.0 # GeV
+ , 'DaughterPIDKMax'       :    0.1
+ , 'BMassMin'              :    5.0 # GeV
+ , 'BMassMax'              :    6.0 # GeV
+ , 'DOCA'                  :    0.07
+ , 'VertexChi2'            :   25.0
+ , 'PrescaleLoose'         :    0.005
+ , 'PostscaleLoose'        :    1.0
+ , 'PrescaleNB'            :    1.0
+ , 'PostscaleNB'           :    1.0
+ , 'NetCut'                :    0.9
+ , 'BLifetime'             :    0.3
+ }
 confBhhUnbiased  = StrippingB2hhLTUnbiased.StrippingB2hhLTUnbiasedConf("BhhLTUnbiased", paramBhhUnbiased)
 stream.appendLines(confBhhUnbiased.lines())
 
@@ -119,9 +132,9 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
 from Configurables import CondDB
-CondDB().IgnoreHeartBeat = True
-
-
+CondDB(UseOracle = True)
+DaVinci().DDDBtag  = "head-20110722"
+DaVinci().CondDBtag = "head-20110722"
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
@@ -132,6 +145,5 @@ DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2011"
 DaVinci().InputType = "SDST"
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py")
 
-
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco11a_Run97120_SDSTs.py")
