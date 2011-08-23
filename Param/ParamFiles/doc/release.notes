@@ -5,6 +5,9 @@
                 simulation and digitization
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
+! 2011-08-23 - Mike Williams
+- add Beauty2Charm_BDTParms_v1r0.txt for use in the Beauty2Charm stripping
+
 !======================= ParamFiles v8r4 2011-02-08 ==========================
 ! 2011-02-08 - Gerhard Raven for Michael Williams
  - add Hlt2Topo{2,3,4}Body_BDTParams_v1r0.txt for use in the Hlt2 topological
