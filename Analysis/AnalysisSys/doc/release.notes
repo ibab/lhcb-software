@@ -3,6 +3,8 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+Migrate Phys/LoKiJets into Phys project.
+
 </PRE><H1><A NAME=v6r6>2011-07-29 Analysis v6r6 </A></H1><PRE>
 
 Based on Phys v12r6, patch for the 2011 Stripping16.

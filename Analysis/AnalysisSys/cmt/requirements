@@ -1,6 +1,6 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version           v6r6
+version           v7r0
 
 branches doc cmt
 
@@ -30,7 +30,6 @@ use  FlavourTaggingChecker      v6r6p3   Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r4p2   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4     Phys   # Victor Coco
 use  DecayTreeTuple             v3r16    Phys   # Rob Lambert
-use  LoKiJets                   v6r0     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessories		v1r1	 Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r1	 Phys   # Victor Coco, Cedric Potterat
 ####################################################################
