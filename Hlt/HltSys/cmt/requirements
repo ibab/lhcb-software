@@ -26,7 +26,6 @@ use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v9r9p1  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r9    Hlt   # Gerhard Raven
 use LoKiTrigger         v12r3   Phys  # Vanya Belyaev
-use BBDecTreeTool       v1r2    Phys  # Mike Williams
 # Declare this as a container package
 apply_pattern container_package
 

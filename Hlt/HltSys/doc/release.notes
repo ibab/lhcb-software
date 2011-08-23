@@ -5,6 +5,7 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+Remove Phys/BBDecTreeTool, now in PhysSys
 Remove Phys/LoKiTracks, now in PhysSys
 
 </PRE><H1><A NAME=v13r9>2011-07-04 HltSys v13r8</A></H1><PRE>
