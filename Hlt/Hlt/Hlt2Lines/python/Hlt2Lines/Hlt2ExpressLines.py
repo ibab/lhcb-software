@@ -40,89 +40,89 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                , 'Hlt2ExpressDStar2D0Pi'  : 'RATE(1)'
                                , 'Hlt2ExpressHLT1Physics' : 'RATE(1)'
                                  }
-               , 'ExJPsiMassWindow'        :  120   # MeV
-               , 'ExJPsiPt'                : 1000   # MeV
-               , 'ExJPsiMuPt'              :  500   # MeV
-               , 'ExJPsiTPMassWindow'      :  300   # MeV
-               , 'ExJPsiTPVChi2'           :   20
-               , 'ExJPsiTPCoP'             : 3000   # MeV
-               , 'ExJPsiTPCoPt'            :  800   # MeV
-               , 'ExJPsiTPTagP'            : 6000   # MeV
-               , 'ExJPsiTPTagPt'           : 1500   # MeV
-               , 'ExJPsiTPMaxEcalE'        : 1000   # MeV
-               , 'ExJPsiTPMinEcalE'        :  -10   # MeV
-               , 'ExJPsiTPMaxHcalE'        : 4000   # MeV
-               , 'ExJPsiTPMinHcalE'        : 1000   # MeV
-               , 'ExLambdaVChi2'           :    9
-               , 'ExLambdaVZ'              :  220*cm 
-               , 'ExLambdaLTimeChi2'       :   36
-               , 'ExLambdaCTau'            :    5*mm
-               , 'ExLambdaWSMassKS'        :   20   # MeV 
-               , 'ExLambdaMassWin'         :   25   # MeV
-               , 'ExLambdaMassWinWide'     :   30   # MeV
-               , 'ExLambdaPiP'             : 2000   # MeV
-               , 'ExLambdaPiIPChi2'        :   25
-               , 'ExLambdaPiTrackChi2'     :    5  
-               , 'ExLambdaPP'              : 2000   # MeV
-               , 'ExLambdaPIPChi2'         :   25
-               , 'ExLambdaPTrackChi2'      :    5  
-               , 'ExKSMassWinWide'         :   70   # MeV
-               , 'ExKSMassWin'             :   50   # MeV
-               , 'ExKSMaxZ'                :  220*cm   
-               , 'ExKSLTimeChi2'           :   36
-               , 'ExKSCTau'                :    1*mm
-               , 'ExKSWrongMass'           :    9   # MeV
-               , 'ExKSTrackP'              : 2000   # MeV
-               , 'ExKSTrackChi2'           :    5
-               , 'ExKSTrackMinIPChi2'      :   25
-               , 'ExPhiMassWinWide'        :   70 # MeV
-               , 'ExPhiMassWin'            :   50 # MeV
-               , 'ExPhiDOCAMax'		   :  10. # mm
-	       , 'ExPhiMIPCHI2DV'          :  2.18 #log(2.5) = 12.18
-               , 'ExPhiKPt'                :  300 # MeV
-               , 'ExPhiKP'                 : 1000 # MeV
-               , 'ExPhiKMIPCHI2DV'         :  1.0
-	       , 'ExDsMassWinWide'         :  100 # MeV
-               , 'ExDsMassWin'             :   50 # MeV
-               , 'ExDsBPVDIRA'             :    0.999
-               , 'ExDsVCHI2'               :   12.18 #log(2.5) = 12.18
-	       , 'ExDsMIPCHI2DV'	   :   12.18 #log(2.5) = 12.18
-               , 'ExDsMIPDV'               :  0.05
-	       , 'ExDsPiPt'                :  300 # MeV
-               , 'ExDsPiP'                 : 1000 # MeV
-               , 'ExDsPiMIPCHI2DV'         :  12.18 #log(2.5) = 12.18
-               , 'ExHaloMinTot'            :  20 
-               , 'ExHaloMaxTot'            : 5000 
-               , 'ExHaloMinRSlice'         :  10 
-               , 'ExHaloMinCell'           :  10
-               , 'ExHaloMaxCell'           :  100
-               , 'ExHaloMaxDiffCell'       :  -1
-               , 'ExHaloMaxSensor'         :  25 
-               , 'ExHaloOverlaps'          :  False
-               , 'ExHaloBigCell'           :  False
-               , 'ExHaloMinOverlap'        :  3
-               , 'ExD0MassWinWide'         :  100   # MeV
-               , 'ExD0MassWin'             :   50   # MeV
-               , 'ExD0VCHI2'               :   10 
-               , 'ExD0Pt'                  : 1000   # MeV
-               , 'ExD0BPVDIRA'             : 0.9999
-               , 'ExD0BPVVDCHI2'           :   12
-               , 'ExD0KP'                  : 2000   # MeV
-               , 'ExD0KPt'                 :  400   # MeV
-               , 'ExD0KIPChi2'             :    6
-               , 'ExD0PiP'                 : 2000   # MeV
-               , 'ExD0PiPt'                :  400   # MeV
-               , 'ExD0PiIPChi2'            :    6
-               , 'ExDStarMassWinWide'      :  100   # MeV
-               , 'ExDStarMassWin'          :   50   # MeV
-               , 'ExDStarPt'               : 2200   # MeV
-               , 'ExDStarVCHI2'            :   15
-               , 'ExDStarMassDiff'         :155.5   # MeV
-               , 'ExDStarPiPt'             : 110    # MeV
-               , 'ExDStarPiIPChi2'         :   2
-               }  
+                 , 'ExJPsiMassWindow'        :  120   # MeV
+                 , 'ExJPsiPt'                : 1000   # MeV
+                 , 'ExJPsiMuPt'              :  500   # MeV
+                 , 'ExJPsiTPMassWindow'      :  200   # MeV
+                 , 'ExJPsiTPVChi2'           :    5
+                 , 'ExJPsiTDVChi2'           :  225
+                 , 'ExJPsiTPCoP'             : 3000   # MeV
+                 , 'ExJPsiTPCoPt'            :  800   # MeV
+                 , 'ExJPsiTPCoTrkChi2'       :    3   
+                 , 'ExJPsiTPCoTrkMIPChi2'    :   15 
+                 , 'ExJPsiTPTagTrkMIPChi2'   :   25  
+                 , 'ExJPsiTPTagP'            : 6000   # MeV
+                 , 'ExJPsiTPTagPt'           : 1500   # MeV
+                 , 'ExLambdaVChi2'           :    9
+                 , 'ExLambdaVZ'              :  220*cm 
+                 , 'ExLambdaLTimeChi2'       :   36
+                 , 'ExLambdaCTau'            :    5*mm
+                 , 'ExLambdaWSMassKS'        :   20   # MeV 
+                 , 'ExLambdaMassWin'         :   25   # MeV
+                 , 'ExLambdaMassWinWide'     :   30   # MeV
+                 , 'ExLambdaPiP'             : 2000   # MeV
+                 , 'ExLambdaPiIPChi2'        :   25
+                 , 'ExLambdaPiTrackChi2'     :    5  
+                 , 'ExLambdaPP'              : 2000   # MeV
+                 , 'ExLambdaPIPChi2'         :   25
+                 , 'ExLambdaPTrackChi2'      :    5  
+                 , 'ExKSMassWinWide'         :   70   # MeV
+                 , 'ExKSMassWin'             :   50   # MeV
+                 , 'ExKSMaxZ'                :  220*cm   
+                 , 'ExKSLTimeChi2'           :   36
+                 , 'ExKSCTau'                :    1*mm
+                 , 'ExKSWrongMass'           :    9   # MeV
+                 , 'ExKSTrackP'              : 2000   # MeV
+                 , 'ExKSTrackChi2'           :    5
+                 , 'ExKSTrackMinIPChi2'      :   25
+                 , 'ExPhiMassWinWide'        :   70 # MeV
+                 , 'ExPhiMassWin'            :   50 # MeV
+                 , 'ExPhiDOCAMax'		   :  10. # mm
+                 , 'ExPhiMIPCHI2DV'          :  2.18 #log(2.5) = 12.18
+                 , 'ExPhiKPt'                :  300 # MeV
+                 , 'ExPhiKP'                 : 1000 # MeV
+                 , 'ExPhiKMIPCHI2DV'         :  1.0
+                 , 'ExDsMassWinWide'         :  100 # MeV
+                 , 'ExDsMassWin'             :   50 # MeV
+                 , 'ExDsBPVDIRA'             :    0.999
+                 , 'ExDsVCHI2'               :   12.18 #log(2.5) = 12.18
+                 , 'ExDsMIPCHI2DV'	   :   12.18 #log(2.5) = 12.18
+                 , 'ExDsMIPDV'               :  0.05
+                 , 'ExDsPiPt'                :  300 # MeV
+                 , 'ExDsPiP'                 : 1000 # MeV
+                 , 'ExDsPiMIPCHI2DV'         :  12.18 #log(2.5) = 12.18
+                 , 'ExHaloMinTot'            :  20 
+                 , 'ExHaloMaxTot'            : 5000 
+                 , 'ExHaloMinRSlice'         :  10 
+                 , 'ExHaloMinCell'           :  10
+                 , 'ExHaloMaxCell'           :  100
+                 , 'ExHaloMaxDiffCell'       :  -1
+                 , 'ExHaloMaxSensor'         :  25 
+                 , 'ExHaloOverlaps'          :  False
+                 , 'ExHaloBigCell'           :  False
+                 , 'ExHaloMinOverlap'        :  3
+                 , 'ExD0MassWinWide'         :  100   # MeV
+                 , 'ExD0MassWin'             :   50   # MeV
+                 , 'ExD0VCHI2'               :   10 
+                 , 'ExD0Pt'                  : 1000   # MeV
+                 , 'ExD0BPVDIRA'             : 0.9999
+                 , 'ExD0BPVVDCHI2'           :   12
+                 , 'ExD0KP'                  : 2000   # MeV
+                 , 'ExD0KPt'                 :  400   # MeV
+                 , 'ExD0KIPChi2'             :    6
+                 , 'ExD0PiP'                 : 2000   # MeV
+                 , 'ExD0PiPt'                :  400   # MeV
+                 , 'ExD0PiIPChi2'            :    6
+                 , 'ExDStarMassWinWide'      :  100   # MeV
+                 , 'ExDStarMassWin'          :   50   # MeV
+                 , 'ExDStarPt'               : 2200   # MeV
+                 , 'ExDStarVCHI2'            :   15
+                 , 'ExDStarMassDiff'         :155.5   # MeV
+                 , 'ExDStarPiPt'             : 110    # MeV
+                 , 'ExDStarPiIPChi2'         :   2
+                 }  
    
-
+   
    def __apply_configuration__(self):
       from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
       from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
@@ -172,30 +172,17 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       # common cut
       cocut = "(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
-      " & (P>%(ExJPsiTPCoP)s*MeV) &(PT>%(ExJPsiTPCoPt)s*MeV)"%  self.getProps()
-      
-      #Tag and probe cuts:
-      #   TAG::  P>6Gev and Pt>1.5 GeV
-      #   PROBE:: Ecal (-10,1000) and Hcal (1000,4000) energy filtered
-      tag1cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),1))"\
-                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),1)) "%  self.getProps()
-      tag2cuts = "  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),2))"\
-                 " & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),2)) "%  self.getProps()
-      
-      probe2cuts = " ( "\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)s*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)s*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)s*MeV),2)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)s*MeV),2)) ) "%  self.getProps()
-      probe1cuts = " ( "\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<%(ExJPsiTPMaxEcalE)s*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<%(ExJPsiTPMaxHcalE)s*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>%(ExJPsiTPMinEcalE)s*MeV),1)) &"\
-      "(CHILDCUT((PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>%(ExJPsiTPMinHcalE)s*MeV),1)) ) "%  self.getProps()
-      
-      child1cuts = tag1cuts + " & " + probe2cuts
-      
-      child2cuts = tag2cuts + " & " + probe1cuts
+          " & (P>%(ExJPsiTPCoP)s*MeV) & (PT>%(ExJPsiTPCoPt)s*MeV)"\
+          " & (TRCHI2DOF<%(ExJPsiTPCoTrkChi2)s)"\
+          " & (MIPCHI2DV(PRIMARY)>%(ExJPsiTPCoTrkMIPChi2)s)"%  self.getProps()
+
+      tag1cuts = "(  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),1)) & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),1))"\
+          " & (CHILDCUT((MIPCHI2DV(PRIMARY)>%(ExJPsiTPTagTrkMIPChi2)s),1)) )"%  self.getProps()
+      tag2cuts = "(  (CHILDCUT((P>%(ExJPsiTPTagP)s*MeV),2)) & (CHILDCUT((PT>%(ExJPsiTPTagPt)s*MeV),2))"\
+          " & (CHILDCUT((MIPCHI2DV(PRIMARY)>%(ExJPsiTPTagTrkMIPChi2)s),2)) )"%  self.getProps()
+
+      child1cuts = tag1cuts 
+      child2cuts = tag2cuts 
      
       JPsiCombine = Hlt2Member( CombineParticles
                                 , 'JPsiCombine'
@@ -205,7 +192,8 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
                                                     'pi-' : cocut }
                                 , CombinationCut = "(ADAMASS('J/psi(1S)')<%(ExJPsiTPMassWindow)s*MeV)"%  self.getProps()
                                 , MotherCut = "( " + child1cuts + " | " + child2cuts + " ) "\
-                                " & (VFASPF(VCHI2PDOF)<%(ExJPsiTPVChi2)s)"%  self.getProps()
+                                " & (VFASPF(VCHI2PDOF)<%(ExJPsiTPVChi2)s) & (BPVVDCHI2>%(ExJPsiTDVChi2)s)"%  self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2000,5000 )
                                 )
 
       line = Hlt2Line('ExpressJPsiTagProbe'
