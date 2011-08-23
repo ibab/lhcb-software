@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-23 - Thomas Blake
+ - StrippingB2XMuMu, small bug fix
+ - Added Tau2PMuMu to __init__.py 
+
 ! 2011-08-22 - Jibo He for Paul Schaack, Michal Kreps
  - StrippingB2XMuMu
   . Updated to include Lambda_b -> Lambda(1520) mu mu decay

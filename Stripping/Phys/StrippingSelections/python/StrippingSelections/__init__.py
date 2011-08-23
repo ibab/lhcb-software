@@ -137,6 +137,7 @@ import StrippingX2D0D0
 import StrippingB2XTau
 
 import StrippingK0s2MuMuLines
+import StrippingTau2PMuMu
 
 from sys import modules as _modules
 _this = _modules[__name__]

@@ -91,7 +91,7 @@ class B2XMuMuConf(LineBuilder) :
         self.name = name
         self.Muons = self.__Muons__(config)
         self.Dimuon = self.__Dimuon__(self.Muons, config)        
-        self.PIDKaons = self.__Protons__(config)
+        self.PIDProtons = self.__Protons__(config)
         self.PIDKaons = self.__Kaons__(config)
         self.PIDPions = self.__Pions__(config)
         self.Protons = self.__NoPIDProtons__(config)
