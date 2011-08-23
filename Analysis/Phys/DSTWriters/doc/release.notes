@@ -4,6 +4,12 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-08-23 - Rob Lambert
+ - Supress items for Stripping17, all GEC are now in RecHeader :)
+ - Supress ODIN and raw banks, instead copy to MicroDST from new
+   raw bank locations: Event/Trigger/RawEvent, Event/Muon/RawEvent
+   see task #21716
+
 ! 2011-07-20 - Vanya Belyaev
 
  -  re-add the GEC-counters using smart helper function recSummary

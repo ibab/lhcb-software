@@ -241,12 +241,13 @@ class CloneRawBanks(MicroDSTElement) :
     branch: TES branch of output.
     
     """
-    def __init__(self, branch = '', banks = []) :
+    def __init__(self, branch = '', banks = [], inputRawEvent="/DAQ/RawEvent") :
         MicroDSTElement.__init__(self, branch)
         self.banks = list(banks)
     def __call__(self, sel) :
         from Configurables import RawEventSelectiveCopy
         rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
+        rawBankCopy.InputRawEventLocation=inputRawEvent
         rawBankCopy.RawBanksToCopy = self.banks 
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
         return [rawBankCopy]
