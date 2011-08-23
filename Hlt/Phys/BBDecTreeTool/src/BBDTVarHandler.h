@@ -30,10 +30,21 @@ class BBDTVarHandler {
 public:
   BBDTVarHandler();
   virtual ~BBDTVarHandler(){}
-  const double& operator[](unsigned int index) const {return m_values[index];}
+  void setPIDs(const LoKi::PhysTypes::Cut &cut);
+  StatusCode initialize(const std::vector<std::string> &vars);
+  StatusCode initialize(const std::vector<bool> &use);
+  const double& operator[](unsigned int index) const {
+    return m_values[m_map[index]];
+  }
   bool set(const LHCb::Particle* p, const DVAlgorithm *dvalg, 
 	   const IDistanceCalculator* dist);
-  unsigned int numVars() const {return m_values.size();}
+  unsigned int numVars() const {
+    int size = m_values.size(), num = 0;
+    for(int i=0; i < size; i++){
+      if(m_use[i]) num++;
+    }
+    return num;
+  }
   double ptSum() const {return m_values[0];}
   double mass() const {return m_values[1];}
   double doca() const {return m_values[2];}
@@ -41,14 +52,18 @@ public:
   double massCor() const {return m_values[4];}
   double ptMin() const {return m_values[5];}
   double fdChi2() const {return m_values[6];}
+  double pt() const {return m_values[7];}
+  double vChi2DofTot() const {return m_values[8];}
   bool cut(const std::map<std::string,std::pair<double,double> > &cuts) const;
 
 private:
   std::vector<double> m_values; ///< variables
-  const LoKi::PhysTypes::Fun m_SUMPT; ///< SUMTREE(PT,'K+'==ABSID,0.0)
-  const LoKi::PhysTypes::Fun m_MINPT; ///< MINTREE('K+'==ABSID,PT)
+  std::vector<bool> m_use; ///< use this variable?
+  std::vector<int> m_map; ///< maps client index to internal index
+  LoKi::PhysTypes::Fun m_SUMPT; ///< SUMTREE(PT,[...],0.0)
+  LoKi::PhysTypes::Fun m_MINPT; ///< MINTREE([...],PT)
   const LoKi::Cuts::BPVIPCHI2 m_BPVIPCHI2; ///< BPVIPCHI2()
-  std::map<std::string,int> m_indices; ///< FUNCTOR -> array index map 
+  std::map<std::string,int> m_indices; ///< var name to (internal) index map
 };
 // ============================================================================
 #endif /* BBDTVarHandler_H */

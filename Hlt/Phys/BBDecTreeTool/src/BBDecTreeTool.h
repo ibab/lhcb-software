@@ -87,6 +87,7 @@ private:
   int m_ntrees; ///< number of trees used in training  
   std::vector<std::vector<double> > m_splits; ///< variable split points
   std::vector<unsigned short int> m_values; ///< response values 
+  std::vector<std::string> m_pids; ///< PID names for PT variabls
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
   const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
   mutable BBDTVarHandler m_vars; ///< variables

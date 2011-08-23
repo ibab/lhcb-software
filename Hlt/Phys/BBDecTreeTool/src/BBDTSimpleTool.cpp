@@ -1,6 +1,7 @@
 // $Id: $
 // ============================================================================
 #include "BBDTSimpleTool.h"
+#include "LoKi/IHybridFactory.h"
 // ============================================================================
 BBDTSimpleTool::BBDTSimpleTool(const std::string& type, 
 			       const std::string& name, 
@@ -16,6 +17,13 @@ StatusCode BBDTSimpleTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc; 
 
+  // configure the BBDT var handler to use only K+
+  LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == "K+"); 
+  m_vars.setPIDs(cut);
+  std::vector<bool> use(7,true); // use 1st 7 vars in the handler
+  if(!m_vars.initialize(use)) 
+    return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE);
+ 
   // get tools and algs
   m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   m_dva = Gaudi::Utils::getDVAlgorithm(contextSvc());

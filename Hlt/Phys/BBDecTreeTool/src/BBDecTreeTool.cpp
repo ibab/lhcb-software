@@ -4,6 +4,7 @@
 #include "GaudiKernel/System.h"
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem.hpp"
+#include "LoKi/IHybridFactory.h"
 // ============================================================================
 std::string SubstituteEnvVarInPath(const std::string& in) {
   /* cp'd directly from $L0MUONROOT/src/component/SubstituteEnvVarInPath.cpp */
@@ -30,6 +31,7 @@ BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
   declareProperty("ParamFile", m_paramFile, "parameter file (full path)");
   declareProperty("ANNSvcKey", m_key, "extrainfo key");
+  declareProperty("PIDs",m_pids, "PID names for daughter PT variables");
 }
 // ============================================================================
 StatusCode BBDecTreeTool::readError(const std::string &msg) const {
@@ -41,7 +43,16 @@ StatusCode BBDecTreeTool::initialize() {
 
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
-  if(sc.isFailure()) return sc; 
+  if(sc.isFailure()) return sc;   
+
+  // configure the BBDT var handler to use specified PIDs
+  int size = m_pids.size();
+  if(size > 0){
+    LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == m_pids[0]);
+    for(int i = 1; i < size; i++)
+      cut = (cut || (LoKi::Cuts::ABSID == m_pids[i]));
+    m_vars.setPIDs(cut);
+  }
 
   // get tools and algs
   m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
@@ -57,17 +68,20 @@ StatusCode BBDecTreeTool::initialize() {
   if(!inFile.is_open()) return this->readError("failed to open file");
   unsigned int nvar,index, value;
   double dvalue;
-  std::string var_name;
+  std::vector<std::string> var_names;
   // number of variables 
   inFile >> nvar;
-  if(nvar != m_vars.numVars()) 
-    return this->readError("unsupported number of variables");
+  var_names.resize(nvar);
   m_splits.resize(nvar);
-  // variable names (currently not used)
+  
+  // variable names 
   for(unsigned int v = 0; v < nvar; v++){
-    if(!(inFile >> var_name))
+    if(!(inFile >> var_names[v]))
       return this->readError("error reading in variable names");
   }
+  if(!m_vars.initialize(var_names)) 
+    return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE); 
+
   // number of splits for each variable
   unsigned int numSplits = 1;
   for(unsigned int v = 0; v < nvar; v++) {

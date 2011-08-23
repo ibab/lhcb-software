@@ -1,18 +1,85 @@
 // $Id: $
 // ============================================================================
 #include "BBDTVarHandler.h"
+#include "LoKi/IHybridFactory.h"
 // ============================================================================
-BBDTVarHandler::BBDTVarHandler(): m_values(7),
-    m_SUMPT(LoKi::Cuts::SUMTREE(LoKi::Cuts::PT,"K+" == LoKi::Cuts::ABSID,0.0)),
-    m_MINPT(LoKi::Cuts::MINTREE("K+" == LoKi::Cuts::ABSID,LoKi::Cuts::PT)),
-    m_BPVIPCHI2(""){
-  m_indices["SUMTREE(PT,'K+'==ABSID,0.0)"] = 0;
+double docaMax(const LHCb::Particle *p,const IDistanceCalculator* dist){
+  LHCb::Particle::ConstVector daughters = p->daughtersVector();
+  int size = daughters.size();
+  double max = 0;
+  for(int i = 0; i < size; i++){
+    if(daughters[i]->particleID().pid() == 22) continue;
+    for(int j = i+1; j < size; j++){
+      if(daughters[j]->particleID().pid() == 22) continue;
+      double doca;
+      dist->distance(daughters[i],daughters[j],doca);
+      if(doca > max) max = doca;
+    }
+  }
+  return max;
+}
+// ============================================================================
+void heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int &dof){
+  LHCb::Particle::ConstVector daughters = p->daughtersVector();
+  int size = daughters.size();
+  if(!p->particleID().hasCharm() && !p->particleID().hasBottom()) return;
+  if(size == 0 || p->endVertex() == 0) return;
+  chi2 += p->endVertex()->chi2();
+  dof += p->endVertex()->nDoF();
+  for(int i = 0; i < size; i++) heavyVChi2Dof(daughters[i],chi2,dof);
+}
+double totHeavyVChi2Dof(const LHCb::Particle *p){
+  double chi2 = 0; int dof = 0;
+  heavyVChi2Dof(p,chi2,dof);
+  if(dof > 0) return chi2/(double)dof;
+  else return 0;
+}
+// ============================================================================
+BBDTVarHandler::BBDTVarHandler(): m_values(9),m_use(9,false),
+  m_SUMPT(LoKi::Cuts::SUMTREE(LoKi::Cuts::PT,LoKi::Cuts::ISBASIC,0.0)),
+  m_MINPT(LoKi::Cuts::MINTREE(LoKi::Cuts::ISBASIC,LoKi::Cuts::PT)),
+  m_BPVIPCHI2(""){
+  m_indices["PTSUM"] = 0;
   m_indices["M"] = 1;
-  m_indices["AMAXDOCA('LoKi::DistanceCalculator')"] = 2;
-  m_indices["BPVIPCHI2()"] = 3;
-  m_indices["BPVCORRM"] = 4;
-  m_indices["MINTREE('K+'==ABSID,PT)"] = 5;
-  m_indices["BPVVDCHI2"] = 6;
+  m_indices["DOCA"] = 2;
+  m_indices["CANDIPCHI2"] = 3;
+  m_indices["MCOR"] = 4;
+  m_indices["PTMIN"] = 5;
+  m_indices["FDCHI2"] = 6;
+  m_indices["PT"] = 7;
+  m_indices["HVCHI2DOFTOT"] = 8;
+}
+// ============================================================================
+void BBDTVarHandler::setPIDs(const LoKi::PhysTypes::Cut &cut){
+  m_SUMPT = LoKi::Cuts::SUMTREE(LoKi::Cuts::PT,cut,0.0);
+  m_MINPT = LoKi::Cuts::MINTREE(cut,LoKi::Cuts::PT);
+}
+// ============================================================================
+StatusCode BBDTVarHandler::initialize(const std::vector<std::string> &vars){
+  int size = vars.size();
+  m_map.resize(size);
+  for(int i = 0; i < size; i++){
+    std::map<std::string,int>::const_iterator it = m_indices.find(vars[i]);
+    if(it == m_indices.end()) return StatusCode::FAILURE;
+    int index = it->second;
+    m_use[index] = true;
+    m_map[i] = index;
+  }
+  return StatusCode::SUCCESS;
+}
+// ============================================================================
+StatusCode BBDTVarHandler::initialize(const std::vector<bool> &use){
+  int size = use.size();
+  m_map.resize(size);
+  int index = 0;
+  for(int i=0; i < size; i++){
+    m_use[i] = use[i];
+    if(use[i]){
+      m_map[i] = index;
+      index++;
+    }
+  }
+  return StatusCode::SUCCESS;
 }
 // ============================================================================
 bool BBDTVarHandler::set(const LHCb::Particle* p,const DVAlgorithm *dvalg, 
@@ -22,23 +89,21 @@ bool BBDTVarHandler::set(const LHCb::Particle* p,const DVAlgorithm *dvalg,
 
   // get variables we need
   const LHCb::VertexBase* bpv = dvalg->bestPV(p);
-  // SUMTREE(PT,'K+'==ABSID,0.0)
-  m_values[0] = m_SUMPT(p)/Gaudi::Units::MeV; 
-  // M
-  m_values[1] = p->measuredMass()/Gaudi::Units::MeV; 
-  // AMAXDOCA('LoKi::DistanceCalculator')
-  const LoKi::ATypes::AFun AMAXDOCA = LoKi::Cuts::AMAXDOCA(dist);
-  m_values[2] = AMAXDOCA(p->daughtersVector())/Gaudi::Units::mm; 
-  // BPVIPCHI2()
-  m_values[3] = m_BPVIPCHI2(p); 
-  // BPVCORRM
-  const LoKi::Types::Fun BPVCORRM = LoKi::Cuts::CORRM(bpv);
-  m_values[4] = BPVCORRM(p)/Gaudi::Units::MeV; 
-  // MINTREE('K+'==ABSID,PT)
-  m_values[5] = m_MINPT(p)/Gaudi::Units::MeV; 
-  // BPVVDCHI2
-  const LoKi::Types::Fun BPVVDCHI2 = LoKi::Cuts::VDCHI2(bpv);
-  m_values[6] = BPVVDCHI2(p); 
+  if(m_use[0]) m_values[0] = m_SUMPT(p)/Gaudi::Units::MeV; 
+  if(m_use[1]) m_values[1] = p->measuredMass()/Gaudi::Units::MeV; 
+  if(m_use[2]) m_values[2] = docaMax(p,dist)/Gaudi::Units::mm;
+  if(m_use[3]) m_values[3] = m_BPVIPCHI2(p); 
+  if(m_use[4]){
+    const LoKi::Types::Fun BPVCORRM = LoKi::Cuts::CORRM(bpv);
+    m_values[4] = BPVCORRM(p)/Gaudi::Units::MeV; 
+  }
+  if(m_use[5]) m_values[5] = m_MINPT(p)/Gaudi::Units::MeV; 
+  if(m_use[6]){
+    const LoKi::Types::Fun BPVVDCHI2 = LoKi::Cuts::VDCHI2(bpv);
+    m_values[6] = BPVVDCHI2(p); 
+  }
+  if(m_use[7]) m_values[7] = p->pt();
+  if(m_use[8]) m_values[8] = totHeavyVChi2Dof(p);
 
   return true;
 }
