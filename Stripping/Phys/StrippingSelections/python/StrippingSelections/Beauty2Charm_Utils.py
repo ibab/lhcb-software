@@ -14,9 +14,9 @@ class ProtoLine(object):
         self.selections = sels
         self.pre = pre
 
-    def prescale(self,line,config):
-        if not line.name() in config['Prescales'].keys(): return self.pre
-        else: return config['Prescales'][line.name()]
+    def prescale(self,line,name,config):
+        if not name in config['Prescales'].keys(): return self.pre
+        else: return config['Prescales'][name]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -64,9 +64,10 @@ def has1TrackChild():
     return "INTREE(ISBASIC & (P>10000*MeV) & (PT>1700*MeV) & (TRCHI2DOF<2.5) "\
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
-def makeTISTOSFilter(name,tistos):
-    specs = {'Hlt2Topo(2|3|4)Body.*Decision%'+tistos:0,
-             'Hlt2IncPhi.*Decision%'+tistos:0}
+def makeTISTOSFilter(name):
+    specs = {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
+             'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
+             'Hlt2IncPhi.*Decision%TOS':0,'Hlt2IncPhi.*Decision%TIS':0}
     from Configurables import TisTosParticleTagger
     tisTosFilter = TisTosParticleTagger(name+'TISTOSFilter')
     tisTosFilter.TisTosSpecs = specs
@@ -76,43 +77,50 @@ def makeTISTOSFilter(name,tistos):
     tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
     return tisTosFilter
 
-def tisTosSelection(sel, tistos):
-    '''Filters Selection sel to be tistos (TOS or TIS).'''
-    tisTosFilter = makeTISTOSFilter(sel.name()+tistos+'Filter',tistos)
-    return Selection(sel.name()+tistos+'Sel', Algorithm=tisTosFilter,
+def tisTosSelection(sel):
+    '''Filters Selection sel to be TOS OR TIS.'''
+    tisTosFilter = makeTISTOSFilter(sel.name())
+    return Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter,
                      RequiredSelections=[sel])
+
+def filterPID(name,input,config,level=1):
+    cuts = ["(NINGENERATION(('p+'==ABSID) & (PIDp < %s),%d) == 0)" \
+            % (config['P']['PIDp_MIN'],level),            
+            "(NINGENERATION(('K+'==ABSID) & (PIDK < %s), %d) == 0)" \
+            % (config['K']['PIDK_MIN'],level),
+            "(NINGENERATION(('pi+'==ABSID) & (PIDK > %s), %d) == 0)" \
+            % (config['PI']['PIDK_MAX'],level)]
+    return filterSelection(name,LoKiCuts.combine(cuts),input)
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
-def makeB2X(name,decay,inputs,config):
+def makeB2X(name,decay,inputs,config,useIP=True):
     '''Makes all B -> X selections.'''
+    from copy import deepcopy
     comboCuts = LoKiCuts(['SUMPT','AM','AMAXDOCA'],config).code()
+    flightCuts = ['BPVLTIME']
+    if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
+    else:
+        config = deepcopy(config)
+        config['BPVVDCHI2_MIN'] = config['NOIP_BPVVDCHI2_MIN']
+        flightCuts += ['BPVVDCHI2']        
     momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),has1TrackChild(),
-               hasTopoChildren(),
-               LoKiCuts(['BPVIPCHI2','BPVLTIME','BPVDIRA'],config).code()]
+               hasTopoChildren(),LoKiCuts(flightCuts,config).code()]
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
-def makeB2XMerged(name,decays,xtag,inputs,config):
-    '''Merges B->X selections.  Returns the TIS and TOS selections.  The name
-    is misleading as the selections are not actually merged.  They used to be;
-    however, this was slow so now they are returned as lists.
-    '''
-    tosSels = []
-    tisSels = []
+def makeB2XSels(decays,xtag,inputs,config,useIP=True):
+    '''Returns a list of the Hb->X selections.'''
+    sels = []
     for tag, decay in decays.iteritems():
         sname = tag+xtag+'Beauty2Charm'
-        if len(decays) > 1: sname += 'Sel'
-        sel = makeB2X(sname,decay,inputs[tag],config)
-        tosSels.append(tisTosSelection(sel,'TOS'))
-        tisSels.append(tisTosSelection(sel,'TIS'))
-    sname = name+xtag+'Beauty2Charm'
-    return {'TOS':tosSels,'TIS':tisSels}
-    #if len(decays) == 1: return {'TOS':tosSels[0],'TIS':tisSels[0]}
-    #tos = MergedSelection(sname+'TOS',RequiredSelections=tosSels)
-    #tis = MergedSelection(sname+'TIS',RequiredSelections=tisSels)
-    #return {'TOS':tos,'TIS':tis}
+        sel = makeB2X(sname,decay,inputs[tag],config,useIP)
+        sel = tisTosSelection(sel)
+        sel = filterSelection(sname+'B2CBBDT',
+                              "FILTER('BBDecTreeTool/B2CBBDT:PUBLIC')",[sel])
+        sels.append(sel)
+    return sels
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

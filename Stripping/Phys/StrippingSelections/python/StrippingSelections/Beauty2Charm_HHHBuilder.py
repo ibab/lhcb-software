@@ -6,7 +6,6 @@ from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
-from Beauty2Charm_ComboEngine import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -23,7 +22,7 @@ class HHHBuilder(object):
         self.kpipi = [self._makeKPiPi()]
         self.ppbarpi = [self._makeppbarPi()]
         self.ppbark = [self._makeppbarK()]
-
+        
     def _makeX2HHH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HHH selections with charged tracks only.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
@@ -54,14 +53,14 @@ class HHHBuilder(object):
     def _makeppbarPi(self):
         '''Makes X -> p pbar-pi+ + c.c.'''
         massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PPH'])
-        return self._makeX2HHH('X2ppbarPi',['[Xi_c+ -> p+ p~- pi+]cc'],
+        return self._makeX2HHH('X2ppbarPi',['[a_1(1260)+ -> p+ p~- pi+]cc'],
                               massWindow,self.config,
                               [self.pions,self.protons])
 
     def _makeppbarK(self):
         '''Makes X -> p pbar-K+ + c.c.'''
         massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PPH'])
-        return self._makeX2HHH('X2ppbarK',['[Xi_c+ -> p+ p~- K+]cc'],
+        return self._makeX2HHH('X2ppbarK',['[a_1(1260)+ -> p+ p~- K+]cc'],
                               massWindow,self.config,
                               [self.kaons,self.protons])
         
