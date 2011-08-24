@@ -11,7 +11,7 @@ Exported symbols (use python help!):
    - makePromptJPsi
 '''
 
-__author__ = ['Diego Martinez Santos','Johannes Albrecht']
+__author__ = ['Johannes Albrecht']
 __date__ = '19/07/2010'
 __version__ = '$Revision: 1.2 $'
 
@@ -20,9 +20,12 @@ __all__ = ('Bs2MuMuLinesConf',
            'makeDefault',
            'makeBs2mmWide',
            'makeLoose',
-           'makeDetachedJPsi',
-           'makeDetachedJPsiLoose',
-           'makePromptJPsi'
+           'makeBu',
+           'makeBs',
+           'makeBd'
+#           'makeDetachedJPsi',
+#           'makeDetachedJPsiLoose',
+#           'makePromptJPsi'
            )
 
 from Gaudi.Configuration import *
@@ -69,6 +72,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'Bs2mmWideLinePostscale',
                               'LooseLinePrescale',
                               'LooseLinePostscale',
+                              'BuPrescale',
+                              'BuPostscale',
+                              'BsPrescale',
+                              'BsPostscale',
+                              'BdPrescale',
+                              'BdPostscale',
                               'JPsiLinePrescale',
                               'JPsiLinePostscale',
                               'JPsiLooseLinePrescale',
@@ -85,6 +94,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
         'Bs2mmWideLinePostscale'  : 1,
         'LooseLinePrescale'      : 0.02,
         'LooseLinePostscale'     : 1,
+        'BuPrescale'    : 1,
+        'BuPostscale'   : 1,
+        'BsPrescale'    : 1,
+        'BsPostscale'   : 1,
+        'BdPrescale'    : 1,
+        'BdPostscale'   : 1,
         'JPsiLinePrescale'       : 1,
         'JPsiLinePostscale'      : 1,
         'JPsiLooseLinePrescale'  : 0.1,
@@ -111,9 +126,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
         default_name=name+'NoMuID'
         wide_name = name+'WideMass'
         loose_name=name+'NoMuIDLoose'
-        jPsi_name=name+'DetachedJPsi'
-        jPsiLoose_name=name+'DetachedJPsiLoose'
-        jPsiPrompt_name=name+'DetachedJPsi_noDetached'
+        bu_name=name+'Bu2JPsiK'
+        bs_name=name+'Bs2JPsiPhi'
+        bd_name=name+'Bd2JPsiKst'
+ #       jPsi_name=name+'DetachedJPsi'
+ #       jPsiLoose_name=name+'DetachedJPsiLoose'
+ #       jPsiPrompt_name=name+'DetachedJPsi_noDetached'
 
         self.selDefault = makeDefault(default_name)
 
@@ -126,11 +144,17 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                   BFDChi2=config['BFDChi2_loose']
                                   )
         
-        self.selJPsi = makeDetachedJPsi(jPsi_name)
+        self.selBu = makeBu(bu_name)
 
-        self.selJPsiLoose = makeDetachedJPsiLoose(jPsiLoose_name)
+        self.selBs = makeBs(bs_name)
 
-        self.selJPsiPrompt = makePromptJPsi( jPsiPrompt_name )
+        self.selBd = makeBd(bd_name)
+
+#        self.selJPsi = makeDetachedJPsi(jPsi_name)
+
+#        self.selJPsiLoose = makeDetachedJPsiLoose(jPsiLoose_name)
+
+#        self.selJPsiPrompt = makePromptJPsi( jPsiPrompt_name )
         
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['DefaultLinePrescale'],
@@ -150,6 +174,26 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                             algos = [ self.selLoose ]
                                             )
 
+        self.buLine = StrippingLine(bu_name+"Line",
+                                    prescale = config['BuPrescale'],
+                                    postscale = config['BuPostscale'],
+                                    algos = [ self.selBu ]
+                                    )
+
+        self.bsLine = StrippingLine(bs_name+"Line",
+                                    prescale = config['BsPrescale'],
+                                    postscale = config['BsPostscale'],
+                                    algos = [ self.selBs ]
+                                    )
+
+        self.bdLine = StrippingLine(bd_name+"Line",
+                                    prescale = config['BdPrescale'],
+                                    postscale = config['BdPostscale'],
+                                    algos = [ self.selBd ]
+                                    )
+
+
+        '''
         self.jPsiLine = StrippingLine( jPsi_name+"Line",
                                        prescale = config['JPsiLinePrescale'],
                                        postscale = config['JPsiLinePostscale'],
@@ -167,15 +211,18 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                              postscale = config['JPsiPromptLinePostscale'],
                                              algos = [ self.selJPsiPrompt ]
                                              )
-
+        '''
 
 
         self.registerLine(self.defaultLine)
         self.registerLine(self.wideLine)
         self.registerLine(self.looseLine)
-        self.registerLine(self.jPsiLine)
-        self.registerLine(self.jPsiLooseLine)
-        self.registerLine(self.jPsiPromptLine)
+        self.registerLine(self.buLine)
+        self.registerLine(self.bsLine)
+        self.registerLine(self.bdLine)
+#        self.registerLine(self.jPsiLine)
+#        self.registerLine(self.jPsiLooseLine)
+#        self.registerLine(self.jPsiPromptLine)
 
 
 def makeDefault(name) :
@@ -236,7 +283,7 @@ def makeBs2mmWide(name) :
                                      "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                                "& (ADMASS('B_s0') < 2400*MeV )"\
+                                "& (ADMASS('B_s0') < 1200*MeV )"\
                                 "& (BPVDIRA > 0) "\
                                 "& (BPVVDCHI2> 225)"\
                                 "& (BPVIPCHI2()< 25) "
@@ -292,6 +339,136 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     
     
 
+
+def makeBu(name) :
+    """
+    detached Bu-->JPsiK selection. Selection is aligned to the Bs2MuMu
+    selection.
+
+    Please contact Johannes Albrecht if you think of prescaling this line!
+
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    
+    from Configurables import OfflineVertexFitter
+   
+    SelDJPsi = makeDetachedJPsi(name)
+
+    PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
+    PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
+    PreselBu2JPsiKCommon.addTool( OfflineVertexFitter() )
+    PreselBu2JPsiKCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
+    PreselBu2JPsiKCommon.ReFitPVs = True
+    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 5 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 500*MeV)"
+    PreselBu2JPsiKCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<45) "
+
+    _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
+
+    return Selection( "SelBu2JPsiK",
+                         Algorithm = PreselBu2JPsiKCommon,
+                         RequiredSelections=[SelDJPsi,_kaons] )
+
+
+def makeBs(name) :
+    """
+    detached Bs-->JPsiPhi selection. Selection is aligned to the Bs2MuMu
+    selection.
+
+    Please contact Johannes Albrecht if you think of prescaling this line!
+
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    
+    from Configurables import OfflineVertexFitter
+   
+    SelDJPsi = makeDetachedJPsi(name)
+
+    makePhi = CombineParticles("makePhi")
+    makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.) & (PT>250*MeV)"}
+    
+    _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
+
+    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<10*MeV)"
+    makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
+    SelPhi = Selection( "SelPhi",                       Algorithm= makePhi,
+                        RequiredSelections=[_kaons] )
+
+    PreselBs2JPsiPhiCommon = CombineParticles("PreselBs2JPsiPhiCommon")
+    PreselBs2JPsiPhiCommon.DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)"
+    PreselBs2JPsiPhiCommon.addTool( OfflineVertexFitter() )
+    PreselBs2JPsiPhiCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBs2JPsiPhiCommon.OfflineVertexFitter.useResonanceVertex = False
+    PreselBs2JPsiPhiCommon.ReFitPVs = True
+    PreselBs2JPsiPhiCommon.DaughtersCuts = {}
+    PreselBs2JPsiPhiCommon.CombinationCut = "(ADAMASS('B_s0') < 500*MeV)"
+    PreselBs2JPsiPhiCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<75)"
+    
+    return  Selection( "SelBs2JPsiPhi",
+                       Algorithm = PreselBs2JPsiPhiCommon,
+                       RequiredSelections=[SelDJPsi,SelPhi] )
+
+
+
+def makeBd(name) :
+    """
+    detached Bd-->JPsiK* selection. Selection is aligned to the Bs2MuMu
+    selection.
+
+    Please contact Johannes Albrecht if you think of prescaling this line!
+
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    
+    from Configurables import OfflineVertexFitter
+   
+    SelDJPsi = makeDetachedJPsi(name)
+
+
+    ## make Kstar
+
+    makeKstar = CombineParticles("makeKstar")
+
+    makeKstar.DecayDescriptor =  "[K*(892)0 -> K+ pi-]cc"
+    makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
+                               "pi-":"(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
+    makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<600*MeV)"
+    makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
+
+    _pions = DataOnDemand(Location='Phys/StdNoPIDsPions/Particles')
+    _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
+
+    SelKst = Selection( "SelKst",
+                        Algorithm= makeKstar,
+                        RequiredSelections=[_pions,_kaons] )
+    
+
+    ## make BtoJPsiKstar
+    PreselBd2JPsiKstCommon = CombineParticles("PreselBd2JPsiKstCommon")
+    PreselBd2JPsiKstCommon.DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc"
+    PreselBd2JPsiKstCommon.addTool( OfflineVertexFitter() )
+    PreselBd2JPsiKstCommon.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+    PreselBd2JPsiKstCommon.OfflineVertexFitter.useResonanceVertex = False
+    PreselBd2JPsiKstCommon.ReFitPVs = True
+    PreselBd2JPsiKstCommon.DaughtersCuts = {}
+    PreselBd2JPsiKstCommon.CombinationCut = "(ADAMASS('B0') < 500*MeV)"
+    PreselBd2JPsiKstCommon.MotherCut = "(BPVIPCHI2()< 25) & (VFASPF(VCHI2)<75)"
+
+    return Selection( "SelBd2JPsiKstar",
+                      Algorithm = PreselBd2JPsiKstCommon,
+                      RequiredSelections=[SelDJPsi,SelKst] )
+
+
+
+
 def makeDetachedJPsi(name) :
     """
     detached JPsi selection for B--> JPsi X calibration and
@@ -328,7 +505,7 @@ def makeDetachedJPsi(name) :
                       Algorithm = DetachedJPsi,
                       RequiredSelections = [ _stdLooseMuons ])
 
-
+'''
 def makeDetachedJPsiLoose(name) :
     """
     loose detached JPsi selection to monitor selection,
@@ -396,3 +573,4 @@ def makePromptJPsi(name) :
     return Selection (name,
                       Algorithm = PromptJPsi,
                       RequiredSelections = [ _stdLooseMuons ])
+'''
