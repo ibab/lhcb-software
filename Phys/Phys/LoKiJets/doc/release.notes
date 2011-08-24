@@ -1,0 +1,400 @@
+! $Id: release.notes,v 1.23 2010-04-30 14:42:02 jpalac Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiJets
+! Responsible : Victor Coco victor.coco@cern.ch
+! Purpose     : Jet finding algorithm embedded into LHCb software
+! -----------------------------------------------------------------------------
+
+
+!================== LoKiJets v6r0 2011-04-29 ===============================
+LoKiJets add new methods with multi PV, move codes in JetAccessories(MC) 
+and correction in the cmt/requirements of LoKiJets
+
+! 2011-04-19 - Cédric Potterat
+ - new LoKiJetMakerWR2VtxAlg.cpp
+  . new algorith to run the JetMaker algorithms on a RecVertx container
+ - new version of src/LoKiSeedConeJetMaker.{cpp,h}, src/LoKiSeedFinder.{cpp,h}, src/LoKiVVSeedFinder.{cpp,h}, LoKiFastJetMaker.{cpp,h},  LoKiFastJetWithAreaMaker.cpp :
+  . update for the new IJetMaker.h fonction (with vertex)
+  . new algorithm for the SeedFinders
+  . add the possiblility to assign a PV to a FastJet (via option)
+ - move LoKiMCPartBHadronSeed.{cpp,h}, PartonicJets2HepMCJets.cpp, HepMCJets2Jets.cpp, HepMCJets2HepMCJets.cpp, PartonicJets2HepMCJets.cpp to JetAccessoriesMC
+ - src/LoKiJetParticleMaker
+  . increase the reserver of the output vector from 20 to 100
+ - cmt/requirements
+  . Increase to v6r0
+
+
+!================== LoKiJets v5r5 2011-04-21 ===============================
+
+! 2011-04-08 - Juan Palacios
+ - src/HepMCJets2HepMCJets.cpp
+ - src/Jets2Jets.cpp
+ - src/HepMCJets2Jets.cpp
+ - src/PartonicJets2HepMCJets.cpp
+  . Fix memory leaks.
+ - cmt/requirements
+  . Increase to v5r5.
+
+!================== LoKiJets v5r4 2011-02-20 ===============================
+
+! 2011-02-08 - Juan Palacios
+ - cmt/requirements
+  . Use Phys/LoKiAlgoMC.
+
+! 2011-02-02 - Cédric Potterat
+ - add src/LoKiSeedConeJetMaker
+    creat Jet with a cone algo around a seed
+    (seed created by a call to a LoKiJetMaker Algo)
+ - add src/LoKiSeedFinder
+    creat Seed for LoKiSeedConeJetMaker (Barcelona and Milano Algo)
+    can be call as a LoKiJetMaker alog, output Seed
+ - add src/LoKiVVSeedFinder
+    creat Seed for LoKiSeedConeJetMaker (Lausanne Algo)
+    can be call as a LoKiJetMaker alog, output Seed
+ - add src/LoKiMCPartBHadronSeed
+    creat Seed for LoKiSeedConeJetMaker (MCPart B Hadron is the Seed)
+    can be call as a LoKiJetMaker alog, output Seed
+ - Increase to v5r4.
+
+!================== LoKiJets v5r3 2011-02-04 ===============================
+
+! 2011-02-04 - Juan Palacios
+ - Add needed LoKi MC packages.
+ - Increase to v5r3.
+
+!================== LoKiJets v5r2p2 2010-07-12 ===============================
+
+! 2010-07-12 - Juan Palacios
+ - cmt/requirements
+  . Remove Phys/Particle2MCTruth. Not actually needed.
+ - src/HepMCJets2Jets.cpp
+  . Remove include of IP2MCP.h
+
+!================== LoKiJets v5r2p1 2010-07-12 ===============================
+
+! 2010-07-12 - Juan Palacios
+ - cmt/requirements
+  . Need Phys/Particle2MCTruth. Increase to v5r2p1.
+
+!================== LoKiJets v5r2 2010-04-30 =================================
+
+! 2010-04-16 - Juan Palacios
+ - src/LoKiJetParticleMaker.cpp, src/LoKiJets2JetsAlg.cpp
+  . use Particle::Range instead of Particle::Container for inputs.
+ - cmt/requirements
+  . Increase to v5r2
+
+!================== LoKiJets v5r1 2010-02-22 =================================
+
+! 2010-02-04 - Victor Coco
+ - rename Configuration.py to JetMaker_Config.py in order to fix some warning
+   concerning configurables
+
+!================== LoKiJets v5r0 2010-02-02 =================================
+
+! 2010-01-11 - Victor Coco
+ - remove stdint.h include from LoKiFastJetMaker (not recognised under windows)
+
+! 2010-01-08 - Victor Coco
+ - remove call to CommonParticles.Utils (not needed and unknown in windows
+   configuration --> package not build)
+
+! 2009-12-14 - Victor Coco
+ - add some python configuration for jet making + some simple option file.
+   Not definitive, just as starting point
+ - add all the needed classes to relate jets at the different level of simulation.
+   In the end they might go in a LoKiJetsMCTools package (except the Jets2Jets tool)
+ - Clean a bit, remove warning, remove completly Kt jet maker
+ - Update few things like the nominal way of calling StdJets on demand
+ 
+
+
+!================== LoKiJets v4r1 
+
+! 2008-11-09 - Vanya BELYAEV
+ - remove options directory with all opts-files 
+ - add python directory with corresponding on-demand configuration of 
+   standard Kt-Jets on-demand.
+
+   to enable on-demand cratino of jets:
+
+      import LoKiJets.StdKtJets_Configuration 
+
+      The location is defined to be "Phys/StdKtJets"
+
+      The jets are made from:
+
+        "Phys/Std/NoPIDPions" 
+         and 
+        "Phys/StdLooseAllPhotons"
+   
+! 2008-06-26 - Vanya BELYAEV
+
+ - LoKi::JetMaker
+     use "LoKi::FastJetMaker" as the default jet maker 
+
+ - KtJetMaker is declaread as obsolete 
+
+ - cmt/requirements
+
+   version increment to v4r1 
+
+!========================== LoKiJets v4r0 2007-12-18 =====================
+
+! 2007-12-18 - Patrick Koppenburg
+ - Small patch by Victor Coco
+
+! 2007-12-10 - Vanya BELYAEV
+
+  Add fastjet package, but still KtJet as the default engine
+  new files:
+
+    src/LoKiFastJetMaker.cpp 
+    src/LoKiFastJetMaker.h 
+    src/LoKiFastJetWithAreaMaker.cpp
+
+  After successfull tests, the "Kt"-stuff will be removed 
+
+
+
+!========================== LoKiJets v3r0 2007-12-10 =====================
+
+! 2007-12-10 - Vanya BELYAEV
+
+ - use ktjet from LCG_Interfaces
+   no local ktejet is used anymore 
+ - postpone a bit the fastjet tools 
+
+! 2007-10-16 - Vanya BELYAEV
+ - add new tool LoKi::KtJetyMaker - the simplest implementation
+   of IJetMaker interface using KtJet algorithm
+ - redesigne the algorithm to invoke th eJEt-Making tool
+ - add LoKi::JetParticleMaker - the implementation of "particle maker" 
+ - cmt/requirements
+   increment the version to v3r0 
+ 
+
+!========================== LoKiJets v2r4 2007-09-24 =====================
+
+! 2007-08-22 - Patrick Koppenburg
+ - LoKiKtJetMaker.cpp
+   Replace all by particle -> setParticleID( m_Id ); by 
+   particle -> setParticleID( LHCb::ParticleID (m_Id) );
+ - Increment to v2r4
+
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file. Rlease when needed.
+
+!========================== LoKiJets v2r3p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
+
+!========================== LoKiJets v2r3 2007-03-26 ===================
+
+! 2007-03-27 - Vanya BELYAEV
+ - src/LoKiKtJetMaker.cpp
+     use pointer instead of copy... 
+      [somethng is definitely wrong inside KtJet and/or KtLorentzVector]
+ - cmt/requirements 
+    version increment to v2r3 
+
+!========================== LoKiJets v2r2 2007-03-04 ===================
+
+! 2007-03-04 - Vanya BELYAEV
+
+ - src/LoKiKtJetMaker.cpp
+   improve the selection of the associated particle
+ - cmt/requirements 
+   version increment to v2r2  
+
+!========================== LoKiJets v2r1 2006-11-12 ===================
+! 2006-11-12 - Vanya BELYAEV
+ - src/LoKiKtJetMaker.cpp
+
+    many fixes, in particular, fix for the particle combiner, 
+    better treatment of orting schemes, better error handling, 
+    guard against empty input lists, etc...
+    
+     Finally it works more or less OK.
+
+- options/StdKtJets.opts,
+  options/StdMCKtJets.opts
+  options/StdHepKtJets.opts
+
+    configuration files to run the corresponding jet-finding algorithms:
+   
+    - for  regular Kt jets 
+    $LOKIJETSOPTS/StdKtJets.opts 
+
+    - for  Kt jets from MC-particles:
+    $LOKIJETSOPTS/StdMCKtJets.opts 
+
+    - for  Kt jets from HepMC-particles:
+    $LOKIJETSOPTS/StdHepMCKtJets.opts 
+
+- cmt/requirements
+  
+     version increment to v2r1 
+
+
+!========================== LoKiJets v2r0 2006-10-18 ===================
+! 2006-10-18 - Vanya BELYAEV
+
+ - src/LoKiKtJetMaker.cpp
+   fix a bug with the creation of jets for particle ("isAtomic"-flag)
+ - (re)-tag as v2r0 !
+
+
+!========================== LoKiJets v2r0 2006-09-06 ===================
+  
+!2006-09-06 - Vanya BELYAEV
+ - reimport the pckage under Phys has and adapt for DC06 software branch
+ - tool is temporary(?) removed 
+ - cmt/requiremens 
+     version change to v2r0 
+
+ 
+! 2005-07-26 - Vanya BELYAEV
+ - src/KtJetTool.cpp
+   new tool which implements IJetMaker interface 
+
+
+!========================== LoKiJets v1r1 2005-06-13 ===================
+! 2005-06-02 - P. Koppenburg
+  KtJets moved to External/
+
+!========================== LoKiJets v1r0 2005-02-21 ==========================
+! 2005-03-29 - Vanya BELYAEV
+
+ - no new code, just SLOCCount report
+
+Categorizing files.
+Computing results.
+
+SLOC    Directory       SLOC-by-Language (Sorted)
+150     src_top_dir     cpp=150
+36      cmt             csh=20,sh=16
+0       CVS             (none)
+0       doc             (none)
+0       src_CVS         (none)
+
+Totals grouped by language (dominant language first):
+cpp:            150 (80.65%)
+csh:             20 (10.75%)
+sh:              16 (8.60%)
+
+Total Physical Source Lines of Code (SLOC)                = 186
+Development Effort Estimate, Person-Years (Person-Months) = 0.03 (0.41)
+ (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
+Schedule Estimate, Years (Months)                         = 0.15 (1.78)
+ (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
+Estimated Average Number of Developers (Effort/Schedule)  = 0.23
+Total Estimated Cost to Develop                           = $ 4,620
+ (average salary = $56,286/year, overhead = 2.40).
+SLOCCount is Open Source Software/Free Software, licensed under the FSF GPL.
+Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
+
+
+! 2005-03-21 - Vanya BELYAEV
+ - New packge:
+
+  * One more piece of complex and unmaintainable software which "physicists" 
+  *     a) do not like 
+  *     b) do not need 
+  *     c) do not use 
+
+
+! -----------------------------------------------------------------------------
+! $Log: not supported by cvs2svn $
+! Revision 1.22  2010/04/16 14:49:25  jpalac
+!  - src/LoKiJetParticleMaker.cpp, src/LoKiJets2JetsAlg.cpp
+!   . use Particle::Range instead of Particle::Container for inputs.
+!  - cmt/requirements
+!   . Increase to v5r2
+!
+! Revision 1.21  2010/02/22 12:55:58  jpalac
+! Tag as v5r1
+!
+! Revision 1.20  2010/02/04 12:37:55  cocov
+! rename Configuration.py to JetMaker_Config.py to fix warning
+!
+! Revision 1.19  2010/02/03 10:58:00  jpalac
+! Tag as v5r0
+!
+! Revision 1.18  2010/01/11 08:37:42  cocov
+! remove stdint.h include from LoKiFastJetMaker
+!
+! Revision 1.17  2010/01/08 13:12:42  cocov
+! Modify Configuration.py to remove call to commonparticles
+!
+! Revision 1.16  2009/12/14 12:34:32  cocov
+! Cleaned, MCTools added, python configuration updated
+!
+! Revision 1.15  2008/11/09 14:31:03  ibelyaev
+!  remove options and add configurations
+!
+! Revision 1.14  2008/06/26 13:21:57  ibelyaev
+!  KtJet is declared to be obsolete, to be remoeved soon
+!
+! Revision 1.13  2007/12/18 10:23:23  pkoppenb
+! retag as v4r0
+!
+! Revision 1.12  2007/12/10 15:38:22  ibelyaev
+!  add fastjet from LCG
+!
+! Revision 1.11  2007/12/10 10:48:38  ibelyaev
+!   use ktjet from LCG_Interfaces
+!
+! Revision 1.10  2007/10/15 22:06:35  ibelyaev
+!  add JetMaker and ParticleMaker
+!
+! Revision 1.9  2007/09/24 12:37:19  jpalac
+! Tag as v2r4
+!
+! Revision 1.8  2007/08/22 17:01:00  pkoppenb
+! Explicit particle ID constructor
+!
+! Revision 1.7  2007/07/17 12:56:39  pkoppenb
+! removed _load file
+!
+! Revision 1.6  2007/04/19 13:49:52  pkoppenb
+! tagged as v2r3p1
+!
+! Revision 1.5  2007/03/27 11:21:18  ibelyaev
+!  v2r3:  ugly patch to solve the proplem with copy constructor
+!
+! Revision 1.4  2007/03/04 16:50:53  ibelyaev
+!  v2r2: improve selection of particles
+!
+! Revision 1.3  2006/11/12 15:13:36  ibelyaev
+!  fix many bugs + add configuration files for 'standard jets'
+!
+! Revision 1.2  2006/10/18 12:03:31  ibelyaev
+!  fix a bug, RE-tag!
+!
+! Revision 1.1.1.1  2006/09/06 14:19:06  ibelyaev
+! Re-import as Phys/LoKiJets
+!
+! Revision 1.6  2005/07/26 16:31:50  ibelyaev
+!  add KtJetTool
+!
+! Revision 1.5  2005/06/13 07:36:51  pkoppenb
+! tagged as v1r1
+!
+! Revision 1.4  2005/06/02 16:07:33  pkoppenb
+! KtJets moved
+!
+! Revision 1.3  2005/05/12 08:39:12  pkoppenb
+! separator added
+!
+! Revision 1.2  2005/03/29 16:41:04  ibelyaev
+!  add SLOCCount report
+!
+! Revision 1.1.1.1  2005/03/21 15:20:00  ibelyaev
+! New package: jet finding algorithm KtJet
+! 
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
