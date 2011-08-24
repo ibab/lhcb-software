@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-08-24 - Rob Lambert
+ - Fix typo, those locations were never persisted on the DST
+
 ! 2011-08-23 - Rob Lambert
  - Prepare DstConf for new entries in the SDST, the raw banks for Trigger and Muon
 
@@ -17,7 +20,7 @@
 
 !========================= GaudiConf v14r0p1 2011-07-11 =========================
 ! 2011-07-07 - Rob Lambert
- - Add extensionString to IOExtension, wrapper for helperString, 
+ - Add extensionString to IOExtension, wrapper for helperString,
    with IOExtension used instead.
    Updated unit tests accordingly
 
