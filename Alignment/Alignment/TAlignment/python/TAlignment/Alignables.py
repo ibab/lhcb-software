@@ -107,11 +107,11 @@ class Alignables( list ):
         elements.append( "Tracker : " + self.m_tt )
         elements.append( "Tracker : " + self.m_it )
         elements.append( "Tracker : " + self.m_ot )
-        elements.append( "Tracker : " + self.m_muon )
+        #elements.append( "Tracker : " + self.m_muon )
         self.__append( elements, dofs )
 
-    def T( self, dofs = "" ) :
-        elements = [ "T : /dd/Structure/LHCb/AfterMagnetRegion/T/(I|O)T" ]
+    def TStations( self, dofs = "" ) :
+        elements = [ "TStations : /dd/Structure/LHCb/AfterMagnetRegion/T/(I|O)T" ]
         self.__append( elements, dofs )
 
     ## VELO ###############################################################################
@@ -188,6 +188,22 @@ class Alignables( list ):
                              self.m_tt + "/TTb/" + layername + "/R(1Module.{2}|2Module(1.|2.|3T))" )
         self.__append( elements, dofs )
 
+    def TTSplitLayers( self, dofs = "" ) :
+        elements = []
+        ttalayers = ['TTaXLayer','TTaULayer']
+        for layername in ttalayers:
+            elements.append( layername + "LowZ : "  +
+                             self.m_tt + "/TTa/" + layername + "/R(1Module(1|3|5)|2Module(1|3)|3Module(2|4|6)).")
+            elements.append( layername + "HighZ : "  +
+                             self.m_tt + "/TTa/" + layername + "/R(1Module(2|4|6)|2Module2|3Module(1|3|5))." )
+        ttblayers = ['TTbVLayer','TTbXLayer']
+        for layername in ttblayers:
+            elements.append( layername + "LowZ : "  +
+                             self.m_tt + "/TTb/" + layername + "/R(1Module(1|3|5)|2Module(1|3|5)|3Module(2|4|6)).")
+            elements.append( layername + "HighZ : "  +
+                             self.m_tt + "/TTb/" + layername + "/R(1Module(2|4|6)|2Module(2|4)|3Module(1|3|5))." )
+        self.__append( elements, dofs )
+      
     def TTBoxes( self, dofs = "" ) :
         elements = []
         elements.append( "TTASide : "  +
