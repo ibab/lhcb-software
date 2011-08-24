@@ -78,33 +78,18 @@ bool BBDTSimpleTool::operator()(const LHCb::Particle* p) const {
 /// declare & implement the factory 
 DECLARE_TOOL_FACTORY(BBDTSimpleTool);
 // ============================================================================
-#include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/Grammars.h"
-// FIXME: Move to the new boost::spirit::classic namespace
-#if !defined(BOOST_SPIRIT_USE_OLD_NAMESPACE)
-#define BOOST_SPIRIT_USE_OLD_NAMESPACE
-#endif
-#include <boost/spirit/include/classic.hpp>
-#include <boost/spirit/include/phoenix1.hpp>
-namespace Gaudi { 
+
+#include "GaudiKernel/ParsersFactory.h"
+
+namespace Gaudi {
   namespace Parsers {
-
-    StatusCode parse(std::vector<std::map<std::string, 
-		     std::pair<double,double> > >& result, 
-		     const std::string& input){
- 
-      typedef RealGrammar<double> RG;
-      typedef PairGrammar<RG,RG> PG;
-      typedef MapGrammar<StringGrammar,PG> MG;
-      typedef VectorGrammar<MG> VG;
-      VG grammar ;
-
-      typedef boost::spirit::position_iterator<std::string::const_iterator> 
-	IteratorT;
- 
-      return parse(IteratorT(input.begin(),input.end()),IteratorT(),
-		   grammar[var(result)=arg1],SkipperGrammar()).full;
+    StatusCode parse(std::vector<std::map<std::string,
+                     std::pair<double,double> > >& result,
+                     const std::string& input) 
+    {
+      return parse_(result, input);
     }
   }
 }
+
 // ============================================================================
