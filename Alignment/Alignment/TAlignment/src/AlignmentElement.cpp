@@ -162,14 +162,19 @@ void AlignmentElement::validDetectorElement(const DetectorElement* element) cons
 
 void AlignmentElement::initAlignmentFrame() {
   // Calculate the center of gravity (the 'local' center)
-  Gaudi::XYZVector averageR(0.0, 0.0, 0.0);
+  double xmin(1e10),xmax(-1e10),ymin(1e10),ymax(-1e10),zmin(1e10),zmax(-1e10) ;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    averageR += toGlobalMatrixMinusDelta( **i ) * Gaudi::XYZPoint(0,0,0)  - Gaudi::XYZPoint(0,0,0);
-    //averageR += (((*i)->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0))) - Gaudi::XYZPoint(0.0, 0.0, 0.0);
+    Gaudi::XYZPoint R =  toGlobalMatrixMinusDelta( **i ) * Gaudi::XYZPoint(0,0,0) ;
+    xmin = std::min(xmin,R.x()) ; 
+    xmax = std::max(xmax,R.x()) ;
+    ymin = std::min(ymin,R.y()) ; 
+    ymax = std::max(ymax,R.y()) ;
+    zmin = std::min(zmin,R.z()) ; 
+    zmax = std::max(zmax,R.z()) ;
   }
-  averageR /= double(m_elements.size());
+  Gaudi::XYZVector averageR(0.5*(xmin+xmax),0.5*(ymin+ymax),0.5*(zmin+zmax)) ;
   m_centerOfGravity = Gaudi::XYZPoint(0.0, 0.0, 0.0) + averageR;
-
+  
   // Initialize the alignment frame transform. For now, we'll only do
   // something special for Velo modules. For all other modules the
   // alignment frame is still just a translation to the cog.
@@ -190,6 +195,16 @@ void AlignmentElement::initAlignmentFrame() {
   } else {
     m_alignmentFrame = Gaudi::Transform3D(averageR) ;
   }
+
+  // We do something special for the 'Tracker': choose its pivot point
+  // in the center of the magnet, such that we can align for magnetic
+  // field rotations
+  if( m_name == std::string("Tracker") ) {
+    m_centerOfGravity = Gaudi::XYZPoint(0.0,0.0,5020.);
+    m_alignmentFrame = Gaudi::Transform3D(Gaudi::XYZVector(0,0,5020.)) ;
+  }
+  
+  // Set the Jacobian
   m_jacobian = AlParameters::jacobian( m_alignmentFrame ) ;
   
   // This is a simple check for velo R, just to make sure Jan separated them correctly:
@@ -364,7 +379,10 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   const std::vector<double> t = deltaTranslations();
   const std::vector<double> r = deltaRotations();
   static const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
-  
+
+  std::vector<double> aft(3,0.0), afr(3,0.0);
+  DetDesc::getZYXTransformParameters(alignmentFrame(),aft,afr);//, it->pivot());
+
   lhs << std::endl;
   lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
   lhs << "* Alignable: " << name() << "\n" 
@@ -375,6 +393,11 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
       << "* CogXYZ   : " << centerOfGravity() << "\n"
+      << "* Alignment frame: " <<  Gaudi::XYZPoint(aft[0], aft[1], aft[2]) << " " << Gaudi::XYZPoint(afr[0], afr[1], afr[2]) << std::endl
+      << "* First elem nominal: " 
+      << m_elements.front()->geometry()->toGlobalMatrixNominal()* Gaudi::XYZPoint(0,0,0) << std::endl
+      << "* First elem aligned: " 
+      << m_elements.front()->geometry()->toGlobalMatrix()*Gaudi::XYZPoint(0,0,0) << std::endl
       << "* DoFs     : ";
   for (DofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
