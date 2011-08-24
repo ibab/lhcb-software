@@ -1,8 +1,13 @@
 <PRE>
 Package: Alignment/AlignTrTools
-Package Coordinator : Johan Blouw
+Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
+
+! 2011-08-24 - Wouter Hulsbergen
+ - moved algorithms that are not directly related to the core of the 
+   TAlignment algorithm from TAlignment to AlignTrTools
+ - added algorithms dealing with particles-track relation/refitting
 
 </PRE><H1><A NAME=v4r9>2010-10-19 AlignTrTools v4r9 </A></H1><PRE>
 ! 2010-08-13 - Wouter Hulsbergen
