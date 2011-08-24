@@ -22,6 +22,7 @@
 #include "Event/Track.h"
 #include "Event/Node.h"
 #include "Event/RecVertex.h"
+#include "Event/Particle.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjectorSelector.h"
@@ -113,6 +114,7 @@ protected:
   void selectVertexTracks( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
 			   TrackContainer& tracksinvertex) const ;
   void removeVertexTracks( const LHCb::RecVertex& vertex, TrackContainer& tracks) const ;
+  void removeParticleTracks( const LHCb::Particle& p, TrackContainer& tracks) const ;
   void splitVertex( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
 		    VertexContainer& splitvertices) const  ;
   LHCb::RecVertex* cloneVertex( const LHCb::RecVertex& vertex, const TrackContainer& selectedtracks ) const ;

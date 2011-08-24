@@ -288,8 +288,7 @@ StatusCode AlignAlgorithm::execute() {
 	m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
 	++numuseddimuons ;
 	numusedtracks += res->numTracks() ;
-	error() << "Still need to remove tracks used in particle." << endreq ;
-	//removeVertexTracks( *res, selectedtracks ) ;
+	removeParticleTracks( *p, selectedtracks ) ;
       }
     }
   }
@@ -578,6 +577,16 @@ void AlignAlgorithm::handle(const Incident& incident) {
 
 namespace {
 
+  void extractTracks( const LHCb::Particle& p,
+		      std::vector<const LHCb::Track*>& tracks)
+  {
+    if( p.proto() && p.proto()->track() ) 
+      tracks.push_back(p.proto()->track() ) ;
+    BOOST_FOREACH( const LHCb::Particle* dau,
+		   p.daughters() )
+      extractTracks( *dau, tracks ) ;
+  }
+  
   struct CompareLHCbIds {
     bool operator()(const LHCb::LHCbID& lhs, const LHCb::LHCbID& rhs) const {
       return lhs.lhcbID() < rhs.lhcbID() ;
@@ -708,6 +717,20 @@ void AlignAlgorithm::splitVertex( const LHCb::RecVertex& vertex,
   //     //std::cout << "    #tracks = " << iver->tracks().size() << std::endl ;
   //     assert( iver->tracks().size() >= m_minTracksPerVertex ) ;
   //   }
+}
+
+void AlignAlgorithm::removeParticleTracks( const LHCb::Particle& particle,
+					   TrackContainer& tracks) const
+{ 
+  std::vector<const LHCb::Track*> particletracks ;
+  extractTracks(particle,particletracks) ;
+
+  TrackContainer unusedtracks ;
+  for( TrackContainer::iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
+    if( std::find_if( particletracks.begin(), particletracks.end(),
+		      TrackClonePredicate(*itrack) )==particletracks.end() )
+      unusedtracks.push_back(*itrack) ;
+  tracks = unusedtracks ;
 }
 
 
