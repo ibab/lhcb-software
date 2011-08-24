@@ -417,7 +417,7 @@ HepMC::GenParticle* TaggingUtilsChecker::HEPassociated(const MCParticle* mcp) {
             p  = (*q)->pGenEvt()->particles_begin();
           p != (*q)->pGenEvt()->particles_end();   ++p ) {
       if( mid == (*p)->pdg_id() ) {
-        if( fabs(mothmom - (*p)->momentum().mag()) < 1.0 ){
+        if( fabs(mothmom - (*p)->momentum().rho()) < 1.0 ){
           if( fabs(moththeta -(*p)->momentum().theta())< 0.0001 ){
             return (*p);
           }
@@ -433,7 +433,7 @@ MCParticle* TaggingUtilsChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   MCParticles* mcpart = get<MCParticles> (MCParticleLocation::Default);
 
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().mag();
+  double mothmom = hepmcp->momentum().rho();
   double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {

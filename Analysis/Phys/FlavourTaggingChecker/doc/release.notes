@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2011-08-24 - Alex Grecu
+ - replace redundant HepMC::FourVector.mag() method by .rho() for HepMC 2.06
+   compatibility in Phys/FlavourTaggingChecker 
+
 ! 2011-07-08 - Marc Grabalosa
  - changes in root 
   . src/Tagger* Changed cuts to new optimization/calibration
