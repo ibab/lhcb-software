@@ -23,14 +23,14 @@ class SurveyConstraints( LHCbConfigurableUser ):
                             self.defaultSurveyDir() + "Velo/Detectors.xml" ]
         self.XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.0002 0.0002 0.0002",
                                   "Detector(PU|)..-.. : 0.005 0.005 0.005 0.0001 0.0001 0.0001" ]
-        self.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.0001",
+        self.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.001",
                               "Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ]
         
     def OT( self ) :
         # we don't load OT xml yet. there is no usefull info, since it doesn't have the right structures in geometry.
                 
         # modules
-        self.Constraints += [ "OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00001 0.00001 0.00001" ]
+        self.Constraints += [ "OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00001 0.001 0.00001" ]
         # OT global
         self.Constraints += [ "OTSystem : 0 0 0 0 0 0 : 1 1 1 0.001 0.001 0.001" ]
 
@@ -57,27 +57,28 @@ class SurveyConstraints( LHCbConfigurableUser ):
         #self.append("OT/T3X1U : -0.78 -2.5  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
         #self.append("OT/T3VX2 : -0.65 -2.9 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
 
-        self.XmlFiles += [ self.defaultSurveyDir() + "OT/ElementsBowingCorrected.xml" ]
+        self.XmlFiles += [ self.defaultSurveyDir() + "OT/Elements_OTSurvey2011StationYCorrected.xml" ]
         self.XmlUncertainties += [ "OT/T.(X1U|VX2) : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
                                    "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
                                    "OT : 0.5 0.5 0.5 0.001 0.001 0.001" ]
         
     def TT( self ) :
-        self.XmlFiles += [ self.defaultSurveyDir() + "TT/Detectors.xml",
+        self.XmlFiles += [ self.defaultSurveyDir() + "TT/Detectors_TTSurvey2011SystemYCorrected.xml",
                            self.defaultSurveyDir() + "TT/Modules.xml",
-                           self.defaultSurveyDir() + "TT/Sensors.xml" ]
+                           self.defaultSurveyDir() + "TT/TTSensorSurvey2011.xml" ]
         self.XmlUncertainties += [ "TTSystem             : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "TT.                  : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer            : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer.Side       : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..LayerR.Module.*? : 0.1 0.1 0.1 0.0005 0.0005 0.0005"]
+        self.XmlUncertainties += [ "TT.*?(Low|High)Z     : 0.1 0.1 1.0 0.0005 0.0005 0.0005"]
         
         # boxes
         self.Constraints += [ "TTASide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001",
                               "TTCSide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001" ]
  
     def IT( self ) :
-        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors.xml" ]
+        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey2011YBoxBilayerCorrected.xml" ]
         self.XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
                                    "ITT.                       : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "ITT.*?Box                  : 0.5 0.5 0.5 0.001 0.001 0.001",
@@ -105,7 +106,7 @@ class SurveyConstraints( LHCbConfigurableUser ):
         self.OT()
         self.MUON()
         self.Constraints += [ "Tracker : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1",
-                              "T : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1" ]
+                              "TStations : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1" ]
 
     def configureTool( self, surveyConstraintTool ) :
         surveyConstraintTool.Constraints      = self.Constraints
