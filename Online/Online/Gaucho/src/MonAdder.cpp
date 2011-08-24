@@ -198,7 +198,7 @@ void MonAdder::TaskDied(std::string & task)
     }
     if (m_inputServicemap.size() == 0)
     {
-//      printf ("Last Input Service... Deleting output service %s\n",m_outsvcname.c_str());
+      printf ("TaskDied: Last Input Service... Deleting output service %s\n",m_outsvcname.c_str());
       delete m_outservice;
       m_outservice = 0;
     }
@@ -267,7 +267,7 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
   }
   if (m_inputServicemap.size() == 0)
   {
-    printf("Last Service %s removed... Deleting our output service \n",this->m_servicePattern.c_str());
+    printf("RemovedService: Last Service %s removed... Deleting our output service \n",this->m_servicePattern.c_str());
     deletePtr(m_outservice);
   }
 }
