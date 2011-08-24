@@ -267,7 +267,7 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
   }
   if (m_inputServicemap.size() == 0)
   {
-    printf("Last Service %s removed... Deleting our output service %s\n",this->m_servicePattern.c_str(),m_outservice->getName());
+    printf("Last Service %s removed... Deleting our output service \n",this->m_servicePattern.c_str());
     deletePtr(m_outservice);
   }
 }
