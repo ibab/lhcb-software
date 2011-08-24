@@ -23,7 +23,15 @@ try:
 except:
   print "Error importing EcalMinimizer!"
   sys.exit(1)
+try:
+  sc = gROOT.LoadMacro(os.path.join(kaliDir, "root", "CellCutter.cxx+"))
+  from ROOT import CellCutter
+except:
+  print "Error importing CellCutter!"
+  sys.exit(1)         
+
 # Kali
+import KaliCalo.CandidateMinimization.Commands as Commands
 import KaliCalo.Kali.LambdaMap as LambdaMap
 import KaliCalo.FakeCells      as FakeCells
 import KaliCalo.Cells          as Cells
@@ -86,7 +94,7 @@ def decodeCellIDs( cellList ):
       print "Non-valid cell -> %s" % cellID
   return output
 
-castorDir = 'castor:/castor/cern.ch/grid/'
+castorDir = '/castor/cern.ch/grid/'
 
 CellID = FakeCells.CellID
 betas = [8.3, 8.8, 9.5]
@@ -98,9 +106,12 @@ if __name__ == '__main__':
   parser.add_option("-l", "--lambdaFile",
                     dest="lambdaFile", action="store", type="string", default="",
                     help="FILE where input constants are stored", metavar="FILE")
-  parser.add_option("-c", "--cellIDs",
-                    dest="cellIDs", action="store", type="string", default="",
-                    help="comma-separated list of CELLIDs to calibrate", metavar="CELLIDs")
+  # parser.add_option("-c", "--cellIDs",
+  #                   dest="cellIDs", action="store", type="string", default="",
+  #                   help="comma-separated list of CELLIDs to calibrate", metavar="CELLIDs")
+  parser.add_option("-c", "--cut",
+                    dest="cut", action="store", type="string", default="",
+                    help="activate cutting of cells from ntuples in FILE", metavar="FILE")
   parser.add_option("-t", "--cellType",
                     dest="cellType", action="store", type="string", default="SameCell",
                     help="use CELLTYPE cell grouping", metavar="CELLTYPE")
@@ -123,99 +134,97 @@ if __name__ == '__main__':
     sys.exit(1)
   CellMassager = CellMassager()
   # Get a list of cells to add
-  if "" == options.cellIDs:
+  if 0 == len(args):
     print "No cell ID specified!"
     sys.exit(1)
-  cellsToCalibrate = {}
-  oppositeCells = {}
+  cellsToCalibrate = []
+  for inputNtuple in args: # CellIDs are comma separated
+    cellIndex = os.path.splitext(os.path.basename(inputNtuple))[0]
+    cellID = decodeCellID(cellIndex)
+    if not cellID == CellMassager(cellID):
+      print "Input cellID is not a massaged cell!! -> %s vs %s" % (cellID, CellMassager(cellID))
+      sys.exit(1)
+    cellsToCalibrate.append(cellID)
+  print "Cells to calibrate: %s" % ' '.join(map(str, cellsToCalibrate))
+  cellMap = {}
   cellRel = {}
-  for cellID in decodeCellIDs(options.cellIDs.split(',')): # CellIDs are comma separated
-    cellsToCalibrate[CellMassager(cellID)] = []
-    #oppositeCells[CellMassager(Cells.oppositeCell(CellMassager(cellID)))] = []
-  print "Cells to calibrate: %s" % ' '.join(map(str, cellsToCalibrate.keys()))
   for cellID in ecalCells:
     mCellID = CellMassager(cellID)
-    oppCellID = Cells.oppositeCell(cellID)
-    oppMCellID = CellMassager(oppCellID)
-    if mCellID in cellsToCalibrate.keys():
-      if not mCellID in cellRel:
-        cellRel[mCellID] = []
-      cellsToCalibrate[mCellID].append(cellID)
-      if not oppMCellID in oppositeCells:
-        oppositeCells[oppMCellID] = []
-        cellRel[mCellID].append(oppMCellID)
-      oppositeCells[oppMCellID].append(oppCellID)
-  print cellRel
-  # Get ntuples
-  ntuples = []
+    mOppCell = CellMassager(Cells.oppositeCell(cellID))
+    if not mCellID in cellMap:
+      cellMap[mCellID] = []
+    cellMap[mCellID].append(cellID)
+    if not mCellID in cellRel:
+      cellRel[mCellID] = []
+    cellRel[mCellID].append(mOppCell)
+  # We need to check all input ntuples
+  inputFiles = {'found': [], 'missing': []}
   for arg in args:
-    #if os.path.exists(arg):
-      ntuples.append(arg)
-  if 0 == len(ntuples):
+    if 0 == len(Commands.nsls(arg)):
+      inputFiles['missing'].append(arg)
+    else:
+      inputFiles['found'].append(arg)
+  if 0 != len(inputFiles['missing']): # There are missing input files
+    if os.path.exists(options.cut):
+      execfile(options.cut)
+      ntuples = ['castor:' + os.path.join(castorDir, t) for t in tup]
+      outputTuple = 'castor:' + arg
+      cutter = CellCutter("", 100)
+      for ntuple in ntuples:
+        cutter.addFile(ntuple)    
+      for arg in inputFiles['missing']:
+        cellIndex = os.path.splitext(os.path.basename(arg))[0]
+        cellID = decodeCellID(cellIndex)
+        fName = 'castor:' + os.path.join(castorDir, arg)
+        for cID in (cellID + cellRel[cellID]):
+          for cell in cellMap[cID]:
+            cutter.addCell(cell.index(), fName)
+      cutter.cut(20.0)
+    else:
+      print "Missing files but no input ntuples specified!"
+      sys.exit(1)
+  # Get ntuples
+  inputFiles = inputFiles['missing'] + inputFiles['found']
+  if 0 == len(inputFiles):
     print "No valid ntuples found"
     sys.exit(1)
-  fileList = std.vector('TString')()
-  for ntuple in ntuples:
-    fileList.push_back(ntuple)
-  # Configure Minuit
-  minuit = EcalMinimizer()
-  for area, beta in enumerate(betas):
-    minuit.setBeta(area, beta)
-  for area, sigma in enumerate(sigmas):
-    minuit.setSigma(area, sigma)
-  #minuit.setDebug()
-  minuit.loadFiles(fileList)
-  minuit.configure(2*len(cellsToCalibrate)+1)
-  # Add cells to calibrate
-  print "Adding cells to calibrate"
-  for var, cellList in cellsToCalibrate.items():
-    varName = str(var.index())
-    for cell in cellList:
-      minuit.addCell(cell.all(), varName, lambdas[cell][-1])
-    for oppMCell in cellRel[var]:
-      oppVarName = str(oppMCell.index())
-      for cell in oppositeCells[oppMCell]:
-        minuit.addCell(cell.all(), oppVarName, lambdas[cell][-1])
-  # Add other cells with a configuration
-  print "Adding fixed cells"
-  for cell in lambdas:
-    if not minuit.hasCell(cell.all()):
-      minuit.addCell(cell.all(), "fixed", lambdas[cell][-1])
-  # Minimize all vars
+  # Calibration
   newLambdas = LambdaMap.LambdaMap()
-  for var in cellsToCalibrate:
-    oppVars = cellRel[var]
-    print "Calibrating -> %s and %s" % (var, ' and '.join(map(str,oppVars)))
-    varName = str(var.index())
-    for varToFix in cellsToCalibrate:
-      oppVarsToFix = cellRel[varToFix]
-      value    = lambdas[cellsToCalibrate[varToFix][0]][-1]
-      varToFix    = str(varToFix.index())
-      if varToFix != varName:
-        minuit.setFixedVar(varToFix, value)
-        for oppVarToFix in oppVarsToFix:
-          oppValue = lambdas[oppositeCells[oppVarToFix][0]][-1]
-          oppVarName = str(oppVarToFix.index())
-          minuit.setFixedVar(oppVarName, oppValue)
-      else:
-        minuit.setLimitedVar(varToFix, value, value*0.95, value*1.05)
-        for oppVarToFix in oppVarsToFix:
-          oppValue = lambdas[oppositeCells[oppVarToFix][0]][-1]
-          oppVarName = str(oppVarToFix.index())
-          minuit.setLimitedVar(oppVarName, oppValue, oppValue*0.95, oppValue*1.05)
+  for inputFile in inputFiles:
+    cellIndex = os.path.splitext(os.path.basename(inputFile))[0]
+    cellID = decodeCellID(cellIndex)    
+    fileList = std.vector('TString')()
+    fileList.push_back(inputFile)
+    # Configure Minuit
+    minuit = EcalMinimizer()
+    for area, beta in enumerate(betas):
+      minuit.setBeta(area, beta)
+    for area, sigma in enumerate(sigmas):
+      minuit.setSigma(area, sigma)
+    #minuit.setDebug()
+    minuit.loadFiles(fileList)    
+    myCells = [cellID] + [cell for cell in cellRel[cellID]]
+    minuit.configure(len(myCells)+1) # Own cell + opposite cells + fixed cells
+    # Add cells to calibrate
+    print "Adding cells to calibrate"
+    for cellVar in myCells:
+      varName = str(cellVar.index())
+      for cell in cellMap[cellVar]:
+        minuit.addCell(cell.all(), varName, lambdas[cell][-1])
+      minuit.setLimitedVar(varName, lambdas[cell][-1], lambdas[cell][-1]*0.95, lambdas[cell][-1]*1.05)
+    print "Adding fixed cells"
+    for cell in lambdas:
+      if not minuit.hasCell(cell.all()):
+        minuit.addCell(cell.all(), "fixed", lambdas[cell][-1])
     sc = minuit.minimize()
     # TODO: error handling
-    calib = minuit.getVarCalib(varName)
-    for cell in cellsToCalibrate[var]:
-      l = newLambdas[cell]
-      l[-1] = calib
-    for oppVar in cellRel[var]:
-      oppVarName = str(oppVar.index())
-      calib = minuit.getVarCalib(oppVarName)
-      for cell in oppositeCells[oppVar]:
+    for cellVar in myCells:
+      varName = str(cellVar.index())
+      calib = minuit.getVarCalib(varName)
+      for cell in cellMap[cellVar]:
         l = newLambdas[cell]
         l[-1] = calib
-  print "We have %s new calibrations" % len(newLambdas.lambdas())
+  print "We have %s new calibrated cells" % len(newLambdas.lambdas())
   fileName = "%s.gz" % '-'.join([str(c.all()) for c in cellsToCalibrate.keys()])
   outputDir = os.path.abspath(options.outputDir)
   if not os.path.exists(outputDir):
