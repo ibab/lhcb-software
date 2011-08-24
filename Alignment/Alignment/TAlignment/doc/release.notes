@@ -1,7 +1,11 @@
 <PRE>
 Package	:	Alignment/TAlignment
-Package Coordinator	:	Jan Amoraal, Johan Blouw
+Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
+
+- moved tools/algos not directly related to TAlignment alorithm into AlignTrTools
+- fix AlignAlgorithm such that it can now use particle
+- new Y survey alignment xml (Fred)
 
 !========================= TAlignment v5r5 2011-06-20 =========================
 ! 2011-06-20 - Rob Lambert
