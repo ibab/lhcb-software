@@ -53,8 +53,8 @@ You can configure one line at a time with the Bd2DstarMuNuOneLineConf class:
 
 one=Bd2DstarMuNuOneLineConf("Bd2DstarMuNuLoose",confdict["Loose"])
 '''
-__author__ = [ 'Stefania Vecchi, Marta Calvi' ]
-__date__ = '2010-10-04'
+__author__ = [ 'Stefania Vecchi, Marta Calvi','Antonio Falabella' ]
+__date__ = '2011-11-08'
 __version = '$Revision: 1.6 $'
 
 #### Which VertexFitter to use? ####
@@ -65,19 +65,38 @@ __version = '$Revision: 1.6 $'
 
 
 confdict={
+##     'LooseNOPr' : { 'Prescale'    : 1.0 ,
+##                 'Postscale'   : 1.0 ,
+##                 #muon paramters # loose # Tight
+##                 'MuPT'        : 700, # 800  # MeV
+##                 'MuTrPID'     :-20,  # -5   
+##                 #kaon parameters
+##                 'KPT'         : 350, # 350  # MeV
+##                 'KTrPID'      : -5,  #-5    
+##                 #pion parameters
+##                 'PiPT'        : 350, # MeV
+##                 #D0-resonance parameters
+##                 'D0MassW'     : 60, # 40    # MeV
+##                 'D0_BPVVDCHI2': 50,
+##                 #Dstar-resonance parameters
+##                 'Dstar_PT'     : 1250, # 1250 # MeV
+##                 'Dstar_VCHI2'  : 25, # 20 # 
+##                 'DstarMassW'   : 80, # 50 # MeV
+##                 #Bd-resonance parameters
+##                 'B0d_VCHI2'    : 10, # 10 # 
+##                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
+##                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
+##                 },
     'Loose' : { 'Prescale'    : 0.3 ,
                 'Postscale'   : 1.0 ,
                 #muon paramters # loose # Tight
                 'MuPT'        : 700, # 800  # MeV
                 'MuTrPID'     :-20,  # -5   
-                'MuIPChi2'    :  0,  # 4    
                 #kaon parameters
                 'KPT'         : 350, # 350  # MeV
-                'KIPChi2'     :  0,  # 4    
                 'KTrPID'      : -5,  #-5    
                 #pion parameters
                 'PiPT'        : 350, # MeV
-                'PiIPChi2'    :  0, # 4    
                 #D0-resonance parameters
                 'D0MassW'     : 60, # 40    # MeV
                 'D0_BPVVDCHI2': 50,
@@ -90,51 +109,23 @@ confdict={
                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
                 },
-##CB    'LooseNoPresc' : { 'Prescale'    : 1. ,
-##CB                'Postscale'   : 1.0 ,
-##CB                #muon paramters # loose # Tight
-##CB                'MuPT'        : 700, # 800  # MeV
-##CB                'MuTrPID'     :-20,  # -5   
-##CB                'MuIPChi2'    :  0,  # 4    
-##CB                #kaon parameters
-##CB                'KPT'         : 350, # 350  # MeV
-##CB                'KIPChi2'     :  0,  # 4    
-##CB                'KTrPID'      : -5,  #-5    
-##CB                #pion parameters
-##CB                'PiPT'        : 350, # MeV
-##CB                'PiIPChi2'    :  0, # 4    
-##CB                #D0-resonance parameters
-##CB                'D0MassW'     : 60, # 40    # MeV
-##CB                'D0_BPVVDCHI2': 50,
-##CB                #Dstar-resonance parameters
-##CB                'Dstar_PT'     : 1250, # 1250 # MeV
-##CB                'Dstar_VCHI2'  : 25, # 20 # 
-##CB                'DstarMassW'   : 80, # 50 # MeV
-##CB                #Bd-resonance parameters
-##CB                'B0d_VCHI2'    : 10, # 10 # 
-##CB                'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
-##CB                'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
-##CB                },
     'Tight'   : {'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters # 
                  'MuPT'        : 800, # MeV
                  'MuTrPID'     :-5,
-                 'MuIPChi2'    : 4,
                  #kaon parameters
                  'KPT'         : 350, # MeV
-                 'KIPChi2'     : 4,
                  'KTrPID'      :-5, 
                  #pion parameters
                  'PiPT'        : 350, # MeV
-                 'PiIPChi2'    : 4,
                  #D0-resonance parameters
-                 'D0MassW'     : 40, # MeV
+                 'D0MassW'     : 60, # MeV
                  'D0_BPVVDCHI2': 50,
                  #Dstar-resonance parameters
                  'Dstar_PT'     : 1250, #  MeV
                  'Dstar_VCHI2'  : 20, 
-                 'DstarMassW'   : 50, 
+                 'DstarMassW'   : 70, 
                  #Bd-resonance parameters
                  'B0d_VCHI2'    : 10, 
                  'B0dD0_DeltaZVtx' : -2.5, # mm
@@ -209,10 +200,11 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
     KCut=''
     PiCut=''
     slowPiCut=''
-    D0CombCut=''
+    #D0CombCut=''
     D0Cut=''
-    DstarCombCut=''
+    #DstarCombCut=''
     DstarCut=''
+    totalDstarCut=''    
     B0CombCut=''
     B0Cut=''
     
@@ -228,14 +220,11 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         #muon paramters
         'MuPT',
         'MuTrPID',
-        'MuIPChi2',
         #kaon parameters
         'KPT',
-        'KIPChi2',
         'KTrPID',
         #pion parameters
         'PiPT',
-        'PiIPChi2',
         #D0-resonance parameters
         'D0MassW',
         'D0_BPVVDCHI2',
@@ -255,36 +244,36 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         and a configuration dictionary, config, which must provide all the settings
         which differ between the lines'''
         LineBuilder.__init__(self, name, config)
+
         ### first we define the cuts from the configuration ###
-        ### it's nice to see all the cuts in one place      ###
+        ### NB: Common particles are defined with some cuts ###
+        ### Check in CommonParticles the definition         ###
+
 
         # Cuts for Mu        
-        self.MuCut = " (PT >  %(MuPT)s *MeV) & (P > 2.0*GeV) & (ISMUON) & (HASMUON) & (ISLONG) & "\
-                     " (MIPCHI2DV(PRIMARY) > %(MuIPChi2)s) &  (PIDmu > %(MuTrPID)s) " % config
+        self.MuCut = " (PT >  %(MuPT)s *MeV) & (P > 2.0*GeV) & (ISMUON) & (HASMUON) & "\
+                     " (PIDmu > %(MuTrPID)s) " % config
 
-        # Cuts for D0        
-        self.KCut  = " (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
+        # Cuts to refine D0 selection
+	self.KCut  = "& CHILDCUT(CHILDCUT( (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & "\
                      " (MIPDV(PRIMARY) > 0.04*mm) & "\
-                     " (MIPCHI2DV(PRIMARY)> %(KIPChi2)s ) & "\
-                     " (PIDK >  %(KTrPID)s ) " % config
+                     " (PIDK >  %(KTrPID)s ),1),2) " % config
+		     
         
-        self.PiCut = " (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
-                     " (MIPDV(PRIMARY) > 0.04*mm) & "\
-                     " (MIPCHI2DV(PRIMARY)> %(PiIPChi2)s ) " % config
-
-        self.D0CombCut = " (APT>1200*MeV) & (ADAMASS('D0') < 70*MeV  )"% config
-
-        self.D0Cut = " (PT>1600*MeV) & (ADMASS('D0') < %(D0MassW)s *MeV ) &  " \
-                     " (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<10)  "% config
+	self.PiCut = "& CHILDCUT(CHILDCUT( (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & "\
+                     " (MIPDV(PRIMARY) > 0.04*mm) ,2),2) " % config
 
 
-        # Cuts for Dstar        
-        self.slowPiCut= " (PT>110*MeV) & (ISLONG)  & "\
-                        " (MIPDV(PRIMARY) > 0.04*mm) " % config        
+        self.D0Cut = "& CHILDCUT( (PT>1600*MeV) & (ADMASS('D0') < %(D0MassW)s *MeV ) &  " \
+                     " (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<10),2)  "% config
 
-        self.DstarCombCut="(ADAMASS('D*(2010)+')< %(DstarMassW)s*MeV) & (APT>%(Dstar_PT)s *MeV) " % config
-        
-        self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & (M-MAXTREE('D0'==ABSID,M)<160 * MeV)" % config
+        # Cuts to refine D* selection
+	self.slowPiCut= "& CHILDCUT( (PT>110*MeV) & "\
+                        " (MIPDV(PRIMARY) > 0.04*mm),1) " % config        
+
+        self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & " \
+                        " (PT>%(Dstar_PT)s *MeV) & (ADMASS('D*(2010)+')< %(DstarMassW)s*MeV)" % config
+#& (M-MAXTREE('D0'==ABSID,M)<165 * MeV) &"\
 
         # Cuts for B0         
         self.BCombCut="((AM > 3000.*MeV) )"
@@ -293,11 +282,12 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
                     "  in_range(3000.*MeV,M,5280.*MeV) & "\
                     " (MINTREE(ABSID=='D0', VFASPF(VZ))-VFASPF(VZ) > %(B0dD0_DeltaZVtx)s*mm) & (BPVVDZ > %(B0dPV_DeltaZVtx)s*mm) & "\
                     " (VFASPF(VCHI2/VDOF)< %(B0d_VCHI2)s ) " % config
+	
+	self.totalDstarCut = self.DstarCut + self.KCut + self.PiCut + self.D0Cut + self.slowPiCut		    
 
         ### Now make all the selections ###
         
         self.__MakeMuSel__()
-        self.__MakeD0__()
         self.__MakeDstar__()
         self.__MakeB0d__()
         
@@ -323,10 +313,11 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         print 'KCut', self.KCut
         print 'PiCut', self.PiCut
         print 'slowPiCut', self.slowPiCut
-        print 'D0CombCut', self.D0CombCut
+        #print 'D0CombCut', self.D0CombCut
         print 'D0Cut', self.D0Cut
-        print 'DstarCombCut', self.DstarCombCut
+        #print 'DstarCombCut', self.DstarCombCut
         print 'DstarCut', self.DstarCut
+        print 'totalDstarCut', self.totalDstarCut
         print 'B0CombCut', self.B0CombCut
         print 'B0Cut', self.B0Cut
         
@@ -346,57 +337,27 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         
         self.MuSel=SelMuForB0d
 
-    def __MakeD0__(self):
-        """
-        D0 for the selection
-        Here [D0 -> K+ pi-]cc
-        Which can be assosciated in this selection to:
-        """
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from PhysSelPython.Wrappers import Selection
-        from StandardParticles import StdLooseKaons, StdLoosePions
-        
-        D02KpiForB0d = CombineParticles(
-            DecayDescriptor = "[D0 -> K- pi+]cc " ,
-            DaughtersCuts = {
-                "K+"  : self.KCut,
-                "pi+" : self.PiCut
-                } ,
-            CombinationCut = self.D0CombCut,
-            MotherCut = self.D0Cut
-            )        
-        
-        SelD02KpiForB0d = Selection("SelD02KpiFor"+self._name,
-                                    Algorithm=D02KpiForB0d,
-                                    RequiredSelections = [StdLooseKaons,StdLoosePions])
-        
-        self.D0Sel=SelD02KpiForB0d
-    
+
     def __MakeDstar__(self):
         """
         Dstar for the selection 
         Here [D*(2010)+ -> pi+ D0]cc
         
         """
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from PhysSelPython.Wrappers import Selection
-        from StandardParticles import StdLoosePions
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
         
-        DstarForB0d = CombineParticles(
-            DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc" ,
-            DaughtersCuts = {
-                "pi+" : self.slowPiCut
-                } ,
-            CombinationCut = self.DstarCombCut,
-            MotherCut = self.DstarCut
+        DstarsForB0d = FilterDesktop(
+	    Code = self.totalDstarCut
             )
-                
-        SelDstarForB0d = Selection("SelDstarFor"+self._name,
-                                    Algorithm=DstarForB0d,
-                                    RequiredSelections = [self.D0Sel,StdLoosePions])
+        #print "\nCreating Dstar from CommonParticles\n"
+        MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
         
-        self.DstarSel=SelDstarForB0d
-    
+        SelDstarsForB0d = Selection("SelDstarsFor"+self._name,Algorithm=DstarsForB0d, RequiredSelections = [MyStdDstars])
+        
+        self.DstarSel=SelDstarsForB0d
+        
+
     def __MakeB0d__(self):
         """
         B0d selection:
@@ -409,7 +370,8 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         CombBd2DstarMuNu = CombineParticles(        
             DecayDescriptors = ["[B0 -> D*(2010)- mu+]cc", "[B0 -> D*(2010)+ mu+]cc"], #includes wrong charges
             CombinationCut = self.BCombCut,
-            MotherCut      = self.BCut
+            MotherCut      = self.BCut,
+            ReFitPVs       = True
             )
         
         SelBd2DstarMuNu = Selection("Sel"+self._name, Algorithm=CombBd2DstarMuNu,

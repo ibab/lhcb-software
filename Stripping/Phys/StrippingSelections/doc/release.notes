@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-24 - Stefania Vecchi
+ - Updated StrippingBd2DstarMuNu for Stripping17.
+   uses StdLooseDstarWithD02Kpi
+   relaxed D0 and D* mass window cuts to fit the bkg
+   selected ReFitPVs=True
+ - Updated StrippingDstarVeryLooseWithD02Kpi
+   uses StdLooseDstarWithD02Kpi
+   reduced Prescale to match requirements
+
 ! 2011-08-24 - Patrick Owen
  - B2XMuMuLine: Added B->DMuMu decay
 

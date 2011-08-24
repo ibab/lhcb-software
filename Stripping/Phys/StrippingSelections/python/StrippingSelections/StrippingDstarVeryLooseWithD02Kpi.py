@@ -56,30 +56,26 @@ __version = '$Revision: 1.6 $'
 
 
 confdict={
-		'Prescale'    : 0.08 ,
-                'Postscale'   : 1.0 ,
-                #kaon parameters
-                'KPT'         : 350,# MeV
-                #'KTrChi2'     :  8,
-                'KIPChi2'     :  0,
-                'KTrPID'      : -5,
-                #pion parameters
-                'PiPT'        : 350, # MeV
-                #'PiTrChi2'    :  8, # 10   # 5
-                'PiIPChi2'    :  0, # 4    # 4
-                #D0-resonance parameters
-                'D0MassW'     : 60, # 40  # 40 #MeV
-                'D0_BPVVDCHI2': 50,
-                #Dstar-resonance parameters
-                #'slowPiTrChi2': 8, # 10 # 5
-                'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
-                'Dstar_VCHI2' : 25, # 20 # 15
-                'DstarMassW'  : 80 # 50 # 80 MeV
-                	
+                  'Prescale'    : 0.03 ,
+                  'Postscale'   : 1.0 ,
+                  #kaon parameters
+                  'KPT'         : 350,# MeV
+                  'KTrPID'      : -5,
+                  #pion parameters
+                  'PiPT'        : 350, # MeV
+                  #D0-resonance parameters
+                  'D0MassW'     : 60, # 40  # 40 #MeV
+                  'D0_BPVVDCHI2': 50,
+                  #Dstar-resonance parameters
+                  'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
+                  'Dstar_VCHI2' : 25, # 20 # 15
+                  'DstarMassW'  : 80 # 50 # 80 MeV
     	}
 
+#from StrippingUtils.Utils import LineBuilder, MasterLineBuilder
 from StrippingUtils.Utils import LineBuilder
 
+name = "DstarVeryLooseWithD02Kpi"
 
 class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
     """
@@ -104,12 +100,10 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
     KCut=''
     PiCut=''
     slowPiCut=''
-    D0CombCut=''
     D0Cut=''
-    DstarCombCut=''
     DstarCut=''
+    totalDstarCut=''
     
-    D0Sel=None
     DstarSel=None
     
     
@@ -118,18 +112,13 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         'Postscale',
         #kaon parameters
         'KPT',
-        #'KTrChi2',
-        'KIPChi2',
         'KTrPID',
         #pion parameters
         'PiPT',
-        #'PiTrChi2',
-        'PiIPChi2',
         #D0-resonance parameters
         'D0MassW',
         'D0_BPVVDCHI2',
         #Dstar-resonance parameters
-        #'slowPiTrChi2',
         'Dstar_PT',
         'Dstar_VCHI2',
         'DstarMassW'
@@ -145,42 +134,44 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
         
         ### first we define the cuts from the configuration ###
-        ### it's nice to see all the cuts in one place      ###
+        ### NB: Common particles are defined with some cuts ###
+        ### Check in CommonParticles the definition         ###
 
-        # Cuts for D0        
-        self.KCut  = " (PT > %(KPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
-                     " (MIPDV(PRIMARY) > 0.04*mm) &"\
-                     " (MIPCHI2DV(PRIMARY)> %(KIPChi2)s ) & "\
-                     " (PIDK >  %(KTrPID)s ) " % config
-                     
-        self.PiCut = " (PT> %(PiPT)s*MeV) & (P > 2.0*GeV) & (ISLONG) & "\
-                     " (MIPDV(PRIMARY) > 0.04*mm) &"\
-                     " (MIPCHI2DV(PRIMARY)> %(PiIPChi2)s ) " % config
+        # Cuts for D0                
+	self.KCut  = "& CHILDCUT(CHILDCUT( (PT > %(KPT)s*MeV) & (P > 2.0*GeV)  & "\
+                     " (MIPDV(PRIMARY) > 0.04*mm) & "\
+                     " (PIDK >  %(KTrPID)s ),1),2) " % config
+		     
         
-        self.D0CombCut = " (APT>1200*MeV) & (ADAMASS('D0') < 70*MeV  )"% config
+	self.PiCut = "& CHILDCUT(CHILDCUT( (PT> %(PiPT)s*MeV) & (P > 2.0*GeV)  & "\
+                     " (MIPDV(PRIMARY) > 0.04*mm) ,2),2) " % config
+		     
 
-        self.D0Cut = " (PT>1600*MeV) & (ADMASS('D0') < %(D0MassW)s *MeV ) &  " \
-                     " (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<10)  & "\
-                     " (BPVDIRA > 0.9995)"% config    # <==== DIRA cut is the only difference
-                                                      # <==== wrt Dstar selection in StrippingBd2DstarMuNu.Loose
+        self.D0Cut = "& CHILDCUT( (PT>1600*MeV) & (ADMASS('D0') < %(D0MassW)s *MeV ) &  " \
+                     " (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<10) & " \
+                     " (BPVDIRA > 0.9995),2)  "% config
+                        # <==== DIRA cut is the only difference wrt Dstar selection in StrippingBd2DstarMuNu
 
-        # Cuts for Dstar        
-        self.slowPiCut= "  (PT>110*MeV) & (ISLONG) & "\
-                        "     (MIPDV(PRIMARY) > 0.04*mm) " % config        
 
-        self.DstarCombCut="(ADAMASS('D*(2010)+')< %(DstarMassW)s*MeV) & (APT>%(Dstar_PT)s *MeV) " % config
+
+        # Cuts for Dstar                
+	self.slowPiCut= "& CHILDCUT( (PT>110*MeV)  & "\
+                        " (MIPDV(PRIMARY) > 0.04*mm),1) " % config        
+
+
+        self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & (M-MAXTREE('D0'==ABSID,M)<160 * MeV) & "\
+                        " (PT>%(Dstar_PT)s *MeV) & (ADMASS('D*(2010)+')< %(DstarMassW)s*MeV)" % config
+
+        # Combine all the cuts
+	self.totalDstarCut = self.DstarCut + self.KCut + self.PiCut + self.D0Cut + self.slowPiCut		    
+
+        ### Now make all the selections  refining CommonParticle Selection ###
         
-        self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & (M-MAXTREE('D0'==ABSID,M)<160 * MeV)" % config
-
-
-        ### Now make all the selections ###
-        
-        self.__MakeD0__()
         self.__MakeDstar__()
         
         from StrippingConf.StrippingLine import StrippingLine
         from PhysSelPython.Wrappers import SelectionSequence
-        #SeqDstarVeryLooseWithD02Kpi = SelectionSequence("SeqDstarVeryLooseWithD02Kpi"+self.LineSuffix, TopSelection = self.DstarSel)
+
         ### Now make a stripping line ###
         DstarLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
@@ -190,47 +181,15 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         
         ### Collect them all together in a nice way ###
         self.registerLine(DstarLine)
-        #self.TopSelectionSeq=SeqDstarVeryLooseWithD02Kpi
-        self.Selections=[self.D0Sel, self.DstarSel]
+        self.Selections=[self.DstarSel]
         
     def printCuts(self):
         '''Print the compiled cut values'''
         print 'name', self._name
-        print 'KCut', self.KCut
-        print 'PiCut', self.PiCut
-        print 'slowPiCut', self.slowPiCut
-        print 'D0CombCut', self.D0CombCut
-        print 'D0Cut', self.D0Cut
-        print 'DstarCombCut', self.DstarCombCut
-        print 'DstarCut', self.DstarCut
+        print 'totalDstarCut', self.totalDstarCut
 
         
-    ############ Functions to make Selections #######################
-        
-    def __MakeD0__(self):
-        """
-        D0 for the selection
-        Here [D0 -> K+ pi-]cc
-        Which can be assosciated in this selection to:
-        """
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from PhysSelPython.Wrappers import Selection
-	from StandardParticles import StdAllLooseKaons, StdAllLoosePions
-        
-        D02Kpi = CombineParticles(DecayDescriptors = ["[D0 -> K- pi+]cc", "[D0 -> K+ pi-]cc"],  # includes WS (DCS) combination
-        	 DaughtersCuts = {
-            		"K+"  : self.KCut,
-            		"pi+" : self.PiCut
-            			}, 
-        	 CombinationCut = self.D0CombCut,
-        	 MotherCut = self.D0Cut
-        )
-                
-        SelD02Kpi = Selection("SelD02Kpi"+self._name,
-                              Algorithm=D02Kpi,
-                              RequiredSelections = [StdAllLooseKaons,StdAllLoosePions])
-        
-        self.D0Sel=SelD02Kpi
+    ############ Functions to make Selections #######################        
     
     def __MakeDstar__(self):
         """
@@ -238,22 +197,16 @@ class DstarVeryLooseWithD02KpiOneLineConf(LineBuilder):
         Here [D*(2010)+ -> pi+ D0]cc
         
         """
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from PhysSelPython.Wrappers import Selection
-	from StandardParticles import StdAllLoosePions
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
         
-        Dstar = CombineParticles(DecayDescriptor =  "[D*(2010)+ -> pi+ D0]cc", 
-        	DaughtersCuts = {
-        		    "pi+" : self.slowPiCut
-            	}, 
-        	CombinationCut = self.DstarCombCut,
-        	MotherCut = self.DstarCut
-        	)
+        Dstar = FilterDesktop(
+	    Code = self.totalDstarCut
+            )
+        #print "\nCreating Dstar from CommonParticles\n"
+        MyStdDstars = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
         
-        
-        SelDstar = Selection("SelDstar"+self._name,
-                                    Algorithm=Dstar,
-                                    RequiredSelections = [self.D0Sel,StdAllLoosePions])
+        SelDstar = Selection("SelDstar"+self._name,Algorithm=Dstar, RequiredSelections = [MyStdDstars])
         
         self.DstarSel=SelDstar
-    
+
