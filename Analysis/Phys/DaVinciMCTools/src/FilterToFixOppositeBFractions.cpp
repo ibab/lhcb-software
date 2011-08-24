@@ -342,7 +342,7 @@ MCParticle* FilterToFixOppositeBFractions::associatedofHEP(HepMC::GenParticle* h
 
   MCParticles* mcpart = get<MCParticles>(MCParticleLocation::Default);
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().mag();
+  double mothmom = hepmcp->momentum().rho();
   double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {

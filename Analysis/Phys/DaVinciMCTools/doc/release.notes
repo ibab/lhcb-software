@@ -4,6 +4,11 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+
+! 2011-08-24 - Alex Grecu
+ - replaced HepMC::FourVector.mag() by HepMC::FourVector.rho() for compatibility
+   with HepMC 2.06 library
+
 !========================== DaVinciMCTools v9r29 2011-04-29 ==================
  - src/MCParticleMaker.h
  - src/MCParticleArrayFilterAlg.cpp
