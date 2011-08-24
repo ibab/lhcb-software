@@ -23,7 +23,6 @@ use 	AlignmentInterfaces	v*	Alignment
 use 	AlignTrTools		v*	Alignment
 use     AlignKernel             v*      Alignment
 use     AlignEvent              v*      Alignment
-use 	DigiEvent		v*	Event
 use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
 use 	TrackFitEvent		v*	Tr
@@ -35,7 +34,6 @@ use     LHCbKernel              v*      Kernel
 use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
 use     LinkerEvent		v*	Event
-use     MuonTrackRec            v*      Muon
 #============================================================================
 # Component library building rule
 #============================================================================
