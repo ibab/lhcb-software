@@ -152,9 +152,14 @@ double Chi2BoxSet::weightedMC2() const{
   }
   return sum;
 }
-double Chi2BoxSet::rmsMC(int Ntotal) const{
+
+// keep changing my mind which one is right...
+double Chi2BoxSet::rmsMC(int ) const{
   return weightedMC2();
-  /*
+}
+
+/*
+double Chi2BoxSet::rmsMC(int Ntotal) const{
   bool dbThis=false;
   double dN = (double) Ntotal;
   double msq = weightedMC2() /(dN);
@@ -172,8 +177,8 @@ double Chi2BoxSet::rmsMC(int Ntotal) const{
   // The variance on the sum of weights
   // is therefore (msq - m*m) * dN
   return (msq - m*m) * dN;
-  */
 }
+*/
 
 void Chi2BoxSet::setHistoColour(Color_t fcolor){
   setFillColour(fcolor);

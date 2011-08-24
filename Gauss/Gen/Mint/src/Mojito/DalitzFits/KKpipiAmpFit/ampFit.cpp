@@ -152,9 +152,11 @@ int ampFit(){
 
   bool doIntegTest=true;
   if(doIntegTest){
+    int Ncheck=100000;
     FitAmpSum fas(pdg);
     DalitzBWBoxSet boxes(fas.makeBWBoxes());
-    boxes.am_I_generating_what_I_think_I_am_generating(1000000);
+    boxes.am_I_generating_what_I_think_I_am_generating(Ncheck);
+    boxes.compareGenerationMethodsForFullPDF(Ncheck);
   }
 
   if(! generateNew){

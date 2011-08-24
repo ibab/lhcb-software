@@ -12,15 +12,19 @@
 #include "Mint/DalitzEventPtrList.h"
 
 #include "Mint/counted_ptr.h"
+#include "Mint/DalitzPhaseSpaceBox.h"
 
 #include <vector>
 #include <iostream>
 
 #include "TRandom.h"
 
+
 class DalitzBWBoxSet : public std::vector<DalitzBWBox>
 , virtual public MINT::IUnweightedEventGenerator<IDalitzEvent>{
  protected:
+  static double __phaseSpaceFracDefaultValue;
+
   DalitzEventPtrList _eventPtrList;
   double _maxWeightEstimate;
   double _maxWeightInSample;
@@ -31,23 +35,37 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   std::vector<double> _volumeProbs;
   TRandom* _rnd;
 
-  double _phaseSpaceProb;
+  double _phaseSpaceFrac;
   mutable double _phaseSpaceIntegral;
+
+  DalitzPhaseSpaceBox _psbox;
+  double _pick_ps_prob;
   
   void getReady();
   void findMax();
 
   MINT::counted_ptr<DalitzEvent> popEventFromList();
 
+  void set_psbox_height_and_weight();
+  void setup_psbox();
+  
   double VolumeSum()const;
+  double heightSum()const;
   void makeVolumeProbIntervals();
   int pickRandomVolume();
-  
+  double calc_pick_ps_prob() const;
+  double pick_ps_prob();
+
   bool checkIntegration()const;
 
   bool ready()const {return _ready;}
 
   double findMaxInList(double& sampleMax);
+
+  // these are good for x-checks only, therefore not public:
+  virtual MINT::counted_ptr<DalitzEvent> makeWeightedApproxEventForOwner();
+  virtual MINT::counted_ptr<DalitzEvent> makeWeightedApproxEventForOwner(int& nTries);
+
  public:
   DalitzBWBoxSet(MINT::IGetRealEvent<IDalitzEvent>* amps=0
 		 , TRandom* r=gRandom);
@@ -56,7 +74,8 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   void add(DalitzBWBox& box);
   void add(DalitzBWBoxSet& boxes);
 
-  double phaseSpaceProb() const{return _phaseSpaceProb;}
+  void setPhaseSpaceFrac(double ps){_phaseSpaceFrac = ps; getReady();}
+  double phaseSpaceFrac() const{return _phaseSpaceFrac;}
 
   void setUnWeightPs(bool doSo=true);
 
@@ -64,8 +83,6 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   virtual MINT::counted_ptr<DalitzEvent> makeEventForOwner(int& nTries);
   virtual MINT::counted_ptr<DalitzEvent> makeWeightedEventForOwner();
   virtual MINT::counted_ptr<DalitzEvent> makeWeightedEventForOwner(int& nTries);
-  virtual MINT::counted_ptr<DalitzEvent> makeWeightedApproxEventForOwner();
-  virtual MINT::counted_ptr<DalitzEvent> makeWeightedApproxEventForOwner(int& nTries);
   virtual MINT::counted_ptr<DalitzEvent> tryEventForOwner();
 
   virtual MINT::counted_ptr<DalitzEvent> phaseSpaceEvent();
@@ -77,7 +94,7 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
 
   double phaseSpaceIntegral() const;
 
-  double fullPdf(DalitzEvent& evt);
+  double fullPdf(DalitzEvent& evt);// (|sum A|^2, w/o phase space factor)
 
   double genValueNoPs(const DalitzEvent& evt) const;
   double genValuePs(const DalitzEvent& evt) const;
@@ -90,7 +107,9 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   bool setRnd(TRandom* rnd=gRandom);
 
 
+  // these two are for some sanity checks:
   bool am_I_generating_what_I_think_I_am_generating(int Nevents=1000000);
+  bool compareGenerationMethodsForFullPDF(int Nevents=1000000);
 };
 
 ostream& operator<<(std::ostream& os, const DalitzBWBoxSet& box);

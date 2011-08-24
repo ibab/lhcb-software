@@ -13,6 +13,13 @@
 using namespace std;
 using namespace MINT;
 
+double DalitzBWBoxSet::__phaseSpaceFracDefaultValue=0.25;
+// phaseSpaceFrac is the fraction of events generated according to
+// phase space (in addition to any flat phase-space component the
+// model might have). This phase-space component makes sure we don't
+// miss out any part of phase space where the (approximate) amplitude
+// model might have some artificial "holes" etc.
+
 DalitzBWBoxSet::DalitzBWBoxSet(IGetRealEvent<IDalitzEvent>* amps, TRandom* r)
   : std::vector<DalitzBWBox>()
   , _maxWeightEstimate(-9999.0)
@@ -21,8 +28,10 @@ DalitzBWBoxSet::DalitzBWBoxSet(IGetRealEvent<IDalitzEvent>* amps, TRandom* r)
   , _ready(false)
   , _volumeProbs()
   , _rnd(r)
-  , _phaseSpaceProb(0)
+  , _phaseSpaceFrac(DalitzBWBoxSet::__phaseSpaceFracDefaultValue)
   , _phaseSpaceIntegral(-9999)
+  , _psbox()
+  , _pick_ps_prob(-9999)
 {}
 DalitzBWBoxSet::DalitzBWBoxSet(TRandom* r)
   : std::vector<DalitzBWBox>()
@@ -32,8 +41,10 @@ DalitzBWBoxSet::DalitzBWBoxSet(TRandom* r)
   , _ready(false)
   , _volumeProbs()
   , _rnd(r)
-  , _phaseSpaceProb(0)
+  , _phaseSpaceFrac(DalitzBWBoxSet::__phaseSpaceFracDefaultValue)
   , _phaseSpaceIntegral(-9999)
+  , _psbox()
+  , _pick_ps_prob(-9999)
 {}
 
 DalitzBWBoxSet::DalitzBWBoxSet(const DalitzBWBoxSet& other)
@@ -47,11 +58,13 @@ DalitzBWBoxSet::DalitzBWBoxSet(const DalitzBWBoxSet& other)
   , _ready(other._ready)
   , _volumeProbs(other._volumeProbs)
   , _rnd(other._rnd)
-  , _phaseSpaceProb(other._phaseSpaceProb)
+  , _phaseSpaceFrac(other._phaseSpaceFrac)
   , _phaseSpaceIntegral(other._phaseSpaceIntegral)
+  , _psbox(other._psbox)
+  , _pick_ps_prob(other._pick_ps_prob)
 {}
 
-double DalitzBWBoxSet::fullPdf(DalitzEvent& evt){
+double DalitzBWBoxSet::fullPdf(DalitzEvent& evt){ // (but w/o phase space factor)
   bool dbThis=false;
   if(dbThis) cout << "DalitzBWBoxSet::fullPdf called" << endl;
   if(0 == _ampSum) return 0;
@@ -145,10 +158,99 @@ bool DalitzBWBoxSet::am_I_generating_what_I_think_I_am_generating(int Nevents){
 
   return true;
 }
+bool DalitzBWBoxSet::compareGenerationMethodsForFullPDF(int Nevents){
+  cout << "Hello from DalitzBWBoxSet::compareGenerationMethodsForFullPDF"
+       << " with " << Nevents << " events to generate for each case" << endl;
+
+  DiskResidentEventList generated_fullPDF_efficient_weighted_events("generated_fullPDF_efficient_weighted_events.root"
+						   , "RECREATE");
+  DiskResidentEventList generatedFlat_fullPDF_flat_weighted_events("generated_fullPDF_flat_weighted_events.root"
+								, "RECREATE");
+
+  int printEvery = min(Nevents/10, 10000);
+ 
+  for(int i=0; i < Nevents; i++){
+    generated_fullPDF_efficient_weighted_events.Add(*makeWeightedEventForOwner());
+    if(0 == i%printEvery) cout << "done event " << i << endl;
+  }
+  cout << "generated approxPDF_events"<< endl;
+
+  generated_fullPDF_efficient_weighted_events.save();
+  DalitzHistoSet datGen= generated_fullPDF_efficient_weighted_events.weightedHistoSet();
+  datGen.save("generated_fullPDF_efficient_weighted_histos.root");
+  datGen.draw("generated_fullPDF_efficient_weighted");
+
+  int rwfactor=1;
+  for(int i=0; i < Nevents*rwfactor; i++){
+    counted_ptr<DalitzEvent> evtPtr(phaseSpaceEvent());
+    evtPtr->setWeight(evtPtr->getWeight()*fullPdf(*evtPtr));
+    generatedFlat_fullPDF_flat_weighted_events.Add(*evtPtr);
+    if(0 == i%(printEvery*rwfactor)) cout << "done event " << i << endl;
+  }
+  cout << "generated generatedFlat_fullPDF_flat_weighted_events" << endl;
+  generatedFlat_fullPDF_flat_weighted_events.save();;
+  DalitzHistoSet datWeight = generatedFlat_fullPDF_flat_weighted_events.weightedHistoSet();
+  datWeight.save("generated_fullPDF_efficient_weighted_histos.root");
+  datWeight.draw("generated_fullPDF_efficient_weighted_events");
+  datGen.drawWithFitNorm(datWeight, "efficientBlue_FlatRed_", "eps", "E1 SAME");
+  
+  cout << "am_I_generating_what_I_think_I_am_generating: all done" << endl;
+
+  return true;
+}
+
+void DalitzBWBoxSet::set_psbox_height_and_weight(){
+  bool dbThis=false;
+  if(phaseSpaceFrac() <= 0) return;
+  
+  double rat = calc_pick_ps_prob()/phaseSpaceFrac();
+  double w=1;
+  if(rat > 0) w=rat;
+  _psbox.weight() *= w;
+  _psbox.height() /= w;
+
+  if(dbThis){
+    cout << "h " << _psbox.height() 
+	 << ", w " << _psbox.weight()
+	 << endl;
+  }
+}
+
+double DalitzBWBoxSet::calc_pick_ps_prob() const{
+  bool dbThis=false;
+  if(_phaseSpaceFrac <= 0) return 0;
+  double returnVal= _psbox.volume()/(_psbox.volume() + VolumeSum());
+  if(dbThis) cout << "calc_pick_ps_prob() " << returnVal << endl;
+  return returnVal;
+}
+double DalitzBWBoxSet::pick_ps_prob(){
+  bool dbThis=true;
+  if(_phaseSpaceFrac <= 0) return 0;
+  if(_pick_ps_prob < 0){
+    _pick_ps_prob = calc_pick_ps_prob();
+    if(dbThis){
+      cout << " DalitzBWBoxSet::pick_ps_prob() = " << _pick_ps_prob << endl;
+    }
+  }
+  return _pick_ps_prob;  
+}
+
+void DalitzBWBoxSet::setup_psbox(){
+  _psbox.setPattern(this->begin()->pattern());
+
+  _psbox.height()=phaseSpaceFrac()*heightSum()/(1.0-phaseSpaceFrac());
+  _psbox.weight()=1.0;
+  for(int i=0; i < 100; i++){
+    set_psbox_height_and_weight();
+  }
+}
 
 void DalitzBWBoxSet::getReady(){
   //  checkIntegration();
   bool dbThis=false;
+  if(this->empty()) return;
+  setup_psbox();
+
   makeVolumeProbIntervals();
   _eventPtrList.clear();
 
@@ -332,6 +434,20 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
   return maxValue;
 }
 
+double DalitzBWBoxSet::heightSum() const{
+  bool dbThis=false;
+
+  double sum = 0;
+  for(unsigned int i=0; i< this->size(); i++){
+    if(dbThis)cout << " height number " << i << ") " 
+		   << (*this)[i].height()
+		   << endl;
+    sum += (*this)[i].height();
+  }
+
+  if(dbThis)cout << " Volume sum: " << sum;
+  return sum;
+}
 double DalitzBWBoxSet::VolumeSum() const{
   bool dbThis=false;
 
@@ -342,6 +458,7 @@ double DalitzBWBoxSet::VolumeSum() const{
 		   << endl;
     sum += (*this)[i].volume();
   }
+
   if(dbThis)cout << " Volume sum: " << sum;
   return sum;
 }
@@ -402,9 +519,7 @@ int DalitzBWBoxSet::pickRandomVolume(){
 counted_ptr<DalitzEvent> DalitzBWBoxSet::phaseSpaceEvent(){
   if(this->empty()) return counted_ptr<DalitzEvent>(0);
   if(! ready()) getReady();
-  DalitzEventPattern pat = (*this)[pickRandomVolume()].pattern();
-  counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(pat, _rnd));
-  return evtPtr;
+  return _psbox.makeEventForOwner();
 }
 
 counted_ptr<DalitzEvent> DalitzBWBoxSet::tryEventForOwner(){
@@ -416,11 +531,19 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::tryEventForOwner(){
     return counted_ptr<DalitzEvent>(0);
   }
   if(! ready()) getReady();
-  //  if(_rnd->Rndm() < _phaseSpaceProb) return phaseSpaceEvent();
-  int vol = pickRandomVolume();
-  counted_ptr<DalitzEvent> evtPtr((*this)[vol].tryEventForOwner());
-  if(dbThis){
-    cout << "picked volume number: " << vol << endl;
+
+  counted_ptr<DalitzEvent> evtPtr(0);
+  if(_rnd->Rndm() < pick_ps_prob()){
+    evtPtr = phaseSpaceEvent();
+    if(dbThis){
+      cout << "picked phaseSpace " << endl;
+    }
+  }else{
+    int vol = pickRandomVolume();
+    evtPtr = ((*this)[vol].tryEventForOwner());
+    if(dbThis){
+      cout << "picked volume number: " << vol << endl;
+    }
   }
   if(dbThis && 0 != evtPtr){
     cout << "weight in DalitzBWBoxSet::tryEventForOwner() "
@@ -580,6 +703,7 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::makeWeightedApproxEventForOwner(int& NT
 
 
 double DalitzBWBoxSet::phaseSpaceIntegral()const{
+  // mainly for debug.
   bool dbThis=false;
 
   if(_phaseSpaceIntegral > 0) return _phaseSpaceIntegral;
@@ -643,6 +767,8 @@ double DalitzBWBoxSet::genValueNoPs(const DalitzEvent& evt)const{
     }
     sum += val;
   }
+  if(phaseSpaceFrac() > 0)sum += _psbox.genValue();
+
   if(dbThis){
     cout << "DalitzBWBoxSet::genValueNoPs returning " << sum << endl;
   }
@@ -670,11 +796,11 @@ double DalitzBWBoxSet::genValueWithLoop(DalitzEvent& evt)const{
 double DalitzBWBoxSet::genValue(const DalitzEvent& evt)const{
   bool dbThis=false;
   double sum=0;
-  sum = genValueNoPs(evt) * (1.0 - phaseSpaceProb());
+  sum = genValueNoPs(evt) * (1.0 - phaseSpaceFrac());
 
   if(dbThis) cout <<  "DalitzBWBoxSet::genValue sum before phase space " 
 		  << sum << endl;
-  double ps = phaseSpaceProb()*genValuePs(evt);
+  double ps = phaseSpaceFrac()*genValuePs(evt);
   if(dbThis) cout <<  "DalitzBWBoxSet::genValue adding ps = " 
 		  << ps << endl;
   sum += ps;

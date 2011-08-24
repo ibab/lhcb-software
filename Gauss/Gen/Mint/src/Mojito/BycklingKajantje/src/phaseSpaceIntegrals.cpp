@@ -484,3 +484,26 @@ double PhaseSpaceIntegral4bodyWith_s123s12::getVal()const{
   //  return intFunc.Integral(xmi, xma, ymi, yma);
 
 }
+
+double phaseSpaceIntegral_upTo4body(const DalitzEventPattern& pat){
+
+  if(pat.numDaughters() < 2 ){
+    return 0;
+  }else if(pat.numDaughters() == 2 ){
+    return phaseSpaceIntegral2body(pat);
+  }else if(pat.numDaughters() == 3){
+    PhaseSpaceIntegral3body p3;
+    return p3.getVal(pat);
+  }else if(pat.numDaughters() == 4){
+    PhaseSpaceIntegral4body p4;
+    return p4.getVal(pat);
+  }else{
+    return -9999;
+  }
+
+}
+
+//
+//
+
+

@@ -87,6 +87,8 @@ class PhaseSpaceIntegral4bodyWith_s123s12{
   double getVal() const;
 };
 
+double phaseSpaceIntegral_upTo4body(const DalitzEventPattern& pat);
+
 //double phaseSpaceIntegralNbody(const DalitzEventPattern& _pat);
 
 #endif
