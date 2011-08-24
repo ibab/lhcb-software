@@ -98,6 +98,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Kaons = self.__NoPIDKaons__(config)
         self.Pions = self.__NoPIDPions__(config)       
         self.Kshort = self.__Kshort__(config)
+        self.Dplus = self.__Dplus__(config)
         self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
         self.Phi = self.__Phi__(self.Kaons, config)
@@ -108,7 +109,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
 
         self.Bs = self.__Bs__(self.Dimuon, self.Protons, self.Kaons, self.Pions,
-                              self.Kshort, self.Lambda, self.Phi, self.Rho,
+                              self.Kshort, self.Lambda, self.Phi, self.Rho, self.Dplus,
                               self.Kstar, self.Lambdastar, self.Kstar2KsPi,
                               self.Kstar2KPi0, config)
 
@@ -455,23 +456,16 @@ class B2XMuMuConf(LineBuilder) :
                                      RequiredSelections = [ Protons, Kaons ] )
         return _selLAMBDASTAR2PK
 
-    def __Dplus__(self, Kaons, Pions, conf):
+    def __Dplus__(self, conf):
         """
-        Make a kstar
-        """      
-        _dplus2kkp = CombineParticles()
-        _dplus2kkp.DecayDescriptors = [
-            "D+ -> K+ K- pi+",
-            "D- -> K- K+ pi-",
-            "D+ -> K+ pi+ pi-",
-            "D- -> K- pi- pi+"
-            ]
-        _dplus2kkp.MotherCut = self.__KpiCuts__(conf) +" & "+ self.__DplusCuts__(conf) 
-
-        _selDPLUS2KKP = Selection( "Selection_"+self.name+"_dplus",
-                                     Algorithm = _dplus2kkp,
-                                     RequiredSelections = [ Kaons, Pions ] )
-        return _selDPLUS2KKP
+        Make a Dplus, the D->Kpipi should cover all the Ds we need (no PID requirement)
+        """
+        _dplus = AutomaticData(Location = 'Phys/StdLooseDplus2KPiPi/Particles') 
+        _filter_dplus = FilterDesktop(Code = self.__KpiCuts__(conf) +" & "+ self.__DplusCuts__(conf))      
+        _seldplus = Selection("Selection_"+self.name+"_dplus",
+                             RequiredSelections = [ _dplus ] ,
+                             Algorithm = _filter_dplus)
+        return _seldplus
 
 
 
@@ -492,7 +486,7 @@ class B2XMuMuConf(LineBuilder) :
 
 
 
-    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Kshort, Lambda, Phi, Rho, Kstar, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
+    def __Bs__(self, Dimuon, Protons, Kaons, Pions, Kshort, Lambda, Phi, Rho, Dplus, Kstar, Lambdastar, Kstar2KsPi, Kstar2KPi0, conf):
         """
         Make and return a Bs selection
         """      
@@ -505,6 +499,7 @@ class B2XMuMuConf(LineBuilder) :
                                       "[B+ -> J/psi(1S) K+]cc",
                                       "[B+ -> J/psi(1S) pi+]cc",
                                       "[B+ -> J/psi(1S) K*(892)+]cc",
+                                      "[B+ -> J/psi(1S) D+]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
                                       "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc"]
         
@@ -513,7 +508,7 @@ class B2XMuMuConf(LineBuilder) :
         
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
                                          RequiredSelections = [Protons, Kaons, Pions, Kshort, Lambda,
-                                                               Phi, Rho, Kstar, Lambdastar,
+                                                               Phi, Rho, Dplus, Kstar, Lambdastar,
                                                                Kstar2KsPi, Kstar2KPi0])
         sel = Selection( "Selection_"+self.name+"_bs2xmumu",
                          Algorithm = _b2xmumu,
