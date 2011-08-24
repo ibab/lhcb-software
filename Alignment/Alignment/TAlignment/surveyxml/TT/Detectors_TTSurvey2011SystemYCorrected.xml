@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+<DDDB>
+  <condition classID="6" name="TTSystem">
+    <paramVector name="dPosXYZ" type="double">0 -0.20 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTa">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTb">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTaXLayer">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTaULayer">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTbVLayer">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  <condition classID="6" name="TTbXLayer">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+</DDDB>
