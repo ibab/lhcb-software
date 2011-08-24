@@ -31,6 +31,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "NumIterations"                : 1                           # Number of iterations
         , "VertexLocation"               : ""                          # Location of input vertex list
         , "DimuonLocation"               : ""                          # Location of input vertex list
+        , "ParticleLocation"             : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
         , "ApplyMS"                      : True                        # Multiple Scattering
         , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
@@ -199,6 +200,7 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
             alignAlg.TracksLocation               = self.getProp( "TrackLocation" )
             alignAlg.VertexLocation               = self.getProp( "VertexLocation" )
+            alignAlg.ParticleLocation             = self.getProp( "ParticleLocation" )
             alignAlg.DimuonLocation               = self.getProp( "DimuonLocation" )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations" )
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier" )
