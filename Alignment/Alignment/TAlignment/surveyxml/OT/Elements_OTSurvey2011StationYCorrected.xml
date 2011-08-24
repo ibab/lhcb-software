@@ -1,0 +1,2990 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+<DDDB>
+
+<!-- J.P. Palacios Place to put general OT conditions -->
+
+  <!-- Alignment condition for the OT -->
+  <condition classID="6" name="OTSystem">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <!-- Alignment conditions for OT T1 and its layers and modules -->
+  <condition classID="6" name="T1">
+    <paramVector name="dPosXYZ" type="double">0 0.381 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q0">
+    <paramVector name="dPosXYZ" type="double">-0.79 -0.70 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1">
+    <paramVector name="dPosXYZ" type="double">-1.43 -0.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2">
+    <paramVector name="dPosXYZ" type="double">-0.79 -0.70 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3">
+    <paramVector name="dPosXYZ" type="double">-1.43 -0.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X1Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X1Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1U">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0">
+    <paramVector name="dPosXYZ" type="double">-0.79 -0.70 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1">
+    <paramVector name="dPosXYZ" type="double">-1.43 -0.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2">
+    <paramVector name="dPosXYZ" type="double">-0.79 -0.70 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3">
+    <paramVector name="dPosXYZ" type="double">-1.43 -0.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1UQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1UQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1V">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0">
+    <paramVector name="dPosXYZ" type="double">-0.35 -2.15 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1">
+    <paramVector name="dPosXYZ" type="double">-0.47 -1.30 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2">
+    <paramVector name="dPosXYZ" type="double">-0.35 -2.15 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3">
+    <paramVector name="dPosXYZ" type="double">-0.47 -1.30 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1VQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1VQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0">
+    <paramVector name="dPosXYZ" type="double">-0.35 -2.15 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1">
+    <paramVector name="dPosXYZ" type="double">-0.47 -1.30 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2">
+    <paramVector name="dPosXYZ" type="double">-0.35 -2.15 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3">
+    <paramVector name="dPosXYZ" type="double">-0.47 -1.30 -0.5</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T1X2Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T1X2Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <!-- Alignment conditions for OT T2 and its s -->
+
+  <condition classID="6" name="T2">
+    <paramVector name="dPosXYZ" type="double">0 0.131 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q0">
+    <paramVector name="dPosXYZ" type="double">-0.98 -1.60 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1">
+    <paramVector name="dPosXYZ" type="double">-0.27 -0.85 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2">
+    <paramVector name="dPosXYZ" type="double">-0.98 -1.60 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3">
+    <paramVector name="dPosXYZ" type="double">-0.27 -0.85 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X1Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X1Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2U">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0">
+    <paramVector name="dPosXYZ" type="double">-0.98 -1.60 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1">
+    <paramVector name="dPosXYZ" type="double">-0.27 -0.85 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2">
+    <paramVector name="dPosXYZ" type="double">-0.98 -1.60 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3">
+    <paramVector name="dPosXYZ" type="double">-0.27 -0.85 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2UQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2UQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2V">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0">
+    <paramVector name="dPosXYZ" type="double">0.04 -2.60 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1">
+    <paramVector name="dPosXYZ" type="double">-1.69 -1.75 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2">
+    <paramVector name="dPosXYZ" type="double">0.04 -2.60 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3">
+    <paramVector name="dPosXYZ" type="double">-1.69 -1.75 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2VQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2VQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0">
+    <paramVector name="dPosXYZ" type="double">0.04 -2.60 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1">
+    <paramVector name="dPosXYZ" type="double">-1.69 -1.75 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2">
+    <paramVector name="dPosXYZ" type="double">0.04 -2.60 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3">
+    <paramVector name="dPosXYZ" type="double">-1.69 -1.75 -3.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T2X2Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T2X2Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <!-- Alignment conditions for OT T3 and its s -->
+
+  <condition classID="6" name="T3">
+    <paramVector name="dPosXYZ" type="double">0 0.461 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q0">
+    <paramVector name="dPosXYZ" type="double">-0.04 -2.35 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1">
+    <paramVector name="dPosXYZ" type="double">-1.52 -2.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2">
+    <paramVector name="dPosXYZ" type="double">-0.04 -2.35 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3">
+    <paramVector name="dPosXYZ" type="double">-1.52 -2.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X1Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X1Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3U">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0">
+    <paramVector name="dPosXYZ" type="double">-0.04 -2.35 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1">
+    <paramVector name="dPosXYZ" type="double">-1.52 -2.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2">
+    <paramVector name="dPosXYZ" type="double">-0.04 -2.35 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3">
+    <paramVector name="dPosXYZ" type="double">-1.52 -2.60 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3UQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3UQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3V">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0">
+    <paramVector name="dPosXYZ" type="double">0.2 -3.05 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1">
+    <paramVector name="dPosXYZ" type="double">-1.49 -2.65 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2">
+    <paramVector name="dPosXYZ" type="double">0.2 -3.05 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3">
+    <paramVector name="dPosXYZ" type="double">-1.49 -2.65 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3VQ3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3VQ3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2">
+    <paramVector name="dPosXYZ" type="double">0.0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0">
+    <paramVector name="dPosXYZ" type="double">0.2 -3.05 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q0M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q0M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q0M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1">
+    <paramVector name="dPosXYZ" type="double">-1.49 -2.65 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q1M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q1M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q1M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2">
+    <paramVector name="dPosXYZ" type="double">0.2 -3.05 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q2M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q2M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q2M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3">
+    <paramVector name="dPosXYZ" type="double">-1.49 -2.65 -2.50</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M1">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q3M2">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M3">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M4">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+  
+  <condition classID="6" name="T3X2Q3M5">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M6">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M7">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M8">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="T3X2Q3M9">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+</DDDB>
