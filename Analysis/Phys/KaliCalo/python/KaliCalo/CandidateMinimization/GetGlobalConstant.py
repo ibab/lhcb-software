@@ -10,6 +10,8 @@
 __author__ = "Albert Puig (albert.puig@cern.ch)"
 
 from optparse import OptionParser
+import os
+import sys
 
 from KaliCalo.Kali.LambdaMap                  import LambdaMap
 from KaliCalo.CandidateMinimization.FillTask  import fillDatabase
@@ -30,6 +32,8 @@ def getEcalCells():
   cells.sort()
   return cells
 
+castorDir = '/castor/cern.ch/grid/'
+
 if __name__ == '__main__':
   parser = OptionParser()
   parser.add_option("-t", "--cellType",
@@ -43,8 +47,8 @@ if __name__ == '__main__':
     options, args = parser.parse_args(sys.stdin.readline().split())
   ntuples = []
   for arg in args:
-    execfile(options.cut)
-    ntuples.extend(['castor:' + os.path.join(castorDir, t) for t in tup])
+    execfile(arg)
+    ntuples.extend(['castor:' + castorDir + t for t in tup])
   # Load the cell massager
   CellMassager = getattr(FakeCells, options.cellType, None)
   if not CellMassager:
@@ -52,6 +56,9 @@ if __name__ == '__main__':
     sys.exit(1)
   CellMassager = CellMassager()
   lambdas  = LambdaMap()
+  #
+  from GaudiMP.Parallel import WorkManager
+  manager = WorkManager(ppservers=(), ncpus=8)
   histos, badfiles = fillDatabase(lambdas, ntuples, manager=None, cellFunc=CellMassager)
   histomap = Task.fitHistos(histos, manager=None, nHistos=100)
   cells = {}
