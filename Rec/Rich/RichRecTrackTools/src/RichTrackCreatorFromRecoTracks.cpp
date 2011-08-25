@@ -50,9 +50,6 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   const StatusCode sc = TrackCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  if ( m_trTracksLocation.empty() )
-  { return Error( "Input Track location is not set" ); }
-
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal         );
   acquireTool( m_trSegToolNickName,       m_segMaker, this );
@@ -212,22 +209,28 @@ TrackCreatorFromRecoTracks::trTracks() const
 {
   if ( !m_trTracks )
   {
-    // Obtain smart data pointer to Tracks
-    if ( exist<LHCb::Tracks>(m_trTracksLocation) )
+    if ( !m_trTracksLocation.empty() )
     {
-      m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
-      if ( msgLevel(MSG::DEBUG) )
+      // Obtain smart data pointer to Tracks
+      if ( exist<LHCb::Tracks>(m_trTracksLocation) )
       {
-        debug() << "located " << m_trTracks->size() << " Tracks at "
-                << m_trTracksLocation << endmsg;
+        m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
+        if ( msgLevel(MSG::DEBUG) )
+        {
+          debug() << "located " << m_trTracks->size() << " Tracks at "
+                  << m_trTracksLocation << endmsg;
+        }
+      }
+      else
+      {
+        Warning( "No input Tracks at '"+m_trTracksLocation+"'" ).ignore();
       }
     }
     else
     {
-      Warning( "No input Tracks at '"+m_trTracksLocation+"'" ).ignore();
+      debug() << "Empty Track location -> Assuming no tracks required" << endmsg;
     }
   }
-
   return m_trTracks;
 }
 

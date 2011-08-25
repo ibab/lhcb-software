@@ -4,7 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!========================= RichRecTrackTools v1r30 2011-07-27 =========================
+! 2011-08-25 - Chris Jones
+ - Allow an empty input track location in the track creators.
+
+!===================== RichRecTrackTools v1r30 2011-07-27 ====================
 ! 2011-07-25 - Chris Jones
  - Add some missing protection to verbose printout messages
 
