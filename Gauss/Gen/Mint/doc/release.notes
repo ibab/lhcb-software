@@ -5,6 +5,15 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+! 25-08-2011 - Matt Coombes
+ - General debugging after running in nightly builds
+ - Fixed requirements to produce libraries correctly
+ - Fixed ../src/Mint/Pareto/src/GeneralisedPareto.cpp(119): warning #68: 
+   integer conversion resulted in a change of sign unsigned int n=-9999;
+ - Fixed FitFraction.h(28): warning #858: type qualifier on return type is meaningless
+   const double sigmaInteg() const{return _sigmaInteg;}.
+ 
+ 
 ! 19-08-2011 - Jonas Rademacker
  - Modified SpinFactors4 so the spin factors actually print themselves 
    correctly upon construction 

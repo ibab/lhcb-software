@@ -13,8 +13,10 @@
 class TRandom;
 class SignalGenerator;
 class FromFileGenerator;
-
-class MINT::MinuitParameterSet;
+namespace MINT
+{
+	class MinuitParameterSet;
+}
 class IFastAmplitudeIntegrable;
 
 class DalitzPdfSaveInteg // saves and retrieves the integration result

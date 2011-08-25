@@ -121,8 +121,8 @@ void CoherenceFactorCalculator::printResult(std::ostream& os) const{
   os << "\n Coherence Factors";
   for(unsigned int i=0; i < _cfList.size(); i++){
     if(0 == i){
-      os << "\n * No efficiency effects"
-	 << " - 100\% efficient detector\n";
+      os << "\n * No efficiency effects "
+    	 << " - 100\% efficient detector\n";
     }else{
       os << "\n * Including efficiency effects\n";
     }

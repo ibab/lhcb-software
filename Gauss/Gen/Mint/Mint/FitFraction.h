@@ -25,7 +25,7 @@ class FitFraction{
   const double& sigmaFit() const{return _sigmaFit;}
   
   double& sigmaInteg(){return _sigmaInteg;}
-  const double sigmaInteg() const{return _sigmaInteg;}
+  double sigmaInteg() const{return _sigmaInteg;}
 
   void print(std::ostream& os) const;
   

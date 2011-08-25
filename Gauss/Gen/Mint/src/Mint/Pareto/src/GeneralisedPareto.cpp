@@ -116,7 +116,9 @@ double MINT::generalisedPareto_estimateMaximum(std::vector<double> input_a
   
   sort(input.begin(), input.end());
 
-  unsigned int n=-9999;
+//  unsigned int n=-9999;
+  unsigned int n=9999;
+
   if(numEvents > 0){
     n = (unsigned int) numEvents;
   }else{

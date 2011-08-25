@@ -400,17 +400,17 @@ TMatrixTSym<double> Minimiser::covMatrix() {
   // use covMatrixFull.
   unsigned int internalPars = fNpar;
 
-  Double_t m[internalPars][internalPars];
+  Double_t m1[internalPars][internalPars];
   for(unsigned int i=0; i < internalPars; i++){
     for(unsigned int j=0; j < internalPars; j++){
-      m[i][j]=0.0;
+      m1[i][j]=0.0;
     }
   }
-  this->mnemat(&m[0][0], internalPars);
+  this->mnemat(&m1[0][0], internalPars);
   TMatrixTSym<double> matrix(internalPars);
   for(unsigned int i=0; i < internalPars; i++){
     for(unsigned int j=i; j < internalPars; j++){
-      matrix(i,j) = matrix(j,i) = m[i][j];
+      matrix(i,j) = matrix(j,i) = m1[i][j];
     }
   }
   return matrix;
@@ -421,19 +421,19 @@ TMatrixTSym<double> Minimiser::covMatrixFull() {
   // (if you have many fixed parameters, you'll get a lot of zeros)
   unsigned int internalPars = fNpar;
 
-  Double_t m[internalPars][internalPars];
+  Double_t m1[internalPars][internalPars];
   for(unsigned int i=0; i < internalPars; i++){
     for(unsigned int j=0; j < internalPars; j++){
-      m[i][j]=0.0;
+      m1[i][j]=0.0;
     }
   }
-  this->mnemat(&m[0][0], internalPars);
+  this->mnemat(&m1[0][0], internalPars);
   TMatrixTSym<double> matrix(nPars());
   for(unsigned int i=0; i < internalPars; i++){
     for(unsigned int j=i; j < internalPars; j++){
       int ex_i = fNexofi[i] -1;
       int ex_j = fNexofi[j] -1;
-      matrix(ex_i,ex_j) = matrix(ex_j,ex_i) = m[i][j];
+      matrix(ex_i,ex_j) = matrix(ex_j,ex_i) = m1[i][j];
     }
   }
   return matrix;
