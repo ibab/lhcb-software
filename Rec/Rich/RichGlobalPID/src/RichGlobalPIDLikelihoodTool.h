@@ -32,6 +32,7 @@
 // RichKernel
 #include "RichKernel/RichMap.h"
 
+// RichDet
 #include "RichDet/Rich1DTabFunc.h"
 
 // boost

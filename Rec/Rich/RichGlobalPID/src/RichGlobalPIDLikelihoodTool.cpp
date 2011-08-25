@@ -72,6 +72,8 @@ LikelihoodTool::LikelihoodTool( const std::string& type,
                    "Maximum number of tracks to change in a single event iteration" );
 
   declareProperty( "MaxIterationRetries", m_maxItRetries = 10, "Maximum retries" );
+
+  //setProperty( "OutputLevel", MSG::DEBUG );
 }
 
 //=============================================================================
@@ -686,11 +688,6 @@ double LikelihoodTool::logLikelihood() const
                                                     rRTrack->currentHypothesis() );
   } // end track loop
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << " -> Track contribution    = " << trackLL << endmsg;
-  }
-
   // Pixel loop
   double pixelLL = 0.0;
   for ( LHCb::RichRecPixels::const_iterator iPixel = richPixels()->begin();
@@ -709,7 +706,7 @@ double LikelihoodTool::logLikelihood() const
       const LHCb::RichRecTrack * rRTrack = (*iPhoton)->richRecTrack();
       if ( rRTrack->inUse() )
       {
-        if ( msgLevel(MSG::VERBOSE) )
+        if ( UNLIKELY(msgLevel(MSG::VERBOSE)) )
         {
           verbose() << "  -> Using photon : track=" << rRTrack->key()
                     << " pixel=" << pixel->key()
@@ -722,7 +719,7 @@ double LikelihoodTool::logLikelihood() const
         photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
                                                         rRTrack->currentHypothesis() );
       }
-    } // loop over photons
+    } // end loop over photons
     if ( foundSelectedTrack )
     {
       pixelLL -= sigFunc( photonSig + pixel->currentBackground() );
@@ -736,6 +733,7 @@ double LikelihoodTool::logLikelihood() const
 
   if ( msgLevel(MSG::DEBUG) )
   {
+    debug() << " -> Track contribution    = " << trackLL << endmsg;
     debug() << " -> Pixel contribution    = " << pixelLL << endmsg;
     debug() << " -> Detector contribution = " << detectorLL << endmsg;
   }

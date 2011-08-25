@@ -4,7 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
-!========================= RichGlobalPID v3r16 2011-07-27 =========================
+!======================= RichGlobalPID v3r16 2011-07-27 ======================
 ! 2011-07-24 - Chris Jones
  - Fine tune LikelihoodTool::logExp for better branch prediction
 

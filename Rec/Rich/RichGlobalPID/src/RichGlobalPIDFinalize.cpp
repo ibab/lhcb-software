@@ -46,17 +46,10 @@ StatusCode Finalize::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Iterate over working tracks and keep/delete PID results
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Final PID results :-" << endmsg;
   for ( LHCb::RichGlobalPIDTracks::iterator track = gpidTracks()->begin();
         track != gpidTracks()->end(); ++track )
   {
-    LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
-
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "PID'ed Track "
-                << (*track)->key() << " (" << (*track)->trQuality()
-                << "), as " << rRTrack->currentHypothesis() << endmsg;
-    }
 
     // Only store results for physics quality tracks
     if ( (*track)->trQuality() != Rich::Rec::GlobalPID::Physics )
@@ -67,6 +60,10 @@ StatusCode Finalize::execute()
 
     // finalize this PID
     m_gtkCreator->finaliseTrack( *track );
+
+    // Printout
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " " << *(*track)->globalPID() << endmsg;
 
   }
 
