@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-25 - Rob Lambert
+ - Added the UseTrigRawEvent options to DaVinci, see task #21716
+
 !========================= DaVinci v28r5 2011-08-03 =========================
 ! 2011-07-28 - Patrick Koppenburg
  - Remove Hlt condb Hack. See https://savannah.cern.ch/task/index.php?21169

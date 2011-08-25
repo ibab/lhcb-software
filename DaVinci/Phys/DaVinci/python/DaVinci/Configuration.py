@@ -51,6 +51,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "UserAlgorithms"     : []              # User algorithms to run.
         , "RedoMCLinks"        : False           # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
         , "Lumi"               : False           # Run Lumi accounting (should normally be True for user jobs)
+        , "UseTrigRawEvent" : False              # Decode HLT from /Event/Trigger/RawEvent ? Usually not! Only if Brunel >=v41r0 
         , "EventPreFilters"       : []
        }
 
@@ -74,6 +75,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "UserAlgorithms"     : """ User algorithms to run. """
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
         , "Lumi"               : """ Run event count and Lumi accounting (should normally be True) """
+        , "UseTrigRawEvent" : "Decode Dec/Sel reports and several L0 objects from the /Event/Trigger/RawEvent location, only exists in SDSTs and MicroDSTs after Brunel v41r0, so after Stripping 17"
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         }
 
@@ -607,7 +609,11 @@ class DaVinci(LHCbConfigurableUser) :
             self._decReports()
         else :
             L0Conf()
-            
+
+        if self.getProp("UseTrigRawEvent"):
+            from PhysConf.SteerRawLocations import setTriggerRawEventLocation
+            setTriggerRawEventLocation()
+        
         self._defineMonitors()
         self._defineEvents()
         self._defineInput()
