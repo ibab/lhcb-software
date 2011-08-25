@@ -83,6 +83,9 @@ private:
   bool m_compression;  /// Apply compression on raw banks
   int  m_mode;         /// Raw banks output mode 
   
+  std::string m_rawInputEvent; ///Raw event input location
+  
+  
   enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
   enum Sides {A=0,C,NSides};
 

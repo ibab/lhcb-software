@@ -75,6 +75,9 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   m_mode = 0;
   m_compression = false;
   
+  declareProperty("InputRawEventLocation", m_rawInputEvent=LHCb::RawEventLocation::Default);
+  
+  
 }
 //=============================================================================
 // Destructor
@@ -113,7 +116,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
 
   int rawBankSize = 0;
 
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( m_rawInputEvent );
 
   // ======================
   //
