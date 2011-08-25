@@ -5,6 +5,16 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-08-25 - Rob Lambert
+ - Added SteerRawLocations.py Simple functions to steer raw event locations
+	def setTriggerRawEventLocation(location="/Event/Trigger/RawEvent"):
+    """
+    After Brunel v41r0, there is a new smaller raw event with the
+    trigger information, '/Event/Trigger/RawEvent'
+    see task #217176
+    This will be there on SDST and MicroDST
+    """
+
 ! 2011-08-09 - Vanya Belyaev
 
  - Filters.py:
