@@ -15,9 +15,14 @@ from Configurables import Brunel, LHCbApp, CondDB
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
 LHCbApp().DDDBtag   = "head-20110722" 
 LHCbApp().CondDBtag = "head-20110722"
+
 # Aerogel Sub Tiles
-#CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
-#CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
+CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+
+# Initial IOV time
+from Configurables import EventClockSvc
+EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
 
 # No output files
 Brunel().OutputType = "None"

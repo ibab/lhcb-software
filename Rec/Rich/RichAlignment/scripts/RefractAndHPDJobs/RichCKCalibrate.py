@@ -157,17 +157,18 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     dbFiles = [ ]
 
     # Corrections
-    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-07082011"]
     dbFiles += ["2011MirrorAlign-22082011"]
-     
+    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-24082011"]
+    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-24082011"]
+         
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
-                        
+
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["RefInCalib-2011_BR-v40r1-09082011"]
+        dbFiles += ["RefInCalib-2011_BR-v40r1-24082011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -206,7 +207,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                 # is this job already submitted ?
                 if jobExists(jobname):
 
-                    print "Job", jobname, "already submitted"
+                    print "Job", jobname, "already submitted ( #", nJob, "of", len(sortedRuns), ")"
 
                 else:
 
@@ -855,11 +856,11 @@ def getControlJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
     # As of RICH S/W meeting 3/9/2010
-    slope = 38.2388535346
-    if rad == 'Rich2Gas': slope = 68.2
+    #slope = 38.2388535346
+    #if rad == 'Rich2Gas': slope = 68.2
     # Test values
-    #slope = 38.25
-    #if rad == 'Rich2Gas': slope = 68.19
+    slope = 38.151
+    if rad == 'Rich2Gas': slope = 68.248
     # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
     error  = shift['Mean'][1]*slope
@@ -1294,6 +1295,15 @@ def removeCalibrationDataSet(name,BrunelVer="v40r1"):
                                statuscodes=['completed','running','submitted','failed'])
     for j in js : j.remove()
     path = '/RichCalibration/RefInCalib-'+name+'_BR-'+BrunelVer
+    if jobtree.exists(path) : jobtree.rm(path)
+    jobtree.cd('/RichCalibration')
+
+def removeVerificationDataSet(name,BrunelVer="v40r1"):
+    from Ganga.GPI import jobtree
+    js = getVerificationJobList(name,BrunelVer,
+                               statuscodes=['completed','running','submitted','failed'])
+    for j in js : j.remove()
+    path = '/RichCalibration/RefInVerify-'+name+'_BR-'+BrunelVer
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
