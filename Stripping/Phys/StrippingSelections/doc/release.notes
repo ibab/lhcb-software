@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-25 - Marco Gersabeck
+ - StrippingD2hh.py: tightened cuts as presented to charm WG today.
+
 ! 2011-08-25 - Johannes Albrecht
  - tau23mu cleanup part 2 of 3: remove Ds and tau
    line from hyperCP and TriMu 
