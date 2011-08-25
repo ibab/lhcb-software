@@ -21,11 +21,11 @@ __all__ = ('D0forBXXConf',
            'confdict')
 
 confdict =  {
-    "PreScale"      : 0.010   # adimensiional        
+    "PreScale"      : 0.005   # adimensiional        
     ,"PreScaleRS"   : 1.0    # adimensiional
     ,"PreScaleWS"   : 0.2    # adimensiional
     ,"MINIPCHI2"     : 9.0   # adimensiional
-    ,"TRCHI2"        : 5.0   # adimensiional
+    ,"TRCHI2"        : 3.0   # adimensiional
     ,"KaonPIDK"      : 4.0   # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"PT"            : 300.0  # MeV
@@ -145,7 +145,7 @@ class D0forBXXLinesConf(LineBuilder):
                      "& (MIPCHI2DV(PRIMARY)> 4.0) &  (PIDK< %(PionPIDK)s) & (PIDmu< 10)" % self.__confdict__,
                             "K+" :  "(TRCHI2DOF < %(TRCHI2)s) & (PT > 400 *MeV) & (P>2.0*GeV) "\
                     "& (MIPCHI2DV(PRIMARY)> 4.0)  &  (PIDK> %(KaonPIDK)s)" % self.__confdict__  }
-        _motherCut = "(VFASPF(VCHI2/VDOF)<6.0) & (BPVVDCHI2>100) & (BPVDIRA>0.999) & (BPVIPCHI2()<25.)"
+        _motherCut = "(VFASPF(VCHI2/VDOF)<6.0) & (BPVVD>4*mm) & (BPVVDCHI2>120) & (BPVDIRA>0.9997) & (BPVIPCHI2()<25.)"
         return CombineParticles(DecayDescriptors = _decayDescriptors,
                                 DaughtersCuts = _daughtersCuts,
                                 CombinationCut = _combinationCut,
@@ -172,8 +172,8 @@ def makeDst2D0Pi(name,
                  DaughterLists):
     #    _decayDescriptor = '[D*(2010)+ -> D0 pi+]cc'
     _combinationCut = "(AM-AM1-139.57*MeV<40.0*MeV) & (APT>3.0*GeV)"
-    _daughtersCuts = { "pi+" : "(PT > 250*MeV) & (TRCHI2DOF < 5.0) & (MIPDV(PRIMARY)< 1.0*mm) & (MIPCHI2DV(PRIMARY)<4.0) & (PIDK < 10)"}
-    _motherCut = "(VFASPF(VCHI2/VDOF)<10.0) & (BPVVDCHI2 < 25) & (BPVIPCHI2() < 25.)"
+    _daughtersCuts = { "pi+" : "(PT > 250*MeV) & (TRCHI2DOF < 3.0) & (MIPDV(PRIMARY)< 0.3*mm) & (MIPCHI2DV(PRIMARY)<4.0) & (PIDK < 10)"}
+    _motherCut = "(VFASPF(VCHI2/VDOF)<5.0) & (BPVVDCHI2 < 25) & (BPVIPCHI2() < 25.)"# & (MINTREE((ABSID=='D0') , VFASPF(VZ))-VFASPF(VZ) > 3 *mm )"
     _dst = CombineParticles(DecayDescriptor = DecayDescriptor,
                             DaughtersCuts = _daughtersCuts,
                             CombinationCut = _combinationCut,

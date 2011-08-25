@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-25 - Liming Zhang
+ - StrippingD0ForBXX.py Tighten the cuts
+
 ! 2011-08-25 - Jibo He
  - StrippingBs2JpsieePhi
   . Apply lifetime cut in the loose line and rename it as Detached line
