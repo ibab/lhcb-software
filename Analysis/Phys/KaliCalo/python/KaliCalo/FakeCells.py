@@ -142,7 +142,6 @@ class JacquesCells( object ) :
                         row ,
                         col )
 
-
 # =============================================================================
 ## "Global Calo"
 #  @author Albert PUIG (albert.puig@cern.ch)
