@@ -14,11 +14,11 @@ __version__ = "$Revision$"
 
 __all__ = [ 'FillTask' , 'fillDatabase' ]
 
-import KaliCalo.Kali.FillTaskBase                  as FillTaskBase
-import KaliCalo.CandidateMinimization.FillSelector as FillSelector
+import KaliCalo.Kali.FillTaskBase                  as _FillTaskBase
+import KaliCalo.CandidateMinimization.FillSelector as _FillSelector
 
-FillTask = FillTaskBase.FillTaskBase
+#FillTask = FillTaskBase.FillTask
 
-fillDatabase = FillTaskBase.FillDatabase( FillSelector.fillDataBase )
+fillDatabase = _FillTaskBase.FillHistos( _FillSelector.fillDataBase )
 
 # EOF

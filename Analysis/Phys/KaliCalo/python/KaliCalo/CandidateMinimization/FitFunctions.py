@@ -12,7 +12,7 @@ __date__ = "$Date$"
 __version__ = "$Revision$"
 
 import KaliCalo.FitUtils as Fit
-from KaliCalo.Calo       import pi0Mass
+from KaliCalo.Kali       import pi0Mass
 
 pi0Func           = Fit.pi0Func
 pi0SubtractedFunc = Fit.pi0SubtractedFunc

@@ -14,8 +14,9 @@ __version__ = "$Revision$"
 
 from math import sqrt
 
-import KaliCalo.Kali.FilLSelectorBase     as FillBase
+import KaliCalo.Kali.FillSelectorBase     as FillBase
 from KaliCalo.Cells                       import CellID
+from KaliCalo.CandidateMinimization       import HistoMap
 
 class FillPi0( FillBase.FillPi0Base ):
     ## the major method: processing of the tree
