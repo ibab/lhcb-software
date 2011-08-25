@@ -985,7 +985,7 @@ void DeMuonDetector::fillGeoInfo()
         mgx = m_LogMapMergex[0][part];
         mgy = m_LogMapMergey[1][part] ;
         m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* mgx;
-        m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[0][part])* mgy;
+        m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[1][part])* mgy;
       }
     }
   }

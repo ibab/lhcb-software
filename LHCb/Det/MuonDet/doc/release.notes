@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2011-08-25 - Alessia Satta
+ - Bug fix in the pad size for regions with double readouts
+
 ! 2011-08-01 - Marco Cattaneo
  - Replace std::cout by MsgStream when the stream was terminated by endmsg,
    fixes several Coverity warnings
