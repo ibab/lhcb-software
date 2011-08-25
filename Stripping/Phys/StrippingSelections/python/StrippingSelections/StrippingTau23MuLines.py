@@ -143,7 +143,7 @@ def makeDs23Pi(name):
 
     Ds2PiPiPi.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 200 * micrometer ) &
+            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
                              
