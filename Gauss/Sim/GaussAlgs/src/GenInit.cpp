@@ -53,6 +53,9 @@ GenInit::GenInit( const std::string& name,
   declareProperty( "YLuminousRegion" , m_yLuminousRegion = 0. ) ;
   declareProperty( "ZLuminousRegion" , m_zLuminousRegion = 0. ) ;
   declareProperty( "Luminosity" , m_luminosity = 1.e32 /( Gaudi::Units::cm2 * Gaudi::Units::s ) ) ;
+
+  declareProperty( "CreateBeam", m_createBeam = false );
+
 }
 
 //=============================================================================
@@ -89,8 +92,11 @@ StatusCode GenInit::initialize() {
                                        m_zLuminousRegion ) ) ;
   m_beam.setLuminosity( m_luminosity ) ;
 
-  LHCb::BeamParameters * beamParameters = new LHCb::BeamParameters( m_beam ) ;
-  BeamForInitialization::getInitialBeamParameters() = beamParameters  ;
+  if (m_createBeam) {
+    info() << "Create BeamForInitialization" << endmsg;
+    LHCb::BeamParameters * beamParameters = new LHCb::BeamParameters( m_beam );
+    BeamForInitialization::getInitialBeamParameters() = beamParameters;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -124,12 +130,23 @@ StatusCode GenInit::execute() {
   header->setRandomSeeds( seeds );
   put( header, m_mcHeader );    
 
-  // Create BeamParameters object and fill it.
-  LHCb::BeamParameters * beamParameters = new LHCb::BeamParameters( m_beam ) ;
-  put( beamParameters , m_beamParameters ) ;
+  // Check if BeamParameters already exists (main event only!!), in which case link from header
+  bool beamInMainEvent = exist<LHCb::BeamParameters>( m_beamParameters );
+  if ( beamInMainEvent ) {
+    debug() << "Set beam parameters link to main event" << endmsg;
+    LHCb::BeamParameters* beamParameters = 
+      get<LHCb::BeamParameters>( m_beamParameters );
+    header -> setBeamParameters ( beamParameters );
+  }
+  else {
+    // Create BeamParameters object and fill it.
+    debug() << "Creating BeamParameters in main event" << endmsg;
+    LHCb::BeamParameters* beamParameters = new LHCb::BeamParameters( m_beam ) ;
+    put( beamParameters , m_beamParameters ) ;
 
-  // Link the beam parameters to the header
-  header -> setBeamParameters( beamParameters ) ;
+    // Link the beam parameters to the header
+    header -> setBeamParameters( beamParameters ) ;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -139,7 +156,10 @@ StatusCode GenInit::execute() {
 //=============================================================================
 StatusCode GenInit::finalize() {
   
-  delete ( BeamForInitialization::getInitialBeamParameters( ) ) ;
+  if (m_createBeam) {
+    debug() << "Delete BeamForInitialization" << endmsg;
+    delete ( BeamForInitialization::getInitialBeamParameters( ) ) ;
+  }
 
   debug() << "==> Finalize" << endmsg;
 

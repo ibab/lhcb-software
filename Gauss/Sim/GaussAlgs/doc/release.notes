@@ -4,6 +4,15 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v4r1 2011-08-25 ===========================
+! 2011-08-25 - Gloria Corti
+ - Fix problem causing GenInit to crash for spill-over events by introducing
+   'createBeam' option to make the static class to pass at initialization.
+   This needs to be set to true for the main event and left to false for the
+   spill-over. The delete is also done based on the property. Spill-over do 
+   do put a new object in the TES but refer to the main event.
+   . GenInit.{h,cpp} 
+
 !======================== GaussAlgs v4r0 2011-07-24 ===========================
 ! 2011-05-29 - Patrick Robbe
  - GenInit.h/.cpp: store beam information retrieved from option in the

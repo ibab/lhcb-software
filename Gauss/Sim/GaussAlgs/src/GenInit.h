@@ -58,6 +58,8 @@ private:
   double        m_xLuminousRegion , m_yLuminousRegion , m_zLuminousRegion ;
   double        m_luminosity ;
 
+  bool          m_createBeam;
+
   LHCb::BeamParameters m_beam ; ///< Local beam parameter object
 };
 #endif // GENINIT_H
