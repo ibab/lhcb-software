@@ -18,13 +18,16 @@ __version__ = '$Revision: 1.0 $'
 
 __all__ = ('D2KS0HConf',
            'makeKS02PiPi',
+           'makeKS02PiPiDD',
            'makeD2KS0Pi',
+           'makeD2KS0PiDD',
            'makeD2KS0K'
+           'makeD2KS0KDD'
            'makeBachelorPions'
            'makeBachelorKaons'
            )
 
-# Import some useful 
+# Import some useful stuff
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -32,61 +35,75 @@ from StandardParticles import StdLoosePions, StdLooseKaons
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
 
+## Example config dictionary - keep updated
+
 ## config = {
-##     # KS0 daughter pion cuts
-##     'KS0DaugP' : 2000       # Cut in common particles
-##     ,'KS0DaugPT' : 300        # Cut in trigger
-##     ,'KS0DaugTrackChi2' : 4  
-##     ,'KS0DaugMIPChi2' : 100
-##     ,'KS0DaugPIDK' : 10
+##   # KS0 daughter pion cuts
+##        'KS0DaugP'  : 2000  
+##       ,'KS0DaugPT'  : 250
+##       ,'KS0DaugTrackChi2' : 4  
+##       ,'KS0DaugMIPChi2' : 50
+##       ,'KS0DaugPIDK' : 10
 
 ##   # KS0 mother cuts
-##     ,'KS0MassWindow' :35   # Done by stdLoose KS0s
-##     ,'KS0MIPChi2'  : 9  # taken away   
-##     ,'KS0VertexChi2' : 10  
-##     ,'KS0PT'       : 900   
+##       ,'KS0MassWindow' : 35   
+##       ,'KS0MIPChi2'     : 8
+##       ,'KS0MIPChi2DD'     : 1
+##       ,'KS0VertexChi2'  : 10
+##       ,'KS0PT' : 700
 
 ##   # Bachelor pion cuts
-##     ,'BachPionP' : 5000               
-##     ,'BachPionPT'    : 500     
-##     ,'BachPionTrackChi2': 3
-##     ,'BachPionMIPChi2'  : 30
-##     ,'BachPionPIDK'     : 0
+##       ,'BachPionP' : 5000               
+##       ,'BachPionPT' : 500         
+##       ,'BachPionTrackChi2' : 3
+##       ,'BachPionMIPChi2' : 15 
+##       ,'BachPionPIDK'   : 0  
 
 ##   # Bachelor kaon cuts
-##     ,'BachKaonP' : 5000                 
-##     ,'BachKaonPT'   : 500     
-##     ,'BachKaonTrackChi2' : 3
-##     ,'BachKaonMIPChi2'  : 30 
-##     ,'BachKaonPIDK'      : 0
+##       ,'BachKaonP' : 5000                 
+##       ,'BachKaonPT'  : 500       
+##       ,'BachKaonTrackChi2': 3
+##       ,'BachKaonMIPChi2'   : 15  
+##       ,'BachKaonPIDK'   : 0      
 
-##   # D meson cuts 
+##   # D meson cuts - pion
 ##   # Combo cuts
-##     ,'DMesonComboLowMass' : 1760          
-##     ,'DMesonComboHighMass'  : 2080
-##     ,'DMesonComboDOCA'      : 0.6
+##       ,'DMesonComboLowMass'  : 1760        
+##       ,'DMesonComboHighMass'  : 2080
+##       ,'DMesonComboDOCA' : 0.6
+##       ,'DMesonAPT' : 1000
+##       ,'DMesonADOCAChi2' : 11
 ##   # Mother cuts
-##     ,'DMesonMotherLowMass' : 1770 
-##     ,'DMesonMotherHighMass'   : 2070
-##     ,'DMesonMotherVertexChi2' : 10
-##     ,'DMesonMotherMIPChi2'    : 20
-##     ,'DMesonMotherPT' : 2000
+##       ,'DMesonMotherLowMass' : 1770
+##       ,'DMesonMotherHighMass'   : 2070
+##       ,'DMesonMotherVertexChi2' : 10
+##       ,'DMesonMotherMIPChi2'  : 15  
+##       ,'DMesonMotherPT' : 1000
+##       ,'KS0ZDiff' : 10
+##       ,'DMesonFlightDistChi2' : 30
  
 ##   # Prescales
-##     ,'PionLinePrescale' : 1 
-##     ,'KaonLinePrescale' : 1 
+##       ,'PionLinePrescale' : 1
+##       ,'KaonLinePrescale' : 1
+##       ,'PionLinePrescaleDD' : 1
+##       ,'KaonLinePrescaleDD' : 1
 
 ##   # Postscales     
-##     ,'PionLinePostscale' : 1 
-##     ,'KaonLinePostscale' : 1
-
+##       ,'PionLinePostscale' : 1 
+##       ,'KaonLinePostscale' : 1    
+##       ,'PionLinePostscaleDD' : 1 
+##       ,'KaonLinePostscaleDD' : 1          
 ##           }
+
+#Class for lines - inherits from LineBuilder class
 
 class D2KS0HConf(LineBuilder) :
     """
     Builder of D2KS0H stripping Selections and StrippingLines.
     Constructs D(s) -> KS0H (H=pi/K) Selections and StrippingLines from a configuration dictionary.
     """
+
+## Set up the keys/cuts which will receive values from the cut dictinaries in Phys/StrippingSettings
 
     __configuration_keys__ = (
 
@@ -99,9 +116,10 @@ class D2KS0HConf(LineBuilder) :
 
   # KS0 mother cuts
       ,'KS0MassWindow'   
-      ,'KS0MIPChi2'     
+      ,'KS0MIPChi2'
+      ,'KS0MIPChi2DD' 
       ,'KS0VertexChi2'  
-      ,'KS0PT'          
+      ,'KS0PT'
 
   # Bachelor pion cuts
       ,'BachPionP'               
@@ -121,21 +139,30 @@ class D2KS0HConf(LineBuilder) :
   # Combo cuts
       ,'DMesonComboLowMass'          
       ,'DMesonComboHighMass'  
-      ,'DMesonComboDOCA'      
+      ,'DMesonComboDOCA'
+      ,'DMesonAPT'
+      ,'DMesonADOCAChi2'
   # Mother cuts
       ,'DMesonMotherLowMass' 
       ,'DMesonMotherHighMass'   
       ,'DMesonMotherVertexChi2' 
       ,'DMesonMotherMIPChi2'    
-      ,'DMesonMotherPT' 
+      ,'DMesonMotherPT'
+      ,'KS0ZDiff'
+      ,'DMesonFlightDistChi2'
  
   # Prescales
       ,'PionLinePrescale' 
       ,'KaonLinePrescale'  
-
+      ,'PionLinePrescaleDD' 
+      ,'KaonLinePrescaleDD'
+       
   # Postscales     
       ,'PionLinePostscale' 
       ,'KaonLinePostscale'
+      ,'PionLinePostscaleDD' 
+      ,'KaonLinePostscaleDD'
+       
                               )
 
     # Class constructor
@@ -149,6 +176,9 @@ class D2KS0HConf(LineBuilder) :
         # Names for different lines
         pion_name = self.name+'Pion'
         kaon_name = self.name+'Kaon'
+        pion_nameDD = self.name+'PionDD'
+        kaon_nameDD = self.name+'KaonDD'
+        
 
         # Define the selections that go forward to the lines - combine particles, combine particles etc 
 
@@ -188,8 +218,23 @@ class D2KS0HConf(LineBuilder) :
                                    ,KS0MIPChi2 = config['KS0MIPChi2']     
                                    ,KS0VertexChi2 = config['KS0VertexChi2']  
                                    ,KS0PT = config['KS0PT'] 
+                                                                  )
 
-                                   )
+        # KS0 DD selection
+        self.selKS0DD = makeKS02PiPiDD(self.name + 'KS0DDForD2KS0H'
+                                    # Cuts
+                                    # KS0 daughter pion cuts
+                                   ,KS0DaugP = config['KS0DaugP']  
+                                   ,KS0DaugPT = config['KS0DaugPT']
+                                   ,KS0DaugTrackChi2 = config['KS0DaugTrackChi2'] 
+                                   ,KS0DaugMIPChi2 = config['KS0DaugMIPChi2']
+                                   ,KS0DaugPIDK = config['KS0DaugPIDK']
+                                   # KS0 mother cuts
+                                   ,KS0MassWindow = config['KS0MassWindow']   
+                                   ,KS0MIPChi2DD = config['KS0MIPChi2DD']     
+                                   ,KS0VertexChi2 = config['KS0VertexChi2']  
+                                   ,KS0PT = config['KS0PT'] 
+                                                                  )
 
        
         # D(s)->KS0Pi selection
@@ -202,14 +247,41 @@ class D2KS0HConf(LineBuilder) :
                                      # Combo cuts
                                      ,DMesonComboLowMass = config['DMesonComboLowMass']           
                                      ,DMesonComboHighMass = config['DMesonComboHighMass']    
-                                     ,DMesonComboDOCA = config['DMesonComboDOCA']        
+                                     ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                     ,DMesonAPT = config['DMesonAPT']
+                                     ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
                                      # Mother cuts
                                      ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
                                      ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
                                      ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
                                      ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                     ,DMesonMotherPT = config['DMesonMotherPT']         
+                                     ,DMesonMotherPT = config['DMesonMotherPT']
+                                     ,KS0ZDiff = config['KS0ZDiff']
+                                     ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
                                      )   
+
+        # D(s)->KS0DDPi selection
+        self.selD2KS0PiDD = makeD2KS0PiDD(pion_nameDD
+                                     # Pass the KS0DD selection 
+                                     ,KS0DDSel = self.selKS0DD
+                                     # Pass the bachelor pions selection
+                                     ,BachPionsSel = self.selBachPions 
+                                     # D meson cuts
+                                     # Combo cuts
+                                     ,DMesonComboLowMass = config['DMesonComboLowMass']           
+                                     ,DMesonComboHighMass = config['DMesonComboHighMass']    
+                                     ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                     ,DMesonAPT = config['DMesonAPT']
+                                     ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
+                                     # Mother cuts
+                                     ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
+                                     ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
+                                     ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
+                                     ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
+                                     ,DMesonMotherPT = config['DMesonMotherPT']
+                                     ,KS0ZDiff = config['KS0ZDiff']
+                                     ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2']      
+                                     )  
                                 
 
         # D(s)->KS0K selection
@@ -222,13 +294,40 @@ class D2KS0HConf(LineBuilder) :
                                     # Combo cuts
                                    ,DMesonComboLowMass = config['DMesonComboLowMass']           
                                    ,DMesonComboHighMass = config['DMesonComboHighMass']    
-                                   ,DMesonComboDOCA = config['DMesonComboDOCA']        
+                                   ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                   ,DMesonAPT = config['DMesonAPT']
+                                   ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
                                     # Mother cuts
                                    ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
                                    ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
                                    ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
                                    ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                   ,DMesonMotherPT = config['DMesonMotherPT']      
+                                   ,DMesonMotherPT = config['DMesonMotherPT']
+                                   ,KS0ZDiff = config['KS0ZDiff']
+                                   ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
+                                    )
+
+        # D(s)->KS0DDK selection
+        self.selD2KS0KDD = makeD2KS0KDD(kaon_nameDD
+                                    # Pass the KS0LL selection 
+                                   ,KS0DDSel = self.selKS0DD
+                                    # Pass the bachelor kaons selection
+                                   ,BachKaonsSel = self.selBachKaons  
+                                    # D meson cuts
+                                    # Combo cuts
+                                   ,DMesonComboLowMass = config['DMesonComboLowMass']           
+                                   ,DMesonComboHighMass = config['DMesonComboHighMass']    
+                                   ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                   ,DMesonAPT = config['DMesonAPT']
+                                   ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
+                                    # Mother cuts
+                                   ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
+                                   ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
+                                   ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
+                                   ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
+                                   ,DMesonMotherPT = config['DMesonMotherPT']
+                                   ,KS0ZDiff = config['KS0ZDiff']
+                                   ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
                                     )
 
 
@@ -243,11 +342,24 @@ class D2KS0HConf(LineBuilder) :
                                        postscale = config['KaonLinePostscale'],
                                        selection = self.selD2KS0K
                                        )
+        self.pion_lineDD = StrippingLine(pion_name+"LineDD",
+                                       prescale = config['PionLinePrescaleDD'],
+                                       postscale = config['PionLinePostscaleDD'],
+                                       selection = self.selD2KS0PiDD
+                                       )
+        self.kaon_lineDD = StrippingLine(kaon_name+"LineDD",
+                                       prescale = config['KaonLinePrescaleDD'],
+                                       postscale = config['KaonLinePostscaleDD'],
+                                       selection = self.selD2KS0KDD
+                                       )
+
+        
 
         # Register the lines
         self.registerLine(self.pion_line)
         self.registerLine(self.kaon_line)
-
+        self.registerLine(self.pion_lineDD)
+        self.registerLine(self.kaon_lineDD)
 
 # Define the bachelor pions filter sequence - arguments are cuts used
 
@@ -323,7 +435,7 @@ def makeKS02PiPi(name,
                 ,KS0MassWindow    
                 ,KS0MIPChi2      
                 ,KS0VertexChi2   
-                ,KS0PT    
+                ,KS0PT 
                  ) :
         """
         Create and return a KS0 -> PiPi selection object.
@@ -332,13 +444,28 @@ def makeKS02PiPi(name,
         name             : name of the Selection.
         All others       : cuts used in the selection - self-explanatory naming.
         """
-        # Define the cuts to be used
-        _code = "CHILDCUT((PT > %(KS0DaugPT)s*MeV),1) & CHILDCUT((PT > %(KS0DaugPT)s*MeV),2) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),1) & CHILDCUT((PIDK < %(KS0DaugPIDK)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s)" % locals()
 
-     #(ADMASS('KS0') < %(KS0MassWindow)s*MeV) &    
-# CHILDCUT((P > %(KS0DaugP)s*MeV),1) & CHILDCUT((P > %(KS0DaugP)s*MeV),2) &
-        # & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)
-    
+        # Define the cuts to be used
+        _code = " (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)" % locals()
+
+
+##         # Vanya suggestion
+##        # _Preambulo = [
+##        #  goodChild =           " (TRCHI2DOF < %(KS0DaugTrackChi2)s)" % locals (), 
+##        #  goodChild = goodChild & "(PIDK < %(KS0DaugPIDK)s)" % locals (), 
+##        #  goodChild = goodChild & "(MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s)" % locals (), 
+##         #             ]
+        
+##         # Define the cuts to be used
+##      #   _code = """
+##      #  (PT > %(KS0PT)s*MeV) &
+##      #  (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s) &
+##      #  CHILDCUT ( goodChild ,1) &
+##      #  CHILDCUT ( goodchild, 2) &
+##      #  (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)
+##      #  """ % locals() 
+
+
         # Define the KS0 LL filter
         _KS0LLFilter = FilterDesktop(Code = _code)
         _stdKS0LL = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
@@ -346,6 +473,58 @@ def makeKS02PiPi(name,
         return Selection (name,
                       Algorithm = _KS0LLFilter,
                       RequiredSelections = [_stdKS0LL])
+
+def makeKS02PiPiDD(name,
+
+                 # Cuts
+                 # KS0 daughter pion cuts
+                 KS0DaugP     
+                ,KS0DaugPT
+                ,KS0DaugTrackChi2  
+                ,KS0DaugMIPChi2
+                ,KS0DaugPIDK
+                # KS0 mother cuts
+                ,KS0MassWindow    
+                ,KS0MIPChi2DD      
+                ,KS0VertexChi2   
+                ,KS0PT 
+                 ) :
+        """
+        Create and return a KS0 -> PiPi selection object.
+        Starts from DataOnDemand 'Phys/StdLooseKS0DD'.
+        Arguments:
+        name             : name of the Selection.
+        All others       : cuts used in the selection - self-explanatory naming.
+        """
+
+        # Define the cuts to be used
+        _code = " (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2)" % locals()
+
+
+##         # Vanya suggestion
+##        # _Preambulo = [
+##        #  goodChild =           " (TRCHI2DOF < %(KS0DaugTrackChi2)s)" % locals (), 
+##        #  goodChild = goodChild & "(PIDK < %(KS0DaugPIDK)s)" % locals (), 
+##        #  goodChild = goodChild & "(MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s)" % locals (), 
+##         #             ]
+        
+##         # Define the cuts to be used
+##      #   _code = """
+##      #  (PT > %(KS0PT)s*MeV) &
+##      #  (VFASPF(VCHI2/VDOF) < %(KS0VertexChi2)s) &
+##      #  CHILDCUT ( goodChild ,1) &
+##      #  CHILDCUT ( goodchild, 2) &
+##      #  (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)
+##      #  """ % locals() 
+
+
+        # Define the KS0 LL filter
+        _KS0DDFilter = FilterDesktop(Code = _code)
+        _stdKS0DD = DataOnDemand(Location = "Phys/StdLooseKsDD/Particles")
+
+        return Selection (name,
+                      Algorithm = _KS0DDFilter,
+                      RequiredSelections = [_stdKS0DD])
 
 
 def makeD2KS0Pi(name,
@@ -358,13 +537,17 @@ def makeD2KS0Pi(name,
                 # Combo cuts
                ,DMesonComboLowMass         
                ,DMesonComboHighMass  
-               ,DMesonComboDOCA      
+               ,DMesonComboDOCA
+               ,DMesonAPT 
+               ,DMesonADOCAChi2
                # Mother cuts
                ,DMesonMotherLowMass             
                ,DMesonMotherHighMass   
                ,DMesonMotherVertexChi2 
                ,DMesonMotherMIPChi2  
                ,DMesonMotherPT
+               ,KS0ZDiff
+               ,DMesonFlightDistChi2 
                ) :
         """
         Create and return a D -> KS0 Pi Selection object.
@@ -375,9 +558,12 @@ def makeD2KS0Pi(name,
         """
 
         # Define the combination and mother cuts
-        _combCuts = "(AM > %(DMesonComboLowMass)s*MeV) & (AM < %(DMesonComboHighMass)s*MeV) &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm)" % locals()
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & (MM > %(DMesonMotherLowMass)s*MeV) & (MM < %(DMesonMotherHighMass)s*MeV) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+
+ #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
+
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -385,7 +571,52 @@ def makeD2KS0Pi(name,
         return Selection ( name,
                        Algorithm = _Dmeson,
                        RequiredSelections = [KS0LLSel, BachPionsSel])
+def makeD2KS0PiDD(name,
+                # KS0 selection
+                KS0DDSel
+                # Bach pions selection
+               ,BachPionsSel   
+                # Cuts to be used                  
+                # D meson cuts
+                # Combo cuts
+               ,DMesonComboLowMass         
+               ,DMesonComboHighMass  
+               ,DMesonComboDOCA
+               ,DMesonAPT 
+               ,DMesonADOCAChi2
+               # Mother cuts
+               ,DMesonMotherLowMass             
+               ,DMesonMotherHighMass   
+               ,DMesonMotherVertexChi2 
+               ,DMesonMotherMIPChi2  
+               ,DMesonMotherPT
+               ,KS0ZDiff
+               ,DMesonFlightDistChi2
+               ) :
+        """
+        Create and return a D -> KS0 Pi Selection object.
+        Arguments:
+        name             : name of the Selection.
+        ks0llSel         : KS0DD -> pi+pi- Selection object.
+        All rest   : Cuts used - self-explanatory naming
+        """
 
+        # Define the combination and mother cuts
+
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+
+ #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
+
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+    
+        # Define the combine particles
+        _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
+
+        return Selection ( name,
+                       Algorithm = _Dmeson,
+                       RequiredSelections = [KS0DDSel, BachPionsSel])
+
+    
 def makeD2KS0K(name,
                # KS0 selection
                KS0LLSel
@@ -396,13 +627,17 @@ def makeD2KS0K(name,
                # Combo cuts
               ,DMesonComboLowMass         
               ,DMesonComboHighMass  
-              ,DMesonComboDOCA      
+              ,DMesonComboDOCA
+              ,DMesonAPT 
+              ,DMesonADOCAChi2
                # Mother cuts
               ,DMesonMotherLowMass             
               ,DMesonMotherHighMass   
               ,DMesonMotherVertexChi2 
               ,DMesonMotherMIPChi2  
-              ,DMesonMotherPT   
+              ,DMesonMotherPT
+              ,KS0ZDiff
+              ,DMesonFlightDistChi2 
                    ) :
 
         """
@@ -414,9 +649,12 @@ def makeD2KS0K(name,
         """
 
         # Define the combination, mother and daughter cuts
-        _combCuts = "(AM > %(DMesonComboLowMass)s*MeV) & (AM < %(DMesonComboHighMass)s*MeV) &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm)" % locals()
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & (MM > %(DMesonMotherLowMass)s*MeV) & (MM < %(DMesonMotherHighMass)s*MeV) & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s)" % locals()
+# &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
+
+
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -424,3 +662,49 @@ def makeD2KS0K(name,
         return Selection ( name,
                        Algorithm = _Dmeson,
                        RequiredSelections = [KS0LLSel, BachKaonsSel])
+
+def makeD2KS0KDD(name,
+               # KS0 selection
+               KS0DDSel
+               # Bach kaons selection
+              ,BachKaonsSel 
+               # Cuts to be used                  
+               # D meson cuts
+               # Combo cuts
+              ,DMesonComboLowMass         
+              ,DMesonComboHighMass  
+              ,DMesonComboDOCA
+              ,DMesonAPT 
+              ,DMesonADOCAChi2
+               # Mother cuts
+              ,DMesonMotherLowMass             
+              ,DMesonMotherHighMass   
+              ,DMesonMotherVertexChi2 
+              ,DMesonMotherMIPChi2  
+              ,DMesonMotherPT
+              ,KS0ZDiff
+              ,DMesonFlightDistChi2 
+                   ) :
+
+        """
+        Create and return a D(s) -> KS0 K Selection object.
+        Arguments:
+        name             : name of the Selection.
+        ks0llSel         : KS0DD -> pi+pi- Selection object.
+        All rest         : Cuts used - self-explanatory naming
+        """
+
+        # Define the combination, mother and daughter cuts
+        _combCuts = "(APT > %(DMesonAPT)s) & (ACUTDOCACHI2(%(DMesonADOCAChi2)s,'')) & in_range(%(DMesonComboLowMass)s, AM, %(DMesonComboHighMass)s)" % locals()
+
+# &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
+
+
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+    
+        # Define the combine particles
+        _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
+
+        return Selection ( name,
+                       Algorithm = _Dmeson,
+                       RequiredSelections = [KS0DDSel, BachKaonsSel])

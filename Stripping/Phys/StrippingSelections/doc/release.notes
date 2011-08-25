@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-25 - Sam Gregson	
+ - Submitting the re-optimisation of the D(s)->KS0H stripping lines for the end of year reprocessing
+
 ! 2011-08-25 - Johannes Albrecht	
  - summarize tau23mu and control lines in one file
  - prescales to be updated
