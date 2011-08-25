@@ -3,7 +3,7 @@
 fitter        = None
 imageFileName = ''
 canvas        = None
-tempDir       = "/var/nwork/pciy/jonesc/tmp/RichCalib"
+tempDir       = "/var/nwork/pcjj/jonesc/tmp/RichCalib"
 initialised   = False
 
 def initialise():
@@ -111,9 +111,6 @@ def rootFileListFromTextFile(rootFileList):
     for file in files.read().split('\n') :
         if len(file) > 0 :
             rootfiles += [file]
-            
-    # Sort the list
-    rootfiles.sort()
     
     # Close the file
     files.close()
@@ -229,7 +226,8 @@ def correctStartTime(time):
     return time - TimeOffset
 
 def correctStopTime(time):
-    TimeOffset = int( 5 * 60 * 1e9 )
+    TimeOffset = 0
+    #TimeOffset = int( 5 * 60 * 1e9 )
     return time + TimeOffset
 
 def stringsMD5(strings):
@@ -356,7 +354,7 @@ def getRunFillData(rootfiles):
                                                       "Files" : []  }
                 fillData = runfilldata["FillData"][fill]
                 if fillData["Start"] > start : fillData["Start"] = start
-                if fillData["Stop"] < stop   : fillData["Stop"]  = stop
+                if fillData["Stop"]  < stop  : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
                 print " -> Run", run, "Fill", fill, polarity, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
@@ -364,13 +362,16 @@ def getRunFillData(rootfiles):
                     tmpTime = unixEndTime
                     runfilldata["GlobalStopTime"] = stop
                 fillData['DataTakingDescription'] = res['Value']['DataTakingDescription']
-                
+
             else:
                 
                 print "ERROR Getting start/stop times for run", run
                 print res
                 import DIRAC
                 DIRAC.exit(1)
+
+        # Print the last time
+        print "-> Last date", runfilldata["GlobalStopTime"]
 
         # Save the result to the cache
         rootFileMD5Cache[md] = runfilldata
@@ -451,16 +452,21 @@ def runToFill(run):
     return fill
 
 def runAll(files='2011-RootFiles.txt'):
+    hpdImageShiftsAverage(files)
+    hpdImageShiftsFollow(files)
+    hpdOccupancies(files)
 
-    # HPD Occupancies
+def hpdOccupancies(files='2011-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
                       fitType='Sobel',smoothSigmaHours=0.5,
                       createShiftUpdate=False,createMagUpdate=False,createHPDOccUpdate=True)
-    # HPD image shifts - follow runs
+
+def hpdImageShiftsFollow(files='2011-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Smoothed",
                       fitType='Sobel',smoothSigmaHours=1.5,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
-    # HPD image shifts - averages
+
+def hpdImageShiftsAverage(files='2011-RootFiles.txt'):
     calibrationByRuns(rootfiles=files,followType="Average",
                       fitType='Sobel',smoothSigmaHours=1.5,
                       createShiftUpdate=True,createMagUpdate=False,createHPDOccUpdate=False)
@@ -480,7 +486,7 @@ def calibrationByFills(rootfiles='2011-RootFiles.txt',
 def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                 createShiftUpdate,createMagUpdate,createHPDOccUpdate):
 
-    from ROOT import TFile, TGraphErrors, TGraph, TF1, TSpline3, TH2D, TH1D
+    from ROOT import TFile, TGraphErrors, TGraph, TF1, TH2D, TH1D
     import GaudiPython
     from GaudiPython import gbl
     import datetime, time
@@ -498,7 +504,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
     # Polarities to consider
     polarities = ['MagAll']
     if createMagUpdate : polarities = ['MagDown','MagUp','MagOff']
-                       
+
     # Load the list of root files
     files = rootFileListFromTextFile(rootfiles)
 
@@ -1166,7 +1172,11 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         # Update the DB with the HPD alignments for the IOV for this run/fill
         startTime = correctStartTime( unixStartTime )
         stopTime  = cool.ValidityKeyMax
-        #stopTime  = correctStopTime( unixStopTime )
+        if followType == "Smoothed" : stopTime = getUNIXTime(runFillData["GlobalStopTime"])
+        # End of 2011 Sept TS/MD
+        #stopTime = getUNIXTime( datetime.datetime( 2011, 8, 31, 0, 0, 0 ) )
+        # End of run
+        #stopTime = correctStopTime( unixStopTime )
         # End of 2009
         #stopTime = getUNIXTime( datetime.datetime( 2009, 12, 31, 23, 59, 59 ) )
         # End of 2010

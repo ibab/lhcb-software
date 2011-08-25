@@ -7,11 +7,11 @@
 ! 2011-07-24 - Chris Jones
  - Various improvements to the alignment scripts.
 
-!========================= RichHPDImageAnalysis v1r8 2011-07-27 =========================
+!=================== RichHPDImageAnalysis v1r8 2011-07-27 ====================
 ! 2011-07-22 - Chris Jones
  - various script improvements
 
-!========================= RichHPDImageAnalysis v1r7 2011-04-27 =========================
+!=================== RichHPDImageAnalysis v1r7 2011-04-27 ====================
 ! 2011-04-15 - Chris Jones
  - Fix a seg. fault in the HPD imge fitting algorithm
 
