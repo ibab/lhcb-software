@@ -303,6 +303,7 @@ StatusCode AdderSvc::finalize()
     m_SaveTimer->Stop();
     deletePtr(m_SaveTimer);
   }
+  m_AdderSys->stop();
   if (m_adder != 0)
   {
     m_AdderSys->Remove(m_adder);
@@ -313,7 +314,6 @@ StatusCode AdderSvc::finalize()
     m_AdderSys->Remove(m_EoRadder);
     deletePtr(m_EoRadder);
   }
-  m_AdderSys->stop();
   //printf("AdderSvc: UNLocking DIM\n");
   return Service::finalize();
 }
