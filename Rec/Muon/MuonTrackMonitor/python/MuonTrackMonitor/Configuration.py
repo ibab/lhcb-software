@@ -3,7 +3,7 @@ from Gaudi.Configuration import *
 from TrackFitter.ConfiguredFitters import ( ConfiguredEventFitter )
 from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, GaudiSequencer, TrackKalmanFilter, MeasurementProvider,
-                            MuonTrackAligMonitor, MuEffMonitor, TrackMasterExtrapolator)
+                            MuonTrackAligMonitor )
 
 class MuonTrackMonitorConf(LHCbConfigurableUser):
 
@@ -56,35 +56,3 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         monalig.IsCosmics = False
         muonMoniSeq.Members += [muonTrackFit, monalig]
         
- 
-        moneff =  MuEffMonitor( "MuEffMonitor",
-                                HistoTopDir = "Muon/",
-                                HistoLevel = self.getProp("Histograms")
-                                )
-        moneff.addTool(TrackMasterExtrapolator, name = "MuEffExtrap")
-        moneff.Extrapolator = moneff.MuEffExtrap
-        
-        moneff.MuEffExtrap.ApplyMultScattCorr = True
-        moneff.MuEffExtrap.ApplyEnergyLossCorr = True
-        moneff.MuEffExtrap.MaterialLocator = "SimplifiedMaterialLocator" 
-        moneff.MuEffExtrap.OutputLevel = 5
-
-        moneff.DoTrigger = False
-        
-        moneff.MomentumCut = 3000.
-        
-        moneff.EecalMax = 1000.
-        moneff.EecalMin = -100.                                   
-        moneff.EhcalMax = 3500.
-        moneff.EhcalMin = 1000.
-        
-        moneff.nSigmaX = [3.5,3.5,3.5,3.5,3.5]
-        moneff.nSigmaY = [2.,2.,2.,2.,2.]
-        moneff.Chi2Min = 10
-        moneff.CosThetaCut = 0.99
-        moneff.xyDistCut = 40.
-        moneff.PCutEff = 12.     
-        
-        moneff.OutputLevel = self.getProp("OutputLevel")
-
-        muonMoniSeq.Members += [moneff]
