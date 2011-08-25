@@ -225,7 +225,9 @@ class StrippingTriMuonsConf(LineBuilder) :
             algos    = [ self.Bc() ]
             )
         self.registerLine(self.lineBc3mu)
-                   
+        
+        '''
+        JA 20110825 remove, now in separate file
         #
         ## tau -> 3mu 
         #
@@ -236,7 +238,7 @@ class StrippingTriMuonsConf(LineBuilder) :
             algos    = [ self.tau() ]
             )
         self.registerLine(self.lineTau3mu)
-        
+        '''
     ## get the selections 
     def selections ( self , name ) :
         
