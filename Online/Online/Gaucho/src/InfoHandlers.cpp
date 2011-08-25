@@ -33,7 +33,7 @@ void HAdderServInfoHandler::infoHandler(void)
   }
   if (RTL::nodeNameShort().length()<=6)
   {
-    printf("New Message from Service List Service %s data:\n%s\n",itsService->getName(),input);
+    printf("New Message from Service List Service %s data:\n%s\n==================\n",itsService->getName(),input);
   }
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
