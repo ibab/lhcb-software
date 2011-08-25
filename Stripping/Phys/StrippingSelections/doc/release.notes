@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-25 - Johannes Albrecht	
+ - summarize tau23mu and control lines in one file
+ - prescales to be updated
+
 ! 2011-08-25 - Greig Cowan
  - Tightened some beta_s cuts.
  - Updated beta_s testing scripts.
