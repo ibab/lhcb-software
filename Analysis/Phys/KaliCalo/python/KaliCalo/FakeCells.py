@@ -144,6 +144,36 @@ class JacquesCells( object ) :
 
 
 # =============================================================================
+## "Global Calo"
+#  @author Albert PUIG (albert.puig@cern.ch)
+#  @date 2011-08-25
+class GlobalCalo( object ) :
+    """
+    Return one cell for the whole calorimeter
+    """
+    def __call__ ( self , cell ) :
+        return CellID ( 'Ecal' , 'PinArea', GlobalRow , GlobalCol )
+
+# =============================================================================
+## "Calo Area"
+#  @author Albert PUIG (albert.puig@cern.ch)
+#  @date 2011-08-25
+class CaloArea( object ) :
+    """
+    Return one cell per zone
+    """
+    def __call__ ( self , cell ) :
+      a  = cell.area()
+      if 2 == a:
+          cellID  = CellID ( 'Ecal' , 'Inner'  , GlobalRow , GlobalCol ) ## inner  zone only 
+      elif 1 == a:
+          cellID = CellID ( 'Ecal' , 'Middle' , GlobalRow , GlobalCol ) ## middle zone only 
+      elif 0 == a:
+          cellID  = CellID ( 'Ecal' , 'Outer'  , GlobalRow , GlobalCol ) ## Outer  zone only
+      return cellID
+
+
+# =============================================================================
 ## ``Un-group'' the cells
 # @param calib the map of claibration coefficientf for ``grouped'' cells
 # @param fakeCell the grouping function
