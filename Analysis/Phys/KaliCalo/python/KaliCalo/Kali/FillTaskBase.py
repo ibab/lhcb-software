@@ -18,7 +18,6 @@ __all__     = [ "FillTask" , "FillHistos" ]
 # =============================================================================
 import os
 import tempfile
-import sets
 
 import GaudiMP.Parallel          as     Parallel
 from   GaudiKernel.SystemOfUnits import MeV
@@ -209,7 +208,7 @@ class FillHistos( object ):
                           Unit     = Unit     ) 
 
         ## prepare the names for temporary files 
-        tmps = sets.Set()
+        tmps = set()
         while len ( tmps ) < len ( file_names ) :
             tmp = tempfile.mktemp ( dir    = tmpdir    ,
                                     prefix = 'tmp_'    ,
