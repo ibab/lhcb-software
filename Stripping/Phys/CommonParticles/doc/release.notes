@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-25 - Greig Cowan
+ - Added muon PT > 0.5*GeV cut to StdMassConstrainedJpsi
+
 ! 2011-08-19 - Jibo He
  - StdLooseDiElectron
   . Added PT>500 MeV for electron to speed up. 
