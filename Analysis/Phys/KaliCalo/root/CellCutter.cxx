@@ -59,6 +59,7 @@ int CellCutter::cut( float prsMax ){
     }
     nElements++ ;
   }
+  cut(prsMax, tempMap) ;
 }
 
 
@@ -70,7 +71,7 @@ int CellCutter::cut( float prsMax, std::map<int, TString> fileMap ){
   //if ( !m_cut.IsNull() ) m_cutFormula = new TTreeFormula("cut", m_cut, m_chain);
   // Let's rock
   for ( int i=0; m_chain->GetEntry(i); i++ ){
-    if ( 0 == (i%1000000) ) std::cout << "Entry " << i << std::endl;
+    if ( 0 == (i%10000000) ) std::cout << "Entry " << i << std::endl;
     if ( m_m12 > 250.0 ) continue; // cut on mass
     if ( max(m_prs1, m_prs2) > prsMax ) continue ; // Cut on PrS energy
     if ( m_cell1 != 0 && m_cell2 != 0 ) {
@@ -87,6 +88,7 @@ int CellCutter::cut( float prsMax, std::map<int, TString> fileMap ){
   TFile *file;
   while ( (file = (TFile*) fileiter() ) ) {
      if( file->IsWritable() ) file->Write("",TObject::kOverwrite);
+     delete file ;
   }
   return 0;
 }
