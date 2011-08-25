@@ -59,5 +59,6 @@ private:
   
   std::string    m_extension;    ///< Adedd to default name, allows comparisons
   L0CaloCandidatesFromRawBank* m_convertTool;
+  std::string    m_rawEvent;    ///< Change the raw event location
 };
 #endif // L0CALOCANDIDATESFROMRAW_H

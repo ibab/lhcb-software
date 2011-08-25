@@ -27,7 +27,11 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw ) ;
 //=============================================================================
 L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : L0FromRawBase ( name , pSvcLocator ) { } ;
+  : L0FromRawBase ( name , pSvcLocator ) 
+{ 
+  declareProperty("InputRawEventLocation",m_rawEvent=LHCb::RawEventLocation::Default);
+  
+} ;
 
 //=============================================================================
 // Destructor
@@ -78,9 +82,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::OK ) ;
   readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::OK ) ;
   
-  if ( exist< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ) {
+  if ( exist< LHCb::RawEvent >( m_rawEvent ) ) {
 
-    rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ;
+    rawEvt = get<LHCb::RawEvent>(  m_rawEvent  ) ;
     const std::vector<LHCb::RawBank*>& banks = 
       rawEvt -> banks( LHCb::RawBank::L0Calo );
     

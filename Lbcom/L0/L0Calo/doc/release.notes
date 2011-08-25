@@ -3,6 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2011-08-25 - Rob Lambert
+ - Steer raw event location with L0CaloCandidatesFromRaw
+
 ! 2011-08-17 - Patrick Robbe
  - L0CaloPRSResetMonitor: tune alarm algorithm
 
