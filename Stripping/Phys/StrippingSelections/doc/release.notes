@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-25 - Greig Cowan
+ - Tightened some beta_s cuts.
+ - Updated beta_s testing scripts.
+
 ! 2011-08-24 - Stefania Vecchi
  - Updated StrippingBd2DstarMuNu for Stripping17.
    uses StdLooseDstarWithD02Kpi

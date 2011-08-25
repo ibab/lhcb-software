@@ -12,8 +12,6 @@ stream = StrippingStream("Betas")
 
 BetaSconfigs = [
         'BetaS',
-	]
-'''
         'BetaSPsi2S',
         'BetaSPsi2SMuMu',
         'BetaSBs2JpsieePhi',
@@ -24,9 +22,9 @@ BetaSconfigs = [
         'BetaSBs2EtacPhi',
         'BetaSBs2ChicPhi_Chic2KKPiPi',
         'BetaSBs2ChicPhi_Chic2PiPiPiPi',
-	'Bs2Q2Body4pi'
+	'BetaSBs2Q2Body4pi'
         ]
-'''
+
 for config in BetaSconfigs:
         stream.appendLines( lineBuilder('strippingdev', config).lines() )
 
