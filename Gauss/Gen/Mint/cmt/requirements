@@ -63,8 +63,8 @@ library          Mint    Mint/Events/src/*.cpp           \
 # define component library link options
 #============================================================================
 apply_pattern component_library    library=Mint
-
-macro            Mint_linkopts " -lMint " target-winxp " libMint.so "
+apply_pattern linker_library    library=Mint
+#macro            Mint_linkopts " -lMint " target-winxp " libMint.so "
 
 private
 # -- Need more things from ROOT
