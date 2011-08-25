@@ -13,7 +13,6 @@ __date__ = "$Date$"
 __version__ = "$Revision$"
 
 import copy
-import sets
 
 from GaudiKernel.SystemOfUnits import MeV 
 from GaudiPython.Bindings import gbl as cpp
@@ -117,7 +116,7 @@ class FillDatabase(object):
 
         histos   = HistoMapClass ()
 
-        badfiles = sets.Set() 
+        badfiles = set()
 
         for file_name in file_names :
   
