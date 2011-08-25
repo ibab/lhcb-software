@@ -29,7 +29,7 @@ HPDHotPixelFinder::HPDHotPixelFinder( const std::string& type,
   // Define interface
   declareInterface<IGenericHPDAnalysisTool>(this);
   // job opts
-  declareProperty( "HotOcc",            m_hotOcc            = 0.9 );
+  declareProperty( "HotOcc",            m_hotOcc            = 0.5 );
   declareProperty( "NEventsForAverage", m_nEventsForAverage = 100 );
 }
 
