@@ -35,7 +35,7 @@ StatusCode PixelBackgroundAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // load tools
-  acquireTool( "PixelBackgroundTool", m_bkgTool );
+  acquireTool( "PixelBackgroundTool", m_bkgTool, this );
 
   // pre-cache tools
   statusCreator();
