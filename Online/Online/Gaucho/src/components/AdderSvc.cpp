@@ -313,6 +313,7 @@ StatusCode AdderSvc::finalize()
     m_AdderSys->Remove(m_EoRadder);
     deletePtr(m_EoRadder);
   }
+  m_AdderSys->stop();
   //printf("AdderSvc: UNLocking DIM\n");
   return Service::finalize();
 }
@@ -323,8 +324,8 @@ void AdderSvc::handle(const Incident& inc)
   {
     m_AdderSys->start();
   }
-  else if (inc.type() == "APP_STOPPED")
-  {
-    m_AdderSys->stop();
-  }
+//  else if (inc.type() == "APP_STOPPED")
+//  {
+//    m_AdderSys->stop();
+//  }
 }
