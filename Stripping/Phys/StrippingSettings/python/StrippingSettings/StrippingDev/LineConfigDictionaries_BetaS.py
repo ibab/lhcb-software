@@ -13,10 +13,10 @@ BetaS = {
     ,       'DaughterPT'            :       1000
     ,       'VCHI2PDOF'             :       10
     ,       'Jpsi2MuMuPrescale'     :       0.01
-    ,       'Bu2JpsiKPrescale'      :       0.1
-    ,       'Bd2JpsiKstarPrescale'  :       0.05
+    ,       'Bu2JpsiKPrescale'      :       0.05
+    ,       'Bd2JpsiKstarPrescale'  :       0.03
     ,       'Bd2JpsiKsPrescale'     :       0.5
-    ,       'Bs2JpsiPhiPrescale'    :       0.2
+    ,       'Bs2JpsiPhiPrescale'    :       0.15
     ,       'Bs2JpsiEtaPrescale'    :       0.2
     },
     'STREAMS' : [ 'Dimuon' ]
@@ -176,9 +176,9 @@ BetaSQ2B = {
     'WGs'		: ['betas'],
     'BUILDERTYPE' 	: 'B2Quasi2BodyConf',
     'CONFIG' : {'Q2BPrescale'     : 1.,
-                'Q2BResMinPT'     : 1000.,
+                'Q2BResMinPT'     : 600.,
                 'Q2BResMinP'      : 10.,
-                'Q2BResMaxMass'   : 1100.,
+                'Q2BResMaxMass'   : 1000.,
                 'Q2BResVtxChiDOF' : 9.,
                 'Q2BBMinM4pi'     : 2500.,
                 'Q2BBMinM3pi'     : 4000.,
