@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-08-25 - M. Williams
+- Updates for the Topo post TS.  
+
 ! 2011-08-22 - V. Gligorov
  - Remove Hlt2DiProtonTF and Hlt2DiProtonLowMultTF from Hadrons_July2011
  - Increase D0->hh sideband mass window by 50*MeV. 
