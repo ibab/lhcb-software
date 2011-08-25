@@ -92,13 +92,13 @@ namespace Rich
       void fillExpectedSignalMap( const LHCb::RichRecTrack::Vector & tracks ) const;
 
       /// Fill the expected signals map
-      void fillExpectedSignalMap( const LHCb::RichRecTrack * track ) const;
+      virtual void fillExpectedSignalMap( const LHCb::RichRecTrack * track ) const;
 
       /// Fill the expected signals map
       void fillExpectedSignalMap() const;
 
       /// Compute the overall RICH1/RICH2 backgrounds
-      void overallRICHBackgrounds() const;
+      virtual void overallRICHBackgrounds() const;
 
       /// Compute the background term for each pixel
       virtual void pixelBackgrounds() const;
@@ -128,8 +128,16 @@ namespace Rich
       /// The deduced background in each HPD in each RICH
       mutable RichDataMap m_expPDbkg;
 
-      /// Minimum pixel background value
+      /** Minimum pixel background value. 
+       *  Any value below this will be set to this value */
       double m_minPixBkg;
+
+      /** Ignore the expected signal when computing the background terms.
+          Effectively, will assume all observed hists are background */
+      bool m_ignoreExpSignal;
+
+      /** Min HPD background level for setting background levels */
+      double m_minHPDbckForInc;
 
     };
 

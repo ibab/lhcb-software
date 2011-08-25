@@ -27,7 +27,7 @@ BackgroundEstiClustering::BackgroundEstiClustering( const std::string& type,
   : BackgroundEstiAvHPD ( type, name, parent ) { }
 
 // Destructor
-BackgroundEstiClustering::~BackgroundEstiClustering() {}
+BackgroundEstiClustering::~BackgroundEstiClustering() { }
 
 double BackgroundEstiClustering::backWeight( LHCb::RichRecPixel * pixel ) const
 {
@@ -54,8 +54,8 @@ void BackgroundEstiClustering::pixelBackgrounds() const
   for ( LHCb::RichRecPixels::const_iterator pixel = richPixels()->begin();
         pixel != richPixels()->end(); ++pixel )
   {
-    const LHCb::RichSmartID   pd = (*pixel)->hpdPixelCluster().hpd();
-    const Rich::DetectorType det = (*pixel)->hpdPixelCluster().rich();
+    const LHCb::RichSmartID&   pd = (*pixel)->hpdPixelCluster().hpd();
+    const Rich::DetectorType& det = (*pixel)->hpdPixelCluster().rich();
 
     // background for this HPD
     const double hpdTotBackground = (m_obsPDsignals[det])[pd] - (m_expPDsignals[det])[pd];
@@ -73,7 +73,7 @@ void BackgroundEstiClustering::pixelBackgrounds() const
     // Save this value in the pixel
     (*pixel)->setCurrentBackground( pixBkg > 0 ? (LHCb::RichRecRing::FloatType)(pixBkg) : 0.0f );
     
-    // Debug printout
+    // printout
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Pixel " << (*pixel)->hpdPixelCluster()

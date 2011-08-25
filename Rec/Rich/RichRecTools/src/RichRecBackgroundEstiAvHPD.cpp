@@ -21,9 +21,9 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD )
 
 // Standard constructor, initializes variables
-  BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
+BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
     : Rich::Rec::ToolBase ( type, name, parent ),
       m_tkSignal       ( NULL          ),
       m_geomEff        ( NULL          ),
@@ -34,18 +34,24 @@ DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD )
   // Define interface for this tool
   declareInterface<IPixelBackgroundEsti>(this);
 
-  // Maximum number of iterations in background normalisation
-  declareProperty( "MaxBackgroundNormIterations", m_maxBkgIterations = 10 );
+  declareProperty( "MaxBackgroundNormIterations", m_maxBkgIterations = 10,
+                   "Maximum number of iterations in background normalisation" );
 
-  // Number of active pixels per PD - To be got from XML eventually
-  declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611 );
+  declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611,
+                   "Number of active pixels per PD - To be got from XML eventually" );
 
-  // Minimum pixel background
-  declareProperty( "MinimumPixelBackground", m_minPixBkg = 0.0 );
+  declareProperty( "MinPixelBackground", m_minPixBkg = 0.0,
+                   "Minimum pixel background" );
+
+  declareProperty( "IgnoreExpectedSignals", m_ignoreExpSignal = false,
+                   "Ignore expectations when calculating backgrounds" );  
+
+  declareProperty( "MinHPDBckForInclusion", m_minHPDbckForInc = 0.0,
+                   "Min HPD background level for setting background levels" );
 }
 
 // Destructor
-BackgroundEstiAvHPD::~BackgroundEstiAvHPD() {}
+BackgroundEstiAvHPD::~BackgroundEstiAvHPD() { }
 
 // Initialize
 StatusCode BackgroundEstiAvHPD::initialize()
@@ -57,6 +63,13 @@ StatusCode BackgroundEstiAvHPD::initialize()
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
   acquireTool( "RichGeomEff",             m_geomEff  );
+
+  if ( m_ignoreExpSignal )
+    info() << "Will ignore expected signals when computing backgrounds" << endmsg;
+
+  info() << "Minimum pixel background = " << m_minPixBkg << endmsg;
+  info() << "Min HPD background level for setting background levels = " 
+         << m_minHPDbckForInc << endmsg;
 
   // pre-cache creator tools
   pixelCreator();
@@ -182,7 +195,7 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack::Vecto
 
 void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * track ) const
 {
-  if ( track )
+  if ( track && !m_ignoreExpSignal )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Track " << track->key() << " " << track->inUse()
@@ -215,7 +228,7 @@ void BackgroundEstiAvHPD::fillExpectedSignalMap( const LHCb::RichRecTrack * trac
                     << " DetPhots=" << detPhots << endmsg;
 
           // Tally total expected hits for each PD
-          //m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
+          m_geomEff->geomEfficiency(*segment,id); // needed to ensure map below is filled
           const LHCb::RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
           for ( LHCb::RichRecSegment::PDGeomEffs::const_iterator iPD = hypoMap.begin();
                 iPD != hypoMap.end(); ++iPD )
@@ -320,7 +333,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
     for ( PDsignals::iterator iPD = m_expPDbkg[*iRich].begin();
           iPD != m_expPDbkg[*iRich].end(); ++iPD )
     {
-      if ( iPD->second < 0 ) iPD->second = 0;
+      if ( iPD->second < m_minHPDbckForInc ) iPD->second = 0;
       bckEstimate[*iRich] += iPD->second;
     }
 
@@ -344,11 +357,7 @@ void BackgroundEstiAvHPD::overallRICHBackgrounds() const
       for ( PDsignals::iterator iPD = m_expPDbkg[*iRich].begin();
             iPD != m_expPDbkg[*iRich].end(); ++iPD )
       {
-        const LHCb::RichSmartID id = iPD->first;
-        double bkg1(iPD->second);
-        double bkg2((m_obsPDsignals[*iRich])[id] - (m_expPDsignals[*iRich])[id]);
-        if ( bkg2<0 ) bkg2 = 0;
-        debug() << "  " << id << " bkg1 = " << bkg1 << " bkg2 = " << bkg2 << endmsg;
+        debug() << "  " << iPD->first << " bkg = " << iPD->second << endmsg;
       }
     }
   }
@@ -361,12 +370,11 @@ void BackgroundEstiAvHPD::pixelBackgrounds() const
   for ( LHCb::RichRecPixels::const_iterator pixel = richPixels()->begin();
         pixel != richPixels()->end(); ++pixel )
   {
-    const LHCb::RichSmartID   pd = (*pixel)->hpdPixelCluster().hpd();
-    const Rich::DetectorType det = (*pixel)->hpdPixelCluster().rich();
+    const LHCb::RichSmartID&   pd = (*pixel)->hpdPixelCluster().hpd();
+    const Rich::DetectorType& det = (*pixel)->hpdPixelCluster().rich();
 
     // background for this HPD
-    const double rbckexp = (m_obsPDsignals[det])[pd] - (m_expPDsignals[det])[pd];
-    //const double rbckexp = (m_expPDbkg[det])[pd];
+    const double rbckexp = (m_expPDbkg[det])[pd];
 
     // Save this value in the pixel
     double bkg = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
