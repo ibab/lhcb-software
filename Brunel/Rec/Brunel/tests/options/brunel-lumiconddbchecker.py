@@ -18,7 +18,10 @@ sequence = GaudiSequencer("CheckDB")
 
 # normalization of BeamCrossing
 seqMembers=[]
-seqMembers.append( LumiCheckCondDB('CheckCondDB', UseOnline=True, ) )
+seqMembers.append( LumiCheckCondDB('CheckCondDB' ) )
+from Configurables import GetLumiParameters
+ToolSvc().addTool(GetLumiParameters, "lumiDatabaseTool") # This is a public tool
+ToolSvc().lumiDatabaseTool.UseOnline = True
 sequence.Members = seqMembers
 sequence.MeasureTime = True
 sequence.ModeOR = False

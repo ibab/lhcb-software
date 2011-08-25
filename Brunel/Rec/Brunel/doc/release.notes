@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2011-08-25 - Patrick Koppenburg
+ - Fix lumi test #85240
+
 ! 2011-08-23 - Rob Lambert
  - Create new Raw events for adding to the SDST, see task #21716
 
