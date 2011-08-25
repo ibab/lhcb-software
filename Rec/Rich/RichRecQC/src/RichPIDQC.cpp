@@ -42,7 +42,7 @@ DECLARE_ALGORITHM_FACTORY( PIDQC )
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = true );
+  declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
   declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = 9999999 );
@@ -51,7 +51,7 @@ DECLARE_ALGORITHM_FACTORY( PIDQC )
   m_requiredRads[Rich::Rich2Gas] = false;
   declareProperty( "RequiredRads", m_requiredRads );
   declareProperty( "ApplyMCPSel", m_mcPsel = false );
-  declareProperty( "ExpertPlots", m_expertPlots = true );
+  declareProperty( "ExpertPlots", m_expertPlots = false );
 
   // Initialise summary information
   for ( int i = 0; i<6; ++i )
@@ -232,8 +232,7 @@ StatusCode PIDQC::execute()
     {
       // Get true track type from MC
       mcpid = m_mcTruth->mcParticleType(track);
-      //if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
-      if ( mcpid == Rich::Unknown )
+      if ( !m_ignoreMCThres && mcpid == Rich::Unknown )
       {
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Track has no MC -> Ghost therefore below threshold :-" << endmsg;
