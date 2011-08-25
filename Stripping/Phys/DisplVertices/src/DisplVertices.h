@@ -128,6 +128,7 @@ private:
   // cuts
   
   double m_PreyMinMass ;      ///< Minimum reconstructed mass
+  double m_PreyMinMass2 ;      ///< Minimum reconstructed mass
   double m_PreyMaxMass ;      ///< Maximum reconstructed mass
   double m_PreyMaxSumPt ;     ///< Maximum sumpt
   double m_SumPt ;            ///< Sumpt of all daughters tracks

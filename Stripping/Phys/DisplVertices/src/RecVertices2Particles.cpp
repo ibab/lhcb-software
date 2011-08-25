@@ -190,6 +190,8 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
      tool<IProtoParticleFilter>( "ProtoParticleMUONFilter", "muon", this ) ) );    
   }
 
+  m_materialVeto = tool< IMatterVeto >( "MatterVetoTool" , "MatterVetoTool" );
+
   m_veloProtoPartLocation = "Strip/"+this->name()+"/VeloProtoP";
   return StatusCode::SUCCESS;
 }
@@ -301,7 +303,7 @@ tool<IProtoParticleFilter>( "ProtoParticleCALOFilter", "electron", this ) ) );
     }
     
     // initialize Geometrical information if needed
-    if( m_RemVtxFromDet==5 ) InitialiseGeoInfo();
+    //if( m_RemVtxFromDet==5 ) InitialiseGeoInfo();
         
     //Turn it into a Particle !
     //Will put in info 51: if the particle is in detector 52: the distance to beamline
@@ -819,7 +821,7 @@ bool RecVertices2Particles::RecVertex2Particle( const RecVertex* rv,
   tmpPart.addInfo(52,r ); 
   tmpPart.addInfo(53,rv->tracks().size() ); 
   //Store 51 info if found to be in detector material
-  if( IsAPointInDet( tmpPart, m_RemVtxFromDet ) ) 
+  if( m_materialVeto->isInMatter(tmpVtx.position()) ) 
     tmpPart.addInfo(51,1.);
   this->markNewTree(tmpPart.clone());
   nbRecParts++;

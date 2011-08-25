@@ -17,6 +17,8 @@ use DaVinciKernel       v* Phys
 
 use CaloDet             v* Det
 use VeloDet             v* Det
+use DetDesc             v* Det
+use HltEvent             v* Event
 
 use HltInterfaces      v*    Kernel
 

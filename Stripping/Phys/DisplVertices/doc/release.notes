@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-08-17 - Victor Coco
+ - Modify registerCondition in the material Veto tool
+ - Adapt the strippibg algorithm to new requirements
+
+! 2011-08-17 - Victor Coco
  - Move the material Veto to a tool. Add the Kernel directory to store
    the tool interface, and add the dict directory to get the lcg dict declaration
 

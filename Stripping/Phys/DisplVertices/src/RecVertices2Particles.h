@@ -21,6 +21,7 @@
 #include <VeloDet/DeVeloSensor.h>
 #include <VeloDet/DeVeloRType.h>
 #include "VeloDet/DeVelo.h"
+#include "Kernel/IMatterVeto.h"   
 
 #include "Kernel/IProtoParticleFilter.h"
 
@@ -94,6 +95,8 @@ private:
   double m_RMax;              ///< Max dist to the z axis
   double m_TChi2;             ///< Max chi2/ndof of tracks to stay in Vtx.
   double m_Dist;              ///< Distance bet. RV to be said isolated
+  const IMatterVeto* m_materialVeto;
+
 
   /***************************************************************//**
    * Remove vtx if in detector material ?

@@ -21,6 +21,7 @@
 #include <VeloDet/DeVeloSensor.h>
 #include <VeloDet/DeVeloRType.h>
 #include "VeloDet/DeVelo.h"
+#include "DetDesc/Condition.h"
 
 using namespace Gaudi::Units ;
 using namespace LHCb ;
@@ -53,6 +54,9 @@ protected:
     //
     declareInterface<IMatterVeto>(this);
     //
+    //this->registering();
+    //this->InitialiseGeoInfo();
+    
   } 
   /// virtual protected destructor 
   virtual ~MatterVetoTool() {} 
@@ -68,7 +72,7 @@ private:
   // ========================================================================
 private:
   // ======================================================================== 
-  StatusCode InitialiseGeoInfo();///< Store geometry infos
+  StatusCode i_cacheGeo();
   bool IsInMaterialBoxLeft(const Gaudi::XYZPoint &)const;///<Point in material region in Left halfbox
   bool IsInMaterialBoxRight(const Gaudi::XYZPoint &)const;///<Point in material region in Right halfbox
 
@@ -76,6 +80,9 @@ private:
   Gaudi::Transform3D m_toVeloRFrame; ///< to transform to local velo R frame
   std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
   std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
+  Condition* m_motionSystem;
+  
+  
 
   // ========================================================================
 };
@@ -88,18 +95,32 @@ private:
 // ============================================================================
 StatusCode MatterVetoTool::initialize() 
 { 
-  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
-  m_updMgrSvc->registerCondition(this,"/dd/Conditions/Online/Velo/MotionSystem",&MatterVetoTool::InitialiseGeoInfo);
-  this->InitialiseGeoInfo();
-  return GaudiTool::initialize () ; 
+  StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  if( !existDet<DataObject>(detSvc(),"Conditions/Online/Velo/MotionSystem") ){
+    Warning("VELO motion system not in conditions DB", 
+            StatusCode::SUCCESS).ignore();
+    //m_useConditions = false;
+  }else{
+    registerCondition("Conditions/Online/Velo/MotionSystem",m_motionSystem,
+                      &MatterVetoTool::i_cacheGeo);
+    sc = runUpdate();
+    if(!sc) return sc;
+  }
+
+  return StatusCode::SUCCESS;
+
+  //m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  //return GaudiTool::initialize () ; 
 }
 //=============================================================================
 // Check if particle vertex is in material
 //=============================================================================
 bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
-  //InitialiseGeoInfo();
   Gaudi::XYZPoint posloc;
   bool inMat = false;
+  
   //move to local Velo half frame
   if( point.x() < 2. ){ //right half
     posloc = m_toVeloRFrame * point;
@@ -113,12 +134,13 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
   return inMat;
 }
 
+
 //=============================================================================
 
 //=============================================================================
 // Initialize the geometric info
 //=============================================================================
-StatusCode MatterVetoTool::InitialiseGeoInfo(){  
+StatusCode MatterVetoTool::i_cacheGeo(){  
   //get the Velo geometry
   string velostr = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
   const IDetectorElement* lefthalv = getDet<IDetectorElement>( velostr+"Left" );
@@ -132,7 +154,6 @@ StatusCode MatterVetoTool::InitialiseGeoInfo(){
     debug() <<"Velo global right half center "
 	    << rightcenter <<", left half center "<< lefthalv << endmsg;
   
-  std::cout <<"Velo global right half center"<< rightcenter <<", left half center "<<lefthalv<<std::endl;//vh
   
   //matrix to transform to local velo frame
   m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
@@ -187,6 +208,7 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
   // First get the z bin
   int regModIndex(0);
   double downlimit(-1000.),uplimit(-1000.);
+  //always()<<m_LeftSensorsCenter.size()-1<<endreq;
   if(int(m_LeftSensorsCenter.size())-1<2)return false;
   for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
     downlimit=uplimit;
@@ -198,18 +220,17 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
     }
   }
   if(point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
-  // Is in vaccum clean cylinder?
   double r = sqrt(pow(point.x()-m_LeftSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_LeftSensorsCenter[regModIndex].y(),2));
- 
   if ( (r<5. && point.z()<370.) || (r<4.3 && point.z()>370.) ){
     return false;
   }
   // Is in the module area
   double halfModuleBoxThickness(1.75);
   if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
-      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness)
+      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){
     return true;
-
+  }
+  
   // depending on z:
   // in the region of small corrugation
   if(point.z()<290. && point.x()-m_LeftSensorsCenter[regModIndex].x()>4){
@@ -220,17 +241,34 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
     float RlargerCyl = 9.;
     
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
-       && r < RsmallerCyl ) return false;
+       && r < RsmallerCyl ){ 
+      return false;
+    }
+    
     if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
-       && r < RlargerCyl ) return false;
+       && r < RlargerCyl ){
+      return false;
+    }
+    
   }
-  // Is clearly outside RFFoil part
-  if(r<12.5 && point.z()<440.) return true;
+  if(r<12.5 && point.z()<440.){
+    return true;
+  }
+  
   if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && 
-     point.z()<440.) return true;
+     point.z()<440.){
+    return true;
+  }
+  
   if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
-     point.z()>440.) return true;  
+     point.z()>440.){ 
+
+    return true;  
+  }
+  
   return false;
+
+
   
 }
 
