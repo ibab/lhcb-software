@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 !
+
+! 2011-08-25 - Johannes Albrecht
+ - tau23mu cleanup part 2 of 3: remove Ds and tau
+   line from hyperCP and TriMu 
+
 ! 2011-08025 - Jussara Miranda
  - StrippingBu2hhh Fix bug on KKK line,  LooseProtons in pph line; NlongTracks cut
 
