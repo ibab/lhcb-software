@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+!
+! 2011-08025 - Jussara Miranda
+ - StrippingBu2hhh Fix bug on KKK line,  LooseProtons in pph line; NlongTracks cut
 
 ! 2011-08-25 - Liming Zhang
  - StrippingD0ForBXX.py Tighten the cuts

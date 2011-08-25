@@ -1,4 +1,4 @@
- # $Id: StrippingBu2hhh.py,v 1.0 2011-05-26 samba team $
+ # $Id: StrippingBu2hhh.py,v 2.0 2011-08-25 Rio team $
 '''
 Module for construction of Bu->hhh from:   
    Inclusive KKK line for light decay modes (pipipi, Kpipi, KKpi and KKK) 
@@ -11,8 +11,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Irina Nasteva', 'Jussara Miranda']
-__date__ = '22/07/2011'
-__version__ = '$Revision: 1.0 $'
+__date__ = '25/08/2011'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ('Bu2hhhBuilder',
            'makeKKK_incl', 
@@ -21,7 +21,7 @@ __all__ = ('Bu2hhhBuilder',
 
 
 config_params = {
-    'MaxTrSIZE'             : 450 ,      ## GEC maximim Rec/Track/Best TrSIZE
+    'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
     '_h_PT'                 : 100. ,     ## tracks min PT
     '_h_P'                  : 1500. ,    ## tracks min P  
     '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
@@ -34,11 +34,10 @@ config_params = {
     '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2 
     '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
     '_3h_PT'                : 1000. ,    ## min 3h PT   
-    '_3h_PTsum'             : 4250. ,    ## min of 3h tracks PT sum 
+    '_3h_PTsum'             : 4500. ,    ## min of 3h tracks PT sum 
     '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum 
     '_3h_PVIPCHI2sum'       : 500. ,     ## min of the 3h tracks IP wrt best 3h PV
     '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-    '_3h_Charge'            : 1 ,        ## 3h tracks charge sum ==+-1
     '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate  
     '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate   
     '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line       
@@ -66,10 +65,10 @@ if hasattr(StandardParticles, "StdAllNoPIDsKaons"):
 else:
   from StandardParticles import StdNoPIDsKaons as StdNoPIDsKaons
 
-if hasattr(StandardParticles, "StdAllTightProtons"):
-  from StandardParticles import StdAllTightProtons as StdTightProtons
+if hasattr(StandardParticles, "StdAllLooseProtons"):
+  from StandardParticles import StdAllLooseProtons as StdLooseProtons
 else:
-  from StandardParticles import StdTightProtons as StdTightProtons
+  from StandardParticles import StdLooseProtons as StdLooseProtons
 
 
 
@@ -98,7 +97,6 @@ class Bu2hhhBuilder(LineBuilder) :
                               '_3h_Psum',              
                               '_3h_PVIPCHI2sum',              
 			      '_3h_TRKCHIDOFmin',
-                              '_3h_Charge',         
                               '_3h_CORRMmax',       
                               '_3h_CORRMmin',       
                               '_3hKKK_Mmax',                 
@@ -137,7 +135,6 @@ class Bu2hhhBuilder(LineBuilder) :
                              _3h_Psum        = config['_3h_Psum'],
                              _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
                              _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
-                             _3h_Charge      = config['_3h_Charge'],
                              _3h_CORRMmax    = config['_3h_CORRMmax'],
                              _3h_CORRMmin    = config['_3h_CORRMmin'],
                              _3hKKK_Mmin     = config['_3hKKK_Mmin'],
@@ -160,7 +157,6 @@ class Bu2hhhBuilder(LineBuilder) :
                              _3h_Psum        = config['_3h_Psum'],
                              _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
                              _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
-                             _3h_Charge      = config['_3h_Charge'],
                              _3h_CORRMmax    = config['_3h_CORRMmax'],
                              _3h_CORRMmin    = config['_3h_CORRMmin'],
                              _3hpph_deltaMmax= config['_3hpph_deltaMmax'],
@@ -210,7 +206,6 @@ def makeKKK_incl(name,
            _3h_Psum,
            _3h_PVIPCHI2sum,
 	   _3h_TRKCHIDOFmin,
-           _3h_Charge,
            _3h_CORRMmax,
            _3h_CORRMmin,
            _3hKKK_Mmin,
@@ -234,7 +229,6 @@ def makeKKK_incl(name,
 		& (SUMTREE(P,((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_Psum)s*MeV) \
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE((('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
-		& (abs(CHILD(Q,1) + CHILD(Q,2) + CHILD(Q,1))== %(_3h_Charge)s ) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
    
     _KKK=CombineParticles()
@@ -265,7 +259,6 @@ def makepph_incl(name,
            _3h_Psum,
            _3h_PVIPCHI2sum,
 	   _3h_TRKCHIDOFmin,
-           _3h_Charge,
            _3h_CORRMmax,
            _3h_CORRMmin,
            _3hpph_deltaMmax,
@@ -293,7 +286,6 @@ def makepph_incl(name,
 		& (SUMTREE(P,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_Psum)s*MeV) \
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE(((ABSID=='p+') |(ABSID=='p~-') |('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
-		& (abs(CHILD(Q,1) + CHILD(Q,2) + CHILD(Q,3))== %(_3h_Charge)s ) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
    
     _pph=CombineParticles()
@@ -304,7 +296,7 @@ def makepph_incl(name,
 
     return Selection ( name,
                        Algorithm = _pph,
-                       RequiredSelections = [StdNoPIDsKaons,StdTightProtons])
+                       RequiredSelections = [StdNoPIDsKaons,StdLooseProtons])
 
 
 def globalEventCutFilter(name, 
@@ -319,7 +311,8 @@ def globalEventCutFilter(name,
   modules = CoreFactory('CoreFactory').Modules
   for i in ['LoKiTracks.decorators']:
      if i not in modules : modules.append(i)
-  if MaxTrSIZE != None : _code += "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTrSIZE)s )" % locals()
+  if MaxTrSIZE != None : _code += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(MaxTrSIZE)s )" %locals()
+
   globalFilter= VoidFilter(name)
   globalFilter.Code = _code
   
