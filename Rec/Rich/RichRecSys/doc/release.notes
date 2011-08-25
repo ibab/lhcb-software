@@ -4,7 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecSys v4r3 2011-07-27 =========================
+! 2011-08-25 - Chris Jones
+ - Explicitly set options for the pixel background tools, for each iteration
+
+!========================= RichRecSys v4r3 2011-07-27 ========================
 ! 2011-07-25 - Chris Jones
  - Loosen off the abort cuts for 2011+ data. No changes for 2010 or 2009 (at 
    the moment)

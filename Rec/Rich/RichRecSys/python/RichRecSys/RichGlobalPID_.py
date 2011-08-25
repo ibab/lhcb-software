@@ -46,7 +46,11 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "PidSequencer"            : None, # The sequencer to add the RICH reconstruction algorithms to
         "OutputLevel"             : INFO, # The output level to set all algorithms and tools to use
         "TrackCuts"               : None,
-        "SingleTrackMode"         : None 
+        "SingleTrackMode"         : None,
+        "HPDBackgroundTool"       : "AvHPD",
+        "HPDBackIgnoreExpSignals" : None,
+        "HPDBackMinPixBackground" : None,
+        "HPDBackMinForInc"        : None
         }
 
     ## Initialize 
@@ -77,6 +81,15 @@ class RichGlobalPIDConfig(RichConfigurableUser):
                                 "KsTrack" : { "Chi2Cut" : [0,10], "PCut" : [1,9999999] } } )
         self.setRichDefault ( "TrackCuts", "HLT",
                               { "Forward" : { "Chi2Cut" : [0,16], "PCut" : [1,9999999] } } )
+        self.setRichDefaults("HPDBackIgnoreExpSignals",
+                             { "Offline" : [ True, False, False, False ],
+                               "HLT"     : [ True, False, False, False ] } )
+        self.setRichDefaults("HPDBackMinPixBackground",
+                             { "Offline" : [ 0,0,0,0 ],
+                               "HLT"     : [ 0,0,0,0 ] } )
+        self.setRichDefaults("HPDBackMinForInc",
+                             { "Offline" : [ 0,0,0,0 ],
+                               "HLT"     : [ 0,0,0,0 ] } )
         
     ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
@@ -128,6 +141,16 @@ class RichGlobalPIDConfig(RichConfigurableUser):
             # background estimation
             bckEsti = self.makeRichAlg( Rich__Rec__PixelBackgroundAlg,
                                         "Rich"+cont+"BckEstIt" + `it` )
+            bkgToolT = self.getProp("HPDBackgroundTool")
+            if bkgToolT == "AvHPD":
+                from Configurables import Rich__Rec__BackgroundEstiAvHPD
+                self.toolRegistry().Tools += ["Rich::Rec::BackgroundEstiAvHPD/PixelBackgroundTool"]
+                bckEsti.addTool( Rich__Rec__BackgroundEstiAvHPD, "PixelBackgroundTool" )
+            else:
+                raise RuntimeError("ERROR : HPD background tool "+bkgToolT+" not known")
+            bckEsti.PixelBackgroundTool.IgnoreExpectedSignals = self.getProp("HPDBackIgnoreExpSignals")[it]
+            bckEsti.PixelBackgroundTool.MinPixelBackground    = self.getProp("HPDBackMinPixBackground")[it]
+            bckEsti.PixelBackgroundTool.MinHPDBckForInclusion = self.getProp("HPDBackMinForInc")[it]
 
             # Likelihood minimisation
             lik = self.makeRichAlg( Rich__Rec__GlobalPID__Likelihood,
@@ -148,7 +171,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
             lik.addTool( pidTool )
 
             # Add the algs to the sequence
-            likSeq.Members += [ bckEsti, lik ]
+            likSeq.Members += [ bckEsti , lik ]
 
         # Finalise Global PID results
         sequence.Members += [ self.makeRichAlg(Rich__Rec__GlobalPID__Finalize,"Rich"+cont+"GPIDFin") ]
