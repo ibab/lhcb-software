@@ -133,12 +133,12 @@ def fitHistoSet ( histoset , set0 , force = False ) :
         ## use "own" background & reference signal Prs+Prs 
         res1, nFit = fitSignal ( _func , hPrsLT10 , background = hPrsLT10Bkg , signal = refAll )
         nFits += nFit 
-    if ( not res1 or not checkHisto ( h1 ) ) and r4 :
+    if ( not res1 or not checkHisto ( hPrsLT10 ) ) and r4 :
         sc1  = 4 
         ## use reference background & signal Prs+Prs 
         res1 , nFit = fitSignal ( _func , hPrsLT10 , background = refPrsLT10Bkg , signal = refAll )
         nFits += nFit 
-    if not res1 or not checkHisto ( h1 ) :
+    if not res1 or not checkHisto ( hPrsLT10 ) :
         sc1 = -1 
             
     # Subtracted all
