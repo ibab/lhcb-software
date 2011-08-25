@@ -3,6 +3,26 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v40r1">2011-08-25 - GaussSys v40r2</A></H1><PRE>
+<H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v32r5 (and Gaudi v22r2)</b>
+   AppConfig v3r*,
+   DecFiles v23r*, 
+   <b>ParamFiles v8r4</b>, 
+   <b>SQLDDDB v6r*</b>, FieldMap v5r*,
+   pythia6 424.2, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   <b>Geant4 v94r2 (based on geant4.9.4.p02) and Geant4Files v94r0</b>
+   <b>XmlVis v1r13</b>,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   <b>hijing 1.36.a.2</b> (via LCG_GeneratorsInterfaces),
+   pythia8 145 (via LCG_GeneratorsInterfaces)
+</A></H3>
+
 ! 2011-08-24 - Gloria Corti
  - Introduce new package for decay model, Mint, provided by Matt Coombes to
    have it in the nightlies
@@ -10,6 +30,21 @@ Purpose: LHCb Simulation program
 ! 2011-08-09 - Gloria Corti
  - Remove package MCInterfaces as it is available in LHCb v32r5.
  - Switch on package GaussCherenkov for RICH upgrade simulation
+
+!========================= Gauss v40r2 2011-08-25 ============================
+! 2011-08-25 - Gloria Corti
+ - Put in configuration the stearing of the creation of the static class
+   needed for beam parameters for the main event. This allow to be able to
+   run spill-over with BeamParameters and the new GenInit setting it up.
+
+!======================== GaussAlgs v4r1 2011-08-25 ===========================
+! 2011-08-25 - Gloria Corti
+ - Fix problem causing GenInit to crash for spill-over events by introducing
+   'createBeam' option to make the static class to pass at initialization.
+   This needs to be set to true for the main event and left to false for the
+   spill-over. The delete is also done based on the property. Spill-over do
+   do put a new object in the TES but refer to the main event.
+   . GenInit.{h,cpp}
 
 !=============================================================================
 </PRE><H1><A NAME="v40r1">2011-07-26 - GaussSys v40r1</A></H1><PRE>
