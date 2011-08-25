@@ -150,8 +150,8 @@ _default_configuration_ = {
     'ProtonCuts' : ' ( TRCHI2DOF < 5 ) & ( 0 < PIDp  - PIDpi ) & ( BPVIPCHI2() > 12 ) ' , 
     'MuonCuts'   : ' ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 12 ) ' ,                
     'PionCuts'   : ' ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 12 ) ' ,
-    'MuonCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 ) & ISMUON                & ( BPVIPCHI2() > 9 ) ' ,                
-    'PionCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 5 )                         & ( BPVIPCHI2() > 9 ) ' ,
+    'MuonCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ISMUON                & ( BPVIPCHI2() > 9 ) ' ,                
+    'PionCuts_forTau23Mu'   : ' ( PT > 300 * MeV ) & ( TRCHI2DOF < 4 )                         & ( BPVIPCHI2() > 9 ) ' ,
     #
     'SigmaCTau'  :   5 *         mm ,
     'SigmaMass'  : 250 *        MeV ,
@@ -186,7 +186,7 @@ _default_configuration_ = {
     'SigmaPrescale' : 1.0 ,
     'DplusPrescale' : 1.0 ,
     'DsPrescale'    : 1.0 ,
-    'Ds3PiPrescale' : 0.2 ,
+    'Ds3PiPrescale' : 1 ,
     }
 
 # =============================================================================
@@ -303,7 +303,7 @@ class StrippingHyperCPXConf(LineBuilder) :
             """                              % self._config[ 'Ds2PhiPiMass' ]  , 
             #
             MotherCut       = """
-            ( chi2vx < 25 ) &
+            ( chi2vx < 20 ) &
             ( ctau_forDs   > %s   ) &
             ( BPVIPCHI2() < 225 )
             """                              % self._config['DsCTau']
@@ -350,11 +350,11 @@ class StrippingHyperCPXConf(LineBuilder) :
             Preambulo        =                self._config [ 'Preambulo' ] , 
             # 
             CombinationCut  = """
-                        ( ADAMASS ( 'D_s+' ) < %s ) & phi 
+                        ( ADAMASS ( 'D_s+' ) < %s ) 
             """                              % self._config[ 'Ds23PiMass' ]  , 
             #
             MotherCut       = """
-            ( chi2vx < 25 ) &
+            ( chi2vx < 20 ) &
             ( ctau_forDs   > %s   ) &
             ( BPVIPCHI2() < 225 )
             """                              % self._config['DsCTau']
@@ -418,7 +418,8 @@ class StrippingHyperCPXConf(LineBuilder) :
                                    StdLoosePions    ]
             )
         
-        return self.PhiPi
+        #return self.PhiPi#was bug ??? JA 20110825
+        return self.PiMuMu
     
     
     ## get the muon selection 
@@ -493,19 +494,19 @@ class StrippingHyperCPXConf(LineBuilder) :
             algos    = [ self.sigma() ]
             ) ,
             ##
-            StrippingLine (
-            "Ds2PhiPiFor"  + self.name ()              ,
-            prescale = self._config['DsPrescale'     ] , ## ATTENTION! Prescale here !!
-            checkPV  = self._config['PrimaryVertices'] ,
-            algos    = [ self.ds2PhiPi () ]
-            ) ,
+            #StrippingLine (
+            #"Ds2PhiPiFor"  + self.name ()              ,
+            #prescale = self._config['DsPrescale'     ] , ## ATTENTION! Prescale here !!
+            #checkPV  = self._config['PrimaryVertices'] ,
+            #algos    = [ self.ds2PhiPi () ]
+            #) ,
             ##
-            StrippingLine (
-            "Ds2PiPiPiFor"  + self.name ()              ,
-            prescale = self._config['Ds3PiPrescale'     ] , ## ATTENTION! Prescale here !!
-            checkPV  = self._config['PrimaryVertices'] ,
-            algos    = [ self.ds2PiPiPi () ]
-            ) ,
+            #StrippingLine (
+            #"Ds2PiPiPiFor"  + self.name ()              ,
+            #prescale = self._config['Ds3PiPrescale'     ] , ## ATTENTION! Prescale here !!
+            #checkPV  = self._config['PrimaryVertices'] ,
+            #algos    = [ self.ds2PiPiPi () ]
+            #) ,
             ##
             StrippingLine (
             "Dplus2PiMuMuFor"  + self.name ()          ,
@@ -523,7 +524,7 @@ class StrippingHyperCPXConf(LineBuilder) :
 default_config = {
     'SigmaPrescale'  : 1.00 ,
     'DsPrescale'     : 1.00 ,
-    'Ds3PiPrescale'  : 0.2 ,
+    'Ds3PiPrescale'  : 1 ,
     'DplusPrescale'  : 1.00 ,
     }
 
