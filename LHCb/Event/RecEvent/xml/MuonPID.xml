@@ -21,7 +21,7 @@ system"
       <import name="Event/Track"/>
 
       <constructor 
-	desc     = "Copy constructor. Creates a new RichPID object with the same pid information" 
+	desc     = "Copy constructor. Creates a new MuonPID object with the same pid information" 
 	initList = "KeyedObject&lt;int&gt;(), m_MuonLLMu(lhs.m_MuonLLMu), m_MuonLLBg(lhs.m_MuonLLBg), m_NShared(lhs.m_NShared), m_Status(lhs.m_Status), m_IDTrack(lhs.m_IDTrack), m_muonTrack(lhs.m_muonTrack)">
 	<arg const="TRUE" name="lhs" type="LHCb::MuonPID"/>
       	</constructor>
@@ -40,6 +40,7 @@ system"
         <bitfield name="InAcceptance"   length="1" desc="Boolean: True if track extraoplation is in the Muon acceptance"/>
         <bitfield name="PreSelMomentum" length="1" desc="Boolean: True if track has minimal momentum"/>
 	<bitfield name="IsMuonLoose"    length="1" desc="Boolean: Is track a muon (looser defintion) ?"/>
+	<bitfield name="IsMuonTight"    length="1" desc="Boolean: Is track a muon (with x,y crossing requirement for muon hits) ?"/>
       </attribute>
 
       <relation type="LHCb::Track" name="IDTrack"
