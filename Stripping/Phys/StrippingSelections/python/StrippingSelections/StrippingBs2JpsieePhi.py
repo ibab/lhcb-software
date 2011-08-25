@@ -1,4 +1,3 @@
-
 __author__ = 'Artur Ukleja, Jibo He'
 __date__ = '2011/03/01'
 
@@ -7,7 +6,7 @@ Bs->JpsieePhi stripping selection
 
 Exports the following stripping lines
 - Bs2JpsieePhiLine
-- Bs2JpsieePhiLooseLine
+- Bs2JpsieePhiDetachedLine
 '''
 
 __all__ = (
@@ -38,7 +37,8 @@ class Bs2JpsieePhiConf(LineBuilder):
                 , 'BsVertexCHI2pDOFLoose'          # adimensional
                 , 'BsMassMinLoose'                 # MeV
                 , 'BsMassMaxLoose'                 # MeV
-                , 'BsDIRALoose'                    # adimensional
+                , 'LifetimeCut'                    # cut
+                  
                 , 'ElectronPT'                # MeV
                 , 'ElectronPID'               # adimensional
                 , 'ElectronTrackCHI2pDOF'     # adimensional
@@ -58,13 +58,13 @@ class Bs2JpsieePhiConf(LineBuilder):
                 )
 
     config_default = {
-                  'ElectronPTLoose'            :   800.    # MeV
+                  'ElectronPTLoose'            :   500.    # MeV
                 , 'ElectronPIDLoose'           :     0.    # adimensional
-                , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
+                , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
                 , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
-                , 'JpsiMassMinLoose'           :  2700.    # MeV
+                , 'JpsiMassMinLoose'           :  2500.    # MeV
                 , 'JpsiMassMaxLoose'           :  3300.    # MeV
-                , 'KaonTrackCHI2pDOFLoose'     :    10.    # adimensional
+                , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
                 , 'PhiPTLoose'                 :  1000.    # MeV
                 , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
                 , 'PhiMassMinLoose'            :   990.    # MeV
@@ -72,7 +72,8 @@ class Bs2JpsieePhiConf(LineBuilder):
                 , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
                 , 'BsMassMinLoose'             :  4500.    # MeV
                 , 'BsMassMaxLoose'             :  6000.    # MeV
-                , 'BsDIRALoose'                :     0.99  # adimensional
+                , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
+                  
                 , 'ElectronPT'            :   800.    # MeV
                 , 'ElectronPID'           :     2.    # adimensional
                 , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
@@ -98,9 +99,9 @@ class Bs2JpsieePhiConf(LineBuilder):
 
       self.name = name
       self.Bs2JpsieePhiLine      = self._Bs2JpsieePhiLine( name, config )
-      self.Bs2JpsieePhiLooseLine = self._Bs2JpsieePhiLooseLine( name+"Loose", config )
+      self.Bs2JpsieePhiDetachedLine = self._Bs2JpsieePhiDetachedLine( name+"Detached", config )
       self.registerLine( self.Bs2JpsieePhiLine )
-      self.registerLine( self.Bs2JpsieePhiLooseLine )
+      self.registerLine( self.Bs2JpsieePhiDetachedLine )
 
 
     def _Bs2JpsieePhiLine( self, name, config ) :
@@ -146,8 +147,8 @@ class Bs2JpsieePhiConf(LineBuilder):
               )
 
 
-    def _Bs2JpsieePhiLooseLine( self, name, config ) :
-
+    def _Bs2JpsieePhiDetachedLine( self, name, config ) :
+        
         _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
         _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPIDLoose)s )" \
@@ -172,10 +173,10 @@ class Bs2JpsieePhiConf(LineBuilder):
                         RequiredSelections = [_stdPhi])
 
         CC = "(AM > %(BsMassMinLoose)s *MeV) & (AM < %(BsMassMaxLoose)s *MeV)" % config
-        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s) & (BPVDIRA > %(BsDIRALoose)s)" % config
+        MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s)" % config
         _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
-                               MotherCut = MC 
+                               MotherCut = MC + config['LifetimeCut'] 
                                )
         Bs = Selection(name,
                        Algorithm = _Bs,

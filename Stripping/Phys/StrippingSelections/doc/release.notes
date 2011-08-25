@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-25 - Jibo He
+ - StrippingBs2JpsieePhi
+  . Apply lifetime cut in the loose line and rename it as Detached line
+
 ! 2011-08-25 - Sam Gregson	
  - Submitting the re-optimisation of the D(s)->KS0H stripping lines for the end of year reprocessing
 

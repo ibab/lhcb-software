@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from StrippingUtils import LineBuilderTests
-from StrippingSelections.StrippingBs2JpsieePhi_NEW import Bs2JpsieePhiConf as builder
+from StrippingSelections.StrippingBs2JpsieePhi import Bs2JpsieePhiConf as builder
 
 config_params = builder.config_default
 
