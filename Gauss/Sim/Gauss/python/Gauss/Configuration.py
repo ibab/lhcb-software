@@ -999,6 +999,7 @@ class Gauss(LHCbConfigurableUser):
         
         # Give beam parameters to GenInit algorithm
         genInit = GenInit( "GaussGen" )
+        genInit.CreateBeam              = True
         genInit.BeamEnergy              = beamMom
         genInit.HorizontalCrossingAngle = angle
         genInit.VerticalCrossingAngle   = 0. 

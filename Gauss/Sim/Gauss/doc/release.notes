@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v40r2 2011-08-25 ============================
+! 2011-08-25 - Gloria Corti
+ - Put in configuration the stearing of the creation of the static class
+   needed for beam parameters for the main event. This allow to be able to
+   run spill-over with BeamParameters and the new GenInit setting it up.
+
 !========================= Gauss v40r1 2011-07-25 ============================
 ! 2011-07-25 - Gloria Corti
  - Remove conditional build of generators packages as now pattern to prevent 
