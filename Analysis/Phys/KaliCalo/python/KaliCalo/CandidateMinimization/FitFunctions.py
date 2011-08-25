@@ -168,4 +168,8 @@ def fitHistoSet ( histoset , set0 , force = False ) :
     histoset.result = result 
     return result 
 
+def simpleFit( histo ):
+  """Simple histogram fit."""
+  return Fit.fitPi0(histo)
+
 # EOF
