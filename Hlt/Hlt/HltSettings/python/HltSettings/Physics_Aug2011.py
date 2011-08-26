@@ -164,8 +164,8 @@ class Physics_Aug2011( object ):
         from Electrons_July2011 import Electrons_July2011
         __update_conf__(thresholds,  Electrons_July2011().Thresholds() )
 
-        from Hadrons_July2011 import Hadrons_July2011
-        __update_conf__(thresholds,  Hadrons_July2011().Thresholds() )
+        from Hadrons_Sept11 import Hadrons_Sept11
+        __update_conf__(thresholds,  Hadrons_Sept11().Thresholds() )
 
         from DV_draft2011 import DV_draft2011
         __update_conf__(thresholds,  DV_draft2011().Thresholds() )
@@ -184,7 +184,10 @@ class Physics_Aug2011( object ):
                 'Hlt2LowMultMuon',
                 'Hlt2LowMultHadron',
                 'Hlt2LowMultPhoton',
-                'Hlt2LowMultElectron']
+                'Hlt2LowMultElectron',
+                'Hlt2LowMultHadron_nofilter',
+                'Hlt2LowMultElectron_nofilter'
+                ]
 
         from Express_Hlt2_Aug11 import Express_Hlt2_Aug11
         hlt2.extend( Express_Hlt2_Aug11().ActiveHlt2Lines() )
@@ -195,8 +198,8 @@ class Physics_Aug2011( object ):
         from Electrons_July2011 import Electrons_July2011
         hlt2.extend( Electrons_July2011().ActiveHlt2Lines() )
 
-        from Hadrons_July2011 import Hadrons_July2011
-        hlt2.extend( Hadrons_July2011().ActiveHlt2Lines() )
+        from Hadrons_Sept11 import Hadrons_Sept11
+        hlt2.extend( Hadrons_Sept11().ActiveHlt2Lines() )
        
         from DV_draft2011 import DV_draft2011 
         hlt2.extend( DV_draft2011().ActiveHlt2Lines() )
