@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Thomas Blake
+ - Updated __init__ to include:
+  . StrippingVeryDecatchedJpsiLines
+  . StrippingTau23MuLines
+
 ! 2011-08-26 - Victor Coco
  - StrippingDisplVertices : update the cuts, reorganise the lines, add trigger
    study lines
