@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Will Barter
+ - Updated StrippingLowMult.py to reflect trigger changes.
+ - Added StrippingZ02TauTauProng.py on behalf of Christian Elsasser
+
+
 ! 2011-08-26 - Sophie Redford
  - Updated B2XMuMuSS lines: increased DIRA and MinIPChi2 cuts, replaced StdLooseKaons with StdNoPIDsKaons.
 

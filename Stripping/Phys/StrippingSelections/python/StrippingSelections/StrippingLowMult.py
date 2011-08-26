@@ -15,7 +15,8 @@ from StrippingUtils.Utils import LineBuilder
 confdict_LowMult={
     'LowMultPrescale'    : 1.0 
     ,  'LowMultPostscale'   : 1.0
-    ,  'LowMultPrescale_ps'    : 0.005 
+    ,  'LowMultPrescale_ps'    : 0.005
+    ,  'LowMultNoFilterPrescale':0.1
     }
 
 name = "LowMult"
@@ -24,7 +25,8 @@ class LowMultConf(LineBuilder) :
 
     __configuration_keys__ = ('LowMultPrescale',
                               'LowMultPostscale',
-                              'LowMultPrescale_ps' 
+                              'LowMultPrescale_ps',
+                              'LowMultNoFilterPrescale'
                               )
     
     def __init__(self, name, config) :
@@ -99,6 +101,16 @@ class LowMultConf(LineBuilder) :
                                                     )
         
         self.registerLine(self.LowMultElectron_lineps)
+
+        self.LowMultElectron_nofilter_line = StrippingLine(self._myname+"ElectronLineNoFilter",
+                                                    prescale = config['LowMultNoFilterPrescale'],
+                                                    postscale = config['LowMultPostscale'],
+                                                    checkPV = False,
+                                                    HLT = "HLT_PASS('Hlt2LowMultElectron_nofilterDecision')"
+                                                    )
+        
+        self.registerLine(self.LowMultElectron_nofilter_line)
+
         
         #HADRON
 
@@ -124,6 +136,16 @@ class LowMultConf(LineBuilder) :
                                                   )
         
         self.registerLine(self.LowMultHadron_lineps)
+
+        self.LowMultHadron_nofilter_line = StrippingLine(self._myname+"HadronLineNoFilter",
+                                                  prescale = config['LowMultNoFilterPrescale'],
+                                                  postscale = config['LowMultPostscale'],
+                                                  checkPV = False,
+                                                  HLT = "HLT_PASS('Hlt2LowMultHadron_nofilterDecision')"
+                                                  )
+        
+        self.registerLine(self.LowMultHadron_nofilter_line)
+        
 
         #PHOTON
 
