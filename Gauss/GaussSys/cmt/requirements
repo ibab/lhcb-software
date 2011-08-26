@@ -52,7 +52,7 @@ use ClhepTools          v2r1p1    Tools
 
 # Simulation specialized packages
 use GaussKine           v4r0      Sim
-use GaussAlgs		v4r0      Sim
+use GaussAlgs		v4r1      Sim
 use GaussTools          v16r0     Sim
 use GaussRICH		v11r4     Sim
 use GaussTracker	v6r2p1	  Sim
