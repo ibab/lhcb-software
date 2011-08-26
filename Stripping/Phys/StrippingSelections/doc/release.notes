@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Benoit Viaud
+ - StrippingDstarPromptWithD02HHHH.py : tightened some cuts (improve timing&retention).
+
 ! 2011-08-25 - Marco Gersabeck
  - StrippingD2hh.py: added low retention line for partially reconstructed opposite side D
 

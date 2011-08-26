@@ -16,8 +16,8 @@ Exported symbols (use python help):
 '''
 
 __author__ = ['Philip Hunt']
-__date__ = '24/02/2011'
-__version__ = '$Revision: 1.1 $'
+__date__ = '26/08/2011'
+__version__ = '$Revision: 1.2 $'
 
 __all__ = ('DstarPromptWithD02K3PiConf'
            ,'makeD02K3Pi'
@@ -31,9 +31,88 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import checkConfig, LineBuilder
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from copy import copy
 
 moduleName='DstarPromptWithD02HHHH'
+
+# What follows documents the cuts to
+# be implemented by the Stripping team in
+# StrippingSettings (valid for Stripping 17,
+# 26/08/2011).
+
+config_default_NoPID = {
+  'CombDelmLower'     : -8*MeV
+  ,'CombDelmUpper'    : 5.5*MeV
+  ,'DelmLower'        : -7.5*MeV
+  ,'DelmUpper'        : 5*MeV
+  ,'CombD0MassWin'    : 42*MeV
+  ,'D0MassWin'        : 40*MeV
+  ,'DstarDOCA'        : 0.22*mm
+  ,'D0MaxDOCA'        : 0.12*mm
+  ,'D0DauPt'          : 350*MeV
+  ,'D0DauP'           : 3*GeV
+  ,'D0Pt'             : 3*GeV
+  ,'DstarPt'          : 3*GeV
+  ,'SlowPionPt'       : 120*MeV
+  ,'DstarVtxChi2DOF'  : 20
+  ,'D0VtxChi2DOF'     : 10
+  ,'D0DauMaxIPChi2'   : 30
+  ,'D0DauIPChi2'      : 3.0
+  ,'D0FDChi2'         : 48
+  ,'D0IPChi2'         : 30
+  ,'D0DIRA'           : 0.9998
+  ,'TrackChi2DOF'     : 4
+  ,'ApplyKaonPIDK'    : False
+  ,'KaonPIDK'         : -100
+  ,'ApplyPionPIDK'    : False
+  ,'PionPIDK'         : 100 # not applied to the slow pion
+  ,'CheckPV'          : True # reject events with no PVs
+  ,'ApplyGECs'        : False # set to False to apply no GECs
+  ,'MaxLongTracks'    : 250
+  ,'MaxVeloTracks'    : None
+  ,'MaxSpdDigits'     : None
+  ,'MaxITClusters'    : None
+  ,'Prescale'         : 0.10
+  ,'Postscale'        : 1
+  }
+
+config_default= {
+  'CombDelmLower'     : -8.*MeV
+  ,'CombDelmUpper'    : 14*MeV
+  ,'DelmLower'        : -7.5*MeV
+  ,'DelmUpper'        : 13*MeV
+  ,'CombD0MassWin'    : 68*MeV
+  ,'D0MassWin'        : 65*MeV
+  ,'DstarDOCA'        : 0.22*mm
+  ,'D0MaxDOCA'        : 0.12*mm
+  ,'D0DauPt'          : 350*MeV
+  ,'D0DauP'           : 3*GeV
+  ,'D0Pt'             : 3*GeV
+  ,'DstarPt'          : 3*GeV
+  ,'SlowPionPt'       : 120*MeV
+  ,'DstarVtxChi2DOF'  : 20
+  ,'D0VtxChi2DOF'     : 10
+  ,'D0DauMaxIPChi2'   : 30
+  ,'D0DauIPChi2'      : 3.0
+  ,'D0FDChi2'         : 48
+  ,'D0IPChi2'         : 30
+  ,'D0DIRA'           : 0.9998
+  ,'TrackChi2DOF'     : 4
+  ,'ApplyKaonPIDK'    : True
+  ,'KaonPIDK'         : 0.
+  ,'ApplyPionPIDK'    : True
+  ,'PionPIDK'         : 3 # not applied to the slow pion
+  ,'CheckPV'          : True # reject events with no PVs
+  ,'ApplyGECs'        : True # set to False to apply no GECs
+  ,'MaxLongTracks'    : 250
+  ,'MaxVeloTracks'    : None
+  ,'MaxSpdDigits'     : None
+  ,'MaxITClusters'    : None
+  ,'Prescale'         : 1
+  ,'Postscale'        : 1
+  }
+
 
 class DstarPromptWithD02HHHHConf(LineBuilder):
   """
