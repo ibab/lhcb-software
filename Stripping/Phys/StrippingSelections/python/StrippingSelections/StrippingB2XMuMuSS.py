@@ -12,21 +12,21 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   #'MuonPIDK'      : -5.   ,    #adimensional
                   #'MuonPIDmu'     : -5.   ,    #adimensional
                   #'MuonPIDp'      : -5.   ,    #adimensional
-                  'MuonMINIPCHI2' : 4     ,    #adminensional
+                  'MuonMINIPCHI2' : 5     ,    #adminensional
                   
                   'PionP'         : 2000. ,    #MeV
                   'PionPT'        : 500.  ,    #MeV
-                  'PionMINIPCHI2' : 4     ,    #adminensional
+                  'PionMINIPCHI2' : 5     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
                   'KaonPT'        : 500.  ,    #MeV
                   #'KaonPIDK'      : -1.   ,    #adimensional
-                  'KaonMINIPCHI2' : 4     ,    #adminensional
+                  'KaonMINIPCHI2' : 5     ,    #adminensional
                   
                   'DimuonMass'    : 0.  ,    #MeV
                   'BVCHI2DOF'     : 7    ,    #adminensional                              
                   #'BFDCHI2'       : 9     ,    #adimensional
-                  'BDIRA'         : 0.9995 ,    #adimensional
+                  'BDIRA'         : 0.9998 ,    #adimensional
                   'BIPCHI2'       : 30    ,    #adimensional
                   'BMassWin'      : 400.  ,    #MeV, mass window
                   
@@ -46,7 +46,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons
+from StandardParticles import StdNoPIDsKaons, StdLoosePions, StdLooseMuons
 
 default_name = "B2XMuMuSS"
 
@@ -327,7 +327,7 @@ def makeKaons(name, KaonP, KaonPT, KaonMINIPCHI2):
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdLooseKaons ] )
+                     RequiredSelections = [ StdNoPIDsKaons ] )
 
 #####################################################
 def makePions(name, PionP, PionPT, PionMINIPCHI2):
