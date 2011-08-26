@@ -15,12 +15,17 @@ from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 
 default_config = { 'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
+           'DaugPtLoose': 500.,
            'DaugP': 5000.,
+           'DaugPLoose': 3000.,
+           'DaugIPChi2Loose': 4.,
            'DaugIPChi2': 9.,
            'DaugTrkChi2': 3.,
+           'DaugTrkChi2Loose': 4.,
            'HighPIDK': 5.,
            'LowPIDK': 0.,
            'D0Pt': 2000.,
+           'D0PtLoose': 1500.,
            'D0MassWindowCentre': 1865.,
            'D0MassWindowWidth': 100.,
            'D0KPiMassWindowWidthLow':  -100.,
@@ -77,12 +82,17 @@ class D2hhConf(LineBuilder) :
 
     __configuration_keys__ = ('DaugPtMin',
 	     		      'DaugPtMax',
+	     		      'DaugPtLoose',
 	     		      'DaugP',
+	     		      'DaugPLoose',
 	     		      'DaugIPChi2',
+	     		      'DaugIPChi2Loose',
 	     		      'DaugTrkChi2',
+	     		      'DaugTrkChi2Loose',
 	     		      'HighPIDK',
 	     		      'LowPIDK',
 	     		      'D0Pt',
+	     		      'D0PtLoose',
 	     		      'D0MassWindowCentre',
 	     		      'D0MassWindowWidth',
 	     		      'D0KPiMassWindowWidthLow',
@@ -133,6 +143,9 @@ class D2hhConf(LineBuilder) :
         dst2DKK_name = name+'PromptDst2D2KK'
         dst2DRS_name = name+'PromptDst2D2RS'
         dst2DWS_name = name+'PromptDst2D2WS'
+	dPartial_name = name+'PromptDPartial'
+	dstarPartial_name = name+'PromptDstarPartial'
+	pseudoPsi_name = name+'PromptD0D0FromDstarPartial'
 
         # D0 -> hh' selections
         #self.selD2Kpi = makeD2hh(d2kpi_name,  
@@ -215,6 +228,24 @@ class D2hhConf(LineBuilder) :
                                    , inputSel = [self.selD0PiPi, self.selD0ConjPiPi, stdNoPIDsPions]
                                  )
 
+        self.selDPartial = makeDPartial( dPartial_name
+				   , config
+                                   , '[D- -> K- pi- pi+]cc'
+                                   , inputSel = [stdNoPIDsPions, stdNoPIDsKaons]
+                                 )
+
+        self.selDstarPartial = makeDstarPartial( dstarPartial_name
+				   , config
+                                   , '[D*(2010)+ -> D- pi+]cc'
+                                   , inputSel = [self.selDPartial, stdNoPIDsPions]
+                                 )
+
+        self.selPseudoPsi = makePseudoPsi( pseudoPsi_name
+				   , config
+                                   , '[psi(3770) -> D0 D*(2010)+]cc'
+                                   , inputSel = [self.selD2Kpi, self.selDstarPartial]
+                                   #, inputSel = [self.selD0PiPi, self.selD0ConjPiPi, self.selD0KK, self.selD0ConjKK, self.selD2Kpi, self.selD0WS, self.selDstarPartial]
+                                 )
         # Untagged lines
         self.d2kpi_line = StrippingLine(d2kpi_name+"Line",
                                         prescale = config['UntaggedCFLinePrescale'],
@@ -259,6 +290,13 @@ class D2hhConf(LineBuilder) :
                                         selection = self.selDstPiPi
                                        )
 
+	# Pseudo Psi line
+        self.pseudoPsi_line = StrippingLine(pseudoPsi_name+"Line",
+                                        prescale = 1.,
+                                        postscale = 1.,
+                                        selection = self.selPseudoPsi
+                                       )
+
         # register lines
         self.registerLine(self.d2kpi_line)
 	if not config['UntaggedKpiOnly']:
@@ -269,6 +307,7 @@ class D2hhConf(LineBuilder) :
           self.registerLine(self.dstWS_line)
           self.registerLine(self.dstKK_line)
           self.registerLine(self.dstPiPi_line)
+          self.registerLine(self.pseudoPsi_line)
 
 def makeD2hh(name,
              config,
@@ -453,6 +492,118 @@ def makeDstar2D0Pi( name
 
     return Selection( name+'Sel',
                       Algorithm = _Dstar,
+                      RequiredSelections = inputSel
+                    )
+
+def makeDPartial( name
+                    , config
+                    , DecayDescriptor
+                    , inputSel
+                  ) :
+
+    """
+    Create and return a D- -> K- pi- pi+ Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
+    """
+
+    _Kcuts1  = "~ISMUON & (PT > %(DaugPtLoose)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2Loose)s)" % locals()['config']
+    _KcutsPIDK  = " & (PIDK > %(HighPIDK)s)" % locals()['config']
+    _Kcuts2  = " & (ISLONG) & (P > %(DaugPLoose)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2Loose)s)" % locals()['config']
+    _Kcuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
+    _Picuts1 = "~ISMUON & (PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
+    _PicutsPIDK  = " & (PIDK < %(LowPIDK)s)" % locals()['config']
+    _Picuts2 = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
+    _Picuts = _Picuts1 + _PicutsPIDK + _Picuts2
+    _dauCuts = { 'K+': _Kcuts, 'pi+': _Picuts }
+    #_Kcuts1  = "~ISMUON & (PT > 500* MeV) & (MIPCHI2DV(PRIMARY) > 4)"
+    #_KcutsPIDK  = " & (PIDK > 5)"
+    #_Kcuts2  = " & (ISLONG) & (P > 5000* MeV) & (TRCHI2DOF < 5)"
+    #_Kcuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
+    #_Picuts1 = "~ISMUON & (PT > 500* MeV) & (MIPCHI2DV(PRIMARY) > 4)"
+    #_PicutsPIDK  = " & (PIDK < 0)"
+    #_Picuts2 = " & (ISLONG) & (P > 5000* MeV) & (TRCHI2DOF < 5)"
+    #_Picuts = _Picuts1 + _PicutsPIDK + _Picuts2
+    #_dauCuts = { 'K+': _Kcuts, 'pi+': _Picuts }
+
+    _combCuts = "(APT > %(D0PtLoose)s* MeV)" \
+                "& (AP > %(D0P)s* MeV)" % locals()['config']
+
+    _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
+                  "& (BPVVDCHI2 > %(D0FDChi2)s)" % locals()['config']
+
+
+    _Dminus = CombineParticles( DecayDescriptor = DecayDescriptor
+                             , DaughtersCuts = _dauCuts
+                             , CombinationCut = _combCuts
+                             , MotherCut = _motherCuts
+                             )
+
+    return Selection( name+'Sel',
+                      Algorithm = _Dminus,
+                      RequiredSelections = inputSel
+                    )
+
+def makeDstarPartial( name
+                    , config
+                    , DecayDescriptor
+                    , inputSel
+                  ) :
+
+    """
+    Create and return a D*+ -> D- pi+ Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
+    """
+
+    daugCuts = "(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % locals()['config']
+    combCuts = "((AM - AM1) < %(Dstar_AMDiff_MAX)s* MeV)" % locals()['config']
+    dstarCuts = "(VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2VDOF_MAX)s)" \
+                "& ((M - M1) < %(Dstar_MDiff_MAX)s* MeV)" % locals()['config']
+
+    _Dstar = CombineParticles( DecayDescriptor = DecayDescriptor
+                             , DaughtersCuts = { "pi+" : daugCuts }
+                             , CombinationCut = combCuts
+                             , MotherCut = dstarCuts
+                             )
+
+    return Selection( name+'Sel',
+                      Algorithm = _Dstar,
+                      RequiredSelections = inputSel
+                    )
+
+def makePseudoPsi( name
+                    , config
+                    , DecayDescriptor
+                    , inputSel
+                  ) :
+
+    """
+    Create and return a D* -> D0 pi Selection object.
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of cut values.
+    DecayDescriptor: DecayDescriptor.
+    inputSel    : input selections
+    """
+
+    _daugCuts = "(PT> %(D0PtLoose)s*MeV)" % locals()['config']
+    _combCuts = "(APT> %(D0PtLoose)s*MeV)" % locals()['config']
+
+    _Psi = CombineParticles( DecayDescriptor = DecayDescriptor
+                             , DaughtersCuts = { "D0": _daugCuts }
+                             , CombinationCut = _combCuts
+                             , MotherCut = "(VFASPF(VCHI2PDOF) < 10000)"
+                             )
+
+    return Selection( name+'Sel',
+                      Algorithm = _Psi,
                       RequiredSelections = inputSel
                     )
 
