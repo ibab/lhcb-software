@@ -31,7 +31,7 @@ void HAdderServInfoHandler::infoHandler(void)
     }
     return;
   }
-//  if (RTL::nodeNameShort().length()<=6)
+  if (RTL::nodeNameShort().length()<=6)
   {
     printf("New Message from Service List Service %s data:\n%s\n==================\n",itsService->getName(),input);
   }
