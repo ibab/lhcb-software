@@ -821,7 +821,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                  , Code ="(MINTREE('e+'==ABSID,PT) > %(DiElectronHighMass_ElecPT)s *MeV)"\
                                                  " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloPrsE,0))>%(DiElectronHighMass_PrsMin)s)"\
                                                  " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P)>%(DiElectronHighMass_EcalMin)s)"\
-                                                 " & (MAXTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P)<%(DiElectronHighMass_HcalMax)s)"\
+                                                 " & (MAXTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P)<%(DiElectronHighMass_HcalMax)s)"\
                                                  " & (MAXTREE('e+'==ABSID,TRCHI2DOF)<%(DiElectronHighMass_TkChi2)s)"\
                                                  " & (MM > %(DiElectronHighMass_MinMass)s *MeV)"\
                                                  " & (VFASPF(VCHI2PDOF) < %(DiElectronHighMass_VtxCHI2)s)"\
@@ -836,7 +836,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                                   , Code ="(MINTREE('e+'==ABSID,PT) > %(DiElectronVHighMass_ElecPT)s *MeV)"\
                                                   " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloPrsE,0))>%(DiElectronHighMass_PrsMin)s)"\
                                                   " & (MINTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P)>%(DiElectronHighMass_EcalMin)s)"\
-                                                  " & (MAXTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P)<%(DiElectronHighMass_HcalMax)s)"\
+                                                  " & (MAXTREE('e+'==ABSID,PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P)<%(DiElectronHighMass_HcalMax)s)"\
                                                   " & (MAXTREE('e+'==ABSID,TRCHI2DOF)<%(DiElectronHighMass_TkChi2)s)"\
                                                   " & (MM > %(DiElectronVHighMass_MinMass)s *MeV)"\
                                                   " & (VFASPF(VCHI2PDOF) < %(DiElectronHighMass_VtxCHI2)s)"\

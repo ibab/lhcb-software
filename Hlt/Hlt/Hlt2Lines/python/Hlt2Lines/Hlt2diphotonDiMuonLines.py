@@ -15,10 +15,12 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  'Prescale'                  : {  'Hlt2diPhotonDiMuon'    :  1.0 
-                                                   ,'Hlt2LowMultMuon'       :  0.1
-                                                   ,'Hlt2LowMultHadron'     :  0.1
-                                                   ,'Hlt2LowMultPhoton'     :  1.0
-                                                   ,'Hlt2LowMultElectron'   :  1.0
+                                                    ,'Hlt2LowMultMuon'       :  0.1
+                                                    ,'Hlt2LowMultHadron'     :  0.1
+                                                    ,'Hlt2LowMultPhoton'     :  1.0
+                                                    ,'Hlt2LowMultElectron'   :  1.0
+                                                    ,'Hlt2LowMultHadron_nofilter'     :  0.01
+                                                    ,'Hlt2LowMultElectron_nofilter'   :  0.05
                                                  }
                 }
     
@@ -37,8 +39,19 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
 
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         FilterNumVeloTracks = VoidFilter('Hlt2LowMultMuonFilterNumVeloTracks', Code="CONTAINS('" + velotracks.outputSelection() + "')<4")
-                   
+        FilterNumVeloTracksEl = VoidFilter('Hlt2LowMultElectronFilterNumVeloTracks', Code="CONTAINS('" + velotracks.outputSelection() + "')<8")       
+        FilterNumVeloTracksHad = VoidFilter('Hlt2LowMultHadronFilterNumVeloTracks', Code="CONTAINS('" + velotracks.outputSelection() + "')<8")
+
         
+        MuBackTrackFilter = VoidFilter('LowMultMuBackTrackKill', Code = "TrNUM('%s', TrBACKWARD)<1" %
+                                     velotracks.outputSelection() )
+        ElBackTrackFilter = VoidFilter('LowMultElBackTrackKill', Code = "TrNUM('%s', TrBACKWARD)<1" %
+                                       velotracks.outputSelection() )
+        HadBackTrackFilter = VoidFilter('LowMultHadBackTrackKill', Code = "TrNUM('%s', TrBACKWARD)<1" %
+                                        velotracks.outputSelection() )
+
+                
+         
         FilterMu = Hlt2Member(FilterDesktop
                              , "FilterMu"
                              , Code = "(PT>400*MeV)"
@@ -108,15 +121,24 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Muon,lowMult')|L0_CHANNEL('DiMuon,lowMult')"
-                       , algos = [ velotracks, FilterNumVeloTracks, BiKalmanFittedMuons,FilterMu ]
+                       , algos = [ velotracks,  MuBackTrackFilter,  FilterNumVeloTracks, BiKalmanFittedMuons,FilterMu ]
                        , postscale = self.postscale
                        )
+        
         
         line = Hlt2Line( 'LowMultHadron'
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('DiHadron,lowMult')"
-                       , algos = [BiKalmanFittedKaons, FilterH]
+                       , algos = [ velotracks, HadBackTrackFilter, FilterNumVeloTracksHad, BiKalmanFittedKaons, FilterH]
+                       , postscale = self.postscale
+                       )
+
+        line = Hlt2Line( 'LowMultHadron_nofilter'
+                       , prescale = self.prescale
+                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , L0DU = "L0_CHANNEL('DiHadron,lowMult')"
+                       , algos = [ BiKalmanFittedKaons, FilterH]
                        , postscale = self.postscale
                        )
         
@@ -127,11 +149,20 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
                        , algos = [ BiKalmanFittedPhotons,AllPi0s,FilterPhFilter ]  
                        , postscale = self.postscale
                        )
+        
         line = Hlt2Line( 'LowMultElectron'
                        , prescale = self.prescale
                        , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
                        , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
-                       , algos = [BiKalmanFittedElectrons,FilterEl]   
+                       , algos = [ velotracks,  ElBackTrackFilter, FilterNumVeloTracksEl, BiKalmanFittedElectrons,FilterEl]   
+                       , postscale = self.postscale
+                       )
+        
+        line = Hlt2Line( 'LowMultElectron_nofilter'
+                       , prescale = self.prescale
+                       , HLT =  "HLT_PASS_RE('Hlt1NoPVPassThroughDecision')"    
+                       , L0DU = "L0_CHANNEL('Electron,lowMult')|L0_CHANNEL('DiEM,lowMult')"
+                       , algos = [ BiKalmanFittedElectrons,FilterEl]   
                        , postscale = self.postscale
                        )
         
@@ -142,6 +173,6 @@ class Hlt2diphotonDiMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultHadronDecision" : 50303 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultPhotonDecision" : 50304 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultElectronDecision" : 50305 } )
-
-        
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultHadron_nofilterDecision" : 50306 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2LowMultElectron_nofilterDecision" : 50307 } )
       

@@ -477,7 +477,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                    , Code ="(PT > %(SingleTFHighPtElectron_PT)s *MeV)" \
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
                                                    " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
-                                                   " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
+                                                   " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                    " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
                                                    , Inputs = [ BiKalmanFittedElectrons ]
                                                    )
@@ -496,7 +496,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                                     , Code ="(PT > %(SingleTFVHighPtElectron_PT)s *MeV)" \
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(SingleTFHighPtElectron_PrsMin)s) "\
                                                     " & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)/P>%(SingleTFHighPtElectron_EcalMin)s) "\
-                                                    " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,0)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
+                                                    " & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)/P<%(SingleTFHighPtElectron_HcalMax)s)"\
                                                     " & (TRCHI2DOF < %(SingleTFHighPtElectron_TkChi2)s )" %self.getProps() 
                                                     , Inputs = [ BiKalmanFittedElectrons ]
                                                     )
