@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-08-26 Sam Gregson (on behalf of Roel Aajj)
+ - Added a file CharmHadronLines_Set2011.py - 
+ including cut updates for the D2KS0H lines
+
 ! 2011-08-26 Johannes Albrecht
  - update Physcis_Aug2011: include prescaled lowMult lines, 
    move to Hadrons_Sept11
