@@ -19,6 +19,11 @@ _locations = {}
 from CommonParticles.StdLooseDplus import *
 _locations.update ( locations )
 
+
+from CommonParticles.StdTightDplus import *
+_locations.update ( locations )
+
+
 # redefine the locations 
 locations = _locations
 
