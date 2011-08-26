@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Victor Coco
+ - StrippingDisplVertices : modify units to have same convention than in 
+   StrippingSettings
+
 ! 2011-08-26 - Thomas Blake
  - Updated __init__ to include:
   . StrippingVeryDecatchedJpsiLines

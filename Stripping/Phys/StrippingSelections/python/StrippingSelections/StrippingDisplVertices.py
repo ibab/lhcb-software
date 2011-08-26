@@ -36,8 +36,8 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-import GaudiKernel.SystemOfUnits as units
 
+from GaudiKernel.SystemOfUnits import *
 
 
 
@@ -59,40 +59,40 @@ confdict = {
     },
     'RCutMethod' : 'FromBeamSpot',
     'MinR':{
-       'PreselVelo':     0.4*units.mm ,
-       'SinglePS': 0.4*units.mm ,
-       'JPsiHLT': 0.4*units.mm ,
-       'MinBias': 0.4*units.mm ,
-       'SingleDown': 3.0*units.mm ,
-       'Double': 0.4*units.mm ,
-       'SingleHighMass': 0.4*units.mm , 
-       'SingleHighFD': 4.*units.mm,
-       'SingleMedium': 2.5*units.mm
+       'PreselVelo':     0.4*mm ,
+       'SinglePS': 0.4*mm ,
+       'JPsiHLT': 0.4*mm ,
+       'MinBias': 0.4*mm ,
+       'SingleDown': 3.0*mm ,
+       'Double': 0.4*mm ,
+       'SingleHighMass': 0.4*mm , 
+       'SingleHighFD': 4.*mm,
+       'SingleMedium': 2.5*mm
     },
     'MinMass':{
-       'PreselVelo': 3.*units.GeV , 
-       'SinglePS': 3.*units.GeV ,  
-       'JPsiHLT': 3.*units.GeV , 
-       'MinBias': 3.*units.GeV , 
-       'SingleDown': 4.*units.GeV,
-       'Double': 3.5*units.GeV , 
-       'SingleHighMass':  9.7*units.GeV,
-       'SingleHighFD': 6.5*units.GeV,
-       'SingleMedium': 8.5*units.GeV
+       'PreselVelo': 3.*GeV , 
+       'SinglePS': 3.*GeV ,  
+       'JPsiHLT': 3.*GeV , 
+       'MinBias': 3.*GeV , 
+       'SingleDown': 4.*GeV,
+       'Double': 3.5*GeV , 
+       'SingleHighMass':  9.7*GeV,
+       'SingleHighFD': 6.5*GeV,
+       'SingleMedium': 8.5*GeV
     },
     'MinMass2':{
-       'Double': 4.*units.GeV 
+       'Double': 4.*GeV 
     },
     'MinSumPt':{
-       'PreselVelo': 3.*units.GeV , 
-       'SinglePS': 3.*units.GeV , 
-       'JPsiHLT': 3.*units.GeV , 
-       'MinBias': 3.*units.GeV , 
-       'SingleDown': 3.*units.GeV,
-       'Double': 3.*units.GeV , 
-       'SingleHighMass':  3.*units.GeV,
-       'SingleHighFD': 3.*units.GeV,
-       'SingleMedium': 3.*units.GeV
+       'PreselVelo': 3.*GeV , 
+       'SinglePS': 3.*GeV , 
+       'JPsiHLT': 3.*GeV , 
+       'MinBias': 3.*GeV , 
+       'SingleDown': 3.*GeV,
+       'Double': 3.*GeV , 
+       'SingleHighMass':  3.*GeV,
+       'SingleHighFD': 3.*GeV,
+       'SingleMedium': 3.*GeV
     },
     'NTracks':{
        'PreselVelo':     4,
@@ -106,7 +106,7 @@ confdict = {
        'SingleMedium': 5
     },
     'MinZ':{   
-       'SingleDown': 100.*units.mm  ,
+       'SingleDown': 100.*mm  ,
     },
     'MaterialVeto':{
        'PreselVelo': 5,
@@ -264,7 +264,7 @@ class DisplVerticeLinesConf(LineBuilder) :
         _veloVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 3
         _veloVertices.PVOfflineTool.addTool( LSAdaptPV3DFitter())
         _veloVertices.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
-        _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
+        _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*mm
         _veloVertices.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
         return PatPV3DWrapper(name+ 'DV3D',_veloVertices,'Rec/'+name+'DV3D/RecVertices')
 ## return Selection( name+ 'DV3D',
@@ -298,13 +298,13 @@ class DisplVerticeLinesConf(LineBuilder) :
         _downVertices.PVOfflineTool.addTool(PVSeed3DTool())
         _downVertices.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
         _downVertices.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 4
-        _downVertices.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2*units.mm
-        _downVertices.PVOfflineTool.PVSeed3DTool.zMaxSpread = 20*units.mm
+        _downVertices.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2*mm
+        _downVertices.PVOfflineTool.PVSeed3DTool.zMaxSpread = 20*mm
         _downVertices.PVOfflineTool.addTool( LSAdaptPVFitter())
         _downVertices.PVOfflineTool.PVFitterName = "LSAdaptPVFitter"
         _downVertices.PVOfflineTool.LSAdaptPVFitter.MinTracks = 4
         _downVertices.PVOfflineTool.LSAdaptPVFitter.maxChi2 = 400.0
-        _downVertices.PVOfflineTool.LSAdaptPVFitter.maxDeltaZ = 0.0005 *units.mm
+        _downVertices.PVOfflineTool.LSAdaptPVFitter.maxDeltaZ = 0.0005 *mm
         _downVertices.PVOfflineTool.LSAdaptPVFitter.maxDeltaChi2NDoF =  0.002
         _downVertices.PVOfflineTool.LSAdaptPVFitter.acceptTrack = 0.000000001
         _downVertices.PVOfflineTool.LSAdaptPVFitter.trackMaxChi2 = 9
