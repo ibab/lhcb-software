@@ -1,40 +1,44 @@
 !-----------------------------------------------------------------------------
 ! Package     : Kernel/LHCbMath
 ! Responsible : Juan Palacios
-! Purpose     : A collection of simple generic classes and functions 
+! Purpose     : A collection of simple generic classes and functions
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-08-26 - Alexander Mazurov
+ - Updates to ValueWithError's parser functions. This version works only with
+   Gaudi version > v22r2 (where the new parser model is provided)
+
 ! 2011-08-01 - Vanya Belyaev
 
  - ValuaWithError:
-    
-    fix few primitive operation: 
+
+    fix few primitive operation:
       self-addition, self-subtraction, self-multiplication and self-division
-   
+
 
 ! 2011-07-29 - Vanya Belyaev
 
  - Types.py
 
-   fix typo in eigenVectors evaluation 
+   fix typo in eigenVectors evaluation
 
-  
+
 !========================= LHCbMath v3r26 2011-07-25 =========================
 ! 2011-07-18 - Vanya Belyaev
- - add few more functions into dictionary 
+ - add few more functions into dictionary
 
 
 
 ! 2011-07-17 - Vanya Belyaev
- - add rounding and related functions 
+ - add rounding and related functions
 
 ! 2011-07-16 - Vanya Belyaev
  - add ifnan/isfinite/isnormal/isinf checks for Gaudi::Math::ValueWithError
 
 ! 2011-07-13 - Vanya Belyaev
- - few fixes 
+ - few fixes
 
 ! 2011-06-16 - Vanya Belyaev
  - add few useful math functions...
@@ -47,7 +51,7 @@
 !========================= LHCbMath v3r24 2011-02-22 =========================
 ! 2011-02-21 - Vanya Belyaev
  - ValueWithErorr:
-    add constructor from textual representation 
+    add constructor from textual representation
 
 ! 2011-02-08 - Marco Clemencic
  - Fixed defect #10002.10607
@@ -55,14 +59,14 @@
 
 !========================= LHCbMath v3r23 2011-01-31 =========================
 ! 2011-01-22 - Vanya Belyaev
- - add more functions for Gaudi::Math::ValueWithErrors 
+ - add more functions for Gaudi::Math::ValueWithErrors
 
 ! 2011-01-14 - Vanya Belyaev
- - add one more test TestAbs, that shows the difference between 
-     std::fabs, std::abs , ::fabs and ::abs 
+ - add one more test TestAbs, that shows the difference between
+     std::fabs, std::abs , ::fabs and ::abs
 
    It prints:
-  
+
   Value:  -4115           std::fabs - std::abs : 0  fabs - abs :    0
   Value:  1371.6667       std::fabs - std::abs : 0  fabs - abs :    0.66666667
   Value:  -457.22222      std::fabs - std::abs : 0  fabs - abs :    0.22222222
@@ -76,7 +80,7 @@
   Value:  -0.069687886    std::fabs - std::abs : 0  fabs - abs :    0.069687886
   Value:  0.023229295     std::fabs - std::abs : 0  fabs - abs :    0.023229295
 
-  One clearly sees that ::abs truncates double values 
+  One clearly sees that ::abs truncates double values
 
 
 ! 2011-01-10 - Marco Cattaneo
@@ -87,8 +91,8 @@
  - add (python) accessor to correlation matrix
 
 ! 2010-11-13 - Vanya Belyaev
- - add eigenvalues and eigenvectors in python for 2x2,3x3 and 4x4 matrices 
- - cmt/requirements 
+ - add eigenvalues and eigenvectors in python for 2x2,3x3 and 4x4 matrices
+ - cmt/requirements
     version increment to v3r22
 
 !========================= LHCbMath v3r21 2010-10-25 =========================
@@ -96,20 +100,20 @@
 ! 2010-10-12 - Vanya Belyaev
  - LHCbMath/Lomont.h
     make use of Lomont from GaudiKernel
- - src/Lomont.cpp 
+ - src/Lomont.cpp
     remove the file...
 
 ! 2010-10-12 - Vanya Belyaev
 
  - tests/blind.cpp
 
-    fix for win32 platform 
+    fix for win32 platform
 
 ! 2010-10-10 - Vanya Belyaev
 
    LHCbMath/Blind.h
 
-     add some string->double hashing (useful for blinding) 
+     add some string->double hashing (useful for blinding)
 
 ! 2010-10-06 - Marco Clemencic
  - Fixed an ICC remark that was mistaken for en error by the nightly build.
@@ -125,15 +129,15 @@
 
 ! 2010-09-26 - Vanya Belyaev
  - python/LHCbMath/Types.py
-     solve the problem with vizibility of symbols 
+     solve the problem with vizibility of symbols
 
- - python/LHCbMath.py -> python/LHCbMath/Math.py 
- - python/LHCbMath/__init__.py 
-     forced import of everything from LHCbMath/Math.py  
+ - python/LHCbMath.py -> python/LHCbMath/Math.py
+ - python/LHCbMath/__init__.py
+     forced import of everything from LHCbMath/Math.py
       (for backward compatibility)
 
  - cmt/requiremnts
-    version increment to v3r20 
+    version increment to v3r20
 
 !========================= LHCbMath v3r19 2010-07-19 =========================
 ! 2010-07-12 - Manuel Tobias Schiller
@@ -152,48 +156,48 @@
 
 ! 2010-06-16 - Vanya Belyaev
  - LHCbMath/Types.py
-   add the proper printout for matrices and symmetric matrices 
+   add the proper printout for matrices and symmetric matrices
 
 ! 2010-06-16 - Vanya Belyaev
- - Kinematics: 
-    add overload methods for matrix expressions 
+ - Kinematics:
+    add overload methods for matrix expressions
 
 ! 2010-06-08 - Vanya Belyaev
- - LorentzVectorWithError: 
-      add few useful methods 
+ - LorentzVectorWithError:
+      add few useful methods
 
 ! 2010-05-26 - Vanya Belyaev
- - fix some errors in ParticleParams 
+ - fix some errors in ParticleParams
 
-! 2010-05-26 - Vanya BELYAEV 
+! 2010-05-26 - Vanya BELYAEV
  - SymPosDefMatrixInverter.h
-   add helper structire _invertForAllN 
-   ( the code is copied from Manuel's class invertForAllN, 
-     the only one difference "N" is compile time constant (template parameter), 
+   add helper structire _invertForAllN
+   ( the code is copied from Manuel's class invertForAllN,
+     the only one difference "N" is compile time constant (template parameter),
      and thus it allows the compilation for Win32 platform) .
    The inverter<> has been update dto use _inverterFroAllN instead of invertrerForAlLN.
    It is *safe*, since for inverter<>, N is a compile tiem constant.
 
 ! 2010-05-25 - Vanya Belyaev
- - minor fix, hopefully it also fixes the compilation 
+ - minor fix, hopefully it also fixes the compilation
    problem for windows platform
 
 ! 2010-05-24 - Vanya Belyaev
  - ParticleParams.h/cpp
-   new object for representation of 4-momentum/reference-point&decay-length  
-   iformation coherent, self-contained way. It is a useful representation 
+   new object for representation of 4-momentum/reference-point&decay-length
+   iformation coherent, self-contained way. It is a useful representation
    for resuld to variosu fitters.
-   Essetially it is a bit modified verison of 
-     class LHCb::VtxFitParams by wouter Huldbergen 
+   Essetially it is a bit modified verison of
+     class LHCb::VtxFitParams by wouter Huldbergen
      from Phys/DecayTreeFitter package
 
  - LHCbMath/Types.py
-      fix few typos 
+      fix few typos
  - LorentzVectorWithError.h
-      add few useful accessors 
+      add few useful accessors
 
- - cmt/requirements 
-     version increment to v3r18 
+ - cmt/requirements
+     version increment to v3r18
 
 !========================= LHCbMath v3r17p1 2010-05-21 =======================
 ! 2010-05-18 - Marco Cattaneo
@@ -202,68 +206,68 @@
 !========================= LHCbMath v3r17 2010-04-09 =========================
 ! 2010-03-22 - Vanya Belyaev
 
- - LHCbMath/Types.py 
-    add symbols from Gaudi::TrackMatrix and the rest of 
-    SMatrix/SVector classes mentioned in 
-      ( cd $LHCBRELEASES/LHCB/LHCB_v29r2/Event/ ;  grep XXX */Event/*.h ) 
+ - LHCbMath/Types.py
+    add symbols from Gaudi::TrackMatrix and the rest of
+    SMatrix/SVector classes mentioned in
+      ( cd $LHCBRELEASES/LHCB/LHCB_v29r2/Event/ ;  grep XXX */Event/*.h )
 
 ! 2010-03-18 - Vanya Belyaev
 
- - ValueWithError 
+ - ValueWithError
 
-    add helper function for evalaution of "fraction" a/(a+b) 
-    add "asymmetry" (a-b)/(a+b) 
-    add possibility to define the printout format 
-    add function to evaluate binomina-efficiency 
+    add helper function for evalaution of "fraction" a/(a+b)
+    add "asymmetry" (a-b)/(a+b)
+    add possibility to define the printout format
+    add function to evaluate binomina-efficiency
 
-    add these functionality into the dictionary 
+    add these functionality into the dictionary
 
  - cmt/requirements
 
-    version increment to v3r17 
+    version increment to v3r17
 
 
 !========================= LHCbMath v3r16 2010-02-12 =========================
-! 2010-02-09 - Vanya BELYAEV 
+! 2010-02-09 - Vanya BELYAEV
  - LHCbMath/EigenSystem.h(.icpp)
      fix compilation problmems for Win32 platrofm
  - test/TestEigen.cpp
      new test/example for EigenSystem
  - cmt/requirements
-     version increment to v3r16 
- 
+     version increment to v3r16
+
 !========================= LHCbMath v3r15 2010-01-20 =========================
-! 2010-01-02 - Vanya BELYAEV 
+! 2010-01-02 - Vanya BELYAEV
  - LHCbMath/LHCbMath.h
 
-     Equal_To : 
+     Equal_To :
 
-        a. use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+        a. use "Lomont"-compare for floating point numbers (from GaudiKernel)
            instead of "Knuth/GSL"-compare
 
         b. "Precision" parameter now is  unisgned short/int instead of float/double.
-           The constructor from floating-point precision is PRIVATE now, 
-           thus compiler error will be generated 
+           The constructor from floating-point precision is PRIVATE now,
+           thus compiler error will be generated
 
-        c. add explicit specializations for std::vector<double> and 
+        c. add explicit specializations for std::vector<double> and
              std::vector<float>
 
       equal_to_int , equal_to_uint:
 
-           use "Lomont"-compare for floating point numbers (from GaudiKernel) 
+           use "Lomont"-compare for floating point numbers (from GaudiKernel)
            instead of "Knuth/GSL"-compare
-      
-      knuth_equal_to_double: 
- 
-           backup old "Knuth/GSL" comparison criteria for floatring pooint numbers 
+
+      knuth_equal_to_double:
+
+           backup old "Knuth/GSL" comparison criteria for floatring pooint numbers
 
  - cmt/requirements
-       version increment to v3r15 
+       version increment to v3r15
 
 !========================= LHCbMath v3r14 2009-11-13 =========================
 ! 2009-10-23 - Vanya Belyaev
 
- - add new tests for CPU comparison of Lomont-type 
+ - add new tests for CPU comparison of Lomont-type
       & Knuth-type compare.
 
 0%   10   20   30   40   50   60   70   80   90   100%
@@ -272,29 +276,29 @@
  Knuth/GSL-compare 4.0001e+06 Time User   : Tot= 24.8  [s] Ave/Min/Max= 1.24(+-0.428)/    0/    2 [ms] #=20000
  Lomont-compare    3.9996e+06 Time User   : Tot= 5.86  [s] Ave/Min/Max=  293(+-  455)/    0/1e+03 [us] #=20000
 
-  Bottom line:  Lomont-type compare is approximately 4 times more CPU efficient 
+  Bottom line:  Lomont-type compare is approximately 4 times more CPU efficient
 
 
 ! 2009-10-23 - Vanya Belyaev
 
  - LHCbMath/LHCbMath.h
-    
-      reimplement the function "round" using boost:numeric 
 
- - tests/TestRound.cpp 
-     
+      reimplement the function "round" using boost:numeric
+
+ - tests/TestRound.cpp
+
       new test/illustration for new "round" function.
 
     Three functions are compared:
 
-     1. "old-round" (based on Knuth-compare) 
-     2. modified round (based on Lomont-compare 
-     2  New implementation using boost::numeric::converter 
-  
-   Results:  
- 
-      - No difference in result has been found , 
-      - Large difference in CPU has been detected: 
+     1. "old-round" (based on Knuth-compare)
+     2. modified round (based on Lomont-compare
+     2  New implementation using boost::numeric::converter
+
+   Results:
+
+      - No difference in result has been found ,
+      - Large difference in CPU has been detected:
 
     Differences: 0
 
@@ -309,24 +313,24 @@
                 Time User   : Tot= 2.03  [s] Ave/Min/Max= 4.06(+- 63.6)/    0/1e+03 [us] #=500000
 
 
-     Lomont-based rounding is approximately factor of 4 faster, 
+     Lomont-based rounding is approximately factor of 4 faster,
      and the new rounding is approximately factor of 10 faster...
-    
+
 
 ! 2009-10-22 - Vanya Belyaev
 
  - python/LHCbMath/Types.h
 
-     add more decorations for lines & planes & their operations, like 
+     add more decorations for lines & planes & their operations, like
       intersections, impact parameters, distances, parallel, etc..
-      
+
  - python/LHCbMath/tests.py
 
-     add the tests for new functions 
+     add the tests for new functions
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v3r14 
+     version increment to v3r14
 
 
 !========================= LHCbMath v3r13 2009-10-16 =========================
@@ -334,29 +338,29 @@
  - faster (but equivalent) check for parallel tracks in GeomFun.icpp
 
 ! 2009-09-13 - Vanya BELYAEV
- - add the parsing functions to ValueWithError and 
-   std::vector<ValueWithError> classes, thus allowing their usage 
-   as proeprteis for Gaudi components 
- 
+ - add the parsing functions to ValueWithError and
+   std::vector<ValueWithError> classes, thus allowing their usage
+   as proeprteis for Gaudi components
+
 
 ! 2009-09-12 - Vanya BELYAEV
- - more polishing for *WithErrorClasses 
- - add python/LHCbMath/Types.py helper module to load few 
-    important classes, like  Gaudi.XYZPoint, etc... 
-    the classes also "Decorated" on-flight 
+ - more polishing for *WithErrorClasses
+ - add python/LHCbMath/Types.py helper module to load few
+    important classes, like  Gaudi.XYZPoint, etc...
+    the classes also "Decorated" on-flight
 
 
 ! 2009-09-05 - Vanya BELYAEV
- - SVEctorWithErorr 
-    add functions to get the correlation coefficient and correlation matrix 
- - cmt/requirements 
-    version increment to v3r13 
+ - SVEctorWithErorr
+    add functions to get the correlation coefficient and correlation matrix
+ - cmt/requirements
+    version increment to v3r13
 
 !========================= LHCbMath v3r12 2009-09-02 =========================
 ! 2009-08-19 - Vanya BELYAEV
  - ValueWithError
-    1. add the constuctor form (value.error)-pair 
-    2. add the conversion to  (value,error)-pair 
+    1. add the constuctor form (value.error)-pair
+    2. add the conversion to  (value,error)-pair
 
  - cmt/requirements
    version increment to v3r12
@@ -368,7 +372,7 @@
 
 !========================= LHCbMath v3r11 2009-07-13 =========================
 ! 2009-07-10 - MC for Wouter
- - In MatrixTransforms.h, use std::sqrt, std::abs instead of sqrt, fabs 
+ - In MatrixTransforms.h, use std::sqrt, std::abs instead of sqrt, fabs
 
 ! 2009-07-09 - Marco Cattaneo
  - Line.h: Fix a compilation warning on windows
@@ -384,17 +388,17 @@
   . Add some LorentzVectors and 3D rotation types.
 
 !========================= LHCbMath v3r9 2009-06-16 ==========================
-! 2009-06-13 - Vanya BELYAEV 
+! 2009-06-13 - Vanya BELYAEV
  - add new class: SVectorWithError
- - fix matrix inversions 
+ - fix matrix inversions
         Point3DWithError
-        Vector3DWithError 
+        Vector3DWithError
         LorentzVectorWithError
  - LorentzVectorWithError:
          add method sigmaMass and chi2mass
  - LHCbMath/Kinematics.h
-         sigmamass: use invalid return valeus for invalid arguments 
- 
+         sigmamass: use invalid return valeus for invalid arguments
+
 ! 2009-06-13 - Vanya Belyaev
  - fix for Linux
 
@@ -404,18 +408,18 @@
      Gaudi::Math::ValueWithError
      Gaudi::Math::Point3DWithError
      Gaudi::Math::Vector3DWithError
-     Gaudi::Math::LorentzVectorWithError 
+     Gaudi::Math::LorentzVectorWithError
 
- - cmt/requirements 
-     version increment to v3r9 
+ - cmt/requirements
+     version increment to v3r9
 
 !========================= LHCbMath v3r8 2009-05-25 ==========================
 ! 2009-05-23 - Vanya Belyaev
  - src/Lomont.cpp
-    use unions instead of reinterpret_cast to avoid gcc4 problems 
-    for gcc34 the result are identical 
+    use unions instead of reinterpret_cast to avoid gcc4 problems
+    for gcc34 the result are identical
  - add tests for Lomont-compare
- - cmt/requirements 
+ - cmt/requirements
     version inrement to v3r8
 
 !========================= LHCbMath v3r7 2009-05-07 ==========================
@@ -437,9 +441,9 @@
  - Add function to get width of the half sample in ModeFunctions
 
 !========================= LHCbMath v3r5 2009-01-12 ==========================
-! 2009-01-10 - Vanya BELYAEV 
+! 2009-01-10 - Vanya BELYAEV
  - LHCbMath/Digit.h
-   to please Reflex at Win32 platform. make a drafstical simplification 
+   to please Reflex at Win32 platform. make a drafstical simplification
    of argument for BOOST_STATIC_ASSERT macro.
 
 ! 2008-12-03 M Needham
@@ -449,12 +453,12 @@
  - LHCbMath/Kinematics.h
     fix the bugs...
  - tests/kinematics.cpp
-    one more test-file 
- - cmt/requirments 
-    version increment to v3r5 
+    one more test-file
+ - cmt/requirments
+    version increment to v3r5
 
 ! 2008-12-02 M Needham
-  - Guard against fpe in generalizedMean calc 
+  - Guard against fpe in generalizedMean calc
 
 ! 2008-12-02 M. Needham
   - Add robust functions to calculate mode or MPV [ModeFunctions.h]
@@ -476,24 +480,24 @@
       lomont_compare_float  (float  A,  float  B, unsigned short maxULPs = 100 )
       lomont_compare_double (double A,  double B, unisgned int   maxULPs )
 
-   and two helper functions: 
-      next_float 
-      next_double    
+   and two helper functions:
+      next_float
+      next_double
 
    The helper functions can be used to adjust properly the parameters maxULPS for
    the "major" fucntions.
 
-   For each maxULPs one can evaluate the corresponding 
+   For each maxULPs one can evaluate the corresponding
    relative precision R = |A-B|/(|A|+|B|)
 
    For floats the relation is:
-        R ~(5*e-8)*maxULPS for |A| > 1.e-37, and it quickly goes to 1, 
-        as |A| goes from 1.e-37 to 0     
+        R ~(5*e-8)*maxULPS for |A| > 1.e-37, and it quickly goes to 1,
+        as |A| goes from 1.e-37 to 0
 
-   For doubles the relation is: 
-        R ~(5*e-16)*maxULPS for |A| > 1.e-304, and it quickly goes to 1, 
-        as |A| goes from 1.e-304 to 0     
-  
+   For doubles the relation is:
+        R ~(5*e-16)*maxULPS for |A| > 1.e-304, and it quickly goes to 1,
+        as |A| goes from 1.e-304 to 0
+
 
 ! 2008-10-24 - Marco Cattaneo
  - Add link to libGenVector when using ROOT_GE_5_19
@@ -503,16 +507,16 @@
 
 ! 2008-10-01 - Vanya BELYAEV
  - LHCbMath/LHCbMath.h
-   LHCb::Math::equal_to_int 
+   LHCb::Math::equal_to_int
    fix an error "integral constant overflow"
 
 !========================= LHCbMath v3r3 2008-09-30 ==========================
 ! 2008-09-17 - Vanya BELYAEV
  - LHCbMath/LHCbMath.h
-    add the functions for comparison of double and int, and double 
+    add the functions for comparison of double and int, and double
     and unsigned int:
-      LHCb::Math::equal_to_int 
-      LHCb::Math::equal_to_uint   
+      LHCb::Math::equal_to_int
+      LHCb::Math::equal_to_uint
 
 ! 2008-09-06 - Manuel Tobias Schiller
  - LHCbMath/{MatrixInversion.h,SymMatrixInverter.h,SymPosDefMatrixInverter.h}
@@ -537,130 +541,130 @@
    LHCbMath/Digit.h
 
      add functionality to get the RANGE of bits (or decimal digits) from
-     unsigned integral type. 
+     unsigned integral type.
 
-     The utilities for evaluation of 
+     The utilities for evaluation of
      decimal N1->N2 decimal digits for the unsigned integral values:
- 
-    -  Gaudi::Math::IDigits 
-       The most efficient compile-time evaluator.  
-       It is applicable if both N1/N2 and value are compile-time constanst 
-    -  Gaudi::Math::Digits 
-       Rather efficient fuctor, N1&N2 are compile-time constanst 
+
+    -  Gaudi::Math::IDigits
+       The most efficient compile-time evaluator.
+       It is applicable if both N1/N2 and value are compile-time constanst
+    -  Gaudi::Math::Digits
+       Rather efficient fuctor, N1&N2 are compile-time constanst
     -  Gaudi::Math::digits
-       The regular function, the least efficient evaluator 
- 
-     The utilities for evaluation of range of bits [N1,N2) for 
+       The regular function, the least efficient evaluator
+
+     The utilities for evaluation of range of bits [N1,N2) for
      the unsigned integral values. N2 is *NOT* included:
-   
-     -  Gaudi::Math::IBits 
+
+     -  Gaudi::Math::IBits
         The most efficient compile-time evaluator.
-        It is applicable if both N1&N2 and value are compile-time constanst 
+        It is applicable if both N1&N2 and value are compile-time constanst
      -  Gaudi::Math::Bits
-        Rather efficient fuctor, N1&N2 are compile-time constanst 
+        Rather efficient fuctor, N1&N2 are compile-time constanst
      -  Gaudi::Math::bits
-        The regular function, the least efficient evaluator 
+        The regular function, the least efficient evaluator
 
 ! 2008-08-01 - Vanya BELYAEV
  - LHCbMath/Bit.h
-    add few more evaluators of Nth nit for integral unsigned types 
+    add few more evaluators of Nth nit for integral unsigned types
 
     Finally one has three possibility:
 
     1) Gaudi::Math::IBit, for compile time evaluation of Nth bit:
-    
+
           const bool bit12 = Gaudi::Math::IBit<unisgned int,12456,12>::value ;
 
     2) Gaudi::Math::Bit, for evaluation of Nth  bit of integral type,
        N is a compile-time constant:
 
           Gaudi::Math::Bit<unsigned int,12> fun ;
-              
+
         unsigned int value = ... ;
 
         const bool bit12 = fun ( value ) ;
 
-    3) Gaudi::Math::bit, the function which should be use if neither 
+    3) Gaudi::Math::bit, the function which should be use if neither
        value nor N are known at compile time:
 
-        
+
        unsigned int value = ... ;
        unsigned int N     = ... ;
- 
-         const bool bitN = Gaudi::Math::bit ( value , N ) ;
- 
-    The compile-time protection is added for all templates, 
-    the "value" is required to be
-        - integral 
-        - unsigned 
-    The check is done with boost::integer_traits 
 
-    ATTENTION! 
-    The least significat bit is numbered as  #0 
+         const bool bitN = Gaudi::Math::bit ( value , N ) ;
+
+    The compile-time protection is added for all templates,
+    the "value" is required to be
+        - integral
+        - unsigned
+    The check is done with boost::integer_traits
+
+    ATTENTION!
+    The least significat bit is numbered as  #0
 
  - LHCbMath/Digit.h
- 
-    add few more evaluators of Nth decimal digit  for integral unsigned types 
+
+    add few more evaluators of Nth decimal digit  for integral unsigned types
 
     Finally one has three possibility:
 
     1) Gaudi::Math::IDigit, for compile time evaluation of Nth decimal digit:
-    
+
           const int dig5 = Gaudi::Math::IDigit<unisgned int,12456,5>::value ;
 
-    2) Gaudi::Math::Digit, for evaluation of Nth  decimal of integral unsigned 
+    2) Gaudi::Math::Digit, for evaluation of Nth  decimal of integral unsigned
        type,
        N is a compile-time constant:
 
           Gaudi::Math::Digit<unsigned int,12> fun ;
-              
+
         unsigned int value = ... ;
 
         const int digit12 = fun ( value ) ;
 
-    3) Gaudi::Math::digit, the function which should be use if neither 
+    3) Gaudi::Math::digit, the function which should be use if neither
        value nor N are known at compile time:
 
-        
+
        unsigned int value = ... ;
        unsigned int N     = ... ;
- 
-       const int digitN = Gaudi::Math::digit ( value , N ) ;
- 
-    The compile-time protection is added for all templates, 
-    the "value" is required to be
-        - integral 
-        - unsigned 
-    The check is done with boost::integer_traits 
 
-    ATTENTION! 
-    The least significat digit is numbered #0 
-  
+       const int digitN = Gaudi::Math::digit ( value , N ) ;
+
+    The compile-time protection is added for all templates,
+    the "value" is required to be
+        - integral
+        - unsigned
+    The check is done with boost::integer_traits
+
+    ATTENTION!
+    The least significat digit is numbered #0
+
 
 -  LHCbMath/TypeWrapper.h
       TypeWrapper utility (extraction from IPower.hpp)
-      Null and Null_ strructures 
+      Null and Null_ strructures
 
 -  LHCbMath/IPower.hpp
       extract the useful TypeWrapper consttuction
 
 - tests/pow.cpp
-      new test for testiing various "pow"-functions  
+      new test for testiing various "pow"-functions
 
 - tests/bit.cpp
-      new test for testiing various "bit"-functions  
+      new test for testiing various "bit"-functions
 
 - tests/digit.cpp
-      new test for testiing various "digit"-functions  
+      new test for testiing various "digit"-functions
 
-- cmt/requirements 
-       add "check" applications: 
+- cmt/requirements
+       add "check" applications:
 
-           TestPow 
-           TestBit 
-           TestDigit 
-     
-        version increment to v3r2 
+           TestPow
+           TestBit
+           TestDigit
+
+        version increment to v3r2
 
 !========================= LHCbMath v3r1 2008-07-16 ==========================
 ! 2008-07-15 - Wouter Hulsbergen (code provided by Manuel Schiller)
@@ -668,25 +672,25 @@
    symmetric matrices based on cholesky decomposition.
 
 ! 2008-07-09 - Vanya BELYAEV
- - LHCbMath/Digit.h    
+ - LHCbMath/Digit.h
     new (templated) function to get the Nth decimal digit for integer type:
 
      #include "LHCbMath/Digit.h"
 
      ...
      const int number = ... ;
-     if( 5 != Gaudi::Math::digit ( number , 1 ) ) { ... } 
+     if( 5 != Gaudi::Math::digit ( number , 1 ) ) { ... }
 
- - LHCbMath/Bit.h: Function to check Nth bit of the integer type 
+ - LHCbMath/Bit.h: Function to check Nth bit of the integer type
 
      #include "LHCbMath/Bit.h"
 
      ...
      const int number = ... ;
-     if (  Gaudi::Math::bit ( number , 11 ) ) { ... } 
+     if (  Gaudi::Math::bit ( number , 11 ) ) { ... }
 
-  - cmt/requirements:  version increment to v3r1 
- 
+  - cmt/requirements:  version increment to v3r1
+
 !========================= LHCbMath v3r0 2008-07-01 ==========================
 ! 2008-07-01 - Gerhard Raven
  - add MD5 and vector<MD5> to the dictionary
@@ -695,7 +699,7 @@
 
 ! 2008-07-01 - Marco Cattaneo
  - On Windows, disable some dictionaries that do not compile
-  
+
 ! 2008-06-30 - Marco Cattaneo
  - Removed  <class name = "Gaudi::Math::Math::Dummy"/> from selection file
 
@@ -703,7 +707,7 @@
  - dict/LHCbMathDict.h
   . Add all the GeomFun::Gaudi::Math free functions to the dictionary.
  - cmt/requirements
-  . Change version to v3r0 since namespace changes are not backwards 
+  . Change version to v3r0 since namespace changes are not backwards
     compatible.
 
 ! 2008-06-24 - Juan PALACIOS
@@ -748,7 +752,7 @@
 
 ! 2008-04-29 - Vanya BELYAEV
  -  LHCbMath/Line.h
-    fix LaTeX inside DoxyGen comments 
+    fix LaTeX inside DoxyGen comments
 
 !========================= LHCbMath v2r7 2008-04-02 ==========================
 ! 2008-04-02 - Marco Cattaneo
@@ -761,31 +765,31 @@
  -  LHCbMath/GeomFun.icpp
     LHCbMath/GeomFun.h
     LHCbMath/Line.h
-   fix a bug in Gaudi::Math::closestPointParam function, 
-   improve a bit the  doxygen comments... 
+   fix a bug in Gaudi::Math::closestPointParam function,
+   improve a bit the  doxygen comments...
 
 ! 2008-03-05 - Vanya BELYAEV
  - LHCbMath/MatrixTransforms.h
-   Add many new operators into namespace Gaudi::Math::Operators 
-   The full list is availabel through the doxyen documentation of 
+   Add many new operators into namespace Gaudi::Math::Operators
+   The full list is availabel through the doxyen documentation of
    namespace Gaudi::Math::Operators. These operators  are really very
-   helpful and useful for coding of the kinamtical fitters.  
+   helpful and useful for coding of the kinamtical fitters.
 
 !========================= LHCbMath v2r6 2008-02-24 ==========================
 ! 2008-02-24 - Vanya BELYAEV
  - LHCbMath/MatrixUtils.h
-     add a bit more optimizations 
+     add a bit more optimizations
 
-! 2008-02-20 - Vanya BELYAEV 
+! 2008-02-20 - Vanya BELYAEV
  - add few more optimizations into MatrixUtils.h & MatrixTransforms.h
-   in particular the additon operators for "geometry" and "linear algebra" 
+   in particular the additon operators for "geometry" and "linear algebra"
    objects.. They really saves a lot of lines in coding the various fitters
 
 !========================= LHCbMath v2r5 2008-01-21 ==========================
 ! 2008-01-19 - Vanya BELYAEV
  - LHCbMath/MatrixUtils.h
     add new function Gaudi::Math::mult for evaluation of v1^T*M*v2
- 
+
 ! 2008-01-15 - Vanya BELYAEV
 
  - Split LHCbMath/MatrixUtils.h into two files MatrixUtils.h and MatrixTransforms.h
@@ -793,46 +797,46 @@
     I) The current functionality of LHCbMath/MatrixUtils.h :
 
       *     - (re)setting all elements of matrices and vectors
-      *     - set the diagonal matrix to be proportional to unit matrix 
+      *     - set the diagonal matrix to be proportional to unit matrix
       *     - efficient scaling of matrices&vectors
       *     - minimal&maximal elements of matrices and vectors
-      *     - indices of the minimal&maximal elements of matrices and vectors 
-      *     - minima&maximal by absolute value elements of matrices and vectors 
-      *     - indices of minima&maximal by absolute value elements of matrices and vectors 
+      *     - indices of the minimal&maximal elements of matrices and vectors
+      *     - minima&maximal by absolute value elements of matrices and vectors
+      *     - indices of minima&maximal by absolute value elements of matrices and vectors
       *     - the trace of the square matrices
       *     - find the minimal/maximal/abs.minimal&abs.maximal diagonal elements of square matrices
       *     - count number of elements which satisfy some criteria
       *     - count number of diagonal elements which satisfy some criteria
       *     - check the presence of elements which satisfy some criteria
       *     - check the presence of diagonal elements which satisfy some criteria
-      *     - efficient element-by-element "equality" for matrices 
+      *     - efficient element-by-element "equality" for matrices
       *     - few specific "matrix updates" (in the spirit of BLAS)
 
-    II) The current functionality of LHCbMath/MatrixTransforms.h : 
+    II) The current functionality of LHCbMath/MatrixTransforms.h :
 
       *     - conversion from geometry&kinematical vectors into Linear Algebra vectors
       *     - conversion from Linear Algebra vectors into geometry&kinematical vectors
-      *     - evaluation of various "chi2"-like values, like chi2-distance between 
-      *       two 3D or 4D-vectors. E.g. "vicinity" of two points, or two momenta 
+      *     - evaluation of various "chi2"-like values, like chi2-distance between
+      *       two 3D or 4D-vectors. E.g. "vicinity" of two points, or two momenta
       *     - conversion form "track" to 4-momenta representation (by Sean BRISBANE)
-      *     - the transition matrix for the conversion form "track" to 
+      *     - the transition matrix for the conversion form "track" to
       *        4-momenta representation (by Sean BRISBANE)
       *
- 
+
   ATTENTION!
   ==========
   It "partly" breaks some existing lines, since not "Gaudi::Math::geo2la" functions
-  are available through LHCbMath/MatrixTransporms.h instead of LHCbMath/MatrixUtils.h 
-  header file. The fix is trivial: one just needs to include LHCbMath/MatrixTransforms.h file. 
+  are available through LHCbMath/MatrixTransporms.h instead of LHCbMath/MatrixUtils.h
+  header file. The fix is trivial: one just needs to include LHCbMath/MatrixTransforms.h file.
 
  - Add new file Kinematics.h to keep some pure mathematical functions useful
-   for kinematical calculations. Currently it contains the functions for 
+   for kinematical calculations. Currently it contains the functions for
    evaluation of dispersions and sigmas  for mass and mass^2 and chi2 of mass:
        *   - sigma2mass2   :   sigma^2(M^2)
-       *   - sigma2mass    :   sigma^2(M)  for M^2 > 0 
+       *   - sigma2mass    :   sigma^2(M)  for M^2 > 0
        *   - sigmamass     :   sigma(M)    for M^2 > 0
-       *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2) 
- 
+       *   - chi2mass      :   delta^2(M^2)/sigma^2(M^2)
+
  - Update(improve?) the doxygen comments for some other header files.
 
 !========================= LHCbMath v2r4 2007-11-29 ===========================
@@ -843,7 +847,7 @@
                    covPxPyPzE_xyz = Jacob * covTxTyQoP_xyz;
 
 ! 2007-10-16 Wouter Hulsbergen
- - Changed templates for line-to-line calculations to allow for lines of 
+ - Changed templates for line-to-line calculations to allow for lines of
    different types
 
 !========================= LHCbMath v2r3 2007-10-02 ===========================
@@ -861,8 +865,8 @@
 
 ! 2007-07-09 - Juan Palacios
  - LHCbMath/GeomFun.icpp
-   . closestPointParams(line, line, double, double)  was assuming lines with 
-     normalised direciton vectors. Fix to work with arbirtary length 
+   . closestPointParams(line, line, double, double)  was assuming lines with
+     normalised direciton vectors. Fix to work with arbirtary length
      direction vectors.
  - Fix LHCbMath/Power.hpp doxygen
 
@@ -885,7 +889,7 @@
 
 ! 2006-11-01 - Marco Cattaneo
  - Update requirements to add MathCore and SMatrix to the linkopts, previously
-   done in LHCBDefinitions 
+   done in LHCBDefinitions
 
 ! 2006-11-01 - Chris Jones
  - Update Gaudi::Math::cbrt to be non-templated, to avoid problems with
@@ -912,15 +916,15 @@
 
   Added:
 
-  - LHCbMath/IPower.hpp: 
-    . Template metafunction for compile-time calculation of even, positive 
+  - LHCbMath/IPower.hpp:
+    . Template metafunction for compile-time calculation of even, positive
       powers of integer numbers.
       Example usage:
 
       // assign 2**35 to result.
         const int result = Gaudi::Math::IPower< int, 2,  35>::value;
   - LHCbMath/Power.hpp:
-    .  Template metafunction to calculate integer powers of integer 
+    .  Template metafunction to calculate integer powers of integer
        and floating point numbers.
        Example useage:
 
@@ -933,9 +937,9 @@
 
 !========================== LHCbMath v1r2 2006-06-30 ==========================
 ! 2006-06-29 M. Needham
-  - Bug fix in plane-line intersection parallelity test 
+  - Bug fix in plane-line intersection parallelity test
 
-! 2006-06-06 - Juan PALACIOS  
+! 2006-06-06 - Juan PALACIOS
   - Add LHCbMath/Power.h
     . Fast and efficient pow function for large integer powers
       by Ivan Belyaev. Imported from LoKi.
@@ -943,7 +947,7 @@
 !========================== LHCbMath v1r1 2006-05-31 ==========================
 ! 2006-05-31 - Juan PALACIOS
 
-  - Add LHCbMath/EigenSystem.h, .icpp and src/EigenSystem.cpp from 
+  - Add LHCbMath/EigenSystem.h, .icpp and src/EigenSystem.cpp from
     Vanya Belyaev. Make linker library LHCbMath
 
   - Import LHCbMath/MatrixManip.h from Kernel/LHCbDefinitions. Change namespace
@@ -951,8 +955,8 @@
 
   - Remove Kernel, move everything to new LHCbMath directory.
 
-  - Kernel: Add MatrixManip.h from Vanya Belyaev. Various useful matrix 
-            and vector utilities. Includes linking to 3D and 4D MathCore 
+  - Kernel: Add MatrixManip.h from Vanya Belyaev. Various useful matrix
+            and vector utilities. Includes linking to 3D and 4D MathCore
             vectors and points,  scaling on all elements of matrices
             and vectors, setting already existing matrix to unit matrix,
             comparison functions, max and minimum elements, various counting,

@@ -2,7 +2,7 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #include <cmath>
 #include <string>
@@ -10,8 +10,8 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
+#include "GAUDI_VERSION.h"
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/Parsers.h"
 #include "GaudiKernel/Lomont.h"
 #include "GaudiKernel/GaudiException.h"
 // ============================================================================
@@ -20,96 +20,97 @@
 #include "LHCbMath/ValueWithError.h"
 #include "LHCbMath/Power.h"
 // ============================================================================
-// Boost 
+// Boost
 // ============================================================================
+
 #include "boost/format.hpp"
 #include "boost/math/special_functions/fpclassify.hpp"
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class Gaudi::Math::ValueWithError
- *  @date 2009-06-03 
+ *  @date 2009-06-03
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
-// local namespace to hide the details 
+// local namespace to hide the details
 // ============================================================================
-namespace 
+namespace
 {
   // ==========================================================================
   const unsigned int _maxULPs = 10000 ;
   // ==========================================================================
-  inline bool _equal ( const double value1 , 
-                       const double value2 ) 
-  { return value1 == value2 || 
+  inline bool _equal ( const double value1 ,
+                       const double value2 )
+  { return value1 == value2 ||
       Gaudi::Math::lomont_compare_double ( value1 ,value2 , _maxULPs ) ; }
   // ==========================================================================
-  // check if the double value close to zero 
+  // check if the double value close to zero
   inline bool _zero  ( const double value ) { return _equal ( value , 0 ) ; }
   // ==========================================================================
-  // check if the double value close to one 
+  // check if the double value close to one
   inline bool _one   ( const double value ) { return _equal ( value , 1 ) ; }
-  // ========================================================================== 
-  /// helper wrapper 
-  inline double _pow ( const double v , const int n ) 
-  { 
-    return 
-      0 <= n ? 
+  // ==========================================================================
+  /// helper wrapper
+  inline double _pow ( const double v , const int n )
+  {
+    return
+      0 <= n ?
       Gaudi::Math::pow ( v , (unsigned long) n ) :
-      std::pow         ( v , n                 ) ; 
+      std::pow         ( v , n                 ) ;
   }
   // ==========================================================================
 }
 // ============================================================================
-// constructor from the value and covariance 
-// ============================================================================
-Gaudi::Math::ValueWithError::ValueWithError 
-( const double value      , 
-  const double covariance ) 
-  : m_value ( value      ) 
-  , m_cov2  ( covariance ) 
-{}
-// ============================================================================
-// constructor from the (value,error)-pair 
+// constructor from the value and covariance
 // ============================================================================
 Gaudi::Math::ValueWithError::ValueWithError
-( const std::pair<double,double>& value ) 
-  : m_value ( value.first ) 
-  , m_cov2  () 
+( const double value      ,
+  const double covariance )
+  : m_value ( value      )
+  , m_cov2  ( covariance )
+{}
+// ============================================================================
+// constructor from the (value,error)-pair
+// ============================================================================
+Gaudi::Math::ValueWithError::ValueWithError
+( const std::pair<double,double>& value )
+  : m_value ( value.first )
+  , m_cov2  ()
 {
   setError ( value.second ) ;
 }
 // ============================================================================
-// constructor from textual representation 
+// constructor from textual representation
 // ============================================================================
 Gaudi::Math::ValueWithError::ValueWithError
-( const std::string& value ) 
-  : m_value () 
-  , m_cov2  () 
+( const std::string& value )
+  : m_value ()
+  , m_cov2  ()
 {
   StatusCode sc = Gaudi::Parsers::parse ( *this , value ) ;
-  if ( sc.isFailure() ) 
+  if ( sc.isFailure() )
   { throw GaudiException ( "Unable to parse ValueWithError: '" + value + "'" ,
                            "Gaudi::Math" , sc ) ; }
 }
 // ============================================================================
-// set the error 
+// set the error
 // ============================================================================
-void Gaudi::Math::ValueWithError::setError ( const double e ) 
-{ 
+void Gaudi::Math::ValueWithError::setError ( const double e )
+{
   m_cov2  = e * e ;
   if ( 0 > e ) { m_cov2 = -m_cov2 ; }
-} 
+}
 // ============================================================================
-// get the error 
+// get the error
 // ============================================================================
-double Gaudi::Math::ValueWithError::error      () const 
+double Gaudi::Math::ValueWithError::error      () const
 { return 0 <= m_cov2 ? std::sqrt ( m_cov2 ) : -std::sqrt ( -m_cov2 ) ; }
 // ============================================================================
-// += 
+// +=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator+= 
-( const Gaudi::Math::ValueWithError& right )                             // += 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator+=
+( const Gaudi::Math::ValueWithError& right )                             // +=
 {
   //
   if ( &right == this ) 
@@ -124,11 +125,11 @@ Gaudi::Math::ValueWithError::operator+=
   return *this ;
 }
 // ============================================================================
-// -= 
+// -=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator-= 
-( const Gaudi::Math::ValueWithError& right )                              // -= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator-=
+( const Gaudi::Math::ValueWithError& right )                              // -=
 {
   //
   if ( &right == this ) 
@@ -143,11 +144,11 @@ Gaudi::Math::ValueWithError::operator-=
   return *this ;
 }
 // ============================================================================
-// *= 
+// *=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator*= 
-( const Gaudi::Math::ValueWithError& right )                              // *= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator*=
+( const Gaudi::Math::ValueWithError& right )                              // *=
 {
   if ( &right == this ) 
   {
@@ -165,11 +166,11 @@ Gaudi::Math::ValueWithError::operator*=
   return *this ;
 }
 // ============================================================================
-// /= 
+// /=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator/= 
-( const Gaudi::Math::ValueWithError& right )                              // /= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator/=
+( const Gaudi::Math::ValueWithError& right )                              // /=
 {
   if ( &right == this ) 
   {
@@ -188,39 +189,39 @@ Gaudi::Math::ValueWithError::operator/=
   return *this ;
 }
 // ============================================================================
-// *= 
+// *=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator*= ( const double v )                // *= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator*= ( const double v )                // *=
 {
   m_value *= v     ;
-  m_cov2  *= (v*v) ; 
+  m_cov2  *= (v*v) ;
   return *this ;
 }
 // ============================================================================
-// /= 
+// /=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator/= ( const double v )                // /= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator/= ( const double v )                // /=
 {
   m_value /= v     ;
-  m_cov2  /= (v*v) ; 
+  m_cov2  /= (v*v) ;
   return *this ;
 }
 // ============================================================================
-// += 
+// +=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator+=( const double right )             // += 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator+=( const double right )             // +=
 {
   m_value += right ;
   return *this ;
 }
 // ============================================================================
-// -= 
+// -=
 // ============================================================================
-Gaudi::Math::ValueWithError& 
-Gaudi::Math::ValueWithError::operator-= ( const double right )            // -= 
+Gaudi::Math::ValueWithError&
+Gaudi::Math::ValueWithError::operator-= ( const double right )            // -=
 {
   m_value -= right ;
   return *this ;
@@ -232,18 +233,18 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::operator-() const                        // unary-
 { return ValueWithError( -value() , cov2() ) ; }
 // ============================================================================
-// printout 
+// printout
 // ============================================================================
-std::ostream& 
-Gaudi::Math::ValueWithError::fillStream ( std::ostream& s ) const 
+std::ostream&
+Gaudi::Math::ValueWithError::fillStream ( std::ostream& s ) const
 { return s << "( " << m_value << " +- " << error() << " )" ; }
 // ============================================================================
-// printout using format 
+// printout using format
 // ============================================================================
-std::ostream& 
-Gaudi::Math::ValueWithError::fillStream 
-( std::ostream&      s   , 
-  const std::string& fmt ) const 
+std::ostream&
+Gaudi::Math::ValueWithError::fillStream
+( std::ostream&      s   ,
+  const std::string& fmt ) const
 {
   using namespace boost::io ;
   //
@@ -256,55 +257,55 @@ Gaudi::Math::ValueWithError::fillStream
 // ============================================================================
 // conversion to string
 // ============================================================================
-std::string Gaudi::Math::ValueWithError::toString   () const 
+std::string Gaudi::Math::ValueWithError::toString   () const
 {
   std::ostringstream s ;
   fillStream ( s ) ;
   return s.str() ;
 }
 // ============================================================================
-// conversion to the string using format 
+// conversion to the string using format
 // ============================================================================
-std::string Gaudi::Math::ValueWithError::toString   
-( const std::string& fmt ) const 
+std::string Gaudi::Math::ValueWithError::toString
+( const std::string& fmt ) const
 {
   std::ostringstream s ;
   fillStream ( s , fmt ) ;
   return s.str() ;
 }
 // ============================================================================
-// evaluate the mean of a and b 
+// evaluate the mean of a and b
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::mean 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::mean
 ( const Gaudi::Math::ValueWithError& b ) const
 {
   if      ( 0 >=   cov2 () && 0 >= b.cov2 () ) { return 0.5*( value() + b.value() ) ; }
   else if ( 0 >=   cov2 ()                   ) { return *this ; }
   else if ( 0 >= b.cov2 ()                   ) { return b     ; }
-  
+
   const double _cov2 = 1.0/( 1.0/cov2() + 1.0/b.cov2() ) ;
-  
-  return Gaudi::Math::ValueWithError 
-    ( _cov2 * ( value()/cov2() + b.value()/b.cov2() ) ,  _cov2 ) ;  
+
+  return Gaudi::Math::ValueWithError
+    ( _cov2 * ( value()/cov2() + b.value()/b.cov2() ) ,  _cov2 ) ;
 }
 // =============================================================================
-// evaluate chi2 
+// evaluate chi2
 // =============================================================================
-double Gaudi::Math::ValueWithError::chi2 
+double Gaudi::Math::ValueWithError::chi2
 ( const Gaudi::Math::ValueWithError& b ) const
 {
   //
   if ( _equal ( value () , b.value() ) ) { return 0 ; } // RETURN
   //
   const double s_cov2 = cov2() + b.cov2() ;
-  if ( 0 >= s_cov2 )                     { return -1 ; } // RETURN 
+  if ( 0 >= s_cov2 )                     { return -1 ; } // RETURN
   //
-  const double diff = value() - b.value() ;  
+  const double diff = value() - b.value() ;
   return diff*diff/s_cov2 ;
 }
 // =============================================================================
-// evaluate chi2 
+// evaluate chi2
 // =============================================================================
 double Gaudi::Math::ValueWithError::chi2 ( const double b ) const
 {
@@ -312,13 +313,13 @@ double Gaudi::Math::ValueWithError::chi2 ( const double b ) const
   if ( _equal ( value() , b ) ) { return  0 ; } // RETURN
   //
   if ( 0 >= cov2 ()           ) { return -1 ; } // RETURN
-  const double diff = value() - b ;  
+  const double diff = value() - b ;
   return diff*diff/cov2() ;
 }
 // =============================================================================
-// evaluate residual: signed sqrt(chi2) 
+// evaluate residual: signed sqrt(chi2)
 // =============================================================================
-double Gaudi::Math::ValueWithError::residual 
+double Gaudi::Math::ValueWithError::residual
 ( const Gaudi::Math::ValueWithError& b ) const
 {
   //
@@ -327,14 +328,14 @@ double Gaudi::Math::ValueWithError::residual
   const double s_cov2 = cov2() + b.cov2() ;
   if ( 0 >= s_cov2 )                     { return -1000 ; } // RETURN
   //
-  const double diff = value() - b.value() ;  
+  const double diff = value() - b.value() ;
   //
   return diff / std::sqrt ( s_cov2 ) ;
 }
 // =============================================================================
-// evaluate residual: signed sqrt(chi2) 
+// evaluate residual: signed sqrt(chi2)
 // =============================================================================
-double Gaudi::Math::ValueWithError::residual 
+double Gaudi::Math::ValueWithError::residual
 ( const double b ) const
 {
   //
@@ -342,19 +343,19 @@ double Gaudi::Math::ValueWithError::residual
   //
   if ( 0 >= cov2 () )           { return -1000 ; } // RETURN
   //
-  const double diff = value() - b ;  
+  const double diff = value() - b ;
   //
   return diff / error () ;
 }
 // ============================================================================
-/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
- *  @param  b the parameter "b" for the fraction 
- *  @return a/(a+b) 
+/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$
+ *  @param  b the parameter "b" for the fraction
+ *  @return a/(a+b)
  */
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::frac 
-( const Gaudi::Math::ValueWithError& b ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::frac
+( const Gaudi::Math::ValueWithError& b ) const
 {
   const double r  = value() / ( value() + b.value() ) ;
   //
@@ -365,28 +366,28 @@ Gaudi::Math::ValueWithError::frac
     std::fabs (   cov2 () ) * b.value () * b.value () +
     std::fabs ( b.cov2 () ) *   value () *   value () ;
   //
-  return ValueWithError 
+  return ValueWithError
     ( r , 0 <= cov2() && 0 <= b.cov2() ? c2/s4 : -1.0 * c2 / s4 ) ;
   //
 }
 // ============================================================================
-/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$ 
- *  @param  b the parameter "b" for the fraction 
- *  @return a/(a+b) 
+/*  evaluate the "fraction" \f$  \frac{a}{a+b} \f$
+ *  @param  b the parameter "b" for the fraction
+ *  @return a/(a+b)
  */
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::frac ( const double  b ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::frac ( const double  b ) const
 { return frac ( ValueWithError ( b ) ) ; }
 // ============================================================================
-/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
- *  @param  b the parameter "b" for the fraction 
- *  @return (a-b)/(a+b) 
+/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$
+ *  @param  b the parameter "b" for the fraction
+ *  @return (a-b)/(a+b)
  */
 // ============================================================================
-Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::asym
-( const Gaudi::Math::ValueWithError& b ) const 
+( const Gaudi::Math::ValueWithError& b ) const
 {
   //
   const double r  = ( value() - b.value() ) / ( value() + b.value() ) ;
@@ -399,50 +400,50 @@ Gaudi::Math::ValueWithError::asym
     4 * std::fabs (   cov2 () ) * b.value () * b.value () +
     4 * std::fabs ( b.cov2 () ) *   value () *   value () ;
   //
-  return ValueWithError 
+  return ValueWithError
     ( r , 0 <= cov2() && 0 <= b.cov2() ? c2/s4 : -1.0 * c2 / s4 ) ;
   //
 }
 // ============================================================================
-/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$ 
- *  @param  b the parameter "b" for the fraction 
- *  @return (a-b)/(a+b) 
+/*  evaluate the "asymmetry" \f$  \frac{a-b}{a+b} \f$
+ *  @param  b the parameter "b" for the fraction
+ *  @return (a-b)/(a+b)
  */
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::asym ( const double  b ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::asym ( const double  b ) const
 { return asym ( ValueWithError ( b ) ) ; }
 // =============================================================================
 // check for NaN
 // =============================================================================
-bool Gaudi::Math::ValueWithError::isnan    () const 
+bool Gaudi::Math::ValueWithError::isnan    () const
 {
   return
     boost::math::isnan    ( m_value ) ||
     boost::math::isnan    ( m_cov2  )  ;
 }
 // =============================================================================
-// check for finiteness 
+// check for finiteness
 // =============================================================================
-bool Gaudi::Math::ValueWithError::isfinite () const 
+bool Gaudi::Math::ValueWithError::isfinite () const
 {
   return
-    boost::math::isfinite ( m_value ) && 
+    boost::math::isfinite ( m_value ) &&
     boost::math::isfinite ( m_cov2  )  ;
 }
 // =============================================================================
-// check for finiteness 
+// check for finiteness
 // =============================================================================
-bool Gaudi::Math::ValueWithError::isnormal () const 
+bool Gaudi::Math::ValueWithError::isnormal () const
 {
   return
-    boost::math::isnormal ( m_value ) && 
+    boost::math::isnormal ( m_value ) &&
     boost::math::isnormal ( m_cov2  )  ;
 }
 // =============================================================================
-// check for finiteness 
+// check for finiteness
 // =============================================================================
-bool Gaudi::Math::ValueWithError::isinf () const 
+bool Gaudi::Math::ValueWithError::isinf () const
 {
   return
     boost::math::isinf ( m_value ) ||
@@ -452,161 +453,161 @@ bool Gaudi::Math::ValueWithError::isinf () const
 // for easy pythonization
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__add__ 
-( const Gaudi::Math::ValueWithError& right ) const 
+Gaudi::Math::ValueWithError::__add__
+( const Gaudi::Math::ValueWithError& right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp += right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__sub__ 
-( const Gaudi::Math::ValueWithError& right ) const 
+Gaudi::Math::ValueWithError::__sub__
+( const Gaudi::Math::ValueWithError& right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp -= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__mul__ 
-( const Gaudi::Math::ValueWithError& right ) const 
+Gaudi::Math::ValueWithError::__mul__
+( const Gaudi::Math::ValueWithError& right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp *= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__div__ 
-( const Gaudi::Math::ValueWithError& right ) const 
+Gaudi::Math::ValueWithError::__div__
+( const Gaudi::Math::ValueWithError& right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp /= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__add__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__add__ ( const double right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp += right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__sub__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__sub__ ( const double right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp -= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__mul__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__mul__ ( const double right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp *= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__div__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__div__ ( const double right ) const
 {
   ValueWithError tmp ( *this ) ;
   return tmp /= right ;
 }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__rsub__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__rsub__ ( const double right ) const
 { return ValueWithError( right - value() , cov2()  ) ; }
 // =============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__rdiv__ ( const double right ) const 
+Gaudi::Math::ValueWithError::__rdiv__ ( const double right ) const
 {
   ValueWithError tmp ( right ) ;
   return tmp /= (*this) ;
 }
 // ============================================================================
-// abs(a) 
+// abs(a)
 // ============================================================================
 Gaudi::Math::ValueWithError
-Gaudi::Math::ValueWithError::__abs__ () const 
+Gaudi::Math::ValueWithError::__abs__ () const
 { return Gaudi::Math::abs ( *this ) ; }
 // ============================================================================
-// me**e 
+// me**e
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__pow__  ( const int             e ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__pow__  ( const int             e ) const
 { return pow ( *this , e ) ; }
 // ============================================================================
-// me**e 
+// me**e
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__pow__  ( const double          e ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__pow__  ( const double          e ) const
 { return pow ( *this , e ) ; }
 // ============================================================================
-// me**e 
+// me**e
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__pow__ 
-( const Gaudi::Math::ValueWithError&  e ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__pow__
+( const Gaudi::Math::ValueWithError&  e ) const
 { return pow ( *this , e ) ; }
 // ============================================================================
-// e**me 
+// e**me
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__rpow__  ( const int             e ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__rpow__  ( const int             e ) const
 { return pow ( e , *this ) ; }
 // ============================================================================
-// e**me 
+// e**me
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__rpow__ ( const double          e ) const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__rpow__ ( const double          e ) const
 { return pow ( e , *this ) ; }
 // ============================================================================
 // -me
 // ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::ValueWithError::__neg__() const 
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__neg__() const
 { return Gaudi::Math::ValueWithError ( -value() , cov2() ) ; }
 // ============================================================================
 // +me (no-effect)
 // ============================================================================
-Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__pos__() const { return *this ; }
 // ============================================================================
 // exp(me)
 // ============================================================================
-Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__exp__   () const { return exp   ( *this ) ; }
 // ============================================================================
 // log(me)
 // ============================================================================
-Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log__   () const { return log   ( *this ) ; }
 // ============================================================================
 // log10(me)
 // ============================================================================
-Gaudi::Math::ValueWithError 
+Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log10__ () const { return log10 ( *this ) ; }
 // ============================================================================
 
 
 
 // ============================================================================
-/*  evaluate abs(a) 
- *  @param a (INPUT) the value 
- *  @return the absolute value 
+/*  evaluate abs(a)
+ *  @param a (INPUT) the value
+ *  @return the absolute value
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::abs    
+Gaudi::Math::ValueWithError Gaudi::Math::abs
 ( const Gaudi::Math::ValueWithError& a )
 { return ValueWithError ( std::fabs ( a.value() ) , a.cov2() ) ; }
 // ============================================================================
 /* evaluate the binomial efficiency for Bernulli scheme with
- *  @param n (INPUT) number of 'success' 
- *  @param N (INPUT) total number 
- *  @return the binomial efficiency 
+ *  @param n (INPUT) number of 'success'
+ *  @param N (INPUT) total number
+ *  @return the binomial efficiency
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::binomEff   
-( const size_t n , 
-  const size_t N ) 
+Gaudi::Math::ValueWithError Gaudi::Math::binomEff
+( const size_t n ,
+  const size_t N )
 {
   if       ( n >  N ) { return binomEff       ( N , n ) ; }
   else if  ( 0 == N ) { return ValueWithError ( 1 , 1 ) ; }
@@ -617,18 +618,18 @@ Gaudi::Math::ValueWithError Gaudi::Math::binomEff
   const double eff = double ( n       ) / N         ;
   const double c2  = double ( n1 * n2 ) / N / N / N ;
   //
-  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;
 }
 // ============================================================================
 /*  evaluate the binomial efficiency interval using Wilson's prescription
- *  @param n (INPUT) number of 'success' 
- *  @param N (INPUT) total number 
- *  @return the binomial efficiency 
+ *  @param n (INPUT) number of 'success'
+ *  @param N (INPUT) total number
+ *  @return the binomial efficiency
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::wilsonEff   
-( const size_t n , 
-  const size_t N ) 
+Gaudi::Math::ValueWithError Gaudi::Math::wilsonEff
+( const size_t n ,
+  const size_t N )
 {
   //
   if      ( n >  N ) { return wilsonEff      ( N , n ) ; }
@@ -649,18 +650,18 @@ Gaudi::Math::ValueWithError Gaudi::Math::wilsonEff
   const double prefix = kappa2 * N / ( nK * nK ) ;
   const double c2     = prefix * ( q * p + 0.25 * kappa2 / N ) ;
   //
-  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;
 }
 // ============================================================================
 /*  evaluate the binomial efficiency interval using Agresti-Coull's prescription
- *  @param n (INPUT) number of 'success' 
- *  @param N (INPUT) total number 
- *  @return the binomial efficiency 
+ *  @param n (INPUT) number of 'success'
+ *  @param N (INPUT) total number
+ *  @return the binomial efficiency
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::agrestiCoullEff   
-( const size_t n , 
-  const size_t N ) 
+Gaudi::Math::ValueWithError Gaudi::Math::agrestiCoullEff
+( const size_t n ,
+  const size_t N )
 {
   //
   if      ( n >  N ) { return wilsonEff      ( N , n ) ; }
@@ -678,24 +679,24 @@ Gaudi::Math::ValueWithError Gaudi::Math::agrestiCoullEff
   const double eff = p ;
   const double c2  = kappa2 * p * q / n2 ;
   //
-  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;  
+  return Gaudi::Math::ValueWithError  ( eff , c2 ) ;
 }
 // ============================================================================
 /*  evaluate pow(a,b)
- *  @param a (INPUT) the base 
- *  @param b (INPUT) the exponent 
- *  @return the <c>a</c> rased to power <c>b</b> 
+ *  @param a (INPUT) the base
+ *  @param b (INPUT) the exponent
+ *  @return the <c>a</c> rased to power <c>b</b>
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::pow 
-( const Gaudi::Math::ValueWithError& a , 
-  const int                          b ) 
+Gaudi::Math::ValueWithError Gaudi::Math::pow
+( const Gaudi::Math::ValueWithError& a ,
+  const int                          b )
 {
   //
   if      ( 0 == b         ) { return 1 ; }          // RETURN
   else if ( 1 == b         ) { return a ; }          // RETURN
   //
-  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )  
+  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )
   { return _pow ( a.value() , b ) ;  }               // RETURN
   //
   const double v  =     _pow ( a.value () , b     ) ;
@@ -706,19 +707,19 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
 }
 // ============================================================================
 /*  evaluate pow(a,b)
- *  @param a (INPUT) the base 
- *  @param b (INPUT) the exponent 
- *  @return the <c>a</c> raised to power <c>b</b> 
+ *  @param a (INPUT) the base
+ *  @param b (INPUT) the exponent
+ *  @return the <c>a</c> raised to power <c>b</b>
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::pow 
-( const Gaudi::Math::ValueWithError& a , 
-  const double                       b ) 
+Gaudi::Math::ValueWithError Gaudi::Math::pow
+( const Gaudi::Math::ValueWithError& a ,
+  const double                       b )
 {
   //
   if      ( _zero ( b )    ) { return 1 ; }         // RETURN
   else if ( _one  ( b )    ) { return a ; }         // RETURN
-  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )  
+  else if ( 0 >= a.cov2 () || _zero ( a.cov2() ) )
   { return std::pow ( a.value() , b ) ; }           // RETURN
   //
   const double v  =     std::pow ( a.value () , b     ) ;
@@ -728,19 +729,19 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
 }
 // ============================================================================
 /*  evaluate pow(a,b)
- *  @param a (INPUT) the base 
- *  @param b (INPUT) the exponent 
- *  @return the <c>a</c> raised to power <c>b</b> 
+ *  @param a (INPUT) the base
+ *  @param b (INPUT) the exponent
+ *  @return the <c>a</c> raised to power <c>b</b>
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::pow 
+Gaudi::Math::ValueWithError Gaudi::Math::pow
 ( const int                          a ,
-  const Gaudi::Math::ValueWithError& b ) 
+  const Gaudi::Math::ValueWithError& b )
 {
-  if      ( 0 == a && 0 < b.value()       ) { return 0 ; }    // RETURN 
-  else if ( 1 == a && _zero ( b.cov2 () ) ) { return 1 ; }    // RETURN 
-  else if ( 0 >= b.cov2() || _zero ( b.cov2() ) )  
-  { return std::pow ( double ( a ) , b.value() ) ; }    // RETURN 
+  if      ( 0 == a && 0 < b.value()       ) { return 0 ; }    // RETURN
+  else if ( 1 == a && _zero ( b.cov2 () ) ) { return 1 ; }    // RETURN
+  else if ( 0 >= b.cov2() || _zero ( b.cov2() ) )
+  { return std::pow ( double ( a ) , b.value() ) ; }    // RETURN
   //
   const double v  =     std::pow ( double ( a ) , b.value() ) ;
   const double e2 = v * std::log ( double ( a ) ) ;
@@ -749,18 +750,18 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
 }
 // ============================================================================
 /*  evaluate pow(a,b)
- *  @param a (INPUT) the base 
- *  @param b (INPUT) the exponent 
- *  @return the <c>a</c> raised to power <c>b</b> 
+ *  @param a (INPUT) the base
+ *  @param b (INPUT) the exponent
+ *  @return the <c>a</c> raised to power <c>b</b>
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::pow 
+Gaudi::Math::ValueWithError Gaudi::Math::pow
 ( const double                       a ,
-  const Gaudi::Math::ValueWithError& b ) 
+  const Gaudi::Math::ValueWithError& b )
 {
-  if      ( _zero ( a ) && 0 < b.value() ) { return 0 ; }    // RETURN 
-  else if ( 0 >= b.cov2() || _zero ( b.cov2() ) ) 
-  { return std::pow ( a , b.value() ) ; }    // RETURN 
+  if      ( _zero ( a ) && 0 < b.value() ) { return 0 ; }    // RETURN
+  else if ( 0 >= b.cov2() || _zero ( b.cov2() ) )
+  { return std::pow ( a , b.value() ) ; }    // RETURN
   //
   const double v  =     std::pow ( a , b.value() ) ;
   const double e2 = v * std::log ( a ) ;
@@ -770,17 +771,17 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
 }
 // ============================================================================
 /*  evaluate pow(a,b)
- *  @param a (INPUT) the base 
- *  @param b (INPUT) the exponent 
- *  @return the <c>a</c> raised to power <c>b</b> 
+ *  @param a (INPUT) the base
+ *  @param b (INPUT) the exponent
+ *  @return the <c>a</c> raised to power <c>b</b>
  */
 // ============================================================================
-Gaudi::Math::ValueWithError Gaudi::Math::pow 
-( const Gaudi::Math::ValueWithError& a , 
-  const Gaudi::Math::ValueWithError& b ) 
+Gaudi::Math::ValueWithError Gaudi::Math::pow
+( const Gaudi::Math::ValueWithError& a ,
+  const Gaudi::Math::ValueWithError& b )
 {
   //
-  if      ( 0 >= a.cov2 () || _zero ( a.cov2() ) ) 
+  if      ( 0 >= a.cov2 () || _zero ( a.cov2() ) )
   { return pow ( a.value() , b         ) ; }
   else if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
   { return pow ( a         , b.value() ) ; }
@@ -791,20 +792,20 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
   const double e1 = v1 *            b.value ()   ;
   const double e2 = v  * std::log ( a.value () ) ;
   //
-  return Gaudi::Math::ValueWithError 
+  return Gaudi::Math::ValueWithError
     ( v , e1 * e1 * a.cov2 () + e2 * e2 * b.cov2 () ) ;
 }
 // ============================================================================
 /*  evaluate exp(b)
- *  @param b (INPUT) the exponent 
- *  @return the <c>e</c> raised to power <c>b</b> 
- *  @warning invalid and small covariances are ignored 
+ *  @param b (INPUT) the exponent
+ *  @return the <c>e</c> raised to power <c>b</b>
+ *  @warning invalid and small covariances are ignored
  */
 // ============================================================================
 Gaudi::Math::ValueWithError Gaudi::Math::exp
-( const Gaudi::Math::ValueWithError& b ) 
+( const Gaudi::Math::ValueWithError& b )
 {
-  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) ) 
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
   { return std::exp ( b.value() ) ; }
   //
   const double v = std::exp ( b.value() ) ;
@@ -812,13 +813,13 @@ Gaudi::Math::ValueWithError Gaudi::Math::exp
 }
 // ============================================================================
 /*  evaluate log(b)
- *  @param b (INPUT) the parameter 
+ *  @param b (INPUT) the parameter
  *  @return logarithm
- *  @warning invalid and small covariances are ignored 
+ *  @warning invalid and small covariances are ignored
  */
 // ============================================================================
 Gaudi::Math::ValueWithError Gaudi::Math::log
-( const Gaudi::Math::ValueWithError& b ) 
+( const Gaudi::Math::ValueWithError& b )
 {
   if ( 0 >= b.cov2 () || _zero ( b.cov2() ) ) { return std::log ( b.value() ) ; }
   //
@@ -828,15 +829,15 @@ Gaudi::Math::ValueWithError Gaudi::Math::log
 }
 // ============================================================================
 /*  evaluate log(b)
- *  @param b (INPUT) the parameter 
+ *  @param b (INPUT) the parameter
  *  @return logarithm
- *  @warning invalid and small covariances are ignored 
+ *  @warning invalid and small covariances are ignored
  */
 // ============================================================================
 Gaudi::Math::ValueWithError Gaudi::Math::log10
-( const Gaudi::Math::ValueWithError& b ) 
+( const Gaudi::Math::ValueWithError& b )
 {
-  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) ) 
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
   { return std::log10 ( b.value() ) ; }
   //
   const double v  = std::log10 ( b.value() ) ;
@@ -853,127 +854,99 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/Parsers.h"
-#include "GaudiKernel/Grammars.h"
-#include "GaudiKernel/Parsers.icpp"
+#include "GaudiKernel/ParsersFactory.h"
 // ============================================================================
 namespace Gaudi
 {
   // ==========================================================================
-  namespace Parsers 
+  namespace Parsers
   {
     // ========================================================================
-    /** @class ValueWithErrorGrammar  
+    /** @class ValueWithErrorGrammar
      *
      *  The valid represenation of value with error are:
-     *     "( 34 +- 10 )" , "( 34 , 10 )" , "34"  
+     *     "( 34 +- 10 )" , "( 34 , 10 )" , "34"
      *
      *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
-     *  @date 2009-09-13
+     *  @author Alexander Mazurov  alexander.mazurov@gmail.com
+     *  @date 2011-07-27
      */
-    class ValueWithErrorGrammar 
-      : public grammar
-    <
-      ValueWithErrorGrammar,
-      ClosureGrammar<Gaudi::Math::ValueWithError>::context_t
-    >
-    {
-    public:
-      // ======================================================================
-      typedef RealGrammar<double>                               ValueGrammarT ;
-      typedef Gaudi::Math::ValueWithError                             ResultT ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// callback. Action when we match first value
-      void matchValue  ( const ValueGrammarT::ResultT v ) const
-      { this->val().setValue ( v ) ; }
-      /// callback. Action when we match second value
-      void matchError  ( const ValueGrammarT::ResultT e ) const 
-      { this->val().setError ( e ) ; }
-      // ======================================================================
-    public:
-      // ============================================================
-      template <typename ScannerT>
-      struct definition
-      {
-        //
-        definition ( ValueWithErrorGrammar const &self)
-        {
-          vale = 
-            ( 
-             str_p("(") 
-             >> grvalue [boost::bind(&ValueWithErrorGrammar::matchValue,&self,_1)]
-             >> !( ( str_p( "+-" ) | ',' | ';' ) 
-                   >> grvalue [boost::bind(&ValueWithErrorGrammar::matchError,&self,_1)]) 
-             >> ')' 
-             ) | grvalue [boost::bind(&ValueWithErrorGrammar::matchValue,&self,_1)] ;
+    template< typename Iterator, typename Skipper>
+    class ValueWithErrorGrammar:
+       public qi::grammar<Iterator,Gaudi::Math::ValueWithError(), Skipper> {
+     // =======================================================================
+     public: // Result type
+       typedef Gaudi::Math::ValueWithError ResultT ;
+     // =======================================================================
+     public: // Grammar is defined at the constructor:
+      ValueWithErrorGrammar() :ValueWithErrorGrammar::base_type(value) {
+          value = ( qi::lit("(") >> grvalue[op(qi::_val,qi::_1)]
+             >> -((qi::lit("+-") | qi::lit(',') | qi::lit(';'))
+                   >> grvalue[op(qi::_val,qi::_1, tag_error())])
+             >> ')'
+             ) | grvalue[op(qi::_val,qi::_1)] ;
         }
-        // 
-        rule<ScannerT> const& start() const { return vale; }
-        rule<ScannerT> vale;
-        ValueGrammarT  grvalue ;
-      } ;
-      // ======================================================================
-    } ;
+     // =======================================================================
+     private:  // Rules and grammars:
+      // Start rule should have the same template parameters as
+      // qi::grammar at the class definition:
+      qi::rule<Iterator, Gaudi::Math::ValueWithError(), Skipper> value;
+      RealGrammar<Iterator, double, Skipper> grvalue;
+     // =======================================================================
+     private: // Semantic actions:
+      struct tag_error{};
+      struct Operations {
+        // Some magic:
+        template <typename A, typename B = boost::fusion::unused_type,
+            typename C = boost::fusion::unused_type,
+            typename D = boost::fusion::unused_type>
+        struct result { typedef void type; };
+        // Actions:
+        // --------------------------------------------------------------------
+        void operator()(Gaudi::Math::ValueWithError& val, double v) const {
+          val.setValue(v);
+        }
+        void operator()(Gaudi::Math::ValueWithError& val, double err,
+            tag_error) const {
+          val.setError(err);
+        }
+        // --------------------------------------------------------------------
+      };  // End of Operations
+      // ----------------------------------------------------------------------
+      ph::function<Operations> op;
+    };
     // ========================================================================
-  } //                                          end of namespace Gaudi::Parsers 
+    REGISTER_GRAMMAR(Gaudi::Math::ValueWithError, ValueWithErrorGrammar);
+    // ========================================================================
+  } //                                          end of namespace Gaudi::Parsers
   // ==========================================================================
 } //                                                     end of namespace Gaudi
 // ============================================================================
 
-  
-
-
-
-
 
 // =============================================================================
-/*  parse the input string into the result 
- *  @param result (output) the result 
+/*  parse the input string into the result
+ *  @param result (output) the result
  *  @param input  (input) input string
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-09-13
- */     
+ */
 // =============================================================================
-StatusCode Gaudi::Parsers::parse 
-( Gaudi::Math::ValueWithError& result , 
-  const std::string&           input  ) 
-{
-  ValueWithErrorGrammar gr ;
-  //
-  return parse
-    ( createIterator ( input ) , 
-      IteratorT ()             ,
-      gr[var(result)=arg1]     , 
-      SkipperGrammar()         ).full ;
+StatusCode Gaudi::Parsers::parse(Gaudi::Math::ValueWithError& result,
+    const std::string& input) {
+  return parse_(result, input);
 }
 // =============================================================================
-/* parse the input string into the result 
- *  @param result (output) the result 
+/* parse the input string into the result
+ *  @param result (output) the result
  *  @param input  (input) input string
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2009-09-13
- */     
+ */
 // =============================================================================
-StatusCode Gaudi::Parsers::parse 
-( std::vector<Gaudi::Math::ValueWithError>& result , 
-  const std::string&                        input  ) 
-{
-  VectorGrammar<ValueWithErrorGrammar> gr ;
-  // 
-  return parse 
-    ( createIterator ( input ) , 
-      IteratorT ()             ,
-      gr[var(result)=arg1]     ,
-      SkipperGrammar()         ) . full ;
+StatusCode Gaudi::Parsers::parse(
+    std::vector<Gaudi::Math::ValueWithError>& result,
+    const std::string& input) {
+  return parse_(result, input);
 }
 // =============================================================================
-
-
-
-// =============================================================================
-// The END 
+// The END
 // =============================================================================
 
 
