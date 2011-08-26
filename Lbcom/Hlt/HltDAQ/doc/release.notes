@@ -4,15 +4,19 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-08-26 - Alexander Mazurov
+ - Update of parser function in PropertyConfigSvc. This version works only with
+   Gaudi version > v22r2 (where the new parser model is provided)
+
 !========================= HltDAQ v2r11 2011-07-27 =========================
 ! 2011-07-25 - Eric van Herwijnen
- - Added a few lines from Gerhard to HltSelReportsDecoder to be able to get Chi2PerDoF 
+ - Added a few lines from Gerhard to HltSelReportsDecoder to be able to get Chi2PerDoF
    and nDoF from the SelReports
 
 !========================= HltDAQ v2r10 2011-06-15 =========================
 ! 2011-06-13 - Tomasz Skwarnicki
- - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid 
-   per event, for odd number of hit sequences saved. 
+ - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid
+   per event, for odd number of hit sequences saved.
    Change bank version number to 1 in HltSelReportsWriter.
    Make HltSelReportsDecoder omit corrupted hit for bank version 0.
 
@@ -70,11 +74,11 @@
 
 ! 2011-01-20 - Gerhard Raven
  - replace the request in the requiremenents for HltTCK from v1r* to v*
- - change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from false to true 
+ - change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from false to true
 
 !========================= HltDAQ v2r5 2010-12-15 =========================
 ! 2010-12-14 - Gerhard Raven
- - PropertyConfigSvc: add possibility to apply transformations on properties just before 
+ - PropertyConfigSvc: add possibility to apply transformations on properties just before
    pushing them into the JobOptionsSrc
 
 ! 2010-12-12 - Marco Cattaneo
@@ -151,7 +155,7 @@
  - minor speed up in HltSelReportsWriter
 
 ! 2010-05-13 - Gerhard Raven
- - make warning message less variable 
+ - make warning message less variable
 
 !========================== HltDAQ v1r7 2010-04-08 ===========================
 
@@ -196,28 +200,28 @@
 
 !========================== HltDAQ v1r2 2009-11-27 ===========================
 ! 2009-11-26 - Tomasz Skwarnicki
- - HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports 
+ - HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports
    (bank version=1, previous was=0).
    Old Decoder will not be compatibile with the new content.
  - HltSelReportsDecoder: decode Particle2Vertex info in HltObjectSummary of selection.
    Old Decoder will give warnings about new content (if present), but will work OK
    (bank format not changed).
-    
+
 !========================== HltDAQ v1r1p1 2009-11-13 =========================
 ! 2009-11-07 - Gerhard Raven
- - In HltRoutingBitsWriter, publish counters 
+ - In HltRoutingBitsWriter, publish counters
 
 !========================== HltDAQ v1r1 2009-10-20 ===========================
 ! 2009-10-14 - Marco Cattaneo
  - Remove obsolete file HltDAQ_dll.cpp
 
 ! 2009-10-09 - Marco Cattaneo
- - HltRoutingBits filter does not fail if routing bits bank is missing, just 
+ - HltRoutingBits filter does not fail if routing bits bank is missing, just
    prints an error
 
 ! 2009-10-09 - Gerhard Raven
  - Add HltRoutingBitsFilter
- 
+
 !========================== HltDAQ v1r0p2 2009-09-11 ===========================
 ! 2009-09-11 - Gerhard Raven
  - add counter for each routing bit
@@ -234,5 +238,5 @@
  - initial version. Move Readers from HltRawData and rename them to Decoders.
    They need to be in LBCOM library like this one. Also move all Writers here.
 
- 
+
 !========================= HltDAQ v2r5 2010-12-15 =========================
