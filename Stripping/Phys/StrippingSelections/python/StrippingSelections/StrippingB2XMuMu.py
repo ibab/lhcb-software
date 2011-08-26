@@ -409,7 +409,7 @@ class B2XMuMuConf(LineBuilder) :
         Make a phi
         """      
         _phi2kk = CombineParticles()
-        _phi2kk.DecayDescriptor = "phi(1020) -> K+ K-"
+        _phi2kk.DecayDescriptors = [ "phi(1020) -> K+ K-", "phi(1020) -> K+ K+", "phi(1020) -> K- K-" ]
         _phi2kk.MotherCut = self.__KpiCuts__(conf)
 
         _selPHI2KK = Selection( "Selection_"+self.name+"_Phi",
@@ -422,7 +422,7 @@ class B2XMuMuConf(LineBuilder) :
         Make a rho
         """      
         _rho2pipi = CombineParticles()
-        _rho2pipi.DecayDescriptor = "rho(770)0 -> pi+ pi-"
+        _rho2pipi.DecayDescriptors = [ "rho(770)0 -> pi+ pi-", "rho(770)0 -> pi+ pi+" , "rho(770)0 -> pi- pi-" ]
         _rho2pipi.MotherCut = self.__KpiCuts__(conf)
 
         _selRHO2PIPI = Selection( "Selection_"+self.name+"_Rho",
@@ -435,7 +435,7 @@ class B2XMuMuConf(LineBuilder) :
         Make a kstar
         """      
         _kstar2kpi = CombineParticles()
-        _kstar2kpi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc"
+        _kstar2kpi.DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*(892)0 -> K+ pi+]cc" ]
         _kstar2kpi.MotherCut = self.__KpiCuts__(conf)
 
         _selKSTAR2KPI = Selection( "Selection_"+self.name+"_Kstar",
@@ -448,7 +448,7 @@ class B2XMuMuConf(LineBuilder) :
         Make a Lambda* 
         """      
         _lambdastar2pk = CombineParticles()
-        _lambdastar2pk.DecayDescriptor = "[Lambda(1520)0 -> p+ K-]cc"
+        _lambdastar2pk.DecayDescriptors = [ "[Lambda(1520)0 -> p+ K-]cc", "[Lambda(1520)0 -> p+ K+]cc" ]
         _lambdastar2pk.MotherCut = self.__pKCuts__(conf)
 
         _selLAMBDASTAR2PK = Selection( "Selection_"+self.name+"_Lambdastar",
