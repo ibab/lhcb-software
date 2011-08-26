@@ -202,7 +202,7 @@ class StrippingBu2D0h_D02KShh_NoPID_WSConf(LineBuilder):
 
         #DD selection cuts
         self.DDPi_FilterCut_WS = "(ISDOWN) & (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<10.) & (BPVIPCHI2() > %(KSdaughterPiIPCHI2_DD)s)  & ((-PIDK) > 0.)"%config
-        self.KSDD_CombCut_WS = "(ADAMASS('KS0') < 40.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
+        self.KSDD_CombCut_WS = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
         self.KSDD_MotherCut_WS = "(ADMASS('KS0') < 28.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)" %config
         self.D_DD_DaughterCut_WS = " (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(DdaughterIPCHI2_DD)s)"%config
         self.D_DD_CombCut_WS = "(ADAMASS('D0') < 45.*MeV) & (ADOCACUT(9.2, 'LoKi::TrgDistanceCalculator'))"
