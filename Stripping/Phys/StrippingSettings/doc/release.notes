@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-26 - Ulrich Kerzel
+- Updated dictionary for Gamma/Loop: B->hhh
+- Add Prescale for unbiased line B->hh line w/o lifetime cut: 0.15
+
 ! 2011-08-26 - Greig Cowan
  - Updated Jpsi(ee)Phi config dictionary.
  - Tightened prescale on JpsiKS line.
