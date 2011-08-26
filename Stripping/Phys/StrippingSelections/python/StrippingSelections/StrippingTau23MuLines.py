@@ -46,9 +46,9 @@ class Tau23MuLinesConf(LineBuilder) :
     config_default={
         'TauPrescale'         :1,
         'TauPostscale'        :1,
-        'Ds23PiTISPrescale'   :1,
+        'Ds23PiTISPrescale'   :0.04,
         'Ds23PiTISPostscale'  :1,
-        'Ds23PiPrescale'      :1,
+        'Ds23PiPrescale'      :0.01,
         'Ds23PiPostscale'     :1,
         'Ds2PhiPiPrescale'    :1,
         'Ds2PhiPiPostscale'   :1,        
