@@ -1,15 +1,19 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/HistoStrings
 ! Responsible : Vanya Belyaev
-! Purpose     : Various histogram <---> string conversion functions 
+! Purpose     : Various histogram <---> string conversion functions
 ! -----------------------------------------------------------------------------
+
+! 2011-08-26 - Alexander Mazurov
+ - Update to histogram's parser functions. This version works only with
+   Gaudi version > v22r2 (where the new parser model is provided)
 
 !========================= HistoStrings v1r1 2011-07-25 =========================
 ! 2011-07-09 - Vanya Belyaev
- - Sascha has fixed orderintg problem with string representation  
+ - Sascha has fixed orderintg problem with string representation
 
 !===================== HistoStrings v1r0 2009-11-13 ===========================
 ! 2009-10-22 - Vanya Belyaev
- - the first commit into CVS 
+ - the first commit into CVS
 
 # =============================================================================
