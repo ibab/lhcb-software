@@ -5,6 +5,12 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Jibo He
+ - StrippingCcbar2PpbarNew
+   . Tightened selections of exclusive line, added a detached line
+ - StrippingBc2JpsiMuXNew
+   . Tightened Jpsi mass window. 
+
 ! 2011-08-26 - Will Barter
  - Updated StrippingLowMult.py to reflect trigger changes.
  - Added StrippingZ02TauTauProng.py on behalf of Christian Elsasser

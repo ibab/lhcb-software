@@ -23,7 +23,7 @@ config_default =  {
     'MuonPT'              : 1400.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
-    'MuMuMassWindow'      :  200.   ,  # MeV, 10 sigma, may decreased to 150
+    'MuMuMassWindow'      :  150.   ,  # MeV, 10 sigma, may decreased to 150
     'MuMuVtxCHI2'         :    9.   ,  # adimentional
     'MuMuPT'              :  -10.   ,  # MeV, not applied 
     

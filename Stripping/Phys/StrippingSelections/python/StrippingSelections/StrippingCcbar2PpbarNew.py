@@ -1,14 +1,9 @@
 '''
-Module for electron ID studies, including one
-Tag-And-Probe line for lifetime biased Jpsi->ee
+Module for Charmonium->p pbar, including three lines
+1. Normal line
+2. Exclusive
+3. Detached
 
-To include it:
-
-from StrippingSelections.StrippingCcbar2Ppbar import Ccbar2PpbarConf
-StrippingCcbar2PpbarConf =  Ccbar2PpbarConf( name = 'Jpsi2eeForCcbar2Ppbar', config = Ccbar2PpbarConf.config_default )
-stream.appendLines( [
-    StrippingCcbar2PpbarConf.line
-    ])
 '''
 
 __author__=['Jibo He']
@@ -27,15 +22,16 @@ config_default =  { 'LinePrescale'     :    1.   ,
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
                     'ProtonPT'         :  1950.  , # MeV
                     'ProtonP'          :    10.  , # GeV
-                    'ProtonTRCHI2DOF' :      4.  ,
+                    'ProtonTRCHI2DOF'  :     4.  ,
                     'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
-                    'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
+                    'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+                    'ProtonIPCHI2Cut'  :    ""   ,
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
                     'CombMinMass'      :  2750.  , # MeV, before Vtx fit
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  7000.    
+                    'CCCut'            :  " & (PT>6*GeV)"    
                     }
 
 config_exclusive =  {
@@ -43,17 +39,37 @@ config_exclusive =  {
         'LinePostscale'    :     1.  ,
         
         'SpdMult'          :    20.  , # dimensionless, Spd Multiplicy cut 
-        'ProtonPT'         :   500.  , # MeV
+        'ProtonPT'         :   550.  , # MeV
         'ProtonP'          :    -2.  , # MeV
-        'ProtonTRCHI2DOF' :      5.  ,
-        'ProtonPIDppi'     :    10.  , # CombDLL(p-pi)
-        'ProtonPIDpK'      :     5.  , # CombDLL(p-K)
+        'ProtonTRCHI2DOF'  :     5.  ,
+        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  :    ""   ,
         'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
         'CombMinMass'      :     0.  , # MeV, before Vtx fit
         'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
         'MinMass'          :     0.  , # MeV, after Vtx fit
         'VtxCHI2'          :     9.  , # dimensionless
-        'CCPT'             :    -2.    
+        'CCCut'            :  ""     
+        }
+
+config_detached =  {
+        'LinePrescale'     :     1.  ,
+        'LinePostscale'    :     1.  ,
+        
+        'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
+        'ProtonPT'         :   550.  , # MeV
+        'ProtonP'          :    -2.  , # MeV
+        'ProtonTRCHI2DOF'  :     5.  ,
+        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>9)",
+        'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
+        'CombMinMass'      :  2650.  , # MeV, before Vtx fit
+        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
+        'MinMass'          :  2700.  , # MeV, after Vtx fit
+        'VtxCHI2'          :     9.  , # dimensionless
+        'CCCut'            :  " & (BPVDLS>5)"     
         }
 
 
@@ -75,12 +91,14 @@ class Ccbar2PpbarConf(LineBuilder):
         'ProtonTRCHI2DOF',
         'ProtonPIDppi',
         'ProtonPIDpK',
+        'ProtonIPCHI2Cut',
+        
         'CombMaxMass',
         'CombMinMass',
         'MaxMass',
         'MinMass',
         'VtxCHI2',
-        'CCPT'
+        'CCCut'
         )
 
     
@@ -96,21 +114,24 @@ class Ccbar2PpbarConf(LineBuilder):
                              ProtonTRCHI2DOF = config['ProtonTRCHI2DOF'],
                              ProtonPIDppi = config['ProtonPIDppi'],
                              ProtonPIDpK = config['ProtonPIDpK'],
+                             ProtonIPCHI2Cut = config['ProtonIPCHI2Cut'],
                              CombMinMass = config['CombMinMass'],
                              CombMaxMass = config['CombMaxMass'],
                              VtxCHI2 = config['VtxCHI2'],
                              MinMass = config['MinMass'],
                              MaxMass = config['MaxMass'],
-                             CCPT = config['CCPT']
+                             CCCut = config['CCCut']
                              )
-
+        
         SpdMultForCcbarCut = config['SpdMult']
         
         self.line = StrippingLine( self.name+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
-                                   FILTER = { 'Code'       : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMultForCcbarCut)s )" % locals() , 'Preambulo' : [ "from LoKiNumbers.decorators import *" ]
-                                              },
+                                   FILTER = {
+                                   'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMultForCcbarCut)s )" % locals() ,
+                                   'Preambulo' : [ "from LoKiNumbers.decorators import *" ]
+                                   },
                                    checkPV  = False,
                                    selection =  self.SelPP                                   
                                    )
@@ -125,12 +146,13 @@ def makePP( name,
             ProtonTRCHI2DOF,
             ProtonPIDppi,
             ProtonPIDpK,
+            ProtonIPCHI2Cut,
             CombMinMass,
             CombMaxMass,
             VtxCHI2,
             MinMass,
             MaxMass,
-            CCPT
+            CCCut
             ):
 
     from StandardParticles import StdTightProtons as ProtonsForCcbar2Ppbar
@@ -140,9 +162,9 @@ def makePP( name,
     MomCut = "(VFASPF(VCHI2)< %(VtxCHI2)s) & (in_range( %(MinMass)s *MeV, MM, %(MaxMass)s *MeV))" % locals() 
     
     _PP = CombineParticles( DecayDescriptor = "J/psi(1S) -> p+ p~-",
-                            DaughtersCuts = {"p+" : ProtonCut },
+                            DaughtersCuts = {"p+" : ProtonCut + ProtonIPCHI2Cut },
                             CombinationCut = CombCut,
-                            MotherCut = MomCut
+                            MotherCut = MomCut + CCCut
                             )
     
     return Selection( name,
