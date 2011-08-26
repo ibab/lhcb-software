@@ -110,7 +110,7 @@ config_default= {
         'DiMuonHighMass_Postscale'                 :     1.   ,
         'DiMuonHighMass_checkPV'                   : False    ,
         
-        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
+        'DiMuonHighMass_MuonPT'                    :   700.   , # MeV
         'DiMuonHighMass_MuonP'                     :  8000.   , # MeV 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
         'DiMuonHighMass_MinMass'                   :  8500.   , # MeV

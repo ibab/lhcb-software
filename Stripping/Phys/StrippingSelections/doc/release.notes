@@ -10,6 +10,8 @@
    . Tightened selections of exclusive line, added a detached line
  - StrippingBc2JpsiMuXNew
    . Tightened Jpsi mass window. 
+ - StrippingDiMuonNew
+   . Tightened the Muon PT cut of DiMuonHighMass line to 700 MeV.
 
 ! 2011-08-26 - Will Barter
  - Updated StrippingLowMult.py to reflect trigger changes.
