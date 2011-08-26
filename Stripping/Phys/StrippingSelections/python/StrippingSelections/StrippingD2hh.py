@@ -55,6 +55,7 @@ default_config = { 'DaugPtMin': 800.,
            'TaggedSCSLinePostscale': 1.,
 	   'UntaggedKpiOnly': False,
 	   'UseTOSFilter': False,
+	   'AddPartialD': True,
 	   'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
 	   'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
 	   'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
@@ -122,6 +123,7 @@ class D2hhConf(LineBuilder) :
                               'TaggedSCSLinePostscale',
 			      'UntaggedKpiOnly',
 			      'UseTOSFilter',
+			      'AddPartialD',
 	                      'Hlt2TOSKPi',
 	                      'Hlt2TOSKK',
 	                      'Hlt2TOSPiPi'
@@ -307,7 +309,8 @@ class D2hhConf(LineBuilder) :
           self.registerLine(self.dstWS_line)
           self.registerLine(self.dstKK_line)
           self.registerLine(self.dstPiPi_line)
-          self.registerLine(self.pseudoPsi_line)
+	  if config['AddPartialD']:
+            self.registerLine(self.pseudoPsi_line)
 
 def makeD2hh(name,
              config,
