@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Victor Coco
+ - StrippingDisplVertices : update the cuts, reorganise the lines, add trigger
+   study lines
+
 ! 2011-08-26 - Johannes Albrecht
  - tau23mu cleanup part 3 of 3: adapt prescales in tau23muLines 
 

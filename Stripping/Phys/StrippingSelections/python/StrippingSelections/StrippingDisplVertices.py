@@ -1,3 +1,4 @@
+
 """
 Module for the selection of events with displaced vertices.
 
@@ -48,79 +49,97 @@ __all__ = ('DisplVerticeLinesConf',
 confdict = {
     'NCands':{
        'SinglePS': 1 ,
-       'SingleLowMass': 1 ,
-       'SingleHighMass': 1 ,
+       'JPsiHLT': 1 ,
+       'MinBias': 1 ,
        'SingleDown': 1 ,
-       'Double':2
+       'Double':2,
+       'SingleHighMass':1,
+       'SingleHighFD':1,
+       'SingleMedium':1
     },
     'RCutMethod' : 'FromBeamSpot',
     'MinR':{
-       'PreselVelo':     0.3*units.mm , 
-       'SinglePS': 0.3*units.mm ,
-       'SingleLowMass': 0.4*units.mm ,
-       'SingleHighMass': 0.3*units.mm ,
+       'PreselVelo':     0.4*units.mm ,
+       'SinglePS': 0.4*units.mm ,
+       'JPsiHLT': 0.4*units.mm ,
+       'MinBias': 0.4*units.mm ,
        'SingleDown': 3.0*units.mm ,
-       'Double': 0.3*units.mm
+       'Double': 0.4*units.mm ,
+       'SingleHighMass': 0.4*units.mm , 
+       'SingleHighFD': 4.*units.mm,
+       'SingleMedium': 2.5*units.mm
     },
     'MinMass':{
-       'PreselVelo':     3.*units.GeV , 
-       'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 7.5*units.GeV ,
-       'SingleHighMass':  12.*units.GeV,
-       'SingleDown':  4.*units.GeV,
-       'Double': 3.*units.GeV 
+       'PreselVelo': 3.*units.GeV , 
+       'SinglePS': 3.*units.GeV ,  
+       'JPsiHLT': 3.*units.GeV , 
+       'MinBias': 3.*units.GeV , 
+       'SingleDown': 4.*units.GeV,
+       'Double': 3.5*units.GeV , 
+       'SingleHighMass':  9.7*units.GeV,
+       'SingleHighFD': 6.5*units.GeV,
+       'SingleMedium': 8.5*units.GeV
+    },
+    'MinMass2':{
+       'Double': 4.*units.GeV 
     },
     'MinSumPt':{
-       'PreselVelo':     3.*units.GeV ,
-       'SinglePS': 5.*units.GeV  ,
-       'SingleLowMass': 7.*units.GeV ,
-       'SingleHighMass':  6.*units.GeV,
-       'SingleDown':  4.*units.GeV,
-       'Double': 3.5*units.GeV
-    },
-    'MaxMass':{
-       'SinglePS': 14*units.TeV ,
-       'SingleLowMass': 12.*units.GeV,
-       'SingleHighMass':  14*units.TeV ,
-       'SingleDown':  14*units.TeV,
-       'Double': 14*units.TeV
-    },
-    'MaxSumPt':{
-       'SinglePS': 14*units.TeV ,
-       'SingleLowMass': 14*units.TeV,
-       'SingleHighMass':  14*units.TeV ,
-       'SingleDown':  14*units.TeV ,
-       'Double': 14*units.TeV
+       'PreselVelo': 3.*units.GeV , 
+       'SinglePS': 3.*units.GeV , 
+       'JPsiHLT': 3.*units.GeV , 
+       'MinBias': 3.*units.GeV , 
+       'SingleDown': 3.*units.GeV,
+       'Double': 3.*units.GeV , 
+       'SingleHighMass':  3.*units.GeV,
+       'SingleHighFD': 3.*units.GeV,
+       'SingleMedium': 3.*units.GeV
     },
     'NTracks':{
        'PreselVelo':     4,
-       'SinglePS': 5,
-       'SingleLowMass': 6,
-       'SingleHighMass':  5 ,
-       'SingleDown':  4 ,
-       'Double': 4
+       'SinglePS': 4 ,
+       'JPsiHLT': 4 ,
+       'MinBias': 4 ,
+       'SingleDown': 4 ,
+       'Double':4 ,
+       'SingleHighMass': 5,
+       'SingleHighFD': 5,
+       'SingleMedium': 5
     },
-    'MinZ':{
-       'SinglePS': -10*units.m,
-       'SingleLowMass':  -10*units.m,
-       'SingleHighMass':   -10*units.m ,
+    'MinZ':{   
        'SingleDown': 100.*units.mm  ,
-       'Double': -10*units.m
     },
     'MaterialVeto':{
-       'PreselVelo':     5 ,
-       'SinglePS': 0,
-       'SingleLowMass': 5,
-       'SingleHighMass':  0 ,
-       'SingleDown':  0 ,
-       'Double': 0
+       'PreselVelo': 5,
+       'SinglePS': 0 ,
+       'JPsiHLT': 0 ,
+       'MinBias': 0 ,
+       'SingleDown': 0 ,
+       'Double': -5 ,
+       'SingleHighMass':5,
+       'SingleHighFD':5,
+       'SingleMedium': 5
     },
     'prescale':{
-       'SinglePS': 0.05,
-       'SingleLowMass': 1.,
-       'SingleHighMass':  1. ,
-       'SingleDown':  1. ,
-       'Double': 1.
+       'SinglePS': 0.005 ,
+       'JPsiHLT': 1. ,
+       'MinBias': 1. ,
+       'SingleDown': 1. ,
+       'Double': 1. ,
+       'SingleHighMass':1.,
+       'SingleHighFD':1.,
+       'SingleMedium': 1.
+    },
+    'HLT':{
+       'SinglePS': '' ,
+       'SingleDown': '' ,
+       'Double': '' ,
+       'SingleHighMass':'',
+       'SingleHighFD':'',
+       'SingleMedium':'',
+       'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
+       'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
+       'SingleHLTPS':"HLT_PASS_RE('Hlt2DisplVertices(Single|SingleMV)PostScaledDecision')",
+       'DoubleHLTPS':"HLT_PASS_RE('Hlt2DisplVerticesDoublePostScaledDecision')"
     }
  }
 
@@ -180,13 +199,13 @@ class DisplVerticeLinesConf(LineBuilder) :
             ,'RCutMethod'
             ,'MinR'
             ,'MinMass'
+            ,'MinMass2'
             ,'MinSumPt'
-            ,'MaxMass'
-            ,'MaxSumPt'
             ,'NTracks'
             ,'MinZ'
             ,'MaterialVeto'
             ,'prescale'
+            ,'HLT'
         )
 
     __confdict__={}
@@ -200,21 +219,35 @@ class DisplVerticeLinesConf(LineBuilder) :
         Velo vertex reconstruction function  _dvVeloReco() is common to all lines using velo vertex
         Downstream vertex reconstruction function  _dvDownReco() is common to all lines using downstream vertex
         '''
+
         self.dvVeloReco = self._dvVeloReco(name)
         self.VeloDVPreselection = self._veloDVPreselection(name)
         self.DownstreamTracks =  self._dvDownstreamTrackSelection(name)
         self.dvDownReco = self._dvDownstreamReco(name)
         self.DownDVPreselection = self._downstreamDVPreselection(name)
-        self.singlePSLine = self._makeDVLine('SinglePS', name)
-        self.singleLowMassLine = self._makeDVLine('SingleLowMass', name)
-        self.singleHighMassLine = self._makeDVLine('SingleHighMass', name)
-        self.doubleLine = self._makeDVLine('Double', name)
-        self.downstreamLine = self._makeDVDownLine('SingleDown', name)
-        self.registerLine(self.singlePSLine)
-        self.registerLine(self.singleLowMassLine)
-        self.registerLine(self.singleHighMassLine)
-        self.registerLine(self.doubleLine)
+        
+        self.singlePSLine = self._makeDVLine('SinglePS', name,  hlt = self.__confdict__['HLT']['SinglePS'])
+        self.downstreamLine = self._makeDVDownLine('SingleDown', name, hlt = self.__confdict__['HLT']['SingleDown'])
+        self.singleHighMassLine = self._makeDVLine('SingleHighMass', name , hlt = self.__confdict__['HLT']['SingleHighMass'])
+        self.singleHighFDLine = self._makeDVLine('SingleHighFD', name, hlt = self.__confdict__['HLT']['SingleHighFD'])
+        self.singleMediumLine = self._makeDVLine('SingleMedium', name, hlt = self.__confdict__['HLT']['SingleMedium'])
+        self.doubleLine = self._makeDVLine('Double', name, hlt = self.__confdict__['HLT']['Double'])
+        self.doubleHLTPSLine =  self._makeDVLineFromTrigger('DoubleHLTPS', name, hlt = self.__confdict__['HLT']['DoubleHLTPS'])
+        self.singleHLTPSLine =  self._makeDVLineFromTrigger('SingleHLTPS', name, hlt = self.__confdict__['HLT']['SingleHLTPS'])
+        self.JPsiHLTLine =  self._makeDVLine('JPsiHLT', name, hlt = self.__confdict__['HLT']['JPsiHLT'])
+        self.MinBias =  self._makeDVLine('MinBias', name, hlt = self.__confdict__['HLT']['MinBias'])
+        
         self.registerLine(self.downstreamLine)
+        self.registerLine(self.singlePSLine)
+        self.registerLine(self.singleHighMassLine)
+        self.registerLine(self.singleMediumLine)
+        self.registerLine(self.singleHighFDLine)
+        self.registerLine(self.doubleLine)
+        self.registerLine(self.doubleHLTPSLine)
+        self.registerLine(self.singleHLTPSLine)
+        self.registerLine(self.JPsiHLTLine)
+        self.registerLine(self.MinBias)
+        
         self.Lines = []
 
        
@@ -327,11 +360,15 @@ class DisplVerticeLinesConf(LineBuilder) :
         selectionAlg.RMin = self.__confdict__['MinR'][lineName]
         selectionAlg.PreyMinMass = self.__confdict__['MinMass'][lineName]
         selectionAlg.PreyMinSumpt = self.__confdict__['MinSumPt'][lineName]
-        selectionAlg.PreyMaxMass = self.__confdict__['MaxMass'][lineName]
+        if self.__confdict__['MinMass2'].has_key(lineName):
+            selectionAlg.PreyMinMass2 =  self.__confdict__['MinMass2'][lineName]
         selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
         #selectionAlg.SaveTuple = True
         selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
         return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.VeloDVPreselection ] )
+    
+    def _makeEmptySelection(self , lineName , name ):
+        return Selection ( "Sel" + lineName + name  , Algorithm = FilterDesktop( Code = "ALL" ) , RequiredSelections = [ self.VeloDVPreselection ] )
 
     def _makeDVDownSelection(self , lineName , name ):
         from Configurables import DisplVertices
@@ -341,22 +378,40 @@ class DisplVerticeLinesConf(LineBuilder) :
         selectionAlg.RMin = self.__confdict__['MinR'][lineName]
         selectionAlg.PreyMinMass = self.__confdict__['MinMass'][lineName]
         selectionAlg.PreyMinSumpt = self.__confdict__['MinSumPt'][lineName]
-        selectionAlg.PreyMaxMass = self.__confdict__['MaxMass'][lineName]
         selectionAlg.NbTracks = self.__confdict__['NTracks'][lineName]
         selectionAlg.MinZ = self.__confdict__['MinZ'][lineName]
-        #selectionAlg.SaveTuple = True
         selectionAlg.RemVtxFromDet = self.__confdict__['MaterialVeto'][lineName]
         return Selection ( "Sel" + lineName + name  , Algorithm = selectionAlg , RequiredSelections = [ self.DownDVPreselection ] )
 
-    def _makeDVLine(self,lineName,name):
-        return StrippingLine( lineName+name ,
-                              prescale = self.__confdict__['prescale'][lineName] ,
-                              selection = self._makeDVSelection(lineName,name))
+    def _makeDVLine(self,lineName,name,hlt = ""):
+        if hlt == "":
+            return StrippingLine( lineName+name ,
+                                  prescale = self.__confdict__['prescale'][lineName] ,
+                                  selection = self._makeDVSelection(lineName,name))
+        else :
+            return StrippingLine( lineName+name ,
+                                  prescale = self.__confdict__['prescale'][lineName] ,
+                                  HLT = hlt,
+                                  selection = self._makeDVSelection(lineName,name))
+
     
-    def _makeDVDownLine(self,lineName,name):
+    def _makeDVLineFromTrigger(self,lineName,name,hlt):
         return StrippingLine( lineName+name ,
-                              prescale = self.__confdict__['prescale'][lineName] ,
-                              selection = self._makeDVDownSelection(lineName,name))
+                              prescale = 1. ,
+                              HLT = hlt,
+                              selection = self._makeEmptySelection(lineName,name))
+    
+    
+    def _makeDVDownLine(self,lineName,name,hlt = "" ):
+        if hlt == "" :
+            return StrippingLine( lineName+name ,
+                                  prescale = self.__confdict__['prescale'][lineName] ,
+                                  selection = self._makeDVDownSelection(lineName,name))
+        else :
+            return StrippingLine( lineName+name ,
+                                  prescale = self.__confdict__['prescale'][lineName] ,
+                                  HLT = hlt,
+                                  selection = self._makeDVDownSelection(lineName,name))
 
 
 
