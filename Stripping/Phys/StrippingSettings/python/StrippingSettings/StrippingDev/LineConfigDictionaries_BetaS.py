@@ -15,7 +15,7 @@ BetaS = {
     ,       'Jpsi2MuMuPrescale'     :       0.01
     ,       'Bu2JpsiKPrescale'      :       0.05
     ,       'Bd2JpsiKstarPrescale'  :       0.03
-    ,       'Bd2JpsiKsPrescale'     :       0.5
+    ,       'Bd2JpsiKsPrescale'     :       0.3
     ,       'Bs2JpsiPhiPrescale'    :       0.15
     ,       'Bs2JpsiEtaPrescale'    :       0.2
     },
@@ -136,38 +136,39 @@ BetaSPsi2SMuMu = {
 BetaSBs2JpsieePhi = {
     'WGs'		: ['betas'],
     'BUILDERTYPE' 	: 'Bs2JpsieePhiConf',
-    'CONFIG' 	: {'ElectronPTLoose'            :   800.    # MeV
-                , 'ElectronPIDLoose'           :     0.    # adimensional
-                , 'ElectronTrackCHI2pDOFLoose' :    10.    # adimensional
-                , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
-                , 'JpsiMassMinLoose'           :  2700.    # MeV
-                , 'JpsiMassMaxLoose'           :  3300.    # MeV
-                , 'KaonTrackCHI2pDOFLoose'     :    10.    # adimensional
-                , 'PhiPTLoose'                 :  1000.    # MeV
-                , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
-                , 'PhiMassMinLoose'            :   990.    # MeV
-                , 'PhiMassMaxLoose'            :  1050.    # MeV
-                , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
-                , 'BsMassMinLoose'             :  4500.    # MeV
-                , 'BsMassMaxLoose'             :  6000.    # MeV
-                , 'BsDIRALoose'                :     0.99  # adimensional
-                , 'ElectronPT'            :   800.    # MeV
-                , 'ElectronPID'           :     2.    # adimensional
-                , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
-                , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
-                , 'JpsiMassMin'           :  2700.    # MeV
-                , 'JpsiMassMax'           :  3300.    # MeV
-                , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
-                , 'KaonPID'               :     0.    # adimensional
-                , 'PhiPT'                 :  1000.    # MeV
-                , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
-                , 'PhiMassMin'            :  1005.    # MeV
-                , 'PhiMassMax'            :  1035.    # MeV
-                , 'BsVertexCHI2pDOF'      :     6.    # adimensional
-                , 'BsMassMin'             :  4500.    # MeV
-                , 'BsMassMax'             :  6000.    # MeV
-                , 'BsDIRA'                :     0.99  # adimensional
-                   },
+    'CONFIG' 	: {
+                 'ElectronPTLoose'            :   500.    # MeV
+               , 'ElectronPIDLoose'           :     0.    # adimensional
+               , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
+               , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
+               , 'JpsiMassMinLoose'           :  2500.    # MeV
+               , 'JpsiMassMaxLoose'           :  3300.    # MeV
+               , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
+               , 'PhiPTLoose'                 :  1000.    # MeV
+               , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
+               , 'PhiMassMinLoose'            :   990.    # MeV
+               , 'PhiMassMaxLoose'            :  1050.    # MeV
+               , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
+               , 'BsMassMinLoose'             :  4500.    # MeV
+               , 'BsMassMaxLoose'             :  6000.    # MeV
+               , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
+               , 'ElectronPT'            :   800.    # MeV
+               , 'ElectronPID'           :     2.    # adimensional
+               , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+               , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
+               , 'JpsiMassMin'           :  2700.    # MeV
+               , 'JpsiMassMax'           :  3300.    # MeV
+               , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
+               , 'KaonPID'               :     0.    # adimensional
+               , 'PhiPT'                 :  1000.    # MeV
+               , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
+               , 'PhiMassMin'            :  1005.    # MeV
+               , 'PhiMassMax'            :  1035.    # MeV
+               , 'BsVertexCHI2pDOF'      :     6.    # adimensional
+               , 'BsMassMin'             :  4500.    # MeV
+               , 'BsMassMax'             :  6000.    # MeV
+               , 'BsDIRA'                :     0.99  # adimensional
+               },
     'STREAMS' : [ 'Dielectron' ]
     }
 

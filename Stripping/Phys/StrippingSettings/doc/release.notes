@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-26 - Greig Cowan
+ - Updated Jpsi(ee)Phi config dictionary.
+ - Tightened prescale on JpsiKS line.
+
 ! 2011-08-25 - Greig Cowan
  - Tightened some of the beta_s prescales.
  - Updated Q2B config dictionary (Fred).
