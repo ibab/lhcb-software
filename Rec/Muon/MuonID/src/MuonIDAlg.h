@@ -375,7 +375,6 @@ private:
 
   // Number of tracks with IsMuon = True (monitoring)
   int m_nmu;
-  int m_ntotmu;
   // Number of tracks with IsMuonLoose = true which failed likelihood construction
   int m_mullfail;
   // Number of stations
@@ -428,7 +427,8 @@ private:
   std::vector<double> m_trackY; // position of track in y(mm) in each station
 
   //test if found a hit in the MuonStations
-  std::vector<int> m_occupancy;
+  std::vector<int> m_occupancyAll;
+  std::vector<int> m_occupancyWithCrossing;  // Requires x,y crossing for IsMuonTight
   std::map< LHCb::MuonPID*, std::vector<LHCb::MuonCoord*> > m_muonMap;
 
   // store X of hits for dx/dz matching with track (only need M2/M3)

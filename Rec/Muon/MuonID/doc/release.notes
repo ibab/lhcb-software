@@ -1,6 +1,11 @@
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
+
+! 2011-08-26 J. Helder Lopes
+ - Implemented IsMuonTight, which is IsMuon requiring hits with x,y crossing.
+   Option UseUncrossed does not affect IsMuonLoose or IsMuon or IsMuonTight anymore.
+
 ! 2011-08-20 J. Helder Lopes
  - Fixed compilation warning left from previous changes.
 

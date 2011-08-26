@@ -7,6 +7,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
+#include "Event/RecHeader.h"
+
 // local
 #include "MuonIDAlg.h"
 #include "TF1.h"
@@ -106,6 +108,12 @@
 // Remove use of random weights for IsMuon or IsMuonLoose
 // Keep, however, weight 0 for hits in M4 if p<3.5 and hits in M5 if p<4.2
 // Property Weight_flag continues in database, bit is not used
+//=====================
+// 25/08/2011: J. Helder Lopes
+// Implemented IsMuonTight, which is IsMuon but using only hits with x,y crossing
+// Option UseUncrossed now affects only probabilities, dlls, NShared... 
+// Does not affect IsMuonLoose or IsMuon or IsMuonTight.
+// MuonPID in Event/RecEvent was modified to save the new IsMuonTight info. Also mutrack saves this info.
 //=====================
 
 // Declaration of the Algorithm Factory
@@ -806,8 +814,9 @@ StatusCode MuonIDAlg::initialize() {
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
 
 
-
-  m_ntotmu=0;
+  counter("nIsMuonLoose");
+  counter("nIsMuon");
+  counter("nIsMuonTight");
   m_mullfail=0;
   m_NStation = 0;
   m_NRegion = 0;
@@ -992,6 +1001,15 @@ StatusCode MuonIDAlg::initialize() {
 StatusCode MuonIDAlg::execute() {
 
   if (msgLevel(MSG::DEBUG) ) debug()  << "==> Execute" << endmsg;
+  LHCb::RecHeader* header=NULL;
+  long evt=-1;
+  long run=-1;
+  if ( exist<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default)){
+    header = get<LHCb::RecHeader>( LHCb::RecHeaderLocation::Default );
+    evt = header->evtNumber();
+    run = header->runNumber();
+  } else warning() << "No RecHeader" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Run " << run << " Event " << evt << endmsg;
   m_nmu = 0;
 
   //XCV: if kalman foi, this will be done by SmartMuonMeasProvider
@@ -1079,6 +1097,8 @@ StatusCode MuonIDAlg::execute() {
       }
 
       pMuids->insert( pMuid, (*iTrack)->key() );
+      if (msgLevel(MSG::DEBUG) ) debug()<< " added MuonPID object with key " << pMuid->key()  << endmsg;
+
       LHCb::Track* mutrack = 0;
 
       // Build mutrack if IsMuonLoose is 1
@@ -1115,7 +1135,6 @@ StatusCode MuonIDAlg::execute() {
     debug()  << "MuonIDAlg:: Number of tracks with IsMuonLoose = True : " << m_nmu
              << endmsg;
   }
-  m_ntotmu += m_nmu;
 
   if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: Muon Tracks registered  " << endmsg;
 
@@ -1139,10 +1158,8 @@ StatusCode MuonIDAlg::finalize() {
 
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "==> Finalize" << endmsg;
-    debug()  << "==> Total number of tracks with IsMuon=1 : " <<
-      m_ntotmu << endmsg;
   }
-  info()  << "==> Total number of tracks with IsMuon=1 failing likelihood (p<0): " <<
+  info()  << "==> Total number of tracks with IsMuonLoose=1 failing likelihood (p<0): " <<
     m_mullfail << endmsg;
 
 
@@ -1168,9 +1185,6 @@ StatusCode MuonIDAlg::fillCoordVectors(){
     int station = (*iCoord)->key().station();
     double x,dx,y,dy,z,dz;
     LHCb::MuonTileID tile=(*iCoord)->key();
-    if ((m_mudet->mapInRegion(station,region ) != 1)
-        &&  ((*iCoord)->uncrossed()) && (!m_use_uncrossed)) continue;
-
     
     StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
     if (sc.isFailure()){
@@ -1243,9 +1257,11 @@ void MuonIDAlg::clearCoordVectors(){
 //=============================================================================
 StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
+  if (msgLevel(MSG::DEBUG) )debug()  << "doID: ------------"  << endmsg;
   // Initializes data members
   pMuid->setIsMuon(0);
   pMuid->setIsMuonLoose(0);
+  pMuid->setIsMuonTight(0);
   pMuid->setNShared(0);
   pMuid->setPreSelMomentum(0);
   pMuid->setInAcceptance(0);
@@ -1262,10 +1278,13 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
   if (m_MomentumPre >= m_MomentumCuts[0] && m_MomentumPre < m_MomentumCuts[1]) {momentumBin = 1;}
   if (m_MomentumPre >= m_MomentumCuts[1]) {momentumBin = 2;}
 
+  if (msgLevel(MSG::DEBUG) )debug()  << " p = " << m_MomentumPre << " bin = "   << momentumBin << endmsg;
+
   StatusCode sc;
     
   bool myIsMuon=false;
   bool myIsMuonLoose=false;
+  bool myIsMuonTight=false;
 
     if (m_kalman_foi){
     // Kalman filter FoI method
@@ -1345,33 +1364,42 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
     std::vector<int> stations;
     for(int ist=1;ist<5;ist++){
-      if (m_occupancy[ist]>0) stations.push_back(ist);
+      if (m_occupancyAll[ist]>0) stations.push_back(ist);
     }
-
-    if (msgLevel(MSG::DEBUG) ) debug()<<"stations="<<stations<<endmsg;
-    //bool myIsMuon = IsMuon(stations,m_MomentumPre);
-    //bool myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);
+    if (msgLevel(MSG::DEBUG)){
+       debug() << " occupancyAll[ist]: " << m_occupancyAll << endmsg;
+       debug() << " stations with hits in FOI: " << stations << endmsg;
+    }
 
     //GL & SF: IsMuon/IsMuonLoose definition (with/without weights):
     //JHL: Remove use of weights 15/08/2011
-    myIsMuon = IsMuon(stations,m_MomentumPre);
     myIsMuonLoose = IsMuonLoose(stations,m_MomentumPre);  
+    myIsMuon = IsMuon(stations,m_MomentumPre);
+
+    std::vector<int> stationsWithCrossing;
+    for(int ist=1;ist<5;ist++){
+      if (m_occupancyWithCrossing[ist]>0) stationsWithCrossing.push_back(ist);
+    }
+    if (msgLevel(MSG::DEBUG) ) {
+        debug() << " occupancyWithCrossing[ist]: " << m_occupancyWithCrossing << endmsg;
+        debug() << " stations with hits in FOI requiring crossing: " << stationsWithCrossing << endmsg;
+    }
+    myIsMuonTight = IsMuon(stationsWithCrossing,m_MomentumPre);
   }
 
   if (msgLevel(MSG::DEBUG) ) {
-    debug()<<"myIsMuon="<<myIsMuon<<endmsg;
-    debug()<<"myIsMuonLoose="<<myIsMuonLoose<<endmsg;
+    debug()<< " myIsMuon="<<myIsMuon<<" myIsMuonLoose="<<myIsMuonLoose<<" myIsMuonTight="<<myIsMuonTight<<endmsg;
   }
   
   
-  int station;
   pMuid->setIsMuon(myIsMuon);
   pMuid->setIsMuonLoose(myIsMuonLoose);
+  pMuid->setIsMuonTight(myIsMuonTight);
 
   if(!m_kalman_foi){  
     // calculate MuProb
     double MuProb = calcMuProb( pMuid );
-    if (msgLevel(MSG::DEBUG) ) debug()  << "MuProb= " << MuProb <<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()  << " MuProb= " << MuProb <<endmsg;
   }
   
   // calculate Muon DLL
@@ -1406,16 +1434,9 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
   //increment number of IsMuonLoose=true tracks for monitoring
   if(pMuid->IsMuonLoose()) m_nmu++;
-
-  if ((!m_kalman_foi)&&(msgLevel(MSG::DEBUG) )) {
-    debug()  << "IsMuonLoose = " << pMuid->IsMuonLoose()
-             << " bin = "   << momentumBin <<" " << " p = " << m_MomentumPre << endmsg;
-    debug()  << " coord in FOI (";
-    for(station = 0; station < m_NStation ; station++ ){
-      debug() << m_occupancy[station] << "," ;
-    }
-    debug() << ")" << endmsg;
-  }
+  if(pMuid->IsMuonLoose()) counter("nIsMuonLoose")++;
+  if(pMuid->IsMuon()) counter("nIsMuon")++;
+  if(pMuid->IsMuonTight()) counter("nIsMuonTight")++;
 
   return StatusCode::SUCCESS;
 }
@@ -1560,6 +1581,8 @@ double MuonIDAlg::calcMuProb(LHCb::MuonPID * pMuid){
                           (m_stationZ[m_xMatchStation] -
                            m_stationZ[m_xMatchStation+1]));
     double dSlopeX = fabs( m_trackSlopeX - coordSlopeX );
+    if (msgLevel(MSG::DEBUG) ) debug()<<"calcMuProb: m_xMatchStation: " << m_xMatchStation << " m_CoordX: " 
+        << m_CoordX[m_xMatchStation] << " - " << m_CoordX[m_xMatchStation+1] << " m_stationZ: " <<  m_stationZ[m_xMatchStation] << " - " <<  m_stationZ[m_xMatchStation+1] << " dSlopeX: " << dSlopeX <<endmsg; 
 
     // formula to make this a probability is
     // dSlopeX < 0.005 = 1.0
@@ -1605,7 +1628,7 @@ StatusCode MuonIDAlg::calcMuonLL_dist(LHCb::MuonPID * pMuid, const double& p){
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(pMuid,p,closest_region);
   if (myDist<=0){
-    Warning("Closest Distance < 0 ",StatusCode::SUCCESS).ignore();
+    Warning("Closest Distance <= 0 ",StatusCode::SUCCESS).ignore();
     return StatusCode::FAILURE; 
   }
 
@@ -2080,12 +2103,16 @@ StatusCode MuonIDAlg::preSelection(LHCb::MuonPID * pMuid, bool &passed){
 //=============================================================================
 StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
 
+  if (msgLevel(MSG::DEBUG) ) debug()  << "setCoords:"  << endmsg;
   int station;
   for(station = 0 ; station < m_NStation ; station++){
     int region;
     for(region = 0 ; region < m_NRegion ; region++){
 
       if( !m_coordPos[station*m_NRegion + region].empty() ){
+
+      if (msgLevel(MSG::DEBUG) ) debug()  << "           station " << station << " region " << region
+                                          << " mapInRegion: " << m_mudet->mapInRegion(station,region ) << endmsg;
 
         std::vector<coordExtent_>::const_iterator itPos;
         for(itPos = m_coordPos[station*m_NRegion + region].begin();
@@ -2107,21 +2134,38 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
 
             if (msgLevel(MSG::DEBUG) ) {
-              debug()  << "FOIfactor : " << m_foifactor << endmsg;
+              debug()  << "              FOIfactor : " << m_foifactor << endmsg;
 
-              debug()  << "ratioX = " << fabs( x - m_trackX[station])
+              debug()  << "              ratioX = " << fabs( x - m_trackX[station])
                        << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = "
                        << foiXDim <<" foiYDim = " << foiYDim <<endmsg;
-              debug()  << "padX = " << dx << " padY = " << dy << endmsg;
+              debug()  << "              padX = " << dx << " padY = " << dy << endmsg;
             }
 
             // it is in the window
             // add the hit to the MuonPID
-            m_muonMap[pMuid].push_back(itPos->m_pCoord);
-            m_occupancy[station]++;
+            m_occupancyAll[station]++;  // Occupancy without requiring x,y crossing
+
+            // Check x,y crossing for this hit
+            bool uncrossed = ((m_mudet->mapInRegion(station,region ) != 1) && ((itPos->m_pCoord)->uncrossed()));
+
+            if ( !uncrossed ) m_occupancyWithCrossing[station]++; // Occupancy requiring x,y crossing
+            if (msgLevel(MSG::DEBUG) ) {
+                debug()  << "              Checking crossing: uncrossed: " << ((itPos->m_pCoord)->uncrossed()) << " add hit? " << !uncrossed
+                         << " m_occupancyAll = " << m_occupancyAll[station]
+                         << " m_occupancyWithCrossing = " << m_occupancyWithCrossing[station] << endmsg;
+            }
+
+            // Fill m_muonMap and m_CoordX according to m_use_uncrossed option
+            if ( !m_use_uncrossed && uncrossed ) continue;
+	    m_muonMap[pMuid].push_back(itPos->m_pCoord);
+
+            if (msgLevel(MSG::DEBUG) )  debug()  << "              m_muonMap size: " << m_muonMap[pMuid].size()  << endmsg;
 
             // also need track angle in X in M2-M3 for angle matching
-            if(1 == m_occupancy[station]) {
+            int nCoord = m_occupancyAll[station];
+            if(!m_use_uncrossed) nCoord = m_occupancyWithCrossing[station];
+            if(1 == nCoord) {
               // this is the first coord found
               m_CoordX[station] = x;
             }else{
@@ -2252,6 +2296,12 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
   //=====================================================================
 
   double closest_dist=0;
+
+  std::vector<int> *occupancy;
+  if(m_use_uncrossed) occupancy = &m_occupancyAll;
+  else occupancy = &m_occupancyWithCrossing;
+
+  if (msgLevel(MSG::DEBUG) )debug()  << "calc_closestDist: occupancy: " << (*occupancy) << endmsg;
   
   if (m_kalman_foi){
       
@@ -2271,29 +2321,33 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
     return -1;
   }
 
+  if (msgLevel(MSG::DEBUG) ){
+    debug()  << "calc_closestDist: station closest_region \t closest_x \t closest_y" << endmsg;
+    for(int ist=0;ist<5;++ist) debug()  << ist << " " << closest_region[ist] << "\t" << closest_x[ist] << "\t" << closest_y[ist] << endmsg;
+  }
 
   if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
     //3 or 2 stations
-    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]>0){//M2 &&M3 && M4
+    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]>0){//M2 &&M3 && M4
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if(m_occupancy[1]>0 && m_occupancy[2]>0){//M2 &&M3
+    if((*occupancy)[1]>0 && (*occupancy)[2]>0){//M2 &&M3
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]);
       closest_dist = closest_dist/2.;
       return closest_dist;
     }
-    if(m_occupancy[1]>0 && m_occupancy[3]>0){//M2 &&M4
+    if((*occupancy)[1]>0 && (*occupancy)[3]>0){//M2 &&M4
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
       closest_dist = closest_dist/2.;
       return closest_dist;
     }
-    if(m_occupancy[2]>0 && m_occupancy[3]>0){//M3 &&M4
+    if((*occupancy)[2]>0 && (*occupancy)[3]>0){//M3 &&M4
       closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
       closest_dist = closest_dist/2.;
@@ -2302,7 +2356,7 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
   }//3-6
 
   if(p>m_MomentumCuts[0]){
-    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){
+    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){
       //M2 &&M3&&M4&&M5
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
@@ -2311,28 +2365,28 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
       closest_dist = closest_dist/4.;
       return closest_dist;
     }
-    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]){//M2 && M3 && M4
+    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]){//M2 && M3 && M4
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if(m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[4]){//M2 && M3 && M5
+    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[4]){//M2 && M3 && M5
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
         (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if(m_occupancy[2]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){//M3 &&M4 && M5
+    if((*occupancy)[2]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){//M3 &&M4 && M5
       closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
         (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if(m_occupancy[1]>0 && m_occupancy[3]>0 && m_occupancy[4]>0){//M2 &&M4 && M5
+    if((*occupancy)[1]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){//M2 &&M4 && M5
       closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
         (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
         (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
@@ -2708,9 +2762,11 @@ void MuonIDAlg::resetTrackLocals(){
   m_trackSlopeX = 0.;
   m_trackX.clear();
   m_trackY.clear();
-  m_occupancy.clear();
+  m_occupancyAll.clear();
+  m_occupancyWithCrossing.clear();
   m_CoordX.clear();
-  m_occupancy.resize(m_NStation,0);
+  m_occupancyAll.resize(m_NStation,0);
+  m_occupancyWithCrossing.resize(m_NStation,0);
   m_CoordX.resize(m_NStation,0.);
   m_dist_out = -1;
 }
@@ -2822,6 +2878,7 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
   mtrack->addInfo(302,mupid.InAcceptance());
   mtrack->addInfo(303,mupid.IsMuonLoose());
   mtrack->addInfo(304,mupid.IsMuon());
+  mtrack->addInfo(310,mupid.IsMuonTight());
 
   double Dist=-1.;
   double DLL=-1.;
@@ -2831,8 +2888,8 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
     DLL     = mupid.MuonLLMu()-mupid.MuonLLBg();
     NShared = mupid.nShared();
   }
-  if (msgLevel(MSG::DEBUG) ) debug()<< "makeMuonTrack:: Dist, DLL, NShared: "
-                                    << Dist<<" "<<DLL<<" "<<NShared<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) debug()<< "makeMuonTrack:: Key, p,Dist, DLL, NShared: "
+                                    <<mtrack->key()<< " " << mtrack->p() << " " << Dist<<" "<<DLL<<" "<<NShared<<endmsg;
 
   mtrack->addInfo(305,Dist);
   mtrack->addInfo(306,DLL);
