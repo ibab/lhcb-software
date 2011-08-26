@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2011-08-26 Johannes Albrecht
+ - update Physcis_Aug2011: include prescaled lowMult lines, 
+   move to Hadrons_Sept11
+
 ! 2011-08-25 - M. Williams
 - Updates for the Topo post TS.  
 
