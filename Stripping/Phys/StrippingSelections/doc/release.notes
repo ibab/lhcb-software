@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Johannes Albrecht
+ - tau23mu cleanup part 3 of 3: adapt prescales in tau23muLines 
+
 ! 2011-08-25 - Marco Gersabeck
  - StrippingD2hh.py: tightened cuts as presented to charm WG today.
 
