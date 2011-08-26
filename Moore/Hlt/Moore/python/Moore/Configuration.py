@@ -177,12 +177,12 @@ class Moore(LHCbConfigurableUser):
         numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
         host = socket.gethostname().split('.')[0].upper()
         if host[:3]=='HLT':
-          if host[3]=='F': numChildren=19
+          if host[3]=='F': numChildren=23
           if host[3]!='F':
             if len(host)==8:
               id = int(host[6:])
-              if id < 12: numChildren=7
-              if id > 11: numChildren=19
+              if id < 12: numChildren=9
+              if id > 11: numChildren=23
 
         forker = LHCb__CheckpointSvc("CheckpointSvc")
         forker.NumberOfInstances   = numChildren
