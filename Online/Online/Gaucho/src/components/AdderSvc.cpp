@@ -93,6 +93,7 @@ StatusCode AdderSvc::initialize()
 {
   StatusCode sc = Service::initialize();
   MsgStream msg( msgSvc(), name() );
+  dis_set_debug_on();
   if( !sc.isSuccess() )
   {
     return sc;
