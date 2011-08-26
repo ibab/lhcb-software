@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Alessandra Borgia
+ - StrippingB2DMuNu.py: tightern Phi Mass cut to improve retention, and removed AM cut on phi.
+ - StrippingB2XuMuNu.py: removed rho and kstar (also ws of each) prescales, added tighter cuts and new cuts to reduce rate and timing.  
+
 ! 2011-08-26 - Benoit Viaud
  - StrippingDstarPromptWithD02HHHH.py : tightened some cuts (improve timing&retention).
 
