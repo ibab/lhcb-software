@@ -22,7 +22,9 @@ confdict_WMu={
     
     'WMuLinePrescale_ps'    : .1
     ,  'WMuLinePrescale_hps': .05
-    ,  'WMuLinePrescale'    : 1.0 
+    ,  'WMuLinePrescale'    : 1.0
+    ,  'WMuLineLoosePrescale'    : 1.0
+    ,  'WMuLineNoPIDsPrescale'    : 0.1
     ,  'WMuLinePostscale'   : 1.0
     ,  'mucuttight' : 20.
     ,  'mucut' : 15.
@@ -39,6 +41,8 @@ class WMuConf(LineBuilder) :
                               'mucut',
                               'mucut_hps',
                               'WMuLinePrescale_hps',
+                              'WMuLineLoosePrescale',
+                              'WMuLineNoPIDsPrescale', 
                               'mucutlow',
                               'trkpchi2',
                               'WMuLinePrescale_ps',
@@ -91,7 +95,7 @@ class WMuConf(LineBuilder) :
                                              _mucutverytight)
      
         self.WMu_lineNoPIDsps = StrippingLine(self._myname+"Line_NoPIDsps",
-                                              prescale = config['WMuLinePrescale_ps'],
+                                              prescale = config['WMuLineNoPIDsPrescale'],
                                               postscale = config['WMuLinePostscale'],
                                               checkPV = False,
                                               selection = self.selWMu_NoPIDsps
@@ -120,7 +124,7 @@ class WMuConf(LineBuilder) :
                               _mucuttight)
      
         self.WMu_lineloose = StrippingLine(self._myname+"Line_loose",
-                                           prescale = config['WMuLinePrescale'],
+                                           prescale = config['WMuLineLoosePrescale'],
                                            postscale = config['WMuLinePostscale'],
                                            checkPV = False,
                                            selection = self.selWMu_loose

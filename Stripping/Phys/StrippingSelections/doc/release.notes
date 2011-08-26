@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Will Barter
+ - StrippingWMu.py : minor change to allow separate prescaling of different lines.
+
 ! 2011-08-26 - Greig Cowan
  - Tightened some mass windows for B2JpsiX lines.
  - Tightened PT cut on hadron in Bu2JpsiH to reduce rate.
