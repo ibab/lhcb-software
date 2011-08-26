@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v40r1   Sim
+use Gauss               v40r2   Sim
 
 # Generator packages: Basic configuration
 use GenCuts             v1r0    Gen
