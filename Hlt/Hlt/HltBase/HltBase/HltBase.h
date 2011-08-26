@@ -10,17 +10,6 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/HistoDef.h"
-// ============================================================================
-namespace Gaudi 
-{ 
-  namespace Utils 
-  { 
-    inline std::ostream& 
-    operator<<( std::ostream& o , const Gaudi::Histo1DDef& histo ) 
-    { return histo.fillStream(o); }
-  }
-}
-// ============================================================================
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/MsgStream.h"

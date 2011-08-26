@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-08-26 - Roel Aaij
+ - Remove obsolete definition of operator<< for Gaudi::Histo1DDef.
+
 !========================== HltBase v12r1p1 2011-06-24 ===================
 ! 2011-06-07 - Vanya Belyaev
 
