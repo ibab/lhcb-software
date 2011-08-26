@@ -121,7 +121,7 @@ class D2hhhConf(LineBuilder) :
         self.selKKP = DataOnDemand(Location = "Phys/StdLooseDplus2KKPi/Particles")
         self.selKPP = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPi/Particles")
         self.selPPP = DataOnDemand(Location = "Phys/StdLooseDplus2PiPiPi/Particles")
-        self.selKPPos = DataOnDemand(Location = "Phys/StdLooseDplus2KPiPiOppSignPi/Particles")
+        self.selKPPos = DataOnDemand(Location = "Phys/StdTightDplus2KPiPiOppSignPi/Particles")
         self.selKKK = DataOnDemand(Location = "Phys/StdLooseDplus2KKK/Particles")
         self.selKKPos = DataOnDemand(Location = "Phys/StdLooseDsplus2KKPiOppSign/Particles")
 

@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 !
+! 2011-08-26 - Sandra Amato 
+  - StrippingD2hhh_conf.py: Changed input Location for KPPos to be StdTightDplus
 
 ! 2011-08-26 - Jibo He
  - StrippingElectronID
