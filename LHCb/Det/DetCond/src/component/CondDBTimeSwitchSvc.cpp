@@ -9,7 +9,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/Time.h"
-#include "GaudiKernel/Parsers.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IDetDataSvc.h"
 
@@ -30,50 +29,18 @@ DECLARE_SERVICE_FACTORY(CondDBTimeSwitchSvc)
 // This is needed otherwise the implementation of std::map does
 // not find operator<(Gaudi::Time,Gaudi::Time).
 namespace Gaudi { using ::operator<; }
-
-//=============================================================================
 //=============================================================================
 // Code copied from GaudiKernel Parsers, to have a parser for
 // pair<long long,long long>.
-
-// ============================================================================
-// Boost
-// ============================================================================
-#include "boost/bind.hpp"
-
-#include <boost/version.hpp>
-#if BOOST_VERSION >= 103800
-#define BOOST_SPIRIT_USE_OLD_NAMESPACE
-#include <boost/spirit/include/classic.hpp>
-#include "boost/spirit/include/phoenix1.hpp"
-#else
-#include <boost/spirit.hpp>
-#include "boost/spirit/phoenix.hpp"
-#endif
-
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/Parsers.h"
-#include "GaudiKernel/Grammars.h"
+// 2011-08-26 : alexander.mazurov@gmail.com
+#include "GaudiKernel/ParsersFactory.h"
 namespace {
-  using namespace std;
-  using namespace boost::spirit;
-  using namespace Gaudi::Parsers;
-
-  /// the actual type of position iterator
-  typedef boost::spirit::position_iterator<string::const_iterator> IteratorT;
-
-  /// create the position iterator from the inptut
-  inline IteratorT createIterator(const std::string& input){
-    return IteratorT(input.begin(), input.end());
-  }
-  StatusCode parse(pair<long long,long long>& result, const string& input){
-    return parse
-    ( createIterator(input),
-        IteratorT(),
-        PairGrammar < IntGrammar<long long> , IntGrammar <long long> >()[var(result)=arg1],
-        SkipperGrammar()).full;
+  StatusCode parse(std::pair<long long,long long>& result,
+      const std::string& input){
+    return Gaudi::Parsers::parse_(result, input);
   }
 }
 //=============================================================================

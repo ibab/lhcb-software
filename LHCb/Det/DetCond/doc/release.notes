@@ -4,10 +4,14 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-08-26 - Alexander Mazurov
+ - Update of parser function in CondDBTimeSwitchSvc. This version works only with
+   Gaudi version > v22r2 (where the new parser model is provided)
+
 !========================= DetCond v12r20 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires
-   it, also using UNLIKELY macro 
+   it, also using UNLIKELY macro
 
 !========================= DetCond v12r19 2011-06-14 =========================
 ! 2011-06-06 - Illya Shapoval
