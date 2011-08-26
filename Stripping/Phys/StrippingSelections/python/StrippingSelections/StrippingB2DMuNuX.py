@@ -44,7 +44,7 @@ confdict = {
     ,"MINIPCHI2Loose" : 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
     ,"PhiVCHI2"      :25.0    #adimensiional
-    ,"PhiMassWin"    :60      #adimensiional
+    ,"PhiMassWin"    :50      #adimensiional
     }
    
 
@@ -282,7 +282,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         return _ka 
   
     def _kaonlooseFilter( self ):
-        _code = "  (TRCHI2DOF < %(TRCHI2Loose)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
         _kal = FilterDesktop( Code = _code )
         return _kal 
@@ -296,7 +296,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
     def _Phi2KKFilter( self ):
         _decayDescriptors = [ '[phi(1020) -> K- K+]cc' ]
-        _combinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWin)s *MeV) & (AM < 1050.*MeV)" % self.__confdict__
+        _combinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWin)s *MeV)" % self.__confdict__
         _motherCut = "(VFASPF(VCHI2) < %(PhiVCHI2)s) " % self.__confdict__
         _phi2kk = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,

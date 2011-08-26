@@ -49,16 +49,16 @@ B->Xu mu nu exclusive reconstruction in Xu=pi/rho/K/K* channels
 #  Prescale = 0.06
 #  
 #  Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-#  Prescale = 0.1
+#  Prescale = 1.0
 #  
 #  Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-#  Prescale= 0.2
+#  Prescale= 1.0
 #  
 #  K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
-#  Prescale= 0.25
+#  Prescale= 1.0
 #  
 #  K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
-#  Prescale= 0.5
+#  Prescale= 1.0
 # =============================================================================
 ## 
 
@@ -100,16 +100,16 @@ K SS line:: Bs0->K+ mu+ nu Background to the K line.
 Prescale = 0.06
 
 Rho line: B+->rho0(-> pi+pi-) mu- nu signal line through rho(770).
-Prescale = 0.15
+Prescale = 1.0
 
 Rho WS line: B+->rho0(->pi+pi+) mu- nu background line to the rho line.
-Prescale= 0.2
+Prescale= 1.0
 
 K* line: Bs0->K*+(Ks(-> pi+pi-)pi+) mu- nu signal line through K*(892).
-Prescale= 0.25
+Prescale= 1.0
 
 K* SS line: Bs0->K*-(Ks(-> pi+pi-)pi-) mu- nu background line to the K* line.
-Prescale= 0.5
+Prescale= 1.0
 =============================================================================
  
 Last modification $Date: 2011-07-21 $
@@ -118,7 +118,7 @@ Last modification $Date: 2011-07-21 $
 
 confdict= {
     #Muons
-    "MuonTRCHI2"          : 6.   ,#adimensional
+    "MuonTRCHI2"          : 4.   ,#adimensional
     "MuonP"               : 3000. ,#MeV
     "MuonPT"              : 1000. ,#MeV
     "MuonPIDK"            : 0.    ,#adimensional
@@ -146,7 +146,7 @@ confdict= {
     #        "KaonMINIP"          : 0.05  ,#mm
     "KaonMINIPCHI2"       : 16     ,#adminensional
     #Rho channel
-    "RhoMassWindow"       : 190.  ,#MeV
+    "RhoMassWindow"       : 150.  ,#MeV
     "RhoVCHI2DOF"         : 6    ,#adimensional
     "RhoPT"               : 500.  ,#MeV
     "RhoLeadingPionPT"    : 800.  ,#MeV
@@ -155,6 +155,10 @@ confdict= {
     "RhoChPionPT"         : 300.  ,#MeV
     "RhoChPionTRCHI2"     : 10.  ,#MeV
     "RhoChPionPIDK"       : -10.   ,#adminensional
+    "RhoFDCHI2"           : 100.  ,#adimensional
+    "RhoFD"               : 6,#mm?
+    "RhoIPMin"            : 0.3   ,#mm    
+    "RhoDIRA"             : 0.9,
     #        "RhoChPionMINIP"     : 0.05  ,#mm
     "RhoChPionMINIPCHI2"  : 9     ,#adimensional
     #K* channel
@@ -171,20 +175,24 @@ confdict= {
     "KstarChPionPT"       : 100.  ,#MeV
     "KstarChPionTRCHI2"   : 10.  ,#MeV
     "KstarChPionPIDK"     : -10.   ,#adminensional
+    "KstarFDCHI2"         : 100,  #adiminseional
+    "KstarFD"               : 5,#mm?
+    "KstarIPMin"          : 0.13   ,#mm   
     #        "KstarChPionMINIP"    : 0.05  ,#mm
     "KstarChPionMINIPCHI2": 9     ,#adimensional
     "KstarLeadingPionPT"  : 800.  ,#MeV
     #Xu
     "PiMuMassLowLoose"    : 1230. ,#MeV
     "KMuMassLowTight"     : 1370. ,#MeV
-    "RhoMuMassLowTight"   : 1360. ,#MeV
-    "KstarMuMassLowTight" : 1400. ,#MeV
+    "RhoMuMassLowTight"   : 2000. ,#MeV
+    "KstarMuMassLowTight" : 2000. ,#MeV
     #B
     "BVCHI2DOF"           : 4     ,#adminensional
     "BDIRA"               : 0.99,  #adminensional
     "BFDCHI2LOW"             : 15,   #adimensional
     "BFDCHI2HIGH"             : 225,   #adimensional
-    "XMuMassUpper"        : 5500 # MeV
+    "XMuMassUpper"        : 5500, # MeV
+    "Enu"                 : 1850  #MeV
     }
 
 
@@ -241,6 +249,10 @@ class B2XuMuNuBuilder(LineBuilder):
         "RhoChPionPIDK"           ,
         #        "RhoChPionMINIP" , 
         "RhoChPionMINIPCHI2"      ,
+        "RhoFDCHI2"               ,
+        "RhoFD"                   ,
+        "RhoIPMin"                ,
+        "RhoDIRA"                 ,
         #K* channel               ,
         "KSMassWindow"            ,
         "KSVCHI2DOF"              ,
@@ -255,6 +267,9 @@ class B2XuMuNuBuilder(LineBuilder):
         "KstarChPionPT"           ,
         "KstarChPionTRCHI2"       ,
         "KstarChPionPIDK"         ,
+        "KstarFDCHI2"             ,
+        "KstarFD"                 ,
+        "KstarIPMin"              ,
         #        "KstarChPionMINIP",  
         "KstarChPionMINIPCHI2"    ,
         "KstarLeadingPionPT"      ,
@@ -268,7 +283,8 @@ class B2XuMuNuBuilder(LineBuilder):
         "BDIRA"                   ,
         "BFDCHI2LOW"              ,
         "BFDCHI2HIGH"             ,
-        "XMuMassUpper"                 
+        "XMuMassUpper"            ,
+        "Enu"
         ]
 
     def __init__(self,name,config):
@@ -326,136 +342,136 @@ class B2XuMuNuBuilder(LineBuilder):
         return StrippingLine(self._name+'Bd2PiLine',
                              # HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
                              prescale = 0.02,
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bd2PiMuNu()])
     
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bd2PiSSLine', prescale = 0.05,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                            # FILTER = {'Code' :
+                            #           """
+                            #           ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                            #           ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                            #           (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                            #           ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                            #           """ ,
+                            #           'Preambulo' : [ "from LoKiTracks.decorators import *",
+                            #                           'from LoKiNumbers.decorators    import *',
+                            #                           'from LoKiCore.functions    import *' ]
+                            #           },
                              algos = [ self._Bd2PiMuNuSS()])
 
     def _Rho_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoLine', prescale = 0.15,
+        return StrippingLine(self._name+'Bu2RhoLine', prescale = 1.0,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bu2RhoMuNu()])
         
     def _RhoWS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 0.2,
+        return StrippingLine(self._name+'Bu2RhoWSLine', prescale = 1.0,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bu2RhoMuNuWS()])
     
     def _K_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KLine', prescale = 0.07,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bs2KMuNu()])
     
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
         return StrippingLine(self._name+'Bs2KSSLine', prescale = 0.06,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bs2KMuNuSS()])
     
     def _Kstar_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarLine', prescale = 0.25,
+        return StrippingLine(self._name+'Bs2KstarLine', prescale = 1.0,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bs2KstarMuNu()])
     
     def _KstarSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bs2KstarSSLine', prescale = 1.0,
                              #HLT = "HLT_PASS('Hlt2SingleMuonDecision') | HLT_PASS('Hlt2TopoMu2BodyDecision') | HLT_PASS('Hlt2TopoMu3BodyDecision')", 
-                             FILTER = {'Code' :
-                                       """
-                                       ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
-                                       ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
-                                       (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
-                                       ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
-                                       """ ,
-                                       'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                                       'from LoKiNumbers.decorators    import *',
-                                                       'from LoKiCore.functions    import *' ]
-                                       },
+                             #FILTER = {'Code' :
+                             #          """
+                             #          ( recSummary ( LHCb.RecSummary.nSPDhits, 'Raw/Spd/Digits'  ) <  500 ) &
+                             #          ( recSummary ( LHCb.RecSummary.nITClusters, 'Raw/IT/Clusters' ) < 1000 ) &
+                             #          (recSummaryTrack(LHCb.RecSummary.nVeloTracks, TrVELO) <50  ) &
+                             #          ( CONTAINS ( 'Rec/Track/Best'  ) <  400 ) 
+                             #          """ ,
+                             #          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                             #                          'from LoKiNumbers.decorators    import *',
+                             #                          'from LoKiCore.functions    import *' ]
+                             #          },
                              algos = [ self._Bs2KstarMuNuSS()])
 
 
@@ -526,11 +542,12 @@ class B2XuMuNuBuilder(LineBuilder):
                                },
             CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self._config,
             MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
-                              "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self._config,
-        )
+            "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s ) & (BPVVDCHI2 > %(RhoFDCHI2)s) & (BPVVD > %(RhoFD)s *mm)"\
+            "& (BPVDIRA> %(RhoDIRA)s) & (BPVIP()> %(RhoIPMin)s *mm)" %self._config
+            )
         _rho770Sel=Selection("Rho02PiPi_for"+self._name,
-                         Algorithm=_rho770,
-                         RequiredSelections = [StdLoosePions])
+                             Algorithm=_rho770,
+                             RequiredSelections = [StdLoosePions])
         
         self._rho770Sel=_rho770Sel
         
@@ -551,11 +568,12 @@ class B2XuMuNuBuilder(LineBuilder):
                                },
             CombinationCut = "(ADAMASS('rho(770)0')< %(RhoMassWindow)s)" % self._config,
             MotherCut       = "(MAXTREE('pi+'==ABSID,PT )>%(RhoLeadingPionPT)s *MeV ) & (VFASPF(VCHI2/VDOF) < %(RhoVCHI2DOF)s ) & (PT > %(RhoPT)s *MeV) "\
-                              "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s )" %self._config
-        )
+            "& (MIPCHI2DV(PRIMARY)> %(RhoMINIPCHI2)s ) & (BPVVDCHI2 > %(RhoFDCHI2)s)  & (BPVVD > %(RhoFD)s *mm) & (BPVDIRA> %(RhoDIRA)s) "\
+            "& (BPVIP()> %(RhoIPMin)s *mm)"%self._config
+            )
         _rho770Sel=Selection("Rho02PiPiWS_for"+self._name,
-                         Algorithm=_rho770,
-                         RequiredSelections = [StdLoosePions])
+                             Algorithm=_rho770,
+                             RequiredSelections = [StdLoosePions])
         
         self._rho770WSSel=_rho770Sel
         return _rho770Sel
@@ -575,7 +593,7 @@ class B2XuMuNuBuilder(LineBuilder):
                                    "& (MIPCHI2DV(PRIMARY)> %(KstarChPionMINIPCHI2)s ) & (PIDpi-PIDK> %(KstarChPionPIDK)s )" % self._config
                                },
             MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KSVCHI2DOF)s ) & (PT > %(KSPT)s *MeV) "\
-                              "& (MIPCHI2DV(PRIMARY)> %(KSMINIPCHI2)s )" % self._config ,
+                              "& (MIPCHI2DV(PRIMARY)> %(KSMINIPCHI2)s )" % self._config
         )
         _KSSel=Selection("KS02PiPi_for"+self._name,
                          Algorithm=_KS,
@@ -598,14 +616,14 @@ class B2XuMuNuBuilder(LineBuilder):
             DaughtersCuts   = {"pi+":"(PT> %(KstarChPionPT)s *MeV) &  (TRCHI2DOF < %(KstarChPionTRCHI2)s )"\
                                "& (MIPCHI2DV(PRIMARY)>%(KstarChPionMINIPCHI2)s) & (PIDpi-PIDK>%(KstarChPionPIDK)s)" % self._config
                                },
-            MotherCut       = "(VFASPF(VCHI2/VDOF) < %(KstarVCHI2DOF)s ) & (PT > %(KstarPT)s *MeV) "\
-                              "& (MAXTREE('pi+'==ABSID,PT)>%(KstarLeadingPionPT)s *MeV )"\
-                              "& (MIPCHI2DV(PRIMARY)> %(KstarMINIPCHI2)s )" % self._config 
-        )
+            MotherCut       = "(PT > %(KstarPT)s *MeV) & (MAXTREE('pi+'==ABSID,PT)>%(KstarLeadingPionPT)s *MeV )"\
+            "& (MIPCHI2DV(PRIMARY)> %(KstarMINIPCHI2)s) & (BPVVDCHI2 > %(KstarFDCHI2)s)"\
+            "& (BPVVD > %(KstarFD)s *mm) & (VFASPF(VCHI2/VDOF) < %(KstarVCHI2DOF)s ) & (BPVIP()> %(KstarIPMin)s *mm)" % self._config 
+            )
         
         _KstarSel=Selection("Kstar2KSPi_for"+self._name,
-                         Algorithm=_Kstar,
-                         RequiredSelections = [StdLoosePions, self._KS02PiPiFilter()])
+                            Algorithm=_Kstar,
+                            RequiredSelections = [StdLoosePions, self._KS02PiPiFilter()])
         self._KstarSel=_KstarSel
         
         return _KstarSel
@@ -682,7 +700,7 @@ class B2XuMuNuBuilder(LineBuilder):
         _RhoMu = CombineParticles(
             DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"],
             CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
-            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            MotherCut = " ( ((((5279.17*5279.17) -(MASS(1,2))*(MASS(1,2))))/(2*5279.17)) < %(Enu)s*MeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"% self._config,
             ReFitPVs = True
             )
         
@@ -698,7 +716,7 @@ class B2XuMuNuBuilder(LineBuilder):
         _RhoMu = CombineParticles(
             DecayDescriptors = ["[B+ -> rho(770)0 mu+]cc"],
             CombinationCut = "(AM>%(RhoMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
-            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)" % self._config,
+            MotherCut = " ( ((((5279.17*5279.17) -(MASS(1,2))*(MASS(1,2))))/(2*5279.17)) < %(Enu)s*MeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"% self._config,
             ReFitPVs = True
             )
         
