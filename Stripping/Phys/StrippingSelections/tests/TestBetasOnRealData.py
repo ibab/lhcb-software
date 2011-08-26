@@ -24,7 +24,6 @@ BetaSconfigs = [
         'BetaSBs2ChicPhi_Chic2PiPiPiPi',
 	'BetaSBs2Q2Body4pi'
         ]
-
 for config in BetaSconfigs:
         stream.appendLines( lineBuilder('strippingdev', config).lines() )
 

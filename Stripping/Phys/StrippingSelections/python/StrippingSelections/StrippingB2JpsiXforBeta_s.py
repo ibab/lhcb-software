@@ -207,7 +207,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bu2JpsiH = self.createCombinationSel( OutputList = "Bu2JpsiKNoPID" + self.name,
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
                                  DaughterLists = [ self.JpsiList, self.NoPIDKaonList ],
-                                 DaughterCuts  = {"K+": "(PT > 0)"},
+                                 DaughterCuts  = {"K+": "(PT > 1.*GeV)"},
                                  PreVertexCuts = "in_range(5000,AM,5650)",
                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
         Bu2JpsiHDetachedLine  = StrippingLine( self.name + "Bu2JpsiKNoPIDDetachedLine",
@@ -221,7 +221,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                    DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                    DaughterLists  = [ self.JpsiList, self.PhiList ],
                                    PreVertexCuts = "in_range(5000,AM,5650)",
-                                   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
+                                   PostVertexCuts = "in_range(5200,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
         Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , prescale = self.config['Bs2JpsiPhiPrescale'])
 
         Bs2JpsiPhiDetached = self.createSubSel( InputList = Bs2JpsiPhi,
@@ -271,7 +271,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   DecayDescriptor = "B0 -> J/psi(1S) KS0",
                                   DaughterLists  = [ self.JpsiList, self.KsList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
-                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
         Bd2JpsiKsPrescaledLine = StrippingLine( self.name + "Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , prescale = self.config['Bd2JpsiKsPrescale'])
 
@@ -333,7 +333,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   DecayDescriptor = "B_s0 -> J/psi(1S) eta",
                                   DaughterLists  = [ self.JpsiList, self.EtaList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
-                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  PostVertexCuts = "in_range(5200,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
         Bs2JpsiEtaPrescaledLine = StrippingLine( self.name + "Bs2JpsiEtaPrescaledLine", algos = [ Bs2JpsiEta ] , prescale = self.config['Bs2JpsiEtaPrescale'])

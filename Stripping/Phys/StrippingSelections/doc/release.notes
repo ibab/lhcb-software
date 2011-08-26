@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-26 - Greig Cowan
+ - Tightened some mass windows for B2JpsiX lines.
+ - Tightened PT cut on hadron in Bu2JpsiH to reduce rate.
+
 ! 2011-08-26 - Victor Coco
  - StrippingDisplVertices : modify units to have same convention than in 
    StrippingSettings
