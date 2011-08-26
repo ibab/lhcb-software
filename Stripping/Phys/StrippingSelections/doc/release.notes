@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 !
+! 2011-08-26 - Paula Alvarez
+ - Added StrippingBs2Kst_0Kst_0.py 
+
 ! 2011-08-26 - Thomas Latham
  - StrippingB2KShh.py
  - Switch to StdLoose* from StdAllLoose* after futher study of effects on DP
