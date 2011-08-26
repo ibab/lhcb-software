@@ -1,4 +1,4 @@
-# $Id: StrippingB2KShh.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
+
 """
 Module for construction of Bd/Bs->KShh stripping Selections and StrippingLines.
 Provides functions to build KS->DD, KS->LL, Bd/Bs selections.
@@ -10,8 +10,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','David Dossett','Jussara Miranda']
-__date__ = '19/06/2011'
-__version__ = 'Stripping15-2'
+__date__ = '26/08/2011'
+__version__ = 'Stripping17'
 __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
@@ -20,46 +20,37 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-import StandardParticles
+from StandardParticles import StdLoosePions as Pions
+from StandardParticles import StdLooseKaons as Kaons
 
-if hasattr(StandardParticles, "StdAllLoosePions"):
-  from StandardParticles import StdAllLoosePions as Pions
-else:
-  from StandardParticles import StdLoosePions as Pions
-
-if hasattr(StandardParticles, "StdAllLooseKaons"):
-  from StandardParticles import StdAllLooseKaons as Kaons
-else:
-  from StandardParticles import StdLooseKaons as Kaons
-
-default_config = {'Trk_Chi2'         		: 4.0,
-                  'KS_DD_MassWindow' 		: 30.0,
-                  'KS_DD_VtxChi2'    		: 12.0,
-                  'KS_DD_FDChi2'     		: 50.0,
-                  'KS_DD_Pmin'       		: 6000.0,
-                  'KS_LL_MassWindow' 		: 20.0,
-                  'KS_LL_VtxChi2'    		: 12.0,
-                  'KS_LL_FDChi2'     		: 80.0,
-                  'B_Mlow'          		: 200.0,
-                  'B_Mhigh'         		: 280.0,
-                  'BDaug_MedPT_PT'   		: 800.0,
-                  'BDaug_MaxPT_IP'   		: 0.05,
-                  'BDaug_DD_maxDocaChi2'  	: 3.0,
-                  'BDaug_LL_maxDocaChi2'	: 5.0,
-                  'BDaug_DD_PTsum'   		: 4800.0,
-                  'BDaug_LL_PTsum'   		: 4500.0,
-                  'B_VtxChi2'        		: 12.0,
-                  'B_Dira'           		: 0.9999,
-                  'B_DD_IPCHI2wrtPV' 		: 8.0,
-                  'B_LL_IPCHI2wrtPV' 		: 8.0,
-                  'BDaug_LL_IPChi2sum'		: 15.0,
-                  'BDaug_DD_IPChi2sum'		: 15.0,
-                  'B_FDwrtPV'        		: 1.0,
-                  'B_DD_FDChi2'      		: 50.0,
-                  'B_LL_FDChi2'      		: 50.0,
-                  'GEC_MaxTracks'    		: 250,
-                  'Prescale'         		: 1.0,
-                  'Postscale'        		: 1.0
+default_config = {'Trk_Chi2'                : 4.0,
+                  'KS_DD_MassWindow'        : 30.0,
+                  'KS_DD_VtxChi2'           : 12.0,
+                  'KS_DD_FDChi2'            : 50.0,
+                  'KS_DD_Pmin'              : 6000.0,
+                  'KS_LL_MassWindow'        : 20.0,
+                  'KS_LL_VtxChi2'           : 12.0,
+                  'KS_LL_FDChi2'            : 80.0,
+                  'B_Mlow'                  : 500.0,
+                  'B_Mhigh'                 : 587.0,
+                  'B_APTmin'                : 1000.0,
+                  'B_PTmin'                 : 1500.0,
+                  'BDaug_MedPT_PT'          : 800.0,
+                  'BDaug_MaxPT_IP'          : 0.05,
+                  'BDaug_DD_maxDocaChi2'    : 5.0,
+                  'BDaug_LL_maxDocaChi2'    : 5.0,
+                  'BDaug_DD_PTsum'          : 3000.0,
+                  'BDaug_LL_PTsum'          : 3000.0,
+                  'B_VtxChi2'               : 12.0,
+                  'B_Dira'                  : 0.9999,
+                  'B_DD_IPCHI2wrtPV'        : 8.0,
+                  'B_LL_IPCHI2wrtPV'        : 8.0,
+                  'B_FDwrtPV'               : 1.0,
+                  'B_DD_FDChi2'             : 50.0,
+                  'B_LL_FDChi2'             : 50.0,
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Postscale'               : 1.0
                   }
 
 class B2KShhConf(LineBuilder) :
@@ -97,6 +88,8 @@ class B2KShhConf(LineBuilder) :
                               'KS_LL_FDChi2',
                               'B_Mlow',
                               'B_Mhigh',
+                              'B_APTmin',
+                              'B_PTmin',
                               'BDaug_MedPT_PT',
                               'BDaug_MaxPT_IP',
                               'BDaug_DD_maxDocaChi2',
@@ -107,8 +100,6 @@ class B2KShhConf(LineBuilder) :
                               'B_Dira',
                               'B_DD_IPCHI2wrtPV',
                               'B_LL_IPCHI2wrtPV',
-                              'BDaug_LL_IPChi2sum',
-                              'BDaug_DD_IPChi2sum',
                               'B_FDwrtPV',
                               'B_DD_FDChi2',
                               'B_LL_FDChi2',
@@ -125,28 +116,28 @@ class B2KShhConf(LineBuilder) :
         ll_name = name+'LL'
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
-	           'Preambulo' : ["from LoKiTracks.decorators import *"]}
+                   'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-	self.pions = Pions
-	self.kaons = Kaons
+        self.pions = Pions
+        self.kaons = Kaons
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )
 
-	self.makeB2KSDDhh( dd_name, config )
-	self.makeB2KSLLhh( ll_name, config )
+        self.makeB2KSDDhh( dd_name, config )
+        self.makeB2KSLLhh( ll_name, config )
 
         self.dd_line = StrippingLine(dd_name+"Line",
                                      prescale = config['Prescale'],
                                      postscale = config['Postscale'],
                                      selection = self.selB2KSDDhh,
-				     FILTER = GECCode
+                                     FILTER = GECCode
                                      )
         self.ll_line = StrippingLine(ll_name+"Line",
                                      prescale = config['Prescale'],
                                      postscale = config['Postscale'],
                                      selection =  self.selB2KSLLhh,
-				     FILTER = GECCode
+                                     FILTER = GECCode
                                      )
 
         self.registerLine(self.dd_line)
@@ -155,10 +146,10 @@ class B2KShhConf(LineBuilder) :
     def makeKS2DD( self, name, config ) :
         # define all the cuts
         _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
-	_vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
-	_fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
-	_momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
-	_allCuts = _massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_momCut
+        _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
+        _fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
+        _momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
+        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut
 
         # get the KS's to filter
         _stdKSDD = DataOnDemand( Location = "Phys/StdLooseKsDD/Particles" )
@@ -172,11 +163,11 @@ class B2KShhConf(LineBuilder) :
     def makeKS2LL( self, name, config ) :
         # define all the cuts
         _massCut    = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MassWindow']
-	_vtxCut     = "(VFASPF(VCHI2)<%s)"     % config['KS_LL_VtxChi2']
-	_fdCut      = "(BPVVDCHI2>%s)"         % config['KS_LL_FDChi2']
-	_trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
-	_trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
-	_allCuts = _massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2
+        _vtxCut     = "(VFASPF(VCHI2)<%s)"     % config['KS_LL_VtxChi2']
+        _fdCut      = "(BPVVDCHI2>%s)"         % config['KS_LL_FDChi2']
+        _trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
+        _trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
+        _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_fdCut
 
         # get the KS's to filter
         _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
@@ -195,31 +186,32 @@ class B2KShhConf(LineBuilder) :
         config           : config dictionary
         """
 
-	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
-	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
-	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-	_maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_DD_maxDocaChi2']
-	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_DD_PTsum']
-	_daugIPChi2SumCut = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)" % config['BDaug_DD_IPChi2sum']
+        _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
+        _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
+        _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
+        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
+        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
+        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_DD_maxDocaChi2']
+        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_DD_PTsum']
 
-	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
+        _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut
 
-	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
-	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_DD_IPCHI2wrtPV']
-	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
-	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
+        _ptCut      = "(PT>%s*MeV)"                    % config['B_PTmin']
+        _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
+        _diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
+        _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_DD_IPCHI2wrtPV']
+        _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
+        _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_DD_FDChi2']
 
-	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
+        _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
-	_B = CombineParticles()
-	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
-	                        "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-				"B0 -> K+ K- KS0" ]
-	_B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
-	_B.CombinationCut = _combCuts
-	_B.MotherCut = _motherCuts
+        _B = CombineParticles()
+        _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
+                                "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
+                                "B0 -> K+ K- KS0" ]
+        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.CombinationCut = _combCuts
+        _B.MotherCut = _motherCuts
 
         self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions, self.kaons ])
 
@@ -231,30 +223,32 @@ class B2KShhConf(LineBuilder) :
         config           : config dictionary
         """
 
-	_massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-	_massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
-	_daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
-	_daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-	_maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LL_maxDocaChi2']
-	_daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LL_PTsum']
-	_daugIPChi2SumCut = "((ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2))>%s)" % config['BDaug_LL_IPChi2sum']
+        _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
+        _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
+        _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
+        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
+        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
+        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LL_maxDocaChi2']
+        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LL_PTsum']
 
-	_combCuts = _massCutLow+'&'+_massCutHigh+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugIPChi2SumCut
+        _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut
 
-	_vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
-	_diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
-	_ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_LL_IPCHI2wrtPV']
-	_fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
-	_fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
+        _ptCut      = "(PT>%s*MeV)"                    % config['B_PTmin']
+        _vtxChi2Cut = "(VFASPF(VCHI2)<%s)"             % config['B_VtxChi2']
+        _diraCut    = "(BPVDIRA>%s)"                   % config['B_Dira']
+        _ipChi2Cut  = "(MIPCHI2DV(PRIMARY)<%s)"        % config['B_LL_IPCHI2wrtPV']
+        _fdCut      = "(VFASPF(VMINVDDV(PRIMARY))>%s)" % config['B_FDwrtPV']
+        _fdChi2Cut  = "(BPVVDCHI2>%s)"                 % config['B_LL_FDChi2']
 
-	_motherCuts = _vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
+        _motherCuts = _ptCut+'&'+_vtxChi2Cut+'&'+_diraCut+'&'+_ipChi2Cut+'&'+_fdCut+'&'+_fdChi2Cut
 
-	_B = CombineParticles()
-	_B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
-	                        "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
-				"B0 -> K+ K- KS0" ]
-	_B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
-	_B.CombinationCut = _combCuts
-	_B.MotherCut = _motherCuts
+        _B = CombineParticles()
+        _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0", \
+                                "B0 -> K+ pi- KS0", "B0 -> pi+ K- KS0", \
+                                "B0 -> K+ K- KS0" ]
+        _B.DaughtersCuts = { "K+" : "TRCHI2DOF<%s"% config['Trk_Chi2'], "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
+        _B.CombinationCut = _combCuts
+        _B.MotherCut = _motherCuts
 
         self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions, self.kaons ])
+

@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 !
+! 2011-08-26 - Thomas Latham
+ - StrippingB2KShh.py
+ - Switch to StdLoose* from StdAllLoose* after futher study of effects on DP
+ - Introduce cut on B PT and change some of the other cuts
+ - Widen B mass window to allow better determination of background shapes
+ - Reorder some cuts to improve timings
+
 ! 2011-08-26 - Sandra Amato 
   - StrippingD2hhh_conf.py: Changed input Location for KPPos to be StdTightDplus
 
