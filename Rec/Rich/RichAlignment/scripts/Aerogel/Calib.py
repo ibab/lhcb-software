@@ -39,8 +39,8 @@ def initialise():
         #LHCbApp().CondDBtag = "HEAD"
 
         # Aerogel Sub Tiles
-        CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
-        CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+        #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
+        #CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
 
         # Set message level to info and above only
         msgSvc().setOutputLevel(3)
@@ -78,14 +78,14 @@ def richAerogel():
     return iDataSvc()["Structure/LHCb/BeforeMagnetRegion/Rich1/Aerogel"]
 
 def loadRichDet():
-    iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich1"]
-    iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel0"]
-    iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel1"]
+    #iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich1"]
+    #iDataSvc()["Structure/LHCb/AfterMagnetRegion/Rich2"]
+    #iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0"]
+    #iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1"]
+    #iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel0"]
+    #iDataSvc()["/dd/Structure/LHCb/BeforeMagnetRegion/Rich2/PDPanel1"]
     richSystem()
-    richAerogel()
+    #richAerogel()
 
 def rootCanvas():
     from ROOT import TCanvas
@@ -119,7 +119,7 @@ def xmlFooter():
     return """
 </DDDB>"""
 
-def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
+def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011.root"):
 
     from ROOT import TFile
 
@@ -130,7 +130,7 @@ def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
     file = TFile(rootFile)
 
     # Parameters
-    minEntries = 100000
+    minEntries = 1000000
 
     # Set output PDF name
     globals()["imageFileName"] = "results/Aerogel.pdf"
@@ -140,7 +140,7 @@ def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
     newXML = xmlHeader()
 
     # primary tile IDs to use the full sub tile calibration for
-    fullCalibTiles = [ 2, 4, 10, 12 ]
+    fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
     # Loop over the tiles
     tiles = aerogel.radiators()
@@ -188,7 +188,8 @@ def run(rootFile="/usera/jonesc/AeroCalib-2011.root"):
         # Write out the new condition
         newXML += cond.toXml() + '\n' + '\n' 
 
-    newXML += xmlHeader()
+    # Finish the XML file 
+    newXML += xmlFooter()
 
     textShifts = open("results/New-Aerogel.xml",'w')
     textShifts.write(newXML)
