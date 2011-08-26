@@ -261,6 +261,7 @@ StatusCode MonitorSvc::i_start()
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
 //  setProperties();
+  dis_set_debug_on();
   DimServer::autoStartOff();
   if (m_CntrMgr != 0)
   {
