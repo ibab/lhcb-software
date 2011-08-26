@@ -102,10 +102,10 @@ PromptCharm = {
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales 
-    'D0Prescale'             : 1.0 ,
+    'D0Prescale'             : 0.33 ,
     'DstarPrescale'          : 1.0 ,
     'DsPrescale'             : 1.0 ,
-    'DplusPrescale'          : 1.0 ,
+    'DplusPrescale'          : 0.33 ,
     'LamCPrescale'           : 1.0 ,
     'DiCharmPrescale'        : 1.0 , 
     'DiMuonAndCharmPrescale' : 1.0
@@ -122,18 +122,25 @@ D2hh = {
     'CONFIG'      : {
            'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
+           'DaugPtLoose': 500.,
            'DaugP': 5000.,
+           'DaugPLoose': 3000.,
            'DaugIPChi2': 9.,
+           'DaugIPChi2Loose': 4.,
            'DaugTrkChi2': 3.,
+           'DaugTrkChi2Loose': 4.,
            'HighPIDK': 5.,
            'LowPIDK': 0.,
            'D0Pt': 2000.,
+           'D0PtLoose': 1500.,
            'D0MassWindowCentre': 1865.,
            'D0MassWindowWidth': 100.,
+           'D0KPiMassWindowWidthLow':  -100.,
+           'D0KPiMassWindowWidthHigh': 200.,
            'D0PiPiMassWindowWidthLow':  -75.,
-           'D0PiPiMassWindowWidthHigh': 100.,
+           'D0PiPiMassWindowWidthHigh': 200.,
            'D0KKMassWindowWidthLow': -100.,
-           'D0KKMassWindowWidthHigh': 75.,
+           'D0KKMassWindowWidthHigh': 200.,
            'D0P': 5000.,
            'D0VtxChi2Ndof': 10.,
            'D0FDChi2': 40.,
@@ -143,8 +150,8 @@ D2hh = {
            'Dstar_AMDiff_MAX': 165.,
            'Dstar_VCHI2VDOF_MAX': 100.,
            'Dstar_MDiff_MAX': 160.,
-           'UntaggedCFLinePrescale': 0.2,
-           'UntaggedCFLinePostscale': 1.,
+           'UntaggedCFLinePrescale': 1.0,
+           'UntaggedCFLinePostscale': 0.1,
            'UntaggedSCSLinePrescale': 1.,
            'UntaggedSCSLinePostscale': 1.,
            'TaggedRSLinePrescale': 1.,
@@ -152,7 +159,13 @@ D2hh = {
            'TaggedWSLinePrescale': 1.,
            'TaggedWSLinePostscale': 1.,
            'TaggedSCSLinePrescale': 1.,
-           'TaggedSCSLinePostscale': 1.
+           'TaggedSCSLinePostscale': 1.,
+           'UntaggedKpiOnly': False,
+           'UseTOSFilter': True,
+           'AddPartialD': True,
+           'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
+           'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
+           'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
@@ -166,18 +179,25 @@ D2hhMicroKPi = {
     'CONFIG'      : {
            'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
+           'DaugPtLoose': 500.,
            'DaugP': 5000.,
+           'DaugPLoose': 3000.,
            'DaugIPChi2': 9.,
+           'DaugIPChi2Loose': 4.,
            'DaugTrkChi2': 3.,
+           'DaugTrkChi2Loose': 4.,
            'HighPIDK': 5.,
            'LowPIDK': 0.,
            'D0Pt': 2000.,
+           'D0PtLoose': 1500.,
            'D0MassWindowCentre': 1865.,
            'D0MassWindowWidth': 100.,
+           'D0KPiMassWindowWidthLow':  -100.,
+           'D0KPiMassWindowWidthHigh': 200.,
            'D0PiPiMassWindowWidthLow':  -75.,
-           'D0PiPiMassWindowWidthHigh': 100.,
+           'D0PiPiMassWindowWidthHigh': 200.,
            'D0KKMassWindowWidthLow': -100.,
-           'D0KKMassWindowWidthHigh': 75.,
+           'D0KKMassWindowWidthHigh': 200.,
            'D0P': 5000.,
            'D0VtxChi2Ndof': 10.,
            'D0FDChi2': 40.,
@@ -196,7 +216,13 @@ D2hhMicroKPi = {
            'TaggedWSLinePrescale': 0.,
            'TaggedWSLinePostscale': 0.,
            'TaggedSCSLinePrescale': 0.,
-           'TaggedSCSLinePostscale': 0.
+           'TaggedSCSLinePostscale': 0.,
+           'UntaggedKpiOnly': True,
+           'UseTOSFilter': False,
+           'AddPartialD': False,
+           'Hlt2TOSKPi': {},
+           'Hlt2TOSKK': {},
+           'Hlt2TOSPiPi': {}
            },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
@@ -209,36 +235,45 @@ D2KS0H = {
     'BUILDERTYPE' : 'D2KS0HConf' ,
     'CONFIG'      : {
     'KS0DaugP'                  : 2000  # Cut in common particles
-    ,'KS0DaugPT'                :  300  # Cut in trigger
+    ,'KS0DaugPT'                :  250
     ,'KS0DaugTrackChi2'         :    4  
-    ,'KS0DaugMIPChi2'           :  100
+    ,'KS0DaugMIPChi2'           :   50
     ,'KS0DaugPIDK'              :   10
     ,'KS0MassWindow'            :   35  # Done by stdLoose KS0s
-    ,'KS0MIPChi2'               :    9  # taken away   
+    ,'KS0MIPChi2'               :    8
+    ,'KS0MIPChi2DD'             :    1
     ,'KS0VertexChi2'            :   10  
-    ,'KS0PT'                    :  900   
+    ,'KS0PT'                    :  700
     ,'BachPionP'                : 5000               
     ,'BachPionPT'               :  500     
     ,'BachPionTrackChi2'        :    3
-    ,'BachPionMIPChi2'          :   30
+    ,'BachPionMIPChi2'          :   15
     ,'BachPionPIDK'             :    0
     ,'BachKaonP'                : 5000                 
     ,'BachKaonPT'               :  500     
     ,'BachKaonTrackChi2'        :    3
-    ,'BachKaonMIPChi2'          :   30 
+    ,'BachKaonMIPChi2'          :   15
     ,'BachKaonPIDK'             :    0
     ,'DMesonComboLowMass'       : 1760          
     ,'DMesonComboHighMass'      : 2080
     ,'DMesonComboDOCA'          :    0.6
-    ,'DMesonMotherLowMass'      : 1770 
+    ,'DMesonAPT'                : 1000
+    ,'DMesonADOCAChi2'          :   11
+    ,'DMesonMotherLowMass'      : 1770
     ,'DMesonMotherHighMass'     : 2070
     ,'DMesonMotherVertexChi2'   :   10
-    ,'DMesonMotherMIPChi2'      :   20
-    ,'DMesonMotherPT'           : 2000
+    ,'DMesonMotherMIPChi2'      :   15  
+    ,'DMesonMotherPT'           : 1000
+    ,'KS0ZDiff'                 :   10
+    ,'DMesonFlightDistChi2'     :   30 
     ,'PionLinePrescale'         :    1 
     ,'KaonLinePrescale'         :    1 
+    ,'PionLinePrescaleDD'       :    1
+    ,'KaonLinePrescaleDD'       :    1
     ,'PionLinePostscale'        :    1 
     ,'KaonLinePostscale'        :    1
+    ,'PionLinePostscaleDD'      :    1 
+    ,'KaonLinePostscaleDD'      :    1          
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
@@ -274,7 +309,6 @@ D2hhh = {
     'Daughter2IPChi2'           :   10.,
     'D2KKKDaughterIPChi2'       :    2.,
     'D2KKKDaughter2IPChi2'      :    4.,
-    'D2KKKDaughter1IPChi2'      :   10.,
     'KPIDK'                     :    7.,
     'piPIDK'                    :    3.,
     'PTSum'                     : 2800.,
@@ -287,6 +321,7 @@ D2hhh = {
     'MinMassPosFit'             : 1800.,
     'MaxMassPosFit'             : 2040.,
     'D2KPPMaxMassPosFit'        : 1940.,
+    'Ds2KKPosMinMassPosFit'     : 1900.,
     'D2HHHIncMinMassPosFit'     : 1100.,
     'D2HHHIncMaxMassPosFit'     : 2070.,
     'MaxTracksInEvent'          :  500,
@@ -300,11 +335,67 @@ D2hhh = {
     'D2KPPosLinePostscale'      :    1.0,
     'D2KKKLinePrescale'         :    1.0,
     'D2KKKLinePostscale'        :    1.0,
+    'Ds2KKPosLinePrescale'      :    1.0,
+    'Ds2KKPosLinePostscale'     :    1.0,
+    'D2KPPosLinePrescale'       :    1.0,
+    'D2KPPosLinePostscale'      :    1.0,
     'D2HHHIncLinePrescale'      :    0.04,
-    'D2HHHIncLinePostscale'     :    1.0
+    'D2HHHIncLinePostscale'     :    1.0,
+    'HLT'                       : None
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ]
+    }
+
+
+## Full DST, Ibid.
+## Heavily prescaled, Kpipi control mode only.
+## New in Stripping17
+D2hhhMicroKPiPi = { 
+    'BUILDERTYPE' : 'D2hhhConf' ,
+    'CONFIG' : {
+    'DaughterPT'                :  250.,
+    'DaughterP'                 : 2000.,
+    'DaughterIPChi2'            :    4.,
+    'Daughter2IPChi2'           :   10.,
+    'D2KKKDaughterIPChi2'       :    2.,
+    'D2KKKDaughter2IPChi2'      :    4.,
+    'KPIDK'                     :    7.,
+    'piPIDK'                    :    3.,
+    'PTSum'                     : 2800.,
+    'DOCAChi2'                  :   50.,
+    'DPt'                       : 1000.,
+    'DIPChi2'                   :   15.,
+    'DdcaFDChi2'                :  100.,
+    'DDIRA'                     :    0.0,
+    'DVXChi2NDOF'               :   10.,
+    'MinMassPosFit'             : 1800.,
+    'MaxMassPosFit'             : 2040.,
+    'D2KPPMaxMassPosFit'        : 1940.,
+    'Ds2KKPosMinMassPosFit'     : 1900.,
+    'D2HHHIncMinMassPosFit'     : 1100.,
+    'D2HHHIncMaxMassPosFit'     : 2070.,
+    'MaxTracksInEvent'          :  500,
+    'D2KKPLinePrescale'         :    0.0,
+    'D2KKPLinePostscale'        :    0.0 ,
+    'D2KPPLinePrescale'         :    0.01,
+    'D2KPPLinePostscale'        :    1.0,
+    'D2PPPLinePrescale'         :    0.0,
+    'D2PPPLinePostscale'        :    0.0,
+    'D2KPPosLinePrescale'       :    0.0,
+    'D2KPPosLinePostscale'      :    0.0,
+    'D2KKKLinePrescale'         :    0.0,
+    'D2KKKLinePostscale'        :    0.0,
+    'Ds2KKPosLinePrescale'      :    0.0,
+    'Ds2KKPosLinePostscale'     :    0.0,
+    'D2KPPosLinePrescale'       :    0.0,
+    'D2KPPosLinePostscale'      :    0.0,
+    'D2HHHIncLinePrescale'      :    0.0,
+    'D2HHHIncLinePostscale'     :    0.0,
+    'HLT'                       : None
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'CharmCompleteEvent' ]
     }
 
 
@@ -553,21 +644,21 @@ DstarPromptWithD02HHHH = {
     ,'D0MassWin'        : 65*MeV
     ,'DstarDOCA'        : 0.22*mm
     ,'D0MaxDOCA'        : 0.12*mm
-    ,'D0DauPt'          : 300*MeV
+    ,'D0DauPt'          : 350*MeV
     ,'D0DauP'           : 3*GeV
     ,'D0Pt'             : 3*GeV
     ,'DstarPt'          : 3*GeV
-    ,'SlowPionPt'       : 70*MeV
+    ,'SlowPionPt'       : 120*MeV
     ,'DstarVtxChi2DOF'  : 20
     ,'D0VtxChi2DOF'     : 10
     ,'D0DauMaxIPChi2'   : 30
-    ,'D0DauIPChi2'      : 0.8
+    ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
     ,'D0IPChi2'         : 30
     ,'D0DIRA'           : 0.9998
     ,'TrackChi2DOF'     : 4
     ,'ApplyKaonPIDK'    : True
-    ,'KaonPIDK'         : -2
+    ,'KaonPIDK'         : 0.0
     ,'ApplyPionPIDK'    : True
     ,'PionPIDK'         : 3 # not applied to the slow pion
     ,'CheckPV'          : True # reject events with no PVs
@@ -596,15 +687,15 @@ DstarPromptWithD02HHHHNoPID = {
     ,'D0MassWin'        : 40*MeV
     ,'DstarDOCA'        : 0.22*mm
     ,'D0MaxDOCA'        : 0.12*mm
-    ,'D0DauPt'          : 300*MeV
+    ,'D0DauPt'          : 350*MeV
     ,'D0DauP'           : 3*GeV
     ,'D0Pt'             : 3*GeV
     ,'DstarPt'          : 3*GeV
-    ,'SlowPionPt'       : 70*MeV
+    ,'SlowPionPt'       : 120*MeV
     ,'DstarVtxChi2DOF'  : 20
     ,'D0VtxChi2DOF'     : 10
     ,'D0DauMaxIPChi2'   : 30
-    ,'D0DauIPChi2'      : 0.8
+    ,'D0DauIPChi2'      : 3.0
     ,'D0FDChi2'         : 48
     ,'D0IPChi2'         : 30
     ,'D0DIRA'           : 0.9998
