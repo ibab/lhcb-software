@@ -52,8 +52,8 @@ D02K3PiForXSec = {
                     }
     ,'CheckPV' : {'Tagged' : True 
                   ,'Untagged' : True }
-    ,'Prescale' : {'Tagged' : 0.1
-                   ,'Untagged' : 0.1 }
+    ,'Prescale' : {'Tagged' : 1.0
+                   ,'Untagged' : 1.0 }
     ,'Postscale' : {'Tagged' : 1
                     ,'Untagged' : 1 }
     ,'ApplyGECs' : {'Tagged' : False
@@ -89,8 +89,8 @@ D02KPiGeoForXSec = {
     , 'Dstar_VCHI2VDOF_MAX' : 100.0
     , 'Dstar_MDiff_MAX'     : 155.0 * MeV
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD02HH'             :   0.1
-    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+    , 'PrescaleD02HH'             :   1.0
+    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -110,13 +110,13 @@ Dstar2D0Pi_D02KPiForXSec = {
     , 'D0_ADMASS_WIN'             :  75.0 * MeV
     , 'D0_VCHI2VDOF_MAX'          :  25.0
     , 'D0_BPVLTIME_MIN'           :   0.2 * picosecond
-    , 'D0_BPVLTFITCHI2_MAX'       : 100.0
+    , 'D0_BPVLTFITCHI2_MAX'       :   2.0e+05
     , 'Dstar_AMDiff_MAX'          : 160.0 * MeV
     , 'Dstar_VCHI2VDOF_MAX'       : 100.0
     , 'Dstar_MDiff_MAX'           : 155.0 * MeV
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD02HH'             :   0.1
-    , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+    , 'PrescaleD02HH'             :   1.0
+    , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
     , 'PostscaleD02HH'            :   1.0
     , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -145,7 +145,7 @@ Lambdac2PKPiForXSec = {
      , 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
      , 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
      , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-     , 'PrescaleLambdac2PKPi'  :    0.1
+     , 'PrescaleLambdac2PKPi'  :    1.0
      , 'PostscaleLambdac2PKPi' :    1.0
     },
     'WGs'          : ['Charm'],
@@ -169,7 +169,7 @@ D2PhiPiForXSec = {
     , 'D_BPVVDCHI2_MIN'           :   30.0
     , 'D_VCHI2VDOF_MAX'           :   10.0
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD2PhiPi'           :    0.1
+    , 'PrescaleD2PhiPi'           :    1.0
     , 'PostscaleD2PhiPi'          :    1.0
     },
     'WGs' : [ 'Charm' ],
@@ -199,8 +199,8 @@ D2HHHForXSec = {
     , 'D_BPVDIRA_MIN' : 0.9999
     , 'D_BPVVDCHI2_MIN' : 60.0
     , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-    , 'PrescaleD2KPP' : 0.1
-    , 'PrescaleD2KKP' : 0.1
+    , 'PrescaleD2KPP' : 1.0
+    , 'PrescaleD2KKP' : 1.0
     , 'PrescaleD2KKK' : 1.0
     , 'PrescaleD2PPP' : 1.0
     , 'PrescaleD2KPPDCS' : 1.0
@@ -222,15 +222,15 @@ D02HHForXSec = {
      , 'Daug_MIPCHI2DV_MIN'        :   9.0
      , 'D0_BPVVDCHI2_MIN'          :  16.0
      , 'D0_BPVDIRA_MIN'            :   0.9999
-     , 'D0_BPVIPCHI2_MAX'          : 100.0
+     , 'D0_BPVIPCHI2_MAX'          :   2.0e+05
      , 'D0_ADAMASS_WIN'            :  80.0*MeV
      , 'D0_ADMASS_WIN'             :  75.0*MeV
      , 'Dstar_AMDiff_MAX'          : 160.0*MeV
      , 'Dstar_MDiff_MAX'           : 155.0*MeV
      , 'Dstar_VCHI2VDOF_MAX'       : 100.0
      , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
-     , 'PrescaleD02HH'             :   0.1
-     , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+     , 'PrescaleD02HH'             :   1.0
+     , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
      , 'PostscaleD02HH'            :   1.0
      , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
