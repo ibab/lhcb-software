@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+
+! 2011-08-27 - Susan Haines
+- StrippingBu2D0h_D02KShh_NoPID and StrippingBu2D0h_D02KShh_NoPID_WS changed to use new StdVeryLooseKs.	
+
 ! 2011-08-27 - Sam Gregson
  - Minor typo in D(s)->KS0H lines corrected 
 
