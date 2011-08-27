@@ -52,7 +52,7 @@ confdict={
 		,	"VertChi2":		2.	# adimensional
 		,	"MassPreComb":		1000.	# MeV
 		,	"MassPostComb":		400.	# MeV
-		,	"Prescale":		1.	# adimensional
+		,	"Prescale":		0.22	# adimensional
 		,	"Postscale":		1.	# adimensional
 		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
 		,	'HLT1PassOnAll': True
@@ -137,7 +137,7 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   JpsiPt = config['JpsiPt'])    
 	
 	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1])
-	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = 1., algos=[self.JpsiMuMuTrackEff2])
+	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2])
 
 	self.registerLine(self.nominal_line1)
 	self.registerLine(self.nominal_line2)
