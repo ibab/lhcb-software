@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-27 - Andrew Powell
+ - StrippingNoPIDDstarWithD02RSKPi.py, StrippingV0ForPID.py
+	 - Prescales in default_config dictionaries updated for writting lines to uDST	
+
 ! 2011-08-27 - Anton Poluektov 
  - Added StrippingUnbiasedB2DPi.py - selection from B2DX that is missing in Beauty2Charm
 

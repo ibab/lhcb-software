@@ -42,45 +42,29 @@ Usage:
 >>> stream.appendLines( V0ForPID.lines() )
 
 Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py
+$STRIPPINGSELECTIONSROOT/tests/data/Reco11a_Run97120_SDSTs.py
 
 with prescales above prescales:
 
-StrippingReport                                                INFO Event 70000, Good event 32178
+StrippingReport                                                INFO Event 100000, Good event 99280
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.7303|       235|       |  21.119|       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.7303|       235|       |  21.112|       |       |       |
- |!StrippingK0SLLLineV0ForPID                        |  0.0963|        31|  1.129|   0.126|      0|      0|      1|
- |!StrippingK0SDDLineV0ForPID                        |  0.1088|        35|  1.057|   0.145|      0|      0|      1|
- |!StrippingLam0LLLine1V0ForPID                      |  0.1367|        44|  1.045|   0.286|      0|      0|      0|
- |!StrippingLam0LLLine2V0ForPID                      |  0.1181|        38|  1.000|   2.306|      0|      0|     25|
- |!StrippingLam0DDLineV0ForPID                       |  0.1026|        33|  1.061|   0.427|      0|      0|      0|
- |!StrippingLam0LLIsMUONLine1V0ForPID                |  0.0746|        24|  1.042|   6.382|      0|      0|     81|
- |!StrippingLam0LLIsMUONLine2V0ForPID                |  0.0062|         2|  1.000|   0.040|      0|      0|      0|
- |!StrippingLam0DDIsMUONLineV0ForPID                 |  0.0994|        32|  1.000|  10.971|      0|      0|      0|
-
-============================================================================================================================================
-                                               AlgorithmCorrelationsAlg.AlgorithmCorrelations
-============================================================================================================================================
-    Algorithm                             Eff.       1        2        3        4        5        6        7        8        9        10  
---------------------------------------------------------------------------------------------------------------------------------------------
-  1 StrippingGlobal                       0.730% |  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  2 StrippingSequenceStreamTest           0.730% | 100.000%  ####### 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000% 100.000%
-  3 StrippingK0SLLLineV0ForPID            0.096% |  13.191%  13.191%  #######   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%   0.000%
-  4 StrippingK0SDDLineV0ForPID            0.109% |  14.894%  14.894%   0.000%  #######   0.000%   0.000%   0.000%   4.167%   0.000%   0.000%
-  5 StrippingLam0LLLine1V0ForPID          0.137% |  18.723%  18.723%   0.000%   0.000%  #######   0.000%   0.000%   0.000%   0.000%   0.000%
-  6 StrippingLam0LLLine2V0ForPID          0.118% |  16.170%  16.170%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   0.000%   0.000%
-  7 StrippingLam0DDLineV0ForPID           0.103% |  14.043%  14.043%   0.000%   0.000%   0.000%   0.000%  #######   0.000%   0.000%   3.125%
-  8 StrippingLam0LLIsMUONLine1V0ForPID    0.075% |  10.213%  10.213%   0.000%   2.857%   0.000%   0.000%   0.000%  ####### 100.000%   0.000%
-  9 StrippingLam0LLIsMUONLine2V0ForPID    0.006% |   0.851%   0.851%   0.000%   0.000%   0.000%   0.000%   0.000%   8.333%  #######   0.000%
- 10 StrippingLam0DDIsMUONLineV0ForPID     0.099% |  13.617%  13.617%   0.000%   0.000%   0.000%   0.000%   3.030%   0.000%   0.000%  #######
-============================================================================================================================================
+ |_StrippingGlobal_                                  |  1.7718|      1759|       |  18.045|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  1.7718|      1759|       |  18.038|       |       |       |
+ |!StrippingnoPIDDstarLine                           |  0.2820|       280|  1.057|   2.885|      0|      0|     83|
+ |!StrippingK0SLLLinenoPIDV0                         |  0.2810|       279|  1.082|   0.125|      0|      0|      2|
+ |!StrippingK0SDDLinenoPIDV0                         |  0.2830|       281|  1.089|   0.218|      0|      0|      2|
+ |!StrippingLam0LLLine1noPIDV0                       |  0.2971|       295|  1.020|   0.861|      0|      0|     18|
+ |!StrippingLam0LLLine2noPIDV0                       |  0.2347|       233|  1.017|   4.647|      0|      0|     66|
+ |!StrippingLam0DDLinenoPIDV0                        |  0.3062|       304|  1.020|   0.880|      0|      0|      0|
+ |!StrippingLam0LLIsMUONLine1noPIDV0                 |  0.0695|        69|  1.014|   0.040|      0|      0|      0|
+ |!StrippingLam0LLIsMUONLine2noPIDV0                 |  0.0101|        10|  1.000|   0.040|      0|      0|      0|
+ |!StrippingLam0DDIsMUONLinenoPIDV0                  |  0.0977|        97|  1.000|   7.878|      0|      0|      0|
  
 """
 # =============================================================================
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
-__date__    = '2011-05-30'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $'
+__date__    = '27-08-2011'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $'
 __all__ = ('StrippingV0ForPIDConf')
 # =============================================================================
 
@@ -145,11 +129,11 @@ default_config = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.007 ,
-    'KS0DD_Prescale'           : 0.008 , 
-    'LamLL_Prescale_LoP'       : 0.027 , 
-    'LamLL_Prescale_HiP'       : 0.308 ,
-    'LamDD_Prescale'           : 0.033 , 
+    'KS0LL_Prescale'           : 0.024 ,
+    'KS0DD_Prescale'           : 0.026 , 
+    'LamLL_Prescale_LoP'       : 0.151 , 
+    'LamLL_Prescale_HiP'       : 1.000 ,
+    'LamDD_Prescale'           : 0.099 , 
     'LamLLIsMUON_Prescale_LoP' : 1.000 ,
     'LamLLIsMUON_Prescale_HiP' : 1.000 ,
     'LamDDIsMUON_Prescale'     : 1.000   

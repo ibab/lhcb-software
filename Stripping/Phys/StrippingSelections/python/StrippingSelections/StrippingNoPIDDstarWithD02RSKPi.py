@@ -1,8 +1,8 @@
 # $Id: StrippingNoPIDDstarWithD02RSKPi.py,v 1.1 2010-09-03 22:38:21 pxing Exp $
 
 __author__  = ['Philip Xing', 'Andrew Powell']
-__date__    = '30th May 2011'
-__version__ = '$Revision: 5.0 $'
+__date__    = '27th August 2011'
+__version__ = '$Revision: 6.0 $'
 
 '''
 Configurable for the RICH calibration using D*+ -> pi+ D0( K- pi+).
@@ -14,13 +14,13 @@ confNoPIDDstarWithD02RSKPi = StrippingNoPIDDstarWithD02RSKPi.NoPIDDstarWithD02RS
 stream.appendLines( confNoPIDDstarWithD02RSKPi.lines() )
 
 Results from running over:
-$STRIPPINGSELECTIONSROOT/tests/data/Reco09-Stripping13_SDSTs.py
+$STRIPPINGSELECTIONSROOT/tests/data/Reco12-Stripping16_SDSTs.py
 
-StrippingReport                                                INFO Event 100000, Good event 48215
+StrippingReport                                                INFO Event 100000, Good event 99280
  |                                    *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*| *Errs*|*Incds*| *Slow*|
- |_StrippingGlobal_                                  |  0.5102|       246|       |   8.717|       |       |       |
- |_StrippingSequenceStreamTest_                      |  0.5102|       246|       |   8.711|       |       |       |
- |!StrippingStripDstarNoPIDsWithD02RSKPiLine         |  0.5102|       246|  1.093|   8.270|      0|      0|    156|
+ |_StrippingGlobal_                                  |  0.2820|       280|       |   2.885|       |       |       |
+ |_StrippingSequenceStreamTest_                      |  0.2820|       280|       |   2.855|       |       |       |
+ |!StrippingDstarNoPIDsWithD02RSKPiLine              |  0.2820|       280|  1.057|   2.885|      0|      0|     83|
 
 '''
 from Gaudi.Configuration import *
@@ -56,7 +56,7 @@ default_config =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.40           ## unitless
+    , 'Prescale'         : 0.482          ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
