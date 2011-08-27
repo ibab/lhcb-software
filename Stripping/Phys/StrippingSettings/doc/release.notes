@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-27 - Anton Poluektov 
+  - Updated StrippingDev/LineConfigDictionaries_GTWG.py
+
 ! 2011-08-26 - Ulrich Kerzel
 - Updated dictionary for Gamma/Loop: B->hhh
 - Add Prescale for unbiased line B->hh line w/o lifetime cut: 0.15
