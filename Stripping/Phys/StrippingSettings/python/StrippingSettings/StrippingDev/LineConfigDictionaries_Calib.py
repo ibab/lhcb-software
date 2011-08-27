@@ -63,7 +63,7 @@ NoPIDDstarWithD02RSKPi = {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.40           ## unitless
+    , 'Prescale'         : 0.482          ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
@@ -128,11 +128,11 @@ V0ForPID = {
     ## define LL-category of K0S 
     "LL =    CHILDCUT ( ISLONG , 1 ) & CHILDCUT ( ISLONG , 2 ) "
     ] ,
-    'KS0LL_Prescale'           : 0.007 ,
-    'KS0DD_Prescale'           : 0.008 , 
-    'LamLL_Prescale_LoP'       : 0.027 , 
-    'LamLL_Prescale_HiP'       : 0.308 ,
-    'LamDD_Prescale'           : 0.033 , 
+    'KS0LL_Prescale'           : 0.024 ,
+    'KS0DD_Prescale'           : 0.026 , 
+    'LamLL_Prescale_LoP'       : 0.151 , 
+    'LamLL_Prescale_HiP'       : 1.000 ,
+    'LamDD_Prescale'           : 0.099 , 
     'LamLLIsMUON_Prescale_LoP' : 1.000 ,
     'LamLLIsMUON_Prescale_HiP' : 1.000 ,
     'LamDDIsMUON_Prescale'     : 1.000   
@@ -183,9 +183,9 @@ MuIDCalib = {
     'WGs'         : [ 'ALL' ],
     'STREAMS'     : [ 'Calibration' ],
     'CONFIG'      : {
-    'PromptPrescale'           : 0.08,
+    'PromptPrescale'           : 0.0,
     'DetachedPrescale'         : 1.,
-    'DetachedNoMIPPrescale'    : 0.3,
+    'DetachedNoMIPPrescale'    : 0.8,
     'DetachedNoMIPHiPPrescale' : 1.,
     'DetachedNoMIPKPrescale'   : 1.,
     'FromLambdacPrescale'      : 1.,

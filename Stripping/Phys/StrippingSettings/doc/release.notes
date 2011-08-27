@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-27 - Andrew Powell
+ - Updated RICH- and MUON-ID line prescales in StrippingDev/LineConfigDictionaries_Calib.py
+
 ! 2011-08-27 - Jibo He
  - Updated StrippingDev/LineConfigDictionaries_PSWG.py 
 
