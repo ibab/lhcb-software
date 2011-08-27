@@ -27,7 +27,7 @@
 #include <boost/assign/list_of.hpp>
 
 // local
-#include <Mismatches/DecisionMap.h>
+#include <Independence/DecisionMap.h>
 
 using namespace std;
 
