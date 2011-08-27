@@ -18,7 +18,7 @@ import GaudiPython
 DecisionMap = GaudiPython.gbl.DecisionMap
 
 # Local imports
-from WriteMismatches.Tasks import EventWriter, EventReporter, time_string
+from IndependenceTests.Tasks import EventWriter, EventReporter, time_string
 
 class ProcessData( object ):
 

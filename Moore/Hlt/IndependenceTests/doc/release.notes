@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Eric van Herwijnen
 Purpose     : HLT application to rest indepence of Hlt lines
 
+! 2011-08-27 - Roel Aaij
+ - Move everything in WriteMismatches subdirectory into main directory.
+
 ! 2011-08-02 - Gerhard Raven
  - fix requirements
 

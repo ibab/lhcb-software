@@ -15,7 +15,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 
 # Local imports
-from WriteMismatches.Tasks import EventWriter, time_string
+from IndependenceTests.Tasks import EventWriter, time_string
 
 class ProcessData( object ):
 

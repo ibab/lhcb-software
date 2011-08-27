@@ -10,7 +10,7 @@
 #include <boost/foreach.hpp>
 
 // local
-#include <Mismatches/DecisionMap.h>
+#include <Independence/DecisionMap.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DecisionMap

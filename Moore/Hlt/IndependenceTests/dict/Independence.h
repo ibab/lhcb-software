@@ -2,7 +2,7 @@
 #define DICT_MISMATCHESDICT_H 1
 
 #include <vector>
-#include <Mismatches/DecisionMap.h>
+#include <Independence/DecisionMap.h>
 
 template class std::pair<unsigned int, unsigned int>;
 template class std::vector<std::pair<unsigned int, unsigned int>,

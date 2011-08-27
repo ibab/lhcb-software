@@ -16,8 +16,8 @@ import Configurables
 from Configurables import TupleHltDecReports
                             
 from Config import ConfigLFC
-from WriteMismatches.Config import ( Config, ConfigOutputLevel,
-                                     ConfigTupleAlg )
+from IndependenceTests.Config import ( Config, ConfigOutputLevel,
+                                       ConfigTupleAlg )
 # GaudiPython
 from GaudiPython import AppMgr
 
