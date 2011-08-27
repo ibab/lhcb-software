@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-27 - Marco Gersabeck
+ - Hlt2CharmSemilepD02HMuNuLines.py: Fixed usage of second loop slow pions
+
 ! 2011-08-26 - Will Barter
  - Tightened LowMult lines on behalf of Ronan McNulty
  - tightened Z->ee and SingleTF(V)HighPtElectron lines.

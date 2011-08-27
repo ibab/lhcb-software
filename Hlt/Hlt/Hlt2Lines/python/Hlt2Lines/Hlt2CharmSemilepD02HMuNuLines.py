@@ -15,21 +15,6 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
     # steering variables
     #------------------------
     __slots__ = {
-                ## Cut values for D0 -> KMuNu, PiMuNu
-                #  'Muon_PT_MIN'               : 800.0 * MeV
-                #, 'Hadron_PT_MIN'             : 600.0 * MeV  
-                #, 'Trk_TRCHI2DOF_MAX'         : 3.0        # neuter
-                #, 'Pair_AMAXDOCA_MAX'         : 0.07 * mm
-                #, 'Pair_Mass_MAX'             : 1900.0 * MeV
-                #, 'Pair_SumAPT_MIN'           : 2800.0 * MeV  
-                #, 'D0_VCHI2PDOF_MAX'          : 10.0       # neuter
-		#, 'D0_FD_MIN'                 : 4.0 * mm # for Suzanne to change
-		#, 'D0_FD_TIGHT_MIN'           : 20.0 * mm
-                #, 'D0_P_MIN'                  : 20.0 * GeV
-                #, 'D0_MCORR_MIN'              : 1400.0 * MeV
-                #, 'D0_MCORR_MAX'              : 2700.0 * MeV 
-                #, 'D0_BPVVDZ_MIN'             : 0.0 * mm    
-
                 ## Cut values for D0 -> KMuNu, PiMuNu, adapted
                   'Muon_PT_MIN'               : 800.0 * MeV
                 , 'Hadron_PT_MIN'             : 600.0 * MeV  
@@ -44,14 +29,6 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'D0_MCORR_MIN'              : 1400.0 * MeV
                 , 'D0_MCORR_MAX'              : 2700.0 * MeV 
                 , 'D0_BPVVDZ_MIN'             : 0.0 * mm    
-
-                # added for the slow pion filter
-                #, 'TrkPt_SlowPion'            : 300.0 * MeV
-                #, 'TrkP_SlowPion'             : 3000.0 * MeV
-                #, 'TrkChi2_SlowPion'          : 100.0
-		#, 'PairMaxDoca_Dstar'	      : 100.0 * mm
-                #, 'DeltaM_MIN'                : 0.0 * MeV
-                #, 'DeltaM_MAX'                : 250.0 *MeV
 
                 , 'TrkPt_SlowPion'            : 300.0 * MeV
                 , 'TrkP_SlowPion'             : 3000.0 * MeV
@@ -390,13 +367,14 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                             , decayDesc = [ decayModes[mode]['descriptor'] ]
                             )
             d02HMuNuSigSeq  = self.__filterHlt1TOS( modeName, d02HMuNuComb )
-            d02HMuNuSigLine = self.__makeLine(modeName, algos = [ d02HMuNuSigSeq ])
-
-            Hlt2CharmSlowPions = self.__DstarCombine( name = modeName + '_SlowPion'
+	    if not ( "Tight" in modeName):
+              d02HMuNuSigLine = self.__makeLine(modeName, algos = [ d02HMuNuSigSeq ])
+            else:
+              Hlt2CharmSlowPions = self.__DstarCombine( name = modeName + '_SlowPion'
                                                   , inputSeq = [ d02HMuNuSigSeq , pionsForDstar ]
                                                   , decayDesc = [ "[D*(2010)+ -> D0 pi+]cc", "[D*(2010)- -> D0 pi-]cc" ]
                                                   , masscut = DeltaMSigMassCut
                                                 )
-            d02HMuNuSigLineSP = self.__makeLine(modeName + '_SlowPion', algos = [ Hlt2CharmSlowPions ])
+              d02HMuNuSigLineSP = self.__makeLine(modeName, algos = [ Hlt2CharmSlowPions ])
 
         # }
