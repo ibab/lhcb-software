@@ -4,6 +4,14 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+
+! 2011-08-27 - Olivier Deschamps
+	- fix tracks list reset in CaloProcessor.XXSequence when called from CaloLines
+	- python/Configuration.py : remove dependency on GlobalRecoConf (was producing loop in configurable).
+															TrackTypes & TrackCuts is now private property with the same default 
+															as in GlobalRecoConf so far
+
+
 !========================= CaloReco v5r11 2011-07-27 =========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect unprotected MSG::DEBUG, also using UNLIKELY macro

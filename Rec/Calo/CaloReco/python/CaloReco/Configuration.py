@@ -38,7 +38,7 @@ from Reconstruction           import ( clusterReco    ,
 
 from Configurables            import CaloDigitConf
 from Configurables            import CaloPIDsConf
-from Configurables            import GlobalRecoConf
+##from Configurables            import GlobalRecoConf
 from Configurables            import GaudiSequencer
 
 
@@ -406,6 +406,12 @@ class CaloProcessor( CaloRecoConf ):
         'ProtoSequencer'      : None,
         'NeutralProtoSequencer'  : None,
         'ChargedProtoSequencer'  : None,
+        ## PRIVATE TrackTypes & TrackCuts property (as in GlobalRecoConf) : for ChargedProto creation OnD.
+        "TrackTypes"  : [ "Long", "Upstream", "Downstream" ],
+        "TrackCuts"   : {  "Long"       : { "Chi2Cut" : [0,10] }
+                           ,"Upstream"   : { "Chi2Cut" : [0,10] }
+                           ,"Downstream" : { "Chi2Cut" : [0,10] } },
+        ##
         'DataType'               : 'MC09',
         'PIDList'            : ['InAcceptance',
                                   'Match',
@@ -419,8 +425,7 @@ class CaloProcessor( CaloRecoConf ):
     ## used configurables 
     __used_configurables__ = (
         (CaloPIDsConf,None ),
-        (CaloDigitConf,None ),
-        (GlobalRecoConf,None)
+        (CaloDigitConf,None )
 	)
 
 
@@ -464,7 +469,8 @@ class CaloProcessor( CaloRecoConf ):
         context = self.getProp('Context')
         if context == '' :
             self.setProp("Context", self.getName() )        
-        self.setProp("TrackLocations", tracks)
+        if tracks != [] :
+            self.setProp("TrackLocations", tracks)
         self.applyConf()
         return seq
     def protoSequence ( self,   tracks=[] , protoPrefix = '' ) :
@@ -473,7 +479,8 @@ class CaloProcessor( CaloRecoConf ):
         self.setProp("ProtoSequencer", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
-        self.setProp("TrackLocations", tracks)        
+        if tracks != [] :
+            self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
@@ -489,7 +496,8 @@ class CaloProcessor( CaloRecoConf ):
         self.setProp("ChargedProtoSequencer", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
-        self.setProp("TrackLocations", tracks)        
+        if tracks != [] :
+            self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             cloc = protoPrefix
             if protoPrefix.find('/Charged') == -1 :
@@ -504,7 +512,8 @@ class CaloProcessor( CaloRecoConf ):
         self.setProp("NeutralProtoSequencer", seq) 
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
-        self.setProp("TrackLocations", tracks)        
+        if tracks != [] :
+            self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix
             if protoPrefix.find('/Neutrals') == -1 :
@@ -519,7 +528,8 @@ class CaloProcessor( CaloRecoConf ):
         self.setProp("Sequence", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
-        self.setProp("TrackLocations", tracks)        
+        if tracks != [] :
+            self.setProp("TrackLocations", tracks)        
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
@@ -659,9 +669,13 @@ class CaloProcessor( CaloRecoConf ):
             maker = getAlgo( ChargedProtoParticleMaker, "ChargedProtoMaker" , context, cloc , pdod )
             # protoPMaker settings (from GlobalRecoConf)
             from Configurables import DelegatingTrackSelector,GaudiSequencer
-            ppConf = GlobalRecoConf('DummyConf',RecoSequencer=GaudiSequencer('DummySeq')) 
-            ttypes = ppConf.getProp('TrackTypes')
-            tcuts  = ppConf.getProp('TrackCuts')            
+            ## ppConf = GlobalRecoConf('DummyConf',RecoSequencer=GaudiSequencer('DummySeq')) 
+            ##ttypes = ppConf.getProp('TrackTypes')
+            ##tcuts  = ppConf.getProp('TrackCuts')
+
+            ttypes = self.getProp('TrackTypes')
+            tcuts  = self.getProp('TrackCuts')
+            
             maker.addTool( DelegatingTrackSelector, name="TrackSelector" )
             maker.TrackSelector.TrackTypes = ttypes
             from Configurables import TrackSelector
@@ -669,9 +683,8 @@ class CaloProcessor( CaloRecoConf ):
                 maker.TrackSelector.addTool(TrackSelector,name=type)
                 ts = getattr(maker.TrackSelector,type)
                 ts.TrackTypes = [type]
-                cuts = ppConf.getProp("TrackCuts")
-                if type in cuts :
-                    for name,cut in cuts[type].iteritems() :
+                if type in tcuts :
+                    for name,cut in tcuts[type].iteritems() :
                         ts.setProp("Min"+name,cut[0])
                         ts.setProp("Max"+name,cut[1])
             #########################################
