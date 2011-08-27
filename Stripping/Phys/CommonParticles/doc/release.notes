@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-27 - Susan Haines
+ - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID and WS lines.
+ - Added StdVeryLooseKs to StandardV0.py
+	
 ! 2011-08-26 Carla Gobel & Sandra Amato
  - Added StdTightDplus.py to be used in KKPos stripping line and included in StandardDplus.py
 
