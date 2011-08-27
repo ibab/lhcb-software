@@ -563,7 +563,7 @@ def makeD2KS0Pi(name,
 
  #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -607,7 +607,7 @@ def makeD2KS0PiDD(name,
 
  #(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2PDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -654,7 +654,7 @@ def makeD2KS0K(name,
 # &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
@@ -700,7 +700,7 @@ def makeD2KS0KDD(name,
 # &(AMAXDOCA('LoKi::DistanceCalculator') < %(DMesonComboDOCA)s * mm
 
 
-        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s*MeV)" % locals()
+        _motherCuts = "(PT > %(DMesonMotherPT)s*MeV) & (VFASPF(VCHI2/VDOF) < %(DMesonMotherVertexChi2)s) & in_range(%(DMesonMotherLowMass)s, MM, %(DMesonMotherHighMass)s) & ((CHILD( VFASPF(VZ) , 'KS0' == ID ) - VFASPF(VZ)) > %(KS0ZDiff)s)  & (MIPCHI2DV(PRIMARY) < %(DMesonMotherMIPChi2)s) & (BPVVDCHI2 > %(DMesonFlightDistChi2)s)" % locals()
     
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
