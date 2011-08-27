@@ -32,15 +32,17 @@ Z02MuMu = {
 WMu = {
     'BUILDERTYPE'  : 'WMuConf',
     'CONFIG'       : {
-    'WMuLinePrescale_ps'    : .1,
-    'WMuLinePrescale_hps': .05,
-    'WMuLinePrescale'    : 1.0, 
-    'WMuLinePostscale'   : 1.0,
-    'mucuttight' : 20.,
-    'mucut' : 15.,
-    'mucut_hps' : 10., 
-    'mucutlow' : 5.,
-    'trkpchi2' : 0.001
+    'WMuLinePrescale_ps'    : .1
+    ,  'WMuLinePrescale_hps': .05
+    ,  'WMuLinePrescale'    : 1.0
+    ,  'WMuLineLoosePrescale'    : 1.0
+    ,  'WMuLineNoPIDsPrescale'    : 0.1
+    ,  'WMuLinePostscale'   : 1.0
+    ,  'mucuttight' : 20.
+    ,  'mucut' : 15.
+    ,  'mucut_hps' : 10. 
+    ,  'mucutlow' : 5.
+    ,  'trkpchi2' : 0.001
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -99,19 +101,46 @@ Z02TauTau = {
     }
 
 
+#Z02TauTauProng
+Z02TauTauProng = {
+    'BUILDERTYPE'  : 'Z02TauTauProngConf',
+    'CONFIG'       : {
+    'Z2TauTau_Prong_LinePrescale'  : 1.0,
+    'Z2TauTau_Prong_LinePostscale' : 1.0,
+    ###
+    'TAU_MASS_LOW'                 : '400.0',    # MeV/c²
+    'TAU_MASS_HIGH'                : '1777.0',   # MeV/c²
+    ###
+    'Z_MASS_LOW'                   : '10000.0',  # MeV/c²
+    #'Z_MASS_HIGH'                 : not set
+    'VCHI2_Z_MAX'                  : '100',       # dl
+    ###
+    'PT_HAD_MIN'                   : '2000',     # MeV/c
+    'TRACKCHI2_HAD_MAX'            : '5',        # dl
+    ###
+    'PT_TAU_MIN'                   : '2000',     # MeV/c
+    'VCHI2_TAU_MAX'                : '20',       # dl
+    'FDCHI2_TAU_MIN'               : '1',        # dl
+    },
+    'WGs' : [ 'RD' ],
+    'STREAMS' : [ 'EW' ]
+    }
+
+
+
 #Z02ee
 Z02ee = {
     'BUILDERTYPE'  : 'Z02eeConf',
     'CONFIG'       : {
-    'Z02eeLinePrescale'    : 1.0, 
-    'Z02eeLinePostscale'   : 1.0,
-    'Z0MinMass' : 40.,
-    'ptcut' : 10.,
-    'trkpchi2' : 0.001,
-    'HCalMax' : 0.05,
-    'ECalMin' : 0.1,
-    'PrsCalMin' : 50.,
-    'mipdvchi2ratio' : 5.
+    'Z02eeLinePrescale'    : 1.0 
+    ,  'Z02eeLinePostscale'   : 1.0
+    ,  'Z0MinMass' : 40.
+    ,  'ptcut' : 10.
+    ,  'trkpchi2' : 0.0
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
+    ,  'mipdvchi2ratio' : 5.
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -121,16 +150,16 @@ Z02ee = {
 We = {
     'BUILDERTYPE'  : 'WeConf',
     'CONFIG'       : {
-    'WeLinePrescale'    : 1.0,
-    'WeLinePostscale'   : 1.0,
-    'WeLinePrescale_ps'    : .1,
-    'ptcut' : 20.,
-    'ptcut_ps' : 15.,
-    'trkpchi2' : 0.001,
-    'HCalMax' : 0.05,
-    'ECalMin' : 0.1,
-    'PrsCalMin' : 50.,
-    'trkghostprob' : 0.6
+    'WeLinePrescale'    : 1.0 
+    ,  'WeLinePostscale'   : 1.0
+    ,  'WeLinePrescale_ps'    : .1 
+    ,  'ptcut' : 20.
+    ,  'ptcut_ps' : 15.
+    ,  'trkpchi2' : 0.0
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
+    ,  'trkghostprob' : 0.6
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -140,28 +169,29 @@ We = {
 DY2ee = {
     'BUILDERTYPE'  : 'DY2eeConf',
     'CONFIG'       : {
-    'DY2eeLine1Prescale'    : .05,
-    'DY2eeLine2Prescale'   : .5,
-    'DY2eeLine3Prescale'   : 1.0,
-    'DY2eeLine4Prescale'   : 1.0,
-    'DY2eeLinePostscale'   : 1.0,
-    'DY1MinMass' : 2.5,
-    'DY1MaxMass' : 5.,
-    'DY2MinMass' : 5.,
-    'DY2MaxMass' : 10.,
-    'DY3MinMass' : 10.,
-    'DY3MaxMass' : 20.,
-    'DY4MinMass' : 20.,
-    'DY4MaxMass' : 40.,
-    'ptcut1' : 1.,
-    'ptcut2' : 2.,
-    'ptcut3' : 5.,
-    'ePID'   : 1.,
-    'trkpchi2' : 0.001,
-    'HCalMax' : 0.05,
-    'ECalMin' : 0.1,
-    'PrsCalMin' : 50.,
-    'mipdvchi2ratio' : 5.
+    'DY2eeLine1Prescale'    : .05 
+    ,  'DY2eeLine2Prescale'   : .5 
+    ,  'DY2eeLine3Prescale'   : 1.0
+    ,  'DY2eeLine4Prescale'   : 1.0
+    ,  'DY2eeLinePostscale'   : 1.0
+    ,  'DY1MinMass' : 2.5
+    ,  'DY1MaxMass' : 5.
+    ,  'DY2MinMass' : 5.
+    ,  'DY2MaxMass' : 10.
+    ,  'DY3MinMass' : 10.
+    ,  'DY3MaxMass' : 20.
+    ,  'DY4MinMass' : 20.
+    ,  'DY4MaxMass' : 40.
+    ,  'ptcut1' : 1.
+    ,  'ptcut2' : 2.
+    ,  'ptcut3' : 5.
+    ,  'ePID'   : 1.
+    ,  'trkpchi2' : 0.0
+    ,  'trkpchi2a' : 0.0
+    ,  'HCalMax' : 0.05
+    ,  'ECalMin' : 0.1
+    ,  'PrsCalMin' : 50.
+    ,  'mipdvchi2ratio' : 5.
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -198,8 +228,10 @@ MuMuSS = {
 LowMult = {
     'BUILDERTYPE'  : 'LowMultConf',
     'CONFIG'       : {
-    'LowMultPrescale'    : 1.0,
-    'LowMultPostscale'   : 1.0    
+    'LowMultPrescale'    : 1.0 
+    ,  'LowMultPostscale'   : 1.0
+    ,  'LowMultPrescale_ps'    : 0.005
+    ,  'LowMultNoFilterPrescale':0.1 
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -221,12 +253,12 @@ DiPhotonDiMuon = {
 SingleTrackTIS = {
     'BUILDERTYPE'  : 'SingleTrackTISConf',
     'CONFIG'       : {
-    'LowPtPrescale'     : .01,
-    'LowPtPostscale'  : 1.0,
-    'HighPtPrescale'  : .1,
-    'HighPtPostscale' : 1.0,
-    'LowPtCut'  : 5.,
-    'HighPtCut' : 15.,
+    'LowPtPrescale'     : .001
+    , 'LowPtPostscale'  : 1.0
+    , 'HighPtPrescale'  : .1
+    , 'HighPtPostscale' : 1.0
+    , 'LowPtCut'  : 5.
+    , 'HighPtCut' : 15.
     },
     'WGs' : [ 'EW' ],
     'STREAMS' : [ 'EW' ]
@@ -237,85 +269,105 @@ DisplVertices = {
     'BUILDERTYPE'  : 'DisplVerticeLinesConf',
     'CONFIG'       : {
     'NCands':{
-    'SinglePS': 1 ,
-    'SingleLowMass': 1 ,
-    'SingleHighMass': 1 ,
-    'SingleDown': 1 ,
-    'Double':2
+       'SinglePS': 1 ,
+       'JPsiHLT': 1 ,
+       'MinBias': 1 ,
+       'SingleDown': 1 ,
+       'Double':2,
+       'SingleHighMass':1,
+       'SingleHighFD':1,
+       'SingleMedium':1
     },
     'RCutMethod' : 'FromBeamSpot',
     'MinR':{
-    'PreselVelo':     0.3*mm , 
-    'SinglePS': 0.3*mm ,
-    'SingleLowMass': 0.4*mm ,
-    'SingleHighMass': 0.3*mm ,
-    'SingleDown': 3.0*mm ,
-    'Double': 0.3*mm
+       'PreselVelo':     0.4*mm ,
+       'SinglePS': 0.4*mm ,
+       'JPsiHLT': 0.4*mm ,
+       'MinBias': 0.4*mm ,
+       'SingleDown': 3.0*mm ,
+       'Double': 0.4*mm ,
+       'SingleHighMass': 0.4*mm ,
+       'SingleHighFD': 4.*mm,
+       'SingleMedium': 2.5*mm
     },
     'MinMass':{
-    'PreselVelo':     3.*GeV , 
-    'SinglePS': 5.*GeV  ,
-    'SingleLowMass': 7.5*GeV ,
-    'SingleHighMass':  12.*GeV,
-    'SingleDown':  4.*GeV,
-    'Double': 3.*GeV 
+       'PreselVelo': 3.*GeV ,
+       'SinglePS': 3.*GeV ,
+       'JPsiHLT': 3.*GeV ,
+       'MinBias': 3.*GeV ,
+       'SingleDown': 4.*GeV,
+       'Double': 3.5*GeV ,
+       'SingleHighMass':  9.7*GeV,
+       'SingleHighFD': 6.5*GeV,
+       'SingleMedium': 8.5*GeV
+    },
+    'MinMass2':{
+       'Double': 4.*GeV
     },
     'MinSumPt':{
-    'PreselVelo':     3.*GeV ,
-    'SinglePS': 5.*GeV  ,
-    'SingleLowMass': 7.*GeV ,
-    'SingleHighMass':  6.*GeV,
-    'SingleDown':  4.*GeV,
-    'Double': 3.5*GeV
-    },
-    'MaxMass':{
-    'SinglePS': 14*TeV ,
-    'SingleLowMass': 12.*GeV,
-    'SingleHighMass':  14*TeV ,
-    'SingleDown':  14*TeV,
-    'Double': 14*TeV
-    },
-    'MaxSumPt':{
-    'SinglePS': 14*TeV ,
-    'SingleLowMass': 14*TeV,
-    'SingleHighMass':  14*TeV ,
-    'SingleDown':  14*TeV ,
-    'Double': 14*TeV
+       'PreselVelo': 3.*GeV ,
+       'SinglePS': 3.*GeV ,
+       'JPsiHLT': 3.*GeV ,
+       'MinBias': 3.*GeV ,
+       'SingleDown': 3.*GeV,
+       'Double': 3.*GeV ,
+       'SingleHighMass':  3.*GeV,
+       'SingleHighFD': 3.*GeV,
+       'SingleMedium': 3.*GeV
     },
     'NTracks':{
-    'PreselVelo':     4,
-    'SinglePS': 5,
-    'SingleLowMass': 6,
-    'SingleHighMass':  5 ,
-    'SingleDown':  4 ,
-    'Double': 4
+       'PreselVelo':     4,
+       'SinglePS': 4 ,
+       'JPsiHLT': 4 ,
+       'MinBias': 4 ,
+       'SingleDown': 4 ,
+       'Double':4 ,
+       'SingleHighMass': 5,
+       'SingleHighFD': 5,
+       'SingleMedium': 5
     },
     'MinZ':{
-    'SinglePS': -10*m,
-    'SingleLowMass':  -10*m,
-    'SingleHighMass':   -10*m ,
-    'SingleDown': 100.*mm  ,
-    'Double': -10*m
+       'SingleDown': 100.*mm  ,
     },
     'MaterialVeto':{
-    'PreselVelo':     5 ,
-    'SinglePS': 0,
-    'SingleLowMass': 5,
-    'SingleHighMass':  0 ,
-    'SingleDown':  0 ,
-    'Double': 0
+       'PreselVelo': 5,
+       'SinglePS': 0 ,
+       'JPsiHLT': 0 ,
+       'MinBias': 0 ,
+       'SingleDown': 0 ,
+       'Double': -5 ,
+       'SingleHighMass':5,
+       'SingleHighFD':5,
+       'SingleMedium': 5
     },
     'prescale':{
-    'SinglePS': 0.05,
-    'SingleLowMass': 1.,
-    'SingleHighMass':  1. ,
-    'SingleDown':  1. ,
-    'Double': 1.
+       'SinglePS': 0.005 ,
+       'JPsiHLT': 1. ,
+       'MinBias': 1. ,
+       'SingleDown': 1. ,
+       'Double': 1. ,
+       'SingleHighMass':1.,
+       'SingleHighFD':1.,
+       'SingleMedium': 1.
+    },
+    'HLT':{
+       'SinglePS': '' ,
+       'SingleDown': '' ,
+       'Double': '' ,
+       'SingleHighMass':'',
+       'SingleHighFD':'',
+       'SingleMedium':'',
+       'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
+       'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
+       'SingleHLTPS':"HLT_PASS_RE('Hlt2DisplVertices(Single|SingleMV)PostScaledDecision')",
+       'DoubleHLTPS':"HLT_PASS_RE('Hlt2DisplVerticesDoublePostScaledDecision')"
     }
     },
     'WGs' : [ 'Exotics' ],
     'STREAMS' : [ 'EW' ]
-    }
+    } 
+
+
 
 HighPtJets = {
     'BUILDERTYPE'  : 'HighPtJetsLinesConf',
