@@ -170,7 +170,7 @@ TwoBodyPrompt = {
 FullDSTDiMuon = {
     'BUILDERTYPE'	:	'DiMuonConf',
     'CONFIG'	: {
-        'MicroDST'                                 :  False   ,
+            'MicroDST'                                 :  False   ,
                 
         # DiMuon line
         'DiMuon_Prescale'                          :     1.   ,
@@ -180,7 +180,8 @@ FullDSTDiMuon = {
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_MinMass'                           :  3000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  3000.   ,  # MeV, no cut now 
 
@@ -197,7 +198,8 @@ FullDSTDiMuon = {
         'DiMuonPrescaled_MuonPT'                   :   650.   ,  # MeV
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonPrescaled_MinMass'                  :  2900.   ,  # MeV
+        'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
         
@@ -223,7 +225,7 @@ FullDSTDiMuon = {
         'DiMuonHighMass_Postscale'                 :     1.   ,
         'DiMuonHighMass_checkPV'                   : False    ,
         
-        'DiMuonHighMass_MuonPT'                    :   650.   , # MeV
+        'DiMuonHighMass_MuonPT'                    :   700.   , # MeV
         'DiMuonHighMass_MuonP'                     :  8000.   , # MeV 
         'DiMuonHighMass_MuonTRCHI2DOF'             :     5.   , 
         'DiMuonHighMass_MinMass'                   :  8500.   , # MeV
@@ -292,9 +294,9 @@ FullDSTDiMuon = {
         'Jpsi2MuMuDetached_Prescale'                       :     1.   ,
         'Jpsi2MuMuDetached_Postscale'                      :     1.   ,
         
-        'Jpsi2MuMuDetached_MuonPT'                         :   500.   ,  # MeV
+        'Jpsi2MuMuDetached_MuonPT'                         :   550.   ,  # MeV
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
-        'Jpsi2MuMuDetached_MuonPIDmu'                      :    -5.   , 
+        'Jpsi2MuMuDetached_MuonPIDmu'                      :     0.   , 
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
         'Jpsi2MuMuDetached_MinMass'                        :  2996.916,  # MeV
         'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
@@ -307,9 +309,9 @@ FullDSTDiMuon = {
         'Psi2MuMuDetached_Postscale'                       :     1.   ,
 
         'Psi2MuMuDetached_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMuDetached_MuonPT'                          :   500.   ,  # MeV
-        'Psi2MuMuDetached_MuonP'                           :  8000.   ,  # MeV, no cut now
-        'Psi2MuMuDetached_MuonPIDmu'                       :    -5.   , 
+        'Psi2MuMuDetached_MuonPT'                          :   550.   ,  # MeV
+        'Psi2MuMuDetached_MuonP'                           : -8000.   ,  # MeV, no cut now
+        'Psi2MuMuDetached_MuonPIDmu'                       :     0.   , 
         'Psi2MuMuDetached_MuonTRCHI2DOF'                   :     5.   , 
         'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
@@ -333,7 +335,8 @@ MicroDSTDiMuon = {
         'DiMuon_MuonPT'                            :   650.   ,  # MeV
         'DiMuon_MuonP'                             : -8000.   ,  # MeV, no cut now 
         'DiMuon_MuonTRCHI2DOF'                     :     5.   , 
-        'DiMuon_MinMass'                           :  2900.   ,  # MeV
+        'DiMuon_MinMass'                           :  3000.   ,  # MeV
+        'DiMuon_MaxMass'                           :  4000.   ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                :  3000.   ,  # MeV
 
@@ -350,7 +353,8 @@ MicroDSTDiMuon = {
         'DiMuonPrescaled_MuonPT'                   :   650.   ,  # MeV
         'DiMuonPrescaled_MuonP'                    : -8000.   ,  # MeV, no cut now 
         'DiMuonPrescaled_MuonTRCHI2DOF'            :     5.   , 
-        'DiMuonPrescaled_MinMass'                  :  2900.   ,  # MeV
+        'DiMuonPrescaled_MinMass'                  :  3000.   ,  # MeV
+        'DiMuonPrescaled_MaxMass'                  :  4000.   ,  # MeV
         'DiMuonPrescaled_VCHI2PDOF'                :    20.   , 
         'DiMuonPrescaled_PT'                       : -1000.   ,  # MeV, no cut now 
 
@@ -484,7 +488,7 @@ Bc2JpsiMu = {
     'MuonPT'              : 1400.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
-    'MuMuMassWindow'      :  200.   ,  # MeV, 10 sigma, may decreased to 150
+    'MuMuMassWindow'      :  150.   ,  # MeV, 10 sigma, may decreased to 150
     'MuMuVtxCHI2'         :    9.   ,  # adimentional
     'MuMuPT'              :  -10.   ,  # MeV, not applied 
     
@@ -494,7 +498,7 @@ Bc2JpsiMu = {
     'BcUpperMass'         : 6400.   ,  # MeV, Upper limit for partial rec. 
     'BcLowerMass'         : 3200.   ,  # MeV, Lower limit for partial rec.
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed      
     },
     'STREAMS' : [ 'Dimuon' ] ,
     'WGs'    : [ 'PSWG' ]
@@ -519,13 +523,9 @@ Bc2JpsiH = {
     'PionP'               :   -5.   ,  # MeV, not applied now
     'BcMassWindow'        :  400.   ,  # MeV, mass window
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 6000.   ,  # MeV, May incrase up to 5000 MeV if needed       
+    'BcPT'                : 6000.   ,  # MeV, May incrase up to 5000 MeV if needed
 
-    'PionIPCHI2'          :   -1.   ,
-    'MuonIPCHI2'          :   -1.   ,
-    'MuMuIPCHI2'          :   -1.   ,
-    'BcIPCHI2'            :    5.0e+9,
-    'BcLTIME'             :   -1.0e+9  
+    'LifetimeCut'         :   ""    
     },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]
@@ -552,11 +552,7 @@ Bc2JpsiHDetached = {
     'BcVtxCHI2'           :    9.   ,  # adimentional
     'BcPT'                : 4000.   ,  # MeV, May incrase up to 5000 MeV if needed       
 
-    'PionIPCHI2'          :   -1.   ,
-    'MuonIPCHI2'          :   -1.   ,
-    'MuMuIPCHI2'          :   -1.   ,
-    'BcIPCHI2'            :    5.0e+9,
-    'BcLTIME'             :    0.1  
+    'LifetimeCut'         : " & (BPVLTIME()>0.1*ps)"
     },
     'STREAMS'   : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]
@@ -632,7 +628,7 @@ BuToKX3872 = {
 FullDSTDiElectron = {
     'BUILDERTYPE'	: 'DiElectronConf',
     'CONFIG'	: {
-            'MicroDST'                                      :  False  ,
+        'MicroDST'                                      :  False  ,
         
         # DiElectron line
         'DiElectron_Prescale'                           :     1.  ,
@@ -645,7 +641,8 @@ FullDSTDiElectron = {
         'DiElectron_ElectronTRCHI2DOF'                  :     5.  , 
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
-        'DiElectron_PT'                                 :  2000.  ,  # MeV, no cut now 
+        'DiElectron_PT'                                 :  2000.  ,  # MeV
+        'DiElectron_TisTosSpecs'                        : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 },
 
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     0.04,
@@ -698,7 +695,8 @@ FullDSTDiElectron = {
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    :  2000.     # MeV
+        'Jpsi2ee_PT'                                    :  2000.  ,  # MeV
+        'Jpsi2ee_TisTosSpecs'                           : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         },
     'STREAMS' : [ 'Dielectron' ],
     'WGs'    : [ 'PSWG' ]
@@ -721,6 +719,7 @@ MicroDSTDiElectron = {
         'DiElectron_MinMass'                            :  2000.  ,  # MeV
         'DiElectron_VCHI2PDOF'                          :    16.  , 
         'DiElectron_PT'                                 : -1000.  ,  # MeV, no cut now 
+        'DiElectron_TisTosSpecs'                        : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 },
 
         # DiElectronLowMass line
         'DiElectronLowMass_Prescale'                    :     1.  ,
@@ -734,7 +733,7 @@ MicroDSTDiElectron = {
         'DiElectronLowMass_MinMass'                     :    30.  ,  # MeV
         'DiElectronLowMass_VCHI2PDOF'                   :    16.  ,       
         'DiElectronLowMass_PT'                          : -1000.  ,  # MeV, no cut now
-        
+
         # BiasedDiElectron line
         'BiasedDiElectron_Prescale'                     :     1.  ,
         'BiasedDiElectron_Postscale'                    :     1.  ,
@@ -773,7 +772,8 @@ MicroDSTDiElectron = {
         'Jpsi2ee_MinMass'                               :  2000.  ,  # MeV
         'Jpsi2ee_MaxMass'                               :  3800.  ,  # MeV
         'Jpsi2ee_VCHI2PDOF'                             :    16.  ,
-        'Jpsi2ee_PT'                                    : -1500.0    # MeV
+        'Jpsi2ee_PT'                                    : -1500.0 ,  # MeV
+        'Jpsi2ee_TisTosSpecs'                           : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         },
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'PSWG' ]
@@ -788,15 +788,16 @@ Ccbar2Ppbar = {
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
                     'ProtonPT'         :  1950.  , # MeV
                     'ProtonP'          :    10.  , # GeV
-                    'ProtonTRCHI2DOF' :      4.  ,
+                    'ProtonTRCHI2DOF'  :     4.  ,
                     'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
-                    'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
+                    'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+                    'ProtonIPCHI2Cut'  :    ""   ,
                     'CombMaxMass'      :  4100.  , # MeV, before Vtx fit
                     'CombMinMass'      :  2750.  , # MeV, before Vtx fit
                     'MaxMass'          :  4000.  , # MeV, after Vtx fit
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
-                    'CCPT'             :  7000.    
+                    'CCCut'            :  " & (PT>6*GeV)"    
                    },
     'STREAMS' : [ 'Charm' ] ,
     'WGs'    : [ 'PSWG' ]
@@ -804,22 +805,48 @@ Ccbar2Ppbar = {
 
 Ccbar2PpbarExclusive = {
     'BUILDERTYPE'	: 'Ccbar2PpbarConf',
-    'CONFIG'	: {  'LinePrescale'     :     1.  ,
-                     'LinePostscale'    :     1.  ,
-                     
-                     'SpdMult'          :    20.  , # dimensionless, Spd Multiplicy cut 
-                     'ProtonPT'         :   500.  , # MeV
-                     'ProtonP'          :    -2.  , # MeV
-                     'ProtonTRCHI2DOF' :      5.  ,
-                     'ProtonPIDppi'     :    10.  , # CombDLL(p-pi)
-                     'ProtonPIDpK'      :     5.  , # CombDLL(p-K)
-                     'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
-                     'CombMinMass'      :     0.  , # MeV, before Vtx fit
-                     'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
-                     'MinMass'          :     0.  , # MeV, after Vtx fit
-                     'VtxCHI2'          :     9.  , # dimensionless
-                     'CCPT'             :    -2.    
-                     },
+    'CONFIG'	: {
+        'LinePrescale'     :     1.  ,
+        'LinePostscale'    :     1.  ,
+        
+        'SpdMult'          :    20.  , # dimensionless, Spd Multiplicy cut 
+        'ProtonPT'         :   550.  , # MeV
+        'ProtonP'          :    -2.  , # MeV
+        'ProtonTRCHI2DOF'  :     5.  ,
+        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  :    ""   ,
+        'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
+        'CombMinMass'      :     0.  , # MeV, before Vtx fit
+        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
+        'MinMass'          :     0.  , # MeV, after Vtx fit
+        'VtxCHI2'          :     9.  , # dimensionless
+        'CCCut'            :  ""     
+        },
+    'STREAMS' : [ 'CharmCompleteEvent' ] ,
+    'WGs'    : [ 'PSWG' ]
+    }
+
+Ccbar2PpbarDetached = {
+    'BUILDERTYPE'	: 'Ccbar2PpbarConf',
+    'CONFIG'	: {
+        'LinePrescale'     :     1.  ,
+        'LinePostscale'    :     1.  ,
+        
+        'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
+        'ProtonPT'         :   550.  , # MeV
+        'ProtonP'          :    -2.  , # MeV
+        'ProtonTRCHI2DOF'  :     5.  ,
+        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>9)",
+        'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
+        'CombMinMass'      :  2650.  , # MeV, before Vtx fit
+        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
+        'MinMass'          :  2700.  , # MeV, after Vtx fit
+        'VtxCHI2'          :     9.  , # dimensionless
+        'CCCut'            :  " & (BPVDLS>5)"     
+        },
     'STREAMS' : [ 'CharmCompleteEvent' ] ,
     'WGs'    : [ 'PSWG' ]
     }

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-27 - Jibo He
+ - Updated StrippingDev/LineConfigDictionaries_PSWG.py 
+
 ! 2011-08-27 - Will Barter
  - Updated StrippingDev/LineConfigDictionaries_EWWG.py
 
