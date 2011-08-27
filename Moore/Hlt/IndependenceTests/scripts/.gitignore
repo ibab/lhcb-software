@@ -1,5 +1,0 @@
-*.o
-find_mismatches
-.deps/*
-summary.xml
-*.lst
