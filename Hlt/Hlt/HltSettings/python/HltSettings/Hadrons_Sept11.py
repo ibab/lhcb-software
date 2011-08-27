@@ -57,7 +57,7 @@ class Hadrons_Sept11 :
         from Phi_July2011 import Phi_July2011 as PhiLines
         lines.extend ( PhiLines().ActiveHlt2Lines() )
 
-        from CharmHadronLines_July2011 import CharmHadronLines
+        from CharmHadronLines_Sept2011 import CharmHadronLines
         lines.extend ( CharmHadronLines().ActiveHlt2Lines() )
 
         return lines
@@ -74,7 +74,7 @@ class Hadrons_Sept11 :
         from Phi_July2011 import Phi_July2011 as PhiLines
         d.update ( PhiLines().Thresholds() )
 
-        from CharmHadronLines_July2011 import CharmHadronLines
+        from CharmHadronLines_Sept2011 import CharmHadronLines
         d.update ( CharmHadronLines().Thresholds() )
 
         return d
