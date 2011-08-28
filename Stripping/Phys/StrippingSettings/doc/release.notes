@@ -4,6 +4,30 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-28 - Jibo He
+ - Copied StrippingDev to Stripping17 
+ - LineConfigDictionaries_RDWG.py
+   . Updated all conf dict acording to (r3)
+     https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/RareDecayStripping17#Configuration 
+   . Added KS02MuMu, Tau2PMuMu
+   . Updated Bs2MuMuLines
+ - LineConfigDictionaries_GTWG.py
+   . Updated B->2,3,4 body config, i.e., adding MaxLong cut, instead of pre-scaling 
+   . Updated Bu2D0h_D02KShh_NoPID, Bu2D0h_D02KShh_NoPID_WS
+   . Commented out Beauty2Charm temporarily
+ - LineConfigDictionaries_MiniBias.py
+   . Updated Minibias
+ - LineConfigDictionaries_Semileptonic.py
+   . Updated DstarVeryLooseWithD02Kpi, DForBSemi, D0ForBXX,  Bd2DstarMuNu, B2XuMuNu
+ - LineConfigDictionaries_EWWG.py
+   . Commented out DisplVertices
+ - LineConfigDictionaries_GLWG.py
+   . Updated B2KShh
+ - LineConfigDictionaries_Calib.py
+   . Pre-scaled D02KPiPi0 by 0.5
+   . Moved NoPIDDstarWithD02RSKPi, InclPhi, V0ForPID, MuIDCalib to PID stream
+   . Updated Jpsi2eeForElectronID
+
 ! 2011-08-27 - Andrew Powell
  - Updated RICH- and MUON-ID line prescales in StrippingDev/LineConfigDictionaries_Calib.py
 
