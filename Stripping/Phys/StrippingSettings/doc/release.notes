@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-29 - Jibo He
+ - LineConfigDictionaries_GTWG.py
+   . Included Beauty2Charm
+ - LineConfigDictionaries_EWWG.py
+   . Included DisplVertices
+
 ! 2011-08-28 - Jibo He
  - Copied StrippingDev to Stripping17 
  - LineConfigDictionaries_RDWG.py

@@ -12,95 +12,95 @@ StrippingSelections file containing the line builder instance.
 
 from GaudiKernel.SystemOfUnits import *
 
-## Beauty2Charm = {
-##   'BUILDERTYPE' : 'Beauty2CharmConf',
-##   'CONFIG' : {
-##     "ALL" : { # Cuts made on all charged input particles in all lines
-##     'TRCHI2DOF_MAX' : 4,
-##     'PT_MIN'        : '100*MeV',
-##     'P_MIN'         : '1000*MeV',
-##     'MIPCHI2DV_MIN' : 4
-##     },
-##     "KS0" : { # Cuts made on all K shorts
-##     'PT_MIN'        : '250*MeV',
-##     'MIPCHI2DV_MIN' : 4,
-##     'MM_MIN'        : '467.*MeV',
-##     'MM_MAX'        : '527.*MeV'
-##     },
-##     "Pi0" : { # Cuts made on all pi0's
-##     'PT_MIN'        : '500*MeV',
-##     'P_MIN'         : '2000*MeV',
-##     'CHILDCL1_MIN'  : 0.25,
-##     'CHILDCL2_MIN'  : 0.25
-##     },
-##     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
-##     'ASUMPT_MIN'    : '1800*MeV',
-##     'AMAXDOCA_MAX'  : '1.0*mm',
-##     'VCHI2DOF_MAX'  : 10,
-##     'BPVVDCHI2_MIN' : 36,
-##     'BPVDIRA_MIN'   : 0, 
-##     'MASS_WINDOW'   : '100*MeV'
-##     },
-##     "B2X" : { # Cuts made on all B's and Lb's used in all lines
-##     'AMAXDOCA_MAX'  : '1.0*mm',
-##     'SUMPT_MIN'     : '5000*MeV',
-##     'VCHI2DOF_MAX'  : 10,
-##     'BPVIPCHI2_MAX' : 25,
-##     'BPVLTIME_MIN'  : '0.3*ps',
-##     'BPVDIRA_MIN'   : 0.999,
-##     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
-##     'AM_MAX'        : '7000*MeV',
-##     'B2CBBDT_MIN'   : 0.05,
-##     'NOIP_BPVVDCHI2_MIN' : 0
-##     },
-##     "Dstar" : { # Cuts made on all D*'s used in all lines 
-##     'AMAXDOCA_MAX'  : '1.0*mm',
-##     'VCHI2DOF_MAX'  : 10,
-##     'BPVVDCHI2_MIN' : 36,
-##     'BPVDIRA_MIN'   : 0, 
-##     'MASS_WINDOW'   : '50*MeV'
-##     },
-##     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
-##     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
-##     'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV'},
-##     'AMAXDOCA_MAX'  : '0.5*mm',
-##     'VCHI2DOF_MAX'  : 16,
-##     'BPVVDCHI2_MIN' : 16, 
-##     'BPVDIRA_MIN'   : 0,
-##     'ASUMPT_MIN'    : '1000*MeV',
-##     'pP_MIN'        : '5000*MeV' # for pH only (obviously)
-##     },
-##     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
-##     'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
-##     'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
-##     'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
-##     'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
-##     'AMAXDOCA_MAX'  : '0.40*mm',
-##     'VCHI2DOF_MAX'  : 8,
-##     'BPVVDCHI2_MIN' : 16, 
-##     'BPVDIRA_MIN'   : 0.98,
-##     'ASUMPT_MIN'    : '1250*MeV',
-##     'MIPCHI2DV_MIN' : 0.0,
-##     'BPVVDRHO_MIN'  : '0.1*mm',
-##     'BPVVDZ_MIN'    : '2.0*mm',
-##     'PTMIN1'       : '300*MeV'
-##     },
-##     'PID' : {
-##     'P'  : {'PIDp_MIN' : -10},
-##     'PI' : {'PIDK_MAX' : 20},
-##     'K'  : {'PIDK_MIN' : -10}
-##     },
-##     "Prescales" : { # Prescales for individual lines
-##     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
-##     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-##     #'B2DDKBeauty2CharmLine' : 0.1,
-##     #'B02D0DKBeauty2CharmLine' : 0.1
-##     },
-##     'GECNTrkMax'   : 500
-##     }, 
-##   'STREAMS' : [ 'Bhadron' ],
-##   'WGs' : [ 'GammaFromTrees' ]
-## }
+Beauty2Charm = {
+  'BUILDERTYPE' : 'Beauty2CharmConf',
+  'CONFIG' : {
+    "ALL" : { # Cuts made on all charged input particles in all lines
+    'TRCHI2DOF_MAX' : 4,
+    'PT_MIN'        : '100*MeV',
+    'P_MIN'         : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4
+    },
+    "KS0" : { # Cuts made on all K shorts
+    'PT_MIN'        : '250*MeV',
+    'MIPCHI2DV_MIN' : 4,
+    'MM_MIN'        : '467.*MeV',
+    'MM_MAX'        : '527.*MeV'
+    },
+    "Pi0" : { # Cuts made on all pi0's
+    'PT_MIN'        : '500*MeV',
+    'P_MIN'         : '2000*MeV',
+    'CHILDCL1_MIN'  : 0.25,
+    'CHILDCL2_MIN'  : 0.25
+    },
+    "D2X" : { # Cuts made on all D's and Lc's used in all lines 
+    'ASUMPT_MIN'    : '1800*MeV',
+    'AMAXDOCA_MAX'  : '1.0*mm',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVVDCHI2_MIN' : 36,
+    'BPVDIRA_MIN'   : 0, 
+    'MASS_WINDOW'   : '100*MeV'
+    },
+    "B2X" : { # Cuts made on all B's and Lb's used in all lines
+    'AMAXDOCA_MAX'  : '1.0*mm',
+    'SUMPT_MIN'     : '5000*MeV',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVIPCHI2_MAX' : 25,
+    'BPVLTIME_MIN'  : '0.3*ps',
+    'BPVDIRA_MIN'   : 0.999,
+    'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
+    'AM_MAX'        : '7000*MeV',
+    'B2CBBDT_MIN'   : 0.05,
+    'NOIP_BPVVDCHI2_MIN' : 0
+    },
+    "Dstar" : { # Cuts made on all D*'s used in all lines 
+    'AMAXDOCA_MAX'  : '1.0*mm',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVVDCHI2_MIN' : 36,
+    'BPVDIRA_MIN'   : 0, 
+    'MASS_WINDOW'   : '50*MeV'
+    },
+    "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
+    'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},
+    'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV'},
+    'AMAXDOCA_MAX'  : '0.5*mm',
+    'VCHI2DOF_MAX'  : 16,
+    'BPVVDCHI2_MIN' : 16, 
+    'BPVDIRA_MIN'   : 0,
+    'ASUMPT_MIN'    : '1000*MeV',
+    'pP_MIN'        : '5000*MeV' # for pH only (obviously)
+    },
+    "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
+    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
+    'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+    'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
+    'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+    'AMAXDOCA_MAX'  : '0.40*mm',
+    'VCHI2DOF_MAX'  : 8,
+    'BPVVDCHI2_MIN' : 16, 
+    'BPVDIRA_MIN'   : 0.98,
+    'ASUMPT_MIN'    : '1250*MeV',
+    'MIPCHI2DV_MIN' : 0.0,
+    'BPVVDRHO_MIN'  : '0.1*mm',
+    'BPVVDZ_MIN'    : '2.0*mm',
+    'PTMIN1'       : '300*MeV'
+    },
+    'PID' : {
+    'P'  : {'PIDp_MIN' : -10},
+    'PI' : {'PIDK_MAX' : 20},
+    'K'  : {'PIDK_MIN' : -10}
+    },
+    "Prescales" : { # Prescales for individual lines
+    # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
+    # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
+    #'B2DDKBeauty2CharmLine' : 0.1,
+    #'B02D0DKBeauty2CharmLine' : 0.1
+    },
+    'GECNTrkMax'   : 500
+    }, 
+  'STREAMS' : [ 'Bhadron' ],
+  'WGs' : [ 'GammaFromTrees' ]
+}
 
 
 DstarD02Kpipi0 = {

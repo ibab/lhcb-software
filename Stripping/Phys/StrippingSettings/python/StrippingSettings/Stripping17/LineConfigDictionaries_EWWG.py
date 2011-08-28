@@ -264,108 +264,108 @@ SingleTrackTIS = {
     'STREAMS' : [ 'EW' ]
     }
 
-###DisplVertices
-## DisplVertices = {
-##     'BUILDERTYPE'  : 'DisplVerticeLinesConf',
-##     'CONFIG'       : {
-##     'NCands':{
-##        'SinglePS': 1 ,
-##        'JPsiHLT': 1 ,
-##        'MinBias': 1 ,
-##        'SingleDown': 1 ,
-##        'Double':2,
-##        'SingleHighMass':1,
-##        'SingleHighFD':1,
-##        'SingleMedium':1
-##     },
-##     'RCutMethod' : 'FromBeamSpot',
-##     'MinR':{
-##        'PreselVelo':     0.4*mm ,
-##        'SinglePS': 0.4*mm ,
-##        'JPsiHLT': 0.4*mm ,
-##        'MinBias': 0.4*mm ,
-##        'SingleDown': 3.0*mm ,
-##        'Double': 0.4*mm ,
-##        'SingleHighMass': 0.4*mm ,
-##        'SingleHighFD': 4.*mm,
-##        'SingleMedium': 2.5*mm
-##     },
-##     'MinMass':{
-##        'PreselVelo': 3.*GeV ,
-##        'SinglePS': 3.*GeV ,
-##        'JPsiHLT': 3.*GeV ,
-##        'MinBias': 3.*GeV ,
-##        'SingleDown': 4.*GeV,
-##        'Double': 3.5*GeV ,
-##        'SingleHighMass':  9.7*GeV,
-##        'SingleHighFD': 6.5*GeV,
-##        'SingleMedium': 8.5*GeV
-##     },
-##     'MinMass2':{
-##        'Double': 4.*GeV
-##     },
-##     'MinSumPt':{
-##        'PreselVelo': 3.*GeV ,
-##        'SinglePS': 3.*GeV ,
-##        'JPsiHLT': 3.*GeV ,
-##        'MinBias': 3.*GeV ,
-##        'SingleDown': 3.*GeV,
-##        'Double': 3.*GeV ,
-##        'SingleHighMass':  3.*GeV,
-##        'SingleHighFD': 3.*GeV,
-##        'SingleMedium': 3.*GeV
-##     },
-##     'NTracks':{
-##        'PreselVelo':     4,
-##        'SinglePS': 4 ,
-##        'JPsiHLT': 4 ,
-##        'MinBias': 4 ,
-##        'SingleDown': 4 ,
-##        'Double':4 ,
-##        'SingleHighMass': 5,
-##        'SingleHighFD': 5,
-##        'SingleMedium': 5
-##     },
-##     'MinZ':{
-##        'SingleDown': 100.*mm  ,
-##     },
-##     'MaterialVeto':{
-##        'PreselVelo': 5,
-##        'SinglePS': 0 ,
-##        'JPsiHLT': 0 ,
-##        'MinBias': 0 ,
-##        'SingleDown': 0 ,
-##        'Double': -5 ,
-##        'SingleHighMass':5,
-##        'SingleHighFD':5,
-##        'SingleMedium': 5
-##     },
-##     'prescale':{
-##        'SinglePS': 0.005 ,
-##        'JPsiHLT': 1. ,
-##        'MinBias': 1. ,
-##        'SingleDown': 1. ,
-##        'Double': 1. ,
-##        'SingleHighMass':1.,
-##        'SingleHighFD':1.,
-##        'SingleMedium': 1.
-##     },
-##     'HLT':{
-##        'SinglePS': '' ,
-##        'SingleDown': '' ,
-##        'Double': '' ,
-##        'SingleHighMass':'',
-##        'SingleHighFD':'',
-##        'SingleMedium':'',
-##        'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
-##        'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
-##        'SingleHLTPS':"HLT_PASS_RE('Hlt2DisplVertices(Single|SingleMV)PostScaledDecision')",
-##        'DoubleHLTPS':"HLT_PASS_RE('Hlt2DisplVerticesDoublePostScaledDecision')"
-##     }
-##     },
-##     'WGs' : [ 'Exotics' ],
-##     'STREAMS' : [ 'EW' ]
-##     }
+#DisplVertices
+DisplVertices = {
+    'BUILDERTYPE'  : 'DisplVerticeLinesConf',
+    'CONFIG'       : {
+    'NCands':{
+       'SinglePS': 1 ,
+       'JPsiHLT': 1 ,
+       'MinBias': 1 ,
+       'SingleDown': 1 ,
+       'Double':2,
+       'SingleHighMass':1,
+       'SingleHighFD':1,
+       'SingleMedium':1
+    },
+    'RCutMethod' : 'FromBeamSpot',
+    'MinR':{
+       'PreselVelo':     0.4*mm ,
+       'SinglePS': 0.4*mm ,
+       'JPsiHLT': 0.4*mm ,
+       'MinBias': 0.4*mm ,
+       'SingleDown': 3.0*mm ,
+       'Double': 0.4*mm ,
+       'SingleHighMass': 0.4*mm ,
+       'SingleHighFD': 4.*mm,
+       'SingleMedium': 2.5*mm
+    },
+    'MinMass':{
+       'PreselVelo': 3.*GeV ,
+       'SinglePS': 3.*GeV ,
+       'JPsiHLT': 3.*GeV ,
+       'MinBias': 3.*GeV ,
+       'SingleDown': 4.*GeV,
+       'Double': 3.5*GeV ,
+       'SingleHighMass':  9.7*GeV,
+       'SingleHighFD': 6.5*GeV,
+       'SingleMedium': 8.5*GeV
+    },
+    'MinMass2':{
+       'Double': 4.*GeV
+    },
+    'MinSumPt':{
+       'PreselVelo': 3.*GeV ,
+       'SinglePS': 3.*GeV ,
+       'JPsiHLT': 3.*GeV ,
+       'MinBias': 3.*GeV ,
+       'SingleDown': 3.*GeV,
+       'Double': 3.*GeV ,
+       'SingleHighMass':  3.*GeV,
+       'SingleHighFD': 3.*GeV,
+       'SingleMedium': 3.*GeV
+    },
+    'NTracks':{
+       'PreselVelo':     4,
+       'SinglePS': 4 ,
+       'JPsiHLT': 4 ,
+       'MinBias': 4 ,
+       'SingleDown': 4 ,
+       'Double':4 ,
+       'SingleHighMass': 5,
+       'SingleHighFD': 5,
+       'SingleMedium': 5
+    },
+    'MinZ':{
+       'SingleDown': 100.*mm  ,
+    },
+    'MaterialVeto':{
+       'PreselVelo': 5,
+       'SinglePS': 0 ,
+       'JPsiHLT': 0 ,
+       'MinBias': 0 ,
+       'SingleDown': 0 ,
+       'Double': -5 ,
+       'SingleHighMass':5,
+       'SingleHighFD':5,
+       'SingleMedium': 5
+    },
+    'prescale':{
+       'SinglePS': 0.005 ,
+       'JPsiHLT': 1. ,
+       'MinBias': 1. ,
+       'SingleDown': 1. ,
+       'Double': 1. ,
+       'SingleHighMass':1.,
+       'SingleHighFD':1.,
+       'SingleMedium': 1.
+    },
+    'HLT':{
+       'SinglePS': '' ,
+       'SingleDown': '' ,
+       'Double': '' ,
+       'SingleHighMass':'',
+       'SingleHighFD':'',
+       'SingleMedium':'',
+       'JPsiHLT':"HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
+       'MinBias':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
+       'SingleHLTPS':"HLT_PASS_RE('Hlt2DisplVertices(Single|SingleMV)PostScaledDecision')",
+       'DoubleHLTPS':"HLT_PASS_RE('Hlt2DisplVerticesDoublePostScaledDecision')"
+    }
+    },
+    'WGs' : [ 'Exotics' ],
+    'STREAMS' : [ 'EW' ]
+    }
 
 HighPtJets = {
     'BUILDERTYPE'  : 'HighPtJetsLinesConf',
