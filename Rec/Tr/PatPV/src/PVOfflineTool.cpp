@@ -7,6 +7,8 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/RecVertex.h"
+#include "DetDesc/Condition.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 // Local
 #include "PVOfflineTool.h"
 
@@ -28,7 +30,12 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
     m_pvFitterName(""),
     m_pvSeedingName(""),
     m_pvsChi2Separation(0.0),
-    m_pvsChi2SeparationLowMult(0.0)
+    m_pvsChi2SeparationLowMult(0.0),
+    m_useBeamSpotRCut(false),
+    m_beamSpotRCut(0.3),
+    m_beamSpotX(0.),
+    m_beamSpotY(0.),
+    m_beamSpotCond("")
 {
   declareInterface<IPVOfflineTool>(this);
   declareProperty("RequireVelo"      , m_requireVelo   = true);
@@ -40,6 +47,8 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
   declareProperty("LookForDisplaced" , m_lookForDisplaced = false);
   declareProperty("PVsChi2Separation", m_pvsChi2Separation = 25.);
   declareProperty("PVsChi2SeparationLowMult", m_pvsChi2SeparationLowMult = 91.);
+  declareProperty("UseBeamSpotRCut",  m_useBeamSpotRCut  = false );
+  declareProperty("BeamSpotRCut",     m_beamSpotRCut = 0.3 );
   
 }
 
@@ -50,6 +59,16 @@ StatusCode PVOfflineTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
+
+  m_beamSpotCond = "/dd/Conditions/Online/Velo/MotionSystem";
+  if (m_useBeamSpotRCut ) {
+    IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+    m_updMgrSvc->registerCondition(this, m_beamSpotCond, &PVOfflineTool::UpdateBeamSpot);
+    StatusCode scu = m_updMgrSvc->update(this);
+    if(!scu.isSuccess()) 
+      return Error("Failed to update conditions!",StatusCode::FAILURE);
+  }  
+
   // Access PVFitterTool
   m_pvfit = tool<IPVFitter>(m_pvFitterName,this);
   if(!m_pvfit) {
@@ -252,7 +271,13 @@ StatusCode PVOfflineTool::reconstructMultiPVWithWeightsFromTracks(std::vector<co
       
       if(scvfit == StatusCode::SUCCESS) {
         bool isSepar = separatedVertex(recvtx,outvtxvec);
-        if ( isSepar ) {
+        bool inR = true;
+        if ( m_useBeamSpotRCut ) {
+          double dx = recvtx.position().x() - m_beamSpotX; 
+          double dy = recvtx.position().y() - m_beamSpotY; 
+          if ( std::sqrt(dx*dx + dy*dy) > m_beamSpotRCut ) inR = false;
+	}
+        if ( isSepar && inR ) {
           outvtxvec.push_back(recvtx);
           weightsvec.push_back(weights);
           
@@ -555,4 +580,23 @@ void PVOfflineTool::removeTracksAndRecalculatePV(const LHCb::RecVertex* pvin,
   m_pvRecalc->RecalculateVertex(pvin, tracks2remove, vtx);  
 }
 
+//=============================================================================
+// Update of the beam spot position
+//=============================================================================
+StatusCode PVOfflineTool::UpdateBeamSpot()
+{
+  if (! exist<Condition>(detSvc(), m_beamSpotCond )){ 
+    Warning( "Unable to locate beam spot condition" ) ;
+    return StatusCode::FAILURE;
+  }
+  Condition *myCond =  get<Condition>(detSvc(), m_beamSpotCond );
+  //
+  const double xRC = myCond -> paramAsDouble ( "ResolPosRC" ) ;
+  const double xLA = myCond -> paramAsDouble ( "ResolPosLA" ) ;
+  const double   Y = myCond -> paramAsDouble ( "ResolPosY"  ) ;
+  //
+  m_beamSpotX = ( xRC + xLA ) / 2;
+  m_beamSpotY = Y ;
+  return StatusCode::SUCCESS;
+}
 

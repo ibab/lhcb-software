@@ -4,6 +4,11 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2011-08-28 - Mariusz Witek
+- add PV to beamspot radial cut to be activated on demand. Default is no cut as before.
+  The radial cut protects high multiplicity SV of B from being reconstructed as PV (and lost)
+  see https://indico.cern.ch/conferenceDisplay.py?confId=134893 (PV definition modification)
+
 !========================= PatPV v3r19 2010-10-30 =========================
 ! 2010-10-29 - Mariusz Witek
 - remove access to tracks of PV to be recalculated in PVOfflineRecalculate.

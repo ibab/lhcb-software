@@ -59,9 +59,11 @@ public:
                                     const std::vector<const LHCb::Track*>& tracks2remove,
                                     LHCb::RecVertex& vtx);
   
+  
 
 
 private:
+
   bool m_requireVelo;   // Option to use tracks with VELO segment only
   bool m_saveSeedsAsPV; // Save seeds as PVs (for monitoring)
   bool m_lookForDisplaced;
@@ -79,6 +81,12 @@ private:
   std::string m_pvSeedingName;
   double m_pvsChi2Separation;
   double m_pvsChi2SeparationLowMult;
+
+  bool m_useBeamSpotRCut;
+  double m_beamSpotRCut;
+  double m_beamSpotX;
+  double m_beamSpotY;
+  std::string m_beamSpotCond;
   
   StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,  
 			      std::vector<LHCb::RecVertex>& outvtxvec, 
@@ -104,6 +112,6 @@ private:
 
   double zCloseBeam(const LHCb::Track* track);
   bool separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::RecVertex>& outvtxvec);
-
+  StatusCode UpdateBeamSpot();
 };
 #endif // PVOFFLINETOOL_H
