@@ -8,6 +8,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v8r8 2011-08-29 ========================
 ! 2011-08-29 - Marco Gersabeck
  - Hlt2CharmSemilepD02HMuNuLines.py: Fixed dictionary
 
@@ -28,11 +29,11 @@
  - Hlt2InclusiveDiProtonLines.py
   . Tighten the PID cuts of DiProton, DiProtonLowMult to offline cuts
 
-!==========================================================================
+!=============================================================================
 ! 2011-08-04 - Sam Gregson
  - Re-optimised D2KS0H Hlt2Lines 
 
-!========================== Hlt2Lines v8r7p1 2011-08-03 ===================
+!========================== Hlt2Lines v8r7p1 2011-08-03 ======================
 ! 2011-08-03 - Gerhard Raven
  - add Hlt2Lumi, remove Hlt1Lumi from Hlt2Transparent
 
