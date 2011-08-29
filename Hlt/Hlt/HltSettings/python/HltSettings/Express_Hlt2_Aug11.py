@@ -1,4 +1,4 @@
-class Express_Hlt2_Aug11 :
+class Express_Hlt2_Aug11(object) :
     """
     Threshold settings for Hlt2 Express stream lines
     
