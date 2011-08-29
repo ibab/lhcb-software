@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2011-08-29 - Mariusz Witek
+- add standard PV configuration class to PVConf: StandardPV to activate beam spot radial cut
+  for reprocessing.
+
 ! 2011-08-28 - Mariusz Witek
 - add PV to beamspot radial cut to be activated on demand. Default is no cut as before.
   The radial cut protects high multiplicity SV of B from being reconstructed as PV (and lost)

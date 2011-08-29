@@ -47,4 +47,17 @@ class VLoosePV(object):
         PVTool.LSAdaptPVFitter.trackMaxChi2 = 25.
         PVTool.LSAdaptPVFitter.minIter      = 3
         
+class StandardPV(object):
+    '''Simple python class to configure Standard PV settings for reconstruction'''
+    def configureAlg(self, PVAlg = PatPVOffline("PatPVOffline")):
+        '''pass in an alg to configure'''
+        
+        PVAlg.addTool(PVOfflineTool, "PVOfflineTool")
+        
+        self.configureTool(PVAlg.PVOfflineTool)
+    
+    def configureTool(self, PVTool):
+        '''pass in a tool method to configure'''
+        PVTool.UseBeamSpotRCut = True
+        PVTool.BeamSpotRCut = 0.3
 
