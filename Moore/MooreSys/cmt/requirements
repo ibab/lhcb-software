@@ -1,16 +1,22 @@
 package MooreSys
-version v12r8
+version v12r9
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r8   Hlt
-use  IndependenceTests  v1r0    Hlt
+use  Moore              v12r9   Hlt
+use  IndependenceTests  v1r1    Hlt
 
 # Patches
-use MuonID              v9r0p1  Muon
+use  MuonDet            v9r7    Det
+use  BBDecTreeTool      v1r2p1  Phys
+use  HltDAQ             v2r11p1 Hlt
+use  LHCbKernel         v13r4   Kernel
+use  LHCbAlgs           v2r42   Kernel
+use  LoKiCore           v11r3   Phys
+use  CaloReco           v5r12   Calo
 
 # Declare this as a container package
 apply_pattern container_package
