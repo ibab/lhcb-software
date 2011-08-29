@@ -2,6 +2,13 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2011-08-29 - alexander.mazurov@gmail.com
+ - CaloCellIDAsProperty.cpp
+
+   Updates for LHCb::CaloCellID's parser functions.
+   This version works only with Gaudi version > v22r2
+   (where the new parser model is provided)
+
 !========================= CaloUtils v9r1 2011-06-14 =========================
 ! 2011-06-14 - Olivier Deschamps
  - CaloAlgUtils : new method StringMatcher()
@@ -14,27 +21,27 @@
   - fix compilation warning on slc4
 
 ! 2010-08-30 - Vanya Belyaev
- - a bit more polishing to Kinemactics functions 
+ - a bit more polishing to Kinemactics functions
 
 ! 2010-08-30 - Vanya Belyaev
- - Kinematics.h, 
+ - Kinematics.h,
    Kinematics.cpp
 
-     factor out the actual evaluation of various quantities 
+     factor out the actual evaluation of various quantities
      from CaloMomentum class
- 
-    FIX THE BUG in Evaluation of F11 and F12 matrix elements! 
 
-  - cmt/requirements 
+    FIX THE BUG in Evaluation of F11 and F12 matrix elements!
 
-    version inrement to v9r0 
+  - cmt/requirements
+
+    version inrement to v9r0
 
 ! 2010-08-27 - O. Deschamps
  - CaloAlgUtils :  new method ClusterFromHypo(CaloHypo*) return hypo->cluster with special care for SplitPhotons
 
 !========================== CaloUtils v8r13 2010-06-18 ========================
 ! 2010-06-11 - V. Gligorov
- - Remove obsolete default HLT track locations. 
+ - Remove obsolete default HLT track locations.
 
 !========================== CaloUtils v8r12p1 2010-06-01 ========================
 ! 2010-06-01 - Gerhard Raven
@@ -46,7 +53,7 @@
      add dictionaries for CaloVectors...
 
  - CaloUtils/CellID.py
-     add the python iteration for related CaloVector-classes 
+     add the python iteration for related CaloVector-classes
 
 ! 2010-03-13 - Olivier Deschamps
   - CaloAlgUtils : track location is either 'offline' or 'hlt' depending on
@@ -54,46 +61,46 @@
 
 ! 2010-02-25 - Olivier Deschamps
   - CaloAlgUtils/Calo2Track : improvements in generic context-dependent TES
-                              locations  
+                              locations
   - CaloTrackAlg : accept unknown fitted status if hltContext(context())
 
 !========================== CaloUtils v8r11 2010-01-20 ========================
 ! 2010-01-14 - Victor Egorychev
- - add dictionary for ICaloElectron interface 
- - cmt/requirements 
+ - add dictionary for ICaloElectron interface
+ - cmt/requirements
      version increment to v8r11
 
 !========================== CaloUtils v8r10 2009-12-11 ========================
 ! 2009-12-08 - Vanya Belyaev
- - CellID.py: bug fix in python decorator for std::set-container 
+ - CellID.py: bug fix in python decorator for std::set-container
 
 ! 2009-12-07 - Marco Cattaneo
- - In CaloTrackTool.h: Fix trivial untested StatusCode, 
+ - In CaloTrackTool.h: Fix trivial untested StatusCode,
                        Downgrade Errors to Warnings
 
 ! 2009-11-30 - Olivier Deschamps
  - Calo2Dview::getUnit() : protect against non string unit (bug or feature in HistoID::literalID())
 
 ! 2009-11-30 - Marco Cattaneo
- - Remove obsolete files CaloUtils/dirHbookName.h, CaloUtils/histoHbookName.h 
+ - Remove obsolete files CaloUtils/dirHbookName.h, CaloUtils/histoHbookName.h
 
 ! 2009-11-28 - Vanya Belyaev
  - new helper python decorator classes
- - cmt/requirements 
-    version increment to v8r10 
+ - cmt/requirements
+    version increment to v8r10
 
 !========================== CaloUtils v8r9 2009-11-27 =========================
 ! 2009-11-17 - Olivier Deschamps
- - CaloParticle : 
+ - CaloParticle :
   - new method isPureNeutralCalo(particle) (all particle descendant is a neutral
     calo object e.g. pi0->gg (J/Psi->ee is not)
   - minor cleaning
 
 !========================== CaloUtils v8r8 2009-11-13 =========================
 ! 2009-11-08 - Olivier Deschamps
- - Calo2Dview : 
-  - speed-up processing 
-    - getunit() method : remove usage of  slow HistoID/std::string cast-conversion 
+ - Calo2Dview :
+  - speed-up processing
+    - getunit() method : remove usage of  slow HistoID/std::string cast-conversion
     - fillCalo2D() method :reduce usage of histoXD() method in case of sequential filling of the same histogram
   - implement  Profile2D view
 
@@ -101,50 +108,50 @@
 
  - CaloNeighbours:
 
-    make use of new typedef  
+    make use of new typedef
 
  - CaloTrackTool:
 
-     use ICaloDigits4Track 
+     use ICaloDigits4Track
 
- - cmt/requirements 
-    
-     version increment to v8r8 
+ - cmt/requirements
+
+     version increment to v8r8
 
 !========================== CaloUtils v8r7 2009-10-16 =========================
 ! 2009-10-12 - Olivier Deschamps
  - Calo2Dview : speed-up processing
 
 ! 2009-10-02 - Vanya BELYAEV
- - attempt for "blind-fix" for compilaiton problme at lhcb6 slot 
+ - attempt for "blind-fix" for compilaiton problme at lhcb6 slot
 
 ! 2009-10-01 - Vanya BELYAEV
- - SharedCells.h 
-    add misisng include <numeric> 
+ - SharedCells.h
+    add misisng include <numeric>
 
 ! 2009-09-30 - Vanya BELYAEV
- - add possibiilty to use CaloCellID as property 
-   new files: 
-     CaloCellIDAsProperty.h/.cpp 
+ - add possibiilty to use CaloCellID as property
+   new files:
+     CaloCellIDAsProperty.h/.cpp
  - add some python decoration:
-      >>> import GaudiUtils.CellID 
- - cmt/requirements 
-    version increment to v8r7 
+      >>> import GaudiUtils.CellID
+ - cmt/requirements
+    version increment to v8r7
 
 !========================== CaloUtils v8r6 2009-08-31 =========================
-! 2009-08-21 - Olivier Deschamps 
+! 2009-08-21 - Olivier Deschamps
   - change rule for detector name extraction in CaloAlgUtils (find substring wherever in the instance name instead of first digits)
 
-! 2009-08-21 - Olivier Deschamps 
+! 2009-08-21 - Olivier Deschamps
   - new functor : CaloAlgUtils (allows to consistently define context-dependent TES I/O)
 
 ! 2009-08-05 - Vanya BELYAEV
  - CaloDataFunctor
-      remove duplicated functors 
-      add isLocalMax 
- - CaloNeighbours - helpe function to get proper neighbours 
- - cmt/requirements 
-    version increment to v8r6 
+      remove duplicated functors
+      add isLocalMax
+ - CaloNeighbours - helpe function to get proper neighbours
+ - cmt/requirements
+    version increment to v8r6
 
 !========================== CaloUtils v8r5 2009-05-25 =========================
 ! 2009-05-21 - Olivier Deschamps
@@ -156,38 +163,38 @@
 
 ! 2009-05-20 - Olivier Deschamps
  - Calo2Dview : fix bug in getCaloParam() - affecting L0CaloMonitoring only
-  
+
 ! 2009-05-19 - Vanya  BELYAEV
- - add missing files 
+ - add missing files
 
 ! 2009-05-16 - Vanya BELYAEV
- - add the dictionary for CaloMomentum/CaloParticle classes 
-    (needed for python) and polish a bit these classes 
- 
-! 2009-05-08 - Vanya BELYAEV
- - CaloUtils/SpreadEstimator.h 
-   src/SpreadEstimator.cpp 
+ - add the dictionary for CaloMomentum/CaloParticle classes
+    (needed for python) and polish a bit these classes
 
-   put more protection for evalaution of 
+! 2009-05-08 - Vanya BELYAEV
+ - CaloUtils/SpreadEstimator.h
+   src/SpreadEstimator.cpp
+
+   put more protection for evalaution of
    cluster covariance("spread") matrix.
 
     The algorithm is:
 
-    1) evaluate the eigenvalues 
+    1) evaluate the eigenvalues
     2) for "suspicion" clusters:
          - "small" eigenvalues
-         - "small" diagonal elements  
-         - four or less cells with positive energy 
+         - "small" diagonal elements
+         - four or less cells with positive energy
          replace the eigenvalues with max("cellsize*cellsize/12", eigenvalue)
 
     3) recalculate the covariance/spread matrix using the updated eigenvalues
-       *and* old eigenvectors ("cluster orientation") 
+       *and* old eigenvectors ("cluster orientation")
 
-    To decrease the influence of numerical uncertanties  
+    To decrease the influence of numerical uncertanties
     the temporary coordinate bias is introduced..
-     
-  - cmt/requirements 
-    version increment to v8r5 
+
+  - cmt/requirements
+    version increment to v8r5
 
 !========================== CaloUtils v8r4 2009-05-06 =========================
 ! 2009-04-20 - Olivier Deschamps
@@ -197,7 +204,7 @@
  - Calo2Dview : fix bug in 'electronics' 2D view for Spd
 
 ! 2009-04-06 - Olivier Deschamps
- - Calo2Dview : add new 2D views (crate-feb vs channels) + 
+ - Calo2Dview : add new 2D views (crate-feb vs channels) +
                 possibility to split the view per area
 
 ! 2009-03-20 - Victor Egorychev
@@ -287,7 +294,7 @@
 
 !========================== CaloUtils v7r4 2007-07-20 =========================
 ! 2007-06-25 - Olivier Deschamps
- - New tools : Track2Calo and Part2Calo --> match Track/Part to calo 
+ - New tools : Track2Calo and Part2Calo --> match Track/Part to calo
   (requested by Jose for L0 on/offline matching)
                CaloElectron tool update accordingly
 
@@ -306,7 +313,7 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
  - Fix a doxygen warning
 
 ! 2007-03-29 - Olivier Deschamps
- - Fix bug in CaloMomenum definition of the transport matrix (indices swap) 
+ - Fix bug in CaloMomenum definition of the transport matrix (indices swap)
  - add new method : bremstrahlung() & bremCaloMomentum() in CaloElectron
  - implement ICaloMomentum interface (moved from CaloInterfaces)
 
@@ -319,12 +326,12 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
  - Remove dependency on LHCbDefinitions
  - Clean up includes
 
-! 2007-01-12 - Olivier Deschamps 
+! 2007-01-12 - Olivier Deschamps
  - include CaloMomentum.h in CaloElectron implementation instead in the interface
    to avoid circular depedency with CaloInterfaces
 
-! 2006-12-21 - Olivier Deschamps 
- - new tool added : CaloUtils/CaloElectron.h - src/CaloElectron.cpp 
+! 2006-12-21 - Olivier Deschamps
+ - new tool added : CaloUtils/CaloElectron.h - src/CaloElectron.cpp
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
@@ -365,13 +372,13 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
  - improve CaloUtils/Calo2Track.h
 
 ! 2006-06-18 - Vanya BELYAEV
- - fix few minor bugs 
+ - fix few minor bugs
 
 ! 2006-06-14 - Vanya BELYAEV
  - CaloUtils/CaloTrackMatch.h
      fix the return boolean valeus from Sinvert functions...
- - CaloUtils/CaloTrackTool.h 
-     fix the problem with NEGATIVE distance from plane to point 
+ - CaloUtils/CaloTrackTool.h
+     fix the problem with NEGATIVE distance from plane to point
 
 ! 2006-06-14 - Olivier Deschamps
  - Bug fix src/CovarianceEstimator.cpp
@@ -383,7 +390,7 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 ! 2006-06-06 - Vanya BELYAEV
  - few base classed for CaloPIDs implementation
     CaloTrackTool &  CaloTrackMatch
- - rewritten class TrackUse 
+ - rewritten class TrackUse
  - cmt/requirements
      add LHCbMath & TrackInterfaces
 
@@ -421,26 +428,26 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 !========================== CaloUtils v6r0 2006-03-22 ===================
 ! 2006-03-22 - Olivier Deschamps
  - Migration to LHCb v20/Gaudi v18
- - cmt/requirement : RecEvent dependency replaces CaloEvent 
+ - cmt/requirement : RecEvent dependency replaces CaloEvent
  - version increment to v6r0
 
 !========================== CaloUtils v5r1 2005-12-08 ===================
 ! 2005-12-08 - Olivier Deschamps
- - TrackUse.cpp based on Track::History == 'Cnv' Tracks only 
+ - TrackUse.cpp based on Track::History == 'Cnv' Tracks only
 
 !========================== CaloUtils v5r0 2005-11-04 ===================
 ! 2005-11-04 - Olivier Deschamps
  - Adapt to new Track Event Model (TrackEvent v1r4)
 
-  modified files :  
+  modified files :
    CaloUtils/CaloTrackAlg.h
    CaloUtils/CaloHistoTrackAlg.h
-   CaloUtils/TrackUse.h  
+   CaloUtils/TrackUse.h
    src/CaloTrackAlg.cpp
    src/CaloHistoTrackAlg.cpp
    src/TrackUse.cpp
 
- - cmt/requirements 
+ - cmt/requirements
    version increment to v5r0
 !========================== CaloUtils v4r9 2005-05-09 ===================
 ! 2005-05-09 - Marco Cattaneo
@@ -448,16 +455,16 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 
 ! 2005-05-06 - Vanya BELYAEV
  - move the base classes CaloTrackAlg and CaloHistoTrackAlg
-   from Calo/CaloReco to this package ( to be used also in Calo/CaloPIDs) 
+   from Calo/CaloReco to this package ( to be used also in Calo/CaloPIDs)
 
   new files :
-  
+
    CaloUtils/CaloTrackAlg.h
    CaloUtils/CaloHistoTrackAlg.h
    src/CaloTrackAlg.cpp
    src/CaloHistoTrackAlg.cpp
 
- - cmt/requirements 
+ - cmt/requirements
    version increment to v4r9
 
 !========================== CaloUtils v4r8 2004-10-27 ===================
@@ -465,16 +472,16 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
  - CaloUtils/TrTrackUse.h ,
    src/TrTrackUse.cpp
 
-      new helper class to simplify the selection/rejection of 
+      new helper class to simplify the selection/rejection of
       TrStoredTrack fro e.g. mathcing, monitoring, PID, etc...
       It defins a "standard" set of properties for "Component"
-      classes ("Algorithm", "Service", "AlgTool") and few methods 
-      for seelction.rejection of tracks, inspection, etc... 
+      classes ("Algorithm", "Service", "AlgTool") and few methods
+      for seelction.rejection of tracks, inspection, etc...
 
-      The clients : CaloReco, CaloMoniDst. CaloPIDs 
+      The clients : CaloReco, CaloMoniDst. CaloPIDs
 
  - cmt/requirements
-    increment the version to v4r8 
+    increment the version to v4r8
 
 ! ============================ CaloUtils v4r7p1 2004-10-26 ====================
 ! 2004-10-26 - Marco Cattaneo
@@ -492,19 +499,19 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
   """
       I am looking at the sharing of the energy of cells that belong to several
       clusters using CellMatrix3x3 method that returns the fraction of 2
-      overlaping squares on the Ecal surface. In the function  
+      overlaping squares on the Ecal surface. In the function
       "treatDifferentAreas" you return :
-      Area / sizeCell / sizeCel 
+      Area / sizeCell / sizeCel
       where Area is the overlaping surface but sizeCell is defined as :
-      0.5 det()->cellSize   ( cell ) ; 
- 
+      0.5 det()->cellSize   ( cell ) ;
+
       So the returned fraction is wrong by a factor (1/0.5)**2=4 (Indeed I
       observe Outer->Middle fractions are set to 4 !!).
-      Are these fractions >1 taken into account elsewhere or is it an error?  
+      Are these fractions >1 taken into account elsewhere or is it an error?
   """
 
   - cmt/requirements
-   version increment to v4r7p1 
+   version increment to v4r7p1
 
 ! ============================= CaloUtils v4r7 2004-05-27 =====================
 ! 2004-05-27 - Marco Cattaneo
@@ -513,9 +520,9 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 ! 2004-05-27 - Ivan Belyaev
  - CaloUtils/CellMatrix.h
    fix my stupid bug in evaluation of overlapping area for 2 rectangular areas
-   The bug was observed and kindly reported by Olivier Deschamps 
+   The bug was observed and kindly reported by Olivier Deschamps
  - cmt/requirements
-   increment the version to v4r7 
+   increment the version to v4r7
 
 ! ============================= CaloUtils v4r6 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo
@@ -530,7 +537,7 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
  - requirements - use new versions
 
 ! 2002-11-29 - Ivan Belyaev
- - cmt/requirements                       version update 
+ - cmt/requirements                       version update
 
 !======================== CaloUtils v4r3 2002-11-11 ========================
 ! 2002-11-14 - Ivan Belyaev
@@ -542,46 +549,46 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 
 !========================= CaloUtils v4r1 2002-07-18 ==========================
 ! 2002-07-18 - Ivan Belyaev
- - use new CaloEvent 
+ - use new CaloEvent
 
 !========================= CaloUtils v4r0 2002-07-09 ==========================
 ! 2002-06-15 - Vanya Belyaev
- - version update for new CaloDet version 
+ - version update for new CaloDet version
 
 ! 2002-06-14 - v3r2 Vanya Belyaev
- - src/SpreadEstimator.cpp       bug fix 
-   
+ - src/SpreadEstimator.cpp       bug fix
+
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v3r0 to use EventKernel v2r*
 
 !===================== CaloUtils v2r0 2002-05-29 ==============================
 ! 2002-05-29 - Ivan Belyaev
- - src/CovarinaceEstimator.cpp : remove the most stupid bug 
-  induced by previoud "bug fix'. Indices for covariance and parameters 
-  were set to be 100% wrong. I definitely need some vacations. 
+ - src/CovarinaceEstimator.cpp : remove the most stupid bug
+  induced by previoud "bug fix'. Indices for covariance and parameters
+  were set to be 100% wrong. I definitely need some vacations.
   I never put SO stupid bugs  :-(((
 
 ! 2002-05-23 - Vanya Belyaev
- - cmt/requirements               : increase tehversion and use new patterns 
- - CaloUtils/CaloPhotonMomnetum.h : add the posiibility to redefine 
-   the nominal position of null(primary) vertex 
- - src/CovarinaceEstimator.cpp    : remove stupid bug 
+ - cmt/requirements               : increase tehversion and use new patterns
+ - CaloUtils/CaloPhotonMomnetum.h : add the posiibility to redefine
+   the nominal position of null(primary) vertex
+ - src/CovarinaceEstimator.cpp    : remove stupid bug
 
 
 !=============================================================================
-! 07/04/2002 - Vanya Belyaev 
-! - histoHbookName.h, dirHbookName.h  bug fix 
+! 07/04/2002 - Vanya Belyaev
+! - histoHbookName.h, dirHbookName.h  bug fix
 !=============================================================================
 
 !=============================================================================
-! 05/04/2002 - Vanya Belyaev 
+! 05/04/2002 - Vanya Belyaev
 ! - split histoHbookName.h file into histoHbookName.h and dirHbookName.h
 !=============================================================================
 
 !=============================================================================
-! 04/04/2002 - Vanya Belyaev 
-  - add "dirHbookName()" function to histoHbookName.h file 
+! 04/04/2002 - Vanya Belyaev
+  - add "dirHbookName()" function to histoHbookName.h file
 !=============================================================================
 
 !=============================================================================
@@ -591,40 +598,40 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
 
 ! =============================================================================
 ! 02/04/2002 - v2r0 Vanya Belyaev
-!  - update for new event model 
+!  - update for new event model
 ! =============================================================================
 
 ! =============================================================================
 ! 13/03/2002 - Vanya Belyaev
-  - change version on requirements file 
+  - change version on requirements file
 ! =============================================================================
 
 ! =============================================================================
 ! 09/12/2001 - Vanya Belyaev
-  - update for newer Gaudi version 
+  - update for newer Gaudi version
 ! =============================================================================
 
 ! =============================================================================
 ! 25/11/2001 - Ivan Belyaev
-  - update for newer CaloKernel package 
+  - update for newer CaloKernel package
 
 ! =============================================================================
-  20011122    Vanya Belyaev 
+  20011122    Vanya Belyaev
   SpreadEstimator.h/.cpp
-  new utility for estimation of teh spread/size of the cluster 
+  new utility for estimation of teh spread/size of the cluster
 
 ! =============================================================================
-  20011107    Vanya Belyaev 
+  20011107    Vanya Belyaev
 
   CaloUtils/CellMatrix.h
   CaloUtils/CellMatrix3x3.h
   CaloUtils/CellMatrix2x2.h
   CaloUtils/CellSwissCross.h
-  3 new useful utilities to determinet the relative position 
+  3 new useful utilities to determinet the relative position
    of calorimeter with respect to some reference ("seed") cell.
-  Utilities are able to determite what fraction of the area of 
-  the given cell belongs to certain topological configuration 
-  around referenced "seed" cell. 
+  Utilities are able to determite what fraction of the area of
+  the given cell belongs to certain topological configuration
+  around referenced "seed" cell.
   5 possible configurations are considered:
     3x3 matrix          ( area of 9 seed cells )
     swiss-cross matrix  ( area of 5 seed cells )
@@ -632,6 +639,6 @@ with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
     UpperLeft,UpperRight, LowerLeft and LowerRight  (area of 4 seed cells)
 
 ! =============================================================================
-  20011102    v1  Vanya Belyaev 
-   first release of new package 
+  20011102    v1  Vanya Belyaev
+   first release of new package
 ! =============================================================================
