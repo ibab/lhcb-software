@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-08-29 - Marco Gersabeck
+ - Hlt2CharmSemilepD02HMuNuLines.py: Fixed dictionary
+
 ! 2011-08-27 - Marco Gersabeck
  - Hlt2CharmSemilepD02HMuNuLines.py: Fixed usage of second loop slow pions
 

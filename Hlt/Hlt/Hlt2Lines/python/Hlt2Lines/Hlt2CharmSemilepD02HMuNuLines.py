@@ -21,10 +21,11 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                 , 'Trk_TRCHI2DOF_MAX'         : 3.0        # neuter
                 , 'Pair_AMAXDOCA_MAX'         : 0.07 * mm
                 , 'Pair_Mass_MAX'             : 1900.0 * MeV
-                , 'Pair_SumAPT_MIN'           : 1500.0 * MeV  
+                , 'Pair_SumAPT_MIN'           : 2800.0 * MeV  
+                , 'Pair_SumAPT_TIGHT_MIN'     : 1500.0 * MeV  
                 , 'D0_VCHI2PDOF_MAX'          : 10.0       # neuter
-		, 'D0_FD_MIN'                 : 10.0 * mm # for Suzanne to change
-		, 'D0_FD_TIGHT_MIN'           : 20.0 * mm
+		, 'D0_FD_MIN'                 :  4.0 * mm # for Suzanne to change
+		, 'D0_FD_TIGHT_MIN'           : 10.0 * mm
                 , 'D0_P_MIN'                  : 20.0 * GeV
                 , 'D0_MCORR_MIN'              : 1400.0 * MeV
                 , 'D0_MCORR_MAX'              : 2700.0 * MeV 
@@ -158,7 +159,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop, CombineParticles
 
         combcuts = "(AM< %(Pair_Mass_MAX)s )" \
-		   "& ((APT1+APT2)> %(Pair_SumAPT_MIN)s)" \
+		   "& ((APT1+APT2)> %(Pair_SumAPT_TIGHT_MIN)s)" \
                    "& (AP > %(D0_P_MIN)s)" \
 	           "& (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMAXDOCA_MAX)s )" \
 		   "& (AALLSAMEBPV)" \
