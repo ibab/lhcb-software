@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r3 2011-08-29 =========================
 ! 2011-08-05 - Marco Clemencic
  - Modified the implementation of LoKi::TES::Stat to be independent of the
    signature of the getters in StatEntity.
