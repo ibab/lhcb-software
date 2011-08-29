@@ -279,12 +279,14 @@ class B2DXBuilder(object):
 
     def _makeB02DD(self):
         '''Makes RS and WS B0 -> D+D- + c.c.'''
+	config = deepcopy(self.config)
+	config['AM_MIN'] = '4600*Mev'
         decays = {'B02DD': ["B0 -> D- D+"] }
         inputs = {'B02DD': self.d.hhh_pid}
-        b2dd_rs = makeB2XSels(decays,'',inputs,self.config)
+        b2dd_rs = makeB2XSels(decays,'',inputs,config)
         decays = {'B02DDWS': ["[B0 -> D+ D+]cc"] }
         inputs = {'B02DDWS': self.d.hhh_pid}
-        b2dd_ws = makeB2XSels(decays,'',inputs,self.config)
+        b2dd_ws = makeB2XSels(decays,'',inputs,config)
         self.lines.append(ProtoLine(b2dd_rs,1.0))
         self.lines.append(ProtoLine(b2dd_ws,0.1))
 

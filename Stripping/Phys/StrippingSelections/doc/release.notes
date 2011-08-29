@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-29 - Anton Poluektov 
+ - python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
+   . Modify minimum DD mass for B0->DD to 4600 MeV
+
 ! 2011-08-28 - Jibo He
  - python/StrippingSelections/__init__.py
   . Added StrippingTau2PMuMu, StrippingUnbiasedB2DPi
