@@ -5,6 +5,13 @@
 ! -----------------------------------------------------------------------------
 !
 
+
+! 2011-08-29 - T. Blake
+ - python/StrippingSelections/Utils.py
+  . Updated buildStream and buildStreams to enable splitting of line builder 
+    lines between streams. Added functionality to select lines by WG.
+
+
 ! 2011-08-29 - S. Blusk
  - python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
    Use "MeV" instead of "Mev"
