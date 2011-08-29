@@ -17,7 +17,7 @@ from GaudiKernel.SystemOfUnits import *
 
 Bd2KstarMuMu = {
     'BUILDERTYPE' : 'StrippingBdToKstarMuMuConf',
-    'CONFIG' : {
+    'CONFIG' : { 
     'UseNoPIDsHadrons'          : True,
     'Prescale_BdToKstarMuMu'    : 1.0,
     'Postscale_BdToKstarMuMu'   : 1.0,
@@ -116,23 +116,18 @@ B2XMuMuSS = {
     'CONFIG'        : {
     'MuonP'         : 3000. ,    #MeV
     'MuonPT'        : 500.  ,    #MeV
-    'MuonMINIPCHI2' : 4     ,    #adminensional
-    
+    'MuonMINIPCHI2' : 5     ,    #adminensional
     'PionP'         : 2000. ,    #MeV
     'PionPT'        : 500.  ,    #MeV
-    'PionMINIPCHI2' : 4     ,    #adminensional
-    
+    'PionMINIPCHI2' : 5     ,    #adminensional
     'KaonP'         : 2000. ,    #MeV
     'KaonPT'        : 500.  ,    #MeV
-    'KaonMINIPCHI2' : 4     ,    #adminensional
-    'DimuonMass'    : 0.  ,
-    
-    #'DimuonMass'    : 250.  ,    #MeV
+    'KaonMINIPCHI2' : 5     ,    #adminensional
+    'DimuonMass'    : 0.  ,    #MeV
     'BVCHI2DOF'     : 7    ,    #adminensional                              
-    'BDIRA'         : 0.9995 ,    #adimensional
+    'BDIRA'         : 0.9998 ,    #adimensional
     'BIPCHI2'       : 30    ,    #adimensional
     'BMassWin'      : 400.  ,    #MeV, mass window
-    
     'B2PiMuMuOSLinePrescale'  : 1 ,
     'B2PiMuMuOSLinePostscale' : 1 ,
     'B2PiMuMuSSLinePrescale'  : 1 ,
@@ -140,7 +135,7 @@ B2XMuMuSS = {
     'B2KMuMuOSLinePrescale'   : 1 ,
     'B2KMuMuOSLinePostscale'  : 1 ,
     'B2KMuMuSSLinePrescale'   : 1 ,
-    'B2KMuMuSSLinePostscale'  : 1 
+    'B2KMuMuSSLinePostscale'  : 1
     },
     'WGs' : [ 'RD' ] ,
     'STREAMS' : [ 'Dimuon' ]
@@ -236,7 +231,8 @@ Bu2LLK = {
     ,  'Bu2mmKLinePostscale' : 1
     },
     'WGs'    : [ 'RD' ] ,
-    'STREAMS' : [ 'Dimuon' ] 
+    'STREAMS' : ['Dimuon']
+    #{ 'Dimuon' : [ 'StrippingBu2LLK_mmLine' ] , 'Dielectron' : [ 'StrippingBu2LLK_eeLine' ]  } 
     }
 
 # B2MuMuMuMuLines
@@ -368,7 +364,7 @@ B2XGamma = {
 Bd2eeKstar = {
     'BUILDERTYPE'             : 'Bd2eeKstarConf',
     'CONFIG'                  : {
-        'LinePrescale'            :    1.   ,
+    'LinePrescale'            :    1.   ,
     'LinePostscale'           :    1.   ,
     #
     'ElectronPT'              :  350.   ,  # MeV
@@ -408,7 +404,7 @@ Bd2eeKstar = {
     'BFDCHI2'                 :    9.   , 
     'BDIRA'                   :    0.999, 
     'BIP'                     :    0.05 ,  # mm
-    'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)"
+    'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
     },
     'WGs'    : [ 'RD' ],
     'STREAMS' : [ 'Dielectron' ]
@@ -421,7 +417,7 @@ Bd2eeKstar = {
 Bd2JpsieeKstar = {
     'BUILDERTYPE' : 'Bd2JpsieeKstarConf',
     'CONFIG'      : {
-        'LinePrescale'            :    1.   ,
+    'LinePrescale'            :    1.   ,
     'LinePostscale'           :    1.   ,
     #
     'ElectronPT'              :  350.   ,  # MeV
@@ -461,7 +457,7 @@ Bd2JpsieeKstar = {
     'BFDCHI2'                 :    9.   , 
     'BDIRA'                   :    0.999, 
     'BIP'                     :    0.05 ,  # mm
-    'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)"
+    'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Dielectron' ] 
@@ -474,30 +470,29 @@ Bd2JpsieeKstar = {
 Bs2MuMuLines = {
     'BUILDERTYPE' : 'Bs2MuMuLinesConf',
     'CONFIG'      : {
-        'DefaultLinePrescale'    : 1,
-        'DefaultLinePostscale'   : 1,
-        'Bs2mmWideLinePrescale'  : 1,
-        'Bs2mmWideLinePostscale'  : 1,
-        'LooseLinePrescale'      : 0.02,
-        'LooseLinePostscale'     : 1,
-        'BuPrescale'    : 1,
-        'BuPostscale'   : 1,
-        'BsPrescale'    : 1,
-        'BsPostscale'   : 1,
-        'BdPrescale'    : 1,
-        'BdPostscale'   : 1,
-        'JPsiLinePrescale'       : 1,
-        'JPsiLinePostscale'      : 1,
-        'JPsiLooseLinePrescale'  : 0.1,
-        'JPsiLooseLinePostscale' : 1,
-        'JPsiPromptLinePrescale' : 0.005,
-        'JPsiPromptLinePostscale': 1,
-        
-        'MuIPChi2_loose'        :  9,
-        'MuTrChi2_loose'        : 10,
-        'BIPChi2_loose'         : 64,
-        'BFDChi2_loose'         : 100
-        },
+    'DefaultLinePrescale'    : 1,
+    'DefaultLinePostscale'   : 1,
+    'Bs2mmWideLinePrescale'  : 1,
+    'Bs2mmWideLinePostscale'  : 1,
+    'LooseLinePrescale'      : 0.02,
+    'LooseLinePostscale'     : 1,
+    'BuPrescale'    : 1,
+    'BuPostscale'   : 1,
+    'BsPrescale'    : 1,
+    'BsPostscale'   : 1,
+    'BdPrescale'    : 1,
+    'BdPostscale'   : 1,
+    'JPsiLinePrescale'       : 1,
+    'JPsiLinePostscale'      : 1,
+    'JPsiLooseLinePrescale'  : 0.1,
+    'JPsiLooseLinePostscale' : 1,
+    'JPsiPromptLinePrescale' : 0.005,
+    'JPsiPromptLinePostscale': 1,
+    'MuIPChi2_loose'        :  9,
+    'MuTrChi2_loose'        : 10,
+    'BIPChi2_loose'         : 64,
+    'BFDChi2_loose'         : 100
+    },
     'WGs'    : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
     }
@@ -507,67 +502,64 @@ Bs2MuMuLines = {
 B2XTau = { 
     'BUILDERTYPE' : 'B2XTauConf',
     'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Bhadron' ],
-    'CONFIG' :    { 'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
-                    'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
-                    'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
-                    'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
-                    #
-                    'PT_MU'                         : '800',  # MeV
-                    'P_MU'                          : '6000', # MeV 
-                    'IPCHI2_MU'                     : '16',    # MeV   
-                    #
-                    'PT_B_TT'                       : '5000', # MeV
-                    'PT_B_TT_HIGH'                  : '10000', # MeV 
-                    'PT_B_TM'                       : '2000', # MeV
-                    'PT_B_TM_HIGH'                  : '7500', # MeV  
-                    'VCHI2_B'                       : '100',  # dimensionless
-                    'FDCHI2_B'                      : '144',  # dimensionless
-                    'DIRA_B'                        : '0.99', # dimensionless
-                    'MASS_LOW_B'                    : '2000', # MeV  
-                    'MASS_HIGH_B'                   : '5750', # MeV
-                    'MCOR_LOW_B'                    : '4000', # MeV
-                    'MCOR_HIGH_B'                   : '7000', # MeV
-                    'MIPCHI2_B'                     : '150',  # dimensionless 
-                    'MIPCHI2_B_HIGH'                : '36',   # dimensionless  
-                    #
-                    'PT_TAU'                        : '1500', # MeV
-                    'VCHI2_TAU'                     : '20',   # dimensionless
-                    'IPCHI2_TAU'                    : '9',    # dimensionless
-                    'FDCHI2_TAU'                    : '144',  # dimensionless
-                    'MASS_LOW_TAU'                  : '700',  # MeV
-                    'MASS_HIGH_TAU'                 : '1800', # MeV
-                    #
-                    'PT_B_CHILD_BEST'               : '1800', # MeV
-                    'P_B_CHILD_BEST'                : '10000',# MeV
-                    'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
-                    'PT_B_TAU_CHILD_BEST'           : '3000', # MeV
-                    'IPCHI2_B_TAU_CHILD_BEST'       : '16',   # dimensionless
-
-                    'MASS_LOW_D'                    : '1800', # MeV
-                    'MASS_HIGH_D'                   : '2030', # MeV  
-                    #
-                    'B2TauTau_TOSLinePrescale'          : 1,
-                    'B2TauTau_TOSLinePostscale'         : 1,
-                    'B2DD_TOSLinePrescale'              : 1,
-                    'B2DD_TOSLinePostscale'             : 1,
-                    'B2TauMu_TOSLinePrescale'           : 1,
-                    'B2TauMu_TOSLinePostscale'          : 1,
-                    'B2DMu_TOSLinePrescale'             : 0.2,
-                    'B2DMu_TOSLinePostscale'            : 1,
-                    'B2TauTau_TISLinePrescale'          : 1,
-                    'B2TauTau_TISLinePostscale'         : 1,
-                    'B2DD_TISLinePrescale'              : 1,
-                    'B2DD_TISLinePostscale'             : 1,
-                    'B2TauMu_TISLinePrescale'           : 1,
-                    'B2TauMu_TISLinePostscale'          : 1,
-                    'B2DMu_TISLinePrescale'             : 0.2,
-                    'B2DMu_TISLinePostscale'            : 1.
+    'STREAMS' : [ 'Semileptonic' ],
+    'CONFIG' :    {
+       'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
+    'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
+    'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
+    'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
+    #
+    'PT_MU'                         : '500',  # MeV
+    'P_MU'                          : '6000', # MeV 
+    'IPCHI2_MU'                     : '9',    # MeV   
+    #
+    'PT_B_TT'                       : '5000', # MeV
+    'PT_B_TM'                       : '2000', # MeV
+    'VCHI2_B'                       : '100',  # dimensionless
+    'FDCHI2_B'                      : '144',  # dimensionless
+    'DIRA_B'                        : '0.99', # dimensionless
+    'MASS_LOW_B'                    : '2000', # MeV  
+    'MASS_HIGH_B'                   : '6000', # MeV
+    'MCOR_LOW_B'                    : '4000', # MeV
+    'MCOR_HIGH_B'                   : '7000', # MeV
+    'MIPCHI2_B'                     : '150',  # dimensionless 
+    #
+    'PT_TAU'                        : '1500', # MeV
+    'VCHI2_TAU'                     : '20',   # dimensionless
+    'IPCHI2_TAU'                    : '9',    # dimensionless
+    'FDCHI2_TAU'                    : '144',  # dimensionless
+    'MASS_LOW_TAU'                  : '800',  # MeV
+    'MASS_HIGH_TAU'                 : '1700', # MeV
+    #
+    'PT_B_CHILD_BEST'               : '1800', # MeV
+    'P_B_CHILD_BEST'                : '10000',# MeV
+    'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
+    'PT_B_TAU_CHILD_BEST'           : '3000', # MeV
+    'IPCHI2_B_TAU_CHILD_BEST'       : '16',   # dimensionless
+    #
+    'MASS_LOW_D'                    : '1800', # MeV
+    'MASS_HIGH_D'                   : '2050', # MeV  
+    #
+    'B2TauTau_TOSLinePrescale'          : 1,
+    'B2TauTau_TOSLinePostscale'         : 1,
+    'B2DD_TOSLinePrescale'              : 1,
+    'B2DD_TOSLinePostscale'             : 1,
+    'B2TauMu_TOSLinePrescale'           : 1,
+    'B2TauMu_TOSLinePostscale'          : 1,
+    'B2DMu_TOSLinePrescale'             : 0.2,
+    'B2DMu_TOSLinePostscale'            : 1,
+    'B2TauTau_TISLinePrescale'          : 1,
+    'B2TauTau_TISLinePostscale'         : 1,
+    'B2DD_TISLinePrescale'              : 1,
+    'B2DD_TISLinePostscale'             : 1,
+    'B2TauMu_TISLinePrescale'           : 1,
+    'B2TauMu_TISLinePostscale'          : 1,
+    'B2DMu_TISLinePrescale'             : 1,
+    'B2DMu_TISLinePostscale'            : 1 }
     }
-    }
-
 
 # Diego + Xabier
+
 KS02MuMu = {
     'BUILDERTYPE' : 'K0s2MuMuLinesConf',
     'WGs' : [ 'RD' ],
@@ -578,14 +570,80 @@ KS02MuMu = {
     'K0s2mmLinePrescale'  : 1,
     'K0s2mmLinePostscale'  : 1
     }
+}
+
+
+B2XTau = {
+    'BUILDERTYPE' : 'B2XTauConf',
+    'STREAMS' : ['Bhadron'],
+    'WGs'    : ['RD'] ,
+    'CONFIG' : {
+    'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
+    'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
+    'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
+    'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
+    #
+    'PT_MU'                         : '800',  # MeV
+    'P_MU'                          : '6000', # MeV 
+    'IPCHI2_MU'                     : '16',    # MeV   
+    #
+    'PT_B_TT'                       : '5000', # MeV
+    'PT_B_TT_HIGH'                  : '10000', # MeV 
+    'PT_B_TM'                       : '2000', # MeV
+    'PT_B_TM_HIGH'                  : '7500', # MeV  
+    'VCHI2_B'                       : '100',  # dimensionless
+    'FDCHI2_B'                      : '144',  # dimensionless
+    'DIRA_B'                        : '0.99', # dimensionless
+    'MASS_LOW_B'                    : '2000', # MeV  
+    'MASS_HIGH_B'                   : '5750', # MeV
+    'MCOR_LOW_B'                    : '4000', # MeV
+    'MCOR_HIGH_B'                   : '7000', # MeV
+    'MIPCHI2_B'                     : '150',  # dimensionless 
+    'MIPCHI2_B_HIGH'                : '36',   # dimensionless  
+    #
+    'PT_TAU'                        : '1500', # MeV
+    'VCHI2_TAU'                     : '20',   # dimensionless
+    'IPCHI2_TAU'                    : '9',    # dimensionless
+    'FDCHI2_TAU'                    : '144',  # dimensionless
+    'MASS_LOW_TAU'                  : '700',  # MeV
+    'MASS_HIGH_TAU'                 : '1800', # MeV
+    #
+    'PT_B_CHILD_BEST'               : '1800', # MeV
+    'P_B_CHILD_BEST'                : '10000',# MeV
+    'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
+    'PT_B_TAU_CHILD_BEST'           : '3000', # MeV
+    'IPCHI2_B_TAU_CHILD_BEST'       : '16',   # dimensionless
+    #
+    'MASS_LOW_D'                    : '1800', # MeV
+    'MASS_HIGH_D'                   : '2030', # MeV  
+    #
+    'B2TauTau_TOSLinePrescale'          : 1,
+    'B2TauTau_TOSLinePostscale'         : 1,
+    'B2DD_TOSLinePrescale'              : 1,
+    'B2DD_TOSLinePostscale'             : 1,
+    'B2TauMu_TOSLinePrescale'           : 1,
+    'B2TauMu_TOSLinePostscale'          : 1,
+    'B2DMu_TOSLinePrescale'             : 0.2,
+    'B2DMu_TOSLinePostscale'            : 1,
+    'B2TauTau_TISLinePrescale'          : 1,
+    'B2TauTau_TISLinePostscale'         : 1,
+    'B2DD_TISLinePrescale'              : 1,
+    'B2DD_TISLinePostscale'             : 1,
+    'B2TauMu_TISLinePrescale'           : 1,
+    'B2TauMu_TISLinePostscale'          : 1,
+    'B2DMu_TISLinePrescale'             : 0.2,
+    'B2DMu_TISLinePostscale'            : 1.
+    }
     }
 
-
-Tau2PMuMu = {
+Tau2PMuMu = { 
     'BUILDERTYPE' : 'StrippingTau2PMuMuConf',
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS'     : ['Dimuon'],
+    'WGs' : [ 'RD' ] ,
     'CONFIG' : {
+    #
+    # Selection of basic muons and protons 
+    #
     'GoodMuons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 ) & ( PIDmu > -5 ) & ( (PIDmu - PIDK) > 0 )" ,
     'GoodProtons' : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 )" ,
     #
@@ -602,5 +660,34 @@ Tau2PMuMu = {
     "from GaudiKernel.PhysicalConstants import c_light" ,
     "ctau = BPVLTIME ( ) * c_light "  
     ]
+    #
     }
     }
+
+Tau23Mu = {
+    'BUILDERTYPE' : 'Tau23MuLinesConf',
+    'STREAMS'     : ['Dimuon'],
+    'WGs'         : ['RD'],
+    'CONFIG'      : {
+    'TauPrescale'         :1,
+    'TauPostscale'        :1,
+    'Ds23PiTISPrescale'   :0.02,
+    'Ds23PiTISPostscale'  :1,
+    'Ds23PiPrescale'      :0.01,
+    'Ds23PiPostscale'     :1,
+    'Ds2PhiPiPrescale'    :1,
+    'Ds2PhiPiPostscale'   :1,        
+    }
+    }
+
+VeryDetachedJpsi = {
+    'BUILDERTYPE'  : 'VDetJPsiLinesConf',
+    'STREAMS'      : ['Dimuon'],
+    'WGs'          : ['RD'],
+    'CONFIG'       : {
+    'VDetJPsiLinePrescale'    : 1,
+    'VDetJPsiLinePostscale'   : 1,
+    }
+    }
+
+

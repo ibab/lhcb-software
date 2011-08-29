@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-29 - T Blake
+ - Updated LineConfigDictionaries_RDWG.py (and dbase)
+
 ! 2011-08-29 - Jibo He
  - LineConfigDictionaries_GTWG.py
    . Included Beauty2Charm
