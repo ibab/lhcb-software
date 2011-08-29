@@ -1004,12 +1004,13 @@ StatusCode MuonIDAlg::execute() {
   LHCb::RecHeader* header=NULL;
   long evt=-1;
   long run=-1;
-  if ( exist<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default)){
-    header = get<LHCb::RecHeader>( LHCb::RecHeaderLocation::Default );
+  if ( msgLevel(MSG::DEBUG) && exist<LHCb::RecHeader>
+       (LHCb::RecHeaderLocation::Default)) {
+    header = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);
     evt = header->evtNumber();
     run = header->runNumber();
-  } else warning() << "No RecHeader" << endmsg;
-  if (msgLevel(MSG::DEBUG)) debug() << "Run " << run << " Event " << evt << endmsg;
+    debug() << "Run " << run << " Event " << evt << endmsg;
+  }
   m_nmu = 0;
 
   //XCV: if kalman foi, this will be done by SmartMuonMeasProvider

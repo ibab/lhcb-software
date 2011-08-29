@@ -2,6 +2,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-08-29 - Roel Aaij
+ - Only look for RecHeader when the MSG level is DEBUG and never warn about
+   it's absence.
+
 ! 2011-08-26 J. Helder Lopes
  - Implemented IsMuonTight, which is IsMuon requiring hits with x,y crossing.
    Option UseUncrossed does not affect IsMuonLoose or IsMuon or IsMuonTight anymore.
