@@ -5,6 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================= CaloReco v5r12 2011-08-29 =========================
 ! 2011-08-27 - Olivier Deschamps
 	- fix tracks list reset in CaloProcessor.XXSequence when called from CaloLines
 	- python/Configuration.py : remove dependency on GlobalRecoConf (was producing loop in configurable).
