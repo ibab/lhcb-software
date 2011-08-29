@@ -43,6 +43,10 @@ if [[ ${PARTNAME} == "LHCb" ]]
    then 
       . ./setupOnline.sh 
       exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
+   elif [[ ${PARTNAME} == "FEST" ]]
+   then
+      . ./setupOnline.sh 
+      exec -a ${UTGID} ${CLASS1_TASK} -options=../options/pooper.opts &
    else 
       source /group/online/dataflow/cmtuser/Online/MyOnline/cmt/setup.x86_64-slc5-gcc43-dbg.vars
       export LOGFIFO=/tmp/logGaudi.fifo
