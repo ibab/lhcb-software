@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r4 2011-08-29 =========================
 ! 2011-08-10 - Patrick Koppenburg
  - New interface IRateFromTCK to allow doing the non-lumi tasks
    from IGetLumiParameters. Task #21133
