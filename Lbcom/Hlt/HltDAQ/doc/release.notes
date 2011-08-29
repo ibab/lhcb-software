@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-08-29 - Eric v. Herwijnen
+ - Use htitle for rate counters.
+
 ! 2011-08-26 - Alexander Mazurov
  - Update of parser function in PropertyConfigSvc. This version works only with
    Gaudi version > v22r2 (where the new parser model is provided)

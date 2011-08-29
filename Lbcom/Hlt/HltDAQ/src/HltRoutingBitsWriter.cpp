@@ -47,8 +47,8 @@ StatusCode HltRoutingBitsWriter::decode() {
                 if (sc.isFailure()) return sc;
                 m_odin_evaluators[i->first].predicate = cut.clone();
                 m_odin_evaluators[i->first].counter   = &counter(title);
-                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
-                        *m_odin_evaluators[i->first].counter,title);
+                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% htitle ),
+                        *m_odin_evaluators[i->first].counter,htitle);
                 m_odin_evaluators[i->first].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else if (i->first<32) {
                 LoKi::Types::L0_Cut cut( LoKi::BasicFunctors<const LHCb::L0DUReport*>::BooleanConstant( false ) );
@@ -56,8 +56,8 @@ StatusCode HltRoutingBitsWriter::decode() {
                 if (sc.isFailure()) return sc;
                 m_l0_evaluators[i->first-8].predicate = cut.clone();
                 m_l0_evaluators[i->first-8].counter   = &counter(title);
-                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
-                        *m_l0_evaluators[i->first-8].counter,title);
+                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% htitle ),
+                        *m_l0_evaluators[i->first-8].counter,htitle);
                 m_l0_evaluators[i->first-8].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             } else {
                 LoKi::Types::HLT_Cut cut( LoKi::BasicFunctors<const LHCb::HltDecReports*>::BooleanConstant( false ) );
@@ -65,8 +65,8 @@ StatusCode HltRoutingBitsWriter::decode() {
                 if (sc.isFailure()) return sc;
                 m_hlt_evaluators[i->first-32].predicate = cut.clone();
                 m_hlt_evaluators[i->first-32].counter   = &counter(title);
-                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
-                        *m_hlt_evaluators[i->first-32].counter,title);
+                declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% htitle ),
+                        *m_hlt_evaluators[i->first-32].counter,htitle);
                 m_hlt_evaluators[i->first-32].hist   = book1D(htitle,0,nBins*m_binWidth,nBins); //TODO: set AxisLabels
             }
 
