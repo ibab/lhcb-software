@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-29 - S. Blusk
+ - python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
+   Use "MeV" instead of "Mev"
+
 ! 2011-08-29 - Anton Poluektov 
  - python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
    . Modify minimum DD mass for B0->DD to 4600 MeV
