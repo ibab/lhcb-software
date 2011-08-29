@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r42 2011-08-29 =========================
 ! 2011-08-10 - Patrick Koppenburg
  - Task #21133:
 	 . New Tool RateFromTCK forking out the not lumi-specific actions from
