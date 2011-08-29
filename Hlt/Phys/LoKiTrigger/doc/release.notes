@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v12r4 2011-08-29 ===================
 ! 2011-07-20 - Vanya Belyaev
 
  - move BeamLineFunctions.h into Phys/LoKiPhys
