@@ -262,5 +262,6 @@ HltANNSvc().InfoID = {
     "IsMuonTool"                                 : 6401,
     'Hlt2Topo2BodyBBDTResponse'                  : 6502,
     'Hlt2Topo3BodyBBDTResponse'                  : 6303,
-    'Hlt2Topo4BodyBBDTResponse'                  : 6304
+    'Hlt2Topo4BodyBBDTResponse'                  : 6304,
+    'Hlt::MatchVeloL0Calo/VeloL0Calo'            : 6600
 }

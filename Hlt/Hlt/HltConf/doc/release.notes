@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v9r11 2011-08-29 ==========================
+! 2011-08-29 - Roel Aaij
+ - Add selection id for Hlt1L0CaloCandidates.
+
 ! 2011-08-10 - Gerhard Raven
  - remove Hlt2Lumi from bit 77.
 
