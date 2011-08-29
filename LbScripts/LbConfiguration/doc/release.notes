@@ -1,3 +1,9 @@
+2011-08-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the "-w" option in order to do partial selection of the CMTCONFIG. For
+	example "LbLogin -w i686" will select the best i686 CMTCONFIG for the platform. The order of selection is
+	defined in LbConfiguration.Platform.
+
 2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r4p1

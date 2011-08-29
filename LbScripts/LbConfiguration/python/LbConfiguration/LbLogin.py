@@ -138,6 +138,10 @@ class LbLoginScript(SourceScript):
                           dest="cmtconfig",
                           help="set CMTCONFIG.",
                           fallback_env="CMTCONFIG")
+        parser.set_defaults(wcmtconfig=None)
+        parser.add_option("-w", "--wildcard-cmtconfig",
+                          dest="wcmtconfig",
+                          help="choose the first CMTCONFIG that match the string in the list of supported ones")
         parser.set_defaults(userarea=None)
         parser.add_option("-u", "--userarea",
                           dest="userarea",
@@ -727,48 +731,75 @@ class LbLoginScript(SourceScript):
             log.debug("Selected gcc 4.3 @ %s" % selected_compilers[0])
         return selected_compilers
 
-    def getTargetPlatformComponents(self):
-        platform = None
-        binary = None
-        compdef = None
-        opts = self.options
-        if opts.cmtconfig :
-            platform = getPlatformType(opts.cmtconfig)
-            binary = getArchitecture(opts.cmtconfig)
-            compdef = getCompiler(opts.cmtconfig)
-        return binary, platform, compdef
 
+    def getWildCardCMTConfig(self, wildcard=None, debug=False):
+        """
+        returns the best matched CMTCONFIG for the wilcard string
+        @param wildcard: text to be look for in the CMTCONFIG
+        @type wildcard: string
+        @param debug: if the searched list includes also the dbg CMTCONFIG
+        @type debug: boolean
+        """
+        opts = self.options
+        log = logging.getLogger()
+        theconf = None
+        supported_configs = self._nativemachine.CMTSupportedConfig(debug=debug)
+        if opts.cmtsite == "CERN" :
+            # every platform with a descent python at CERN
+            supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
+        else :
+            # restriction on supported CONFIG for LOCAL use
+            supconf = supported_configs
+
+        if wildcard :
+            log.debug("Looking for %s in the list of selected CMTCONFIGs." % wildcard)
+            supconf = [ c for c in supconf if wildcard in c ]
+
+        if supconf :
+            theconf = supconf[0]
+            if theconf not in supported_configs :
+                log.warning("%s is not in the list of distributed configurations" % theconf)
+                if supported_configs :
+                    log.warning("Please switch to a supported one with 'LbLogin -c' before building")
+                    log.warning("Supported configs: %s" % ", ".join(supported_configs))
+
+        return theconf
 
     def setCMTConfig(self, debug=False):
         ev = self.Environment()
         opts = self.options
         log = logging.getLogger()
-        if opts.cmtconfig :
-            theconf = opts.cmtconfig
-            self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
-            opts.use_nocache = False
-            if isBinaryDbg(opts.cmtconfig) :
-                debug = True
+        self.binary = None
+        self.platform = None
+        self.compdef = None
+        if not opts.wcmtconfig :
+            if opts.cmtconfig :
+                log.debug("Using provided CMTCONFIG %s" % opts.cmtconfig)
+                theconf = opts.cmtconfig
+                opts.use_nocache = False
+            else :
+                log.debug("Guessing CMTCONFIG")
+                theconf = self.getWildCardCMTConfig(debug=debug)
+                if not theconf :
+                    log.debug("Falling back on the native CMTCONFIG")
+                    theconf = self._nativemachine.CMTNativeConfig(debug=debug)
         else :
-            supported_configs = self._nativemachine.CMTSupportedConfig(debug=debug)
-            if opts.cmtsite == "CERN" :
-                # every platform with a descent python at CERN
-                supconf = self._nativemachine.CMTCompatibleConfig(debug=debug)
-            else :
-                # restriction on supported CONFIG for LOCAL use
-                supconf = supported_configs
-            if supconf :
-                theconf = supconf[0]
-                if theconf not in supported_configs :
-                    log.warning("%s is not in the list of distributed configurations" % theconf)
-                    if supported_configs :
-                        log.warning("Please switch to a supported one with 'LbLogin -c' before building")
-                        log.warning("Supported configs: %s" % ", ".join(supported_configs))
-            else :
-                theconf = self._nativemachine.CMTNativeConfig(debug=debug)
+            theconf = self.getWildCardCMTConfig(wildcard=opts.wcmtconfig, debug=True)
+            if not theconf :
+                if opts.cmtconfig :
+                    log.debug("Falling back on the previous CMTCONFIG")
+                    theconf = opts.cmtconfig
+                else :
+                    log.debug("Falling back on the native CMTCONFIG")
+                    theconf = self._nativemachine.CMTNativeConfig(debug=debug)
+
+        if theconf :
+            if isBinaryDbg(theconf) :
+                debug = True
             self.binary = getArchitecture(theconf)
             self.platform = getPlatformType(theconf)
             self.compdef = getCompiler(theconf)
+            opts.cmtconfig = theconf
 
 
         ev["PYTHON_BINOFFSET"] = os.sep + "bin"
@@ -777,7 +808,7 @@ class LbLoginScript(SourceScript):
             ev["PYTHON_BINOFFSET"] = ""
 
 
-        if isBinaryDbg(theconf) :
+        if debug :
             ev["CMTOPT"] = getBinaryOpt(theconf)
             ev["CMTDEB"] = theconf
         else :
