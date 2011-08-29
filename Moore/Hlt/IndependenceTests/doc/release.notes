@@ -1,7 +1,8 @@
 Package     : Hlt/IndepenceTests
 Package Coordinator : Eric van Herwijnen
-Purpose     : HLT application to rest indepence of Hlt lines
+Purpose     : HLT application to test indepence of Hlt lines
 
+==================== IndependenceTests v1r1  2011-08-29 ======================
 ! 2011-08-27 - Roel Aaij
  - Move everything in WriteMismatches subdirectory into main directory.
  - Adjust scripts and find_mismatches to changes.
