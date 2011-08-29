@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-08-29 - Mariusz Witek
+ - introduce new StandardPV configuration to include radial cut for primary
+   vertices. See http://savannah.cern.ch/task/?19768. 
+
 !========================= RecConf v2r2 2011-07-27 =========================
 ! 2011-07-19 - Chris Jones
  - propagate "Simulation" flag to RichRecQCConf Configurable.

@@ -85,11 +85,13 @@ class RecSysConf(LHCbConfigurableUser):
             if "2009" == self.getProp("DataType"):
                 from PatPV import PVConf 
                 PVConf.VLoosePV().configureAlg()
-            else:     
-                if ( "veloOpen" in self.getProp("SpecialData") or
-                     "microBiasTrigger" in self.getProp("SpecialData") ):
-                    from PatPV import PVConf
-                    PVConf.LoosePV().configureAlg()
+            elif ( "veloOpen" in self.getProp("SpecialData") or
+                    "microBiasTrigger" in self.getProp("SpecialData") ):
+                from PatPV import PVConf
+                PVConf.LoosePV().configureAlg()
+            else:
+                from PatPV import PVConf
+                PVConf.StandardPV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
             if self.getProp( "OutputType" ).upper() == "RDST":
                 # Velo tracks not copied to Rec/Track/Best for RDST 
