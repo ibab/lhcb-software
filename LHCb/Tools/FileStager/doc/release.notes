@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r2 2011-08-30 =========================
 ! 2011-08-05 - Roel Aaij
  - Add some ifdef to allow compilation on Windows. The FileStager is _not_
    meant to work, but at least it compiles.
