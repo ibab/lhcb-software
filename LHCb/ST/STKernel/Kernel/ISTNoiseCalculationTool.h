@@ -94,6 +94,12 @@ namespace ST {
     virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
       const = 0;
 
+    /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
+    virtual std::vector<bool>::const_iterator stripStatusBegin( const unsigned int TELL1SourceID ) const = 0;
+
+    /// Return an iterator corresponding to the status of the last channel for a given TELL1 source ID
+    virtual std::vector<bool>::const_iterator stripStatusEnd( const unsigned int TELL1SourceID ) const = 0;
+
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
     virtual int followPeriod() const = 0;
 

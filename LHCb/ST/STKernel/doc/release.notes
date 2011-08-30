@@ -3,7 +3,11 @@
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2011-08-30 Mark Tobin
+ - Add method to noise calculation tool to check strip status.
+
 !========================= STKernel v2r6 2011-08-30 =========================
+
 ! 2011-08-09 Mark Tobin
  - Fix so that dictionary generated properly for DectectorPlot classes.
 
