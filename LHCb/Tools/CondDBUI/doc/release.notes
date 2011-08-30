@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r11 2011-08-30 =========================
 ! 2011-08-19 - Illya Shapoval
  - 'CondDBUI/Browser/MainWindow.py':
    + Fixed deprecation warning as of python 2.6 on obsolete 'BaseException.message'.
