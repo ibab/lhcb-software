@@ -407,7 +407,7 @@ Bd2eeKstar = {
     'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
     },
     'WGs'    : [ 'RD' ],
-    'STREAMS' : [ 'Dielectron' ]
+    'STREAMS' : [ 'Radiative' ]
     }
 
 
@@ -460,7 +460,7 @@ Bd2JpsieeKstar = {
     'SumIPSCut'               : " & (SUMTREE(((ABSID=='K+') | (ABSID=='pi-') | (ID=='e+') | (ID=='e-')),sqrt(BPVIPCHI2()))>15)" 
     },
     'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Dielectron' ] 
+    'STREAMS' : [ 'Radiative' ] 
     }
 
 

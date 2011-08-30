@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-30 - Jibo He
+ - Moved all lines in "Dielectron" stream to "Radiative" stream
+ - Updated LineConfigDictionaries_PSWG
+
 ! 2011-08-29 - T Blake
  - Updated LineConfigDictionaries_RDWG.py (and dbase)
 

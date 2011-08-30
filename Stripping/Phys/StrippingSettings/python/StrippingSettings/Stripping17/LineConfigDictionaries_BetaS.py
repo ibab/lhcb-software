@@ -169,7 +169,7 @@ BetaSBs2JpsieePhi = {
                , 'BsMassMax'             :  6000.    # MeV
                , 'BsDIRA'                :     0.99  # adimensional
                },
-    'STREAMS' : [ 'Dielectron' ]
+    'STREAMS' : [ 'Radiative' ]
     }
 
 # Quasi two-body (Fred Blanc)
