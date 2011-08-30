@@ -273,6 +273,8 @@ StatusCode AdderSvc::start()
 
 StatusCode AdderSvc::stop()
 {
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::INFO << "AdderSvc Stop called" << endreq;
   IGauchoMonitorSvc* psvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   if (psvc) psvc->resetHistos(this);
 
@@ -286,6 +288,8 @@ StatusCode AdderSvc::stop()
 
 StatusCode AdderSvc::finalize()
 {
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::INFO << "AdderSvc finalize called" << endreq;
   m_arrhist = 0;
   if ( m_pMonitorSvc )
   {
