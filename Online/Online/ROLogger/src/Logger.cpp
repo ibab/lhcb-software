@@ -63,9 +63,9 @@ int Logger::connectMessages(bool con, const string& name) {
 }
 
 /// Connect to messages of a given source
-int Logger::connectMessages(const vector<string>& names) {
+int Logger::connectMessages(const vector<string>& names, const string& title) {
   stringstream s;
-  s << "Messages:";
+  s << title << ":";
   for(vector<string>::const_iterator i=names.begin();i!=names.end();++i)
     s << *i << ends;
   s << ends;
@@ -132,8 +132,12 @@ void Logger::handle(const Event& ev) {
     return;
   }
   case CMD_UPDATE_FARMS:
-    connectMessages(*data.vec);
+    connectMessages(*data.vec,"Messages");
     delete data.vec;
+    return;
+  case CMD_SET_PARTITION:
+    sendData("O:"+*data.str);
+    delete data.str;
     return;
   default:
     break;

@@ -88,6 +88,7 @@ namespace ROLogger {
     CMD_EXECUTE = 25000,
     
     CMD_UPDATE_RUNNUMBER,
+    CMD_SET_PARTITION,
 
     CMD_LAST
   };

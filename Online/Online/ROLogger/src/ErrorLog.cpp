@@ -122,6 +122,7 @@ void ErrorLog::handle(const Event& ev) {
     case CMD_UPDATE_NODES:              // From PartitionListener
     case CMD_UPDATE_FARMS:              // From PartitionListener
     case CMD_UPDATE_RUNNUMBER:          // From PartitionListener
+    case CMD_SET_PARTITION:             // From PartitionListener
       ioc.send(m_partDisplay,ev.type,ev.data);
       return;
     case CMD_DELETE:

@@ -127,8 +127,10 @@ void PartitionDisplay::updateFarms() {
     ::upic_delete_command(m_id,(*i).first);
   m_items.clear();
   for(Farms::const_iterator f=m_farms.begin(); f!=m_farms.end(); ++f) {
-    ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(*f,true).c_str(), "");
-    m_items[nf] = make_pair(true,(*f));
+    if ( (*f).find("/pvssconfig") == string::npos ) {
+      ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(*f,true).c_str(), "");
+      m_items[nf] = make_pair(true,(*f));
+    }
   }
   if ( !m_storage.empty() ) {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_storage,true).c_str(), "");
@@ -148,6 +150,7 @@ void PartitionDisplay::updateFarms() {
 
 void PartitionDisplay::handle(const Event& ev) {
   typedef vector<string> _SV;
+
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {
@@ -173,6 +176,11 @@ void PartitionDisplay::handle(const Event& ev) {
         ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
         ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
       }
+      return;
+    case CMD_SET_PARTITION:
+      ioc.send(m_msg,CMD_SET_PARTITION,new string(*data.str));
+      ioc.send(m_history,CMD_SET_PARTITION,new string(*data.str));
+      delete data.str;
       return;
     case CMD_UPDATE_NODES:
       m_nodes = *(Nodes*)ev.data;

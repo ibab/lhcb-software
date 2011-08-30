@@ -50,7 +50,7 @@ namespace ROLogger {
     void shutdown();
 
     /// Connect to messages of a given source
-    int connectMessages(const std::vector<std::string>& name);
+    int connectMessages(const std::vector<std::string>& name, const std::string& title);
     /// Connect to messages of a given source
     int connectMessages(bool con, const std::string& name);
     /// Connect to processing cluster of a given name

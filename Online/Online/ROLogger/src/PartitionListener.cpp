@@ -147,6 +147,13 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     f->push_back(fmcLogger("HLT01",h->m_facility));
     f->push_back(fmcLogger("CALD07",h->m_facility));
   }
+  if ( h->name() == "LHCb" || h->name() == "FEST" ) {
+    f->push_back(fmcLogger("MONA09","pvssconfig"));
+  }
+  f->push_back(fmcLogger("MONA08","pvssconfig"));
+  f->push_back(fmcLogger("HLT01","pvssconfig"));
+  f->push_back(fmcLogger("STORECTL01","pvssconfig"));
+  IocSensor::instance().send(h->m_parent,CMD_SET_PARTITION,new string(h->name()));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 

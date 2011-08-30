@@ -85,6 +85,8 @@ namespace ROLogger {
     std::string       m_monitoring;
     /// Reconstruction slice name
     std::string       m_reconstruction;
+    /// Partition name
+    std::string       m_partition;
     /// Message counter by type
     std::vector<int>  m_numMsg;
     /// Currently known run number
@@ -128,12 +130,14 @@ namespace ROLogger {
     /// Execute command from message
     void execute(const std::string& cmd);
 
+    /// Set partition name to filter PVSS names
+    void setPartition(const std::string& partition);
     /// Set message severity level for display
     void setMessageSeverity(const std::string& severity);
     /// Print header information before starting output
-    void printHeader(const std::string& title);
+    void printHeader(const std::string& title, bool with_guards=true);
     /// Print multi-line header information before starting output
-    void printHeader(const std::vector<std::string>& titles);
+    void printHeader(const std::vector<std::string>& titles, bool with_guards=true);
     /// Retrieve message severity from DIM logger message
     int msgSeverity(const char* msg);
     /// Cleanup service stack

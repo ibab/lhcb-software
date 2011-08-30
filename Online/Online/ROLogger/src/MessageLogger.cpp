@@ -123,9 +123,10 @@ void MessageLogger::removeAllServices() {
 /// Print single message retrieved from error logger
 void MessageLogger::printMessage(const char* msg, bool crlf)  {
   int sev = MessageLine::msgSeverity(msg);
+  bool is_pvss = m_partition.length()>0 && ::strstr(msg,m_partition.c_str())!=0;
   if ( m_numMsg.empty() ) m_numMsg.resize(MessageLine::Msg_Always+1);
   ++m_numMsg[sev];
-  if ( sev >= m_severity ) {
+  if ( sev >= m_severity || is_pvss ) {
     if ( m_colors ) {
       bg_black();
       switch(sev)      {
@@ -165,9 +166,10 @@ void MessageLogger::printMessage(const char* msg, bool crlf)  {
 /// Print single message retrieved from error logger
 void MessageLogger::printAlarm(const char* msg, bool crlf)  {
   int sev = MessageLine::msgSeverity(msg);
+  bool is_pvss = m_partition.length()>0 && ::strstr(msg,m_partition.c_str())!=0;
   if ( m_numMsg.empty() ) m_numMsg.resize(MessageLine::Msg_Always+1);
   ++m_numMsg[sev];
-  if ( sev >= m_severity ) {
+  if ( sev >= m_severity || is_pvss ) {
     if ( m_colors ) {
       bg_black();
       switch(sev)      {
@@ -333,13 +335,13 @@ string MessageLogger::getSummary() {
 }
 
 /// Print header information before starting output
-void MessageLogger::printHeader(const string& title) {
+void MessageLogger::printHeader(const string& title, bool with_guards) {
   vector<string> v(1,title);
-  printHeader(v);
+  printHeader(v,with_guards);
 }
 
 /// Print multi-line header information before starting output
-void MessageLogger::printHeader(const vector<string>& titles) {
+void MessageLogger::printHeader(const vector<string>& titles, bool with_guards) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -352,8 +354,10 @@ void MessageLogger::printHeader(const vector<string>& titles) {
       ::bold();
       ::memset(buffer,' ',cols);
       buffer[cols-1] = 0; 
-      ::printf(buffer);
-      ::printf("\n");
+      if ( with_guards ) {
+	::printf(buffer);
+	::printf("\n");
+      }
       for(vector<string>::const_iterator i=titles.begin();i!=titles.end();++i) {
         const string& title = *i;
         ::memcpy(&buffer[20],title.c_str(),title.length());
@@ -362,8 +366,10 @@ void MessageLogger::printHeader(const vector<string>& titles) {
         ::memset(&buffer[20],' ',title.length());
         buffer[cols-1] = 0;
       }
-      ::printf(buffer);
-      ::printf("\n");
+      if ( with_guards ) {
+	::printf(buffer);
+	::printf("\n");
+      }
       ::normal();
       ::plain();
       ::printf("\n");
@@ -372,6 +378,11 @@ void MessageLogger::printHeader(const vector<string>& titles) {
   } 
   for(vector<string>::const_iterator i=titles.begin();i!=titles.end();++i)
     ::fprintf(m_output,"                      %s\n",(*i).c_str());
+}
+
+/// Set partition name to filter PVSS names
+void MessageLogger::setPartition(const string& part) {
+  m_partition = "PVSS("+part+")";
 }
 
 /// Set message severity level for display
@@ -483,6 +494,12 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
       h->removeAllServices();
       h->handleMessages(p+idx,p + (*size));
       return;
+    case 'O': // Set partition
+      h->setPartition(nam);
+      return;
+    case 'P': // Messages mode
+      h->handleMessages(p+idx,p + (*size));
+      return;
     case 'Q': // Wildcard Messages mode
       h->printHistory(nam);
       return;
@@ -551,6 +568,7 @@ void MessageLogger::handleMessages(const char* items, const char* end) {
         }
       }
     }
+    if ( !m_partition.empty() ) titles.push_back("Configuration match:"+m_partition);
     for(Services::iterator i=m_infos.begin();i!=m_infos.end();++i) 
       titles.push_back((*i).first);
     printHeader(titles);

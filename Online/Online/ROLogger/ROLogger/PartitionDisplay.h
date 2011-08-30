@@ -39,6 +39,7 @@ namespace ROLogger {
   protected:
     
     /// Partition definition
+    typedef std::vector<std::string>    PVSSLogs;
     typedef std::vector<std::string>    Nodes;
     typedef std::vector<std::string>    Farms;
     typedef std::map<std::string,Nodes> Clusters;
