@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!========================= Magnet v7r3 2011-08-30 =========================
 ! 2011-08-04 - Marco Cattaneo
  - Fix UNINIT_CTOR coverity defects 22922, 22923, 22924
  - Fix DEADCODE coverity defect 10628
