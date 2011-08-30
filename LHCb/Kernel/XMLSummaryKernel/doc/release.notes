@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r2 2011-08-30 =========================
 ! 2011-08-10 - Rob Lambert
  - removed .project and .pydevproject files
  - adjusted logic such that "failing" files are never considered active
