@@ -1,5 +1,5 @@
 package HltSys
-version           v13r10
+version           v13r10p1
 
 branches cmt doc
 
@@ -23,7 +23,7 @@ use HltRecChecker       v1r13   Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v12r1   Hlt   # Patrick Koppenburg
 use HltSettings         v5r15   Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v1r1    Hlt   # Tomasz Skwarnicki
-use HltTracking         v9r9p1  Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v9r9p2  Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r9p1  Hlt   # Gerhard Raven
 use LoKiTrigger         v12r4   Phys  # Vanya Belyaev
 # Declare this as a container package
