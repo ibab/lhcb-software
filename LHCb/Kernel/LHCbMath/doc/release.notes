@@ -1,29 +1,22 @@
 !-----------------------------------------------------------------------------
 ! Package     : Kernel/LHCbMath
-! Responsible : Juan Palacios
+! Responsible : Vanya Belyaev
 ! Purpose     : A collection of simple generic classes and functions
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r27 2011-08-30 =========================
 ! 2011-08-26 - Alexander Mazurov
  - Updates to ValueWithError's parser functions. This version works only with
    Gaudi version > v22r2 (where the new parser model is provided)
 
 ! 2011-08-01 - Vanya Belyaev
-
- - ValuaWithError:
-
-    fix few primitive operation:
+ - ValueWithError: fix few primitive operations:
       self-addition, self-subtraction, self-multiplication and self-division
 
-
 ! 2011-07-29 - Vanya Belyaev
-
- - Types.py
-
-   fix typo in eigenVectors evaluation
-
+ - Types.py: fix typo in eigenVectors evaluation
 
 !========================= LHCbMath v3r26 2011-07-25 =========================
 ! 2011-07-18 - Vanya Belyaev
