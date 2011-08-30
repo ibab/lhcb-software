@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r45 2011-08-30 =========================
 ! 2011-08-10 - Chris Jones
  - Move RichKernel/IHpdUkL1DisableTool.h to Panoptes project, as it is
    not used anywhere else.
