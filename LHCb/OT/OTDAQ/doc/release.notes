@@ -3,6 +3,7 @@
 ! Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v7r10p1 2011-08-30 =========================
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR warnings from Coverity
  - Replace all endreq by endmsg
