@@ -14,17 +14,21 @@
 typedef std::map<std::string, DimInfo*> TaskMap;
 typedef std::pair<std::string,DimInfo*> TaskPair;
 typedef TaskMap::iterator TaskIter;
-
-class HAdderTaskInfoHandler : public DimInfoHandler
-{
-public:
-  TaskMap m_TaskMap;
-  void infoHandler(void);
-};
 class HAdderServInfoHandler : public DimInfoHandler
 {
 public:
   void infoHandler(void);
 };
 
+class HAdderTaskInfoHandler : public DimInfoHandler
+{
+public:
+  HAdderTaskInfoHandler()
+  {
+    m_ServInfoHandler = 0;
+  }
+  HAdderServInfoHandler *m_ServInfoHandler;
+  TaskMap m_TaskMap;
+  void infoHandler(void);
+};
 #endif /* INFOHANDLERS_H_ */

@@ -113,8 +113,8 @@ void HAdderTaskInfoHandler::infoHandler(void)
         if (i == m_TaskMap.end())
         {
           servc = tname + string("/SERVICE_LIST");
-          HAdderServInfoHandler *shand = new HAdderServInfoHandler();
-          DimInfo *slist = new DimInfo(servc.c_str(), (char *) "DEAD",(DimInfoHandler*)shand);
+          if (this->m_ServInfoHandler == 0) m_ServInfoHandler = new HAdderServInfoHandler();
+          DimInfo *slist = new DimInfo(servc.c_str(), (char *) "DEAD",(DimInfoHandler*)m_ServInfoHandler);
           m_TaskMap.insert(TaskPair(tname, slist));
         }
       }
