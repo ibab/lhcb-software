@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!========================= SimComponents v2r21 2011-08-30 ====================
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR warning from Coverity
  - Protect unprotected MSG::DEBUG and MSG::VERBOSE
