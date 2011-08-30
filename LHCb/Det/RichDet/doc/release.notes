@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r6 2011-08-30 =========================
 ! 2011-08-22 - Chris Jones
  - Add DeRichRadiator::Vector to python dictionary
  - Add a new method to DeRichSystem to return the L1 logicla ID for a given
