@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r23p1 2011-08-30 ========================
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR warnings from coverity
 
