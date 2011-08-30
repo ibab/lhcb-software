@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v14r2 2011-08-30 =========================
 ! 2011-08-24 - Rob Lambert
  - Fix typo, those locations were never persisted on the DST
 
