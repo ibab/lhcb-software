@@ -4,6 +4,7 @@
 ! Purpose     : Various histogram <---> string conversion functions
 ! -----------------------------------------------------------------------------
 
+!========================= HistoStrings v1r2 2011-08-30 =========================
 ! 2011-08-26 - Alexander Mazurov
  - Update to histogram's parser functions. This version works only with
    Gaudi version > v22r2 (where the new parser model is provided)
