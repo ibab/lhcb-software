@@ -346,7 +346,7 @@ void MonitorSvc::StopUpdate()
 StatusCode MonitorSvc::finalize()
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "MonitorSvc Destructor" << endmsg;
+  msg << MSG::INFO << "MonitorSvc Finalizer" << endmsg;
 
   if ( m_incidentSvc )
   {
@@ -371,7 +371,7 @@ StatusCode MonitorSvc::finalize()
   deletePtr(m_RateMgr);
   deletePtr(m_CntrMgr);
   deletePtr(m_savetimer);
-  msg << MSG::DEBUG << "finalized successfully" << endmsg;
+  msg << MSG::INFO << "finalized successfully" << endmsg;
 
   //printf("MonitorSvc: UNLocking DIM\n");
   return Service::finalize();
