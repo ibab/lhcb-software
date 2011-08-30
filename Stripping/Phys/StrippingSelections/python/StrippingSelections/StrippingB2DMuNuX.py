@@ -13,7 +13,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions
 
 __all__ = ('B2DMuNuXAllLinesConf',
            'makeb2DMuX',
@@ -117,7 +117,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         
         self.selPionloose = Selection( "Piloosefor" + name,
                                   Algorithm = self._pionlooseFilter(),
-                                  RequiredSelections = [StdLoosePions])
+                                  RequiredSelections = [StdNoPIDsPions])
 
         self.selKaonloose = Selection( "Kloosefor" + name,
                                   Algorithm = self._kaonlooseFilter(),
