@@ -123,7 +123,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
         TaskIter i = m_TaskMap.find(tname);
         if (i != m_TaskMap.end())
         {
-          delete i->second->itsHandler;
+//          delete i->second->itsHandler;
           delete i->second;
           m_TaskMap.erase(i);
         }
