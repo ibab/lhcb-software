@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r21 2011-08-30 =========================
 ! 2011-08-26 - Alexander Mazurov
  - Update of parser function in CondDBTimeSwitchSvc. This version works only with
    Gaudi version > v22r2 (where the new parser model is provided)
