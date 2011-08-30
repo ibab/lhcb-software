@@ -1,6 +1,6 @@
 project MOORE
 
-use HLT     HLT_v13r10
+use HLT     HLT_v13r10p1
 use LBCOM   LBCOM_v10r5
 
 container       MooreSys
