@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2010-08-09 Mark Tobin
+ - Add new algorithm to monitor noise (STNoiseMonitor).
+   Has raw, common mode subtracted and common mode noise stored in one
+   algorithm.  For use with the calibration stream.
+
+! 2010-08-09 Mark Tobin
  - Add 2d noise map a la cluster monitor.
  - Add histograms of average noise/pedestal per tell1.
 
