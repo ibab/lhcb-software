@@ -385,13 +385,15 @@ void CtrlFarmClusterLine::handle(const Event& ev) {
 
 /// DIM command service callback
 void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
-  if ( address && tag && *size > 0 ) {
+  if ( tag ) {
     CtrlFarmClusterLine* l = *(CtrlFarmClusterLine**)tag;
-    char *p = (char*)address, *end = p+*size;
     set<string> nodes;
-    while(p<end) {
-      nodes.insert(strlower(p));
-      p += (::strlen(p)+1);
+    if ( address && *size > 0 ) {
+      char *p = (char*)address, *end = p+*size;
+      while(p<end) {
+	nodes.insert(strlower(p));
+	p += (::strlen(p)+1);
+      }
     }
     IocSensor::instance().send(l,CMD_EXCLUDE,new set<string>(nodes));
   }
