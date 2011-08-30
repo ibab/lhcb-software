@@ -15,7 +15,8 @@ Production version for 2011 reprocessing and MC11.
     LumiEvent v3r2, RecEvent v2r39, IOExample v4r2, GaudiConf v14r2,
     HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r4, LHCbMath v3r27,
     XMLSummaryKernel v1r2, MuonDAQ v4r11, OTDAQ v7r10p1, LoKiCore v11r3,
-    SimComponents v2r21, STKernel v2r6, CondDBUI v3r11, XmlTools v6r6
+    RichKernel v7r45, SimComponents v2r21, STKernel v2r6, CondDBUI v3r11,
+    XmlTools v6r6
 
 - In Calo/CaloUtils v9r2, Det/DetCond v12r21, Kernel/HistoStrings v1r2,
      Kernel/LHCbMath v3r27
@@ -89,6 +90,10 @@ Production version for 2011 reprocessing and MC11.
     signature of the getters in StatEntity.
   . Fix Gaudi State Machine protocol errors
   . (attempt to) kill the 'initial spike' in the random rate limiter
+
+- In Rich/RichKernel v7r45
+  . Move RichKernel/IHpdUkL1DisableTool.h to Panoptes project, as it is
+    not used anywhere else.
 
 - In ST/STKernel v2r6
   . Add method to noise calculation tool to check strip status.

@@ -115,7 +115,7 @@ use LoKiHlt               v3r7    Phys    # Ivan Belyaev
 use LoKiMC                v10r2   Phys    # Ivan Belyaev
 use LoKiNumbers           v10r1   Phys    # Ivan Belyaev
 
-use RichKernel            v7r44   Rich    # Chris Jones
+use RichKernel            v7r45   Rich    # Chris Jones
 use RichRecBase           v4r7    Rich    # Chris Jones
 
 use SiDAQ                 v2r1p1  Si      # Matt Needham
