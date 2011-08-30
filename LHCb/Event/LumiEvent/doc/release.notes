@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!========================= LumiEvent v3r2 2011-08-30 =========================
+! 2011-08-11 - Jaap Panman
+ - Add Vertex and PoissonVertex values to counterKey enum
+
 !========================= LumiEvent v3r1 2011-02-01 =========================
 ! 2011-01-12 - Marco Cattaneo
  - Fix again ICC warning 1125, previous fix was wrong
