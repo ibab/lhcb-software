@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-08-30 - Marco Cattaneo
+ - Update references for change in format of printout of some options with
+   Gaudi > v22r2
+
 !========================= IOExample v4r1 2011-07-25 =========================
 ! 2011-07-25 - Marco Cattaneo
  - Add ioexample.testunpacktrack test, tests that UnpackTrack algorithm works
