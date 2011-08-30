@@ -42,7 +42,7 @@ class TrackSys(LHCbConfigurableUser):
     ## Default track pattern recognition algorithms to run in 2011
     DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
     ## Default global cuts from 2011
-    DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':999999 }
+    DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':15000 }
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
     ## Cosmic track pattern recognition algorithms to run

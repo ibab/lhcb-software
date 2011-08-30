@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2011-08-30 - Jeroen van Tilburg
+ - Changed default global event cut for number of OT hits from 1M to 15k. 
+
 !========================= TrackSys v6r3 2011-07-28 =========================
 ! 2011-07-28 - Marco Cattaneo
  - Add protections for invalid GlobalCuts
