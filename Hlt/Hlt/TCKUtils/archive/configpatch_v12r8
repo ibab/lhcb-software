@@ -17,7 +17,6 @@ bless = [ ( 'Calibration_VeloMicroBias', [ '3336d097506f653777f904586b585191'
 
 x = createAccessSvcSingleton( cas = ConfigTarFileAccessSvc(Mode='ReadWrite'))
 for (tp, ids) in bless :
-    print tp
     for id in ids :
         print tp,id
         c = x.resolveConfigTreeNode(id)
@@ -31,7 +30,7 @@ for (tp, ids) in bless :
 
 
 def prescale_lowmultphoton(id,label,tck) :
-	cas = ConfigTarFileAccessSvc(Mode='ReadWrite',CompressOnWrite=True)
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
     patch = { 'id' : id
             , 'updates' : { 'Hlt2LowMultPhotonPreScaler' : { 'AcceptFraction'  : '0.001' } }
             , 'label' : '%s, Hlt2LowMultPhoton=0.001' % (label)
@@ -42,3 +41,26 @@ def prescale_lowmultphoton(id,label,tck) :
 
 prescale_lowmultphoton('3b738af40a733157ae40d6f20b670400','Default',0x00760037) 
 
+
+# fix bit 77: remove Hlt2Lumi from it...
+def fix77(id,label,tck) :
+	cas = ConfigTarFileAccessSvc(Mode='ReadWrite')
+    rb = getProperty(id,'HltRoutingBitsWriter','RoutingBits',cas)
+    rb = eval(rb)
+    rb[77] = "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Transparent)(?!Lumi)(?!PassThrough).*Decision')"
+    rb[66] = "HLT_PASS_RE('Hlt2(?!Transparent)(?!Lumi).*Decision')"
+    m = getProperty(0x00770037,'HltGlobalMonitor','DecToGroupHlt2',cas)
+    m = eval(m)
+    m['Lumi'] = [ 'Hlt2LumiDecision' ]
+    m['Other'] = [ x for x in m['Other'] if x != 'Hlt2LumiDecision' ]
+    patch = { 'id' : id
+            , 'updates' : { 'HltRoutingBitsWriter' : { 'RoutingBits'  : rb.__str__() }
+                          , 'HltGlobalMonitor' : { 'DecToGroupHlt2' : m.__str__() }
+                          }
+            , 'label' : label
+            , 'cas'   : cas }
+	ids = { tck:  updateProperties( **patch ) }
+	createTCKEntries( ids, cas =  cas )
+
+
+fix77( 'c285a9cf68cda6b951bd86ef00f484b4','Default', 0x00780037)

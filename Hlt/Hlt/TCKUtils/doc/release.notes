@@ -4,6 +4,7 @@
 ! Purpose     : utilities for managing and querying Trigger Configuration Keys,
 !               and the underlying information
 !-----------------------------------------------------------------------------
+!========================== TCKUtils v1r9p1 2011-08-11 ===================
 ! 2011-07-12 - Gerhard Raven
  - fix caching: this didn't work due to a non-working default MD5.__hash__
    function. Defering MD5.__hash__ to the __hash__ of the string representation

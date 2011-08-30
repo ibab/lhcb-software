@@ -279,7 +279,7 @@ class PropCfg(object) :
     def properties(self) : return self.props
     def fqn(self) : return  self.fullyQualifiedName + ' ('+self.kind+')'
     def fmt(self) :
-        return [  "'"+k+"':"+v+'\n'  for k,v in self.props.iteritems() ]
+        return [  "'%s':%s\n"%(k,v)  for k,v in self.props.iteritems() ]
 
 class Tree(object):
     def __init__(self,id,parent=None ) :
