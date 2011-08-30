@@ -6,6 +6,7 @@
 
 // STTELL1Event
 #include "Event/STTELL1Data.h"
+#include "Kernel/STTell1Board.h"
 
 // ODIN
 #include "Event/ODIN.h"
@@ -18,10 +19,14 @@
 
 // Detector description for access to conditions
 #include "DetDesc/Condition.h"
+#include "STDet/DeSTDetector.h"
+#include "STDet/DeSTSector.h"
+
 
 #include "AIDA/IHistogram2D.h"
 
 #include "boost/lexical_cast.hpp"
+#include "boost/algorithm/string.hpp"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -90,7 +95,7 @@ StatusCode ST::STNoiseToolBase::initialize() {
   StatusCode sc = ST::HistoToolBase::initialize();
   if (sc.isFailure()) return sc;
   m_evtNumber = 0;
-  // Reset the maps for each tell1
+  m_debug = msgLevel( MSG::DEBUG );
 
   // Select small number of TELL1s
   m_selectedTells = false;
@@ -112,6 +117,10 @@ StatusCode ST::STNoiseToolBase::initialize() {
     std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
     mgrSvc->registerCondition(this, condPath, &ST::STNoiseToolBase::cacheTELL1Parameters);
   }
+  // attempt to re-cache geometry/bad channels
+  mgrSvc->registerCondition( this,  const_cast<IGeometryInfo*>(this->tracker()->geometry()),
+                             &ST::STNoiseToolBase::cacheStripStatus );
+
   StatusCode mgrSvcStatus=mgrSvc->update(this);
   if(mgrSvcStatus.isFailure()){
     return ( Error("Failed first UMS update", mgrSvcStatus) );
@@ -195,7 +204,41 @@ void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) 
     error() << "No condition: " << condPath << endmsg;
   }
 }
+//======================================================================================================================
+// Cache strip status / loop over all tell1, get sector+convert offline then get strip status
+//======================================================================================================================
+StatusCode ST::STNoiseToolBase::cacheStripStatus() {
+  info() << "==> we are fucking having it" << endreq;
+  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+  int notOKAll = 0;
+  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+    unsigned int TELL1SourceID = (*itT).first;
+    STTell1Board* board = readoutTool()->findByBoardID(STTell1ID(TELL1SourceID));
+    std::vector<bool>* status = &m_statusMap[TELL1SourceID];
+    status->resize(3072,false);
+    std::vector<bool>::iterator itStat = status->begin();
+    unsigned int strip = 0;
+    int notOK=0;
+    for(; itStat != status->end(); ++itStat, ++strip) {
+      //      unsigned int link = static_cast<unsigned int>(strip/128);
+      LHCb::STChannelID channelID = (board->DAQToOffline(0, STDAQ::v4, STDAQ::StripRepresentation(strip)).first);
+      DeSTSector* sector = tracker()->findSector(channelID);
+      if(sector != 0) {
+        *itStat = sector->isOKStrip( channelID );
+        if(! *itStat ) {
+          notOK++;
+          notOKAll++;
+        }
+        if(m_verbose) verbose() << detType()+"StripStatus\t" << (*itT).second << "\t" 
+                                << strip << "\t" << sector->stripStatus( channelID ) << endreq;
+      }
+    }
+    if(m_debug) debug() << boost::to_upper_copy(detType()+"tell") << (*itT).second << "\t" << notOK << endreq;
+  }
+  if(m_debug) debug() << "Sum bad channels:\t" << notOKAll << endreq;
 
+  return StatusCode::SUCCESS;
+}
 //======================================================================================================================
 //
 // Noise calculation
@@ -413,8 +456,6 @@ std::vector<std::pair<unsigned int, unsigned int> >::const_iterator ST::STNoiseT
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
   return m_nEvents.find(TELL1SourceID)->second.begin();
-  
-
 }
 
 /** Return an iterator corresponding to the number of events used in the noise calculations
@@ -428,6 +469,21 @@ std::vector<std::pair<unsigned int, unsigned int> >::const_iterator ST::STNoiseT
     error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
   }
   return m_nEvents.find(TELL1SourceID)->second.end();
-  
-
 }
+
+/// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
+std::vector<bool>::const_iterator ST::STNoiseToolBase::stripStatusBegin( const unsigned int TELL1SourceID ) const {
+  if(m_statusMap.find(TELL1SourceID) == m_statusMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_statusMap.find(TELL1SourceID)->second.begin();
+}
+
+/// Return an iterator corresponding to the status of the last channel for a given TELL1 source ID
+std::vector<bool>::const_iterator ST::STNoiseToolBase::stripStatusEnd( const unsigned int TELL1SourceID ) const {
+  if(m_statusMap.find(TELL1SourceID) == m_statusMap.end()) {
+    error() << "This should never happen! Did you pass TELLID rather than source ID? " << TELL1SourceID << endmsg;
+  }
+  return m_statusMap.find(TELL1SourceID)->second.end();
+}
+

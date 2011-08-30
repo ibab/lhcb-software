@@ -2,6 +2,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2010-08-30 Mark Tobin
+ - Implement methods added to noise calculation tool.
+ - Read status of strip from database and set pedestal, noise, cms noise to 0 if 
+   status is not ok.
+
 ! 2010-08-09 Mark Tobin
  - Cache tell1 parameters in noise calculation tool.
  - Add option to select calibration step(s) in noise calculation tool.

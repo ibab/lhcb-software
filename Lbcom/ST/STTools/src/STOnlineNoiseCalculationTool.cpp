@@ -125,11 +125,10 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
 
     std::vector<std::pair<unsigned int, unsigned int> >* nEvents = &m_nEvents[tellID];
 
-
     // Local copy of pedestal and thresholds used on the TELL1
     //    std::vector<std::pair<double, int> >* pedestals = &m_pedestalMaps[tellID][0];
     std::vector<std::pair<double, double> >* thresholds = &m_thresholdMap[tellID];
-
+    std::vector<bool>* stripStatus = &m_statusMap[tellID];
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterFullData)->sentPPs();
     std::vector<unsigned int>::const_iterator iPP = sentPPs.begin();
@@ -151,37 +150,38 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
         for ( ; iStrip < LHCbConstants::nStripsInBeetle ; ++iStrip){
           
           int strip = iStrip + beetle * LHCbConstants::nStripsInBeetle;
-          const int rawValue = dataValues[beetle][iStrip];
-          const int lcmsValue = lcmsValues[beetle][iStrip];
-          bool updateRaw=true; 
-          bool updateCMS=true;
-          if(m_removeOutliers) {
-            //            if(fabs(rawValue-(*pedestals)[strip].first) > (*thresholds)[strip].first) updateRaw=false;
-            if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
-          }
-          // Calculate the pedestal and the pedestal squared
-          if(updateRaw) {
-            (*nEvents)[strip].first += 1;
-            // Cumulative average up to m_followingPeriod; after that exponential moving average
-            int nEvt = (*nEvents)[strip].first;
-            if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
-              nEvt = m_followingPeriod;
-            (*rawMean)[strip] = ((*rawMean)[strip]*(nEvt-1) + rawValue ) / nEvt;
-            (*rawPedestal)[strip] = (*rawMean)[strip];
-            (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
-            (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
-          }
-          if(updateCMS) {
-            (*nEvents)[strip].second += 1;
-            // Cumulative average up to m_followingPeriod; after that exponential moving average
-            int nEvt = (*nEvents)[strip].second;
-            if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
-              nEvt = m_followingPeriod;
-            (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
-            (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + gsl_pow_2(lcmsValue) ) / nEvt;
-            (*cmsNoise)[strip] = sqrt( (*cmsMeanSq)[strip] - gsl_pow_2((*cmsMean)[strip]) );
-          }
-          
+          if((*stripStatus)[strip]) {
+            const int rawValue = dataValues[beetle][iStrip];
+            const int lcmsValue = lcmsValues[beetle][iStrip];
+            bool updateRaw=true; 
+            bool updateCMS=true;
+            if(m_removeOutliers) {
+              //            if(fabs(rawValue-(*pedestals)[strip].first) > (*thresholds)[strip].first) updateRaw=false;
+              if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
+            }
+            // Calculate the pedestal and the pedestal squared
+            if(updateRaw) {
+              (*nEvents)[strip].first += 1;
+              // Cumulative average up to m_followingPeriod; after that exponential moving average
+              int nEvt = (*nEvents)[strip].first;
+              if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
+                nEvt = m_followingPeriod;
+              (*rawMean)[strip] = ((*rawMean)[strip]*(nEvt-1) + rawValue ) / nEvt;
+              (*rawPedestal)[strip] = (*rawMean)[strip];
+              (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
+              (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
+            }
+            if(updateCMS) {
+              (*nEvents)[strip].second += 1;
+              // Cumulative average up to m_followingPeriod; after that exponential moving average
+              int nEvt = (*nEvents)[strip].second;
+              if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
+                nEvt = m_followingPeriod;
+              (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
+              (*cmsMeanSq)[strip] = ((*cmsMeanSq)[strip]*(nEvt-1) + gsl_pow_2(lcmsValue) ) / nEvt;
+              (*cmsNoise)[strip] = sqrt( (*cmsMeanSq)[strip] - gsl_pow_2((*cmsMean)[strip]) );
+            }
+          }// stripStatus
         } // strip
       }  // beetle
       

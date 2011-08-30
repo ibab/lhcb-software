@@ -128,6 +128,12 @@ namespace ST {
     virtual std::vector<std::pair<unsigned int, unsigned int> >::const_iterator nEventsEnd( const unsigned int TELL1SourceID ) 
       const;
 
+    /// Return an iterator corresponding to the status of the first channel for a given TELL1 source ID
+    virtual std::vector<bool>::const_iterator stripStatusBegin( const unsigned int TELL1SourceID ) const;
+    
+    /// Return an iterator corresponding to the status of the last channel for a given TELL1 source ID
+    virtual std::vector<bool>::const_iterator stripStatusEnd( const unsigned int TELL1SourceID ) const;
+
     /// Return the period of the an exponential moving average. (Set to -1 to have a cumulative average.)
     virtual int followPeriod() const {return m_followingPeriod;};
 
@@ -177,6 +183,10 @@ namespace ST {
     /// Internal map of number of events per tell1 and FPGA-PP used in the calculation of the noise.
     std::map<unsigned int, std::vector<unsigned int> > m_rawNEventsPP;///< Number of events in RAW noise calculation
     std::map<unsigned int, std::vector<unsigned int> > m_cmsNEventsPP;///< Number of events in CMS noise calculation
+
+    /// Cache the status of each strip
+    typedef std::map<unsigned int, std::vector<bool> > StatusMap;
+    StatusMap m_statusMap;
 
     // Use number of events per strip in noise calculations
     bool m_evtsPerStrip;
@@ -249,6 +259,11 @@ namespace ST {
     /// Reset noise counters for a given tell1 during initialise or after change in TELL1 conditions
     void resetNoiseCounters(const unsigned int TELL1SourceID);
 
+    /// Cache the status of each strip
+    virtual StatusCode cacheStripStatus();
+
+    bool m_debug;///< True if message service is set for DEBUG or VERBOSE
+    bool m_verbose;///< True if message service is set for VERBOSE
   };
 }
 #endif // STCMNOISETOOLBASE_H
