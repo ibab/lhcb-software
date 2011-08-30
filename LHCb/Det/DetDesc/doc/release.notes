@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+!========================= DetDesc v18r27p1 2011-08-30 =======================
 ! 2011-08-03 - Marco Cattaneo
  - Remove files DetDesc/*.icpp, moving code directly into corresponding .h,
    since they were not used anywhere else and makes it consistent with standard
