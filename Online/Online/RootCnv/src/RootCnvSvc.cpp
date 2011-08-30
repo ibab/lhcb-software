@@ -54,7 +54,7 @@ namespace {
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
 : ConversionSvc( nam, svc, ROOT_StorageType), 
-m_dataMgr(0), m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
+  m_ioMgr(0), m_incidentSvc(0), m_current(0), m_setup(0)
 {
   m_classRefs = m_classDO = 0;
   m_setup = new RootConnectionSetup();
@@ -92,7 +92,6 @@ StatusCode RootCnvSvc::error(CSTR msg)  {
 // Initialize the Db data persistency service
 StatusCode RootCnvSvc::initialize()  {
   string cname;
-  IDataProviderSvc* pSvc = 0;
   StatusCode status = ConversionSvc::initialize();
   if ( !status.isSuccess() )
     return error("Failed to initialize ConversionSvc base class.");
@@ -101,12 +100,8 @@ StatusCode RootCnvSvc::initialize()  {
     return error("Unable to localize interface from service:IODataManager");
   if( !(status=service("IncidentSvc", m_incidentSvc)).isSuccess() )
     return error("Unable to localize interface from service:IncidentSvc");
-  if ( !(status=service("EventDataSvc",pSvc)).isSuccess() )
-    return error("Failed to get data provider.");
-  setDataProvider(pSvc).ignore();
   m_setup->setMessageSvc(new MsgStream(msgSvc(),name()));
   GaudiRoot::patchStreamers(log());
-
   cname = System::typeinfoName(typeid(DataObject));
   m_classDO = gROOT->GetClass(cname.c_str());
   if ( 0 == m_classDO )
@@ -143,7 +138,6 @@ StatusCode RootCnvSvc::finalize()    {
     releasePtr(m_ioMgr);
   }
   deletePtr(m_log);
-  releasePtr(m_dataMgr);
   releasePtr(m_incidentSvc);
   return ConversionSvc::finalize();
 }
@@ -189,20 +183,6 @@ TClass* RootCnvSvc::getClass(DataObject* pObject) {
   string cname = System::typeinfoName(typeid(*pObject));
   throw runtime_error("Unknown ROOT class for object:"+cname);
   return 0;
-}
-
-// Connect to data provider service. Re-connects to data manager service.
-StatusCode RootCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
-  MsgStream log(msgSvc(), name());
-  IDataManagerSvc* tmp = m_dataMgr;
-  if (pSvc)  {
-    StatusCode sc = pSvc->queryInterface(IDataManagerSvc::interfaceID(),(void**)&m_dataMgr);
-    if ( !sc.isSuccess() )    {
-      return error("Cannot connect to \"IDataManagerSvc\" interface.");
-    }
-  }
-  if ( tmp ) tmp->release();
-  return ConversionSvc::setDataProvider(pSvc);
 }
 
 // Connect the output file to the service with open mode.
@@ -419,7 +399,7 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
     }
     return error("Failed to write object data for:"+p[1]);
   }
-  return error("markWrite> Current Database is invalid!");
+  return error("createRep> Current Database is invalid!");
 }
 
 // Save object references to data file
@@ -429,30 +409,33 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
     Leaves leaves;
     RootObjectRefs refs;
     IRegistry* pR = pObj->registry();
-    StatusCode status = m_dataMgr->objectLeaves(pObj, leaves);
-    if ( status.isSuccess() )  {
-      RootRef ref;
-      const string& id    = pR->identifier();
-      size_t        len   = id.find('/',1);
-      string        sect  = id.substr(1,len==string::npos ? string::npos : len-1);
-      LinkManager* pLinks = pObj->linkMgr();
-      for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
-        if ( (*i)->address() ) {
-          m_current->makeRef(*i,ref);
-          ref.entry = (*i)->address()->ipar()[1];
-          refs.refs.push_back(ref);
-        }
-      }
-      for(int i = 0, n=pLinks->size(); i < n; ++i)  {
-        LinkManager::Link* lnk = pLinks->link(i);
-        int link_id = m_current->makeLink(lnk->path());
-        refs.links.push_back(link_id);
-      }
-      pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,true);
-      if ( ret.first > 1 ) {
-        log() << MSG::DEBUG << "Writing object:" << id << " " 
-          << ret.first << " " << hex << ret.second << dec << endmsg;
-        return S_OK;
+    SmartIF<IDataManagerSvc> dataMgr(pR->dataSvc());
+    if ( dataMgr ) {
+      StatusCode status = dataMgr->objectLeaves(pObj, leaves);
+      if ( status.isSuccess() )  {
+	RootRef ref;
+	const string& id    = pR->identifier();
+	size_t        len   = id.find('/',1);
+	string        sect  = id.substr(1,len==string::npos ? string::npos : len-1);
+	LinkManager* pLinks = pObj->linkMgr();
+	for(Leaves::iterator i=leaves.begin(), iend=leaves.end(); i != iend; ++i)  {
+	  if ( (*i)->address() ) {
+	    m_current->makeRef(*i,ref);
+	    ref.entry = (*i)->address()->ipar()[1];
+	    refs.refs.push_back(ref);
+	  }
+	}
+	for(int i = 0, n=pLinks->size(); i < n; ++i)  {
+	  LinkManager::Link* lnk = pLinks->link(i);
+	  int link_id = m_current->makeLink(lnk->path());
+	  refs.links.push_back(link_id);
+	}
+	pair<int,unsigned long> ret = m_current->save(sect,id+"#R",m_classRefs,&refs,true);
+	if ( ret.first > 1 ) {
+	  log() << MSG::DEBUG << "Writing object:" << id << " " 
+		<< ret.first << " " << hex << ret.second << dec << endmsg;
+	  return S_OK;
+	}
       }
     }
   }
@@ -506,7 +489,9 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
         string npar[3];
         unsigned long nipar[2];
         IOpaqueAddress* nPA;
-        SmartIF<IService> isvc(m_dataMgr);
+	IRegistry* pR = pObj->registry();
+        SmartIF<IService> isvc(pR->dataSvc());
+	SmartIF<IDataManagerSvc> dataMgr(pR->dataSvc());
         LinkManager* mgr = pObj->linkMgr();
         bool active = log().isActive();
         for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
@@ -525,7 +510,7 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
               log() << isvc->name() << " -> Register:" << pA->registry()->identifier() 
                 << "#" << npar[2] << "[" << r.entry << "]" << endmsg;
             }
-            sc = m_dataMgr->registerAddress(pA->registry(),npar[2],nPA);
+            sc = dataMgr->registerAddress(pA->registry(),npar[2],nPA);
             if ( sc.isSuccess() ) {
               continue;
             }

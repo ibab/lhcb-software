@@ -46,8 +46,6 @@ namespace Gaudi {
   class GAUDI_API RootCnvSvc : public ConversionSvc  {
   protected:
 
-    /// Services needed for proper operation: Data Manager
-    IDataManagerSvc*            m_dataMgr;
     /// Reference to the I/O data manager
     Gaudi::IIODataManager*      m_ioMgr;
     /// Reference to incident service
@@ -100,13 +98,6 @@ namespace Gaudi {
      * @return     Status code returning failure.
      */
     StatusCode error(const std::string& msg);
-
-    /** Connect to data provider service. Re-connects to data manager service.
-     *  @param      pDataSvc    New data provider object.
-     *
-     *  @return     Status code indicating success or failure.
-     */
-    StatusCode setDataProvider(IDataProviderSvc* pDataSvc);
 
     /** Connect the output file to the service with open mode.
      *  @param      dataset     String containig file name
