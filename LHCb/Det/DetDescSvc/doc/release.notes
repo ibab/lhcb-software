@@ -4,6 +4,7 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v3r3 2011-08-30 =========================
 ! 2011-08-02 - Marco Cattaneo
  - FakeEventTime: remove unused EventDataSvc property
 
