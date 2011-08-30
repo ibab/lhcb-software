@@ -1,5 +1,5 @@
 package GaussSys
-version v40r2p1
+version v40r2p2
 
 branches cmt doc
 
@@ -14,13 +14,11 @@ use Gauss               v40r2   Sim
 use GenCuts             v1r0    Gen
 use GENSER              v9r1    Gen
 use EvtGen              v12r1   Gen
+use Mint                v1r0    Gen    # Additions to EvtGen
 use EvtGenExtras        v2r7    Gen
 use Generators          v11r0   Gen
 use LbPythia            v10r0   Gen
 
-# Generator packages: Additions to EvtGen
-#use Mint                v1r0    Gen
-#use EvtGenExtras        v2r7    Gen
 
 # Generators packages: extensions to Pythia6
 #use LbAlpGen             v1r0    Gen   # OFF for the moment
@@ -59,7 +57,7 @@ use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
 use GaussPhysics	v7r0	  Sim
 use GaussUMC            v1r1      Sim
-#use GaussCherenkov      v1r0      Sim
+use GaussCherenkov      v1r0      Sim
 
 # Monitoring packages
 use GaussMonitor	v6r8      Sim
