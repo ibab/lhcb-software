@@ -46,7 +46,14 @@ void HAdderServInfoHandler::infoHandler(void)
   {
     fullList = true;
   }
-
+  if (fullList)
+  {
+    printf("Processing FullList\n");
+  }
+  else
+  {
+    printf("Selective Service Processing\n");
+  }
   Adderlist_t& l = AdderSys::Instance().gg_AdderList;
   auto_ptr<dyn_string> service_list(Strsplit(input,"\n"));
   taskname = taskname.substr(0, taskname.find("/SERVICE_LIST"));
