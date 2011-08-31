@@ -242,7 +242,7 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   }
   for(i=0;i<toRemoveList.size();i++)
   {
-    printf("removing service %s from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),taskname.c_str(),m_taskPattern.c_str());
+    printf("removing service %s (%s) from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),this->m_servicePattern.c_str(),taskname.c_str(),m_taskPattern.c_str());
     RemovedService(0,taskname,toRemoveList[i]);
   }
 }
