@@ -19,7 +19,7 @@
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
 # |-ForceFullSequence = False
-# |-DataType          = '2009'  (default: '2010')
+# |-DataType          = '2009'  (default: '2011')
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
 # |-MergeFSR          = False
@@ -27,13 +27,13 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x199daa70>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x12396a40>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
 # WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag head-20110524 for partition LHCBCOND
+# WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag MC-20101026-vc15mm-md100 for partition SIMCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
@@ -64,8 +64,8 @@
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v39r4
-                                          running on lxbuild163.cern.ch on Mon Jun  6 14:53:11 2011
+                                                   Welcome to Brunel version v40r1
+                                          running on lxbuild163.cern.ch on Wed Aug 31 14:16:45 2011
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -82,7 +82,7 @@ ServiceManager      DEBUG Initializing service DetectorDataSvc
 DetectorDataSvc     DEBUG Service base class initialized successfully
 IncidentSvc         DEBUG Service base class initialized successfully
 DetectorDataSvc   VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
+DetectorPersist...  DEBUG  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...  DEBUG Service base class initialized successfully
 DetectorDataSvc     DEBUG Storage type used is: 7
 DetectorDataSvc     DEBUG Setting DetectorDataSvc root node...
@@ -138,7 +138,7 @@ ServiceManager      DEBUG Initializing service EventLoopMgr
 EventLoopMgr        DEBUG Service base class initialized successfully
 IncidentSvc         DEBUG Adding [AbortEvent] listener '<unknown>' with priority 0
 EventLoopMgr        DEBUG Creating Top Algorithm GaudiSequencer with name LumiSequence
-LumiSequence        DEBUG Releasing service 'JobOptionsSvc'
+LumiSequence      VERBOSE ServiceLocatorHelper::service: found service JobOptionsSvc
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 AlgContextSvc       DEBUG Service base class initialized successfully
@@ -163,7 +163,7 @@ LumiSequence        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 LumiSequence        DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 LumiSequence        DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 LumiSequence        DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-LumiSequence        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+LumiSequence        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
 LumiSequence        DEBUG Property ['Name': Value] =  'RootOnTES':
 LumiSequence        DEBUG Property ['Name': Value] =  'RootInTES':
 LumiSequence        DEBUG Property ['Name': Value] =  'Context':
@@ -188,13 +188,13 @@ LumiSequence        DEBUG Property ['Name': Value] =  'ErrorMax':1
 LumiSequence        DEBUG Property ['Name': Value] =  'Enable':True
 LumiSequence        DEBUG Property ['Name': Value] =  'OutputLevel':1
 LumiSequence        DEBUG ==> Initialise
-EventAccount        DEBUG Releasing service 'JobOptionsSvc'
+EventAccount      VERBOSE ServiceLocatorHelper::service: found service JobOptionsSvc
 LumiSequence        DEBUG Added algorithm EventAccount
 LumiSequence        DEBUG Releasing service 'ApplicationMgr'
 LumiSequence        DEBUG Releasing service 'JobOptionsSvc'
 LumiSequence         INFO OR Member list: EventAccounting/EventAccount
 LumiSequence      VERBOSE ServiceLocatorHelper::service: found service ToolSvc
-ToolSvc.Sequenc...  DEBUG Releasing service 'JobOptionsSvc'
+ToolSvc.Sequenc...VERBOSE ServiceLocatorHelper::service: found service JobOptionsSvc
 ToolSvc           VERBOSE Created tool SequencerTimerTool/ToolSvc.SequencerTimerTool
 ToolSvc.Sequenc...  DEBUG Property update for OutputLevel : new value = 1
 ToolSvc.Sequenc...  DEBUG Initialize base class GaudiCommon<AlgTool>
@@ -211,7 +211,7 @@ ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'RootOnTES':
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'RootInTES':
 ToolSvc.Sequenc...  DEBUG Property ['Name': Value] =  'Context':
@@ -231,7 +231,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -250,7 +250,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 EventAccount        DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 EventAccount        DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 EventAccount        DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-EventAccount        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
+EventAccount        DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
 EventAccount        DEBUG Property ['Name': Value] =  'RootOnTES':
 EventAccount        DEBUG Property ['Name': Value] =  'RootInTES':
 EventAccount        DEBUG Property ['Name': Value] =  'Context':
@@ -277,7 +277,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'OutputLevel':1
 EventAccount        DEBUG ==> Initialize
 FileRecordDataSvc   DEBUG Service base class initialized successfully
 FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
+FileRecordPersi...  DEBUG  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 FileRecordPersi...  DEBUG Service base class initialized successfully
 FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service PersistencySvc/FileRecordPersistencySvc
 IncidentSvc         DEBUG Adding [FILE_OPEN_READ] listener 'FileRecordDataSvc' with priority 0
@@ -288,7 +288,7 @@ IncidentSvc         DEBUG Adding [WroteToOutputFile] listener 'EventAccount' wit
 EventAccount        DEBUG registered with incSvc
 EventDataSvc        DEBUG Service base class initialized successfully
 EventDataSvc      VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
+EventPersistenc...  DEBUG  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 EventPersistenc...  DEBUG Service base class initialized successfully
 EventSelector       DEBUG Service base class initialized successfully
 ToolSvc           VERBOSE Created tool DataStreamTool/EventSelector.DataStreamTool
@@ -299,7 +299,7 @@ EventSelector.D...  DEBUG Selection root:/Event CLID:1
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:56721-100ev.dst' TYP='POOL_ROOT' OPT='READ'
 HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...  DEBUG  'CnvServices':[ 'RootHistSvc' ]
 HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::service: found service HistogramPersistencySvc
@@ -336,7 +336,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
-RootDBase.open    SUCCESS 56721-100ev.dst File version:52800
+RootDBase.open    SUCCESS 56721-100ev.dst File version:53000
 PoolRootEvtCnvSvc    INFO Records token:[DB=3095CD43-0286-E011-A5D9-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000001E-00000000]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
 FileRecordDataSvc   DEBUG Request to load record for file 3095CD43-0286-E011-A5D9-003048C9CD62
@@ -374,6 +374,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -381,6 +382,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -388,6 +390,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -395,6 +398,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -402,6 +406,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -409,6 +414,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -416,6 +422,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -423,6 +430,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -430,6 +438,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -437,6 +446,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 11. Record number within stream 1: 11
 EventDataSvc      VERBOSE Requested object /Event
@@ -445,6 +455,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -452,6 +463,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -459,6 +471,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -466,6 +479,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -473,6 +487,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -480,6 +495,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -487,6 +503,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -494,6 +511,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -501,6 +519,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -508,6 +527,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 21. Record number within stream 1: 21
 EventDataSvc      VERBOSE Requested object /Event
@@ -516,6 +536,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -523,6 +544,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -530,6 +552,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -537,6 +560,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -544,6 +568,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -551,6 +576,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -558,6 +584,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -565,6 +592,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -572,6 +600,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -579,6 +608,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 31. Record number within stream 1: 31
 EventDataSvc      VERBOSE Requested object /Event
@@ -587,6 +617,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -594,6 +625,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -601,6 +633,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -608,6 +641,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -615,6 +649,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -622,6 +657,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -629,6 +665,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -636,6 +673,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -643,6 +681,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -650,6 +689,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 41. Record number within stream 1: 41
 EventDataSvc      VERBOSE Requested object /Event
@@ -658,6 +698,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -665,6 +706,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -672,6 +714,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -679,6 +722,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -686,6 +730,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -693,6 +738,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -700,6 +746,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -707,6 +754,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -714,6 +762,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -721,6 +770,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 51. Record number within stream 1: 51
 EventDataSvc      VERBOSE Requested object /Event
@@ -729,6 +779,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -736,6 +787,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -743,6 +795,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -750,6 +803,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -757,6 +811,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -764,6 +819,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -771,6 +827,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -778,6 +835,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -785,6 +843,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -792,6 +851,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 61. Record number within stream 1: 61
 EventDataSvc      VERBOSE Requested object /Event
@@ -800,6 +860,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -807,6 +868,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -814,6 +876,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -821,6 +884,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -828,6 +892,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -835,6 +900,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -842,6 +908,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -849,6 +916,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -856,6 +924,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -863,6 +932,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 71. Record number within stream 1: 71
 EventDataSvc      VERBOSE Requested object /Event
@@ -871,6 +941,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -878,6 +949,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -885,6 +957,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -892,6 +965,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -899,6 +973,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -906,6 +981,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -913,6 +989,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -920,6 +997,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -927,6 +1005,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -934,6 +1013,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 81. Record number within stream 1: 81
 EventDataSvc      VERBOSE Requested object /Event
@@ -942,6 +1022,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -949,6 +1030,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -956,6 +1038,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -963,6 +1046,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -970,6 +1054,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -977,6 +1062,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -984,6 +1070,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -991,6 +1078,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -998,6 +1086,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1005,6 +1094,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventSelector     SUCCESS Reading Event record 91. Record number within stream 1: 91
 EventDataSvc      VERBOSE Requested object /Event
@@ -1013,6 +1103,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1020,6 +1111,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1027,6 +1119,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1034,6 +1127,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1041,6 +1135,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1048,6 +1143,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -1055,6 +1151,7 @@ EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventLoopMgr         INFO No more events in event selection
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
@@ -1130,11 +1227,11 @@ ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.010 |     0.011 |    0.009       0.1 |      97 |     0.001 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.002 |    0.002       0.0 |      97 |     0.000 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     0.021 |     0.027 |    0.021       0.2 |      97 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.003 |    0.003       0.0 |      97 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
@@ -1147,7 +1244,7 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0204056(+-0.403495)/0/7.999[ms] Total:0.007999[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0382602(+-0.611076)/0/11.998[ms] Total:0.014998[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
