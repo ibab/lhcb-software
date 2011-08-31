@@ -4,6 +4,11 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackMonitor v2r4 2011-08-31 =========================
+! 2011-08-25 - Patrizia de Simone
+ - Moved MuEffMonitor from MuonTrackMonitor to DaVinciMonitors and removed it from 
+   Brunel sequence
+
 !========================= MuonTrackMonitor v2r3 2011-07-27 =========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
