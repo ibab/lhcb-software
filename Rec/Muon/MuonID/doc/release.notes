@@ -1,7 +1,9 @@
+!-----------------------------------------------------------------------------
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r1 2011-08-31 =========================
 ! 2011-08-29 - Roel Aaij
  - Only look for RecHeader when the MSG level is DEBUG and never warn about
    it's absence.
