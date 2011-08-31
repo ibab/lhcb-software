@@ -6,6 +6,48 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v11r0>2011-09-01 LbcomSys v11r0</A></H1><PRE>
+This version uses Gaudi v22r3 and LHCb v33r0
+
+- Production release for 2011 end of year reprocessing and MC11
+
+- Packages updated: HltDAQ v2r12, L0Calo v11r5, L0Muon v9r6, RichTools v2r37,
+    STCheckers v3r3, STMonitors v3r6, STTools v4r8
+
+- In Hlt/HltDAQ v2r12
+  . Use htitle for rate counters.
+  . Update of parser function in PropertyConfigSvc to use new parsers introduced
+    in Gaudi v22r3
+
+- In L0/L0Calo v11r5
+  . Steer raw event location with L0CaloCandidatesFromRaw
+  . L0CaloCompare.cpp: add counters of errors
+  . L0CaloPRSResetMonitor.h/.cpp: new monitoring algorithm to handle
+    automatically the PRS reset in case of board missing
+
+- In L0/L0Muon v9r6
+  . L0MuonOutputs, make the raw event steerable in location
+
+- In Rich/RichTools v2r37
+  . Lower default 'hot pixel' fraction from 90% to 50% of consecutive events.
+
+- In ST/STCheckers v3r3
+  . Add new algorithm to check active fraction of detector in conditions
+    database vs time.  Example options are in options/runSTActiveTrend.py
+
+- In ST/STMonitors v3r6
+  . Add new algorithm to monitor noise (STNoiseMonitor).
+    Has raw, common mode subtracted and common mode noise stored in one
+    algorithm.  For use with the calibration stream.
+
+- In ST/STTools v4r8
+  . Add job option to toggle on/off strip masking in noise tool.
+  . Implement methods added to noise calculation tool.
+  . Read status of strip from database and set pedestal, noise, cms noise to 0 if
+    status is not ok.
+  . Cache tell1 parameters in noise calculation tool.
+  . Add option to select calibration step(s) in noise calculation tool.
+
 </PRE><H1><A NAME=v10r5>2011-07-28 LbcomSys v10r5</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r5
 
