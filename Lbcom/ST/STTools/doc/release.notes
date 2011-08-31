@@ -1,7 +1,9 @@
+!------------------------------------------------------------------------------
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STTools v4r8 2011-08-31 =========================
 ! 2011-08-31 - Mark Tobin
  - Add job option to toggle on/off strip masking in noise tool.
 
