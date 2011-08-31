@@ -210,6 +210,13 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   unsigned int i;
   bool fnd;
   std::string le;
+  std::string tskname,tgen;
+  TaskName(taskname, tskname, tgen);
+  if (tskname != "")
+  {
+//        printf("... Found\n");
+    return;
+  }
   for (i=0;i<service_list.size();i++)
   {
     NewService(0,taskname,service_list[i]);
