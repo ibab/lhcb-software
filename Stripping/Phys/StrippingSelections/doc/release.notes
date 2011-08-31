@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-08-30 - Jeremy Dickens
+ - python/StrippingSelections/StrippingBuToKX3872.py
+	- Updated X3827 stripping line to remove PV filtering
 
 ! 2011-08-29 - T. Blake
  - python/StrippingSelections/Utils.py

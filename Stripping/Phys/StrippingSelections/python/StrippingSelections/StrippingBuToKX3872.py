@@ -155,8 +155,8 @@ class StrippingBu2KX3872Conf(LineBuilder):
         self.BuToKPsi2SLineName = self.name + "_BuToKPsi2S"
         self.BuToKX3872LooseLineName = self.name + "_BuToKX3872Loose"
         self.BuToKPsi2SLooseLineName = self.name + "_BuToKPsi2SLoose"
-        self.__PVOutputLocation__ = "Rec/Vertex/"+name+"_ModPrimary"
-        #self.__PVOutputLocation__ = "Rec/Vertex/Primary"
+        #self.__PVOutputLocation__ = "Rec/Vertex/"+name+"_ModPrimary"
+        ##self.__PVOutputLocation__ = "Rec/Vertex/Primary"
 
         ############################
         ## Define the cut strings ##
@@ -266,14 +266,14 @@ class StrippingBu2KX3872Conf(LineBuilder):
         from StrippingConf.StrippingLine import StrippingLine
 
         ## Define PV filter
-        MyFilterPVs = {'Code' : "VSOURCE('Rec/Vertex/Primary') >> (NTRACKS > 6) >> RV_SINKTES('"+self.__PVOutputLocation__+"') >> ~VEMPTY", 'Preambulo' : ["from LoKiPhys.decorators import *"]}
+        #MyFilterPVs = {'Code' : "VSOURCE('Rec/Vertex/Primary') >> (NTRACKS > 6) >> RV_SINKTES('"+self.__PVOutputLocation__+"') >> ~VEMPTY", 'Preambulo' : ["from LoKiPhys.decorators import *"]}
 
         ## --- B+ -> X3872 K+ loose line ---
         Line_BuToX3872Loose_Name = self.BuToKX3872LooseLineName + "Line"
         Line_BuToX3872Loose = StrippingLine( Line_BuToX3872Loose_Name,
                                              prescale = config['Prescale_BuToKX3872Loose'],
                                              postscale = config['Postscale_BuToKX3872Loose'],
-                                             FILTER = MyFilterPVs,
+                                             #FILTER = MyFilterPVs,
                                              selection = Sel_BuX3872KLoose)
         self.registerLine(Line_BuToX3872Loose)
 
@@ -370,7 +370,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
         
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterKaon = FilterDesktop()
-        FilterKaon.InputPrimaryVertices = self.__PVOutputLocation__
+        #FilterKaon.InputPrimaryVertices = self.__PVOutputLocation__
         FilterKaon.Code = KaonCut
 
         from PhysSelPython.Wrappers import Selection        
@@ -392,7 +392,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineRho = CombineParticles()
-        CombineRho.InputPrimaryVertices = self.__PVOutputLocation__
+        #CombineRho.InputPrimaryVertices = self.__PVOutputLocation__
         
         CombineRho.DecayDescriptor = "rho(770)0 -> pi+ pi-"
 
@@ -415,7 +415,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterRho = FilterDesktop()
-        FilterRho.InputPrimaryVertices = self.__PVOutputLocation__
+        #FilterRho.InputPrimaryVertices = self.__PVOutputLocation__
         FilterRho.Code = RhoCuts
 
         from PhysSelPython.Wrappers import Selection        
@@ -438,7 +438,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterJPsi = FilterDesktop()
-        FilterJPsi.InputPrimaryVertices = self.__PVOutputLocation__
+        #FilterJPsi.InputPrimaryVertices = self.__PVOutputLocation__
         FilterJPsi.Code = JPsiCuts
 
         from PhysSelPython.Wrappers import Selection        
@@ -458,7 +458,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineX3872 = CombineParticles()
-        CombineX3872.InputPrimaryVertices = self.__PVOutputLocation__
+        #CombineX3872.InputPrimaryVertices = self.__PVOutputLocation__
 
         CombineX3872.DecayDescriptor = "X_1(3872) -> J/psi(1S) rho(770)0"
 
@@ -482,7 +482,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
 
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineBu = CombineParticles()
-        CombineBu.InputPrimaryVertices = self.__PVOutputLocation__
+        #CombineBu.InputPrimaryVertices = self.__PVOutputLocation__
         
         CombineBu.DecayDescriptors = ["B+ -> X_1(3872) K+", "B- -> X_1(3872) K-"]
 
