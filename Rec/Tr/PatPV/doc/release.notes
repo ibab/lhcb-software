@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r20 2011-08-31 =========================
 ! 2011-08-29 - Mariusz Witek
 - add standard PV configuration class to PVConf: StandardPV to activate beam spot radial cut
   for reprocessing.
