@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r37 2011-08-31 =========================
 ! 2011-07-29 - Chris Jones
  - Lower default 'hot pixel' fraction from 90% to 50% of consecutive events.
 
