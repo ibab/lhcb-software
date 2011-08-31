@@ -130,7 +130,7 @@ StatusCode MonitorSvc::initialize()
 /// Incident handler implemenentation: Inform that a new incident has occured
 void MonitorSvc::handle(const Incident& inc) {
   MsgStream log(msgSvc(),name());
-  log << MSG::INFO << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
+  log << MSG::DEBUG << "Got incident from:" << inc.source() << ": " << inc.type() << endmsg;
   if ( inc.type() == "APP_RUNNING" ) {
     i_start().ignore();
   }
@@ -259,7 +259,7 @@ StatusCode MonitorSvc::i_start()
 {
 //  CALLGRIND_START_INSTRUMENTATION
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::INFO << "======== MonitorSvc start() called ============= " << endmsg;
+  msg << MSG::DEBUG << "======== MonitorSvc start() called ============= " << endmsg;
 //  setProperties();
 //  dis_set_debug_on();
   DimServer::autoStartOff();
@@ -346,7 +346,7 @@ void MonitorSvc::StopUpdate()
 StatusCode MonitorSvc::finalize()
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::INFO << "MonitorSvc Finalizer" << endmsg;
+  msg << MSG::DEBUG << "MonitorSvc Finalizer" << endmsg;
 
   if ( m_incidentSvc )
   {
@@ -371,7 +371,7 @@ StatusCode MonitorSvc::finalize()
   deletePtr(m_RateMgr);
   deletePtr(m_CntrMgr);
   deletePtr(m_savetimer);
-  msg << MSG::INFO << "finalized successfully" << endmsg;
+  msg << MSG::DEBUG << "finalized successfully" << endmsg;
 
   //printf("MonitorSvc: UNLocking DIM\n");
   return Service::finalize();
@@ -437,7 +437,7 @@ template<class T> void MonitorSvc::i_declareCounter(const string& nam, const T& 
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
+      msg << MSG::DEBUG << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -582,7 +582,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
     printf("Delcare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
-   msg << MSG::INFO << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
+   msg << MSG::DEBUG << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
   if (name.find("COUNTER_TO_RATE") != string::npos)
   {
     string newName = extract("COUNTER_TO_RATE", name);
@@ -632,7 +632,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
     }
     else
     {
-      msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
+      msg << MSG::DEBUG << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endmsg;
     }
     return;
   }
@@ -658,11 +658,11 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
 
   if (m_started)
   {
-    msg << MSG::WARNING << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
+    msg << MSG::INFO << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
   }
   if (0 != m_disableDeclareInfoHistos)
   {
-    msg << MSG::INFO << "m_disableDeclareInfoHistos DISABLED " << endmsg;
+    msg << MSG::DEBUG << "m_disableDeclareInfoHistos DISABLED " << endmsg;
     return;
   }
   if( 0 != dynamic_cast<const AIDA::IProfile1D* >(var) )
