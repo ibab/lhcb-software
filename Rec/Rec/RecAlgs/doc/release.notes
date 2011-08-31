@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r6 2011-08-31 =========================
 ! 2011-07-29 - Chris Jones
  - Fill the total number of (Best) tracks in the RecSummary data object
 
