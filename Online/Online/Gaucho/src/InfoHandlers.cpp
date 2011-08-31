@@ -16,6 +16,7 @@ using namespace std;
 void HAdderServInfoHandler::infoHandler(void)
 {
   bool Newe = true;
+  bool fullList;
   char *input = itsService->getString();
   string taskname = itsService->getName();
 
@@ -39,27 +40,39 @@ void HAdderServInfoHandler::infoHandler(void)
   {
     Newe = (input[0] == '+');
     ++input;
+    fullList = false;
+  }
+  else
+  {
+    fullList = true;
   }
 
   Adderlist_t& l = AdderSys::Instance().gg_AdderList;
   auto_ptr<dyn_string> service_list(Strsplit(input,"\n"));
   taskname = taskname.substr(0, taskname.find("/SERVICE_LIST"));
-  for (unsigned int j = 0; j < service_list->size(); j++)
+  unsigned int j;
+  for (j = 0; j < service_list->size(); j++)
   {
     string service_line(service_list->at(j));
     auto_ptr<dyn_string> service(Strsplit((char*)service_line.c_str(),"|"));
+    service_list->at(j) = service->at(0);
+  }
+  for (j = 0; j < service_list->size(); j++)
+  {
+//    string service_line(service_list->at(j));
+//    auto_ptr<dyn_string> service(Strsplit((char*)service_line.c_str(),"|"));
     if (Newe)
     {
       for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
       {
-        (*i)->NewService(itsService, taskname, service->at(0));
+        (*i)->NewService(itsService, taskname, service_list->at(j));
       }
     }
     else
     {
       for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
       {
-        (*i)->RemovedService(itsService, taskname, service->at(0));
+        (*i)->RemovedService(itsService, taskname, service_list->at(j));
       }
     }
   }
