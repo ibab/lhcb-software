@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r4 2011-08-31 =========================
 ! 2011-08-25 - Chris Jones
  - Explicitly set options for the pixel background tools, for each iteration
 
