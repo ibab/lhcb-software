@@ -223,13 +223,16 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   }
   INServiceMap::iterator j;
   std::vector<std::string> toRemoveList;
-  for (j= m_inputServicemap.begin();j!=m_inputServicemap.end();j++)
+
+
+
+  TskServiceMap::iterator ii = m_TaskMap.find(taskname);
+  if (ii != m_TaskMap.end())
   {
-    fnd = false;
-    le = j->first;
+    const std::string& service = ii->second;
     for (i=0;i<service_list.size();i++)
     {
-      if (service_list[i] == le)
+      if (service_list[i] == service)
       {
         fnd = true;
         break;
@@ -237,13 +240,17 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
     }
     if (!fnd)
     {
-      toRemoveList.push_back(le);
+      toRemoveList.push_back(service);
+    }
+    for(i=0;i<toRemoveList.size();i++)
+    {
+      printf("removing service %s (%s) from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),this->m_servicePattern.c_str(),taskname.c_str(),m_taskPattern.c_str());
+      RemovedService(0,taskname,toRemoveList[i]);
     }
   }
-  for(i=0;i<toRemoveList.size();i++)
+  else
   {
-    printf("removing service %s (%s) from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),this->m_servicePattern.c_str(),taskname.c_str(),m_taskPattern.c_str());
-    RemovedService(0,taskname,toRemoveList[i]);
+    return;
   }
 }
 
