@@ -309,7 +309,7 @@ StatusCode AdderSvc::finalize()
     m_SaveTimer->Stop();
     deletePtr(m_SaveTimer);
   }
-  m_AdderSys->stop();
+  if (m_AdderSys !=0)  m_AdderSys->stop();
   if (m_adder != 0)
   {
     m_AdderSys->Remove(m_adder);
