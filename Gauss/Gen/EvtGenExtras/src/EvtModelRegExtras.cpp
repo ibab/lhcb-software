@@ -12,7 +12,7 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
 	models->push_back(new EvtBToKStarllDurham07);
         models -> push_back( new EvtbTosllMS() );
         models -> push_back( new Evtbs2llGammaMNT() );
-//        models -> push_back( new EvtDTohhhh() );
+        models -> push_back( new EvtDTohhhh() );
 	return std::auto_ptr<const EvtModelList>(models);
 	
 }
