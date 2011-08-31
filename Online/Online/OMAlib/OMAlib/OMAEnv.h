@@ -21,7 +21,7 @@ class TH1;
 
 namespace OMAconstants {
   static const int AlgListID = 21;
-  static const std::string version = "v4r0";
+  static const std::string version = "v4r1";
   
   static const int AlarmExpTime = 3456000; // s =  40 days
   static const double epsilon = 1.e-10;
