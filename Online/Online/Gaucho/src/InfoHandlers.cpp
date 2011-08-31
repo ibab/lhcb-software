@@ -33,6 +33,10 @@ void HAdderServInfoHandler::infoHandler(void)
     return;
   }
 //  if (RTL::nodeNameShort().length()<=6)
+  if (strlen(input)==0)
+  {
+    return;
+  }
   {
     printf("New Message from Service List Service %s data:\n%s\n==================\n",itsService->getName(),input);
   }
@@ -103,6 +107,10 @@ void HAdderTaskInfoHandler::infoHandler(void)
   if (strcmp(input, "DEAD") == 0)
   {
     printf("Task Info Handler from DNS DEAD\n");
+    return;
+  }
+  if (strlen(input)==0)
+  {
     return;
   }
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
