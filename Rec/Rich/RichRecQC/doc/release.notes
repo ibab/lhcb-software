@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r54 2011-08-31 =========================
 ! 2011-08-15 - Chris Jones
  - Add a 2D plot to the decoding errors monitor to show the number of each 
    error type, for each L1 board, by copy number.
