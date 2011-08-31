@@ -211,10 +211,10 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   bool fnd;
   std::string le;
   std::string tskname,tgen;
-  TaskName(taskname, tskname, tgen);
-  if (tskname != "")
+  printf("In SynchronizeServices: Taskname = %s, expected task name =%s",taskname.c_str(),m_taskPattern.c_str());
+  bool status = boost::regex_search(taskname,m_taskexp);
+  if (!status)
   {
-//        printf("... Found\n");
     return;
   }
   for (i=0;i<service_list.size();i++)
