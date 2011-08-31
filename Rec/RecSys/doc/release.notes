@@ -5,6 +5,114 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v12r0>2011-09-01 RecSys v12r0</A></H1><PRE>
+This version uses Gaudi v22r3 and LHCb v33r0
+
+- Production release for 2011 end of year reprocessing and MC11
+
+- Packages updated: CaloReco v5r12, MuonID v9r1, MuonTrackMonitor v2r4,
+    LumiAlgs v7r0, RecAlgs v2r6, RecConf v2r3, RichAlignment v1r5,
+    RichHPDImageAnalysis v1r9, RichParticleSearch v1r4, RichRecAlgorithms v2r19,
+    RichRecQC v2r54, RichRecSys v4r4, RichRecTemplateRings v1r5, 
+    RichRecTools v4r18, RichRecTrackTools v1r31, TrackSys v7r0, TrackTools v4r8,
+    PatPV v3r20
+
+- In Calo/CaloReco v5r12
+  . fix tracks list reset in CaloProcessor.XXSequence when called from CaloLines
+  . python/Configuration.py: 
+    o remove dependency on GlobalRecoConf (was producing loop in configurable).
+    o TrackTypes & TrackCuts is now private property currently with the same
+      default as in GlobalRecoConf
+
+- In Muon/MuonID v9r1
+  . Only look for RecHeader when MSG::DEBUG and never warn about its absence.
+  . Implemented IsMuonTight, which is IsMuon requiring hits with x,y crossing.
+    Option UseUncrossed does not affect IsMuonLoose or IsMuon or IsMuonTight
+    anymore.
+  . Remove use of random weights for IsMuon or IsMuonLoose. Keep, however, 
+    weight 0 for hits in M4 if p<3.5 GeV and hits in M5 if p<4.2 GeV.
+    Property Weight_flag continues in database, bit is not used anymore.
+
+- In Muon/MuonTrackMonitor v2r4
+  . Moved MuEffMonitor from MuonTrackMonitor to DaVinciMonitors and removed it
+    from Brunel sequence
+
+- In Rec/LumiAlgs v7r0
+  . Add a filter algorithm FilterFillingSchema: Filters on the presence of
+    buckets in a given beam for a given magnet polarity. Needs the online
+    partition of the CondDB filling scheme data (2011 onward)
+  . Activate this filer for 2011 MAGUP data Beam1, Beam2 in Brunel sequences
+    (in Configuration.py)
+  . Task #21133:
+    o Moved src/IGetLumiParameters.h to LHCbKernel and changed
+      src/GetLumiParameters.h accordingly
+    o Moved GetLumiParameters::rateFromTCK to RateFromTCK (LHCbAlgs)
+    o Adapt GetLumiParameters to use this tool
+    o Remove duplicate defined interfaces
+  . Cleanup LumiMergeFSR, LumiIntegrator, DumpFSR:
+    o indent properly
+    o Protect a few debug()
+  . GetLumiParameters.cpp: Bug #85240
+    o Rename method init(..) to initialise and push the properties passed to that
+      method to this class. Change LumiCheckCondDB and 
+      GetIntegratedLuminosity.cpp accordingly.
+    o Move UseOnline property to tool in LumiIntegratorConf
+  . GetLumiParameters and GetIntegratedLuminosity.cpp:
+    o Indent properly
+    o Protect debug() and verbose()
+    o Added doxygen comment
+    o Make a few methods inline and const
+
+- In Rec/RecAlgs v2r6
+  . Fill the total number of (Best) tracks in the RecSummary data object
+
+- In Rec/RecConf v2r3
+  . Introduce new StandardPV configuration to include radial cut for primary
+    vertices. See http://savannah.cern.ch/task/?19768.
+
+- In Rich/RichAlignment v1r5, Rich/RichHPDImageAnalysis v1r9
+  . Various improvements to the alignment scripts.
+
+- In Rich/RichParticleSearch v1r4
+  . Added track and Evt information
+
+- In Rich/RichRecAlgorithms v2r19
+  . Load the background tool privately.
+
+- In Rich/RichRecQC v2r54
+  . Add a 2D plot to the decoding errors monitor to show the number of each
+    error type, for each L1 board, by copy number.
+  . Get the number L1 boards from DeRichSystem, instead of hard coding them.
+
+- In Rich/RichRecSys v4r4
+  . Explicitly set options for the pixel background tools, for each iteration
+
+- In Rich/RichRecTemplateRings v1r5
+  . Added factory declaration in
+    RichRingRecAlgBase,RichRingRecToolBase,RichRingRecTupleAlgBase
+
+- In Rich/RichRecTools v4r18
+  . Various small improvements to the background tools
+
+- In Rich/RichRecTrackTools v1r31
+  . Allow an empty input track location in the track creators.
+
+- In Tf/TrackSys v7r0
+  . Changed default global event cut for number of OT hits from 1M to 15k.
+
+- In Tr/TrackTools v4r8
+  . VeloMuonBuilder: move trackfit after selection of the best candidate
+                     o tiny impact on efficiency and ghost rate
+                     o large reduction of CPU consumption
+- In Tr/PatPV v3r20
+  . Add standard PV configuration class to PVConf: StandardPV to activate beam
+    spot radial cut for reprocessing.
+  . Add PV to beamspot radial cut to be activated on demand. Default is no cut as
+    before. The radial cut protects high multiplicity SV of B from being
+    reconstructed as PV (and lost)
+    see https://indico.cern.ch/conferenceDisplay.py?confId=134893
+    (PV definition modification)
+
 </PRE><H1><A NAME=v11r6>2011-07-27 RecSys v11r6</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r5
 
