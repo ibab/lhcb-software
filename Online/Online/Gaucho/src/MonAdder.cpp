@@ -218,7 +218,7 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   for (j= m_inputServicemap.begin();j!=m_inputServicemap.end();j++)
   {
     fnd = false;
-    le = j->first;
+    le = (*j).first;
     for (i=0;i<service_list.size();i++)
     {
       if (service_list[i] == le)
