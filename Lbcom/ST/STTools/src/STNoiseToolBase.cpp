@@ -82,6 +82,9 @@ ST::STNoiseToolBase::STNoiseToolBase( const std::string& type,
   // Set the path for the conditions database
   declareProperty("CondPath", m_condPath = "CondDB");
 
+  // Mask known bad channels
+  declareProperty("MaskBadChannels", m_maskBad = true);
+
   // Use number of events per strip in noise calculations
   declareProperty("UseEventsPerStrip", m_evtsPerStrip = false);
 
@@ -208,7 +211,7 @@ void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) 
 // Cache strip status / loop over all tell1, get sector+convert offline then get strip status
 //======================================================================================================================
 StatusCode ST::STNoiseToolBase::cacheStripStatus() {
-  info() << "==> we are fucking having it" << endreq;
+  info() << "==> Caching strip status" << endreq;
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   int notOKAll = 0;
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
@@ -224,7 +227,7 @@ StatusCode ST::STNoiseToolBase::cacheStripStatus() {
       LHCb::STChannelID channelID = (board->DAQToOffline(0, STDAQ::v4, STDAQ::StripRepresentation(strip)).first);
       DeSTSector* sector = tracker()->findSector(channelID);
       if(sector != 0) {
-        *itStat = sector->isOKStrip( channelID );
+        *itStat = m_maskBad ? sector->isOKStrip( channelID ) : true;
         if(! *itStat ) {
           notOK++;
           notOKAll++;
@@ -233,7 +236,11 @@ StatusCode ST::STNoiseToolBase::cacheStripStatus() {
                                 << strip << "\t" << sector->stripStatus( channelID ) << endreq;
       }
     }
-    if(m_debug) debug() << boost::to_upper_copy(detType()+"tell") << (*itT).second << "\t" << notOK << endreq;
+    if(m_debug) {
+      debug() << boost::to_upper_copy("--------------------------------> "+detType()+"tell") 
+              << (*itT).second << "\t" << notOK << endreq;
+      debug() << *status << endreq;
+    }
   }
   if(m_debug) debug() << "Sum bad channels:\t" << notOKAll << endreq;
 

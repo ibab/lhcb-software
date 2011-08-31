@@ -30,6 +30,7 @@
  *  - \b PedestalsFromDB: read the pedestals from the conditions database.
  *  - \b ThresholdsFromDB: read the hit tresholds for outlier removal from the 
  *    conditions data base.
+ *  - \b MaskBadChannels: set all pedestals, noise etc to 0 if channel is know to be bad
  *  - \b CondPath: The pedestals and hit thresholds are not in the standard LHCBCOND 
  *    so they must be read from an additional DB slice.  The location in the database
  *    can be specified via CondPath
@@ -228,6 +229,8 @@ namespace ST {
     bool m_readThresholds;///< Read hit thresholds from conditions database
     std::string m_condPath; ///< Set the condition path in the database
     
+    bool m_maskBad;///< Turn on/off masking of bad channels
+
     /** data values for up to 8 pedestal values 
         - tellID to access map
         - vector of 8 PCN/header combinations

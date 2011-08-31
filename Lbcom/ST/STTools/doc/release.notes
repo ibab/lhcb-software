@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2011-08-31 - Mark Tobin
+ - Add job option to toggle on/off strip masking in noise tool.
+
 ! 2010-08-30 Mark Tobin
  - Implement methods added to noise calculation tool.
  - Read status of strip from database and set pedestal, noise, cms noise to 0 if 
