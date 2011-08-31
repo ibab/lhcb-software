@@ -35,6 +35,7 @@ void HAdderServInfoHandler::infoHandler(void)
 //  if (RTL::nodeNameShort().length()<=6)
   if (strlen(input)==0)
   {
+    printf("received empty message from %s.... Ignoring...\n",itsService->getName());
     return;
   }
   {
