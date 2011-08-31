@@ -57,22 +57,32 @@ void HAdderServInfoHandler::infoHandler(void)
     auto_ptr<dyn_string> service(Strsplit((char*)service_line.c_str(),"|"));
     service_list->at(j) = service->at(0);
   }
-  for (j = 0; j < service_list->size(); j++)
+  if (fullList)
   {
-//    string service_line(service_list->at(j));
-//    auto_ptr<dyn_string> service(Strsplit((char*)service_line.c_str(),"|"));
-    if (Newe)
+    for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
     {
-      for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
-      {
-        (*i)->NewService(itsService, taskname, service_list->at(j));
-      }
+      (*i)->SynchronizeServices(taskname, *service_list);
     }
-    else
+  }
+  else
+  {
+    for (j = 0; j < service_list->size(); j++)
     {
-      for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
+  //    string service_line(service_list->at(j));
+  //    auto_ptr<dyn_string> service(Strsplit((char*)service_line.c_str(),"|"));
+      if (Newe)
       {
-        (*i)->RemovedService(itsService, taskname, service_list->at(j));
+        for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
+        {
+          (*i)->NewService(itsService, taskname, service_list->at(j));
+        }
+      }
+      else
+      {
+        for (Adderlist_t::iterator i = l.begin(); i != l.end(); i++)
+        {
+          (*i)->RemovedService(itsService, taskname, service_list->at(j));
+        }
       }
     }
   }

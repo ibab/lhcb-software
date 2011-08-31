@@ -206,6 +206,7 @@ public:
 //  virtual void ServiceHandler(DimInfo *, std::string &, char *, int);
   virtual void NewService(DimInfo *myInfo, std::string &TaskName, std::string &ServiceName);
   virtual void RemovedService(DimInfo *, std::string &TaskName, std::string &ServiceName);
+  virtual void SynchronizeServices(std::string taskname, std::vector<std::string>&service_list);
   virtual void TaskDied(std::string & task);
   unsigned long long gettime();
   virtual void TimeoutHandler();

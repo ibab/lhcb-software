@@ -204,6 +204,36 @@ void MonAdder::TaskDied(std::string & task)
     }
   }
 }
+
+void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string>&service_list)
+{
+  unsigned int i;
+  bool fnd;
+  std::string le;
+  for (i=0;i<service_list.size();i++)
+  {
+    NewService(0,taskname,service_list[i]);
+  }
+  INServiceMap::iterator j;
+  for (j= m_inputServicemap.begin();j!=m_inputServicemap.end();j++)
+  {
+    fnd = false;
+    le = j->first;
+    for (i=0;i<service_list.size();i++)
+    {
+      if (service_list[i] == le)
+      {
+        fnd = true;
+        break;
+      }
+    }
+    if (!fnd)
+    {
+      RemovedService((DimInfo*)0,taskname,le);
+    }
+  }
+}
+
 void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &ServiceName)
 {
   int status;
