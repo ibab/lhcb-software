@@ -26,7 +26,7 @@ use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r11  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r46   Det     # Marco Cattaneo
+use DDDB                  v1r47   Det     # Marco Cattaneo
 use DetCond               v12r21  Det     # Marco Clemencic
 use DetDesc               v18r27p1 Det     # Marco Clemencic
 use DetDescChecks         v5r6    Det     # Marco Clemencic, Ivan Belyaev
