@@ -1,7 +1,9 @@
+!------------------------------------------------------------------------------
 ! Package         : ST/STCheckers
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STCheckers v3r3 2011-08-31 =========================
 ! 2011-08-08 Mark Tobin
  - Add new algorithm to check active fraction of detector in conditions
    database vs time.  Example options are in options/runSTActiveTrend.py
