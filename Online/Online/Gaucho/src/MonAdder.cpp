@@ -198,7 +198,7 @@ void MonAdder::TaskDied(std::string & task)
     }
     if (m_inputServicemap.size() == 0)
     {
-      printf ("TaskDied: Last Input Service... Deleting output service %s\n",m_outsvcname.c_str());
+//      printf ("TaskDied: Last Input Service... Deleting output service %s\n",m_outsvcname.c_str());
       delete m_outservice;
       m_outservice = 0;
     }
@@ -211,7 +211,7 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
   bool fnd;
   std::string le;
   std::string tskname,tgen;
-  printf("In SynchronizeServices: Taskname = %s, expected task name =%s\n",taskname.c_str(),m_taskPattern.c_str());
+//  printf("In SynchronizeServices: Taskname = %s, expected task name =%s\n",taskname.c_str(),m_taskPattern.c_str());
   bool status = boost::regex_search(taskname,m_taskexp);
   if (!status)
   {
@@ -244,7 +244,7 @@ void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string
     }
     for(i=0;i<toRemoveList.size();i++)
     {
-      printf("removing service %s (%s) from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),this->m_servicePattern.c_str(),taskname.c_str(),m_taskPattern.c_str());
+//      printf("removing service %s (%s) from taskname %s apparently matching pattern %s\n",toRemoveList[i].c_str(),this->m_servicePattern.c_str(),taskname.c_str(),m_taskPattern.c_str());
       RemovedService(0,taskname,toRemoveList[i]);
     }
   }
@@ -316,14 +316,14 @@ void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName
     m_inputServicemap.erase(i);
     if (m_inputServicemap.size() == 0)
     {
-      printf("RemovedService: Last Service %s removed... Deleting our output service",this->m_servicePattern.c_str());
+//      printf("RemovedService: Last Service %s removed... Deleting our output service",this->m_servicePattern.c_str());
       if (m_outservice != 0)
       {
-        printf("Name %s\n",m_outservice->getName());
+//        printf("Name %s\n",m_outservice->getName());
       }
       else
       {
-        printf("\n");
+//        printf("\n");
       }
       deletePtr(m_outservice);
     }
@@ -379,8 +379,8 @@ void MonAdder::TimeoutHandler()
     {
 //      ::lib_rtl_output(LIB_RTL_INFO,"Timeout from source %s expected %lli last received %lli\n",
       d->m_timeouts++;
-      printf("Timeout from source %s (PID = %d) expected %lli last received %lli cons. TMO %d\n ",
-          d->m_Info->m_TargetService.c_str(),d->m_pid, m_reference,d->last_update,d->m_timeouts);
+//      printf("Timeout from source %s (PID = %d) expected %lli last received %lli cons. TMO %d\n ",
+//          d->m_Info->m_TargetService.c_str(),d->m_pid, m_reference,d->last_update,d->m_timeouts);
       if (d->m_buffer != 0)
       {
         add(d->m_buffer,d->m_bufsiz,d->m_Info);

@@ -22,7 +22,7 @@ void HAdderServInfoHandler::infoHandler(void)
 
   if (strcmp(input, "DEAD") == 0)
   {
-    printf("Service Info Handler from %s DEAD\n",taskname.c_str());
+//    printf("Service Info Handler from %s DEAD\n",taskname.c_str());
     Adderlist_t::iterator adder;
     Adderlist_t& l = AdderSys::Instance().gg_AdderList;
     taskname = taskname.substr(0, taskname.find("/SERVICE_LIST"));
@@ -35,11 +35,11 @@ void HAdderServInfoHandler::infoHandler(void)
 //  if (RTL::nodeNameShort().length()<=6)
   if (strlen(input)==0)
   {
-    printf("received empty message from %s.... Ignoring...\n",itsService->getName());
+//    printf("received empty message from %s.... Ignoring...\n",itsService->getName());
     return;
   }
   {
-    printf("New Message from Service List Service %s data:\n%s\n==================\n",itsService->getName(),input);
+//    printf("New Message from Service List Service %s data:\n%s\n==================\n",itsService->getName(),input);
   }
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
@@ -53,11 +53,11 @@ void HAdderServInfoHandler::infoHandler(void)
   }
   if (fullList)
   {
-    printf("Processing FullList\n");
+//    printf("Processing FullList\n");
   }
   else
   {
-    printf("Selective Service Processing\n");
+//    printf("Selective Service Processing\n");
   }
   Adderlist_t& l = AdderSys::Instance().gg_AdderList;
   auto_ptr<dyn_string> service_list(Strsplit(input,"\n"));
@@ -107,7 +107,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
 
   if (strcmp(input, "DEAD") == 0)
   {
-    printf("Task Info Handler from DNS DEAD\n");
+//    printf("Task Info Handler from DNS DEAD\n");
     return;
   }
   if (strlen(input)==0)
