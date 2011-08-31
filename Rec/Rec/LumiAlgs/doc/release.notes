@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r0 2011-08-31 =========================
 ! 2011-08-11 - Jaap Panman
  - add a filter algorithm FilterFillingScheme 
    . filters on the presence of buckets in a given beam for a given magnet 
