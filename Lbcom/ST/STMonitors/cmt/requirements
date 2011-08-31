@@ -5,8 +5,8 @@
 #            : Nicola Chiapolini
 #============================================================================
 
-package STMonitors
-version           v3r5
+package           STMonitors
+version           v3r6
 
 #============================================================================
 # Structure, i.e. directories to process. 
