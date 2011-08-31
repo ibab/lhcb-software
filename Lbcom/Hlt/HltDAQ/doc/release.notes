@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r12 2011-08-31 =========================
 ! 2011-08-29 - Eric v. Herwijnen
  - Use htitle for rate counters.
 
