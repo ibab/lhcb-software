@@ -3,9 +3,13 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
-!2011-07-08 - Sajan Easo
- - Added factory declaration in RichRingRecAlgBase,RichRingRecToolBase,RichRingRecTupleAlgBase
-!========================= RichRecTemplateRings v1r4p2 2011-02-28 =========================
+
+!========================= RichRecTemplateRings v1r5 2011-08-31 ==============
+! 2011-07-08 - Sajan Easo
+ - Added factory declaration in 
+   RichRingRecAlgBase,RichRingRecToolBase,RichRingRecTupleAlgBase
+
+!===================== RichRecTemplateRings v1r4p2 2011-02-28 ================
 ! 2011-02-10 - Chris Jones
  - fix various icc warnings
 
