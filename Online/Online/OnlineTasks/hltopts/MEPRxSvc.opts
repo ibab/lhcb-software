@@ -30,8 +30,8 @@ Runable.partitionID      = @OnlineEnv.PartitionID;
 Runable.MEPBufSize       = 8000000;    // Test to see whether better CPU usage of farm can be achieved. BJ 6/10/2010
 Runable.sockBuf          = 30000000;   // this must be supported by the kernel! 
 Runable.refCount         = 2;
-//Runable.RTTCCompat       = false;      // this option does *not* exist anymore
-Runable.maxEventAge      = 100000; // us i.e 500 ms
+Runable.RTTCCompat       = false;      // for RTTC backward compatibility
+Runable.maxEventAge      = 100000;
 Runable.MEPRecvTimeout   = 5;
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
