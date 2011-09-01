@@ -1,10 +1,14 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set><text>../options/testMoore-Physics_MinBiasL0_PassThroughHlt_Jan10-raw.py</text></set></argument>
+  <argument name="program"><text>../options/run_moore.py</text></argument>
+  <argument name="args"><set>
+    <text>-n</text>
+    <text>1200</text>
+    <text>Commissioning_OTCosmics</text>
+  </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 105001. Record number within stream 1: 105001&quot; 
+expected_string = &quot;SUCCESS Reading Event record 1001. Record number within stream 1: 1001&quot; 
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['GaudiTest.expected_string'] = result.Quote(expected_string)

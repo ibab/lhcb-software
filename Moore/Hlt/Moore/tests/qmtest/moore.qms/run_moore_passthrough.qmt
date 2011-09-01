@@ -1,7 +1,11 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set><text>../options/testMoore-FEST-raw.py</text></set></argument>
+  <argument name="program"><text>../options/run_moore.py</text></argument>
+  <argument name="args"><set>
+    <text>-n</text>
+    <text>1200</text>
+    <text>Commissioning_PassThrough</text>
+  </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 expected_string = &quot;SUCCESS Reading Event record 1001. Record number within stream 1: 1001&quot; 

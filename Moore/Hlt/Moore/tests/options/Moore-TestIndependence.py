@@ -1,255 +1,287 @@
 #!/usr/bin/env python
 #
-# Script to test independence of Hlt lines
+# Script to use several processes to write events with differing Hlt Decisions to a file
 
-import os, sys, subprocess, re, optparse
+# MultiProcessing
+from multiprocessing import Process, Queue, Event, Condition, Lock
+from time import sleep
+from copy import copy
+import os
+import sys
+import select
+from collections import defaultdict
 
-# Configuration
-import Gaudi.Configuration
-from Configurables import GaudiSequencer as Sequence
-from Configurables import EventSelector, HltConf
+# General imports
+import random, optparse, subprocess
 
-from Moore.Configuration import Moore
+# Gaudi configuration
+from Gaudi.Configuration import *
+from GaudiConf.Configuration import *
 
-# GaudiPython
-from GaudiPython import AppMgr
+# Local imports
+from IndependenceTests.Tasks import DecisionReporter, time_string
+from HltMonitor.Base import ProcessWrapper
 
-def find_accept( startLine, lines ):
-    """ Function to obtain an accept line from a list of output lines. """
-    iter = lines.__iter__()
-    while 1:
+from GaudiPython.Bindings import gbl
+dm = gbl.DecisionMap()
+
+def index( seq, item ):
+    """Return the index of the first item in seq."""
+    for index in xrange( len( seq ) ):
+        if seq[ index ] == item:
+            return index
+
+def remove( lines ):
+    remove = []
+    bad = set( [ 'Hlt1ErrorEvent', 'Hlt1ODINTechnical', 'Hlt1Tell1Error', 'Hlt1Incident',
+                 'Hlt1Global', 'Hlt2Global', 'Hlt1Lumi', 'Hlt1VeloClosingMicroBias',
+                 'Hlt1L0Any', 'Hlt1MBMicroBiasTStation',
+                 'Hlt1MBNoBias', 'Hlt1LumiMidBeamCrossing', 'Hlt1CharmCalibrationNoBias' ] )
+    for line in lines:
+        if line.find( 'RateLimited' ) != -1: remove.append( line )
+        elif line.find( 'PassThrough' ) != -1: remove.append( line )
+        elif line.find( 'BeamGas' ) != -1: remove.append( line )
+        elif line in bad: remove.append( line )
+    for line in remove: lines.remove( line )
+    return lines
+    
+def find_lines( options, args ):
+    print 'Determining available lines'
+    jobArgs = [ '-d', options.DataType,
+                '-n', str( options.EvtMax ),
+                '--dddbtag', options.DDDBtag,
+                '--conddbtag', options.CondDBtag,
+                '--settings', args[ 0 ] ]
+
+    command = os.path.expandvars( '$INDEPENDENCETESTSROOT/scripts/lines.sh' )
+    p = subprocess.Popen( [command] + jobArgs, stdout = subprocess.PIPE,
+                          stderr = subprocess.STDOUT )
+    o = p.communicate()[ 0 ]
+    if ( p.returncode ):
+        print "failed finding lines"
+        return p.returncode
+
+    # Get the list of hlt lines from the output
+    output = []
+    for line in o.split( "\n" ):
+        if len( line.strip() ):
+            output.append( line )
+
+    hlt1Lines = set()
+    for m in output[ index( output, "HLT1LINES" ) + 1 : index( output, "HLT2LINES" ) ]:
+        hlt1Lines.add( m )
+
+    hlt2Lines = set()
+    for m in output[ index( output, "HLT2LINES" ) + 1 : index( output, "ENDLINES" ) ]:
+        hlt2Lines.add( m )
+
+    return remove( hlt1Lines ), remove( hlt2Lines )
+
+def run( options, args ):
+
+    evtMax = options.EvtMax
+
+    EventSelector().Input = [
+        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/81349_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
+        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/80881_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
+        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79647_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
+        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79646_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'"
+        ]
+
+    # Put the options into a dictionary
+    reporterConfig = dict()
+    reporterConfig[ 'EvtMax' ] = options.EvtMax
+    reporterConfig[ 'Verbose' ] = options.Verbose
+    reporterConfig[ 'UseDBSnapshot' ] = options.UseDBSnapshot
+    reporterConfig[ 'DDDBtag' ] = options.DDDBtag
+    reporterConfig[ 'CondDBtag' ] = options.CondDBtag
+    reporterConfig[ 'Simulation' ] = options.Simulation
+    reporterConfig[ 'DataType' ] = options.DataType
+    reporterConfig[ 'ThresholdSettings' ] = args[ 0 ]
+    reporterConfig[ 'Input' ]  = EventSelector().Input
+    reporterConfig[ 'Catalogs' ] = FileCatalog().Catalogs
+    if options.L0:
+        reporterConfig[ 'L0' ] = True
+        reporterConfig[ 'ReplaceL0BanksWithEmulated' ] = True
+
+    ## Don't wait after each event
+    reporterConfig[ 'Wait' ] = False
+    
+    # Find all lines in this configuration
+    all1Lines, all2Lines = find_lines( options, args )
+
+    hlt1Lines = set()
+    # Process the options to setup Hlt lines to be run
+    if options.Hlt1Lines == 'none':
+        pass
+    elif options.Hlt1Lines == 'all':
+        hlt1Lines = copy( all1Lines )
+    else:
+        # Put the comma separated lists of lines into lists
+        for line in options.Hlt1Lines.split( ";" ):
+            if ( len( line.strip() ) ):
+                hlt1Lines.add( line )
+
+    hlt2Lines = set()
+    if options.Hlt2Lines == 'none':
+        pass
+    elif options.Hlt2Lines == 'all':
+        hlt2Lines = copy( all2Lines )
+    else:
+        for line in options.Hlt2Lines.split( ";" ):
+            if ( len( line.strip() ) ):
+                hlt2Lines.add( line )
+
+    if options.Verbose:
+        for line in hlt1Lines:
+            print line
+        for line in hlt2Lines:
+            print line
+
+    # Check if the specified lines exist
+    allLines = all1Lines.union( all2Lines )
+    for line in hlt1Lines.union( hlt2Lines ):
+        if line not in allLines:
+            print "Error, " + line + " is not a valid Hlt 1 or 2 line."
+            print "Available lines:"
+            for l in allLines:
+                print l
+            return 1
+    del allLines
+
+    wrappers = dict()
+    i = 0
+    # Setup the process with all lines
+    # Setup the processes running a all Hlt lines
+    allConfig = reporterConfig.copy()
+    allConfig[ 'Hlt1Lines' ] = list( hlt1Lines )
+    allConfig[ 'Hlt2Lines' ] = list( hlt2Lines )
+    wrappers[ 'allLines' ] = ProcessWrapper( i, DecisionReporter, 'allLines', allConfig,
+                                             options.Verbose )
+
+    # Setup the processes running a single Hlt1 line
+    for lineName in hlt1Lines:
+        i += 1
+        config = reporterConfig.copy()
+        config[ 'Hlt1Lines' ] = [ lineName ]
+        config[ 'Hlt2Lines' ] = []
+        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
+                                               options.Verbose )
+
+    # Setup the processes running a single Hlt2 line
+    for lineName in hlt2Lines:
+        i += 1
+        config = reporterConfig.copy()
+        config[ 'Hlt1Lines' ] = list( hlt1Lines )
+        config[ 'Hlt2Lines' ] = [ lineName ]
+        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
+                                               options.Verbose )
+
+    # Keep track of jobs that have completed
+    completed = set()
+    running = set()
+    todo = set()
+
+    # start the allLines process first
+    wrappers[ 'allLines' ].start()
+    print 'Running allLines'
+    running.add( 'allLines' )
+
+    # start the rest of the processes
+    for name, wrapper in wrappers.iteritems():
+        if len( running ) == options.NProcesses:
+            break
+        wrapper.start()
+        running.add( name )
+    todo = set( wrappers.keys() ).difference( running )
+
+    while True:
+        ready = None
         try:
-            line = iter.next()
-            if re.search( "^" + startLine + "\s", line ):
-                acceptIter = iter
-                try:
-                    for i in range( 6 ):
-                        if re.search( r"#accept", line ):
-                            return line
-                        line = acceptIter.next()
-                except StopIteration:
-                    return None
-        except StopIteration:
-            return None
-    return None
+            ( ready, [], [] ) = select.select( [ wrappers[ name ] for name in running ], [], [] )
 
-def main():
+            for wrapper in ready:
+                data = wrapper.getData( False )
+                if data == None:
+                    continue
+                elif type( data ) == type( "" ):
+                    # Message
+                    if data == 'DONE':
+                        print '%s done' % wrapper.name()
+                        completed.add( wrapper.name() )
+                        wrapper.join()
+                        if len( todo ) != 0:
+                            to_start = todo.pop()
+                            print 'Running %s' % to_start
+                            wrappers[ to_start ].start()
+                            running.add( to_start )
+                        running.difference_update( completed )
+                else:
+                    run = data.pop( 'run' )
+                    event = data.pop( 'event' )
+                    for line, dec in data.iteritems():
+                        dm.addDecision( run, event, line, dec )
+
+            if len( completed ) == len( wrappers ):
+                break
+
+        except select.error:
+            sleep( 5 )
+
+    mismatches = defaultdict(set)
+    events = dm.events()
+    for entry in events:
+        for line in hlt1Lines.union( hlt2Lines ):
+            if not dm.compare( entry.first, entry.second, 'allLines', line ):
+                mismatches[ line ].add( entry )
+
+    if len( mismatches ):
+        print 'Found mismatches:'
+        for line, events in mismatches.iteritems():
+            print '%s %d' % ( line, len( events ) )
+    else:
+        print 'No mismatches found.'
+
+    return 0
+    
+if __name__ == "__main__":
 
     # Setup the option parser
-    usage = "usage: %prog [options] inputfile <inputfile>"
+    usage = "usage: %prog settings"
     parser = optparse.OptionParser( usage = usage )
     parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
-                       default="2009", help="DataType to run on.")
-    parser.add_option( "-n", "--evtmax", type="int", action = "store", dest = "EvtMax",
-                       default = 10000, help = "Number of events to run" )
+                       default="2011", help="DataType to run on.")
+    parser.add_option( "-n", "--evtmax", action = "store", type = 'int',
+                       dest = "EvtMax", default = 1e4, help = "Number of events to run" )
+    parser.add_option( "--nprocesses", action = "store", type = 'int',
+                       dest = "NProcesses", default = 8,
+                       help = "Number of simultaneous processes to run." )
     parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
                        default='MC09-20090602', help="DDDBTag to use" )
     parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
                        default = 'sim-20090402-vc-md100', help = "CondDBtag to use" )
-    parser.add_option( "--settings", action = "store", dest="ThresholdSettings",
-                       default = 'Physics_320Vis_300L0_10Hlt1_Jan10',
-                       help = "ThresholdSettings to use")
     parser.add_option( "-s", "--simulation", action = "store_true", dest = "Simulation",
                        default = False, help = "Run on simulated data")
     parser.add_option( "--dbsnapshot", action = "store_true", dest = "UseDBSnapshot",
                        default = False, help = "Use a DB snapshot" )
     parser.add_option( "-v", "--verbose", action = "store_true", dest = "Verbose",
                        default = False, help = "Verbose output" )
+    parser.add_option( "--hlt1lines", action = "store", dest = "Hlt1Lines",
+                       default = "", help = "Colon seperated list of additional hlt1 lines" )
+    parser.add_option( "--hlt2lines", action = "store", dest = "Hlt2Lines",
+                       default = "", help = "Colon seperated list of additional hlt2 lines" )
+    parser.add_option( "--l0", action="store_true", dest="L0",
+                       default=False, help="Rerun L0" )
 
-    # Parse the arguments
+    # Parse the command line arguments
     (options, args) = parser.parse_args()
 
-    # Make sure there is data to run on
+    ## multiprocessing.log_to_stderr()
+    ## logger = multiprocessing.get_logger()
+    ## logger.setLevel(logging.INFO)
+
     if not len( args ):
-        print "error, no input data specified"
-        return 2
+        print "No settings specified"
+        exit( 1 )
 
-    # Put the options into the Moore configurable
-    Moore().ThresholdSettings = options.ThresholdSettings
-
-    Moore().Verbose = options.Verbose
-    Moore().EvtMax = options.EvtMax
-
-    Moore().UseDBSnapshot = options.UseDBSnapshot
-    Moore().DDDBtag   = options.DDDBtag
-    Moore().CondDBtag = options.CondDBtag
-    Moore().Simulation = options.Simulation
-    Moore().DataType   = options.DataType
-    Moore().inputFiles = args
-
-    EventSelector().PrintFreq = 100
-
-    # Instanciate the AppMgr to get the Hlt lines from their Sequences
-    appMgr = AppMgr()
-
-    hlt1Seq = Sequence( "Hlt1" )
-    hlt1Lines = set()
-    for m in hlt1Seq.Members:
-        hlt1Lines.add( m.name() )
-
-    hlt2Seq = Sequence( "Hlt2" )
-    hlt2Lines = set()
-    for m in hlt2Seq.Members:
-        hlt2Lines.add( m.name() )
-
-    # The AppMgr is no longer needed
-    appMgr.exit()
-
-    # Run the full set of lines
-    # Setup the command to run all lines
-    runjob = os.environ['MOOREROOT'] + '/tests/options/Moore-RunJob.py'
-    cmdList = [ runjob,
-                "-n", str( Moore().EvtMax ),
-                "--settings", Moore().ThresholdSettings,
-                "-d", Moore().DataType,
-                "--dddbtag", Moore().DDDBtag,
-                "--conddbtag", Moore().CondDBtag ]
-    if ( Moore().UseDBSnapshot ):
-        cmdList += [ "--dbsnapshot" ]
-    if ( Moore().Simulation ):
-        cmdList += [ "--simulation" ]
-    if ( Moore().Verbose ):
-        cmdList += [ "-v" ]
-    if len( hlt1Lines ):
-        cmdList += [ "--hlt1lines" ]
-        lines = list( hlt1Lines )
-        string = str( lines[ 0 ] )
-        for line in lines[ 1: ]:
-            string += "," + line
-        cmdList += [ string ]
-    if len( hlt2Lines ):
-        cmdList += [ "--hlt2lines" ]
-        lines = list( hlt2Lines )
-        string = str( lines[ 0 ] )
-        for line in lines[ 1: ]:
-            string += "," + line
-        cmdList += [ string ]
-    cmdList += args
-
-    if options.Verbose:
-        cmdStr = cmdList[ 0 ]
-        for cmd in cmdList[ 1 : ]: cmdStr += " " + cmd
-        print "Running All Lines:" + cmdStr
-    else:
-        print "Running All Lines."
-    # Spawn the job to run with all lines enabled
-    p = subprocess.Popen( cmdList, stdout = subprocess.PIPE, stderr = subprocess.STDOUT )
-    o = p.communicate()[ 0 ]
-    if ( p.returncode ):
-        print "failed running all lines"
-        return p.returncode
-
-    # Get the output as a list of lines
-    output = []
-    for line in o.split( "\n" ):
-        if len( line.strip() ):
-            output.append( line )
-
-    acceptAllLines = {}
-
-    # Hlt{1,2}Global always runs, so it can be removed here
-    hlt1Lines.remove( "Hlt1Global" )
-    hlt2Lines.remove( "Hlt2Global" )
-
-    # Find and save all accept lines
-    for hltLine in ( hlt1Lines | hlt2Lines ):
-        line = find_accept( hltLine, output )
-        if line: acceptAllLines[ hltLine ] = line
-                            
-    # Run each line individually
-    # Setup the command to run individual lines
-    cmdList = [ runjob,
-                "-n", str( Moore().EvtMax ),
-                "--settings", Moore().ThresholdSettings,
-                "-d", Moore().DataType,
-                "--dddbtag", Moore().DDDBtag,
-                "--conddbtag", Moore().CondDBtag ]
-    if ( Moore().UseDBSnapshot ):
-        cmdList += [ "--dbsnapshot" ]
-    if ( Moore().Simulation ):
-        cmdList += [ "--simulation" ]
-    if ( Moore().Verbose ):
-        cmdList += [ "-v" ]
-
-    acceptSingleLine = {}
-
-    # Run Hlt1 lines individually
-    for hltLine in hlt1Lines:
-        lst = cmdList + [ "--hlt1lines", hltLine ]
-        lst += args
-        if options.Verbose:
-            cmdStr = lst[ 0 ]
-            for arg in lst[ 1 : ]: cmdStr += " " + arg
-            print "Running Hlt1 Line: " + hltLine + " using: " + cmdStr
-        else:
-            print "Running Hlt1 Line: " + hltLine
-        # Spawn the job with a single hlt1 line running
-        p = subprocess.Popen( lst, stdout = subprocess.PIPE, stderr = subprocess.STDOUT )
-        o = p.communicate()[ 0 ]
-        if p.returncode:
-            print "failed running job"
-            return p.returncode
-        output = []
-        for line in o.split( "\n" ):
-            if len( line.strip() ):
-                output.append( line )
-        line = find_accept( hltLine, output )
-        if line: acceptSingleLine[ hltLine ] = line
-
-    # Hlt2 needs Hlt1 to run, so run all Hlt1 lines when testing Hlt2
-    if len( hlt1Lines ):
-        cmdList += [ "--hlt1lines" ]
-        lines = list( hlt1Lines )
-        string = str( lines[ 0 ] )
-        for line in lines[ 1: ]:
-            string += "," + line
-        cmdList += [ string ]
-
-    # Run Hlt2 lines individually
-    for hltLine in hlt2Lines:
-        lst = cmdList + [ "--hlt2lines", hltLine ]
-        lst += args
-        ## cmdStr = lst[ 0 ]
-        ## for arg in lst[ 1 : ]: cmdStr += " " + arg
-        print "Running Hlt2 Line: " + hltLine
-        # Spawn the job to run the individual Hlt2 lines
-        p = subprocess.Popen( lst, stdout = subprocess.PIPE, stderr = subprocess.STDOUT )
-        o = p.communicate()[ 0 ]
-        if p.returncode:
-            print "failed running job"
-            return p.returncode
-        output = []
-        for line in o.split( "\n" ):
-            if len( line.strip() ):
-                output.append( line )
-        line = find_accept( hltLine, output )
-        if line: acceptSingleLine[ hltLine ] = line
-
-    # Save any lines which contain mismatches
-    badLines = dict()
-    
-    # Check for accept line mismatches for all Hlt lines
-    for key in acceptAllLines.keys():
-        if key in acceptSingleLine.keys():
-            allAccept = acceptAllLines[ key ]
-            singleAccept = acceptSingleLine[ key ]
-            if allAccept != singleAccept:
-                badLines[ key ] = { "All" : allAccept,
-                                    "Single" : singleAccept }
-
-    # Print all lines with mismatches
-    if len( badLines ):
-        print "!!! Lines with mismatches !!!\n"
-        for key in badLines.keys():
-            allAccept = acceptAllLines[ key ]
-            singleAccept = acceptSingleLine[ key ]
-            print key
-            print "All:    " + allAccept
-            print "Single: " + singleAccept + "\n"
-        return 2
-    else:
-        print "No mismatches."
-        return 0
-
-if __name__ == "__main__":
-    sys.exit( main() )
+    sys.exit( run( options, args ) )

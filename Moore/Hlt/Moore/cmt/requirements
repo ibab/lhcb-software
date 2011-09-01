@@ -39,7 +39,9 @@ use GaudiPoolDb         v*                  -no_auto_imports
 use GaudiPython         v*                  -no_auto_imports
 
 # From LHCbSys
-use L0Interfaces        v*    L0            -no_auto_imports
+use L0Interfaces        v*      L0          -no_auto_imports
+use IndependenceTests   v*      Hlt         -no_auto_imports
+use HltMonitor          v*      Hlt         -no_auto_imports
 
 #-- Lbcom packages 
 use LbcomSys            v*                  -no_auto_imports

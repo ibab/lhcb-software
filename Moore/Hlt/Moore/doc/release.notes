@@ -2,6 +2,16 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-09-01 - Roel Aaij
+ - Remove obsolete tests (qmt and options files)
+ - Add tests for the following configure
+   - Commissioning_OTCosmics
+   - Commissioning_PassThrough
+   - Calibration_VeloMicroBias
+   - Physics_Sept2011
+   All of these tests run 1200 events.
+ - Update test_independence to make it work again.
+
 ========================== Moore v12r9  2011-08-29 =================
 ========================== Moore v12r8  2011-07-04 =================
 ========================== Moore v12r7  2011-06-24 =================

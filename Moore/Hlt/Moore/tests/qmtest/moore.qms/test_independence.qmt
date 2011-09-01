@@ -4,22 +4,25 @@
   <argument name="timeout">
     <integer>7200</integer>
   </argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="args"><set>
     <text>-n</text>
     <text>10000</text>
     <text>-s</text>
-    <text>-v</text>
-    <text>--settings</text>
-    <text>Physics_320Vis_300L0_10Hlt1_Jan10</text>
-    <text>castor:/castor/cern.ch/user/r/raaij/Sim03Reco02-Mbias_0x00011409.raw</text>
+    <text>--dddbtag=head-20110302</text>
+    <text>--conddbtag=head-20110622</text>
+    <text>--hlt1lines=all</text>
+    <text>--hlt2lines=all</text>
+    <text>--l0</text>
+    <text>--nprocesses=8</text>
+    <text>Physics_Sept2011</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;No mismatches.&quot;
+expected_string = &quot;No mismatches found.&quot;
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['GaudiTest.expected_string'] = result.Quote(expected_string)
 </text></argument>
 
 </extension>
-
