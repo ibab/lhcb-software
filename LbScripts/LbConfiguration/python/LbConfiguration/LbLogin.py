@@ -101,6 +101,7 @@ def _useDevCb(_option, _opt_str, _value, parser):
 
 def _pythonVerCb(_option, _opt_str, value, parser):
     parser.values.pythonvers = value
+    parser.values.get_python = True
     parser.values.use_cache = False
 
 #-----------------------------------------------------------------------------------
