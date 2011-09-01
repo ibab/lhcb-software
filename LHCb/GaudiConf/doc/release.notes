@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-01 - Rob Lambert
+ - Modify IOHelper to work directly with FileRecordCnvSvc for any type
+ - Add information getter functions for iohelper
+ - Add compatibility with connection strings not containing DATAFILE
+   OutputStream, for example, can have it set separately 
+
 !========================= GaudiConf v14r2 2011-08-30 =========================
 ! 2011-08-24 - Rob Lambert
  - Fix typo, those locations were never persisted on the DST

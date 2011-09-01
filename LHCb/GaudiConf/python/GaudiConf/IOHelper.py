@@ -70,8 +70,9 @@ class IOHelper(object):
     
     '''
     #the default persistencies
-    _inputPersistency="POOL"
-    _outputPersistency="POOL"
+    _outputPersistency=_inputPersistency=_defaultPersistency="POOL"
+    #_inputPersistency=_defaultPersistency
+    #_outputPersistency=_defaultPersistency
     
     _inputSvcTypDict = { 'ROOT' : "SVC='Gaudi::RootEvtSelector'",
                          'POOL' : "TYP='POOL_ROOT'",
@@ -80,7 +81,8 @@ class IOHelper(object):
     
     _outputSvcTypDict = { 'ROOT' : "SVC='RootCnvSvc'",
                           'POOL' : "TYP='POOL_ROOTTREE'",
-                          'MDF'  : "SVC='LHCb::RawDataCnvSvc'"
+                          'MDF'  : "SVC='LHCb::RawDataCnvSvc'",
+                          'FSR'  : "SVC='FileRecordCnvSvc'"
                           }
     
     _knownPerServices = {'PoolDbCnvSvc': 'POOL',
@@ -98,6 +100,8 @@ class IOHelper(object):
                            'RunRecordStream' : 'FSR',
                            'RecordStream' : 'FSR'                           
                            }
+    
+    
     
     def __init__(self,Input=None,Output=None):
         '''
@@ -131,11 +135,14 @@ class IOHelper(object):
             if self._inputPersistency == 'POOL':
                 print "# ROOT output file requested. Forcing reading of POOL input files with RootCnv" 
                 self._inputPersistency = 'ROOT'
-
+        
         if self._inputPersistency=='ROOT' or self._outputPersistency=='ROOT':
             if not self.isRootSupported():
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
+        
+        if self._outputPersistency=="FSR" and self._inputPersistency not in ['ROOT','POOL']:
+            raise TypeError("FSR is not a proper persistency type. To configure services, you would need to specify a proper type.")
     
     ###############################################################
     #              Helper functions
@@ -277,6 +284,36 @@ class IOHelper(object):
         else:
             return wclass(name=config.split('/')[-1])
     
+    def _isDressed(self, filename):
+        '''Determine if a string is dressed or not
+        '''
+        return ("DATAFILE='" in filename or " OPT='" in filename or "SVC=" in filename or "TYP='" in filename)
+    
+    ###############################################################
+    #              Information
+    ###############################################################
+    def defaultPersistency(self):
+        '''Information: return the default persistency'''
+        return str(IOHelper._defaultPersistency)
+    
+    def inputPersistency(self):
+        '''Information: return the input persistency'''
+        return str(self._inputPersistency)
+    
+    
+    def outputPersistency(self):
+        '''Information: return the output persistency'''
+        return str(self._outputPersistency)
+    
+    def knownPersistencyServices(self):
+        '''Information: return the list of known persistency services'''
+        return self._knownPerServices.keys()
+    
+    
+    def knownOutputStreams(self):
+        '''Information: return the list of known output streams'''
+        return self._knownOutputStreams.keys()
+    
     ###############################################################
     #              Services
     ###############################################################
@@ -296,6 +333,7 @@ class IOHelper(object):
     
     def setupServices(self):
         '''Services:  Setup the pool/Root services, to be done by LHCbApp'''
+        
         from Gaudi.Configuration import (EventDataSvc, ApplicationMgr, EventPersistencySvc)
         # Set up the TES
         EventDataSvc( ForceLeaves        = True,
@@ -352,7 +390,12 @@ class IOHelper(object):
         retlist+=self._getSvcList(EventPersistencySvc().CnvServices)
         retlist+=self._getSvcList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
         
-        return retlist
+        reducedList=[]
+        for svc in retlist:
+            if svc not in reducedList:
+                reducedList.append(svc)
+        
+        return reducedList
     
     def activePersistencies(self):
         '''Services:  return all configured persistency services'''
@@ -388,7 +431,7 @@ class IOHelper(object):
         self.setupServices()
     
     def postConfigServices(self):
-        '''Services:  append a Post Config action to change the services, input and outpu
+        '''Services:  append a Post Config action to change the services, input and output
         this is a helper function for patching old software
         '''
         from Gaudi.Configuration import appendPostConfigAction
@@ -403,21 +446,34 @@ class IOHelper(object):
     def dressFile(self,filename,IO):
         '''Filenames:  Go from file name to connection string'''
         IO=self.__chooseIO(IO)
-        if "DATAFILE=" in filename:
+        if self._isDressed(filename):
             raise ValueError, "the file has already been dressed, don't dress a dressed file!: "+filename
+        retstr=""
+        #allow filename to be an empty string, in the case of OutputStream where outputFile and Output are
+        #set separately
+        if filename.strip()!='':
+            filename="DATAFILE='" + filename + "' "
         if IO=='O':
-            return "DATAFILE='" + filename + "' " + self.svcTypString( 'O' ) + " OPT='REC'"
+            return filename + self.svcTypString( 'O' ) + " OPT='REC'"
         
-        return "DATAFILE='" + filename + "' " + self.svcTypString( 'I' ) + " OPT='READ'"
+        return filename + self.svcTypString( 'I' ) + " OPT='READ'"
     
     def undressFile(self,filestring):
         '''Filenames:  Go from connection string to file name'''
+        if not self._isDressed(filestring):
+            return filestring
+        #allow filename to be an empty string,
+        #in the case of OutputStream where outputFile and Output are
+        #set separately
         match="DATAFILE='"
         pos=filestring.find(match)
-        if pos>=0:
-            pos=pos+len(match)
-            if pos <len(filestring):
-                filestring=filestring[pos:]
+        if pos<0:
+            return ''
+        
+        pos=pos+len(match)
+        if pos <len(filestring):
+            filestring=filestring[pos:]
+        
         filestring=filestring.strip("'").split("'")[0]
         return filestring
     
@@ -438,16 +494,16 @@ class IOHelper(object):
         needs to know the IO type to know what to convert to'''
         IO=self.__chooseIO(IO)
 
-        #don't do anything if my type is MDF
+        #don't do anything if my type is MDF or FSR
         if not force and IO=="I" and self._inputPersistency=="MDF":
             return filelist
-        if not force and IO=="O" and self._outputPersistency=="MDF":
+        if not force and IO=="O" and (self._outputPersistency=="MDF" or self._outputPersistency=="FSR"):
             return filelist
         
         retlist=[]
         for file in filelist:
-            #never convert an MDF file, it's not needed
-            if not force and self.detectFileType(file)=="MDF":
+            #never convert an MDF or an output FSR file, it's not needed, filetype FSR implies FileRecordCnvSvc is already specified
+            if not force and (self.detectFileType(file)=="MDF" or (self.detectFileType(file)=="FSR" and IO=="O")):
                 retlist.append(file)
                 continue
             #otherwise convert it
@@ -661,16 +717,18 @@ class IOHelper(object):
             streams=self.activeStreams()
         
         for stream in streams:
+            #for converting streams, only ignore MDF, its the only format
+            #for which the old and new specifications are identical
             if self.detectStreamType(stream) in ["MDF","UNKNOWN"]:
                 continue
             if type(stream) is str:
                 stream=self._configurableInstanceFromString(stream)
-                
+            
             if hasattr(stream,'Output'):
                 if stream.Output is not None:
                     #don't convert odd looking lists or empty strings
                     if len(stream.Output) and type(stream.Output) is str:
-                        if self.detectFileType(stream.Output) not in ["MDF","ETC","UNKNOWN"]:
+                        if self.detectFileType(stream.Output) not in ["MDF","ETC","FSR","UNKNOWN"]:
                             stream.Output=self.dressFile(self.undressFile(stream.Output),"O")
         return
     
@@ -713,14 +771,15 @@ class IOHelper(object):
             winstance=writer
             writer=writer.getFullName()
         
+        dst_filename=""
         if hasattr(winstance,"Output") or (hasattr(winstance,'__slots__') and "Output" in winstance.__slots__):
             #build up the filename
-            filename=self.dressFile(filename,'O')
-            winstance.Output = filename
+            dst_filename=self.dressFile(filename,'O')
+            winstance.Output = dst_filename
         elif hasattr(winstance, "Connection") or (hasattr(winstance,'__slots__') and "Connection" in winstance.__slots__):
             winstance.Connection="file://"+filename
             #build up the filename
-            filename=self.dressFile(filename,'O')
+            dst_filename=self.dressFile(filename,'O')
         else:
             raise TypeError, "writer class "+writer+" does not have any output to configure. Choose a class with either Output or Connection"
         
@@ -735,8 +794,16 @@ class IOHelper(object):
                                                      EvtDataSvc = "FileRecordDataSvc",
                                                      EvtConversionSvc = "FileRecordPersistencySvc" )
         
-        FSRWriter.Output = filename
+        #FSRs have a different output service
+        FSRIO=None
+        if self._outputPersistency in ["ROOT","POOL"]:
+            FSRIO=IOHelper(self._outputPersistency,"FSR")
+        elif self._inputPersistency in ["ROOT","POOL"]:
+            FSRIO=IOHelper(self._inputPersistency,"FSR")
+        else:
+            raise TypeError("Something odd has occurred when setting FSRs")
         
+        FSRWriter.Output = FSRIO.dressFile(filename,"O")
         #As far as I can tell, the ordering of the algs does not matter here
         return [winstance, FSRWriter]
         #both result in well-formed Lumi tests
@@ -810,7 +877,8 @@ class IOExtension(object):
                     LHCbApp().Persistency=iox.detectMinType(input+output)
     '''
     
-    _defaultPersistency=IOHelper._inputPersistency
+    _defaultPersistency=_rootTypePersistency=IOHelper._defaultPersistency
+    #_rootTypePersistency=IOExtension._defaultPersistency
     
     _knownExtensions={ 'DIGI' : '',
                        'SIM'  : '',
@@ -831,7 +899,22 @@ class IOExtension(object):
             #check the persistency is valid
             ioh=IOHelper(Persistency,Persistency)
             #reset own persistency
-            self._defaultPersistency=ioh._inputPersistency
+            self._rootTypePersistency=ioh._inputPersistency
+    
+    ###############################################################
+    #              Information
+    ###############################################################
+    def defaultPersistency(self):
+        '''Information: return the default persistency'''
+        return str(IOExtension._defaultPersistency)
+    
+    def rootTypePersistency(self):
+        '''Information: return the persistency type which is used for Root-like files'''
+        return str(self._rootTypePersistency)
+    
+    def knownExtensions(self):
+        '''Information: return the list of known file extensions'''
+        return self._knownExtensions.keys()
     
     ###############################################################
     #              Extensions
@@ -854,7 +937,7 @@ class IOExtension(object):
         if ext not in self._knownExtensions:
             return "UNKNOWN"
         
-        retext=self._defaultPersistency
+        retext=self._rootTypePersistency
         if 'MDF' in self._knownExtensions[ext]:
             retext='MDF'
         if 'Warning' in self._knownExtensions[ext]:
@@ -875,11 +958,12 @@ class IOExtension(object):
         '''
         for file in files:
             persistency=self.detectFileType(file)
+            
             if persistency=="UNKNOWN":
                 raise TypeError, "Type of file "+filename+" could not be determined"+" use IOHelper with specified persistency instead"
             if persistency is not 'MDF':
-                if persistency!=self._defaultPersistency:
-                    raise TypeError, "You are trying to parse "+persistency+" file types when you told IOExtension to expect "+self._defaultPersistency
+                if persistency!=self._rootTypePersistency:
+                    raise TypeError, "You are trying to parse "+persistency+" file types when you told IOExtension to expect "+self._rootTypePersistency
                 return persistency
         
         return 'MDF'
@@ -923,9 +1007,9 @@ class IOExtension(object):
     def inputFiles(self,files,clear=False, eventSelector=None):
         '''Input: wrapper for IOHelper.inputFiles, where the persistency
         type is guessed from the file extension
-
+        
         inputFiles(<list_of_files>, clear=False, eventSelector=None)
-
+        
         if clear is True, empty the existing EventSelector list
         '''
         #print eventSelector
@@ -965,7 +1049,7 @@ class IOExtension(object):
         ioh=self.getIOHelper(files[0])
         
         if setPersistency:
-            retstr+='IOExtension("'+self._defaultPersistency+'").inputFiles([\n'
+            retstr+='IOExtension("'+self._rootTypePersistency+'").inputFiles([\n'
         else:
             retstr+="IOExtension().inputFiles([\n"
         alen=4
@@ -985,7 +1069,7 @@ class IOExtension(object):
         '''Output: wrapper for IOHelper.outputAlgs, where the persistency
         type is guessed from the file extension
         In the case of MDF, no FSR will be written
-
+        
         returns a list of algorithms to add to your sequence
         '''
         ftype=self.detectFileType(filename)

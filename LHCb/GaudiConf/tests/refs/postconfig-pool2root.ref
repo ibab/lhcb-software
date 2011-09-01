@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/GaudiConf/tests/postconfig-pool2root.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/GaudiConf/tests/postconfig-pool2root.py'
+# --> Including file '/tmp/rlambert/LHCb_v32r5/GaudiConf/tests/postconfig-pool2root.py'
+# <-- End of file '/tmp/rlambert/LHCb_v32r5/GaudiConf/tests/postconfig-pool2root.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency = 'POOL'  (default: None)
@@ -17,7 +17,7 @@
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
 # WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag head-20110524 for partition LHCBCOND
+# WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag MC-20101026-vc15mm-md100 for partition SIMCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
@@ -27,8 +27,8 @@
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r15/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r15/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -46,21 +46,21 @@
 # |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ace1c54ec80>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ace1cdc4b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ace1cdc4c50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ace1cdc4d50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ace1cdc4e50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ace1cdc4b50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ace1cdc4d50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ace1cdc4c50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ace1cdc4e50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b537895baa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b53791bda50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b53791bdb50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b53791bdc50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b53791bdd50>, 'LHCb::RawDataCnvSvc']
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
 DATAFILE='PFN:testPoolOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ace1c54ec80>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ace1cdc4b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ace1cdc4c50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ace1cdc4d50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ace1cdc4e50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ace1cdc4b50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ace1cdc4d50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ace1cdc4c50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ace1cdc4e50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b537895baa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b53791bda50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b53791bdb50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b53791bdc50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b53791bdd50>, 'LHCb::RawDataCnvSvc']
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
 DATAFILE='PFN:testPoolOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0xbba6610>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xbba6850>, <Gaudi::RootCnvSvc/RootCnvSvc at 0xbba6610>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xbba6850>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x17e2bc60>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x17e31470>, 'LHCb::RawDataCnvSvc']
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
 DATAFILE='PFN:testPoolOP.dst' SVC='RootCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
 DATAFILE='PFN:testPoolOP.dst' SVC='RootCnvSvc' OPT='REC'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v39r4
-                                          running on lbcsrv01 on Wed Jun  1 20:11:34 2011
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lbcsrv01 on Tue Aug 30 17:17:07 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]

@@ -1,8 +1,8 @@
-# --> Including file '/tmp/rlambert/LHCb_v32r5/GaudiConf/tests/postconfig-root2pool.py'
-# <-- End of file '/tmp/rlambert/LHCb_v32r5/GaudiConf/tests/postconfig-root2pool.py'
+# --> Including file '/tmp/rlambert/Brunel_v40r1/GaudiConf/tests/ioh-postconfig-pool2root.py'
+# <-- End of file '/tmp/rlambert/Brunel_v40r1/GaudiConf/tests/ioh-postconfig-pool2root.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency = 'ROOT'  (default: None)
+# |-Persistency = 'POOL'  (default: None)
 # |-DDDBtag     = ''
 # |-DataType    = '2009'
 # |-TimeStamp   = False
@@ -46,44 +46,46 @@
 # |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ffc7460>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x20056770>, 'LHCb::RawDataCnvSvc']
-["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
-DATAFILE='PFN:testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x1ffc7460>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x20056770>, 'LHCb::RawDataCnvSvc']
-["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
-DATAFILE='PFN:testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b421a937050>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b421a34ea50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b421a34eb50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b421a34ec50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b421a34ed50>, 'LHCb::RawDataCnvSvc']
+Before, i.e. POOL
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b9467f47aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b94687a8a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b94687a8b50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b94687a8c50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b94687a8d50>, 'LHCb::RawDataCnvSvc']
+DATAFILE='testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
+DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
-DATAFILE='PFN:testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
-["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
-DATAFILE='PFN:testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
+After, i.e. ROOT
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x5424110>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4fe23b0>, 'LHCb::RawDataCnvSvc']
+DATAFILE='testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
+["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lbcsrv01 on Tue Aug 30 17:18:56 2011
+                                                   Welcome to Brunel version v40r1
+                                          running on lbcsrv01 on Thu Sep  1 21:24:57 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
-ICS                  INFO Data source: EventDataSvc output: DATAFILE='PFN:testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'
+EventPersistenc...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/RootCnvSvc' , 'LHCb::RawDataCnvSvc' ]
+OutputStream         INFO Data source: EventDataSvc output: DATAFILE='testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
+FileRecordPersi...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/FileRecordCnvSvc' ]
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSROutputStream      INFO Data source: FileRecordDataSvc output: DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-RootDBase.open    SUCCESS root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default File version:51800
-RootDBase.open    SUCCESS root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default File version:51800
-PoolRootEvtCnvSvc    INFO No Records /FileRecords present in:9032500F-3924-DE11-89FD-0030487C5E0E
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 ApplicationMgr       INFO Application Manager Stopped successfully
-ICS                  INFO Events output: 1
+OutputStream         INFO Events output: 1
+FSROutputStream      INFO Set up File Summary Record
+IODataManager        INFO Referring to dataset testRootOP.dst by its file ID:F2E2C514-D0D4-E011-B13E-002590138ADC
+FSROutputStream      INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:9032500F-3924-DE11-89FD-0030487C5E0E[root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default]
+RootCnvSvc           INFO Disconnected data IO:9032500F-3924-DE11-89FD-0030487C5E0E[root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default]
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

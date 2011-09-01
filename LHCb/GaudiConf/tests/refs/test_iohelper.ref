@@ -41,7 +41,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ab79d7c8aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2aecf3122aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2aecf334f750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2aecf334f950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2aecf334fa50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2aecf334fb50>, 'LHCb::RawDataCnvSvc']
 =============================
 POOL
 =============================
@@ -91,7 +91,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2ab79d7c8aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ab79da09850>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ab79da09b50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ab79da09a50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ab79da09c50>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2aecf3122aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2aecf334f750>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2aecf334f950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2aecf334fa50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2aecf334fb50>, 'LHCb::RawDataCnvSvc']
 =============================
 ROOT
 =============================
@@ -141,7 +141,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0xde34720>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xde35cc0>, <Gaudi::RootCnvSvc/RootCnvSvc at 0xde34720>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xde35cc0>]
+['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x19a63970>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x19a64ec0>, 'LHCb::RawDataCnvSvc']
 =============================
 MDF
 =============================
