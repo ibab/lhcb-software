@@ -39,6 +39,7 @@ import StrippingBs2JpsieePhi
 import StrippingB2CharmlessQuasi2Body
 import StrippingBs2PhiPhi
 import StrippingBs2Kst0Kst0
+import StrippingBs2Kst_0Kst_0
 import StrippingBs2PhiKst0
 import StrippingBs2EtacPhi
 import StrippingBs2ChicPhi_Chic2KKPiPi

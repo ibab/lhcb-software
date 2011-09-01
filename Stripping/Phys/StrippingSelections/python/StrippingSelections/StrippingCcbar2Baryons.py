@@ -52,7 +52,11 @@ class Ccbar2BaryonsConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
         self.name = name 
         self.config = config
-        
+
+
+        """
+        Lambda 
+        """
         self.LambdaLLForJpsi = self.createSubSel( OutputList = "LambdaLLFor" + self.name,
                                                   InputList =  DataOnDemand( Location = 'Phys/StdLooseLambdaLL/Particles' ), 
                                                   Cuts = "(VFASPF(VCHI2/VDOF)<16)"\
@@ -75,13 +79,31 @@ class Ccbar2BaryonsConf(LineBuilder):
                                                  RequiredSelections =  [ self.LambdaLLForJpsi, 
                                                                          self.LambdaDDForJpsi, 
                                                                          ])
+        
+        """
+        Pion 
+        """
+        self.PionLongForXi = self.createSubSel( OutputList = "PionLongForXiList" + self.name,
+                                                InputList =  DataOnDemand( Location = 'Phys/StdNoPIDsPions/Particles' ), 
+                                                Cuts = "(PT>0.1*GeV) & (P>2.*GeV) & (TRCHI2DOF < %(TRCHI2DOF)s )" % self.config
+                                                )
 
+        self.PionDownForXi = self.createSubSel( OutputList = "PionDownForXiList" + self.name,
+                                                InputList =  DataOnDemand( Location = 'Phys/StdNoPIDsDownPions/Particles' ), 
+                                                Cuts = "(PT>0.1*GeV) & (P>2.*GeV) & (TRCHI2DOF < %(TRCHI2DOF)s )" % self.config
+                                                )
+        
+        self.PionForXiList = MergedSelection("MergedPionForXi" + self.name,
+                                             RequiredSelections =  [ self.PionLongForXi, 
+                                                                     self.PionDownForXi, 
+                                                                     ])
+        
+        """
+        Xi
+        """
         self.XiList = self.createCombinationSel( OutputList = "XiFor" + self.name,
-                                                 DaughterLists = [ self.LambdaForJpsiList, StdNoPIDsPions, StdNoPIDsDownPions ],
+                                                 DaughterLists = [ self.LambdaForJpsiList, self.PionForXiList ],
                                                  DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
-                                                 DaughterCuts = { "pi-"  : "(PT>0.1*GeV) & (P>2.*GeV)"\
-                                                                  " & (TRCHI2DOF < %(TRCHI2DOF)s )" % self.config
-                                                                  },
                                                  PreVertexCuts = "(ADAMASS('Xi-')<50*MeV) & (ADOCACHI2CUT(40, ''))",
                                                  PostVertexCuts = "(VFASPF(VCHI2/VDOF)<16)"\
                                                  " & (ADMASS('Xi-')<20*MeV)"

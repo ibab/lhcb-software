@@ -5,6 +5,12 @@
 ! -----------------------------------------------------------------------------
 !
 
+! 2011-09-01 - Jibo He
+ - python/StrippingSelections/__init__.py
+  . added StrippingBs2Kst_0Kst_0
+ - python/StrippingSelections/StrippingCcbar2Baryons.py
+  . fixed the bug in using both long and downstream pion
+
 ! 2011-08-30 - Jeremy Dickens
  - python/StrippingSelections/StrippingBuToKX3872.py
 	- Updated X3827 stripping line to remove PV filtering
