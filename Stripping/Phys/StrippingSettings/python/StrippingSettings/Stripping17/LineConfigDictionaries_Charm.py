@@ -521,9 +521,9 @@ D2XMuMuMicro = {
 DstarD02xx = {
     'BUILDERTYPE' : 'StrippingDstarD02xxConf',
     'CONFIG':  {
-                   'PrescalepipiBox'     : 0.5
+                   'PrescalepipiBox'     : 1.
                  , 'PrescalemumuBox'     : 1.
-                 , 'PrescaleKpiBox'    : 0.3
+                 , 'PrescaleKpiBox'    : 1.
                  , 'PrescaleemuBox'    : 1.
                  , 'PrescaleeKBox'    : 1.
                  , 'PrescaleepiBox'    : 1.

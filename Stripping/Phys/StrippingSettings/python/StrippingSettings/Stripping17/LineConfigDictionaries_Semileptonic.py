@@ -360,7 +360,7 @@ B2XuMuNu = {
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
     'CONFIG' :  {
-        "PrescalD0Mu"    : 0.5
+     "PrescalD0Mu"    : 0.5
     ,"MINIPCHI2"      : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
@@ -383,7 +383,7 @@ B2DMuNuX = {
     ,"MINIPCHI2Loose" : 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
     ,"PhiVCHI2"      :25.0    #adimensiional
-    ,"PhiMassWin"    :60      #adimensiional
+    ,"PhiMassWin"    :50      #adimensiional
     },
     'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic'] 

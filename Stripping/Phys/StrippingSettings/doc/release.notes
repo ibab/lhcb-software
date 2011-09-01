@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-01 - Jibo He
+ - LineConfigDictionaries_Charm.py
+  . Removed some pre-scales in DstarD02xx, as requested by W. Bonivento
+ - LineConfigDictionaries_BetaS.py 
+  . Added Bs2Kst_0Kst_0 (BetaSBs2K0stK0st), as requested by P. A. Cartelle
+ - LineConfigDictionaries_Semileptonic.py
+  . Tightened Phi mass window from 60 MeV to 50 MeV in B2DMuNu, as requested by A. Borgia
+ - Stripping17/dev dbase updated 
+
 ! 2011-08-30 - Jibo He
  - Moved all lines in "Dielectron" stream to "Radiative" stream
  - Updated LineConfigDictionaries_PSWG

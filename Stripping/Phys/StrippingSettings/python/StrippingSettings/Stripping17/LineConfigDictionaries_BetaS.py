@@ -231,6 +231,33 @@ BetaSBs2KstKst = {
     'STREAMS' : [ 'Bhadron' ]
     }
 
+
+# Bs2K0stK0st (Paula)
+BetaSBs2K0stK0st = {
+    'WGs'		: ['betas'],
+    'BUILDERTYPE' 	: 'StrippingBs2Kst_0Kst_0Conf',
+    'CONFIG' 	: {
+             "KaonPT"                 : 500.0         #MeV
+          ,  "KaonIPCHI2"             : 9.            # adimensional
+          ,  "PionPT"                 : 500.0         # MeV
+          ,  "PionIPCHI2"             : 9.            # adimensional
+          ,  "PionPIDK"               : 0.            #adimensional
+          ,  "KstarVCHI2"             : 9.0           # adimensional
+          ,  "KstarPT"                : 900.0         # MeV
+          ,  "KaonPIDK"               : 2.0           # adimensional
+          ,  "KstarMassWin"           : 680.0         # MeV
+          ,  "KstarAPT"               : 800.0         # MeV
+          ,  "BMassWin"               : 500.0         # MeV
+          ,  "BVCHI2"                 : 15.0          # adimensional
+          ,  "BDOCA"                  : 0.3           # mm
+          ,  "BIPCHI2"                : 25.           # adimensional
+          ,  "BFDistanceCHI2"         : 81.           # adimensional
+          ,  "SumPT"                  : 5000          # MeV 
+         },
+    'STREAMS' : [ 'Bhadron' ]
+    }
+
+
 # Cibran
 BetaSBs2PhiKst = {
 	'WGs'   	: ['betas'],
