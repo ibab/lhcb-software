@@ -817,7 +817,7 @@ int main(int argc, char *argv[])
                                 char text[132];
 			        sprintf(text,"DIM_DNS_NODE=%s",opt_str+4);
    		  	        putenv(text);
- 			        dis_set_dns_node(opt_str+4);
+ 			        dim_set_dns_node(opt_str+4);
 			}
 			else if((!strncmp(opt_str,"service",7)) || 
 					(!strncmp(opt_str,"SERVICE",7)))
