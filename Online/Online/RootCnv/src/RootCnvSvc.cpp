@@ -217,7 +217,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     if ( !c )  {
       auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
       StatusCode sc = (mode != IDataConnection::READ)
-        ? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT_TREE")
+        ? m_ioMgr->connectWrite(connection.get(),IDataConnection::IoType(mode),"ROOT")
         : m_ioMgr->connectRead(false,connection.get());
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
