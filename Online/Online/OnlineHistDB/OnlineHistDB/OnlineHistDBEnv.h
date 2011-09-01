@@ -23,7 +23,7 @@ namespace OnlineHistDBEnv_constants {
   static const std::string ACCOUNT="HIST_READER";
   static const std::string PASSWORD="reader";
   static const unsigned int DBschema = 16;
-  static const std::string version = "v8r0";
+  static const std::string version = "v8r1";
 
   static const int NHTYPES=7;
   static const char HistTypeName[][4] = {
