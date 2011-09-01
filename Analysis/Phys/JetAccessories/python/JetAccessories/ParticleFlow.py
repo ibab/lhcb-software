@@ -1,4 +1,4 @@
-from Configurables import DaVinci
+#from Configurables import DaVinci
 from Gaudi.Configuration import VERBOSE
 def setupTypeTrackSelector(tsname,selector,trackCuts):
          from Configurables import TrackSelector
