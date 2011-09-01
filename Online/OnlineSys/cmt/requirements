@@ -1,5 +1,5 @@
 package OnlineSys
-version v4r56
+version v4r57
 
 branches cmt doc
  
@@ -17,18 +17,18 @@ use GaudiObjDesc      v11r12
 #use confDBpython        v1r7     Online
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
-use Camera              v1r21    Online
+use Camera              v1r22    Online
 use Checkpointing       v0r7     Online
 use CondDBServer        v1r4     Online
-use DailyReport         v1r0     Online
-use DIM                 v19r21   Online
+use DailyReport         v1r1     Online
+use DIM                 v19r25   Online
 ####use ExampleGaucho       v3r4     Online
-use FarmMonitor         v2r7     Online
-use Gaucho              v7r16    Online
-use GaudiCheckpointing  v0r7     Online
-use GaudiOnline         v2r54    Online
+use FarmMonitor         v2r8     Online
+use Gaucho              v7r18    Online
+use GaudiCheckpointing  v0r8     Online
+use GaudiOnline         v2r55    Online
 use GaudiRootCnvTests   v1r2     Online
-use GaudiSerialize      v0r9     Online
+use GaudiSerialize      v0r10    Online
 use GaudiUPI            v1r13    Online
 #use Hugin              v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
@@ -36,27 +36,27 @@ use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r1     Online
-use OnlineBase          v1r10    Online
+use OnlineBase          v1r11    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB        v8r1     Online
-use OnlineKernel        v2r7     Online
+use OnlineKernel        v2r8     Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r40    Online
+use OnlineTasks         v1r41    Online
 
-use Presenter           v3r0     Online
+use Presenter           v3r1     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r11    Online
 use RootCnv             v1r5     Online
 use ROMon               v1r31    Online
-use ROLogger            v0r22    Online
+use ROLogger            v0r23    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
-use Trending            v1r8     Online
+use Trending            v2r0     Online
 use UPI                 v1r20    Online
 use UPIR                v1r3     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r36    Online
+use Writer              v1r37    Online
 
 # Declare this as a container package
 apply_pattern container_package

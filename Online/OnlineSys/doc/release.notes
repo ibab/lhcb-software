@@ -5,6 +5,26 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 </PRE>
+<H1><A NAME=v4r55>2011-09-01 OnlineSys v4r57</A></H1>
+<PRE>
+   Based in Gaudi v22r2, 
+   Updated packages are:
+     Camera              v1r22    Online
+     DailyReport         v1r1     Online
+     DIM                 v19r25   Online
+     FarmMonitor         v2r8     Online
+     Gaucho              v7r18    Online
+     GaudiCheckpointing  v0r8     Online
+     GaudiOnline         v2r55    Online
+     GaudiSerialize      v0r10    Online
+     OnlineBase          v1r11    Online
+     OnlineKernel        v2r8     Online
+     OnlineTasks         v1r41    Online
+     Presenter           v3r1     Online
+     ROLogger            v0r23    Online
+     Trending            v2r0     Online
+     Writer              v1r37    Online
+</PRE>
 
 <H1><A NAME=v4r55>2011-06-06 OnlineSys v4r56</A></H1>
 <PRE>
@@ -31,7 +51,7 @@
      ROMon               v1r31    Online
      Trending            v1r8     Online
      Writer              v1r36    Online
-</PRE>
+</PRE
 
 <H1><A NAME=v4r55>2011-03-01 OnlineSys v4r55</A></H1>
 <PRE>
