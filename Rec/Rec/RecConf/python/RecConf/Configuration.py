@@ -89,7 +89,8 @@ class RecSysConf(LHCbConfigurableUser):
                     "microBiasTrigger" in self.getProp("SpecialData") ):
                 from PatPV import PVConf
                 PVConf.LoosePV().configureAlg()
-            else:
+            elif ( not ( self.getProp("Simulation") and
+                         self.getProp("DataType") in ["2008","2009","2010","MC09","Upgrade"] ) ): 
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
