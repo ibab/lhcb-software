@@ -41,6 +41,7 @@ class ProcessData( object ):
 class ProcessWrapper( object ):
 
     def __init__( self, key, task, name, config, debug = False ):
+        self._name = name
         self._key = key
         self._debug = debug
         self._name = name
@@ -53,10 +54,11 @@ class ProcessWrapper( object ):
     def run( self):
         if self._debug == False:
             filename = '%s.log' % self._name
-            run = self._config[ 'Run' ]
-            cwd = os.path.realpath( os.path.curdir )
-            dirname = os.path.join( cwd, '%d' % run )
-            filename = os.path.join( dirname, filename )
+            if 'Run' in self._config:
+                run = self._config[ 'Run' ]
+                cwd = os.path.realpath( os.path.curdir )
+                dirname = os.path.join( cwd, '%d' % run )
+                filename = os.path.join( dirname, filename )
             old_stdout = os.dup( sys.stdout.fileno() ) 
             fd = os.open( filename, os.O_CREAT | os.O_WRONLY ) 
             os.dup2( fd, sys.stdout.fileno() ) 
@@ -69,6 +71,9 @@ class ProcessWrapper( object ):
         if self._debug == False:
             os.close( fd ) 
             os.dup2( old_stdout, sys.stdout.fileno() )
+
+    def name( self ):
+        return self._name
 
     def key( self ):
         return self._key

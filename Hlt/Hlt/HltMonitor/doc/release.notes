@@ -4,6 +4,9 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+! 2011-09-01 - Roel Aaij
+ - Protect against run number not being defined in ProcessWrapper.
+
 !========================== HltMonitor v1r0p1 2011-06-24 ==================
 ! 2011-05-20 - Roel Aaij
  - Fixed a bug in daylight saving time conversion.
