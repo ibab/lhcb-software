@@ -4,13 +4,13 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/ToolHandle.h"
+#include <GaudiAlg/GaudiHistoAlg.h>
+#include <GaudiKernel/ToolHandle.h>
 
-#include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/IPVOfflineTool.h"
+#include <TrackInterfaces/ITrackExtrapolator.h>
+#include <TrackInterfaces/IPVOfflineTool.h>
 
-#include "Event/RecVertex.h"
+#include <Event/RecVertex.h>
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -75,7 +75,6 @@ namespace Velo
     const LHCb::RecVertex* m_pv;
     const LHCb::Track* m_track;
 
-
     double m_InversePTMin;
     double m_InversePTMax;
     int m_nBins;
@@ -84,6 +83,9 @@ namespace Velo
     
     unsigned int m_minPVnTracks;
     float m_maxTrackChi2PerNDOF ;
+    float m_maxP ;
+    unsigned int m_minNRHits ;
+    unsigned int m_minNTTHits ;
     
     float m_limitIntercept1D;
     float m_limitGradient1D;
@@ -91,6 +93,8 @@ namespace Velo
 
     bool m_refitPVs;
     bool m_makePlotsVsPhiInBinsOfEta ;
+
+    bool m_save2DHistos ;
     
     ITrackExtrapolator* m_trackExtrapolator;
     IPVOfflineTool* m_pvtool;
@@ -105,6 +109,8 @@ namespace Velo
     void getBinsFromTH2D( TH2D* h, std::string id, std::string title, std::string unit, std::vector<TH1D*>& out ) ;
     void saveMeanAndSigmaProfiles( TH2D* ) ;
     void saveMeanAndSigmaProfilesAndXProjection( TH2D*, std::string ) ;
+
+    TH2D* book2DHisto( std::string, std::string, unsigned int, double, double, unsigned int, double, double, bool ) ;
     
   };
 }

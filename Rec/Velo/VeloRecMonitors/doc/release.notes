@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-09-01 - Michael Alexander
+ - Updated track selection in VeloIPResolutionMonitor to be consistent with 
+   standard offline selection.
+ - Cleaned code for VeloIPResolutionMonitor.
+ - Added extra track hit info to VeloIPResolutionMonitorNT.
+
 !========================= VeloRecMonitors v2r14 2011-07-27 =========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect more unprotected debug and verbose messages
