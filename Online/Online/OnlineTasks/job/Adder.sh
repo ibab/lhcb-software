@@ -64,10 +64,10 @@ if test -n "${TOP}" ; then
   export DIM_DNS_NODE=mona08
   export DIM_DNS_CLIENT_NODE=hlt01.lbdaq.cern.ch
   if test -n "${DEBUG}" 
-     then  exec -a ${UTGID} ${debug_exe} -options=../options/Adder.opts &  
+     then  exec -a ${UTGID} ${debug_exe} -options=../options/Adder.opts   
     # else  exec -a ${UTGID} ${debug_exe} -options=../options/Adder.opts &  
     # else  exec -a ${UTGID} ${gaudi_exe3} -options=../options/Adder.opts &  
-     else exec -a ${UTGID} ${CLASS1_TASK} -options=../options/Adder.opts &
+     else exec -a ${UTGID} ${CLASS1_TASK} -options=../options/Adder.opts 
   fi   
 fi
 
@@ -84,24 +84,20 @@ fi
 
 if test -z "${TOP}" ; then
   if [[ ${PARENT} == "cald07" ]]
-    then ${gaudi_exe3} -options=../options/AdderCalibrationfarm.opts  &
-    else 
-       if [[ ${PARENT} == "mona09" ]]
-         then exec -a ${UTGID} ${debug_exe} -options=../options/AdderRecFarm.opts  &
-	#in the rec farm, we need to run without loggeronly option else we can't stop it
-	#then exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderRecFarm.opts  &
-      else
+    then 
+      ${gaudi_exe3} -options=../options/AdderCalibrationfarm.opts  &
+    else
         export LOGFIFO=/tmp/logGaudi.fifo;
 	if test -n "${PARENT:7}";
 	  then
-	    ##echo "Exec Node adder..."
+	    ##echo "Exec Node adder... UTGID=${UTGID} Task:${CLASS1_TASK} ${PWD}"
 	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/nodeAdder.opts &
           else 
-	    ##echo "Exec subfarm adder..."
-	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/SubfarmAdder.opts &
+	    # This is done properly by Beat. No '&' anymore!!!!!!
+	    ##echo "Exec subfarm adder... UTGID=${UTGID} Task:${CLASS1_TASK} ${PWD}"
+	    exec -a ${UTGID} ${CLASS1_TASK} -options=../options/SubfarmAdder.opts;
 	fi;
 #         else exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderSubfarm.opts &
 #        else /usr/bin/valgrind --tool=callgrind ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
-      fi
    fi
 fi
