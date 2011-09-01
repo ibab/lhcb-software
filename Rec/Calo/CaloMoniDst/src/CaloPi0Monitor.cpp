@@ -169,6 +169,10 @@ StatusCode CaloPi0Monitor::execute()
           pi0.mass() > m_massFilterMin &&
           pi0.mass() < m_massFilterMax ) isPi0 = true;
       
+      //      info() << "pi0 E/M" << pi0.e() << " / " << pi0.mass()
+      //       << "  " << v1.E() << " " << v2.E() 
+      //       << endmsg;
+      
       
       if( !isPi0 && !isBkg)continue;
 

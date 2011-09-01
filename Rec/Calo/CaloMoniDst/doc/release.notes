@@ -4,6 +4,9 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2011-09-03 - Olivier Deschamps
+ - fix CaloAlignment.cpp
+
 !========================= CaloMoniDst v5r8 2011-07-27 =========================
 ! 2011-07-22 - Marco Cattaneo
  - Create debug() messages only when output level requires it,

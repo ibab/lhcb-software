@@ -523,8 +523,8 @@ StatusCode CaloAlignmentNtp::execute() {
     
     // S-shape
     double size = calo()->cellSize(id);
-    double atx =(  statR.X()       - cellR.X())/size; // track propagation provides the 'true' position @ HypoZ
-    double aty =(  statR.Y()       - cellR.Y())/size; 
+    double atx =(  closR.X()       - cellR.X())/size; // track propagation provides the 'true' position @ HypoZ
+    double aty =(  closR.Y()       - cellR.Y())/size; 
     double atxSM=(  statR.X()       - cellR.X())/size; // track propagation provides the 'true' position @ ShowerMax
     double atySM =(  statR.Y()       - cellR.Y())/size;
     double abx =(  clusR.X()       - cellR.X())/size; // e-weighted barycenter (cluster)
@@ -536,29 +536,29 @@ StatusCode CaloAlignmentNtp::execute() {
     for(std::vector<std::string>::iterator is = split.begin();is <split.end() ; ++is){
       std::string base = "ElectronAlign/Sshape/" + *is;
       if(m_histo){
-        plot2D(atx, abx , base + "Cluster/X"  , "trackX(HypoZ) .vs. clusterX " ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
-        plot2D(aty, aby , base + "Cluster/Y"  , "trackY(HypoZ) .vs. clusterY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
-        plot2D(atx, acx , base + "Hypo/X"  , "trackX(HypoZ) .vs. hypoX" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
-        plot2D(aty, acy , base + "Hypo/Y"  , "trackY(HypoZ) .vs. hypoY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);    
+        plot2D(atx, abx , base + "Cluster/X"  , "trackX(bestZ) .vs. clusterX " ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
+        plot2D(aty, aby , base + "Cluster/Y"  , "trackY(bestZ) .vs. clusterY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
+        plot2D(atx, acx , base + "Hypo/X"  , "trackX(bestZ) .vs. hypoX" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
+        plot2D(aty, acy , base + "Hypo/Y"  , "trackY(bestZ) .vs. hypoY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);    
         plot2D(atxSM, abx , base + "ClusterSM/X"  , "trackX(ShowerMax) .vs. clusterX" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
         plot2D(atySM, aby , base + "ClusterSM/Y"  , "trackY(ShowerMax) .vs. clusterY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
         plot2D(atxSM, acx , base + "HypoSM/X"  , "trackX(ShowerMax) .vs. hypoX" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
         plot2D(atySM, acy , base + "HypoSM/Y"  , "trackY(ShowerMax) .vs. hypoY" ,-1*m_r,+1*m_r,-1*m_r,+1*m_r, m_b, m_b);
       }
       if(m_profil){
-        profile1D(atx, abx , base + "Cluster/profX"  , "trackX(HypoZ) .vs. clusterX " ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r); 
-        profile1D(aty, aby , base + "Cluster/profY"  , "trackY(HypoZ) .vs. clusterY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
-        profile1D(atx, acx , base + "Hypo/profX"  , "trackX(HypoZ) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
-        profile1D(aty, acy , base + "Hypo/profY"  , "trackY(HypoZ) .vs. hypoY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);    
+        profile1D(atx, abx , base + "Cluster/profX"  , "trackX(bestZ) .vs. clusterX " ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r); 
+        profile1D(aty, aby , base + "Cluster/profY"  , "trackY(bestZ) .vs. clusterY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
+        profile1D(atx, acx , base + "Hypo/profX"  , "trackX(bestZ) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
+        profile1D(aty, acy , base + "Hypo/profY"  , "trackY(bestZ) .vs. hypoY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);    
         profile1D(atxSM, abx , base + "ClusterSM/profX","trackX(ShowerMax) .vs. clusterX" ,-1*m_r,+1*m_r,m_b ,prof,-1*m_r,1*m_r);
         profile1D(atySM, aby , base + "ClusterSM/profY","trackY(ShowerMax) .vs. clusterY" ,-1*m_r,+1*m_r,m_b ,prof,-1*m_r,1*m_r);
         profile1D(atxSM, acx , base + "HypoSM/profX"  , "trackX(ShowerMax) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
         profile1D(atySM, acy , base + "HypoSM/profY"  , "trackY(ShowerMax) .vs. hypoY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
         base = "ElectronAlign/iSshape/" + *is;
-        profile1D(abx,atx,    base + "Cluster/profX"  , "trackX(HypoZ) .vs. clusterX " ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r); 
-        profile1D(aby,aty,    base + "Cluster/profY"  , "trackY(HypoZ) .vs. clusterY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
-        profile1D(acx,atx,    base + "Hypo/profX"  , "trackX(HypoZ) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
-        profile1D(acy,aty,    base + "Hypo/profY"  , "trackY(HypoZ) .vs. hypoY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);    
+        profile1D(abx,atx,    base + "Cluster/profX"  , "trackX(bestZ) .vs. clusterX " ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r); 
+        profile1D(aby,aty,    base + "Cluster/profY"  , "trackY(bestZ) .vs. clusterY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
+        profile1D(acx,atx,    base + "Hypo/profX"  , "trackX(bestZ) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
+        profile1D(acy,aty,    base + "Hypo/profY"  , "trackY(bestZ) .vs. hypoY" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);    
         profile1D(abx,atxSM,  base + "ClusterSM/profX","trackX(ShowerMax) .vs. clusterX" ,-1*m_r,+1*m_r,m_b ,prof,-1*m_r,1*m_r);
         profile1D(aby,atySM,  base + "ClusterSM/profY","trackY(ShowerMax) .vs. clusterY" ,-1*m_r,+1*m_r,m_b ,prof,-1*m_r,1*m_r);
         profile1D(acx,atxSM,  base + "HypoSM/profX"  , "trackX(ShowerMax) .vs. hypoX" ,-1*m_r,+1*m_r, m_b , prof,-1*m_r,1*m_r);
