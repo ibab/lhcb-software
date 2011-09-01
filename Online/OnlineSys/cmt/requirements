@@ -38,7 +38,7 @@ use MBMDump             v1r15    Online
 use OMAlib              v4r1     Online
 use OnlineBase          v1r10    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
-use OnlineHistDB        v8r0     Online
+use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r7     Online
 use OnlineTools         v1r4     Online
 use OnlineTasks         v1r40    Online
