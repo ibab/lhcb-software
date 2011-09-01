@@ -174,21 +174,24 @@ def run( options, args ):
     allConfig = reporterConfig.copy()
     allConfig[ 'Hlt1Lines' ] = all1Lines
     allConfig[ 'Hlt2Lines' ] = all2Lines
-    wrappers[ 'allLines' ] = ProcessWrapper( DecisionReporter, 'allLines', allConfig )
+    wrappers[ 'allLines' ] = ProcessWrapper( 0, DecisionReporter, 'allLines', allConfig )
 
     # Setup the processes running a single Hlt1 line
+    i = 0
     for lineName in hlt1Lines:
+        i += 1
         config = reporterConfig.copy()
         config[ 'Hlt1Lines' ] = [ lineName ]
         config[ 'Hlt2Lines' ] = []
-        wrappers[ lineName ] = ProcessWrapper( DecisionReporter, lineName, config )
+        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config )
 
     # Setup the processes running a single Hlt2 line
     for lineName in hlt2Lines:
+        i += 1
         config = reporterConfig.copy()
         config[ 'Hlt1Lines' ] = all1Lines
         config[ 'Hlt2Lines' ] = [ lineName ]
-        wrappers[ lineName ] = ProcessWrapper( DecisionReporter, lineName, config )
+        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config )
 
     # Setup the output writer process
     writerConfig = dict()

@@ -19,62 +19,7 @@ DecisionMap = GaudiPython.gbl.DecisionMap
 
 # Local imports
 from IndependenceTests.Tasks import EventWriter, EventReporter, time_string
-
-class ProcessData( object ):
-
-    def __init__( self ):
-        self._condition = Condition( Lock() )
-        self._inQueue = Queue()
-        self._outQueue = Queue()
-
-    def getData( self ):
-        self._data = self._outQueue.get()
-        return self._data
-
-    def data( self ):
-        return self._data
-
-    def putData( self, data ):
-        self._inQueue.put( data )
-
-class ProcessWrapper( object ):
-
-    def __init__( self, task, name, config ):
-        self._name = name
-        self._data = ProcessData()
-        self._task = task( name, ( self._data._inQueue, self._data._outQueue ),
-                           self._data._condition )
-        self._config = config
-        self._process = Process( target = self.run )
-
-    def run( self ):
-        old_stdout = os.dup( sys.stdout.fileno() ) 
-        fd = os.open( '%s.log' % self._name, os.O_CREAT | os.O_WRONLY ) 
-        os.dup2( fd, sys.stdout.fileno() ) 
-        self._task.configure( self._config )
-        self._task.initialize()
-        self._task.run()
-        self._task.finalize()
-        os.close( fd ) 
-        os.dup2( old_stdout, sys.stdout.fileno() )
-
-    def start( self ):
-        self._process.start()
-
-    def join( self ):
-        self._process.join()
-
-    def data( self ) :
-        return self._data.data()
-
-    def condition( self ):
-        return self._data._condition
-
-    def getData( self ):
-        return self._data.getData()
-
-    def putData( self, data ):
-        self._data.putData( data )
+from IndependenceTests.Base import ProcessWrapper
 
 def run( options, args ):
 
@@ -111,7 +56,7 @@ def run( options, args ):
         f.close()
 
     # Setup the EventReporter process
-    reporterWrapper = ProcessWrapper( EventReporter, 'reporter', reporterConfig )
+    reporterWrapper = ProcessWrapper( 0, EventReporter, 'reporter', reporterConfig )
 
     # Setup the output writer process
     writerConfig = dict()
@@ -120,7 +65,7 @@ def run( options, args ):
     writerConfig[ 'Input' ]  = EventSelector().Input
     writerConfig[ 'Catalogs' ] = FileCatalog().Catalogs
     writerConfig[ 'Output' ] = "file:mismatches.raw"
-    writerWrapper = ProcessWrapper( EventWriter, 'writer', writerConfig )
+    writerWrapper = ProcessWrapper( 1, EventWriter, 'writer', writerConfig )
 
     reporterWrapper.start()
     writerWrapper.start()

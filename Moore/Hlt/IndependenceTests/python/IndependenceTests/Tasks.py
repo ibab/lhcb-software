@@ -4,6 +4,8 @@ import sys, time
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 
+from HltMonitor.Base import Task
+
 from GaudiPython import AppMgr, SUCCESS, FAILURE
 
 def time_string():
@@ -61,22 +63,6 @@ class Config( object ):
                     postscale.Code = "FALL"
             except AttributeError:
                 pass
-
-class Task( object ):
-    def __init__( self, name ):
-        self._name = name
-
-    def configure( self ):
-        pass
-
-    def initialize( self ):
-        pass
-
-    def run( self ):
-        pass
-
-    def finalize( self ) :
-        pass
 
 class EventWriter( Task ):
     def __init__( self, name, queues, condition ):
@@ -193,6 +179,10 @@ class DecisionReporter( Task ):
         hlt1Lines = self._config[ 'Hlt1Lines' ]
         hlt2Lines = self._config[ 'Hlt2Lines' ]
 
+        if 'L0' in self._config and self._config[ 'L0' ]:
+            from Configurables import L0MuonAlg
+            L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+
         EventSelector().Input = self._config[ 'Input' ]
         EventSelector().PrintFreq = 100
         FileCatalog().Catalogs = self._config[ 'Catalogs' ]
@@ -212,17 +202,22 @@ class DecisionReporter( Task ):
             if self.wait():
                 self._condition.acquire()
             self._appMgr.run( 1 )
-            # Grab the HltDecReports and put the decisions in a dict by line name
-            decReports = evt[ 'Hlt/DecReports' ]
-            reports = None
-            if decReports:
-                reports = dict()
-                names = decReports.decisionNames()
-                for name in names:
-                    reports[ name ] = decReports.decReport( name ).decision()
-            else:
+
+            # Check if there is still event data
+            if not bool( evt[ '/Event' ] ):
                 self.done()
                 break
+            
+            # Grab the HltDecReports and put the decisions in a dict by line name
+            decReports = evt[ 'Hlt/DecReports' ]
+            odin = evt[ 'DAQ/ODIN' ]
+            reports = dict()
+            reports[ 'event' ] = odin.eventNumber()
+            reports[ 'run' ] = odin.runNumber()
+            names = decReports.decisionNames()
+            for name in names:
+                reports[ name ] = decReports.decReport( name ).decision()
+
             # Put our dict on the queue
             self._outQueue.put( reports )
             event += 1
@@ -239,7 +234,8 @@ class DecisionReporter( Task ):
     def done( self ):
         # Max events reached, signal done to the main process
         self._outQueue.put( 'DONE' )
-        self._condition.release()
+        if self.wait():
+            self._condition.release()
 
     def wait( self ):
         if 'Wait' in self._config:

@@ -6,5 +6,5 @@ if [ "$SetupProjectStatus" = 0 -a -n "$SetupProject_tmpfile" ]; then
     . $SetupProject_tmpfile
 fi
 rm -f $SetupProject_tmpfile
-python ./Moore-Lines.py "$@"
+python ${INDEPENDENCETESTSROOT}/scripts/Moore-Lines.py "$@"
 )
