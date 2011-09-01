@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r29    DAQ
+use MDF               v3r31    DAQ
 use MDF_ROOT          v1r6     DAQ
 use DAQEvent          v9r5     Event
 use GaudiObjDesc      v11r12
@@ -46,8 +46,8 @@ use OnlineTasks         v1r41    Online
 use Presenter           v3r1     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r11    Online
-use RootCnv             v1r5     Online
-use ROMon               v1r31    Online
+use RootCnv             v1r7     Online
+use ROMon               v1r32    Online
 use ROLogger            v0r23    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)

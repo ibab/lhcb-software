@@ -33,6 +33,7 @@
      DailyReport         v1r0     Online
 
    Updated packages are:
+     MDF                 v3r31    DAQ
      Camera              v1r21    Online
      Checkpointing       v0r7     Online
      DIM                 v19r21   Online
@@ -47,8 +48,9 @@
      OnlineTasks         v1r40    Online
      Presenter           v3r0     Online
      RawBankSizes        v2r11    Online
-     RootCnv             v1r5     Online
-     ROMon               v1r31    Online
+     RootCnv             v1r7     Online
+     ROMon               v1r32    Online
+     ROLogger            v0r23    Online
      Trending            v1r8     Online
      Writer              v1r36    Online
 </PRE
