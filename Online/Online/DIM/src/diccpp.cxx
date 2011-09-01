@@ -109,14 +109,22 @@ int DimInfo::getTimestampMillisecs()
 char *DimInfo::getFormat()
 {
 	char *def;
+	int len = 0, new_len;
 
 	if(itsFormat)
 	{
-		return itsFormat;
+		len = strlen(itsFormat)+1;
+		if(len > 1)
+			return itsFormat;
 	}
 	def = dic_get_format(itsId);
-
-	itsFormat = new char[strlen(def)+1];
+	new_len = strlen(def)+1;
+	if(new_len > len)
+	{
+		if(itsFormat)
+			delete[] itsFormat;
+		itsFormat = new char[strlen(def)+1];
+	}
 	strcpy(itsFormat, def);
 	return itsFormat;
 }
@@ -1110,15 +1118,24 @@ static void clt_error_user_routine(int severity, int code, char *msg)
 {
 
 	DimCore::inCallback = 2;
-	DimClient::itsCltError->errorHandler(severity, code, msg);
+	if(DimClient::itsCltError != 0)
+		DimClient::itsCltError->errorHandler(severity, code, msg);
 	DimCore::inCallback = 0;
 }
 }
 
 void DimClient::addErrorHandler(DimErrorHandler *handler)
 {
-	DimClient::itsCltError = handler;
-	dic_add_error_handler(clt_error_user_routine);
+	if(handler == 0)
+	{
+		dic_add_error_handler(0);
+		DimClient::itsCltError = 0;
+	}
+	else
+	{
+		DimClient::itsCltError = handler;
+		dic_add_error_handler(clt_error_user_routine);
+	}
 }
 
 void DimClient::addErrorHandler()
@@ -1205,4 +1222,11 @@ char **DimClient::getServerServices()
 		list = new char*[1];
 	list[index] = 0;
 	return list;
+}
+
+int DimClient::inCallback()
+{
+	if(DimCore::inCallback)
+		return 1;
+	return 0;
 }

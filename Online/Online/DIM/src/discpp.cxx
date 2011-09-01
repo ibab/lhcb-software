@@ -611,8 +611,16 @@ void DimServer::clearClientExitHandler(int clientId)
 
 void DimServer::addClientExitHandler(DimClientExitHandler *handler)
 {
-	DimServer::itsClientExit = handler;
-	dis_add_client_exit_handler(client_exit_user_routine);
+	if(handler == 0)
+	{
+		dis_add_client_exit_handler(0);
+		DimServer::itsClientExit = 0;
+	}
+	else
+	{
+		DimServer::itsClientExit = handler;
+		dis_add_client_exit_handler(client_exit_user_routine);
+	}
 }
 
 void DimServer::addClientExitHandler()
@@ -623,14 +631,30 @@ void DimServer::addClientExitHandler()
 
 void DimServer::addExitHandler(DimExitHandler *handler)
 {
-	DimServer::itsExit = handler;
-	dis_add_exit_handler(exit_user_routine);
+	if(handler == 0)
+	{
+		dis_add_exit_handler(0);
+		DimServer::itsExit = 0;
+	}
+	else
+	{
+		DimServer::itsExit = handler;
+		dis_add_exit_handler(exit_user_routine);
+	}
 }
 
 void DimServer::addErrorHandler(DimErrorHandler *handler)
 {
-	DimServer::itsSrvError = handler;
-	dis_add_error_handler(srv_error_user_routine);
+	if(handler == 0)
+	{
+		dis_add_error_handler(0);
+		DimServer::itsSrvError = 0;
+	}
+	else
+	{
+		DimServer::itsSrvError = handler;
+		dis_add_error_handler(srv_error_user_routine);
+	}
 }
 
 int DimServer::setDnsNode(const char *node) 
@@ -685,6 +709,13 @@ void DimServer::addErrorHandler()
 	dis_add_error_handler(srv_error_user_routine);
 }
 
+int DimServer::inCallback()
+{
+	if(DimCore::inCallback)
+		return 1;
+	return 0;
+}
+
 extern "C" {
 static void client_exit_user_routine(int *idp)
 {
@@ -710,7 +741,8 @@ static void srv_error_user_routine(int severity, int code, char *msg)
 {
 
 	DimCore::inCallback = 2;
-	DimServer::itsSrvError->errorHandler(severity, code, msg);
+	if(DimServer::itsSrvError != 0)
+		DimServer::itsSrvError->errorHandler(severity, code, msg);
 	DimCore::inCallback = 0;
 }
 

@@ -56,14 +56,18 @@ void rout_list( int *tag, char *buf, int *size )
 
 void version_rout( int *tag, int *buf, int *size)
 {
-  printf("Received VERSION %lx, %d\n", (long)buf, *size);
+  printf("Received VERSION %lx, %d\n", (unsigned long)buf, *size);
 }
 
 void rout( tag, buf, size )
 char *buf;
 int *tag, *size;
 {
-
+	char *format;
+/*
+	format = dic_get_format(0);
+	printf("Received format = %s %08x, %d\n",format, format, *size);
+*/
 	if(*tag == 1100)
 	{
 		printf("Received ONCE_ONLY : %s\n",buff);
@@ -90,7 +94,7 @@ int *tag, *size;
 		return;
 	}
 	else
-		printf("%s Received %s for Service%03d\n",client_str,buf, *tag);
+		printf("%s Received %s for Service%03d\n",client_str,buf,*tag);
 
 /*
 	if(conn_id = dic_get_server(server))

@@ -29,8 +29,10 @@ class StrService : public DimInfo
 	{
 		int index = 0;
 		char **services;
+		char *format;
 //		cout << "Dns Node = " << DimClient::getDnsNode() << endl;
-		cout << "Received STRVAL : " << getString() << endl;
+		format = getFormat();
+		cout << "Received STRVAL : " << getString() << "format = " << format << endl;
 		services = DimClient::getServerServices();
 		cout<< "from "<< DimClient::getServerName() << " services:" << endl;
 		while(services[index])
@@ -38,6 +40,8 @@ class StrService : public DimInfo
 			cout << services[index] << endl;
 			index++;
 		}
+		int inCallback = DimClient::inCallback();
+		cout << "infoHandler: In callback "<< inCallback << endl; 
 	}
 public :
 	StrService() : DimInfo("TEST/STRVAL","not available") {};
@@ -82,6 +86,10 @@ int main()
 		
 		cout << "Current INTVAL : " << servint.getInt() << endl;
 		DimClient::sendCommand("TEST/CMND","UPDATE_STRVAL");
+		int inCallback = DimClient::inCallback();
+		cout << "main: In callback "<< inCallback << endl;
+
+		DimClient::addErrorHandler(0);
 	}
 	return 0;
 }

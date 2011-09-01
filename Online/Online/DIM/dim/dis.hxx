@@ -135,6 +135,7 @@ public:
 
 	virtual void serviceHandler() {};
 	virtual void commandHandler() {};
+	static int inCallback();
 };
 
 class DllExp DimService : public DimServiceHandler {

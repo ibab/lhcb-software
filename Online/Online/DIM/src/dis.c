@@ -1014,7 +1014,8 @@ dim_print_date_time();
 void do_update_service_list(DIS_DNS_CONN *dnsp)
 {
 	dnsp->updating_service_list = 0;
-	dis_update_service(dnsp->dis_service_id);
+	if(dnsp->dis_service_id)
+		dis_update_service(dnsp->dis_service_id);
 }
 
 /* start serving client requests
@@ -1282,11 +1283,6 @@ printf("Received Request for %s, from %d  %s@%s\n",
 	   dic_packet->service_name, conn_id, 
 	   Net_conns[conn_id].task, Net_conns[conn_id].node);
 }
-		if(!(servp = find_service(dic_packet->service_name)))
-		{
-			release_conn(conn_id, 0, 0);
-			return;
-		}
 		dic_packet->type = vtohl(dic_packet->type);
 		type = dic_packet->type & 0xFFF;
 		/*
@@ -1301,6 +1297,11 @@ printf("Received Request for %s, from %d  %s@%s\n",
 		if(type == DIM_DELETE) 
 		{
 			find_release_request(conn_id, vtohl(dic_packet->service_id));
+			return;
+		}
+		if(!(servp = find_service(dic_packet->service_name)))
+		{
+			release_conn(conn_id, 0, 0);
 			return;
 		}
 		newp = (REQUEST *)/*my_*/malloc(sizeof(REQUEST));
@@ -2935,6 +2936,8 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 	}
 	*bufp = (int *)service_info_buffer;
 	*size = buff_ptr - service_info_buffer+1;
+	if(*size == 1)
+		*size = -1;
 	ENABLE_AST
 }
 		

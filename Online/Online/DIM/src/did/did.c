@@ -812,6 +812,13 @@ int main(int argc, char *argv[])
 			else if((!strncmp(opt_str,"all",3)) || 
 				(!strncmp(opt_str,"ALL",3)))
 				Curr_view_opt = 1;
+			else if((!strncmp(opt_str,"dns",3)) || 
+				(!strncmp(opt_str,"DNS",3))) {
+                                char text[132];
+			        sprintf(text,"DIM_DNS_NODE=%s",opt_str+4);
+   		  	        putenv(text);
+ 			        dis_set_dns_node(opt_str+4);
+			}
 			else if((!strncmp(opt_str,"service",7)) || 
 					(!strncmp(opt_str,"SERVICE",7)))
 				Curr_view_opt = 2;
@@ -823,6 +830,7 @@ int main(int argc, char *argv[])
 			  {
     printf("Did - DIM Information Display\n");
     printf("\t-all             Show ALL Servers\n");
+    printf("\t-dns=<str>       Show Servers with DIM_DNS_NODE provided by <str>\n");
     printf("\t-service=<str>   Show Servers providing Service <str>\n");
     printf("\t-node=<nodename> Show Servers on Node <nodename>\n");
     printf("\t-error           Show Servers in Error\n");

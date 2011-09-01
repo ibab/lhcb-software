@@ -27,6 +27,7 @@ void cmnd_rout(int *tag, TT *buf, int *size)
 {
 
 	if(tag){}
+	dim_print_date_time();
 	printf("Command received, size = %d, TT size = %d:\n", *size,
 	       (int)sizeof(TT));
 	printf("buf->i = %d, buf->d = %2.2f, buf->s = %d, buf->c = %c, buf->f = %2.2f, buf->str = %s\n",
@@ -64,11 +65,12 @@ int main(int argc, char **argv)
 {
 	int i, id, *ptr;
 	char aux[80];
-	char name[84];
+	char name[84], name1[132];
 	int on = 0;
 	long dnsid = 0;
 	char extra_dns[128];
 	int new_dns = 0;
+	int index = 0;
 /*
 	int buf_sz, buf_sz1;
 */
@@ -155,6 +157,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 */
 	while(1)
 	{
+		index++;
 /*
 		for(i = 0; i < 20; i++)
 		{
@@ -199,7 +202,6 @@ printf("Adding service %s\n",more_str[curr_more_index]);
 printf("Connecting New DNS \n");
 				for(i = 0; i < 10; i++)
 				{
-				        char name1[132];
 					sprintf(name1,"NewService%d",i);
 					NewIds[i] = dis_add_service_dns(dnsid, name1, "i", &NewData, sizeof(NewData), 
 						(void *)0, 0 );

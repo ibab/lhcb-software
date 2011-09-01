@@ -182,10 +182,10 @@ int main()
 //	DimServer::start("TEST");
 	}
 */
-
 	while(1)
 	{
 		sleep(5);
+
 /*
 		while(cmdsvr.hasNext())
 		{
@@ -199,6 +199,9 @@ int main()
 		else
 			boolval = 0;
 		ival++;
+		
+		int inCallback = DimServer::inCallback();
+		cout << "main: In callback "<< inCallback << endl; 
 		servint.updateService();
 		if(extraDns)
 			new_servint->updateService();

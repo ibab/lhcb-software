@@ -461,6 +461,7 @@ public:
 	static int dicNoCopy;
 	static void setNoDataCopy();
 	static int getNoDataCopy();
+	static int inCallback();
 };
 
 class DllExp DimBrowser
