@@ -47,7 +47,9 @@ namespace Rich
       /// Sorting operator
       inline bool operator <  ( const Pixel & pixel ) const
       { 
-        return this->col <  pixel.col && this->row <  pixel.row ;
+        const unsigned int scale = 10000000;
+        return ( (scale * this->col) + this->row <
+                 (scale * pixel.col) + pixel.row );
       }
 
       /// Equality operator

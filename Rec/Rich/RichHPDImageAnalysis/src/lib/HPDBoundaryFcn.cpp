@@ -109,10 +109,10 @@ void HPDBoundaryFcn::findBoundary( Pixel::List & boundary ) const
     }
 
     // Sort
-    std::sort  ( boundary.begin(), boundary.end() );
+    std::sort   ( boundary.begin(), boundary.end() );
 
     // remove duplicates
-    std::unique( boundary.begin(), boundary.end() );
+    std::unique ( boundary.begin(), boundary.end() );
 
     // Enough hits
     if ( boundary.size() < m_params.minBoundary ) { boundary.clear(); }

@@ -4,7 +4,11 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
-!========================= RichHPDImageAnalysis v1r9 2011-08-31 =========================
+! 2011-09-02 - Chris Jones
+ - Improve the sorting operator of Pixels.
+ - Various script improvements.
+
+!=================== RichHPDImageAnalysis v1r9 2011-08-31 ====================
 ! 2011-07-24 - Chris Jones
  - Various improvements to the alignment scripts.
 

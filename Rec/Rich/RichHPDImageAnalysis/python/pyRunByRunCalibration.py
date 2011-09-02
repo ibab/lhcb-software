@@ -452,8 +452,8 @@ def runToFill(run):
     return fill
 
 def runAll(files='2011-RootFiles.txt'):
-    hpdImageShiftsAverage(files)
     hpdImageShiftsFollow(files)
+    hpdImageShiftsAverage(files)
     hpdOccupancies(files)
 
 def hpdOccupancies(files='2011-RootFiles.txt'):
@@ -1049,7 +1049,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         # Average time for run/fill in secs
         avTime = ( unixStartTime + unixStopTime ) / 2e9
 
-        # Set UMS to the start time for this run/fill
+        # Set UMS to the average time for this run/fill
         iDetDataSvc().setEventTime( gbl.Gaudi.Time((unixStartTime+unixStopTime)/2) )
         umsSvc().newEvent()
 
