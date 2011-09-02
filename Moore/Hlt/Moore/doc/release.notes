@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-09-02 - Roel Aaij
+ - Update tests to search for the correct string.
+ - More test_independence to Hlt/IndependenceTests.
+ - Remove more obsolete files from test area.
+
 ! 2011-09-01 - Roel Aaij
  - Remove obsolete tests (qmt and options files)
  - Add tests for the following configure

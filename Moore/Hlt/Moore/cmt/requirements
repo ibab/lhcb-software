@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version v12r9
+version v12r9p1
 
 branches doc cmt options python
 
@@ -40,8 +40,6 @@ use GaudiPython         v*                  -no_auto_imports
 
 # From LHCbSys
 use L0Interfaces        v*      L0          -no_auto_imports
-use IndependenceTests   v*      Hlt         -no_auto_imports
-use HltMonitor          v*      Hlt         -no_auto_imports
 
 #-- Lbcom packages 
 use LbcomSys            v*                  -no_auto_imports
