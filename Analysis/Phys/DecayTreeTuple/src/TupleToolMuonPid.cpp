@@ -50,7 +50,7 @@ StatusCode TupleToolMuonPid::fill( const Particle*
     const ProtoParticle* proto = P->proto();
     if( proto ){
       // Combined DLLs
-      test &= tuple->column( prefix+"_CombmuID"
+      test &= tuple->column( prefix+"_CombDLLMu"
           ,proto->info(LHCb::ProtoParticle::CombDLLmu,-1000));
       test &= tuple->column( prefix+"_ProbNNmu"
           ,proto->info(LHCb::ProtoParticle::ProbNNmu,-1000));
@@ -60,8 +60,8 @@ StatusCode TupleToolMuonPid::fill( const Particle*
       bool isMuon = false;
       bool isMuonLoose = false;
       bool isMuonTight = false;
-      double muonLLmu;
-      double muonLLbg;
+      double muonLLmu = -99999;
+      double muonLLbg = -99999;
       const MuonPID * muonPID = proto->muonPID();
       int NShared  = -1;
       if(muonPID) {
@@ -77,6 +77,9 @@ StatusCode TupleToolMuonPid::fill( const Particle*
       test &= tuple->column( prefix+"_isMuon", isMuon);
       test &= tuple->column( prefix+"_isMuonLoose", isMuonLoose);
       //test &= tuple->column( prefix+"_isMuonTight", isMuonTight);
+      test &= tuple->column( prefix+"_NShared", NShared);
+      test &= tuple->column( prefix+"_MuonLLmu", muonLLmu);
+      test &= tuple->column( prefix+"_MuonLLbg", muonLLbg);
 
       return StatusCode(test);
     }
