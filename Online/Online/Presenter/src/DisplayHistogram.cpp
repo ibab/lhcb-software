@@ -360,6 +360,7 @@ void DisplayHistogram::setDrawingOptions( TPad* pad ) {
        ( 0 == m_rootHistogram ) ) return ;
   if ( m_isOverlap ) return;
 
+
   int iopt = 0;
   float fopt = 0.0;
   std::string sopt("");

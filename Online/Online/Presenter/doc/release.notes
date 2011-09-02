@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-09-02 - Olivier Callot
+ - Add protection for ratio > 80 chars in Trending plot creation.
+
 !=============================== 2011-08-16 v3r1 =============================
 ! 2011-08-17 - Olivier Callot
  - Revisit reference normalisation.

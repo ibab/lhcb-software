@@ -106,8 +106,10 @@ void CreateTrendingHistogramDialog::ok() {
         for ( it = tags.begin() ; it != tags.end() ; ++it ) {
           if ( ratio != *it ) {
             std::string newTag = *it + "|" + ratio;
-            m_histdb->declareTrendingHistogram( newTag, fileName, newTag );           
-            nbRatio++;
+            if ( newTag.size() < 80 ) {
+              m_histdb->declareTrendingHistogram( newTag, fileName, newTag );           
+              nbRatio++;
+            }
           }
         }
       }
