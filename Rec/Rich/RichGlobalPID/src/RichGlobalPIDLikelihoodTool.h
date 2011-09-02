@@ -37,6 +37,8 @@
 
 // boost
 #include "boost/format.hpp"
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 
 namespace Rich
 {

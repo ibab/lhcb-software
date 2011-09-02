@@ -339,8 +339,9 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
         { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endmsg; }
         continue;
       }
+
       // Initialise starting values
-      double mindeltaLL = 9e30.;
+      double mindeltaLL = boost::numeric::bounds<double>::highest();
       Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
       // Loop over all particle codes
@@ -392,7 +393,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
       }
 
       // Add this track / deltaLL to the track list
-      m_trackList.push_back( TrackPair(mindeltaLL, *track) );
+      m_trackList.push_back( TrackPair(mindeltaLL,*track) );
 
     }} // end track for loop
 
