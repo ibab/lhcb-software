@@ -4,11 +4,14 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
-!========================= RichENNRingFinder v1r3 2011-07-27 =========================
+! 2011-09-02 - Chris Jones
+ - Use stable_sort when sorting the pixels
+
+!=================== RichENNRingFinder v1r3 2011-07-27 =========================
 ! 2011-07-25 - Chris Jones
  - Add missing protection to some verbose and debug printouts
 
-!========================= RichENNRingFinder v1r2p1 2011-02-28 =========================
+!=================== RichENNRingFinder v1r2p1 2011-02-28 =======================
 ! 2011-02-10 - Chris Jones
  - Fix various icc and coverity warnings
 

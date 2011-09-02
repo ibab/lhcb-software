@@ -30,7 +30,7 @@ void Finder::FindRings()
   if ( Hits.size() < config().minRingHits() ) return;
 
   Rings.clear();
-  std::sort( Hits.begin(), Hits.end() );
+  std::stable_sort( Hits.begin(), Hits.end() );
 
   Hit::PtnVector SearchArea;
   Hit::PtnVector PickUpArea;
