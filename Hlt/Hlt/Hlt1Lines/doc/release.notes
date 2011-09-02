@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-09-02 - Roel Aaij
+ - Allow configuration of Hlt1L0.*, but don't create the lines by default.
+   Hlt1L0PU and Hlt1L0CALO are needed by the VanDerMeerScan_Mar11 settings.
+
 !========================== Hlt1Lines v6r12  2011-07-06 =================
 ! 2011-07-06 - Gerhard Raven
  - define Hlt1L0HighSumETJet
