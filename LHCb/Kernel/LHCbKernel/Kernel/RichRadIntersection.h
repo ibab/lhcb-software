@@ -15,7 +15,7 @@
 // STL
 #include <functional>
 #include <cmath>
-#include <algorithm> // for std::sort
+#include <algorithm>
 
 // Include files
 #include "GaudiKernel/Point3DTypes.h"
@@ -218,7 +218,9 @@ namespace Rich
       /// Sort the vector of intersections into order increasing Z position
       inline static void sortByZ( Rich::RadIntersection::Vector & intersections )
       {
-        std::sort( intersections.begin(), intersections.end(), Rich::RadIntersection::Sorter::SortByZ() );
+        std::stable_sort( intersections.begin(), 
+                          intersections.end(), 
+                          Rich::RadIntersection::Sorter::SortByZ() );
       }
 
     };
