@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2011-09-01- Kazu Akiba
+  - Adding TupleToolMuonPid. simple tuple tool based on tupletoolpid with, 
+    but with a small selection of the muon variables
+
 
 ! 2011-08-17 - Rob Lambert
  - Add Stripping TisTos ability to TUpleToolTISTOS,
