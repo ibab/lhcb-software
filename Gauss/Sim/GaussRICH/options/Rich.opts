@@ -78,6 +78,18 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true
 // corresponding to about 1/10 of the normal scintillation.
 GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
 
+// To set the Readout efficiency which empirically seems to depend on Radiator Type, from real data.
+// The default in the C++ is 1.0 which sets 100% readout efficiency for each radiator. 
+// The default for chip efficiency is 0.85 in the code. The total efficiency is
+// readoutEfficiency* chip efficiency
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=1.0;
+
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 0.844;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=0.775;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=0.776;
+
 // Use of PreDc06 PSF parametrization. If true it keeps the PSF as set in the beginning of Dc06.
 // The Default is set to false, which gives slightly worse resolution than that assumed at the beginning of dc06.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= true;
@@ -100,5 +112,9 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1;
 // software for resolution studies. The RichAnalysis.opts is not needed
 // for for any standard MC production runs. It is also not needed for any production 
 // runs with 'extended output info'.
+
+#include "$GAUSSRICHROOT/options/RichEfficiency.opts"
+
+//GiGaGeo.HpdSiliconSensDet.RichAviodDuplicateHitsActivate=true;
 //#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
