@@ -51,7 +51,8 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right)
     m_PhotoElectricProductionFlag(right.m_PhotoElectricProductionFlag),
     m_RichHpdPhotonReflectionFlag(right.m_RichHpdPhotonReflectionFlag),
     m_HpdQuartzWindowExtSurfPhotIncidentPosition(right.m_HpdQuartzWindowExtSurfPhotIncidentPosition),
-    m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo)
+    m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo),
+    m_FlagHitAsDuplicate(right.m_FlagHitAsDuplicate)
 {}
 
 const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
@@ -95,6 +96,8 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_RichHpdPhotonReflectionFlag=right.m_RichHpdPhotonReflectionFlag;
   m_HpdQuartzWindowExtSurfPhotIncidentPosition=right.m_HpdQuartzWindowExtSurfPhotIncidentPosition;
   m_PhotonSourceProcessInfo=right.m_PhotonSourceProcessInfo;
+  m_FlagHitAsDuplicate=right.m_FlagHitAsDuplicate;
+  
   
   return *this;
 }
@@ -227,7 +230,8 @@ void RichG4Hit::Print()
           <<"   "<<m_HpdQuartzWindowExtSurfPhotIncidentPosition.y()<<"    "
           << m_HpdQuartzWindowExtSurfPhotIncidentPosition.z()  <<G4endl;
 
-    G4cout<<" RichG4Hit source process info "<<m_PhotonSourceProcessInfo<<G4endl;
+    G4cout<<" RichG4Hit source process and duplicate flag info "<<m_PhotonSourceProcessInfo<<"   "
+          <<  m_FlagHitAsDuplicate<< G4endl;
     
   
   }

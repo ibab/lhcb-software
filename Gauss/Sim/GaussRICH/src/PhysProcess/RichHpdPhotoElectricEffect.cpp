@@ -47,6 +47,7 @@ void RichHpdPhotoElectricEffect::setHpdPhElecParam()
     RichHpdProperties*  m_HpdProperty = HpdProperty();
     m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UseHpdMagDistortions );
     m_HpdProperty -> setUseNominalHpdQE( (bool) m_HpdQEUsingNominalTable );
+    m_HpdProperty -> SetHpdSmearValueVect(m_RichAerogelHitSmearVal, m_Rich1GasHitSmearVal, m_Rich2GasHitSmearVal );
     m_HpdProperty -> InitializeHpdProperties( );
 
     m_HpdPhElectronKE=m_HpdProperty->RichHpdHighVoltage();

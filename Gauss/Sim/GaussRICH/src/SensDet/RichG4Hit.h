@@ -139,7 +139,9 @@ private:
   G4int m_PhotonSourceProcessInfo; // 0 means unknown, 1 means Cherenkov process, 2 means Scintillation process
                                    // This is the process which created the corresponding optical photon.
                                    // for hits from backscattered pe, this is 0.
-  
+  G4bool m_FlagHitAsDuplicate; // if true the hit is a duplicate hit. If false it is a unique hit which is the case for most of the hits.
+                              // this helps to study the effect of binary readout 
+
 public:
 
   inline void SetEdep(const G4double de)
@@ -405,7 +407,17 @@ public:
   {
     return this->PhotonSourceProcessInfo() == 2;
   }
-
+  void setCurrentHitAsDuplicate(G4bool aDupFlag ) 
+  {
+    m_FlagHitAsDuplicate=aDupFlag;
+  }
+  
+  inline bool FlagHitAsDuplicate() const
+  {
+    return ( (bool) m_FlagHitAsDuplicate);
+  }
+  
+   
 private:
 
   RichG4HpdReflectionFlag * hpdRefFlags() const

@@ -143,6 +143,12 @@ public:
   {
     return m_activateRichHitSmear;
   }
+  void setRichAerogelHitSmearVal(double aAgelVal) 
+  { m_RichAerogelHitSmearVal=aAgelVal;  }
+  void setRich1GasHitSmearVal(double aR1gasSmVal)
+  {m_Rich1GasHitSmearVal=aR1gasSmVal;}
+  void setRich2GasHitSmearVal(double aR2gasSmVal)
+  {m_Rich2GasHitSmearVal=aR2gasSmVal;  }
   
 
   
@@ -178,6 +184,9 @@ private:
                                    // if false using the new measured QE tables for the Hpds. 
 
   G4bool m_activateRichHitSmear;
+  double m_RichAerogelHitSmearVal;
+  double m_Rich1GasHitSmearVal;
+  double m_Rich2GasHitSmearVal;
   
 };
 

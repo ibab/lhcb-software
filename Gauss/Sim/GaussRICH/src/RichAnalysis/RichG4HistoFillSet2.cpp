@@ -623,9 +623,15 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
   SmartDataPtr<IHistogram1D>hNumTotHitAgelFullAcceptSat(CurrentHistoSvc,
                                               "RICHG4HISTOSET2/329");
 
+  SmartDataPtr<IHistogram1D>hNumTotHitC4F10FullAcceptSatHighMom(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/358");
   SmartDataPtr<IHistogram1D>hNumTotHitC4F10FullAcceptSat(CurrentHistoSvc,
                                                "RICHG4HISTOSET2/359");
 
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4FullAcceptSatNonScint(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/377");
+  SmartDataPtr<IHistogram1D>hNumTotHitCF4FullAcceptSatNonScintHighMom(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/378");
   SmartDataPtr<IHistogram1D>hNumTotHitCF4FullAcceptSat(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/379");
 
@@ -648,6 +654,15 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
     aRichCounter->NumHitFullAcceptSatPerTrackR1Agel() ;
   const std::vector<int> & NumRich2GasFullAcceptSatHit =
     aRichCounter->NumHitFullAcceptSatPerTrackR2Gas();
+
+  const std::vector<int> NumRich1GasHighMomFullAcceptSatHit =
+    aRichCounter-> NumHitFullAcceptSatPerTrackHighMomR1Gas() ;
+  const std::vector<int> NumHitFullAcceptSatPerTrackNoScintR2Gas =
+    aRichCounter-> NumHitFullAcceptSatPerTrackNoScintR2Gas();
+  const std::vector<int> NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas=
+    aRichCounter-> NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas();
+  
+
   
   const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom =
     aRichCounter->TrackMomFullAcceptRich1Gas();
@@ -677,16 +692,30 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
       double trackTheta1= r1gasTrkMom.theta();
 
 
+      if( trackTheta1>0.01) {  
+        if(hNumHitVsAngC4F10FullAcceptSat) hNumHitVsAngC4F10FullAcceptSat->fill(trackTheta1,nhita);
       
-      if(hNumHitVsAngC4F10FullAcceptSat) hNumHitVsAngC4F10FullAcceptSat->fill(trackTheta1,nhita);
+      
+      if(hNumTotHitC4F10FullAcceptSatHighMom) {
+        if(NumRich1GasHighMomFullAcceptSatHit[ihtra] > 0 ) {  
+          hNumTotHitC4F10FullAcceptSatHighMom->fill(NumRich1GasHighMomFullAcceptSatHit[ihtra]);
+        }
+        
+      }
+      }
+      
+      
       
 
       
     }
     
+    
+    
       
     
   }
+  
   
   
 
@@ -694,23 +723,31 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
 
   for(int ihtrb=0; ihtrb<NumSatTrajFullAccceptRich1Agel ; ++ihtrb){
     int nhitb= NumRich1AgelFullAcceptSatHit[ihtrb];
+      
     if(nhitb >0 ) {
-      if( hNumTotHitAgelFullAcceptSat)hNumTotHitAgelFullAcceptSat->fill(nhitb,1.0);
       G4ThreeVector r1agelTrkMom=NumRich1AgelFullAcceptTrackMom[ihtrb];
 
 
       double trackThetaagel= r1agelTrkMom.theta();
+      if(trackThetaagel > 0.01) {
 
-
-      if(hNumHitVsAngAgelFullAcceptSat) hNumHitVsAngAgelFullAcceptSat->fill(trackThetaagel,nhitb);
-
-    }  
+        if( hNumTotHitAgelFullAcceptSat)hNumTotHitAgelFullAcceptSat->fill(nhitb,1.0);
+        if(hNumHitVsAngAgelFullAcceptSat) hNumHitVsAngAgelFullAcceptSat->fill(trackThetaagel,nhitb);
+      }
+      
+      
+    }
+    
+    
   }
+  
   
 
   for(int ihtrc=0; ihtrc <  NumSatTrajFullAcceptRich2Gas ; ++ihtrc ) {
 
     int nhitc = NumRich2GasFullAcceptSatHit[ihtrc];
+    int nhitcc= NumHitFullAcceptSatPerTrackNoScintR2Gas[ihtrc];
+    
     if( nhitc > 0) {
       if(hNumTotHitCF4FullAcceptSat ) hNumTotHitCF4FullAcceptSat->fill(nhitc,1.0);
       G4ThreeVector r2gasTrkMom=NumRich2GasFullAcceptTrackMom[ihtrc];
@@ -720,12 +757,36 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
 
 
       
-      if(hNumHitVsAngCF4FullAcceptSat) hNumHitVsAngCF4FullAcceptSat->fill(trackTheta2,nhitc);
-
-
+      // if(hNumHitVsAngCF4FullAcceptSat) hNumHitVsAngCF4FullAcceptSat->fill(trackTheta2,nhitc);
+      if(trackTheta2 > 0.01) {  
+        if(hNumHitVsAngCF4FullAcceptSat) hNumHitVsAngCF4FullAcceptSat->fill(trackTheta2,nhitcc);
+      
+      
+      if(hNumTotHitCF4FullAcceptSatNonScint)hNumTotHitCF4FullAcceptSatNonScint->
+        fill( nhitcc );
+      if(hNumTotHitCF4FullAcceptSatNonScintHighMom ){ 
+        if(NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas[ihtrc] > 0 ) {
+          
+        hNumTotHitCF4FullAcceptSatNonScintHighMom->
+          fill(NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas[ihtrc]);
+        }
+        
+        
+        
+      }
+      
+      }
+      
+      
+      
+      
     }
-
+    
+    
   }
+  
+  
+  
 
 
   //=============================================================================

@@ -42,7 +42,7 @@ public:
   //
   G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
                                   const G4Step& aStep);
-  G4double RichHpdSiEnergyDeposit(G4double ElossInput);
+  G4double RichHpdSiEnergyDeposit(G4double ElossInput, G4double aReadOutEff);
   G4double RichHpdSiBackScatter(G4double EnergyInput);
   void InitializeHpdProcParam();
 
@@ -50,8 +50,15 @@ public:
   void setHpdSiPixelChipEff(double aValueB){ m_SiPixelChipEff = (G4double) aValueB ;}     
 
   void setHpdPeBackScaProb(double aValueC) {PeBackScaProb=(G4double) aValueC ;}
+ 
+  void setHpdReadOutEffAerogel(double aValAgelEff) 
+  {m_HpdReadOutEffAerogel=(G4double) aValAgelEff;}
+  void setHpdReadOutEffRich1Gas(double aValR1Eff) 
+  {m_HpdReadOutEffRich1Gas=(G4double) aValR1Eff;}
+  void setHpdReadOutEffRich2Gas(double aValR2Eff) 
+  {m_HpdReadOutEffRich2Gas=(G4double)aValR2Eff;}
+  G4double  getPhotonOriginRadDependentReadoutEfficiency(  const G4Track& aTrack );
   
-    
 private:
 
   // hide assignment and copy operators.
@@ -80,6 +87,11 @@ private:
   G4double m_siliconDetYSize;
   G4double m_siliconDetZSize;
   
+  G4double m_HpdReadOutEffAerogel;
+  G4double m_HpdReadOutEffRich1Gas;
+  G4double m_HpdReadOutEffRich2Gas;
+  
+  G4double m_HpdCurrentReadOutEff;
   
 };
 

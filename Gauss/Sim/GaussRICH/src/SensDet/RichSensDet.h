@@ -10,6 +10,7 @@
 #include "RichG4Hit.h"
 #include "RichG4HitCollName.h"
 #include "RichG4GeomProp.h"
+#include <map>
 
 // forward declarations
 class G4HCofThisEvent;
@@ -95,6 +96,9 @@ public:
   G4int PixelYNum( const G4double localYCoord ) const
   {return m_RichGeomProperty->PixelYNumFromCoord(localYCoord) ;}
 
+  void ResetHpdMapInCurrentEvent();
+  G4int GetPixelNumInHpd(G4int PixelXNum, G4int PixelYNum);
+  
 private:
   ///
   RichSensDet(); ///< no default constructor
@@ -111,6 +115,13 @@ private:
   G4int m_NumberOfHCInRICH;
   std::vector<RichG4HitsCollection*>  m_RichHC;
   std::vector<G4int> m_HpdHCID;
+  bool m_RichAviodDuplicateHitsActivate;
+  bool m_RichFlagDuplicateHitsActivate;
+  G4int m_TotNumHpdsInRich;
+  std::vector<bool> m_RichHpdAlreadyHit; // flag for hpd to have hits in current event
+  std::multimap<G4int,G4int> m_RichHpdToPixelNumMap; // map between Hpd and Pixelnum for each hit in current event
+  
+  
 };
 
 #endif

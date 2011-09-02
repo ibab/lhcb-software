@@ -49,12 +49,19 @@ GiGaPhysConstructorHpd::GiGaPhysConstructorHpd
     m_RichHpdSiDetEfficiency(0.85),
     m_RichHpdPixelChipEfficiency(1.0),
     m_RichHpdPeBackScatterProb(0.005823), /*RWL change 8th Nov 06*/
-    m_ActivateRICHHPDPhysProc(true)   
+    m_ActivateRICHHPDPhysProc(true),
+    m_RichHpdReadoutEffWithAerogel(1.0),
+    m_RichHpdReadoutEffWithRich1Gas(1.0),
+    m_RichHpdReadoutEffWithRich2Gas(1.0)   
 { 
   declareProperty("RichHpdSiDetEfficiency", m_RichHpdSiDetEfficiency);
   declareProperty("RichHpdPixelChipEfficiency", m_RichHpdPixelChipEfficiency);
   declareProperty("RichHpdBackScatterProb" , m_RichHpdPeBackScatterProb);
   declareProperty("RichHpdPhysicsProcessActivate",m_ActivateRICHHPDPhysProc); 
+  declareProperty("RichHpdReadOutEffInAerogel",m_RichHpdReadoutEffWithAerogel);
+  declareProperty("RichHpdReadOutEffInRich1Gas", m_RichHpdReadoutEffWithRich1Gas);
+  declareProperty("RichHpdReadOutEffInRich2Gas", m_RichHpdReadoutEffWithRich2Gas);
+  
  }
 
 
@@ -165,6 +172,10 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
   theRichHpdSiEnergyLossProcess->setHpdSiDetEff ( m_RichHpdSiDetEfficiency);
   theRichHpdSiEnergyLossProcess->setHpdSiPixelChipEff (m_RichHpdPixelChipEfficiency);
   theRichHpdSiEnergyLossProcess->setHpdPeBackScaProb(m_RichHpdPeBackScatterProb);
+  theRichHpdSiEnergyLossProcess->setHpdReadOutEffAerogel(m_RichHpdReadoutEffWithAerogel);
+  theRichHpdSiEnergyLossProcess->setHpdReadOutEffRich1Gas(m_RichHpdReadoutEffWithRich1Gas);
+  theRichHpdSiEnergyLossProcess->setHpdReadOutEffRich2Gas(m_RichHpdReadoutEffWithRich2Gas);
+  
   theRichHpdSiEnergyLossProcess->InitializeHpdProcParam();
   
 

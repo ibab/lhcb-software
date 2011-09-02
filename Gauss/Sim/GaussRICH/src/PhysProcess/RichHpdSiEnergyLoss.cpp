@@ -16,6 +16,10 @@
 #include "G4ProcessVector.hh"
 #include "G4ProcessManager.hh"
 #include "RichHpdProperties.h"
+#include "GaussTools/GaussTrackInformation.h"
+#include "RichInfo.h"
+#include "RichPEInfo.h"
+#include "RichG4RadiatorMaterialIdValues.h"
 
 RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
                                         G4ProcessType   aType )
@@ -24,7 +28,11 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
     MinKineticEnergy(1.*keV),
     MipEnergyHpdSiEloss(1.0*GeV),
     finalRangeforSiDetStep(0.15*mm),
-    PhElectronMaxEnergy(25.0*keV) 
+    PhElectronMaxEnergy(25.0*keV) ,
+    m_HpdReadOutEffAerogel(1.0),
+    m_HpdReadOutEffRich1Gas(1.0),
+    m_HpdReadOutEffRich2Gas(1.0),
+    m_HpdCurrentReadOutEff(1.0)
 {
   
   // The following three initializations moved to GiGaPhysConstructorHpd and InitializeHpdProcParam so that they can be
@@ -169,6 +177,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //  return &aParticleChange;
   // }
 
+  
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
   G4double aKinEnergyInit = aParticle->GetKineticEnergy();
   G4String  aCreatorProcessName= "NullProcess";
@@ -270,7 +279,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // So this process deposits 20*10 = 200 keV.
   // SE June 2004. now using RichPhotoelectron where no further deposit of
   // energy. Hence the energy deposited on the hit is 20 keV.
-  G4double EnegydepositMultFactor=1.0;
+  G4double EnergydepositMultFactor=1.0;
 
   if( (aCreatorProcessName == "RichHpdPhotoelectricProcess") ||  (aCreatorProcessName == "RichHpdSiEnergyLossProcess") ) {
     if(aKinEnergyInit > 1500 ) {
@@ -279,7 +288,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       // if( aCreatorProcessName == "RichHpdSiEnergyLossProcess" ) {
       //	G4cout<<" a backscatered eln back in RichHpdenergyLossProcess "<<G4endl;
       // }
-      // EnegydepositMultFactor=10.0;
+      // EnergydepositMultFactor=10.0;
     }    
   } else {
     // G4cout<<" Now a non pe particle in RicHpdEnergyLoss  " <<G4endl;
@@ -302,9 +311,19 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //   cout<<"Hpd sidet Energy already deposited  "
   //             <<aEnergyAlreadyDeposit<<endl;
   //  G4cout<<"HpdEnergyloss: pe Energy before transfer "<<Eloss<<G4endl;
+
+  // now for the pe created by photons, find the photon origin radiator and
+  // retrieve the corresponding efficiency. Apply this efficieny to kill the 
+  // pe, which is done  by setting energy transfer to 0.0. 
   
+  if( aCreatorProcessName == "RichHpdPhotoelectricProcess") {
+    m_HpdCurrentReadOutEff = getPhotonOriginRadDependentReadoutEfficiency(aTrack);
+  }else {
+    m_HpdCurrentReadOutEff=1.0;
+  }
+
   G4double EnergyTransfer=
-    EnegydepositMultFactor* RichHpdSiEnergyDeposit(Eloss);
+    EnergydepositMultFactor* RichHpdSiEnergyDeposit(Eloss,m_HpdCurrentReadOutEff );
   //     G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
 
 
@@ -325,8 +344,12 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       //also can do using sum of GS in inverse
       // for now allow only one backscatered electron per charged particle.
 
-
-      if( (Randreflect <= PeBackScaProbCorrected) &&  (aCreatorProcessName != "RichHpdSiEnergyLossProcess" ) )
+      double aFracEff=(SiHitDetGlobalEff != 1.0) ? (1.0-SiHitDetGlobalEff)/(1.0-(SiHitDetGlobalEff*m_HpdCurrentReadOutEff)): 1.0;
+      // G4cout<<" Hpd Energy losss SidetEff HpdReadOuteff FracEff "<<SiHitDetGlobalEff<<"  "<<m_HpdCurrentReadOutEff<<"  "
+      //      <<aFracEff<<G4endl;
+      
+      
+      if( (Randreflect <= (PeBackScaProbCorrected*aFracEff*m_HpdCurrentReadOutEff) ) &&  (aCreatorProcessName != "RichHpdSiEnergyLossProcess" ) )
         {
 
 	  //create new photoelectron, kill old photoelectron
@@ -411,6 +434,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       
       
       
+      
   }
   
   
@@ -437,7 +461,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   return &aParticleChange;
 
 }
-G4double RichHpdSiEnergyLoss::RichHpdSiEnergyDeposit(G4double   ElossInput)
+G4double RichHpdSiEnergyLoss::RichHpdSiEnergyDeposit(G4double   ElossInput, G4double aReadOutEff)
 {
   G4double NetEnergyTransfer =    ElossInput;
 
@@ -445,7 +469,7 @@ G4double RichHpdSiEnergyLoss::RichHpdSiEnergyDeposit(G4double   ElossInput)
   //  cout<<"SiEnergy dep  EFFR GloablEFF  "
   //    << Effrandom << "  "<< SiHitDetGlobalEff<<endl;
 
-  if( Effrandom >  SiHitDetGlobalEff ) {
+  if( Effrandom >  ( SiHitDetGlobalEff* aReadOutEff) ) {
 
     NetEnergyTransfer= 0.0;
 
@@ -461,6 +485,60 @@ G4double RichHpdSiEnergyLoss::RichHpdSiEnergyDeposit(G4double   ElossInput)
   return NetEnergyTransfer;
 
 }
+G4double RichHpdSiEnergyLoss::getPhotonOriginRadDependentReadoutEfficiency(const G4Track& aTrack )
+{
+  // this is called only for those pe which are from photons. But it is verified here anyway.
+  G4double aRadEff=1.0;
+
+  G4int aRadiatorNumber=-1;
+  //  G4ThreeVector aEmissPt;
+
+  G4String  bCreatorProcessName= "NullProcess";
+  const G4VProcess* bProcess = aTrack.GetCreatorProcess();
+  if(bProcess) bCreatorProcessName =  bProcess->GetProcessName();
+
+  G4VUserTrackInformation* aUserTrackinfo=aTrack.GetUserInformation();
+  GaussTrackInformation* aRichPETrackInfo= (GaussTrackInformation*)aUserTrackinfo;
+  if( ( (aTrack.GetDefinition() == G4Electron::Electron()) ||
+        (aTrack.GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
+        (bCreatorProcessName  == "RichHpdPhotoelectricProcess") ) {
+    if(aRichPETrackInfo)
+    {
+      if(aRichPETrackInfo->detInfo())
+      {
+        RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
+        if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo())
+        {
+          RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
+          if( aPEInfo)
+          { 
+             aRadiatorNumber = aPEInfo->PhotOriginRadiatorNumber();
+            //aEmissPt          =   aPEInfo->PhotonEmisPoint();
+            
+          }
+        }
+      }
+    }
+  }
+  RichG4RadiatorMaterialIdValues* aRMIdValues =
+      RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+  
+  if(aRadiatorNumber == (aRMIdValues-> Rich1GaseousCkvRadiatorNum())){
+      aRadEff = m_HpdReadOutEffRich1Gas;
+  }else if(aRadiatorNumber == (aRMIdValues-> Rich2GaseousCkvRadiatorNum())){
+      aRadEff = m_HpdReadOutEffRich2Gas;
+  }else if ( aRMIdValues -> IsRich1AerogelAnyTileRad(aRadiatorNumber)){
+     aRadEff = m_HpdReadOutEffAerogel;
+  }
+  //G4cout<<"Hpd energy Loss : Radiator number ReadOuteff "<< aRadiatorNumber <<"  "<< aRadEff<<G4endl;
+  
+
+  return aRadEff;
+  
+}
+
+
+
 
 
 

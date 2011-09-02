@@ -44,11 +44,11 @@ RichG4EventHitCount::RichG4EventHitCount(  ) {
 
   ChTkBetaSaturatedCut = 0.9999;
 
-  //  m_Rich1InitSlopeRMin= 0.015*rad;
-  // m_Rich1InitSlopeXMin= 0.015*rad;
-  // m_Rich1InitSlopeXMax= 0.30*rad;
-  // m_Rich1InitSlopeYMin = 0.015*rad;
-  // m_Rich1InitSlopeYMax=  0.30*rad;
+   m_Rich1InitSlopeRMinFull= 0.015*rad;
+   m_Rich1InitSlopeXMinFull = 0.015*rad;
+   m_Rich1InitSlopeXMaxFull = 0.30*rad;
+   m_Rich1InitSlopeYMinFull = 0.015*rad;
+   m_Rich1InitSlopeYMaxFull =  0.30*rad;
 
   m_Rich1InitSlopeRMin= 0.05*rad;
   m_Rich1InitSlopeXMin= 0.05*rad;
@@ -69,11 +69,11 @@ RichG4EventHitCount::RichG4EventHitCount(  ) {
   // m_MomRich2GasMin = 20.0*GeV;
   //  m_MomRich2GasMin = 20.0*GeV;
 
-  //  m_Rich2InitSlopeRMin= 0.015*rad;
-  //  m_Rich2InitSlopeXMin= 0.015*rad;
-  // m_Rich2InitSlopeXMax= 0.20*rad;
-  // m_Rich2InitSlopeYMin = 0.015*rad;
-  // m_Rich2InitSlopeYMax=  0.20*rad;
+   m_Rich2InitSlopeRMinFull= 0.015*rad;
+   m_Rich2InitSlopeXMinFull= 0.015*rad;
+   m_Rich2InitSlopeXMaxFull= 0.20*rad;
+   m_Rich2InitSlopeYMinFull = 0.015*rad;
+   m_Rich2InitSlopeYMaxFull=  0.20*rad;
 
   m_Rich2InitSlopeRMin= 0.05*rad;
   m_Rich2InitSlopeXMin= 0.05*rad;
@@ -81,8 +81,10 @@ RichG4EventHitCount::RichG4EventHitCount(  ) {
   m_Rich2InitSlopeYMin = 0.05*rad;
   m_Rich2InitSlopeYMax=  0.20*rad;
   m_MinTkPtRich2FiducialRegion= 1;
-  m_MinC4F10HighMomCutForYield= 60.0*GeV;
-  m_MinCF4HighMomCutForYield= 60.0*GeV;
+  //  m_MinC4F10HighMomCutForYield= 60.0*GeV;
+  // m_MinCF4HighMomCutForYield= 60.0*GeV;
+  m_MinC4F10HighMomCutForYield= 40.0*GeV;
+  m_MinCF4HighMomCutForYield= 40.0*GeV;
 
 }
 RichG4EventHitCount::~RichG4EventHitCount(  ) {
@@ -236,6 +238,33 @@ bool  RichG4EventHitCount::Rich1ProdDirSelection
 
 }
 
+bool  RichG4EventHitCount::Rich1ProdDirSelectionFullAcceptance
+( const G4ThreeVector & initMom )
+{
+  bool InitDirOK = false;
+  if(initMom.z() > 0.0 ) {
+    G4double SlopeX= (initMom.x()) /( initMom.z());
+    G4double SlopeY = (initMom.y())/(initMom.z());
+    G4double SlopeR=pow(( SlopeX*SlopeX+SlopeY*SlopeY),0.5);
+
+    if( ( SlopeR  >= m_Rich1InitSlopeRMinFull) &&
+        ( fabs(SlopeX) <= m_Rich1InitSlopeXMaxFull ) &&
+        ( fabs(SlopeY) <= m_Rich1InitSlopeYMaxFull ) ) {
+
+      InitDirOK = true;
+
+    }
+
+
+  }
+
+
+
+  return  InitDirOK ;
+
+}
+
+
 
 bool  RichG4EventHitCount::Rich1AgelMomSelection
 ( const G4ThreeVector & InitMomA ) {
@@ -363,10 +392,33 @@ bool  RichG4EventHitCount::Rich2ProdDirSelection
 
 }
 
+bool  RichG4EventHitCount::Rich2ProdDirSelectionFullAcceptance
+( const G4ThreeVector & initMom )
+{
+  bool InitDirOK = false;
+  if(initMom.z() > 0.0 ) {
+    G4double SlopeX= (initMom.x()) /( initMom.z());
+    G4double SlopeY = (initMom.y())/(initMom.z());
+    G4double SlopeR =pow((SlopeX*SlopeX+SlopeY*SlopeY),0.5);
+
+    if( ( SlopeR >= m_Rich2InitSlopeRMinFull) &&
+        ( fabs(SlopeX) <= m_Rich2InitSlopeXMaxFull ) &&
+        ( fabs(SlopeY) <= m_Rich2InitSlopeYMaxFull ) ) {
+
+      InitDirOK = true;
+
+    }
+
+  }
+
+
+  return  InitDirOK ;
+
+}
 
 
 bool RichG4EventHitCount::Rich1TrajTraverse
-(const G4Event* anEvent, int trajId)
+(const G4Event* anEvent, int trajId, bool FullAcceptance)
 {
   //  Get the track ID of all the charged particle trajectories.
   // excluding those of the photoelectrons.
@@ -400,7 +452,13 @@ bool RichG4EventHitCount::Rich1TrajTraverse
       const G4ThreeVector & initMomentum =  CurTraj->GetInitialMomentum();
 
       Rich1GasMomHigh   = Rich1GasMomSelection(initMomentum);
-      TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      if(FullAcceptance) {
+        TrackDirInRich1Acceptance = Rich1ProdDirSelectionFullAcceptance(initMomentum);
+
+      }else {
+        TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      }
+      
       //      G4cout<<" Rich1Traj tkid InitMom  "<<trajId<<"   "
       //      <<initMomentum<<"   GasMomOK DirOK "
       //       <<"  "<< Rich1GasMomHigh
@@ -598,7 +656,7 @@ bool RichG4EventHitCount::Rich1TrajTraverse
 
 
 bool RichG4EventHitCount::Rich1AgelTrajTraverse
-(const G4Event* anEvent, int trajId)
+(const G4Event* anEvent, int trajId, bool FullAcc)
 {
   bool atravAgel= false;
 
@@ -631,7 +689,12 @@ bool RichG4EventHitCount::Rich1AgelTrajTraverse
       const G4ThreeVector & initMomentum=  CurTraj->GetInitialMomentum();
 
       Rich1AgelMomHigh   = Rich1AgelMomSelection(initMomentum);
-      TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      if(FullAcc) {
+        TrackDirInRich1Acceptance = Rich1ProdDirSelectionFullAcceptance(initMomentum);
+      }else {
+        TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      }
+      
       //   G4cout<<" Rich1Traj tkid InitMom  "<<trajId<<"   "
       //    <<initMomentum<<"   AgelMomOK DirOK "
       //      <<"  "<< Rich1AgelMomHigh
@@ -800,7 +863,7 @@ bool RichG4EventHitCount::Rich1AgelTrajTraverse
 
 
 bool RichG4EventHitCount::Rich2TrajTraverse
-(const G4Event* anEvent, int trajId)
+(const G4Event* anEvent, int trajId, bool FullAcc)
 {
 
   //  Get the track ID of all the charged particle trajectories.
@@ -838,7 +901,12 @@ bool RichG4EventHitCount::Rich2TrajTraverse
       const G4ThreeVector & initMomentum=  CurTraj->GetInitialMomentum();
 
       Rich2GasMomHigh   = Rich2GasMomSelection(initMomentum);
-      TrackDirInRich2Acceptance = Rich2ProdDirSelection(initMomentum);
+      if(FullAcc) {
+        TrackDirInRich2Acceptance = Rich2ProdDirSelectionFullAcceptance(initMomentum);
+      }else {      
+        TrackDirInRich2Acceptance = Rich2ProdDirSelection(initMomentum);
+      }
+      
       // the following 'if' is to save cpu time.
 
       // G4cout<<" Rich2Traj trajID initmom Rich2momOk TrackDirOk "
@@ -1025,12 +1093,14 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
   std::vector<int>  TrajIdVectR1;
   std::vector<int>  TrajIdVectR1Agel;
   std::vector<int>  TrajIdVectR2;
+
   TrajIdVectR1.clear();
   TrajIdVectR1.reserve(100);
   TrajIdVectR1Agel.clear();
   TrajIdVectR1Agel.reserve(100);
   TrajIdVectR2.clear();
   TrajIdVectR2.reserve(100);
+
 
   RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 
@@ -1081,6 +1151,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
             bool trajAlreadyStoredR2=true;;
             bool trajtraversedRich2=false;
 
+
+
             if(TrajIdVectR1.size() > 0 ) {
 
               std::vector<int>::iterator p = find(TrajIdVectR1.begin(),
@@ -1094,6 +1166,8 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
               trajAlreadyStoredR1=false;
 
             }
+
+
             if(TrajIdVectR1Agel.size() > 0 ) {
 
               std::vector<int>::iterator p = find(TrajIdVectR1Agel.begin(),
@@ -1133,7 +1207,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
               // downstream of Rich1.
 
 
-              trajtraversedRich1= Rich1TrajTraverse(anEvent, ChtkId );
+              trajtraversedRich1= Rich1TrajTraverse(anEvent, ChtkId, false );
 
               if( trajtraversedRich1) {
 
@@ -1151,7 +1225,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
               // downstream of Rich1 agel.
 
 
-              trajtraversedRich1Agel= Rich1AgelTrajTraverse(anEvent, ChtkId );
+              trajtraversedRich1Agel= Rich1AgelTrajTraverse(anEvent, ChtkId , false);
 
               if( trajtraversedRich1Agel) {
 
@@ -1171,7 +1245,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
               // downstream of Rich2.
 
 
-              trajtraversedRich2= Rich2TrajTraverse(anEvent, ChtkId );
+              trajtraversedRich2= Rich2TrajTraverse(anEvent, ChtkId , false );
 
               if( trajtraversedRich2) {
 
@@ -1489,6 +1563,416 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
   //   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
 
 };
+
+void RichG4EventHitCount::RichG4CountSaturatedHitsFullAcc(const G4Event* anEvent,  int NumRichColl,
+                                                   const std::vector<int> & RichG4CollectionID )
+{
+  std::vector<int>  TrajIdVectR1FullAcc;
+  std::vector<int>  TrajIdVectR1AgelFullAcc;
+  std::vector<int>  TrajIdVectR2FullAcc;
+  std::vector<G4ThreeVector> TrajIdVectMomR1FullAcc;
+  std::vector<G4ThreeVector> TrajIdVectMomAgelFullAcc;
+ std::vector<G4ThreeVector> TrajIdVectMomR2FullAcc;
+
+  TrajIdVectR1FullAcc.clear();
+  TrajIdVectR1FullAcc.reserve(100);
+  TrajIdVectR1AgelFullAcc.clear();
+  TrajIdVectR1AgelFullAcc.reserve(100);
+  TrajIdVectR2FullAcc.clear();
+  TrajIdVectR2FullAcc.reserve(100);
+  TrajIdVectMomR1FullAcc.clear();
+  TrajIdVectMomR1FullAcc.reserve(100);
+  TrajIdVectMomAgelFullAcc.clear();
+  TrajIdVectMomAgelFullAcc.reserve(100);
+  TrajIdVectMomR2FullAcc.clear();
+  TrajIdVectMomR2FullAcc.reserve(100);
+  
+  RichG4RadiatorMaterialIdValues* aRMIdValues= RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+
+  
+//   G4cout<<"  Now counting Saturated numhits in Rich1 Rich2 with full acceptance "<<G4endl;
+  G4HCofThisEvent * HCE;
+  RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
+  //  G4cout<<" Now in RichG4CountSaturated Hits "<< G4endl;
+  
+  if(aRichCounter ) {
+
+    G4int NumRichCollection= NumRichColl;
+
+    int Current_RichG4CollectionID=0;
+    for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
+      Current_RichG4CollectionID =RichG4CollectionID[ihcol];      
+      if(Current_RichG4CollectionID >=0 ) {
+        HCE = anEvent->GetHCofThisEvent();
+        RichG4HitsCollection* RHC=NULL;
+        if(HCE){
+          RHC = (RichG4HitsCollection*)(HCE->
+                                        GetHC( Current_RichG4CollectionID));
+        }
+        if(RHC){
+          G4int nHitInCurColl = RHC->entries();
+          for (G4int iha=0; iha<nHitInCurColl ; iha++ ) {
+
+            RichG4Hit* aHit = (*RHC)[iha];
+            int ChtkId =  (int) (aHit-> GetChTrackID());
+            G4ThreeVector ChMomVect = aHit-> ChTrackMomVect() ;
+            
+            //G4cout<<" TRkId for rich1 hits  "<< ChtkId <<G4endl;
+             bool trajAlreadyStoredR1FullAcc=true;;
+             bool trajtraversedRich1FullAcc=false;
+
+            bool trajAlreadyStoredR1AgelFullAcc=true;;
+            bool trajtraversedRich1AgelFullAcc=false;
+
+            bool trajAlreadyStoredR2FullAcc=true;;
+            bool trajtraversedRich2FullAcc=false;
+           
+            if(TrajIdVectR1FullAcc.size() > 0 ) {
+
+              std::vector<int>::iterator p = find(TrajIdVectR1FullAcc.begin(),
+                                                  TrajIdVectR1FullAcc.end(),
+                                                  ChtkId);
+              if( p == TrajIdVectR1FullAcc.end() ) trajAlreadyStoredR1FullAcc=false;
+
+
+            } else {
+
+              trajAlreadyStoredR1FullAcc=false;
+
+            }
+
+
+            if(TrajIdVectR1AgelFullAcc.size() > 0 ) {
+
+              std::vector<int>::iterator p = find(TrajIdVectR1AgelFullAcc.begin(),
+                                                  TrajIdVectR1AgelFullAcc.end(),
+                                                  ChtkId);
+              if( p == TrajIdVectR1AgelFullAcc.end() ) trajAlreadyStoredR1AgelFullAcc=false;
+
+
+            } else {
+
+              trajAlreadyStoredR1AgelFullAcc=false;
+
+            }
+
+            if(TrajIdVectR2FullAcc.size() > 0 ) {
+
+              std::vector<int>::iterator p = find(TrajIdVectR2FullAcc.begin(),
+                                                  TrajIdVectR2FullAcc.end(),
+                                                  ChtkId);
+              if( p == TrajIdVectR2FullAcc.end() ) trajAlreadyStoredR2FullAcc=false;
+
+
+            } else {
+
+              trajAlreadyStoredR2FullAcc=false;
+
+            }
+
+            if( !( trajAlreadyStoredR1FullAcc) ) {
+
+              // Now loop through the trajectory container to see
+              // this track goes through the whle length of Rich1.
+              // This is done by checking if the first point of the
+              // trajectory is upstream of Rich1 and the last point is
+              // downstream of Rich1.
+
+
+              trajtraversedRich1FullAcc= Rich1TrajTraverse(anEvent, ChtkId, true );
+
+              if( trajtraversedRich1FullAcc) {
+
+                TrajIdVectR1FullAcc.push_back(ChtkId);
+                TrajIdVectMomR1FullAcc.push_back(ChMomVect);
+                
+
+              }
+
+            }
+
+            if( !( trajAlreadyStoredR1AgelFullAcc) ) {
+
+              // Now loop through the trajectory container to see
+              // this track goes through the whle length of Rich1 agel.
+              // This is done by checking if the first point of the
+              // trajectory i supstream of Rich1 agel and the last point is
+              // downstream of Rich1 agel.
+
+
+              trajtraversedRich1AgelFullAcc= Rich1AgelTrajTraverse(anEvent, ChtkId , true);
+
+              if( trajtraversedRich1AgelFullAcc) {
+
+                TrajIdVectR1AgelFullAcc.push_back(ChtkId);
+                TrajIdVectMomAgelFullAcc.push_back(ChMomVect);
+                
+              }
+
+            }
+
+
+            // now for rich2
+            if( !( trajAlreadyStoredR2FullAcc) ) {
+
+              // Now loop through the trajectory container to see
+              // this track goes through the whle length of Rich2.
+              // This is done by checking if the first point of the
+              // trajectory i supstream of Rich2 and the last point is
+              // downstream of Rich2.
+
+
+              trajtraversedRich2FullAcc= Rich2TrajTraverse(anEvent, ChtkId , true );
+
+              if( trajtraversedRich2FullAcc) {
+
+                TrajIdVectR2FullAcc.push_back(ChtkId);
+                TrajIdVectMomR2FullAcc.push_back(ChMomVect);
+                
+              }
+
+            }
+
+
+
+
+
+          }// endloop through hits
+          
+        }
+        
+      }
+      
+    }// end loop through the hit collections
+    
+    aRichCounter-> setTrackIdFullAcceptRich1Gas ( TrajIdVectR1FullAcc);
+    aRichCounter-> setTrackIdFullAcceptRich1Agel (TrajIdVectR1AgelFullAcc);
+    aRichCounter-> setTrackIdFullAcceptRich2Gas (TrajIdVectR2FullAcc);
+    aRichCounter-> setTrackMomFullAcceptRich1Gas(TrajIdVectMomR1FullAcc);
+    aRichCounter-> setTrackMomFullAcceptRich1Agel(TrajIdVectMomAgelFullAcc);
+    aRichCounter-> setTrackMomFullAcceptRich2Gas( TrajIdVectMomR2FullAcc);
+    
+
+    
+    int NumTrajR1FullAcc=  TrajIdVectR1FullAcc.size();
+    int NumTrajR1AgelFullAcc = TrajIdVectR1AgelFullAcc.size();
+    int NumTrajR2FullAcc=  TrajIdVectR2FullAcc.size();
+
+    std::vector<int>TrajSatNumHitFullAccAgelRich1( NumTrajR1AgelFullAcc,0);
+ 
+    std::vector<int>TrajSatNumHitFullAccGasRich1( NumTrajR1FullAcc,0);
+    std::vector<int>TrajSatNumHitFullAccGasRich1NoHpdReflHighMom( NumTrajR1FullAcc,0);
+
+    std::vector<int>TrajSatNumHitFullAccGasRich2( NumTrajR2FullAcc,0);
+    std::vector<int>TrajSatNumHitFullAccGasRich2NoScint( NumTrajR2FullAcc,0);
+    std::vector<int>TrajSatNumHitFullAccGasRich2NoScintHighMom( NumTrajR2FullAcc,0);
+
+    
+
+
+    for (int ihcolb=0; ihcolb<NumRichCollection; ihcolb++) {
+
+      Current_RichG4CollectionID =RichG4CollectionID[ihcolb];
+
+      if(Current_RichG4CollectionID >=0 ) {
+     
+      HCE = anEvent->GetHCofThisEvent();
+      RichG4HitsCollection* RHCB=NULL;
+      if(HCE){
+        RHCB = (RichG4HitsCollection*)(HCE->
+                                       GetHC( Current_RichG4CollectionID));
+      }
+      if(RHCB){
+        G4int nHitInCurCollb = RHCB->entries();
+        for (G4int ihb=0; ihb<nHitInCurCollb ; ihb++ ) {
+
+          RichG4Hit* bHit = (*RHCB)[ihb];
+
+          G4int aPhotSource = bHit->PhotonSourceProcessInfo();
+          
+          //is it a reflected hit?    
+
+	       std::vector<bool> aHpdRefl = bHit->DecodeRichHpdReflectionFlag();
+
+	       bool areflectedInHpd= bHit->ElectronBackScatterFlag(); //plot without any bsc or refl
+         for(int ii=0; ii<(int)aHpdRefl.size() ; ++ii) 
+         {
+           if( aHpdRefl [ii]) areflectedInHpd=true; 
+	       }
+
+          G4double aChTrackTotMom =  bHit->ChTrackTotMom() ;
+
+          int ChtkId =  (int) (bHit-> GetChTrackID()) ;
+          G4int aRadiatorNum=  bHit->GetRadiatorNumber();
+
+          G4double ChTkPDGMass =  bHit->RichChTrackMass();
+
+          G4double ChTkEnergy =
+            pow( (ChTkPDGMass*ChTkPDGMass+ aChTrackTotMom* aChTrackTotMom),0.5);
+          G4double ChTkBeta=0.0;
+
+          if( ChTkEnergy > 0.0 ) {
+
+            ChTkBeta = aChTrackTotMom/ChTkEnergy;
+
+            // G4cout<<"trackId  Beta  Mom Mass  "
+            //    <<ChtkId<<"   "<< ChTkBeta <<"    "
+            //    <<aChTrackTotMom<<"    "
+            //    <<ChTkPDGMass
+            //    <<G4endl;
+
+          } //end if
+
+          G4int NumRayleighScat = bHit->OptPhotRayleighFlag();
+          
+          int it=0;
+          while(it < (int) TrajIdVectR1AgelFullAcc.size()) {
+
+            if(TrajIdVectR1AgelFullAcc[it] ==  ChtkId) {
+              if( aRMIdValues ->  IsRich1AerogelAnyTileRad( aRadiatorNum ) ) {
+                //if(NumRayleighScat == 0 ) {
+                //     TrajNumHitAgelRich1FullAcc[it]++;
+                //  } //end if
+                  
+                if( ChTkBeta >  ChTkBetaSaturatedCut) {
+
+                  //               if(  ( aChTrackTotMom >  MinMomAgelCut)  &&
+                  //    ( aChTrackTotMom <  MaxMomAgelCut ) ) {
+                    
+                  if(!areflectedInHpd) {
+                   if(NumRayleighScat == 0 ) {
+                    if(!areflectedInHpd)TrajSatNumHitFullAccAgelRich1 [it]++;
+                   }
+                   
+                  }
+                  
+                  
+                  
+                  //                 }
+
+                }//end if chtkbeta                
+              } // end if aerogel test
+              
+              
+              // now skip out
+              it =  TrajIdVectR1AgelFullAcc.size() +1;
+
+            }//end if
+
+
+            it++;
+
+          }//end while for int
+
+          int itr1g = 0;
+
+          while(itr1g < (int) TrajIdVectR1FullAcc.size()) {
+
+
+            if(TrajIdVectR1FullAcc[itr1g] ==  ChtkId) {
+
+
+              if( aRadiatorNum ==  ( aRMIdValues -> Rich1GaseousCkvRadiatorNum()) ) {
+
+                if( ChTkBeta >  ChTkBetaSaturatedCut) {
+
+                  //                 if(aChTrackTotMom > MinMomc4f10Cut ) {
+
+                  //TrajSatNumHitGasRich1[itr1g]++;
+
+                  if(!areflectedInHpd)TrajSatNumHitFullAccGasRich1 [itr1g]++;
+
+                  if(aChTrackTotMom >  m_MinC4F10HighMomCutForYield ) {
+                    if(!areflectedInHpd)  TrajSatNumHitFullAccGasRich1NoHpdReflHighMom[itr1g]++;
+                  }
+
+                  //                }
+
+                }
+              }
+              // now skip out
+              itr1g =  TrajIdVectR1FullAcc.size() +1;
+
+            }
+
+            itr1g++;
+
+          } // end loop over traj ID
+
+
+          //          G4cout<<" Loooping through Rich2 vect "<<G4endl;
+
+          int it2=0;
+          while(it2 < (int) TrajIdVectR2FullAcc.size()) {
+
+            if(TrajIdVectR2FullAcc[it2] ==  ChtkId) {
+              if(aRadiatorNum == ( aRMIdValues -> Rich2GaseousCkvRadiatorNum() )   ) {
+
+                //TrajNumHitGasRich2FullAcc[it2]++;
+
+                //             G4cout<<" Beta and BetaCut  "
+                //    << ChTkBeta<<"   "<< ChTkBetaSaturatedCut<<G4endl;
+
+                if( ChTkBeta >  ChTkBetaSaturatedCut) {
+                  //              if( ChTkBeta >  0.9999 ) {
+
+                  //                if(  aChTrackTotMom > 10000 ) {
+
+                  
+                  if(!areflectedInHpd) TrajSatNumHitFullAccGasRich2[it2]++;
+                  if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitFullAccGasRich2NoScint[it2]++;
+                   if(aChTrackTotMom > m_MinCF4HighMomCutForYield ) {
+                    if(( !areflectedInHpd) && (aPhotSource != 2)) TrajSatNumHitFullAccGasRich2NoScintHighMom[it2]++; 
+                  }
+                 
+                  //  }
+
+                }
+
+
+
+              }
+
+
+
+
+
+              it2 =  TrajIdVectR2FullAcc.size() +1;
+
+            }
+
+
+
+
+            it2++;
+
+          } // end loop over TrajIdVectR2.
+
+
+        }  // end loop over hits in a coll.
+
+        
+      }}
+      
+      
+
+
+    }   //end loop over collections
+
+    aRichCounter->setNumHitFullAcceptSatPerTrackR1Agel(TrajSatNumHitFullAccAgelRich1);
+    aRichCounter->setNumHitFullAcceptSatPerTrackR1Gas (TrajSatNumHitFullAccGasRich1);
+    aRichCounter->setNumHitFullAcceptSatPerTrackR2Gas(TrajSatNumHitFullAccGasRich2);
+    
+    aRichCounter->setNumHitFullAcceptSatPerTrackHighMomR1Gas(TrajSatNumHitFullAccGasRich1NoHpdReflHighMom);
+    aRichCounter->setNumHitFullAcceptSatPerTrackNoScintR2Gas(TrajSatNumHitFullAccGasRich2NoScint);
+    aRichCounter->setNumHitFullAcceptSatPerTrackNoScintHighMomR2Gas(TrajSatNumHitFullAccGasRich2NoScintHighMom);
+    
+
+  }// end test richcounter existance
+  
+  
+  
+}
 
 
 

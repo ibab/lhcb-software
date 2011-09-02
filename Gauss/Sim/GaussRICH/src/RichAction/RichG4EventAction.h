@@ -170,6 +170,7 @@ private:
   bool m_RichEventActionHistoFillActivateSet4;
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
+  bool m_RichG4EventHitActivateCountFullAcc;
   bool m_RichG4EventActivateCkvRecon;
   bool m_RichG4HistoActivateQw;
 

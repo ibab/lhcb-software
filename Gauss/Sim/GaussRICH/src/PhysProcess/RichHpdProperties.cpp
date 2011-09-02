@@ -30,7 +30,8 @@ RichHpdProperties::RichHpdProperties( )
     m_RichHpdPSFList(2,std::vector<RichHpdPSF*>(200)),
     m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200)),
     m_HpdVerboseLevel(0),m_HpdActivateOverRideMaxQEFromDB(false),
-    m_HpdDBOverRideMaxQEValue(0.45)
+    m_HpdDBOverRideMaxQEValue(0.45),
+    m_HpdSmearValueVect(std::vector<double>(3))
 { }
 //    m_hpdNumBegInHitCollection(std::vector<int>(4)),
 //    m_hpdNumEndInHitCollection(std::vector<int>(4)),
@@ -38,6 +39,13 @@ RichHpdProperties::RichHpdProperties( )
 void  RichHpdProperties::setHpdPropertiesVerboseLevel(int aLevel ) {
   m_HpdVerboseLevel=aLevel;
 
+}
+void RichHpdProperties::SetHpdSmearValueVect(double SmAgel, double SmR1, double SmR2){
+  m_HpdSmearValueVect.clear();
+  m_HpdSmearValueVect.resize(3);
+  m_HpdSmearValueVect[0]= SmAgel;
+  m_HpdSmearValueVect[1]= SmR1;
+  m_HpdSmearValueVect[2]= SmR2;
 }
 
 void RichHpdProperties::InitializeHpdProperties( ) {
@@ -530,18 +538,21 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
   SmartDataPtr<TabulatedProperty>tabPSF(detSvc,RichHpdPsfMatTabPropPath);
   SmartDataPtr<TabulatedProperty>tabPSFPhEn(detSvc,RichHpdPsfPhEnMatTabPropPath);
   SmartDataPtr<TabulatedProperty>tabPSFRadial(detSvc,RichHpdPsfRadialMatTabPropPath);
-  SmartDataPtr<TabulatedProperty>tabHpdSmear(detSvc,RichHpdHitSmearPath);
+  //the following moved to the options file. SE 1-9-11
+  // SmartDataPtr<TabulatedProperty>tabHpdSmear(detSvc,RichHpdHitSmearPath);
   
   double HpdPsfSingle = 0.0;
   std::vector<double> aPsfValueVect;
   std::vector<double> aPsfPhEnergyVect;
   std::vector<double> aPsfRadValueVect;
-  std::vector<double> aSmearValueVect;
+  //  std::vector<double> aSmearValueVect= m_HpdSmearValueVect;
+  
+  
   
   aPsfValueVect.clear();
   aPsfPhEnergyVect.clear();
   aPsfRadValueVect.clear();
-  aSmearValueVect.clear();
+  //  aSmearValueVect.clear();
   
   
   if( (!tabPSF) || (!tabPSFPhEn) || (!tabPSFRadial) ) {
@@ -557,8 +568,9 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
     TabulatedProperty::Table tablePsf = tabPSF->table();
     TabulatedProperty::Table tablePsfPh = tabPSFPhEn->table();
     TabulatedProperty::Table tablePsfRadial = tabPSFRadial->table();
-    TabulatedProperty::Table tableHitSmear ;
-    if( tabHpdSmear != 0 ) tableHitSmear= tabHpdSmear ->table();
+    // the following moved to options file.
+    //    TabulatedProperty::Table tableHitSmear ;
+    // if( tabHpdSmear != 0 ) tableHitSmear= tabHpdSmear ->table();
 
     // the following line can be removed in the future. Kept for backward compatibility.
     HpdPsfSingle=tablePsf.begin()->second;
@@ -580,23 +592,25 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
       aPsfRadValueVect.push_back(itr->second);
     }
 
-    if( tabHpdSmear != 0 ) {
-      
-      for (its = tableHitSmear.begin(); its != tableHitSmear.end(); its++) {      
-        aSmearValueVect.push_back(its->second);
-      }
-    }else {
+    // moved to options file
+    //    if( tabHpdSmear != 0 ) {
+    //  
+    //  for (its = tableHitSmear.begin(); its != tableHitSmear.end(); its++) {      
+    //    aSmearValueVect.push_back(its->second);
+    //  }
+    // }else {
       // the following is for backward compatibility for old DB.
-      aSmearValueVect.resize(3);
-      aSmearValueVect[0]=0.0;
-      aSmearValueVect[1]=0.0;
-      aSmearValueVect[2]=0.0;
-    }
+    //  aSmearValueVect.resize(3);
+    //  aSmearValueVect[0]=0.0;
+    //  aSmearValueVect[1]=0.0;
+    //  aSmearValueVect[2]=0.0;
+    // }
     
     
 
-
+    
   }
+  
   if(m_HpdVerboseLevel >0 ) {
     RichHpdPropLogPSF << MSG::INFO <<"Hpd PSF value =  "<<HpdPsfSingle<<endreq;
   }
@@ -620,7 +634,8 @@ void RichHpdProperties::FillHpdPSFTablesAtInit ( IDataProviderSvc* detSvc, IMess
       m_RichHpdPSFList[irichdet][ih]->sethpdPointSpreadFunctionVect(aPsfValueVect );
       m_RichHpdPSFList[irichdet][ih]->sethpdPSFPhoEnergyVect(aPsfPhEnergyVect );
       m_RichHpdPSFList[irichdet][ih]->sethpdPSFRadialPosVect(aPsfRadValueVect );
-      m_RichHpdPSFList[irichdet] [ih]->sethitSmearValueVect(aSmearValueVect);
+      // m_RichHpdPSFList[irichdet] [ih]->sethitSmearValueVect(aSmearValueVect);
+      m_RichHpdPSFList[irichdet] [ih]->sethitSmearValueVect(m_HpdSmearValueVect);
       
     }
   }

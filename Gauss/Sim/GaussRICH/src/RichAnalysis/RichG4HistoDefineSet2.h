@@ -67,7 +67,9 @@ private:
   IHistogram1D*        m_hNumTotHitAgelFullAcceptSat;  
   IHistogram1D*        m_hNumTotHitC4F10FullAcceptSat;
   IHistogram1D*        m_hNumTotHitCF4FullAcceptSat;
-  
+  IHistogram1D*        m_hNumTotHitC4F10FullAcceptSatHighMom;
+  IHistogram1D*        m_hNumTotHitCF4FullAcceptSatNonScintHighMom;
+  IHistogram1D*        m_hNumTotHitCF4FullAcceptSatNonScint;
   IHistogram2D*        m_hNumHitVsAngAgelFullAcceptSat;  
   IHistogram2D*        m_hNumHitVsAngC4F10FullAcceptSat;
   IHistogram2D*        m_hNumHitVsAngCF4FullAcceptSat;

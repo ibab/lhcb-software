@@ -126,17 +126,21 @@ private:
   std::vector<int> m_TrackIdFullAcceptRich1Agel;
   std::vector<int> m_TrackIdFullAcceptRich2Gas;
 
-  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich1Gas;
-  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich1Agel;
-  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich2Gas;
+  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich1Gas; // not used for now
+  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich1Agel; // not used for now
+  std::vector<G4ThreeVector> m_TrackMomFullAcceptRich2Gas; // not used for now
 
   std::vector<int> m_NumHitFullAcceptSatPerTrackR1Gas;
   std::vector<int> m_NumHitFullAcceptSatPerTrackR1Agel;
   std::vector<int> m_NumHitFullAcceptSatPerTrackR2Gas;
 
-  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR1Gas;
-  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR2Gas;
+  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR1Gas; //not used for now
+  std::vector<int> m_NumSignalHitFullAcceptSatPerTrackR2Gas; //not used for now
 
+  std::vector<int>  m_NumHitFullAcceptSatPerTrackHighMomR1Gas;
+  std::vector<int>  m_NumHitFullAcceptSatPerTrackNoScintR2Gas;
+  std::vector<int>   m_NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas;
+  
 public:
 
 #include "RichG4Counters.icpp"

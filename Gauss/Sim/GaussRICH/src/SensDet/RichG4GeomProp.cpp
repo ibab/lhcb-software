@@ -194,3 +194,9 @@ G4int RichG4GeomProp::PixelPosFinder(G4double Xc,
   return CPixel;
 }
 
+G4int RichG4GeomProp::GetPixelNumInHpd(G4int PixelXNum, G4int PixelYNum) 
+{
+  return (PixelXNum + (m_NumberOfPixelColInHPD * PixelYNum)) ;
+  
+}
+

@@ -30,9 +30,9 @@ public:
 
   std::vector<int> RichG4GetChTrajId(const G4Event* anEvent);
 
-  bool Rich1TrajTraverse(const G4Event* anEvent, int trajId);
-  bool Rich1AgelTrajTraverse(const G4Event* anEvent, int trajId);
-  bool Rich2TrajTraverse(const G4Event* anEvent, int trajId);
+  bool Rich1TrajTraverse(const G4Event* anEvent, int trajId, bool FullAcc);
+  bool Rich1AgelTrajTraverse(const G4Event* anEvent, int trajId, bool FullAcc);
+  bool Rich2TrajTraverse(const G4Event* anEvent, int trajId, bool FullAcc);
   bool Rich1FiducialRegion(const G4ThreeVector & aTjPos  ) ;
   bool Rich1AgelFiducialRegion(const G4ThreeVector & aTjPos  ) ;
   bool Rich2FiducialRegion(const G4ThreeVector & aTjPos  ) ;
@@ -41,8 +41,13 @@ public:
   bool Rich1GasMomSelection(const G4ThreeVector & InitMomB);
   bool Rich2ProdDirSelection(const  G4ThreeVector & InitMom);
   bool Rich2GasMomSelection(const G4ThreeVector & InitMomB);
+  bool Rich1ProdDirSelectionFullAcceptance(const  G4ThreeVector & InitMom);
+  bool Rich2ProdDirSelectionFullAcceptance(const  G4ThreeVector & InitMom);
 
   void RichG4CountSaturatedHits( const G4Event* anEvent,
+                                 int NumRichColl,
+                                 const std::vector<int> & RichG4CollectionID ) ;
+  void RichG4CountSaturatedHitsFullAcc( const G4Event* anEvent,
                                  int NumRichColl,
                                  const std::vector<int> & RichG4CollectionID ) ;
 
@@ -69,6 +74,17 @@ private:
   G4double   m_MinTkPtRich2FiducialRegion;
   G4double m_MinC4F10HighMomCutForYield;
   G4double m_MinCF4HighMomCutForYield;
+
+  G4double   m_Rich1InitSlopeRMinFull;
+  G4double   m_Rich1InitSlopeXMinFull;
+  G4double   m_Rich1InitSlopeXMaxFull;
+  G4double   m_Rich1InitSlopeYMinFull;
+  G4double   m_Rich1InitSlopeYMaxFull;
+  G4double   m_Rich2InitSlopeRMinFull;
+  G4double   m_Rich2InitSlopeXMinFull;
+  G4double   m_Rich2InitSlopeXMaxFull;
+  G4double   m_Rich2InitSlopeYMinFull;
+  G4double   m_Rich2InitSlopeYMaxFull;
 
 
 };

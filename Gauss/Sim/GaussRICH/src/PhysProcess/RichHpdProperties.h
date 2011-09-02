@@ -159,6 +159,7 @@ public:
 
   double getHpdCorrectedQEFromPhotonEnergy(double photonenergy, double originalQE );
 
+  void SetHpdSmearValueVect(double SmAgel, double SmR1, double SmR2);
   
 
 private:
@@ -204,7 +205,8 @@ private:
   double m_siDetYSize;
   double m_siDetZSize;
   
-
+  std::vector<double>m_HpdSmearValueVect;
+  
   
 
   //  bool m_UseHpdMagDistortions;

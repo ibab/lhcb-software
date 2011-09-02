@@ -108,6 +108,11 @@ void RichG4Counters::InitRichEventCounters()
   m_NumSignalHitFullAcceptSatPerTrackR1Gas.clear();
   m_NumSignalHitFullAcceptSatPerTrackR2Gas.clear();
 
+
+  m_NumHitFullAcceptSatPerTrackHighMomR1Gas.clear();
+  m_NumHitFullAcceptSatPerTrackNoScintR2Gas.clear();
+  m_NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas.clear();
+
   m_NumHitTotRich1HpdRefl=0;
   m_NumHitTotRich2HpdRefl=0;
   

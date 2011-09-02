@@ -33,6 +33,7 @@
 #include "RichPEInfo.h"
 #include "RichPhotoElectron.h"
 
+using namespace std;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichSensDet
@@ -51,14 +52,21 @@ RichSensDet::RichSensDet( const std::string& type   ,
                           const std::string& name   ,
                           const IInterface*  parent )
   : G4VSensitiveDetector ( name  ),  
-    GiGaSensDetBase      ( type , name , parent )
+    GiGaSensDetBase      ( type , name , parent ),
+    m_RichAviodDuplicateHitsActivate(false),
+    m_RichFlagDuplicateHitsActivate(false),
+    m_TotNumHpdsInRich(500),         
+    m_RichHpdAlreadyHit(std::vector<bool>(m_TotNumHpdsInRich))
 {
+  // the above dummey value 500 is set to the correct value below.
 
+  declareProperty("RichAviodDuplicateHitsActivate", m_RichAviodDuplicateHitsActivate);
+  declareProperty("RichFlagDuplicateHitsactivate", m_RichFlagDuplicateHitsActivate);
+  
   IDataProviderSvc* detSvc;
   if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
 
-    m_RichGeomProperty= new
-      RichG4GeomProp(detSvc,msgSvc()) ;
+    m_RichGeomProperty= new RichG4GeomProp(detSvc,msgSvc()) ;
 
     m_RichG4HCName= new RichG4HitCollName();
     m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
@@ -72,10 +80,19 @@ RichSensDet::RichSensDet( const std::string& type   ,
       HCName=(m_RichG4HCName->RichHCName(ihc));
       collectionName.push_back(HCName);
       m_HpdHCID.push_back(-1);
-
+      
     }
-
+  
+    G4int m_TotNumHpdsInRich =   ( m_RichGeomProperty-> NumberOfHPDsInRich1()) +
+                          ( m_RichGeomProperty-> NumberOfHPDsInRich2());
+    
+    m_RichHpdAlreadyHit.resize(m_TotNumHpdsInRich);
+    ResetHpdMapInCurrentEvent();
+    
+    
   }
+  
+  
 
 }
 
@@ -355,7 +372,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit->   setHpdQuartzWindowExtSurfPhotIncidentPosition (CurHpdQwPhotIncidentPosition);
   newHit ->  setPhotonSourceProcessInfo( CurPhotonSourceProcInfo );
   
-
+  
   // for now the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exists it is set
   // as the trackid. Otherwise the track creating the
@@ -411,17 +428,90 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   }
 
   if ( CurrentRichCollectionSet >= 0 ) {
-    int NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
+    bool EnableThisHitStore=true;
+    G4bool FlagThisHitAsDuplicate=false;
+    //log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichAviodDuplicateHitsActivate
+    //       <<"   "<<m_RichFlagDuplicateHitsActivate<< endreq;
+    G4int CurPixelNumInHpd = m_RichGeomProperty ->GetPixelNumInHpd( CurrentPixelXNum, CurrentPixelYNum);
+    
+    if(m_RichAviodDuplicateHitsActivate || m_RichFlagDuplicateHitsActivate  ) { 
+      if(  m_RichHpdAlreadyHit[CurrentHpdNumber] ) {
+        pair<multimap<G4int, G4int>::iterator, multimap<G4int,G4int>::iterator> ppp= 
+                                    m_RichHpdToPixelNumMap.equal_range(CurrentHpdNumber);
+        multimap<G4int,G4int>::iterator ipm= ppp.first;
+        while( (ipm !=ppp.second ) &&   ( EnableThisHitStore ) ) {
+          if((*ipm).second == CurPixelNumInHpd) {
+               FlagThisHitAsDuplicate=true;
+               if(m_RichAviodDuplicateHitsActivate )EnableThisHitStore=false;
+          }
+          ++ipm;
+        }
+      }// end test hpd already hit
+      
+    
+    
 
+    //test print for debug
+      //if(FlagThisHitAsDuplicate ) {
+        
+      //  log << MSG::INFO<<"Current Rich Hpd hit is duplicate HpdNum Pixel PixelX PixelY "<<CurrentHpdNumber<<"  "
+      //     << CurPixelNumInHpd  <<"   "<<  CurrentPixelXNum <<"   "<<CurrentPixelYNum<<endreq;
+      //  G4int nHitInCurColl = (m_RichHC[CurrentRichCollectionSet])->entries();
+      //  int iha=0;
+      //  bool foundDup=false;
+      //  while( (iha<nHitInCurColl) && !(foundDup) ) {
+      //    RichG4Hit* aHitEx =( * m_RichHC[CurrentRichCollectionSet]) [iha];
+      //    G4int aPixelXNumEx = aHitEx-> GetCurPixelXNum();
+      //    G4int aPixelYNumEx = aHitEx-> GetCurPixelYNum();
+      //    G4int anHpdNumEx =    aHitEx-> GetCurHpdNum();
+      //    G4int aRichDetNumEx = aHitEx->  GetCurRichDetNum();
+      //    if( (aRichDetNumEx == CurrentRichDetNumber) && (anHpdNumEx == CurrentHpdNumber) && 
+      //        ( aPixelXNumEx == CurrentPixelXNum) && ( aPixelYNumEx == CurrentPixelYNum)) {
+      //      foundDup=true;
+      //      log << MSG::INFO<<" Duplicate Hit number Det hpd pixelXY "<< iha << "  "<<aRichDetNumEx <<"   "
+      //          <<  anHpdNumEx<<"   "<< aPixelXNumEx<<"    "<<aPixelYNumEx<<endreq;
+      //    }  
+      //    iha++;
+      //  }
+      //  if( !(foundDup) ) {
+      //    log << MSG::INFO<<"DuplicateHpd NotFound Please check "<<endreq;
+      //    
+      //  }
+      //  
+      // }      
+      // end of test print
+      
+    }// end test activation of avoiding or flagging hits as duplicate .
+    
+    
+    
+
+    int NumHitsInCurHC=0;
+
+    newHit -> setCurrentHitAsDuplicate( FlagThisHitAsDuplicate);
+    
+    if(EnableThisHitStore) {
+      NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
+    
+    if(m_RichAviodDuplicateHitsActivate || m_RichFlagDuplicateHitsActivate ) { 
+      m_RichHpdAlreadyHit[CurrentHpdNumber]=true;
+      m_RichHpdToPixelNumMap.insert(pair<G4int,G4int>(CurrentHpdNumber, CurPixelNumInHpd));
+    }
+    
+    }
+    
 
     log << MSG::VERBOSE
-        << "RichSensdet: Current collection set and Hit number stored = "
-        << CurrentRichCollectionSet << "  " << NumHitsInCurHC << endreq;
-
-  }
+        << "RichSensdet: Current collection set and Hit number stored  ActivationOfRepatedHits  = "
+        << CurrentRichCollectionSet << "  " << NumHitsInCurHC << "    "<<EnableThisHitStore<< endreq;
+    
+    
+  }// end test on collection set existance
+  
 
   return true;
 }
+
 
 //=============================================================================
 // clear (G4VSensitiveDetector method)
@@ -469,6 +559,16 @@ void RichSensDet::Initialize(G4HCofThisEvent*  HCE) {
     HCE->AddHitsCollection( m_HpdHCID[ihhc] , m_RichHC[ihhc]  );
   }
 
+  // log << MSG::INFO<<" resetting SensDet Counters in current Event "<<endreq;
+  
+   ResetHpdMapInCurrentEvent();
+  
+}
+void RichSensDet::ResetHpdMapInCurrentEvent() {
+    m_RichHpdAlreadyHit.assign(m_TotNumHpdsInRich,false);
+    m_RichHpdToPixelNumMap.clear();
+
+  
 }
 
 

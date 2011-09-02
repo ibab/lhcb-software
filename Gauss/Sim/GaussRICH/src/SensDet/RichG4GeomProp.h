@@ -40,7 +40,8 @@ public:
   G4int PixelYNumFromCoord(const G4double localY );
   G4int PixelPosFinder( G4double Coord,
                         const std::vector<G4double> & BoundaryValues );
-
+  G4int GetPixelNumInHpd(G4int PixelXNum, G4int PixelYNum);
+  
 private:
 
   G4int m_NumberOfRichDet;

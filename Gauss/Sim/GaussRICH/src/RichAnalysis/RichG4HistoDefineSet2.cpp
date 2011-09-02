@@ -194,7 +194,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   title="Number of  Sat Hits Vs polar Angle in Aerogel  ";
 
   m_hNumHitVsAngAgelFullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"322",
-                              title,100,0.0,0.4,100,0.0,25.0);
+                              title,100,0.0,0.3,100,0.0,25.0);
   if(! m_hNumHitVsAngAgelFullAcceptSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
   }
@@ -262,11 +262,21 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+  title="Number of Rich1 saturated Hits in Rich1Gas per track for All HighMom Tracks in Rich1";
+
+
+  m_hNumTotHitC4F10FullAcceptSatHighMom = CurHistoSvc->book(m_RichG4HistoPathSet2+"358",
+                          title,100,0.0,100.0);
+  if(! m_hNumTotHitC4F10FullAcceptSatHighMom) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
   title="Number of Sat hits vs Track Polar Angle in Rich1Gas ";
 
 
   m_hNumHitVsAngC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"352",
-                          title,100, 0.0, 0.4, 100,0.0,60.0);
+                          title,100, 0.0, 0.35, 100,0.0,60.0);
   if(! m_hNumHitVsAngC4F10FullAcceptSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
@@ -378,11 +388,33 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
+
+  title="Number of Rich2 saturated NonScint Hits in Rich2Gas per track for All HighMom Tracks in Rich2";
+
+
+  m_hNumTotHitCF4FullAcceptSatNonScintHighMom = CurHistoSvc->book(m_RichG4HistoPathSet2+"378",
+                     title,100,0.0,100.0);
+  if(!m_hNumTotHitCF4FullAcceptSatNonScintHighMom ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich2 saturated NonScint Hits in Rich2Gas per track for All Tracks in Rich2";
+
+
+  m_hNumTotHitCF4FullAcceptSatNonScint = CurHistoSvc->book(m_RichG4HistoPathSet2+"377",
+                     title,100,0.0,100.0);
+  if(!m_hNumTotHitCF4FullAcceptSatNonScint ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
   title="Number of Sat  Hits vs polar Angle in Rich2Gas ";
 
 
   m_hNumHitVsAngCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"372",
-                     title,100,0.0,0.4,100,0.0,60.0);
+                     title,100,0.0,0.25,100,0.0,60.0);
   if(!m_hNumHitVsAngCF4FullAcceptSat ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 

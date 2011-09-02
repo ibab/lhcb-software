@@ -37,6 +37,7 @@ public:
   void setRICHHPDPhysProcActivation(bool bAct) 
   { m_ActivateRICHHPDPhysProc=bAct;  }
   
+    
   ///
 
 private:
@@ -55,6 +56,9 @@ private:
   double m_RichHpdPixelChipEfficiency;
   double m_RichHpdPeBackScatterProb;
   bool m_ActivateRICHHPDPhysProc;
+  double m_RichHpdReadoutEffWithAerogel;   //to account for efficiency loss seen in real data
+  double m_RichHpdReadoutEffWithRich1Gas; // to account for efficiency loss seen in real data
+  double m_RichHpdReadoutEffWithRich2Gas; // to account for efficiency loss seen in real data
   
 };
 // ============================================================================

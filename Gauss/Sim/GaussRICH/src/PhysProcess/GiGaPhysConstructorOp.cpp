@@ -73,7 +73,10 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_HpdQEUseNominalTable(false),
     m_ActivateRICHOpticalPhysProc(true),
     m_activateRICHCF4Scintillation(true),
-    m_ActivateRICHHitSmearing(false)
+    m_ActivateRICHHitSmearing(false),
+    m_RichAerogelHitSmearValue(0.0),
+    m_Rich1GasHitSmearValue(0.0),
+    m_Rich2GasHitSmearValue(0.0)
 {
   // in the above 3 is for the three radiators.
 
@@ -113,6 +116,9 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
 
   //  declareProperty("RichActivateCF4ScintHisto" , m_activateRICHCF4ScintillationHisto);
   declareProperty("RichHitSmearingActivate", m_ActivateRICHHitSmearing);
+  declareProperty("RichAerogelHitSmearValue",m_RichAerogelHitSmearValue);
+  declareProperty("Rich1GasHitSmearValue",m_Rich1GasHitSmearValue);
+  declareProperty("Rich2GasHitSmearValue",m_Rich2GasHitSmearValue);
   
 
 }
@@ -289,8 +295,11 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theRichHpdPhotoElectricProcess->setUseHpdMagDistortions( (G4bool) m_UseHpdMagDistortions);
   theRichHpdPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
   theRichHpdPhotoElectricProcess->setHpdQEUsingNominalTable(m_HpdQEUseNominalTable);
-  theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
   theRichHpdPhotoElectricProcess->setactivateRichHitSmear( m_ActivateRICHHitSmearing);
+  theRichHpdPhotoElectricProcess->setRichAerogelHitSmearVal(m_RichAerogelHitSmearValue);
+  theRichHpdPhotoElectricProcess->setRich1GasHitSmearVal(m_Rich1GasHitSmearValue);
+  theRichHpdPhotoElectricProcess->setRich2GasHitSmearVal(m_Rich2GasHitSmearValue);
+  theRichHpdPhotoElectricProcess->setHpdPhElecParam();  
   
 
   //  G4int MaxNumPhotons = 300;

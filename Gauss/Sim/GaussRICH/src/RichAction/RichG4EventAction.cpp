@@ -60,6 +60,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichEventActionHistoFillActivateSet4(false),
     m_RichEventActionHistoFillActivateTimer(false),
     m_RichG4EventHitActivateCount(false),
+    m_RichG4EventHitActivateCountFullAcc(false),
     m_RichG4EventActivateCkvRecon(false),
     m_RichG4HistoActivateQw(false),
     m_RichG4HitReconUseSatHit(true),
@@ -86,7 +87,8 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
 
   declareProperty("RichG4EventActivateCounting" ,
                   m_RichG4EventHitActivateCount);
-
+  declareProperty("RichG4EventActivateCountingFullAcc" ,
+                  m_RichG4EventHitActivateCountFullAcc);
 
   declareProperty("RichG4EventActivateCkvReconstruction",
                   m_RichG4EventActivateCkvRecon);
@@ -295,6 +297,7 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
     m_RichG4EventHitCounter-> RichG4CountSaturatedHits(
                                                        anEvent, m_NumRichColl,m_RichG4CollectionID);
 
+ 
 
     if( m_RichEventActionVerboseLevel >= 2 ) {
 
@@ -304,6 +307,13 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   }
 
+   if( m_RichG4EventHitActivateCountFullAcc ) {
+  
+     m_RichG4EventHitCounter-> RichG4CountSaturatedHitsFullAcc(
+                                                               anEvent, m_NumRichColl,m_RichG4CollectionID);
+   }
+   
+ 
 
   if( m_RichEventActionHistoFillActivateSet2) {
 
