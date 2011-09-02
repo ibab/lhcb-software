@@ -10,11 +10,10 @@ from GaudiConf.Configuration import *
 from Moore.Configuration import Moore
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( EventSelector,
-                            HltConf,
                             CondDB )
 import Configurables
 from Configurables import TupleHltDecReports
-                            
+
 from Config import ConfigLFC
 from IndependenceTests.Config import ( Config, ConfigOutputLevel,
                                        ConfigTupleAlg )
@@ -26,7 +25,7 @@ def main():
     # Setup the option parser
     usage = "usage: %prog [options] inputfile <inputfile>"
     parser = optparse.OptionParser( usage = usage )
-    parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
+    parser.add_option( "-d", "--datatype", action="store", dest="DataType",
                        default="2009", help="DataType to run on.")
     parser.add_option( "-n", "--evtmax", type = "int", action = "store",
                        dest = "EvtMax", default = 1e4, help = "Number of events to run" )
@@ -73,8 +72,6 @@ def main():
     # Parse the command line arguments
     (options, args) = parser.parse_args()
 
-    ## # mgr = ApplicationMgr()
-    
     # Put the options into the Moore configurable
     Moore().ThresholdSettings = options.ThresholdSettings
 
@@ -104,7 +101,7 @@ def main():
                 site = options.Site
                 config = ConfigLFC( site )
                 appendPostConfigAction( config.setLFCSite )
-    
+
     # Inputdata is now handled through separate option files, this is for
     # testing/convenience
     if len( args ):
@@ -139,25 +136,9 @@ def main():
 
     # Use the filestager?
     if options.FileStager:
-        ApplicationMgr().ExtSvc += [ 'FileStagerSvc' ]
-        name = 'Gaudi::IODataManager/IODataManager'
-        if name in ApplicationMgr().ExtSvc:
-            ApplicationMgr().ExtSvc.remove( name )
-        from Configurables import Gaudi__StagedIODataManager as IODataManager
-        from Configurables import FileStagerSvc
-        mgr = IODataManager( "IODataManager" )
-        ApplicationMgr().ExtSvc += [ mgr.getFullName() ]
-        FileStagerSvc().Tempdir = options.Tempdir
-        FileStagerSvc().StageLocalFiles = True
-        files = os.listdir( '.' )
-        command = "garbage.exe"
-        if command in files:
-            command = "./" + command
-        FileStagerSvc().GarbageCollectorCommand = command
-        from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
-        RawDataCnvSvc( 'RawDataCnvSvc' ).DataManager = mgr.getFullName() 
-        EventSelector().StreamManager = "StagedStreamTool"
-    
+        from FileStager.Configuration import configureFileStager
+        configureFileStager()
+
     # Put the comma separated lists of lines into lists
     hlt1Lines = []
     for line in options.Hlt1Lines.split( ";" ):
@@ -186,11 +167,10 @@ def main():
         appendPostConfigAction( configOL.setOutputLevel )
 
     # Add the TupleHltDecReports alg to the sequence
-    tupleAlg = TupleHltDecReports( "TupleHltDecReports" )
-    addTupleAlg = ConfigTupleAlg( filename = options.TupleFile )
-    appendPostConfigAction( addTupleAlg.addTupleAlg )
-
-    ## ApplicationMgr().OutputLevel = 3
+    if options.TupleFile:
+        tupleAlg = TupleHltDecReports( "TupleHltDecReports" )
+        addTupleAlg = ConfigTupleAlg( filename = options.TupleFile )
+        appendPostConfigAction( addTupleAlg.addTupleAlg )
 
     # Instantiate the AppMgr
     appMgr = AppMgr()
