@@ -23,7 +23,8 @@ from IndependenceTests.Tasks import DecisionReporter, time_string
 from HltMonitor.Base import ProcessWrapper
 
 from GaudiPython.Bindings import gbl
-dm = gbl.DecisionMap()
+dm = { 'all'    : gbl.DecisionMap(),
+       'single' : gbl.DecisionMap() }
 
 def index( seq, item ):
     """Return the index of the first item in seq."""
@@ -219,8 +220,15 @@ def run( options, args ):
                 else:
                     run = data.pop( 'run' )
                     event = data.pop( 'event' )
-                    for line, dec in data.iteritems():
-                        dm.addDecision( run, event, line, dec )
+                    name = wrapper.name()
+                    if name == 'allLines':
+                        dm_all = dm[ 'all' ]
+                        for line, dec in data.iteritems():
+                            dm_all.addDecision( run, event, line, dec )
+                    else:
+                        name = name + 'Decision'
+                        dm_single = dm[ 'single' ]
+                        dm_single.addDecision( run, event, name, data[ name ] )
 
             if len( completed ) == len( wrappers ):
                 break
@@ -229,10 +237,14 @@ def run( options, args ):
             sleep( 5 )
 
     mismatches = defaultdict(set)
-    events = dm.events()
+    dm_all = dm[ 'all' ]
+    dm_single = dm[ 'single' ]
+    events = dm_all.events()
     for entry in events:
         for line in hlt1Lines.union( hlt2Lines ):
-            if not dm.compare( entry.first, entry.second, 'allLines', line ):
+            all_dec = dm_all.decision( entry.first, entry.second, line )
+            single_dec = dm_single.decision( entry.first, entry.second, line )
+            if all_dec != single_dec:
                 mismatches[ line ].add( entry )
 
     if len( mismatches ):
