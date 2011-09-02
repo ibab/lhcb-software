@@ -1,8 +1,8 @@
 // $Id: Structure.cpp,v 1.1 2010-02-15 16:02:54 jost Exp $
 // =====================================================================-------
-// Include files 
+// Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #ifdef _WIN32
 #pragma warning (disable : 4244 )
@@ -11,8 +11,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/Grammars.h"
-#include "GaudiKernel/Parsers.icpp"
+#include "GaudiKernel/ParsersFactory.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -23,115 +22,116 @@
 // stream it!
 // ============================================================================
 
-std::ostream& Gaudi::Utils::toStream 
-( const HParam::HistParams& o , 
-  std::ostream& s ) 
+std::ostream& Gaudi::Utils::toStream
+( const HParam::HistParams& o ,
+  std::ostream& s )
 {
-  return s << "( " 
-           << o.n_bin << " , " 
-           << o.xmin  << " , " 
-           << o.xmax  << " , " 
-    		   << o.s_min << " , " 
+  return s << "( "
+           << o.n_bin << " , "
+           << o.xmin  << " , "
+           << o.xmax  << " , "
+    		   << o.s_min << " , "
 		       << o.s_max << " , "
-           << "detector" //o.det 
+           << "detector" //o.det
            << " )" ;
 }
 // ============================================================================
 namespace Gaudi
 {
   // ==========================================================================
-  namespace Parsers 
+  namespace Parsers
   {
     // ========================================================================
-    class BeatGrammar : public grammar
-    < BeatGrammar, ClosureGrammar<HParam::HistParams>::context_t >
+    template< typename Iterator, typename Skipper>
+    class BeatGrammar:
+      public qi::grammar<Iterator, HParam::HistParams(), Skipper>
     {
     public:
       // ======================================================================
       typedef HParam::HistParams ResultT;
       // ======================================================================
     public:
-      // ======================================================================
-      /// callback
-      void matchBin ( const int bin ) const 
-      { 
-      	this->val().n_bin = bin ; 
-      }
-      /// callback
-      void matchMin ( const float x ) const 
-      {
-       this->val().xmin = x ; 
-      }
-      /// callback
-      void matchMax ( const float x ) const 
-      {
-       this->val().xmax = x ; 
-      }
-      /// callback
-      void matchsmin ( const int smin ) const 
-      {
-       this->val().s_min = smin ; 
-      }
-      /// callback
-      void matchsmax ( const int smax ) const 
-      {
-       this->val().s_max = smax ; 
-      }
-      void matchdet ( const std::string d ) const 
-      {
-       this->val().det = d ; 
-      }
-      // ======================================================================
+      struct tag_bin{};
+      struct tag_min{};
+      struct tag_max{};
+      struct tag_smin{};
+      struct tag_smax{};
+      struct Operations {
+        // Some magic:
+        template <typename A, typename B = boost::fusion::unused_type,
+            typename C = boost::fusion::unused_type,
+            typename D = boost::fusion::unused_type>
+        struct result { typedef void type; };
+        // Actions:
+        // --------------------------------------------------------------------
+        void operator()(HParam::HistParams& val, const int bin,
+            tag_bin) const {
+         val.n_bin = bin;
+        }
+
+        void operator()(HParam::HistParams& val, const float x,
+            tag_min) const {
+         val.xmin = x;
+        }
+
+        void operator()(HParam::HistParams& val, const float x,
+            tag_max) const {
+         val.xmax = x;
+        }
+
+        void operator()(HParam::HistParams& val, const int smin,
+            tag_smin) const {
+         val.s_min = smin;
+        }
+
+        void operator()(HParam::HistParams& val, const int smax,
+            tag_smax) const {
+         val.s_max = smax;
+        }
+
+        void operator()(HParam::HistParams& val,
+            const std::string& d) const {
+         val.det = d;
+        }
+
+      };
     public:
-      template <typename ScannerT>
-      struct definition
+      BeatGrammar() : BeatGrammar::base_type(para)
       {
-        definition( BeatGrammar const &self)
-        {
-          para = str_p("(")   
-            >> bin   [boost::bind(&BeatGrammar::matchBin,&self,_1)]
+          para = qi::lit('(')
+            >> qi::int_[op(qi::_val, qi::_1, tag_bin())]
             >> ','
-            >> x_min [boost::bind(&BeatGrammar::matchMin,&self,_1)]
+            >> qi::float_[op(qi::_val, qi::_1, tag_min())]
             >> ','
-            >> x_max [boost::bind(&BeatGrammar::matchMax,&self,_1)]
+            >> qi::float_[op(qi::_val, qi::_1, tag_max())]
             >> ','
-            >> s_min    [boost::bind(&BeatGrammar::matchsmin,&self,_1)]
+            >> qi::int_[op(qi::_val, qi::_1, tag_smin())]
             >> ','
-            >> s_max   [boost::bind(&BeatGrammar::matchsmax,&self,_1)]
+            >> qi::int_[op(qi::_val, qi::_1, tag_smax())]
              >> ','
-            >> det   [boost::bind(&BeatGrammar::matchdet,&self,_1)]
+            >> det   [op(qi::_val, qi::_1)]
             >> ')' ;
         }
-        rule<ScannerT> const& start() const { return para; }
-        rule<ScannerT>     para  ;
-        IntGrammar<int>    bin   ;
-        RealGrammar<float> x_min ;
-        RealGrammar<float> x_max ;
-        IntGrammar<int>    s_min ;
-        IntGrammar<int>    s_max ;
-        StringGrammar det;
-      };
+        qi::rule<Iterator, HParam::HistParams(), Skipper> para;
+        StringGrammar<Iterator, Skipper> det;
+        ph::function<Operations> op;
       // ======================================================================
     };
+    REGISTER_GRAMMAR(HParam::HistParams, BeatGrammar);
     // ========================================================================
-  } //                                         end of namespace Gaudi::Parsers 
+  } //                                         end of namespace Gaudi::Parsers
   // ==========================================================================
 } //                                                     end of namespace Gaudi
 // ============================================================================
 // parse it!
 // ============================================================================
-StatusCode  Gaudi::Parsers::parse 
-( HParam::HistParams& result , 
-  const std::string&          input  ) 
+StatusCode  Gaudi::Parsers::parse
+( HParam::HistParams& result ,
+  const std::string& input  )
 {
-  BeatGrammar gr ;
-  return parse
-    ( createIterator(input), 
-      IteratorT(),
-      gr[var(result)=arg1],
-      SkipperGrammar()).full;
+  return parse_(result, input);
 }
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 

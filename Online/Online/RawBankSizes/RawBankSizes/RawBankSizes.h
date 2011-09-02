@@ -1,5 +1,5 @@
 // $Id: RawBankSizes.h,v 1.7 2010-09-25 21:31:08 frankb Exp $
-#ifndef COMPONENT_RawBankSizes_H 
+#ifndef COMPONENT_RawBankSizes_H
 #define COMPONENT_RawBankSizes_H 1
 
 // Include files
@@ -8,14 +8,12 @@
 #include <map>
 // from Gaudi
 #include "Structure.h"
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 // from LHCb
-#include "GaudiKernel/Grammars.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile1D.h"
-#include "GaudiKernel/IHistogramSvc.h" 
-#include "GaudiKernel/Parsers.icpp"
+#include "GaudiKernel/IHistogramSvc.h"
 #include "Event/RawEvent.h"
 #include "BankDescr.h"
 
@@ -28,12 +26,12 @@ namespace LHCb
  typedef dethmap::iterator dethmiter;
  typedef std::pair<dethmiter, bool> dethinsrtp;
 }
-namespace LHCb 
+namespace LHCb
 {
 
-  class RawBankSizes : public GaudiHistoAlg 
+  class RawBankSizes : public GaudiHistoAlg
   {
-  public: 
+  public:
     /// Standard constructor
     RawBankSizes( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -53,7 +51,7 @@ namespace LHCb
 
     LHCb::detbmap m_detectors;
     LHCb::dethmap m_dethparams;
-    
+
     std::vector<LHCb::RawBank::BankType> m_bankTypes;
     std::map<std::string,IHistogram1D *> m_dethist;
     std::map<int,double > m_detsums;
