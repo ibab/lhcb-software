@@ -4,6 +4,11 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-09-02 - Mariusz Witek
+ - modify RecConf/Configuration.py to disable radial cut for primary vertices
+   for old MC to preserve backward compatibility. 
+   The cut will be applied starting from MC 2011 on. 
+
 !========================= RecConf v2r3 2011-08-31 =========================
 ! 2011-08-29 - Mariusz Witek
  - introduce new StandardPV configuration to include radial cut for primary
