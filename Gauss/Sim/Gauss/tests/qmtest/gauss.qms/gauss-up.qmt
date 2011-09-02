@@ -40,5 +40,6 @@ for l in stdout.splitlines():
         if firstLineToSkip in l:
             skipping = True
 validateWithReference(preproc = preprocessor)
-</text></argument> 
+</text></argument>
+<argument name="unsupported_platforms"><set><text>.*</text></set></argument>
 </extension>
