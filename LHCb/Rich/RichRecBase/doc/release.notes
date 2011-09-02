@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecBase v4r7 2011-07-27 =========================
+! 2011-09-02 - Chris Jones
+ - Use stable_sort instead of sort when sorting the pixels.
+
+!========================= RichRecBase v4r7 2011-07-27 =======================
 ! 2011-07-27 - Marco Cattaneo
  - Protect an uprotected MSG::DEBUG
 
@@ -12,17 +15,17 @@
  - Set default clone distance variable to 1e10, instead of FLT_MAX, to avoid
    problems in the track selectors later on.
 
-!========================= RichRecBase v4r6 2011-04-26 =========================
+!========================= RichRecBase v4r6 2011-04-26 =======================
 ! 2011-04-15 - Chris Jones
  - Suppress finalize() warnings about no pixels or photons being created.
    Can happen in the HLT and it is not really a problem. 
    Instead just print info messages as normal.   
 
-!========================= RichRecBase v4r5 2011-04-04 =========================
+!========================= RichRecBase v4r5 2011-04-04 =======================
 ! 2011-03-15 - Chris Jones
  - Remove a few CVS comments and extend ostream printout
 
-!========================= RichRecBase v4r4 2011-02-22 =========================
+!========================= RichRecBase v4r4 2011-02-22 =======================
 ! 2011-02-18 - Chris Jones
  - Change some static_cast to C style castes, to avoid ICC remarks
 

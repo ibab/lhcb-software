@@ -366,7 +366,7 @@ namespace Rich
 
     inline void PixelCreatorBase::sortPixels() const
     {
-      std::sort( richPixels()->begin(), richPixels()->end(), SortByRegion() );
+      std::stable_sort( richPixels()->begin(), richPixels()->end(), SortByRegion() );
     }
 
     inline const std::string & PixelCreatorBase::pixelLocation() const
