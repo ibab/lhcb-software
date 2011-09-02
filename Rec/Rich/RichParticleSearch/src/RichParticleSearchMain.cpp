@@ -344,7 +344,7 @@ StatusCode RichParticleSearchMain::execute() {
     		  // Setup Sort by largest variance first
     		  MattTest mt;
     		  mt.SetAvTheta(AvThetaRec);
-    		  std::sort(CKTheta.begin(), CKTheta.end(), MattTestOb); // sort in order to remove furthest out-lyers first
+    		  std::stable_sort(CKTheta.begin(), CKTheta.end(), MattTestOb); // sort in order to remove furthest out-lyers first
 
     		  int CKcounter = 0;
     		  double CKVariance = 0.0;
