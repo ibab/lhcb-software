@@ -207,6 +207,12 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           std::ostringstream mess;
           mess << nChange << " track(s) changed hypo after iteration " << nRetries;
           ++counter( mess.str() );
+
+          // some info printout to debug strange nightlies bug
+          info() << mess.str() << endmsg;
+          sortTrackList();
+          printTrackList( MSG::INFO );
+
           // Rerun iterations
           if ( msgLevel(MSG::DEBUG) )
           { debug() << "Re-running event iteratons" << endmsg; }
@@ -258,8 +264,8 @@ unsigned int LikelihoodTool::doIterations() const
     // set track hypotheses to the current best
     if ( !minTracks.empty() )
     {
-      MinTrList::iterator iTrack;
-      for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack )
+      for ( MinTrList::iterator iTrack = minTracks.begin();
+            iTrack != minTracks.end(); ++iTrack )
       {
         if ( Rich::Unknown == iTrack->second )
         {
@@ -411,6 +417,29 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
   return minTrackData.size();
 }
 
+void LikelihoodTool::printTrackList( const MSG::Level level ) const
+{
+  if ( msgLevel(level) )
+  {
+    msgStream(level) << m_trackList.size() << " Tracks in DLL list" << endmsg;
+    double lastTrackDLL(0);
+    for ( TrackList::const_iterator iP = m_trackList.begin();
+          iP != m_trackList.end(); ++iP )
+    {
+      const LHCb::RichGlobalPIDTrack * gTrack = (*iP).second;
+      msgStream(level) << " -> Track " << gTrack->key()
+                       << " DLL = " << (*iP).first 
+                       << " " << gTrack->richRecTrack()->currentHypothesis()
+                       << endmsg;
+      if ( (*iP).first == lastTrackDLL )
+      {
+        msgStream(level) << "  -> DLL SAME AS PREVIOUS TRACK ..." << endmsg;
+      }
+      lastTrackDLL = (*iP).first;
+    }
+  }
+}
+
 void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
 {
   if ( msgLevel(MSG::DEBUG) )
@@ -427,7 +456,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
   double minEventDll                   = 999999;
 
   // sort Track list according to delta LL
-  std::sort( m_trackList.begin(), m_trackList.end() );
+  sortTrackList();
 
   // Loop on all tracks
   for ( TrackList::iterator iP = m_trackList.begin();

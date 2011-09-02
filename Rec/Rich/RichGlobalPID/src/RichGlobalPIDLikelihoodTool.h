@@ -169,6 +169,15 @@ namespace Rich
         /// Sets flags to say if the given set of tracks are in Rich1 and/or Rich2
         void updateRichFlags( const MinTrList & minTracks ) const;
 
+        /// Print the current track list
+        void printTrackList( const MSG::Level level ) const;
+
+        /// Sort the track list
+        inline void sortTrackList() const 
+        { 
+          std::stable_sort(m_trackList.begin(),m_trackList.end()); 
+        }
+
       private:  // Private data members
 
         // tool pointers

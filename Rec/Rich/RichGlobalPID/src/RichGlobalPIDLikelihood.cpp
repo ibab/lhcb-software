@@ -46,7 +46,7 @@ StatusCode Likelihood::initialize()
   statusCreator();
   photonCreator();
 
-  if ( m_oneAtATime ) info() << "WIll operate in single track 'local' mode" << endmsg;
+  if ( m_oneAtATime ) info() << "Will operate in single track 'local' mode" << endmsg;
 
   return sc;
 }
