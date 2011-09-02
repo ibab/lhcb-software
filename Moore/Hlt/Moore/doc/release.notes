@@ -6,6 +6,7 @@ Purpose     : LHCb HLT application
  - Update tests to search for the correct string.
  - More test_independence to Hlt/IndependenceTests.
  - Remove more obsolete files from test area.
+ - Add a test for VanDerMeerScan_Mar11
 
 ! 2011-09-01 - Roel Aaij
  - Remove obsolete tests (qmt and options files)
