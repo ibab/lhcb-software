@@ -70,7 +70,7 @@ class IOHelper(object):
     
     '''
     #the default persistencies
-    _outputPersistency=_inputPersistency=_defaultPersistency="POOL"
+    _outputPersistency=_inputPersistency=_defaultPersistency="ROOT"
     #_inputPersistency=_defaultPersistency
     #_outputPersistency=_defaultPersistency
     

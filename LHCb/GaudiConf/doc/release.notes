@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-02 - Marco Cattaneo
+ - Change default persistency to ROOT
+
 ! 2011-09-01 - Rob Lambert
  - Modify IOHelper to work directly with FileRecordCnvSvc for any type
  - Add information getter functions for iohelper
