@@ -1,0 +1,19 @@
+// Options for RichEffiency
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=1.0;
+
+GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 0.844;
+GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=0.775;
+GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=0.776;
+
+//GiGaGeo.HpdSiliconSensDet.RichAviodDuplicateHitsActivate=true;
+//GiGaGeo.HpdSiliconSensDet.RichFlagDuplicateHitsactivate=true;
+
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichAerogelHitSmearValue=0.0;
+//GiGa.ModularPL.GiGaPhysConstructorOp.Rich1GasHitSmearValue=0.0;
+//GiGa.ModularPL.GiGaPhysConstructorOp.Rich2GasHitSmearValue=0.0;
+// MC10 smearing values for reference
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichAerogelHitSmearValue=0.76;
+//GiGa.ModularPL.GiGaPhysConstructorOp.Rich1GasHitSmearValue=0.2;
+//GiGa.ModularPL.GiGaPhysConstructorOp.Rich2GasHitSmearValue=0.2;
