@@ -118,7 +118,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20110823")
-        self.__set_tag__(["LHCBCOND"], "head-20110823")
+        self.__set_tag__(["LHCBCOND"], "head-20110901")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
 
     def __2010_conf__(self):
