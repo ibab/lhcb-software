@@ -2,6 +2,10 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2011-09-02 - Alexandr Kozlinskiy
+ - Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
+   assuming that NextNext is stored in PrevPrev.
+
 !==================== OTMonitor v3r2p1 2010-02-03 ==========================
 ! 2010-01-29 - Marco Cattaneo
  - Remove obsolete OTTimeCreator from Boole.opts (see task 12764)
