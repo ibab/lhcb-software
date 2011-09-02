@@ -3,6 +3,11 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2011-09-01 - Albert Bursche
+   - added TupleToolJets a trivial tool derrived from TupleToolJetsBase
+
+
 ! 2011-09-01- Kazu Akiba
   - Adding TupleToolMuonPid. simple tuple tool based on tupletoolpid with, 
     but with a small selection of the muon variables
