@@ -44,8 +44,8 @@ config_params = {'Z2TauTau_Prong_LinePrescale'  : 1.0,
                  'TRACKCHI2_HAD_MAX'            : '5',        # dl
                  ###
                  'PT_TAU_MIN'                   : '2000',     # MeV/c
-                 'VCHI2_TAU_MAX'                : '20',       # dl
-                 'FDCHI2_TAU_MIN'               : '1',        # dl
+                 'VCHI2_TAU_MAX'                : '20'        # dl
+                 #'FDCHI2_TAU_MIN'               : '0'         # dl
                  }
                  
    
@@ -79,8 +79,8 @@ class Z02TauTauProngConf(LineBuilder) :
                               'TRACKCHI2_HAD_MAX',
                               ###
                               'PT_TAU_MIN',
-                              'VCHI2_TAU_MAX',
-                              'FDCHI2_TAU_MIN'
+                              'VCHI2_TAU_MAX'
+                              #'FDCHI2_TAU_MIN'
                                )
 
            
@@ -114,10 +114,7 @@ class Z02TauTauProngConf(LineBuilder) :
                          }
        
         
-        ## Define PV filter
-        MyFilterPVs                                = {name             :  {'Code' : "VSOURCE('Rec/Vertex/Primary') >> (NTRACKS > 5) >> RV_SINKTES('"+self.__PVOutputLocation__[name]+"') >> ~VEMPTY", 'Preambulo' : ["from LoKiPhys.decorators import *"]},
-                                                      name+"_SameSign" :  {'Code' : "VSOURCE('Rec/Vertex/Primary') >> (NTRACKS > 5) >> RV_SINKTES('"+self.__PVOutputLocation__[name+"_SameSign"]+"') >> ~VEMPTY", 'Preambulo' : ["from LoKiPhys.decorators import *"]} }
-        
+       
 
         
         ##### DEFINE LINES
@@ -126,7 +123,6 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauLine           = StrippingLine(  name+"_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
-                                                      FILTER      = MyFilterPVs[name],
                                                       selection   = self._createZ(name   = name,
                                                                                   tauSel = selTau[name],
                                                                                   config = config)
@@ -134,7 +130,6 @@ class Z02TauTauProngConf(LineBuilder) :
         self.Z2TauTauSameSignLine   = StrippingLine(  name+"_SameSign_Line",
                                                       prescale    = config['Z2TauTau_Prong_LinePrescale'],
                                                       postscale   = config['Z2TauTau_Prong_LinePostscale'],
-                                                      FILTER      = MyFilterPVs[name+"_SameSign"],
                                                       selection   = self._createZ_SameSign(name   = name+"_SameSign",
                                                                                            tauSel = selTau[name+"_SameSign"],
                                                                                            config = config)
@@ -160,8 +155,7 @@ class Z02TauTauProngConf(LineBuilder) :
 
         _CombineZ       = CombineParticles(  DecayDescriptors          = ["Z0 -> tau+ tau-"],
                                              CombinationCut            = _combcut,
-                                             MotherCut                 = _Zcut,
-                                             InputPrimaryVertices      = self.__PVOutputLocation__[name]
+                                             MotherCut                 = _Zcut
                                              #Preambulo                = "",#_preambulo
                                              )
         
@@ -183,7 +177,6 @@ class Z02TauTauProngConf(LineBuilder) :
         _CombineZ       = CombineParticles(  DecayDescriptors          = ['[Z0 -> tau+ tau+]cc'],
                                              CombinationCut            = _combcut,
                                              MotherCut                 = _Zcut,
-                                             InputPrimaryVertices      = self.__PVOutputLocation__[name],
                                              WriteP2PVRelations        = False
                                              #Preambulo                = "",#_preambulo
                                              )
@@ -214,8 +207,7 @@ class Z02TauTauProngConf(LineBuilder) :
 
         _CombineTau     = CombineParticles(  DecayDescriptor           = "[tau+ -> pi+ pi+ pi-]cc ",
                                              CombinationCut            = _combcut,
-                                             MotherCut                 = _taucut,
-                                             InputPrimaryVertices      = self.__PVOutputLocation__[name.replace('Tau_','',1)]
+                                             MotherCut                 = _taucut
                                              )
 
         return Selection(   name                 = name+"_TauProng",
@@ -232,8 +224,8 @@ class Z02TauTauProngConf(LineBuilder) :
 
         print name
 
-        _filter         = FilterDesktop(Code                      = selectionCuts,
-                                        InputPrimaryVertices      = self.__PVOutputLocation__[name.replace('Hadron_','')])
+        _filter         = FilterDesktop(Code                      = selectionCuts
+                                        )
 
         return Selection(   name+"_HadProng",
                             Algorithm            = _filter,
@@ -244,8 +236,7 @@ class Z02TauTauProngConf(LineBuilder) :
     ### KINEMATIC CUTS FOR TAU
     def _hadIntermediateKinematicCutsProng(self,config):
         _combcode = "(APT > "                + config['PT_TAU_MIN'] +"*MeV)"
-        _ptvxcode = "(VFASPF(VCHI2PDOF) < "  + config['VCHI2_TAU_MAX'] +") & "\
-                    "(BPVVDCHI2 > "          + config['FDCHI2_TAU_MIN'] +")"
+        _ptvxcode = "(VFASPF(VCHI2PDOF) < "  + config['VCHI2_TAU_MAX'] +")"
         return [_combcode,_ptvxcode]
 
     ### KINEMATIC CUTS FOR PRONG
