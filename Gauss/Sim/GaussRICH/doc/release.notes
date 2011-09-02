@@ -3,6 +3,23 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-9-02 - Sajan Easo
+- RICH inefficiency applied as default in the RichEfficiency.opts as part of
+  tuning to match  to the yields from real data.
+!2011-9-01 - Sajan Easo
+- RICH ReadOut hit efficiency activated. There is one number per radiator which can be
+  set from the options file. This is in addition to the SiDetEff (=0.85). So the 
+  total efficiency is ReadOutEfficenyFromRadiator*SiDetEff. Added an options file
+  named RichEfficiency.opts where these can be set. This file is activated from Rich.opts
+- RICH Binary readout simplified simulation made available on an options file switch. There is
+  one flag named RichFlagDuplicateHitsactivate which allows to flag the duplicate hits in
+  in event. There is a second flag named RichAviodDuplicateHitsActivate which allows to
+  avoid creating the duplicate hits. This is implemented in RichSensDet.cpp by looking through the
+  appropriate set of hits already created,  to see if any duplicate entries exist.
+  By default these flags are set to false in the C++ code, which means the duplicate hits are created. 
+  These flags are also available in RichEfficiency.opts and are switched off by default.
+- The Hit smearng capabiltity can be activated from the options file RichEfficiency.opts
+  By default the hit smearing is switched off.
 !2011-6-24 - Sajan Easo
 - Minor changes to monitoring and analysis while reconstructing aerogel sub tiles.
 - Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
