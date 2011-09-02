@@ -224,11 +224,11 @@ class Gauss(LHCbConfigurableUser):
         Set up output stream according to phase processed and spill-over slots
         """
         # and in the future extended or reduced DIGI
-
+        
         # not required since it is now in LHCb App
         # POOL persistency 
         #importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
-
+        
         #
         knownOptions = ['NONE','SIM']
         output = self.getProp("Output").upper()
@@ -246,10 +246,10 @@ class Gauss(LHCbConfigurableUser):
         outputFile=""
         from GaudiConf import IOHelper
         if simWriter.isPropertySet( "Output" ):
-            outputFile=simWriter.getProp("Output")
+            outputFile=IOHelper().undressFile(simWriter.getProp("Output"))
         else:
             outputFile=self.outputName() + fileExtension
-
+        
         persistency=None
         
         if hasattr( self, "Persistency" ):
@@ -260,8 +260,7 @@ class Gauss(LHCbConfigurableUser):
         if not FileCatalog().isPropertySet("Catalogs"):
             FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
         
-
-
+    
     def defineMonitors( self ):
 
         # get all defined monitors

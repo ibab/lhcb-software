@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-09-02 - Rob Lambert
+ - Fix in Configuration.py for bug #86302
+ - if GaussTape output is set externally it must be undressed
+   before passing to IOHelper
+
 !========================= Gauss v40r2 2011-08-25 ============================
 ! 2011-08-25 - Gloria Corti
  - Put in configuration the stearing of the creation of the static class
