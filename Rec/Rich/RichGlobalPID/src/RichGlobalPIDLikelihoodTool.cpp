@@ -340,7 +340,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
         continue;
       }
       // Initialise starting values
-      double mindeltaLL = 99999.;
+      double mindeltaLL = 9e30.;
       Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
       // Loop over all particle codes
