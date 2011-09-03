@@ -21,13 +21,13 @@ using namespace Rich::Rec::GlobalPID;
 DECLARE_TOOL_FACTORY( LikelihoodTool )
 
 // anon namespace for a few constants
-namespace
-{
-  const double limitA = 0.001;
-  const double limitB = 0.01;
-  const double limitC = 0.1;
-  const double limitD = 1.0;
-}
+// namespace
+// {
+//   const double limitA = 0.001;
+//   const double limitB = 0.01;
+//   const double limitC = 0.1;
+//   const double limitD = 1.0;
+// }
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -81,7 +81,7 @@ LikelihoodTool::LikelihoodTool( const std::string& type,
 //=============================================================================
 LikelihoodTool::~LikelihoodTool() {}
 
-//  Initialize
+// Initialize
 StatusCode LikelihoodTool::initialize()
 {
   // Sets up various tools and services
@@ -89,9 +89,9 @@ StatusCode LikelihoodTool::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // tools
-  acquireTool( "GPIDTrackCreator",       m_gtkCreator );
-  acquireTool( "RichPhotonSignal",        m_photonSig );
-  acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
+  acquireTool( "GPIDTrackCreator",        m_gtkCreator );
+  acquireTool( "RichPhotonSignal",        m_photonSig  );
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal   );
 
   // trick to force pre-loading of various tools. Avoids loading
   // during first processed event and thus biasing any timing numbers
@@ -99,11 +99,11 @@ StatusCode LikelihoodTool::initialize()
   photonCreator();
   statusCreator();
 
-  // Check if power series expansions are OK
-  if ( m_minSig < 0.999*limitA )
-  {
-    return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
-  }
+//   // Check if power series expansions are OK
+//   if ( m_minSig < 0.999*limitA )
+//   {
+//     return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
+//   }
 
   // Initialise parameters
   m_logMinSig = logExp(m_minSig);
@@ -185,7 +185,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
 
   // did any tracks change in the first initialisation
   unsigned int eventIteration = 0;
-  if ( tracks.size() > 1 && nChangeFirstIt>0 )
+  if ( tracks.size() > 1 && nChangeFirstIt > 0 )
   {
 
     // Do the event iterations
@@ -196,10 +196,11 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
     {
 
       unsigned int nChange(1), nRetries(0);
-      while ( nChange>0 && nRetries<m_maxItRetries )
+      while ( nChange > 0 && nRetries < m_maxItRetries )
       {
         ++nRetries;
 
+        // First pass at minimising
         nChange = initBestLogLikelihood();
         if ( nChange > 0 )
         {
@@ -208,16 +209,23 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           mess << nChange << " track(s) changed hypo after iteration " << nRetries;
           ++counter( mess.str() );
 
-          // some info printout to debug strange nightlies bug
-          info() << mess.str() << endmsg;
-          sortTrackList();
-          printTrackList( MSG::INFO );
-
-          // Rerun iterations
+          // debug printout
           if ( msgLevel(MSG::DEBUG) )
+          {
+            debug() << mess.str() << endmsg;
+//             sortTrackList();
+//             printTrackList( MSG::DEBUG );
+          }
+
+          // Rerun iterations again
+          if ( msgLevel(MSG::DEBUG) ) 
           { debug() << "Re-running event iteratons" << endmsg; }
+
           eventIteration += doIterations();
+
         }
+
+        // Compute the event likelihood from scratch
         m_currentBestLL = logLikelihood();
 
         if ( nRetries == m_maxItRetries && nChange > 0 )
@@ -227,6 +235,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
         }
 
       } // retry while loop
+
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Ran " << nRetries << " iteration re-tries" << endmsg;
@@ -331,6 +340,8 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
          track != m_gpidTracksToPID->end(); ++track )
     {
       LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
+//       if ( msgLevel(MSG::DEBUG) )
+//       { debug() << " -> Track " << rRTrack->key() << endmsg; }
 
       // skip frozen tracks
       if ( (*track)->frozenHypo() )
@@ -354,6 +365,8 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
 
         // calculate delta logLikelihood for event with new track hypothesis
         const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
+//         if ( msgLevel(MSG::DEBUG) )
+//         { debug() << "  -> " << *hypo << " dLL = " << deltaLogL << endmsg; }
 
         // Set the value for deltaLL for this hypothesis
         (*track)->globalPID()->setParticleDeltaLL( *hypo, (float)(deltaLogL) );
@@ -385,6 +398,9 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
         }
 
       } // end particle for loop
+
+//       if ( msgLevel(MSG::DEBUG) )
+//       { debug() << "  -> Min Hypo " << minHypo << endmsg; }
 
       // Save info on tracks that have a better minimum hypothesis
       if ( minHypo != rRTrack->currentHypothesis() )
@@ -458,6 +474,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
 
   // sort Track list according to delta LL
   sortTrackList();
+  if ( msgLevel(MSG::DEBUG) ) { printTrackList(MSG::DEBUG); }
 
   // Loop on all tracks
   for ( TrackList::iterator iP = m_trackList.begin();
@@ -654,10 +671,12 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 {
 
   // Change due to track expectation
-  double deltaLL = ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
-                     m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
+  const double tkDeltaLL = 
+    ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
+      m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
 
   // Photon part
+  double pixDeltaLL(0);
   LHCb::RichRecTrack::Pixels & pixels = track->richRecPixels();
   const LHCb::RichRecTrack::Pixels::iterator ePixel = pixels.end();
   for ( LHCb::RichRecTrack::Pixels::iterator iPixel = pixels.begin();
@@ -682,20 +701,31 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
         // update signal numbers
         const double tmpOldSig =
-          m_photonSig->predictedPixelSignal( *iPhoton, (*iPhoton)->richRecTrack()->currentHypothesis() );
+          m_photonSig->predictedPixelSignal( *iPhoton, 
+                                             (*iPhoton)->richRecTrack()->currentHypothesis() );
         oldSig += tmpOldSig;
         newSig += ( (*iPhoton)->richRecTrack() != track ? tmpOldSig :
                     m_photonSig->predictedPixelSignal( *iPhoton, newHypo ) );
       } // end photon loop
 
       // increment change to likelihood for this pixel
-      deltaLL -= sigFunc(newSig) - sigFunc(oldSig);
+      pixDeltaLL -= sigFunc(newSig) - sigFunc(oldSig);
 
     } // end photons not empty
 
   } // end pixel loop
 
-  return deltaLL;
+//   if ( msgLevel(MSG::VERBOSE) )
+//   {
+//     verbose() << "deltaLogLikelihood : Track " << track->key()
+//               << " " << track->currentHypothesis()
+//               << " " << newHypo
+//               << " tkDLL=" << tkDeltaLL
+//               << " pixDLL=" << pixDeltaLL
+//               << endmsg;
+//   }
+  
+  return ( pixDeltaLL + tkDeltaLL );
 }
 
 double LikelihoodTool::logLikelihood() const
@@ -714,8 +744,13 @@ double LikelihoodTool::logLikelihood() const
     // Sum expected photons from each track with current assumed hypotheses
     LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
     if ( !rRTrack->inUse() ) continue;
-    trackLL += m_tkSignal->nTotalObservablePhotons( rRTrack,
-                                                    rRTrack->currentHypothesis() );
+    const double obsPhots = m_tkSignal->nTotalObservablePhotons( rRTrack,
+                                                                 rRTrack->currentHypothesis() );
+    trackLL += obsPhots;
+//     if ( msgLevel(MSG::VERBOSE) )
+//     {
+//       verbose() << " -> Track " << rRTrack->key() << " obsPhots=" << obsPhots << endmsg;
+//     }
   } // end track loop
 
   // Pixel loop
@@ -736,23 +771,29 @@ double LikelihoodTool::logLikelihood() const
       const LHCb::RichRecTrack * rRTrack = (*iPhoton)->richRecTrack();
       if ( rRTrack->inUse() )
       {
-        if ( UNLIKELY(msgLevel(MSG::VERBOSE)) )
-        {
-          verbose() << "  -> Using photon : track=" << rRTrack->key()
-                    << " pixel=" << pixel->key()
-                    << " bkg=" << pixel->currentBackground()
-                    << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
-                                                                     rRTrack->currentHypothesis() )
-                    << endmsg;
-        }
+//         if ( UNLIKELY(msgLevel(MSG::VERBOSE)) )
+//         {
+//           verbose() << "  -> Using photon : track=" << rRTrack->key()
+//                     << " pixel=" << pixel->key()
+//                     << " bkg=" << pixel->currentBackground()
+//                     << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
+//                                                                      rRTrack->currentHypothesis() )
+//                     << endmsg;
+//         }
         foundSelectedTrack = true;
         photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
                                                         rRTrack->currentHypothesis() );
       }
     } // end loop over photons
+
     if ( foundSelectedTrack )
     {
-      pixelLL -= sigFunc( photonSig + pixel->currentBackground() );
+      const double pixSig = sigFunc( photonSig + pixel->currentBackground() );
+      pixelLL -= pixSig;
+//       if ( msgLevel(MSG::VERBOSE) )
+//       {
+//         verbose() << " -> Pixel " << pixel->key() << " " << pixSig << endmsg;
+//       }
     }
 
   } // loop over all pixels
@@ -772,56 +813,56 @@ double LikelihoodTool::logLikelihood() const
   return ( trackLL + pixelLL );
 }
 
-double LikelihoodTool::logExp( const double x ) const
-{
-  double res(0);
-  if ( x <= limitD )
-  {
-    // A collection of rational power series covering the important range
-    // note by construction this function should never be called for x < limitA
+// double LikelihoodTool::logExp( const double x ) const
+// {
+//   double res(0);
+//   if ( x <= limitD )
+//   {
+//     // A collection of rational power series covering the important range
+//     // note by construction this function should never be called for x < limitA
     
-    const double xx    = x*x;
-    const double xxx   = xx*x;
-    const double xxxx  = xx*xx;
-    const double xxxxx = xx*xxx; 
+//     const double xx    = x*x;
+//     const double xxx   = xx*x;
+//     const double xxxx  = xx*xx;
+//     const double xxxxx = xx*xxx; 
     
-    if      ( x > limitC )
-    {
-      res = (-5.751779337152293 - 261.58791552313113*x -
-             1610.1902353909695*xx - 291.61172549536417*xxx +
-             3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
-        (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
-         2638.609797400796*xxx + 1506.9612115322623*xxxx -
-         27.33558114045007*xxxxx);
-    }
-    else if ( x > limitB )
-    {
-      res = (-7.845788509794026 - 3428.7804135353526*x -
-             228752.20145929293*xx - 3.082032088759535e6*xxx -
-             3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
-        (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
-         1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
-         3.3914176474223877e6*xxxxx);
-    }
-    else if ( x > limitA )
-    {
-      res = (-10.160864268729455 - 49897.23275778952*x -
-             3.855669108991894e7*xx - 6.777802095268419e9*xxx -
-             2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
-        (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
-         1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
-         6.06654149712832e11*xxxxx);
-    }
-    else
-    {
-      // should never get here. But just in case ...
-      res = std::log( std::exp(x) - 1.0 );
-    }
-  }
-  else
-  {
-    // Very very rarely called in this regime, so just use the full fat version
-    res = std::log( std::exp(x) - 1.0 );
-  }
-  return res;
-}
+//     if      ( x > limitC )
+//     {
+//       res = (-5.751779337152293 - 261.58791552313113*x -
+//              1610.1902353909695*xx - 291.61172549536417*xxx +
+//              3733.957211885683*xxxx + 1224.2104172168554*xxxxx)/
+//         (1.0 + 79.52981108433892*x + 953.4570349071099*xx +
+//          2638.609797400796*xxx + 1506.9612115322623*xxxx -
+//          27.33558114045007*xxxxx);
+//     }
+//     else if ( x > limitB )
+//     {
+//       res = (-7.845788509794026 - 3428.7804135353526*x -
+//              228752.20145929293*xx - 3.082032088759535e6*xxx -
+//              3.836270197409883e6*xxxx + 1.2251900378118051e7*xxxxx)/
+//         (1.0 + 638.7306815040638*x + 60430.91709817034*xx +
+//          1.315432074531156e6*xxx + 6.373056770682967e6*xxxx +
+//          3.3914176474223877e6*xxxxx);
+//     }
+//     else if ( x > limitA )
+//     {
+//       res = (-10.160864268729455 - 49897.23275778952*x -
+//              3.855669108991894e7*xx - 6.777802095268419e9*xxx -
+//              2.421987003565588e11*xxxx - 3.5610129242332263e11*xxxxx)/
+//         (1.0 + 6487.897657865318*x + 6.294785881144457e6*xx +
+//          1.4333658673633337e9*xxx + 7.670700007081306e10*xxxx +
+//          6.06654149712832e11*xxxxx);
+//     }
+//     else
+//     {
+//       // should never get here. But just in case ...
+//       res = std::log( std::exp(x) - 1.0 );
+//     }
+//   }
+//   else
+//   {
+//     // Very very rarely called in this regime, so just use the full fat version
+//     res = std::log( std::exp(x) - 1.0 );
+//   }
+//   return res;
+// }

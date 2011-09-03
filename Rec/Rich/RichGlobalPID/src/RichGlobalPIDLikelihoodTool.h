@@ -153,8 +153,12 @@ namespace Rich
         double deltaLogLikelihood( LHCb::RichRecTrack * track,
                                    const Rich::ParticleIDType newHypo ) const;
 
-        /// Power Approximation of log(exp(x)-1) (Mathematica)
-        double logExp( const double x ) const;
+        /// Implementation of log( e^x -1 )
+        inline double logExp( const double x ) const
+        {
+          return std::log( std::exp(x) - 1.0 );
+        }
+        //double logExp( const double x ) const;
 
         /// Returns log( exp(x) - 1 ) or an approximation for small signals
         inline double sigFunc( const double x ) const

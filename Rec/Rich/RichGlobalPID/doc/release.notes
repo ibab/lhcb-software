@@ -4,10 +4,15 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2011-09-03 - Chris Jones
+ - Various improvements designed to investigate instabilities seen in the
+   nightlies.
+ - Go back to the full std::log( std::exp(x) - 1.0 ) calculation instead
+   of the power series expansion, as this caused 32/64 bit differences and
+   possible instabilities.
+
 ! 2011-09-02 - Chris Jones
  - Change std::sort to std::stable_sort in the LikelihoodTool
- - Add some (temporary) info printout to the LikelihoodTool to investigate 
-   an instability seen in the nightlies
 
 !======================= RichGlobalPID v3r16 2011-07-27 ======================
 ! 2011-07-24 - Chris Jones
