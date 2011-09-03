@@ -126,8 +126,8 @@ StatusCode TimeMonitor::execute()
 StatusCode TimeMonitor::finalize()
 {
   // Printout timing info
-  const double evtTime = ( m_nEvents>0 ? m_totTime/m_nEvents : 0.0 );
-  const double pidTime = ( m_nPIDs>0   ? m_totTime/m_nPIDs   : 0.0 );
+  const long double evtTime = ( m_nEvents>0 ? m_totTime/m_nEvents : 0.0 );
+  const long double pidTime = ( m_nPIDs>0   ? m_totTime/m_nPIDs   : 0.0 );
   info() << "Average timing : " << evtTime << " ms/event, "
          << pidTime << " ms/PID" << endmsg;
 
