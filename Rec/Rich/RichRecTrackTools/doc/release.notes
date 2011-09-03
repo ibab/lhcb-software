@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-09-03 - Chris Jones
+ - For better debuggin, include P and Pt in track printout in track
+   selector and creator.
+
 !========================= RichRecTrackTools v1r31 2011-08-31 ================
 ! 2011-08-25 - Chris Jones
  - Allow an empty input track location in the track creators.

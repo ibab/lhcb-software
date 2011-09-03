@@ -179,7 +179,10 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Trying Track key = " << track->key() << " type = " << track->type()
+    verbose() << "Trying Track " << track->key()
+              << " P=" << track->p()
+              << " Pt=" << track->pt()
+              << " charge=" << track->charge()
               << endmsg;
   }
 

@@ -266,8 +266,10 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Trying Track " << trTrack->key()
-              << " type " << trType << ", unique=" << trUnique
-              << ", charge=" << trTrack->charge()
+              << " P=" << trTrack->p()
+              << " Pt=" << trTrack->pt()
+              << " type=" << trType << " unique=" << trUnique
+              << " charge=" << trTrack->charge()
               << endmsg;
   }
 
