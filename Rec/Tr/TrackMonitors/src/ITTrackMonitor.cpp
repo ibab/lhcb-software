@@ -261,8 +261,11 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
 	  firstnode->measurement().detectorElement()->geometry()->toLocal( firstnode->state().slopes() ) ;
 	double localTx  = localdir.x()/localdir.z() ;
 	diff *= std::sqrt( 1+localTx*localTx) ;
-	plot2D( ilay, diff, "overlapResidualsByLayer","Overlap residuals by unique layer",
+	plot2D( ilay, diff, "OverlapResidualByLayer","Overlap residuals by unique layer",
 		-0.5, NumUniqueLayers-0.5, -0.5, 0.5, NumUniqueLayers, 50 ) ;
+	// the problem with x-scale is most easily observed when plotting by stack
+	plot1D( diff, ITNames().BoxToString((ilay%4)+1) + "/Overlap residual",
+		"Overlap residuals in " + ITNames().BoxToString((ilay%4)+1), -0.5, 0.5, 50) ;
       }
     }
   }
