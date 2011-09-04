@@ -15,6 +15,7 @@
 // STD
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 
 // Base class
 #include "RichGlobalPIDToolBase.h"
@@ -107,6 +108,7 @@ namespace Rich
         /// List of all track list entries
         typedef std::vector<TrackPair> TrackList;
 
+        /// Stores information associated to a RichGlobalPIDTrack
         class InitTrackInfo
         {
         public:
@@ -121,6 +123,17 @@ namespace Rich
           LHCb::RichGlobalPIDTrack * pidTrack; ///< Pointer to the track
           Rich::ParticleIDType hypo;     ///< Track hypothesis
           double minDLL;                 ///< The DLL value
+        };
+
+        /// Sort a TrackList
+        class TrackListSort : std::binary_function<const TrackPair,const TrackPair,bool>
+        {
+        public:
+          /// Sorting operator
+          inline bool operator() ( const TrackPair& p1, const TrackPair& p2 ) const
+          {
+            return p1.first < p2.first;
+          }
         };
 
       private: // Private methods
@@ -180,8 +193,10 @@ namespace Rich
 
         /// Sort the track list
         inline void sortTrackList() const 
-        { 
-          std::stable_sort(m_trackList.begin(),m_trackList.end()); 
+        {
+          std::stable_sort( m_trackList.begin(),
+                            m_trackList.end(),
+                            TrackListSort() ); 
         }
 
       private:  // Private data members

@@ -439,7 +439,6 @@ void LikelihoodTool::printTrackList( const MSG::Level level ) const
   if ( msgLevel(level) )
   {
     msgStream(level) << m_trackList.size() << " Tracks in DLL list" << endmsg;
-    double lastTrackDLL(0);
     for ( TrackList::const_iterator iP = m_trackList.begin();
           iP != m_trackList.end(); ++iP )
     {
@@ -448,11 +447,6 @@ void LikelihoodTool::printTrackList( const MSG::Level level ) const
                        << " DLL = " << (*iP).first 
                        << " " << gTrack->richRecTrack()->currentHypothesis()
                        << endmsg;
-      if ( (*iP).first == lastTrackDLL )
-      {
-        msgStream(level) << "  -> DLL SAME AS PREVIOUS TRACK ..." << endmsg;
-      }
-      lastTrackDLL = (*iP).first;
     }
   }
 }
@@ -470,7 +464,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
   LHCb::RichGlobalPIDTrack * overallMinTrack = NULL;
   Rich::ParticleIDType overallMinHypo  = Rich::Unknown;
   double minDLLs                       = 0;
-  double minEventDll                   = 999999;
+  double minEventDll                   = boost::numeric::bounds<double>::highest();
 
   // sort Track list according to delta LL
   sortTrackList();
@@ -514,7 +508,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
     }
 
     bool addto(false), minFound(false);
-    double minTrackDll = 99999999;
+    double minTrackDll = boost::numeric::bounds<double>::highest();
     Rich::ParticleIDType minHypo = Rich::Unknown;
     for ( Rich::Particles::const_iterator hypo = pidTypes().begin();
           hypo != pidTypes().end(); ++hypo )
@@ -709,7 +703,7 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
       } // end photon loop
 
       // increment change to likelihood for this pixel
-      pixDeltaLL -= sigFunc(newSig) - sigFunc(oldSig);
+      pixDeltaLL -= ( sigFunc(newSig) - sigFunc(oldSig) );
 
     } // end photons not empty
 

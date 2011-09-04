@@ -10,6 +10,7 @@
  - Go back to the full std::log( std::exp(x) - 1.0 ) calculation instead
    of the power series expansion, as this caused 32/64 bit differences and
    possible instabilities.
+ - Sort track list on first value (DLL) only.
 
 ! 2011-09-02 - Chris Jones
  - Change std::sort to std::stable_sort in the LikelihoodTool
