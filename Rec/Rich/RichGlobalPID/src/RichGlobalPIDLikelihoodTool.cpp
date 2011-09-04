@@ -32,16 +32,16 @@ DECLARE_TOOL_FACTORY( LikelihoodTool )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-LikelihoodTool::LikelihoodTool( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
-    m_gtkCreator      ( NULL ),
-    m_tkSignal        ( NULL ),
-    m_photonSig       ( NULL ),
-    m_gpidTracksToPID ( NULL ),
-    m_inR1            ( true ),
-    m_inR2            ( true )
+  LikelihoodTool::LikelihoodTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+    : Rich::Rec::GlobalPID::ToolBase ( type, name, parent ),
+      m_gtkCreator      ( NULL ),
+      m_tkSignal        ( NULL ),
+      m_photonSig       ( NULL ),
+      m_gpidTracksToPID ( NULL ),
+      m_inR1            ( true ),
+      m_inR2            ( true )
 {
   // interfaces
   declareInterface<IRichGlobalPID> ( this );
@@ -99,11 +99,11 @@ StatusCode LikelihoodTool::initialize()
   photonCreator();
   statusCreator();
 
-//   // Check if power series expansions are OK
-//   if ( m_minSig < 0.999*limitA )
-//   {
-//     return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
-//   }
+  //   // Check if power series expansions are OK
+  //   if ( m_minSig < 0.999*limitA )
+  //   {
+  //     return Warning( "Power series interpolations for log(exp(x)-1) need retuning" );
+  //   }
 
   // Initialise parameters
   m_logMinSig = logExp(m_minSig);
@@ -210,15 +210,10 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           ++counter( mess.str() );
 
           // debug printout
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << mess.str() << endmsg;
-//             sortTrackList();
-//             printTrackList( MSG::DEBUG );
-          }
+          if ( msgLevel(MSG::DEBUG) ) { debug() << mess.str() << endmsg; }
 
           // Rerun iterations again
-          if ( msgLevel(MSG::DEBUG) ) 
+          if ( msgLevel(MSG::DEBUG) )
           { debug() << "Re-running event iteratons" << endmsg; }
 
           eventIteration += doIterations();
@@ -336,82 +331,82 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
   m_trackList.clear();
 
   // Loop over all tracks and find best hypothesis for each track
-  {for ( LHCb::RichGlobalPIDTrack::Vector::const_iterator track = m_gpidTracksToPID->begin();
-         track != m_gpidTracksToPID->end(); ++track )
+  for ( LHCb::RichGlobalPIDTrack::Vector::const_iterator track = m_gpidTracksToPID->begin();
+        track != m_gpidTracksToPID->end(); ++track )
+  {
+    LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
+    if ( msgLevel(MSG::VERBOSE) )
+    { verbose() << " -> Track " << rRTrack->key() << endmsg; }
+
+    // skip frozen tracks
+    if ( (*track)->frozenHypo() )
     {
-      LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
-//       if ( msgLevel(MSG::DEBUG) )
-//       { debug() << " -> Track " << rRTrack->key() << endmsg; }
+      if ( msgLevel(MSG::DEBUG) )
+      { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endmsg; }
+      continue;
+    }
 
-      // skip frozen tracks
-      if ( (*track)->frozenHypo() )
+    // Initialise starting values
+    double mindeltaLL = boost::numeric::bounds<double>::highest();
+    Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
+
+    // Loop over all particle codes
+    for ( Rich::Particles::const_iterator hypo = pidTypes().begin();
+          hypo != pidTypes().end(); ++hypo )
+    {
+
+      // Skip analysing starting hypothesis
+      if ( *hypo == rRTrack->currentHypothesis() ) continue;
+
+      // calculate delta logLikelihood for event with new track hypothesis
+      const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
+      if ( msgLevel(MSG::VERBOSE) )
+      { verbose() << "  -> " << *hypo << " dLL = " << deltaLogL << endmsg; }
+
+      // Set the value for deltaLL for this hypothesis
+      (*track)->globalPID()->setParticleDeltaLL( *hypo, (float)(deltaLogL) );
+
+      // Set new minimum if lower logLikelihood is achieved
+      if ( deltaLogL < mindeltaLL )
       {
-        if ( msgLevel(MSG::DEBUG) )
-        { debug() << "  -> Skipping globally frozen track " << (*track)->key() << endmsg; }
-        continue;
+        if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
+        if ( deltaLogL < m_epsilon ) minHypo = *hypo;
       }
 
-      // Initialise starting values
-      double mindeltaLL = boost::numeric::bounds<double>::highest();
-      Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
-
-      // Loop over all particle codes
-      for ( Rich::Particles::const_iterator hypo = pidTypes().begin();
-            hypo != pidTypes().end(); ++hypo )
+      // In case the threshold is reached, skip other hypotheses
+      bool threshold = true;
+      for ( Rich::Particles::const_iterator hypo2 = hypo; hypo2 != pidTypes().end(); ++hypo2 )
       {
-
-        // Skip analysing starting hypothesis
-        if ( *hypo == rRTrack->currentHypothesis() ) continue;
-
-        // calculate delta logLikelihood for event with new track hypothesis
-        const double deltaLogL = deltaLogLikelihood( rRTrack, *hypo );
-//         if ( msgLevel(MSG::DEBUG) )
-//         { debug() << "  -> " << *hypo << " dLL = " << deltaLogL << endmsg; }
-
-        // Set the value for deltaLL for this hypothesis
-        (*track)->globalPID()->setParticleDeltaLL( *hypo, (float)(deltaLogL) );
-
-        // Set new minimum if lower logLikelihood is achieved
-        if ( deltaLogL < mindeltaLL )
+        if ( m_tkSignal->nDetectablePhotons( rRTrack, *hypo2 ) > 0 )
         {
-          if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
-          if ( deltaLogL < m_epsilon ) minHypo = *hypo;
+          threshold = false; break;
         }
-
-        // In case the threshold is reached, skip other hypotheses
-        bool threshold = true;
-        for ( Rich::Particles::const_iterator hypo2 = hypo; hypo2 != pidTypes().end(); ++hypo2 )
-        {
-          if ( m_tkSignal->nDetectablePhotons( rRTrack, *hypo2 ) > 0 )
-          {
-            threshold = false; break;
-          }
-        }
-        if ( threshold )
-        {
-          for ( Rich::Particles::const_iterator hypo3 = hypo;
-                hypo3 != pidTypes().end(); ++hypo3 )
-          {
-            (*track)->globalPID()->setParticleDeltaLL( *hypo3, (float)(deltaLogL) );
-          }
-          break;
-        }
-
-      } // end particle for loop
-
-//       if ( msgLevel(MSG::DEBUG) )
-//       { debug() << "  -> Min Hypo " << minHypo << endmsg; }
-
-      // Save info on tracks that have a better minimum hypothesis
-      if ( minHypo != rRTrack->currentHypothesis() )
+      }
+      if ( threshold )
       {
-        minTrackData.push_back( InitTrackInfo(*track,minHypo,mindeltaLL) );
+        for ( Rich::Particles::const_iterator hypo3 = hypo;
+              hypo3 != pidTypes().end(); ++hypo3 )
+        {
+          (*track)->globalPID()->setParticleDeltaLL( *hypo3, (float)(deltaLogL) );
+        }
+        break;
       }
 
-      // Add this track / deltaLL to the track list
-      m_trackList.push_back( TrackPair(mindeltaLL,*track) );
+    } // end particle for loop
 
-    }} // end track for loop
+    if ( msgLevel(MSG::VERBOSE) )
+    { verbose() << "  -> Min Hypo " << minHypo << endmsg; }
+
+    // Save info on tracks that have a better minimum hypothesis
+    if ( minHypo != rRTrack->currentHypothesis() )
+    {
+      minTrackData.push_back( InitTrackInfo(*track,minHypo,mindeltaLL) );
+    }
+
+    // Add this track / deltaLL to the track list
+    m_trackList.push_back( TrackPair(mindeltaLL,*track) );
+
+  } // end track for loop
 
   // Finally, set all track hypotheses to their minimum
   for ( InitTrackInfo::Vector::const_iterator iT = minTrackData.begin();
@@ -444,7 +439,7 @@ void LikelihoodTool::printTrackList( const MSG::Level level ) const
     {
       const LHCb::RichGlobalPIDTrack * gTrack = (*iP).second;
       msgStream(level) << " -> Track " << gTrack->key()
-                       << " DLL = " << (*iP).first 
+                       << " DLL = " << (*iP).first
                        << " " << gTrack->richRecTrack()->currentHypothesis()
                        << endmsg;
     }
@@ -665,7 +660,7 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 {
 
   // Change due to track expectation
-  const double tkDeltaLL = 
+  const double tkDeltaLL =
     ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
       m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
 
@@ -695,7 +690,7 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
         // update signal numbers
         const double tmpOldSig =
-          m_photonSig->predictedPixelSignal( *iPhoton, 
+          m_photonSig->predictedPixelSignal( *iPhoton,
                                              (*iPhoton)->richRecTrack()->currentHypothesis() );
         oldSig += tmpOldSig;
         newSig += ( (*iPhoton)->richRecTrack() != track ? tmpOldSig :
@@ -709,16 +704,16 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
   } // end pixel loop
 
-//   if ( msgLevel(MSG::VERBOSE) )
-//   {
-//     verbose() << "deltaLogLikelihood : Track " << track->key()
-//               << " " << track->currentHypothesis()
-//               << " " << newHypo
-//               << " tkDLL=" << tkDeltaLL
-//               << " pixDLL=" << pixDeltaLL
-//               << endmsg;
-//   }
-  
+  //   if ( msgLevel(MSG::VERBOSE) )
+  //   {
+  //     verbose() << "deltaLogLikelihood : Track " << track->key()
+  //               << " " << track->currentHypothesis()
+  //               << " " << newHypo
+  //               << " tkDLL=" << tkDeltaLL
+  //               << " pixDLL=" << pixDeltaLL
+  //               << endmsg;
+  //   }
+
   return ( pixDeltaLL + tkDeltaLL );
 }
 
@@ -741,10 +736,10 @@ double LikelihoodTool::logLikelihood() const
     const double obsPhots = m_tkSignal->nTotalObservablePhotons( rRTrack,
                                                                  rRTrack->currentHypothesis() );
     trackLL += obsPhots;
-//     if ( msgLevel(MSG::VERBOSE) )
-//     {
-//       verbose() << " -> Track " << rRTrack->key() << " obsPhots=" << obsPhots << endmsg;
-//     }
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Track " << rRTrack->key() << " obsPhots=" << obsPhots << endmsg;
+    }
   } // end track loop
 
   // Pixel loop
@@ -765,15 +760,15 @@ double LikelihoodTool::logLikelihood() const
       const LHCb::RichRecTrack * rRTrack = (*iPhoton)->richRecTrack();
       if ( rRTrack->inUse() )
       {
-//         if ( UNLIKELY(msgLevel(MSG::VERBOSE)) )
-//         {
-//           verbose() << "  -> Using photon : track=" << rRTrack->key()
-//                     << " pixel=" << pixel->key()
-//                     << " bkg=" << pixel->currentBackground()
-//                     << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
-//                                                                      rRTrack->currentHypothesis() )
-//                     << endmsg;
-//         }
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "  -> Using photon : track=" << rRTrack->key()
+                    << " pixel=" << pixel->key()
+                    << " bkg=" << pixel->currentBackground()
+                    << " sig=" << m_photonSig->predictedPixelSignal( *iPhoton,
+                                                                     rRTrack->currentHypothesis() )
+                    << endmsg;
+        }
         foundSelectedTrack = true;
         photonSig += m_photonSig->predictedPixelSignal( *iPhoton,
                                                         rRTrack->currentHypothesis() );
@@ -784,10 +779,10 @@ double LikelihoodTool::logLikelihood() const
     {
       const double pixSig = sigFunc( photonSig + pixel->currentBackground() );
       pixelLL -= pixSig;
-//       if ( msgLevel(MSG::VERBOSE) )
-//       {
-//         verbose() << " -> Pixel " << pixel->key() << " " << pixSig << endmsg;
-//       }
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> Pixel " << pixel->key() << " " << pixSig << endmsg;
+      }
     }
 
   } // loop over all pixels
@@ -814,12 +809,12 @@ double LikelihoodTool::logLikelihood() const
 //   {
 //     // A collection of rational power series covering the important range
 //     // note by construction this function should never be called for x < limitA
-    
+
 //     const double xx    = x*x;
 //     const double xxx   = xx*x;
 //     const double xxxx  = xx*xx;
-//     const double xxxxx = xx*xxx; 
-    
+//     const double xxxxx = xx*xxx;
+
 //     if      ( x > limitC )
 //     {
 //       res = (-5.751779337152293 - 261.58791552313113*x -
