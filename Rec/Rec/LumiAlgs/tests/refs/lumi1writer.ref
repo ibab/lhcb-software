@@ -1,23 +1,22 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Rec_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiWriter.py'
 # applying configuration of LumiWriterConf
-# WARNING: Using default tag head-20110303 for partition DDDB
-# WARNING: Using default tag head-20110524 for partition LHCBCOND
+# WARNING: Using default tag head-20110721 for partition DDDB
+# WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lbcsrv01 on Wed May 25 13:32:18 2011
+                                          running on lxbuild163.cern.ch on Mon Sep  5 10:57:25 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 LumiSeq              INFO Member list: GaudiSequencer/writeLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 writeLumiSeq         INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, HltLumiSummaryDecoder, GaudiSequencer/filterLumi, bankKiller/KillAll, FileIdBankWriter, LHCb::MDFWriter/MDFWriter
 LoKiSvc           SUCCESS
 
@@ -47,17 +46,13 @@ KillAll           SUCCESS bankKiller : all banks of type 'ODIN' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltLumiSummary' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'HltRoutingBits' will be kept.
 KillAll           SUCCESS bankKiller : all banks of type 'DAQ' will be kept.
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw' SVC='LHCb::MDFSelector'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootKeyEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
 FileIdBankWriter     INFO RunInfo record: 0238bd38-9252-13e0-8123-00188b856c32
 ApplicationMgr       INFO Application Manager Stopped successfully
@@ -91,18 +86,18 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.89 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.157 |     0.158 |    0.062       1.2 |    1000 |     0.158 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.095 |     0.092 |    0.052       0.8 |    1000 |     0.092 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.003 |     0.008 |    0.006       0.1 |    1000 |     0.008 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.028 |     0.026 |    0.023       0.3 |     286 |     0.007 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.017 |     0.013 |    0.011       0.1 |     286 |     0.004 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.017 |     0.008 |    0.007       0.1 |     286 |     0.002 |
-ToolSvc.Sequenc...   INFO   KillAll                     |     0.086 |     0.075 |    0.071       0.3 |     243 |     0.018 |
-ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.008 |     0.009 |    0.008       0.2 |     243 |     0.002 |
-ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.082 |     0.097 |    0.082       0.4 |     243 |     0.023 |
+ToolSvc.Sequenc...   INFO writeLumiSeq                  |     0.108 |     0.182 |    0.038      64.0 |    1000 |     0.182 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.055 |     0.066 |    0.031       0.7 |    1000 |     0.066 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.003 |     0.006 |    0.004       0.1 |    1000 |     0.006 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.031 |     0.021 |    0.016       0.2 |     286 |     0.006 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.017 |     0.010 |    0.007       0.1 |     286 |     0.003 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.010 |     0.007 |    0.004       0.1 |     286 |     0.002 |
+ToolSvc.Sequenc...   INFO   KillAll                     |     0.053 |     0.055 |    0.048       0.2 |     243 |     0.013 |
+ToolSvc.Sequenc...   INFO   FileIdBankWriter            |     0.008 |     0.007 |    0.005       0.2 |     243 |     0.002 |
+ToolSvc.Sequenc...   INFO   MDFWriter                   |     0.074 |     0.347 |    0.052      63.9 |     243 |     0.084 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ApplicationMgr       INFO Application Manager Finalized successfully

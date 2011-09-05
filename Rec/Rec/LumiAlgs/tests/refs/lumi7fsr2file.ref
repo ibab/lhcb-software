@@ -1,36 +1,29 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrToFile.py'
 # applying configuration of LumiFsrReaderConf
-# WARNING: Using default tag head-20110303 for partition DDDB
-# WARNING: Using default tag head-20110524 for partition LHCBCOND
+# WARNING: Using default tag head-20110721 for partition DDDB
+# WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v39r4
-                                          running on lbcsrv01 on Tue May 31 12:32:24 2011
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxbuild163.cern.ch on Mon Sep  5 10:58:58 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 LumiSeq              INFO Member list: DumpFSR/dumpFSR
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.41 times the speed of a 2.8 GHz Xeon.
-FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' TYP='POOL_ROOT' OPT='READ'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-RootDBase.open    SUCCESS testFSRout.dst File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000009-00000000]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 dumpFSR           SUCCESS asciifile: test_ascii_fsr.dat - opened
@@ -38,11 +31,11 @@ dumpFSR           SUCCESS asciifile: test_ascii_fsr.dat - closed
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.41 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
+RootCnvSvc           INFO Disconnected data IO:AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517[testFSRout.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

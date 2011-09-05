@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-09-05 - Marco Cattaneo
+ - Update references for IOHelper FSR fixes and switch of default persistency
+   to ROOT
+
 !========================= LumiAlgs v7r0 2011-08-31 =========================
 ! 2011-08-11 - Jaap Panman
  - add a filter algorithm FilterFillingScheme 
