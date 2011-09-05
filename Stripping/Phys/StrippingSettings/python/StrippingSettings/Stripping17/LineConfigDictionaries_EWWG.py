@@ -119,8 +119,7 @@ Z02TauTauProng = {
     'TRACKCHI2_HAD_MAX'            : '5',        # dl
     ###
     'PT_TAU_MIN'                   : '2000',     # MeV/c
-    'VCHI2_TAU_MAX'                : '20',       # dl
-    'FDCHI2_TAU_MIN'               : '1',        # dl
+    'VCHI2_TAU_MAX'                : '20'       # dl
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'EW' ]

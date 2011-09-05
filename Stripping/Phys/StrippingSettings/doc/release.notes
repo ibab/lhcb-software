@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-05 - Jibo He
+ - LineConfigDictionaries_EWWG.py
+  . Updated Z02TauTauProng
+
 ! 2011-09-01 - Jibo He
  - LineConfigDictionaries_Charm.py
   . Removed some pre-scales in DstarD02xx, as requested by W. Bonivento
