@@ -65,44 +65,60 @@ namespace {
   } ;
 }
   
-AlignmentElement::AlignmentElement(const DetectorElement* element, 
+AlignmentElement::AlignmentElement(const DetectorElement& element, 
                                    const unsigned int index, 
-                                   const std::vector<bool>& dofMask,
+				   const std::string& dofs,
 				   bool useLocalFrame)
-  : m_name(stripElementName(element->name())),
-    m_basename(element->name()),
+  : m_name(stripElementName(element.name())),
+    m_basename(element.name()),
     m_mother(0),
     m_index(index),
     m_activeParOffset(-1),
-    m_dofMask(dofMask),
-    m_useLocalFrame(useLocalFrame),
-    m_lastDeltaDelta( m_dofMask )
+    m_dofMask(AlParameters::NumPars,false),
+    m_useLocalFrame(useLocalFrame)
 {
   //m_name = description() ;
-  std::vector<const DetectorElement*> elements(1u,element) ;
+  std::vector<const DetectorElement*> elements(1u,&element) ;
   addElements( elements ) ;
+  addDofs(dofs) ;
 }
 
 AlignmentElement::AlignmentElement(const std::string& aname,
 				   const std::vector<const DetectorElement*>& elements, 
-                                   const unsigned int index, 
-                                   const std::vector<bool>& dofMask,
+                                   const unsigned int index,
+				   const std::string& dofs,
 				   bool useLocalFrame)
   : m_name(aname),
     m_mother(0),
     m_index(index),
     m_activeParOffset(-1),
-    m_dofMask(dofMask),
-    m_useLocalFrame(useLocalFrame),
-    m_lastDeltaDelta( m_dofMask )
+    m_dofMask(AlParameters::NumPars,false),
+    m_useLocalFrame(useLocalFrame)
 {
   size_t pos = aname.find_first_of("(.*") ;
   m_basename = pos == std::string::npos ? aname : aname.substr(0,pos) ;
   addElements(elements) ;
+  addDofs(dofs) ;
 }
 
-void AlignmentElement::addElements( const std::vector<const DetectorElement*>& elements )
+void AlignmentElement::addDofs( const std::string& dofs )
 {
+  for(size_t ipar = 0; ipar<AlParameters::NumPars; ++ipar) 
+    if( dofs.find( AlParameters::parName(ipar ) ) != std::string::npos )
+      m_dofMask.setActive(ipar,true) ;
+  m_lastDeltaDelta = AlParameters( m_dofMask ) ;
+}
+
+void AlignmentElement::addElements( const std::vector<const DetectorElement*>& newelements )
+{
+  // first check that the element hasn't been used yet
+  std::vector<const DetectorElement*> elements ;
+  elements.reserve( newelements.size() ) ;
+  for( ElementContainer::const_iterator ielem = newelements.begin();
+       ielem != newelements.end(); ++ielem) 
+    if( std::find( m_elements.begin(), m_elements.end(), *ielem) == m_elements.end() )
+      elements.push_back( *ielem ) ;
+  
   std::for_each(elements.begin(), elements.end(),
                 boost::lambda::bind(&AlignmentElement::validDetectorElement, this, boost::lambda::_1));
   for( ElementContainer::const_iterator ielem = elements.begin();

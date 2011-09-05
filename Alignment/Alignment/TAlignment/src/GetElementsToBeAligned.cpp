@@ -182,32 +182,31 @@ StatusCode GetElementsToBeAligned::initialize() {
       return StatusCode::FAILURE;
     }
 
-    /// Set the dofs we want to align for
-    /// First try to find matches
-    bool matchTx = false, matchTy = false, matchTz = false;
-    bool matchRx = false, matchRy = false, matchRz = false;
-    if (dofs.find("Tx") != std::string::npos) matchTx = true;
-    if (dofs.find("Ty") != std::string::npos) matchTy = true;
-    if (dofs.find("Tz") != std::string::npos) matchTz = true;
-    if (dofs.find("Rx") != std::string::npos) matchRx = true;
-    if (dofs.find("Ry") != std::string::npos) matchRy = true;
-    if (dofs.find("Rz") != std::string::npos) matchRz = true;
-    /// create mask
-    std::vector<bool> dofMask = boost::assign::list_of(matchTx)(matchTy)(matchTz)(matchRx)(matchRy)(matchRz);
-     
     // Loop over elements and create AlignmentElements
     if (groupElems) {
       // first check that there isn't already a group with this name. if there is, add the elements.
       NonConstElements::iterator ielem = alignelements.begin() ;
       while( ielem != alignelements.end() && (*ielem)->name() != groupname) ++ielem ;
-      if( ielem != alignelements.end() ) (*ielem)->addElements( detelements ) ;
+      if( ielem != alignelements.end() ) {
+	(*ielem)->addElements( detelements ) ;
+	(*ielem)->addDofs( dofs ) ;
+      }
       else alignelements.push_back(new AlignmentElement(groupname,
-                                                        detelements, index++, dofMask,m_useLocalFrame));
-    }
-    else
+                                                        detelements, index++, dofs,m_useLocalFrame));
+    } else {
       for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
-          ielem != detelements.end(); ++ielem)
-        alignelements.push_back(new AlignmentElement(*ielem, index++, dofMask,m_useLocalFrame));
+          ielem != detelements.end(); ++ielem) {
+	//check that there isn't already a group with this name. if there is, add the dofs
+	std::string name = AlignmentElement::stripElementName( (*ielem)->name()) ;
+	NonConstElements::iterator jelem = alignelements.begin() ;
+	while( jelem != alignelements.end() && (*jelem)->name() != name) ++jelem ;
+	if( jelem != alignelements.end() ) {
+	  (*jelem)->addDofs( dofs ) ;
+	} else {
+	  alignelements.push_back(new AlignmentElement(**ielem, index++, dofs,m_useLocalFrame));
+	}
+      }
+    }
   }
   
   // sort the elements by hierarchy. currently, this just follows the

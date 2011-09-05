@@ -56,10 +56,11 @@ public:
    *  the derivatives in H and rho. Also a  vector of booleans representing 
    *  which dofs to align for, Tx, Ty, Tz, Rx, Ry, and Rz. Default is all dofs
    */
-  AlignmentElement(const DetectorElement* element, const unsigned int index, 
-                   const std::vector<bool>& dofMask = std::vector<bool>(6, true),
+  AlignmentElement(const DetectorElement& element,
+		   const unsigned int index, 
+		   const std::string& dofs,
 		   bool useLocalFrame=false);
-
+  
   /** Construct an alignment element from a group, i.e. vector, of
    *  detector elements and an index. The index is needed for bookkeeping
    *  purposes, i.e. where to get/put the derivatives in H and rho. Also a 
@@ -69,9 +70,9 @@ public:
   AlignmentElement(const std::string& name,
 		   const std::vector<const DetectorElement*>& elements, 
 		   const unsigned int index, 
-                   const std::vector<bool>& dofMask = std::vector<bool>(6, true),
+		   const std::string& dofs,
 		   bool useLocalFrame=false);
-
+  
 public:
   
   typedef std::vector<const DetectorElement*> ElementContainer ;
@@ -213,6 +214,9 @@ public:
 
   /** add more detector elements to this alignable */
   void addElements( const std::vector<const DetectorElement*>& elements ) ;
+  
+  /** add more dofs to this alignable */
+  void addDofs( const std::string& dofs ) ;
 
   /** if this alignable has no 'own' detector conditions because its
       daughters serve the same detector elements, then return a vector
@@ -228,7 +232,7 @@ public:
   // mothers.
   static Gaudi::Transform3D toGlobalMatrixMinusDelta( const DetectorElement& element) ;
   
-private:
+public:
   static std::string stripElementName(const std::string& name) ;
 
 private:
