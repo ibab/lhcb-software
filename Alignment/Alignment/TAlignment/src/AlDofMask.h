@@ -12,7 +12,7 @@ public:
 
   /** Constructors */
   AlDofMask() {}
-  AlDofMask(size_t size) ;
+  AlDofMask(size_t size, bool isactive = true) ;
   template<class Container> AlDofMask(const Container& mask) ;
   
   // number of active (unmasked) parameters
@@ -43,8 +43,8 @@ private:
   std::vector<unsigned char> m_activetoallmap; 
 } ;
 
-inline AlDofMask::AlDofMask(size_t size) 
-  : m_mask(size,true)
+inline AlDofMask::AlDofMask(size_t size, bool active) 
+  : m_mask(size,active)
 {
   fillIndexMaps() ;
 }
