@@ -131,10 +131,6 @@ class RichRecSysConf(RichConfigurableUser):
         if self.getProp("ConfigureTools") : self.configTools()
         if self.getProp("ConfigureAlgs")  : self.configAlgorithms(recoSequencer)
 
-        # Nightlies debugging
-        self.gpidConfig().OutputLevel = 2
-        #self.trackConfig().OutputLevel = 1
-        #self.pixelConfig().OutputLevel = 1
         
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
