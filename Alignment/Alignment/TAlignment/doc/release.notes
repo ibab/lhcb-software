@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2011-09-05 - Woiuter Hulsbergen
+- allow for adding dofs to existing alignables in configuration
 - moved tools/algos not directly related to TAlignment alorithm into AlignTrTools
 - fix AlignAlgorithm such that it can now use particle
 - new Y survey alignment xml (Fred)
