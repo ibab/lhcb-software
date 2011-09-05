@@ -141,12 +141,9 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
   
   // Loop over the nodes to get the hits variables
   LHCb::Track::ConstNodeRange nodes = track.nodes() ;
-
   LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
   std::vector<const LHCb::STMeasurement*> measVector; measVector.reserve(24);
-
   std::vector< const LHCb::FitNode* > nodesByTTLayer[4] ;
-
 
   unsigned int nHigh = 0u;
   for ( ; iNodes != nodes.end(); ++iNodes ) {
@@ -246,9 +243,9 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 	const std::string layerName = TTNames().UniqueLayerToString(firstnode->measurement().lhcbID().stID());
 	plot( diff, prefix + "Overlap residual",std::string("Overlap residuals in ") + layerName, -1.0, 1.0 ,100);
 	plot( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2()),
-	      prefix + "Residuals in overlaps (left)", "Residuals in overlaps (left)", -0.5, 0.5, 100) ;
+	      prefix + "Residuals in overlaps (left)", std::string("Residuals in overlaps (left) in ")+ layerName , -0.5, 0.5, 100) ;
 	plot( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2()),
-	      prefix + "Residuals in overlaps (right)", "Residuals in overlaps (right)", -0.5, 0.5, 100) ;
+	      prefix + "Residuals in overlaps (right)", std::string("Residuals in overlaps (right) in ") + layerName, -0.5, 0.5, 100) ;
 
 	// this needs to be fixed: can we somehow can a consecutive ladder ID?
 	size_t sectorID = ttUniqueSectorID( firstnode->measurement().lhcbID().stID()) ;
