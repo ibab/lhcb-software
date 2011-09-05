@@ -4,6 +4,6 @@ from GaudiConf.IOHelper import IOHelper
 
 IOTest( EvtMax = 5, LoadAll = True )
 
-ioh = IOHelper('POOL')
+ioh = IOHelper('POOL','POOL')
 ioh.setupServices()
 ioh.inputFiles(['PFN:POOL-2009.dst'])
