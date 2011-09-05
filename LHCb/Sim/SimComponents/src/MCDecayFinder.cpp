@@ -175,7 +175,7 @@ bool MCDecayFinder::findDecay( const LHCb::MCParticle::ConstVector& event,
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endmsg;
   if (!m_decay)   Exception("Trying to find an unspecified decay!");
   bool r = m_decay->test( event.begin(), event.end(), previous_result );
-  if (!r) Warning("Could not find decay");
+  if (!r && UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Could not find decay" << endmsg;
   return r ;
 }
 
@@ -185,7 +185,7 @@ bool MCDecayFinder::hasDecay( const LHCb::MCParticles &event )
   if (!m_decay) Exception("Trying to find an unspecified decay!");
   const LHCb::MCParticle *drop_me = NULL;
     bool r = m_decay->test( event.begin(), event.end(), drop_me );
-    if (!r) Warning("Could not find decay");
+    if (!r && UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Could not find decay" << endmsg;
     return r ;
 }
 
@@ -195,7 +195,7 @@ bool MCDecayFinder::findDecay( const LHCb::MCParticles &event,
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endmsg;
   if (!m_decay) Exception("Trying to find an unspecified decay!");
   bool r = m_decay->test( event.begin(), event.end(), previous_result );
-  if (!r) Warning("Could not find decay");
+  if (!r && UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Could not find decay" << endmsg;
   return r;
 }
 
@@ -205,7 +205,7 @@ bool MCDecayFinder::hasDecay( void )
     get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !mcparts )
   {
-    fatal() << "Enable to find MC particles at '"
+    fatal() << "Unable to find MC particles at '"
             << LHCb::MCParticleLocation::Default << "'" << endmsg;
     return false;
   }
@@ -218,7 +218,7 @@ bool MCDecayFinder::findDecay( const LHCb::MCParticle *&previous_result )
     get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default );
   if( !mcparts )
   {
-    fatal() << "Enable to find MC particles at '"
+    fatal() << "Unable to find MC particles at '"
             << LHCb::MCParticleLocation::Default << "'" << endmsg;
     return false;
   }
