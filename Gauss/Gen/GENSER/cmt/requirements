@@ -96,6 +96,13 @@ macro_append hijingforgauss_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_hom
 macro_append GENSER_linkopts " $(hijing_linkopts) "
 macro_append hijing_linkopts " -lpythia_hijing "
 
+macro_prepend tauola++_linkopts "-Wl,--no-as-needed "
+macro_append tauola++_linkopts "-Wl,--as-needed "
+
+macro_prepend photos++_linkopts "-Wl,--no-as-needed "
+macro_append photos++_linkopts "-Wl,--as-needed "
+
+
 private
 macro_remove libraryshr_linkopts "-Wl,--no-undefined"
 

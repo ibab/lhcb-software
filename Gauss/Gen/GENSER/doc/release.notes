@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2011-09-05 - Hubert Degaudenzi
+ - added workaround for tauola++ and photos++ libraries which have missing links
+   on their respective fortran libraries.
+
 ! 2011-08-14 - Gloria Corti
  - Move to version 150 of pythia8 as the only one available for hepmc 2.06.05
    (also available for 2.03)
