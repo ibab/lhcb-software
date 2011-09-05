@@ -60,7 +60,8 @@ class SurveyConstraints( LHCbConfigurableUser ):
         self.XmlFiles += [ self.defaultSurveyDir() + "OT/Elements_OTSurvey2011StationYCorrected.xml" ]
         self.XmlUncertainties += [ "OT/T.(X1U|VX2) : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
                                    "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
-                                   "OT : 0.5 0.5 0.5 0.001 0.001 0.001" ]
+                                   "OT : 0.5 0.5 0.5 0.001 0.001 0.001",
+                                   "OT/T. : 0.5 0.0001 0.5 0.0001 0.0001 0.0001"]
         
     def TT( self ) :
         self.XmlFiles += [ self.defaultSurveyDir() + "TT/Detectors_TTSurvey2011SystemYCorrected.xml",
@@ -82,10 +83,10 @@ class SurveyConstraints( LHCbConfigurableUser ):
         self.XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
                                    "ITT.                       : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "ITT.*?Box                  : 0.5 0.5 0.5 0.001 0.001 0.001",
-                                   "ITT.*?Layer.{1,2}          : 0.05 0.05 0.05 0.0001 0.0001 0.0001",
-                                   "ITT.*?Layer.{1,2}Ladder.*? : 0.02 0.02 0.02 0.0001 0.0001 0.0001" ] 
-        
-
+                                   "ITT.*?Layer.{1,2}          : 0.2 0.05 0.05 0.0001 0.0001 0.001",
+                                   "ITT.*?Layer(X1U|VX2)       : 0.2 0.05 0.05 0.0001 0.0001 0.001",
+                                   "ITT.*?Layer.{1,2}Ladder.*? : 0.1 0.02 0.02 0.0001 0.0001 0.001" ] 
+    
     def MUON( self ) :
         self.Constraints += [ 
             "Muon/M1/M1ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001",
