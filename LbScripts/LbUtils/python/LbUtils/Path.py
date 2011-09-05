@@ -92,6 +92,27 @@ def pathAppend(path, dirname, exist_check=False):
         path_list.append(dirname)
     return os.pathsep.join(path_list)
 
+def pathRemove(path, path_components):
+    """
+    remove the entry matching the path components from the path
+    @param path: orginal path
+    @type path: string
+    @param path_components: list of component of an entry path ["/usr","lib"]
+    @type path_components: list
+    """
+    path_match = []
+    for c in path_components :
+        if os.sep in c :
+            path_match += c.split(os.sep)
+        else :
+            path_match.append(c)
+    path_match = [ x for x in path_match if x ]
+    final_path = []
+    for p in path.split(os.pathsep) :
+        if os.sep.join(path_match) not in p :
+            final_path.append(p)
+    return os.pathsep.join(final_path)
+
 def pathAdd(path1, path2, exist_check=False):
     result = path1
     for d in path2.split(os.pathsep) :
