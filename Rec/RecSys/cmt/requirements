@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst          v5r8    Calo # Olivier Deschamps
+use CaloMoniDst          v5r9    Calo # Olivier Deschamps
 use CaloPIDs             v5r9	 Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r12   Calo # Olivier Deschamps
 
@@ -38,8 +38,8 @@ use RecoUpgradeMC        v1r3    Rec  # Victor Coco
 
 # Rich
 use RichAlignment        v1r5    Rich # Chris Jones, Antonis Papanestis
-use RichENNRingFinder    v1r3    Rich # Chris Jones, Ulrich Kerzel
-use RichGlobalPID        v3r16   Rich # Chris Jones
+use RichENNRingFinder    v1r4    Rich # Chris Jones, Ulrich Kerzel
+use RichGlobalPID        v3r17   Rich # Chris Jones
 use RichHPDImageAnalysis v1r9    Rich # Thomas Blake, Chris Jones
 use RichIFBAnalysis      v1r1p2  Rich # Ross Young, Chris Jones
 use RichParticleSearch   v1r4    Rich # Matt Coombes
@@ -78,7 +78,7 @@ use TrackFitEvent        v5r11   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r2    Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v3r0p1  Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r33   Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors        v1r34   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r29p1 Tr   # Wouter Hulsbergen
 use TrackTools           v4r8    Tr   # Eduardo Rodrigues
 use TrackUtils           v1r43   Tr   # Eduardo Rodrigues
@@ -87,7 +87,7 @@ use TrackUtils           v1r43   Tr   # Eduardo Rodrigues
 use PatPV                v3r20   Tr   # Mariusz Witek
 
 # Velo
-use VeloRecMonitors      v2r14   Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r15   Velo # Malcom John, Eduardo Rodrigues
 
 # Declare this as a container package
 apply_pattern container_package
