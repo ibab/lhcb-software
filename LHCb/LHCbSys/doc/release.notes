@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v33r0>2011-09-07 LHCbSys v33r0</A></H1><PRE>
-This version uses Gaudi v22r3 and LCG_61
+This version uses Gaudi v22r4 and LCG_61
 Production version for 2011 reprocessing and MC11.
 
 - Packages added:    Tools/FileStager v1r2: Create local copies of files from the grid at runtime 
