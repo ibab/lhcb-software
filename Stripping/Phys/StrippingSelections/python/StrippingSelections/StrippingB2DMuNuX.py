@@ -295,10 +295,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
 
     def _Phi2KKFilter( self ):
-        _decayDescriptors = [ '[phi(1020) -> K- K+]cc' ]
+        _decayDescriptor = 'phi(1020) -> K- K+'
         _combinationCut = "(ADAMASS('phi(1020)') < %(PhiMassWin)s *MeV)" % self.__confdict__
         _motherCut = "(VFASPF(VCHI2) < %(PhiVCHI2)s) " % self.__confdict__
-        _phi2kk = CombineParticles( DecayDescriptors = _decayDescriptors,
+        _phi2kk = CombineParticles( DecayDescriptor = _decayDescriptor,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
         return _phi2kk
