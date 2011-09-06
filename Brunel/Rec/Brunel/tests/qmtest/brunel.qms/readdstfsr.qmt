@@ -10,6 +10,6 @@ preprocessor = BrunelPreprocessor + \
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>brunel.brunel-fest09</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>brunel.brunel-bigeventspool</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
 </extension>

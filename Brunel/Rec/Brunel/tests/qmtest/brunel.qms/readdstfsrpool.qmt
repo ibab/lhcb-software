@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/test-FSR.py</text>
     <text>--option</text>
-    <text>from GaudiConf.Configuration import LHCbApp; LHCbApp().Persistency="ROOT"; from Configurables import Gaudi__RootCnvSvc; Gaudi__RootCnvSvc( "RootCnvSvc").OutputLevel = INFO</text>
+    <text>from GaudiConf.Configuration import LHCbApp; LHCbApp().Persistency="POOL"; from Configurables import Gaudi__RootCnvSvc; Gaudi__RootCnvSvc( "RootCnvSvc").OutputLevel = INFO</text>
   </set></argument>
   <argument name="reference"><text>../refs/test-FSR.ref</text></argument>
   <argument name="validator"><text>
@@ -12,12 +12,10 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["DEBUG  'CnvServices':"]) + \
   LineSkipper(["ServiceManager      DEBUG"]) + \
   LineSkipper(["VERBOSE ServiceLocatorHelper"]) + \
-  LineSkipper(["RootEvtSelector"]) + \
   LineSkipper(["RootCnvSvc"]) + \
   LineSkipper(["PoolDbBaseCnv"]) + \
   LineSkipper(["PoolRoot"]) + \
-  LineSkipper(["POOL"]) + \
-  LineSkipper(["FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/00000000-0000-0000-0000-000000000000#"])
+  LineSkipper(["POOL"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>

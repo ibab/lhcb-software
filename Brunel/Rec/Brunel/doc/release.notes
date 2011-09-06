@@ -20,9 +20,13 @@ Purpose: LHCb reconstruction program
   . Implemented IsMuonTight, added counter for each IsMuon flag (MuonID)
   . Introduce new StandardPV configuration to include radial cut for primary
     vertices (PatPV, RecConf)
+  . Change default persistency to ROOT
+  . Updates to VeloIPResolutionMonitor and TrackMonitors
 
 - Changes to QMTests
   . Fix brunel-lumiconddbchecker following fix to bug #85240
+  . Replace ROOT persistency tests with POOL persistency test, default for
+    all other tests is now ROOT
 
 </PRE><H1><A NAME=v40r1>2011-07-29 Brunel v40r1</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5,

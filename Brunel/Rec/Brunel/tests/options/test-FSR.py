@@ -5,7 +5,7 @@ from LumiAlgs.Configuration import *
 
 #Select DST file
 EventSelector().Input   = [
-  "DATAFILE='PFN:56721-100ev.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]
 
 # Run LumiTest

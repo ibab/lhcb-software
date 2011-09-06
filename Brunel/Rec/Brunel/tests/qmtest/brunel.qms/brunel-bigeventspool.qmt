@@ -2,17 +2,14 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagOff.py</text>
-    <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
+    <text>../options/test-big.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="DST"; Brunel().Persistency="ROOT"</text>
+    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().PackType="NONE"; Brunel().Persistency="POOL"</text>
   </set></argument>
-  <argument name="reference"><text>../refs/brunel2010magoff.ref</text></argument>
+  <argument name="reference"><text>../refs/bigevents.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
-  LineSkipper(["EventPersistenc...   INFO  'CnvServices':"]) + \
-  LineSkipper(["FileRecordPersi...   INFO  'CnvServices':"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:"]) + \
   LineSkipper(["DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:"]) + \
@@ -20,6 +17,6 @@ preprocessor = BrunelPreprocessor + \
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>brunel.brunel2010magoff</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>brunel.brunel-bigevents</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
 </extension>
