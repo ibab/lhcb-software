@@ -164,13 +164,12 @@ updateL0( ids[ 0x002d002b ], 0x002f002a
 # create MC version without prescales
 #
 def createMCversion( tck, newtck = None, cas = ConfigTarFileAccessSvc() ) :
-        if not newtck : newtck = tck | 0x40000000
-	props = getProperties(tck,'.*','AcceptFraction')
+    if not newtck : newtck = tck | 0x40000000
+	props = getProperties(tck,'DeterministicPrescaler/.*','AcceptFraction')
 	exceptions = { 'LumiStripper.*' : '0', '.*Debug.*' : None, 'Hlt1ODINTechnical.*': None, 'Hlt1Lumi.*': None, 'Hlt1L0.*': None, 'Hlt1MBMicroBias.*': None }
 	update = { } 
-	for n,v in props :
-		(prefix,n) = n.split('/')
-		if prefix !=  'DeterministicPrescaler' : continue
+	for n,v in props.iteritems() :
+        print n
 		if v == '1' or v == '0' : continue # do not modify these
 		vorig = v
 		m = 0  # count # of matching exceptions
@@ -182,13 +181,12 @@ def createMCversion( tck, newtck = None, cas = ConfigTarFileAccessSvc() ) :
 		if m == 0 : v = '1'   # if no exception, put at 1
 		if vorig == v : continue  # if not 
 		update[ n ] = { 'AcceptFraction' : '%s'%v }
-
 	from pprint import pprint
 	pprint(update)
 	label = None
 	for (i,j) in getConfigurations(cas).iteritems() :
 		if tck in j['TCK'] : label = j['label']
-	id  = updateProperties( tck2id(tck,cas),update,label='%s - MC version of 0x%08x' % (label,tck), cas=cas)
+	id  = updateProperties( resolveTCK(tck,cas),update,label='%s - MC version of 0x%08x' % (label,tck), cas=cas)
 	createTCKEntries({newtck:id},cas)
 
 cas=ConfigTarFileAccessSvc(Mode='ReadWrite') 

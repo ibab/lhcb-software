@@ -371,7 +371,7 @@ def getProperties( id, algname='',property='',cas = ConfigAccessSvc() ) :
     import re
     if algname :
         reqNode = re.compile(algname)
-        matchNode = lambda x : reqNode.match(x.leaf.name)
+        matchNode = lambda x : reqNode.match(x.leaf.fullyQualifiedName)
     else :
         matchNode = None
     if property :
@@ -593,6 +593,10 @@ class RemoteAccess(object) :
         svc.writeConfigTreeNodeAlias(top)
         print 'wrote ' + str(top.alias()) 
         return str(newId)
+    def rresolveTCK(self, tck ) :
+        svc = RemoteAccess._svc
+        return svc.resolveTCK(tck)
+
     def rcreateTCKEntries(self, d ) :
         svc = RemoteAccess._svc
         for tck,id in d.iteritems() :
@@ -667,6 +671,8 @@ class AccessProxy( object ) :
         AccessProxy._manager = None
 
 
+def resolveTCK( tck, cas=ConfigAccessSvc()) :
+    return AccessProxy().access(cas).rresolveTCK( tck )
 
 def getConfigTree(id, cas = ConfigAccessSvc()):
     if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict()
