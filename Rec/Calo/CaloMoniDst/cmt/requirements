@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # ============================================================================
 package           CaloMoniDst
-version           v5r8
+version           v5r9
 
 # =============== structure ==================================================
 branches          cmt doc src python
