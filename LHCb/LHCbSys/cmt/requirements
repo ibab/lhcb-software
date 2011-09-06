@@ -70,7 +70,7 @@ use IOExample             v4r2    Ex      # Marco Cattaneo
 # Packages without Hat, cannot have comment field.
 
 # Maintainer M.Cattaneo
-use GaudiConf             v14r2
+use GaudiConf             v15r0
 
 # Maintainer ??
 use GaudiConfUtils        v1r0
@@ -88,7 +88,7 @@ use HistoStrings          v1r2    Kernel  # Vanya Belyaev
 use HltInterfaces         v4r3    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r42   Kernel  # Marco Cattaneo
-use LHCbKernel            v13r4   Kernel  # Marco Cattaneo
+use LHCbKernel            v13r5   Kernel  # Marco Cattaneo
 use LHCbMath              v3r27   Kernel  # Vanya Belyaev
 use MCInterfaces          v1r14   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r10   Kernel  # Vanya Belyaev 
@@ -105,7 +105,7 @@ use MuonDAQ               v4r11   Muon    # Alessia Satta
 use MuonInterfaces        v1r2p1  Muon    # Alessia Satta
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
-use RootCnv               v1r6    Online  # Markus Frank (also in ONLINE project)
+use RootCnv               v1r7    Online  # Markus Frank (also in ONLINE project)
 
 use OTDAQ                 v7r10p1 OT      # Wouter Hulsbergen
 
@@ -116,7 +116,7 @@ use LoKiMC                v10r2   Phys    # Ivan Belyaev
 use LoKiNumbers           v10r1   Phys    # Ivan Belyaev
 
 use RichKernel            v7r45   Rich    # Chris Jones
-use RichRecBase           v4r7    Rich    # Chris Jones
+use RichRecBase           v4r8    Rich    # Chris Jones
 
 use SiDAQ                 v2r1p1  Si      # Matt Needham
 

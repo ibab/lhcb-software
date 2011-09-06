@@ -5,25 +5,27 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v33r0>2011-08-31 LHCbSys v33r0</A></H1><PRE>
+</PRE><H1><A NAME=v33r0>2011-09-07 LHCbSys v33r0</A></H1><PRE>
 This version uses Gaudi v22r3 and LCG_61
 Production version for 2011 reprocessing and MC11.
 
 - Packages added:    Tools/FileStager v1r2: Create local copies of files from the grid at runtime 
 - Packages modified: CaloDAQ v4r23p1, CaloUtils v9r2, DDDB v1r47, DetCond v12r21,
     DetDesc v18r27p1, DetDescSvc v3r3, Magnet v7r3, MuonDet v9r7, RichDet v16r6,
-    LumiEvent v3r2, RecEvent v2r39, IOExample v4r2, GaudiConf v14r2,
-    HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r4, LHCbMath v3r27,
-    XMLSummaryKernel v1r2, MuonDAQ v4r11, OTDAQ v7r10p1, LoKiCore v11r3,
-    RichKernel v7r45, SimComponents v2r21, STKernel v2r6, CondDBUI v3r11,
-    XmlTools v6r6
+    LumiEvent v3r2, RecEvent v2r39, IOExample v4r2, GaudiConf v15r0,
+    HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r5, LHCbMath v3r27,
+    XMLSummaryKernel v1r2, MuonDAQ v4r11, RootCnv v1r7, OTDAQ v7r10p1,
+    LoKiCore v11r3, RichKernel v7r45, RichRecBase v4r8, SimComponents v2r21,
+    STKernel v2r6, CondDBUI v3r11, XmlTools v6r6
 
 - In Calo/CaloUtils v9r2, Det/DetCond v12r21, Kernel/HistoStrings v1r2,
      Kernel/LHCbMath v3r27
   . Updates of parser functions to use new parsers introduced in Gaudi v22r3
 
 - In Det/DDDB v1r47
-  . Update database tags for SQLDDDB v6r15:
+  . Update database tags for SQLDDDB v6r16:
+    o LHCBCOND, 2011: head-20110901
+    o DDDB,     2011: head-20110823
 
 - In Det/DetDescSvc v3r3
   . FakeEventTime: remove unused EventDataSvc property
@@ -45,10 +47,18 @@ Production version for 2011 reprocessing and MC11.
   . Add the total number of tracks to the RecSummary information
 
 - In Ex/IOExample v4r2
+  . Update POOL tests to force POOL output if default is ROOT
+  . Make ioexample.testunpacktrack test use default I/O technology
   . Update references for change in format of printout of some options with
     Gaudi > v22r2
 
-- In GaudiConf v14r2
+- In GaudiConf v14r2, v15r0
+  . Update test references for default persistency change
+  . Change default persistency to ROOT
+  . Modify IOHelper to work directly with FileRecordCnvSvc for any type
+  . Add information getter functions for iohelper
+  . Add compatibility with connection strings not containing DATAFILE
+    OutputStream, for example, can have it set separately
   . Prepare DstConf for new entries in the SDST, raw banks for Trigger and Muon
 
 - In Kernel/LHCbAlgs v2r42
@@ -65,7 +75,8 @@ Production version for 2011 reprocessing and MC11.
   . Fix tiny bug in PostScaler.cpp: in case ForcedReduction property was set
     (i.e. not equal to 1.), event count used was not counting first event
 
-- In Kernel/LHCbKernel v13r4
+- In Kernel/LHCbKernel v13r4, v13r5
+  . Use stable_sort instead of sort in RichRadIntersection.h
   . Task #21132:
     o New interface IRateFromTCK to allow doing the non-lumi tasks
       from IGetLumiParameters.
@@ -88,6 +99,10 @@ Production version for 2011 reprocessing and MC11.
   . Fix bugs found by Coverity (MuonRawBuffer and MuonRec)
   . Improve protection against failures in initialization
 
+- In Online/RootCnv v1r7
+  . Fixes for writing FSRs, to go with Gaudi v22r4
+  . Write ROOT technology when creating output file entry in XmlCatalog 
+
 - In Phys/LoKiCore v11r3
   . Modified the implementation of LoKi::TES::Stat to be independent of the
     signature of the getters in StatEntity.
@@ -97,6 +112,9 @@ Production version for 2011 reprocessing and MC11.
 - In Rich/RichKernel v7r45
   . Move RichKernel/IHpdUkL1DisableTool.h to Panoptes project, as it is
     not used anywhere else.
+
+- In Rich/RichRecBase v4r8
+  . Use stable_sort instead of sort when sorting the pixels.
 
 - In ST/STKernel v2r6
   . Add method to noise calculation tool to check strip status.
@@ -129,6 +147,8 @@ Production version for 2011 reprocessing and MC11.
 
 - In Sim/SimComponents v2r21
   . Protect unprotected MSG::DEBUG and MSG::VERBOSE
+  . MCDecayFinder:  Demoted some unnecessary warning messages to debug messages.
+    see bug #86351 (https://savannah.cern.ch/bugs/?86351).
 
 - In OT/OTDAQ v7r10p1, Sim/SimComponents v2r21
   . Fix some trivial icc remarks (extra ";" ignored)
