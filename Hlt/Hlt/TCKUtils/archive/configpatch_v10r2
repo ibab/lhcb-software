@@ -186,7 +186,7 @@ def createMCversion( tck, newtck = None, cas = ConfigTarFileAccessSvc() ) :
 	label = None
 	for (i,j) in getConfigurations(cas).iteritems() :
 		if tck in j['TCK'] : label = j['label']
-	id  = updateProperties( resolveTCK(tck,cas),update,label='%s - MC version of 0x%08x' % (label,tck), cas=cas)
+	id  = updateProperties( tck,update,label='%s - MC version of 0x%08x' % (label,tck), cas=cas)
 	createTCKEntries({newtck:id},cas)
 
 cas=ConfigTarFileAccessSvc(Mode='ReadWrite') 

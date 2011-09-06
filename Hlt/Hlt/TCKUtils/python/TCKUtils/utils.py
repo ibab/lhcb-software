@@ -542,7 +542,7 @@ class RemoteAccess(object) :
             print 'please provide a reasonable label for the new configuration'
             return None
         svc = RemoteAccess._svc
-        if type(id) == str: id = _digest( id )
+        id = svc._2id(id)
         if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
         a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
         if len(a) != 1 : 
