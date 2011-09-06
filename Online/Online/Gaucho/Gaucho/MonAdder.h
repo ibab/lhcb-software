@@ -215,6 +215,7 @@ public:
     if (p)
     {
       m_lockid = new BRTLLock();
+      m_lockid->m_name = m_name+"AdderLock";
     }
     m_isSaver = p;
     return;
