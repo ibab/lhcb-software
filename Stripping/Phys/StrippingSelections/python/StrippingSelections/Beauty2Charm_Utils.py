@@ -118,8 +118,15 @@ def makeB2XSels(decays,xtag,inputs,config,useIP=True):
         sname = tag+xtag+'Beauty2Charm'
         sel = makeB2X(sname,decay,inputs[tag],config,useIP)
         sel = tisTosSelection(sel)
+        # CRJ : Public tools don't work well here
+        #sel = filterSelection(sname+'B2CBBDT',
+        #                      "FILTER('BBDecTreeTool/B2CBBDT:PUBLIC')",[sel])
         sel = filterSelection(sname+'B2CBBDT',
-                              "FILTER('BBDecTreeTool/B2CBBDT:PUBLIC')",[sel])
+                              "FILTER('BBDecTreeTool/B2CBBDT')",[sel])
+        from Configurables import BBDecTreeTool as BBDT
+        bbdt = BBDT(sel.name()+'.B2CBBDT')
+        bbdt.Threshold = config['B2CBBDT_MIN']
+        bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
         sels.append(sel)
     return sels
 

@@ -127,7 +127,7 @@ class Beauty2CharmConf(LineBuilder):
         bbdt = BBDT('B2CBBDT')
         bbdt.Threshold = config['B2X']['B2CBBDT_MIN']
         bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
-        
+      
         # pre-filter all inputs (nothing is looser than this)
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
