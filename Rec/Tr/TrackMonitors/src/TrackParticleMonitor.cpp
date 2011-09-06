@@ -158,7 +158,7 @@ StatusCode TrackParticleMonitor::execute()
     double ppos = p3A.R() ;
     double pneg = p3B.R() ;
     double pdif = ppos - pneg ;
-    double costheta = pdif / (ppos + pneg) ;
+    //double costheta = pdif / (ppos + pneg) ;
     double asym = pdif / (ppos + pneg) ;
     
     Gaudi::XYZVector norm = p3A.Cross( p3B ).Unit() ;
