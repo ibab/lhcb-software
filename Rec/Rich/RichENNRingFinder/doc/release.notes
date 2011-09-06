@@ -4,6 +4,7 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!========================= RichENNRingFinder v1r4 2011-09-06 =========================
 ! 2011-09-02 - Chris Jones
  - Use stable_sort when sorting the pixels
 
