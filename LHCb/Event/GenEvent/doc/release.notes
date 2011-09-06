@@ -2,6 +2,11 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2011-09-06 - Marco Cattaneo
+ - Add a dictionary for std::map<std::string,HepMC::WeightContainer::size_type>,
+   this fixes the segmentation violation on 32-bit when reading the old HepMC
+   data. To be moved to LCG 
+
 !========================= GenEvent v6r0 2011-06-14 =========================
 ! 2011-05-30 - Patrick Robbe
  - xml/GenHeader.xml, xml/BeamParameters.xml: changes to keep backward  
