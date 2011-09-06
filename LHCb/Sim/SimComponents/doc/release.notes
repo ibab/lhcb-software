@@ -5,11 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
-! 2011-Sep-05 - Patrick Spradlin
+!========================= SimComponents v2r21 2011-09-06 =========================
+! 2011-09-05 - Patrick Spradlin
  - MCDecayFinder:  Demoted some unnecessary warning messages to debug messages.
    see bug #86351 (https://savannah.cern.ch/bugs/?86351).
 
-!========================= SimComponents v2r21 2011-08-30 ====================
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR warning from Coverity
  - Protect unprotected MSG::DEBUG and MSG::VERBOSE
