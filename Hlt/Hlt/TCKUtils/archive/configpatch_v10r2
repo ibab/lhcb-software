@@ -169,7 +169,7 @@ def createMCversion( tck, newtck = None, cas = ConfigTarFileAccessSvc() ) :
 	exceptions = { 'LumiStripper.*' : '0', '.*Debug.*' : None, 'Hlt1ODINTechnical.*': None, 'Hlt1Lumi.*': None, 'Hlt1L0.*': None, 'Hlt1MBMicroBias.*': None }
 	update = { } 
 	for n,v in props.iteritems() :
-        print n
+        v = v['AcceptFraction']
 		if v == '1' or v == '0' : continue # do not modify these
 		vorig = v
 		m = 0  # count # of matching exceptions
