@@ -122,11 +122,6 @@ class Beauty2CharmConf(LineBuilder):
     def __init__(self, moduleName, config) :
         
         LineBuilder.__init__(self, moduleName, config)
-
-        from Configurables import BBDecTreeTool as BBDT
-        bbdt = BBDT('B2CBBDT')
-        bbdt.Threshold = config['B2X']['B2CBBDT_MIN']
-        bbdt.ParamFile = 'Beauty2Charm_BDTParams_v1r0.txt'
       
         # pre-filter all inputs (nothing is looser than this)
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
