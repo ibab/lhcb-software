@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r7 2011-09-06 =========================
 ! 2011-09-05 - Jibo He
  - LineConfigDictionaries_EWWG.py
   . Updated Z02TauTauProng
