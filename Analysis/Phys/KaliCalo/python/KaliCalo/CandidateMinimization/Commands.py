@@ -25,7 +25,7 @@ def runCommand(cmd, *args):
   return [line for line in subprocess.Popen([cmd]+list(args), stdout=subprocess.PIPE).communicate()[0].split('\n') if line]
 
 def bsub(*args):
-  args = ['-q1nh'] + list(args)
+  args = ['-q8nh'] + list(args)
   out = runCommand('bsub', *args)
   if len(out) > 1:
     print out

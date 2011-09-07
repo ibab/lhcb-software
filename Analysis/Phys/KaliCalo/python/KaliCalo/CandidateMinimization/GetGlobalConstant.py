@@ -17,8 +17,9 @@ from ROOT import *
 from KaliCalo.Kali.LambdaMap                  import LambdaMap
 from KaliCalo.CandidateMinimization.FillTask  import fillDatabase
 from KaliCalo.Det                             import getCalo
+from KaliCalo.Kali                            import pi0Mass
 import KaliCalo.FitUtils                      as FitUtils
-import KaliCalo.FitFunctions                  as FitFunctions
+import KaliCalo.CandidateMinimization.FitFunctions as FitFunctions
 import KaliCalo.CandidateMinimization.FitTask as Task
 import KaliCalo.FakeCells                     as FakeCells
 import KaliCalo.Cells                         as Cells
@@ -62,7 +63,7 @@ if __name__ == '__main__':
     histos[0] = globalH
     histos[1] = globalH
     histos[2] = globalH
-  else: # three constants
+  elif options.cellType == "area": # three constants
     inner  = TH1F("inner", "inner", 250, 0, 250)
     chain.Project("inner", "m12", "max(prs1,prs2)<10 && (ind1>8000 && ind2>8000)")
     middle = TH1F("middle", "middle", 250, 0, 250)
@@ -75,6 +76,9 @@ if __name__ == '__main__':
     histos[0] = outer
     histos[1] = middle
     histos[2] = inner
+  else:
+    print "Unknown cell type -> %s" % options.cellType
+    sys.exit(1)
   means = {}
   means[2] = FitUtils.getPi0Params(histos[2])[1]
   means[1] = FitUtils.getPi0Params(histos[1])[1]
@@ -87,7 +91,9 @@ if __name__ == '__main__':
   for cell in getEcalCells():
     area = cell.area()
     lams = lambdas[cell]
-    lams.append(means[area].value())
+    lams.append(pi0Mass/means[area].value())
   lambdas.save(os.path.join(options.outputDir, 'lambdas.gz'))
+  sys.exit(0)
   
 # EOF
+

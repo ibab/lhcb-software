@@ -13,6 +13,8 @@ __author__ = "Albert Puig (albert.puig@cern.ch)"
 import os
 import sys
 import glob
+import string
+import random
 from optparse import OptionParser
 kaliDir = os.path.expandvars("$KALICALOROOT")
 # ROOT
@@ -36,6 +38,13 @@ import KaliCalo.Kali.LambdaMap as LambdaMap
 import KaliCalo.FakeCells      as FakeCells
 import KaliCalo.Cells          as Cells
 from KaliCalo.Det              import getCalo
+
+def randomFilename(chars=string.hexdigits, length=16, prefix='', suffix=''):
+  while True:
+    filename = ''.join([random.choice(chars) for i in range(length)])
+    filename = prefix + filename + suffix
+    if not os.path.exists(filename):
+      return filename
 
 def getEcalCells():
   ecal = getCalo()
@@ -167,18 +176,19 @@ if __name__ == '__main__':
   if 0 != len(inputFiles['missing']): # There are missing input files
     if os.path.exists(options.cut):
       execfile(options.cut)
-      ntuples = ['castor:' + os.path.join(castorDir, t) for t in tup]
-      outputTuple = 'castor:' + arg
+      ntuples = ['castor://' + castorDir + t for t in tup]
       cutter = CellCutter("", 100)
       for ntuple in ntuples:
         cutter.addFile(ntuple)    
       for arg in inputFiles['missing']:
         cellIndex = os.path.splitext(os.path.basename(arg))[0]
         cellID = decodeCellID(cellIndex)
-        fName = 'castor:' + os.path.join(castorDir, arg)
-        for cID in (cellID + cellRel[cellID]):
+        fName = 'castor://' + arg
+        print fName
+        for cID in ([cellID] + cellRel[cellID]):
           for cell in cellMap[cID]:
             cutter.addCell(cell.index(), fName)
+      print "Cutting"
       cutter.cut(20.0)
     else:
       print "Missing files but no input ntuples specified!"
@@ -225,11 +235,14 @@ if __name__ == '__main__':
         l = newLambdas[cell]
         l[-1] = calib
   print "We have %s new calibrated cells" % len(newLambdas.lambdas())
-  fileName = "%s.gz" % '-'.join([str(c.all()) for c in cellsToCalibrate.keys()])
   outputDir = os.path.abspath(options.outputDir)
   if not os.path.exists(outputDir):
     os.makedirs(outputDir)
+  fileName = randomFilename(length=8, suffix='lambda.gz')
+  #fileName = "%s.gz" % '-'.join([str(c.all()) for c in cellsToCalibrate.keys()])
   fileName = os.path.join(outputDir, fileName)
+  print "Output lambdas -> %s" % fileName
+  print newLambdas.lambdas()
   newLambdas.save(fileName)
   lambdasFile = os.path.join(outputDir,"lambdas.input")
   if not os.path.exists(lambdasFile):
