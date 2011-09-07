@@ -142,6 +142,7 @@ import StrippingB2XTau
 import StrippingK0s2MuMuLines
 import StrippingTau2PMuMu
 import StrippingVeryDetachedJPsiLines
+import StrippingInflaton2MuMuLine
 import StrippingTau23MuLines
 
 from sys import modules as _modules
