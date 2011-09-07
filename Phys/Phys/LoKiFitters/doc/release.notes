@@ -5,6 +5,7 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiFitters v4r2 2011-09-07 =========================
 ! 2011-07-29 - Vanya Belyaev
  - add possibility to evaluate the vertex for ``Rho+''-like particles 
 
