@@ -5,6 +5,7 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================= DisplVertices v7r7 2011-09-07 =========================
 ! 2011-08-17 - Victor Coco
  - Modify registerCondition in the material Veto tool
  - Adapt the strippibg algorithm to new requirements
