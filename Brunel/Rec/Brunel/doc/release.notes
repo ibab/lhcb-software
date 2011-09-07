@@ -22,6 +22,8 @@ Purpose: LHCb reconstruction program
     vertices (PatPV, RecConf)
   . Change default persistency to ROOT
   . Updates to VeloIPResolutionMonitor and TrackMonitors
+  . Add histogramsfor IT module overlap residuals for A/C/Top/Bottom for use in
+    DQ monitoring (TrackMonitors)
 
 - Changes to QMTests
   . Fix brunel-lumiconddbchecker following fix to bug #85240
