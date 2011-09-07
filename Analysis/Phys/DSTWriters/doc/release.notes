@@ -4,6 +4,7 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r0 2011-09-07 =========================
 ! 2011-08-23 - Rob Lambert
  - Suppress duplication of RecHeader and RecSummary, add in the
    'usual locations' for the Header/Summary to the stripped micro DST
