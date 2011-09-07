@@ -2,11 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v15r0 2011-09-07 =========================
 ! 2011-09-07 - Marco Cattaneo
  - Fix requirements to set up complete environment to run QMTests standalone
  - Fix QMTest comparisons on i686 when addresses are printed as 0x########L
 
-!========================= GaudiConf v15r0 2011-09-06 =========================
 ! 2011-09-05 - Rob Lambert
  - Update test references for default persistency change
 
