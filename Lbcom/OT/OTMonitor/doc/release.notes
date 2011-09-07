@@ -1,7 +1,9 @@
+!---------------------------------------------------------------------------
 ! Package         : OTMonitor
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+!========================= OTMonitor v3r3 2011-09-07 =========================
 ! 2011-09-02 - Alexandr Kozlinskiy
  - Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
    assuming that NextNext is stored in PrevPrev.
