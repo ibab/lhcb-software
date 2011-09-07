@@ -6,6 +6,7 @@
 # |-DetectorInit        = {'MUON': ['Muon'], 'DATA': ['Data']}  (default: {'MUON': ['Muon'], 'DATA': ['Data']})
 # |-Histograms          = 'NONE'  (default: 'Default')
 # |-SkipEvents          = 0
+# |-Persistency         = None
 # |-IgnoreFlatSpillover = False
 # |-VeloTell1Processing = True
 # |-ProductionMode      = False
@@ -27,8 +28,8 @@
 # |-OutputLevel         = 3
 # |-EvtMax              = 0  (default: -1)
 # |-TAENext             = 0
-# |-UseSpillover        = False
 # |-CondDBtag           = ''
+# |-UseSpillover        = False
 # |-InitSequence        = ['Data', 'Muon']  (default: [])
 # |-DataType            = '2011'
 # |-NoWarnings          = False
@@ -43,24 +44,21 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v22r1
-                                          running on lxbuild163.cern.ch on Tue Jun  7 17:23:42 2011
+                                          running on lxbuild163.cern.ch on Wed Sep  7 15:37:29 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
 BooleInit         SUCCESS ==================================================================
 BooleInit         SUCCESS Requested to process 0 events
 BooleInit         SUCCESS ==================================================================
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r4/data/muonlow-G4.root as LowEnergy
@@ -247,9 +245,8 @@ L0MoniSeq            INFO Member list: L0CaloMonit, L0MuonOnlineMonitor, L0DURep
 MoniMCSeq            INFO Member list:
 Filter               INFO OR Member list:
 PrepareDIGI          INFO Member list: PackMCVertex, PackMCParticle, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
-DigiWriter           INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.digi' TYP='POOL_ROOTTREE' OPT='REC'
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+DigiWriter           INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.digi' SVC='RootCnvSvc' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
 RawWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -461,7 +458,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
