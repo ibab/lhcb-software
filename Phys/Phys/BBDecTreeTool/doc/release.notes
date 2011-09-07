@@ -5,6 +5,7 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================= BBDecTreeTool v1r3 2011-09-07 =========================
 ! 2011-08-23 - Mike Williams
 - updates for usage in Beauty2Charm stripping
 
