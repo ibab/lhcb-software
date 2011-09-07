@@ -47,7 +47,7 @@ use DigiEvent             v2r19   Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r1    Event   # 
 use EventBase             v2r5p1  Event   # Marco Cattaneo, Gloria Corti
 use EventPacker           v2r10   Event   # Olivier Callot
-use GenEvent              v6r0    Event   # Gloria Corti
+use GenEvent              v6r1    Event   # Gloria Corti
 use HltEvent              v9r2    Event   # Jose Angel Hernando-Morata
 use L0Event               v19r4   Event   # Olivier Deschamps, Julien Cogan
 use LinkerEvent           v3r8    Event   # Olivier Callot

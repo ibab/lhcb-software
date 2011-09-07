@@ -5,14 +5,14 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v33r0>2011-09-07 LHCbSys v33r0</A></H1><PRE>
+</PRE><H1><A NAME=v33r0>2011-09-08 LHCbSys v33r0</A></H1><PRE>
 This version uses Gaudi v22r4 and LCG_61
 Production version for 2011 reprocessing and MC11.
 
 - Packages added:    Tools/FileStager v1r2: Create local copies of files from the grid at runtime 
 - Packages modified: CaloDAQ v4r23p1, CaloUtils v9r2, DDDB v1r47, DetCond v12r21,
     DetDesc v18r27p1, DetDescSvc v3r3, Magnet v7r3, MuonDet v9r7, RichDet v16r6,
-    LumiEvent v3r2, RecEvent v2r39, IOExample v4r2, GaudiConf v15r0,
+    GenEvent v6r1, LumiEvent v3r2, RecEvent v2r39,IOExample v4r2,GaudiConf v15r0,
     HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r5, LHCbMath v3r27,
     XMLSummaryKernel v1r2, MuonDAQ v4r11, RootCnv v1r7, OTDAQ v7r10p1,
     LoKiCore v11r3, RichKernel v7r45, RichRecBase v4r8, SimComponents v2r21,
@@ -38,6 +38,10 @@ Production version for 2011 reprocessing and MC11.
   . Add DeRichRadiator::Vector to python dictionary
   . Add a new method to DeRichSystem to return the L1 logicla ID for a given
     HPD RichSmartID
+
+- In Event/GenEvent v6r1
+  . Add a dictionary for std::map<std::string,HepMC::WeightContainer::size_type>,
+    needed to read old HepMC data on 32-bit machines
 
 - In Event/LumiEvent v3r2
   . Add Vertex and PoissonVertex values to counterKey enum
