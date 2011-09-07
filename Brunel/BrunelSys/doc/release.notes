@@ -3,6 +3,62 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v41r0>2011-09-08 Brunel v41r0</A></H1><PRE>
+This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
+ Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production version for 2011 end of year reprocessing (Reco12)
+
+- Changes to Brunel persistency:
+  . Output files are now in ROOT format by default, can be read by DaVinci v28r4
+    or later. POOL output can be switched on by options.
+    (GaudiConf v15r0, RootCnv v1r7, Gaudi v22r4, ROOT 5.30)
+  . Write ROOT technology when creating output file entry in XmlCatalog
+    (RootCnv v1r7)
+  . SDST now contains copies of Raw event banks (Trigger/RawEvent, Muon/RawEvent)
+    see task #21716 (Configuration.py, GaudiConf v14r2)
+  . RecSummary object now contains total number of (Best) tracks (RecAlgs v2r6)
+  . Added IsMuonTight field to StatusBits in MuonPID (RecEvent v2r39)
+  . Uses HepMC v2.06 for HepMCEvent, can be read by DaVinci v29r0 or later
+    (GenEvent v6r1, LCG 61)
+
+- New tuning
+  . Changed default global event cut for number of OT hits from 1M to 15k
+    (TrackSys v7r0)
+  . Introduce new StandardPV configuration to include radial cut for primary
+    vertices, see https://indico.cern.ch/conferenceDisplay.py?confId=134893 and
+    task #19768 (PatPV v3r20, RecConf v2r3)
+  . Add FilterFillingScheme algorithm to LumiBeam1 and LumiBeam2 sequences,
+    changes luminosity results for 2011 MagUp data (LumiAlgs v7r0)
+  . Implemented IsMuonTight, added counter for each IsMuon flag (MuonID v9r1)
+  . Remove use of random weights for IsMuon or IsMuonLoose. Keep, however, weight
+    0 for hits in M4 if p<3.5 GeV and hits in M5 if p<4.2 GeV. (MuonID v9r1)
+  . Small improvements to Rich background tools (RichRecTools v4r18)
+  . Lower default 'hot pixel' fraction from 90% to 50% of consecutive events
+    (RichTools v2r37)
+
+- Bug fixes
+  . Write out FSRs when using ROOT persistency. In previous versions, FSRs were
+    missing (GaudiConf v15r0, RootCnv v1r7, Gaudi v22r4)
+  . Various improvements to avoid unstable behaviour when sorting objects
+    (RichGlobalPID v3r17, LHCbKernel v13r5)
+  . Fix many unprotected DEBUG/VERBOSE messages
+
+- Monitoring changes
+  . Add TrackParticleMonitor (TrackMonitors v1r34)
+  . Add histograms for IT module overlap residuals for A/C/Top/Bottom for use in
+    DQ monitoring (TrackMonitors v1r34)
+  . Updated track selection in VeloIPResolutionMonitor to be consistent with
+    standard offline selection (VeloRecMonitors v2r15)
+  . Remove Muon Stations efficiency monitor MuEffMonitor, moved to DaVinci
+    (MuonTrackMonitor v2r4)
+  . Reduced verbosity from Gaudi persistency service initialisation
+
+- Changes to QMTests
+  . Fix brunel-lumiconddbchecker following fix to bug #85240
+  . Replace ROOT persistency tests with POOL persistency test, default for
+    all other tests is now ROOT
+
 </PRE><H1><A NAME=v40r1>2011-07-29 Brunel v40r1</A></H1><PRE>
 This version uses projects LCG 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5,
  Rec v11r6 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
