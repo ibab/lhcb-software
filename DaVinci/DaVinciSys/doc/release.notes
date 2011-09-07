@@ -3,6 +3,20 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v29r0>2011-09-07 DaVinci v29r0</A></H1><PRE>
+
+Production version for Stripping17, depends on Stripping v3r0, Analysis v7r0, Phys v13r0
+
+Major version change, since this is the first version where ROOT is the default persistency.
+
+Other DST content has also changed, so the GEC are no longer needed as a separate class. A repacked Trigger/RawEvent should be available. Options have been provided for its decoding. Added the UseTrigRawEvent options to DaVinci(), see task #21716
+
+This version of Stripping should retain almost factor 2 less in retention.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v29r0
+
+
 </PRE><H1><A NAME=v28r5>2011-08-03 DaVinci v28r5</A></H1><PRE>
 
 Production version for Stripping16, depends on Stripping v2r5p1, Analysis v6r6, Phys v12r6
