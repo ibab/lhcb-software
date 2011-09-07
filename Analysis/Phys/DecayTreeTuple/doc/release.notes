@@ -4,9 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-09-07 - Patrick Koppenburg
+ - TupleToolEventInfo : add field polarity
+ - TupleToolMuonPid: comment out unused IsMuonTight. Causes a warning.
+
 ! 2011-09-01 - Albert Bursche
    - added TupleToolJets a trivial tool derrived from TupleToolJetsBase
-
 
 ! 2011-09-01- Kazu Akiba
   -Changed TupleToolMuonPid. added few vairables. 

@@ -3,6 +3,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 // local
 #include "TupleToolEventInfo.h"
@@ -17,7 +18,6 @@
 #include "Event/RecVertex.h"
 #include "Event/VertexBase.h"
 #include "Event/Track.h"
-
 
 //#include "GaudiAlg/TupleObj.h"
 // #include "GaudiAlg/GaudiTupleAlg.h"
@@ -51,9 +51,14 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
   declareProperty("Mu", m_mu);
 }
 //=============================================================================
-
-StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) 
+StatusCode TupleToolEventInfo::initialize( )
 {
+  m_magSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  return TupleToolBase::initialize();
+}
+
+//=============================================================================
+StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ){
   const std::string prefix=fullName();
   int run = -1;
   ulonglong ev = 0;
@@ -131,6 +136,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"TriggerType", triggerType );
   }
   test &= tuple->column( prefix+"Primaries", nPVs );
+  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (m_magSvc->isDown()?-1:1)) ;
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);
 }

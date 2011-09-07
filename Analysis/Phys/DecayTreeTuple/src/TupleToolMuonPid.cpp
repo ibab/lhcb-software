@@ -59,7 +59,7 @@ StatusCode TupleToolMuonPid::fill( const Particle*
       bool hasMuon = false;
       bool isMuon = false;
       bool isMuonLoose = false;
-      bool isMuonTight = false;
+      //bool isMuonTight = false;
       double muonLLmu = -99999;
       double muonLLbg = -99999;
       const MuonPID * muonPID = proto->muonPID();

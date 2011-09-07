@@ -8,6 +8,7 @@
 #include "Kernel/IEventTupleTool.h"            // Interface
 
 class ITupleTool;
+class ILHCbMagnetSvc;
 
 /** @class TupleToolEventInfo TupleToolEventInfo.h jborel/TupleToolEventInfo.h
  *
@@ -37,10 +38,12 @@ public:
 
   virtual ~TupleToolEventInfo( ){}; ///< Destructor
 
+  StatusCode  initialize();
   StatusCode fill( Tuples::Tuple& );
 
 private :
   std::string m_pvLocation ;
   std::map<int,double> m_mu ;
+  ILHCbMagnetSvc* m_magSvc ;
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H
