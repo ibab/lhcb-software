@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2011-09-07 - Mark Tobin
+ - Bug fix in outlier removal in STOnlineNoiseCalculationTool.
+
 !========================= STTools v4r8 2011-08-31 =========================
 ! 2011-08-31 - Mark Tobin
  - Add job option to toggle on/off strip masking in noise tool.

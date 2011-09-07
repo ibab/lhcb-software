@@ -160,21 +160,21 @@ StatusCode ST::STOnlineNoiseCalculationTool::calculateNoise() {
               if(fabs(static_cast<double>(lcmsValue)) > (*thresholds)[strip].second) updateCMS=false;
             }
             // Calculate the pedestal and the pedestal squared
-            if(updateRaw) {
+            // Cumulative average up to m_followingPeriod; after that exponential moving average
+            if( updateRaw && updateCMS ) { // only update the noise if both criteria are fulfilled
+              int nEvt;
+              // raw noise
               (*nEvents)[strip].first += 1;
-              // Cumulative average up to m_followingPeriod; after that exponential moving average
-              int nEvt = (*nEvents)[strip].first;
+              nEvt = (*nEvents)[strip].first;
               if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
                 nEvt = m_followingPeriod;
               (*rawMean)[strip] = ((*rawMean)[strip]*(nEvt-1) + rawValue ) / nEvt;
               (*rawPedestal)[strip] = (*rawMean)[strip];
               (*rawMeanSq)[strip] = ((*rawMeanSq)[strip]*(nEvt-1) + gsl_pow_2(rawValue) ) / nEvt;
               (*rawNoise)[strip] = sqrt( (*rawMeanSq)[strip] - gsl_pow_2((*rawMean)[strip]) );
-            }
-            if(updateCMS) {
+              // cms noise
               (*nEvents)[strip].second += 1;
-              // Cumulative average up to m_followingPeriod; after that exponential moving average
-              int nEvt = (*nEvents)[strip].second;
+              nEvt = (*nEvents)[strip].second;
               if( m_followingPeriod > 0 && nEvt > m_followingPeriod ) 
                 nEvt = m_followingPeriod;
               (*cmsMean)[strip] = ((*cmsMean)[strip]*(nEvt-1) + lcmsValue ) / nEvt;
