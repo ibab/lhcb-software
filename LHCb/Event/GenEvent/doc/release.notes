@@ -1,8 +1,10 @@
+!------------------------------------------------------------------------------
 ! Package Event/GenEvent
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
-! 2011-09-06 - Marco Cattaneo
+!========================= GenEvent v6r1 2011-09-07 =========================
+! 2011-09-06 - Marco Cattaneo for Patrick Robbe
  - Add a dictionary for std::map<std::string,HepMC::WeightContainer::size_type>,
    this fixes the segmentation violation on 32-bit when reading the old HepMC
    data. To be moved to LCG 
