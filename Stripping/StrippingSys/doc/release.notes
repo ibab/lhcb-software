@@ -3,6 +3,15 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+
+</PRE><H1><A NAME=v3r0>2011-09-07 StrippingSys v3r0 </A></H1><PRE>
+Stripping for 2011 re-processing attempt to reduce the bandwidth (stripping17)
+
+This is the first version of the Stripping with ROOT as the default persistency
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v3r0
+
 </PRE><H1><A NAME=v2r5p1>2011-08-03 StrippingSys v2r5p1 </A></H1><PRE>
 Stripping for 2011 processing attempt to reduce the CPU and retention (stripping16)
 
