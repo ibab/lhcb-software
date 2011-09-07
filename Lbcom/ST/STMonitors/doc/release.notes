@@ -4,6 +4,9 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2010-09-07 Mark Tobin
+ - Added new histograms to STNoiseMonitor.
+
 !========================= STMonitors v3r6 2011-08-31 =========================
 ! 2010-08-09 Mark Tobin
  - Add new algorithm to monitor noise (STNoiseMonitor).

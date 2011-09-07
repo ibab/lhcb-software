@@ -48,6 +48,9 @@ namespace ST {
     /// Fill the noise histograms (only called every N events and at finalize)
     void updateNoiseHistogram(unsigned int tell1ID, bool updateTitle=false);
 
+    /// Make some summary plots of things like average noise/link etc...
+    void updateSummaryHistograms();
+
     //const std::string   m_basenameNoiseHisto; 
     int                 m_evtNumber;
 
@@ -79,21 +82,49 @@ namespace ST {
     std::string m_odinEvent;///< String of the time of the first run
 
     /// Map of RAW noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_noiseHistosRAW;
+    std::map<int, AIDA::IProfile1D*> m_raw_noiseHistos;
 
     /// Map of pedestal histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_pedestalHistosRAW;
+    std::map<int, AIDA::IProfile1D*> m_raw_pedestalHistos;
 
     /// Map of CMS noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_noiseHistosCMS;
+    std::map<int, AIDA::IProfile1D*> m_cms_noiseHistos;
 
     /// Map of CMS pedestal histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_pedestalHistosCMS;
+    std::map<int, AIDA::IProfile1D*> m_cms_pedestalHistos;
 
     /// Map of CMS noise histograms booked in initialize
-    std::map<int, AIDA::IProfile1D*> m_noiseHistosCM;
+    std::map<int, AIDA::IProfile1D*> m_cm_noiseHistos;
 
-    TH2D* m_2d_NoisePerLinkVsTell1;///< 2d map of noise vs link
+    /// Map of average RAW noise per port histograms booked in initialize
+    std::map<int, AIDA::IProfile1D*> m_average_raw_noiseHistos;
+
+    /// Map of average raw pedestal per port histograms booked in initialize
+    std::map<int, AIDA::IProfile1D*> m_average_raw_pedestalHistos;
+
+    /// Map of average CMS noise per port histograms booked in initialize
+    std::map<int, AIDA::IProfile1D*> m_average_cms_noiseHistos;
+
+    /// Map of average CMS pedestal per port histograms booked in initialize
+    std::map<int, AIDA::IProfile1D*> m_average_cms_pedestalHistos;
+
+    /// Map of average CMS per port noise histograms booked in initialize
+    std::map<int, AIDA::IProfile1D*> m_average_cm_noiseHistos;
+
+    /// Histograms of all strips combined
+    AIDA::IHistogram1D* m_1d_raw_noise;///< Raw noise of each strip
+    AIDA::IHistogram1D* m_1d_cms_noise;///< CMS noise of each strip
+    AIDA::IHistogram1D* m_1d_cm_noise;///< CM noise of each strip
+    AIDA::IHistogram1D* m_1d_raw_pedestal;///< Raw pedestal of each strip
+    AIDA::IHistogram1D* m_1d_cms_pedestal;///< CMS pedestal of each strip
+
+    // Maps of histograms by sector type
+    std::map<std::string, AIDA::IHistogram1D*> m_1d_raw_noiseByType;///< Raw noise of each strip
+    std::map<std::string, AIDA::IHistogram1D*> m_1d_cms_noiseByType;///< CMS noise of each strip
+    std::map<std::string, AIDA::IHistogram1D*> m_1d_cm_noiseByType;///< CM noise of each strip
+    std::map<std::string, AIDA::IHistogram1D*> m_1d_raw_pedestalByType;///< Raw pedestal of each strip
+    std::map<std::string, AIDA::IHistogram1D*> m_1d_cms_pedestalByType;///< CMS pedestal of each strip
+
     AIDA::IProfile1D* m_1dp_AvRAWNoisePerTell1;///< Average raw noise in each tell1
     AIDA::IProfile1D* m_1dp_AvCMSNoisePerTell1;///< Average cms noise in each tell1
     AIDA::IProfile1D* m_1dp_AvCMNoisePerTell1;///< Average cm noise in each tell1
@@ -101,6 +132,10 @@ namespace ST {
     TH2D* m_2d_PedestalPerLinkVsTell1;///< 2d map of pedestal vs link
     AIDA::IProfile1D* m_1dp_AvRAWPedestalPerTell1;///< Average raw pedestal in each tell1
     AIDA::IProfile1D* m_1dp_AvCMSPedestalPerTell1;///< Average cms pedestal in each tell1
+
+    TH2D* m_2d_RawNoisePerLinkVsTell1;///< 2d map of raw noise vs link
+    TH2D* m_2d_CMSNoisePerLinkVsTell1;///< 2d map of raw noise vs link
+    TH2D* m_2d_CMNoisePerLinkVsTell1;///< 2d map of raw noise vs link
 
     /// 2d map used for normalisation of noise, pedestal plots as 2d profile histograms are not supported by online monitoring
     TH2D* m_2d_NormalisationPerLinkVsTell1;
@@ -117,6 +152,16 @@ namespace ST {
   
     /// Number of events to be skipped (read from noise tool)
     int m_skipEvents;
+
+    /// Make summary plots
+    bool m_summaryPlots;
+
+    unsigned int m_nStripsInSector;
+    static const unsigned int m_nStripsInITSector=384;///< Hardcode number of strips/sector for IT
+    static const unsigned int m_nStripsInTTSector=512;///< Hardcode number of strips/sector for TT
+
+    std::map<int, std::vector<DeSTSector*> > m_sectorMap;///< Map of DeSTSectors (for use filling / type histograms)
+    std::map<std::string, std::string> m_types;///< keep map of sector types to book / type histograms
 
   };
 }
