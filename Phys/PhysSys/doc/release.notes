@@ -3,7 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-Migrate Phys/LoKiJets from Analysis and Phys/BBDecTreeTool from Hlt
+</PRE><H1><A NAME=v13r0>2011-09-07 Phys v13r0 </A></H1><PRE>
+- Based on LHCb v33r0. Stripping17 version, hopefully.
+
+New Packages: Phys/LoKiJets v6r0, Phys/BBDecTreeTool v1r3
+
+Minor changes for Stripping17 release, a few packages rejuggled.
+
+This is the first version of Phys with ROOT as the default Persistency service.
+
+For more information see here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Phys&version=v13r0
 
 </PRE><H1><A NAME=v12r5>2011-06-16 Phys v12r5 </A></H1><PRE>
 - Based on LHCb v32r5. Stripping16 version, hopefully.

@@ -13,17 +13,17 @@ use  SelPy                      v4r2p1   Phys    # Juan Palacios
 use  PhysSelPython              v9r2     PhysSel # Juan Palacios
 
 #===================================================================
-use  PhysConf                   v1r10    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r12    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r6p1   Phys    # Chris Jones
 use  DaVinciTools       	v22r9    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r10    Phys    # Juan Palacios
 use  ParticleMaker      	v6r0 	 Phys    # Chris Jones
 use  VertexFit			v6r7p2   Phys    # Yuehong Xie
-use  LoKiFitters                v4r1p4   Phys    # Vanya Belyaev
+use  LoKiFitters                v4r2     Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r11p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2     Phys    # Juan Palacios
 use  HighPtJets                 v1r4     Phys    # Marcin Kucharczyk
-use  BBDecTreeTool              v1r2     Phys    # Mike Williams
+use  BBDecTreeTool              v1r3     Phys    # Mike Williams
 
 #===================================================================
 use LoKiUtils                   v1r1p1   Phys    # Vanya Belyaev
@@ -34,7 +34,7 @@ use LoKiPhys                    v10r3    Phys    # Vanya Belyaev
 use LoKiProtoParticles          v2r0p1   Phys    # Vanya Belyaev
 use LoKi                        v9r0     Phys    # Vanya Belyaev
 use LoKiTracks                  v2r2     Phys    # Vanya Belyaev
-use KalmanFilter                v1r2p1   Phys    # Vanya Belyaev
+use KalmanFilter                v1r3     Phys    # Vanya Belyaev
 
 #===================================================================
 use TisTosTobbing		v7r3	 Phys	 # Tomasz Skwarnicki
