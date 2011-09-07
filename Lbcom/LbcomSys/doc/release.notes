@@ -6,13 +6,13 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v11r0>2011-09-01 LbcomSys v11r0</A></H1><PRE>
-This version uses Gaudi v22r3 and LHCb v33r0
+</PRE><H1><A NAME=v11r0>2011-09-08 LbcomSys v11r0</A></H1><PRE>
+This version uses Gaudi v22r4 and LHCb v33r0
 
 - Production release for 2011 end of year reprocessing and MC11
 
-- Packages updated: HltDAQ v2r12, L0Calo v11r5, L0Muon v9r6, RichTools v2r37,
-    STCheckers v3r3, STMonitors v3r6, STTools v4r8
+- Packages updated: HltDAQ v2r12, L0Calo v11r5, L0Muon v9r6, OTMonitor v3r3, 
+    RichTools v2r37, STCheckers v3r3, STMonitors v3r6, STTools v4r8
 
 - In Hlt/HltDAQ v2r12
   . Use htitle for rate counters.
@@ -27,6 +27,10 @@ This version uses Gaudi v22r3 and LHCb v33r0
 
 - In L0/L0Muon v9r6
   . L0MuonOutputs, make the raw event steerable in location
+
+- In OT/OTMonitor v3r3
+  . Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
+    getting NextNext from PrevPrev
 
 - In Rich/RichTools v2r37
   . Lower default 'hot pixel' fraction from 90% to 50% of consecutive events.

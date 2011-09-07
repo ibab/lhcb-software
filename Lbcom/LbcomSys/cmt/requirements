@@ -32,7 +32,7 @@ use MuonAssociators   v3r3    Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r4    OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r2p1  OT        # Wouter Hulsbergen
+use OTMonitor         v3r3    OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r3    Rich      # Chris Jones
