@@ -7,14 +7,14 @@
 package           FlavourTaggingChecker
 version           v6r7
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src options
 
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGCHECKEROPTS ${FLAVOURTAGGINGCHECKERROOT}/options
-# Used packages. 
+# Used packages.
 #============================================================================
 use DaVinciKernel   v*  Phys
 use MCInterfaces    v*  Kernel
