@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-09-07 - Marco Cattaneo
+ - Add test references also for .i686 due to minute differences in unpacking
+
 !========================= IOExample v4r2 2011-09-06 =========================
 ! 2011-09-05 - Marco Cattaneo
  - Update POOL tests to force POOL output if default is ROOT

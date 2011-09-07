@@ -1,0 +1,2178 @@
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadReco08POOLdst.py'
+# applying configuration of IOTest
+# /***** User IOTest/IOTest **************************************************************************
+# |-DataType    = '2011'
+# |-LoadAll     = True  (default: False)
+# |-DataContent = 'DST'
+# |-WithMC      = False
+# |-EvtMax      = 5  (default: -1)
+# \----- (End of User IOTest/IOTest) -----------------------------------------------------------------
+# applying configuration of DstConf
+# /***** User DstConf/DstConf ************************************************************************
+# |-OutputName          = ''
+# |-SimType             = 'None'
+# |-PackType            = 'TES'
+# |-DstType             = 'NONE'
+# |-EnablePackingChecks = False
+# |-DataType            = ''
+# |-Writer              = 'DstWriter'
+# |-PackSequencer       = None
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-EnableUnpack        = True  (default: False)
+# |-AlwaysCreate        = False
+# \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
+# /***** User DstConf/DstConf ************************************************************************
+# |-OutputName          = ''
+# |-SimType             = 'None'
+# |-PackType            = 'TES'
+# |-DstType             = 'NONE'
+# |-EnablePackingChecks = False
+# |-DataType            = ''
+# |-Writer              = 'DstWriter'
+# |-PackSequencer       = None
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-EnableUnpack        = True  (default: False)
+# |-AlwaysCreate        = False
+# \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
+# applying configuration of DigiConf
+# No Writer defined for DIGI
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lxbuild163.cern.ch on Wed May 25 07:56:25 2011
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
+TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
+TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
+TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditFinalize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditExecute':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint      DEBUG ==> Initialize
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
+DumpTracks          DEBUG Property update for OutputLevel : new value = 2
+DumpTracks          DEBUG Property update for OutputLevel : new value = 2
+DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
+DumpTracks          DEBUG could not locate CounterSummarySvc, no counter summary will be made
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 34
+DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
+DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
+DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+DumpTracks          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+DumpTracks          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+DumpTracks          DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+DumpTracks          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.00000000
+DumpTracks          DEBUG Property ['Name': Value] =  'RootOnTES':
+DumpTracks          DEBUG Property ['Name': Value] =  'RootInTES':
+DumpTracks          DEBUG Property ['Name': Value] =  'Context':
+DumpTracks          DEBUG Property ['Name': Value] =  'TypePrint':True
+DumpTracks          DEBUG Property ['Name': Value] =  'StatPrint':True
+DumpTracks          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+DumpTracks          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
+DumpTracks          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditStop':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditStart':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditEndRun':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditBeginRun':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditFinalize':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditExecute':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditRestart':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditReinitialize':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditInitialize':False
+DumpTracks          DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
+DumpTracks          DEBUG Property ['Name': Value] =  'ErrorCount':0
+DumpTracks          DEBUG Property ['Name': Value] =  'ErrorMax':1
+DumpTracks          DEBUG Property ['Name': Value] =  'Enable':True
+DumpTracks          DEBUG Property ['Name': Value] =  'OutputLevel':2
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOL-Reco08.dst' TYP='POOL_ROOT' OPT='READ'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+DumpTracks          DEBUG Property update for OutputLevel : new value = 2
+RootDBase.open    SUCCESS POOL-Reco08.dst File version:52800
+PoolRootEvtCnvSvc    INFO Records token:[DB=EA0579AA-9286-E011-B384-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=000000A6-00000000]
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0xe155fb0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Bhadron [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2threebodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSDDhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0M [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0R [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x8]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x8]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x6]
+StoreExplorerAlg     INFO   | | +--> /SelD2hhhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x8]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x7]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x7]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelD2KshhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /SelKsForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /SelKstarNoMWForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /SelRhoNoMWForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x10]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x10]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelD2hhhhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x4]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bu2D0h_D02KShh_KSLL [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllLambdaB2LambdaCPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllLambdaB2LambdaCKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
+DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
+DumpTracks           INFO There are 156 tracks in Rec/Track/Best
+DumpTracks          DEBUG *** Track ***
+ key     : 0
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 51
+ # meas   : 0
+ chi2PerDoF : 1.47701
+ nDoF       : 44
+ extraInfo : [ FitVeloChi2=22.4793  FitVeloNDoF=19  FitTChi2=31.834  FitTNDoF=16  FitMatchChi2=3.21477 ]
+ p  : 9021.41
+ pt : 420.807
+ 4 states at z = -81.9896 109.39 990 9450  :-
+ *** State ***
+ z        : -81.9896
+ location : ClosestToBeam
+ p               : 9021.41
+ pt              : 420.807
+ (x,y,tx,ty,q/p) : 0.3199, -0.0534, -0.0208755, -0.0417702, -0.000110847
+ covariance      : [   0.00488601   -0.000304-2.64917e-05  1.3328e-06-1.15154e-11
+     -0.000304  0.00481636 1.30899e-06-2.60644e-05 1.90551e-12
+  -2.64917e-05 1.30899e-06 1.48981e-07-5.75474e-09 7.94836e-14
+    1.3328e-06-2.60644e-05-5.75474e-09 1.46398e-07-1.05056e-14
+  -1.15154e-11 1.90551e-12 7.94836e-14-1.05056e-14 1.69623e-13 ]
+ *** State ***
+ z        : 109.39
+ location : FirstMeasurement
+ p               : 9019.01
+ pt              : 420.521
+ (x,y,tx,ty,q/p) : -3.6713, -8.0474, -0.0208313, -0.0417706, -0.000110877
+ covariance      : [      4.9e-05-1.15904e-05-9.51344e-07 2.20687e-07-2.11418e-12
+  -1.15904e-05   4.761e-05 1.96361e-07-1.02623e-06-6.63082e-13
+  -9.51344e-07 1.96361e-07 7.68343e-08-5.81503e-09 1.14161e-14
+   2.20687e-07-1.02623e-06-5.81503e-09 7.41636e-08 -1.1216e-14
+  -2.11418e-12-6.63082e-13 1.14161e-14 -1.1216e-14 1.69622e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 9007.18
+ pt              : 411.417
+ (x,y,tx,ty,q/p) : -21.8081, -44.262, -0.0208431, -0.0406973, -0.000111023
+ covariance      : [     0.001296 4.91542e-05 2.09973e-06 4.08678e-07-1.80785e-09
+   4.91542e-05  0.00223729 3.43833e-07 8.44451e-06-2.27207e-09
+   2.09973e-06 3.43833e-07 2.06382e-08  2.3239e-09-9.82752e-12
+   4.08678e-07 8.44451e-06  2.3239e-09 6.40191e-08-1.55858e-11
+  -1.80785e-09-2.27207e-09-9.82752e-12-1.55858e-11  1.6962e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 8976.3
+ pt              : 1110.42
+ (x,y,tx,ty,q/p) : 376.229, -384.617, 0.118195, -0.0396356, -0.000111404
+ covariance      : [    0.0114704   0.0192436 2.07634e-05 5.29719e-06-9.17473e-10
+     0.0192436     1.26585 2.42522e-06 0.000384327-2.23964e-08
+   2.07634e-05 2.42522e-06  9.2173e-08 2.69857e-09 1.05032e-12
+   5.29719e-06 0.000384327 2.69857e-09 4.20941e-07 3.50044e-12
+  -9.17473e-10-2.23964e-08 1.05032e-12 3.50044e-12 1.69621e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 1
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 36
+ # meas   : 0
+ chi2PerDoF : 1.26493
+ nDoF       : 30
+ extraInfo : [ FitVeloChi2=16.2474  FitVeloNDoF=15  FitTChi2=9.07587  FitTNDoF=6  FitMatchChi2=7.31199 ]
+ p  : 30734.1
+ pt : 1045.31
+ 4 states at z = -72.775 169.412 990 9450  :-
+ *** State ***
+ z        : -72.775
+ location : ClosestToBeam
+ p               : 30734.1
+ pt              : 1045.31
+ (x,y,tx,ty,q/p) : 0.1439, -0.2274, -0.0289598, -0.0178731, -3.25372e-05
+ covariance      : [   0.00063001-1.22662e-05-2.29789e-06 4.16677e-08-1.52825e-11
+  -1.22662e-05  0.00073984 3.83503e-08 -2.6305e-06 2.72653e-12
+  -2.29789e-06 3.83503e-08 8.75722e-09-1.59055e-10 7.95603e-14
+   4.16677e-08 -2.6305e-06-1.59055e-10 9.80298e-09-1.28655e-14
+  -1.52825e-11 2.72653e-12 7.95603e-14-1.28655e-14 1.24051e-14 ]
+ *** State ***
+ z        : 169.412
+ location : FirstMeasurement
+ p               : 30732.9
+ pt              : 1044.81
+ (x,y,tx,ty,q/p) : -6.8678, -4.5561, -0.028942, -0.0178732, -3.25384e-05
+ covariance      : [    2.809e-05-2.30082e-06-2.53942e-07 2.91083e-09 3.18766e-12
+  -2.30082e-06   3.721e-05-5.14027e-10-3.27383e-07-3.84999e-13
+  -2.53942e-07-5.14027e-10   6.241e-09-1.60288e-10 7.27378e-14
+   2.91083e-09-3.27383e-07-1.60288e-10 7.28804e-09-1.29948e-14
+   3.18766e-12-3.84999e-13 7.27378e-14-1.29948e-14 1.24052e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 30709.5
+ pt              : 1049.78
+ (x,y,tx,ty,q/p) : -30.5878, -19.2542, -0.0292407, -0.0177457, -3.25632e-05
+ covariance      : [   0.00030976 1.63792e-05-4.85973e-08 4.67634e-09-2.57972e-10
+   1.63792e-05  0.00034969-9.89368e-09 4.62251e-07-2.08973e-11
+  -4.85973e-08-9.89368e-09  2.6905e-09-7.83064e-12-7.53159e-13
+   4.67634e-09 4.62251e-07-7.83064e-12 8.20474e-09-6.01961e-14
+  -2.57972e-10-2.08973e-11-7.53159e-13-6.01961e-14 1.24053e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 30685
+ pt              : 636.2
+ (x,y,tx,ty,q/p) : -110.734, -168.298, 0.0110966, -0.017519, -3.25892e-05
+ covariance      : [   0.00174724-0.000466403 3.14222e-06-9.19982e-08-1.40287e-10
+  -0.000466403   0.0943104 6.13624e-07 2.50477e-05 1.04778e-09
+   3.14222e-06 6.13624e-07 9.08209e-09 1.71122e-11 1.23479e-13
+  -9.19982e-08 2.50477e-05 1.71122e-11 2.36883e-08 1.29136e-13
+  -1.40287e-10 1.04778e-09 1.23479e-13 1.29136e-13 1.24048e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 2
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 45
+ # meas   : 0
+ chi2PerDoF : 1.34368
+ nDoF       : 39
+ extraInfo : [ FitVeloChi2=17.536  FitVeloNDoF=15  FitTChi2=22.2835  FitTNDoF=15  FitMatchChi2=8.70913 ]
+ p  : 6542.2
+ pt : 325.386
+ 4 states at z = -13.2652 169.412 990 9450  :-
+ *** State ***
+ z        : -13.2652
+ location : ClosestToBeam
+ p               : 6542.2
+ pt              : 325.386
+ (x,y,tx,ty,q/p) : 0.0957, -0.2426, -0.0444784, -0.0223946, 0.000152854
+ covariance      : [   0.00358801-0.000111289-2.18111e-05 5.47707e-07  -1.298e-11
+  -0.000111289  0.00405769 5.33468e-07-2.38577e-05-4.31356e-12
+  -2.18111e-05 5.33468e-07 1.39779e-07-2.63964e-09 9.62056e-14
+   5.47707e-07-2.38577e-05-2.63964e-09 1.48849e-07 2.09006e-14
+    -1.298e-11-4.31356e-12 9.62056e-14 2.09006e-14  1.6508e-13 ]
+ *** State ***
+ z        : 169.412
+ location : FirstMeasurement
+ p               : 6540.53
+ pt              : 325.692
+ (x,y,tx,ty,q/p) : -8.0352, -4.3336, -0.0445454, -0.0223944, 0.000152893
+ covariance      : [    3.969e-05-5.24664e-06-6.65554e-07 4.69293e-08-1.70645e-12
+  -5.24664e-06     6.4e-05 3.28508e-08-1.04133e-06-8.66768e-13
+  -6.65554e-07 3.28508e-08 4.01241e-08-2.73804e-09 2.44156e-14
+   4.69293e-08-1.04133e-06-2.73804e-09 4.93462e-08 2.10595e-14
+  -1.70645e-12-8.66768e-13 2.44156e-14 2.10595e-14 1.65078e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 6532.45
+ pt              : 328.88
+ (x,y,tx,ty,q/p) : -44.69, -22.792, -0.0452302, -0.0222565, 0.000153082
+ covariance      : [     0.001936  0.00012194  4.1545e-06 7.62212e-07-1.78353e-09
+    0.00012194  0.00337561 6.57447e-07 1.31095e-05-1.87272e-09
+    4.1545e-06 6.57447e-07 3.59671e-08 4.24304e-09-9.76785e-12
+   7.62212e-07 1.31095e-05 4.24304e-09 9.36727e-08-1.20661e-11
+  -1.78353e-09-1.87272e-09-9.76785e-12-1.20661e-11 1.65075e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 6515.22
+ pt              : 1537.9
+ (x,y,tx,ty,q/p) : -1232.05, -212.998, -0.241891, -0.0222343, 0.000153487
+ covariance      : [   0.00848241 -0.00772967  1.6412e-05-1.60799e-06-1.71133e-09
+   -0.00772967     0.89662-2.10539e-05 0.000216356 5.29632e-09
+    1.6412e-05-2.10539e-05 1.03041e-07 -2.8159e-09 3.29964e-12
+  -1.60799e-06 0.000216356 -2.8159e-09 2.62144e-07 4.65971e-12
+  -1.71133e-09 5.29632e-09 3.29964e-12 4.65971e-12 1.65075e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 3
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 45
+ # meas   : 0
+ chi2PerDoF : 1.4946
+ nDoF       : 39
+ extraInfo : [ FitVeloChi2=11.6122  FitVeloNDoF=14  FitTChi2=36.7339  FitTNDoF=16  FitMatchChi2=7.69708 ]
+ p  : 7380.01
+ pt : 566.239
+ 4 states at z = -70.3698 49.2862 990 9450  :-
+ *** State ***
+ z        : -70.3698
+ location : ClosestToBeam
+ p               : 7380.01
+ pt              : 566.239
+ (x,y,tx,ty,q/p) : 0.0614, -0.2448, -0.0719663, -0.0272508, 0.000135501
+ covariance      : [   0.00084681 -4.4797e-05-6.76194e-06 2.62329e-07-2.27813e-11
+   -4.4797e-05  0.00105625 2.38819e-07-7.87421e-06-1.29615e-11
+  -6.76194e-06 2.38819e-07 5.69204e-08-1.57507e-09 1.90299e-13
+   2.62329e-07-7.87421e-06-1.57507e-09 6.31718e-08  9.6526e-14
+  -2.27813e-11-1.29615e-11 1.90299e-13  9.6526e-14 1.96364e-13 ]
+ *** State ***
+ z        : 49.2862
+ location : FirstMeasurement
+ p               : 7379.38
+ pt              : 566.411
+ (x,y,tx,ty,q/p) : -8.5516, -3.5056, -0.0719985, -0.0272508, 0.000135513
+ covariance      : [    3.025e-05-8.18164e-06-4.54983e-07  6.7935e-08-2.76216e-12
+  -8.18164e-06   6.241e-05 4.36938e-08 -8.0503e-07 -1.1669e-12
+  -4.54983e-07 4.36938e-08 2.90805e-08  -1.629e-09 1.43576e-13
+    6.7935e-08 -8.0503e-07  -1.629e-09 3.54531e-08 9.73424e-14
+  -2.76216e-12 -1.1669e-12 1.43576e-13 9.73424e-14 1.96361e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7370.29
+ pt              : 574.37
+ (x,y,tx,ty,q/p) : -76.8176, -29.2093, -0.0731793, -0.0274784, 0.00013568
+ covariance      : [   0.00870489-0.000897106 1.05987e-05 9.45445e-07-7.05881e-09
+  -0.000897106   0.0187964 1.88231e-06 2.74872e-05-5.07087e-09
+   1.05987e-05 1.88231e-06 4.64058e-08  4.1461e-09 -1.5983e-11
+   9.45445e-07 2.74872e-05  4.1461e-09 8.66066e-08-1.37494e-11
+  -7.05881e-09-5.07087e-09 -1.5983e-11-1.37494e-11 1.96365e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7347.85
+ pt              : 1785.85
+ (x,y,tx,ty,q/p) : -1419.94, -263.973, -0.249056, -0.0273858, 0.000136094
+ covariance      : [    0.0165122   0.0041448 2.43517e-05 1.41966e-06-2.39723e-09
+     0.0041448     1.23143  3.2944e-07 0.000431023-8.57255e-09
+   2.43517e-05  3.2944e-07 9.43166e-08 1.02698e-09-3.28424e-12
+   1.41966e-06 0.000431023 1.02698e-09 4.03149e-07 7.02453e-12
+  -2.39723e-09-8.57255e-09-3.28424e-12 7.02453e-12 1.96358e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 4
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 43
+ # meas   : 0
+ chi2PerDoF : 1.20585
+ nDoF       : 37
+ extraInfo : [ FitVeloChi2=15.2512  FitVeloNDoF=15  FitTChi2=19.1136  FitTNDoF=13  FitMatchChi2=7.71583 ]
+ p  : 7918.7
+ pt : 428.752
+ 4 states at z = -15.042 153.857 990 9450  :-
+ *** State ***
+ z        : -15.042
+ location : ClosestToBeam
+ p               : 7918.7
+ pt              : 428.752
+ (x,y,tx,ty,q/p) : 0.3555, -0.1632, 0.0330939, 0.0429535, -0.000126283
+ covariance      : [   0.00345744-0.000119871-2.22971e-05 6.03579e-07-1.49496e-11
+  -0.000119871  0.00301401 6.35864e-07-2.02457e-05 1.90337e-12
+  -2.22971e-05 6.35864e-07 1.55551e-07-3.25989e-09 1.00274e-13
+   6.03579e-07-2.02457e-05-3.25989e-09 1.45977e-07-1.32463e-14
+  -1.49496e-11 1.90337e-12 1.00274e-13-1.32463e-14   1.202e-13 ]
+ *** State ***
+ z        : 153.857
+ location : FirstMeasurement
+ p               : 7916.23
+ pt              : 428.857
+ (x,y,tx,ty,q/p) : 5.9491, 7.0916, 0.0331446, 0.0429527, -0.000126323
+ covariance      : [    6.724e-05-7.67422e-06-1.21176e-06 2.88595e-08-2.08486e-12
+  -7.67422e-06   4.356e-05 6.11185e-08-7.83115e-07-3.81376e-13
+  -1.21176e-06 6.11185e-08 5.49621e-08-3.40354e-09 5.14784e-14
+   2.88595e-08-7.83115e-07-3.40354e-09 4.53136e-08-1.23005e-14
+  -2.08486e-12-3.81376e-13 5.14784e-14-1.23005e-14 1.20205e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7907.57
+ pt              : 434.77
+ (x,y,tx,ty,q/p) : 33.7, 43.5785, 0.0331479, 0.0439699, -0.000126461
+ covariance      : [   0.00167281 0.000101377 3.33846e-06 5.49195e-07-1.65531e-09
+   0.000101377    0.003025 4.72331e-07 1.06147e-05-1.40283e-09
+   3.33846e-06 4.72331e-07 2.29674e-08 2.46747e-09-7.38408e-12
+   5.49195e-07 1.06147e-05 2.46747e-09 6.12266e-08 -7.3807e-12
+  -1.65531e-09-1.40283e-09-7.38408e-12 -7.3807e-12 1.20205e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7884.42
+ pt              : 1531.09
+ (x,y,tx,ty,q/p) : 974.668, 418.881, 0.192997, 0.0440506, -0.000126832
+ covariance      : [    0.0393229 -0.00729016 7.69571e-05-8.19946e-07-8.01853e-09
+   -0.00729016     1.14212 3.79487e-06 0.000316561 3.77925e-09
+   7.69571e-05 3.79487e-06  2.5013e-07 1.82468e-09-3.44475e-12
+  -8.19946e-07 0.000316561 1.82468e-09 3.69749e-07 4.35686e-12
+  -8.01853e-09 3.77925e-09-3.44475e-12 4.35686e-12 1.20198e-13 ]
+
+
+EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0xe1f4b40@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Bhadron [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2threebodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0M [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0R [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhWSLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelKstarForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /SelD2KPiPi0ResolvedForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdLooseResolvedPi0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | +--> /SelRhoForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
+DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
+DumpTracks           INFO There are 112 tracks in Rec/Track/Best
+DumpTracks          DEBUG *** Track ***
+ key     : 0
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 50
+ # meas   : 0
+ chi2PerDoF : 1.98671
+ nDoF       : 43
+ extraInfo : [ FitVeloChi2=21.9327  FitVeloNDoF=17  FitTChi2=46.3168  FitTNDoF=17  FitMatchChi2=14.6766 ]
+ p  : 12197.6
+ pt : 811.23
+ 4 states at z = -126.946 19.1797 990 9450  :-
+ *** State ***
+ z        : -126.946
+ location : ClosestToBeam
+ p               : 12197.6
+ pt              : 811.23
+ (x,y,tx,ty,q/p) : 0.1989, -0.2443, -0.0534431, -0.0398331, -8.19831e-05
+ covariance      : [   0.00096721  -5.909e-05 -6.9338e-06 2.03287e-07-3.14111e-11
+    -5.909e-05  0.00092416 2.23104e-07-6.73185e-06-1.19892e-11
+   -6.9338e-06 2.23104e-07 5.62876e-08-7.29787e-10 2.32777e-13
+   2.03287e-07-6.73185e-06-7.29787e-10 5.54179e-08 7.24616e-14
+  -3.14111e-11-1.19892e-11 2.32777e-13 7.24616e-14 8.32739e-14 ]
+ *** State ***
+ z        : 19.1797
+ location : FirstMeasurement
+ p               : 12195.2
+ pt              : 810.862
+ (x,y,tx,ty,q/p) : -7.6091, -6.0649, -0.0534216, -0.0398332, -8.19992e-05
+ covariance      : [    4.624e-05-1.40553e-05-5.11216e-07 8.36712e-08 1.04655e-12
+  -1.40553e-05   4.489e-05 1.04626e-07-4.40925e-07-1.61119e-12
+  -5.11216e-07 1.04626e-07 1.60833e-08 -8.1418e-10 2.11041e-13
+   8.36712e-08-4.40925e-07 -8.1418e-10 1.52621e-08 7.13003e-14
+   1.04655e-12-1.61119e-12 2.11041e-13 7.13003e-14 8.32736e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 12185.8
+ pt              : 807.875
+ (x,y,tx,ty,q/p) : -59.3309, -44.7329, -0.0532055, -0.0397964, -8.20624e-05
+ covariance      : [   0.00367236 0.000191565 4.19395e-06 5.44045e-07-4.13696e-09
+   0.000191565  0.00644809 4.40905e-07 1.11921e-05-1.58113e-09
+   4.19395e-06 4.40905e-07 1.77609e-08 1.15423e-09 -8.2954e-12
+   5.44045e-07 1.11921e-05 1.15423e-09 3.61266e-08-4.16304e-12
+  -4.13696e-09-1.58113e-09 -8.2954e-12-4.16304e-12  8.3274e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 12149.8
+ pt              : 761.074
+ (x,y,tx,ty,q/p) : -87.2511, -377.222, 0.0495843, -0.0384806, -8.23061e-05
+ covariance      : [    0.0140186 -0.00524577 2.65757e-05-1.76325e-06-1.48057e-11
+   -0.00524577     0.80874 -1.7012e-05 0.000261856-8.83213e-09
+   2.65757e-05 -1.7012e-05 1.12232e-07-4.73506e-09 4.51794e-12
+  -1.76325e-06 0.000261856-4.73506e-09 3.40181e-07 7.12514e-13
+  -1.48057e-11-8.83213e-09 4.51794e-12 7.12514e-13 8.32746e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 1
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 47
+ # meas   : 0
+ chi2PerDoF : 1.26432
+ nDoF       : 40
+ extraInfo : [ FitVeloChi2=23.9125  FitVeloNDoF=17  FitTChi2=17.4103  FitTNDoF=14  FitMatchChi2=3.11664 ]
+ p  : 15815.8
+ pt : 1460.19
+ 4 states at z = -128.244 -25.8294 990 9450  :-
+ *** State ***
+ z        : -128.244
+ location : ClosestToBeam
+ p               : 15815.8
+ pt              : 1460.19
+ (x,y,tx,ty,q/p) : 0.2315, -0.3124, 0.0731173, 0.0570173, 6.32277e-05
+ covariance      : [     0.000256-4.88751e-05-1.85757e-06 2.09838e-07 1.06857e-13
+  -4.88751e-05  0.00024649 2.17483e-07-1.79402e-06-1.31066e-11
+  -1.85757e-06 2.17483e-07 1.54256e-08-9.71221e-10 1.07832e-13
+   2.09838e-07-1.79402e-06-9.71221e-10   1.507e-08 7.21474e-14
+   1.06857e-13-1.31066e-11 1.07832e-13 7.21474e-14 4.01425e-14 ]
+ *** State ***
+ z        : -25.8294
+ location : FirstMeasurement
+ p               : 15815.3
+ pt              : 1460.01
+ (x,y,tx,ty,q/p) : 7.7192, 5.527, 0.0731061, 0.0570177, 6.32299e-05
+ covariance      : [    3.481e-05 -1.5458e-05-3.49073e-07 1.07937e-07 1.07966e-11
+   -1.5458e-05   3.481e-05 1.16021e-07-3.28843e-07 -5.7135e-12
+  -3.49073e-07 1.16021e-07  1.0574e-08 -9.9139e-10 1.00266e-13
+   1.07937e-07-3.28843e-07 -9.9139e-10 1.02273e-08  7.2268e-14
+   1.07966e-11 -5.7135e-12 1.00266e-13  7.2268e-14 4.01428e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 15804.3
+ pt              : 1445.43
+ (x,y,tx,ty,q/p) : 81.5216, 63.3133, 0.0721859, 0.0567833, 6.3274e-05
+ covariance      : [   0.00395641 0.000138198 2.63766e-06 3.79591e-07-3.12079e-09
+   0.000138198  0.00806404 3.16126e-07 1.06069e-05-7.56867e-10
+   2.63766e-06 3.16126e-07 1.11535e-08 6.03278e-10-4.12967e-12
+   3.79591e-07 1.06069e-05 6.03278e-10 2.68927e-08-1.46212e-12
+  -3.12079e-09-7.56867e-10-4.12967e-12-1.46212e-12  4.0143e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 15784.3
+ pt              : 888.839
+ (x,y,tx,ty,q/p) : 363.962, 539.706, -0.00683179, 0.0559856, 6.33539e-05
+ covariance      : [     0.009409    -0.02182 9.27345e-06-3.18729e-06-5.00311e-09
+      -0.02182    0.907256-7.40703e-06 0.000137589 1.17048e-09
+   9.27345e-06-7.40703e-06 2.48472e-08-1.39581e-09-4.68364e-12
+  -3.18729e-06 0.000137589-1.39581e-09 5.87481e-08 7.04156e-13
+  -5.00311e-09 1.17048e-09-4.68364e-12 7.04156e-13 4.01428e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 2
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 49
+ # meas   : 0
+ chi2PerDoF : 1.88726
+ nDoF       : 42
+ extraInfo : [ FitVeloChi2=32.162  FitVeloNDoF=17  FitTChi2=37.597  FitTNDoF=16  FitMatchChi2=5.27775 ]
+ p  : 7252.58
+ pt : 393.468
+ 4 states at z = -118.805 49.2862 990 9450  :-
+ *** State ***
+ z        : -118.805
+ location : ClosestToBeam
+ p               : 7252.58
+ pt              : 393.468
+ (x,y,tx,ty,q/p) : -0.0264, 0.0734, -0.0367952, 0.0399761, -0.000137882
+ covariance      : [   0.00366025 0.000201295-2.46007e-05-9.61567e-07-1.70745e-11
+   0.000201295  0.00337561 -9.8096e-07-2.33277e-05 -3.6438e-12
+  -2.46007e-05 -9.8096e-07 1.78168e-07 4.68675e-09 1.19126e-13
+  -9.61567e-07-2.33277e-05 4.68675e-09 1.72507e-07 1.30242e-14
+  -1.70745e-11 -3.6438e-12 1.19126e-13 1.30242e-14 2.21248e-13 ]
+ *** State ***
+ z        : 49.2862
+ location : FirstMeasurement
+ p               : 7250.01
+ pt              : 393.111
+ (x,y,tx,ty,q/p) : -6.2079, 6.793, -0.0367513, 0.0399756, -0.000137931
+ covariance      : [      6.4e-05 1.28039e-05-1.07382e-06-1.41508e-07-2.00692e-12
+   1.28039e-05   4.624e-05-1.60466e-07-7.59197e-07-8.52941e-13
+  -1.07382e-06-1.60466e-07 4.73324e-08 4.88253e-09  5.1167e-14
+  -1.41508e-07-7.59197e-07 4.88253e-09 4.16242e-08 1.59942e-14
+  -2.00692e-12-8.52941e-13  5.1167e-14 1.59942e-14  2.2125e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7241.34
+ pt              : 392.751
+ (x,y,tx,ty,q/p) : -40.1544, 45.3428, -0.0356407, 0.0409892, -0.000138096
+ covariance      : [   0.00354025 0.000290519 4.72626e-06 1.01859e-06-4.08143e-09
+   0.000290519  0.00675684 8.46103e-07 1.60532e-05-4.09713e-09
+   4.72626e-06 8.46103e-07 2.55201e-08 3.07235e-09 -1.2243e-11
+   1.01859e-06 1.60532e-05 3.07235e-09 6.64041e-08-1.48522e-11
+  -4.08143e-09-4.09713e-09 -1.2243e-11-1.48522e-11 2.21247e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7213.25
+ pt              : 1023.21
+ (x,y,tx,ty,q/p) : 373.577, 389.465, 0.137418, 0.040634, -0.000138634
+ covariance      : [     0.015129  -0.0383922 2.43524e-05-1.50002e-05 4.47416e-10
+    -0.0383922     1.18418-4.97199e-05 0.000532199-3.03702e-09
+   2.43524e-05-4.97199e-05 9.77563e-08-1.77798e-08 2.42659e-12
+  -1.50002e-05 0.000532199-1.77798e-08 6.12964e-07 8.35956e-12
+   4.47416e-10-3.03702e-09 2.42659e-12 8.35956e-12 2.21248e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 3
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 50
+ # meas   : 0
+ chi2PerDoF : 1.31974
+ nDoF       : 43
+ extraInfo : [ FitVeloChi2=25.898  FitVeloNDoF=17  FitTChi2=20.5185  FitTNDoF=17  FitMatchChi2=3.83046 ]
+ p  : 10962.9
+ pt : 940.137
+ 4 states at z = -125.783 -10.6992 990 9450  :-
+ *** State ***
+ z        : -125.783
+ location : ClosestToBeam
+ p               : 10962.9
+ pt              : 940.137
+ (x,y,tx,ty,q/p) : 0.2918, -0.3211, -0.0638431, -0.057729, 9.12165e-05
+ covariance      : [   0.00050176-8.31667e-05-3.81748e-06 3.90449e-07-2.82043e-11
+  -8.31667e-05  0.00054756 3.84383e-07-4.05198e-06-1.57286e-11
+  -3.81748e-06 3.84383e-07 3.21592e-08-1.83726e-09 2.75032e-13
+   3.90449e-07-4.05198e-06-1.83726e-09 3.34305e-08 1.05588e-13
+  -2.82043e-11-1.57286e-11 2.75032e-13 1.05588e-13 8.06626e-14 ]
+ *** State ***
+ z        : -10.6992
+ location : FirstMeasurement
+ p               : 10962.1
+ pt              : 940.211
+ (x,y,tx,ty,q/p) : -7.0565, -6.9648, -0.0638613, -0.0577289, 9.12235e-05
+ covariance      : [    3.969e-05-1.91964e-05-4.44846e-07 1.73783e-07 2.44529e-12
+  -1.91964e-05   4.761e-05 1.66388e-07-5.33987e-07-3.59268e-12
+  -4.44846e-07 1.66388e-07 1.67962e-08-1.89407e-09  2.5765e-13
+   1.73783e-07-5.33987e-07-1.89407e-09 1.80768e-08 1.05644e-13
+   2.44529e-12-3.59268e-12  2.5765e-13 1.05644e-13 8.06594e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 10952.3
+ pt              : 935.54
+ (x,y,tx,ty,q/p) : -70.7677, -64.3627, -0.0638881, -0.0571698, 9.13047e-05
+ covariance      : [   0.00628849 0.000327208 4.70854e-06 8.22776e-07-5.06299e-09
+   0.000327208   0.0111936 6.27687e-07 1.54672e-05-1.96818e-09
+   4.70854e-06 6.27687e-07  2.1179e-08 1.35014e-09-7.68643e-12
+   8.22776e-07 1.54672e-05 1.35014e-09 4.45928e-08-4.26821e-12
+  -5.06299e-09-1.96818e-09-7.68643e-12-4.26821e-12  8.0663e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 10922.9
+ pt              : 2033.73
+ (x,y,tx,ty,q/p) : -1092.69, -551.012, -0.180602, -0.057398, 9.15509e-05
+ covariance      : [    0.0108576 0.000218893 1.92181e-05 3.18358e-07 2.34777e-10
+   0.000218893     0.81054 8.86773e-06 0.000260942 4.99454e-09
+   1.92181e-05 8.86773e-06 8.19849e-08 1.52964e-09 5.44575e-12
+   3.18358e-07 0.000260942 1.52964e-09 2.87307e-07 3.73983e-12
+   2.34777e-10 4.99454e-09 5.44575e-12 3.73983e-12 8.06612e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 4
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 44
+ # meas   : 0
+ chi2PerDoF : 8.17676
+ nDoF       : 37
+ extraInfo : [ FitVeloChi2=21.0629  FitVeloNDoF=9  FitTChi2=223.835  FitTNDoF=19  FitMatchChi2=51.6896 ]
+ p  : 3855.39
+ pt : 286.249
+ 4 states at z = -121.211 4.2996 990 9450  :-
+ *** State ***
+ z        : -121.211
+ location : ClosestToBeam
+ p               : 3855.39
+ pt              : 286.249
+ (x,y,tx,ty,q/p) : 0.555, -0.4101, 0.0373547, 0.0644027, -0.000259377
+ covariance      : [    0.0244923  -0.0132216-9.92489e-05  4.6792e-05-3.03905e-10
+    -0.0132216   0.0108785 4.62325e-05-5.19051e-05 1.64563e-10
+  -9.92489e-05 4.62325e-05 4.83011e-07-1.73221e-07 1.32147e-12
+    4.6792e-05-5.19051e-05-1.73221e-07 3.07592e-07-5.60931e-13
+  -3.03905e-10 1.64563e-10 1.32147e-12-5.60931e-13 1.47301e-12 ]
+ *** State ***
+ z        : 4.2996
+ location : FirstMeasurement
+ p               : 3854.65
+ pt              : 286.302
+ (x,y,tx,ty,q/p) : 5.247, 7.673, 0.0374136, 0.0644013, -0.000259427
+ covariance      : [   0.00712336 -0.00428167-4.12295e-05 2.50305e-05-1.57066e-10
+   -0.00428167  0.00262144  2.4451e-05-1.58719e-05 9.52817e-11
+  -4.12295e-05  2.4451e-05 3.57508e-07-1.73518e-07 9.91765e-13
+   2.50305e-05-1.58719e-05-1.73518e-07 1.81757e-07-5.51922e-13
+  -1.57066e-10 9.52817e-11 9.91765e-13-5.51922e-13 1.47301e-12 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 3846.24
+ pt              : 284.874
+ (x,y,tx,ty,q/p) : 42.1649, 70.7865, 0.0376344, 0.0640282, -0.000259994
+ covariance      : [    0.0260823  0.00152793 3.56461e-05 4.81736e-06 2.92054e-09
+    0.00152793    0.036481 3.76083e-06 6.61172e-05 4.72125e-09
+   3.56461e-05 3.76083e-06 1.58444e-07 1.17089e-08 8.08395e-12
+   4.81736e-06 6.61172e-05 1.17089e-08 2.45788e-07 1.49223e-11
+   2.92054e-09 4.72125e-09 8.08395e-12 1.49223e-11 1.47302e-12 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3816.37
+ pt              : 1391.56
+ (x,y,tx,ty,q/p) : 1773.19, 584.947, 0.387692, 0.0551099, -0.000262029
+ covariance      : [      0.01004 -0.00655618 3.57648e-05-2.58776e-06-9.40446e-10
+   -0.00655618    0.882097-3.39575e-05 0.000347334 4.36952e-08
+   3.57648e-05-3.39575e-05  3.1036e-07-1.05738e-08 8.38406e-12
+  -2.58776e-06 0.000347334-1.05738e-08 7.76919e-07 1.33364e-11
+  -9.40446e-10 4.36952e-08 8.38406e-12 1.33364e-11 1.47299e-12 ]
+
+
+EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0xf83fc20@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Bhadron [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2threebodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0M [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0R [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhWSLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /SelD2hhhhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllWSB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
+DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
+DumpTracks           INFO There are 270 tracks in Rec/Track/Best
+DumpTracks          DEBUG *** Track ***
+ key     : 0
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 44
+ # meas   : 0
+ chi2PerDoF : 1.42968
+ nDoF       : 37
+ extraInfo : [ FitVeloChi2=9.47564  FitVeloNDoF=14  FitTChi2=26.6875  FitTNDoF=14  FitMatchChi2=14.768 ]
+ p  : 7512.88
+ pt : 285.194
+ 4 states at z = -73.3576 229.231 990 9450  :-
+ *** State ***
+ z        : -73.3576
+ location : ClosestToBeam
+ p               : 7512.88
+ pt              : 285.194
+ (x,y,tx,ty,q/p) : 0.1059, 0.0215, 0.00051358, -0.0379845, -0.000133105
+ covariance      : [    0.0434722-1.88095e-05-0.000150652 1.04532e-07-1.08166e-10
+  -1.88095e-05   0.0253446-9.60855e-08-0.000100207 4.34683e-12
+  -0.000150652-9.60855e-08  5.6918e-07 1.97343e-10 3.70789e-13
+   1.04532e-07-0.000100207 1.97343e-10 4.27638e-07-1.78553e-14
+  -1.08166e-10 4.34683e-12 3.70789e-13-1.78553e-14 1.67742e-13 ]
+ *** State ***
+ z        : 229.231
+ location : FirstMeasurement
+ p               : 7505.11
+ pt              : 284.918
+ (x,y,tx,ty,q/p) : 0.2744, -11.4723, 0.00061084, -0.0379857, -0.000133243
+ covariance      : [   0.00061009 2.66266e-06-8.84889e-06 1.67915e-07 -1.1465e-11
+   2.66266e-06     4.9e-05 -3.2456e-08-1.27534e-06 9.55642e-14
+  -8.84889e-06 -3.2456e-08 2.26919e-07 2.12807e-10 2.53628e-13
+   1.67915e-07-1.27534e-06 2.12807e-10 8.48848e-08-1.19326e-14
+   -1.1465e-11 9.55642e-14 2.53628e-13-1.19326e-14  1.6774e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7483.89
+ pt              : 287.645
+ (x,y,tx,ty,q/p) : 1.1403, -40.3328, 0.00163472, -0.0384289, -0.00013362
+ covariance      : [   0.00305809 0.000173358 1.90717e-06 8.18452e-07-2.71255e-09
+   0.000173358    0.003481  4.5744e-07 9.21749e-06-1.73014e-09
+   1.90717e-06  4.5744e-07 3.00849e-08 3.30009e-09-1.11222e-11
+   8.18452e-07 9.21749e-06 3.30009e-09 7.93718e-08-1.16962e-11
+  -2.71255e-09-1.73014e-09-1.11222e-11-1.16962e-11 1.67739e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7461.32
+ pt              : 1290.83
+ (x,y,tx,ty,q/p) : 709.684, -364.292, 0.17162, -0.0374192, -0.000134025
+ covariance      : [    0.0171086  -0.0261099 3.26871e-05-7.44788e-06-7.21402e-10
+    -0.0261099     1.19115-2.71224e-05 0.000384295-3.29279e-09
+   3.26871e-05-2.71224e-05 1.36486e-07-1.03577e-08 2.87984e-12
+  -7.44788e-06 0.000384295-1.03577e-08 4.46304e-07 2.59013e-12
+  -7.21402e-10-3.29279e-09 2.87984e-12 2.59013e-12 1.67733e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 1
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 43
+ # meas   : 0
+ chi2PerDoF : 0.667778
+ nDoF       : 37
+ extraInfo : [ FitVeloChi2=9.9913  FitVeloNDoF=17  FitTChi2=10.0243  FitTNDoF=12  FitMatchChi2=3.09857 ]
+ p  : 16404.2
+ pt : 695.902
+ 4 states at z = -81.8242 124.061 990 9450  :-
+ *** State ***
+ z        : -81.8242
+ location : ClosestToBeam
+ p               : 16404.2
+ pt              : 695.902
+ (x,y,tx,ty,q/p) : 0.1017, 0.0683, 0.0203853, -0.0372468, 6.096e-05
+ covariance      : [   0.00234256 3.75016e-05-1.11229e-05-1.73861e-07-2.87233e-11
+   3.75016e-05  0.00206116-1.79839e-07-1.00575e-05-6.89239e-12
+  -1.11229e-05-1.79839e-07 5.45082e-08 8.42156e-10 1.44999e-13
+  -1.73861e-07-1.00575e-05 8.42156e-10 5.04047e-08 3.40839e-14
+  -2.87233e-11-6.89239e-12 1.44999e-13 3.40839e-14 4.28573e-14 ]
+ *** State ***
+ z        : 124.061
+ location : FirstMeasurement
+ p               : 16400.5
+ pt              : 695.527
+ (x,y,tx,ty,q/p) : 4.2962, -7.6002, 0.0203587, -0.0372462, 6.09739e-05
+ covariance      : [      4.9e-05 1.47896e-06 -6.5268e-07 5.09754e-09-7.72869e-13
+   1.47896e-06   3.249e-05-1.07003e-09-4.40913e-07 1.18001e-13
+   -6.5268e-07-1.07003e-09 1.88678e-08 8.68579e-10 1.26067e-13
+   5.09754e-09-4.40913e-07 8.68579e-10 1.47307e-08 3.43386e-14
+  -7.72869e-13 1.18001e-13 1.26067e-13 3.43386e-14 4.28566e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 16388.1
+ pt              : 688.84
+ (x,y,tx,ty,q/p) : 21.7317, -39.8451, 0.0197107, -0.0371669, 6.10198e-05
+ covariance      : [   0.00058081-8.53357e-06 5.90354e-07-4.38741e-08-7.18927e-10
+  -8.53357e-06  0.00101761-5.45661e-08 3.48866e-06-1.41542e-10
+   5.90354e-07-5.45661e-08 7.19443e-09-3.96331e-10-3.34208e-12
+  -4.38741e-08 3.48866e-06-3.96331e-10 2.73902e-08-9.62738e-13
+  -7.18927e-10-1.41542e-10-3.34208e-12-9.62738e-13 4.28556e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 16361.1
+ pt              : 1101.46
+ (x,y,tx,ty,q/p) : -126.819, -353.846, -0.0563726, -0.037081, 6.11207e-05
+ covariance      : [   0.00917764  -0.0143507 1.40072e-05-2.35733e-06 -3.0991e-09
+    -0.0143507    0.962361-1.33719e-05 0.000163037 1.00864e-09
+   1.40072e-05-1.33719e-05 6.45922e-08-2.30717e-09 1.98877e-12
+  -2.35733e-06 0.000163037-2.30717e-09 1.23805e-07 8.74086e-13
+   -3.0991e-09 1.00864e-09 1.98877e-12 8.74086e-13 4.28555e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 2
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 49
+ # meas   : 0
+ chi2PerDoF : 1.08539
+ nDoF       : 42
+ extraInfo : [ FitVeloChi2=19.9884  FitVeloNDoF=17  FitTChi2=14.9568  FitTNDoF=16  FitMatchChi2=4.97811 ]
+ p  : 7676.11
+ pt : 402.535
+ 4 states at z = -26.1972 139.222 990 9450  :-
+ *** State ***
+ z        : -26.1972
+ location : ClosestToBeam
+ p               : 7676.11
+ pt              : 402.535
+ (x,y,tx,ty,q/p) : 0.0243, 0.075, -0.03812, 0.0361164, -0.000130274
+ covariance      : [   0.00180625 8.08869e-05-1.07616e-05-4.08148e-07-1.68129e-11
+   8.08869e-05  0.00203401-3.81492e-07-1.17646e-05-8.63298e-12
+  -1.07616e-05-3.81492e-07 6.65073e-08 2.05547e-09 1.15185e-13
+  -4.08148e-07-1.17646e-05 2.05547e-09 7.08997e-08 4.41732e-14
+  -1.68129e-11-8.63298e-12 1.15185e-13 4.41732e-14 1.46564e-13 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 7675.24
+ pt              : 402.211
+ (x,y,tx,ty,q/p) : -6.2776, 6.0493, -0.0380703, 0.036116, -0.000130289
+ covariance      : [    3.844e-05 7.79042e-06 -5.6766e-07-6.03278e-08-1.97801e-12
+   7.79042e-06   5.476e-05 -3.3768e-08-8.43241e-07-1.22764e-12
+   -5.6766e-07 -3.3768e-08 3.21915e-08 2.10275e-09 5.95308e-14
+  -6.03278e-08-8.43241e-07 2.10275e-09 3.65919e-08 4.39402e-14
+  -1.97801e-12-1.22764e-12 5.95308e-14 4.39402e-14 1.46568e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7666.17
+ pt              : 405.715
+ (x,y,tx,ty,q/p) : -38.6876, 37.0484, -0.0379255, 0.0370181, -0.000130443
+ covariance      : [   0.00164836 0.000124612 3.28845e-06 6.43382e-07-1.90456e-09
+   0.000124612  0.00292681 5.22641e-07 1.11037e-05 -1.8164e-09
+   3.28845e-06 5.22641e-07 2.61857e-08  3.1523e-09-9.41652e-12
+   6.43382e-07 1.11037e-05  3.1523e-09 7.27974e-08-1.08596e-11
+  -1.90456e-09 -1.8164e-09-9.41652e-12-1.08596e-11 1.46565e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7646.32
+ pt              : 988.462
+ (x,y,tx,ty,q/p) : 315.569, 349.858, 0.125107, 0.0366587, -0.000130782
+ covariance      : [    0.0105473 -0.00166774 1.80328e-05-7.35386e-07-1.68017e-09
+   -0.00166774    0.832291-4.96302e-06 0.000217717-8.59187e-09
+   1.80328e-05-4.96302e-06 8.25585e-08-1.49035e-09 1.85535e-12
+  -7.35386e-07 0.000217717-1.49035e-09 2.39444e-07 4.02768e-12
+  -1.68017e-09-8.59187e-09 1.85535e-12 4.02768e-12 1.46565e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 3
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 42
+ # meas   : 0
+ chi2PerDoF : 1.54337
+ nDoF       : 36
+ extraInfo : [ FitVeloChi2=14.4573  FitVeloNDoF=13  FitTChi2=19.0176  FitTNDoF=13  FitMatchChi2=11.3019 ]
+ p  : 10111
+ pt : 552.228
+ 4 states at z = -28.0396 139.222 990 9450  :-
+ *** State ***
+ z        : -28.0396
+ location : ClosestToBeam
+ p               : 10111
+ pt              : 552.228
+ (x,y,tx,ty,q/p) : 0.152, -0.3303, -0.0492975, -0.0236998, -9.89026e-05
+ covariance      : [   0.00201601-0.000105077 -1.3386e-05 4.42025e-07-1.52855e-11
+  -0.000105077  0.00194481 4.63729e-07-1.30608e-05-2.84032e-12
+   -1.3386e-05 4.63729e-07 9.65966e-08-1.98866e-09 9.72278e-14
+   4.42025e-07-1.30608e-05-1.98866e-09 9.52401e-08 1.41975e-14
+  -1.52855e-11-2.84032e-12 9.72278e-14 1.41975e-14  7.6191e-14 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 10108.2
+ pt              : 551.737
+ (x,y,tx,ty,q/p) : -8.0907, -4.2944, -0.0492597, -0.0236999, -9.89293e-05
+ covariance      : [    4.624e-05-1.13396e-05-6.91289e-07 9.55649e-08  -1.439e-12
+  -1.13396e-05   4.624e-05 1.17103e-07-5.81796e-07-5.63086e-13
+  -6.91289e-07 1.17103e-07 2.63445e-08 -2.0701e-09 6.72018e-14
+   9.55649e-08-5.81796e-07 -2.0701e-09 2.51222e-08 1.45832e-14
+    -1.439e-12-5.63086e-13 6.72018e-14 1.45832e-14 7.61885e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 10100.2
+ pt              : 553.805
+ (x,y,tx,ty,q/p) : -50.153, -24.3209, -0.0496539, -0.0234517, -9.90075e-05
+ covariance      : [   0.00145161-0.000215398 2.24401e-06  1.0177e-07-1.29213e-09
+  -0.000215398  0.00322624 3.45339e-07 7.89088e-06-8.89994e-10
+   2.24401e-06 3.45339e-07 1.38298e-08 1.18153e-09-4.78141e-12
+    1.0177e-07 7.89088e-06 1.18153e-09 3.65766e-08-3.98032e-12
+  -1.29213e-09-8.89994e-10-4.78141e-12-3.98032e-12 7.61888e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 10079.9
+ pt              : 769.753
+ (x,y,tx,ty,q/p) : 37.18, -223.546, 0.0729497, -0.0233267, -9.9207e-05
+ covariance      : [     0.006241-0.000112542  1.9484e-05-1.57609e-07-8.79504e-11
+  -0.000112542    0.116896 1.20971e-06 8.82567e-05 1.22684e-09
+    1.9484e-05 1.20971e-06 7.52295e-08 1.94401e-10-4.74435e-13
+  -1.57609e-07 8.82567e-05 1.94401e-10 1.55047e-07 7.97039e-13
+  -8.79504e-11 1.22684e-09-4.74435e-13 7.97039e-13 7.61891e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 4
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 43
+ # meas   : 0
+ chi2PerDoF : 7.43694
+ nDoF       : 36
+ extraInfo : [ FitVeloChi2=6.54419  FitVeloNDoF=15  FitTChi2=90.5918  FitTNDoF=14  FitMatchChi2=170.202 ]
+ p  : 2577.67
+ pt : 144.803
+ 4 states at z = -30.32 139.222 990 9450  :-
+ *** State ***
+ z        : -30.32
+ location : ClosestToBeam
+ p               : 2577.67
+ pt              : 144.803
+ (x,y,tx,ty,q/p) : 0.1558, -0.3274, -0.0398253, -0.0397451, 0.000387947
+ covariance      : [    0.0122103 -0.00022153-7.69103e-05  1.0903e-06 -5.4876e-11
+   -0.00022153   0.0115348 1.19675e-06-7.37757e-05-4.10281e-12
+  -7.69103e-05 1.19675e-06 4.99481e-07-5.72636e-09 5.66964e-13
+    1.0903e-06-7.37757e-05-5.72636e-09 4.85098e-07 2.66067e-14
+   -5.4876e-11-4.10281e-12 5.66964e-13 2.66067e-14  1.3134e-12 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 2576.71
+ pt              : 145.02
+ (x,y,tx,ty,q/p) : -6.6082, -7.0658, -0.0399748, -0.0397444, 0.000388092
+ covariance      : [      8.1e-05-1.38328e-05-1.93237e-06 2.76977e-08-1.37524e-12
+  -1.38328e-05   5.476e-05 1.35485e-07 -1.2331e-06           0
+  -1.93237e-06 1.35485e-07 1.62393e-07-6.26807e-09 4.61829e-14
+   2.76977e-08 -1.2331e-06-6.26807e-09 1.47986e-07 2.93912e-14
+  -1.37524e-12           0 4.61829e-14 2.93912e-14  1.3134e-12 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 2570.45
+ pt              : 145.65
+ (x,y,tx,ty,q/p) : -40.3609, -41.7032, -0.038255, -0.0419241, 0.000389037
+ covariance      : [     0.013248-0.000107814 3.31203e-05-6.10585e-07-2.19758e-08
+  -0.000107814   0.0218744-3.48824e-07 7.47331e-05 1.00003e-08
+   3.31203e-05-3.48824e-07 1.83887e-07-1.78987e-09-9.07523e-11
+  -6.10585e-07 7.47331e-05-1.78987e-09 3.80492e-07 4.69155e-11
+  -2.19758e-08 1.00003e-08-9.07523e-11 4.69155e-11 1.31337e-12 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 2552.08
+ pt              : 1313.45
+ (x,y,tx,ty,q/p) : -2668.18, -439.769, -0.598725, -0.0428781, 0.000391837
+ covariance      : [    0.0282576  -0.0104917 0.000106143-3.58948e-06-4.94469e-10
+    -0.0104917     2.37098-7.87694e-05  0.00123599 7.59401e-08
+   0.000106143-7.87694e-05  9.1428e-07-1.29591e-08  2.9222e-13
+  -3.58948e-06  0.00123599-1.29591e-08 2.13905e-06 2.53098e-11
+  -4.94469e-10 7.59401e-08  2.9222e-13 2.53098e-11 1.31342e-12 ]
+
+
+EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0xe39d9a0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Bhadron [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Bd2DstarTauNuTight [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Quasi2Body4piLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | +--> /DiTracksForCharmlessB [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x3]
+StoreExplorerAlg     INFO   | | +--> /TracksForCharmlessB [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x5]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSDDhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0M [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0R [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x3]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelRhoForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x6]
+StoreExplorerAlg     INFO   | | +--> /SelD2hhhhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x3]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x3]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithUnbiasedB2DPiLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bu2D0h_D02KShh_KSLL [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+TESFingerPrint      DEBUG ==> Execute
+DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
+DumpTracks           INFO There are 221 tracks in Rec/Track/Best
+DumpTracks          DEBUG *** Track ***
+ key     : 0
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 36
+ # meas   : 0
+ chi2PerDoF : 31.7575
+ nDoF       : 29
+ extraInfo : [ FitVeloChi2=2.3231  FitVeloNDoF=8  FitTChi2=80.5508  FitTNDoF=13  FitMatchChi2=813.247 ]
+ p  : 2820.49
+ pt : 156.003
+ 4 states at z = -29.847 184.313 990 9450  :-
+ *** State ***
+ z        : -29.847
+ location : ClosestToBeam
+ p               : 2820.49
+ pt              : 156.003
+ (x,y,tx,ty,q/p) : 0.9377, -0.2191, 0.0135629, 0.0537092, -0.000354548
+ covariance      : [    0.0633026 -0.00423712-0.000328071 1.87926e-05-5.97693e-11
+   -0.00423712   0.0521666 1.86935e-05-0.000277797           0
+  -0.000328071 1.86935e-05 1.77108e-06-8.28716e-08 4.74218e-13
+   1.87926e-05-0.000277797-8.28716e-08 1.54284e-06           0
+  -5.97693e-11           0 4.74218e-13           0 7.93593e-13 ]
+ *** State ***
+ z        : 184.313
+ location : FirstMeasurement
+ p               : 2816.84
+ pt              : 155.921
+ (x,y,tx,ty,q/p) : 3.8605, 11.283, 0.013747, 0.0537068, -0.000355008
+ covariance      : [     0.000169-4.47688e-05-4.07528e-06 8.82434e-07-7.72045e-13
+  -4.47688e-05   9.025e-05 7.77142e-07-2.76472e-06 5.64187e-13
+  -4.07528e-06 7.77142e-07 6.76391e-07-8.36661e-08 4.88425e-14
+   8.82434e-07-2.76472e-06-8.36661e-08 4.45196e-07           0
+  -7.72045e-13 5.64187e-13 4.88425e-14           0 7.93562e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 2804.09
+ pt              : 155.121
+ (x,y,tx,ty,q/p) : 14.1067, 54.8206, 0.0109694, 0.0543075, -0.000356622
+ covariance      : [    0.0173976 1.60285e-05 5.33782e-05 6.89101e-07-1.55494e-09
+   1.60285e-05   0.0230736  8.1439e-07 7.99588e-05-6.01267e-09
+   5.33782e-05  8.1439e-07 2.70941e-07 4.47072e-09-6.90914e-12
+   6.89101e-07 7.99588e-05 4.47072e-09 3.93041e-07-2.74407e-11
+  -1.55494e-09-6.01267e-09-6.90914e-12-2.74407e-11 7.93599e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 2782.73
+ pt              : 1214.14
+ (x,y,tx,ty,q/p) : 2103.23, 434.891, 0.483448, 0.0375018, -0.000359359
+ covariance      : [    0.0171872  0.00994719 6.75903e-05 4.64942e-06 7.00716e-11
+    0.00994719     1.45202-4.06392e-05 0.000692367  4.6909e-08
+   6.75903e-05-4.06392e-05 5.96509e-07 -8.6786e-09-2.36218e-12
+   4.64942e-06 0.000692367 -8.6786e-09 1.57044e-06-4.65143e-12
+   7.00716e-11  4.6909e-08-2.36218e-12-4.65143e-12 7.93553e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 1
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 49
+ # meas   : 0
+ chi2PerDoF : 0.834266
+ nDoF       : 44
+ extraInfo : [ FitVeloChi2=6.08517  FitVeloNDoF=17  FitTChi2=15.4276  FitTNDoF=18  FitMatchChi2=4.84756 ]
+ p  : 2815.58
+ pt : 143.853
+ 4 states at z = -26.9245 139.222 990 9450  :-
+ *** State ***
+ z        : -26.9245
+ location : ClosestToBeam
+ p               : 2815.58
+ pt              : 143.853
+ (x,y,tx,ty,q/p) : 0.1795, -0.2616, -0.0454287, -0.0235249, 0.000355167
+ covariance      : [   0.00872356-0.000278068-5.31338e-05   1.327e-06-4.25188e-11
+  -0.000278068  0.00817216 1.42474e-06-5.05802e-05           0
+  -5.31338e-05 1.42474e-06 3.29246e-07-6.78289e-09 4.29136e-13
+     1.327e-06-5.05802e-05-6.78289e-09  3.1787e-07           0
+  -4.25188e-11           0 4.29136e-13           0 9.51601e-13 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 2815
+ pt              : 144.158
+ (x,y,tx,ty,q/p) : -7.3789, -4.1701, -0.0455637, -0.0235244, 0.00035524
+ covariance      : [      6.4e-05-1.32995e-05-1.73345e-06 1.66784e-07-7.80419e-13
+  -1.32995e-05   4.761e-05 2.63641e-07-1.05681e-06 2.24371e-13
+  -1.73345e-06 2.63641e-07 1.44256e-07-6.97583e-09 6.17523e-14
+   1.66784e-07-1.05681e-06-6.97583e-09 1.33152e-07           0
+  -7.80419e-13 2.24371e-13 6.17523e-14           0 9.51647e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 2806.73
+ pt              : 152.289
+ (x,y,tx,ty,q/p) : -46.7753, -23.5642, -0.0500478, -0.0211638, 0.000356286
+ covariance      : [   0.00769129 0.000416881 2.14216e-05 2.90388e-06-1.25762e-09
+   0.000416881   0.0114276 2.66516e-06 4.41125e-05-2.73915e-09
+   2.14216e-05 2.66516e-06 1.75377e-07 1.76604e-08 -6.9994e-12
+   2.90388e-06 4.41125e-05 1.76604e-08 3.23306e-07-1.80455e-11
+  -1.25762e-09-2.73915e-09 -6.9994e-12-1.80455e-11 9.51624e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 2786.36
+ pt              : 1348.05
+ (x,y,tx,ty,q/p) : -2487.52, -212.518, -0.552402, -0.0211606, 0.000358891
+ covariance      : [    0.0215209 -0.00444712 8.70694e-05-2.35845e-06 8.72948e-10
+   -0.00444712     1.78864-6.38576e-05  0.00111351 1.99175e-08
+   8.70694e-05-6.38576e-05 7.39256e-07 -2.6024e-08-1.64952e-12
+  -2.35845e-06  0.00111351 -2.6024e-08 2.00044e-06 5.97879e-13
+   8.72948e-10 1.99175e-08-1.64952e-12 5.97879e-13 9.51604e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 2
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 38
+ # meas   : 0
+ chi2PerDoF : 2.55078
+ nDoF       : 33
+ extraInfo : [ FitVeloChi2=10.6766  FitVeloNDoF=17  FitTChi2=9.01852  FitTNDoF=7  FitMatchChi2=56.477 ]
+ p  : 7884.08
+ pt : 402.32
+ 4 states at z = -26.9245 139.222 990 9450  :-
+ *** State ***
+ z        : -26.9245
+ location : ClosestToBeam
+ p               : 7884.08
+ pt              : 402.32
+ (x,y,tx,ty,q/p) : 0.1634, -0.286, -0.045423, -0.0233998, -0.000126838
+ covariance      : [   0.00169744-0.000114838 -9.5434e-06  5.1929e-07-1.14443e-11
+  -0.000114838  0.00158404  5.4401e-07-9.08841e-06-9.21287e-13
+   -9.5434e-06  5.4401e-07 5.54744e-08-2.56044e-09 7.90544e-14
+    5.1929e-07-9.08841e-06-2.56044e-09 5.38797e-08 5.37309e-15
+  -1.14443e-11-9.21287e-13 7.90544e-14 5.37309e-15 1.20561e-13 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 7883.44
+ pt              : 401.951
+ (x,y,tx,ty,q/p) : -7.3797, -4.1738, -0.0453748, -0.0234, -0.000126848
+ covariance      : [    4.624e-05-9.51334e-06-7.44607e-07 9.02249e-08-1.88889e-12
+  -9.51334e-06   3.969e-05 1.14465e-07-5.53249e-07 -2.1875e-13
+  -7.44607e-07 1.14465e-07 3.24468e-08-2.58419e-09 3.33573e-14
+   9.02249e-08-5.53249e-07-2.58419e-09 3.08845e-08 6.10207e-15
+  -1.88889e-12 -2.1875e-13 3.33573e-14 6.10207e-15 1.20563e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 7874.33
+ pt              : 397.597
+ (x,y,tx,ty,q/p) : -46.0325, -23.7749, -0.0452005, -0.0226486, -0.000126995
+ covariance      : [   0.00150544 7.92244e-05 2.89089e-06 4.81073e-07-1.59464e-09
+   7.92244e-05    0.002704 4.13289e-07 9.83769e-06-1.26026e-09
+   2.89089e-06 4.13289e-07 2.40343e-08  2.4693e-09-8.01335e-12
+   4.81073e-07 9.83769e-06  2.4693e-09 6.57153e-08-7.54797e-12
+  -1.59464e-09-1.26026e-09-8.01335e-12-7.54797e-12  1.2056e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 7854.88
+ pt              : 889.411
+ (x,y,tx,ty,q/p) : 232.458, -208.372, 0.112014, -0.0209872, -0.000127309
+ covariance      : [   0.00786769 -0.00110284 2.39172e-05-6.24196e-07-2.54603e-10
+   -0.00110284    0.181306-2.35423e-06 0.000136869  5.9632e-10
+   2.39172e-05-2.35423e-06 8.17846e-08-1.32867e-09-1.27103e-12
+  -6.24196e-07 0.000136869-1.32867e-09 2.06125e-07 1.24012e-12
+  -2.54603e-10  5.9632e-10-1.27103e-12 1.24012e-12 1.20564e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 3
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 46
+ # meas   : 0
+ chi2PerDoF : 3.62677
+ nDoF       : 39
+ extraInfo : [ FitVeloChi2=62.0795  FitVeloNDoF=17  FitTChi2=34.4419  FitTNDoF=13  FitMatchChi2=14.5291 ]
+ p  : 27338.6
+ pt : 1437.66
+ 4 states at z = -26.6494 139.222 990 9450  :-
+ *** State ***
+ z        : -26.6494
+ location : ClosestToBeam
+ p               : 27338.6
+ pt              : 1437.66
+ (x,y,tx,ty,q/p) : 0.1307, 0.0846, -0.0304985, 0.0429292, -3.65783e-05
+ covariance      : [     0.000361 1.95849e-05-2.03166e-06-5.88737e-08 1.98576e-11
+   1.95849e-05  0.00037636-5.05814e-08-2.08828e-06 5.61625e-12
+  -2.03166e-06-5.05814e-08 1.29254e-08 2.11456e-10-4.29542e-14
+  -5.88737e-08-2.08828e-06 2.11456e-10 1.30736e-08-1.06597e-14
+   1.98576e-11 5.61625e-12-4.29542e-14-1.06597e-14 2.16684e-14 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 27336
+ pt              : 1437.3
+ (x,y,tx,ty,q/p) : -4.927, 7.2053, -0.0304845, 0.0429291, -3.65818e-05
+ covariance      : [    3.025e-05 7.57783e-06-1.81649e-07-2.21078e-08 1.20631e-11
+   7.57783e-06   3.136e-05-1.40029e-08-2.17671e-07 3.81938e-12
+  -1.81649e-07-1.40029e-08 5.03674e-09 2.21613e-10-5.15379e-14
+  -2.21078e-08-2.17671e-07 2.21613e-10  5.1768e-09-1.05911e-14
+   1.20631e-11 3.81938e-12-5.15379e-14-1.05911e-14 2.16682e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 27326
+ pt              : 1426.19
+ (x,y,tx,ty,q/p) : -30.6338, 43.6576, -0.0299414, 0.0428362, -3.65951e-05
+ covariance      : [   0.00030625   7.875e-06 2.85139e-07 2.91028e-08-4.83614e-10
+     7.875e-06    0.000625 1.79322e-08 1.96607e-06-6.82045e-11
+   2.85139e-07 1.79322e-08 2.51603e-09 8.99838e-11 -1.4418e-12
+   2.91028e-08 1.96607e-06 8.99838e-11 1.12678e-08 -3.2241e-13
+  -4.83614e-10-6.82045e-11 -1.4418e-12 -3.2241e-13  2.1669e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 27291.2
+ pt              : 1244.88
+ (x,y,tx,ty,q/p) : -95.8824, 406.673, 0.015469, 0.0429622, -3.66419e-05
+ covariance      : [    0.0138298  -0.0214753 1.40909e-05-3.61772e-06-2.34274e-09
+    -0.0214753     0.84548-2.42717e-05 0.000147226 5.68477e-10
+   1.40909e-05-2.42717e-05 3.01057e-08-3.78602e-09-9.09256e-13
+  -3.61772e-06 0.000147226-3.78602e-09  7.5713e-08 4.32042e-13
+  -2.34274e-09 5.68477e-10-9.09256e-13 4.32042e-13 2.16682e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 4
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 45
+ # meas   : 0
+ chi2PerDoF : 1.3745
+ nDoF       : 40
+ extraInfo : [ FitVeloChi2=14.2841  FitVeloNDoF=13  FitTChi2=20.9891  FitTNDoF=18  FitMatchChi2=17.0654 ]
+ p  : 3081.06
+ pt : 165.438
+ 4 states at z = -32.4457 124.061 990 9450  :-
+ *** State ***
+ z        : -32.4457
+ location : ClosestToBeam
+ p               : 3081.06
+ pt              : 165.438
+ (x,y,tx,ty,q/p) : 0.3571, -0.0744, 0.0293527, 0.0450546, -0.000324564
+ covariance      : [       0.0064  -0.0004768-4.16657e-05 2.58234e-06-2.84146e-11
+    -0.0004768      0.0064 2.58335e-06-4.13843e-05 2.18574e-12
+  -4.16657e-05 2.58335e-06 2.76297e-07-1.39547e-08 2.87228e-13
+   2.58234e-06-4.13843e-05-1.39547e-08 2.73111e-07-1.42784e-14
+  -2.84146e-11 2.18574e-12 2.87228e-13-1.42784e-14 6.71831e-13 ]
+ *** State ***
+ z        : 124.061
+ location : FirstMeasurement
+ p               : 3080.48
+ pt              : 165.594
+ (x,y,tx,ty,q/p) : 4.9595, 6.9768, 0.0294675, 0.0450527, -0.000324625
+ covariance      : [      4.9e-05-1.51585e-05-1.17918e-06 3.62929e-07-7.65002e-13
+  -1.51585e-05   5.929e-05 3.67489e-07-1.43378e-06 4.20751e-13
+  -1.17918e-06 3.67489e-07 1.22787e-07-1.41636e-08 4.78686e-14
+   3.62929e-07-1.43378e-06-1.41636e-08 1.19419e-07 -1.8883e-14
+  -7.65002e-13 4.20751e-13 4.78686e-14 -1.8883e-14 6.71818e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 3075.06
+ pt              : 172.388
+ (x,y,tx,ty,q/p) : 31.1459, 46.8909, 0.0315212, 0.0464656, -0.000325197
+ covariance      : [    0.0151536 -0.00549787  2.2756e-05-2.38361e-06-2.80502e-09
+   -0.00549787   0.0153512 8.51529e-07 4.22323e-05-5.60249e-09
+    2.2756e-05 8.51529e-07 1.16527e-07 6.43709e-09-1.19381e-11
+  -2.38361e-06 4.22323e-05 6.43709e-09 1.99362e-07-2.69116e-11
+  -2.80502e-09-5.60249e-09-1.19381e-11-2.69116e-11 6.71841e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3057.19
+ pt              : 1329.8
+ (x,y,tx,ty,q/p) : 2102.6, 436.569, 0.48115, 0.0429976, -0.000327098
+ covariance      : [    0.0166668   0.0107857 6.31261e-05  3.8656e-06 1.51669e-10
+     0.0107857     1.31217-3.05425e-05 0.000699548 2.27214e-08
+   6.31261e-05-3.05425e-05 5.48548e-07-1.19479e-08-2.42824e-13
+    3.8656e-06 0.000699548-1.19479e-08 1.34692e-06 2.27983e-11
+   1.51669e-10 2.27214e-08-2.42824e-13 2.27983e-11 6.71812e-13 ]
+
+
+EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0xf99c0b0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /Bhadron [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2threebodyLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0M [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2HHPi0R [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelPhiNoMWForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsKaons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | +--> /SelD2hhForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x1]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x1]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsPions [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0xc]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0xc]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelD2KPiPi0ResolvedForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x6]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x6]
+StoreExplorerAlg     INFO   | | +--> /StdLooseResolvedPi0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x8]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x4]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x4]
+StoreExplorerAlg     INFO   | | | +--> /Particle2VertexRelations [Address: CLID=0xea9168dc Type=0x202]  LHCb::Relation1D<LHCb::Particle,
+StoreExplorerAlg     INFO   | | +--> /SelLambdaC2pKPiForB2DX [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | | +--> /decayVertices [Address: CLID=0x60322 Type=0x202]  KeyedContainer<LHCb::Vertex,Cont [0x2]
+StoreExplorerAlg     INFO   | | +--> /StdNoPIDsProtons [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithUnbiasedB2DPiLine [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
+TESFingerPrint      DEBUG ==> Execute
+DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
+DumpTracks           INFO There are 235 tracks in Rec/Track/Best
+DumpTracks          DEBUG *** Track ***
+ key     : 0
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 34
+ # meas   : 0
+ chi2PerDoF : 42.8962
+ nDoF       : 27
+ extraInfo : [ FitVeloChi2=13.1669  FitVeloNDoF=15  FitTChi2=177.686  FitTNDoF=7  FitMatchChi2=967.345 ]
+ p  : 4912.23
+ pt : 458
+ 4 states at z = -44.2352 95.9254 990 9450  :-
+ *** State ***
+ z        : -44.2352
+ location : ClosestToBeam
+ p               : 4912.23
+ pt              : 458
+ (x,y,tx,ty,q/p) : 0.5212, -0.1569, 0.000718, -0.0936419, -0.000203574
+ covariance      : [    0.0137593  9.6369e-05-9.59214e-05-5.90598e-07 5.02622e-11
+    9.6369e-05  0.00797449-4.99529e-07-6.42035e-05           0
+  -9.59214e-05-4.99529e-07 7.18341e-07 2.95593e-09-7.78219e-14
+  -5.90598e-07-6.42035e-05 2.95593e-09 5.42904e-07           0
+   5.02622e-11           0-7.78219e-14           0 8.43088e-13 ]
+ *** State ***
+ z        : 95.9254
+ location : FirstMeasurement
+ p               : 4909.35
+ pt              : 457.738
+ (x,y,tx,ty,q/p) : 0.6259, -13.2819, 0.00077841, -0.0936427, -0.000203693
+ covariance      : [   0.00038025  3.2866e-06-8.32183e-06-1.65065e-07 2.08887e-11
+    3.2866e-06   3.481e-05-7.34202e-08-1.24797e-06 1.80577e-13
+  -8.32183e-06-7.34202e-08 3.23863e-07 3.03337e-09-3.30936e-13
+  -1.65065e-07-1.24797e-06 3.03337e-09 1.44955e-07           0
+   2.08887e-11 1.80577e-13-3.30936e-13           0 8.43067e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 4886.35
+ pt              : 451.932
+ (x,y,tx,ty,q/p) : 4.6328, -96.4068, 0.00804297, -0.0925379, -0.000204652
+ covariance      : [     0.169415 -0.00016501 0.000207264-5.92441e-07 7.23605e-08
+   -0.00016501    0.160721 -1.9105e-07 0.000208339 2.94482e-09
+   0.000207264 -1.9105e-07 4.63475e-07-8.86579e-10 1.76568e-10
+  -5.92441e-07 0.000208339-8.86579e-10 4.69787e-07 5.24447e-12
+   7.23605e-08 2.94482e-09 1.76568e-10 5.24447e-12 8.43074e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 4859.28
+ pt              : 1485.85
+ (x,y,tx,ty,q/p) : 1210.75, -873.409, 0.308749, -0.088408, -0.000205792
+ covariance      : [     0.028426    0.129095 4.59534e-05 5.00646e-05-1.15593e-09
+      0.129095     3.23316 9.81864e-06  0.00142547-1.56575e-07
+   4.59534e-05 9.81864e-06 2.72181e-07  1.7248e-08 2.79922e-11
+   5.00646e-05  0.00142547  1.7248e-08 1.65912e-06-6.62331e-11
+  -1.15593e-09-1.56575e-07 2.79922e-11-6.62331e-11 8.43132e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 1
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 48
+ # meas   : 0
+ chi2PerDoF : 1.07028
+ nDoF       : 41
+ extraInfo : [ FitVeloChi2=12.4937  FitVeloNDoF=17  FitTChi2=27.1364  FitTNDoF=15  FitMatchChi2=3.26257 ]
+ p  : 14058.9
+ pt : 791.964
+ 4 states at z = -36.761 109.39 990 9450  :-
+ *** State ***
+ z        : -36.761
+ location : ClosestToBeam
+ p               : 14058.9
+ pt              : 791.964
+ (x,y,tx,ty,q/p) : 0.1108, 0.0826, -0.0307907, 0.0472791, 7.11293e-05
+ covariance      : [   0.00112225  2.2439e-05-7.39501e-06-1.00643e-07-1.68995e-11
+    2.2439e-05  0.00103041-1.12648e-07-7.00094e-06-6.47731e-12
+  -7.39501e-06-1.12648e-07 5.10398e-08 5.68389e-10 1.32963e-13
+  -1.00643e-07-7.00094e-06 5.68389e-10 4.92796e-08 4.85272e-14
+  -1.68995e-11-6.47731e-12 1.32963e-13 4.85272e-14 6.36208e-14 ]
+ *** State ***
+ z        : 109.39
+ location : FirstMeasurement
+ p               : 14056.2
+ pt              : 791.991
+ (x,y,tx,ty,q/p) : -4.3909, 6.9925, -0.0308138, 0.0472793, 7.11429e-05
+ covariance      : [    4.225e-05 4.50836e-06-4.56257e-07-9.77369e-09   1.093e-12
+   4.50836e-06   2.809e-05-2.18951e-08-3.18672e-07  6.6841e-13
+  -4.56257e-07-2.18951e-08 1.46483e-08 6.21862e-10 1.11934e-13
+  -9.77369e-09-3.18672e-07 6.21862e-10  1.2846e-08 4.95521e-14
+     1.093e-12  6.6841e-13 1.11934e-13 4.95521e-14 6.36201e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 14048.7
+ pt              : 795.624
+ (x,y,tx,ty,q/p) : -31.7771, 48.5597, -0.0315128, 0.0471655, 7.11809e-05
+ covariance      : [   0.00082369 4.77918e-05 1.36513e-06  1.5866e-07-1.37038e-09
+   4.77918e-05  0.00173889 1.22258e-07 5.01248e-06-5.48352e-10
+   1.36513e-06 1.22258e-07 7.32051e-09 4.87367e-10-4.55007e-12
+    1.5866e-07 5.01248e-06 4.87367e-10 2.19662e-08-2.15456e-12
+  -1.37038e-09-5.48352e-10-4.55007e-12-2.15456e-12 6.36233e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 14023.6
+ pt              : 1804.33
+ (x,y,tx,ty,q/p) : -668.795, 446.98, -0.121015, 0.0467807, 7.13085e-05
+ covariance      : [   0.00896809  0.00393127 1.32945e-05 8.16081e-07-1.79069e-09
+    0.00393127    0.862484 4.94163e-06 0.000173797-3.28728e-09
+   1.32945e-05 4.94163e-06 5.57621e-08 5.53336e-10 1.52876e-12
+   8.16081e-07 0.000173797 5.53336e-10 1.47564e-07-2.48691e-13
+  -1.79069e-09-3.28728e-09 1.52876e-12-2.48691e-13 6.36212e-14 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 2
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 50
+ # meas   : 0
+ chi2PerDoF : 3.91689
+ nDoF       : 43
+ extraInfo : [ FitVeloChi2=12.963  FitVeloNDoF=17  FitTChi2=75.2317  FitTNDoF=16  FitMatchChi2=74.2852 ]
+ p  : 3587.68
+ pt : 179.54
+ 4 states at z = -44.5153 139.222 990 9450  :-
+ *** State ***
+ z        : -44.5153
+ location : ClosestToBeam
+ p               : 3587.68
+ pt              : 179.54
+ (x,y,tx,ty,q/p) : 0.4166, -0.3335, -0.028116, -0.0414746, -0.000278732
+ covariance      : [    0.0107744-1.10831e-05-6.37861e-05 7.83764e-08-2.78835e-11
+  -1.10831e-05     0.01002 1.52016e-07-6.04682e-05           0
+  -6.37861e-05 1.52016e-07 3.89501e-07-7.13228e-10 2.43854e-13
+   7.83764e-08-6.04682e-05-7.13228e-10 3.74813e-07           0
+  -2.78835e-11           0 2.43854e-13           0  5.3673e-13 ]
+ *** State ***
+ z        : 139.222
+ location : FirstMeasurement
+ p               : 3586.29
+ pt              : 179.244
+ (x,y,tx,ty,q/p) : -4.7395, -7.954, -0.0280013, -0.0414754, -0.00027884
+ covariance      : [    7.744e-05-3.80183e-06-1.64418e-06-1.12542e-07-8.59611e-13
+  -3.80183e-06   4.624e-05-3.94999e-08-1.02737e-06           0
+  -1.64418e-06-3.94999e-08 1.11449e-07-1.04056e-09 2.44579e-14
+  -1.12542e-07-1.02737e-06-1.04056e-09 9.65096e-08           0
+  -8.59611e-13           0 2.44579e-14           0 5.36737e-13 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 3577.81
+ pt              : 173.319
+ (x,y,tx,ty,q/p) : -28.4299, -43.1555, -0.0261405, -0.0408522, -0.000279501
+ covariance      : [   0.00535824 0.000266507 1.35924e-05 2.23105e-06 -2.5974e-09
+   0.000266507  0.00788544 2.07703e-06 2.93867e-05-5.60143e-09
+   1.35924e-05 2.07703e-06 1.12507e-07 1.34325e-08-1.48262e-11
+   2.23105e-06 2.93867e-05 1.34325e-08 2.14341e-07-3.64058e-11
+   -2.5974e-09-5.60143e-09-1.48262e-11-3.64058e-11 5.36742e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3553.25
+ pt              : 1131.24
+ (x,y,tx,ty,q/p) : 1225.06, -381.337, 0.333708, -0.037806, -0.000281432
+ covariance      : [    0.0164352  -0.0132601 4.98385e-05 -7.2584e-06   2.107e-09
+    -0.0132601     1.42325   -6.05e-05 0.000951005-1.00512e-08
+   4.98385e-05   -6.05e-05 3.65348e-07 -2.6877e-08 5.49107e-12
+   -7.2584e-06 0.000951005 -2.6877e-08 1.86426e-06-9.73637e-12
+     2.107e-09-1.00512e-08 5.49107e-12-9.73637e-12 5.36739e-13 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 3
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 46
+ # meas   : 0
+ chi2PerDoF : 0.744225
+ nDoF       : 41
+ extraInfo : [ FitVeloChi2=8.65443  FitVeloNDoF=14  FitTChi2=10.2583  FitTNDoF=18  FitMatchChi2=4.59973 ]
+ p  : 52306
+ pt : 2218
+ 4 states at z = -49.6096 155.877 990 9450  :-
+ *** State ***
+ z        : -49.6096
+ location : ClosestToBeam
+ p               : 52306
+ pt              : 2218
+ (x,y,tx,ty,q/p) : 0.0955, 0.1151, 0.0281935, -0.0317254, 1.91183e-05
+ covariance      : [   0.00034225 6.02729e-05 -1.2768e-06-1.48931e-07 4.30456e-11
+   6.02729e-05  0.00031684-1.51274e-07-1.21653e-06 1.15927e-11
+   -1.2768e-06-1.51274e-07 5.38609e-09 3.99724e-10-1.15817e-13
+  -1.48931e-07-1.21653e-06 3.99724e-10 5.25045e-09-2.23858e-14
+   4.30456e-11 1.15927e-11-1.15817e-13-2.23858e-14 6.97178e-15 ]
+ *** State ***
+ z        : 155.877
+ location : FirstMeasurement
+ p               : 52304.1
+ pt              : 2217.61
+ (x,y,tx,ty,q/p) : 5.8881, -6.404, 0.0281846, -0.0317252, 1.9119e-05
+ covariance      : [    4.096e-05 1.54829e-05-2.39244e-07-6.64289e-08 1.89526e-11
+   1.54829e-05   3.481e-05-6.89672e-08-2.07729e-07 6.97891e-12
+  -2.39244e-07-6.89672e-08 3.88254e-09  4.0104e-10-1.18968e-13
+  -6.64289e-08-2.07729e-07  4.0104e-10 3.74544e-09-2.23136e-14
+   1.89526e-11 6.97891e-12-1.18968e-13-2.23136e-14 6.97165e-15 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 52290.9
+ pt              : 2215.98
+ (x,y,tx,ty,q/p) : 29.3714, -32.877, 0.0281031, -0.03177, 1.91238e-05
+ covariance      : [   0.00017956-3.99253e-06 5.61251e-08 3.56217e-09-1.60779e-10
+  -3.99253e-06  0.00031329 2.64311e-09 7.51948e-07-5.86228e-12
+   5.61251e-08 2.64311e-09 9.67832e-10-1.85364e-12-3.57599e-14
+   3.56217e-09 7.51948e-07-1.85364e-12 4.72656e-09-5.05153e-14
+  -1.60779e-10-5.86228e-12-3.57599e-14-5.05153e-14 6.97164e-15 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 52252.1
+ pt              : 1676.68
+ (x,y,tx,ty,q/p) : 168.792, -301.788, 0.00440649, -0.031801, 1.9138e-05
+ covariance      : [   0.00595984 -0.00266315 5.14528e-06-3.87791e-07-1.17467e-09
+   -0.00266315    0.415767-7.59169e-07 6.49913e-05-1.90231e-10
+   5.14528e-06-7.59169e-07 1.03612e-08-1.33362e-10-6.20156e-13
+  -3.87791e-07 6.49913e-05-1.33362e-10 2.53224e-08 3.98607e-15
+  -1.17467e-09-1.90231e-10-6.20156e-13 3.98607e-15 6.97177e-15 ]
+
+
+DumpTracks          DEBUG *** Track ***
+ key     : 4
+ type    : Long
+ history : PatForward
+ fitstatus: Fitted
+ # ids    : 43
+ # meas   : 0
+ chi2PerDoF : 0.643287
+ nDoF       : 36
+ extraInfo : [ FitVeloChi2=9.63365  FitVeloNDoF=15  FitTChi2=3.42875  FitTNDoF=12  FitMatchChi2=4.51862 ]
+ p  : 18500.1
+ pt : 780.486
+ 4 states at z = -41.1451 169.412 990 9450  :-
+ *** State ***
+ z        : -41.1451
+ location : ClosestToBeam
+ p               : 18500.1
+ pt              : 780.486
+ (x,y,tx,ty,q/p) : 0.1831, -0.2743, -0.0329481, -0.0264091, 5.40538e-05
+ covariance      : [   0.00077284-2.66694e-05-3.41475e-06 8.61756e-08-1.10097e-11
+  -2.66694e-05  0.00084681 7.99699e-08-3.65282e-06-1.39692e-12
+  -3.41475e-06 7.99699e-08 1.58911e-08-3.16955e-10 7.79117e-14
+   8.61756e-08-3.65282e-06-3.16955e-10 1.66823e-08 2.32508e-15
+  -1.10097e-11-1.39692e-12 7.79117e-14 2.32508e-15 3.24055e-14 ]
+ *** State ***
+ z        : 169.412
+ location : FirstMeasurement
+ p               : 18499
+ pt              : 780.82
+ (x,y,tx,ty,q/p) : -6.757, -5.8349, -0.0329746, -0.026409, 5.4057e-05
+ covariance      : [    3.136e-05-6.05758e-06-2.70078e-07 1.83137e-08 3.72991e-12
+  -6.05758e-06   3.969e-05 1.18976e-08-3.36445e-07-7.93867e-13
+  -2.70078e-07 1.18976e-08 9.00601e-09-3.22878e-10 6.15004e-14
+   1.83137e-08-3.36445e-07-3.22878e-10   9.801e-09 2.97025e-15
+   3.72991e-12-7.93867e-13 6.15004e-14 2.97025e-15 3.24054e-14 ]
+ *** State ***
+ z        : 990
+ location : BegRich1
+ p               : 18489.3
+ pt              : 780.216
+ (x,y,tx,ty,q/p) : -33.9096, -27.4795, -0.0330771, -0.0262634, 5.40852e-05
+ covariance      : [   0.00044944 1.55289e-05 4.17361e-07 6.06705e-08 -6.0642e-10
+   1.55289e-05  0.00075076 3.70448e-08 2.55156e-06-1.37287e-10
+   4.17361e-07 3.70448e-08 5.49822e-09 2.84131e-10-2.73595e-12
+   6.06705e-08 2.55156e-06 2.84131e-10 2.09612e-08-9.27839e-13
+   -6.0642e-10-1.37287e-10-2.73595e-12-9.27839e-13 3.24062e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 18463.9
+ pt              : 1909.09
+ (x,y,tx,ty,q/p) : -592.929, -250.61, -0.100549, -0.026385, 5.41597e-05
+ covariance      : [   0.00978121  0.00418012 1.32855e-05 5.12679e-07-3.49959e-09
+    0.00418012     1.03063-1.13192e-05  0.00016076-1.97373e-09
+   1.32855e-05-1.13192e-05 4.85541e-08 -1.3145e-09-7.97298e-13
+   5.12679e-07  0.00016076 -1.3145e-09 9.52093e-08 3.33275e-14
+  -3.49959e-09-1.97373e-09-7.97298e-13 3.33275e-14 3.24058e-14 ]
+
+
+TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+DumpTracks          DEBUG Property update for OutputLevel : new value = 2
+ApplicationMgr       INFO Application Manager Stopped successfully
+UnpackTrack       SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# UnpackedTracks"                              |         5 |        994 |     198.80 |     56.989 |      112.00 |      270.00 |
+PrintHeader          INFO Filtered 5 events
+PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+TESFingerPrint      DEBUG ==> Finalize
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/Bhadron: 5, /Event/Bhadron/Phys: 5, /Event/Bhadron/Phys/AllB2D0KPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2D0KPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DDLineLoose: 5, /Event/Bhadron/Phys/AllB2DDLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose: 5, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose/Particles: 5, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose: 1, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/AllWSB2DDLineLoose: 2, /Event/Bhadron/Phys/AllWSB2DDLineLoose/Particles: 2, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose: 3, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose/Particles: 3, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose: 1, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose/Particles: 1, /Event/Bhadron/Phys/B2Charged2Body: 5, /Event/Bhadron/Phys/B2Charged2Body/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particle2VertexRelations: 2, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/decayVertices: 2, /Event/Bhadron/Phys/B2DXWithD2KshhLine: 5, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2KshhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhWSLine: 2, /Event/Bhadron/Phys/B2DXWithD2hhWSLine/Particles: 2, /Event/Bhadron/Phys/B2DXWithD2hhhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhhLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithD2hhhhLine: 5, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particle2VertexRelations: 3, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/decayVertices: 3, /Event/Bhadron/Phys/B2DXWithLambdaLine: 5, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particle2VertexRelations: 1, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particles: 5, /Event/Bhadron/Phys/B2DXWithLambdaLine/decayVertices: 1, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine: 2, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine/Particles: 2, /Event/Bhadron/Phys/B2PPbarLine: 5, /Event/Bhadron/Phys/B2PPbarLine/Particles: 5, /Event/Bhadron/Phys/B2Quasi2Body4piLine: 1, /Event/Bhadron/Phys/B2Quasi2Body4piLine/Particles: 1, /Event/Bhadron/Phys/B2Quasi2Body4piLine/decayVertices: 1, /Event/Bhadron/Phys/B2threebodyLine: 4, /Event/Bhadron/Phys/B2threebodyLine/Particles: 4, /Event/Bhadron/Phys/B2twobodyLine: 5, /Event/Bhadron/Phys/B2twobodyLine/Particles: 5, /Event/Bhadron/Phys/Bd2DstarTauNuTight: 1, /Event/Bhadron/Phys/Bd2DstarTauNuTight/Particles: 1, /Event/Bhadron/Phys/Bs2KstKst: 5, /Event/Bhadron/Phys/Bs2KstKst/Particles: 5, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL: 2, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particle2VertexRelations: 2, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particles: 2, /Event/Bhadron/Phys/DiTracksForCharmlessB: 1, /Event/Bhadron/Phys/DiTracksForCharmlessB/Particles: 1, /Event/Bhadron/Phys/DiTracksForCharmlessB/decayVertices: 1, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX: 2, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/Particles: 2, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/decayVertices: 2, /Event/Bhadron/Phys/SelD2KshhForB2DX: 1, /Event/Bhadron/Phys/SelD2KshhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2KshhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhForB2DX: 1, /Event/Bhadron/Phys/SelD2hhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2hhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX/Particles: 1, /Event/Bhadron/Phys/SelD2hhhForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelD2hhhhForB2DX: 3, /Event/Bhadron/Phys/SelD2hhhhForB2DX/Particles: 3, /Event/Bhadron/Phys/SelD2hhhhForB2DX/decayVertices: 3, /Event/Bhadron/Phys/SelKsForB2DX: 1, /Event/Bhadron/Phys/SelKsForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKsForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelKstarForB2DX: 1, /Event/Bhadron/Phys/SelKstarForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKstarForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/Particles: 1, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/SelRhoForB2DX: 2, /Event/Bhadron/Phys/SelRhoForB2DX/Particles: 2, /Event/Bhadron/Phys/SelRhoForB2DX/decayVertices: 2, /Event/Bhadron/Phys/SelRhoNoMWForB2DX: 1, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/Particles: 1, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/decayVertices: 1, /Event/Bhadron/Phys/StdLooseResolvedPi0: 2, /Event/Bhadron/Phys/StdLooseResolvedPi0/Particles: 2, /Event/Bhadron/Phys/StdNoPIDsKaons: 5, /Event/Bhadron/Phys/StdNoPIDsKaons/Particles: 5, /Event/Bhadron/Phys/StdNoPIDsPions: 5, /Event/Bhadron/Phys/StdNoPIDsPions/Particles: 5, /Event/Bhadron/Phys/StdNoPIDsProtons: 1, /Event/Bhadron/Phys/StdNoPIDsProtons/Particles: 1, /Event/Bhadron/Phys/StripB2HHPi0M: 5, /Event/Bhadron/Phys/StripB2HHPi0M/Particles: 5, /Event/Bhadron/Phys/StripB2HHPi0R: 5, /Event/Bhadron/Phys/StripB2HHPi0R/Particles: 5, /Event/Bhadron/Phys/StripB2KSDDhh: 2, /Event/Bhadron/Phys/StripB2KSDDhh/Particles: 2, /Event/Bhadron/Phys/StripB2KSLLhh: 3, /Event/Bhadron/Phys/StripB2KSLLhh/Particles: 3, /Event/Bhadron/Phys/StripB2hhLTUnbiased: 1, /Event/Bhadron/Phys/StripB2hhLTUnbiased/Particles: 1, /Event/Bhadron/Phys/StripBu2hhh: 4, /Event/Bhadron/Phys/StripBu2hhh/Particles: 4, /Event/Bhadron/Phys/TracksForCharmlessB: 1, /Event/Bhadron/Phys/TracksForCharmlessB/Particles: 1, /Event/Bhadron/Rec: 5, /Event/Bhadron/Rec/Vertex: 5, /Event/Bhadron/Rec/Vertex/Primary: 5, /Event/DAQ: 5, /Event/DAQ/RawEvent: 5, /Event/Rec: 5, /Event/Rec/Header: 5, /Event/Rec/Status: 5, /Event/Strip: 5, /Event/Strip/Phys: 5, /Event/Strip/Phys/DecReports: 5, /Event/pRec: 5, /Event/pRec/Calo: 5, /Event/pRec/Calo/Electrons: 5, /Event/pRec/Calo/MergedPi0s: 5, /Event/pRec/Calo/Photons: 5, /Event/pRec/Calo/SplitPhotons: 5, /Event/pRec/Muon: 5, /Event/pRec/Muon/MuonPID: 5, /Event/pRec/ProtoP: 5, /Event/pRec/ProtoP/Charged: 5, /Event/pRec/ProtoP/Neutrals: 5, /Event/pRec/Rich: 5, /Event/pRec/Rich/PIDs: 5, /Event/pRec/Track: 5, /Event/pRec/Track/Best: 5, /Event/pRec/Track/Muon: 5, /Event/pRec/Vertex: 5, /Event/pRec/Vertex/Primary: 5, /Event/pRec/Vertex/V0: 5, /Event/pRec/Vertex/Weights: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Bhadron/Phys/AllB2D0KPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2D0PiPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DDLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DKPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllB2DPiPiPiLineLoose/Particles: {0: 5}, /Event/Bhadron/Phys/AllLambdaB2LambdaCKPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/AllLambdaB2LambdaCPiPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/AllWSB2DDLineLoose/Particles: {0: 2}, /Event/Bhadron/Phys/AllWSB2DKPiPiLineLoose/Particles: {0: 3}, /Event/Bhadron/Phys/AllWSB2DPiPiPiLineLoose/Particles: {0: 1}, /Event/Bhadron/Phys/B2Charged2Body/Particles: {0: 5}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0MergedLine/Particles: {0: 5}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/Particles: {0: 3, 2: 1, 12: 1}, /Event/Bhadron/Phys/B2DXWithD2KPiPi0ResolvedLine/decayVertices: {2: 1, 12: 1}, /Event/Bhadron/Phys/B2DXWithD2KshhLine/Particles: {0: 4, 7: 1}, /Event/Bhadron/Phys/B2DXWithD2KshhLine/decayVertices: {7: 1}, /Event/Bhadron/Phys/B2DXWithD2hhLine/Particles: {0: 4, 1: 1}, /Event/Bhadron/Phys/B2DXWithD2hhLine/decayVertices: {1: 1}, /Event/Bhadron/Phys/B2DXWithD2hhWSLine/Particles: {0: 2}, /Event/Bhadron/Phys/B2DXWithD2hhhLine/Particles: {0: 4, 8: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhLine/decayVertices: {8: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/Particles: {0: 2, 2: 1, 3: 1, 16: 1}, /Event/Bhadron/Phys/B2DXWithD2hhhhLine/decayVertices: {2: 1, 3: 1, 16: 1}, /Event/Bhadron/Phys/B2DXWithLambdaLine/Particles: {0: 4, 4: 1}, /Event/Bhadron/Phys/B2DXWithLambdaLine/decayVertices: {4: 1}, /Event/Bhadron/Phys/B2DXWithUnbiasedB2DPiLine/Particles: {0: 2}, /Event/Bhadron/Phys/B2PPbarLine/Particles: {0: 5}, /Event/Bhadron/Phys/B2Quasi2Body4piLine/Particles: {2: 1}, /Event/Bhadron/Phys/B2Quasi2Body4piLine/decayVertices: {2: 1}, /Event/Bhadron/Phys/B2threebodyLine/Particles: {0: 4}, /Event/Bhadron/Phys/B2twobodyLine/Particles: {0: 5}, /Event/Bhadron/Phys/Bd2DstarTauNuTight/Particles: {0: 1}, /Event/Bhadron/Phys/Bs2KstKst/Particles: {0: 5}, /Event/Bhadron/Phys/Bu2D0h_D02KShh_KSLL/Particles: {0: 2}, /Event/Bhadron/Phys/DiTracksForCharmlessB/Particles: {3: 1}, /Event/Bhadron/Phys/DiTracksForCharmlessB/decayVertices: {3: 1}, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/Particles: {1: 1, 6: 1}, /Event/Bhadron/Phys/SelD2KPiPi0ResolvedForB2DX/decayVertices: {1: 1, 6: 1}, /Event/Bhadron/Phys/SelD2KshhForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelD2KshhForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelD2hhForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelD2hhForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelD2hhhForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelD2hhhForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/SelD2hhhhForB2DX/Particles: {1: 1, 3: 1, 4: 1}, /Event/Bhadron/Phys/SelD2hhhhForB2DX/decayVertices: {1: 1, 3: 1, 4: 1}, /Event/Bhadron/Phys/SelKsForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKsForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelKstarForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKstarForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelKstarNoMWForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelLambdaC2pKPiForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/Particles: {1: 1}, /Event/Bhadron/Phys/SelPhiNoMWForB2DX/decayVertices: {1: 1}, /Event/Bhadron/Phys/SelRhoForB2DX/Particles: {1: 2}, /Event/Bhadron/Phys/SelRhoForB2DX/decayVertices: {1: 2}, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/Particles: {2: 1}, /Event/Bhadron/Phys/SelRhoNoMWForB2DX/decayVertices: {2: 1}, /Event/Bhadron/Phys/StdLooseResolvedPi0/Particles: {3: 1, 8: 1}, /Event/Bhadron/Phys/StdNoPIDsKaons/Particles: {2: 2, 4: 2, 6: 1}, /Event/Bhadron/Phys/StdNoPIDsPions/Particles: {3: 1, 4: 2, 6: 1, 8: 1}, /Event/Bhadron/Phys/StdNoPIDsProtons/Particles: {2: 1}, /Event/Bhadron/Phys/StripB2HHPi0M/Particles: {0: 5}, /Event/Bhadron/Phys/StripB2HHPi0R/Particles: {0: 5}, /Event/Bhadron/Phys/StripB2KSDDhh/Particles: {0: 2}, /Event/Bhadron/Phys/StripB2KSLLhh/Particles: {0: 3}, /Event/Bhadron/Phys/StripB2hhLTUnbiased/Particles: {0: 1}, /Event/Bhadron/Phys/StripBu2hhh/Particles: {0: 4}, /Event/Bhadron/Phys/TracksForCharmlessB/Particles: {5: 1}, /Event/Bhadron/Rec/Vertex/Primary: {1: 1, 2: 4}}
+TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
+TESFingerPrint      DEBUG Tools to release :
+TESFingerPrint      DEBUG Services to release :
+DumpTracks          DEBUG Finalize base class GaudiAlgorithm
+DumpTracks          DEBUG Tools to release :
+DumpTracks          DEBUG Services to release :
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/15(Alg/Node/Total).
+FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
+PoolRootEvtCnvSvc    INFO Disconnected data IO:EA0579AA-9286-E011-B384-003048C9CD62[POOL-Reco08.dst]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully
