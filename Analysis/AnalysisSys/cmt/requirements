@@ -6,19 +6,19 @@ branches doc cmt
 
 ####################################################################
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v3r1     Phys   # Juan Palacios
+use  DSTWriters                 v4r0     Phys   # Juan Palacios
 use  DSTWriterTests             v2r3     Phys   # Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  FlavourTagging             v12r5    Phys   # Marc Grabalosa
 
-use  DaVinciMonitors            v1r14p2  Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r15    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
-use  KaliCalo                   v4r11    Phys   # Vanya Belyaev
+use  KaliCalo                   v4r12    Phys   # Vanya Belyaev
 ####################################################################
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
-use  DaVinciMCTools     	v9r29    Phys   # Juan Palacios
+use  DaVinciMCTools     	v10r0     Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r4     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1     Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r3     Phys   # Vanya Belyaev
@@ -26,15 +26,15 @@ use  DaVinciAssociators         v9r4p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p6   Phys   # Juan Palacios
 use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r6p3   Phys   # Marc Grabalosa
+use  FlavourTaggingChecker      v6r7     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r4p2   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4     Phys   # Victor Coco
 use  DecayTreeTuple             v3r16    Phys   # Rob Lambert
 use  JetAccessories		v1r1	 Phys   # Victor Coco, Cedric Potterat
-use  JetAccessoriesMC		v1r1	 Phys   # Victor Coco, Cedric Potterat
+use  JetAccessoriesMC		v1r2	 Phys   # Victor Coco, Cedric Potterat
 ####################################################################
 #
-use AnalysisPython              v2r4     Phys
+use AnalysisPython              v2r5     Phys
 use PyAna                       v1r3     Analysis
 #
 ####################################################################
