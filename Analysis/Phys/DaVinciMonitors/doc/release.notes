@@ -4,6 +4,14 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciMonitors v1r15 2011-09-07 =========================
+! 2011-08-27 - Patricia Disimone
+  - The Muon Stations efficiency monitor MuEffMonitor has been moved from Muon/MuonTrackMonitor to Phys/DaVinciMonitors. The main changes are : 
+   1) muon candidates TIS unbiased, 
+   2) efficiency of the M1 station added, 
+   3) measurement of the efficiency by charge, 
+   4) only crossed hits (pads) counted as signal
+
 !========================== DaVinciMonitors v1r14p2 2011-03-25 ===============
 
 ! 2011-03-25 - Chris Jones
