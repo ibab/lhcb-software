@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to references to reflect changes in Boole v23r0 output:
+   . Default persistency switched to ROOT
+   . Reduced verbosity from persistency initialisation in Gaudi v22r4
+   . Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
+     getting NextNext from PrevPrev
+
 </PRE><H1><A NAME=v22r3>2011-07-29 Boole v22r3</A></H1><PRE>
 This version uses projects LCGCMT 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
