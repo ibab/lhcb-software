@@ -20,4 +20,13 @@ apply_pattern install_python_modules
 apply_pattern install_scripts
 
 #QM tests
-apply_pattern QMTest
+private
+# Uses only needed to set up run time environment of tests
+  macro HepMC_use "" QMTest "HepMC  v*  LCG_Interfaces"
+  macro RELAX_use "" QMTest "RELAX  v*  LCG_Interfaces"
+  macro GaudiPoolDb_use "" QMTest "GaudiPoolDb  v*"
+  use $(HepMC_use)
+  use $(RELAX_use)
+  use $(GaudiPoolDb_use)
+  apply_pattern QMTest
+end_private

@@ -1,6 +1,9 @@
 from GaudiTest import normalizeExamples, RegexpReplacer, LineSkipper
 
 preprocessor = normalizeExamples + \
+    RegexpReplacer(when = "at 0x########L",
+        orig = r'0x########L',
+        repl = r'0x########') + \
     RegexpReplacer(when = "Connected to database",
         orig = r'ONLINE[_-][0-9 ]{1,6}(.*)"[^"]*/([0-9A-Z_]{1,8})"',
         repl = r'ONLINE_xxxxxx\1"\2"') + \
