@@ -52,7 +52,13 @@ namespace STDAQ{
   const unsigned int mask3= 0x00ff0000;
   const unsigned int mask4= 0xff000000;
 
- 
+  /// Store the number of strips in each sector
+  enum StripsInSector{ 
+    nStripsInITSector=384u,
+    nStripsInTTSector=512u
+  };
+
+
   // Non-Zero suppressed specific
   const unsigned int nwordsFull = 896u;
   const unsigned int sizebankFull = nwordsFull*4;
