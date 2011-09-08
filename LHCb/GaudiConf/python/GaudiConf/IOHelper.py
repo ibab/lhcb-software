@@ -587,8 +587,10 @@ class IOHelper(object):
 
         #don't do anything if my type is MDF or FSR
         if not force and IO=="I" and self._inputPersistency=="MDF":
+            #print "skipping in ConnectionStrings 1"
             return filelist
         if not force and IO=="O" and (self._outputPersistency=="MDF" or self._outputPersistency=="FSR"):
+            #print "skipping in ConnectionStrings 2"
             return filelist
         
         retlist=[]
@@ -596,6 +598,7 @@ class IOHelper(object):
             #never convert an MDF or an output FSR file, it's not needed, filetype FSR implies FileRecordCnvSvc is already specified
             if not force and (self.detectFileType(file)=="MDF" or (self.detectFileType(file)=="FSR" and IO=="O")):
                 retlist.append(file)
+                #print "skipping in COnnectionStrings 3"
                 continue
             #otherwise convert it
             retlist.append( self.dressFile( self.undressFile(file),IO) )
@@ -802,6 +805,7 @@ class IOHelper(object):
         '''
         #don't do anything if _my_ type is MDF to avoid overwiting everything forever
         if self._outputPersistency=="MDF":
+            #print "skipping in stream type 0"
             return
         
         if streams is None:
@@ -811,16 +815,27 @@ class IOHelper(object):
             #for converting streams, only ignore MDF, its the only format
             #for which the old and new specifications are identical
             if self.detectStreamType(stream) in ["MDF","UNKNOWN"]:
+                #print "skipping in stream type 1"
                 continue
+            
             if type(stream) is str:
                 stream=self._configurableInstanceFromString(stream)
+            
+            #redo FSR streams completely so that they have all the right options
+            if self.detectStreamType(stream) in ["FSR"]:
+                self._fsrWriter(self.undressFile(stream.Output),stream)
+                #print "Done conversion!"
+                continue
             
             if hasattr(stream,'Output'):
                 if stream.Output is not None:
                     #don't convert odd looking lists or empty strings
                     if len(stream.Output) and type(stream.Output) is str:
-                        if self.detectFileType(stream.Output) not in ["MDF","ETC","FSR","UNKNOWN"]:
+                        #I should also be converting "Unknown" types
+                        if self.detectFileType(stream.Output) not in ["MDF","ETC","FSR"]:
                             stream.Output=self.dressFile(self.undressFile(stream.Output),"O")
+                            continue
+            #print "fallen through if statements in convertStreams"
         return
     
     def outputAlgs(self,filename,writer="OutputStream",writeFSR=True):
@@ -880,10 +895,32 @@ class IOHelper(object):
         if writer.split('/')[0]== writer.split('/')[-1]:
             writer=writer.split('/')[0]
         
-        FSRWriter = GaudiConfigurables.RecordStream( "FSR"+writer.replace('/','').replace('::','').replace('__',''),
-                                                     ItemList = [ "/FileRecords#999" ],
-                                                     EvtDataSvc = "FileRecordDataSvc",
-                                                     EvtConversionSvc = "FileRecordPersistencySvc" )
+        FSRWriter = self._fsrWriter(filename, writer=GaudiConfigurables.RecordStream( "FSR"+writer.replace('/','').replace('::','').replace('__','')))
+        
+        #As far as I can tell, the ordering of the algs does not matter here
+        return [winstance, FSRWriter]
+        #both result in well-formed Lumi tests
+        #return [FSRWriter, winstance]
+    
+    def _fsrWriter(self,filename,writer="RecordStream"):
+        '''Configure FSR writer. Since it has odd options, reset them all'''
+        
+        stype=self.detectStreamType(writer)
+        if stype not in ["FSR"]:
+            raise TypeError("Expecting a recognised FSR writer, but you have supplied something else")
+        
+        #find the writer
+        winstance=None
+                
+        if type(writer) is str:
+            winstance=self._configurableInstanceFromString(writer)
+        else:
+            winstance=writer
+            writer=writer.getFullName()
+        
+        winstance.ItemList = [ "/FileRecords#999" ]
+        winstance.EvtDataSvc = "FileRecordDataSvc"
+        winstance.EvtConversionSvc = "FileRecordPersistencySvc"
         
         #FSRs have a different output service
         FSRIO=None
@@ -894,11 +931,8 @@ class IOHelper(object):
         else:
             raise TypeError("Something odd has occurred when setting FSRs")
         
-        FSRWriter.Output = FSRIO.dressFile(filename,"O")
-        #As far as I can tell, the ordering of the algs does not matter here
-        return [winstance, FSRWriter]
-        #both result in well-formed Lumi tests
-        #return [FSRWriter, winstance]
+        winstance.Output = FSRIO.dressFile(filename,"O")
+        return winstance
     
     def outStream(self,filename,writer="OutputStream",writeFSR=True):
         '''Output:  Create a output stream and FSR writing algorithm instance
