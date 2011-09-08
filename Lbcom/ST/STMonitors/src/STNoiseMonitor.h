@@ -156,9 +156,7 @@ namespace ST {
     /// Make summary plots
     bool m_summaryPlots;
 
-    unsigned int m_nStripsInSector;
-    static const unsigned int m_nStripsInITSector=384;///< Hardcode number of strips/sector for IT
-    static const unsigned int m_nStripsInTTSector=512;///< Hardcode number of strips/sector for TT
+    unsigned int m_nStripsInSector;///< number of strips in sector (from STDAQ::nStripsInXTSector where X== T or I)
 
     std::map<int, std::vector<DeSTSector*> > m_sectorMap;///< Map of DeSTSectors (for use filling / type histograms)
     std::map<std::string, std::string> m_types;///< keep map of sector types to book / type histograms

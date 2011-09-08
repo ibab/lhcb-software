@@ -80,7 +80,7 @@ StatusCode ST::STNoiseMonitor::initialize() {
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
 
-  m_nStripsInSector = (detType() == "TT") ? m_nStripsInTTSector : m_nStripsInITSector;
+  m_nStripsInSector = (detType() == "TT") ? STDAQ::nStripsInTTSector : STDAQ::nStripsInITSector;
 
   m_evtNumber = 0;
 
