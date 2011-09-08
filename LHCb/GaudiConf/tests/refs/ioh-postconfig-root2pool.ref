@@ -1,5 +1,5 @@
-# --> Including file '/tmp/rlambert/Brunel_v40r1/GaudiConf/tests/ioh-postconfig-root2pool.py'
-# <-- End of file '/tmp/rlambert/Brunel_v40r1/GaudiConf/tests/ioh-postconfig-root2pool.py'
+# --> Including file '/tmp/rlambert/LHCb_HEAD/GaudiConf/tests/ioh-postconfig-root2pool.py'
+# <-- End of file '/tmp/rlambert/LHCb_HEAD/GaudiConf/tests/ioh-postconfig-root2pool.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency = 'ROOT'  (default: None)
@@ -27,8 +27,8 @@
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r15/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r15/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -47,32 +47,67 @@
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 Before, i.e. ROOT
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0xacd2d30>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0xacd3740>, 'LHCb::RawDataCnvSvc']
+[<Gaudi::RootCnvSvc/RootCnvSvc at 0x14092200>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x14092c10>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']
 DATAFILE='testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
 After, i.e. POOL
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0xad5f050>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2ad080c45a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2ad080c45b50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2ad080c45c50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x2ad080c45d50>, 'LHCb::RawDataCnvSvc']
+[<PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x13d4ca50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x13d4cc50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x13d4cb50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x13d4cd50>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x140fc050>]
 DATAFILE='testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
 DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
+==========================
+Debugging Persistencies
+['POOL']
+==========================
+Debugging External Services
+EvtDataSvc/EventDataSvc
+{'RootCLID': 1, 'ForceLeaves': True, 'EnableFaultHandler': True}
+EvtPersistencySvc/EventPersistencySvc
+{'CnvServices': ['PoolDbCnvSvc/PoolRootEvtCnvSvc', 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc', 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc', 'LHCb::RawDataCnvSvc']}
+FileRecordDataSvc/FileRecordDataSvc
+{'PersistencySvc': 'PersistencySvc/FileRecordPersistencySvc', 'RootCLID': 1, 'ForceLeaves': True, 'EnableFaultHandler': True}
+PersistencySvc/FileRecordPersistencySvc
+{'CnvServices': ['PoolDbCnvSvc/FileRecordCnvSvc']}
+==========================
+Debugging Persistency Services
+PoolDbCnvSvc/PoolRootEvtCnvSvc
+{'DbType': 'POOL_ROOT', 'EnableIncident': True}
+PoolDbCnvSvc/PoolRootTreeEvtCnvSvc
+{'DbType': 'POOL_ROOTTREE', 'EnableIncident': True}
+PoolDbCnvSvc/PoolRootKeyEvtCnvSvc
+{'DbType': 'POOL_ROOTKEY', 'EnableIncident': True}
+LHCb::RawDataCnvSvc
+PoolDbCnvSvc/FileRecordCnvSvc
+{'DbType': 'POOL_ROOTTREE', 'ShareFiles': 'YES'}
+Gaudi::MultiFileCatalog/FileCatalog
+Gaudi::IODataManager/IODataManager
+PoolDbCacheSvc/PoolDbCacheSvc
+{'OutputLevel': 4, 'Dlls': ['lcg_RootStorageSvc', 'GaudiKernelDict'], 'DomainOpts': ['Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong']}
+==========================
+Debugging Streams
+OutputStream/OutputStream
+{'Output': "DATAFILE='testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'"}
+RecordStream/FSROutputStream
+{'Output': "DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+==========================
+Debugging Input
+EventSelector/EventSelector
+{'Input': ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]}
+==========================
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v40r1
-                                          running on lbcsrv01 on Thu Sep  1 21:24:59 2011
+                                                   Welcome to ApplicationMgr $Revision: 1.77 $
+                                          running on lbcsrv01 on Thu Sep  8 18:56:14 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 OutputStream         INFO Data source: EventDataSvc output: DATAFILE='testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
-FileRecordPersi...   INFO  'CnvServices':[ 'PoolDbCnvSvc/FileRecordCnvSvc' ]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 FSROutputStream      INFO Data source: FileRecordDataSvc output: DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -85,7 +120,7 @@ EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtC
 ApplicationMgr       INFO Application Manager Stopped successfully
 OutputStream         INFO Events output: 1
 FSROutputStream      INFO Set up File Summary Record
-RootDBase.open    SUCCESS testRootOP.dst File version:52800
+RootDBase.open    SUCCESS testRootOP.dst File version:53000
 FSROutputStream      INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc

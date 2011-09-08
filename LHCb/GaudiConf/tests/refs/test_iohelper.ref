@@ -41,7 +41,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x4aad4a0>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4aae1a0>, 'LHCb::RawDataCnvSvc']
+[<Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x502ea90>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x502e1d0>, 'LHCb::RawDataCnvSvc', 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']
 =============================
 POOL
 =============================
@@ -91,7 +91,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x4724aa0>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x4744950>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x4744750>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x4744a50>, <PoolDbCnvSvc/FileRecordCnvSvc at 0x4744b50>, 'LHCb::RawDataCnvSvc']
+[<PoolDbCnvSvc/FileRecordCnvSvc at 0x4cc8b50>, <PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x4cc8950>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x4cc8a50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x4cc8750>, 'LHCb::RawDataCnvSvc', 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x4ca7aa0>]
 =============================
 ROOT
 =============================
@@ -141,7 +141,7 @@ IOHelper().inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <Gaudi::RootCnvSvc/RootCnvSvc at 0x4aad4a0>, <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x4aae1a0>, 'LHCb::RawDataCnvSvc']
+[<Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x502ea90>, <Gaudi::RootCnvSvc/RootCnvSvc at 0x502e1d0>, 'LHCb::RawDataCnvSvc', 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']
 =============================
 MDF
 =============================
@@ -191,4 +191,4 @@ IOHelper("MDF").inputFiles([
 (0, '')
 (0, '')
 - change service tests
-['Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', 'LHCb::RawDataCnvSvc']
+['LHCb::RawDataCnvSvc', 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']

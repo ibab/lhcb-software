@@ -85,13 +85,23 @@ class IOHelper(object):
                           'FSR'  : "SVC='FileRecordCnvSvc'"
                           }
     
+    #services which vary depending on the input persistency
     _knownPerServices = {'PoolDbCnvSvc': 'POOL',
                          'PoolDbCacheSvc': 'POOL',
                          'RootCnvSvc' : 'ROOT',
                          "RawDataCnvSvc": 'MDF',
                          'MultiFileCatalog' : '',
-                         'IODataManager' : ''
+                         'IODataManager' : '',
                          }
+    
+    #services which exist in Gaudi, independent of the persistency
+    _externalPerServices = {"FileRecordDataSvc" : 'FSR',
+                            'EventPersistencySvc' : 'EVT',
+                            'EvtPersistencySvc' : 'EVT',
+                            'EventDataSvc' : 'EVT',
+                            'EvtDataSvc' : 'EVT',
+                            "FileRecordPersistencySvc": 'FSR',
+                            }
     
     _knownOutputStreams = {'InputCopyStream' : 'DST',
                            'OutputStream' : 'DST',
@@ -238,7 +248,7 @@ class IOHelper(object):
         conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
         for k in conftodel:
             del allConfigurables[k]
-
+    
     def _fullNameConfigurables(self):
         import Gaudi.Configuration as GaudiConfigurables
         retdict={}
@@ -309,10 +319,56 @@ class IOHelper(object):
         '''Information: return the list of known persistency services'''
         return self._knownPerServices.keys()
     
+    def knownExternalServices(self):
+        '''Information: return the list of known external persistency services'''
+        return self._externalPerServices.keys()
     
     def knownOutputStreams(self):
         '''Information: return the list of known output streams'''
         return self._knownOutputStreams.keys()
+    
+    def debugIO(self):
+        '''Information: print properties of all configured svc streams and selectors'''
+        print "=========================="
+        print "Debugging Persistencies"
+        print self.activePersistencies()
+        print "=========================="
+        print "Debugging External Services"
+        for svc in self.externalServices():
+            if type(svc) is str:
+                print svc
+                continue
+            print svc.getFullName()
+            print svc.getValuedProperties()
+        print "=========================="
+        print "Debugging Persistency Services"
+        for svc in self.activeServices():
+            if type(svc) is str:
+                print svc
+                continue
+            print svc.getFullName()
+            print svc.getValuedProperties()
+        print "=========================="
+        print "Debugging Streams"
+        for stream in self.activeStreams():
+            if type(stream) is str:
+                print stream
+                continue
+            
+            print stream.getFullName()
+            print stream.getValuedProperties()
+        print "=========================="
+        print "Debugging Input"
+        from Gaudi.Configuration import EventSelector
+        print EventSelector().getFullName()
+        print EventSelector().getValuedProperties()
+        print "=========================="
+    
+    def postConfigDebug(self):
+        '''Print debug information as a post-config action'''
+        from Gaudi.Configuration import appendPostConfigAction
+        
+        appendPostConfigAction(self.debugIO)
     
     ###############################################################
     #              Services
@@ -382,13 +438,34 @@ class IOHelper(object):
         #always convert defined streams
         self.convertStreams()
     
-    def activeServices(self):
-        '''Services:  return all configured persistency services'''
-        from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
+    def externalServices(self):
+        '''Services: Return services configured irrespective of the persistency type '''
         retlist=[]
+        
+        allConfigurables=self._fullNameConfigurables()
+        
+        for key in allConfigurables:
+            for extsvc in self._externalPerServices:
+                if extsvc in key:
+                    if allConfigurables[key] not in retlist:
+                        retlist+=[allConfigurables[key]]
+        
+        #from Gaudi.Configuration import (EventDataSvc, ApplicationMgr, EventPersistencySvc)
+        
+        return retlist
+    
+    def activeServices(self):
+        '''Services:  return all configured persistency services which depend on the persistency'''
+        from Gaudi.Configuration import ApplicationMgr
+        
+        retlist=[]
+        extsvc=self.externalServices()
+        
+        for svc in extsvc:
+            if hasattr(svc,"CnvServices") or "CnvServices" in svc.__slots__:
+                retlist+=self._getSvcList(svc.CnvServices)
+        
         retlist+=self._getSvcList(ApplicationMgr().ExtSvc)
-        retlist+=self._getSvcList(EventPersistencySvc().CnvServices)
-        retlist+=self._getSvcList(PersistencySvc("FileRecordPersistencySvc").CnvServices)
         
         reducedList=[]
         for svc in retlist:
@@ -403,14 +480,17 @@ class IOHelper(object):
     
     def clearServices(self):
         '''Services:  remove all persistency services'''
-        from Gaudi.Configuration import (ApplicationMgr, EventPersistencySvc, PersistencySvc)
+        from Gaudi.Configuration import ApplicationMgr
         
         active=self.activeServices()
         
         ApplicationMgr().ExtSvc=[svc for svc in ApplicationMgr().ExtSvc if svc not in active]
-        EventPersistencySvc().CnvServices=[svc for svc in EventPersistencySvc().CnvServices if svc not in active]
-        PersistencySvc("FileRecordPersistencySvc").CnvServices=[
-            svc for svc in PersistencySvc("FileRecordPersistencySvc").CnvServices if svc not in active]
+        
+        extsvc=self.externalServices()
+        
+        for svc in extsvc:
+            if hasattr(svc, "CnvServices") or "CnvServices" in svc.__slots__:
+                svc.CnvServices=[asvc for asvc in svc.CnvServices if asvc not in active]
         
         self._removeConfigurables(active)
     
@@ -438,6 +518,17 @@ class IOHelper(object):
         
         appendPostConfigAction(self.changeServices)
     
+    def detectServiceType(self, svc):
+        '''Services: return the persistency type(s) of a given service'''
+        if type(svc)!=str:
+            svc=svc.getFullName()
+        for service in self._knownPerServices:
+            if service in svc:
+                return self._knownPerServices[service]
+        for service in self._externalPerServices:
+            if service in svc:
+                return self._externalPerServices[service]
+        return "UNKNOWN"
     
     ###############################################################
     #              Filenames

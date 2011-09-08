@@ -34,3 +34,5 @@ appendPostConfigAction(myB4Action)
 IOHelper("ROOT","ROOT").postConfigServices()
 
 appendPostConfigAction(myAction)
+
+IOHelper().postConfigDebug()
