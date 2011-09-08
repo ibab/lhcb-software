@@ -165,7 +165,7 @@ confdict={
 
 from StrippingUtils.Utils import LineBuilder, MasterLineBuilder
 
-name="Bd2DstarTauNu"
+default_name="Bd2DstarTauNu"
 
 class Bd2DstarTauNuAllLinesConf(MasterLineBuilder):
     """

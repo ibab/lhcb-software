@@ -630,7 +630,7 @@ def globalEventCutFilter(name,
   for i in ['LoKiTracks.decorators']:
      if i not in modules : modules.append(i)
   
-  _code = "TrSOURCE('Rec/Track/Best') >> (TrSIZE < %(MaxTrSIZE)s )" % locals()
+  _code = "(recSummary(LHCb.RecSummary.nTracks, 'Rec/Track/Best') < %(MaxTrSIZE)s )" % locals()
   
   
   return _code          

@@ -80,7 +80,7 @@ class LowMultConf(LineBuilder) :
 
         #ELECTRON
 
-        ExclusiveElectronGEC = {'Code' : "(recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) &   ( CONTAINS ( 'Rec/Track/Best'  ) <  6 ) ",
+        ExclusiveElectronGEC = {'Code' : "(recSummaryTrack( LHCb.RecSummary.nBackTracks, TrBACKWARD)<1) &   ( recSummary(LHCb.RecSummary.nTracks , 'Rec/Track/Best'  ) <  6 ) ",
                                 'Preambulo' : ["from LoKiTracks.decorators import *"]}                               
          
         self.LowMultElectron_line = StrippingLine(self._myname+"ElectronLine",

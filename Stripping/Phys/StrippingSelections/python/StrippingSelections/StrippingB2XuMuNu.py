@@ -201,7 +201,7 @@ from StrippingUtils.Utils import LineBuilder
 
 import logging
 
-name="B2XuMuNu"
+default_name="B2XuMuNu"
 
 class B2XuMuNuBuilder(LineBuilder):
     """
