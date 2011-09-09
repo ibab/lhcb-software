@@ -406,7 +406,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             """
         
 
-        self.Lam0_LL = Selection("SelLam02PPi_LL",
+        self.Lam0_LL = Selection("SelLam02PPi_LL",+ self._name
                                  Algorithm = _Lam0,
                                  RequiredSelections = [ StdAllNoPIDsPions, StdAllNoPIDsProtons ]) 
 
@@ -447,7 +447,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             >> process ( p2DD )
             >> EMPTY
             """
-        self.Lam0_DD = Selection("SelLam02PiPi_DD",
+        self.Lam0_DD = Selection("SelLam02PiPi_DD" + self._name ,
                                  Algorithm = _Lam0DD,
                                  RequiredSelections = [ StdNoPIDsDownPions , StdNoPIDsDownProtons]) 
         

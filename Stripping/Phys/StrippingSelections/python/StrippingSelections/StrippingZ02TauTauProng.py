@@ -49,7 +49,7 @@ config_params = {'Z2TauTau_Prong_LinePrescale'  : 1.0,
                  }
                  
    
-name = "Z02TauTauProng"
+default_name = "Z02TauTauProng"
 
 
 """

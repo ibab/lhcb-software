@@ -21,7 +21,7 @@ confdict_Z02MuMu={
     ,  'mucut' : 15.                                   
  }
 
-name = "Z02MuMu"
+default_name = "Z02MuMu"
 
 class Z02MuMuConf(LineBuilder) :
 

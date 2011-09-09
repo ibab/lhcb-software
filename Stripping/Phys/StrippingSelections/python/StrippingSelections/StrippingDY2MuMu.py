@@ -42,7 +42,7 @@ confdict_DY2MuMu={
     ,  'mupidreq' : -3.
  }
 
-name = "DY2MuMu"
+default_name = "DY2MuMu"
 
 class DY2MuMuConf(LineBuilder) :
 

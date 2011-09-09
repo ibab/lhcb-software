@@ -170,7 +170,7 @@ def makeKst_02Kpi(name,
     _stdPions = DataOnDemand(Location="Phys/StdLoosePions/Particles")
 
 
-    _Kstar_02Kpi = CombineParticles ("Kstar_02Kpi")
+    _Kstar_02Kpi = CombineParticles ("Combine"+name)
 
     _Kstar_02Kpi.DecayDescriptor = "[K*_0(1430)0 -> K+ pi-]cc"
     _Kstar_02Kpi.DaughtersCuts = {"K+" : "(PT > %(KaonPT)s *MeV) & (PIDK > %(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)"% locals()

@@ -23,7 +23,7 @@ confdict_Z02TauTau={
     ,  'pitrpchi2' : 0.001
     }
 
-name = "Z02TauTau"
+default_name = "Z02TauTau"
 
 class Z02TauTauConf(LineBuilder) :
 

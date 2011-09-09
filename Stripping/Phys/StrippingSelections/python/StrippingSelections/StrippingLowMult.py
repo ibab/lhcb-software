@@ -19,7 +19,7 @@ confdict_LowMult={
     ,  'LowMultNoFilterPrescale':0.1
     }
 
-name = "LowMult"
+default_name = "LowMult"
 
 class LowMultConf(LineBuilder) :
 

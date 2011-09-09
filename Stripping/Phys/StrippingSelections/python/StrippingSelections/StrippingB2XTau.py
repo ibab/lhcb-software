@@ -74,7 +74,7 @@ from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions, StdLooseMuons
 from StandardParticles import StdLoosePions,StdTightPions
 from StandardParticles import StdLooseKaons
 
-name = "B2XTau"
+default_name = "B2XTau"
 HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
 HLT_DECISIONS_MUON  = "Hlt2(TopoMu|SingleMuon).*Decision"
 HLT1_DECISIONS_TIS  = "Hlt1TrackAllL0Decision"

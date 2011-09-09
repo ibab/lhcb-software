@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-09 - T. Blake
+ - Updated lines to remove global use of "name =" and fixed several
+   dangerous name CombineParticles interfaces
+
 ! 2011-09-08 - Rob Lambert
  - Fix linebuilders which use outdated functors and hard-coded name, see task #22485 
 

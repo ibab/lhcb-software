@@ -72,7 +72,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseKaons, StdLoosePions, StdLooseMuons, StdNoPIDsPions, StdNoPIDsKaons
 from StandardParticles import StdAllLooseKaons, StdAllLoosePions, StdAllLooseMuons, StdAllNoPIDsPions, StdAllNoPIDsKaons
 
-name = "D2XMuMu"
+default_name = "D2XMuMu"
 
 class D2XMuMuConf(LineBuilder) :
     """

@@ -33,7 +33,7 @@ confdict_WMu={
     ,  'trkpchi2' : 0.001
  }
 
-name = "W2Mu"
+default_name = "W2Mu"
 
 class WMuConf(LineBuilder) :
 

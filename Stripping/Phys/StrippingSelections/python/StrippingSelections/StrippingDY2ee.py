@@ -38,7 +38,7 @@ confdict_DY2ee={
     ,  'mipdvchi2ratio' : 5.
  }
 
-name = "DY2ee"
+default_name = "DY2ee"
 
 class DY2eeConf(LineBuilder) :
 

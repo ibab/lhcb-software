@@ -23,7 +23,7 @@ confdict_We={
     ,  'trkghostprob' : 0.6
  }
 
-name = "We"
+default_name = "We"
 
 class WeConf(LineBuilder) :
 
