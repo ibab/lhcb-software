@@ -823,7 +823,10 @@ class IOHelper(object):
             
             #redo FSR streams completely so that they have all the right options
             if self.detectStreamType(stream) in ["FSR"]:
-                self._fsrWriter(self.undressFile(stream.Output),stream)
+                if hasattr(stream,'Output') and stream.Output is not None:
+                    self._fsrWriter(self.undressFile(stream.Output),stream)
+                else:
+                    self._fsrWriter(writer=stream)
                 #print "Done conversion!"
                 continue
             
@@ -902,8 +905,9 @@ class IOHelper(object):
         #both result in well-formed Lumi tests
         #return [FSRWriter, winstance]
     
-    def _fsrWriter(self,filename,writer="RecordStream"):
-        '''Configure FSR writer. Since it has odd options, reset them all'''
+    def _fsrWriter(self,filename=None,writer="RecordStream"):
+        '''Configure FSR writer. Since it has odd options, reset them all
+        If filename is None, do not attempt to dress it '''
         
         stype=self.detectStreamType(writer)
         if stype not in ["FSR"]:
@@ -921,6 +925,9 @@ class IOHelper(object):
         winstance.ItemList = [ "/FileRecords#999" ]
         winstance.EvtDataSvc = "FileRecordDataSvc"
         winstance.EvtConversionSvc = "FileRecordPersistencySvc"
+        
+        if filename is None:
+            return
         
         #FSRs have a different output service
         FSRIO=None

@@ -14,10 +14,12 @@ def testType(ioh):
     
     RecordStream('FileRecord5').Output="DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"
     
+    RecordStream("RubbishRecord").EvtDataSvc="CrappyNonexistingService"
+    
     ioh.debugIO()
-
+    
     ioh.convertStreams()
-
+    
     ioh.debugIO()
 
 

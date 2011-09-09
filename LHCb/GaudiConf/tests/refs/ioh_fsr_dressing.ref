@@ -13,6 +13,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'"}
+RecordStream/RubbishRecord
+{'EvtDataSvc': 'CrappyNonexistingService'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'"}
 RecordStream/FileRecord2
@@ -37,6 +39,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+RecordStream/RubbishRecord
+{'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord2
@@ -63,6 +67,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+RecordStream/RubbishRecord
+{'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'CrappyNonexistingService', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord2
@@ -87,6 +93,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+RecordStream/RubbishRecord
+{'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord2
@@ -113,6 +121,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+RecordStream/RubbishRecord
+{'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'CrappyNonexistingService', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord2
@@ -137,6 +147,8 @@ RecordStream/FileRecord5
 {'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord4
 {'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+RecordStream/RubbishRecord
+{'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'CrappyNonexistingService', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord3
 {'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'ItemList': ['/FileRecords#999'], 'EvtDataSvc': 'FileRecordDataSvc', 'EvtConversionSvc': 'FileRecordPersistencySvc'}
 RecordStream/FileRecord2
