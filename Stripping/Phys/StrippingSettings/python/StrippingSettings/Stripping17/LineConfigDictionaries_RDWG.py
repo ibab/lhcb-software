@@ -680,6 +680,8 @@ Tau23Mu = {
     }
     }
 
+# J. Albrecht
+# Searches for highly displaced dimuons 
 VeryDetachedJpsi = {
     'BUILDERTYPE'  : 'VDetJPsiLinesConf',
     'STREAMS'      : ['Dimuon'],
@@ -691,3 +693,17 @@ VeryDetachedJpsi = {
     }
 
 
+
+# N. Serra , M. De Cian 
+# Searches for highly displaced dimuons for Inflaton searches
+Inflaton2MuMu = {
+    'BUILDERTYPE' : 'StrippingInflaton2MuMuConf' ,
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'     : [ 'RD' ] ,
+    'CONFIG'  : {
+    'Inflaton2MuMuLongPrescale'        : 1,
+    'Inflaton2MuMuDownstreamPrescale'  : 1,
+    'Inflaton2MuMuLongPostscale'       : 1,
+    'Inflaton2MuMuDownstreamPostscale' : 1
+    }
+    }
