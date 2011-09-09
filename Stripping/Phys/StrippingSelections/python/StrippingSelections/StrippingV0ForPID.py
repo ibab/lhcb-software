@@ -406,7 +406,7 @@ class StrippingV0ForPIDConf(LineBuilder) :
             """
         
 
-        self.Lam0_LL = Selection("SelLam02PPi_LL",+ self._name
+        self.Lam0_LL = Selection("SelLam02PPi_LL" + self._name,
                                  Algorithm = _Lam0,
                                  RequiredSelections = [ StdAllNoPIDsPions, StdAllNoPIDsProtons ]) 
 
