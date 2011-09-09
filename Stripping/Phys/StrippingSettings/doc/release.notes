@@ -5,10 +5,13 @@
 ! -----------------------------------------------------------------------------
 
 
-! 2011-08-29 - T Blake
+! 2011-09-09 - T Blake
+ - Updated stripping17 dbase 
+
+! 2011-09-09 - T Blake
  - Reverted accidental changes to Stripping 16 to the previous tagged version. 
 
-! 2011-08-29 - T Blake
+! 2011-09-09 - T Blake
  - Updated LineConfigDictionaries_RDWG.py (and dbase)
 
 !========================= StrippingSettings v2r7 2011-09-06 =========================
