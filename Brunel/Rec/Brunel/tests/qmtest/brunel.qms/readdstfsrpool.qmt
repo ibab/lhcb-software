@@ -12,9 +12,11 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["DEBUG  'CnvServices':"]) + \
   LineSkipper(["ServiceManager      DEBUG"]) + \
   LineSkipper(["VERBOSE ServiceLocatorHelper"]) + \
+  LineSkipper(["FileRecordCnvSvc"]) + \
   LineSkipper(["RootCnvSvc"]) + \
   LineSkipper(["PoolDbBaseCnv"]) + \
   LineSkipper(["PoolRoot"]) + \
+  LineSkipper(["SVC='Gaudi::RootEvtSelector'"]) + \
   LineSkipper(["POOL"])
 validateWithReference(preproc = preprocessor)
 </text></argument>

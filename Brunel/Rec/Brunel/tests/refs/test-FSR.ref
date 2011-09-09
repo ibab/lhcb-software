@@ -27,7 +27,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xfb77430>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xeea1900>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
@@ -62,10 +62,10 @@
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr      DEBUG Getting my own properties
-ApplicationMgr    SUCCESS 
+ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v40r1
-                                          running on lxbuild163.cern.ch on Tue Sep  6 16:55:42 2011
+                                          running on lxbuild163.cern.ch on Fri Sep  9 14:59:16 2011
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -85,7 +85,7 @@ DetectorDataSvc   VERBOSE ServiceLocatorHelper::service: found service IncidentS
 DetectorPersist...  DEBUG  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...  DEBUG Service base class initialized successfully
 DetectorDataSvc     DEBUG Storage type used is: 7
-DetectorDataSvc     DEBUG Setting DetectorDataSvc root node... 
+DetectorDataSvc     DEBUG Setting DetectorDataSvc root node...
 XmlCnvSvc           DEBUG Service base class initialized successfully
 XmlParserSvc        DEBUG Service base class initialized successfully
 ToolSvc             DEBUG Service base class initialized successfully
@@ -104,12 +104,6 @@ FileCatalog         DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service IODataManager
 IODataManager       DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service RootCnvSvc
-RootCnvSvc          DEBUG Service base class initialized successfully
-RootCnvSvc        VERBOSE ServiceLocatorHelper::service: found service IODataManager
-RootCnvSvc        VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-RootCnvSvc          DEBUG Installed IOHandler for class SmartRefBase
-RootCnvSvc          DEBUG Installed IOHandler for class ContainedObject
-RootCnvSvc          DEBUG Installed IOHandler for class pool::Token
 ServiceManager      DEBUG Initializing service FileRecordCnvSvc
 FileRecordCnvSvc    DEBUG Service base class initialized successfully
 FileRecordCnvSvc  VERBOSE ServiceLocatorHelper::service: found service IODataManager
@@ -213,7 +207,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -313,94 +307,11 @@ ApplicationMgr       INFO Application Manager Started successfully
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
-RootCnvSvc          DEBUG Opened file Brunel.dst in mode READ. [Brunel.dst]
-TFile**		Brunel.dst	Brunel.dst
- TFile*		Brunel.dst	Brunel.dst
-  KEY: TTree	##Shapes;1	##Shapes
-  KEY: TTree	##Links;1	##Links
-  KEY: TTree	##Params;1	##Params
-  KEY: TTree	_Event;1	_Event
-  KEY: TTree	_Event_Rec;1	_Event_Rec
-  KEY: TTree	_Event_Rec_Header;1	_Event_Rec_Header
-  KEY: TTree	_Event_Rec_Status;1	_Event_Rec_Status
-  KEY: TTree	_Event_Rec_Summary;1	_Event_Rec_Summary
-  KEY: TTree	_Event_Rec_Track;1	_Event_Rec_Track
-  KEY: TTree	_Event_Rec_Track_Best;1	_Event_Rec_Track_Best
-  KEY: TTree	_Event_Rec_Rich;1	_Event_Rec_Rich
-  KEY: TTree	_Event_Rec_Rich_PIDs;1	_Event_Rec_Rich_PIDs
-  KEY: TTree	_Event_Rec_Muon;1	_Event_Rec_Muon
-  KEY: TTree	_Event_Rec_Muon_MuonPID;1	_Event_Rec_Muon_MuonPID
-  KEY: TTree	_Event_Rec_Calo;1	_Event_Rec_Calo
-  KEY: TTree	_Event_Rec_Calo_Electrons;1	_Event_Rec_Calo_Electrons
-  KEY: TTree	_Event_Rec_Calo_Photons;1	_Event_Rec_Calo_Photons
-  KEY: TTree	_Event_Rec_Calo_MergedPi0s;1	_Event_Rec_Calo_MergedPi0s
-  KEY: TTree	_Event_Rec_Calo_SplitPhotons;1	_Event_Rec_Calo_SplitPhotons
-  KEY: TTree	_Event_Rec_ProtoP;1	_Event_Rec_ProtoP
-  KEY: TTree	_Event_Rec_ProtoP_Charged;1	_Event_Rec_ProtoP_Charged
-  KEY: TTree	_Event_Rec_ProtoP_Neutrals;1	_Event_Rec_ProtoP_Neutrals
-  KEY: TTree	_Event_Rec_Vertex;1	_Event_Rec_Vertex
-  KEY: TTree	_Event_Rec_Vertex_Primary;1	_Event_Rec_Vertex_Primary
-  KEY: TTree	_Event_Rec_Vertex_Weights;1	_Event_Rec_Vertex_Weights
-  KEY: TTree	_Event_Rec_Vertex_V0;1	_Event_Rec_Vertex_V0
-  KEY: TTree	_Event_Rec_Track_Muon;1	_Event_Rec_Track_Muon
-  KEY: TTree	_Event_DAQ;1	_Event_DAQ
-  KEY: TTree	_Event_DAQ_RawEvent;1	_Event_DAQ_RawEvent
-  KEY: TTree	_FileRecords;1	_FileRecords
-  KEY: TTree	_FileRecords_LumiFSRNoBeam;1	_FileRecords_LumiFSRNoBeam
-  KEY: TTree	_FileRecords_LumiFSRBeamCrossing;1	_FileRecords_LumiFSRBeamCrossing
-  KEY: TTree	_FileRecords_LumiFSRBeam1;1	_FileRecords_LumiFSRBeam1
-  KEY: TTree	_FileRecords_LumiFSRBeam2;1	_FileRecords_LumiFSRBeam2
-  KEY: TTree	_FileRecords_TimeSpanFSR;1	_FileRecords_TimeSpanFSR
-  KEY: TTree	_FileRecords_EventCountFSR;1	_FileRecords_EventCountFSR
-TFile: name=Brunel.dst, title=Brunel.dst, option=READ
-RootCnvSvc        VERBOSE Param:FID=786A9DE8-0186-E011-9C09-003048C9CD62.
-RootCnvSvc        VERBOSE Param:PFN=Brunel.dst.
-RootCnvSvc        VERBOSE Param:POOL_VSN=1.1.
-RootCnvSvc        VERBOSE Param:FORMAT_VSN=1.1.
-RootCnvSvc        VERBOSE Add link[0]:<localDB>##Params [-1,-1]  tech:       1 CLID:       1
-RootCnvSvc        VERBOSE Add link[1]:<localDB>/Event [-1,-1]  tech:       1 CLID:       1
-RootCnvSvc        VERBOSE Add link[2]:<localDB>/Event/Rec [0,0]  tech:       2 CLID:da8f479c
-RootCnvSvc        VERBOSE Add link[3]:<localDB>/Event/Rec/Header [0,1]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[4]:<localDB>/Event/Rec/Status [0,2]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[5]:<localDB>/Event/Rec/Summary [0,3]  tech:       2 CLID:      69
-RootCnvSvc        VERBOSE Add link[6]:<localDB>/Event/Rec/Track [0,4]  tech:       2 CLID:    1389
-RootCnvSvc        VERBOSE Add link[7]:<localDB>/Event/Rec/Track/Best [0,5]  tech:       2 CLID:      6a
-RootCnvSvc        VERBOSE Add link[8]:<localDB>/Event/Rec/Rich [0,6]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[9]:<localDB>/Event/Rec/Rich/PIDs [0,7]  tech:       2 CLID:   6271a
-RootCnvSvc        VERBOSE Add link[10]:<localDB>/Event/Rec/Muon [0,8]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[11]:<localDB>/Event/Rec/Muon/MuonPID [0,9]  tech:       2 CLID:   63072
-RootCnvSvc        VERBOSE Add link[12]:<localDB>/Event/Rec/Calo [0,10]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[13]:<localDB>/Event/Rec/Calo/Electrons [0,11]  tech:       2 CLID:   62b2a
-RootCnvSvc        VERBOSE Add link[14]:<localDB>/Event/Rec/Calo/Photons [0,12]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[15]:<localDB>/Event/Rec/Calo/MergedPi0s [0,13]  tech:       2 CLID:   607d4
-RootCnvSvc        VERBOSE Add link[16]:<localDB>/Event/Rec/Calo/SplitPhotons [0,14]  tech:       2 CLID:   607d4
-RootCnvSvc        VERBOSE Add link[17]:<localDB>/Event/Rec/ProtoP [0,15]  tech:       2 CLID:   607d4
-RootCnvSvc        VERBOSE Add link[18]:<localDB>/Event/Rec/ProtoP/Charged [0,16]  tech:       2 CLID:   607d4
-RootCnvSvc        VERBOSE Add link[19]:<localDB>/Event/Rec/ProtoP/Neutrals [0,17]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[20]:<localDB>/Event/Rec/Vertex [0,18]  tech:       2 CLID:   60323
-RootCnvSvc        VERBOSE Add link[21]:<localDB>/Event/Rec/Vertex/Primary [0,19]  tech:       2 CLID:   60323
-RootCnvSvc        VERBOSE Add link[22]:<localDB>/Event/Rec/Vertex/Weights [0,20]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[23]:<localDB>/Event/Rec/Vertex/V0 [0,21]  tech:       2 CLID:   6272e
-RootCnvSvc        VERBOSE Add link[24]:<localDB>/Event/Rec/Track/Muon [0,22]  tech:       2 CLID:   6272f
-RootCnvSvc        VERBOSE Add link[25]:<localDB>/Event/DAQ [0,23]  tech:       2 CLID:   62738
-RootCnvSvc        VERBOSE Add link[26]:<localDB>/Event/DAQ/RawEvent [0,24]  tech:       2 CLID:   6271a
-RootCnvSvc        VERBOSE Add link[27]:<localDB>/FileRecords [0,25]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[28]:<localDB>/FileRecords/LumiFSRNoBeam [0,26]  tech:       2 CLID:     3ea
-RootCnvSvc        VERBOSE Add link[29]:<localDB>/FileRecords/LumiFSRBeamCrossing [0,27]  tech:       2 CLID:       1
-RootCnvSvc        VERBOSE Add link[30]:<localDB>/FileRecords/LumiFSRBeam1 [0,28]  tech:       2 CLID:   634bd
-RootCnvSvc        VERBOSE Add link[31]:<localDB>/FileRecords/LumiFSRBeam2 [0,29]  tech:       2 CLID:   634bd
-RootCnvSvc        VERBOSE Add link[32]:<localDB>/FileRecords/TimeSpanFSR [0,30]  tech:       2 CLID:   634bd
-RootCnvSvc        VERBOSE Add link[33]:<localDB>/FileRecords/EventCountFSR [0,31]  tech:       2 CLID:   634bd
-RootCnvSvc          DEBUG Check FID param:786A9DE8-0186-E011-9C09-003048C9CD62
-RootCnvSvc          DEBUG Using FID 786A9DE8-0186-E011-9C09-003048C9CD62 from params table....
-RootCnvSvc          DEBUG for PFN:Brunel.dst
-RootCnvSvc        VERBOSE Prepare /FileRecords 786A9DE8-0186-E011-9C09-003048C9CD62 [786A9DE8-0186-E011-9C09-003048C9CD62][0]
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
 FileRecordDataSvc   DEBUG Request to load record for file 786A9DE8-0186-E011-9C09-003048C9CD62
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service Gaudi::RootCnvSvc/FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords  1 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62 created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62
 FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62#LumiFSRNoBeam[0]
@@ -412,43 +323,31 @@ FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/786A9DE8-01
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62 successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRNoBeam
-RootCnvSvc        VERBOSE Add leaf:30->LumiFSRNoBeam from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/LumiFSRNoBeam Link:LumiFSRNoBeam CLID:634bd Typ:2 Ent:0
-Add leaf:31->LumiFSRBeamCrossing from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/LumiFSRBeamCrossing Link:LumiFSRBeamCrossing CLID:634bd Typ:2 Ent:0
-Add leaf:32->LumiFSRBeam1 from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/LumiFSRBeam1 Link:LumiFSRBeam1 CLID:634bd Typ:2 Ent:0
-Add leaf:33->LumiFSRBeam2 from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/LumiFSRBeam2 Link:LumiFSRBeam2 CLID:634bd Typ:2 Ent:0
-Add leaf:34->TimeSpanFSR from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/TimeSpanFSR Link:TimeSpanFSR CLID:634c0 Typ:2 Ent:0
-Add leaf:35->EventCountFSR from 786A9DE8-0186-E011-9C09-003048C9CD62#/FileRecords/EventCountFSR Link:EventCountFSR CLID:34bf Typ:2 Ent:0
-Load [0] --> FileRecords:/FileRecords/LumiFSRNoBeam  123 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRNoBeam created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRNoBeam
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRNoBeam successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRNoBeam
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeamCrossing
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords/LumiFSRBeamCrossing  123 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeamCrossing created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeamCrossing
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeamCrossing successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeamCrossing
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam1
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords/LumiFSRBeam1  123 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam1 created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam1
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam1 successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam1
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam2
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords/LumiFSRBeam2  123 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam2 created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam2
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam2 successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/LumiFSRBeam2
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/TimeSpanFSR
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords/TimeSpanFSR  203 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/TimeSpanFSR created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/TimeSpanFSR
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/TimeSpanFSR successfully loaded
 FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/TimeSpanFSR
 FileRecordDataSvc VERBOSE Requested object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/EventCountFSR
-RootCnvSvc        VERBOSE Load [0] --> FileRecords:/FileRecords/EventCountFSR  21 bytes.
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/EventCountFSR created
 FileRecordDataSvc VERBOSE Filling object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/EventCountFSR
 FileRecordDataSvc VERBOSE Object /FileRecords/786A9DE8-0186-E011-9C09-003048C9CD62/EventCountFSR successfully loaded
@@ -457,56 +356,38 @@ EventSelector     SUCCESS Reading Event record 1. Record number within stream 1:
 EventDataSvc      VERBOSE Requested object /Event
 EventPersistenc...VERBOSE ServiceLocatorHelper::service: found service Gaudi::RootCnvSvc/RootCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
-RootCnvSvc        VERBOSE Load [0] --> Event:/Event  1 bytes.
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#DAQ[0]
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#Rec[0]
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
-RootCnvSvc        VERBOSE Add leaf:27->DAQ from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/DAQ Link:DAQ CLID:1 Typ:2 Ent:0
-Add leaf:4->Rec from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/Rec Link:Rec CLID:1 Typ:2 Ent:0
-Load [1] --> Event:/Event  1 bytes.
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#DAQ[1]
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#Rec[1]
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
-RootCnvSvc        VERBOSE Add leaf:27->DAQ from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/DAQ Link:DAQ CLID:1 Typ:2 Ent:1
-Add leaf:4->Rec from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/Rec Link:Rec CLID:1 Typ:2 Ent:1
-Load [2] --> Event:/Event  1 bytes.
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#DAQ[2]
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#Rec[2]
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
 EventDataSvc      VERBOSE Requested object /Event
-RootCnvSvc        VERBOSE Add leaf:27->DAQ from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/DAQ Link:DAQ CLID:1 Typ:2 Ent:2
-Add leaf:4->Rec from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/Rec Link:Rec CLID:1 Typ:2 Ent:2
-Load [3] --> Event:/Event  1 bytes.
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#DAQ[3]
-RootCnvSvc        VERBOSE EventDataSvc -> Register:/Event#Rec[3]
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventLoopMgr         INFO No more events in event selection 
+EventLoopMgr         INFO No more events in event selection
 LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> endRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
@@ -571,19 +452,19 @@ ServiceManager      DEBUG Finalizing service XmlCnvSvc
 ServiceManager      DEBUG Finalizing service XmlParserSvc
 ServiceManager      DEBUG Finalizing service ToolSvc
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 EventSelector.DataStreamTool:1 
+ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 EventSelector.DataStreamTool:1
 ToolSvc             DEBUG 3 tools left to finalize. Summed refCounts: 3
 ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.250 |     0.026 |    0.018       0.0 |       4 |     0.000 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.250 |     0.006 |    0.003       0.0 |       4 |     0.000 |
+ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.023 |    0.014       0.0 |       4 |     0.000 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.006 |    0.002       0.0 |       4 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool 
+ToolSvc.Sequenc...  DEBUG  ==> Finalize the base class GaudiTool
 ToolSvc.Sequenc...  DEBUG Tools to release :
 ToolSvc.Sequenc...  DEBUG Services to release : RndmGenSvc
 ToolSvc.Sequenc...  DEBUG Releasing service 'RndmGenSvc'
@@ -594,353 +475,11 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.54995(+-2.39718)/0/10.999[ms] Total:0.010999[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.6499(+-2.83285)/0/12.998[ms] Total:0.012998[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ServiceManager      DEBUG Finalizing service RootCnvSvc
-TFile**		Brunel.dst	Brunel.dst
- TFile*		Brunel.dst	Brunel.dst
-  OBJ: TTree	##Links	##Links : 0 at: 0x12a81650
-  OBJ: TTree	##Params	##Params : 0 at: 0x12a81d70
-  OBJ: TTree	_FileRecords	_FileRecords : 0 at: 0x12af16a0
-  OBJ: TTree	_FileRecords_LumiFSRNoBeam	_FileRecords_LumiFSRNoBeam : 0 at: 0x12bbd440
-  OBJ: TTree	_FileRecords_LumiFSRBeamCrossing	_FileRecords_LumiFSRBeamCrossing : 0 at: 0x12c9c730
-  OBJ: TTree	_FileRecords_LumiFSRBeam1	_FileRecords_LumiFSRBeam1 : 0 at: 0x12ca2530
-  OBJ: TTree	_FileRecords_LumiFSRBeam2	_FileRecords_LumiFSRBeam2 : 0 at: 0x12cd3380
-  OBJ: TTree	_FileRecords_TimeSpanFSR	_FileRecords_TimeSpanFSR : 0 at: 0x12d04140
-  OBJ: TTree	_FileRecords_EventCountFSR	_FileRecords_EventCountFSR : 0 at: 0x12d90a50
-  OBJ: TTree	_Event	_Event : 0 at: 0x12d96020
-  KEY: TTree	##Shapes;1	##Shapes
-  KEY: TTree	##Links;1	##Links
-  KEY: TTree	##Params;1	##Params
-  KEY: TTree	_Event;1	_Event
-  KEY: TTree	_Event_Rec;1	_Event_Rec
-  KEY: TTree	_Event_Rec_Header;1	_Event_Rec_Header
-  KEY: TTree	_Event_Rec_Status;1	_Event_Rec_Status
-  KEY: TTree	_Event_Rec_Summary;1	_Event_Rec_Summary
-  KEY: TTree	_Event_Rec_Track;1	_Event_Rec_Track
-  KEY: TTree	_Event_Rec_Track_Best;1	_Event_Rec_Track_Best
-  KEY: TTree	_Event_Rec_Rich;1	_Event_Rec_Rich
-  KEY: TTree	_Event_Rec_Rich_PIDs;1	_Event_Rec_Rich_PIDs
-  KEY: TTree	_Event_Rec_Muon;1	_Event_Rec_Muon
-  KEY: TTree	_Event_Rec_Muon_MuonPID;1	_Event_Rec_Muon_MuonPID
-  KEY: TTree	_Event_Rec_Calo;1	_Event_Rec_Calo
-  KEY: TTree	_Event_Rec_Calo_Electrons;1	_Event_Rec_Calo_Electrons
-  KEY: TTree	_Event_Rec_Calo_Photons;1	_Event_Rec_Calo_Photons
-  KEY: TTree	_Event_Rec_Calo_MergedPi0s;1	_Event_Rec_Calo_MergedPi0s
-  KEY: TTree	_Event_Rec_Calo_SplitPhotons;1	_Event_Rec_Calo_SplitPhotons
-  KEY: TTree	_Event_Rec_ProtoP;1	_Event_Rec_ProtoP
-  KEY: TTree	_Event_Rec_ProtoP_Charged;1	_Event_Rec_ProtoP_Charged
-  KEY: TTree	_Event_Rec_ProtoP_Neutrals;1	_Event_Rec_ProtoP_Neutrals
-  KEY: TTree	_Event_Rec_Vertex;1	_Event_Rec_Vertex
-  KEY: TTree	_Event_Rec_Vertex_Primary;1	_Event_Rec_Vertex_Primary
-  KEY: TTree	_Event_Rec_Vertex_Weights;1	_Event_Rec_Vertex_Weights
-  KEY: TTree	_Event_Rec_Vertex_V0;1	_Event_Rec_Vertex_V0
-  KEY: TTree	_Event_Rec_Track_Muon;1	_Event_Rec_Track_Muon
-  KEY: TTree	_Event_DAQ;1	_Event_DAQ
-  KEY: TTree	_Event_DAQ_RawEvent;1	_Event_DAQ_RawEvent
-  KEY: TTree	_FileRecords;1	_FileRecords
-  KEY: TTree	_FileRecords_LumiFSRNoBeam;1	_FileRecords_LumiFSRNoBeam
-  KEY: TTree	_FileRecords_LumiFSRBeamCrossing;1	_FileRecords_LumiFSRBeamCrossing
-  KEY: TTree	_FileRecords_LumiFSRBeam1;1	_FileRecords_LumiFSRBeam1
-  KEY: TTree	_FileRecords_LumiFSRBeam2;1	_FileRecords_LumiFSRBeam2
-  KEY: TTree	_FileRecords_TimeSpanFSR;1	_FileRecords_TimeSpanFSR
-  KEY: TTree	_FileRecords_EventCountFSR;1	_FileRecords_EventCountFSR
-TFile: name=Brunel.dst, title=Brunel.dst, option=READ
-******************************************************************************
-*Tree    :##Links   : ##Links                                                *
-*Entries :       34 : Total =            5859 bytes  File  Size =       1478 *
-*        :          : Tree compression factor =   4.03                       *
-******************************************************************************
-*Br    0 :db_string : db_string/C                                            *
-*Entries :       34 : Total  Size=       5521 bytes  File Size  =       1105 *
-*Baskets :        2 : Basket Size=       4096 bytes  Compression=   4.03     *
-*............................................................................*
-******************************************************************************
-*Tree    :##Params  : ##Params                                               *
-*Entries :        4 : Total =            1412 bytes  File  Size =        573 *
-*        :          : Tree compression factor =   1.16                       *
-******************************************************************************
-*Br    0 :db_string : db_string/C                                            *
-*Entries :        4 : Total  Size=       1070 bytes  File Size  =        211 *
-*Baskets :        1 : Basket Size=       4096 bytes  Compression=   1.16     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords: _FileRecords                                           *
-*Entries :        1 : Total =            5896 bytes  File  Size =       1614 *
-*        :          : Tree compression factor =   1.22                       *
-******************************************************************************
-*Branch  :DataObject                                                         *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        764 bytes  File Size  =         85 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    1 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        823 bytes  File Size  =        109 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=       1117 bytes  File Size  =        173 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.57     *
-*............................................................................*
-*Br    3 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        972 bytes  File Size  =        176 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.11     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_LumiFSRNoBeam: _FileRecords_LumiFSRNoBeam                             *
-*Entries :        1 : Total =            8437 bytes  File  Size =       2079 *
-*        :          : Tree compression factor =   1.03                       *
-******************************************************************************
-*Branch  :KeyedContainer_LHCb__LumiFSR_Containers__KeyedObjectManager_Containers__hashmap___ *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        806 bytes  File Size  =         99 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_sequential : vector<LHCb::LumiFSR*>                              *
-*Entries :        1 : Total  Size=       1089 bytes  File Size  =        217 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.08     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        865 bytes  File Size  =        123 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    3 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        823 bytes  File Size  =        117 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    4 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        830 bytes  File Size  =        118 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_LumiFSRBeamCrossing: _FileRecords_LumiFSRBeamCrossing                       *
-*Entries :        1 : Total =            8551 bytes  File  Size =       2120 *
-*        :          : Tree compression factor =   1.03                       *
-******************************************************************************
-*Branch  :KeyedContainer_LHCb__LumiFSR_Containers__KeyedObjectManager_Containers__hashmap___ *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        824 bytes  File Size  =        105 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_sequential : vector<LHCb::LumiFSR*>                              *
-*Entries :        1 : Total  Size=       1107 bytes  File Size  =        223 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.08     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        883 bytes  File Size  =        129 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    3 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        841 bytes  File Size  =        123 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    4 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        848 bytes  File Size  =        124 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_LumiFSRBeam1: _FileRecords_LumiFSRBeam1                              *
-*Entries :        1 : Total =            8418 bytes  File  Size =       2068 *
-*        :          : Tree compression factor =   1.03                       *
-******************************************************************************
-*Branch  :KeyedContainer_LHCb__LumiFSR_Containers__KeyedObjectManager_Containers__hashmap___ *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        803 bytes  File Size  =         98 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_sequential : vector<LHCb::LumiFSR*>                              *
-*Entries :        1 : Total  Size=       1086 bytes  File Size  =        216 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.08     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        862 bytes  File Size  =        122 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    3 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        820 bytes  File Size  =        116 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    4 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        827 bytes  File Size  =        117 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_LumiFSRBeam2: _FileRecords_LumiFSRBeam2                              *
-*Entries :        1 : Total =            8418 bytes  File  Size =       2065 *
-*        :          : Tree compression factor =   1.03                       *
-******************************************************************************
-*Branch  :KeyedContainer_LHCb__LumiFSR_Containers__KeyedObjectManager_Containers__hashmap___ *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        803 bytes  File Size  =         98 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_sequential : vector<LHCb::LumiFSR*>                              *
-*Entries :        1 : Total  Size=       1086 bytes  File Size  =        216 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.08     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        862 bytes  File Size  =        122 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    3 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        820 bytes  File Size  =        116 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    4 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        827 bytes  File Size  =        117 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_TimeSpanFSR: _FileRecords_TimeSpanFSR                               *
-*Entries :        1 : Total =            8599 bytes  File  Size =       2090 *
-*        :          : Tree compression factor =   1.11                       *
-******************************************************************************
-*Branch  :KeyedContainer_LHCb__TimeSpanFSR_Containers__KeyedObjectManager_Containers__hashmap___ *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        800 bytes  File Size  =         97 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_sequential : vector<LHCb::TimeSpanFSR*>                          *
-*Entries :        1 : Total  Size=       1243 bytes  File Size  =        239 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.31     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        859 bytes  File Size  =        121 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    3 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        817 bytes  File Size  =        115 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    4 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        824 bytes  File Size  =        116 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_FileRecords_EventCountFSR: _FileRecords_EventCountFSR                             *
-*Entries :        1 : Total =            8780 bytes  File  Size =       2258 *
-*        :          : Tree compression factor =   1.00                       *
-******************************************************************************
-*Branch  :EventCountFSR                                                      *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        1 : Total  Size=        806 bytes  File Size  =         99 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    1 :m_output  : Long64_t                                               *
-*Entries :        1 : Total  Size=        813 bytes  File Size  =        105 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    2 :m_input   : Long64_t                                               *
-*Entries :        1 : Total  Size=        806 bytes  File Size  =        104 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    3 :m_statusFlag : Int_t                                               *
-*Entries :        1 : Total  Size=        833 bytes  File Size  =        105 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    4 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        1 : Total  Size=        865 bytes  File Size  =        123 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        1 : BranchElement (see below)                              *
-*............................................................................*
-*Br    5 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        1 : Total  Size=        823 bytes  File Size  =        117 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Br    6 :m_links   : vector<string>                                         *
-*Entries :        1 : Total  Size=        830 bytes  File Size  =        118 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-******************************************************************************
-*Tree    :_Event    : _Event                                                 *
-*Entries :        4 : Total =            6130 bytes  File  Size =       1580 *
-*        :          : Tree compression factor =   1.46                       *
-******************************************************************************
-*Branch  :DataObject                                                         *
-*Entries :        4 : BranchElement (see below)                              *
-*............................................................................*
-*Br    0 :m_version : UChar_t                                                *
-*Entries :        4 : Total  Size=        752 bytes  File Size  =         82 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.00     *
-*............................................................................*
-*Branch  :Links                                                              *
-*Entries :        4 : BranchElement (see below)                              *
-*............................................................................*
-*Br    1 :m_linkVector : vector<LinkManager::Link*>                          *
-*Entries :        4 : Total  Size=        889 bytes  File Size  =        125 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.16     *
-*............................................................................*
-*Branch  :Refs                                                               *
-*Entries :        4 : BranchElement (see below)                              *
-*............................................................................*
-*Br    2 :m_refs    : vector<pool::Token*>                                   *
-*Entries :        4 : Total  Size=       1359 bytes  File Size  =        209 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.89     *
-*............................................................................*
-*Br    3 :m_links   : vector<string>                                         *
-*Entries :        4 : Total  Size=        934 bytes  File Size  =        132 *
-*Baskets :        1 : Basket Size=      16384 bytes  Compression=   1.36     *
-*............................................................................*
-RootCnvSvc          DEBUG Add leaf:27->DAQ from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/DAQ Link:DAQ CLID:1 Typ:2 Ent:3
-Add leaf:4->Rec from 786A9DE8-0186-E011-9C09-003048C9CD62#/Event/Rec Link:Rec CLID:1 Typ:2 Ent:3
-Disconnected file Brunel.dst Brunel.dst
 RootCnvSvc           INFO Disconnected data IO:786A9DE8-0186-E011-9C09-003048C9CD62[Brunel.dst]
 ServiceManager      DEBUG Finalizing service IODataManager
 ServiceManager      DEBUG Finalizing service FileCatalog
