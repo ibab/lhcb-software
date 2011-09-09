@@ -603,8 +603,7 @@ Bu2D0h_D02KShh_NoPID_WS = {
 B2twobody = {
     'BUILDERTYPE' : 'B2nbodyConf',
     'CONFIG' : {  'nbody':              2,
-                  'prescale':           0.5,
-                  'MaxTrLong':           70,
+                  'prescale':           0.5, 
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,
@@ -747,7 +746,6 @@ B2twobody = {
                   'MinDSD0DauPt':     250.0,
                   'MinDSD0DauIPChi2':   9.0,
                   'MaxDSD0DauTrkChi2':  5.0
-                  
                   }, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
@@ -756,8 +754,7 @@ B2twobody = {
 B2threebody = {
     'BUILDERTYPE' : 'B2nbodyConf',
     'CONFIG' : {  'nbody':              3,
-                  'prescale':           0.5,
-                  'MaxTrLong':           70,
+                  'prescale':           0.5, 
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,
@@ -909,7 +906,6 @@ B2fourbody = {
     'BUILDERTYPE' : 'B2nbodyConf',
     'CONFIG' : {  'nbody':              4,
                   'prescale':           0.5, 
-                  'MaxTrLong':           70,
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,

@@ -541,17 +541,3 @@ B2XTau = {
     'B2DMu_TISLinePrescale'             : 1,
     'B2DMu_TISLinePostscale'            : 1 }
     }
-
-# Diego + Xabier
-
-KS02MuMu = {
-    'BUILDERTYPE' : 'K0s2MuMuLinesConf',
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ],
-    'CONFIG' : {
-    'NoMuIDLinePrescale'    : 1e-03,
-    'NoMuIDLinePostscale'   : 1,
-    'K0s2mmLinePrescale'  : 1,
-    'K0s2mmLinePostscale'  : 1
-    }
-}
