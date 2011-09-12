@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Add option for MC10 files
+
  - Changes to references to reflect changes in Boole v23r0 output:
    . Default persistency switched to ROOT
    . Reduced verbosity from persistency initialisation in Gaudi v22r4
