@@ -67,11 +67,17 @@ namespace Online {
     const_iterator end() const 
       {  return begin()+size();                        }
     /// Iterator implementation: Next element of iteration
-    iterator next(iterator prev) const
-      {  return ++prev;                                }
+    iterator next(iterator prev) const  {
+      iterator i=++prev;
+      iterator e=begin()+size();
+      return i <= e ? i : e;
+    }
     /// Iterator implementation: Next element of iteration
-    const_iterator next(const_iterator prev) const
-      {  return ++prev;                                }
+    const_iterator next(const_iterator prev) const     {
+      const_iterator i=++prev;
+      const_iterator e=begin()+size();
+      return i <= e ? i : e;
+    }
     /// Add new element to container and return pointer to next object
     pointer_type add(pointer_type /* prev */)      
       {  return begin()+(++m_size);                    }
@@ -123,12 +129,18 @@ namespace Online {
       {  return (pointer_type)(data()+data_length());            }
 
     /// Iterator implementation: Next element of iteration
-    const_iterator next(const_iterator prev) const
-      {  return (const_iterator)(((char*)prev)+prev->length());}
+    const_iterator next(const_iterator prev) const      {
+      const_iterator i = (const_iterator)(((char*)prev)+ prev->length());
+      const_iterator e = (const_iterator)(((char*)data())+data_length());
+      return i > prev && i <= e ? i : e;
+    }
 
     /// Iterator implementation: Next element of iteration
-    iterator next(iterator prev) 
-      {  return (iterator)(((char*)prev)+prev->length());}
+    iterator next(iterator prev)       {      
+      iterator i = (iterator)(((char*)prev)+ prev->length());
+      iterator e = (iterator)(((char*)data())+data_length());
+      return i > prev && i <= e ? i : e;
+    }
 
     /// Add new element to container and return pointer to next object
     pointer_type add(pointer_type prev)            {
