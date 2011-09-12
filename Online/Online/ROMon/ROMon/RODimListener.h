@@ -30,9 +30,9 @@ namespace ROMon {
   class ROMonInfo;
 
   class ROUpdateHandler {
-    protected:
-    virtual ~ROUpdateHandler();
-    public:
+  protected:
+    virtual ~ROUpdateHandler() {}
+  public:
     virtual void update(void* param=0) = 0;
   };
 
