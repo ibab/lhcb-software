@@ -1,6 +1,6 @@
 import GaudiPython
 from Gaudi.Configuration import*
-from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
+from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigTarFileAccessSvc, ConfigZipFileAccessSvc, ConfigFileAccessSvc, PropertyConfigSvc
 
 # pick the default config access svc
 from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
@@ -17,7 +17,7 @@ topLevelAlias = GaudiPython.gbl.ConfigTreeNodeAlias.createTopLevel
 TCK = GaudiPython.gbl.ConfigTreeNodeAlias.createTCK
 vector_string = GaudiPython.gbl.std.vector('std::string')
 
-defaultCas = ConfigTarFileAccessSvc(File = '$STRIPPINGTCKROOT/config.tar')
+defaultCas = ConfigZipFileAccessSvc(File = '$STRIPPINGTCKROOT/config.zip')
 
 def _appMgr() :
     ApplicationMgr().AppName = ""
@@ -179,64 +179,6 @@ def getL0Prescales( id, cas  = defaultCas ) :
     return ret
 
 
-def _updateL0TCK( id, l0tck, label, cas, extra = None ) :
-    if not label : 
-        print 'please provide a reasonable label for the new configuration'
-        return None
-    l0tck = '0x%04X'%_tck(l0tck)
-    importOptions('$L0TCK/L0DUConfig.opts')
-    from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
-    if l0tck not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
-             raise KeyError('requested L0 TCK %s is not known to TCK/L0TCK'%l0tck) 
-    configProvider = L0DUConfigProvider('ToolSvc.L0DUConfig.TCK_%s'%l0tck)
-    l0config = configProvider.getValuedProperties()
-    l0config['TCK'] = l0tck
-
-    pc = PropertyConfigSvc( prefetchConfig = [ _digest(id,cas).str() ],
-                            ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(), 
-                            ConfigAccessSvc =  cas.getFullName())
-
-    appMgr = _appMgr()
-    appMgr.createSvc(cas.getFullName())
-    appMgr.createSvc(pc.getFullName())
-    cas = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    pc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
-    cte = appMgr.toolsvc().create(cte.getFullName(),interface='IConfigTreeEditor')
-    id  = _digest(id,cas)
-    a = [ i.alias().str() for  i in cas.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-    if len(a) != 1 : 
-        print 'something went wrong: no unique toplevel match for ' + str(id)
-        return
-    (release,hlttype) = a[0].split('/',3)[1:3]
-    mods = vector_string()
-    # check L0 config in source config
-    for i in pc.collectLeafRefs( id ) :
-        propConfig = pc.resolvePropertyConfig( i )
-        #  check for either a MultiConfigProvider with the right setup,
-        #  or for a template with the right TCK in it...
-        if propConfig.name() == 'ToolSvc.L0DUConfig' : 
-            cfg = PropCfg(propConfig)
-            if cfg.type != 'L0DUConfigProvider':
-                raise KeyError("Can only update configuration which use L0DUConfigProvider, not  %s" % cfg.type )
-            #  check that all specified properties exist in cfg
-            for (k,v) in l0config.iteritems() :
-                if k not in cfg.props : raise KeyError('Specified property %s not in store'%k)
-                #print 'key: %s  request: %s  persistent: %s ' % ( k, v, cfg.props[k] )
-                mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
-    if extra :
-        for algname,props in extra.iteritems() :
-            for k,v in props.iteritems() : 
-                mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
-    print 'updates: %s ' % mods
-    newId = cte.updateAndWrite(id,mods,label)
-    noderef = cas.readConfigTreeNode( newId )
-    if not noderef : print 'oops, could not find node for %s ' % newId
-    top = topLevelAlias( release, hlttype, noderef.get() )
-    cas.writeConfigTreeNodeAlias(top)
-    print 'wrote ' + str(top.alias()) 
-    return str(newId)
-
 
 def _createTCKEntries(d, cas ) :
     ## first pick up all the L0 configurations during the Configurable step
@@ -318,6 +260,16 @@ def _getConfigTree( configID , cas = defaultCas ) :
     _TreeNodeCache( svc = appMgr.service(name,'IPropertyConfigSvc') )
     return Tree(id)
 
+# TODO: caching should be done seperately for each cas instance... 
+def xget( ids , cas = ConfigAccessSvc() ) : 
+    if 'forest' not in dir(xget) : xget.forest = dict() 
+    fetch = [ id for id in ids if id not in xget.forest.keys() ] 
+    if fetch : 
+	xget.forest.update( execInSandbox( _xget, fetch, cas ) ) 
+    forest = dict() 
+    for id in ids : forest[id] = xget.forest[id] 
+    return forest 
+
 def _xget( configIDs , cas = defaultCas ) :
     ids = [ _digest(i,cas) for i in configIDs ]
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() for id in ids ],
@@ -369,43 +321,9 @@ def _lookupProperty(table,algname,property) :
 
 def _getProperty(id,algname,property, cas ) :
     id = tck2id(id,cas)
-    tables = execInSandbox( _xget, [ id ], cas )
+#    tables = execInSandbox( _xget, [ id ], cas )
+    tables = xget( [ id ], cas )
     return _lookupProperty(tables[id],algname,property)
-
-def _updateProperties(id, updates, label, cas  ) :
-    if not label : 
-        print 'please provide a reasonable label for the new configuration'
-        return None
-    if type(id) == str: id = digest( id )
-    pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
-                            ConfigAccessSvc = cas.getFullName() )
-    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName(),
-                            ConfigAccessSvc = cas.getFullName() )
-    # run program...
-    appMgr = _appMgr()
-    appMgr.createSvc(pc.getFullName())
-    cteName = cte.name().split('.')[-1]
-    ed = appMgr.toolsvc().create(cteName,interface='IConfigTreeEditor')
-    if not ed : raise RuntimeWarning(' could not get tool ' + cteName )
-    cf = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    if not cf : raise RuntimeWarning(' could not get service ' + cas.name() )
-    a = [ i.alias().str() for  i in cf.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-    if len(a) != 1 : 
-        print 'something went wrong: no unique toplevel match for ' + str(id)
-        return
-    (release,hlttype) = a[0].split('/',3)[1:3]
-    mods = vector_string()
-    for algname,props in updates.iteritems() :
-        for k,v in props.iteritems() : 
-            item = algname + '.' + k + ':' + v
-            print 'updating: ' + item
-            mods.push_back( item )
-    newId = ed.updateAndWrite(id,mods,label)
-    noderef = cf.readConfigTreeNode( newId )
-    top = topLevelAlias( release, hlttype, noderef.get() )
-    cf.writeConfigTreeNodeAlias(top)
-    print 'wrote ' + str(top.alias()) 
-    return str(newId)
 
 
 ### and now define the routines visible from the outside world...
@@ -477,7 +395,8 @@ class Tree(object):
 
 def diff( lhs, rhs , cas = defaultCas ) :
     (lhs,rhs) = (tck2id(lhs,cas),tck2id(rhs,cas))
-    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
+#    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
+    table = xget( [ lhs, rhs ] , cas ) 
     setl = set( table[lhs].keys() )
     setr = set( table[rhs].keys() )
     onlyInLhs = setl - setr
@@ -497,14 +416,6 @@ def diff( lhs, rhs , cas = defaultCas ) :
                                         lhs, rhs, n=0) )
 
 
-
-
-def updateProperties(id,updates,label='', cas = defaultCas ) :
-    return execInSandbox( _updateProperties,id,updates,label, cas )
-
-def updateL0TCK(id, l0tck, label='', cas = defaultCas, extra = None ) :
-    return execInSandbox( _updateL0TCK, id, l0tck, label, cas = cas, extra = extra)
-
 def createTCKEntries(d, cas = defaultCas ) :
     return execInSandbox( _createTCKEntries, d, cas )
 
@@ -512,14 +423,14 @@ def copy( source = defaultCas , target = ConfigDBAccessSvc(ReadOnly=False) ) :
     return execInSandbox( _copy, source, target )
 
 def listComponents( id, cas = defaultCas ) :
-    tree = execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree( id, cas )
     for i in tree : 
         if i.leaf : 
           s =  i.depth*3*' ' + i.leaf.name
           print s + (80-len(s))*' ' + str(i.leaf.digest)
 
 def getAlgorithms( id, cas = defaultCas ) :
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree( id, cas )
     x = ''
     for i in tree :
        if i.leaf and i.leaf.kind =='IAlgorithm':
@@ -531,7 +442,7 @@ def listAlgorithms( id, cas = defaultCas ) :
     print getAlgorithms(id,cas)
 
 def getStreams( id, cas = defaultCas ) : 
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree =  getConfigTree( id, cas )
     x = ''
     stream_prefix = 'StrippingSequenceStream'
     for i in tree :
@@ -546,7 +457,7 @@ def listStreams( id, cas = defaultCas ) :
     print getStreams(id,cas)
 
 def getLines( id, stream = None, cas = defaultCas) :
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree( id, cas )
     x = ''
     stream_prefix = 'StrippingSequenceStream'
     stream_lines = []
@@ -570,7 +481,7 @@ def listLines( id, stream = None, cas = defaultCas ) :
     print getLines(id, stream, cas)
 
 def getLineProperties( id, linename='', cas = defaultCas ) : 
-    tree =  execInSandbox( _getConfigTree, id, cas )
+    tree =  getConfigTree( id, cas )
     matchleaf = None
     for i in tree :
        if i.leaf and i.leaf.type == 'StrippingAlg' :
@@ -618,7 +529,7 @@ def listLineProperties( id, linename='', cas = defaultCas ) :
 
 def getProperties( id, algname='',property='',cas = defaultCas ) :
     retlist=[]
-    tree = execInSandbox( _getConfigTree, id, cas )
+    tree = getConfigTree ( id, cas )
     import re
     if algname :
         reqNode = re.compile(algname)
@@ -639,7 +550,7 @@ def getProperties( id, algname='',property='',cas = defaultCas ) :
     return retlist
 
 def listProperties( id, algname='',property='',cas = defaultCas ) :
-    tree = execInSandbox( _getConfigTree, id, cas ) 
+    tree = getConfigTree( id, cas ) 
     import re
     if algname : 
         reqNode = re.compile(algname)
@@ -744,7 +655,11 @@ def dump( id, properties = None,  lines = None, cas = defaultCas ) :
        print line
 
 def getConfigTree(id, cas = defaultCas ):
-    return execInSandbox( _getConfigTree, id, cas )
+#    return execInSandbox( _getConfigTree, id, cas )
+    if 'forest' not in dir(getConfigTree) : getConfigTree.forest = dict() 
+    if id not in getConfigTree.forest : 
+	getConfigTree.forest[id] = execInSandbox( _getConfigTree, id, cas ) 
+    return getConfigTree.forest[id] 
 
 def getHlt1Lines( id , cas = defaultCas ) :
     # should be a list... so we try to 'eval' it

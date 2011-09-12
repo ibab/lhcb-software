@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+import tarfile,zipfile,time,gzip
+
+z = zipfile.ZipFile('config.zip','w',zipfile.ZIP_DEFLATED)
+t = tarfile.TarFile('config.tar')
+for f in t : 
+        if not f.isfile() : continue
+        # TODO: figure out how to add uid/guid to ZipInfo.extra...
+        g = t.extractfile(f)
+        zi = zipfile.ZipInfo()
+        zi.filename = f.name
+        zi.date_time = time.gmtime(f.mtime)[0:6]
+        if f.size > 64 : zi.compress_type = zipfile.ZIP_DEFLATED
+        if f.name[-3:] == '.gz' : 
+            g = gzip.GzipFile(fileobj=g)
+            zi.filename = zi.filename[:-3]
+            zi.compress_type = zipfile.ZIP_DEFLATED
+        z.writestr(zi, g.read())
+        
+

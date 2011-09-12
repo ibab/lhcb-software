@@ -6,6 +6,13 @@
                 Based on TCKsh by Gerhard Raven
 !-----------------------------------------------------------------------------
 
+! 2011-09-12 - Anton Poluektov 
+  - Use zip file access service instead of tar. Faster access, smaller file
+  - Implement modifications by Gerhard to cache reading config tree from file
+    (access is slow due to Gaudi calls only for the fist call)
+  - Update config database with Stripping15 (STCK  0x28400150) 
+    and Stripping16 (0x28500160). 
+
 !========================= StrippingTCK v1r1 2011-05-13 =========================
 ! 2011-05-04 - Anton Poluektov 
 
