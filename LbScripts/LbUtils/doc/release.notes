@@ -2,6 +2,7 @@
 
 	* python/LbUtils/Path.py: added function to remove entries from a given os.pathsep separated path.
 	* tests/PathTest.py:
+
 2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r4p1

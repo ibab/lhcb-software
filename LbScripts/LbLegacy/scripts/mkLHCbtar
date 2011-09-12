@@ -1,33 +1,6 @@
 #!/usr/bin/env python
 
-""" Script to make a LHCb tar file
- - 060612 - first version
- - 060829 - fix create_web :
-            which should not change $LHCBTAR/distribution.html
- - 060920 - add MCatNLOData
- - 061005 - fix Panoramix
- - 061103 - remove temporary dependency file
- - 061128 - import LHCb_config to get data_files dictionary
- - 070126 - adapt the code to CMTPROJECTPATH
- - 070329 - get Gauss dependencies on GENSER through GENSER or MCGenerators
- - 070416 - keep test* directories in Online project
- - 070925 - added generation of md5 sum
- - 071002 - fixed md5 file format
- - 071004 - removed the exclusion of the glimpse index from the source tar ball
- - 071022 - added the exclusion of install.history from the tar balls
- - 071022 - removed from the source tarball exclusion, the glimpse files
- - 080204 - added the calculation of the md5 check sum for data files
- - 080221 - added the Mac binary exclusion
- - 080221 - added exclusion of binary ATLAS tags
- - 080421 - added exclusion of the archived library (lib*.a) in the binary tar balls
- - 081007 - by default consider that there is no version directories for the packages
- - 081028 - added the same feature as above for Panoramix
- - 081113 - fix the cleaning of GaudiExamples without version directory
- - 081215 - Removed LCGCMT from the direct dependencies of Dirac
- - 081217 - added LCGGrid to the Dirac dependencies
- - 090430 - added support for slc5
- - 091013 - added suport for Ganga distribution
-"""
+""" Script to make a LHCb tar file """
 
 #-----------------------------------------------------------------------------
 
@@ -501,7 +474,8 @@ def create_web():
 
     os.chdir(HTMLDIR)
     webfile = 'distribution.htm'
-    if os.path.exists(webfile): os.remove(webfile)
+    if os.path.exists(webfile):
+        os.remove(webfile)
 
     flist = fnmatch.filter(os.listdir(HTMLDIR), '*.html')
     flist.sort()
@@ -515,7 +489,6 @@ def create_web():
         for line in open(f).readlines():
             web.write(line)
 
-#  d = datetime.date.today().isoformat()
     d = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     web.write('<HR>Last Update : ' + d + '\n')
 
@@ -523,6 +496,16 @@ def create_web():
         web.write(line + '\n')
 
     web.close()
+
+    webmd5file = 'distribution.md5'
+    if os.path.exists(webmd5file):
+        os.remove(webmd5file)
+
+    md5sum = calculateMD5(webfile)
+    mdf = open(webmd5file, "w")
+    mdf.write("%s  %s" % (md5sum, os.path.basename(webfile)))
+    mdf.close()
+
     os.chdir(here)
 
 

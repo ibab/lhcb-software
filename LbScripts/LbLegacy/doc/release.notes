@@ -1,3 +1,7 @@
+2011-09-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLHCbtar: added calculation of the MD5 sum for the distribution.htm file.
+
 2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r4p1
