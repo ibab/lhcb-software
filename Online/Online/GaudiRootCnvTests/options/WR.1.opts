@@ -1,3 +1,5 @@
 #include "$GAUDIROOTCNVTESTSROOT/options/WR.opts"
 RootDst.Output             = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='RootCnvSvc' OPT='RECREATE'";
 RootMini.Output            = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='RootCnvSvc' OPT='RECREATE'";
+DstRecords.Output          = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='FileRecordCnvSvc' OPT='RECREATE'";
+MiniRecords.Output         = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='FileRecordCnvSvc' OPT='RECREATE'";

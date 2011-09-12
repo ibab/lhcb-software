@@ -44,13 +44,11 @@ FileRecordDataSvc.EnableFaultHandler  = true;
 FileRecordDataSvc.RootCLID            = 1;
 
 ApplicationMgr.OutStream             += { "RecordStream/DstRecords" };
-DstRecords.ItemList                   = { "/FileRecords#999" } ;
-DstRecords.Output                     = @RootDst.Output;
+DstRecords.ItemList                   = { "/FileRecords#999" };
 DstRecords.EvtDataSvc                 = "FileRecordDataSvc";
 DstRecords.EvtConversionSvc           = "FileRecordPersistencySvc";
 
 ApplicationMgr.OutStream            += { "RecordStream/MiniRecords" };
-MiniRecords.ItemList                  = { "/FileRecords#999" } ;
-MiniRecords.Output                    = @RootMini.Output;
+MiniRecords.ItemList                  = { "/FileRecords#999" };
 MiniRecords.EvtDataSvc                = "FileRecordDataSvc";
 MiniRecords.EvtConversionSvc          = "FileRecordPersistencySvc";
