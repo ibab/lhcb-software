@@ -45,6 +45,8 @@ namespace ROMon {
     /// String matching of services
     std::string m_match;
     std::string m_item;
+    int         m_infoTMO;
+
   public:
     /// Standard constructor
     FMCMonListener(bool verbose=false);

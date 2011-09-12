@@ -183,8 +183,8 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
 
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
-  m_service[0] = new _Svc<Nodeset> (m_mbm,  64,svc);
-  m_service[1] = new _Svc<CPUfarm> (m_stat, 10,svc + "/CPU");
+  m_service[0] = new _Svc<Nodeset> (m_mbm, 128,svc);
+  m_service[1] = new _Svc<CPUfarm> (m_stat, 32,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
   m_service[3] = new _Svc<ProcFarm>(m_stat, 64,svc + "/ROTasks",1);
 

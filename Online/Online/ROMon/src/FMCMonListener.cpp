@@ -29,9 +29,9 @@ using namespace ROMon;
 /// Copy data to descriptor
 void FMCMonListener::Descriptor::copy(const void* address, size_t siz) {
   if ( size_t(len) < siz ) {
-    len = siz;
+    len = siz+256;
     ::free(data);
-    data = (char*)::malloc(len);
+    data = (char*)::malloc(len+256);
   }
   actual = siz;
   int tm=0;
@@ -42,7 +42,7 @@ void FMCMonListener::Descriptor::copy(const void* address, size_t siz) {
 
 /// Standard constructor
 FMCMonListener::FMCMonListener(bool verbose) 
-  : RODimListener(verbose)
+  : RODimListener(verbose), m_infoTMO(10)
 {
 }
 
@@ -69,7 +69,7 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
       std::string nam = svc;
       if ( !m_item.empty() ) nam += "/" + m_item;
       m_clients[node] = itm;
-      itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,10,0,0,infoHandler,(long)itm,0,0);
+      itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,m_infoTMO,0,0,infoHandler,(long)itm,0,0);
       if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
                              << nam << "@" << node << " id=" << itm->id << std::endl;
     }

@@ -132,8 +132,10 @@ typedef RODimListener::Clients     Clients;
 ClusterListener::ClusterListener(bool verbose, const string& sf, const string& pref) 
   : FMCMonListener(verbose), m_prefix(pref) 
 {
-  setMatch("*");
+  m_infoTMO = 0;
   setItem("");
+  setMatch("*");
+  setUpdateHandler(this);
   string svc0 = "/" + strlower(sf) + "/ROpublish";
   addService(svc0);
   addService(svc0+"/CPU");
@@ -142,7 +144,6 @@ ClusterListener::ClusterListener(bool verbose, const string& sf, const string& p
   svc0 = "/" + strupper(sf) + "/TaskSupervisor";
   addService(svc0+"/Summary");
   addService(svc0+"/Status");
-  setUpdateHandler(this);
   ::lib_rtl_output(LIB_RTL_DEBUG,"[ROMonBridge] Added services for subfarm:%s",sf.c_str());
 }
 
@@ -162,7 +163,7 @@ void ClusterListener::addService(const string& svc) {
   Clients::iterator i=m_clients.find(svc);
   if ( i != m_clients.end() )  {
     Item* it = (*i).second;
-    int id = ::dis_add_service((char*)svc_name.c_str(),(char*)"C",0,0,feed,(long)it);
+    int   id = ::dis_add_service((char*)svc_name.c_str(),(char*)"C",0,0,feed,(long)it);
     m_services.insert(make_pair(it,id));
     ::lib_rtl_output(LIB_RTL_VERBOSE,"[ROMonBridge] Added service:%s",svc_name.c_str());
   }
@@ -180,12 +181,17 @@ void ClusterListener::update(void* param) {
 }
 
 /// Feed data to DIS when updating data
-void ClusterListener::feed(void* tag, void** buff, int* size, int* /* first */) {
+void ClusterListener::feed(void* tag, void** buff, int* size, int* first) {
   static const char* data = "";
-  Item* it = *(Item**)tag;
-  Descriptor* d = it->data<Descriptor>();
-  *buff = (void*)(d->data ? d->data : data);
-  *size = d->actual;
+  if ( !(*first) )  {
+    Item* it = *(Item**)tag;
+    Descriptor* d = it->data<Descriptor>();
+    *buff = (void*)(d->data ? d->data : data);
+    *size = d->actual;
+    return;
+  }
+  *buff = (void*)data;
+  *size = 0;
 }
 
 /// Standard constructor

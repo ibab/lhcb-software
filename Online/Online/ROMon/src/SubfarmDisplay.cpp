@@ -49,7 +49,7 @@ static void getBuffInfo(const MBMBuffer::Control& c, int info[3], int tot[3]) {
 }
 
 static void help() {
-  cout <<"  romon_storage -option [-option]" << endl
+  cout <<"  romon_subfarm -option [-option]" << endl
        <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
        <<"       -n[odesheight]=<number>      Height of the Nodes         display.                      " << endl
        <<"       -m[ooresheight]=<number>     Height of the MOORE tasks   display.                      " << endl
