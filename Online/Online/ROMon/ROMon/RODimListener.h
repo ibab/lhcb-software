@@ -29,7 +29,10 @@ namespace ROMon {
   // Forward declarations
   class ROMonInfo;
 
-  struct ROUpdateHandler {
+  class ROUpdateHandler {
+    protected:
+    virtual ~ROUpdateHandler();
+    public:
     virtual void update(void* param=0) = 0;
   };
 
