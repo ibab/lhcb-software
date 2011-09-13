@@ -13,23 +13,23 @@
 findReferenceBlock("""
 PrintJpsi_2600_3200                                         SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# /Event/SeqJpsi_2600_3200/Phys/SelJpsi_2600_32|        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |        67 |         13 |    0.19403 |    0.39545 |      0.0000 |      1.0000 |
- |*"#accept"                                       |        67 |         13 |(  19.4030 +- 4.83121  )%|   -------   |   -------   |
+ | "# /Event/SeqJpsi_2600_3200/Phys/SelJpsi_2600_32|         7 |          7 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        18 |          7 |    0.38889 |    0.48750 |      0.0000 |      1.0000 |
+ |*"#accept"                                       |        18 |          7 |(  38.8889 +- 11.4904  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "2600")
 findReferenceBlock("""
 PrintJpsi_3000_3500                                         SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# /Event/SeqJpsi_3000_3500/Phys/SelJpsi_3000_35|        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |        67 |         13 |    0.19403 |    0.39545 |      0.0000 |      1.0000 |
- |*"#accept"                                       |        67 |         13 |(  19.4030 +- 4.83121  )%|   -------   |   -------   |
+ | "# /Event/SeqJpsi_3000_3500/Phys/SelJpsi_3000_35|         1 |          1 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        18 |          1 |   0.055556 |    0.22906 |      0.0000 |      1.0000 |
+ |*"#accept"                                       |        18 |          1 |(  5.55556 +- 5.39903  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "3000")
 findReferenceBlock("""
 PrintJpsi_3050_3150                                         SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# /Event/SeqJpsi_3050_3150/Phys/SelJpsi_3050_31|        61 |         62 |     1.0164 |    0.12698 |      1.0000 |      2.0000 |
- | "# input particles"                             |        67 |         62 |    0.92537 |    0.31450 |      0.0000 |      2.0000 |
- |*"#accept"                                       |        67 |         61 |(  91.0448 +- 3.48842  )%|   -------   |   -------   |
+ | "# /Event/SeqJpsi_3050_3150/Phys/SelJpsi_3050_31|        12 |         13 |     1.0833 |    0.27639 |      1.0000 |      2.0000 |
+ | "# input particles"                             |        18 |         13 |    0.72222 |    0.55833 |      0.0000 |      2.0000 |
+ |*"#accept"                                       |        18 |         12 |(  66.6667 +- 11.1111  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "3050")
 </text></argument>
 </extension>

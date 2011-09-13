@@ -44,6 +44,9 @@ DaVinci().Simulation   = True                  # It is MC
 DaVinci().TupleFile = "DVnTuple.root"
 #DaVinci().ETCFile = "etc.root"                # no longer supported
 
+DaVinci().CondDBtag="sim-20100715-vc-md100"
+DaVinci().DDDBtag="head-20100624"
+
 #-- GAUDI jobOptions generated on Mon Jan 17 17:13:58 2011
 #-- Contains event types : 
 #--   13144006 - 1 files - 10000 events - 4.13 GBytes

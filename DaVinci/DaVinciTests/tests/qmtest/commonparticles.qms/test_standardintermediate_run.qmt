@@ -16,9 +16,11 @@ findReferenceBlock("""
 DaVinciInitAlg                                              SUCCESS 500 events processed
 """, stdout, result, causes, signature_offset = 0, id='Events')
 findReferenceBlock("""
-CountParticles                                              SUCCESS Number of counters : 48
+CountParticles                                              SUCCESS Number of counters : 51
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# Phys/StdLTUnbiasedJpsi2MuMu"                 |       500 |         44 |   0.088000 |    0.29027 |      0.0000 |      2.0000 |
+ | "# Phys/StdLooseD02KK"                          |       500 |        232 |    0.46400 |     1.3118 |      0.0000 |      12.000 |
+ | "# Phys/StdLooseD02KPi"                         |       500 |        272 |    0.54400 |     1.0863 |      0.0000 |      9.0000 |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
 </text></argument>
