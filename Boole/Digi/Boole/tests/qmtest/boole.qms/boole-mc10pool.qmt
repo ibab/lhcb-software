@@ -3,12 +3,12 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
-    <text>$BOOLEOPTS/Boole-2010.py</text>
-    <text>$BOOLEOPTS/2010-Files.py</text>
+    <text>$BOOLEOPTS/Boole-MC10.py</text>
+    <text>$BOOLEOPTS/MC10-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; Boole().Persistency="ROOT"</text>
+    <text>from Boole.Configuration import *; Boole().Persistency="POOL"</text>
   </set></argument>
-  <argument name="reference"><text>../refs/testBoole-2010.ref</text></argument>
+  <argument name="reference"><text>../refs/boole-mc10.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
 preprocessor = BoolePreprocessor + \
@@ -20,6 +20,6 @@ preprocessor = BoolePreprocessor + \
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>boole.boole-2010</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>boole.boole-mc10</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
 </extension>

@@ -4,12 +4,15 @@
   <argument name="args"><set>
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
     <text>$BOOLEROOT/tests/options/db-latest-2010.py</text>
-    <text>$BOOLEOPTS/Boole-2010.py</text>
-    <text>$BOOLEOPTS/2010-Files.py</text>
+    <text>$BOOLEOPTS/Boole-MC10.py</text>
+    <text>$BOOLEOPTS/MC10-Files.py</text>
   </set></argument>
-  <argument name="reference"><text>../refs/testBoole-2010-latestdb.ref</text></argument>
+  <argument name="reference"><text>../refs/boole-mc10.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>boole.boole-mc10</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
 </extension>

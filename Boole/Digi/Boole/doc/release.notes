@@ -3,7 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Add option for MC10 files
+
+ - Changes to example options:
+   . Replace 2010-Files.py by MC10-Files.py, produced with official MC10 settings
+   . Rename Boole-2010.py to Boole-MC10.py
+
+ - Changes to tests
+   . Replace boole-2010 and boole-2010root with boole-mc10 and boole-mc10pool
+   . Updated boole-2010-latestdb.qmt test to use MC10-Files.py and removed its
+     reference file since it should give identical output to boole-mc10
 
  - Changes to references to reflect changes in Boole v23r0 output:
    . Default persistency switched to ROOT

@@ -8,7 +8,7 @@
 from Gaudi.Configuration import *
 from Configurables import Boole, LHCbApp
 
-# L0 TCK for MC09
+# L0 TCK for MC10
 from Configurables import L0Conf
 L0Conf().TCK = '0x002A'
 
@@ -36,6 +36,3 @@ Boole().DatasetName = datasetName
 
 # writeRawMDF = false: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
 #OutputStream("DigiWriter").Output = "DATAFILE='PFN:SomeFile.digi' TYP='POOL_ROOTTREE' OPT='REC'"
-
-# write L0ETC = true: ETC with L0 result
-#TagCollectionStream( "WR" ).Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='SomeETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"

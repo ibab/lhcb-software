@@ -1,8 +1,8 @@
 ##############################################################################
-# File for running Boole with 2010 settings (full Digi output)
+# File for running Boole with default MC10 settings (full Digi output)
 #
 # Syntax is:
-# gaudirun.py Boole-2010.py <someDataFiles>.py
+# gaudirun.py Boole-MC10.py <someDataFiles>.py
 ##############################################################################
 
 from Gaudi.Configuration import importOptions
