@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 #include "TFile.h"
 #include "RootCnv/RootRefs.h"
@@ -125,6 +126,8 @@ namespace Gaudi  {
     typedef std::map<std::string,ContainerSections>                  MergeSections;
     /// Link sections definition
     typedef std::vector<RootRef>                                     LinkSections;
+    /// Client set
+    typedef std::set<const IInterface*>                              Clients;
 
     /// Allow access to printer service
     MsgStream& msgSvc() const {  return m_setup->msgSvc(); }
@@ -155,6 +158,8 @@ namespace Gaudi  {
     MergeSections        m_mergeSects;
     /// Database link sections
     LinkSections         m_linkSects;
+    /// Client list
+    Clients              m_clients;
     /// Buffer for empty string reference
     std::string          m_empty;
 
@@ -238,6 +243,14 @@ namespace Gaudi  {
     const MergeSections& mergeSections() const  {  return m_mergeSects;                        }
     /// Access merged FIDs
     const StringVec& mergeFIDs() const          {  return m_mergeFIDs;                         }
+
+
+    /// Add new client to this data source
+    void addClient(const IInterface* client);
+    /// Remove client from this data source
+    size_t removeClient(const IInterface* client);
+    /// Lookup client for this data source
+    bool lookupClient(const IInterface* client) const;
 
     /// Access link section for single container and entry
     std::pair<const RootRef*,const ContainerSection*>  getMergeSection(const std::string& container, int entry) const;

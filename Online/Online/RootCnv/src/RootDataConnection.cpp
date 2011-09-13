@@ -108,7 +108,7 @@ void RootConnectionSetup::setMessageSvc(MsgStream* m) {
 
 // Standard constructor
 RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, RootConnectionSetup* setup)
-: IDataConnection(owner,fname), m_setup(setup), m_statistics(0), m_tool(0)
+  : IDataConnection(owner,fname), m_setup(setup), m_statistics(0), m_tool(0)
 { //               01234567890123456789012345678901234567890
   // Check if FID: A82A3BD8-7ECB-DC11-8DC0-000423D950B0
   if ( fname.length() == 36 && fname[8]=='-'&&fname[13]=='-'&&fname[18]=='-'&&fname[23]=='-' ) {
@@ -118,12 +118,31 @@ RootDataConnection::RootDataConnection(const IInterface* owner, CSTR fname, Root
   m_age  = 0;
   m_file = 0;
   m_refs = 0;
+  addClient(owner);
 }
 
 // Standard destructor      
 RootDataConnection::~RootDataConnection()   {
   m_setup->release();
   releasePtr(m_tool);
+}
+
+// Add new client to this data source
+void RootDataConnection::addClient(const IInterface* client) {
+  m_clients.insert(client);
+}
+
+// Remove client from this data source
+size_t RootDataConnection::removeClient(const IInterface* client) {
+  Clients::iterator i=m_clients.find(client);
+  if ( i != m_clients.end() ) m_clients.erase(i);
+  return m_clients.size();
+}
+
+// Lookup client for this data source
+bool RootDataConnection::lookupClient(const IInterface* client)   const {
+  Clients::const_iterator i=m_clients.find(client);
+  return i != m_clients.end();
 }
 
 // Save TTree access statistics if required

@@ -117,23 +117,24 @@ StatusCode RootCnvSvc::initialize()  {
 StatusCode RootCnvSvc::finalize()    {
   log() << MSG::INFO;
   if ( m_ioMgr )  {
-    if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
-      IIODataManager::Connections cons = m_ioMgr->connections(this);
-      for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
-        if ( !m_ioPerfStats.empty() )   {
-          RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
-          if ( pc ) pc->saveStatistics(m_ioPerfStats);
-        }
-        if ( m_ioMgr->disconnect(*i).isSuccess() )  {
-          log() << "Disconnected data IO:" << (*i)->fid()
-            << "[" << (*i)->pfn() << "]"
-            << endmsg;
-          delete (*i);
-        }
+    IIODataManager::Connections cons = m_ioMgr->connections(0);
+    for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
+      RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
+      if ( pc ) {
+	if ( pc->owner() == this && !m_ioPerfStats.empty() )   {
+	  pc->saveStatistics(m_ioPerfStats);
+	}
+	if ( pc->lookupClient(this) )   {
+	  size_t num_clients = pc->removeClient(this);
+	  if ( num_clients == 0 ) {
+	    if ( m_ioMgr->disconnect(pc).isSuccess() )  {
+	      log() << "Disconnected data IO:" << pc->fid() 
+		    << " [" << pc->pfn() << "]" << endmsg;
+	      delete pc;
+	    }
+	  }
+	}
       }
-    }
-    else  {
-      log() << "File sharing enabled. Do not retire files." << endmsg;
     }
     releasePtr(m_ioMgr);
   }
@@ -235,9 +236,11 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       //if ( enable_stats ) pc->enableStatistics(m_section);
       *con = pc;
       pc->resetAge();
+      log() << MSG::ALWAYS << "Add client:" << pc->pfn() << "  " << name() << endmsg;
+      pc->addClient(this);
     }
     if ( *con )  {
-      if ( fire_incident ) {
+      if ( fire_incident )   {
         IOpaqueAddress* pAddr = 0;
         string fid = pc->fid();
         string section = m_recordName[0] == '/' ? m_recordName.substr(1) : m_recordName;
@@ -263,17 +266,21 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
           log() << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
         }
       }
-      // If we are not in shared mode, we can remove retired connections, which are no longer used....
-      if ( ::toupper(m_shareFiles[0]) != 'Y' )  {
-	IIODataManager::Connections cons = m_ioMgr->connections(this);
-	for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
-	  c = (*i);
-	  if ( !c->isConnected() )  {
-	    log() << MSG::INFO << "Removed disconnected IO  stream:" << c->fid() << endmsg;
-	    m_ioMgr->disconnect(c);
-	    delete c;
+      // We can remove retired connections, which are no longer used....
+      IIODataManager::Connections cons = m_ioMgr->connections(this);
+      for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
+	if ( !(*i)->isConnected() )  {
+	  RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
+	  if ( pc && pc->lookupClient(this) )   {
+	    size_t num_client = pc->removeClient(this);
+	    if ( num_client == 0 ) {
+	      if ( m_ioMgr->disconnect(pc).isSuccess() )  {
+		log() << MSG::INFO << "Removed disconnected IO  stream:" << pc->fid() << endmsg;
+		delete pc;
+	      }
+	    }
 	  }
-        }
+	}
       }
       return S_OK;
     }
