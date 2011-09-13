@@ -563,7 +563,8 @@ class RemoteAccess(object) :
         return str(newId)
     def rupdateL0TCK(self, id, l0config, label, extra ) :
         svc = RemoteAccess._svc
-        id  = _digest(id)
+        id  = svc._2id(id)
+        if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
         a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
         if len(a) != 1 : 
             print 'something went wrong: no unique toplevel match for ' + str(id)
