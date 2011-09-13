@@ -7,7 +7,7 @@
 
 #include <string.h>
 #include <stdio.h>
-
+#include "RTL/rtl.h"
 #include "Gaucho/BRTL_Lock.h"
 #include <errno.h>
 
@@ -23,7 +23,7 @@ int BRTLLock::lockMutex()
   int status = pthread_mutex_lock(&m_lid);
   if (status != 0)
   {
-    printf("Error from locking mutex %s Status %s\n", m_name.c_str(),strerror(status));
+    printf("%s: Error from locking mutex %s Status %s\n", RTL::processName().c_str(),m_name.c_str(),strerror(status));
   }
   return status;
 }
@@ -32,7 +32,7 @@ int BRTLLock::unlockMutex()
   int status = pthread_mutex_unlock(&m_lid);
   if (status != 0)
   {
-    printf("Error from unlocking mutex %s Status %s\n", m_name.c_str(),strerror(status));
+    printf("%s: Error from unlocking mutex %s Status %s\n",  RTL::processName().c_str(),m_name.c_str(),strerror(status));
     if (status == EPERM)
     {
       status =0;
