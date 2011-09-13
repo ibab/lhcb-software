@@ -98,13 +98,11 @@ if not hasattr ( _EvtSel , '_openNew_') :
         >>> evtSel.open ( 'file.mdf' )                   ## open MDF file 
         
         """
-
-        print ' I AM OPEN-NEW'
         
-        if typ == 'ROOT' and 'RootCnvSvc' not in self.g.ExtSvc :
+        if typ == 'ROOT' and ( 'RootCnvSvc' not in self.g.ExtSvc and 'Gaudi::RootCnvSvc/RootCnvSvc' not in self.g.ExtSvc ) : 
             self.g.ExtSvc   += [ 'Gaudi::RootCnvSvc/RootCnvSvc' ]
             rsvc = self.g.service ( 'RootCnvSvc'          )
-            eps  = selg.g.service ( 'EventPersistencySvc' )
+            eps  = self.g.service ( 'EventPersistencySvc' )
             eps.CnvServices += [ 'RootCnvSvc' ]
                         
         if instance ( stream , tuple ) : stream = list ( stream )
