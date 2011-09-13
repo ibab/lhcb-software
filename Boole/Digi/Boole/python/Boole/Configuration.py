@@ -89,7 +89,7 @@ class Boole(LHCbConfigurableUser):
 
     KnownFilterSubdets = [ "L0", "ODIN" ]
     KnownHistOptions = ["","None","Default","Expert"]
-    KnownSpillPaths  = [ "Prev", "PrevPrev", "Next" ]
+    KnownSpillPaths  = [ "Prev", "PrevPrev", "Next", "NextNext" ]
     
     __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf ]
 
