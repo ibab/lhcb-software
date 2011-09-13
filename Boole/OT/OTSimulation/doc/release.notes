@@ -2,6 +2,9 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-09-13 - Jeroen Van Tilburg
+ - Changed MCOTDepositCreator to use NextNext spill instead of reusing PrevPrev.
+
 !========================= OTSimulation v5r0p1 2011-04-11 =========================
 ! 2011-04-08 - Marco Cattaneo
  - Add some VERBOSE debug in MCOTDepositCreator

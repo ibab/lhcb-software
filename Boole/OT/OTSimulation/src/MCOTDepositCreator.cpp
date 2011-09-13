@@ -216,7 +216,7 @@ void MCOTDepositCreator::makeDeposits() const
     /// which is statistically incorrect. Here we also assume that the order of the 
     /// spills is as specified above. Just hope that someone doesn't mess-up the order
     /// in the options.
-    SmartDataPtr<MCHits> otMCHits( eventSvc(), m_spillNames[iSpill<4?iSpill:0] );
+    SmartDataPtr<MCHits> otMCHits( eventSvc(), m_spillNames[iSpill] );
 
     /// Can't assume that there are hits in spills
     if (!otMCHits) {
