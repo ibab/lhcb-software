@@ -108,8 +108,6 @@ public:
   virtual void setSignal( const int ) ;
   
  protected:
-  
- private:
   /** Make a HepMCTree tree from an EvtGen particle stopping at the PDG
    *  Id targetId
    *
@@ -125,14 +123,6 @@ public:
                         const Gaudi::LorentzVector & theOrigin ,
                         int targetId = -999 )  const ;
 
-  /** Create a temporary evt.pdl file filled with Gaudi Particle Svc
-   *  properties to update EvtGen particle properties
-   *
-   *  @param tempFileName name of the temporary created file
-   */
-  StatusCode createTemporaryEvtFile( const boost::filesystem::path & tempFileName ) 
-    const ;
-
   /** Check if HepMC Particle is valid for decay by EvtGen and to fill a
    *  HepMC event (checks if it is not already decayed and ensures that
    *  it has a defined production vertex) 
@@ -141,7 +131,7 @@ public:
    *  @return StatusCode::ERROR if particle has already an end vertex
    */
   void checkParticle( const HepMC::GenParticle * theParticle ) const ;
-  
+
   /** Call EvtGen to decay a particle
    *  @param[out] thePart the EvtParticle to produce
    *  @param[in]  theHepMCParticle the HepMC::GenParticle to decay with 
@@ -153,7 +143,24 @@ public:
   StatusCode callEvtGen( EvtParticle * &thePart , 
                          const HepMC::GenParticle * theHepMCParticle ,
                          const EvtId & eid ) const ;  
-  
+
+  /// Return the id of the alias corresponding to the pdg code pdgId
+  virtual const EvtId getSignalAlias( int pdgId ) const ;
+ 
+  EvtGen * m_gen ; ///< EvtGen engine
+
+  EvtRandomEngine * m_randomEngine ; ///< Random Engine to use in EvtGen
+
+private:
+
+  /** Create a temporary evt.pdl file filled with Gaudi Particle Svc
+   *  properties to update EvtGen particle properties
+   *
+   *  @param tempFileName name of the temporary created file
+   */
+  StatusCode createTemporaryEvtFile( const boost::filesystem::path & tempFileName ) 
+    const ;
+      
   /** Get 2J+1 spin for particles not supported in LHCbKernel/ParticleID
    *
    *  @param theId ParticleID of the particle for which to calculate 2J+1
@@ -166,14 +173,7 @@ public:
 
   /// check if id exists in generic decay table
   bool checkGeneric( const EvtId & id ) const ;
-
-  /// Return the id of the alias corresponding to the pdg code pdgId
-  virtual const EvtId getSignalAlias( int pdgId ) const ;
  
-  EvtGen * m_gen ; ///< EvtGen engine
-
-  EvtRandomEngine * m_randomEngine ; ///< Random Engine to use in EvtGen
-
   std::string m_decayFile ; ///< Generic decay file name (set by options)
 
   std::string m_userDecay ; ///< User decay file name (set by options)
@@ -209,7 +209,7 @@ public:
 
   /// Imaginary part of spin matrix for helicity 1 for charmonium polarization
   double m_imHelOne ;
-  
+ 
   /// Name of the temporary file for PHOTOS output
   boost::filesystem::path m_photosTempFilename ;  
 };

@@ -5,6 +5,10 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-09-13 - Alex Shires
+ - Add new DecayTool, EvtGenDecayInPhSp, for reweighting the Kstmumu phase space 
+    distribution such that it is flat in q2.
+
 !======================= Generators v11r0 2011-07-15 =========================
 ! 2011-07-15 - Gloria Corti
  - Apply pattern not to build on windows, so that conditional use can be
