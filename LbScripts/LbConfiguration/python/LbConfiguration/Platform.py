@@ -394,6 +394,11 @@ class NativeMachine:
         return self._osflavor
 
     def OSVersion(self, position=None, teststring=None):
+        """
+        returns version of the OS up to position
+        @param position: last position of version (no included)
+        @param teststring: test entry
+        """
         if not self._osversion :
             if self._ostype == "Windows" :
                 self._osversion = self._sysinfo[3]
