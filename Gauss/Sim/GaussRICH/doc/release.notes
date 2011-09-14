@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2011-9014 - Sajan Easo
+ - Fixed a typo in RichAnalysis.opts
 !2011-9-02 - Sajan Easo
 - RICH inefficiency applied as default in the RichEfficiency.opts as part of
   tuning to match  to the yields from real data.
