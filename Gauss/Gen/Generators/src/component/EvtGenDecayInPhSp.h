@@ -30,9 +30,6 @@ public:
   /// Finalize method
   virtual StatusCode finalize() ;
 
-  /// Implements IDecayTool::generateDecay
-  virtual StatusCode generateDecay( HepMC::GenParticle * theMother ) const ;
-
   /// Implements IDecayTool::generateSignalDecay
   virtual StatusCode generateSignalDecay( HepMC::GenParticle * theMother , 
                                           bool & flip ) const ;
