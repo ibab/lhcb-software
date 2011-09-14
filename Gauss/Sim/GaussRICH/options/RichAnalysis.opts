@@ -1,5 +1,5 @@
 // Rich specific Analysis job options
-#incldue "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+#include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
 
 GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
 //GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
@@ -10,7 +10,7 @@ GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=true;
 GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=true;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
 //GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=true;
@@ -18,16 +18,16 @@ GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=true;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCountingFullAcc=true;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=true;
+GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
-GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
+GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=true;
 
  GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
- GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=true;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
