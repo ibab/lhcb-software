@@ -1,55 +1,46 @@
-JobOptionsSvc        INFO
-//GP:================================================================================
-//GP: include "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.all.opts" (0,0)
-//GP: include "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.opts" (1,10)
-//GP: include "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts" (1,10)
-ApplicationMgr.ExtSvc =  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" ] ;//GP: (1,1)
-//GP: include "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts" (3,10)
-ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
-ApplicationMgr.ExtSvc +=  [ "Gaudi::RootCnvSvc/RootCnvSvc" ] ;          //GP: (1,1)
-EventPersistencySvc.CnvServices +=  [ "RootCnvSvc" ] ;                  //GP: (1,1)
-MessageSvc.OutputLevel = 3;                                             //GP: (1,1)
-ApplicationMgr.AuditAlgorithms = 1;                                     //GP: (1,1)
-ApplicationMgr.ExtSvc +=  [ "AuditorSvc" ] ;                            //GP: (1,1)
-ApplicationMgr.EvtMax = -1;                                             //GP: (1,1)
-AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;                           //GP: (1,1)
-FileCatalog.Catalogs =  [ "xmlcatalog_file:ROOTIO.xml" ] ;              //GP: (1,1)
-EventSelector.PrintFreq = 500;                                          //GP: (1,1)
-EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
-ReadAlg.OutputLevel = 4;                                                //GP: (1,1)
-RootCnvSvc.CacheSize = 50000000;                                        //GP: (1,1)
-//GP: end  "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts" (14,1)
-//GP: end  "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts" (4,1)
-ApplicationMgr.TopAlg =  [ "EvtCollectionWrite/Writer" ] ;              //GP: (1,10)
-ApplicationMgr.ExtSvc +=  [ "TagCollectionSvc/EvtTupleSvc" ] ;          //GP: (1,10)
-ReadAlg.OutputLevel = 4;                                                //GP: (1,10)
-Writer.OutputLevel = 2;                                                 //GP: (1,10)
-Writer.NumMcTracks = 1;                                                 //GP: (1,10)
-//GP: end  "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.opts" (7,1)
-EventSelector.Input =  [ "DATAFILE='PFN:ROOTIO.1.dst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EventSelector.Input +=  [ "DATAFILE='PFN:ROOTIO.1.mdst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EventSelector.Input +=  [ "DATAFILE='PFN:ROOTIO.2.dst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EventSelector.Input +=  [ "DATAFILE='PFN:ROOTIO.2.mdst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EventSelector.Input +=  [ "DATAFILE='PFN:ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EventSelector.Input +=  [ "DATAFILE='PFN:ROOTIO.3.mdst' SVC='Gaudi::RootEvtSelector'" ] ;//GP: (1,10)
-EvtTupleSvc.Output =  [ "EvtColl DATAFILE='PFN:ROOTIO.all.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" ] ;//GP: (1,10)
-//GP: end  "/home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.all.opts" (9,1)
-//GP:================================================================================
-
-JobOptionsSvc        INFO Job options successfully read in from /home/frankm/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.all.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts)
+JobOptionsSvc        INFO # (1,1): ApplicationMgr.ExtSvc = ["Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
+JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts)
+JobOptionsSvc        INFO # (1,1): ApplicationMgr.HistogramPersistency = "NONE"
+JobOptionsSvc        INFO # (2,1): ApplicationMgr.ExtSvc += ["Gaudi::RootCnvSvc/RootCnvSvc"]
+JobOptionsSvc        INFO # (3,1): EventPersistencySvc.CnvServices += ["RootCnvSvc"]
+JobOptionsSvc        INFO # (4,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # (5,1): ApplicationMgr.AuditAlgorithms = 1
+JobOptionsSvc        INFO # (6,1): ApplicationMgr.ExtSvc += ["AuditorSvc"]
+JobOptionsSvc        INFO # (7,1): ApplicationMgr.EvtMax = -1
+JobOptionsSvc        INFO # (8,1): AuditorSvc.Auditors += ["ChronoAuditor"]
+JobOptionsSvc        INFO # (9,1): FileCatalog.Catalogs = ["xmlcatalog_file:ROOTIO.xml"]
+JobOptionsSvc        INFO # (10,1): EventSelector.PrintFreq = 500
+JobOptionsSvc        INFO # (11,1): EventDataSvc.RootCLID = 1
+JobOptionsSvc        INFO # (12,1): ReadAlg.OutputLevel = 4
+JobOptionsSvc        INFO # (13,1): RootCnvSvc.CacheSize = 50000000
+JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.opts)
+JobOptionsSvc        INFO # (2,1): ApplicationMgr.TopAlg = ["EvtCollectionWrite/Writer"]
+JobOptionsSvc        INFO # (3,1): ApplicationMgr.ExtSvc += ["TagCollectionSvc/EvtTupleSvc"]
+JobOptionsSvc     WARNING # (4,1): Reassignment of option 'ReadAlg.OutputLevel' . Previously defined at /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts: (12, 1).
+JobOptionsSvc        INFO # (4,1): ReadAlg.OutputLevel = 4
+JobOptionsSvc        INFO # (5,1): Writer.OutputLevel = 2
+JobOptionsSvc        INFO # (6,1): Writer.NumMcTracks = 1
+JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.all.opts)
+JobOptionsSvc        INFO # (2,1): EventSelector.Input = ["DATAFILE='PFN:ROOTIO.1.dst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (3,1): EventSelector.Input += ["DATAFILE='PFN:ROOTIO.1.mdst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (4,1): EventSelector.Input += ["DATAFILE='PFN:ROOTIO.2.dst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (5,1): EventSelector.Input += ["DATAFILE='PFN:ROOTIO.2.mdst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (6,1): EventSelector.Input += ["DATAFILE='PFN:ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (7,1): EventSelector.Input += ["DATAFILE='PFN:ROOTIO.3.mdst' SVC='Gaudi::RootEvtSelector'"]
+JobOptionsSvc        INFO # (8,1): EvtTupleSvc.Output = ["EvtColl DATAFILE='PFN:ROOTIO.all.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'"]
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/CWR.all.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on plus08 on Thu May  5 18:48:14 2011
+                                          running on lxplus408.cern.ch on Wed Sep 14 14:07:00 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 EvtTupleSvc          INFO Added stream file:PFN:ROOTIO.all.tags as EvtColl
-IODataManager        INFO Referring to dataset ROOTIO.all.tags by its file ID:0C26C478-3777-E011-BCCA-001D0970D31F
+IODataManager        INFO Referring to dataset ROOTIO.all.tags by its file ID:BC07A30D-CADE-E011-84B8-003048F0E7D4
 Gaudi::RootData...   INFO Recreate Database file:PFN:ROOTIO.all.tags as /EvtColl
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:ROOTIO.1.dst' SVC='Gaudi::RootEvtSelector'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -90,8 +81,8 @@ Writer               INFO ================ EVENT:8 RUN:999 ====== N(Track)=30 PA
 Writer               INFO ================ EVENT:9 RUN:999 ====== N(Track)=43 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:500 RUN:999 ====== N(Track)=52 PASSED selection (>=1) ============
 EventSelector        INFO Stream:EventSelector.DataStreamTool_4 Def:DATAFILE='PFN:ROOTIO.2.mdst' SVC='Gaudi::RootEvtSelector'
-IODataManager        INFO Disconnect from dataset ROOTIO.1.dst [F2ADE56B-3777-E011-98D8-001D0970D31F]
-RootCnvSvc           INFO Removed disconnected IO  stream:F2ADE56B-3777-E011-98D8-001D0970D31F
+IODataManager        INFO Disconnect from dataset ROOTIO.1.dst [26E179F8-C9DE-E011-9901-003048F0E7D4]
+RootCnvSvc           INFO Removed disconnected IO  stream:26E179F8-C9DE-E011-9901-003048F0E7D4 [ROOTIO.1.dst]
 EventSelector     SUCCESS Reading Event record 1501. Record number within stream 4: 1
 Writer               INFO ================ EVENT:1 RUN:999 ====== N(Track)=39 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:2 RUN:999 ====== N(Track)=93 PASSED selection (>=1) ============
@@ -104,8 +95,8 @@ Writer               INFO ================ EVENT:8 RUN:999 ====== N(Track)=30 PA
 Writer               INFO ================ EVENT:9 RUN:999 ====== N(Track)=43 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:500 RUN:999 ====== N(Track)=52 PASSED selection (>=1) ============
 EventSelector        INFO Stream:EventSelector.DataStreamTool_5 Def:DATAFILE='PFN:ROOTIO.3.dst' SVC='Gaudi::RootEvtSelector'
-IODataManager        INFO Disconnect from dataset ROOTIO.1.mdst [1018036C-3777-E011-98D8-001D0970D31F]
-RootCnvSvc           INFO Removed disconnected IO  stream:1018036C-3777-E011-98D8-001D0970D31F
+IODataManager        INFO Disconnect from dataset ROOTIO.1.mdst [9C59AEF8-C9DE-E011-9901-003048F0E7D4]
+RootCnvSvc           INFO Removed disconnected IO  stream:9C59AEF8-C9DE-E011-9901-003048F0E7D4 [ROOTIO.1.mdst]
 EventSelector     SUCCESS Reading Event record 2001. Record number within stream 5: 1
 Writer               INFO ================ EVENT:1 RUN:999 ====== N(Track)=39 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:2 RUN:999 ====== N(Track)=93 PASSED selection (>=1) ============
@@ -118,8 +109,8 @@ Writer               INFO ================ EVENT:8 RUN:999 ====== N(Track)=30 PA
 Writer               INFO ================ EVENT:9 RUN:999 ====== N(Track)=43 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:500 RUN:999 ====== N(Track)=52 PASSED selection (>=1) ============
 EventSelector        INFO Stream:EventSelector.DataStreamTool_6 Def:DATAFILE='PFN:ROOTIO.3.mdst' SVC='Gaudi::RootEvtSelector'
-IODataManager        INFO Disconnect from dataset ROOTIO.2.dst [1A4CA46E-3777-E011-AAC8-001D0970D31F]
-RootCnvSvc           INFO Removed disconnected IO  stream:1A4CA46E-3777-E011-AAC8-001D0970D31F
+IODataManager        INFO Disconnect from dataset ROOTIO.2.dst [103F83FC-C9DE-E011-AED2-003048F0E7D4]
+RootCnvSvc           INFO Removed disconnected IO  stream:103F83FC-C9DE-E011-AED2-003048F0E7D4 [ROOTIO.2.dst]
 EventSelector     SUCCESS Reading Event record 2501. Record number within stream 6: 1
 Writer               INFO ================ EVENT:1 RUN:999 ====== N(Track)=39 PASSED selection (>=1) ============
 Writer               INFO ================ EVENT:2 RUN:999 ====== N(Track)=93 PASSED selection (>=1) ============
@@ -136,19 +127,19 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 EvtTupleSvc          INFO NTuples saved successfully
-EvtTupleSvc.Evt...   INFO Disconnected data IO:0C26C478-3777-E011-BCCA-001D0970D31F[ROOTIO.all.tags]
-RootCnvSvc           INFO Disconnected data IO:34185C71-3777-E011-A870-001D0970D31F[ROOTIO.3.dst]
-RootCnvSvc           INFO Disconnected data IO:844A7571-3777-E011-A870-001D0970D31F[ROOTIO.3.mdst]
-RootCnvSvc           INFO Disconnected data IO:BCBEBC6E-3777-E011-AAC8-001D0970D31F[ROOTIO.2.mdst]
+EvtTupleSvc.Evt...   INFO Disconnected data IO:BC07A30D-CADE-E011-84B8-003048F0E7D4 [ROOTIO.all.tags]
+RootCnvSvc           INFO Disconnected data IO:28A99D00-CADE-E011-9549-003048F0E7D4 [ROOTIO.3.mdst]
+RootCnvSvc           INFO Disconnected data IO:30BE7B00-CADE-E011-9549-003048F0E7D4 [ROOTIO.3.dst]
+RootCnvSvc           INFO Disconnected data IO:C0C4A2FC-C9DE-E011-AED2-003048F0E7D4 [ROOTIO.2.mdst]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-Writer:Stop          INFO Time User   : Tot=    0 [us]                                             #=  1
 Writer:Finalize      INFO Time User   : Tot=    0 [us]                                             #=  1
+Writer:Stop          INFO Time User   : Tot=    0 [us]                                             #=  1
 Writer:Start         INFO Time User   : Tot=    0 [us]                                             #=  1
-Writer:Initialize    INFO Time User   : Tot=   28 [ms]                                             #=  1
-Writer:Execute       INFO Time User   : Tot= 1.83  [s] Ave/Min/Max=0.611(+-0.963)/    0/   12 [ms] #=3000
-ChronoStatSvc        INFO Time User   : Tot= 2.73  [s]                                             #=  1
+Writer:Initialize    INFO Time User   : Tot=   68 [ms]                                             #=  1
+Writer:Execute       INFO Time User   : Tot= 3.67  [s] Ave/Min/Max= 1.22(+-  1.1)/    0/   20 [ms] #=3000
+ChronoStatSvc        INFO Time User   : Tot= 4.94  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
