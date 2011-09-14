@@ -182,40 +182,18 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
         
 
         # imports
-        from Configurables          import NoPIDsParticleMaker
-        from CommonParticles.Utils  import trackSelector, updateDoD
         from PhysSelPython.Wrappers import MergedSelection
 
-        #
-        # setup electrons
-        #
-
-        # TTrack electrons not OK yet ?
-        algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsTtrackElectrons'         ,
-                                           DecayDescriptor = 'Electron' , Particle = 'electron'  )
-        algorithm.AddBremPhotonTo = []
-        selector = trackSelector ( algorithm , trackTypes = [ "Ttrack" ])
-        locations = updateDoD ( algorithm )
-        StdNoPIDsTtrackElectrons = algorithm
-
-
-        # switch off Bremsstrahlung correction until fully tuned
-        algorithm =  NoPIDsParticleMaker ( 'StdAllNoPIDsElectrons'    , DecayDescriptor = 'Electron' , Particle = 'electron'  )
-        algorithm.AddBremPhotonTo = []
-        
-        algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsUpElectrons'  , DecayDescriptor = 'Electron' , Particle = 'electron'  )
-        algorithm.AddBremPhotonTo = []
-        
-        algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownElectrons', DecayDescriptor = 'Electron' , Particle = 'electron'  )
-        algorithm.AddBremPhotonTo = []
-
         # all required electrons
-        from CommonParticles import StdNoPIDsDownElectrons, StdNoPIDsUpElectrons,StdNoPIDsVeloElectrons 
+        from CommonParticles import NoBremNoPIDsElectrons
+        from CommonParticles import NoBremNoPIDsDownElectrons
+        from CommonParticles import NoBremNoPIDsUpElectrons
+        from CommonParticles import NoBremNoPIDsVeloElectrons 
 
-        eLong        = DataOnDemand('Phys/StdAllNoPIDsElectrons/Particles')
-        eUp          = DataOnDemand('Phys/StdNoPIDsUpElectrons/Particles')
-        eDown        = DataOnDemand('Phys/StdoPIDsDownElectrons/Particles')
-        eTtrack      = DataOnDemand('Phys/StdNoPIDsTtrackElectrons/Particles')
+        eLong        = DataOnDemand('Phys/NoBremNoPIDsElectrons/Particles')
+        eUp          = DataOnDemand('Phys/NoBremNoPIDsUpElectrons/Particles')
+        eDown        = DataOnDemand('Phys/NoBremNoPIDsDownElectrons/Particles')
+        eTtrack      = DataOnDemand('Phys/NoBremNoPIDsTtrackElectrons/Particles')
         allElectrons = MergedSelection('allElectrons', RequiredSelections = [eLong, eUp, eDown, eTtrack])
         
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
