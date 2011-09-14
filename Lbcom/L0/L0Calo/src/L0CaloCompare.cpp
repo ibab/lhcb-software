@@ -113,18 +113,18 @@ StatusCode L0CaloCompare::initialize() {
 
   m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp" , 
                                              "SpdMult comparison" ,
-                                             -101. , 101. , 200 ) ;
+                                             -101. , 101. , 202 ) ;
   m_histSumEt_Comp    = GaudiHistoAlg::book( "SumEt_Comp", 
                                              "SumEt comparison " , 
-                                             -101. , 101. , 200 ) ;
+                                             -101. , 101. , 202 ) ;
 
   m_histTotalCount = GaudiHistoAlg::book( "TotalCounter_Comp" , 
                                           "Counter of compared candidates" , 
-                                          0 , 5 , 5 ) ;
+                                          0 , 4 , 4 ) ;
 
   m_histErrorCount = GaudiHistoAlg::book( "ErrorCounter_Comp" , 
                                           "Counter of compared candidates in error" , 
-                                          0 , 5 , 5 ) ;
+                                          0 , 4 , 4 ) ;
 
   m_idles.insert( m_idleBCIdVector.begin() , m_idleBCIdVector.end() ) ;
 
@@ -371,7 +371,7 @@ StatusCode L0CaloCompare::execute() {
       {
         debug() << " SumEt : etCode = " << etCodeCheck << endreq ;
 
-        m_histTotalCount -> fill( 3.5 ) ;
+        // m_histTotalCount -> fill( 3.5 ) ;
 
         int sumRef( 0 ) ;
         int diff_SumEt( 0 ) ;
@@ -382,10 +382,10 @@ StatusCode L0CaloCompare::execute() {
         diff_SumEt = etCodeCheck - sumRef ;
         if ( diff_SumEt > 100.  ) diff_SumEt = 100 ; 
         else if ( diff_SumEt < -100. ) diff_SumEt = -100 ; 
-        m_histSumEt_Comp -> fill(diff_SumEt) ; 
+        m_histSumEt_Comp -> fill( diff_SumEt ) ; 
         if ( etCodeCheck != sumRef ) { 
           debug() << " SumEt ... Pb " <<endreq;  
-          m_histErrorCount -> fill( 3.5 ) ;
+          // m_histErrorCount -> fill( 3.5 ) ;
         }
       }
     break ; 
@@ -395,7 +395,7 @@ StatusCode L0CaloCompare::execute() {
       if ( m_fullMonitoring ) break ;
       { 
         debug() << "SpdMult (3) : etCode = " << etCodeCheck << endreq ;
-        m_histTotalCount -> fill( 4.5 ) ;
+        m_histTotalCount -> fill( 3.5 ) ;
 
         int spdRef( 0 ) ;
         int diff_SpdMult( 0 ) ;
@@ -406,7 +406,7 @@ StatusCode L0CaloCompare::execute() {
         m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
         if ( etCodeCheck != spdRef ) { 
           debug() << " SpdMult ... Pb (1) " <<endreq;
-          m_histErrorCount -> fill( 4.5 ) ;
+          m_histErrorCount -> fill( 3.5 ) ;
         }
       }
     break ; 
@@ -426,7 +426,7 @@ StatusCode L0CaloCompare::execute() {
         {
           debug() << " SumEt : etCode = " << etCodeCheck << endreq ;
 
-          m_histTotalCount -> fill( 3.5 ) ;
+          // m_histTotalCount -> fill( 3.5 ) ;
 
           int sumRef( 0 ) ;
           int diff_SumEt( 0 ) ;
@@ -440,7 +440,7 @@ StatusCode L0CaloCompare::execute() {
           m_histSumEt_Comp -> fill(diff_SumEt) ; 
           if ( etCodeCheck != sumRef ) { 
             debug() << " SumEt ... Pb " <<endreq;  
-            m_histErrorCount -> fill( 3.5 ) ;
+            // m_histErrorCount -> fill( 3.5 ) ;
           }  
         }
         
@@ -449,7 +449,7 @@ StatusCode L0CaloCompare::execute() {
         { 
           debug() << "SpdMult (4) : etCode = " << etCodeCheck << endreq ;
           
-          m_histTotalCount -> fill( 4.5 ) ;
+          m_histTotalCount -> fill( 3.5 ) ;
 
           int spdRef( 0 ) ;
           int diff_SpdMult( 0 ) ;
@@ -460,7 +460,7 @@ StatusCode L0CaloCompare::execute() {
           m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
           if ( etCodeCheck != spdRef ) {
             debug() << " SpdMult ... Pb (2) " <<endreq;
-            m_histErrorCount -> fill( 4.5 ) ;
+            m_histErrorCount -> fill( 3.5 ) ;
           } 
         }
       break ;

@@ -67,7 +67,8 @@ StatusCode L0CaloPRSResetMonitor::initialize() {
   // Initialize the counter
   int eCard( 0 );
   for ( eCard = 0 ; eCard < m_ecal -> nCards() ; ++eCard ) {
-    if ( ! m_ecal -> isPinCard( eCard ) ) 
+    if ( ( ! m_ecal -> isPinCard( eCard ) ) && 
+	 ( ! m_ecal -> isParasiticCard( eCard ) ) )
       m_electronCounter[ eCard ] = 0 ;
   }
  
@@ -144,7 +145,8 @@ StatusCode L0CaloPRSResetMonitor::execute() {
     // Reset the counters
     int eCard( 0 );
     for ( eCard = 0 ; eCard < m_ecal -> nCards() ; ++eCard ) {
-      if ( ! m_ecal -> isPinCard( eCard ) ) 
+      if ( ( ! m_ecal -> isPinCard( eCard ) ) && 
+	   ( ! m_ecal -> isParasiticCard( eCard ) ) ) 
         m_electronCounter[ eCard ] = 0 ;
     }
   }

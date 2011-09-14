@@ -109,7 +109,7 @@ StatusCode L0CaloAlg::initialize() {
     m_ecalFe.push_back( TriggerCard( eCard , m_ecal ) ) ;
     validationNb = m_ecal -> validationNumber( eCard ) ;    
     if ( m_nbValidation <= validationNb ) m_nbValidation = validationNb + 1 ;
-    if( !( m_ecal -> isPinCard( eCard ) ) )
+    if( !( m_ecal -> isPinCard( eCard ) ) && !( m_ecal -> isParasiticCard( eCard ) ) )
       m_ecalFe[ eCard ].setValidationNumber( validationNb ) ;
   }  
   
@@ -157,7 +157,7 @@ StatusCode L0CaloAlg::initialize() {
 
   for ( eCard = 0 ; eCard < m_ecal -> nCards() ; ++eCard ) {
     // Reject pin cards
-    if( m_ecal -> isPinCard( eCard ) ) continue ;
+    if( m_ecal -> isPinCard( eCard ) || m_ecal -> isParasiticCard( eCard ) ) continue ;
     
     LHCb::CaloCellID ecalID  = m_ecal -> firstCellID( eCard ) ;
     Gaudi::XYZPoint  center  = m_ecal -> cellCenter( ecalID ) * zRatio ;
@@ -197,7 +197,7 @@ StatusCode L0CaloAlg::initialize() {
   if ( msgLevel( MSG::DEBUG ) ) {      
     for ( eCard = 0 ;  eCard < m_ecal -> nCards() ; ++eCard ) {
       // Reject pin cards
-      if( m_ecal -> isPinCard( eCard ) ) continue ;
+      if( m_ecal -> isPinCard( eCard ) || m_ecal -> isParasiticCard( eCard ) ) continue ;
 
       debug() << "Ecal card " 
               << format( "Ecal card%4d Area%2d Row%3d Col%3d Validation%3d", 
@@ -222,7 +222,7 @@ StatusCode L0CaloAlg::initialize() {
   
     for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
       // reject pin cards
-      if( m_hcal -> isPinCard( hCard ) ) continue ;
+      if( m_hcal -> isPinCard( hCard ) || m_hcal -> isParasiticCard( hCard ) ) continue ;
       debug() << format( "Hcal card%4d Area%2d Row%3d Col%3d ",
                         hCard,
                         m_hcal->cardArea(hCard),
@@ -357,7 +357,7 @@ StatusCode L0CaloAlg::execute() {
   
   for( eCard = 0 ; m_ecal -> nCards() > eCard ; ++eCard ) {
     // reject pin readout FE-cards
-    if( m_ecal->isPinCard(eCard) ) continue ;
+    if( m_ecal->isPinCard(eCard) || m_ecal -> isParasiticCard( eCard ) ) continue ;
     
     etMax = m_ecalFe[ eCard ].etMax() ;
     etTot = m_ecalFe[ eCard ].etTot()  ;
@@ -442,7 +442,7 @@ StatusCode L0CaloAlg::execute() {
   
   for ( hCard = 0 ; hCard < m_hcal -> nCards() ; ++hCard ) {
     // reject pin readout FE-cards
-    if ( m_hcal -> isPinCard( hCard ) ) continue ;
+    if ( m_hcal -> isPinCard( hCard ) || m_hcal -> isParasiticCard( hCard ) ) continue ;
     
     maxHcalEt = m_hcalFe[hCard].etMax() ;
     ID = m_hcalFe[ hCard ].cellIdMax() ;
@@ -709,7 +709,7 @@ void L0CaloAlg::sumEcalData(  ) {
   // Reset the cards collection
   for( int eCard = 0 ; m_ecal -> nCards() > eCard;  ++eCard ) {
     // reject pin readout FE-cards
-    if ( m_ecal -> isPinCard( eCard ) ) continue ; 
+    if ( m_ecal -> isPinCard( eCard ) || m_ecal -> isParasiticCard( eCard ) ) continue ; 
     m_ecalFe[eCard].reset( );
   }
 
@@ -750,7 +750,7 @@ void L0CaloAlg::sumEcalData(  ) {
 void L0CaloAlg::sumHcalData( ) {
   for( int hCard = 0; m_hcal -> nCards() > hCard;  ++hCard ) {
     // reject pin readout FE-cards
-    if( m_hcal -> isPinCard( hCard ) ) continue ;
+    if( m_hcal -> isPinCard( hCard ) || m_hcal -> isParasiticCard( hCard ) ) continue ;
     m_hcalFe[ hCard ].reset() ;
   }
 
