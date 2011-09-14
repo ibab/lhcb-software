@@ -720,7 +720,7 @@ StatusCode DeCalorimeter::buildCards( )  {
       prevValidation = validationCard;
     }
 
-    if( area != m_pinArea ){
+    if( area != m_pinArea && !card.isParasitic() ){
       card.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
       card.setValidationNumber( validationCard );
     }

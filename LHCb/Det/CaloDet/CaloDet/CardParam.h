@@ -71,7 +71,9 @@ public:
   int  code           () const { return 16*m_crate+m_slot; }
   int  selectionType  () const { return m_selectionType  ; }    
   Mapping mapping     () const { return m_mapping        ; }
-  
+  bool isParasitic()     const { return ( (m_Row+m_lRow+m_Col+m_lCol) == 0 );}  // special FEBs (no channelID associated)
+  bool isPmtCard      () const { return (!isPinCard() && !isParasitic());}
+
   const std::vector<LHCb::CaloCellID>& ids() { return m_ids; }  
   void addID( LHCb::CaloCellID id )    { m_ids.push_back( id ); }  
   void setTell1(int tell1)             { m_tell1 = tell1; }

@@ -3,6 +3,11 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2011-09-04 - Olivier Deschamps
+ - CardParam.h : allow for parasitic FEBs in ReadoutConf condition (e.g. crate timing). 
+   - Parasitics FEB are flagged when no channel ID area is associated to the board -> dedicated DAQ from raw (for monitoring only)
+ - DeCalorimeter.cpp : protect against processing the trigger neighborhood on parasitics FEBs
+
 !========================= CaloDet v10r11 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires

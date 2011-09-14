@@ -247,6 +247,8 @@ public:
   const std::vector<CardParam>& cardParams(){return m_feCards;}
   const std::vector<Tell1Param>& tell1Params(){return m_tell1Boards;}
   // PIN flag
+  bool isParasiticCard (const int card) { return m_feCards[card].isParasitic(); };
+  bool isPmtCard (const int card) { return m_feCards[card].isPmtCard(); };
   bool isPinCard (const int card) { return m_feCards[card].isPinCard(); };
   bool isPinTell1(const int tell1) { return m_tell1Boards[tell1].readPin(); };
   bool isPinId(LHCb::CaloCellID id){ return ((unsigned)m_pinArea == id.area()) ? true : false; }
