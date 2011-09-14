@@ -236,7 +236,6 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       //if ( enable_stats ) pc->enableStatistics(m_section);
       *con = pc;
       pc->resetAge();
-      log() << MSG::ALWAYS << "Add client:" << pc->pfn() << "  " << name() << endmsg;
       pc->addClient(this);
     }
     if ( *con )  {
