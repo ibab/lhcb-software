@@ -103,7 +103,7 @@ StatusCode EvtGenDecayInPhSp::initialize( ) {
   //do the same for the Q2 binning file
   if ( "UNKNOWN" != System::getEnv("DECFILESROOT") ) 
     m_q2mapfile  = System::getEnv( "DECFILESROOT" ) + 
-      "/params/" + m_q2mapfilename ;
+      "/EvtData/" + m_q2mapfilename ;
   else   return Error( "DECFILESROOT is UNKNOWN" ) ;
  
   if ( msgLevel ( MSG::INFO) )  info() << "Parameter file is "<< m_q2mapfile << endmsg;

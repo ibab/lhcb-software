@@ -5,6 +5,9 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-09-14 - Alex Shires
+ - Fixes and new parameter file location for EvtGenDecayInPhSp
+
 ! 2011-09-13 - Alex Shires
  - Add new DecayTool, EvtGenDecayInPhSp, for reweighting the Kstmumu phase space 
     distribution such that it is flat in q2.
