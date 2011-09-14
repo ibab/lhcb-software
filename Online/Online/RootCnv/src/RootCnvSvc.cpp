@@ -215,6 +215,7 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     IDataConnection* c = m_ioMgr->connection(dataset);
     bool fire_incident = false;
     //bool enable_stats = false;
+    *con = 0;
     if ( !c )  {
       auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
       StatusCode sc = (mode != IDataConnection::READ)
@@ -268,13 +269,14 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       // We can remove retired connections, which are no longer used....
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
-	if ( !(*i)->isConnected() )  {
-	  RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
+	if ( (*i) != *con && !(*i)->isConnected() )  {
+	  RootDataConnection* pc = dynamic_cast<RootDataConnection*>(*i);
 	  if ( pc && pc->lookupClient(this) )   {
 	    size_t num_client = pc->removeClient(this);
 	    if ( num_client == 0 ) {
 	      if ( m_ioMgr->disconnect(pc).isSuccess() )  {
-		log() << MSG::INFO << "Removed disconnected IO  stream:" << pc->fid() << endmsg;
+		log() << MSG::INFO << "Removed disconnected IO  stream:" << pc->fid() 
+		      << " [" << pc->pfn() << "]" << endmsg;
 		delete pc;
 	      }
 	    }
