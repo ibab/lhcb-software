@@ -189,9 +189,9 @@ void HistAdder::Update()
       if (m_locked)
       {
         //printf("HistAdder UNLocking\n");
+        m_locked = false;
         UnLock();
       }
-      m_locked = false;
     }
     m_added = 0;
     m_received = 0;
