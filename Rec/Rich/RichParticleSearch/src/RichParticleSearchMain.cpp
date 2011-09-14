@@ -58,8 +58,15 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
   declareProperty( "CKDevCut",    m_CKDevCut = 0.5, "CK Standard Deviation Cut" );
   declareProperty( "MinCK",     m_minCK = 0.0, "Minimum CK agnle for each radiator");
   declareProperty("PlotPhotons",    m_plotPerPhoton =false, "Enter second photon loop");
+  declareProperty( "MinTrackMass",    m_minTrackMass = 0.0, "Lower Mass Cut" );
+  declareProperty( "MaxPhotons",    m_maxPhotons = 150, "upper number of photons Cut" );
+  declareProperty( "MinPhotons",    m_minPhotons = 0, "lower number of photons Cut" );
+
+
   //Use Muon Information
   declareProperty("UseMuonInfo",   m_useMuonInfo = false, "Use Muon PID information");
+  declareProperty("findYields",   findYields = false, "FindPhotonYields");
+
 }
 //=============================================================================
 // Destructor
@@ -187,10 +194,16 @@ StatusCode RichParticleSearchMain::execute() {
         iSeg != richSegments()->end(); ++iSeg )
   {
 	  //runNumber and eventNumber added by Viet Nga
-	const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
-	const std::vector<long int> seeds = header-> randomSeeds();
-	long int runNumber = seeds[0];
-	long int evtNumber = seeds[1];
+	long int runNumber = 0;
+	long int evtNumber = 0;
+	if (m_useMCTruth)
+	{
+		const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
+		const std::vector<long int> seeds = header-> randomSeeds();
+		runNumber = seeds[0];
+		evtNumber = seeds[1];
+	}
+
 
     LHCb::RichRecSegment* segment = *iSeg;
     debug()<< "Event "<<EvtNum<<endmsg;
@@ -199,22 +212,18 @@ StatusCode RichParticleSearchMain::execute() {
 
     // Saturated CK angle for segment
     double SatCK = m_ckAngle->saturatedCherenkovTheta(segment);
-
     // Maximum allowed angle
     double maxCK = SatCK + RichRes[RICHint]*m_maxCKcut;
-
-
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
     double pathLength = segment->trackSegment().pathLength();
-
     if ( m_radiator != rad ) continue;
-
     const std::string RAD = Rich::text(rad);
 
-    trackCounter++;
+    // track selection
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
+    trackCounter++;
     m_tkTotal++;
 
     // ========================================================================================== //
@@ -252,7 +261,6 @@ StatusCode RichParticleSearchMain::execute() {
     pt = std::sqrt( std::pow(trackSegment.bestMomentum().x(),2) +
                     std::pow(trackSegment.bestMomentum().y(),2) );
 
-
     // Get refractive index of radiator required for mass calculations
     double refIndx = m_tkIndex->refractiveIndex(segment);
 
@@ -284,13 +292,6 @@ StatusCode RichParticleSearchMain::execute() {
             iPhot2 != segment->richRecPhotons().end(); ++iPhot2 )
       {
         LHCb::RichRecPhoton* photon2 = *iPhot2;
-
-//        bool TP ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon2 ) );
-//        if (TP == false)
-//        {
-//        	continue;
-//        }
-
 
         const LHCb::RichGeomPhoton & gPhoton2 = photon2->geomPhoton();
         const LHCb::RichRecPixel * pixel  = photon2->richRecPixel();
@@ -325,7 +326,7 @@ StatusCode RichParticleSearchMain::execute() {
           }
         }
 
-        if (PhotonCounter>150)
+        if (PhotonCounter>m_maxPhotons)
         {
           break;
         } //END photon cut
@@ -333,9 +334,7 @@ StatusCode RichParticleSearchMain::execute() {
       // 								END Photon LOOP											   	//
       // ============================================================================================//
 
-
-
-      if (PhotonCounter>0 && PhotonCounter<149)
+      if (PhotonCounter>m_minPhotons && PhotonCounter<m_maxPhotons-1)
       {
     	  double AvThetaRec = thetaRecSum/PhotonCounter; // Average CK per track
 
@@ -350,13 +349,11 @@ StatusCode RichParticleSearchMain::execute() {
     		  double CKVariance = 0.0;
     		  double thetaRecSumUpdate = 0.0; //Updated after outlyer removals
     		  int UsedPhotons = 0; //Updated after outlyer removals
-    	//	  std::cout << " AvThetaRec: " << AvThetaRec <<std::endl;
     		  for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
-    		 // A method to remove outlyers
+    		  // A method to remove outlyers
     			  if (fabs(*it- AvThetaRec) > 500*RichPhotonCut[RICHint])
     			  {
     				  CKcounter++;
-    			//	  std::cout << fabs(*it- AvThetaRec) << " ";
     				  CKTheta.erase(it);// Remove the element outside variance range
     				  // update ThetaRecAv for next removal
     				  AvThetaRec = (AvThetaRec*(PhotonCounter - CKcounter +1) - *it)/(PhotonCounter- CKcounter);
@@ -370,20 +367,20 @@ StatusCode RichParticleSearchMain::execute() {
     			  thetaRecSumUpdate = *it + thetaRecSumUpdate;
 
     		  }// end iterator
-    		//  std::cout << " AvThetaRecUpdated: " << AvThetaRec <<std::endl;
 
-    		//  std::cout << std::endl;
     		  AvThetaRec = thetaRecSumUpdate/UsedPhotons;
     		  PhotonCounter = UsedPhotons; // Update photon counter
 			  // Average beta calculated per track
 			  double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
 			  // Average Mass calculated per track
 			  double avTrackMass = momentum * std::sqrt((1/(std::pow(avBetaTk,2)))-1.0);
+
 			  // CK Standard Deviation per track
 			  double stdDevCK = std::pow(CKVariance/(PhotonCounter-1), 0.5);
 
 
-        	  if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut )
+        	  if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut
+        			  && avTrackMass>m_minTrackMass )
         	  { // Cut on CK standard Deviation weighted by mean CK per track
 
 				  if ( m_histoOutputLevel > 1 )
@@ -401,14 +398,16 @@ StatusCode RichParticleSearchMain::execute() {
 					hasMuonPID = m_MuonInformation->HasMuonInformation(track);
 				  }
 
-
-				  // Hit point of current segment on HPD plane in local coords
-				  const Gaudi::XYZPoint & tkPtLocal = segment->LHCb::RichRecSegment::pdPanelHitPointLocal();
 				  std::vector<float> trackProjection;
 
-				  trackProjection.push_back(tkPtLocal.x());
-				  trackProjection.push_back(tkPtLocal.y());
-				  trackProjection.push_back(tkPtLocal.z());
+				  if (findYields)
+				  {
+					  const Gaudi::XYZPoint & tkPtLocal = segment->LHCb::RichRecSegment::pdPanelHitPointLocal();
+
+					  trackProjection.push_back(tkPtLocal.x());
+					  trackProjection.push_back(tkPtLocal.y());
+					  trackProjection.push_back(tkPtLocal.z());
+				  }
 
 
 				  if ( produceNTuples())
@@ -427,24 +426,28 @@ StatusCode RichParticleSearchMain::execute() {
 						TrackTuple->column( "stdDevCK", stdDevCK);
 						TrackTuple->column( "TrackType", TrackType);
 						TrackTuple->column( "pathLength", pathLength);
-						TrackTuple->column( "TrackProjectionX", trackProjection[0]);
-						TrackTuple->column( "TrackProjectionY", trackProjection[1]);
-						TrackTuple->column( "TrackProjectionZ", trackProjection[2]);
 						TrackTuple->column( "trChi2", trChi2);
-						//columns added by Viet Nga
-						TrackTuple->column( "trackKey", trackKey);
-						TrackTuple->column( "runNumber", runNumber);
-						TrackTuple->column( "evtNumber", evtNumber);
-						// Photon Yield Info
-						TrackTuple->column( "trkenX",trkenX);
-						TrackTuple->column( "trkenY",trkenY);
-						TrackTuple->column( "trkexX",trkexX);
-						TrackTuple->column( "trkexY",trkexY);
+						if (findYields){
+							TrackTuple->column( "TrackProjectionX", trackProjection[0]);
+							TrackTuple->column( "TrackProjectionY", trackProjection[1]);
+							TrackTuple->column( "TrackProjectionZ", trackProjection[2]);
+
+							// Photon Yield Info
+							TrackTuple->column( "trkenX",trkenX);
+							TrackTuple->column( "trkenY",trkenY);
+							TrackTuple->column( "trkexX",trkexX);
+							TrackTuple->column( "trkexY",trkexY);
+						}
+
 						TrackTuple->column( "rad_length",rad_length);
 
 
 						if ( m_useMCTruth )
 						{ // if use Truth information
+
+							TrackTuple->column( "trackKey", trackKey);
+							TrackTuple->column( "runNumber", runNumber);
+							TrackTuple->column( "evtNumber", evtNumber);
 							TrackTuple->column( "MCParticleType", MCtype);
 							TrackTuple->column( "TruePhotonsPerTrack", TruePhotonCounter);
 							// TrackTuple->column( "TruePhotonsPerTrackTrueRad",TrueParentAndRadCounter);
@@ -462,24 +465,19 @@ StatusCode RichParticleSearchMain::execute() {
 
 				  if (m_plotPerPhoton)
 				  {
-
 						for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
 							  iPhot != segment->richRecPhotons().end(); ++iPhot )
 						{
 								LHCb::RichRecPhoton* photon = *iPhot;
-
-								// get the geometrical photon
 								const LHCb::RichGeomPhoton & gPhoton = photon->geomPhoton();
 
 								// Cherenkov angles
 								const double thetaRec = gPhoton.CherenkovTheta();
-
 								// Get true track parent if using MCTruth
 								bool trueParent2( false );
 								if ( m_useMCTruth ) {
 									trueParent2 = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
 								}
-
 								//track Beta = v/c
 								double beta = 1.0/(cos(thetaRec)*refIndx);
 								// Mass from photon track pair
@@ -508,16 +506,9 @@ StatusCode RichParticleSearchMain::execute() {
 											photonTuple->write();
 										}
 									}
-								//	else
-								//	{
-									//	std::cout << Var << " ";
-
-									//}
 								}
 
 						}//end photon loop
-						//std::cout << std::endl;
-
 				  }//End if m_plotPhotons
         	  }//End CKDev Cut
     	  }// end Average CK cut

@@ -32,6 +32,10 @@ class RichParticleSearchConf(RichConfigurableUser):
         ,"CKDevCut"         : [0.5, 0.5, 0.5]
         ,"UseMuonInfo"      : False
         ,"PlotPhotons"      : False
+        ,"FindYields"       : False
+        ,"MinTrackMass"     : [0,0,0] # lower limit of track mass in Mev
+        ,"MaxPhotons"       : [10,50,50]
+        ,"MinPhotons"       : [0, 2, 2]
         }
 
 
@@ -80,6 +84,10 @@ class RichParticleSearchConf(RichConfigurableUser):
             RichPartSearchAerogel.CKDevCut = self.getProp("CKDevCut")[0] 
             RichPartSearchAerogel.UseMuonInfo = self.getProp("UseMuonInfo")
             RichPartSearchAerogel.PlotPhotons = self.getProp("PlotPhotons")
+            RichPartSearchAerogel.MinTrackMass = self.getProp("MinTrackMass")[0]
+            RichPartSearchAerogel.findYields = self.getProp("FindYields")
+            RichPartSearchAerogel.MaxPhotons = self.getProp("MaxPhotons")[0]
+            RichPartSearchAerogel.MinPhotons = self.getProp("MinPhotons")[0]
 
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
@@ -116,6 +124,11 @@ class RichParticleSearchConf(RichConfigurableUser):
             
             RichPartSearchR1.UseMuonInfo = self.getProp("UseMuonInfo")
             RichPartSearchR1.PlotPhotons = self.getProp("PlotPhotons")
+            RichPartSearchR1.MinTrackMass = self.getProp("MinTrackMass")[1]
+            RichPartSearchR1.findYields = self.getProp("FindYields")
+
+            RichPartSearchR1.MaxPhotons = self.getProp("MaxPhotons")[1]
+            RichPartSearchR1.MinPhotons = self.getProp("MinPhotons")[1]
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
            
@@ -151,6 +164,12 @@ class RichParticleSearchConf(RichConfigurableUser):
 
             RichPartSearchR2.UseMuonInfo = self.getProp("UseMuonInfo")
             RichPartSearchR2.PlotPhotons = self.getProp("PlotPhotons")
+            RichPartSearchR2.MinTrackMass = self.getProp("MinTrackMass")[2]
+            RichPartSearchR2.findYields = self.getProp("FindYields")
+
+
+            RichPartSearchR2.MaxPhotons = self.getProp("MaxPhotons")[2]
+            RichPartSearchR2.MinPhotons = self.getProp("MinPhotons")[2]
 
       #      RichAlignMoniR2.HPDList = self.getProp("HPDList")[2]
 

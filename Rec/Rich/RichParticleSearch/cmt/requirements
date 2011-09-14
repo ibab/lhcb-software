@@ -18,7 +18,6 @@ use  RichRecBase          v*    Rich
 use  MCEvent              v*    Event
 use  MCInterfaces         v*    Kernel
 
-
 private
 #use GaudiObjDesc v* -no_auto_imports
 end_private

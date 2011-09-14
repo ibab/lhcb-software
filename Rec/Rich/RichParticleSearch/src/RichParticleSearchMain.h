@@ -115,10 +115,17 @@ namespace Rich
         //Minimum cut on CK angle
         double m_minCK;
 
+        double m_minTrackMass;
         //Plot Per Photon
         bool m_plotPerPhoton;
         //whether to use Muon information
         bool m_useMuonInfo;
+
+        bool findYields;
+
+        int m_maxPhotons;
+
+        int m_minPhotons;
 
         //  event counter
         int EvtNum;
@@ -149,7 +156,6 @@ namespace Rich
       inline int RichParticleSearchMain::GetRichInt(){
       return (int) m_radiator;
       }
-
     }
   }
 }
