@@ -7,6 +7,7 @@ insert into SUBSYSTEM(SSName) VALUES('OT');
 insert into SUBSYSTEM(SSName) VALUES('IT');
 insert into SUBSYSTEM(SSName) VALUES('RICH1');
 insert into SUBSYSTEM(SSName) VALUES('RICH2');
+insert into SUBSYSTEM(SSName) VALUES('RICH');
 insert into SUBSYSTEM(SSName) VALUES('SPD');
 insert into SUBSYSTEM(SSName) VALUES('ECAL');
 insert into SUBSYSTEM(SSName) VALUES('HCAL');
