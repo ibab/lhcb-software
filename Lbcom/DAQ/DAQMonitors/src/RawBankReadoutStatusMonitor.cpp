@@ -78,7 +78,7 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
 StatusCode RawBankReadoutStatusMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
-
+s
 
   // get RawBankReadoutStatus
   LHCb::RawBankReadoutStatuss* statuss;
@@ -93,8 +93,8 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
       std::stringstream tit1D("");
       tit1D << "Status summary for " << typeName << " bank " ;
       AIDA::IHistogram1D* histo1D =
-        plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
-      plot1D( -1 , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
+        plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
+      plot1D( -1 , base.str() + "1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
       setLabels1D( histo1D  );
     }
     return StatusCode::SUCCESS;
@@ -109,8 +109,8 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
       std::stringstream tit1D("");
       tit1D << "Status summary for " << typeName << " bank " ;
       AIDA::IHistogram1D* histo1D =
-        plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
-      plot1D( -1 , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
+        plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
+      plot1D( -1 , base.str() + "1",  tit1D.str() ,  -1, (double) m_degree, m_degree+1);
       setLabels1D( histo1D  );
     }
     return StatusCode::SUCCESS;
@@ -138,12 +138,12 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     std::stringstream tit1D("");
     tit1D << "Status summary for " << typeName << " bank " ;
     AIDA::IHistogram1D* histo1D =
-      plot1D( -1., base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
+      plot1D( -1., base.str() + "1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
     setLabels1D( histo1D  );
     debug() << "Status " << status->status() << endmsg;
     for(int i = 0; i < m_degree ; ++i ){
       int word = status->status() >> i;
-      if( ( 0x1 & word) )plot1D( (double) i , base.str() + "/1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
+      if( ( 0x1 & word) )plot1D( (double) i , base.str() + "1",  tit1D.str() ,   -1, (double) m_degree , m_degree+1);
       int isok = (0x1 & word);
       debug() << i << " -> " <<  isok << endmsg;
     }
@@ -167,12 +167,12 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     for( std::map< int, long >::iterator imap = statusMap.begin() ; imap != statusMap.end() ; ++imap ){
       double source = (double)(*imap).first;
       AIDA::IHistogram2D* histo2D =
-        plot2D(  source, -1.,  base.str() + "/2",  
+        plot2D(  source, -1.,  base.str() + "2",  
                  tit2D.str() , min, max, -1., (double) m_degree , bin , m_degree+1 );
       setLabels2D( histo2D );
       for(int i = 0; i < m_degree ; ++i ){
         int word = (*imap).second >> i;
-        if( ( 0x1 & word) )plot2D(  source , (double) i , base.str() + "/2",  
+        if( ( 0x1 & word) )plot2D(  source , (double) i , base.str() + "2",  
                                     tit2D.str() , min, max, -1., (double) m_degree , bin , m_degree+1 );
       }
     }

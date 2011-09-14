@@ -4,6 +4,9 @@
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
 
+! 2011-09-14 - Olivier Deschamps 
+ - RawBankReadoutStatusMonitor : fix "//" in histo path (no longer presenter-compatible)
+
 !========================= DAQMonitors v1r3 2011-02-25 =========================
 ! 2011-02-17 - Chris Jones
  - Fix some icc remarks and coverity defects
