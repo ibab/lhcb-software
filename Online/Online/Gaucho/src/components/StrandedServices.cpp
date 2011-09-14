@@ -60,6 +60,8 @@ StrandedServices::StrandedServices(const std::string& name, ISvcLocator* sl):Ser
 {
   declareProperty("SubFarms",m_subfarms);
   declareProperty("PartitionName",m_partname);
+  m_hltstate = 0;
+  m_Browser = 0;
 }
 StrandedServices::~StrandedServices()
 {
