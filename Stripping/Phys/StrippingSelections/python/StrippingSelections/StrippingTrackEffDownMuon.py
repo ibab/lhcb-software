@@ -282,7 +282,7 @@ def trackingDownPreFilter(name, prefilter):
 
     TrackToDST("DownTrackToDST").TracksInContainer = "Rec/Downstream/FittedTracks"
 
-    TrackSys().setProp('SpecialData', ['earlyData'])
+    #TrackSys().setProp('SpecialData', ['earlyData'])
 
     jpsidotracking=GaudiSequencer("DownTrackingFor" + name)
     
