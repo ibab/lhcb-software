@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-09-14 - Ulrichh Kerzel
+- Add NoBremNoPIDs*Electrons for all types: Track as electron, no PID requirement, no Bremsstrahlung correction
+
 !========================= CommonParticles v8r5 2011-09-06 =========================
 ! 2011-08-27 - Susan Haines
  - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID and WS lines.
