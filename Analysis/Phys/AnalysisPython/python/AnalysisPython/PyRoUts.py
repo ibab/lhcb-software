@@ -687,7 +687,7 @@ def _h1_iteritems_ ( h1 ) :
     Iterate over histogram items:
     
     >>> h1 = ...
-    >>> for i,x,y in h1 : ...
+    >>> for i,x,y in h1.iteritems()  : ...
     
     """
     ax = h1.GetXaxis()
@@ -714,7 +714,7 @@ def _h2_iteritems_ ( h2 ) :
     Iterate over histogram items:
     
     >>> h2 = ...
-    >>> for ix,iy,x,y,z in h2 : ...
+    >>> for ix,iy,x,y,z in h2.iteritems() : ...
     
     """
     ax = h2.GetXaxis()
@@ -1508,6 +1508,126 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
         
     return gr
 
+# =============================================================================
+def hToGraph ( h1                   ,
+               funcx = lambda s : s ,
+               funcv = lambda s : s ) :
+    """
+    Convert  1D-histogram into graph 
+    """
+    #
+    ## book graph 
+    graph = ROOT.TGraphErrors( len( h1 )  )
+
+    for i in h1.iteritems () :
+
+        x = funcx  ( i[1] ) 
+        v = funcv  ( i[2] )
+
+        ## note the different convention 
+        graph [ i[0] - 1 ] = (x,v)  
+        
+    return graph
+
+
+
+# =============================================================================
+# iterate over graph items
+# =============================================================================
+## iterate over points in TGraphError
+def _gr_iter_ ( graph ) :
+    """
+    Iterate over graph points 
+    
+    >>> gr = ...
+    >>> for i in gr : ...
+    
+    """
+    
+    for ip in range ( 0 , len ( graph ) ) :
+        yield ip
+        
+# =============================================================================
+## iterate over points in TGraphError
+def _gr_iteritems_ ( graph ) :
+    """
+    Iterate over graph points 
+    
+    >>> gr = ...
+    >>> for i,x,v in gr.iteritems(): ...
+    
+    """
+    for ip in graph :
+
+        point = graph[ ip ] 
+        
+        yield ip , point[0] , point[1] 
+        
+# =============================================================================
+## get the point in TGraphError
+def _gr_getitem_ ( graph , ipoint )  :
+    """
+    Get the point from the Graph
+    """
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x_ = ROOT.Double(0)
+    v_ = ROOT.Double(0)
+    
+    graph.GetPoint ( ipoint , x_ , v_ )
+    
+    x = VE ( x_ , graph.GetErrorX ( ipoint ) )
+    v = VE ( v_ , graph.GetErrorY ( ipoint ) )
+    
+    return x,v
+
+# =============================================================================
+## set the point in TGraphError
+def _gr_setitem_ ( graph , ipoint , point )  :
+    """
+    Get the point from the Graph
+    """
+    #
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x = point[0]
+    v = point[1]
+
+    graph.SetPoint      ( ipoint , x . value () , v . value () )
+    graph.SetPointError ( ipoint , x . error () , v . error () )
+
+# =============================================================================
+ROOT.TGraphErrors.__len__       = ROOT.TGraphErrors . GetN 
+ROOT.TGraphErrors.__contains__  = lambda s,i : i in range(0,len(s))
+ROOT.TGraphErrors.__iter__      = _gr_iter_ 
+ROOT.TGraphErrors.__iteritems__ = _gr_iteritems_ 
+ROOT.TGraphErrors.__getitem__   = _gr_getitem_ 
+ROOT.TGraphErrors.__setitem__   = _gr_setitem_ 
+
+ROOT.TH1F.asGraph = hToGraph
+ROOT.TH1D.asGraph = hToGraph
+ROOT.TH1F.toGraph = hToGraph
+ROOT.TH1D.toGraph = hToGraph
+
+# =============================================================================
+## get edges from the axis:
+def _edges_ ( axis ) :
+    """
+    Get list of edges form the TAxis
+
+    >>> axis
+    >>> edges = axis.edges() 
+    """
+    #
+    bins  = [ axis.GetBinLowEdge ( i ) for i in axis ]
+    bins += [ axis.GetXmax() ]
+    #
+    return tuple( bins )
+
+# =============================================================================
+ROOT.TAxis.edges = _edges_
 
 # =============================================================================
 ## make 2D-histogram from axes
@@ -1526,14 +1646,10 @@ def h2_axes ( x_axis       ,
     #
     if not name : name = hID() 
     #
-    x_bins  = [ x_axis.GetBinLowEdge ( i ) for i in x_axis ]
-    x_bins += [ x_axis.GetXmax() ]
-    #
-    y_bins  = [ y_axis.GetBinLowEdge ( i ) for i in y_axis ]
-    y_bins += [ y_axis.GetXmax() ] 
+    x_bins  = x_axis.edges()
+    y_bins  = y_axis.edges()
     #
     from numpy import array
-    #
     return ROOT.TH2F ( name  ,
                        title ,
                        len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
@@ -1555,11 +1671,9 @@ def h1_axis ( axis         ,
     #
     if not name : name = hID() 
     #
-    bins  = [ axis.GetBinLowEdge ( i ) for i in axis ]
-    bins += [ axis.GetXmax() ]
+    bins  = axis.edges()
     #
     from numpy import array
-    #
     return ROOT.TH1F ( name  ,
                        title ,
                        len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
@@ -1731,6 +1845,7 @@ ROOT.TH3D.histoDiff = _h_diff_
 ## perform some accumulation for the histogram 
 def _h_accumulate_ ( h                         ,
                      func = lambda s,v : s + v ,
+                     cut  = lambda s   : True  , 
                      init = VE ()              ) :
     """
     Accumulate the function value over the histogram
@@ -1739,7 +1854,8 @@ def _h_accumulate_ ( h                         ,
     >>> sum = h.accumulate() 
     """
     result = init
-    for i in h : result = func ( result , h[i] )
+    for i in h.iteritems() :
+        if cut ( i ) : result = func ( result , h[i] )
     return result 
 
 ROOT.TH1.accumulate = _h_accumulate_ 
