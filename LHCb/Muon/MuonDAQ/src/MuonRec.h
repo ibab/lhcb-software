@@ -63,6 +63,6 @@ private:
   DeMuonDetector* m_muonDetector;
   IMuonRawBuffer* m_muonBuffer;  
   bool m_forceResetDAQ;
-  
+  int  m_Exccounter;  
 };
 #endif // MUONREC_MUONREC_H

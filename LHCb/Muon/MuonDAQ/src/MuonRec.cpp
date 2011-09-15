@@ -27,6 +27,7 @@ MuonRec::MuonRec( const std::string& name,
 {
   m_forceResetDAQ=false;
   if(context()=="TAE")  m_forceResetDAQ=true;
+  m_Exccounter=0;
   
 
 }
@@ -152,6 +153,11 @@ StatusCode MuonRec::finalize() {
     release(	m_muonBuffer);
     
   }
+  if(   m_Exccounter>0){
+    info()<<" during the reconstruction there were problem with duplicated coords "<<endmsg;
+    info()<<"The error occured " <<  m_Exccounter<<endmsg;
+    
+  }
   
   return GaudiAlgorithm::finalize();
 }
@@ -190,7 +196,16 @@ StatusCode MuonRec::addCoordsNoMap(MuonCoords *coords,
       if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose()<<pad<<endmsg;
       
       // as no change between digit and coord in this mapping key is the same
-      coords->insert(current,pad);
+      try {
+        coords->insert( current, pad );
+      } catch( const GaudiException& exc  ) {
+       
+        error() << "The error is caused by the duplication of  pad " <<pad<<endmsg; 
+        error() << "It is likely due to data corruption " <<endmsg;
+        m_Exccounter++;
+        
+        delete current;
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -258,8 +273,17 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
         current->setDigitTDC2((iTwo->first).second);
       
         // as no change between digit and coord in this mapping key is the same
-        coords->insert(current,pad);
-
+      
+        try {
+          coords->insert( current, pad );
+        } catch( const GaudiException& exc  ) {
+          
+          error() << "The error is caused by the duplication of  pad " <<pad<<endmsg; 
+          error() << "It is likely due to data corruption " <<endmsg;
+          m_Exccounter++;
+          
+          delete current;
+        }
         // set flags to used on iOne and iTwo
         iOne->second = true;
         iTwo->second = true;
@@ -289,10 +313,22 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
 
       if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
         verbose() << " Found an uncrossed pad type 1 " << pad << endmsg;
-
-      coords->insert(current,pad);
+    
+    
+      try {
+        coords->insert( current, pad );
+      } catch( const GaudiException& exc  ) {
+        
+        error() << "The error is caused by the duplication of  pad " <<pad<<endmsg; 
+        error() << "It is likely due to data corruption " <<endmsg;
+        m_Exccounter++;
+        
+        delete current;
+      }
+      
     }
   }
+  
   
   for( iTwo = typeTwos.begin() ; iTwo != typeTwos.end() ; iTwo++ ){
     if(!(iTwo->second)){
@@ -311,8 +347,17 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
 
       if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
         verbose() << " Found an uncrossed pad type 2 " << pad << endmsg;
-
-      coords->insert(current,pad);      
+      try {
+        coords->insert( current, pad );
+      } catch( const GaudiException& exc  ) {
+        
+        error() << "The error is caused by the duplication of  pad " <<pad<<endmsg; 
+        error() << "It is likely due to data corruption " <<endmsg;
+        m_Exccounter++;
+        
+        delete current;
+      }
+      
 
     }
   } 

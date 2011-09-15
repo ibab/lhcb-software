@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+! 2011-09-15 - Alessia Satta
+ - Add protection for duplicated hits ( due to data corruption). The changes are in MuonRec
 
 !========================= MuonDAQ v4r11 2011-08-30 =========================
 ! 2011-08-22 - Alessia Satta
