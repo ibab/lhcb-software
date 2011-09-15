@@ -9,6 +9,9 @@ Stripping for 2011 re-processing attempt to reduce the bandwidth (stripping17)
 
 This is the first version of the Stripping with ROOT as the default persistency
 
+Bandwidth is vastly smaller. New functionality to split by WG, split lines
+into different streams, and other information added.
+
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v3r0
 

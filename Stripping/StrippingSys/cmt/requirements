@@ -17,12 +17,12 @@ use  MvaPreSelB2DH               v1r1     Phys   # Sajan Easo
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r7     Phys   # Anton Poluektov
-use  StrippingArchive            v1r3     Phys   # Rob Lambert
+use  StrippingArchive            v1r4     Phys   # Rob Lambert
 use  StrippingConf               v4r2p1   Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r3     Phys   # Ulrich Kerzel
 use  StrippingSelections         v3r8     Phys   # Tom Blake, Jibo He
 use  StrippingSettings           v2r7     Phys   # Tom Blake, Jibo He
-use  StrippingTCK                v1r1     Phys   # Anton Poluektov
+use  StrippingTCK                v1r2     Phys   # Anton Poluektov
 use  StrippingUtils              v1r4     Phys   # Juan Palacios
 ####################################################################
 
