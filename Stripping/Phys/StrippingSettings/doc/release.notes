@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r7 2011-09-15 =========================
 ! 2011-09-15 - Rob Lambert
  - Updated Stripping17 dbase with some SL lines now going to microDST
 
@@ -17,7 +18,6 @@
 ! 2011-09-09 - T Blake
  - Updated LineConfigDictionaries_RDWG.py (and dbase)
 
-!========================= StrippingSettings v2r7 2011-09-06 =========================
 ! 2011-09-05 - Jibo He
  - LineConfigDictionaries_EWWG.py
   . Updated Z02TauTauProng
