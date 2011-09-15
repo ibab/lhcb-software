@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-15 - Rob Lambert
+ - Updated Stripping17 dbase with some SL lines now going to microDST
+
 
 ! 2011-09-09 - T Blake
  - Updated stripping17 dbase 

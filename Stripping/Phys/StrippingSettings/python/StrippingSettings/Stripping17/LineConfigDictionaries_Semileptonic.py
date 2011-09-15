@@ -54,7 +54,7 @@ Bd2DstarMuNu = {
                  'B0dPV_DeltaZVtx' : 0.5 #  mm
                    }
       },
-    'STREAMS' : ['Semileptonic'] ,
+    'STREAMS' : {'Semileptonic':['StrippingBd2DstarMuNuTight'], 'Leptonic':['StrippingBd2DstarMuNuLoose']} ,
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -93,7 +93,7 @@ B0q2DplusMuX = {
                  'B_BPVDIRA'   : 0.997
                  },
 
-           'Tuned'   : { 'Prescale'    : 1.0 ,
+        'Tuned'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 500, #MeV
@@ -125,7 +125,7 @@ B0q2DplusMuX = {
                  'B_BPVDIRA'   : 0.9980
                  },
  
-     'MC09'   : { 'Prescale'    : 1.0 ,
+        'MC09'   : { 'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters
                  'MuPT'        : 600, #MeV
@@ -157,7 +157,7 @@ B0q2DplusMuX = {
                  'B_BPVDIRA'   : 0.9980
                   }
         },
-    'STREAMS' : [ 'Semileptonic' ],
+    'STREAMS' : {'Semileptonic':['StrippingB0q2DplusMuXTuned','StrippingB0q2DplusMuXPresel'], 'Leptonic':['StrippingB0q2DplusMuXMC09']} ,#'STREAMS' : [ 'Semileptonic' ],
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -353,7 +353,9 @@ B2XuMuNu = {
     "XMuMassUpper"        : 5500, # MeV
     "Enu"                 : 1850  #MeV
     },
-    'STREAMS' : ['Semileptonic'],
+    'STREAMS' : { 'Semileptonic' : ['StrippingB2XuMuNuBu2RhoLine','StrippingB2XuMuNuBu2RhoWSLine','StrippingB2XuMuNuBs2KstarLine','StrippingB2XuMuNuBs2KstarSSLine'],
+                  'Leptonic' : ['StrippingB2XuMuNuBs2KLine','StrippingB2XuMuNuBs2KSSLine','StrippingB2XuMuNuBd2PiLine','StrippingB2XuMuNuBd2PiSSLine']
+                  },
     'WGs'    : ['Semileptonic'] 
     }
 
@@ -407,7 +409,7 @@ DstarVeryLooseWithD02Kpi = {
                   'Dstar_VCHI2' : 25, # 20 # 15
                   'DstarMassW'  : 80 # 50 # 80 MeV
                 },
-    'STREAMS' : ['CharmCompleteEvent'],
+    'STREAMS' : ['Charm'],
     'WGs'    : ['Semileptonic'] 
     }
 
