@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2011-09-15 - Gloria Corti
+ - Move to latest versions of 
+   Pythia6 6.424.2 -> 6.425.2
+   LHAPDF  5.7.1   -> 5.8.6
+   Pythia8 150     -> 153
+
 ! 2011-09-05 - Hubert Degaudenzi
  - added workaround for tauola++ and photos++ libraries which have missing links
    on their respective fortran libraries.

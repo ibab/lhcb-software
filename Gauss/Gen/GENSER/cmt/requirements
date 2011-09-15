@@ -21,7 +21,7 @@ use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf_native_version "5.7.1"
+macro lhapdf_native_version "5.8.6"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/lhapdf/PDFsets
 
@@ -44,13 +44,13 @@ macro alpgen_name "alpgen"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "150"
+macro pythia8_native_version "153"
 macro_append pythia8_linkopts " -lhepmcinterface "
 
 
 #-- Pythia 6
 #============================================================================
-macro pythia6_native_version "424.2"
+macro pythia6_native_version "425.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
