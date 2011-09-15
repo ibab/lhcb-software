@@ -45,10 +45,10 @@ StrandInfo::StrandInfo(std::string name,StrandBrowser *serv):DimInfo(name.c_str(
 void StrandInfo::infoHandler()
 {
   char *rawstate = (char*)getData();
-  int datlen = getSize();
+  getSize();
   dyn_string *stat=Strsplit(rawstate,"/");
   std::string state = stat->at(0);
-  if (state == "READY")
+  if (state =="READY")
 //  if (state == "RUNNING")
   {
     IocSensor::instance().send(m_service, CMD_BROWSE, (void*)m_service->gService);
@@ -136,7 +136,7 @@ int StrandedServices::analyze()
       {
         DimClient::setDnsNode((*it).first.c_str());
         br = new DimBrowser();
-        int ns = br->getServices("*MEPRx_01/*/Data*");
+        br->getServices("*MEPRx_01/*/Data*");
         typ = br->getNextService(serv,fmt);
         while (typ != 0)
         {
@@ -156,7 +156,7 @@ int StrandedServices::analyze()
   }
   return 0;
 }
-void StrandedServices::handle(const Incident& inc)
+void StrandedServices::handle(const Incident& )
 {
 
 }
