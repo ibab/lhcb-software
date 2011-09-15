@@ -5,7 +5,8 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
-parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer")
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("-c", "--derivativefile",dest="derivativefile",help="name of derivative file",default = "")
@@ -42,6 +43,16 @@ if opts.aligndb:
       CondDB().addLayer( alignCond )
       counter += 1
    print 'added databases: ', opts.aligndb
+   
+if opts.dddb:
+   counter  = 1
+   for db in opts.dddb:
+      from Configurables import ( CondDB, CondDBAccessSvc )
+      alignCond = CondDBAccessSvc( 'AlignDDDB' + str(counter) )
+      alignCond.ConnectionString = 'sqlite_file:' + db + '/DDDB'
+      CondDB().addLayer( alignCond )
+      counter += 1
+   print 'added databases: ', opts.dddb
    
 # turn off the printfreq
 from Configurables import EventSelector

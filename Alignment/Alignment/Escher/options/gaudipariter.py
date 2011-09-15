@@ -7,7 +7,8 @@ parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of it
 parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first iterations", default=0)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
-parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with alignment database layer for first iteration")
+parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 (opts, args) = parser.parse_args()
 
@@ -34,6 +35,9 @@ for i in range(opts.firstiter,opts.numiter) :
         if opts.aligndb :
             for db in opts.aligndb :
                 theseoptions += ' -d ' + db
+    if opts.dddb :
+        for db in opts.dddb :
+            theseoptions += ' --dddb ' + db
 
     # add the remaining options
     for a in args:

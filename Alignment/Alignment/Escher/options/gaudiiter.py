@@ -5,7 +5,8 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=1)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=100000)
-parser.add_option("-d", "--aligndb",action="append", dest="aligndb",help="path to file with alignment database layer. you can use this option multiple times")
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -50,6 +51,15 @@ if opts.aligndb:
       from Configurables import ( CondDB, CondDBAccessSvc )
       alignCond = CondDBAccessSvc( 'AlignCond' + str(counter) )
       alignCond.ConnectionString = 'sqlite_file:' + db + '/LHCBCOND'
+      CondDB().addLayer( alignCond )
+      counter += 1
+      
+if opts.dddb:
+   counter  = 1
+   for db in opts.dddb:
+      from Configurables import ( CondDB, CondDBAccessSvc )
+      alignCond = CondDBAccessSvc( 'AlignDDDB' + str(counter) )
+      alignCond.ConnectionString = 'sqlite_file:' + db + '/DDDB'
       CondDB().addLayer( alignCond )
       counter += 1
 
