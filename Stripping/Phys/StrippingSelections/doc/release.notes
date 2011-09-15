@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r8 2011-09-15 =========================
 ! 2011-09-14 - Ulrich Kerzel
 - update ChiC with conversion line to use new NoBremNoPID*Electrons
 
@@ -17,7 +18,6 @@
 ! 2011-09-08 - Rob Lambert
  - Fix linebuilders which use outdated functors and hard-coded name, see task #22485 
 
-!========================= StrippingSelections v3r8 2011-09-06 =========================
 ! 2011-09-06 - Chris Jones
  - Use private instead of public instances of the BBDT tool. See bug
    https://savannah.cern.ch/bugs/?86134
