@@ -11,6 +11,7 @@ import Stripping13
 import Stripping14
 import Stripping15
 import Stripping16
+import Stripping17
 
 #give a dictionary of strippings which use the same line builders
 _duplicate_strippings={ "Stripping13b"        : "Stripping13",
@@ -23,7 +24,8 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping1Point4Tev" : "2011 data reprocessing, for data in 2011 taken at 1.4 TeV",
                  "Stripping14" : "2010 data reprocessing, reprocessed in early 2011 with the 2010 dataset",
                  "Stripping15" : "2011 data processing for data in 2011 taken after the June technical stop",
-                 "Stripping16" : "2011 data processing for data in 2011 taken after the July technical stop, many CPU improvements"
+                 "Stripping16" : "2011 data processing for data in 2011 taken after the July technical stop, many CPU improvements",
+                 "Stripping16" : "2011 data reprocessing for all data in 2011, reprocessed at the end of 2011, many bandwidth improvements"
                  }
 
 #compile dictionary of all known strippings

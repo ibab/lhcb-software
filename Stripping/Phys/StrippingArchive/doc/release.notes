@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-07-21 - Rob Lambert
+ - Add Stripping17 to archive definition
+
 !========================= StrippingArchive v1r3 2011-08-04 =========================
 ! 2011-08-04 - Rob Lambert
  - Add Stripping16 to tests
