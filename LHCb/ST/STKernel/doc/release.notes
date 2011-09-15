@@ -3,10 +3,10 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r6 2011-09-15 =========================
 ! 2011-09-08 Mark Tobin
  - Add enum to STDAQDefinitions to give number of strips/sector
 
-!========================= STKernel v2r6 2011-08-30 =========================
 ! 2011-08-30 Mark Tobin
  - Add method to noise calculation tool to check strip status.
 
