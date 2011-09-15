@@ -11,6 +11,7 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
+  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"])
 validateWithReference(preproc = preprocessor)
 </text></argument>

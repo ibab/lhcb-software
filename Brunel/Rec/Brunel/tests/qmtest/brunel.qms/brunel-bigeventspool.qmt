@@ -12,6 +12,7 @@ from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:"]) + \
+  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["DstWriter            INFO Data source: EventDataSvc output: DATAFILE='PFN:"]) + \
   LineSkipper(["FSROutputStream...   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:"])
 validateWithReference(preproc = preprocessor)
