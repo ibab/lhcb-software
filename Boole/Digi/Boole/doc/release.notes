@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configuration:
+   . Add NextNext to default spillover paths KnownSpillPaths
 
  - Changes to example options:
    . Replace 2010-Files.py by MC10-Files.py, produced with official MC10 settings
