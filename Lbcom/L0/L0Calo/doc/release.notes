@@ -3,7 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
-!========================= L0Calo v11r5 2011-08-31 =========================
+!========================= L0Calo v11r5 2011-09-15 =========================
+! 2011-09-14 - Patrick Robbe
+ - Protect against new ECAL parasitic FEB
+
 ! 2011-08-25 - Rob Lambert
  - Steer raw event location with L0CaloCandidatesFromRaw
 
