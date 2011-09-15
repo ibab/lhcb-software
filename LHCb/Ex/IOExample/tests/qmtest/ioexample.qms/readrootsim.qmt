@@ -10,6 +10,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["EventPersistenc...   INFO  'CnvServices':"]) + \
   LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"]) + \
   LineSkipper(["PoolRootEvtCnvSvc    INFO"]) + \
+  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"])
 validateWithReference(preproc = preprocessor)
 </text></argument>

@@ -14,6 +14,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["FSRInputCopyStream   INFO "]) + \
   LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/FileRecordCnvSvc' ]"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
+  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["FileRecordDataSvc    INFO Failed to register record for:00000000-0000-0000-0000-000000000000 [Invalid Address]"]) + \
   LineSkipper(["PoolRootEvtCnvSvc    INFO"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"])

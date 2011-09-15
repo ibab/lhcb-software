@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-09-15 - Marco Cattaneo
+ - Update tests to follow fixes in RootCnv
+
 !========================= IOExample v4r2 2011-09-09 =========================
 ! 2011-09-09 - Marco Cattaneo
  - Really fix the references for .i686, also for _dbg

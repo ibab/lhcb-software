@@ -12,6 +12,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["InputCopyStream      INFO"]) + \
   LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"]) + \
   LineSkipper(["FSRInputCopyStream   INFO "]) + \
+  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/FileRecordCnvSvc' ]"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
   LineSkipper(["PoolRootEvtCnvSvc    INFO"]) + \
