@@ -30,10 +30,10 @@ from StrippingUtils.Utils import LineBuilder
 import StandardParticles
 if hasattr(StandardParticles, "StdAllLooseKaons"):
   from StandardParticles import StdAllLooseKaons as MyLooseKaons
-  print "importing StdAllLooseKaons as MyLooseKaons"
+  #print "importing StdAllLooseKaons as MyLooseKaons"
 else:
   from StandardParticles import StdLooseKaons as MyLooseKaons
-  print "importing StdLooseKaons as MyLooseKaons"
+  #print "importing StdLooseKaons as MyLooseKaons"
 
 class StrippingBs2PhiPhiConf(LineBuilder):
 

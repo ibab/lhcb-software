@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-09-15 - Rob Lambert
+ - Update for Stripping13Calib and splitting SL lines to microDST
+ - Supress printout from Bs2JPsiPhi lines
+
+! 2011-09-15 - Rob Lambert
  - Add WG and Stream dictionary
 
 ! 2011-09-15 - Rob Lambert

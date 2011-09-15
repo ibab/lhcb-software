@@ -1,10 +1,6 @@
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 =============================================
 Stripping16 :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 B2threebody: 445 channels
 Created lines
 Created lines
@@ -91,8 +87,6 @@ Creating EW stream with 44 lines
 =============================================
 Stripping17 :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 B2threebody: 445 channels
 Hadron_Z02TauTauProng
 Hadron_Z02TauTauProng_SameSign
@@ -104,6 +98,8 @@ Created lines
 B2fourbody: 1084 channels
 WARNING: line B2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter . Consider using Selection instead!
 WARNING: line B2hhh_pph_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter . Consider using Selection instead!
+Created lines
+B2twobody: 69 channels
 Created lines
 # WARNING: StrippingPromptCharm: new configuration: D0Prescale       : 0.33
 # WARNING: StrippingPromptCharm: new configuration: DplusPrescale    : 0.33
@@ -169,24 +165,20 @@ KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 
 self.name BetaSPsi2SMuMu
 inclusiveline BetaSPsi2SMuMu_InclPsi2SToMuMu
 Created lines
-B2twobody: 69 channels
-Created lines
 Creating Bhadron stream with 203 lines
-Creating Semileptonic stream with 20 lines
-Creating Leptonic stream with 10 lines
+Creating Semileptonic stream with 14 lines
+Creating Leptonic stream with 16 lines
 Creating PID stream with 26 lines
 Creating Dimuon stream with 98 lines
 Creating Calibration stream with 17 lines
 Creating Radiative stream with 17 lines
-Creating CharmCompleteEvent stream with 72 lines
-Creating Charm stream with 54 lines
+Creating CharmCompleteEvent stream with 71 lines
+Creating Charm stream with 55 lines
 Creating EW stream with 58 lines
 Creating MiniBias stream with 16 lines
 =============================================
 Stripping14 :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 Created lines
 Created lines
 -----------------------------------------
@@ -218,8 +210,6 @@ Creating CharmCompleteEvent stream with 18 lines
 =============================================
 Stripping15 :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 Created lines
 Created lines
 WARNING: line B2hhh_KKK_inclLine uses plain Gaudi configurable B2hhhGlobalEventCutFilter . Consider using Selection instead!
@@ -302,8 +292,6 @@ Creating EW stream with 44 lines
 =============================================
 Stripping13b :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 Created lines
 Created lines
 makeJpsiPhi2KK Code =   (MINTREE('K+'==ABSID, PIDK) > 0.0)& (PT > 500.0 *MeV)& (MIPCHI2DV(PRIMARY)> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
@@ -382,8 +370,6 @@ Creating EW stream with 42 lines
 =============================================
 Stripping13 :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 Created lines
 Created lines
 makeJpsiPhi2KK Code =   (MINTREE('K+'==ABSID, PIDK) > 0.0)& (PT > 500.0 *MeV)& (MIPCHI2DV(PRIMARY)> 9.0)& (ADMASS('phi(1020)') < 25.0 *MeV)& (ADMASS('phi(1020)') < 25.0 *MeV)& (PT > 900.0 *MeV)& (VFASPF(VCHI2/VDOF) < 9.0)
@@ -462,6 +448,8 @@ Creating EW stream with 42 lines
 =============================================
 Stripping1Point4Tev :
 =============================================
-importing StdAllLooseKaons as MyLooseKaons
-importing StdAllLooseKaons as MyLooseKaons
 Creating AllStreams stream with 50 lines
+=============================================
+Stripping13Calib :
+=============================================
+Creating Calibration stream with 35 lines
