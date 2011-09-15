@@ -48,7 +48,7 @@ def cloneLinesFromStream(stream, prefix = 'Clone' , prescale = 1.0):
     """
 
     clonedLines = []
-    
+
     for _line in stream.lines:
         clonedLine = _line.clone( prefix + _line.name().lstrip('Stripping'),
                                   prescale = _line.prescale()*prescale )
@@ -73,29 +73,38 @@ def addBuilderToStreamGrouping( streams, config, lb ):
     Append lines from a line builder to a dictionary
     mapping lines to stream names.
     """
-    from StrippingUtils.Utils import lineFromName 
+    from StrippingUtils.Utils import lineFromName
 
     for stream in config['STREAMS']:
         if stream in streams:
             if isinstance(config['STREAMS'],dict):
                 for linename in config['STREAMS'][stream]:
                     line = lineFromName( lb,   linename )
-                    if line: streams[stream] += [ line ] 
+                    if line:
+                        streams[stream] += [ line ]
+                    else:
+                        raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(config['STREAMS'],list):
-                streams[stream] += [ line for line in lb.lines() ] 
+                streams[stream] += [ line for line in lb.lines() ]
             else:
                 raise Exception( 'Unsupported type, expected list' +
-                                 'or dict for line-to-STREAM mapping' ) 
+                                 'or dict for line-to-STREAM mapping' )
         else:
             if isinstance(config['STREAMS'],dict):
                 for linename in config['STREAMS'][stream]:
                     line = lineFromName( lb,   linename )
-                    if line: streams[stream] = [ line ] 
+                    if line:
+                        if stream not in streams:
+                            streams[stream] = [ line ]
+                        else:
+                            streams[stream] += [ line ]
+                    else:
+                        raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(config['STREAMS'],list):
-                streams[stream] = [ line for line in lb.lines() ] 
+                streams[stream] = [ line for line in lb.lines() ]
             else:
                 raise Exception( 'Unsupported type, expected list' +
-                                 'or dict for line-to-STREAM mapping' ) 
+                                 'or dict for line-to-STREAM mapping' )
     return
 
 
@@ -107,43 +116,46 @@ def buildStream( stripping, streamName = '', WGs = None ):
     or:
     >>> conf = strippingConfiguration('Stripping13')
     >>> streamDimuon = strippingStream(conf,'Dimuon')
-    
+
     """
-    
+
     from StrippingConf.StrippingStream import StrippingStream
     from StrippingSettings.Utils import strippingConfiguration
     from StrippingSelections import lineBuilders
     from StrippingUtils.Utils import lineFromName
-    
+
     stream = StrippingStream( streamName )
 
     if isinstance(stripping, basestring) :
         _db = strippingConfiguration( stripping )
     else :
         _db = stripping
-    
-        
+
+
     for key in _db.keys():
         _conf = _db[key]
         if stream.name() in _conf['STREAMS']:
             if WGs and not any( WG for WG in _conf['WGs'] if WG in WGs): continue
             _lb = lineBuilders()[_conf['BUILDERTYPE']](key,_conf['CONFIG'])
-            
+
             if isinstance(_conf['STREAMS'],dict):
                 for linename in _conf['STREAMS'][stream.name()]:
                     line = lineFromName( _lb, linename )
-                    if line: stream.appendLines( [ line ] )
+                    if line:
+                        stream.appendLines( [ line ] )
+                    else:
+                        raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(_conf['STREAMS'],list):
                 stream.appendLines( _lb.lines() )
             else:
                 raise Exception( 'Unsupported type, expected list ' +
-                                 'or dict for line-to-STREAM mapping' ) 
+                                 'or dict for line-to-STREAM mapping' )
     return stream
 
 
 def buildStreams( stripping, WGs = None ):
     """
-    Build and return a set of StrippingStreams for a given 
+    Build and return a set of StrippingStreams for a given
     stripping configuration.
     Usage:
 
@@ -152,30 +164,30 @@ def buildStreams( stripping, WGs = None ):
     ...   print s.name(), s.lines
 
 
-    It is also possible to use a configuration dictionary 
+    It is also possible to use a configuration dictionary
     directly:
-    
+
     >>> conf = strippingConfiguration('Stripping13')
     >>> streams = buildStreams(conf)
 
-    To select only streams belonging to the RD or the 
+    To select only streams belonging to the RD or the
     Gamma from trees WGs:
 
     >>> streams = buildStreams('stripping13', WGs = ['RD','GammaFromTrees'] )
     >>>
-    
+
     """
     from StrippingConf.StrippingStream import StrippingStream
     from StrippingSettings.Utils import strippingConfiguration
     from StrippingSelections import lineBuilders
-    
+
     streams = {}
-    
+
     if isinstance(stripping, basestring) :
         scdb = strippingConfiguration(stripping)
     else :
         scdb = stripping
-        
+
     for k, v in scdb.iteritems() :
         if 'STREAMS' in v.keys() and not WGs or 'WGs' in v.keys():
             if not WGs or any( WG for WG in v['WGs'] if WG in WGs ):
@@ -183,7 +195,7 @@ def buildStreams( stripping, WGs = None ):
                 addBuilderToStreamGrouping( streams, v, lb )
         else:
             raise Exception('Config',k,'missing either STREAM or WG data data.')
-            
+
     strippingStreams=[]
     for stream in streams:
         lines = [ line for line in streams[stream] ]
@@ -202,9 +214,9 @@ def buildStreams( stripping, WGs = None ):
 ##     or:
 ##     >>> conf = strippingConfiguration('Stripping13')
 ##     >>> streamDimuon = strippingStream(conf,'Dimuon')
-    
+
 ##     """
-    
+
 ##     from StrippingConf.StrippingStream import StrippingStream
 ##     from StrippingSettings.Utils import strippingConfiguration
 ##     from StrippingSelections import lineBuilders
@@ -215,7 +227,7 @@ def buildStreams( stripping, WGs = None ):
 ##         _db = strippingConfiguration( stripping )
 ##     else :
 ##         _db = stripping
-        
+
 ##     for key in _db.keys():
 ##         _conf = _db[key]
 ##         if stream.name() in _conf['STREAMS']:
@@ -238,7 +250,7 @@ def buildStreams( stripping, WGs = None ):
 
 ##     >>> conf = strippingConfiguration('Stripping13')
 ##     >>> streams = buildStreams(conf)
-    
+
 ##     """
 ##     from StrippingConf.StrippingStream import StrippingStream
 ##     streams = {}
@@ -246,7 +258,7 @@ def buildStreams( stripping, WGs = None ):
 ##         scdb = strippingConfiguration(stripping)
 ##     else :
 ##         scdb = stripping
-        
+
 ##     for k, v in scdb.iteritems() :
 ##         if 'STREAMS' in v.keys() :
 ##             for stream in v['STREAMS'] :
@@ -264,11 +276,11 @@ def buildStreams( stripping, WGs = None ):
 ##     for stream, builderNames in streams.iteritems() :
 ##         lines=[]
 ##         for b in builderNames :
-##             lines +=  [line for line in builderMap[b].lines()] 
+##             lines +=  [line for line in builderMap[b].lines()]
 ##         print 'Creating steam', stream, 'with lines', lines
 ##         strippingStreams.append(StrippingStream(stream, Lines = lines))
 ##     return strippingStreams
 
 
-    
-    
+
+
