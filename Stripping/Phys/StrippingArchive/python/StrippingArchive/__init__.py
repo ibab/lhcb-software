@@ -25,7 +25,7 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping14" : "2010 data reprocessing, reprocessed in early 2011 with the 2010 dataset",
                  "Stripping15" : "2011 data processing for data in 2011 taken after the June technical stop",
                  "Stripping16" : "2011 data processing for data in 2011 taken after the July technical stop, many CPU improvements",
-                 "Stripping16" : "2011 data reprocessing for all data in 2011, reprocessed at the end of 2011, many bandwidth improvements"
+                 "Stripping17" : "2011 data reprocessing for all data in 2011, reprocessed at the end of 2011, many bandwidth improvements"
                  }
 
 #compile dictionary of all known strippings
