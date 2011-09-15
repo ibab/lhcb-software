@@ -78,7 +78,7 @@ StatusCode RawBankReadoutStatusMonitor::initialize() {
 StatusCode RawBankReadoutStatusMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
-s
+
 
   // get RawBankReadoutStatus
   LHCb::RawBankReadoutStatuss* statuss;
