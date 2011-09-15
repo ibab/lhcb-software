@@ -4,6 +4,7 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r17 2011-09-15 =========================
 ! 2011-09-07 - Patrick Koppenburg
  - TupleToolEventInfo : add field polarity
  - TupleToolMuonPid: comment out unused IsMuonTight. Causes a warning.
