@@ -7,6 +7,7 @@
 !========================= LumiAlgs v7r0 2011-09-15 =========================
 ! 2011-09-15 - Marco Cattaneo
  - Update LumiAlgsExclusions.py to follow verbosity change in ROOT persistency
+   and to fix a tiny finalisation difference between i686 and x86_64
 
 ! 2011-09-05 - Marco Cattaneo
  - Update references for IOHelper FSR fixes and switch of default persistency
