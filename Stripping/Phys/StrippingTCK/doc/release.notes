@@ -6,6 +6,7 @@
                 Based on TCKsh by Gerhard Raven
 !-----------------------------------------------------------------------------
 
+!========================= StrippingTCK v1r2 2011-09-15 =========================
 ! 2011-09-12 - Anton Poluektov 
   - Use zip file access service instead of tar. Faster access, smaller file
   - Implement modifications by Gerhard to cache reading config tree from file
