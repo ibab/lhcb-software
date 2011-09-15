@@ -1855,7 +1855,7 @@ def _h_accumulate_ ( h                         ,
     """
     result = init
     for i in h.iteritems() :
-        if cut ( i ) : result = func ( result , h[i] )
+        if cut ( i ) : result = func ( result , i[2] )
     return result 
 
 ROOT.TH1.accumulate = _h_accumulate_ 
