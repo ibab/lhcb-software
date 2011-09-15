@@ -71,7 +71,7 @@ def addBuilderToStreamGrouping( streams, config, lb ):
         else:
             if isinstance(config['STREAMS'],dict):
                 for linename in config['STREAMS'][stream]:
-                    line = lineFromName( lb,   linename )
+                    line = _lfName( lb,   linename )
                     if line: streams[stream] = [ line ]
             elif isinstance(config['STREAMS'],list):
                 streams[stream] = [ line for line in lb.lines() ]
@@ -217,18 +217,6 @@ def buildStreams(stripping,archive=None, WGs = None) :
                 addBuilderToStreamGrouping( streams, v, lb )
         else:
             raise Exception('Config',k,'missing either STREAM or WG data data.')
-        if 'STREAMS' in v.keys() :
-            for stream in v['STREAMS'] :
-                if stream in streams.keys() :
-                    streams[stream] += [k]
-                else :
-                    streams[stream] = [k]
-        else :
-            print 'ERROR: config',k,'had no STREAMS data. Ignore!!!'
-    builderMap = {}
-    for builder in scdb.keys() :
-        builderMap[builder] = lineBuilder(scdb, builder, archive)
-
 
     strippingStreams=[]
     for stream in streams:
