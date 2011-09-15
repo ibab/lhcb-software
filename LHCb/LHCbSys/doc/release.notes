@@ -5,27 +5,34 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v33r0>2011-09-08 LHCbSys v33r0</A></H1><PRE>
+</PRE><H1><A NAME=v33r0>2011-09-16 LHCbSys v33r0</A></H1><PRE>
 This version uses Gaudi v22r4 and LCG_61
 Production version for 2011 reprocessing and MC11.
 
 - Packages added:    Tools/FileStager v1r2: Create local copies of files from the grid at runtime 
-- Packages modified: CaloDAQ v4r23p1, CaloUtils v9r2, DDDB v1r47, DetCond v12r21,
-    DetDesc v18r27p1, DetDescSvc v3r3, Magnet v7r3, MuonDet v9r7, RichDet v16r6,
-    GenEvent v6r1, LumiEvent v3r2, RecEvent v2r39,IOExample v4r2,GaudiConf v15r0,
-    HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r5, LHCbMath v3r27,
-    XMLSummaryKernel v1r2, MuonDAQ v4r11, RootCnv v1r7, OTDAQ v7r10p1,
-    LoKiCore v11r3, RichKernel v7r45, RichRecBase v4r8, SimComponents v2r21,
-    STKernel v2r6, CondDBUI v3r11, XmlTools v6r6
+- Packages modified: CaloDAQ v4r24, CaloUtils v9r2, CaloDet v10r2, DDDB v1r47,
+    DetCond v12r21, DetDesc v18r27p1, DetDescSvc v3r3, Magnet v7r3, MuonDet v9r7,
+    RichDet v16r6, GenEvent v6r1, LumiEvent v3r2, RecEvent v2r39, IOExample v4r2,
+    GaudiConf v15r0, HistoStrings v1r2, LHCbAlgs v2r42, LHCbKernel v13r5,
+    LHCbMath v3r27,  XMLSummaryKernel v1r2, MuonDAQ v4r11, RootCnv v1r8,
+    OTDAQ v7r10p1, LoKiCore v11r3, RichKernel v7r45, RichRecBase v4r8,
+    SimComponents v2r21, STKernel v2r6, CondDBUI v3r11, XmlTools v6r6
+
+- In Calo/CaloDAQ v2r24
+  . Protect readout against missing parasitic FEB in the rawBank
 
 - In Calo/CaloUtils v9r2, Det/DetCond v12r21, Kernel/HistoStrings v1r2,
      Kernel/LHCbMath v3r27
   . Updates of parser functions to use new parsers introduced in Gaudi v22r3
 
+- In Det/CaloDet v10r12
+  . Allow for parasitic FEBs in ReadoutConf condition (e.g. crate timing)
+  . Protect against processing the trigger neighborhood on parasitics FEBs
+
 - In Det/DDDB v1r47
-  . Update database tags for SQLDDDB v6r16:
-    o LHCBCOND, 2011: head-20110901
-    o DDDB,     2011: head-20110823
+  . Update database tags for SQLDDDB v6r17:
+    o LHCBCOND, 2011: head-20110914
+    o DDDB,     2011: head-20110914
 
 - In Det/DetDescSvc v3r3
   . FakeEventTime: remove unused EventDataSvc property
@@ -55,6 +62,7 @@ Production version for 2011 reprocessing and MC11.
   . Make ioexample.testunpacktrack test use default I/O technology
   . Update references for change in format of printout of some options with
     Gaudi > v22r2
+  . Add test references also for .i686 due to minute differences in unpacking
 
 - In GaudiConf v14r2, v15r0
   . Update test references for default persistency change
@@ -64,6 +72,13 @@ Production version for 2011 reprocessing and MC11.
   . Add compatibility with connection strings not containing DATAFILE
     OutputStream, for example, can have it set separately
   . Prepare DstConf for new entries in the SDST, raw banks for Trigger and Muon
+  . Added two tests to confirm that opening several files with FSRs works
+  . Fixed bug #86527
+    o New test added to check for this bug
+    o Added a test that files which only contain an FSR and nothing else can be
+      read and written correctly
+  . Fix requirements to set up complete environment to run QMTests standalone
+  . Fix QMTest comparisons on i686 when addresses are printed as 0x########L
 
 - In Kernel/LHCbAlgs v2r42
   . Task #21133:
@@ -103,7 +118,8 @@ Production version for 2011 reprocessing and MC11.
   . Fix bugs found by Coverity (MuonRawBuffer and MuonRec)
   . Improve protection against failures in initialization
 
-- In Online/RootCnv v1r7
+- In Online/RootCnv v1r7, v1r8
+  . Fix bug when writing FSRs for files with no events
   . Fixes for writing FSRs, to go with Gaudi v22r4
   . Write ROOT technology when creating output file entry in XmlCatalog 
 
@@ -123,6 +139,7 @@ Production version for 2011 reprocessing and MC11.
 - In ST/STKernel v2r6
   . Add method to noise calculation tool to check strip status.
   . Fix so that dictionary generated properly for DectectorPlot classes.
+  . Add enum to STDAQDefinitions to give number of strips/sector
 
 - In Tools/CondDBUI v3r11
   . 'CondDBUI/Browser/MainWindow.py':

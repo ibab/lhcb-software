@@ -10,7 +10,7 @@ branches doc cmt test
 #                                         Maintainer
 use MCAssociators         v1r1    Associators # V. Gligorov
 
-use CaloDAQ               v4r23p1 Calo    # Olivier Deschamps
+use CaloDAQ               v4r24   Calo    # Olivier Deschamps
 use CaloInterfaces        v8r3    Calo    # Olivier Deschamps
 use CaloKernel            v6r2    Calo    # Olivier Deschamps
 use CaloUtils             v9r2    Calo    # Olivier Deschamps
@@ -24,7 +24,7 @@ use Tell1Kernel           v1r12   DAQ     # Tomasz Szumlak
 # Detector description
 use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
-use CaloDet               v10r11  Det     # Olivier Deschamps
+use CaloDet               v10r12  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r47   Det     # Marco Cattaneo
 use DetCond               v12r21  Det     # Marco Clemencic
@@ -105,7 +105,7 @@ use MuonDAQ               v4r11   Muon    # Alessia Satta
 use MuonInterfaces        v1r2p1  Muon    # Alessia Satta
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
-use RootCnv               v1r7    Online  # Markus Frank (also in ONLINE project)
+use RootCnv               v1r8    Online  # Markus Frank (also in ONLINE project)
 
 use OTDAQ                 v7r10p1 OT      # Wouter Hulsbergen
 
