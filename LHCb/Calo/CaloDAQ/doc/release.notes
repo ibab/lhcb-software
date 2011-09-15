@@ -4,12 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r24 2011-09-15 =========================
 ! 2011-09-04 - Olivier Deschamps
  - Readout.cpp : protect readout against missing parasitic FEB in the rawBank
   - As for the PIN data parasitic data is not to appear in the physics data  (except in case of wrong ECTELL1 configuration)
     -> decoders would complain because of an unseen FEB
   - In case of  ECTELL misconfiguration, such parasitic data could appear in the physics bank, but they are throw away in the decoding process anyway.
-
 
 !========================= CaloDAQ v4r23p1 2011-08-30 ========================
 ! 2011-08-02 - Marco Cattaneo

@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps
 # =============================================================================
 package           CaloDAQ
-version           v4r23p1
+version           v4r24
 
 # =============================================================================
 # Structure, i.e. directories to process. 
