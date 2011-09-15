@@ -48,8 +48,8 @@ void StrandInfo::infoHandler()
   int datlen = getSize();
   dyn_string *stat=Strsplit(rawstate,"/");
   std::string state = stat->at(0);
-//  if (state == "READY")
-  if (state == "RUNNING")
+  if (state == "READY")
+//  if (state == "RUNNING")
   {
     IocSensor::instance().send(m_service, CMD_BROWSE, (void*)m_service->gService);
   }
