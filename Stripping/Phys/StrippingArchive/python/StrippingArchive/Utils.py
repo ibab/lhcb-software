@@ -138,6 +138,8 @@ def buildStream(stripping, streamName = '', archive=None, WGs = None ):
                 for linename in _conf['STREAMS'][stream.name()]:
                     line = _lfName( _lb, linename )
                     if line: stream.appendLines( [ line ] )
+                    else:
+                        raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(_conf['STREAMS'],list):
                 stream.appendLines( _lb.lines() )
             else:
