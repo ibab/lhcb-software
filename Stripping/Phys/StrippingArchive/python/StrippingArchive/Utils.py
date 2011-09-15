@@ -62,7 +62,8 @@ def addBuilderToStreamGrouping( streams, config, lb ):
             if isinstance(config['STREAMS'],dict):
                 for linename in config['STREAMS'][stream]:
                     line = _lfName( lb,   linename )
-                    if line: streams[stream] += [ line ]
+                    if line:
+                        streams[stream] += [ line ]
                     else:
                         raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(config['STREAMS'],list):
@@ -74,7 +75,11 @@ def addBuilderToStreamGrouping( streams, config, lb ):
             if isinstance(config['STREAMS'],dict):
                 for linename in config['STREAMS'][stream]:
                     line = _lfName( lb,   linename )
-                    if line: streams[stream] = [ line ]
+                    if line:
+                        if stream not in streams:
+                            streams[stream] = [ line ]
+                        else:
+                            streams[stream] += [ line ]
                     else:
                         raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(config['STREAMS'],list):
@@ -137,7 +142,8 @@ def buildStream(stripping, streamName = '', archive=None, WGs = None ):
             if isinstance(_conf['STREAMS'],dict):
                 for linename in _conf['STREAMS'][stream.name()]:
                     line = _lfName( _lb, linename )
-                    if line: stream.appendLines( [ line ] )
+                    if line:
+                        stream.appendLines( [ line ] )
                     else:
                         raise Exception('The line you have requested does not exist '+linename)
             elif isinstance(_conf['STREAMS'],list):
