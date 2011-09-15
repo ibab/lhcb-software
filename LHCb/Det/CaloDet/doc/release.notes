@@ -3,6 +3,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v10r12 2011-09-15 =========================
 ! 2011-09-04 - Olivier Deschamps
  - CardParam.h : allow for parasitic FEBs in ReadoutConf condition (e.g. crate timing). 
    - Parasitics FEB are flagged when no channel ID area is associated to the board -> dedicated DAQ from raw (for monitoring only)
