@@ -2,11 +2,15 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-15 - Marco Cattaneo
+ - Update test references to follow small verbosity change in ROOT persistency
+
 ! 2011-09-14 - Rob Lambert
  - Added two tests to confirm what opening several files with FSRs works
 
 ! 2011-09-13 - Rob Lambert
- - Added a test that files which only contain an FSR and nothing else can be read and written correctly, see bug #86527
+ - Added a test that files which only contain an FSR and nothing else can be read
+   and written correctly, see bug #86527
 
 !========================= GaudiConf v15r0 2011-09-09 =========================
 ! 2011-09-09 - Rob Lambert
