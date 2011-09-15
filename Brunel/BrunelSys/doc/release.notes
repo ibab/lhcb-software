@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v41r0>2011-09-08 Brunel v41r0</A></H1><PRE>
+</PRE><H1><A NAME=v41r0>2011-09-15 Brunel v41r0</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
  Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
@@ -12,9 +12,9 @@ Production version for 2011 end of year reprocessing (Reco12)
 - Changes to Brunel persistency:
   . Output files are now in ROOT format by default, can be read by DaVinci v28r4
     or later. POOL output can be switched on by options.
-    (GaudiConf v15r0, RootCnv v1r7, Gaudi v22r4, ROOT 5.30)
+    (GaudiConf v15r0, RootCnv v1r8, Gaudi v22r4, ROOT 5.30)
   . Write ROOT technology when creating output file entry in XmlCatalog
-    (RootCnv v1r7)
+    (RootCnv v1r8)
   . SDST now contains copies of Raw event banks (Trigger/RawEvent, Muon/RawEvent)
     see task #21716 (Configuration.py, GaudiConf v14r2)
   . RecSummary object now contains total number of (Best) tracks (RecAlgs v2r6)
@@ -36,6 +36,7 @@ Production version for 2011 end of year reprocessing (Reco12)
   . Small improvements to Rich background tools (RichRecTools v4r18)
   . Lower default 'hot pixel' fraction from 90% to 50% of consecutive events
     (RichTools v2r37)
+  . Updated default DDDB and LHCBCOND tags for 2011 to head-20110914 (DDDB v1r47)
 
 - Bug fixes
   . Write out FSRs when using ROOT persistency. In previous versions, FSRs were
@@ -96,6 +97,8 @@ Production version for 2011 August processing (Reco11a)
     o Protect many unprotected debug and verbose messages
   . Use latest DDDB and LHCBCOND tags from SQLDDDB v6r14
     (new field map by default for 2011 data, new Rich aerogel geometry)
+  . Add protections for parasitic FEB in Calo readout
+    (CaloDAQ v2r24, CaloDet v10r12)
 
 - Bug fixes
   . Fix a problem with the track selector when trying to apply a clone distance
