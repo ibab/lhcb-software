@@ -54,7 +54,7 @@ StatusCode DirectionFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
  
   return sc;
 }
@@ -191,8 +191,9 @@ StatusCode DirectionFitter::fit( const LHCb::VertexBase& PV, LHCb::Particle& B )
   if(!converged)  return StatusCode::FAILURE;
 
   if(m_applyBMassConstraint) {
-    int Bpid = B.particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID(Bpid  );
+    //int Bpid = B.particleID().pid();
+    //ParticleProperty*  partProp = m_ppSvc->findByStdHepID(Bpid  );
+    const LHCb::ParticleProperty*  partProp = m_ppSvc->find(B.particleID());
     double nominalBMass = partProp->mass();
     ROOT::Math::SMatrix<double,1,10> DD;
     Gaudi::Vector1 dd;

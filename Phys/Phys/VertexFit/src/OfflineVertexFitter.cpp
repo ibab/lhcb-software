@@ -12,8 +12,9 @@
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IParticleStuffer.h"
 
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "OfflineVertexFitter.h"
@@ -71,13 +72,16 @@ StatusCode OfflineVertexFitter::initialize()
   if (!sc) return sc;
 
   m_transporter = tool<IParticleTransporter>(m_transporterName, this);
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
 
-  const ParticleProperty* partProp;
+  const LHCb::ParticleProperty* partProp;
   partProp = m_ppSvc->find( "gamma" );
-  m_photonID = (*partProp).jetsetID();
+  //m_photonID = (*partProp).jetsetID();
+  m_photonID = partProp->particleID().pid();
+
   partProp = m_ppSvc->find( "pi0" );
-  m_pi0ID  = (*partProp).jetsetID();
+  //m_pi0ID  = (*partProp).jetsetID();
+  m_pi0ID  = partProp->particleID().pid();
 
   return sc;
 }
@@ -225,8 +229,10 @@ StatusCode OfflineVertexFitter::fit
     getParticleInfo(P, V7, C7, chi2, NDoF);
     double mm = P.measuredMass();
     double mmerr = P.measuredMassErr();
-    const int pid = P.particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    //const int pid = P.particleID().pid();
+    //ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    const LHCb::ParticleProperty*  partProp = m_ppSvc->find(P.particleID());
+
     double nominalMass = partProp->mass();
     sc=constrainMass(V7, C7, nominalMass);
     if(sc.isFailure()) {
@@ -280,8 +286,10 @@ StatusCode OfflineVertexFitter::fit
 //==================================================================
 bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const 
 {
-  const int id( part->particleID().pid() );
-  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
+  //const int id( part->particleID().pid() );
+  //ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
+  const LHCb::ParticleProperty*  partProp = m_ppSvc->find(part->particleID());
+
   return partProp->lifetime() < 1.e-6*nanosecond ;
 }
 
@@ -1964,8 +1972,10 @@ bool OfflineVertexFitter::requireMassConstraint(const LHCb::Particle* part,
   nominalMass=0.0;
 
   if(m_applyDauMassConstraint && !part->isBasicParticle()) {
-    const int pid = part->particleID().pid();
-    ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    //const int pid = part->particleID().pid();
+    //ParticleProperty*  partProp = m_ppSvc->findByStdHepID( pid  );
+    const LHCb::ParticleProperty*  partProp = m_ppSvc->find(part->particleID());
+
     const double wid = hbar_Planck/partProp->lifetime();
     if(wid<m_widthThreshold) {
       require=true;

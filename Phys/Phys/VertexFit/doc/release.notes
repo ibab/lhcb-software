@@ -4,6 +4,11 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2011-09-16 - Yuehong Xie
+ - commit the changes for using new ParticlePropertySvc, which were forgot
+   last time. 
+
+
 !========================= VertexFit v6r7p2 2011-05-13 =========================
 ! 2011-05-10 - Yuehong Xie
  - migrate to new ParticlePropertySvc

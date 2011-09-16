@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IVertexFit.h"            // Interface
 
+namespace LHCb { class IParticlePropertySvc; }
 
 /** @class ParticleAdder ParticleAdder.h
  *
@@ -54,7 +55,7 @@ public:
 private:
 
 
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
 
 };
 #endif // PARTICLEADDER_H

@@ -7,6 +7,10 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IDirectionFit.h"            // Interface
 
+// from LHCb
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
+
 using namespace LHCb;
 
 typedef ROOT::Math::SMatrix<double, 10, 10,
@@ -45,7 +49,7 @@ public:
 
 private:
       
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
 
   bool m_applyBMassConstraint;
 

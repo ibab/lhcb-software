@@ -186,7 +186,7 @@ private:
 
   IParticleTransporter* m_transporter;
 
-  IParticlePropertySvc* m_ppSvc;
+  LHCb::IParticlePropertySvc* m_ppSvc;
 
   bool m_useResonanceVertex;
   bool m_includeDauVertexChi2;
