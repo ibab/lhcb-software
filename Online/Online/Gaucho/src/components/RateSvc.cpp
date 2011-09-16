@@ -310,6 +310,7 @@ StatusCode RateSvc::initialize()
       m_trender->initialize();
       m_trender->setAverageTime(20);
       m_trender->setPartitionAndName(this->m_PartitionName,syst);
+      m_trender->setMaxTimeNoWrite(600);
     }
   }
   return StatusCode::SUCCESS;
