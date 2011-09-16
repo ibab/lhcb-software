@@ -21,7 +21,7 @@ use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf_native_version "5.8.6"
+macro lhapdf_native_version "5.8.5"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/lhapdf/PDFsets
 

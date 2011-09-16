@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2011-09-16 - Gloria Corti
+ - Latest version of LHAPDF does not have soft link for lower cases library.
+   For now use 5.8.5
+
 ! 2011-09-15 - Gloria Corti
  - Move to latest versions of 
    Pythia6 6.424.2 -> 6.425.2
