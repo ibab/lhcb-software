@@ -91,22 +91,26 @@ if '__main__' == __name__ :
     #### SDSTs for Stripping tests, 2010 data, mu = 2.7
     ##importOptions('$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py')
 
+    
+    from GaudiConf.IOHelper import IOHelper
+    
+    ioh = IOHelper()
+    
+    castor   =  'castor:/castor/cern.ch/grid'
+    pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
+    ioh.inputFiles ( [ castor+pattern%i for i in range(1,10) ] )
+    
+    #evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
+
     from GaudiPython.Bindings import AppMgr    
     gaudi = AppMgr()
     
     ## === OR with test fmDSTs
     
     evtSel = gaudi.evtSel()
-    
-    castor   =  'castor:/castor/cern.ch/grid'
-    pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
-    evtSel.open ( [ castor+pattern%i for i in range(1,10) ] )
-    
-    #evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
-    
+        
     ## run 100 events
     gaudi.run(5000)
-
     
     from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 

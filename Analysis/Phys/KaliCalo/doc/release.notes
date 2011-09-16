@@ -7,6 +7,10 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2011-09-16 - Vanya Belyaev
+
+ - fix in input/output persistency 
+
 
 !========================= KaliCalo v4r12 2011-09-07 =========================
 ! 2011-09-07 - Albert Puig

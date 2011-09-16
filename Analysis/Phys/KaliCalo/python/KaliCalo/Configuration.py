@@ -503,17 +503,24 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             tracks = [ i.replace('/Event/Rec', '/Event/Kali/Rec') for i in tracks ]
 
         item_list  = items + calos + tracks 
-
-        return OutputStream (
-            'FMDST', 
-            ItemList = item_list ,
+        
+        writer = OutputStream (
+            'FMDST' , 
+            ItemList    = item_list ,
             # 
-            Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='NEW'" % self.getProp('FemtoDST')
-            , AcceptAlgs  = self.getProp ( 'DestroyList' )
-            , RequireAlgs =              [ 'Destroyer'   ] 
+            AcceptAlgs  = self.getProp ( 'DestroyList' ) ,
+            RequireAlgs =              [ 'Destroyer'   ] ,
             )
 
-                
+        
+        from GaudiConf.IOHelper import IOHelper
+        ioh = IOHelper()
+
+        return ioh.outputAlgs ( self.getProp ( 'FemtoDST' ) ,
+                                writer                      ,
+                                writeFSR = False            )
+    
+                    
     ## Apply the configuration
     def __apply_configuration__ (self):
         """
@@ -697,8 +704,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         if self.getProp('FemtoDST'):
             fmDST = self.fmDst()
             from Gaudi.Configuration import ApplicationMgr 
-        
-            ApplicationMgr ( OutStream = [ fmDST ] )     
+            
+            ApplicationMgr ( OutStream = fmDST )     
             
         ## 8. The configuration of NTuples & Monitoring Histograms   
         from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
