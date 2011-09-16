@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-09-16 - Gloria Corti
+ - Update Gauss-DEV.py to pick latest tag in DDDB
+
 !======================== Gauss v40r2p3 2011-08-25 ===========================
 ! 2011-09-02 - Rob Lambert
  - Fix in Configuration.py for bug #86302

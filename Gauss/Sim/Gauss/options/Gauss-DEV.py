@@ -15,7 +15,7 @@ importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 from Configurables import DDDBConf, CondDB, LHCbApp
 
 #CondDB().Simulation = True             # Already taken care of in Gauss()
-LHCbApp().DDDBtag   = "head-20110302"   # Must be set for selecting VELO
+LHCbApp().DDDBtag   = "head-20110914"   # Must be set for selecting VELO
                                         # geometry list in Gauss()
 
 DDDBConf(DataType = "2011")
