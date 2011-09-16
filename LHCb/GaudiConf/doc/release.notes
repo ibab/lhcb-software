@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-16 - Marco Cattaneo
+ - Add "NextNext" to default DstConf().SpilloverPaths
+
 !========================= GaudiConf v15r0 2011-09-15 =========================
 ! 2011-09-15 - Marco Cattaneo
  - Update test references to follow small verbosity change in ROOT persistency

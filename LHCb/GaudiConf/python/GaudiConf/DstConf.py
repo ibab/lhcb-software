@@ -30,7 +30,7 @@ class DstConf(LHCbConfigurableUser):
        , "AlwaysCreate"   : False
        , "Writer"         : "DstWriter"
        , "OutputName"     : ""
-       , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next" ]
+       , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next", "NextNext" ]
        , "DataType"       : ""
        , "Persistency"    : None
        , "WriteFSR"       : True
