@@ -34,6 +34,8 @@ public:
   
   void setAverageTime( unsigned int seconds );
 
+  void setMaxTimeNoWrite( unsigned int seconds );
+
   void addValue( std::string tag, float value );
 
   bool write( std::vector<float> values, unsigned int time = 0 );

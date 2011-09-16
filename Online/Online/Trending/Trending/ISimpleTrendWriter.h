@@ -31,6 +31,8 @@ public:
   
   virtual void setAverageTime( unsigned int seconds ) = 0;
 
+  virtual void setMaxTimeNoWrite( unsigned int seconds ) = 0;
+
   virtual void saveEvent() = 0;
   
   virtual void close() = 0;

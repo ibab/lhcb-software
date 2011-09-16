@@ -73,6 +73,13 @@ void TrendingTool::setAverageTime ( unsigned int seconds  ) {
 }
 
 //=========================================================================
+//  Set the max time without write
+//=========================================================================
+void TrendingTool::setMaxTimeNoWrite ( unsigned int seconds  ) {
+  m_trendWriter.setMaxTimeNoWrite( seconds );  
+}
+
+//=========================================================================
 //  Add an entry for a single tag, mainly for averaging
 //=========================================================================
 void TrendingTool::addValue( std::string tag, float value ) {

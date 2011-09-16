@@ -33,7 +33,9 @@ public:
   
   bool setThreshold( std::string tag, float thr );
   
-  void setAverageTime( unsigned int seconds );
+  void setAverageTime( unsigned int seconds )    { m_averageTime = seconds; }
+
+  void setMaxTimeNoWrite( unsigned int seconds ) { m_maxTimeNoWrite = seconds;};
 
   void addValue( std::string tag, float value );
 
@@ -86,6 +88,7 @@ private:
   unsigned int             m_averageTime;
   std::vector<float>       m_sumForAverage;
   std::vector<int>         m_nbForAverage;
+  unsigned int             m_maxTimeNoWrite;
 };
 //=============================================================================
 // Standard constructor, initializes variables
@@ -102,6 +105,7 @@ TrendWriter::TrendWriter( ) :
   , m_requestedTagNumber( -1 )
   , m_lastTime( 0xffffffff )
   , m_averageTime( 0 )
+  , m_maxTimeNoWrite( 0)
 {
   m_data.size       = 0;
   m_data.data[0].i  = 0;
@@ -285,17 +289,8 @@ bool TrendWriter::setThreshold ( std::string tag, float thr) {
   std::cout << "TrendWriter::setThreshold: Can't change threshold for '" << tag << "' : not found" << std::endl;
   return false;
 }
-
-
 //=========================================================================
-//  Set the time onto which one averages before writing
-//=========================================================================
-void TrendWriter::setAverageTime ( unsigned int delta ) {
-  m_averageTime = delta;
-}
-
-//=========================================================================
-//  Add a avlue to the average. If time is later than needed, write.
+//  Add a value to the average. If time is later than needed, write.
 //=========================================================================
 void TrendWriter::addValue ( std::string tag, float value ) {
   if ( 0 == m_averageTime ) return;
@@ -487,6 +482,8 @@ void TrendWriter::writeEntry( unsigned int now, std::vector<float>& data, bool w
   }
 
   bool full = ( 0 == m_ptData );
+  if ( m_maxTimeNoWrite > 0 && 
+       now > m_lastTime + m_maxTimeNoWrite ) full = true;
   addDataEntry( now, data, writeEachEntry, full );
 }
 //=========================================================================

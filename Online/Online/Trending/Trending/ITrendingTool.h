@@ -49,9 +49,15 @@ public:
 
   /**
    * Set the time onto which one average before writing an entry
-   * @param seconds: size ogf teh averaging interval in seconds.
+   * @param seconds: size of the averaging interval in seconds.
    */
   virtual void setAverageTime( unsigned int seconds ) = 0;
+
+  /**
+   * Set the maximum time without saving to file
+   * @param seconds: maximum time without writing to file.
+   */
+  virtual void setMaxTimeNoWrite( unsigned int seconds ) = 0;
 
   /**
    * Add the value of the specified tag to the average. Store if time has expired

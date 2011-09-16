@@ -102,8 +102,8 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
       nn -= ll;
       m_tags.push_back( tag );
       m_lastData.push_back( 0. );
-      std::cout << "   loaded tag " << m_tags.size() << " = '" << tag
-                               << "'   rest " << nn << " bytes." << std::endl;
+      //std::cout << "   loaded tag " << m_tags.size() << " = '" << tag
+      //                         << "'   rest " << nn << " bytes." << std::endl;
     }
     m_nbTag = m_tags.size();
     m_nbMask = (m_nbTag/32) + 1;
@@ -231,7 +231,7 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
                       << m_trend->timeString( time ) << " read " << nbData << " values, next pointer " << m_ptData
                       << std::endl;
             maxPrint--;
-          } else if ( time - firstTime > 3600*24 ) {
+          } else if ( time - firstTime > 3600 ) {
             if ( !headPrinted ) {
               sprintf( line, "   entry%5d time%12d = %s address %15d size%6d bytes type%2d version%2d",
                        kk,  m_dir.entry[kk].firstTime,
@@ -241,7 +241,7 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
               std::cout << line << std::endl;
               headPrinted = true;
             }
-            std::cout << " ** Gap>1 day from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
+            std::cout << " ** Gap>1 hrs from " << firstTime << " = " << m_trend->timeString( firstTime ) << std::endl
                       << "                to " << time << " = " << m_trend->timeString( time ) << std::endl;
             maxPrint--;
           } else if ( verbose ) {

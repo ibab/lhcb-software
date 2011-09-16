@@ -97,6 +97,13 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
 void SimpleTrendWriter::setAverageTime( unsigned int seconds ) {
   m_trend->setAverageTime( seconds );
 }
+
+//=========================================================================
+//  Set maximum time without writing
+//=========================================================================
+void SimpleTrendWriter::setMaxTimeNoWrite ( unsigned int seconds) {
+  m_trend->setMaxTimeNoWrite( seconds );
+}
 //=========================================================================
 //  Write the event in the file. Update the tags if needed.
 //=========================================================================

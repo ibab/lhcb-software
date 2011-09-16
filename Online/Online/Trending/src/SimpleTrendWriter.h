@@ -33,6 +33,8 @@ public:
   
   virtual void setAverageTime( unsigned int seconds );
 
+  virtual void setMaxTimeNoWrite( unsigned int seconds );
+
   virtual void saveEvent();
   
   virtual void close();
