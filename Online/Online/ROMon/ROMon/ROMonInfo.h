@@ -41,8 +41,6 @@ namespace ROMon {
     /// Reference to parent/owner object
     Servers           m_servers;
 
-    /// Extract node/service name from DNS info
-    void getServiceNode(char* s, std::string& svc, std::string& node)  const;
     /// Add handler for a given message source
     void addHandler(const std::string& node, const std::string& svc);
     /// Remove handler for a given message source

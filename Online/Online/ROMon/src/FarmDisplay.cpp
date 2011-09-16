@@ -105,13 +105,6 @@ namespace {
       if ( m_flush ) ::scrc_fflush(m_pb);
     }
   };
-  /// Extract node/service name from DNS info
-  void getServiceNode(char* s, string& svc, string& node) {
-    char* at = strchr(s,'@');
-    *at = 0;
-    svc = s;
-    node = at+1;
-  }
 }
 
 /// Standard constructor

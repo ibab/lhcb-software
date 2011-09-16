@@ -17,51 +17,12 @@
 #define ROMON_FARMLINEDISPLAY_H 1
 
 // Framework includes
+#include "ROMon/ClusterLine.h"
 #include "ROMon/FarmDisplayBase.h"
 /*
  *   ROMon namespace declaration
  */
 namespace ROMon {
-
-
-  /**@class ClusterLine ROMon.h GaudiOnline/Display.h
-   *
-   *   Display entry for the boot status of one subfarm
-   *
-   *   @author M.Frank
-   */
-  class ClusterLine  {
-  protected:
-    std::string        m_name;
-    int                m_svc;
-    size_t             m_position;
-    FarmLineDisplay*   m_parent;
-    Nodeset*           m_cluster;
-    char*              m_ptr;
-
-    /// End update cycle.
-    void begin_update(const char* text=0);
-    void end_update();
-
-  public:
-    /// Initializing constructor
-    ClusterLine(FarmLineDisplay* p, int pos, const std::string& n);
-    /// Default destructor
-    virtual ~ClusterLine();
-    /// Connect to data service
-    void connect(const std::string& name);
-    /// Name of the clusterline (=subfarm name)
-    const std::string& name() const           { return m_name;      }
-    const Nodeset* cluster() const            { return m_cluster;   }
-    size_t position() const                   { return m_position;  }
-    void check(time_t now);
-    /// Hightlight cursor if current
-    void set_cursor();
-    /// Display function drawing on pasteboard of current display
-    virtual void display();
-    /// DIM command service callback
-    static void dataHandler(void* tag, void* address, int* size);
-  };
 
   /**@class FarmLineDisplay ROMon.h GaudiOnline/FarmLineDisplay.h
    *

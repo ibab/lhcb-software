@@ -43,14 +43,6 @@ ROMonInfo::~ROMonInfo()  {
   }
 }
 
-/// Extract node/service name from DNS info
-void ROMonInfo::getServiceNode(char* s, std::string& svc, std::string& node) const {
-  char* at = strchr(s,'@');
-  *at = 0;
-  svc = s;
-  node = at+1;
-}
-
 /// Add handler for a given message source
 void ROMonInfo::addHandler(const std::string& node, const std::string& svc) {
   for(Servers::iterator i=m_servers.begin(); i!=m_servers.end();++i)
@@ -71,15 +63,15 @@ void ROMonInfo::infoHandler(void* tag, void* address, int* size)  {
     std::string svc, node;
     switch(msg[0]) {
     case '+':
-      h->getServiceNode(++msg,svc,node);
+      getServiceNode(++msg,svc,node);
       h->addHandler(node,svc);
       break;
     case '-':
-      h->getServiceNode(++msg,svc,node);
+      getServiceNode(++msg,svc,node);
       h->removeHandler(node,svc);
       break;
     case '!':
-      h->getServiceNode(++msg,svc,node);
+      getServiceNode(++msg,svc,node);
       log() << "Service " << msg << " in ERROR." << std::endl;
       break;
     default:
@@ -88,7 +80,7 @@ void ROMonInfo::infoHandler(void* tag, void* address, int* size)  {
         while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
           last = strchr(at,'|');
           if ( last ) *last = 0;
-          h->getServiceNode(p,svc,node);
+          getServiceNode(p,svc,node);
           h->addHandler(node,svc);
           p = last+1;
         }

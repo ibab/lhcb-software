@@ -54,16 +54,6 @@ static void help() {
        << endl;
 }
 
-namespace {
-  /// Extract node/service name from DNS info
-  void getServiceNode(char* s, string& svc, string& node) {
-    char* at = strchr(s,'@');
-    *at = 0;
-    svc = s;
-    node = at+1;
-  }
-}
-
 SubfarmStatCollector::SubfarmStatCollector(FarmStatSrv* parent, const string& title) 
   : m_parent(parent), m_name(title)
 {

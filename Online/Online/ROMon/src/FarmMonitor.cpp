@@ -14,8 +14,9 @@
 // $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmMonitor.cpp,v 1.10 2010-10-14 06:44:04 frankb Exp $
 
 #define MBM_IMPLEMENTATION
-#include "ROMon/ROMon.h"
 #include "ROMon/FarmMonitor.h"
+#include "ROMon/ROMon.h"
+#include "ROMonDefs.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"
@@ -171,16 +172,6 @@ namespace ROMon {
   }; 
 #endif
 
-}
-
-namespace {
-  /// Extract node/service name from DNS info
-  void getServiceNode(char* s, string& svc, string& node) {
-    char* at = strchr(s,'@');
-    *at = 0;
-    svc = s;
-    node = at+1;
-  }
 }
 
 /// Standard Constructor

@@ -25,6 +25,14 @@ void ROMon::ro_gettime(int* time, unsigned int* millitm) {
   *millitm = tv.tv_usec/1000;
 }
 
+/// Extract node/service name from DNS info
+void ROMon::getServiceNode(char* s, string& svc, string& node) {
+  char* at = strchr(s,'@');
+  *at = 0;
+  svc = s;
+  node = at+1;
+}
+
 MBMBuffer* MBMBuffer::reset() {
   ::memset(this,0,sizeof(MBMBuffer));  
   return this;

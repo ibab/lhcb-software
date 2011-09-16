@@ -14,6 +14,8 @@ namespace ROMon {
   std::string strupper(const std::string& n);
   std::string strlower(const std::string& n);
   size_t ro_rtl_print(void*,int,const char* fmt,va_list args);
+  /// Extract node/service name from DNS info
+  void getServiceNode(char* s, std::string& svc, std::string& node);
   class DimLock {
   public:
     DimLock();

@@ -154,7 +154,7 @@ namespace ROMon {
    */
   class FarmDisplayBase : public InternalDisplay  {
   protected:
-    enum { HLT_MODE, RECO_MODE, CTRL_MODE };
+    enum { HLT_MODE, RECO_MODE, CTRL_MODE, TORRENT_MODE };
     ClusterDisplay*                  m_subfarmDisplay;
     ScrDisplay*                      m_nodeSelector;
     std::auto_ptr<ClusterDisplay>    m_sysDisplay;
