@@ -98,12 +98,19 @@ StatusCode DaVinciInit::execute() {
   if ( 0 == m_lastMem ) m_lastMem = mem ;
   else if ( m_increment>0 && 0 == nev%m_increment) {
     if ( m_lastMem != mem ){
-      info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
-             << " (" << mem-m_lastMem << "KB, " << 100.*(mem-m_lastMem)/mem << "%)" 
-             << " in last " << m_increment << " events" << endmsg ;
+      if ( m_lastMem < mem ){
+        info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
+               << " (" << mem-m_lastMem << "KB, " << 100.*(mem-m_lastMem)/m_lastMem << "%)" 
+               << " in last " << m_increment << " events" << endmsg ;
+      }
+      else {
+        info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
+               << " (-" << m_lastMem-mem << "KB, -" << 100.*(m_lastMem-mem)/m_lastMem << "%)" 
+               << " in last " << m_increment << " events" << endmsg ;
+      }
     }
+    
     m_lastMem = mem ;
- 
   }
   
   return StatusCode::SUCCESS;

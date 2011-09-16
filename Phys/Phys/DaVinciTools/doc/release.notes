@@ -3,6 +3,10 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+
+! 2011-09-16  T. Blake 
+ - Fix memory print out from DaVinciInit when memory decreases. 
+
 !========================= DaVinciTools v22r9 2011-07-25 =========================
 - Added SubPIDMMFilter algorithm and modified interface.  This allows a list of PIDs to be used w/o the need to revertex (it then make a MM cut). 
 
