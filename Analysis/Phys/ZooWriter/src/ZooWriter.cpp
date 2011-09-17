@@ -70,12 +70,77 @@ using namespace std;
 ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	const std::string& treename,
 	const std::vector<std::string>& sel_collections,
-	const std::vector<std::string>& sel_names)
+	const std::vector<std::string>& sel_names, ZooWriter* const base)
 {
     using namespace boost::lambda;
     // open ROOT file
     m_f = new TFile(filename.c_str(), "recreate", "", 9);
     m_f->cd();
+    {
+        TTree *opttree = new TTree("Options","Zoo Options tree");
+	opttree->SetDirectory(m_f);
+	
+	static std::vector<std::string> o_sel_collections = base->m_sel_collections;
+	static std::vector<std::string> o_sel_names = base->m_sel_names;
+	static std::vector<std::string> o_L0Name = base->m_L0Name;
+	static std::vector<std::string> o_Hlt1Name = base->m_Hlt1Name;
+	static std::vector<std::string> o_Hlt2Name = base->m_Hlt2Name;
+	static std::vector<std::string> o_treefit_names = base->m_treefit_names;
+	static std::vector<std::string> o_linkToList = base->m_linkToList;
+	static std::vector<std::string> o_linkFromList = base->m_linkFromList;
+
+	opttree->Branch( "InputCollections",     &o_sel_collections);
+	opttree->Branch( "DecayName" ,           &o_sel_names);
+	opttree->Branch( "WriteMC",              &base->m_writeMC);
+	opttree->Branch( "MCList",               &base->m_MCList);
+	opttree->Branch( "WriteDLL",             &base->m_writeDLL);
+	opttree->Branch( "IntelligentPV",        &base->m_intelligentPV);
+	opttree->Branch( "SecondIpSig",          &base->m_secondIpSig);
+	opttree->Branch( "OnlyTreefitter",       &base->m_onlyTreefitter);
+	opttree->Branch( "MinTracksPV",          &base->m_minTracksPV);
+    
+	opttree->Branch( "TaggingList",          &base->m_taggingList);
+	opttree->Branch( "BackgroundList",       &base->m_backgroundList);
+	opttree->Branch( "TriggerList",          &base->m_triggerList);
+	
+	opttree->Branch( "L0SelectionName" ,     &o_L0Name);
+	opttree->Branch( "HLT1SelectionName" ,   &o_Hlt1Name);
+	opttree->Branch( "HLT2SelectionName" ,   &o_Hlt2Name);
+
+	opttree->Branch( "Filename"   ,          &base->m_filename);
+	opttree->Branch( "Tree"       ,          &base->m_treename);
+
+	opttree->Branch( "CovarianceList",       &base->m_covarianceList);
+
+	opttree->Branch( "TreefitName",     &o_treefit_names);
+	opttree->Branch( "TreefitMassConstraints", &base->m_treefit_constraints);
+
+	opttree->Branch( "PVReFitterName",       &base->m_PVReFitterName);
+	opttree->Branch( "LinkToList",           &o_linkToList);
+	opttree->Branch( "LinkFromList",         &o_linkFromList);
+	opttree->Branch( "WriteHitPattern",      &base->m_writeHitPattern);
+	opttree->Branch( "WriteExpectedHitPattern",  &base->m_writeExpectedHitPattern);
+	opttree->Branch( "WriteCollectedHitPattern", &base->m_writeCollectedHitPattern);
+	opttree->Branch( "ExtraInfoList",	     &base->m_extraInfoList);
+	opttree->Branch( "WriteTrackInfo",       &base->m_writeTrackInfo);
+	opttree->Branch( "PackedStatesList",     &base->m_packedStatesList);
+	opttree->Branch( "PackedStatesExtrapolate", &base->m_packedStatesExtrapolate);
+	opttree->Branch( "PackedStatesZList",     &base->m_packedStatesZList);
+	opttree->Branch( "PackedStateAtPocaToZAxis", &base->m_packedStateAtPocaToZAxis);
+	opttree->Branch( "MakeEmergencyPV",      &base->m_makeEmergencyPV);
+	opttree->Branch( "WriteOccupancies",     &base->m_writeOccupancies);
+	opttree->Branch( "WriteLHCbIDs",         &base->m_writeLHCbIDs);
+	opttree->Branch( "WriteMCGenEventInfo",  &base->m_writeMCGenEventInfo);
+	opttree->Branch( "MCAcceptanceEtaRegion", &base->m_mcAcceptanceEtaRegion);
+	opttree->Branch( "MCAcceptanceMinP",     &base->m_mcAcceptanceMinP);
+	opttree->Branch( "MCAcceptanceCharged",  &base->m_mcAcceptanceCharged);
+	opttree->Branch( "MCAcceptanceNeutral",  &base->m_mcAcceptanceNeutral);
+	opttree->Branch( "MCAcceptanceMinCtau",  &base->m_mcAcceptanceMinCtau);
+
+	opttree->Fill();
+	opttree->Write();
+    }
+    
     {
 	boost::shared_ptr<TTree> t(
 		new TTree(treename.c_str(),"Zoo particles tree"),
@@ -283,6 +348,8 @@ StatusCode ZooWriter::initialize  ()
     m_hitManagerVeloPhi = tool<Tf::DefaultVeloPhiHitManager>(
 	    "Tf::DefaultVeloPhiHitManager");
 
+    m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+    
     // write covariance list and packed states list are needed sorted
     std::sort(m_covarianceList.begin(), m_covarianceList.end());
     std::sort(m_packedStatesList.begin(), m_packedStatesList.end());
@@ -340,7 +407,7 @@ StatusCode ZooWriter::initialize  ()
     // create ZooWriterContext
     boost::shared_ptr<ZooWriterContext> ctx(
 	    new ZooWriterContext(m_filename, m_treename,
-		m_sel_collections.value(), m_sel_names.value()));
+		m_sel_collections.value(), m_sel_names.value(), this));
     m_ctx.swap(ctx);
 
     return StatusCode::SUCCESS;
@@ -979,6 +1046,9 @@ void ZooWriter::writeEvent()
     zooev()->m_ecalMult = digis->size();
     digis = get<LHCb::CaloDigits>(LHCb::CaloDigitLocation::Hcal);
     zooev()->m_hcalMult = digis->size();
+
+    //write magnet polarities
+    zooev()->m_polarity = - (float)(m_magFieldSvc->signedRelativeCurrent()); // -- get field polarity
 }
 
 void ZooWriter::writeTrigger(ZooP* zp, const LHCb::Particle* p)

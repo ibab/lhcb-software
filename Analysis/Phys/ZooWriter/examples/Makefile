@@ -14,14 +14,15 @@ FFLAGS = -O2 $(TUNEFLAG) -Wall -Wextra -pedantic -g -std=legacy
 ROOTLIBDIR = $(shell $(ROOTCONFIG) --libdir)
 # some versions of ROOT have libGenVector, others libMathCore
 LIBGENVECTOR = $(shell test -e $(ROOTLIBDIR)/libGenVector.so && echo -lGenVector || echo -lMathCore)
-LDFLAGS = -O2 $(shell $(ROOTCONFIG) --libs) $(LIBGENVECTOR) -lMinuit -lstdc++ -lboost_regex -rdynamic --as-needed -L../Zoo -lZooROOT
+#LDFLAGS = -O2 $(shell $(ROOTCONFIG) --libs) $(LIBGENVECTOR) -lMinuit -lstdc++ -lboost_regex -rdynamic -L../Zoo -lZooROOT
+LDFLAGS = -O2 $(shell $(ROOTCONFIG) --libs) $(LIBGENVECTOR) -lMinuit -static-libgcc -lboost_regex -rdynamic -L../Zoo -lZooROOT
 
 # source files
 ccsrc = $(wildcard *.cc)
 f77src = $(wildcard *.f)
 allsrc = $(ccsrc) $(f77src)
 SUBDIRS = Zoo
-TARGETS = ZooReader
+TARGETS = ZooReader ZooOptionsReader
 
 # general targets
 all: dep subdirs $(TARGETS)

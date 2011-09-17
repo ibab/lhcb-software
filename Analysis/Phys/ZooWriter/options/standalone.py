@@ -4,15 +4,15 @@ from Configurables import CombineParticles
 
 importOptions("$STDOPTS/PreloadUnits.opts")
 
-MyOptions = [ "MC" ] 
-#MyOptions = [ "Data"]
+#MyOptions = [ "MC" ] 
+MyOptions = [ "Data"]
 
 ################################################################################
 # add here your selection
 
 preselSeq = GaudiSequencer("MyZooSeq")
 myResoSeq = GaudiSequencer("MyResoSeq")
-importOptions( "$ZOOROOT/options/MyResos.py" )
+importOptions( "$ZOOWRITERROOT/options/MyResos.py" )
 preselSeq.Members += [ myResoSeq ]
 myResoSeq.Members += [ CombineParticles("MyKaons"), CombineParticles("MyLambdas")]
 
@@ -171,22 +171,22 @@ zoowriter.Filename = "MC.root"
 
 ##########################################################################################
 # Configure the Trigger you like to run
-from Configurables import HltConf, L0Conf
+#from Configurables import HltConf, L0Conf
 
-if "MC" in MyOptions :
-	# L0 emulation
-	DaVinci().L0 = True
-	DaVinci().ReplaceL0BanksWithEmulated = True 
-	DaVinci().Hlt = True
-	# HLT setup
-	HltConf().ThresholdSettings = 'Physics_MinBiasL0_PassThroughHlt_Apr10'
-if "DATA" in MyOptions :
-	importOptions('$HLTCONFROOT/options/HltInit.py')
-	from Configurables import HltDecReportsDecoder,HltSelReportsDecoder,HltVertexReportsDecoder,DataOnDemandSvc
-	DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder(OutputLevel = 4);
-	DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder(OutputLevel = 4);
-	DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder(OutputLevel = 4);
-	DaVinci().UserAlgorithms = [HltDecReportsDecoder(OutputLevel = 4),HltSelReportsDecoder(OutputLevel = 4)]
+#if "MC" in MyOptions :
+#	# L0 emulation
+#	DaVinci().L0 = True
+#	DaVinci().ReplaceL0BanksWithEmulated = True 
+#	DaVinci().Hlt = True
+#	# HLT setup
+#	HltConf().ThresholdSettings = 'Physics_MinBiasL0_PassThroughHlt_Apr10'
+#if "DATA" in MyOptions :
+#	importOptions('$HLTCONFROOT/options/HltInit.py')
+#	from Configurables import HltDecReportsDecoder,HltSelReportsDecoder,HltVertexReportsDecoder,DataOnDemandSvc
+#	DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder(OutputLevel = 4);
+#	DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder(OutputLevel = 4);
+#	DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder(OutputLevel = 4);
+#	DaVinci().UserAlgorithms = [HltDecReportsDecoder(OutputLevel = 4),HltSelReportsDecoder(OutputLevel = 4)]
 
 #DaVinci().Hlt2Requires = 'L0'               ## change if you want Hlt2 with respective of L0+Hlt1
 #DaVinci().HltType = 'Hlt1+Hlt2'                  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
@@ -196,7 +196,7 @@ if "DATA" in MyOptions :
 
 #-- Use latest 2009 database tags for real data
 #DaVinci().DataType = "2009"
-DaVinci().DataType = "2010"
+DaVinci().DataType = "2011"
 #DaVinci().PrintFreq = 1
 #DaVinci().InputType = "DST"
 
@@ -207,8 +207,8 @@ if "Data" in MyOptions:
 		sys.exit(1)
 	# setup for data [FIXME: What databases do I have to run in any case?]
 	DaVinci().Simulation = False
-	DaVinci().DDDBtag = "head-20100119"
-	DaVinci().CondDBtag = "head-20100303"
+	#DaVinci().DDDBtag = "head-20100119"
+	#DaVinci().CondDBtag = "head-20100303"
 
 elif "MC" in MyOptions:
 	# setup for MC [FIXME: What databases do I have to run in any case?]
@@ -221,11 +221,11 @@ else:
 	sys.exit(1)
 
 #[FIXME: What is this decode clusters tool for?]
-importOptions("$ZOOROOT/options/DecodeClusters.py")
+importOptions("$ZOOWRITERROOT/options/DecodeClusters.py")
 
 
 #importOptions("$ZOOROOT/options/Collision10-Beam3500-VeloClosed-MagDown-Minbias-RecoStripping4.py")
-importOptions("$ZOOROOT/options/Beam3500-VeloCloseMagDownNu1-2010-Sim03Reco03.py")
+importOptions("$ZOOWRITERROOT/options/test.py")
 
 #FileCatalog().Catalogs = [
 #	"xml_file:$HOME/gkrocker/Datacards/2010_3500GeV_VeloClosed_MagDown_Nu1_Sim03Reco03_minbias.xml"
@@ -235,6 +235,6 @@ importOptions("$ZOOROOT/options/Beam3500-VeloCloseMagDownNu1-2010-Sim03Reco03.py
 # set the number of events you like to run on
 
 DaVinci().UserAlgorithms += [ preselSeq ]
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 10000
 ##########################################################################################
 # start the job with: gaudirun.py options/standalone.py options/Bs_DsPi.py

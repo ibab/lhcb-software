@@ -18,6 +18,7 @@
 
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "DecayTreeFitter/Fitter.h"
 
@@ -102,6 +103,7 @@ class ZooWriter : public DVAlgorithm {
 	 * deal with a single method call to the struct, and the details can all
 	 * be done in a single place
 	 */
+	friend class ZooWriterContext;
 	class ZooWriterContext
 	{
 	    public:
@@ -134,7 +136,7 @@ class ZooWriter : public DVAlgorithm {
 		ZooWriterContext(const std::string& filename,
 				const std::string& treename,
 				const std::vector<std::string>& sel_collections,
-				const std::vector<std::string>& sel_names);
+				const std::vector<std::string>& sel_names, ZooWriter* const base);
 		/// destructor
 		~ZooWriterContext();
 		/// return ZooEv
@@ -249,6 +251,7 @@ class ZooWriter : public DVAlgorithm {
 	IEventTimeDecoder* m_odinDecoder;
 	ITrackHitCollector* m_hitCollector;
 	TrackExpectedHitsTool* m_expectedHitsTool;
+	ILHCbMagnetSvc* m_magFieldSvc;
 
 	// hit managers
 	typedef Tf::TStationHitManager<PatForwardHit> HitManT;

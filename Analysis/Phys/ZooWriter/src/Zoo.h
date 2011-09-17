@@ -1064,6 +1064,8 @@ class ZooEv : public TObject
 
 	UInt_t m_nMCPartInAcceptance;
 
+	Short_t m_polarity;
+
 	friend class ZooWriter;
 
  public:
@@ -1168,6 +1170,8 @@ class ZooEv : public TObject
 	int nPRSMult() const { return m_prsMult; }
 	int nECALMult() const { return m_ecalMult; }
 	int nHCALMult() const { return m_hcalMult; }
+
+	int polarity() const { return m_polarity; }
 
 	ClassDef(ZooEv,8)
 };
