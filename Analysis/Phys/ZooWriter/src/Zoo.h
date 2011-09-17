@@ -14,6 +14,7 @@
 #include <limits>
 #include <cassert>
 #include <algorithm>
+#include <utility>
 
 #include <TObject.h>
 #include <TObjArray.h>		// per default, does not own its contents
@@ -1324,6 +1325,7 @@ class ZooP : public TObject
   const ZooHitPattern     *HitPattern()   const { return TrInfo()->hitPattern(); }
   const ZooGhostCategory  *GhostCat()     const { return Info<ZooGhostCategory>(); }
   const ZooTreefitInfo    *Treefit()      const { return Info<ZooTreefitInfo>(); }
+  const ZooParticleInfo   *ParticleInfo() const { return Info<ZooParticleInfo>(); }
 
   float  measuredMass()       const { return Dc()->measuredMass(); };
   float  measuredMassErr()    const { return Dc()->measuredMassErr(); };
@@ -1366,6 +1368,48 @@ class ZooP : public TObject
   ClassDef(ZooP,1);
 };
 
+
+/** @class ZooParticleInfo: public TObject
+ *  \brief Class that holds informations which were added to a particle in DaVinci
+ *
+ *  flexible methods of adding float type information to a zoontuple
+ *  enables you to put infos on the tuple which the maintainer wouldn't allow you
+ *  to implement for public release.
+ *  reads info(int ,double) method of LHCb::Particle
+ */
+class ZooParticleInfo: public TObject
+{
+ public:
+  typedef std::pair<UInt_t, Float_t> KeyValuePair;
+  typedef std::vector<KeyValuePair> KeyValueVector;
+  /// check if the property "key" exists
+  bool exists(unsigned key) const;
+  /// get the value of the property "key"
+  float value(unsigned key) const;
+ protected:
+  /// modify a value
+  bool modify(unsigned key, float val);
+  /// add an info to an existing ntuple
+  int insert(unsigned key, float val);
+  /// deprecated method. don't expect compatibility with exists() and value()
+  bool insert_unsorted(unsigned key, float val);
+ public:
+  /// default constructor. Needed for ROOT
+  ZooParticleInfo() {}
+  /// usefull constructor. used in ZooWriter
+  ZooParticleInfo(KeyValueVector& extrainfo);
+  /// print all properties to stdout
+  void dump();
+ private:
+  typedef std::vector<UInt_t> KeyVector;
+  typedef std::vector<Float_t> ValueVector;
+  KeyVector m_idx;
+  ValueVector m_val;
+
+  friend class ZooReader;
+
+  ClassDef(ZooParticleInfo,2);
+};
 
 
 #endif /* __ZOO_H */

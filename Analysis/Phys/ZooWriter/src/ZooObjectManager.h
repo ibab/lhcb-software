@@ -59,6 +59,7 @@ namespace ZooObjectID
 	ZOOLHCBIDBLOCK_INFO,
 	ZOOMCGENEVENT_INFO,
 	TREEFIT_INFO,
+        ZOOPARTICLE_INFO,
 	// ADD YOUR NEW INFO BLOCK IDS HERE!!!!
 	maxid // this must always be last
     };
@@ -93,6 +94,7 @@ ZooObjectIDMapping(ZooOccupancy, OCCUPANCY_INFO);
 ZooObjectIDMapping(ZooLHCbIDBlock, ZOOLHCBIDBLOCK_INFO);
 ZooObjectIDMapping(ZooMCGenEventInfo, ZOOMCGENEVENT_INFO);
 ZooObjectIDMapping(ZooTreefitInfo, TREEFIT_INFO);
+ZooObjectIDMapping(ZooParticleInfo, ZOOPARTICLE_INFO);
 // ADD YOUR NEW ZOOOBJECTIDMAPPINGS HERE
 #undef ZooObjectIDMapping
 

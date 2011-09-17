@@ -63,5 +63,8 @@
 
 #pragma link C++ class ZooTreefitInfo+;
 
+
+#pragma link C++ class ZooParticleInfo+;
+
 #endif
 

@@ -263,7 +263,8 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     m_L0TriggerTisTos(0),
 #endif
     m_extrapolator (0),
-    m_linkerTool_Links (0)
+    m_linkerTool_Links (0),
+    m_evts (0)
 {
     declareProperty( "InputCollections",     m_sel_collections);
     declareProperty( "DecayName" ,           m_sel_names);
@@ -317,11 +318,16 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     declareProperty( "MCAcceptanceCharged",  m_mcAcceptanceCharged = true);
     declareProperty( "MCAcceptanceNeutral",  m_mcAcceptanceNeutral = false);
     declareProperty( "MCAcceptanceMinCtau",  m_mcAcceptanceMinCtau = 50. * Gaudi::Units::cm);
+    declareProperty( "ParticleInfoList",     m_particleinfoList);
 }
 
 StatusCode ZooWriter::initialize  ()
 {
     DVAlgorithm::initialize();
+
+    m_parts.clear();
+    for (unsigned k = 0 ; k < m_sel_names.value().size() ; ++k)
+      m_parts.push_back(0);
 
     m_dist = distanceCalculator();
     m_pvReFitter = tool<IPVReFitter>(m_PVReFitterName, this );
@@ -415,6 +421,11 @@ StatusCode ZooWriter::initialize  ()
 
 StatusCode ZooWriter::finalize()
 {
+    always() << "==== ZooWriter summary ====" << endmsg;
+    always() << m_evts << " events processed" << endmsg;
+    for (unsigned k = 0 ; k < m_sel_names.value().size() ; ++k) {
+      always() << m_parts[k] << " particles of decay " << m_sel_names.value()[k] << endmsg;
+    }
     // release context
     m_ctx.reset();
     return DVAlgorithm::finalize();
@@ -432,6 +443,7 @@ StatusCode ZooWriter::execute()
     }  
 #endif
     setFilterPassed(true);
+    m_evts++;
 
     // make sure event is started and written out properly
     EventGuard myEvent(m_ctx);
@@ -447,10 +459,13 @@ StatusCode ZooWriter::execute()
     }
 
     // write selected particle collections
+    unsigned selectionid = 0;
     BOOST_FOREACH(ZooWriterContext::KnownSelection& s, sel()) {
+  ++selectionid;
 	if ( !exist<LHCb::Particle::Range>( s.collection ) ) continue;
 	LHCb::Particle::Range parts = get<LHCb::Particle::Range>( s.collection );
 	BOOST_FOREACH(const LHCb::Particle* const part, parts) {
+      m_parts[selectionid]++;
 	    s.pref->push_back(GetSaved(part));
 	}
     }
@@ -601,6 +616,21 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
     ZooP *&zp = objman()->getOrCreateMappingFor<ZooP>(p);
     if (zp) return zp;
     zp = objman()->zooObj<ZooP>();
+
+    ZooParticleInfo::KeyValueVector values;
+    for (unsigned k = 0 ; k < m_particleinfoList.size() ; ++k) {
+      double info = p->info(m_particleinfoList[k], std::numeric_limits<double>::quiet_NaN());
+
+      if (!std::isnan(info))
+         values.push_back(std::make_pair(UInt_t(m_particleinfoList[k]), Float_t(info)));
+    }
+    ZooParticleInfo*& pi = objman()->getOrCreateMappingFor<ZooParticleInfo>(p);
+    if (pi)
+      zp->AssignInfo<ZooParticleInfo>(pi);
+    else {
+      pi = zp->AddInfo<ZooParticleInfo>(*objman(),
+            ZooParticleInfo(values));
+    }
 
     const int abspid = std::abs(p->particleID().pid());
 

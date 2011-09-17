@@ -11,7 +11,7 @@ MyFilter.PassSelectedEvents = false;
 MyFilter.OutputLevel = 4;
 
 
-#include "$ZOOROOT/options/DaVinci.py"
+#include "$ZOOWRITERROOT/options/DaVinci.py"
 
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Zoo" };
@@ -41,7 +41,7 @@ MySeq.Members += {
 	};
 
 // load input data 
-#include "$ZOOROOT/options/Bs_DsPi.opts"
+#include "$ZOOWRITERROOT/options/Bs_DsPi.opts"
 
 FilterToFixOppositeBFractions.ActivateCorrection = true; 
 

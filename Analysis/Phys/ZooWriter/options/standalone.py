@@ -209,6 +209,11 @@ if "Data" in MyOptions:
 	DaVinci().Simulation = False
 	#DaVinci().DDDBtag = "head-20100119"
 	#DaVinci().CondDBtag = "head-20100303"
+  # on the Grid you might want to use
+  #from Configurables import CondDB
+  #CondDB(UseOracle = True)
+  #CondDB().UseLatestTags = ["2011"]
+
 
 elif "MC" in MyOptions:
 	# setup for MC [FIXME: What databases do I have to run in any case?]
@@ -221,10 +226,11 @@ else:
 	sys.exit(1)
 
 #[FIXME: What is this decode clusters tool for?]
+#[FIX: Needed when pattern reco is run in DaVinci]
 importOptions("$ZOOWRITERROOT/options/DecodeClusters.py")
 
 
-#importOptions("$ZOOROOT/options/Collision10-Beam3500-VeloClosed-MagDown-Minbias-RecoStripping4.py")
+#importOptions("$ZOOWRITERROOT/options/Collision10-Beam3500-VeloClosed-MagDown-Minbias-RecoStripping4.py")
 importOptions("$ZOOWRITERROOT/options/test.py")
 
 #FileCatalog().Catalogs = [

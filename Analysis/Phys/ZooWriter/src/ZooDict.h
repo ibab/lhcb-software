@@ -86,6 +86,7 @@ extern G__linked_taginfo G__ZooDictLN_ZooOccupancy;
 extern G__linked_taginfo G__ZooDictLN_ZooLHCbIDBlock;
 extern G__linked_taginfo G__ZooDictLN_ZooMCGenEventInfo;
 extern G__linked_taginfo G__ZooDictLN_ZooTreefitInfo;
+extern G__linked_taginfo G__ZooDictLN_ZooParticleInfo;
 extern G__linked_taginfo G__ZooDictLN_ZooObjClonesArray;
 extern G__linked_taginfo G__ZooDictLN_ZooObjRefArraylEZooPgR;
 extern G__linked_taginfo G__ZooDictLN_ZooObjRefArraylEZooMCPgR;

@@ -201,6 +201,7 @@ class ZooWriter : public DVAlgorithm {
 
 	bool			 m_writeTrackInfo;
 	std::vector<short>       m_extraInfoList;
+	std::vector<unsigned>         m_particleinfoList;
 	bool                     m_writeHitPattern;
 	bool                     m_writeExpectedHitPattern;
 	bool                     m_writeCollectedHitPattern;
@@ -252,6 +253,11 @@ class ZooWriter : public DVAlgorithm {
 	ITrackHitCollector* m_hitCollector;
 	TrackExpectedHitsTool* m_expectedHitsTool;
 	ILHCbMagnetSvc* m_magFieldSvc;
+
+  unsigned int                  m_evts;
+  std::vector<unsigned int>     m_parts;
+
+
 
 	// hit managers
 	typedef Tf::TStationHitManager<PatForwardHit> HitManT;
