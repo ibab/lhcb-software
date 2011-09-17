@@ -3,6 +3,12 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-09-17 - Georg Alexander Krocker
+ - Added new Tree to NTuple which writes out Options from the configuration
+   file. This way you can look up what you did when you produced your tuple.
+ - Added ZooOptionsReader in examples dir to show how the options are read.
+ - Added new variable for magnet polarity in ZooEv (method polarity())
+   (-untested-).
 
 ! 2011-08-15 - Paul Seyfert
  - Removed double definition of WriteDLL
