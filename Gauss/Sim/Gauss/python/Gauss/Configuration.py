@@ -100,7 +100,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"    : """ Dictionary specifying the detectors to simulated (should be in geometry): """
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
-       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb'], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False] """
+       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE'], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
@@ -1201,8 +1201,15 @@ class Gauss(LHCbConfigurableUser):
             addConstructor("G4EmStandardPhysics", "EmPhysics")
         elif(emPhys == "NoCuts"):
             addConstructor("G4EmStandardPhysics_option1NoApplyCuts", "EmOpt1NoCutsPhysics")
-        elif(emPhys == "LHCb"):
+        elif(emPhys.find("LHCb") != -1):
             addConstructor("G4EmStandardPhysics_option1LHCb", "EmOpt1LHCbPhysics")
+            # overwrite cuts depending on choice of list
+            if(emPhys.find("NoCuts") != -1 ):
+                gmpl.EmOpt1LHCbPhysics.ApplyCuts = False
+            if(emPhys.find("OldForE") != -1 ):
+                gmpl.EmOpt1LHCbPhysics.NewModelForE = False
+            
+            #gmpl.EmOpt1LHCbPhysics.OutputLevel = VERBOSE
         else:
             raise RuntimeError("Unknown Em PhysicsList chosen ('%s')"%emPhys)
             
@@ -1213,7 +1220,8 @@ class Gauss(LHCbConfigurableUser):
         ## EM physics: Synchroton Radiation & gamma,electron-nuclear Physics
             addConstructor("G4EmExtraPhysics", "EmExtraPhysics")
         ## Hadron physics: Hadron elastic scattering
-            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
+        ##    addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
+        ## now specialised for different constructors
         ## Ions physics
             addConstructor("G4IonPhysics", "IonPhysics")
         elif (genPhys == False):
@@ -1223,27 +1231,34 @@ class Gauss(LHCbConfigurableUser):
 
         ## --- Hadron physics:
         if  (hadronPhys == "LHEP"):
+            addConstructor("G4HadronElasticPhysicsLHEP", "ElasticPhysicsLHEP")
             addConstructor("HadronPhysicsLHEP", "LHEPPhysics")
         elif(hadronPhys == "QGSP"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsQGSP", "QGSPPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
         elif(hadronPhys == "QGSP_BERT"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsQGSP_BERT", "QGSP_BERTPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
         elif(hadronPhys == "QGSP_BERT_HP"):
+            addConstructor("G4HadronElasticPhysicsHP", "ElasticPhysicsHP")
             addConstructor("HadronPhysicsQGSP_BERT_HP", "QGSP_BERT_HPPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             # overwrite the defaut value of the HighPrecision property of the 
-            # G4HadronElasticPhysics constructor
-            gmpl.ElasticPhysics.HighPrecision = True
+            # G4HadronElasticPhysics constructor: no longer true, use dedicated
+            # constructor
+            #gmpl.ElasticPhysics.HighPrecision = True
             #gmpl.ElasticPhysics.OutputLevel = VERBOSE
         elif(hadronPhys == "QGSP_BERT_CHIPS"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsQGSP_BERT_CHIPS", "QGSP_BERT_CHIPSPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")            
         elif(hadronPhys == "FTFP_BERT"):
+            addConstructor("G4HadronElasticPhysics", "ElasticPhysics")
             addConstructor("HadronPhysicsFTFP_BERT", "FTFP_BERTPhysics")
             addConstructor("G4QStoppingPhysics", "QStoppingPhysics")
             addConstructor("G4NeutronTrackingCut", "NeutronTrkCut")
