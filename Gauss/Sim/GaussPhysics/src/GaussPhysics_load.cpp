@@ -29,6 +29,8 @@
 #include "G4IonPhysics.hh"
 #include "G4QStoppingPhysics.hh"
 #include "G4HadronElasticPhysics.hh"
+#include "G4HadronElasticPhysicsLHEP.hh"
+#include "G4HadronElasticPhysicsHP.hh"
 #include "G4NeutronTrackingCut.hh"
 
 // LHEP hadrons
@@ -77,6 +79,11 @@ typedef GiGaExtPhysics< G4QStoppingPhysics > QStopPhysFactory;
 DECLARE_TOOL_FACTORY( QStopPhysFactory );
 typedef GiGaExtPhysics< G4HadronElasticPhysics > HadElPhysFactory;
 DECLARE_TOOL_FACTORY( HadElPhysFactory );
+typedef GiGaExtPhysics< G4HadronElasticPhysicsLHEP > HadElLHEPPhysFactory;
+DECLARE_TOOL_FACTORY( HadElLHEPPhysFactory );
+typedef GiGaExtPhysics< G4HadronElasticPhysicsHP > HadElHPPhysFactory;
+DECLARE_TOOL_FACTORY( HadElHPPhysFactory );
+
 typedef GiGaExtPhysics< G4NeutronTrackingCut > NeuTrkCutFactory;
 DECLARE_TOOL_FACTORY( NeuTrkCutFactory );
 
@@ -156,12 +163,19 @@ public:
 template <>
 class GiGaExtPhysicsExtender<G4EmStandardPhysics_option1LHCb> {
 public:
-  inline void addPropertiesTo(AlgTool */*tool*/) {
-    // No specific properties
+  inline void addPropertiesTo(AlgTool *tool) {
+    tool->declareProperty("ApplyCuts", m_applyCuts = true, 
+                          "Apply production cuts to all EM processes for the LHCb EM constructor");
+    tool->declareProperty("NewModelForE", m_newForE = true,
+                          "Use new MS models for electrons and positrons");
   }
   inline G4EmStandardPhysics_option1LHCb *newInstance(const std::string &/*name*/, int verbosity) const {
-    return new G4EmStandardPhysics_option1LHCb(verbosity);
+    std::cout << "LHCb option 1, applycut = " << m_applyCuts << std::endl;
+    return new G4EmStandardPhysics_option1LHCb(verbosity, m_applyCuts, m_newForE);
   }
+private:
+  bool m_applyCuts;
+  bool m_newForE;
 };
 
 template <>
@@ -194,18 +208,42 @@ private:
 template <>
 class GiGaExtPhysicsExtender<G4HadronElasticPhysics> {
 public:
-  inline void addPropertiesTo(AlgTool *tool) {
-    tool->declareProperty("HighPrecision", m_highPrecision = false,
-                          "Parameter 'HighPrecision' for the constructor of G4HadronElasticPhysics");
-    tool->declareProperty("Glauber", m_glauber = false,
-                          "Parameter 'Glauber' for the constructor of G4HadronElasticPhysics");
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+  // no specialised properties
+    //    tool->declareProperty("HighPrecision", m_highPrecision = false,
+    //                          "Parameter 'HighPrecision' for the constructor of G4HadronElasticPhysics");
+    // tool->declareProperty("Glauber", m_glauber = false,
+    //                          "Parameter 'Glauber' for the constructor of G4HadronElasticPhysics");
   }
-  inline G4HadronElasticPhysics *newInstance(const std::string &name, int verbosity) const {
-    return new G4HadronElasticPhysics(name, verbosity, m_highPrecision, m_glauber);
+  inline G4HadronElasticPhysics *newInstance(const std::string &/*name*/, int verbosity) const {
+    //return new G4HadronElasticPhysics(name, verbosity, m_highPrecision, m_glauber);
+    return new G4HadronElasticPhysics(verbosity);
   }
-private:
-  bool m_highPrecision;
-  bool m_glauber;
+//private:
+//  bool m_highPrecision;
+//  bool m_glauber;
+};
+
+template <>
+class GiGaExtPhysicsExtender<G4HadronElasticPhysicsLHEP> {
+public:
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+  // No specific properties
+  }
+  inline G4HadronElasticPhysicsLHEP *newInstance(const std::string &/*name*/, int verbosity) const {
+    return new G4HadronElasticPhysicsLHEP(verbosity);
+  }  
+};
+
+template <>
+class GiGaExtPhysicsExtender<G4HadronElasticPhysicsHP> {
+public:
+  inline void addPropertiesTo(AlgTool */*tool*/) {
+  // No specific properties
+  }
+  inline G4HadronElasticPhysicsHP *newInstance(const std::string &/*name*/, int verbosity) const {
+    return new G4HadronElasticPhysicsHP(verbosity);
+  }  
 };
 
 

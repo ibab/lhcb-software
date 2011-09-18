@@ -4,6 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-09-18 - Gloria Corti
+ - Add new physics lists for elastic physics.
+ - Fix specialization for hadronic physics to reflect the changes in 9.4
+ - Modify specialization of LHCb physics list to reflect changes in 
+   G4LHCbPhysics (> v2r0)
+
 !====================== GaussPhysics v7r0 2011-07-26 =========================
 ! 2011-07-26 - Gloria Corti
  - Add specialization templates for new physics lists.
