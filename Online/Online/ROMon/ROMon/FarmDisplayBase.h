@@ -173,6 +173,8 @@ namespace ROMon {
     size_t                           m_posCursor;
     /// Cursor position in sub display array
     size_t                           m_subPosCursor;
+    /// Flag to setup reverse colors in display
+    bool                             m_reverse;
 
     /// Standard constructor
     FarmDisplayBase();

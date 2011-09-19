@@ -123,8 +123,9 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   cli.getopt("sdh",         2, m_subDisplayHeight);
   cli.getopt("node-height", 7, m_subDisplayHeight);
 
-  m_dense = 0 != cli.getopt("dense",2);
-  m_mode  = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
+  m_dense   = 0 != cli.getopt("dense",2);
+  m_reverse = 0 != cli.getopt("reverse",3);
+  m_mode  = cli.getopt("reconstruction",3) == 0 ? HLT_MODE : RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   if ( cli.getopt("anchor",2,anchor) != 0 ) {
     int x, y;
@@ -166,7 +167,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ScrDisplay::setBorder(BLUE|INVERSE);
   m_width -= 2;
   m_height -= 2;
-  ::scrc_create_display (&m_display, m_height, m_width,NORMAL, ON, m_title.c_str());
+  ::scrc_create_display(&m_display,m_height,m_width,NORMAL|(m_reverse?INVERSE:NORMAL),ON,m_title.c_str());
   show(2,2);
   if ( m_mode == CTRL_MODE ) {
     ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);

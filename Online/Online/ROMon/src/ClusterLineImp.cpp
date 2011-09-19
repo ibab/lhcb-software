@@ -269,6 +269,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
     pos += val.length();
     cl_good |= (good || excl);
   }
+  ::scrc_put_chars(dis," ",GREEN|INVERSE,line,pos,1);
 
   col = (c.status=="ALIVE" || cl_good) ? NORMAL : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   if ( missTaskCount>0 ) {

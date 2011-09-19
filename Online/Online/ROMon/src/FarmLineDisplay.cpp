@@ -77,8 +77,9 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   cli.getopt("node-height", 7, m_subDisplayHeight);
 
   m_dense = 0 != cli.getopt("dense",2);
+  m_reverse = 0 != cli.getopt("reverse",3);
   m_mode = HLT_MODE;
-  if ( cli.getopt("reconstruction",2) ) m_mode = RECO_MODE;
+  if ( cli.getopt("reconstruction",3) ) m_mode = RECO_MODE;
   if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   if ( cli.getopt("torrentmonitor",2) != 0 ) m_mode = TORRENT_MODE;
   if ( cli.getopt("anchor",2,anchor) != 0 ) {
@@ -123,9 +124,9 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   ScrDisplay::setBorder(BLUE|INVERSE);
   m_width -= 2;
   m_height -= 2;
-  ::scrc_create_display (&m_display, m_height, m_width,NORMAL, ON, m_title.c_str());
+  ::scrc_create_display (&m_display, m_height, m_width,NORMAL|(m_reverse?INVERSE:NORMAL), ON, m_title.c_str());
   show(2,2);
-  if ( m_mode == CTRL_MODE ) {
+  if ( m_mode == CTRL_MODE || m_mode == TORRENT_MODE ) {
     ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
     ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
     ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
@@ -502,22 +503,32 @@ void FarmLineDisplay::connect(const vector<string>& vfarms) {
   if ( m_mode == CTRL_MODE ) {
     ::sprintf(txt," %-10s %-8s%-7s %-6s %-6s    %s",
 	      "","Last","No.of","No.of","No.of","< -------- Subfarm Information ------- >");
-    ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-2,1,1);
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %7s %5s  %-19s           %s",
 	      "","Update","Nodes", "Tasks","Conn.","Status","PVSS","Summary",
 	      "Controls PC and worker node status");
-    ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-1,1,1);
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
+  }
+  else if ( m_mode == TORRENT_MODE ) {
+    ::sprintf(txt," %-10s %8s %6s %6s %6s %6s     %-9s %8s %8s      %s",
+	      "","Last","No.of","Pro","No.of","No.of","Pieces","Download","Upload",
+	      "< -------- Subfarm Information ------- >");
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
+    ::sprintf(txt," %-10s %8s %6s %6s %6s %5s %6s/%-6s %8s %8s      %s",
+	      "","Update","Session","gress","Upload","Peers","Done","Total","[MB]  ","[MB]  ",
+	      "Controls PC and worker torrent status summary");
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else {
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %35s%44s%47s",
 	      "","Last","No.of","No.of","Num.of","",
 	      "<<---------- Summ Counters --------->>",
 	      "<<--------- Minimum Counters -------->>");
-    ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-2,1,1);
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %-32s  %9s%5s%11s%6s%9s%5s  %9s%5s%10s%7s%9s%5s",
 	      "Subfarm","Update","Nodes", "Buffer","Client","Subfarm status",
 	      "MEP","Sl","EVENT","Sl","SEND","Sl","MEP","Sl","EVENT","Sl","SEND","Sl");
-    ::scrc_put_chars(m_display,txt,INVERSE|BLUE,CLUSTERLINE_FIRSTPOS-1,1,1);
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   m_currentLine = 0;
 

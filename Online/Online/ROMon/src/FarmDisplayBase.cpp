@@ -80,7 +80,7 @@ namespace {
 FarmDisplayBase::FarmDisplayBase()
   : InternalDisplay(0,""), m_subfarmDisplay(0), m_nodeSelector(0),
     m_subDisplayHeight(3), m_anchorX(10), m_anchorY(5), m_mode(HLT_MODE), 
-    m_posCursor(0), m_subPosCursor(0)
+    m_posCursor(0), m_subPosCursor(0), m_reverse(false)
 {
 }
 
@@ -162,6 +162,12 @@ int FarmDisplayBase::showSubfarm()    {
     string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish";
     string part= "-partition="+m_name;
     if ( m_mode == CTRL_MODE ) {
+      string node = "-node="+strupper(dnam);
+      svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
+      const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
+      m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
+    }
+    else if ( m_mode == TORRENT_MODE ) {
       string node = "-node="+strupper(dnam);
       svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
