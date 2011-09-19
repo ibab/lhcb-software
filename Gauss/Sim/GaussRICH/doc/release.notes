@@ -3,8 +3,12 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+
+!========================= GaussRICH v12r5 2011-09-20 ========================
 !2011-9014 - Sajan Easo
  - Fixed a typo in RichAnalysis.opts
+
 !2011-9-02 - Sajan Easo
 - RICH inefficiency applied as default in the RichEfficiency.opts as part of
   tuning to match  to the yields from real data.
@@ -26,6 +30,8 @@
 - Minor changes to monitoring and analysis while reconstructing aerogel sub tiles.
 - Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
   MCRichHit class.
+
+!========================= GaussRICH v12r4 2011-07-12 ========================
 !2011-6-15 - Sajan Easo
 - Made the changes needed to simulate Aerogel sub tiles. This involves changes in 
   several files.  
@@ -40,6 +46,7 @@
   of scintillation set is approximate, but it is the best estimate so far.  
 !2011-5-10 - Sajan Easo
  -Added some histograms and modifications to RichAnalysis 
+
 !========================= GaussRICH v11r3 2011-04-13 ========================
 !2011-04-12 - Sajan Easo
   - Added a few histograms to the RichAnalysis and updated the Counters used 
