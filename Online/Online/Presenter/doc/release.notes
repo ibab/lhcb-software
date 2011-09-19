@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-09-19 - Olivier Callot
+ - Fix page editing for trends with underscores in the file name
+
 ! 2011-09-02 - Olivier Callot
  - Add protection for ratio > 80 chars in Trending plot creation.
 

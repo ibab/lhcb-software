@@ -100,6 +100,7 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH,
   if ( NULL != onlH && onlH->type() == OnlineHistDBEnv::TRE ) {
     std::string file = onlH->algorithm();
     if ( file.find( ".trend" ) < file.size() ) file = file.substr( 0, file.find( ".trend" ) );
+    /*
     unsigned indx = file.size();
     unsigned underscore = 0;
     while ( 0 < indx && file[indx-1] != '/' ) {
@@ -108,6 +109,8 @@ void PresenterPage::addSimpleHisto ( std::string dimName, OnlineHistogram* onlH,
     }
     if ( underscore == 0 ) underscore = indx;
     file = file.substr(0,indx) + partition + "_" + file.substr( underscore );
+    */
+    file = partition + "_" + file;
     std::string variable = onlH->hname();
     bool existed = false;
     for ( std::vector<TrendingFile>::iterator itF = m_trends.begin(); m_trends.end() != itF; ++itF ) {
