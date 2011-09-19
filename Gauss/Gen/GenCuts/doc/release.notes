@@ -4,6 +4,15 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v1r1 2011-09-19 ========================== 
+! 2011-09-19 - Gloria Corti
+ - Port cut from Adam Webber that was in branch of Gen/Generators package and
+   adapt it to packaging as for v40r3.
+   . DMuCascadeInAcc filter tool to src/components. This is filters events 
+   with Xb->XcXc, where one of the charm daughters goes to a muon, and another 
+   goes to 3 charged K/pi. Used to make an inclusive background sample for 
+   semileptonic B decay analysis.
+
 !========================== GenCuts v1r0 2011-07-15 ========================== 
 ! 2011-07-15 - Vanya Belyaev
  - fix GenericFullEventCutTool
