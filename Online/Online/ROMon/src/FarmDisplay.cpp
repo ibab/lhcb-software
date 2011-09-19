@@ -142,6 +142,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
     }
   }
   if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
+  if ( m_reverse       ) InternalDisplay::setCreateFlags(INVERSE);
   s_fd = this;
   if ( m_mode == RECO_MODE && all && m_match=="*" )
     ::sprintf(txt," Reconstruction farm display of all known subfarms ");
@@ -180,6 +181,18 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,": OK/Excluded",NORMAL,1,112,0);
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
     ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
+  }
+  else if ( m_mode == TORRENT_MODE ) {
+    ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
+    ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
+    ::scrc_put_chars(m_display," nn ",GREEN|INVERSE,1,80,0);
+    ::scrc_put_chars(m_display,": OK, TorrentInfo present",NORMAL,1,85,0);
+    ::scrc_put_chars(m_display," nn ",BLUE|INVERSE,2,80,0);
+    ::scrc_put_chars(m_display,": Excluded from HLT",NORMAL,2,85,0);
+    ::scrc_put_chars(m_display," nn ",RED|INVERSE|BOLD,1,120,0);
+    ::scrc_put_chars(m_display,": Not OK, No torrent info",NORMAL,1,125,0);
+    ::scrc_put_chars(m_display," nn ",BG_BLACK|FG_YELLOW|BOLD,2,120,0);
+    ::scrc_put_chars(m_display,": Executing",NORMAL,2,125,0);
   }
   ::scrc_end_pasteboard_update (m_pasteboard);
   ::scrc_fflush(m_pasteboard);
@@ -546,6 +559,12 @@ void FarmDisplay::handle(const Event& ev) {
       }
       if ( m_sysDisplay.get() )   {
         IocSensor::instance().send(m_sysDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_roDisplay.get() )   {
+        IocSensor::instance().send(m_roDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_torrentDisplay.get() )   {
+        IocSensor::instance().send(m_torrentDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_mbmDisplay.get() )  {
         const void* data = m_subfarmDisplay->data().pointer;

@@ -79,7 +79,7 @@ CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& ti
 {
   m_height = height;
   m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,m_height,DISP_WIDTH,NORMAL,ON,m_title.c_str());
+  ::scrc_create_display(&m_display,m_height,DISP_WIDTH,createFlags(),ON,m_title.c_str());
   init(bad);
   string svc   = "HLT/ExcludedNodes/"+strupper(title);
   m_svc2 = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);

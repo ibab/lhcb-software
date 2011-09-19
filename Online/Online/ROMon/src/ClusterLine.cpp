@@ -89,7 +89,7 @@ void ClusterLine::display() {
   char text[256];
   time_t   t1  = time(0);
   size_t   pos = position();
-  int xp = 42+CLUSTERLINE_START;
+  int      xp  = 42+CLUSTERLINE_START;
   Display* dis = m_parent->display();
   const Nodeset* c = data<Nodeset>();
 
@@ -108,8 +108,8 @@ void ClusterLine::display() {
 }
 
 void ClusterLine::begin_update(const char* text) {
-  Pasteboard* pb = m_parent->pasteboard();
-  Display*       dis = m_parent->display();
+  Pasteboard* pb  = m_parent->pasteboard();
+  Display*    dis = m_parent->display();
 
   ::scrc_begin_pasteboard_update(pb);
   ::scrc_put_chars(dis," ", NORMAL,position(),1,1);
@@ -147,9 +147,6 @@ void ClusterLine::dataHandler(void* tag, void* address, int* size) {
     if ( l->m_ptr ) delete [] l->m_ptr;
     l->m_ptr = ptr;
     l->m_data = ((char*)l->m_ptr + sizeof(int));
-    {
-      //RTL::Lock lock(InternalDisplay::screenLock());
-      l->display();
-    }
+    l->display();
   }
 }

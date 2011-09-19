@@ -86,6 +86,11 @@ namespace ROMon {
     static const std::string& svcPrefix();
     /// Set service prefix for usage of the bridge
     static void setSvcPrefix(const std::string& pref);
+    /// Set create flags
+    static void setCreateFlags(int flags);
+    /// Set create flags
+    static int createFlags();
+
     /// Draw bar to show occupancies
     size_t draw_bar(int x, int y, float f1, int scale);
     /// Show the display on the main panel

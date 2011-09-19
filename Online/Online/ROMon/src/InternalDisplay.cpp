@@ -32,6 +32,7 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
+static int               s_createFlags = NORMAL;
 static lib_rtl_lock_t    s_lock = 0;
 static string            s_prefix = "/";
 
@@ -41,6 +42,16 @@ lib_rtl_lock_t InternalDisplay::screenLock() {
     ::lib_rtl_create_lock(0,&s_lock);
   }
   return s_lock;
+}
+
+/// Set create flags
+void InternalDisplay::setCreateFlags(int flags) {
+  s_createFlags = flags;
+}
+
+/// Set create flags
+int InternalDisplay::createFlags() {
+  return s_createFlags;
 }
 
 InternalDisplay::InternalDisplay(InternalDisplay* parent, const string& title) 

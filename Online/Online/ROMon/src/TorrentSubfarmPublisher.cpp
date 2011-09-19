@@ -125,12 +125,10 @@ TorrentSubfarmPublisher::TorrentSubfarmPublisher(int argc, char** argv)
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
   m_service[0] = new _Svc<SubfarmTorrentStatus>(m_torrents,64,svc);
-
   if ( svc.empty() )  {
     ::lib_rtl_output(LIB_RTL_FATAL,"Unknown data type -- cannot be published.\n");
     throw std::runtime_error("Unknown data type and unknwon service name -- cannot be published.");
   }
-
   m_torrents.setMatch(match);
   m_torrents.setItem("monitor");
   m_torrents.setVerbose(m_verbose);
@@ -176,7 +174,7 @@ void TorrentSubfarmPublisher::update(void* /* param */)   {
 
 extern "C" int bittorrent_publish(int argc, char** argv) {
   TorrentSubfarmPublisher mon(argc,argv);
-  print_startup("Process information COLLECTOR");
+  print_startup("Torrent information COLLECTOR");
   return mon.monitor();
 }
 

@@ -274,6 +274,8 @@ FarmStatDisplay::FarmStatDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
+
+  if ( cli.getopt("reverse",3) ) setCreateFlags(INVERSE); 
   //::lib_rtl_install_printer(ro_rtl_print,(void*)level);
   if ( cli.getopt("debug",2) != 0 ) {
     ::lib_rtl_output(LIB_RTL_ALWAYS,"Attach debugger: gdb --pid %d",::lib_rtl_pid());
@@ -288,7 +290,7 @@ FarmStatDisplay::FarmStatDisplay(int argc, char** argv)
   m_width -= 2;
   m_height -= 2;
 
-  ::scrc_create_display (&m_display, m_height, m_width, NORMAL, ON, m_title.c_str());
+  ::scrc_create_display (&m_display, m_height, m_width, createFlags(), ON, m_title.c_str());
   for(int i=1;i<m_height;++i) ::scrc_put_chars(m_display," ",NORMAL,1,i,1);
   ::scrc_put_chars(m_display," ",NORMAL,1,STATLINE_START,1);
   ::scrc_put_chars(m_display," ",NORMAL,1,STATLINE_START+1,1);

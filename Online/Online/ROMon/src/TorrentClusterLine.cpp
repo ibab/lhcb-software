@@ -95,15 +95,20 @@ namespace {
 TorrentClusterLine::TorrentClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
 : ClusterLine(p,pos,n)
 {
+  string info = "/"+strupper(m_name)+"/TorrentInfo";
   m_numUpdate = 0;
   m_lastUpdate = time(0);
   m_hasProblems = false;
-  Display*       dis = m_parent->display();
-  connect(strupper(m_name)+"/TorrentInfo");
+  //connect(info);
+  m_svc        = ::dic_info_service((char*)info.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   string svc   = "HLT/ExcludedNodes/"+strupper(m_name);
-  m_exclID = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
-  begin_update("-----------");
-  ::scrc_put_chars(dis," ---- No torrent information availible ----",RED,pos,85+CLUSTERLINE_START,1);
+  m_exclID     = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
+  Display* dis = m_parent->display();
+  begin_update();
+  ::scrc_put_chars(dis," --------------------------------------------------------------------",BOLD,pos,12,0);
+  ::scrc_put_chars(dis,("---- No torrent information availible:"+info+
+			" ------------------------------------------------------------------------").c_str(),
+		   RED|BOLD,pos,85+CLUSTERLINE_START,1);
   end_update();
 }
 
@@ -153,7 +158,7 @@ void TorrentClusterLine::display() {
   char txt[256];
   string nam, val, torrent;
   size_t pos, line = position();
-  Display*       dis = m_parent->display();
+  Display*     dis = m_parent->display();
   const SubfarmTorrentStatus* sf = data<SubfarmTorrentStatus>();
   TorrentStatus sum;
 
@@ -180,7 +185,7 @@ void TorrentClusterLine::display() {
       case TorrentStatus::checking_files:
       case TorrentStatus::downloading_metadata:
       case TorrentStatus::downloading:
-	col = GREEN;
+	col = FG_YELLOW|BOLD|BG_BLACK;
 	break;
       case TorrentStatus::finished:
       case TorrentStatus::seeding:

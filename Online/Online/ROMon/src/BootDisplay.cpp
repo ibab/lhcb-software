@@ -234,6 +234,7 @@ BootDisplay::BootDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
+  if ( cli.getopt("reverse",3) ) setCreateFlags(INVERSE); 
   ::lib_rtl_install_printer(ro_rtl_print,(void*)long(level));
   s_fd = this;
   m_title = " BOOT monitor display";
@@ -242,8 +243,9 @@ BootDisplay::BootDisplay(int argc, char** argv)
   ScrDisplay::setBorder(BLUE|INVERSE);
   m_width -= 2;
   m_height -= 2;
-  ::scrc_create_display (&m_display, m_height, m_width, NORMAL, ON, m_title.c_str());
+  ::scrc_create_display (&m_display, m_height, m_width, createFlags(), ON, m_title.c_str());
   show(2,2);
+  ::scrc_begin_pasteboard_update (m_pasteboard);
   ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
   ::scrc_put_chars(m_display,"",NORMAL,1,BOOTLINE_START+1,1);
 

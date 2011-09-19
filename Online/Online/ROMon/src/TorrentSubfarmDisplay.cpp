@@ -139,6 +139,7 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
 			  "State","Peers","Progress","done total","upload","download");
   size_t num_session = sf.sessions.size();
   for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
+    int cnt_torrents = 0;
     const char* file = 0;
     const char* msg  = 0;
     const SessionStatus& s = *i;
@@ -149,6 +150,7 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
     ::sprintf(text2,"No torrent information availible for this node.");
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
+      ++cnt_torrents;
       ::snprintf(text2,sizeof(text2),"%16s%6d%9.2f%6d%6d%10ld%10ld",
 		 states[t.state], t.num_peers, 100.f*t.progress,
 		 t.num_pieces_done, t.num_pieces_total,
@@ -166,6 +168,9 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
 	if ( msg  ) disp->draw_line_reverse("Message: %s",msg);
 	break;
       }
+    }
+    if ( cnt_torrents == 0 ) {
+      disp->draw_line_normal("%s%s",text1,"---- No explicit torrents found. ----");
     }
   }
   disp->end_update();
