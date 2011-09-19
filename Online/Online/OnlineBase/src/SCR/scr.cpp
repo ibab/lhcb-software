@@ -891,12 +891,27 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, uint_t attr, int row, int col)
     else set = 0;
   }
   if (set)  {
-    if (set & RED)       fg_red(pb);
-    if (set & GREEN)     fg_green(pb);
-    if (set & YELLOW)    fg_yellow(pb);
-    if (set & MAGENTA)   fg_magenta(pb);
-    if (set & CYAN)      fg_cyan(pb);
-    if (set & BLUE)      fg_blue(pb);
+
+#define BITS_SET(x,y)  ((x&y)==y)
+
+    if      ( BITS_SET(set,BG_BLACK) )   {  bg_black(pb);  }
+    else if ( BITS_SET(set,BG_RED) )     {  bg_red(pb);  }
+    else if ( BITS_SET(set,BG_GREEN) )   {  bg_green(pb);  }
+    else if ( BITS_SET(set,BG_YELLOW) )  {  bg_yellow(pb);  }
+    else if ( BITS_SET(set,BG_BLUE) )    {  bg_blue(pb);  }
+    else if ( BITS_SET(set,BG_MAGENTA) ) {  bg_magenta(pb);  }
+    else if ( BITS_SET(set,BG_CYAN) )    {  bg_cyan(pb);  }
+    else if ( BITS_SET(set,BG_WHITE) )   {  bg_white(pb);  }
+
+    if      (set & RED)       {  fg_red(pb);  }
+    else if (set & GREEN)     {  fg_green(pb);  }
+    else if (set & YELLOW)    {  fg_yellow(pb);  }
+    else if (set & MAGENTA)   {  fg_magenta(pb);  }
+    else if (set & CYAN)      {  fg_cyan(pb);  }
+    else if (set & BLUE)      {  fg_blue(pb);  }
+    else if (set & BLACK)     {  fg_black(pb);  }
+    else if (set & WHITE)     {  fg_white(pb);  }
+
     if (set & BOLD)      bold();
     if (set & UNDERLINE) underline();
     if (set & FLASH)     flash();

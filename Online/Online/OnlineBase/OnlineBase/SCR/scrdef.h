@@ -125,14 +125,35 @@ namespace SCR {
           MODIFIED            = 0x0040,
 
 	  /*  Colors                */
+	  BLACK               = 0x0100,
 	  RED                 = 0x0200,
 	  GREEN               = 0x0400,
 	  YELLOW              = 0x0800,
 	  BLUE                = 0x1000,
 	  MAGENTA             = 0x2000,
 	  CYAN                = 0x4000,
-          COLORS              = 0xFF00,
-          ATTRIBUTES          = 0xFFFF,
+	  WHITE               = 0x8000,
+
+	  FG_BLACK            = BLACK,
+	  FG_RED              = RED,
+	  FG_GREEN            = GREEN,
+	  FG_YELLOW           = YELLOW,
+	  FG_BLUE             = BLUE,
+	  FG_MAGENTA          = MAGENTA,
+	  FG_CYAN             = CYAN,
+	  FG_WHITE            = WHITE,
+
+	  BG_BLACK            = 0x010000,
+	  BG_RED              = 0x020000,
+	  BG_GREEN            = 0x040000,
+	  BG_YELLOW           = 0x080000,
+	  BG_BLUE             = 0x100000,
+	  BG_MAGENTA          = 0x200000,
+	  BG_CYAN             = 0x400000,
+	  BG_WHITE            = 0x800000,
+
+          COLORS              = 0xFfFF00,
+          ATTRIBUTES          = 0xFFffFF,
 
           SEQUENTIAL_WINDOW   = 0,
           DETACHED_WINDOW     = 1,

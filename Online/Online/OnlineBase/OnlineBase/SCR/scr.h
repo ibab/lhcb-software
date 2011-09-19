@@ -290,12 +290,14 @@ char scrc_bottom_right_corner();
 char scrc_horizontal_bar();
 char scrc_vertical_bar();
 
+#define fg_black(pb)      {   scrc_putes("[30m",pb); }
 #define fg_red(pb)        {   scrc_putes("[31m",pb); }
 #define fg_green(pb)      {   scrc_putes("[32m",pb); }
 #define fg_yellow(pb)     {   scrc_putes("[33m",pb); }
 #define fg_blue(pb)       {   scrc_putes("[34m",pb); }
 #define fg_magenta(pb)    {   scrc_putes("[35m",pb); }
 #define fg_cyan(pb)       {   scrc_putes("[36m",pb); }
+#define fg_white(pb)      {   scrc_putes("[37m",pb); }
 
 #define bg_black(pb)      {   scrc_putes("[40m",pb); }
 #define bg_red(pb)        {   scrc_putes("[41m",pb); }
@@ -305,6 +307,7 @@ char scrc_vertical_bar();
 #define bg_magenta(pb)    {   scrc_putes("[45m",pb); }
 #define bg_cyan(pb)       {   scrc_putes("[46m",pb); }
 #define bg_grey(pb)       {   scrc_putes("[47m",pb); }
+#define bg_white(pb)      {   scrc_putes("[47m",pb); }
 
 #ifdef __cplusplus
 }
