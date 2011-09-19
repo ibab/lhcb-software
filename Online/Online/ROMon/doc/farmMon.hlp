@@ -53,7 +53,7 @@ p or P displays all processes, which have the UTGID environment set.
        These are typically processes used by the LHCb data aquisition.
 CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
 CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
-
+T or t shows the torrent download information.    L or l shows the system information
 +++ Show BOOT information:
 b or B displays the BOOT summary of a given subfarm. Once invoked, type H for further help.
 
@@ -80,6 +80,7 @@ p or P displays all processes, which have the UTGID environment set.
        These are typically processes used by the LHCb data aquisition.
 CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
 CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
+T or t shows the torrent download information.    L or l shows the system information
 
 +++ Show CPU usage of a node:
 c or C displays the CPU summary of a given node. For space reasons not all nodes are expanded.
@@ -150,6 +151,7 @@ p or P displays all processes, which have the UTGID environment set.
        These are typically processes used by the LHCb data aquisition.
 CTRL-V displays all system tasks.                 CTRL-B displays all non-system tasks
 CTRL-P shows all PVSS processes.                  CTRL-N displays all driver tasks.
+T or t shows the torrent download information.    L or l shows the system information
 
 Invokation of the same command again closes the window.
 </procs>
@@ -172,6 +174,7 @@ To be invoked from the extended subfarm display:
 -- To show the MBM monitor         type KPD-PERIOD or .        -- To show the CPU monitor     type c or C
 -- To show the process monitor     type CTRL-P or p or P       -- To show BOOT display        type b or B
 -- To show the farm statistics     type s or S                 -- Event processing statistics type CTRL-L
+-- To show the torrent information type t or T.                -- Top show the system info    type l or L
 
 </common>
 

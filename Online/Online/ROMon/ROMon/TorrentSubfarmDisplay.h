@@ -47,7 +47,6 @@ namespace BitTorrent   {
 
     /// Excluded nodes
     StrSet               m_excluded;
-    StrSet               m_nodeSet;
 
     std::string          m_name;
     /// Initialize window
@@ -64,7 +63,7 @@ namespace BitTorrent   {
     virtual ~TorrentSubfarmDisplay();
 
     /// Number of nodes in the dataset
-    size_t numNodes()                      { return m_nodeSet.size(); }
+    size_t numNodes();
 
     /// Retrieve cluster name from cluster display
     virtual std::string clusterName() const;
@@ -94,7 +93,7 @@ namespace BitTorrent   {
     static void excludedHandler(void* tag, void* address, int* size);
   };
   /// Static abstract object creator.
-  ROMon::ClusterDisplay*  createTorrentSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ROMon::ClusterDisplay*  createTorrentDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }      // End namespace ROMon
 #endif /* ROMON_TORRENTSUBFARMDISPLAY_H */
 

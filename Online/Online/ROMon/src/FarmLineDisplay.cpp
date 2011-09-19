@@ -197,6 +197,10 @@ void FarmLineDisplay::dnsDataHandler(void* tag, void* address, int* size) {
 string FarmLineDisplay::selectedCluster() const {
   if ( m_sysDisplay.get() )
     return m_sysDisplay->clusterName();
+  else if ( m_roDisplay.get() )
+    return m_roDisplay->clusterName();
+  else if ( m_torrentDisplay.get() )
+    return m_torrentDisplay->clusterName();
   else if ( m_subfarmDisplay )
     return m_subfarmDisplay->clusterName();
   else if ( currentDisplay() )
@@ -210,6 +214,10 @@ pair<string,string> FarmLineDisplay::selectedNode() const {
   if ( !cl.empty() ) {
     if ( m_sysDisplay.get() )
       node_name = m_sysDisplay->nodeName(m_subPosCursor);
+    else if ( m_torrentDisplay.get() )
+      node_name = m_roDisplay->nodeName(m_subPosCursor);
+    else if ( m_roDisplay.get() )
+      node_name = m_torrentDisplay->nodeName(m_subPosCursor);
     else if ( m_subfarmDisplay )
       node_name = m_subfarmDisplay->nodeName(m_subPosCursor);
   }
@@ -220,6 +228,10 @@ pair<string,string> FarmLineDisplay::selectedNode() const {
 size_t FarmLineDisplay::selectedClusterSize() const {
   if ( m_sysDisplay.get() )
     return m_sysDisplay->numNodes();
+  else if ( m_roDisplay.get() )
+    return m_roDisplay->numNodes();
+  else if ( m_torrentDisplay.get() )
+    return m_torrentDisplay->numNodes();
   else if ( m_subfarmDisplay )
     return m_subfarmDisplay->numNodes();
   return 0;
@@ -244,6 +256,14 @@ void FarmLineDisplay::set_cursor() {
   if ( 0 != m_sysDisplay.get() ) {
     Display* d1 = m_sysDisplay->display();
     if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
+  }
+  else if ( 0 != m_roDisplay.get() ) {
+    Display* d1 = m_roDisplay->display();
+    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
+  }
+  else if ( 0 != m_torrentDisplay.get() ) {
+    Display* d1 = m_torrentDisplay->display();
+    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+10, 2); // 8 is offset in child window to select nodes
   }
   else if ( 0 != m_subfarmDisplay ) {
     Display* d1 = m_subfarmDisplay->display();
@@ -329,28 +349,31 @@ int FarmLineDisplay::handleKeyboard(int key)    {
   if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
     return WT_SUCCESS;
   }
-  ClusterLine* d = 0;
   try {
     switch (key)    {
     case MOVE_UP:
-      if( 0 == m_nodeSelector && m_posCursor > 0 )
+      if ( int(m_posCursor) < 0 || m_posCursor>=subDisplays().size() )  
+	m_posCursor = 0;
+      if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
+        m_subPosCursor = 0;
+      else if( 0 == m_nodeSelector && m_posCursor > 0 )
         --m_posCursor;
       else if( m_nodeSelector && int(m_subPosCursor) >= 0 )
         --m_subPosCursor;
       break;
     case MOVE_DOWN:
+      if ( int(m_posCursor) < 0 || m_posCursor>=subDisplays().size() )  
+	m_posCursor = 0;
+      if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
+        m_subPosCursor = 0;
       if( 0 == m_nodeSelector && m_posCursor < subDisplays().size()-1 )
         ++m_posCursor;
       else if( m_nodeSelector && selectedClusterSize() > m_subPosCursor )
         ++m_subPosCursor;
       break;
     case MOVE_LEFT:
-      if( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
-      }
       break;
     case MOVE_RIGHT:
-      if( 0 == m_subfarmDisplay && 0 == m_sysDisplay.get() && (d=currentDisplay()) ) {
-      }
       break;
     default:
       return WT_SUCCESS;
@@ -404,12 +427,6 @@ void FarmLineDisplay::handle(const Event& ev) {
       return;
     }
     switch(ev.type) {
-    case CMD_SETCURSOR:
-      set_cursor();
-      break;
-    case CMD_HANDLE_KEY:
-      handleKeyboard(int((long)ev.data));
-      break;
     case CMD_SHOW:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
         if ( (d=(*k).second) == ev.data )  {
@@ -434,6 +451,12 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       if ( m_sysDisplay.get() )   {
         IocSensor::instance().send(m_sysDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_roDisplay.get() )   {
+        IocSensor::instance().send(m_roDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_torrentDisplay.get() )   {
+        IocSensor::instance().send(m_torrentDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_mbmDisplay.get() )  {
         const void* data = m_subfarmDisplay->data().pointer;
@@ -466,19 +489,6 @@ void FarmLineDisplay::handle(const Event& ev) {
       if ( m_sysDisplay.get() ) m_sysDisplay->update();
       break;
     }
-    case CMD_NOTIFY: {
-      unsigned char* ptr = (unsigned char*)ev.data;
-      if ( ptr ) {
-	if ( m_benchDisplay.get() ) m_benchDisplay->update(ptr + sizeof(int), *(int*)ptr);
-	delete [] ptr;
-      }
-      return;
-    }
-    case CMD_DELETE:
-      delete this;
-      ::lib_rtl_sleep(200);
-      ::exit(0);
-      return;
     default:
       break;
     }

@@ -18,6 +18,7 @@
 #include "ROMon/FarmDisplayBase.h"
 #include "ROMon/CPUMon.h"
 #include "SCR/MouseSensor.h"
+#include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
 #include "RTL/Lock.h"
 #include "SCR/scr.h"
@@ -47,6 +48,9 @@ namespace ROMon {
   ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createMonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+}
+namespace BitTorrent {
+  ClusterDisplay*  createTorrentDisplay(int width, int height, int posx, int posy, int argc, char** argv);
 }
 
 namespace {
@@ -104,6 +108,10 @@ int FarmDisplayBase::showHelpWindow() {
     string fin = input+"/doc/farmStats.hlp";
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","stats-subfarm",fin));
   }
+  else if ( m_torrentDisplay.get() || (m_mode == TORRENT_MODE) ) {
+    string fin = input+"/doc/torrent.hlp";
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","torrent-subfarm",fin));
+  }
   else if ( m_benchDisplay.get() && !(m_mode == CTRL_MODE || m_mode == RECO_MODE) ) {
     string fin = input+"/doc/benchmark.hlp";
     const char* tag = "benchmark-farm";
@@ -113,6 +121,8 @@ int FarmDisplayBase::showHelpWindow() {
   }
   else if ( m_sysDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_ctrl"));
+  else if ( m_roDisplay.get() ) 
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
   else if ( m_mbmDisplay.get() ) 
     m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
   else if ( m_ctrlDisplay.get() ) 
@@ -143,19 +153,24 @@ int FarmDisplayBase::showSubfarm()    {
   //RTL::Lock lock(screenLock());//,true);  
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
-    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_sysDisplay.get());
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,0);
+    m_nodeSelector = swapMouseSelector(this,m_torrentDisplay.get(),0);
+    m_nodeSelector = swapMouseSelector(this,m_sysDisplay.get(),0);
+    m_nodeSelector = swapMouseSelector(this,m_roDisplay.get(),0);
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
-    m_sysDisplay   = auto_ptr<ClusterDisplay>(0);
-    m_cpuDisplay   = auto_ptr<CPUDisplay>(0);
-    m_mbmDisplay   = auto_ptr<BufferDisplay>(0);
-    m_procDisplay  = auto_ptr<ProcessDisplay>(0);
-    m_bootDisplay  = auto_ptr<InternalDisplay>(0);
-    m_statsDisplay = auto_ptr<InternalDisplay>(0);
-    m_ctrlDisplay  = auto_ptr<CtrlNodeDisplay>(0);
-    m_benchDisplay = auto_ptr<InternalDisplay>(0);
-    m_subPosCursor = 0;
+    m_torrentDisplay = auto_ptr<ClusterDisplay>(0);
+    m_roDisplay      = auto_ptr<ClusterDisplay>(0);
+    m_sysDisplay     = auto_ptr<ClusterDisplay>(0);
+    m_cpuDisplay     = auto_ptr<CPUDisplay>(0);
+    m_mbmDisplay     = auto_ptr<BufferDisplay>(0);
+    m_procDisplay    = auto_ptr<ProcessDisplay>(0);
+    m_bootDisplay    = auto_ptr<InternalDisplay>(0);
+    m_statsDisplay   = auto_ptr<InternalDisplay>(0);
+    m_ctrlDisplay    = auto_ptr<CtrlNodeDisplay>(0);
+    m_benchDisplay   = auto_ptr<InternalDisplay>(0);
+    m_subPosCursor   = 0;
   }
   else if ( !dnam.empty() ) {
     //string dnam = d->name();
@@ -169,9 +184,9 @@ int FarmDisplayBase::showSubfarm()    {
     }
     else if ( m_mode == TORRENT_MODE ) {
       string node = "-node="+strupper(dnam);
-      svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
+      svc = "-servicename=/"+strupper(dnam)+"/TorrentInfo";
       const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
-      m_subfarmDisplay = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
+      m_subfarmDisplay = BitTorrent::createTorrentDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
@@ -287,7 +302,7 @@ int FarmDisplayBase::showCpuWindow() {
   return WT_SUCCESS;
 }
 
-/// Show window with CPU information of a given subfarm
+/// Show window with BOOT information of a given subfarm
 int FarmDisplayBase::showBootWindow() {
   DisplayUpdate update(this,true);
   if ( m_bootDisplay.get() ) {
@@ -325,6 +340,31 @@ int FarmDisplayBase::showStatsWindow() {
   return WT_SUCCESS;
 }
 
+/// Show window with TORRENT information of a given subfarm
+int FarmDisplayBase::showTorrentWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_torrentDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_torrentDisplay->display());
+    m_torrentDisplay->finalize();
+    m_nodeSelector = swapMouseSelector(this,m_torrentDisplay.get(),m_subfarmDisplay);
+    m_torrentDisplay = auto_ptr<ClusterDisplay>(0);
+    return WT_SUCCESS;
+  }
+  string cluster_name = selectedCluster();
+  if ( !cluster_name.empty() )   {
+    string node = "-node="+strupper(cluster_name);
+    string svc  = "-servicename=/"+strupper(cluster_name)+"/TorrentInfo";
+    const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
+    ClusterDisplay* disp = BitTorrent::createTorrentDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
+    m_torrentDisplay = auto_ptr<ClusterDisplay>(disp);
+    m_torrentDisplay->initialize();
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_torrentDisplay.get());
+    IocSensor::instance().send(this,CMD_UPDATE,m_torrentDisplay.get());
+  }
+  return WT_SUCCESS;
+}
+
 /// Show window with SYSTEM information of a given subfarm
 int FarmDisplayBase::showSysWindow() {
   DisplayUpdate update(this,true);
@@ -345,6 +385,31 @@ int FarmDisplayBase::showSysWindow() {
     m_sysDisplay = auto_ptr<ClusterDisplay>(disp);
     m_sysDisplay->initialize();
     m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_sysDisplay.get());
+    IocSensor::instance().send(this,CMD_UPDATE,m_sysDisplay.get());
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with SYSTEM information of a given subfarm
+int FarmDisplayBase::showReadoutWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_roDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_roDisplay->display());
+    m_roDisplay->finalize();
+    m_nodeSelector = swapMouseSelector(this,m_roDisplay.get(),m_subfarmDisplay);
+    m_roDisplay = auto_ptr<ClusterDisplay>(0);
+    return WT_SUCCESS;
+  }
+  string dnam = selectedCluster();
+  if ( !dnam.empty() ) {
+    string svc = "-servicename="+svcPrefix()+strlower(dnam)+"/ROpublish";
+    const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=31"};
+    ClusterDisplay* disp = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
+    m_roDisplay = auto_ptr<ClusterDisplay>(disp);
+    m_roDisplay->initialize();
+    m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_roDisplay.get());
+    IocSensor::instance().send(this,CMD_UPDATE,m_roDisplay.get());
   }
   return WT_SUCCESS;
 }
@@ -394,6 +459,8 @@ bool FarmDisplayBase::handleMouseEvent(const MouseEvent* m) {
       IocSensor::instance().send(this,CMD_SHOWHELP,this);
     else if ( m_ctrlDisplay.get() )
       IocSensor::instance().send(this,CMD_SHOWCTRL,this);
+    else if ( m_torrentDisplay.get() )
+      IocSensor::instance().send(this,CMD_SHOWTORRENT,this);
     else if ( m_mbmDisplay.get() )
       IocSensor::instance().send(this,CMD_SHOWMBM,this);
     else if ( m_procDisplay.get() )
@@ -419,6 +486,15 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
   case CMD_SHOWSUBFARM:
     showSubfarm();
     return true;
+  case CMD_SHOWTORRENT:
+    showTorrentWindow();
+    return true;
+  case CMD_SHOWSYS:
+    showSysWindow();
+    return true;
+  case CMD_SHOWREADOUT:
+    showReadoutWindow();
+    return true;
   case CMD_SHOWBENCHMARK:
     showBenchmarkWindow();
     return true;
@@ -427,9 +503,6 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
     return true;
   case CMD_SHOWSTATS:
     showStatsWindow();
-    return true;
-  case CMD_SHOWSYS:
-    showSysWindow();
     return true;
   case CMD_SHOWCPU:
     showCpuWindow();
@@ -446,6 +519,26 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
   case CMD_SHOWHELP:
     showHelpWindow();
     return true;
+  case CMD_SETCURSOR:
+    set_cursor();
+    return true;
+  case CMD_HANDLE_KEY:
+    handleKeyboard(int((long)ev.data));
+    return true;
+  case CMD_NOTIFY: {
+    unsigned char* ptr = (unsigned char*)ev.data;
+    if ( ptr ) {
+      if ( m_benchDisplay.get() ) m_benchDisplay->update(ptr + sizeof(int), *(int*)ptr);
+      delete [] ptr;
+    }
+    return true;
+  }
+  case CMD_DELETE:
+    delete this;
+    ::lib_rtl_sleep(200);
+    ::exit(0);
+    return true;
+
   default:
     return false;
   }
@@ -503,9 +596,17 @@ int FarmDisplayBase::handleKeyboard(int key)    {
       return showProcessWindow(4);
     case CTRL_M:
       break;      
+    case 'r':
+    case 'R':
+      IocSensor::instance().send(this,CMD_SHOWREADOUT,this);
+      break;
     case 's':
     case 'S':
       return showStatsWindow();
+    case 't':
+    case 'T':
+      IocSensor::instance().send(this,CMD_SHOWTORRENT,this);
+      break;
     case RETURN_KEY:
     case ENTER:
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);

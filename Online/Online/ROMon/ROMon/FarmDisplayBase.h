@@ -157,7 +157,9 @@ namespace ROMon {
     enum { HLT_MODE, RECO_MODE, CTRL_MODE, TORRENT_MODE };
     ClusterDisplay*                  m_subfarmDisplay;
     ScrDisplay*                      m_nodeSelector;
+    std::auto_ptr<ClusterDisplay>    m_roDisplay;
     std::auto_ptr<ClusterDisplay>    m_sysDisplay;
+    std::auto_ptr<ClusterDisplay>    m_torrentDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<CtrlNodeDisplay>   m_ctrlDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
@@ -212,6 +214,10 @@ namespace ROMon {
     int showStatsWindow();
     /// Show window to run Moore bench marks
     int showBenchmarkWindow();
+    /// Show window to with the bittorrent data distribution status for this node
+    int showTorrentWindow();
+    /// Show readout window 
+    int showReadoutWindow();
 
     /// Handle common Mouse interrupt
     virtual bool handleMouseEvent(const SCR::MouseEvent* m);

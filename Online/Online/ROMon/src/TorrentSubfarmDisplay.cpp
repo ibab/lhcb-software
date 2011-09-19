@@ -30,10 +30,10 @@ using namespace BitTorrent;
 
 static void help() {
   cout <<"  romon_storage -option [-option]" << endl
-            <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
-            <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
-            <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
-            << endl;
+       <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+       <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+       << endl;
 }
 
 namespace ROMon {
@@ -42,7 +42,7 @@ namespace ROMon {
 }
 
 /// Static abstract object creator.
-ClusterDisplay* BitTorrent::createTorrentSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
+ClusterDisplay* BitTorrent::createTorrentDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
   return new TorrentSubfarmDisplay(width,height,posx,posy,argc,argv);
 }
 
@@ -72,7 +72,9 @@ void TorrentSubfarmDisplay::init(int argc, char** argv)   {
     ::lib_rtl_sleep(10000);
   }
   m_readAlways = true;
-  m_svcName = "/"+ROMon::strupper(m_name)+"/TorrentInfo";
+  if ( m_svcName == "TorrentInfo" )  {
+    m_svcName = "/"+ROMon::strupper(m_name)+"/TorrentInfo";
+  }
   m_name = ROMon::strlower(m_name);
 
   if ( !node.empty() ) {
@@ -126,6 +128,7 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
     "allocating",
     "checking_resume_data"};
 
+  disp->begin_update();
   disp->draw_line_bold("Torrent:%s",torrent.c_str());
   disp->draw_line_bold("");
   disp->draw_line_reverse("%-14s %23s %17s %13s %-31s %11s %17s",
@@ -165,6 +168,7 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
       }
     }
   }
+  disp->end_update();
 }
 
 /// Update header information
@@ -205,7 +209,7 @@ void TorrentSubfarmDisplay::update()   {
     showHeader();
     if ( m_data.actual > 0 ) {
       const SubfarmTorrentStatus& status = *(m_data.data<SubfarmTorrentStatus>());
-      showNodes (status);
+      showNodes(status);
     }
     else {
       m_nodes->draw_line_normal ("");
@@ -232,13 +236,19 @@ string TorrentSubfarmDisplay::clusterName() const {
   return m_name;
 }
 
+/// Number of nodes in the dataset
+size_t TorrentSubfarmDisplay::numNodes() {
+  const SubfarmTorrentStatus& sf = *(m_data.data<SubfarmTorrentStatus>());
+  return sf.sessions.size();
+}
+
 /// Retrieve node name from cluster display by offset
 string TorrentSubfarmDisplay::nodeName(size_t offset) {
   typedef SubfarmTorrentStatus::Sessions Sessions;
   const SubfarmTorrentStatus& sf = *(m_data.data<SubfarmTorrentStatus>());
-  size_t cnt = 0;
+  int cnt = -2;
   for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i), ++cnt) {
-    if ( cnt == offset ) return (*i).name;
+    if ( cnt == int(offset) ) return (*i).name;
   }
   return "";
 }

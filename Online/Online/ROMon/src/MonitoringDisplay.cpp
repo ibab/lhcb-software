@@ -124,14 +124,12 @@ size_t MonitoringDisplay::numNodes() {
   size_t n = 0;
   const Nodeset* ns = data().data<const Nodeset>();
   if ( ns ) {
-    ::dim_lock();
     switch(ns->type)  {
     case Nodeset::TYPE:
       n = ns->nodes.size();
     default:
       break;
     }
-    ::dim_unlock();
   }
   return n;
 }
