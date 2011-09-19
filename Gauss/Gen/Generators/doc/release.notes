@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
+$! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v11r1 2011-09-19 =========================
 ! 2011-09-14 - Alex Shires
  - Fixes and new parameter file location for EvtGenDecayInPhSp
 
