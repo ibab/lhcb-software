@@ -4,6 +4,18 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2011-09-19 - Roel Aaij
+ - Changes in HltVeloIsMuon and MatchVeloMuon:
+   - Fix momentum estimate.
+   - Get charge using magnetic field service.
+   - Add a property SetQOverP which will propagate momentum estimate.
+
+* NOTE * Enabling SetQOverP will make the tool create new track objects.
+For correct behaviour, this requires the corresponding streamer
+configuration object to have its owner property set to True. Both
+setting of the SetQOverP property and the owner property happen in
+HltTracking.
+
 !========================== Hlt1Muons v1r3 2011-03-18 ==================
 ! 2011-03-18 - Roel Aaij
  - Add HltVeloIsMuon, a tool like MatchVeloMuon, but using the momentum

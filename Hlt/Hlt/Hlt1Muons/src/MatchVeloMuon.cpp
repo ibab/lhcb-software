@@ -13,6 +13,9 @@
 #include <GaudiKernel/SystemOfUnits.h>
 #include <GaudiKernel/boost_allocator.h>
 
+// from LHCb
+#include <Kernel/ILHCbMagnetSvc.h>
+
 // local
 #include "MatchVeloMuon.h"
 #include "Hlt1MuonHit.h"
@@ -39,7 +42,7 @@ using std::less;
 MatchVeloMuon::MatchVeloMuon( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-   : GaudiHistoTool ( type, name , parent ), m_nRegions( 0 ),
+   : GaudiHistoTool ( type, name , parent ), m_fieldSvc( 0 ), m_nRegions( 0 ),
      m_magnetHit( 0 ), m_seeds( 0 )
 {
    declareInterface< ITracksFromTrack >(this);
@@ -59,6 +62,8 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type,
 
    declareProperty( "MaxMissedHits", m_maxMissed = 2 );
    setProduceHistos( false ); // yes, this indeed changes the default ;-)
+
+   declareProperty( "SetQOverP", m_setQOverP = false );
    
    m_order = list_of( 3 )( 4 )( 5 )( 2 );
 }
@@ -76,6 +81,11 @@ StatusCode MatchVeloMuon::initialize()
    if ( sc.isFailure() ) return sc;
 
    m_hitManager = tool< Hlt1MuonHitManager >( "Hlt1MuonHitManager" );
+
+   if ( m_setQOverP ) {
+      // Magnetic Field
+      m_fieldSvc = svc< ILHCbMagnetSvc >( "MagneticFieldSvc", true );
+   }
 
    return sc;
 }
@@ -106,17 +116,38 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
       debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
    }
    
+   ConstCandidates goodCandidates;
+
    BOOST_FOREACH( Candidate* c, m_seeds ) { 
       addHits( c );
       if ( msgLevel(MSG::DEBUG)) {
          debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
       }
       if ( produceHistos() ) plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-      if ( c->chi2DoF() < m_maxChi2DoFX ) {
+      if ( !m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
          // There is a good enough candidate, put the seed into the output unmidified.
-         debug() << "Accepted candidate with chi2/DoF " << c->chi2DoF() << endmsg;
          tracks.push_back( const_cast< LHCb::Track* >( &seed ) );
          break;
+      } else if ( m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
+         goodCandidates.push_back( c );
+      }
+   }
+
+   if ( m_setQOverP ) {
+      ConstCandidates::const_iterator best = std::min_element
+         (goodCandidates.begin(), goodCandidates.end(),
+          boost::bind(std::less<double>(), 
+                      boost::bind( &Candidate::chi2DoF, _1 ),
+                      boost::bind( &Candidate::chi2DoF, _2 )));
+      if ( best != goodCandidates.end() ) {
+         LHCb::Track* out = seed.clone();
+         const Candidate* c = *best;
+         out->addInfo( 35, c->slope() - c->tx() );
+         LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
+         double down = m_fieldSvc->isDown() ? -1 : 1;
+         double q = down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
+         state->setQOverP( q / c->p() );
+         tracks.push_back( out );
       }
    }
    return StatusCode::SUCCESS;

@@ -45,10 +45,10 @@ public:
    virtual StatusCode initialize();
 
    virtual StatusCode finalize();
-   
+
    virtual StatusCode tracksFromTrack( const LHCb::Track &seed,
                                        std::vector< LHCb::Track * > &tracks );
-      
+   
 private:
 
    friend class ToolFactory< HltVeloIsMuon >;
@@ -68,6 +68,8 @@ private:
    double m_maxChi2DoFX;
 
    unsigned int m_maxMissed;
+
+   bool m_setQOverP;
 
    // Tools and services
    Hlt1MuonHitManager* m_hitManager;
@@ -122,11 +124,11 @@ private:
    void clean();
 
    inline double dtx( const double p ) const {
-        return  m_kickScale / ( p - m_kickOffset );
+      return  m_kickScale / ( p - m_kickOffset );
    }
 
    inline double momentum( const double dtx ) const {
-        return m_kickScale / dtx + m_kickOffset;
+      return m_kickScale / fabs( dtx ) + m_kickOffset;
    }
 
    double FoIX( const int station, const int region, const double p ) const;

@@ -5,6 +5,7 @@
 
 // boost
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 #include <boost/assign/list_of.hpp>
 
 // from Gaudi
@@ -12,6 +13,9 @@
 #include <GaudiKernel/SystemOfUnits.h>
 #include <GaudiKernel/boost_allocator.h>
 #include <DetDesc/Condition.h>
+
+// from LHCb
+#include <Kernel/ILHCbMagnetSvc.h>
 
 // Muon Detector
 #include <MuonDet/DeMuonDetector.h>
@@ -63,6 +67,8 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type,
 
    declareProperty( "MaxMissedHits", m_maxMissed = 2 );
    setProduceHistos( false ); // yes, this indeed changes the default ;-)
+
+   declareProperty( "SetQOverP", m_setQOverP = false );
    
    m_order = list_of( 3 )( 4 )( 5 )( 2 );
 
@@ -172,7 +178,9 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
    if ( msgLevel(MSG::DEBUG) ) {
       debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
    }
-   
+
+   ConstCandidates goodCandidates;   
+
    BOOST_FOREACH( Candidate* c, m_seeds ) { 
       addHits( c );
       if ( msgLevel(MSG::DEBUG)) {
@@ -180,11 +188,30 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
       }
       if ( !c->fitted() ) continue;
       if ( produceHistos() ) plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-      if ( c->chi2DoF() < m_maxChi2DoFX ) {
-         // There is a good enough candidate, put the seed into the output unmidified.
-         debug() << "Accepted candidate with chi2/DoF " << c->chi2DoF() << endmsg;
+      if ( !m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
+         // There is a good enough candidate, put the seed into the output unmodified.
          tracks.push_back( const_cast< LHCb::Track* >( &seed ) );
          break;
+      } else if ( m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
+         goodCandidates.push_back( c );
+      }
+   }
+
+   if ( m_setQOverP ) {
+      ConstCandidates::const_iterator best = std::min_element
+         (goodCandidates.begin(), goodCandidates.end(),
+          boost::bind(std::less<double>(), 
+                      boost::bind( &Candidate::chi2DoF, _1 ),
+                      boost::bind( &Candidate::chi2DoF, _2 )));
+      if ( best != goodCandidates.end() ) {
+         LHCb::Track* out = seed.clone();
+         const Candidate* c = *best;
+         
+         LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
+         double down = m_fieldSvc->isDown() ? -1 : 1;
+         double q = down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
+         state->setQOverP( q / c->p() );
+         tracks.push_back( out );
       }
    }
    return StatusCode::SUCCESS;

@@ -261,5 +261,6 @@ private:
 };
 
 typedef std::vector< Candidate* > Candidates;
+typedef std::vector< const Candidate* > ConstCandidates;
 
 #endif // CANDIDATE_H

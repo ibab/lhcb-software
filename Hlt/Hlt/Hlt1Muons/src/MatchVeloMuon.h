@@ -16,6 +16,7 @@
 namespace LHCb {
    class Track;
 }
+class ILHCbMagnetSvc;
 class Hlt1MuonHitManager;
 class Candidate;
 
@@ -30,8 +31,8 @@ public:
 
    /// Standard constructor
    MatchVeloMuon( const std::string& type, 
-               const std::string& name,
-               const IInterface* parent);
+                  const std::string& name,
+                  const IInterface* parent);
 
    virtual ~MatchVeloMuon( ); ///< Destructor
 
@@ -59,8 +60,13 @@ private:
 
    unsigned int m_maxMissed;
 
+   bool m_setQOverP;
+
    // Tools
    Hlt1MuonHitManager* m_hitManager;
+
+   // Services
+   ILHCbMagnetSvc* m_fieldSvc;
 
    // Data members
    std::vector< unsigned int > m_order;
@@ -80,11 +86,11 @@ private:
    void clean();
 
    inline double dtx( const double p ) const {
-        return  m_kickScale / ( p - m_kickOffset );
+      return  m_kickScale / ( p - m_kickOffset );
    }
 
    inline double momentum( const double dtx ) const {
-        return m_kickScale / dtx + m_kickOffset;
+      return m_kickScale / fabs( dtx ) + m_kickOffset;
    }
 
 };
