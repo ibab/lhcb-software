@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!======================= EvtGenExtras v3r0 2011-09-19 ========================
+! 2011-09-19 - Gloria Corti
+ - Increase major version because of new dependency introduced.
+
 ! 2011-08-23 - Matthew Coombes
  - Added new class for description of 4-body D decays, EvtDTohhhh.hh
  - Updated requirements to use MINT generator for these 4-body decays
