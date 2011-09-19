@@ -152,7 +152,7 @@ def buildStream(stripping, streamName = '', archive=None, WGs = None ):
                 raise Exception( 'Unsupported type, expected list ' +
                                  'or dict for line-to-STREAM mapping' )
 
-            stream.appendLines( _lb.lines() )
+            
     return stream
 
 def streamNames(stripping) :
