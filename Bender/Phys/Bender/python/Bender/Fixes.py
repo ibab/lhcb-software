@@ -105,8 +105,8 @@ if not hasattr ( _EvtSel , '_openNew_') :
             eps  = self.g.service ( 'EventPersistencySvc' )
             eps.CnvServices += [ 'RootCnvSvc' ]
                         
-        if instance ( stream , tuple ) : stream = list ( stream )
-        if instance ( stream , str   ) : stream =      [ stream ] 
+        if isinstance ( stream , tuple ) : stream = list ( stream )
+        if isinstance ( stream , str   ) : stream =      [ stream ] 
 
         from Bender.DataUtils import extendfile2
 
@@ -117,10 +117,24 @@ if not hasattr ( _EvtSel , '_openNew_') :
             if fun        : ff += " FUN=\'%s\'" % fun
             if collection : ff += " COLLECTION=\'%s\'" % collection
             files += [ ff ]
+            
+        self.Input = files
 
-        self.Input = files 
-        self.reinitialize()
+        ## reinitialize the service
+        state_s = self._isvc.FSMState ()
 
+        from GaudiPython.Bindings import gbl as cpp
+        ## we need here 'INIITALIZED' state 
+        if   cpp.Gaudi.StateMachine.OFFLINE    == state_s : 
+            self.configure     ()
+            self.sysInitialize ()
+        elif cpp.Gaudi.StateMachine.CONFIGURED == state_s : 
+            self.sysInitialize()
+        elif cpp.Gaudi.StateMachine.RUNNING    == state_s : 
+            self.stop()
+            
+        self.reinitialize ()
+        sc = self.start   ()
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_

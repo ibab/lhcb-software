@@ -135,9 +135,9 @@ def extendfile2 ( filename ) :
        0 < filename.find ( '.raw' ) or \
        0 < filename.find ( '.MDF' ) or \
        0 < filename.find ( '.RAW' )    : 
-        ioh = IOHelper( Input = 'MDF'  , Output = 'ROOT' )
+        ioh = IOHelper ( Input = 'MDF'  , Output = 'ROOT' )
     else :
-        ioh = IOHelper( Input = 'ROOT' , Output = 'ROOT' )
+        ioh = IOHelper ( Input = 'ROOT' , Output = 'ROOT' )
         #
     from GaudiPython.Bindings import _gaudi
     iohstr = str(ioh) 
@@ -145,7 +145,7 @@ def extendfile2 ( filename ) :
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
     #
-    return ioh.dressFile ( filename , 'O')
+    return ioh.dressFile ( filename , 'I')
 
 # =============================================================================
 ## Helper function to 'extend' the short file name
