@@ -131,10 +131,15 @@ if not hasattr ( _EvtSel , '_openNew_') :
         elif cpp.Gaudi.StateMachine.CONFIGURED == state_s : 
             self.sysInitialize()
         elif cpp.Gaudi.StateMachine.RUNNING    == state_s : 
-            self.stop()
+            self._isvc.sysStop()
             
-        self.reinitialize ()
-        sc = self.start   ()
+        state_s = self._isvc.FSMState ()
+        if cpp.Gaudi.StateMachine.INITIALIZED != state_s :
+            print 'Invalid State of EventSelector ' , state_s 
+
+        sc =   self._isvc.sysReinitialize ()
+        return self._isvc.sysStart        ()
+
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
