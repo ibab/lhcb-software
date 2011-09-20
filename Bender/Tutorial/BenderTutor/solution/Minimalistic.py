@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: Minimalistic.py,v 1.15 2010-09-13 13:24:04 ibelyaev Exp $
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file solution/Minimalictic.py
 #
 #  The most trivial ``Bender-based'' module:
@@ -21,7 +19,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -45,7 +43,7 @@ And it is based on the LoKi project:
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:04 $
@@ -84,11 +82,18 @@ def configure ( inputdata , catalogs = [] ) :
 ## Job steering 
 if __name__ == '__main__' :
     
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print '*'*120
+
     ## job configuration
     inputdata = [
-        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/V0.DST
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007551/0000/00007551_00000%03d_1.v0.dst' % i for i in range ( 1 , 691 )
+        '/castor/cern.ch/grid/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(1,25)
         ]
+
     
     configure( inputdata )
     

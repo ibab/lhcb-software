@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: SelectDplus.py,v 1.1 2010-09-13 13:24:04 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file solution/SelectDplus.py
 #
 #  Simple example that illustrates the selection of D+/D_s+ from stripped DSTs
@@ -20,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -41,7 +39,7 @@ And it is based on the LoKi project:
     ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:04 $
@@ -67,12 +65,9 @@ class SelectDplus(Algo):
         """
         
         # select from input particles according to the decay pattern:
-        d_1  = self.select ( 'd1'  , "[ D+ -> K- pi+ pi+]CC " )
-        d_2  = self.select ( 'd2'  , "[ D+ -> K- K+  pi+]CC " )
+        d_1  = self.select ( 'd1'  , "[ D+   --> K- pi+ pi+]CC " )        
+        ds_1 = self.select ( 'ds1' , "[ D_s+ --> K- K+  pi+]CC " )
         
-        ds_1 = self.select ( 'ds1' , "[ D_s+ -> K- K+  pi+]CC "                 )
-        ds_2 = self.select ( 'ds2' , "[ D_s+ -> ( phi(1020) -> K- K+ ) pi+]CC " )
-
         # retrieve N-tuple (book-on-demand)
         tup = self.nTuple('My N-tuple')
         for d in d_1  :
@@ -95,20 +90,11 @@ class SelectDplus(Algo):
             # commit the row 
             tup.write()
             
-        for d in d_2  :
-            print 'D2 : ' , d.decay() , M(d)
-            self.plot ( M(d) / GeV , 'D^{+}/D_{s}^{+} #rightarrow K^{-} K^{+} #pi^{+} 1 ' , 1.8 , 2.050 , 250 ) 
-            
         for d in ds_1 :
             print 'Ds1: ' , d.decay() , M(d)
             self.plot ( M(d) / GeV , 'D^{+}/D_{s}^{+} #rightarrow K^{-} K^{+} #pi^{+} 2 ' , 1.8 , 2.050 , 250 ) 
             
-        for d in ds_2 :
-            print 'Ds2: ' , d.decay() , M(d)  
-            self.plot ( M(d) / GeV , 'D_{s}^{+} #rightarrow ( #phi #rightarrow K^{-} K^{+}) #pi^{+} ' , 1.770 , 2.070 , 300 ) 
-
         return SUCCESS
-
 
     ## finalize & print histos 
     def finalize ( self ) :
@@ -121,30 +107,32 @@ class SelectDplus(Algo):
         return Algo.finalize ( self )
     
 
-
+# =============================================================================
 ## The configuration of the job
 def configure( inputdata , catalogs = [] ) :
     """
     The configuration of the job
     """
     
-    ## define event-levele filters:
-    from PhysConf.Filters import LoKi_Filters
+    ## Define event-level filters:
+    from PhysConf.Filters import LoKi_Filters    
     fltrs = LoKi_Filters (
-        HLT_Code   = " HLT_PASS_RE ('Hlt1MBMicro.*Decision') | HLT_PASS_RE ('Hlt1.*Hadron.*Decision') " ,
-        ## get Rio's lines for D->hhh and Conor's line for Ds->phi pi
         STRIP_Code = """
-        HLT_PASS    ( 'StrippingDs2piPhiLineDecision'                       ) |
-        HLT_PASS_RE ('StrippingStripD2K(KP|PP)_A_LoosePID_(Sig|Bkg).*Decision') 
-        """      ,
-        ## select one or 2 vertices 
-        VOID_Code  = " CONTAINS    ('/Event/Charm/Rec/Vertex/Primary') < 3.1 " 
+        HLT_PASS_RE ( 'Stripping.*ForPromptCharm.*Decision'  ) 
+        """ ,
+        VOID_Code  = """
+        ( 0.5 < CONTAINS ('/Event/Charm/Phys/DForPromptCharm/Particles'  ) )
+        |
+        ( 0.5 < CONTAINS ('/Event/Charm/Phys/DsForPromptCharm/Particles' ) ) 
+        """
         )
+    filters = fltrs.filters('Filters')
+    filters.reverse() 
     
     from Configurables import DaVinci , GaudiSequencer 
-    DaVinci ( DataType        = '2010' ,
-              EventPreFilters = fltrs.filters ('Filters') ,
-              Lumi            = False  ,
+    DaVinci ( DataType        = '2011'   ,
+              EventPreFilters = filters  ,
+              Lumi            = False    ,
               HistogramFile   = 'Dplus_Histos.root' ,
               TupleFile       = 'Dplus_Tuples.root' )
     
@@ -154,32 +142,23 @@ def configure( inputdata , catalogs = [] ) :
     setData ( inputdata , catalogs )
     
     ## get/create Application Manager
-    gaudi = appMgr()
+    gaudi = appMgr ()
     
     # modify/update the configuration:
     
     ## create the algorithm
     alg = SelectDplus (
         'Dplus'                               , 
-        ## Reco05-Stripping09 : 
-        # RootInTES      = '/Event/Hadronic'    ,
-        ## Reco04-Stripping07 :
+        ## Reco10-Stripping13 :
         RootInTES      = '/Event/Charm'    ,
         # 
-        InputLocations = [
-        'Ds2piPhiLine'                               , ## Conor's line 
-        ##
-        'StrippingStripD2KPP_A_LoosePID_SigFilter'   , ## Rio's lines 
-        'StrippingStripD2KPP_A_LoosePID_BkgFilter'   ,
-        ##
-        'StrippingStripD2KKP_A_LoosePID_SigFilter'   ,
-        'StrippingStripD2KKP_A_LoosePID_BkgFilter'   ,
-        ] 
+        Inputs = [ 'Phys/DForPromptCharm/Particles'       ,
+                   'Phys/DsForPromptCharm/Particles'      ]
         )
     
-    ## add algorithm into main DaVinci sequence
-    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciMainSequence' , True )
-    dvMain.Members += [ alg.name() ]
+    ## add algorithm into DaVinci sequence
+    dvUser = gaudi.algorithm ( 'GaudiSequencer/DaVinciUserSequence' , True )
+    dvUser.Members += [ alg.name() ]
     
     return SUCCESS 
 # =============================================================================
@@ -198,16 +177,15 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/HADRONIC.DST
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/HADRONIC.DST/00007580/0000/00007580_0000%04d_1.hadronic.dst' % i for i in range ( 2 , 9900 )
-        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco04-Striping07/90000000/CHARM.DST
-        #'/castor/cern.ch/grid' + '/lhcb/data/2010/CHARM.DST/00007502/0000/00007502_0000%04d_1.charm.dst' % i for i in range ( 1 , 2400 )
+        ## Charm microDST, Stripping 13 
+        "/castor/cern.ch/grid/lhcb/LHCb/Collision11/CHARM.MDST/00010646/0000/00010646_000000%02d_1.charm.mdst" % i for i in range(1,20) 
         ]
-        
-    configure( inputdata )
+    
+    configure ( inputdata )
     
     ## event loop 
-    run(10 )
+    run ( 1000 )
+    
     
 # =============================================================================
 # The END

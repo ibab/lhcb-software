@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: SelectDplusMC.py,v 1.1 2010-09-13 13:24:04 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file solution/SelectDplusMC.py
 #
 #  Simple example that illustrates the MC-selection of D+/D_s+ 
@@ -20,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -41,7 +39,7 @@ And it is based on the LoKi project:
     ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:04 $
@@ -169,7 +167,7 @@ def configure( inputdata , catalogs = [] ) :
     setData ( inputdata , catalogs )
     
     ## get/create Application Manager
-    gaudi = appMgr()
+    gaudi = appMgr ()
     
     # modify/update the configuration:
     
@@ -177,9 +175,9 @@ def configure( inputdata , catalogs = [] ) :
     alg = SelectDplusMC (
         'DplusMC'                               , 
         # 
-        InputLocations = [
-        'StdLooseKaons' ,
-        'StdLoosePions'         
+        Inputs = [
+        'Phys/StdLooseKaons/Particles' ,
+        'Phys/StdLoosePions/Particles'         
         ] ,
         # Use LoKi-fitters :
         ParticleCombiners = { '' : "LoKi::VertexFitter" } , 
@@ -187,9 +185,9 @@ def configure( inputdata , catalogs = [] ) :
         PP2MCs            = [ 'Relations/Rec/ProtoP/Charged'] 
         )
     
-    ## add algorithm into main DaVinci sequence
-    dvMain = gaudi.algorithm('GaudiSequencer/DaVinciMainSequence' , True )
-    dvMain.Members += [ alg.name() ]
+    ## add algorithm into DaVinci user sequence
+    dvUser = gaudi.algorithm('GaudiSequencer/DaVinciUserSequence' , True )
+    dvUser.Members += [ alg.name() ]
     
     return SUCCESS 
 # =============================================================================

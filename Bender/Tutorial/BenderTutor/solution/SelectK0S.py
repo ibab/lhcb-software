@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: SelectK0S.py,v 1.2 2010-09-13 13:24:05 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file solution/SelectK0S.py
 #
 #  Simple example that illustrates the selection of K0S from stripped DSTs
@@ -20,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -42,7 +40,7 @@ And it is based on the LoKi project:
     ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
      ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:05 $

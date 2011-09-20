@@ -1,7 +1,5 @@
 # $Id: Minimalistic_0.py,v 1.13 2010-09-13 13:24:04 ibelyaev Exp $
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file solution/Minimalictic_0.py
 #
 #  The most trivial ``Bender-based'' script:
@@ -19,7 +17,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -43,7 +41,7 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:04 $
@@ -61,11 +59,11 @@ from Bender.Main import *
 from Configurables import DaVinci
 
 DaVinci (
-    DataType   = '2010' , 
-    Simulation = True
+    DataType   = '2011' , 
+    Simulation = False
     )
 
-importOptions('$DAVINCIROOT/options/2009-RealData-Reco07V0.py')
+importOptions('$STRIPPINGSELECTIONSROOT/tests/data/Reco11aNewRoot_Run97120_SDSTs.py')
 
 ## get or create application manager 
 gaudi = appMgr() 

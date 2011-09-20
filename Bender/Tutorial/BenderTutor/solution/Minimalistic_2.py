@@ -17,37 +17,10 @@ __version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.
 ## import everything from Bender 
 from Bender.Main import *
 # =============================================================================
-## configure the application 
-def configure() :
-    """
-    This is the configuration method for module Minimalistic_1.py
-    """
-    
-    from Configurables import DaVinci
-    
-    DaVinci (
-        DataType   = 'DC06' , # default  
-        Simulation = True   ) 
-
-    ## get/create application manager
-    gaudi = appMgr() 
-    
-    ## redefine input files 
-    evtSel = gaudi.evtSel()
-    import LoKiExample.Bs2Jpsiphi_mm_data as data 
-    evtSel.open( data.Files ) 
-    
-    return SUCCESS
 
 # =============================================================================
 ## Job steeting  
-if __name__ == '__main__' :
-    
-    # job configuration
-    configure()
-    
-    # event loop 
-    run(50)
+
     
 # ======================================================-======================
 # The END 

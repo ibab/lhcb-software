@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: DataAccess.py,v 1.16 2010-09-13 13:24:03 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file solution/DataAccess.py
 #
 #  Simple example that illustrates the access to data (tracks) and loop
@@ -20,7 +18,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -43,7 +41,7 @@ And it is based on the LoKi project:
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:03 $
@@ -93,13 +91,15 @@ def configure( inputdata , catalogs = [] ) :
     The configuration of the job
     """
     from Configurables import DaVinci
-    DaVinci ( DataType   = '2010' ,
-              Lumi       = False  )
+    DaVinci ( DataType    = '2011' ,
+              Lumi        = False  ,
+              Persistency = 'ROOT' )
 
     ## get/create Application Manager
     gaudi = appMgr()
 
     setData ( inputdata , catalogs )
+
     
     # modify/update the configuration:
     
@@ -124,13 +124,11 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120
     
-    
     ## job configuration
     inputdata = [
-        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/V0.DST
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/V0.DST/00007551/0000/00007551_00000%03d_1.v0.dst' % i for i in range ( 1 , 691 )
+        '/castor/cern.ch/grid/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(1,25)
         ]
-    
+
     configure( inputdata )
     
     ## event loop 

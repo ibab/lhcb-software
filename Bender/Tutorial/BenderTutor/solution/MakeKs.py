@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id: MakeKs.py,v 1.2 2010-09-13 13:24:04 ibelyaev Exp $ 
 # =============================================================================
-# $URL$ 
-# =============================================================================
 ## @file solution/MakeKs.py
 #
 #  Simple example that illustrates Ks-making
@@ -19,7 +17,7 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -39,7 +37,7 @@ Pere MATO and Andrey TSAREGORODTSEV. And it is based on the LoKi project:
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
    ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
 Last modification $Date: 2010-09-13 13:24:04 $
@@ -155,7 +153,7 @@ def configure( inputdata , catalogs = [] ) :
     """
     
     from Configurables import DaVinci , GaudiSequencer 
-    DaVinci ( DataType        = '2010' ,
+    DaVinci ( DataType        = '2011' ,
               Lumi            = False  )
     
     from StandardParticles import StdLoosePions
@@ -195,10 +193,9 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        ## dbpath: /LHCb/Collision10/Beam3500GeV-VeloClosed-MagDown/Reco05-Striping09-Merged/90000000/MINIBIAS.DST
-        '/castor/cern.ch/grid' + '/lhcb/data/2010/MINIBIAS.DST/00007548/0000/00007548_0000%04d_1.minibias.dst' % i for i in range ( 1 , 1400 )
+        '/castor/cern.ch/grid/lhcb/LHCb/Collision11/MINIBIAS.DST/00011900/0000/00011900_000000%02d_1.minibias.dst' % i for i in range(1,25)
         ]
-    
+
     configure( inputdata )
     
     ## event loop 
