@@ -12,6 +12,9 @@ from checkTestLogs import checkTestLogs
 #import configuration  # <--- doesn't work with acrontab on lxplus5
 import BaseConfiguration as configuration
 from optparse import OptionParser
+from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName, getParentMountPoint, NotInAFS, isMountPoint, Directory, isAFSDir, isAFSFile
+from LbUtils.afs.volume import Volume
+from NightliesXML import messageXML, unique
 
 log=logging.getLogger("nightlies.shownightlies")
 h=logging.FileHandler("showNightlies.log")
@@ -24,9 +27,76 @@ day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 
 rssHtml = '<img src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/images/rss.gif" width="16" height="16" border="0" valign="middle" />'
 
+startTime = time.clock()
+
 configHistory = []
 
+# # Dictionary for harvesting problems:
+# #   classes of problems so far:
+# #     FileSystem = file system problems kept in a list of tuples with the dir, total size, free size, i.e. systemHealth['Warning']['FileSystem'] = [(dir1,total1,free1),(dir2,total2,free2),...]
+systemHealth = {'Warning' : {}, 'Error' : {}}
+systemHealth['Warning']['FileSystem'] = {'Header':('volume/path','total space','free space'),'Data':[]}
+systemHealth['Error']['FileSystem'] = {'Header':('volume/path','total space','free space'),'Data':[]}
+# # Pathes to check for their health
+#systemHealthPathes = ['/afs/cern.ch/lhcb/software/nightlies', '/afs/cern.ch/lhcb/software/nightlies/www','/tmp/certainly/missing/path']
+systemHealthPathes = ['/afs/cern.ch/lhcb/software/nightlies', '/afs/cern.ch/lhcb/software/nightlies/www']
+
 # --------------------------------------------------------------------------------
+def getLocalMount(localPath):
+  localPath = os.path.abspath(localPath)
+  while localPath != os.path.sep:
+    if os.path.ismount(localPath):
+      return localPath
+    localPath = os.path.abspath(os.path.join(localPath, os.pardir))
+  return localPath
+
+def getPathSpaceInfo(directoryPath):
+    """Wrapper to get the available space for a directory/its volume in AFS or in the local file system"""
+    pathInfos = {'Name' : directoryPath, 'SizeTotal' : -1, 'SizeFree' : -1, 'SizeUsed' : -1}
+    if os.path.exists(directoryPath):
+        try:
+            afsDirectory = Directory(directoryPath)
+            afsVolume = Volume(dirname=afsDirectory.getParentMountPoint())
+            afsMountPointList = []
+            for afsMountPoints in afsVolume.mountPoints():
+                afsMountPointList.append(afsMountPoints.name())
+            pathInfos['Name'] = afsVolume.name()
+            pathInfos['SizeTotal'] = int(afsVolume.quota())
+            pathInfos['SizeFree'] = int(afsVolume.usedSpace())
+            pathInfos['SizeUsed']  = pathInfos['SizeTotal'] - pathInfos['SizeFree']
+        except NotInAFS :
+            try:
+                localMountPoint = getLocalMount(directoryPath)
+                localMountInfo = os.statvfs(localMountPoint)
+                pathInfos['Name'] = localMountPoint
+                # calculate the total and free space on the volume in kb
+                pathInfos['SizeTotal'] = localMountInfo.f_bsize * localMountInfo.f_blocks / 1024
+                pathInfos['SizeFree']  = localMountInfo.f_bsize * localMountInfo.f_bavail / 1024
+                pathInfos['SizeUsed']  = pathInfos['SizeTotal'] - pathInfos['SizeFree']
+            except OSError:
+                print 'Path %s not accessible' % directoryPath
+    #else:
+    #    print 'Path %s not in AFS or in the local file system' % directoryPath
+    #    systemHealth['Error']['FileSystem']['Data'].append((directoryPath,-1,-1))
+    return pathInfos
+
+def checkPathHealth(pathlist):
+    """Check a given path for the space left. If less than a threshold is free or if the path cannot be resolved, add a warning/error to the systemHealth"""
+    # #Warn if free space is less than 10000kb
+    freeSpaceWarningThreshold = 10000
+    # # list of file system problems
+    for path in pathlist:
+        pathHealth = getPathSpaceInfo(path)
+        pathHealth['SizeTotal'] - pathHealth['SizeFree']
+        if pathHealth['SizeFree'] < freeSpaceWarningThreshold and pathHealth['SizeFree'] > -1:
+            #print 'Warning: In %s only %i kb space left' % (pathHealth['Name'],pathHealth['SizeFree'])
+            systemHealth['Warning']['FileSystem']['Data'].append((pathHealth['Name'],pathHealth['SizeTotal'],pathHealth['SizeFree']))
+        elif pathHealth['SizeFree']  < 0:
+            #print 'Error: Check if %s exists' % (pathHealth['Name'])
+            systemHealth['Error']['FileSystem']['Data'].append((pathHealth['Name'],pathHealth['SizeTotal'],pathHealth['SizeFree']))
+
+                
+    
 
 def getBuildSummary(slotObj, day, pkgName, plat):
     nWarn   = None
@@ -55,9 +125,12 @@ def getBuildSummary(slotObj, day, pkgName, plat):
 
     return nWarn, nErr, nMkErr, nCMTErr
 
+def strStrip(toStr):
+    return str(toStr).strip()
+
 # ================================================================================
 
-def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
+def showAll(htmlFile, xmlData, generalConf, slotList, historyFromSvn = False):
 
     # hide slots with "hidden='true'" flag in current xml
     hideSlots = ['']
@@ -85,11 +158,11 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
     i = today
     n = 0
     while n < 7:
-        if (i < 0):
-            i = 6
-        days.append(day_names[i])
-        i = i - 1
-        n = n + 1
+      if (i < 0):
+        i = 6
+      days.append(day_names[i])
+      i = i - 1
+      n = n + 1
 
     slotList = []
     slots = [] #names
@@ -98,7 +171,7 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
         for sl in configHistory[dayn]._slotList:
             if sl.getName() not in slots and sl.getName() not in hideSlots:
                 slots.append(sl.getName())
-                slotList.append(sl)
+                slotList.append(sl)		
                 for p in sl.getProjects(hideDisabled=False):
                     pName = p.getName()
                     if pName not in projList: projList.append(pName)
@@ -120,14 +193,14 @@ def showAll(htmlFile, generalConf, slotList, historyFromSvn = False):
     htmlFile.write( '</title>'+"\n")
 
     htmlFile.write( """
-        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css">
+        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css"> 
+ 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script> 
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-
-<script type="text/javascript">
+<script type="text/javascript"> 
 function genrss() {
     $.typ = 'all'
     if ($("input[id='build']:checked").val() == 'build') { $.typ = 'build' }
@@ -151,10 +224,11 @@ $(document).ready(function() {
   $('#left input, #left select, #left radio, #right input, #right select, #right radio').bind('blur keyup change', genrss);
 genrss();
 });
-</script>
+</script> 
 """)
 
     htmlFile.write( '    <META HTTP-EQUIV="expires" CONTENT="Wed, 19 Feb 2003 08:00:00 GMT">'+"\n")
+    htmlFile.write( '    <META HTTP-EQUIV="refresh" content="1200">'+"\n")
     htmlFile.write( '    <style type="text/css">'+"\n")
     htmlFile.write( '      td {'+"\n")
     htmlFile.write( '        font-family: arial;'+"\n")
@@ -224,7 +298,7 @@ genrss();
     htmlFile.write( "}\n")
 
     htmlFile.write( "function tooltipout(event,tooltip) {\n")
-    htmlFile.write( "  elem = document.getElementById(tooltip);\n")
+    htmlFile.write( "  elem = document.getElementById(tooltip);\n");
     htmlFile.write( '  elem.style.left=(-1000)+"px";'+" \n")
     htmlFile.write( '  elem.style.top=(-1000)+"px";'+" \n")
     htmlFile.write( '  elem.style.visibility="hidden";'+" \n")
@@ -284,17 +358,17 @@ genrss();
 
     insert_comma = 0
     for slot in slots:
-        if insert_comma == 1: htmlFile.write(',')
-        htmlFile.write(slot)
-        insert_comma = 1
+      if insert_comma == 1: htmlFile.write(',')
+      htmlFile.write(slot)
+      insert_comma = 1
     htmlFile.write( ' -->'+" \n")
 
     htmlFile.write( '<!-- projects:')
     insert_comma = 0
     for proj in projList:
-        if insert_comma == 1: htmlFile.write(',')
-        htmlFile.write(proj)
-        insert_comma = 1
+      if insert_comma == 1: htmlFile.write(',')
+      htmlFile.write(proj)
+      insert_comma = 1
     htmlFile.write( ' -->'+" \n")
 
     htmlFile.write( '<div align="center">'+" \n")
@@ -305,6 +379,8 @@ genrss();
     if generalConf.has_key('wwwtitle'): htmlFile.write(generalConf['wwwtitle'])
     else: htmlFile.write( 'Summaries of nightly builds for LCG AA projects')
     htmlFile.write( '</font><font face="Arial" color="#666666" size="3"><br>Last update: '+time.asctime()+'</font><br /></td>'+" \n")
+    xmlData.appendNode("meta",[],{"meta":"True"})
+    xmlData.appendNode("time",["meta"],{"meta":"True","creation":strStrip(time.asctime())},strStrip(time.asctime()))
     if generalConf.has_key('wwwurl') and 'lcgapp.cern.ch' in generalConf['wwwurl']:
         htmlFile.write( '</tr><tr><td>&nbsp;</td><td align="center"><font face="Arial">A new version of this page is available <a href="http://lcgapp.cern.ch/spi/cgi-bin/nightly.py"><b>there</b></a></font></td>'+" \n")
     htmlFile.write( '  </tr>'+" \n")
@@ -313,10 +389,11 @@ genrss();
 
     if not generalConf.has_key('wwwurl') or 'lcgapp.cern.ch' not in generalConf['wwwurl']:
         htmlFile.write( '<a class="header_link_black">Nightlies Status</a>')
-        htmlFile.write( '<a class="header_link" href="overview_nightlies.py" target="_blank" >Configuration overview</a>')
+        htmlFile.write( '<a class="header_link" href="./overview_nightlies.py" target="_blank" >Configuration overview</a>')
         htmlFile.write( '<a class="header_link" href="../editor.html" target="_blank" >Configuration editor</a>')
         htmlFile.write( '<a class="header_link" href="https://svnweb.cern.ch/trac/lhcb/browser/LHCbNightlyConf/trunk/configuration.xml" target="_blank" >Configuration SVN</a>')
         htmlFile.write( '<a class="header_link" href="http://lhcb-coverity.cern.ch:8080" target="_blank" >LHCb Coverity</a>')
+        htmlFile.write( '<a class="header_link" href="https://lhcb-nightlies.web.cern.ch/lhcb-nightlies/index-LHCb-cache.xml" target="_blank" >XML</a>')
         htmlFile.write( '<hr/>')
 
     htmlFile.write('<h3>[<a id="dc_toggle" href="#" onClick="'+"toggleMe('dc')"+'">+</a>] Display Criteria</h3>'+" \n")
@@ -343,7 +420,7 @@ genrss();
     htmlFile.write('          <tr><td><input type="checkbox" name="day_cbox_yesterday" value="on"></td><td>yesterday</td></tr>'+" \n")
     htmlFile.write('          <tr><td>&nbsp;</td><td>&nbsp;</td></tr>'+" \n")
     for day in days:
-        htmlFile.write('        <tr><td><input type="checkbox" name="day_cbox_'+day+'" value="on"></td><td>'+day+'</td></tr>'+" \n")
+      htmlFile.write('        <tr><td><input type="checkbox" name="day_cbox_'+day+'" value="on"></td><td>'+day+'</td></tr>'+" \n")
 
     htmlFile.write('      </table>'+" \n")
     htmlFile.write('    </td>'+" \n")
@@ -471,13 +548,13 @@ genrss();
                     </div>
                     <div id="live-result"></div>""")
 
-#    htmlFile.write("""
+#    htmlFile.write("""        
 #                    <div id="d_clip_button" style="border:1px solid black; padding:1px;">copy</div>
 #                <script language="JavaScript">
 #                        var clip = new ZeroClipboard.Client();
 #                        clip.setHandCursor( true );
 #                        clip.setCSSEffects( true );
-#                        clip.addEventListener( 'mouseDown', function(client) {
+#                        clip.addEventListener( 'mouseDown', function(client) { 
 #                            clip.setText( document.getElementById('live-result').value );
 #                        } );
 #//                        clip.setText( $('#live-result').val() );
@@ -521,6 +598,9 @@ genrss();
         htmlFile.write("<h1>"+day)
         if day == time.strftime("%A"):
             htmlFile.write(" (Today)")
+            xmlData.appendNode(strStrip(day),[],{"day":strStrip(day),"dayabbr":strStrip(day[:3]),"today":"True"})
+        else:
+            xmlData.appendNode(strStrip(day),[],{"day":strStrip(day),"dayabbr":strStrip(day[:3]),"today":"False"})
         htmlFile.write(":<hr/></h1>")
 
         #aSlots = configuration.getArchivedSlotNames(day[:3])
@@ -550,11 +630,21 @@ genrss();
             htmlFile.write( '    <tr>')
             htmlFile.write( '      <td><b>Project</b></td> ')
             htmlFile.write( '      <td><b>Version</b></td> ')
+
+            stampDay = day[:3]
+          
+            xmlData.appendNode(strStrip(slot),[strStrip(day)],{"slot":strStrip(slotObj.getName()),"dayabbr":strStrip(day[:3])})
+          
             for platObj in slotObj.getPlatforms():
                 plat = platObj.getName()
                 timeStamp = None
-                stampFileName = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isDone-'+plat)
-                stampFileNameStarted = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
+                if '%DAY%' in slotObj._releaseDir:
+                    stampFileName = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isDone-'+plat)
+                    stampFileNameStarted = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
+                else:
+                    stampFileName = os.path.join(slotObj.releaseDir(), 'isDone-'+plat)
+                    stampFileNameStarted = os.path.join(slotObj.releaseDir(), 'isStarted-'+plat)
+                    
                 if os.path.exists(stampFileName):
                     stampFile = open(stampFileName, 'r')
                     lines = stampFile.readlines()
@@ -577,24 +667,52 @@ genrss();
                         else:
                             pass
                             #timeStamp = None
+
+                waitForPlat = ""
+                waitForIs = False
+                for iter in slotObj.waitForFlag():
+                    if iter is not None:
+                        waitForPlat = iter+plat
+                        waitForIs = True                    
+
                 if timeStamp:
                     # get rid of seconds
                     date_parts = timeStamp.split(':')
                     parts = date_parts[2].split(' ')
                     timeStamp = date_parts[0]+':'+date_parts[1]+' '+parts[1]
+                    stampDay = date_parts[0][:3]
                     htmlFile.write( '<td nowrap> <b> '+plat+' </b>')
-                    htmlFile.write( '<br/>('+timeStamp+')')
+                    if stampDay == day[:3]:
+                        htmlFile.write( '<br/>('+timeStamp+')')
+                    else:
+                        htmlFile.write( '<br/><font style="background-color: yellow">(%s)</font>' % timeStamp)
+                        
+                    xmlData.appendNode(strStrip(plat),[strStrip(day),strStrip(slotObj.getName())],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"projCompleted":strStrip(timeStamp),"dayabbr":strStrip(day[:3]),"platReady":"True"})
+
                     htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s" target="_blank">%s</a> ' % (slotObj.getName(), plat, rssHtml))
+                    if waitForIs:
+                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"platDepends":"True"})          
+                        if os.path.exists(waitForPlat):
+                            htmlFile.write( '<br/>waiting for <font style="background-color: #80FF00">%s</font>' % " LCG: OK" )
+                            xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"LCGReady":"True"})
+                        else:
+                            htmlFile.write( '<br/>waiting for <font style="background-color: #FF8040">%s</font>' % " LCG")
+                            xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"LCGReady":"False"})
+                        #htmlFile.write( '<br/><font style="background-color: red">%s</font>' % waitForPlat)
                     htmlFile.write( '</td> \n')
                 else:
-                    platformsNotReady.append((day, slot, plat))
+                    platformsNotReady.append((day, slot, plat,waitForIs))
+                    xmlData.appendNode(strStrip(plat),[strStrip(day),strStrip(slotObj.getName())],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"dayabbr":strStrip(day[:3])})
                     if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) != 'FALSE' and os.path.exists(stampFileNameStarted):
                         htmlFile.write( '<td nowrap> <b> '+plat+' </b>')
                         htmlFile.write( '<br/><center><em>not ready</em></center>')
                         htmlFile.write( '</td> \n')
+                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"platReady":"False"})    
             htmlFile.write( '    </tr>\n')
 
             for proj in slotObj.getProjects(hideDisabled=False):
+
+
                 if proj.getDisabledFlag() is True:
                     projDisabled = True
                 else:
@@ -619,20 +737,44 @@ genrss();
                     htmlFile.write( '      <td bgcolor="#D3D3D3">'+projectTag+'</td>\n')
                 else:
                     htmlFile.write( '      <td bgcolor="'+wheat+'">'+projectTag+'</td>\n')
+ 
                 for platObj in slotObj.getPlatforms():
+                                    
+                    # if slotObj.getName() == 'lhcb-test0' and day == 'Monday' and platObj.getName()!="i686-slc5-gcc43-opt":
+                    #     print " ------------ "
+                    #     print "day "+day
+                    #     print "slot "+slotObj.getName()
+                    #     print "proj "+ proj.getName()
+                    #     print " -- 1"
+                    #     print "disabled "+str(proj.getDisabledFlag())
+                    #     print "plat "+platObj.getName()
+                    #     print os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
+                    #     print " -- 2"
+                    #     print slotObj.getName()+'.'+stampDay+'_'+projectTag+'-'+plat+'-log.html'
+                    #     print "summary "+ str(getBuildSummary(slotObj, stampDay, projectTag, plat))
+                    #     print "disabled "+str(projDisabled)
+                    #     print " -- 3"
+                    #     print "noFile "+str(noFile)
+
                     plat = platObj.getName()
-                    if (day, slot, plat) in platformsNotReady:
+                    xmlData.appendNode(strStrip(proj.getName()),[strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"projCompleted":strStrip(timeStamp),"dayabbr":strStrip(day[:3]),"project":strStrip(proj.getName()),"disabled":"False"})
+
+                    if (day, slot, plat,True) in platformsNotReady or (day, slot, plat,False) in platformsNotReady:
                         stampFileNameStarted = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) == 'FALSE' or not os.path.exists(stampFileNameStarted): continue
                     htmlFile.write( '<td><table border="0" cellpadding="4" cellspacing="1" width="100%">\n<tr>\n')
 
-                    #logFileName = slotObj.getName()+'.'+day[:3]+'_'+proj.getTag()+'-'+plat+'-log.html'
-                    logFileName = slotObj.getName()+'.'+day[:3]+'_'+projectTag+'-'+plat+'-log.html'
-                    nWarn, nErr, nMkErr, nCMTErr = getBuildSummary(slotObj, day[:3], projectTag, plat)
+                    #logFileName = slotObj.getName()+'.'+day[:3]+'_'+projectTag+'-'+plat+'-log.html'
+                    logFileName = slotObj.getName()+'.'+stampDay+'_'+projectTag+'-'+plat+'-log.html'
+
+                    #nWarn, nErr, nMkErr, nCMTErr = getBuildSummary(slotObj, day[:3], projectTag, plat)
+                    nWarn, nErr, nMkErr, nCMTErr = getBuildSummary(slotObj, stampDay, projectTag, plat)
                     noFile = False
                     if (nWarn, nErr, nMkErr, nCMTErr) == (None, None, None, None): noFile = True
                     if projDisabled:
                         noFile = True
+                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat),strStrip(proj.getName())],{"disabled":"True"})
+ 
                     if not noFile:
                         flag = "OK"
                         if int(nWarn) > 0: flag = "warn"
@@ -650,9 +792,11 @@ genrss();
                         elif int(nWarn)>0 :
                             nInPar = int(nWarn)
                         htmlFile.write( '<a href="' + str(logURL) + '/' + logFileName + '">build')
+
                         if nInPar : htmlFile.write( ' ('+str(nInPar)+')')
                         htmlFile.write( '</a>&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s&proj=%s&type=build" target="_blank">%s</a> ' % (slotObj.getName(), plat, proj.getName().upper(), rssHtml))
                         #htmlFile.write( '</a> ')
+                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat),strStrip(proj.getName())],{"nWarn":strStrip(nWarn),"nErr":strStrip(nErr),"nMkErr":strStrip(nMkErr),"nCMTErr":strStrip(nCMTErr),"logFile":strStrip(str(logURL) + '/' + logFileName)})
                     else:
                         flag = "err"
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) == 'FALSE':
@@ -681,6 +825,7 @@ genrss();
                     #Status=checkTestLogs(os.path.join(slotObj.wwwDir(), plat, slotObj.getName() + "." + day[:3]+'_'+proj.getTag()+'-'+plat))
                     Status=checkTestLogs(None, None, slotObj, proj, day[:3], plat, includePlatformInPrefix)
                     if time.strftime("%A") == day:
+                        pass
                         if nWarn != None:
                             build = (NoErr, nWarn)
                         else:
@@ -801,7 +946,15 @@ genrss();
             htmlFile.write( '    </table>\n')
 
             platformsNotReadyHtml = ''
+            if waitForIs:
+              platformsNotReadyHtml += '<font style="background-color: #FF8040; font-weight:600"> wait for LCG-nightlies</font>: '
             for x in platformsNotReady:
+              if waitForIs:
+                if os.path.exists(waitForPlat):
+                  if x[0]==day and x[1]==slotObj.getName(): platformsNotReadyHtml += '<font style="background-color: #80FF00">' + x[2] + '</font>, '
+                else:
+                  if x[0]==day and x[1]==slotObj.getName(): platformsNotReadyHtml += '<font style="background-color: #FF8040">' + x[2] + '</font>, '
+              else:
                 if x[0]==day and x[1]==slotObj.getName(): platformsNotReadyHtml += '' + x[2] + ', '
             if len(platformsNotReadyHtml) > 2:
                 platformsNotReadyHtml = platformsNotReadyHtml[:-2]
@@ -820,23 +973,70 @@ genrss();
         htmlFile.write(str(divdata))
     htmlFile.write( "\n<!-- end STAT divs -->\n")
 
+    
+    htmlFile.write( '<table width="80%" border="0">'+" \n")
+    htmlFile.write( '  <tr>'+" \n")
+    htmlFile.write( '    <td align="left"><span style="font-family:Arial; color=#000000; font-weight: bold; font-size: 13pt" >System health messages</span></td>'+" \n")
+
+    #checkPathHealth(systemHealthPathes)
+
+    for problemClass in systemHealth:
+        htmlFile.write( '  <tr>'+" \n")
+        if problemClass is 'Warning':
+            bgColor = "warn"
+        elif problemClass is 'Error':
+            bgColor = "err"
+        else:
+            bgColor = "wheat"
+        htmlFile.write( '    <td align="center" bgcolor="'+colour[bgColor]+'"><span style="font-family:Arial; color=#000000; font-weight: bold; font-size: 12pt">'+str(problemClass)+'</span></td>')
+        htmlFile.write( '  </tr>'+" \n")
+        for problemKey in systemHealth[problemClass]:
+            if len(systemHealth[problemClass][problemKey]['Data'])>0:
+                htmlFile.write( '  <tr>'+" \n")
+                htmlFile.write( '    <td align="center" bgcolor="'+colour[bgColor]+'"><span style="font-family:Arial; color=#000000; font-weight: bold; font-size: 11pt">'+str(problemKey)+'</span></td>')
+                htmlFile.write( '  </tr>'+" \n")
+                htmlFile.write( '  <tr>'+" \n")
+                for problemHeader in systemHealth[problemClass][problemKey]['Header']:
+                    htmlFile.write( '        <td bgcolor="'+colour[bgColor]+'">'+problemHeader+'</td>')
+                htmlFile.write( '</tr>'+" \n")
+                for problemData in systemHealth[problemClass][problemKey]['Data']:
+                    htmlFile.write( '  <tr>'+" \n")
+                    for problemElement in problemData:
+                        htmlFile.write( '    <td bgcolor="'+colour[bgColor]+'">'+str(problemElement)+'</td>'+" \n")
+                    htmlFile.write( '  </tr>'+" \n")
+                htmlFile.write( '  </tr>'+" \n")
+
+    htmlFile.write( '</table>'+" \n")
+
+    htmlFile.write( '<h5>Time for processing the input: %s seconds</h5>' % (time.clock() - startTime))
+    xmlData.modifyNode(["meta","time"],{"processingSecs":strStrip(time.clock() - startTime)})
+
     trailer = """
-        <address><a href="mailto:Stefan.Roiser@cern.ch">Stefan ROISER</a></address> <address><a href="mailto:Karol.Kruzelecki@cern.ch">Karol Kruzelecki</a></address> <address><a href="mailto:piotr.kolet@cern.ch">Piotr Kolet</a></address>
+        <address><a href="mailto:Stefan.Roiser@cern.ch">Stefan ROISER</a></address> <address><a href="mailto:thomas.hartmann@cern.ch">Thomas Hartmann</a></address> <address><a href="mailto:piotr.kolet@cern.ch">Piotr Kolet</a></address>
       </body>
     </html>
     """
+    #trailer = """
+    #    <address><a href="mailto:Stefan.Roiser@cern.ch">Stefan ROISER</a></address> <address><a href="mailto:Karol.Kruzelecki@cern.ch">Karol Kruzelecki</a></address> <address><a href="mailto:piotr.kolet@cern.ch">Piotr Kolet</a></address>
+    #  </body>
+    #</html>
+    #"""
 
     htmlFile.write( trailer )
 
-
 def getConfigurationContents(svnDate=None):
+    #svnPath = 'http://svnweb.cern.ch/guest/lhcb/LHCbNightlyConf/trunk/configuration.xml'
+    #svnPathTest = 'http://svnweb.cern.ch/guest/lhcb/LHCbNightlyConf/trunk/configuration-test.xml'
     svnPath = 'https://svn.cern.ch/reps/lhcb/LHCbNightlyConf/trunk/configuration.xml'
     svnPathTest = 'https://svn.cern.ch/reps/lhcb/LHCbNightlyConf/trunk/configuration-test.xml'
+    svnPathTest = 'https://svn.cern.ch/reps/lhcb/LHCbNightlyConf/trunk/configuration.xml'
     from subprocess import Popen, PIPE
     if svnDate is None: # test configuration from now
         confContents = Popen(["svn", "cat", svnPathTest], stdout=PIPE).communicate()[0]
     else: # last from today
         confContents = Popen(["svn", "cat", "-r", "{%s}" % svnDate, svnPath], stdout=PIPE).communicate()[0]
+#for tests:
+#        confContents = Popen(["svn", "cat", svnPath], stdout=PIPE).communicate()[0]
     return confContents
 
 #def getArchivedConfig(day): #For example: "Monday" --> config.xml from last Monday
@@ -852,13 +1052,34 @@ def getConfigurationContents(svnDate=None):
 def generateIndex(mainConfigFileName, resultFileName):
     global configuration
     confContents = None
-    tmpFileName = resultFileName + '.tmp.html'
+    #tmpFileName = resultFileName + '.tmp.html'
+    tmpFileName = resultFileName + "_" + time.strftime("%a%H%M") + '.tmp.html'
+    tmpFileNameLink = resultFileName + '.tmp.html'
+
+    xmlFileName = resultFileName.rstrip('.html')+'.xml'
+    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
+    xmlTmpFileName = xmlFileName + "_" + time.strftime("%a%H%M") + '.tmp.xml'
+    xmlTmpFileNameLink = xmlFileName + '.tmp.html'
+
+    if os.path.lexists(tmpFileNameLink): os.remove(tmpFileNameLink)
+    os.symlink(tmpFileName,tmpFileNameLink)
+    if os.path.lexists(xmlTmpFileNameLink): os.remove(xmlTmpFileNameLink)
+    os.symlink(xmlTmpFileName,xmlTmpFileNameLink)
+
     indexFile = open(tmpFileName, 'w')
+    xmlData = messageXML('LHCbNightlies')
+
     generalConf, slotList = configuration.readConf(mainConfigFileName, confContents)
-    showAll(indexFile, generalConf, slotList, historyFromSvn = True)
+    showAll(indexFile, xmlData, generalConf, slotList, historyFromSvn = True)
     indexFile.close()
+    xmlData.writeDoc(xmlTmpFileName)
     try:
         os.rename(tmpFileName, resultFileName)
+        if os.path.lexists(tmpFileNameLink): os.remove(tmpFileNameLink)
+        os.rename(xmlTmpFileName, xmlFileName)
+        if os.path.lexists(xmlTmpFileNameLink): os.remove(xmlTmpFileNameLink)
+        #os.rename(tmpFileName, resultFileName)
+        #os.rename(xmlTmpFileName, xmlFileName)
     except:
         print "ERROR moving index file."
         raise
@@ -878,13 +1099,37 @@ def generateIndexSVN(resultFileName, svnNow=False):
         else:
             configHistory[x].readConf(configFile=None, configContents=getConfigurationContents(None))
 
-    tmpFileName = resultFileName + '.tmp.html'
-    indexFile = open(tmpFileName, 'w')
+    #xmlFileName = resultFileName.rstrip('.html')+'.xml'
+    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
+    #tmpFileName = resultFileName + '.tmp.html'
 
-    showAll(indexFile, configHistory[0]._generalConfig, configHistory[0]._slotList, historyFromSvn = True)
+    #tmpFileName = resultFileName + '.tmp.html'
+    tmpFileName = resultFileName + "_" + time.strftime("%a%H%M") + '.tmp.html'
+    tmpFileNameLink = resultFileName + '.tmp.html'
+
+    xmlFileName = resultFileName.rstrip('.html')+'.xml'
+    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
+    xmlTmpFileName = xmlFileName + "_" + time.strftime("%a%H%M") + '.tmp.xml'
+    xmlTmpFileNameLink = xmlFileName + '.tmp.html'
+
+    if os.path.lexists(tmpFileNameLink): os.remove(tmpFileNameLink)
+    os.symlink(tmpFileName,tmpFileNameLink)
+    if os.path.lexists(xmlTmpFileNameLink): os.remove(xmlTmpFileNameLink)
+    os.symlink(xmlTmpFileName,xmlTmpFileNameLink)
+
+    indexFile = open(tmpFileName, 'w')
+    xmlData = messageXML()
+    
+    showAll(indexFile, xmlData, configHistory[0]._generalConfig, configHistory[0]._slotList, historyFromSvn = True)
     indexFile.close()
+    xmlData.writeDoc(xmlTmpFileName)
     try:
         os.rename(tmpFileName, resultFileName)
+        if os.path.lexists(tmpFileNameLink): os.remove(tmpFileNameLink)
+        os.rename(xmlTmpFileName, xmlFileName)
+        if os.path.lexists(xmlTmpFileNameLink): os.remove(xmlTmpFileNameLink)
+        #os.rename(tmpFileName, resultFileName)
+        #os.rename(xmlTmpFileName, xmlFileName)
     except:
         print "ERROR moving index file."
         raise
