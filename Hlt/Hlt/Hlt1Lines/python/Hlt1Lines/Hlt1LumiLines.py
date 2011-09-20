@@ -43,7 +43,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                 LumiFromL0DU,
                                 LumiCountHltTracks,
                                 LumiFlagMethod,
-                                LumiCountMuons
+                                LumiCountMuons,
+                                LumiCountVeloWithZRCuts
                                 )
     containerNameLumiTracks = 'Hlt/Track/Lumi'
     containerNameLumiVertex = 'Hlt/Vertex/Lumi'
@@ -204,6 +205,18 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                      , ShortCircuit = False
                      ) )
         lumiRecoSequence.Members.append(lumiRecoFilterSequence)
+
+        # VELO counters of tracks and vertexes with z,R cuts
+        from Configurables import LumiCountVeloWithZRCuts
+        lumiCountSequence.Members.append( LumiCountVeloWithZRCuts( seqCountName+'VeloWithZRCuts'
+                                                                   , TrackCounterName='Velo'
+                                                                   , VertexCounterName='Vertex'
+                                                                   , AbsZCut = '300'
+                                                                   , RCut =      '4'
+                                                                   , TrackInputSelection='TES:%s' % self.containerNameLumiTracks
+                                                                   , VertexInputSelection='TES:%s' % self.containerNameLumiVertex
+                                                                   , OutputContainer='Hlt/LumiSummary' ) )
+
         
         # sequence to get TT tracks
         #  disabled because of https://savannah.cern.ch/bugs/index.php?62933
