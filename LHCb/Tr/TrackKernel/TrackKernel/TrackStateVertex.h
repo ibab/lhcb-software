@@ -101,7 +101,7 @@ namespace LHCb
     /// Get the error on the mass given a set of mass hypotheses
     double massErr(const std::vector<double>& masshypos) const ;
     /// Add a mass constraint
-    FitStatus constrainMass(const std::vector<double>& masshypos,double constrainedmass) ;
+    FitStatus constrainMass(const std::vector<double>& masshypos,double constrainedmass, double naturalwidth=0.) ;
 
     /// Projection matrix for state i to vertex position (matrix A in Fruhwirth)
     const ROOT::Math::SMatrix<double,5,3>& matrixA(size_t i) const ;
