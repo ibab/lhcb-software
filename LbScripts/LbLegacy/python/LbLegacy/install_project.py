@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '110822'
+script_version = '110920'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r4p1"
@@ -495,7 +495,7 @@ def fixCMTSetup(cmt_mgr_dir):
                 if os.path.exists(sfile_bak) :
                     log.debug("Removing %s" % sfile_bak)
                     os.remove(sfile_bak)
-                shutil.move(sfile, sfile_bak)
+                safeMove(sfile, sfile_bak)
                 log.debug("Writing %s" % sfile)
                 nsf = open(sfile, "w")
                 nsf.write("".join(sfile_lines))
@@ -1150,8 +1150,7 @@ def getProjectTar(tar_list, already_present_list=None):
                         if extradir is not None :
                             f = os.path.join(pack_ver[0], pack_ver[1])
                             tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
-                            if not os.path.exists(tdir) :
-                                os.makedirs(tdir)
+                            safeMakeDirs(tdir)
                             shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
                             if fix_perm :
                                 changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
@@ -1953,11 +1952,59 @@ def cleanTarFileTarget(filename, targetlocation):
         if os.path.isfile(fp) :
             os.remove(fp)
 
+def _basename(path):
+    # A basename() variant which first strips the trailing slash, if present.
+    # Thus we always get the last component of the path, even for directories.
+    return os.path.basename(path.rstrip(os.path.sep))
+
+def _destinsrc(src, dst):
+    src = os.path.abspath(src)
+    dst = os.path.abspath(dst)
+    if not src.endswith(os.path.sep):
+        src += os.path.sep
+    if not dst.endswith(os.path.sep):
+        dst += os.path.sep
+    return dst.startswith(src)
 
 def safeMove(src, dst):
-    shutil.move(src, dst)
+    """
+    copy of the shutil.move function that moves properly links across filesystems. It
+    also fix windows attributes from tarball expansion.
+    @param src: source
+    @param dst: destination
+    """
+
+    real_dst = dst
+    if os.path.isdir(dst):
+        real_dst = os.path.join(dst, _basename(src))
+        if os.path.exists(real_dst):
+            raise shutil.Error, "Destination path '%s' already exists" % real_dst
+    try:
+        os.rename(src, real_dst)
+    except OSError:
+        if os.path.isdir(src):
+            if _destinsrc(src, dst):
+                raise shutil.Error, "Cannot move a directory '%s' into itself '%s'." % (src, dst)
+            shutil.copytree(src, real_dst, symlinks=True)
+            rmtree(src)
+        elif os.path.islink(src) :
+            # treats correctly symlinks across filesystems
+            linkto = os.readlink(src)
+            os.symlink(linkto, real_dst)
+            os.unlink(src)
+        else:
+            shutil.copy2(src, real_dst)
+            os.unlink(src)
+
+    # fix windows attributes
     if os.path.isdir(dst) and sys.platform.startswith("win32") :
         fixWinAttrib(dst)
+
+def safeMakeDirs(path):
+    if not os.path.exists(path) :
+        if os.path.islink(path) :
+            os.unlink(path)
+        os.makedirs(path)
 
 def addSoft(srcdir, dstdir, overwrite=False):
     log = logging.getLogger()
@@ -1965,9 +2012,8 @@ def addSoft(srcdir, dstdir, overwrite=False):
         log.debug("Overwriting %s with %s" % (dstdir, srcdir))
     else :
         log.debug("Add %s to %s" % (dstdir, srcdir))
-    if not os.path.exists(dstdir):
-        os.makedirs(dstdir)
-        log.info("%s has been created" % dstdir)
+    safeMakeDirs(dstdir)
+    log.info("%s has been created" % dstdir)
     for root, dirs, files in os.walk(srcdir, topdown=True) :
         dirstoremove = []
         for d in dirs :
@@ -1976,8 +2022,7 @@ def addSoft(srcdir, dstdir, overwrite=False):
             dst = os.path.join(dstdir, dst)
             if not os.path.exists(dst) :
                 pdst = os.path.dirname(dst)
-                if not os.path.exists(pdst) :
-                    os.makedirs(pdst)
+                safeMakeDirs(pdst)
                 safeMove(src, dst)
                 dirstoremove.append(d)
         for f in files :
@@ -1986,15 +2031,13 @@ def addSoft(srcdir, dstdir, overwrite=False):
             dst = os.path.join(dstdir, dst)
             if not os.path.exists(dst) :
                 pdst = os.path.dirname(dst)
-                if not os.path.exists(pdst) :
-                    os.makedirs(pdst)
+                safeMakeDirs(pdst)
                 safeMove(src, dst)
             elif overwrite :
                 if os.path.exists(dst) :
                     os.remove(dst)
                 pdst = os.path.dirname(dst)
-                if not os.path.exists(pdst) :
-                    os.makedirs(pdst)
+                safeMakeDirs(pdst)
                 safeMove(src, dst)
         for d in dirstoremove :
             dirs.remove(d)

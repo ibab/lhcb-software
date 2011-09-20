@@ -1,3 +1,10 @@
+2011-09-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py:
+	- fixed the safeMove function that treats correctly links (at the first level) that are moved
+	across filesystems.
+	- added safeMakeDirs that removes correctly broken links on the target directory.
+
 2011-09-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLHCbtar: added calculation of the MD5 sum for the distribution.htm file.
