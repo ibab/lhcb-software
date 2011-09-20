@@ -134,16 +134,16 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
   int nITCont = 0;
 
 
-  if (exist<LHCb::VeloClusters>("Raw/Velo/Clusters")){
-    LHCb::VeloClusters* veloCont = get<LHCb::VeloClusters>("Raw/Velo/Clusters");
+  if (exist<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default)){
+    LHCb::VeloClusters* veloCont = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
     nVeloCont = veloCont->size();
   }
-  if (exist<LHCb::STClusters>("Raw/TT/Clusters")){
-    LHCb::STClusters *ttCont = get<LHCb::STClusters>("Raw/TT/Clusters");
+  if (exist<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters)){
+    LHCb::STClusters *ttCont = get<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters);
     nTTCont = ttCont->size();
   }
-  if (exist<LHCb::STClusters>("Raw/IT/Cluseters")){
-    LHCb::STClusters *itCont = get<LHCb::STClusters>("Raw/IT/Clusters");
+  if (exist<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters)){
+    LHCb::STClusters *itCont = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
     nITCont = itCont->size();
   }
 
