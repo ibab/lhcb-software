@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v15r1 2011-09-20 =========================
 ! 2011-09-16 - Marco Cattaneo
  - Add "NextNext" to default DstConf().SpilloverPaths
 
