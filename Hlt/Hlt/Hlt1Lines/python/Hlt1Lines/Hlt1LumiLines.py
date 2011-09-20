@@ -213,8 +213,8 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                                    , VertexCounterName='Vertex'
                                                                    , AbsZCut = '300'
                                                                    , RCut =      '4'
-                                                                   , TrackInputSelection='TES:%s' % self.containerNameLumiTracks
-                                                                   , VertexInputSelection='TES:%s' % self.containerNameLumiVertex
+                                                                   , TrackInputSelection=self.containerNameLumiTracks
+                                                                   , VertexInputSelection=self.containerNameLumiVertex
                                                                    , OutputContainer='Hlt/LumiSummary' ) )
 
         
