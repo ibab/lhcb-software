@@ -10,7 +10,8 @@ This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
 Production version for MC11
 
 - Changes to references to reflect changes in Brunel v41r1 output:
-  . add NextNext to default DstConf().SpilloverPaths
+  . Add NextNext to default DstConf().SpilloverPaths (GaudiConf)
+  . In TrackNNGhostID, fix typo in ITClusterLocation (TrackTools)
 
 </PRE><H1><A NAME=v41r0>2011-09-16 Brunel v41r0</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
