@@ -5,7 +5,7 @@
 !----------------------------------------------------------------------------- 
 
 
-!========================= GaussRICH v12r5 2011-09-20 ========================
+!========================= GaussRICH v11r5 2011-09-20 ========================
 !2011-9014 - Sajan Easo
  - Fixed a typo in RichAnalysis.opts
 
@@ -31,7 +31,7 @@
 - Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
   MCRichHit class.
 
-!========================= GaussRICH v12r4 2011-07-12 ========================
+!========================= GaussRICH v11r4 2011-07-12 ========================
 !2011-6-15 - Sajan Easo
 - Made the changes needed to simulate Aerogel sub tiles. This involves changes in 
   several files.  
