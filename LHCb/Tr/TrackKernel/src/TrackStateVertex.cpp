@@ -500,7 +500,7 @@ namespace LHCb
   }
   
   TrackStateVertex::FitStatus TrackStateVertex::constrainMass(const std::vector<double>& masshypos,
-							      double constrainedmass)
+                                                              double constrainedmass, double naturalwidth)
   {
     // note: this is not optimized for speed. we can improve a lot by
     // not testing the cache all the time ...
@@ -555,6 +555,8 @@ namespace LHCb
     dM2dP4(0,3) =   2*p4sum.E() ;  // <--- it might be better to use M^2 + P^2 here !
     dM2dP4(0,3) =   2*std::sqrt( p4sum.P2() + constrainedmass2) ;
     Gaudi::SymMatrix1x1 R = ROOT::Math::Similarity( dM2dP4, p4cov ) ;
+    // now add the natural width
+    R(0,0) += 4* constrainedmass2 * naturalwidth * naturalwidth ;
     Gaudi::SymMatrix1x1 Rinv(1/R(0,0)) ;
     
     // these are the derivatives of the constraint to the track momenta
