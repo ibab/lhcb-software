@@ -12,6 +12,11 @@ Production version for MC11
 - Changes to Brunel persistency:
   . add NextNext to default DstConf().SpilloverPaths (GaudiConf v15r1)
 
+- Bug fixes:
+  . In TrackNNGhostID, fix typo in ITClusterLocation, effect of which is that
+    IT hit multiplicity was never added to the hit multiplicity used to get the
+    ghost probability (TrackTools v4r9)
+
 </PRE><H1><A NAME=v41r0>2011-09-15 Brunel v41r0</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
  Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
