@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v7r1 2011-09-20 =========================
 ! 2011-09-18 - Gloria Corti
  - Add new physics lists for elastic physics.
  - Fix specialization for hadronic physics to reflect the changes in 9.4
