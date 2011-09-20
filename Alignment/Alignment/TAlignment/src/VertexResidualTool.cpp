@@ -20,6 +20,7 @@ namespace
   {
     std::vector<double> daughtermasses ;
     double mothermass ;
+    double motherwidth ;
   } ;
 }
 
@@ -175,6 +176,7 @@ namespace Al
       mconstraint = new MassConstraint() ;
       mconstraint->daughtermasses =  m_daughterMass ;
       mconstraint->mothermass = m_parentMass ;
+      mconstraint->motherwidth = 0. ;
     }
     rc = compute( trackresiduals, vertex.position(), mconstraint ) ;
     if(rc) m_residuals.push_back(rc) ;
@@ -190,7 +192,8 @@ namespace Al
     TrackResidualContainer trackresiduals ;
     MassConstraint mconstraint ;
     mconstraint.mothermass = m_propertysvc->find( p.particleID() )->mass() ;
-    //info() << "Mothermass: " << mconstraint.mothermass << endreq ;
+    mconstraint.motherwidth = m_propertysvc->find( p.particleID() )->width() ;
+    //    info() << "Mothermass: " << mconstraint.mothermass << "\t width: " << mconstraint.motherwidth << endreq ;
 
     bool success(true) ;
     BOOST_FOREACH( const LHCb::Particle* daughter, p.daughters()) {
@@ -292,7 +295,7 @@ namespace Al
 		<< vertex.mass(mconstraint->daughtermasses) 
 		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
-	fitstatus = vertex.constrainMass( mconstraint->daughtermasses, mconstraint->mothermass) ;
+	fitstatus = vertex.constrainMass( mconstraint->daughtermasses, mconstraint->mothermass, mconstraint->motherwidth) ;
 	debug() << "mass afterconstraint: "
 		<< vertex.mass(mconstraint->daughtermasses)
 		<< " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
