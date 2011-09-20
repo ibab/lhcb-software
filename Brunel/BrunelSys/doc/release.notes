@@ -7,7 +7,7 @@ Purpose: LHCb reconstruction programs
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
  Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
-Production version for MC11
+Production version for MC11 and 2011 end of year reprocessing (Reco12)
 
 - Changes to Brunel persistency:
   . add NextNext to default DstConf().SpilloverPaths (GaudiConf v15r1)
