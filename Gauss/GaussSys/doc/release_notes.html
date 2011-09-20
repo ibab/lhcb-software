@@ -4,7 +4,222 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
-</PRE><H1><A NAME="v40r1">2011-08-25 - GaussSys v40r2</A></H1><PRE>
+</PRE><H1><A NAME="v40r3">2011-09-20 - GaussSys v40r3</A></H1><PRE>
+<H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v33r0 (and Gaudi v22r4)</b>
+   AppConfig v3r*,
+   DecFiles v23r*, 
+   <b>ParamFiles v8r5</b>, 
+   SQLDDDB v6r*, FieldMap v5r*,
+   <b>pythia 6.425.2</b>, photos 215.4, <b>lhapdf 5.8.5</b> 
+   (via LCG_GeneratorsInterfaces)
+   <b>HepMC 2.06.05</b> (via LCG_Interfaces)
+   <b>Geant4 v94r2p1 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   XmlVis v1r13,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 153</b> (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+- Introduce two new packages Mint by M.Coombes and GaussCherenkov by S.Easo
+
+!========================= Gauss v40r3 2011-09-20 ============================
+! 2011-09-20 - Gloria Corti
+ - Use latest release of ParamFiles
+
+! 2011-09-16 - Gloria Corti
+ - Update Gauss-DEV.py to pick latest tag in DDDB
+ - Switch off qmtest for upgrade as it causes memory problems on server
+
+!========================= GaussCherenkov v1r1 2011-09-20 ====================
+! 2011-08-22 - Sajan Easo
+ - Comment out the obsolete G4MultipleScattering.hh which caused compilation
+   issues
+
+!========================= GaussCherenkov v1r0 2011-07-24 ====================
+! 2011-06-15 -Sajan Easo
+ - Made the adaptations needed for the new Radiator number scheme setup in 
+   GaussRICH 
+
+! 2011-05-10 - Sajan Easo
+ - Adapted GetMCCkvInfoBase.cpp and .h to use the new base class configuration.
+
+! 2011-05-10 - Sajan Easo
+ - Added more histograms for monitoring
+
+! 2011-04-18 - Sajan Easo
+ - Added a few histograms on occupancy for monitoring.
+
+! 2011-03-03 - Sajan EASO
+ - First version 
+ - Uses MAPMT as the photodetector
+
+!====================== GaussPhysics v7r1 2011-09-20 =========================
+! 2011-09-18 - Gloria Corti
+ - Add new physics lists for elastic physics.
+ - Fix specialization for hadronic physics to reflect the changes in 9.4
+ - Modify specialization of LHCb physics list to reflect changes in 
+   G4LHCbPhysics (> v2r0)
+
+!========================= GaussRICH v11r5 2011-09-20 ========================
+!2011-9014 - Sajan Easo
+ - Fixed a typo in RichAnalysis.opts
+
+!2011-9-02 - Sajan Easo
+- RICH inefficiency applied as default in the RichEfficiency.opts as part of
+  tuning to match  to the yields from real data.
+!2011-9-01 - Sajan Easo
+- RICH ReadOut hit efficiency activated. There is one number per radiator which can be
+  set from the options file. This is in addition to the SiDetEff (=0.85). So the 
+  total efficiency is ReadOutEfficenyFromRadiator*SiDetEff. Added an options file
+  named RichEfficiency.opts where these can be set. This file is activated from Rich.opts
+- RICH Binary readout simplified simulation made available on an options file switch. There is
+  one flag named RichFlagDuplicateHitsactivate which allows to flag the duplicate hits in
+  in event. There is a second flag named RichAviodDuplicateHitsActivate which allows to
+  avoid creating the duplicate hits. This is implemented in RichSensDet.cpp by looking through the
+  appropriate set of hits already created,  to see if any duplicate entries exist.
+  By default these flags are set to false in the C++ code, which means the duplicate hits are created
+. 
+  These flags are also available in RichEfficiency.opts and are switched off by default.
+- The Hit smearng capabiltity can be activated from the options file RichEfficiency.opts
+  By default the hit smearing is switched off.
+!2011-6-24 - Sajan Easo
+- Minor changes to monitoring and analysis while reconstructing aerogel sub tiles.
+- Modified GetMCRichHitsAlg.cpp to tag the aerogel sub tile ids using the latest 
+  MCRichHit class.
+
+!========================= VisSvc v5r6 2011-09-20 ============================
+! 2009-02-14 - Chris Jones
+ - supress various icc warnings
+
+!========================== GENSER v9r2 2011-09-20 ===========================
+! 2011-09-16 - Gloria Corti
+ - Latest version of LHAPDF does not have soft link for lower cases library.
+   For now use 5.8.5
+
+! 2011-09-15 - Gloria Corti
+ - Move to latest versions of 
+   Pythia6 6.424.2 -> 6.425.2
+   LHAPDF  5.7.1   -> 5.8.6
+   Pythia8 150     -> 153
+
+! 2011-09-05 - Hubert Degaudenzi
+ - added workaround for tauola++ and photos++ libraries which have missing
+   links on their respective fortran libraries.
+
+! 2011-08-14 - Gloria Corti
+ - Move to version 150 of pythia8 as the only one available for hepmc 2.06.05
+   (also available for 2.03)
+
+!========================== GenCuts v1r1 2011-09-19 ========================== 
+! 2011-09-19 - Gloria Corti
+ - Port cut from Adam Webber that was in branch of Gen/Generators package and
+   adapt it to packaging as for v40r3.
+   . DMuCascadeInAcc filter tool to src/components. This is filters events 
+   with Xb->XcXc, where one of the charm daughters goes to a muon, and another 
+   goes to 3 charged K/pi. Used to make an inclusive background sample for 
+   semileptonic B decay analysis.
+
+!========================= EvtGen v12r4 2011-09-19 ==========================
+! 2011-09-17 - John Back
+ - EvtGenKine.cpp: Protect against negative square roots in the calculation
+   of the z momentum component for 2-body phase space kinematics. 
+   This was generating NaN values, affecting boosts/spin density matrices.
+
+!========================== EvtGen v12r3 2011-09-15 ==========================
+! 2011-09-15 - John Back
+ - EvtDDalitz.cpp: Added missing modes D,Ds->3pi; D,Ds->Kpipi WS and updated 
+   D+->Kpipi and D+->KKpi (from C. Gobel and H. Gordon).
+
+!========================== EvtGen v12r2 2011-08-18 ==========================
+! 2011-08-11 - John Back
+ - Added Bc -> V + npi and Bc -> P + npi decay models 
+  (from Alexey Luchinsky et al.)
+
+!======================= EvtGenExtras v3r0 2011-09-19 ========================
+! 2011-09-19 - Gloria Corti
+ - Increase major version because of new dependency introduced.
+
+! 2011-08-23 - Matthew Coombes
+ - Added new class for description of 4-body D decays, EvtDTohhhh.hh
+ - Updated requirements to use MINT generator for these 4-body decays
+
+!=========================== Mint v1r0 2011-09-10 ============================
+
+! 25-08-2011 - Matt Coombes
+ - General debugging after running in nightly builds
+ - Fixed requirements to produce libraries correctly
+ - Fixed ../src/Mint/Pareto/src/GeneralisedPareto.cpp(119): warning #68: 
+   integer conversion resulted in a change of sign unsigned int n=-9999;
+ - Fixed FitFraction.h(28): warning #858: type qualifier on return type is meaningless
+   const double sigmaInteg() const{return _sigmaInteg;}.
+ 
+ 
+! 19-08-2011 - Jonas Rademacker
+ - Modified SpinFactors4 so the spin factors actually print themselves 
+   correctly upon construction 
+ - there were problems with inherited spin factors previously, 
+   who thought they were their own parents. 
+ - I also added KKpipiAmpFit/ampFit.cpp again
+
+! 19-08-2011 - Matt Coombes
+ - Moved header files back into exported directory Mint/
+   with flat directory structure so that include statements are simple
+ - Corrected all include statements accordingly
+ - Added missing AmpFit.cpp to Users area
+ - Removed directory structure under Mint/
+ 
+ 
+! 18-08-2011 - Matt Coombes
+ - Moved header files back into exported directory Mint/
+   this now has directory structure which has changed imports a bit
+ - Renamed some files incorrectly named Namecpp - added dot back
+ - Updated Makefiles to take into account the changes.
+ 
+! 17-08-2011 - Jonas Rademacker
+ - Added DalitzFits/4pi_gamma 
+   as method for fitting for gamma using 4pi model
+
+! 17-08-2011 - Matt Coombes
+ - Created Interface IMintGen.h
+ - Moved header files to private
+ - Export only IMintGen.h
+ - Corrected Include statements to return to 'old' structure
+ 
+! 16-08-2011 - Matt Coombes
+ - Major changes to structure in order to release into Gauss
+ - Introduced test/ folder for test jobs.
+ - Test .C files renamed as .cpp
+ - Test files now call header files from Mint/
+ 
+! 15-08-2011 - Matt Coombes
+ - Major changes to structure in order to release into Gauss
+ - Introduced Mint/ folder with exported header files
+ - All Mint header files must now be imported with #import "Mint/header.h"
+ - Renamed all source .C files with .cpp. Needed in order to release
+ 
+! 10-08-2011 - Matt Coombes
+ - Edited ParticlePropertiesList.C to find .cvs files using $MINTROOT
+ - Added MoelNotes.txt to describe the models included within MINT
+ - Included models folder containing 3 current models to be used in production
+ - Implemented model naming format clearly visible and consistent with EvtModel
+
+  
+! 18-07-2011 - Matt Coombes
+ - Cleaned up Dalitz Event removed DecayD.C and .h
+  Instead use exterior interface to interact directly with Gauss
+
+! 06-07-2011 - Matt Coombes
+ - Replaced Mojito Makefile with a new Makefile from Jonas
+ - Updated MINT version to most recent local improvements by Jonas.
+
+! 03-04-2011 - Matt Coombes
+ - First Added MINT to LHCb framework
+
+!=============================================================================
+</PRE><H1><A NAME="v40r2p3">2011-09-02 - GaussSys v40r2p3</A></H1><PRE>
 <H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
    </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -22,6 +237,50 @@ Purpose: LHCb Simulation program
    <b>hijing 1.36.a.2</b> (via LCG_GeneratorsInterfaces),
    pythia8 145 (via LCG_GeneratorsInterfaces)
 </A></H3>
+
+!======================== Gauss v40r2p3 2011-08-25 ===========================
+! 2011-09-02 - Rob Lambert
+ - Fix in Configuration.py for bug #86302
+ - if GaussTape output is set externally it must be undressed
+   before passing to IOHelper
+
+!=============================================================================
+</PRE><H1><A NAME="v40r2p2">2011-08-26 - GaussSys v40r2p2</A></H1><PRE>
+
+! 2011-08-26 - Gloria Corti
+ - Fix problem with inconsistency of Gauss and GaussAlgs versions in v40r2p1:
+   now it is as it should be
+   . Gauss v40r2
+   . GaussAlgs v4r1
+   see in GAUSS v40r2 for details
+
+! 2011-08-26 - Gloria Corti
+ - In fact Gauss v40r2 is identical to Gauss v40r1 for its packages but based
+   LHCb v32r5.
+
+!=============================================================================
+</PRE><H1><A NAME="v40r2">2011-08-25 - GaussSys v40r2</A></H1><PRE>
+<H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v32r5 (and Gaudi v22r2)</b>
+   AppConfig v3r*,
+   DecFiles v23r*, 
+   <b>ParamFiles v8r4</b>, 
+   <b>SQLDDDB v6r*</b>, FieldMap v5r*,
+   pythia6 424.2, photos 215.4, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   <b>Geant4 v94r2 (based on geant4.9.4.p02) and Geant4Files v94r0</b>
+   <b>XmlVis v1r13</b>,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   <b>hijing 1.36.a.2</b> (via LCG_GeneratorsInterfaces),
+   pythia8 145 (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+! 2011-08-26 - Gloria Corti
+ - Switch off Mint package from release
+ - Switch off GaussCherenkov from release
 
 ! 2011-08-24 - Gloria Corti
  - Introduce new package for decay model, Mint, provided by Matt Coombes to
