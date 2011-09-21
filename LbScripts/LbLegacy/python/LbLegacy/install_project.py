@@ -19,7 +19,6 @@ import logging
 import random
 import socket
 from urllib import urlretrieve, urlopen, urlcleanup
-from shutil import rmtree
 
 script_version = '110920'
 python_version = sys.version_info[:3]
@@ -240,7 +239,7 @@ def removeAll(path):
     Recursively remove directories and files.
     """
     try :
-        rmtree(path, ignore_errors=True)
+        shutil.rmtree(path, ignore_errors=True)
     except :
         if os.path.exists(path) :
             if os.path.isdir(path) and not os.path.islink(path):
@@ -1986,7 +1985,7 @@ def safeMove(src, dst):
             if _destinsrc(src, dst):
                 raise shutil.Error, "Cannot move a directory '%s' into itself '%s'." % (src, dst)
             shutil.copytree(src, real_dst, symlinks=True)
-            rmtree(src)
+            shutil.rmtree(src)
         elif os.path.islink(src) :
             # treats correctly symlinks across filesystems
             linkto = os.readlink(src)
