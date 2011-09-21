@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
+This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC11 simulation.
+
  - Changes to configuration:
    . Add NextNext to default spillover paths KnownSpillPaths
 
