@@ -17,6 +17,7 @@ public:
   pthread_mutex_t m_lid;
   std::string m_name;
   BRTLLock(void);
+  ~BRTLLock(void);
   int lockMutex();
   int unlockMutex();
 };

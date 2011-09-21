@@ -5,6 +5,7 @@ MonTimer::MonTimer(MonSubSys *HSys, int period) : GenTimer((void*)HSys,period*10
 {
   m_Hsys = HSys;
   m_dueTime = 0;
+  this->m_lock.m_name = m_Hsys->m_name+"_TimerLock";
 }
 
 MonTimer::~MonTimer( )
@@ -38,14 +39,16 @@ void MonTimer::timerHandler ( void )
       return;
     }
   }
+  m_lock.lockMutex();
   m_Hsys->m_genSrv->Update();
+  m_lock.unlockMutex();
 }
 
 void MonTimer::Stop()
 {
   m_Hsys->Lock();
-  dim_lock();
+  m_lock.lockMutex();
   GenTimer::Stop();
-  dim_unlock();
+  m_lock.unlockMutex();
   m_Hsys->unLock();
 }

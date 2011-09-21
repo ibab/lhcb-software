@@ -2,6 +2,7 @@
 #define ONLINE_GAUCHO_MONTIMER_H
 
 #include "Gaucho/GenTimer.h"
+#include "Gaucho/BRTL_Lock.h"
 class MonSubSys;
 
 class MonTimer : public GenTimer
@@ -12,5 +13,6 @@ public:
   virtual ~MonTimer(void);
   void timerHandler ( void );
   void Stop();
+  BRTLLock m_lock;
 };
 #endif  // ONLINE_GAUCHO_MONTIMER_H

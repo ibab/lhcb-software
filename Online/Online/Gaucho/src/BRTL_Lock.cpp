@@ -18,6 +18,11 @@ BRTLLock::BRTLLock(void)
   m_name = "Lock_Name_Not_Set";
 }
 
+BRTLLock::~BRTLLock(void)
+{
+  pthread_mutex_destroy(&m_lid);
+}
+
 int BRTLLock::lockMutex()
 {
   int status = pthread_mutex_lock(&m_lid);
