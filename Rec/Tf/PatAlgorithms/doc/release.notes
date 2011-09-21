@@ -4,6 +4,14 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2011-09-21 - Manuel Tobias Schiller
+ - fix insane TES usage in PatSeedFit reported by Markus Frank today on the
+   lhcb-reconstruction mailing list: instead of getting the container of
+   STLiteClusters for every track, we cache the pointer for the duration of
+   the event (no changes in performance, though)
+ - properly initialise a few pointers in the constructor of PatSeedFit while
+   I am at it
+
 !========================= PatAlgorithms v4r14 2011-07-27 =========================
 ! 2011-07-26 - Marco Cattaneo
  - In PatAlgConf.py, apply global global event cuts taken from

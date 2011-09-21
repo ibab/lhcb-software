@@ -4,7 +4,7 @@
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
-#include "Event/STLiteCluster.h"
+#include "GaudiKernel/IIncidentSvc.h"
 #include "Event/Track.h"
 #include "Event/OTLiteTime.h"
 #include "Event/StateParameters.h"
@@ -33,7 +33,9 @@ DECLARE_TOOL_FACTORY( PatSeedFit )
 PatSeedFit::PatSeedFit(const std::string& type,
                        const std::string& name,
                        const IInterface* parent)
-  : GaudiTool(type, name, parent)
+  : GaudiTool(type, name, parent),
+    m_patSeedTool(0), m_itDet(0), m_othitcreator(0),
+    m_momentumTool(0), m_magFieldSvc(0), m_stLiteContainer(0)
 {
   declareInterface<IPatSeedFit>(this);
   declareProperty( "StateErrorX2",              m_stateErrorX2          =   4. );
@@ -67,6 +69,8 @@ StatusCode PatSeedFit::initialize()
   m_othitcreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator/OTHitCreator") ;
   m_momentumTool = tool<ITrackMomentumEstimate>( "FastMomentumEstimate" );
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  m_stLiteContainer = 0;
+  incSvc()->addListener( this, IncidentType::EndEvent );
 
   return StatusCode::SUCCESS;
 }
@@ -77,8 +81,18 @@ StatusCode PatSeedFit::initialize()
 StatusCode PatSeedFit::finalize()
 {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
+  incSvc()->removeListener( this, IncidentType::EndEvent );
+  m_stLiteContainer = 0;
 
   return GaudiTool::finalize();  // must be called after all other actions
+}
+
+void PatSeedFit::handle(const Incident& incident)
+{
+  // invalidate the (cached) container of STLiteClusters at the
+  // end of the event
+  if (IncidentType::EndEvent == incident.type())
+    m_stLiteContainer = 0;
 }
 
 namespace PatSeedFitUtils {
@@ -344,9 +358,12 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   std::vector<double> m_zOutputs  =
     boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT);
 
-  //
-  LHCb::STLiteCluster::FastContainer*  m_stLiteContainer =
-    get<LHCb::STLiteCluster::FastContainer>(LHCb::STLiteClusterLocation::ITClusters);
+  // if we have not requested the container of STLiteClusters in this event,
+  // do so now
+  if (0 == m_stLiteContainer) {
+    m_stLiteContainer =
+      get<LHCb::STLiteCluster::FastContainer>(LHCb::STLiteClusterLocation::ITClusters);
+  }
 
   // loop over LHCbIDs, extract T-station measurements
   std::vector< PatFwdHit > hits ;

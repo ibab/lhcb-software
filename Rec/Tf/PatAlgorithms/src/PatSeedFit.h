@@ -3,8 +3,10 @@
 #define INCLUDE_PATSEEDFIT_H 1
 
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "TrackInterfaces/IPatSeedFit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
+#include "Event/STLiteCluster.h"
 
 static const InterfaceID IID_PatSeedFit("PatSeedFit", 1, 0);
 
@@ -24,7 +26,7 @@ typedef PatForwardHit PatFwdHit;
  * @author Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
  * @date   2009-01-28
  */
-class PatSeedFit : public GaudiTool, virtual public IPatSeedFit {
+class PatSeedFit : public GaudiTool, virtual public IPatSeedFit, virtual public IIncidentListener {
 
 public:
 
@@ -41,7 +43,6 @@ public:
   virtual StatusCode initialize(); ///< Tool initialization
   virtual StatusCode   finalize(); ///< Tool finalize
 
-
   virtual StatusCode fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs, 
 			      std::vector<LHCb::State> *states) const;
   /// fit a PatSeedTrack
@@ -49,12 +50,18 @@ public:
 		  unsigned minPlanes, bool xOnly, bool forceDebug ) const; 
 
 private:
+  /// patseed tool (handles the actual track fit)
   PatSeedTool* m_patSeedTool;
-
+  /// IT detector
   DeSTDetector* m_itDet ;
-  const Tf::IOTHitCreator* m_othitcreator ;
+  /// OT hit creator
+  const Tf::IOTHitCreator* m_othitcreator;
+  /// momentum estimator
   const ITrackMomentumEstimate *m_momentumTool ;
+  /// magnetic field service
   ILHCbMagnetSvc*  m_magFieldSvc;
+  /// cache for STLiteClusters (so we do not have to reget them in every event)
+  mutable LHCb::STLiteCluster::FastContainer* m_stLiteContainer;
 
   double m_stateErrorX2;
   double m_stateErrorY2;
@@ -86,6 +93,9 @@ private:
   /// make an OT cluster from ihit and a suitable one in hits (if possible)
   void makeCluster(std::vector<PatFwdHit>& hits, PatFwdHit& ihit,
       const PatFwdHit*& in, double& x, double& z, bool& isCluster) const;
+
+  /// handle incidents (specifically clear m_stLiteContainer at EndEvent)
+  virtual void handle(const Incident& incident);
 };
 #endif // INCLUDE_PATSEEDFIT_H
 
