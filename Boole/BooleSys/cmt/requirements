@@ -1,5 +1,5 @@
 package BooleSys
-version v22r3
+version v23r0
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v22r3   Digi     # Marco Cattaneo
+use Boole               v23r0   Digi     # Marco Cattaneo
 use BooleUMC            v1r3    Digi     # Tomasz Skwarnicki
 use DigiAlg             v4r20   Digi     # Marco Cattaneo
 
@@ -25,7 +25,7 @@ use MuonBackground      v2r10p1 Muon     # Alessia Satta
 use MuonMoniDigi        v2r4p1  Muon     # Alessio Sarti
 
 # Outer Tracker
-use OTSimulation        v5r0p1  OT       # Alexandr Kozlinskiy
+use OTSimulation        v5r1    OT       # Alexandr Kozlinskiy
 
 # Rich
 use RichDigiQC          v3r12   Rich     # Chris Jones

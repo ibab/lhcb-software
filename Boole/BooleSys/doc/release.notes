@@ -3,6 +3,42 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
+This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC11 simulation.
+
+ - Changes to persistency:
+  . Output files are now in ROOT format by default, can be read by Brunel v40r0
+    or later. POOL output can be switched on by options.
+    (GaudiConf v15r0, RootCnv v1r8, Gaudi v22r4, ROOT 5.30)
+  . Write ROOT technology when creating output file entry in XmlCatalog
+    (RootCnv v1r8)
+  . Uses HepMC v2.06 for HepMCEvent, can be read by Brunel v41r0 or later
+    (GenEvent v6r1, LCG 61)
+
+ - Changes to configuration:
+   . NextNext spillover slot is now processed by default if present on the input
+     file and Spillover is enabled
+   . Changed MCOTDepositCreator to use NextNext spill instead of reusing PrevPrev
+     (OTSimulation v5r1)
+
+ - Monitoring changes
+   . Reduced verbosity from Gaudi persistency service initialisation
+   . Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
+     getting NextNext from PrevPrev (OTMonitor v3r3)
+
+ - Changes to example options:
+   . Replace 2010-Files.py by MC10-Files.py, produced with official MC10 settings
+   . Rename Boole-2010.py to Boole-MC10.py
+
+ - Changes to tests
+   . Replace boole-2010 and boole-2010root with boole-mc10 and boole-mc10pool
+   . Updated boole-2010-latestdb.qmt test to use MC10-Files.py and removed its
+     reference file since it should give identical output to boole-mc10
+
+
 </PRE><H1><A NAME=v22r3>2011-07-29 Boole v22r3</A></H1><PRE>
 This version uses projects LCGCMT 60b, Gaudi v22r2, LHCb v32r5, Lbcom v10r5
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
