@@ -42,61 +42,6 @@ systemHealth['Error']['FileSystem'] = {'Header':('volume/path','total space','fr
 systemHealthPathes = ['/afs/cern.ch/lhcb/software/nightlies', '/afs/cern.ch/lhcb/software/nightlies/www']
 
 # --------------------------------------------------------------------------------
-def getLocalMount(localPath):
-  localPath = os.path.abspath(localPath)
-  while localPath != os.path.sep:
-    if os.path.ismount(localPath):
-      return localPath
-    localPath = os.path.abspath(os.path.join(localPath, os.pardir))
-  return localPath
-
-def getPathSpaceInfo(directoryPath):
-    """Wrapper to get the available space for a directory/its volume in AFS or in the local file system"""
-    pathInfos = {'Name' : directoryPath, 'SizeTotal' : -1, 'SizeFree' : -1, 'SizeUsed' : -1}
-    if os.path.exists(directoryPath):
-        try:
-            afsDirectory = Directory(directoryPath)
-            afsVolume = Volume(dirname=afsDirectory.getParentMountPoint())
-            afsMountPointList = []
-            for afsMountPoints in afsVolume.mountPoints():
-                afsMountPointList.append(afsMountPoints.name())
-            pathInfos['Name'] = afsVolume.name()
-            pathInfos['SizeTotal'] = int(afsVolume.quota())
-            pathInfos['SizeFree'] = int(afsVolume.usedSpace())
-            pathInfos['SizeUsed']  = pathInfos['SizeTotal'] - pathInfos['SizeFree']
-        except NotInAFS :
-            try:
-                localMountPoint = getLocalMount(directoryPath)
-                localMountInfo = os.statvfs(localMountPoint)
-                pathInfos['Name'] = localMountPoint
-                # calculate the total and free space on the volume in kb
-                pathInfos['SizeTotal'] = localMountInfo.f_bsize * localMountInfo.f_blocks / 1024
-                pathInfos['SizeFree']  = localMountInfo.f_bsize * localMountInfo.f_bavail / 1024
-                pathInfos['SizeUsed']  = pathInfos['SizeTotal'] - pathInfos['SizeFree']
-            except OSError:
-                print 'Path %s not accessible' % directoryPath
-    #else:
-    #    print 'Path %s not in AFS or in the local file system' % directoryPath
-    #    systemHealth['Error']['FileSystem']['Data'].append((directoryPath,-1,-1))
-    return pathInfos
-
-def checkPathHealth(pathlist):
-    """Check a given path for the space left. If less than a threshold is free or if the path cannot be resolved, add a warning/error to the systemHealth"""
-    # #Warn if free space is less than 10000kb
-    freeSpaceWarningThreshold = 10000
-    # # list of file system problems
-    for path in pathlist:
-        pathHealth = getPathSpaceInfo(path)
-        pathHealth['SizeTotal'] - pathHealth['SizeFree']
-        if pathHealth['SizeFree'] < freeSpaceWarningThreshold and pathHealth['SizeFree'] > -1:
-            #print 'Warning: In %s only %i kb space left' % (pathHealth['Name'],pathHealth['SizeFree'])
-            systemHealth['Warning']['FileSystem']['Data'].append((pathHealth['Name'],pathHealth['SizeTotal'],pathHealth['SizeFree']))
-        elif pathHealth['SizeFree']  < 0:
-            #print 'Error: Check if %s exists' % (pathHealth['Name'])
-            systemHealth['Error']['FileSystem']['Data'].append((pathHealth['Name'],pathHealth['SizeTotal'],pathHealth['SizeFree']))
-
-                
-    
 
 def getBuildSummary(slotObj, day, pkgName, plat):
     nWarn   = None
@@ -379,8 +324,8 @@ genrss();
     if generalConf.has_key('wwwtitle'): htmlFile.write(generalConf['wwwtitle'])
     else: htmlFile.write( 'Summaries of nightly builds for LCG AA projects')
     htmlFile.write( '</font><font face="Arial" color="#666666" size="3"><br>Last update: '+time.asctime()+'</font><br /></td>'+" \n")
-    xmlData.appendNode("meta",[],{"meta":"True"})
-    xmlData.appendNode("time",["meta"],{"meta":"True","creation":strStrip(time.asctime())},strStrip(time.asctime()))
+    xmlMetaNode = xmlData.appendSpecificNode("meta",xmlData.getDoc().documentElement)
+    xmlMetaTimeNode = xmlData.appendSpecificNode("time",xmlMetaNode,{"creation":strStrip(time.asctime())})
     if generalConf.has_key('wwwurl') and 'lcgapp.cern.ch' in generalConf['wwwurl']:
         htmlFile.write( '</tr><tr><td>&nbsp;</td><td align="center"><font face="Arial">A new version of this page is available <a href="http://lcgapp.cern.ch/spi/cgi-bin/nightly.py"><b>there</b></a></font></td>'+" \n")
     htmlFile.write( '  </tr>'+" \n")
@@ -596,11 +541,12 @@ genrss();
         htmlFile.write( '<div id="' + day + '_header' + '" style="margin-left: 10px;">')
 
         htmlFile.write("<h1>"+day)
+        xmlDayNode = None
         if day == time.strftime("%A"):
             htmlFile.write(" (Today)")
-            xmlData.appendNode(strStrip(day),[],{"day":strStrip(day),"dayabbr":strStrip(day[:3]),"today":"True"})
+            xmlDayNode = xmlData.appendSpecificNode("day",xmlData.getRootNode(),{"name":strStrip(day),"today":"True"})
         else:
-            xmlData.appendNode(strStrip(day),[],{"day":strStrip(day),"dayabbr":strStrip(day[:3]),"today":"False"})
+            xmlDayNode = xmlData.appendSpecificNode("day",xmlData.getRootNode(),{"name":strStrip(day),"today":"False"})
         htmlFile.write(":<hr/></h1>")
 
         #aSlots = configuration.getArchivedSlotNames(day[:3])
@@ -633,7 +579,7 @@ genrss();
 
             stampDay = day[:3]
           
-            xmlData.appendNode(strStrip(slot),[strStrip(day)],{"slot":strStrip(slotObj.getName()),"dayabbr":strStrip(day[:3])})
+            xmlSlotNode = xmlData.appendSpecificNode("slot",xmlDayNode,{"name":strStrip(slotObj.getName())})
           
             for platObj in slotObj.getPlatforms():
                 plat = platObj.getName()
@@ -644,7 +590,6 @@ genrss();
                 else:
                     stampFileName = os.path.join(slotObj.releaseDir(), 'isDone-'+plat)
                     stampFileNameStarted = os.path.join(slotObj.releaseDir(), 'isStarted-'+plat)
-                    
                 if os.path.exists(stampFileName):
                     stampFile = open(stampFileName, 'r')
                     lines = stampFile.readlines()
@@ -687,32 +632,25 @@ genrss();
                     else:
                         htmlFile.write( '<br/><font style="background-color: yellow">(%s)</font>' % timeStamp)
                         
-                    xmlData.appendNode(strStrip(plat),[strStrip(day),strStrip(slotObj.getName())],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"projCompleted":strStrip(timeStamp),"dayabbr":strStrip(day[:3]),"platReady":"True"})
-
                     htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s" target="_blank">%s</a> ' % (slotObj.getName(), plat, rssHtml))
                     if waitForIs:
-                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"platDepends":"True"})          
                         if os.path.exists(waitForPlat):
                             htmlFile.write( '<br/>waiting for <font style="background-color: #80FF00">%s</font>' % " LCG: OK" )
-                            xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"LCGReady":"True"})
+                            xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"True"})
                         else:
                             htmlFile.write( '<br/>waiting for <font style="background-color: #FF8040">%s</font>' % " LCG")
-                            xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"LCGReady":"False"})
-                        #htmlFile.write( '<br/><font style="background-color: red">%s</font>' % waitForPlat)
+                            xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"False"})
                     htmlFile.write( '</td> \n')
                 else:
                     platformsNotReady.append((day, slot, plat,waitForIs))
-                    xmlData.appendNode(strStrip(plat),[strStrip(day),strStrip(slotObj.getName())],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"dayabbr":strStrip(day[:3])})
                     if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) != 'FALSE' and os.path.exists(stampFileNameStarted):
                         htmlFile.write( '<td nowrap> <b> '+plat+' </b>')
                         htmlFile.write( '<br/><center><em>not ready</em></center>')
                         htmlFile.write( '</td> \n')
-                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"platReady":"False"})    
             htmlFile.write( '    </tr>\n')
 
             for proj in slotObj.getProjects(hideDisabled=False):
-
-
+                xmlProjectNode = xmlData.appendSpecificNode("project",xmlSlotNode,{"name":strStrip(proj.getName())})
                 if proj.getDisabledFlag() is True:
                     projDisabled = True
                 else:
@@ -737,27 +675,22 @@ genrss();
                     htmlFile.write( '      <td bgcolor="#D3D3D3">'+projectTag+'</td>\n')
                 else:
                     htmlFile.write( '      <td bgcolor="'+wheat+'">'+projectTag+'</td>\n')
- 
+                    
                 for platObj in slotObj.getPlatforms():
-                                    
-                    # if slotObj.getName() == 'lhcb-test0' and day == 'Monday' and platObj.getName()!="i686-slc5-gcc43-opt":
-                    #     print " ------------ "
-                    #     print "day "+day
-                    #     print "slot "+slotObj.getName()
-                    #     print "proj "+ proj.getName()
-                    #     print " -- 1"
-                    #     print "disabled "+str(proj.getDisabledFlag())
-                    #     print "plat "+platObj.getName()
-                    #     print os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
-                    #     print " -- 2"
-                    #     print slotObj.getName()+'.'+stampDay+'_'+projectTag+'-'+plat+'-log.html'
-                    #     print "summary "+ str(getBuildSummary(slotObj, stampDay, projectTag, plat))
-                    #     print "disabled "+str(projDisabled)
-                    #     print " -- 3"
-                    #     print "noFile "+str(noFile)
+                    xmlPlatformNode = xmlData.appendSpecificNode("platform",xmlProjectNode,{"name":strStrip(plat)})
+                    if timeStamp:
+                        xmlData.modifySpecificNode(xmlPlatformNode,{"platCompleted":strStrip(timeStamp),"platReady":"True"})
+                        if waitForIs:
+                            xmlData.modifySpecificNode(xmlSlotNode,{"platDepends":"True"})          
+                            if os.path.exists(waitForPlat):
+                                xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"True"})
+                            else:
+                                xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"False"})
+                    else:
+                        if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) != 'FALSE' and os.path.exists(stampFileNameStarted):
+                            xmlData.modifySpecificNode(xmlPlatformNode,{"platReady":"False"})          
 
                     plat = platObj.getName()
-                    xmlData.appendNode(strStrip(proj.getName()),[strStrip(day),strStrip(slotObj.getName()),strStrip(plat)],{"slot":strStrip(slotObj.getName()),"platform":strStrip(plat),"projCompleted":strStrip(timeStamp),"dayabbr":strStrip(day[:3]),"project":strStrip(proj.getName()),"disabled":"False"})
 
                     if (day, slot, plat,True) in platformsNotReady or (day, slot, plat,False) in platformsNotReady:
                         stampFileNameStarted = os.path.join(slotObj.releaseDir(), '..', day[:3] , 'isStarted-'+plat)
@@ -773,8 +706,7 @@ genrss();
                     if (nWarn, nErr, nMkErr, nCMTErr) == (None, None, None, None): noFile = True
                     if projDisabled:
                         noFile = True
-                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat),strStrip(proj.getName())],{"disabled":"True"})
- 
+                        #xmlData.modifySpecificNode(xmlProjectNode,{"disabled":"True"})
                     if not noFile:
                         flag = "OK"
                         if int(nWarn) > 0: flag = "warn"
@@ -792,11 +724,10 @@ genrss();
                         elif int(nWarn)>0 :
                             nInPar = int(nWarn)
                         htmlFile.write( '<a href="' + str(logURL) + '/' + logFileName + '">build')
-
                         if nInPar : htmlFile.write( ' ('+str(nInPar)+')')
                         htmlFile.write( '</a>&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s&proj=%s&type=build" target="_blank">%s</a> ' % (slotObj.getName(), plat, proj.getName().upper(), rssHtml))
                         #htmlFile.write( '</a> ')
-                        xmlData.modifyNode([strStrip(day),strStrip(slotObj.getName()),strStrip(plat),strStrip(proj.getName())],{"nWarn":strStrip(nWarn),"nErr":strStrip(nErr),"nMkErr":strStrip(nMkErr),"nCMTErr":strStrip(nCMTErr),"logFile":strStrip(str(logURL) + '/' + logFileName)})
+                        xmlData.modifySpecificNode(xmlPlatformNode,{"nWarn":strStrip(nWarn),"nErr":strStrip(nErr),"nMkErr":strStrip(nMkErr),"nCMTErr":strStrip(nCMTErr),"logFile":strStrip(str(logURL) + '/' + logFileName)})
                     else:
                         flag = "err"
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) == 'FALSE':
@@ -889,10 +820,11 @@ genrss();
                         if os.path.exists(os.path.join(slotObj.wwwDir(plat), htmlTestLogName)):
                             #testboxHtml += ' <a href="' + logURL + '/' + htmlTestLogName + '">tests'+errStr+'</a> '
                             testboxHtml += ' <a href="' + logURL + '/' + htmlTestLogName + '">tests'+errStr+'</a>&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s&proj=%s&type=test" target="_blank">%s</a> ' % (slotObj.getName(), plat, proj.getName().upper(), rssHtml)
-
+                            xmlData.modifySpecificNode(xmlPlatformNode,{"testLogfile":strStrip(logURL + '/' + htmlTestLogName),"testErrors":strStrip(Status[2])})
                         else:
                             #testboxHtml += ' <a href="' + logURL + '/' + logName + '">tests'+errStr+'</a> '
                             testboxHtml += ' <a href="' + logURL + '/' + logName + '">tests'+errStr+'</a>&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s&proj=%s&type=test" target="_blank">%s</a> ' % (slotObj.getName(), plat, proj.getName().upper(), rssHtml)
+                            xmlData.modifySpecificNode(xmlPlatformNode,{"testLogfile":strStrip( logURL + '/' + logName),"testErrors":strStrip(Status[2])})
                         testboxHtml += ' </td> \n'
                         htmlFile.write(colour[flag])
                         htmlFile.write(testboxHtml)
@@ -1009,7 +941,7 @@ genrss();
     htmlFile.write( '</table>'+" \n")
 
     htmlFile.write( '<h5>Time for processing the input: %s seconds</h5>' % (time.clock() - startTime))
-    xmlData.modifyNode(["meta","time"],{"processingSecs":strStrip(time.clock() - startTime)})
+    xmlData.modifySpecificNode(xmlMetaTimeNode,{"processingSecs":strStrip(time.clock() - startTime)})
 
     trailer = """
         <address><a href="mailto:Stefan.Roiser@cern.ch">Stefan ROISER</a></address> <address><a href="mailto:thomas.hartmann@cern.ch">Thomas Hartmann</a></address> <address><a href="mailto:piotr.kolet@cern.ch">Piotr Kolet</a></address>
