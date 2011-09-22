@@ -21,7 +21,7 @@ public:
   std::string m_trendfile;
   ISimpleTrendWriter* m_trender;
   IService *m_isvc ;
-  std::string m_PartName;
+  std::string m_PName;
   TrndTimer *m_timer;
 
 };

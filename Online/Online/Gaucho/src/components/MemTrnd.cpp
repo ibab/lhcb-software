@@ -21,7 +21,7 @@ StatusCode MemTrnd::initialize()
   {
     m_trender->initialize();
     m_trender->setAverageTime(20);
-    m_trender->setPartitionAndName(m_PartName,syst);
+    m_trender->setPartitionAndName(m_PName,syst);
     m_trender->setMaxTimeNoWrite(600);
   }
   m_timer = new TrndTimer(m_trender,this,m_interv);
@@ -50,7 +50,7 @@ StatusCode MemTrnd::finalize()
 MemTrnd::MemTrnd(const std::string& name, ISvcLocator* sl) : Service(name,sl)
 {
   declareProperty("TrendInterval",m_interv=60);
-  declareProperty("PartitionName",m_PartName);
+  declareProperty("PartitionName",m_PName);
   sl->getService( "ToolSvc" , m_isvc ) ;//  printf("%x\n",isvc);
 }
 
