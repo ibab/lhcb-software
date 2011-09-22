@@ -28,9 +28,10 @@ public:
 class TrndTimer : public GenTimer
 {
 public:
-  TrndTimer(ISimpleTrendWriter *trender,int period);
+  TrndTimer(ISimpleTrendWriter *trender,MemTrnd *mtrend,int period);
   void timerHandler ( void );
   void Stop();
   ISimpleTrendWriter* m_trender;
+  MemTrnd *m_MemTrnd;
 };
 #endif // ONLINE_GAUCHO_MEMTRND_H

@@ -24,7 +24,7 @@ StatusCode MemTrnd::initialize()
     m_trender->setPartitionAndName(m_PartName,syst);
     m_trender->setMaxTimeNoWrite(600);
   }
-  m_timer = new TrndTimer(m_trender,m_interv);
+  m_timer = new TrndTimer(m_trender,this,m_interv);
   m_timer->Start();
   return StatusCode::SUCCESS;
 }
@@ -72,9 +72,10 @@ StatusCode MemTrnd::queryInterface(const InterfaceID& riid, void** ppvIF)
   return StatusCode::SUCCESS;
 }
 
-TrndTimer::TrndTimer(ISimpleTrendWriter *trender,int period) : GenTimer(0,period*1000)
+TrndTimer::TrndTimer(ISimpleTrendWriter *trender,MemTrnd *mtrend,int period) : GenTimer(0,period*1000)
 {
   m_trender = trender;
+  m_MemTrnd = mtrend;
 }
 void TrndTimer::timerHandler()
 {
