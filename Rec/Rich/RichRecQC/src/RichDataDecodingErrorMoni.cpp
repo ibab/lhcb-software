@@ -24,7 +24,8 @@ DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni )
                                                 ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name, pSvcLocator ),
       m_decoder    ( NULL ),
-      m_RichSys    ( NULL )
+      m_RichSys    ( NULL ),
+      m_odin       ( NULL )
 { }
 
 // Destructor
@@ -80,6 +81,9 @@ StatusCode DataDecodingErrorMoni::prebookHistograms()
 StatusCode DataDecodingErrorMoni::execute()
 {
   StatusCode sc = StatusCode::SUCCESS;
+
+  // Load the ODIN for this event
+  m_odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
   // Obtain RichSmartIDs from raw decoding
   const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
@@ -138,9 +142,6 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
     copyN = m_RichSys->copyNumber(hID);
   }
 
-  // Get the ODIN
-  const LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
-
   // loop over ingresses for this L1 board
   for ( Rich::DAQ::IngressMap::const_iterator iIn = inMap.begin();
         iIn != inMap.end(); ++iIn )
@@ -152,7 +153,7 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
     fillPlots( copyN, 1, ingressHeader.hpdsSuppressed() ? 100.0 : 0.0, h1D, h2D );
 
     // Check BX ID between Rich and ODIN
-    fillPlots( copyN, 2, BXID(odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0, h1D, h2D );
+    fillPlots( copyN, 2, BXID(m_odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0, h1D, h2D );
 
     // Loop over HPDs in this ingress
     for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();

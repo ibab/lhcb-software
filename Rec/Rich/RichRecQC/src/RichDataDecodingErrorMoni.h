@@ -93,6 +93,9 @@ namespace Rich
       /// Pointer to RICH system detector element
       const DeRichSystem * m_RichSys;
 
+      /// Pointer to the ODIN data object
+      const LHCb::ODIN * m_odin;
+
     };
 
   }

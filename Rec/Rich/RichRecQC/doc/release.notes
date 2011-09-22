@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-09-22 - Chris Jones
+ - Avoid multiple ODIN TES requests per event in DataDecodingErrorMoni
+
 !========================= RichRecQC v2r54 2011-08-31 =========================
 ! 2011-08-15 - Chris Jones
  - Add a 2D plot to the decoding errors monitor to show the number of each 
