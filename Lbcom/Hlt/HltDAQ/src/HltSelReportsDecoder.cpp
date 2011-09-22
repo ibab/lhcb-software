@@ -303,8 +303,8 @@ StatusCode HltSelReportsDecoder::execute() {
             infoPersistent.insert( "5#Track.firstState.qOverP", floatFromInt(stdInfo[5]) );  
             
             if (stdInfo.size()>=8) {
-                  infoPersistent.insert( "6#Track.chi2PerDoF", float( stdInfo[6] ) );
-                  infoPersistent.insert( "7#Track.nDoF", float( stdInfo[7] ) );
+                  infoPersistent.insert( "6#Track.chi2PerDoF", floatFromInt( stdInfo[6] ) );
+                  infoPersistent.insert( "7#Track.nDoF", floatFromInt( stdInfo[7] ) );
             }
         
          } else {
