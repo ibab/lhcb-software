@@ -83,8 +83,8 @@ void TrndTimer::timerHandler()
   long rss;
   rss = System::mappedMemory(System::kByte,System::Memory,lib_rtl_pid());
   long vm = System::virtualMemory(System::kByte,System::Memory,lib_rtl_pid());
-  m_trender->addEntry("VirtMem",double(vm));
-  m_trender->addEntry("ResidentSize",double(rss));
+  m_trender->addEntry(std::string("VirtMem"),double(vm));
+  m_trender->addEntry(std::string("ResidentSize"),double(rss));
   m_trender->saveEvent();
 }
 void TrndTimer::Stop()
