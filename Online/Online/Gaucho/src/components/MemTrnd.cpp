@@ -8,6 +8,7 @@ DECLARE_SERVICE_FACTORY(MemTrnd)
 
 StatusCode MemTrnd::initialize()
 {
+  Service::initialize();
   std::string syst;
   if (m_trender == 0)
   {
