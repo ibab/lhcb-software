@@ -199,7 +199,7 @@ int FarmDisplayBase::showSubfarm()    {
     }
     else if ( strncasecmp(dnam.c_str(),"mona09",6)==0 && m_name != "ALL" ) {
       string relay = "-namerelay="+dnam+"01";
-      const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=14", "-nodeheight=22", relay.c_str()};
+      const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300", "-relayheight=12", "-nodeheight=12", relay.c_str()};
       m_subfarmDisplay = createMonitoringDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,7,(char**)argv);
     }
     else if ( m_mode == RECO_MODE ) {

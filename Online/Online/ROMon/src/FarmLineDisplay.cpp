@@ -552,6 +552,9 @@ void FarmLineDisplay::connect(const vector<string>& vfarms) {
   DisplayUpdate update(this,false);
 
   set<string> farms;
+  if ( m_mode == TORRENT_MODE ) {
+    //farms.insert("plus10");
+  }
   for (Farms::const_iterator v=vfarms.begin(); v != vfarms.end(); ++v) farms.insert(*v);
 
   ::sprintf(txt,"Total number of subfarms:%d    ",int(farms.size()));
