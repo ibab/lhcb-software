@@ -21,7 +21,7 @@ StatusCode MemTrnd::initialize()
   {
     m_trender->initialize();
     m_trender->setAverageTime(20);
-    m_trender->setPartitionAndName(this->m_PartName,syst);
+    m_trender->setPartitionAndName(m_PartName,syst);
     m_trender->setMaxTimeNoWrite(600);
   }
   m_timer = new TrndTimer(m_trender,m_interv);
