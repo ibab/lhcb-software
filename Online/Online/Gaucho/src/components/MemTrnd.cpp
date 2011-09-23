@@ -17,7 +17,7 @@ StatusCode MemTrnd::initialize()
     IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
     m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
   }
-  syst = RTL::processName();
+  syst = RTL::nodeNameShort()+"Adder";
   if (m_trender != 0)
   {
     m_trender->initialize();
