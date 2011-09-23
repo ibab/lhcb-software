@@ -21,7 +21,7 @@ StatusCode MemTrnd::initialize()
   if (m_trender != 0)
   {
     m_trender->initialize();
-    m_trender->setAverageTime(20);
+//    m_trender->setAverageTime(20);
     m_trender->setPartitionAndName(m_PName,syst);
     m_trender->setMaxTimeNoWrite(600);
   }
@@ -83,8 +83,10 @@ void TrndTimer::timerHandler()
   long rss;
   rss = System::mappedMemory(System::kByte,System::Memory,lib_rtl_pid());
   long vm = System::virtualMemory(System::kByte,System::Memory,lib_rtl_pid());
-  m_trender->addEntry(std::string("VirtMem"),double(vm));
-  m_trender->addEntry(std::string("ResidentSize"),double(rss));
+  std::string t1 = "VirtMem";
+  std::string t2 = "ResidentSize";
+  m_trender->addEntry(t1,double(vm));
+  m_trender->addEntry(t2,double(rss));
   m_trender->saveEvent();
 }
 void TrndTimer::Stop()
