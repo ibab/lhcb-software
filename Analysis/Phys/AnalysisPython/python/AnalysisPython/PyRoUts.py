@@ -1889,6 +1889,45 @@ ROOT.RooArgList . __len__       = lambda s   : s.getSize()
 ROOT.RooArgList . __contains__  = lambda s,i :  0<= i < len(s)
 ROOT.RooArgList . __iter__      = _ral_iter_ 
 
+
+# =============================================================================
+## iterator for RooArgSet
+def _ras_iter_ ( self ) :
+    """
+    Simple iterator fior RotoArgSet:
+
+    >>> arg_set = ...
+    >>> for i in arg_set : print i
+    
+    """
+    
+    it  = self.createIterator()
+    val = it.Next()
+    while val :
+        yield val 
+        val = it.Next()
+        
+    del it
+    
+## some decoration over RooArgSet 
+ROOT.RooArgSet . __len__       = lambda s   : s.getSize()
+ROOT.RooArgSet . __iter__      = _ras_iter_ 
+
+
+# =============================================================================
+## iterator for RooDataSet
+def _rds_iter_ ( self ) :
+    """
+    Iterator for RooDataSet 
+    """
+    _l = len ( self )
+    for i in xrange ( 0 , _l ) : yield self.get ( i )
+
+## some decoration over RooDataSet 
+ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
+ROOT.RooDataSet . __iter__      = _ras_iter_ 
+        
+        
 # =============================================================================
 ## ``easy'' print of RooFitResult
 def _rfr_print_ ( self , opts = 'v' ) :
