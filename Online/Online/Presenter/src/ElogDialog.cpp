@@ -195,6 +195,12 @@ void ElogDialog::build() {
     elogFrame->AddFrame(okButton, layout );
     okButton->MoveResize( xFirst, yBeg, 2*xButtonSize, yButtonSize );
     okButton->Connect("Clicked()", "ElogDialog", this, "ok()");
+
+    TGLabel* tmp = new TGLabel(elogFrame,"(To ProblemDB ONLY if logbook = Shifts) ");
+    tmp->SetTextJustify(kTextLeft);
+    elogFrame->AddFrame(tmp, layout );
+    tmp->MoveResize( xFirst, yBeg+yStep, 300, 22);
+
     xFirst += 2*xButtonSize + 20;
   } else {
     TGTextButton* elogButton = new TGTextButton(elogFrame,"Send to Elog");
@@ -210,14 +216,14 @@ void ElogDialog::build() {
   elogFrame->AddFrame(cancelButton, layout );
   cancelButton->MoveResize( xFirst, yBeg, xButtonSize, yButtonSize );
   cancelButton->Connect("Clicked()", "ElogDialog", this, "CloseWindow()");
-  yBeg += yButtonSize + 20;
+  yBeg += yButtonSize + 40;
 
   AddFrame(elogFrame, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY));
   elogFrame->MoveResize(0, 0, 646, yBeg);
   MapSubwindows();
   Resize(GetDefaultSize());
   MapWindow();
-  Resize(658, yBeg+12 );
+  Resize(658, yBeg+38 );
 }
 void ElogDialog::CloseWindow() {
   DeleteWindow();
