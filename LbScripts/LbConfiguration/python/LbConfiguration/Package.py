@@ -20,6 +20,7 @@ package_names = ['XmlDDDB',
                  'XmlConditions',
                  'SQLDDDB',
                  'VeloSQLDDDB',
+                 'STSQLDDDB',
                  'BcVegPyData',
                  'MCatNLOData',
                  'LHCbBkg',
@@ -187,6 +188,10 @@ SQLDDDB.setProject("DBASE")#IGNORE:E0602
 
 VeloSQLDDDB.setHat("Det")#IGNORE:E0602
 VeloSQLDDDB.setProject("DBASE")#IGNORE:E0602
+
+STSQLDDDB.setHat("Det")#IGNORE:E0602
+STSQLDDDB.setProject("DBASE")#IGNORE:E0602
+
 
 BcVegPyData.setProject("PARAM")#IGNORE:E0602
 
