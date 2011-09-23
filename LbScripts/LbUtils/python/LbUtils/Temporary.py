@@ -9,11 +9,11 @@ if not 'mkdtemp' in dir(tempfile):
     import warnings
     warnings.filterwarnings(action = 'ignore', message = '.*tmpnam.*', category = RuntimeWarning)
     def mkdtemp():
-        name = os.tmpnam()
+        name = os.tmpnam() #@UndefinedVariable
         os.mkdir(name,0700)
         return name
     def mkstemp():
-        name = os.tmpnam()
+        name = os.tmpnam() #@UndefinedVariable
         return (os.open(name,os.O_CREAT | os.O_RDWR | os.O_EXCL, 0600),
 name)
 else:
