@@ -22,6 +22,10 @@
 
 //ROOT
 #include "TVector3.h"
+#include "TRandom2.h"
+#include "TRandom3.h"
+#include <ctime>
+
 
 namespace MINT {
 	class MintGen : virtual public IMintGen{
@@ -29,7 +33,7 @@ namespace MINT {
 		MintGen();
 		virtual ~MintGen();
 
-		void Initalize(std::vector<int>);
+		void Initalize(const std::vector<int>&);
 
 		void SetInputTextFile(std::string inputFile);
 
@@ -45,6 +49,7 @@ namespace MINT {
 		std::string m_inputFileName;
 		IDalitzEvent* m_dE;
 		SignalGenerator* m_sg;
+		bool m_swap;
 	};
 }
 

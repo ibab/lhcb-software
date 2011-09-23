@@ -51,20 +51,44 @@ std::vector<double> MintGen::getDaugtherMom(IDalitzEvent* dE, int daughter)
 }
 
 
-void MintGen::Initalize(std::vector<int> patternVec)
+void MintGen::Initalize(const std::vector<int> &patternVec)
 {
+	m_swap = false;
 	std::cout <<"m_inputFileName " << m_inputFileName << std::endl;
 	NamedParameterBase::setDefaultInputFile(m_inputFileName);
 
+
+	NamedParameter<int> RandomSeed("RandomSeed", 0);
+	std::cout << " Random Seed " << RandomSeed << std::endl;
+
+
+	NamedParameter<double> integPrecision("IntegPrecision", 1.e-4);
+	NamedParameter<std::string> integMethod("IntegMethod"
+						  , (std::string)"efficient");
+
+
 	NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, -211, 211); // takes Pdg_id (421 is D0)
 	std::vector<int> TextEvtpattern = EventPattern.getVector();
-	DalitzEventPattern pdg_text(TextEvtpattern);
-
+//	DalitzEventPattern pdg_text(TextEvtpattern);
 	DalitzEventPattern pdg(patternVec);
 //	DalitzEventPattern pdg(EventPattern.getVector());
 
+	// some initialisation
+//	TRandom3 ranLux;
+//	ranLux.SetSeed((int)RandomSeed);
 	std::cout << " got event pattern: " << pdg << std::endl;
-	std::cout << " Text input event pattern: " << pdg_text << std::endl;
+
+	if (patternVec[0] < 0)
+	{
+		m_swap = true;
+		cout << "Mother Particle " <<patternVec[0] << std::endl;
+		pdg = pdg.makeCPConjugate();
+	}
+
+	std::cout << " got event pattern: " << pdg << std::endl;
+
+
+//	std::cout << " Text input event pattern: " << pdg_text << std::endl;
 
 	m_sg = new SignalGenerator(pdg);
 }
@@ -72,6 +96,7 @@ void MintGen::Initalize(std::vector<int> patternVec)
 std::vector<std::vector<double> > MintGen::DecayEventRFVec()
 {
 	MINT::counted_ptr<IDalitzEvent> newEvt = m_sg->newEvent();
+
 
 	IDalitzEvent* dE = newEvt.get();
 

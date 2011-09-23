@@ -105,10 +105,19 @@ void ParticlePropertiesList::fillDirList(){
 	  Mintevn = "UNKNOWN";
   }
 	//  printf ("The current path is: %s",pPath);
+  char * DecFiles;
+  DecFiles = getenv ("DECFILESROOT");
+    if (DecFiles==NULL)
+    {
+    	DecFiles = "UNKNOWN";
+    }
 
   std::string MintRoot = Mintevn;
+  std::string DecFilesRoot = DecFiles;
+
   _dirList.push_back("");
   _dirList.push_back("./");
+  _dirList.push_back(DecFilesRoot+"/MintData/");
   _dirList.push_back(MintRoot+"/src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../../Mojito/ParticleProperties/src/");
   _dirList.push_back("../../ParticleProperties/src/");
