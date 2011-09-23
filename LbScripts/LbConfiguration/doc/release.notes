@@ -1,3 +1,9 @@
+2011-09-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: fixed bug #86875
+	Added the possibility to pretend we are on CVMFS via an environment
+	variable (SP_FAKE_CVMFS).
+
 2011-09-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Package.py: added Det/STSQLDDDB in the list of supported packages.

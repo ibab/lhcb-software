@@ -9,7 +9,9 @@ from tempfile import mkstemp
 
 from LbConfiguration import createProjectMakefile, createEclipseConfiguration
 from LbUtils.Temporary import TempDir
-from LbUtils.Path import isCVMFS
+import LbUtils.Path
+# Special version of isCVMFS with override
+isCVMFS = lambda d: ("SP_FAKE_CVMFS" in os.environ) or LbUtils.Path.isCVMFS(d)
 
 from LbConfiguration.Version import ParseSvnVersion
 __version__ = ParseSvnVersion("$Id$", "$URL$")
@@ -57,11 +59,10 @@ lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
 # LHCb standard projects
 from LbConfiguration.Project import project_names
 # LHCb projects without container
-from LbConfiguration.Package import project_names as package_project_names
-package_project_names.append("LCGCMT") # This is not an LHCb project but we know about it
-project_names += package_project_names # Add the projects without container to the full list
-
 import LbConfiguration.Package
+# LCGCMT is not an LHCb project but we know about it
+nocontainer_project_names = LbConfiguration.Package.project_names + ["LCGCMT"]
+project_names += nocontainer_project_names # Add the projects without container to the full list
 
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and
@@ -278,7 +279,8 @@ def isProject(path, ignore_not_ready = False, cvmfs = False):
                 v = v[len(p)+1:]
                 return lhcb_style_version.match(v) or lcg_style_version.match(v)
             else:
-                return False
+                # in case of projects without version, 'v' is the name of the project
+                return v in LbConfiguration.Package.project_names
         except:
             return False
     # on other filesystems we use a better check
@@ -492,7 +494,7 @@ class ProjectInfo:
                     container = self.name + "Release"
                 else:
                     container = self.name
-            elif self.name in package_project_names: # Project without container
+            elif self.name in nocontainer_project_names: # Project without container
                 container = None
             else:
                 container = self.name + 'Sys'
