@@ -6,6 +6,14 @@
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+! 2011-09-23 - Albert Bursche
+
+Added the criterion "Is MC particle in HepMC jet?"
+This is now default for "MCtrue" and not available for "Measured".
+This can be changed easily if needed.
+
+HepMCJets2Jets class was split in header and cpp file by breaking up after "};".
+
 
 !========================= JetAccessoriesMC v1r2 2011-09-07 =========================
 ! 2011-08-02 - Albert Bursche
