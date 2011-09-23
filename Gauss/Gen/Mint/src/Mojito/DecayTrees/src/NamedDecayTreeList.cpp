@@ -1015,7 +1015,17 @@ int NamedDecayTreeList::makeKKpipiList(){
   if(dbThis) cout << "somethingth decay: " << *dk << endl;
   delete dk;
  
-  
+  /* non-resonant with topology D->R1 P1, R1->R2 P2, R2->P3 P4
+	D->nonResP K-
+           nonResP -> nonResVector pi+
+                           nonResVector -> K+pi-
+     (need to implement spin factor for this)
+  dk = new DecayTree(421);
+  dk->addDgtr(-321, 9991)->addDgtr(211, 9993)->addDgtr(321, -211);
+  add(*dk);
+  if(dbThis) cout << "somethingth decay: " << *dk << endl;
+  delete dk;
+  */
 
   // non-resonant KK pipi
   dk = new DecayTree(421);
