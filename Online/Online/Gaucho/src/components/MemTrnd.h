@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Gaucho/GenTimer.h"
+#include "Gaucho/BRTL_Lock.h"
 class ISimpleTrendWriter;
 class TrndTimer;
 class MemTrnd : public Service
@@ -30,6 +31,7 @@ class TrndTimer : public GenTimer
 public:
   TrndTimer(ISimpleTrendWriter *trender,MemTrnd *mtrend,int period);
   void timerHandler ( void );
+  BRTLLock m_lock;
   void Stop();
   ISimpleTrendWriter* m_trender;
   MemTrnd *m_MemTrnd;

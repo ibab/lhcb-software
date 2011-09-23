@@ -44,6 +44,11 @@ StatusCode MemTrnd::stop()
 StatusCode MemTrnd::finalize()
 {
   m_timer->Stop();
+  std::string t1 = "VirtMem";
+  std::string t2 = "ResidentSize";
+  m_trender->addEntry(t1,double(0.0));
+  m_trender->addEntry(t2,double(0.0));
+  m_trender->saveEvent();
   Service::finalize();
   return StatusCode::SUCCESS;
 }
@@ -77,6 +82,7 @@ TrndTimer::TrndTimer(ISimpleTrendWriter *trender,MemTrnd *mtrend,int period) : G
 {
   m_trender = trender;
   m_MemTrnd = mtrend;
+  m_lock.m_name = "TrendLock";
 }
 void TrndTimer::timerHandler()
 {
@@ -85,11 +91,15 @@ void TrndTimer::timerHandler()
   long vm = System::virtualMemory(System::kByte,System::Memory,lib_rtl_pid());
   std::string t1 = "VirtMem";
   std::string t2 = "ResidentSize";
+  m_lock.lockMutex();
   m_trender->addEntry(t1,double(vm));
   m_trender->addEntry(t2,double(rss));
   m_trender->saveEvent();
+  m_lock.unlockMutex();
 }
 void TrndTimer::Stop()
 {
+  m_lock.lockMutex();
   GenTimer::Stop();
+  m_lock.unlockMutex();
 }
