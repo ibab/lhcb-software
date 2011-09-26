@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2011-09-26 - Illya Shapoval
+ - ONLINE snapshot replacement in 'CondDB_UpdateOnlineSnapshots.py' is made atomic.
+
 !========================= CondDBUI v3r11 2011-08-30 =========================
 ! 2011-08-19 - Illya Shapoval
  - 'CondDBUI/Browser/MainWindow.py':

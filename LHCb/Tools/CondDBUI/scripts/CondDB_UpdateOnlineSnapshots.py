@@ -60,7 +60,7 @@ def _update_rel_notes(sqldddb_path,new_snapshots):
             os.rename(temp_file_name, standard_file_name)
             log.info("Release notes at '%s' are updated." %standard_file_name)
 
-    except Exception, ex:
+    except Exception as ex:
         log.warning("Release notes file wasn't updated at '%s' due to: %s" %(standard_file_name, ex))
 
 def _make_snapshots(since, until, digit_number):
@@ -86,27 +86,30 @@ def _make_snapshots(since, until, digit_number):
         output = reduce(lambda x,y: x+y, snapshotProc.stdout.readlines(),'')
         if 'rror' in output or 'xception' in output:
             raise Exception, output
-    except Exception, e:
+    except Exception as e:
         log.error("Snapshot '%s' creation failed: %s" %(standard_file_name, e))
         if os.path.isfile(new_file_path): os.remove(new_file_path)
         if os.path.isfile(new_file_path + "-journal"): os.remove(new_file_path + "-journal")
         if 'output' in locals() and ('I/O' in output or 'unable to open database' in output):
             log.warning("Possible reason of the failure is the lack of disk "
-                        "space to produce new snapshot.")
+                        "space to produce the new snapshot.")
         return False
 
     if os.path.isfile(new_file_path):
         if os.path.isfile(standard_file_path):
-            os.remove(standard_file_path)
-            os.rename(new_file_path, standard_file_path)
-            log.info(_format_str("'%s' snapshot is updated.\n"
-                                 %standard_file_name, 'green'))
+            log.info(_format_str("Updating '%s' snapshot..."%standard_file_name, 'green'))
         else:
+            log.info(_format_str("Creating '%s' snapshot..."%standard_file_name, 'green'))
+        try:
             os.rename(new_file_path, standard_file_path)
-            log.info(_format_str("New snapshot '%s' is created.\n"
-                                 %standard_file_name, 'green'))
+            log.info(_format_str("Done.", 'green'))
+        except OSError as er:
+            log.error(_format_str("Renaming temporary snapshot file to the persistent one has failed.",
+                                  'red', blink = True))
+            log.error(er)
+            return False
     else:
-        log.error(_format_str("'%s' snapshot wasn't successful.\n"
+        log.error(_format_str("'%s' snapshotting has failed.\n"
                               %standard_file_name, 'red', blink = True))
         return False
 
