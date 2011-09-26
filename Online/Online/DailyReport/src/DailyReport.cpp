@@ -137,7 +137,8 @@ void DailyReport::build ( int argc, char** argv ) {
   m_histAlarms->retrieveAlarms( yesterday );
 
   //== Get the fill informations
-  RunDB* myRunDb = new RunDB( "devrundb.lbdaq.cern.ch" );
+  //RunDB* myRunDb = new RunDB( "devrundb.lbdaq.cern.ch" );
+  RunDB* myRunDb = new RunDB( "lbrundb.cern.ch" );
   myRunDb->setMinDate( minYear, minMonth, minDay, minHour );
   myRunDb->fillInformation( 0 );
   while( 0 < myRunDb->nextFill() ) {
@@ -262,6 +263,7 @@ void DailyReport::listOnePiquet ( std::string name ) {
   } else if ( name == "HLT Piquet" ) {
     pbdb.getListOfProblems( problems, "HLT" );
     m_histAlarms->retrieveAlarms( histAlarms, "HLT" );
+    extractFromElog( "HLT Trigger", "piquet report" );
 
   } else if ( name == "Online Piquet" ) {
     pbdb.getListOfProblems( problems, "DAQ" );
