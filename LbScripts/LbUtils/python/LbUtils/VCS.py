@@ -7,6 +7,17 @@ from LbUtils.Processes import callCommand, RetryCommand
 
 import re
 
+#------------------------------------------------------------------------------
+def splitlines(text):
+    """
+    Split a text in lines removing empty lines and lines starting with "#".
+    """
+    return [ l
+             for l in [ l.strip() for l in text.splitlines() ]
+             if l and l[0] != "#" ]
+
+
+
 # constants for the regexp extraction of the items from the repository URL.
 # They happen to be identical for both CVS and SVN.
 VCS_PROTOCOL = 1
@@ -68,6 +79,9 @@ class CVSReposInfo( RepositoryInfo ):
         else:
             url = ":%(_protocol)s:%(host)s:%(_path)s"
         return url % self.__dict__
+    def getModules(self):
+        out, _err, _retcode = cvs_command("-d", self.__str__(), "checkout", "-s")
+        return out
 
 #------------------------------------------------------------------------------
 
@@ -92,3 +106,20 @@ class SVNReposInfo( RepositoryInfo ):
         else:
             url = "%(_protocol)s://%(host)s%(_path)s"
         return url % self.__dict__
+    def getProperty(self, property, path=None):
+        """
+        get the property as text
+        @param property: property name
+        @type property: string
+        @param path: relative path in the repository
+        @type path: string
+        """
+        if path:
+            if path[0] == "/": # we need relative path
+                path = path[1:]
+            path = "/".join([self.repository, path])
+        else:
+            path = self.__str__()
+        out, _err, _retcode = svn_command("propget", property, path)
+        return out
+

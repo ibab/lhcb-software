@@ -1,5 +1,6 @@
 2011-09-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* LbUtils/python/LbUtils/VCS.py: added the splitlines function from LbRelease.rcs.
 	* python/LbUtils/VCS.py: New file. collected various utilities from LbConfiguration.Repository
 	and LbRelease.rcs.
 

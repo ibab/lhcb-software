@@ -7,6 +7,7 @@ from LbUtils.VCS import svn_repository_rexp, cvs_repository_rexp
 from LbUtils.VCS import VCS_PROTOCOL, VCS_USER, VCS_HOST, VCS_PATH
 from LbUtils.VCS import svn_command as _svn
 from LbUtils.VCS import cvs_command as _cvs
+from LbUtils.VCS import splitlines
 
 
 
@@ -427,13 +428,6 @@ class CVS(RevisionControlSystem):
     def __str__(self):
         return "CVS repository at %s" % self.repository
 
-def splitlines(text):
-    """
-    Split a text in lines removing empty lines and lines starting with "#".
-    """
-    return [ l
-             for l in [ l.strip() for l in text.splitlines() ]
-             if l and l[0] != "#" ]
 
 
 class SubversionCmd(RevisionControlSystem):
