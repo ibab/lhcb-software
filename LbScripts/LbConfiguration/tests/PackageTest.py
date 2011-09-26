@@ -1,16 +1,17 @@
 from LbConfiguration.Package import getPackage, DecFiles, AppConfig
+from LbConfiguration.Package import _getSVNPackage
 
 import logging
 import unittest
 
 class PackageTestCase(unittest.TestCase):
-    
+
     def setUp(self):
         unittest.TestCase.setUp(self)
-    
+
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-        
+
     def testPackage(self):
         m1 = getPackage("DecFiles")
         self.assertEqual(m1, DecFiles)
@@ -18,7 +19,7 @@ class PackageTestCase(unittest.TestCase):
         self.assertEqual(m1.hat(), "Gen")
         self.assertEqual(m1.FullName(), "Gen/DecFiles")
         self.assertEqual(m1.project(), "DBASE")
-        
+
         m2 = getPackage("AppConfig")
         self.assertEqual(m2, AppConfig)
         self.assertNotEqual(m2, DecFiles)
@@ -26,14 +27,19 @@ class PackageTestCase(unittest.TestCase):
         self.assertEqual(m2.hat(), None)
         self.assertEqual(m2.FullName(), "AppConfig")
         self.assertEqual(m1.project(), "DBASE")
-        
+    def testSVNPackage(self):
+        p = _getSVNPackage("DecFiles")
+        self.assertEqual("DecFiles", p.Name())
+        self.assertEqual("Gen", p.hat())
+        self.assertEqual("DBASE", p.project())
+
     def testTarBall(self):
         m1 = getPackage("DecFiles")
-        
+
         m2 = getPackage("AppConfig")
-        
-        
-        
+
+
+
 if __name__ == '__main__':
     log = logging.getLogger()
     log.setLevel(logging.CRITICAL)

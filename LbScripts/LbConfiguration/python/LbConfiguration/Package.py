@@ -1,6 +1,9 @@
 """ general configuration for data packages """
 #@PydevCodeAnalysisIgnore
 
+from LbConfiguration.Repository import getRepositories
+from LbUtils.VCS import splitlines
+
 import logging
 import sys, os
 
@@ -122,6 +125,34 @@ for _pak in package_names:
     package_list.append(PackageConf(_pak))
 del _pak#IGNORE:W0631
 
+def _getSVNPackage(packagename):
+    """
+    extract package informations directly from SVN top properties. This
+    function is used as a fallback if this very file doesn't contain any
+    informations about that packagename
+    @param packagename: name of the package for the conf retrieving.
+    @type packagename: string
+    """
+    log = logging.getLogger()
+    reps = getRepositories(protocol="anonymous")
+    for name in reps:
+        url = str(reps[name])
+        log.info("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+        rep = reps[name]
+        if hasattr(rep, "getProperty") :
+            for l in splitlines(rep.getProperty("packages")) :
+                hat = None
+                package, project = l.split()[:2]
+                if "/" in package :
+                    hat, package = package.split("/")
+                if packagename == package :
+                    pj = PackageConf(package)
+                    pj.setHat(hat)
+                    pj.setProject(project)
+                    return pj
+    return None
+
+
 def getPackage(packagename):
     """ return the static instance of the package configuration by name """
     pj = None
@@ -132,6 +163,8 @@ def getPackage(packagename):
         return pj
     else:
         raise PackageConfException, "No such package configuration"
+
+
 
 def isPackage(packagename):
     ispackage = True
