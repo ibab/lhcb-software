@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-26 - Rob Lambert
+ - Fix IOExtension problem with svcClass.
+
 !========================= GaudiConf v15r1 2011-09-20 =========================
 ! 2011-09-16 - Marco Cattaneo
  - Add "NextNext" to default DstConf().SpilloverPaths
@@ -25,7 +28,7 @@
  - an extra unit test is added verifying this problem is now avoided
 
 ! 2011-09-08 - Rob Lambert
- - Small bug in FSRs fixed. New test added to check for this bug. 
+ - Small bug in FSRs fixed. New test added to check for this bug.
  - Still no confirmation that it is really fixed, though. Because Stripping16
    configuration dictionary is broken
  - See bug #86527
@@ -47,7 +50,7 @@
  - Modify IOHelper to work directly with FileRecordCnvSvc for any type
  - Add information getter functions for iohelper
  - Add compatibility with connection strings not containing DATAFILE
-   OutputStream, for example, can have it set separately 
+   OutputStream, for example, can have it set separately
 
 !========================= GaudiConf v14r2 2011-08-30 =========================
 ! 2011-08-24 - Rob Lambert
