@@ -1,3 +1,9 @@
+2011-09-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/GetPack.py: factored out utilities placed in LbUtils.VCS.
+	* python/LbRelease/rcs.py: idem
+	* scripts/svnpath: idem
+
 2011-08-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r4p1

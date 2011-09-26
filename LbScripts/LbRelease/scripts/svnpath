@@ -6,7 +6,7 @@ from LbRelease import rcs
 from LbConfiguration.Repository import repositories
 
 from urllib import splittype, splituser, splithost
-from LbConfiguration.Repository import SVNReposInfo
+from LbUtils.VCS import SVNReposInfo
 
 import sys
 

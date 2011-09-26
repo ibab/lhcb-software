@@ -5,8 +5,9 @@ import os, sys, re
 from subprocess import Popen, PIPE
 
 from LbUtils.Script import Script
+from LbUtils.VCS import SVNReposInfo, CVSReposInfo
 from LbConfiguration import createProjectMakefile, eclipseConfigurationAddPackage, createEclipseConfiguration
-from LbConfiguration.Repository import repositories as __repositories__, SVNReposInfo, CVSReposInfo
+from LbConfiguration.Repository import repositories as __repositories__
 import rcs
 
 ## Class to select valid version tags according to LHCb policy

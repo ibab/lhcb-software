@@ -1,64 +1,13 @@
 """
 Module for handling of software repository informations.
 """
+from LbUtils.VCS import SVNReposInfo, CVSReposInfo
+
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
-__all__ = ["RepositoryInfo", "SVNReposInfo", "CVSReposInfo", "repositories",
-           "getRepositories"]
-
-## Small class for the generic manipulation of RevisionControlSystem URLs
-class RepositoryInfo( object ):
-    __protocols__ = []
-    def __init__( self, protocol, host, path, user = None ):
-        self.protocol = protocol
-        self.host = host
-        self.path = path
-        self.user = user
-
-    def _get_protocol( self ):
-        return self._protocol
-    def _set_protocol( self, protocol ):
-        if protocol not in self.__protocols__:
-            raise RuntimeError( "Invalid protocol '%s' (allowed: %r)" % ( protocol, self.__protocols__ ) )
-        self._protocol = protocol
-    ## Property for the validation of the protocol
-    protocol = property( _get_protocol, _set_protocol )
-
-    def _get_path( self ):
-        return self._path
-    def _set_path( self, path ):
-        if not path.startswith( "/" ):
-            self._path = "/" + path
-        else:
-            self._path = path
-    ## Property for the validation of the path
-    path = property( _get_path, _set_path )
+__all__ = ["repositories", "getRepositories"]
 
 
-## Subversion specific implementation of RepositoryInfo
-class SVNReposInfo( RepositoryInfo ):
-    __protocols__ = ["svn", "svn+ssh", "file", "https", "http"]
-    def __str__( self ):
-        # prepare url template
-        if self.user:
-            url = "%(_protocol)s://%(user)s@%(host)s%(_path)s"
-        else:
-            url = "%(_protocol)s://%(host)s%(_path)s"
-        return url % self.__dict__
-
-## CVS specific implementation of RepositoryInfo
-class CVSReposInfo( RepositoryInfo ):
-    __protocols__ = [ "gserver", "kserver", "ext", "pserver"]
-    def __str__( self ):
-        import os
-        if self._protocol == "ext" and 'CVS_RSH' not in os.environ:
-            raise RuntimeError( "Cannot use 'ext' protocol without the environment variable 'CVS_RSH' set (e.g. ssh or plink)" )
-        # prepare url template
-        if self.user:
-            url = ":%(_protocol)s:%(user)s@%(host)s:%(_path)s"
-        else:
-            url = ":%(_protocol)s:%(host)s:%(_path)s"
-        return url % self.__dict__
 
 ## List of known repositories
 repositories = { "gaudi": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/gaudi" ),

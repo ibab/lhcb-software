@@ -2,8 +2,13 @@
 Module providing the basic functionalities of the GetPack utility.
 """
 from LbConfiguration.Repository import getRepositories
-from LbUtils.Processes import callCommand, RetryCommand
 from LbUtils.Temporary import TempDir
+from LbUtils.VCS import svn_repository_rexp, cvs_repository_rexp
+from LbUtils.VCS import VCS_PROTOCOL, VCS_USER, VCS_HOST, VCS_PATH
+from LbUtils.VCS import svn_command as _svn
+from LbUtils.VCS import cvs_command as _cvs
+
+
 
 import logging
 
@@ -240,17 +245,15 @@ class RevisionControlSystem(object):
         elif not os.path.exists(vers_file):
             open(vers_file, "w").write(version + "\n")
 
-_cvs = lambda *args, **kwargs: apply(callCommand, ("cvs",) + args, kwargs)
-_cvs_retry = RetryCommand(_cvs, lambda r: r[2] == 0)
 class CVS(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
     """
-    __repository_rexp__ = re.compile(r":([pkg]server|ext):(?:([\w.]+)@)?([\w.]+):(/[\w./]+)*")
-    CVS_PROTOCOL = 1
-    CVS_USER     = 2
-    CVS_HOST     = 3
-    CVS_PATH     = 4
+    __repository_rexp__ = cvs_repository_rexp
+    CVS_PROTOCOL = VCS_PROTOCOL
+    CVS_USER     = VCS_USER
+    CVS_HOST     = VCS_HOST
+    CVS_PATH     = VCS_PATH
     __package_version_check_file__ = "/cmt/requirements"
     __project_version_check_file__ = "/cmt/project.cmt"
     def __init__(self, repository):
@@ -432,17 +435,16 @@ def splitlines(text):
              for l in [ l.strip() for l in text.splitlines() ]
              if l and l[0] != "#" ]
 
-_svn = lambda *args, **kwargs: apply(callCommand, ("svn",) + args, kwargs)
-_svn_retry = RetryCommand(_svn, lambda r: r[2] == 0)
+
 class SubversionCmd(RevisionControlSystem):
     """
     SVN implementation of RevisionControlSystem.
     """
-    __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https?|file)://(?:([\w.]+)@)?([\w.]*)(/[\w./]+)*")
-    SVN_PROTOCOL = 1
-    SVN_USER     = 2
-    SVN_HOST     = 3
-    SVN_PATH     = 4
+    __repository_rexp__ = svn_repository_rexp
+    SVN_PROTOCOL = VCS_PROTOCOL
+    SVN_USER     = VCS_USER
+    SVN_HOST     = VCS_HOST
+    SVN_PATH     = VCS_PATH
     def __init__(self, repository):
         """
         Initialize the connection to the repository.
