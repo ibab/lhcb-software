@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.9 2010-08-28 15:01:48 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
 # $URL$
 # =============================================================================
@@ -20,15 +20,15 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
 #
 #  @author ...
 #  @date   ...
 #
-# Last modification $Date: 2010-08-28 15:01:48 $
-#                by $Author: ibelyaev $
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
 This a template file for the Bender-based module
@@ -43,16 +43,16 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-Last modification $Date: 2010-08-28 15:01:48 $
-               by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__version__ = " Version $Revision: 1.9 $ "
+__version__ = " Version $Revision$ "
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.Main import * 
@@ -86,7 +86,7 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     DaVinci (
-        DataType = '2010' 
+        DataType = '2010' ,
         ) 
     
     from Gaudi.Configuration import HistogramPersistencySvc
@@ -113,9 +113,16 @@ def configure ( datafiles , catalogs = [] ) :
         # Ntuples 
         NTupleLUN = "MYLUN"     ## LogicalUnit for N-tuples 
         )
+
+    ## Use only *THIS* algorithm
+    # gaudi.setAlgorithms( [alg] )
     
-    ## gaudi.addAlgorithm ( alg ) 
-    ## gaudi.setAlgorithms( [alg] )
+    ## Add the algorithm to the TopAlgs-list:
+    # gaudi.addAlgorithm ( alg )
+
+    ## Inser the algorithm into DaVinci "User"-sequence
+    # userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    # userSeq.Members += [ alg.name() ] 
     
     return SUCCESS
 

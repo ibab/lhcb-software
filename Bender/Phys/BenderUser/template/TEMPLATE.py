@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TEMPLATE.py,v 1.6 2010-09-13 13:27:52 ibelyaev Exp $ 
+# $Id$ 
 # =============================================================================
-# $URL$ 
+# $URL$
 # =============================================================================
 ## @file
-#  This a template file for the Bender-based scriopt/module
 #
+#  This a template file for the Bender-based script/module
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -20,17 +20,18 @@
 #  ``C++ ToolKit for Smart and Friendly Physics Analysis''
 #
 #  By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
+#  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #
 #  @author ...
 #  @date   ...
 #
-#  Last modified $Date: 2010-09-13 13:27:52 $
-#             by $Author: ibelyaev $
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
-This a template file for the Bender-based scriopt/module
+This a template file for the Bender-based module
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -42,24 +43,22 @@ And it is based on the
 LoKi project: ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
 By usage of this code one clearly states the disagreement 
-with the campain of Dr.O.Callot et al.: 
+with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-  Last modified $Date: 2010-09-13 13:27:52 $
-             by $Author: ibelyaev $
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
-__author__  = "Do not forget your name here"
-__date__    = "20??-??-?? " 
-__verison__ = "Verison $Revision: 1.6 $"
+__author__  = " Do not forget your name here "
+__date__    = " 20??-??-?? " 
+__version__ = " Version $Revision$ "
 # =============================================================================
 ## import all nesessary stuff from Bender
-from Bender.MainMC import * 
+from Bender.Main import * 
 # =============================================================================
 ## @class Template
-#  @author The Author 
-#  @date   ????-??-??
-class Tempate(AlgoMC) :
+class Template(Algo) :
     """
     This is the template algorithm 
     """        
@@ -74,6 +73,8 @@ class Tempate(AlgoMC) :
 
 # =============================================================================
 ## job configuration:
+#  @attention the function with such signature is required
+#             by Ganga for submission of Grid jobs!
 def configure ( datafiles , catalogs = [] ) :
     """
     Configure the job
@@ -85,10 +86,16 @@ def configure ( datafiles , catalogs = [] ) :
     
     from Configurables import DaVinci
     DaVinci (
-        DataType   = '2010' , 
-        Simulation = False  ) 
+        DataType = '2010' ,
+        ) 
     
-
+    from Gaudi.Configuration import HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
+    
+    from Gaudi.Configuration import NTupleSvc
+    ntSvc = NTupleSvc()
+    ntSvc.Output += [ "MYLUN DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] 
+    
     ## define/set the input data 
     setData ( datafiles , catalogs )
     
@@ -100,12 +107,22 @@ def configure ( datafiles , catalogs = [] ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
+    
+    alg = Template(
+        'MyAlg'               , ## algorithm instance name 
+        # Ntuples 
+        NTupleLUN = "MYLUN"     ## LogicalUnit for N-tuples 
+        )
 
-    ## alg = Template( .... )
+    ## Use only *THIS* algorithm
+    # gaudi.setAlgorithms( [alg] )
     
-    ## gaudi.addAlgorithm ( alg ) 
-    ## gaudi.setAlgorithms( [alg] )
-    
+    ## Add the algorithm to the TopAlgs-list:
+    # gaudi.addAlgorithm ( alg )
+
+    ## Inser the algorithm into DaVinci "User"-sequence
+    # userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    # userSeq.Members += [ alg.name() ] 
     
     return SUCCESS
 
@@ -125,7 +142,7 @@ if __name__ == '__main__' :
     # configure ( ... )
     
     ## run the job
-    run(100)
+    run(1000)
 
 # =============================================================================
 # The END 
