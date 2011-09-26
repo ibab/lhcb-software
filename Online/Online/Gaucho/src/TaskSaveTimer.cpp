@@ -130,6 +130,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   {
     printf("Root File %s cannot be opened or is Zombie\n",fn);
     fflush (stdout);
+    delete f;
     return;
   }
   TH1 *r;
@@ -144,6 +145,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
     {
       case H_1DIM:
       case H_2DIM:
+      case H_3DIM:
       case H_PROFILE:
       case H_RATE:
       {
@@ -169,6 +171,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
         {
           case H_1DIM:
           case H_2DIM:
+          case H_3DIM:
           case H_PROFILE:
           case H_RATE:
           {
@@ -199,6 +202,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
   }
   TH1::AddDirectory(dirstat);
   m_subsys->Lock();
+  f->Close();
   delete f;
   m_subsys->unLock();
   if (m_filenamesvc != 0)
