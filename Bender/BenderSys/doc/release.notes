@@ -24,6 +24,20 @@
 </PRE>
 
 
+<A NAME=v18r0>2011-09-26 Bender v18r0 based on the DaVinci v29r0</A>
+</H1>	
+
+<PRE>		
+The version is rather similar  to v17r4, but it is based on fresh DaVinci v29r5
+and thus in this way it picks up many goodies and fixes.
+
+It also contains many useful fixes for dst-explorer, 
+in particular (if available)
+it accepts the bare LFNs for input.
+ 
+</PRE>
+
+
 <A NAME=v17r4>2011-08-05 Bender v17r4 based on the DaVinci v28r5</A>
 </H1>	
 

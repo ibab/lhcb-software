@@ -22,21 +22,21 @@
 #
 # =============================================================================
 package       BenderSys
-version       v17r4
+version       v18r0
 
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v17r4   Phys 
+use           Bender         v18r0   Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v17r3p2 Ex
+use           BenderExample  v18r0    Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v15r0   Tutorial
+use           BenderTutor    v18r0   Tutorial
 
 # =========== template of user module/scriot ==================================
-use           BenderUser     v15r0   Phys 
+use           BenderUser     v18r0   Phys 
 
 # Declare this as a container package
 apply_pattern container_package
