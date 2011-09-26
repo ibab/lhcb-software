@@ -24,10 +24,17 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v18r0 2011-09-26 ===========================
+
+! 2011-09-26 - Vanya Belyaev
+
+	 Fixes,DstExplorer, etc.. : 
+     allow the direct usage of 	LFNs form CERN Castor Gris storage
+
 ! 2011-09-13 - Vanya Belyaev
 
  - fix in Fixes.py
-   thank you to Thoams Bauer for report 
+   thanks to Thomas Bauer for report 
 
 ! ==================== Phys/Bender v17r4 2011-08-05 ===========================
 

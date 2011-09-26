@@ -150,6 +150,15 @@ if '__main__' == __name__ :
         )
     ## 
     parser.add_option (
+        '-c'                          ,
+        '--castor'                    ,
+        action  = "store_true"        ,
+        dest    = 'Castor'            ,
+        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
+        default = True   
+        )
+    ## 
+    parser.add_option (
         '-l'                          ,
         '--level'                     ,
         type    = 'int'               , 
@@ -206,7 +215,7 @@ if '__main__' == __name__ :
     
     ## Files must be specfied are mandatory!
     if not arguments :
-        parser.error('No input files are specified') 
+        parser.error ( 'No input files are specified' ) 
 
 
     if options.Simulation and '2009' == options.DataType :
@@ -288,7 +297,7 @@ if '__main__' == __name__ :
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
     
     ## set input data
-    setData ( arguments , catalogs  )
+    setData ( arguments , catalogs , options.Castor  )
     
     ## instantiate the application manager 
     gaudi=appMgr ()

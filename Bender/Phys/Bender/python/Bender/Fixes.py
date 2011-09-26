@@ -87,7 +87,14 @@ _EvtSel = GaudiPython.Bindings.iEventSelector
 
 if not hasattr ( _EvtSel , '_openNew_') :
     
-    def _openNew_ ( self , stream , typ = 'ROOT', opt = 'READ', sel = None, fun = None, collection = None ):
+    def _openNew_ ( self                ,
+                    stream              ,
+                    typ        = 'ROOT' ,
+                    opt        = 'READ' ,
+                    sel        =  None  ,
+                    fun        =  None  ,
+                    collection =  None  ,
+                    castor     =  True  ) :
         """
         Open the file(s) :
 
@@ -112,7 +119,7 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
         files = []
         for f in stream :
-            ff = extendfile2 ( f )
+            ff = extendfile2 ( f , castor )
             if sel        : ff += " SEL=\'%s\'" % sel
             if fun        : ff += " FUN=\'%s\'" % fun
             if collection : ff += " COLLECTION=\'%s\'" % collection

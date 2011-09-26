@@ -50,7 +50,67 @@ __version__ = "$Revision$"
 __all__     = ( 'extendfile1' ,
                 'extendfile2' ,
                 'extendfile'  ,
-                )
+                'inCastor'    ) 
+
+# =============================================================================
+## check the presence of the file in (CERN) Castor
+#
+#  @code
+#
+#   >>> lfn = '/lhcb/Collisons11/......'
+#   >>> ok = inCastor ( lfn ) ## check CERN Grid Castor storage 
+#
+#  @endcode
+#
+#  @code
+#
+#   >>> fname = '/castor/cern.ch/......'
+#   >>> ok = inCastor ( fname , '' ) ## check the explicit location
+#
+#  @endcode
+#
+#  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+#  @date 2011-09-26
+#
+#  @param fname   filename
+#  @param prefix  prefix to be used
+#
+def inCastor ( fname , prefix = '/castor/cern.ch/grid' ) :
+    """
+    check if the file is accessible from castor:
+
+    >>> lfn = '/lhcb/Collisons11/......'
+    >>> ok = inCastor ( lfn ) ## check CERN Grid Castor storage 
+
+    >>> fname = '/castor/cern.ch/......'
+    >>> ok = inCastor ( fname , '' ) ## check the explicit location
+    
+    """
+    if 0 != fname.find ( prefix ) : fname = prefix + fname
+
+    try:
+        ## use nsls command to check the file existence 
+        cmd = 'nsls -l %s' % fname    
+        from subprocess import Popen, PIPE
+        p   = Popen( cmd                 ,
+                     shell     = True    ,
+                     stdin     = PIPE    ,
+                     stdout    = PIPE    ,
+                     stderr    = PIPE    ,
+                     close_fds = True    )
+        stdin, stdout, stderr = p.stdin, p.stdout, p.stderr
+
+        ## require empty stder
+        for l in stderr : return False   ## RETURN 
+        
+        ## Require non-empty std-out: 
+        for l in stdout : return True    ##  RETURN 
+
+    except : pass
+    
+    return False 
+
+
 # =============================================================================
 ## Helper function to 'extend' the short file name
 #
@@ -59,7 +119,7 @@ __all__     = ( 'extendfile1' ,
 #
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
-def extendfile1 ( filename ) :
+def extendfile1 ( filename , castor = False ) :
     """
     Helper function to 'extend' the short file name 
 
@@ -67,7 +127,8 @@ def extendfile1 ( filename ) :
            LHCb conventions for CASTOR pools and many CASTOR-related tricks
 
     """
-    if 0 <= filename.find(' ') : return filename
+    ## the name is already decorated:
+    if 0 <= filename.find (' ') : return filename
     ##
     import os 
     ## 
@@ -86,7 +147,10 @@ def extendfile1 ( filename ) :
         else:
             filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdisk' % filename
 
-    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/MC/'   ) :
+    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/MC/'        ) :
+        filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdisk' % filename
+
+    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/validation/' ) :
         filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbdisk' % filename
 
     elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/'      ) :
@@ -95,11 +159,22 @@ def extendfile1 ( filename ) :
     elif 0 == filename.find ( '/castor/cern.ch'                 ) :
         filename = 'PFN:castor:' + filename
 
-    elif 0 == filename.find ( '//castor'    ) : return extendfile1 ( filename[1:] ) ## RECURSION!
-    elif os.path.exists ( filename )          : filename = 'PFN:' + filename 
-    elif 0 == filename.find ( '/lhcb/data/' ) or \
-         0 == filename.find ( '/lhcb/MC/'   ) or \
-         0 == filename.find ( '/lhcb/user/' ) : filename = 'LFN:' + filename 
+    elif 0 == filename.find ( '//castor'    ) :
+        return extendfile1 ( filename[1:] , castor ) ## RECURSION!
+    
+    elif os.path.exists ( filename )          : filename = 'PFN:' + filename
+    
+    elif 0 == filename.find ( '/lhcb/data/'       ) or \
+         0 == filename.find ( '/lhcb/MC/'         ) or \
+         0 == filename.find ( '/lhcb/user/'       ) or \
+         0 == filename.find ( '/lhcb/validation/' ) :
+
+        if castor and inCastor ( filename ) :
+            filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor ) 
+        else : 
+            filename = 'LFN:' + filename
+
+            
     ##
     return filename
 
@@ -109,7 +184,7 @@ _local_dict_ = {}
 ## Helper function to 'extend' the short file name
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2010-02-12
-def extendfile2 ( filename ) :
+def extendfile2 ( filename , castor = False ) :
     """
     Helper function to 'extend' the short file name 
     """
@@ -118,7 +193,7 @@ def extendfile2 ( filename ) :
     if 0 <= filename.find('DATAFILE=') : return filename
     ##
     ## @see extendfile1 
-    filename = extendfile1 ( filename ) 
+    filename = extendfile1 ( filename , castor ) 
     ##
     ##
     #
