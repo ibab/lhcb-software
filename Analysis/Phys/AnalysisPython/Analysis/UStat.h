@@ -38,8 +38,8 @@ namespace Analysis
   public: 
     // ========================================================================
     static StatusCode calculate
-    ( RooAbsPdf&  pdf      , 
-      RooDataSet& data     ,  
+    ( const RooAbsPdf&  pdf  , 
+      const RooDataSet& data ,  
       TH1&        hist     ,
       RooArgSet * args = 0 );
     // ========================================================================

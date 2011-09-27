@@ -68,8 +68,8 @@ namespace
 } //                                                 end of anonymous namespace  
 // ============================================================================
 StatusCode Analysis::UStat::calculate
-( RooAbsPdf&  pdf  , 
-  RooDataSet& data ,  
+( const RooAbsPdf&  pdf  , 
+  const RooDataSet& data ,  
   TH1&        hist ,
   RooArgSet*  args )
 {
@@ -98,7 +98,7 @@ StatusCode Analysis::UStat::calculate
     event_x = data . get(i) ;      
     if ( 0 == event_x || 0 == event_x->getSize() ) 
     { return StatusCode ( InvalidItem1 ) ; }             // RETURN 
-    RooArgSet *event_i = (RooArgSet*)event_x->selectCommon( *args );
+    const RooArgSet *event_i = (RooArgSet*)event_x->selectCommon( *args );
     if ( 0 == event_i || 0 == event_i->getSize() ) 
     { return StatusCode ( InvalidItem2 ) ; }             // RETURN 
     //
@@ -119,7 +119,7 @@ StatusCode Analysis::UStat::calculate
       event_y = cloned->get(j) ;      
       if ( 0 == event_y || 0 == event_y->getSize() ) 
       { return StatusCode ( InvalidItem1 ) ; }            // RETURN 
-      RooArgSet *event_j = (RooArgSet*)event_y->selectCommon( *args );
+      const RooArgSet *event_j = (RooArgSet*)event_y->selectCommon( *args );
       if ( 0 == event_j || 0 == event_j->getSize() )  
       { return StatusCode ( InvalidItem2 ) ; }            // RETURN 
       //
@@ -129,7 +129,10 @@ StatusCode Analysis::UStat::calculate
       if ( 0 == j || distance < min_distance ) 
       { min_distance = distance  ; }
       //
+      delete event_j ;
     }
+    //
+    delete event_i ; 
     //
     const double val1 = 
       1 == dim ? 2  * min_distance : 

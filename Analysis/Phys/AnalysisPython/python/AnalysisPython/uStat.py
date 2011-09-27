@@ -239,7 +239,13 @@ def uPlot ( pdf            ,
             histo     ,
             silent    )    
     
-    return  histo.Fit ( 'pol0' , 'SLQ' ), histo
+    res  = histo.Fit         ( 'pol0' , 'SLQ0+' )
+    func = histo.GetFunction ( 'pol0' )
+    if func :
+        func.SetLineWidth ( 3 )
+        fcun.SetLineColor ( 2 )
+        
+    return res , histo
 
 # ===========================================================================
 
