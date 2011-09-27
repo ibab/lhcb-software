@@ -153,7 +153,7 @@ def _getSVNPackage(packagename):
     return None
 
 
-def getPackage(packagename):
+def getPackage(packagename, svn_fallback=False):
     """ return the static instance of the package configuration by name """
     pj = None
     for p in package_list:
@@ -161,6 +161,12 @@ def getPackage(packagename):
             pj = p
     if pj :
         return pj
+    elif svn_fallback:
+        pj = _getSVNPackage(packagename)
+        if not pj :
+            raise PackageConfException
+        else :
+            return pj
     else:
         raise PackageConfException, "No such package configuration"
 
