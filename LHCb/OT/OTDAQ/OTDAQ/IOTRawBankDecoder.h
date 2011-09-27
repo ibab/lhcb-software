@@ -65,6 +65,9 @@ public:
 
   /// Get a lite time from an OTChannelId
   virtual LHCb::OTLiteTime time( LHCb::OTChannelID id ) const = 0 ;
+
+  virtual bool isTotalNumberOfHitsLessThen(size_t nmax) const
+  { return totalNumberOfHits() < nmax; }
 };
 
 #endif // OTDAQ_IOTRAWBANKDECODER_H

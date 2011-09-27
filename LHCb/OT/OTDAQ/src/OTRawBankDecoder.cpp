@@ -1,3 +1,4 @@
+
 // Include files
 #include <algorithm>
 #include <numeric>
@@ -223,10 +224,10 @@ namespace OTRawBankDecoderHelpers
   }
 
   struct add { 
-      inline size_t operator()(size_t c, const Module& x) { return c+x.size(); } 
+      inline size_t operator()(size_t c, const Module& m) { return c + m.size(); } 
   };
   struct addInWindow{ 
-      inline size_t operator()(size_t c, const Module& x) { return c+x.countHitsInWindow(); } 
+      inline size_t operator()(size_t c, const Module& m) { return c + m.countHitsInWindow(); } 
   };
   
   class Detector : public OTDAQ::IndexedModuleDataHolder<Module>
@@ -248,7 +249,7 @@ namespace OTRawBankDecoderHelpers
     
     void clearevent() {
       m_event = 0 ;
-      for(iterator imod = begin(); imod!= end(); ++imod) imod->clearevent() ;
+      for(iterator imod = begin(); imod != end(); ++imod) imod->clearevent() ;
     }
     
     const LHCb::RawEvent* rawEvent() const { return m_event ; }
@@ -262,8 +263,20 @@ namespace OTRawBankDecoderHelpers
         return nwin;
 
     }
+
     size_t totalNumberOfHitsInWindow() const {
         return std::accumulate( begin(), end(), size_t(0), addInWindow() ); 
+    }
+
+    bool isTotalNumberOfHitsLessThen(size_t nmax) const
+    {
+        size_t n = 0;
+        for(const_iterator imod = begin(); imod!= end(); ++imod)
+        {
+            n += imod->countHitsInWindow();
+            if(n >= nmax) return false;
+        }
+        return true;
     }
     
   private: 

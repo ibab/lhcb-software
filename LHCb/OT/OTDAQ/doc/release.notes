@@ -3,6 +3,11 @@
 ! Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+! 2011-09-27 - Alexandr Kozlinskiy
+ - IOTRawBankDecoder extended with method isTotalNumberOfHitsLessThen(nmax)
+   with trivial default implementation. The nontrivial implementation
+   added to OTRawBankDecoder.
+
 !========================= OTDAQ v7r10p1 2011-08-30 =========================
 ! 2011-08-02 - Marco Cattaneo
  - Fix UNINIT_CTOR warnings from Coverity
