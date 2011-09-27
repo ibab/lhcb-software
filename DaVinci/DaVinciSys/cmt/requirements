@@ -1,13 +1,14 @@
 package DaVinciSys
-version           v29r0
+version           v29r1
 
 branches doc cmt
 
 #=======================================================
-use  DaVinci                 	v29r0   Phys
-use  DaVinciTests               v2r8
+use  DaVinci                 	v29r1   Phys
+use  DaVinciTests               v2r9
 
 #Other packages temporarily included
+use  GaudiConf                  v15r2
 
 # Declare this as a container package
 apply_pattern container_package

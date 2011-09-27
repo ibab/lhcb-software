@@ -3,6 +3,14 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v29r1>2011-09-28 DaVinci v29r1</A></H1><PRE>
+
+Bug fix version for Stripping17, depends on Stripping v3r0, Analysis v7r0, Phys v13r0
+
+For more details see:
+https://cern.ch/lhcb-tag-collector/display.html?project=DaVinci&version=v29r1
+
+
 </PRE><H1><A NAME=v29r0>2011-09-07 DaVinci v29r0</A></H1><PRE>
 
 Production version for Stripping17, depends on Stripping v3r0, Analysis v7r0, Phys v13r0
