@@ -151,10 +151,10 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
       ++cnt_torrents;
-      ::snprintf(text2,sizeof(text2),"%16s%6d%9.2f%6d%6d%10ld%10ld",
+      ::snprintf(text2,sizeof(text2),"%16s%6d%9.2f%6d%6d%10d%10d",
 		 states[t.state], t.num_peers, 100.f*t.progress,
 		 t.num_pieces_done, t.num_pieces_total,
-		 t.total_upload/1024, t.total_download/1024);
+		 int(t.total_upload/1024), int(t.total_download/1024));
       if ( t.name != torrent ) file = t.name;
       if ( t.msgLen>0 ) disp->draw_line_normal("\t%s", t.message());
       if ( num_session == 1 ) {

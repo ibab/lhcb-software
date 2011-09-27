@@ -233,9 +233,9 @@ void TorrentClusterLine::display() {
   ::sprintf(txt,"%6d/%-6d",sum.num_pieces_done,sum.num_pieces_total);
   ::scrc_put_chars(dis,txt,sum.num_pieces_done==sum.num_pieces_total ? NORMAL : RED,line,50,0);
 
-  ::sprintf(txt,"%8ld",sum.total_download/1024/1024);
+  ::sprintf(txt,"%8d",int(sum.total_download/1024/1024));
   ::scrc_put_chars(dis,txt,NORMAL,line,64,0);
-  ::sprintf(txt,"%8ld",sum.total_upload/1024/1024);
+  ::sprintf(txt,"%8d",int(sum.total_upload/1024/1024));
   ::scrc_put_chars(dis,txt,NORMAL,line,73,0);
 
   end_update();
