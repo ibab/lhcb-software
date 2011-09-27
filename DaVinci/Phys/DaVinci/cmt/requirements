@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.464 2010-09-07 15:53:14 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v29r0
+version           v29r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -70,4 +69,3 @@ ignore_pattern package_stamps
 #
 macro DaVinciConfUserModules "DaVinci.Configuration"
 apply_pattern install_python_modules
-

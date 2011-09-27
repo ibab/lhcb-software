@@ -1,4 +1,3 @@
-! $Id: release.notes,v 1.446 2010-09-10 11:31:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +7,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================= DaVinci v29r1 2011-09-27 =========================
+! 2011-09-27 - Marco Cattaneo
+ - New tag for Stripping17, with fixes to GaudiConf, DaVinciTests, stripping
+   lines
 
 !========================= DaVinci v29r0 2011-09-07 =========================
 ! 2011-08-25 - Rob Lambert
