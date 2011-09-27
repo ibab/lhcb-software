@@ -10,6 +10,9 @@ GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=0.776;
 //GiGaGeo.HpdSiliconSensDet.RichAviodDuplicateHitsActivate=true;
 //GiGaGeo.HpdSiliconSensDet.RichFlagDuplicateHitsactivate=true;
 
+GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=true;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichAerogelHitSmearValue=0.76;
+GiGa.ModularPL.GiGaPhysConstructorOp.Rich1GasHitSmearValue=0.085;
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichAerogelHitSmearValue=0.0;
 //GiGa.ModularPL.GiGaPhysConstructorOp.Rich1GasHitSmearValue=0.0;
 //GiGa.ModularPL.GiGaPhysConstructorOp.Rich2GasHitSmearValue=0.0;
