@@ -1,7 +1,11 @@
 # ROOT part
 ROOTCONFIG = root-config
-CXX = c++
-CXXso = c++
+# get compiler version(s) used to compile ROOT
+CXX = $(shell $(ROOTCONFIG) --cxx)
+CXXso = $(shell $(ROOTCONFIG) --cxx)
+FC = $(shell $(ROOTCONFIG) --f77)
+CC = $(shell $(ROOTCONFIG) --cc)
+LD = $(shell $(ROOTCONFIG) --ld)
 TUNEFLAG = $(shell $(CXX) --version | \
 	   awk '// { for (i = 1; i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) {if ($$i < "4.2") print "-mtune=opteron"; else print "-mtune=native"; }; }')
 CXXFLAGS = -Wall -Wextra -O3 $(TUNEFLAG) $(shell $(ROOTCONFIG) --cflags)

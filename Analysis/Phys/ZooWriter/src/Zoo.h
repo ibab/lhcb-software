@@ -1174,7 +1174,7 @@ class ZooEv : public TObject
 
 	int polarity() const { return m_polarity; }
 
-	ClassDef(ZooEv,8)
+	ClassDef(ZooEv,9)
 };
 
 

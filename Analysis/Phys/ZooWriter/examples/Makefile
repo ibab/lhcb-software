@@ -1,6 +1,11 @@
 # ROOT part
 ROOTCONFIG = root-config
-CXX = c++
+# get compiler version(s) used to compile ROOT
+CXX = $(shell $(ROOTCONFIG) --cxx)
+CXXso = $(shell $(ROOTCONFIG) --cxx)
+FC = $(shell $(ROOTCONFIG) --f77)
+CC = $(shell $(ROOTCONFIG) --cc)
+LD = $(shell $(ROOTCONFIG) --ld)
 TUNEFLAG = $(shell $(CXX) --version | \
 	   awk '// { for (i = 1; i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) {if ($$i < "4.") print "-mtune=opteron"; else print "-mtune=native"; }; }')
 CXXFLAGS = -O2 -g -Wall -Wextra $(TUNEFLAG)\
@@ -8,7 +13,6 @@ CXXFLAGS = -O2 -g -Wall -Wextra $(TUNEFLAG)\
 	   -DBOOST_DISABLE_ASSERTS -fmessage-length=78 \
 	   -DCOMBBGPARABOLA -g
 CPPFLAGS= $(shell $(ROOTCONFIG) --cflags)
-FC = gfortran
 FFLAGS = -O2 $(TUNEFLAG) -Wall -Wextra -pedantic -g -std=legacy
 # assemble root libraries
 ROOTLIBDIR = $(shell $(ROOTCONFIG) --libdir)

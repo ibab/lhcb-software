@@ -3,6 +3,14 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-09-27 - Manuel Tobias Schiller
+ - added polarity member and corresponding method of ZooEv demand increase of
+   class version number near the end (from "ClassDef(ZooEv,8)" to
+   "ClassDef(Zoo,9)")
+ - fixed standalone Makefiles in Zoo and examples to use the compiler versions
+   used to compile ROOT (should solve link-time errors on systems like SLC5
+   where cc and gcc refer to different versions of gcc)
+
 ! 2011-09-17 - Paul Seyfert
  - Added class ZooParticleInfo to hold various additionalInfo (see
    LHCb::Particle). Can hold, e.g., output of Bender algorithms or your private
