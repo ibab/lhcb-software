@@ -5,7 +5,9 @@
 !----------------------------------------------------------------------------- 
 
 !========================= GaussRICH v11r5 2011-09-20 ========================
-!2011-9014 - Sajan Easo
+!2011-9-27 - Sajan Easo
+ - Set the hit smearing values in the options file named RichEfficiency.opts
+!2011-9-14 - Sajan Easo
  - Fixed a typo in RichAnalysis.opts
 
 !2011-9-02 - Sajan Easo
