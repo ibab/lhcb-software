@@ -1,5 +1,6 @@
 2011-09-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* tests/PackageTest.py: added test on tarball name for the _getSVNPackage returned object.
 	* python/LbConfiguration/Package.py: added SVN fallback to getPackage.
 
 2011-09-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

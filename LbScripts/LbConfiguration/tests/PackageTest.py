@@ -32,6 +32,7 @@ class PackageTestCase(unittest.TestCase):
         self.assertEqual("DecFiles", p.Name())
         self.assertEqual("Gen", p.hat())
         self.assertEqual("DBASE", p.project())
+        self.assertEqual("DBASE_Gen_DecFiles_v1r0", p.tarBallName("v1r0"))
 
     def testTarBall(self):
         m1 = getPackage("DecFiles")
