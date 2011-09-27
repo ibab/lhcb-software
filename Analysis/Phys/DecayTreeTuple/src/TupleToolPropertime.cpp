@@ -42,6 +42,8 @@ TupleToolPropertime::TupleToolPropertime( const std::string& type,
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty("ToolName", m_toolName = "PropertimeFitter" );
+  declareProperty("FitToPV", m_fitToPV = false ); // true determines proper time of all particles w.r.t. their best PV
+                                                  // false (default) determines proper time w.r.t. mother particle
 
 }//=============================================================================
 
@@ -78,11 +80,16 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   if( P->isBasicParticle() ) return StatusCode::SUCCESS; 
 
   const VertexBase* originVtx = NULL;
-  if( mother != P ){
-    originVtx = originVertex( mother, P ); // the origin vertex is 
-                                           // somewhere in the decay
-  } else { // the origin vertex is the primary.
-    originVtx = m_dva->bestPV( mother );
+  if( m_fitToPV ){
+    originVtx = m_dva->bestPV( P );
+  }
+  else {
+    if( mother != P ){
+      originVtx = originVertex( mother, P ); // the origin vertex is 
+                                             // somewhere in the decay
+    } else { // the origin vertex is the primary.
+      originVtx = m_dva->bestPV( mother );
+    }
   }
 
   if( originVtx ){} // I'm happy

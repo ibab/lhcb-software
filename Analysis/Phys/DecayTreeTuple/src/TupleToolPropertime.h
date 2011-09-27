@@ -51,6 +51,7 @@ private:
 				    , const LHCb::Particle* ) const;
 
   std::string m_toolName;
+  bool        m_fitToPV;
 };
 
 #endif // JBOREL_TUPLETOOLPROPERTIME_H
