@@ -68,7 +68,7 @@ __all__     = (
 import ROOT
 import AnalysisPython.PyRoUts 
 from math import sqrt, exp, pi 
-
+import sys 
 
 # =============================================================================
 ## calculate the distance between two data points 
@@ -108,7 +108,6 @@ def uDist ( x , y ) :
 #   @param args   (input) arguments/variables
 #   @param data   (input) dataset 
 #   @param histo  (input) the histogram to be filled 
-#   @param silent (input) keep the silence 
 #   @author Vanya Belyaev Ivan.Belyaev@cern.ch
 #   @date 2011-09-21
 def uCalc ( pdf            ,
@@ -119,22 +118,28 @@ def uCalc ( pdf            ,
     """
     Calculate U-statistics 
     """
+    cpp = AnalysisPython.PyRoUts.cpp
+    sc  = cpp.Analysis.UStat.calculate ( pdf   ,
+                                         data  ,
+                                         histo ,
+                                         args  )
+    return histo 
+    
     numEntries = data.numEntries ()
     dim        = args.getSize    ()
     data_clone = data.Clone      ()
-    
-    i_print    = 100
-    if   numEntries >    1000 : i_print =   500
-    elif numEntries >   10000 : i_print =  1000
-    elif numEntries >  100000 : i_print =  5000
-    elif numEntries > 1000000 : i_print = 10000
-    
-    if silent : i_print = numEntries + 1
 
+    bar = None
+    if not silent :
+        from AnalysisPython.progress_bar import ProgressBar
+        bar = ProgressBar ( 0 , numEntries , 77 , mode = 'fixed' )
+        
     for i in xrange ( 0 , numEntries ) :
 
-        if 0 == i % i_print :
-            print ' uStat: process %10d/%-10d ' % (  i , numEntries )
+        if bar and not silent :
+            bar.update_amount(i)
+            print  bar, '\r',
+            sys.stdout.flush()
             
         event_x = data_clone.get ( i ) 
         event_i = event_x.selectCommon ( args )

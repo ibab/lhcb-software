@@ -16,5 +16,7 @@
   <class    name = "Analysis::Selector"      />
   <class    name = "Analysis::Process"       />
   <class    name = "Analysis::RooMakeHistos" />
+  <class    name = "Analysis::UStat"         />
   
 </lcgdict> 
+
