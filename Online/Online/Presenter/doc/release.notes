@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-09-28 - Olivier Callot
+ - Update the normalisation o fthe reference on refresh
+
 ! 2011-09-23 - Olivier Callot
  - Specify that report to ELog go to PbDB only if logbook=Shift
 

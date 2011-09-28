@@ -998,6 +998,7 @@ void PresenterPage::updateDrawingOptions ( ) {
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
     DisplayHistogram* dispH =  displayHisto( (*itHP)  );
     if ( NULL != dispH ) {
+      dispH->normalizeReference();
       TPad* pad = dispH->hostingPad();
       if ( NULL != pad ) dispH->setDrawingOptions( pad );
     }
