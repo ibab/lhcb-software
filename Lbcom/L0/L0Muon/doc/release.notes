@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-09-28 - Julien Cogan
+ - L0MuonCandidatesFromRaw, make the raw event steerable in location 
+
 !========================= L0Muon v9r6 2011-08-31 =========================
 ! 2011-08-25 - Rob Lambert
  - L0MuonOutputs, make the raw event steerable in location

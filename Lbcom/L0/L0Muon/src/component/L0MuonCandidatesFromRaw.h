@@ -30,6 +30,7 @@ private:
   int m_mode;                         // Output mode (defin the bank to be decoded)
   bool m_disableTAE;                  // Flag to disable the decoding of TAE event (obsolete, for backward compatibility)
   bool m_enableTAE;                   ///< Enable TAE mode
+  std::string m_rawInputEvent;        ///Raw event input location
 
   // For output to RawEvent, TES or L0ProcessorDatas
   L0MuonOutputs* m_outputTool;

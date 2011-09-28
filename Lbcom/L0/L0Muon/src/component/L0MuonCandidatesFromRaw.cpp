@@ -43,6 +43,7 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   m_enableTAE = false;
   m_procVersion = 0;
   
+  declareProperty("InputRawEventLocation", m_rawInputEvent=LHCb::RawEventLocation::Default);
 }
 
 
@@ -70,6 +71,10 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs"  , "OutputTool" , this );
   m_outputTool->setDecodingMode();
+  sc = m_outputTool->setProperty( "InputRawEventLocation", m_rawInputEvent );
+  if ( sc.isFailure() ) {
+    Error("Can not set InputRawEventLocation property of the L0MuonOutputs tool",sc);
+  }
   
   m_totEvent = 0;
   m_totBx = 0;
@@ -142,7 +147,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     sc = setProperty("RootInTES",originalRootInTes + rootInTes);
     if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
 
-    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) {
+    if (!exist<LHCb::RawEvent>( m_rawInputEvent )) {
       Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
       continue;
     }
