@@ -243,7 +243,8 @@ def uPlot ( pdf            ,
     func = histo.GetFunction ( 'pol0' )
     if func :
         func.SetLineWidth ( 3 )
-        fcun.SetLineColor ( 2 )
+        func.SetLineColor ( 2 )
+        func.ResetBit     ( 1 << 512 )
         
     return res , histo
 
