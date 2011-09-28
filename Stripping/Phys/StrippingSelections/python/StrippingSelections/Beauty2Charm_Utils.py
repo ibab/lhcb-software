@@ -5,6 +5,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
+from Configurables import OfflineVertexFitter
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -94,33 +95,31 @@ def filterPID(name,input,config,level=1):
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
-def makeB2X(name,decay,inputs,config,useIP=True):
+def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     '''Makes all B -> X selections.'''
     from copy import deepcopy
     comboCuts = LoKiCuts(['SUMPT','AM','AMAXDOCA'],config).code()
     flightCuts = ['BPVLTIME']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
-    else:
-        config = deepcopy(config)
-        config['BPVVDCHI2_MIN'] = config['NOIP_BPVVDCHI2_MIN']
-        flightCuts += ['BPVVDCHI2']        
     momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),has1TrackChild(),
                hasTopoChildren(),LoKiCuts(flightCuts,config).code()]
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
+    if not resVert:
+        b2x = b2x.configurable(name+'Beauty2CharmVertexFitter')
+        b2x.addTool(OfflineVertexFitter)
+        b2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        b2x.OfflineVertexFitter.useResonanceVertex = False
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
-def makeB2XSels(decays,xtag,inputs,config,useIP=True):
+def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
     '''Returns a list of the Hb->X selections.'''
     sels = []
     for tag, decay in decays.iteritems():
         sname = tag+xtag+'Beauty2Charm'
-        sel = makeB2X(sname,decay,inputs[tag],config,useIP)
+        sel = makeB2X(sname,decay,inputs[tag],config,useIP,resVert)
         sel = tisTosSelection(sel)
-        # CRJ : Public tools don't work well here
-        #sel = filterSelection(sname+'B2CBBDT',
-        #                      "FILTER('BBDecTreeTool/B2CBBDT:PUBLIC')",[sel])
         sel = filterSelection(sname+'B2CBBDT',
                               "FILTER('BBDecTreeTool/B2CBBDT')",[sel])
         from Configurables import BBDecTreeTool as BBDT

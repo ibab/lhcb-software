@@ -43,32 +43,31 @@ config = {
     },
     "Pi0" : { # Cuts made on all pi0's
     'PT_MIN'        : '500*MeV',
-    'P_MIN'         : '2000*MeV',
+    'P_MIN'         : '1000*MeV',
     'CHILDCL1_MIN'  : 0.25,
-    'CHILDCL2_MIN'  : 0.25
+    'CHILDCL2_MIN'  : 0.25,
+    'FROM_B_P_MIN'  : '2000*MeV'
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV'
     },
     "B2X" : { # Cuts made on all B's and Lb's used in all lines
-    'AMAXDOCA_MAX'  : '1.0*mm',
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
     'BPVIPCHI2_MAX' : 25,
     'BPVLTIME_MIN'  : '0.3*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
-    'AM_MAX'        : '7000*MeV',
-    'B2CBBDT_MIN'   : 0.05,
-    'NOIP_BPVVDCHI2_MIN' : 0
+    'AM_MAX'        : '7000*MeV', # B->Dh+-h0 sets this to 5800*MeV
+    'B2CBBDT_MIN'   : 0.05
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
@@ -122,8 +121,8 @@ class Beauty2CharmConf(LineBuilder):
     def __init__(self, moduleName, config) :
         
         LineBuilder.__init__(self, moduleName, config)
-      
-        # pre-filter all inputs (nothing is looser than this)
+
+        # pre-filter inputs
         pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
         kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
         protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
@@ -136,20 +135,25 @@ class Beauty2CharmConf(LineBuilder):
         pi0_resolved = filterPi0s('Resolved',[StdLooseResolvedPi0],
                                   config['Pi0'])
         pi0 = {"Merged":[pi0_merged],"Resolved":[pi0_resolved]}
-
+        pcut = 'P > %s' % config['Pi0']['FROM_B_P_MIN']
+        pi0_fromB_merged = filterSelection('Pi0FromBMerged',pcut,[pi0_merged])
+        pi0_fromB_resolved = filterSelection('Pi0FromBResolved',pcut,
+                                             [pi0_resolved])
+        pi0_fromB = {'Merged':[pi0_fromB_merged],
+                     'Resolved':[pi0_fromB_resolved]}
+        
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
-        #topoProtonsPID = filterPID('PTopoInputsPID',[topoProtons],
-        #                           config['PID'])
         
         # make D->X, etc. inputs
         d = DBuilder(pions,ks,pi0,config['D2X'],config['PID'])
         dst = DstarBuilder(d,pions,pi0,config['Dstar'],config['PID'])
 
         # X -> hh
-        hh = HHBuilder(pions,kaons,protons,ks,pi0,config['HH'],config['PID'])
+        hh = HHBuilder(pions,kaons,protons,ks,pi0_fromB,config['HH'],
+                       config['PID'])
 
         # X -> hhh
         hhh = HHHBuilder(pions,kaons,protons,config['HHH'])
@@ -158,7 +162,8 @@ class Beauty2CharmConf(LineBuilder):
         lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
 
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,ks,hh,hhh,config['B2X'])
+        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,ks,pi0_fromB,hh,hhh,
+                           config['B2X'])
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X

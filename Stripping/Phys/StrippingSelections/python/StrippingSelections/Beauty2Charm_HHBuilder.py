@@ -41,9 +41,6 @@ class HHBuilder(object):
         self.pipi0 = self._makePiPi0()
         self.kpi = self._makeKPi(self.pipi)
         self.kk = self._makeKK(self.pipi)
-        self.rhoplus = self._makeRhoPlus()
-        self.kstplus_kspi = self._makeKstarPlus_KSpi()
-        self.kstplus_kpi0 = self._makeKstarPlus_KPi0()
         self.kstar0 = self._makeKstar0(self.kpi)
         self.ph = self._makePH()
         self.phi = self._makePhi(self.kk)
@@ -89,7 +86,7 @@ class HHBuilder(object):
         return [self._makeX2HH('X2PiPi',['rho(770)0 -> pi+ pi-'],
                               '(AM < 5.2*GeV)',self.config,[self.pions])]
 
-    def _makePiPiWS(self):
+    def _makePiPiWSSels(self):
         '''Makes X -> pi+pi+ + c.c.'''
         plus = self._makeX2HH('X2PiPiWSPlus',['rho(770)+ -> pi+ pi+'],
                               '(AM < 5.2*GeV)',self.config,[self.pions])
@@ -97,11 +94,17 @@ class HHBuilder(object):
                                '(AM < 5.2*GeV)',self.config,[self.pions])
         return [plus,minus]
 
+    def _makePiPiWS(self):
+        sels = self._makePiPiWSSels()
+        return [MergedSelection('X2PiPiWSBeauty2Charm',
+                                RequiredSelections=sels)]
+
     def _makeKPi(self,pipi):
         '''Makes X -> K+pi- + c.c.'''
         sel1 = subPID('X2KPi','K*(892)0',['K+','pi-'],pipi)
         sel2 = subPID('X2KPiBar','K*(892)~0',['pi+','K-'],pipi)
-        return [sel1,sel2]
+        return [MergedSelection('X2KPiBeauty2Charm',
+                                RequiredSelections=[sel1,sel2])]
    
     def _makeKK(self,pipi):
         '''Makes X -> K+K-.'''
@@ -109,50 +112,47 @@ class HHBuilder(object):
 
     def _makeHHWS(self):
         from Beauty2Charm_DBuilder import subPIDSels
-        protoSels = self._makePiPiWS()
+        protoSels = self._makePiPiWSSels()
         decays = [['pi+','pi+'],['pi+','K+'],['K+','pi+'],['K+','K+']]
         plus = subPIDSels(decays,'X2HHWSPlus','','0*MeV','5200*MeV',
                           [protoSels[0]])
         decays = [['pi-','pi-'],['pi-','K-'],['K-','pi-'],['K-','K-']]
         minus = subPIDSels(decays,'X2HHWSMinus','','0*MeV','5200*MeV',
                            [protoSels[1]])
-        return [plus,minus]
+        return [MergedSelection('X2HHWSBeauty2Charm',
+                                RequiredSelections=[plus,minus])]
         
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
-        return [self._makeXPLUS2HH('X2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                   '(AM < 5.2*GeV)',self.config,
-                                   self.ks["DD"]+self.ks["LL"]+[self.pions])]
+        dd = self._makeXPLUS2HH('X2KsPiDD',['[K*(892)+ -> KS0 pi+]cc'],
+                                '(AM < 5.2*GeV)',self.config,
+                                self.ks["DD"]+[self.pions])
+        ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
+                                '(AM < 5.2*GeV)',self.config,
+                                self.ks["DD"]+[self.pions])
+        return [MergedSelection('X2KsPiBeauty2Charm',
+                                RequiredSelections=[dd,ll])]
 
     def _makeKPi0(self):
         '''Makes X -> K+pi0 + c.c.'''
-        inputs = self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons]
-        return [self._makeXPLUS2HH('X2KPi0',['[K*(892)+ -> K+ pi0]cc'],
-                                   '(AM < 5*GeV)',self.config,inputs,True)]
+        m = self._makeXPLUS2HH('X2KPi0Merged',['[K*(892)+ -> K+ pi0]cc'],
+                               '(AM < 5*GeV)',self.config,
+                               self.pi0["Merged"]+[self.kaons],True)
+        r = self._makeXPLUS2HH('X2KPi0Resolved',['[K*(892)+ -> K+ pi0]cc'],
+                               '(AM < 5*GeV)',self.config,
+                               self.pi0["Resolved"]+[self.kaons],True)
+        return [MergedSelection('X2KPi0Beauty2Charm',RequiredSelections=[m,r])]
 
     def _makePiPi0(self):
-        '''Makes X -> pi+pi0'''
-        inputs = [self.pions] +self.pi0["Merged"]+self.pi0["Resolved"]
-        return [self._makeXPLUS2HH('X2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
-                                   'AM < 5*GeV',self.config,inputs,True)]
-
-    def _makeRhoPlus(self):
-        inputs = [self.pions] +self.pi0["Merged"]+self.pi0["Resolved"]
-        return [self._makeXPLUS2HH('RHO2PiPi0',['[rho(770)+ -> pi+ pi0]cc'],
-                                   self._massWindow('RHO','rho(770)+'),
-                                   self.config,inputs,True)]
-
-    def _makeKstarPlus_KSpi(self):
-        inputs = self.ks["DD"]+self.ks["LL"]+[self.pions]
-        return [self._makeXPLUS2HH('Kst2KsPi',['[K*(892)+ -> KS0 pi+]cc'],
-                                   self._massWindow('KST','K*(892)+'),
-                                   self.config,inputs)]
-
-    def _makeKstarPlus_KPi0(self):
-        inputs = self.pi0["Merged"]+self.pi0["Resolved"]+[self.kaons]
-        return [self._makeXPLUS2HH('Kst2KPi0',['[K*(892)+ -> K+ pi0]cc'],
-                                   self._massWindow('KST','K*(892)+'),
-                                   self.config,inputs,True)]
+        '''Makes X -> pi+pi0'''        
+        m = self._makeXPLUS2HH('X2PiPi0Merged',['[rho(770)+ -> pi+ pi0]cc'],
+                               'AM < 5*GeV',self.config,
+                               [self.pions]+self.pi0["Merged"],True)
+        r = self._makeXPLUS2HH('X2PiPi0Resolved',['[rho(770)+ -> pi+ pi0]cc'],
+                               'AM < 5*GeV',self.config,
+                               [self.pions]+self.pi0["Resolved"],True)
+        return [MergedSelection('X2PiPi0Beauty2Charm',
+                                RequiredSelections=[m,r])]
 
     def _makeRho0(self,pipi):
         mass = self._massWindow('RHO','rho(770)0').replace('ADAMASS','ADMASS')

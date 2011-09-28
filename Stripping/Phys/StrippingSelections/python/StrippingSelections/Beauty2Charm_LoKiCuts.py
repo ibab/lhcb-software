@@ -34,8 +34,8 @@ class LoKiCuts(object):
                 'PT'        : 'PT',
                 'MIPCHI2DV' : 'MIPCHI2DV(PRIMARY)',
                 'ASUMPT'    : 'ASUM(PT)',
-                'AMAXDOCA'  : "ACUTDOCA(%s,'LoKi::TrgDistanceCalculator')",
-                #'AMAXDOCA' : "AMAXDOCA('LoKi::TrgDistanceCalculator')" 
+                'AMAXDOCA'  : "ACUTDOCA(%s,'LoKi::DistanceCalculator')",
+                #'AMAXDOCA' : "AMAXDOCA('LoKi::DistanceCalculator')" 
                 'VCHI2DOF'  : "VFASPF(VCHI2/VDOF)",
                 'BPVVDCHI2' : 'BPVVDCHI2',
                 'BPVDIRA'   : 'BPVDIRA',
@@ -66,7 +66,13 @@ class LoKiCuts(object):
         cuts = []
         fun = self.functors[cut]
         if cut is 'AMAXDOCA': # Use ACUTDOCA instead (slightly faster)
-            return [fun%self.config[cut+'_MAX']]        
+            if self.config.has_key(cut+'_MAX'):
+                return [fun%self.config[cut+'_MAX']]
+            else: # Look for ADOCA(N,M) entries
+                for key,val in self.config.iteritems():
+                    if key.startswith('ADOCA') and key.endswith('MAX'):
+                        cuts.append(key.replace('_MAX','')+'<'+str(val))
+                return cuts
         for key,val in self.config.iteritems():
             if key.startswith(cut+'_'):                
                 if key.endswith('MIN'): cuts.append(fun+'>'+str(val))
@@ -84,8 +90,9 @@ class LoKiCuts(object):
         '''Simple combine of list of LoKi cut strings.'''
         cutList = []
         for c in cuts:
-            if not c.startswith('('): c = '('+c+')'
-            cutList.append(c)
+            if c:
+                if not c.startswith('('): c = '('+c+')'
+                cutList.append(c)
         return ' & '.join(cutList)
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
