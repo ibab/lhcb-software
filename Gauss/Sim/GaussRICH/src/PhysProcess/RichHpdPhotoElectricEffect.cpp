@@ -44,6 +44,9 @@ void RichHpdPhotoElectricEffect::setHpdPhElecParam()
 	     << m_PSFPreDc06Flag <<std::endl;
      std::cout<< "RichHpdPhotoElectricEffect UseNominalHpdQE =   "<<m_HpdQEUsingNominalTable<<std::endl;
 
+     std::cout<< "RichHpd Hit Smearing Flag and Values  =   "<< m_activateRichHitSmear <<"  "<< m_RichAerogelHitSmearVal <<"  "
+              <<m_Rich1GasHitSmearVal<<"   "<<m_Rich2GasHitSmearVal<<std::endl;
+
     RichHpdProperties*  m_HpdProperty = HpdProperty();
     m_HpdProperty -> setUsingHpdMagneticFieldDistortion((bool) m_UseHpdMagDistortions );
     m_HpdProperty -> setUseNominalHpdQE( (bool) m_HpdQEUsingNominalTable );
@@ -293,7 +296,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
       double hitSmearValue = getCurrentHitSmearSigma(currentHpdNumber,
                                                      currentRichDetNumber,
                                                     currentRadiatorNumber);
-
+      
       psfVectInXY=GetPSFXYForASigma(hitSmearValue);
       
     } else {
