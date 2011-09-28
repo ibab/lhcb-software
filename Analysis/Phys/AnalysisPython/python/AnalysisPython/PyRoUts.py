@@ -1858,7 +1858,25 @@ def _h_accumulate_ ( h                         ,
         if cut ( i ) : result = func ( result , i[2] )
     return result 
 
-ROOT.TH1.accumulate = _h_accumulate_ 
+# =============================================================================
+## get the sum of entries 
+def _h_sum_ ( h    ,
+              low  ,
+              high ) :
+    """
+    Get the histogram integral  over the specified range:
+    
+    >>> h = ....
+    >>> h.sum ( 1 , 20 )
+    
+    """
+    return _h_accumulate_ ( h , cut = lambda s : low<=s[1].value()<=high ) 
+
+ROOT.TH1  . accumulate = _h_accumulate_ 
+ROOT.TH1F . sum        = _h_sum_ 
+ROOT.TH1D . sum        = _h_sum_
+ROOT.TH1F . integral   = _h_sum_ 
+ROOT.TH1D . integral   = _h_sum_
 # =============================================================================
 ## adjust the "efficiency"
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
