@@ -29,32 +29,31 @@ Beauty2Charm = {
     },
     "Pi0" : { # Cuts made on all pi0's
     'PT_MIN'        : '500*MeV',
-    'P_MIN'         : '2000*MeV',
+    'P_MIN'         : '1000*MeV',
     'CHILDCL1_MIN'  : 0.25,
-    'CHILDCL2_MIN'  : 0.25
+    'CHILDCL2_MIN'  : 0.25,
+    'FROM_B_P_MIN'  : '2000*MeV'
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV'
     },
     "B2X" : { # Cuts made on all B's and Lb's used in all lines
-    'AMAXDOCA_MAX'  : '1.0*mm',
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
     'BPVIPCHI2_MAX' : 25,
-    'BPVLTIME_MIN'  : '0.3*ps',
+    'BPVLTIME_MIN'  : '0.2*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
-    'AM_MAX'        : '7000*MeV',
-    'B2CBBDT_MIN'   : 0.05,
-    'NOIP_BPVVDCHI2_MIN' : 0
+    'AM_MAX'        : '7000*MeV', # B->Dh+-h0 sets this to 5800*MeV
+    'B2CBBDT_MIN'   : 0.05
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
@@ -97,7 +96,7 @@ Beauty2Charm = {
     #'B02D0DKBeauty2CharmLine' : 0.1
     },
     'GECNTrkMax'   : 500
-    }, 
+  }, 
   'STREAMS' : [ 'Bhadron' ],
   'WGs' : [ 'GammaFromTrees' ]
 }
