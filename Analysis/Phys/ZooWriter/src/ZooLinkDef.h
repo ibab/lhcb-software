@@ -60,11 +60,9 @@
 #pragma link C++ class ZooHitPattern+;
 #pragma link C++ class ZooTrackExtraInfo+;
 #pragma link C++ class ZooTrackInfo+;
-
 #pragma link C++ class ZooTreefitInfo+;
-
-
 #pragma link C++ class ZooParticleInfo+;
+
 
 #endif
 
