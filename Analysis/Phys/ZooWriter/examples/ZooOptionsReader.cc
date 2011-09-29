@@ -173,7 +173,7 @@ int main(int argc, char** argv)
 
 	std::cout << "WriteMC " << m_writeMC << std::endl;
 	std::cout << "MCList " ;
-	for(int e=0;e<(*m_MCList).size();++e)
+	for(unsigned e=0;e<(*m_MCList).size();++e)
 	    std::cout << (*m_MCList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "WriteDLL " << m_writeDLL << std::endl;
@@ -182,42 +182,42 @@ int main(int argc, char** argv)
 	std::cout << "OnlyTreefitter " << m_onlyTreefitter << std::endl;
 	std::cout << "MinTracksPV " << m_minTracksPV << std::endl;
 	std::cout << "TaggingList " ;
-	for(int e=0;e<(*m_taggingList).size();++e)
+	for(unsigned e=0;e<(*m_taggingList).size();++e)
 	    std::cout << (*m_taggingList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "BackgroundList " ;
-	for(int e=0;e<(*m_backgroundList).size();++e)
+	for(unsigned e=0;e<(*m_backgroundList).size();++e)
 	    std::cout << (*m_backgroundList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "TriggerList " ;
-	for(int e=0;e<(*m_triggerList).size();++e)
+	for(unsigned e=0;e<(*m_triggerList).size();++e)
 	    std::cout << (*m_triggerList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "Filename " << (*m_filename) << std::endl;
 	std::cout << "Tree " << (*m_treename) << std::endl;
 	std::cout << "CovarianceList " ;
-	for(int e=0;e<(*m_covarianceList).size();++e)
+	for(unsigned e=0;e<(*m_covarianceList).size();++e)
 	    std::cout << (*m_covarianceList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "TreeFitMassConstraints " ;
-	for(int e=0;e<(*m_treefit_constraints).size();++e)
+	for(unsigned e=0;e<(*m_treefit_constraints).size();++e)
 	    std::cout << (*m_treefit_constraints)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "WriteHitPattern " << m_writeHitPattern << std::endl;
 	std::cout << "WriteExpectedHitPattern " << m_writeExpectedHitPattern << std::endl;
 	std::cout << "WriteCollectedHitPattern " << m_writeCollectedHitPattern << std::endl;
 	std::cout << "ExtraInfoList " ;
-	for(int e=0;e<(*m_extraInfoList).size();++e)
+	for(unsigned e=0;e<(*m_extraInfoList).size();++e)
 	    std::cout << (*m_extraInfoList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "WriteTrackInfo " << m_writeTrackInfo << std::endl;
 	std::cout << "PackedStatesList " ;
-	for(int e=0;e<(*m_packedStatesList).size();++e)
+	for(unsigned e=0;e<(*m_packedStatesList).size();++e)
 	    std::cout << (*m_packedStatesList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "PackedStatesExtrapolate " << m_packedStatesExtrapolate << std::endl;
 	std::cout << "PackedStatesZList " ;
-	for(int e=0;e<(*m_packedStatesZList).size();++e)
+	for(unsigned e=0;e<(*m_packedStatesZList).size();++e)
 	    std::cout << (*m_packedStatesZList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "PackedStateAtPocaToZAxis " << m_packedStateAtPocaToZAxis << std::endl;
@@ -225,35 +225,35 @@ int main(int argc, char** argv)
 	std::cout << "WriteOccupancies " << m_writeOccupancies << std::endl;
 	std::cout << "WriteLHCbIDs " << m_writeLHCbIDs << std::endl;
 	std::cout << "InputLocations " ;
-	for(int e=0;e<(*m_sel_collections).size();++e)
+	for(unsigned e=0;e<(*m_sel_collections).size();++e)
 	    std::cout << (*m_sel_collections)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "DecayNames " ;
-	for(int e=0;e<(*m_sel_names).size();++e)
+	for(unsigned e=0;e<(*m_sel_names).size();++e)
 	    std::cout << (*m_sel_names)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "L0SelectionName " ;
-	for(int e=0;e<(*m_L0Name).size();++e)
+	for(unsigned e=0;e<(*m_L0Name).size();++e)
 	    std::cout << (*m_L0Name)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "Hlt1SelectionName " ;
-	for(int e=0;e<(*m_Hlt1Name).size();++e)
+	for(unsigned e=0;e<(*m_Hlt1Name).size();++e)
 	    std::cout << (*m_Hlt1Name)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "Hlt2SelectionName " ;
-	for(int e=0;e<(*m_Hlt2Name).size();++e)
+	for(unsigned e=0;e<(*m_Hlt2Name).size();++e)
 	    std::cout << (*m_Hlt2Name)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "TreefitName " ;
-	for(int e=0;e<(*m_treefit_names).size();++e)
+	for(unsigned e=0;e<(*m_treefit_names).size();++e)
 	    std::cout << (*m_treefit_names)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "LinkFromList " ;
-	for(int e=0;e<(*m_linkFromList).size();++e)
+	for(unsigned e=0;e<(*m_linkFromList).size();++e)
 	    std::cout << (*m_linkFromList)[e] << " ";
 	std::cout << std::endl;
 	std::cout << "LinkToList " ;
-	for(int e=0;e<(*m_linkToList).size();++e)
+	for(unsigned e=0;e<(*m_linkToList).size();++e)
 	    std::cout << (*m_linkToList)[e] << " ";
 	std::cout << std::endl;
     }

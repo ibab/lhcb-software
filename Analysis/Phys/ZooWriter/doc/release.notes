@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 ! 2011-09-29 - Manuel Tobias Schiller
+ - fix a few compiler warnings in examples/ZooOptionsReader due to
+   signed/unsigned comparisons
+
+! 2011-09-29 - Manuel Tobias Schiller
  - revamped the build system for standalone builds (makefiles are almost empty
    now, the complexity is in a Rules.mk file); the idea is the writing
    makefiles for new projects (either based on Zoo or not) should be basically
@@ -21,17 +25,20 @@
  - split off the less heavy classes in ZooPacked.{cpp,h} to work towards one
    class per file (in the long run, this should help keep (re-)compilation
    times down because less code needs to be rebuilt)
+
 ! 2011-09-29 - Paul Seyfert
  - removed hard coded input filename in ZooOptionsReader, use argv instead:
    no need to recompile for new input file, once compiled reads every ntuple
+
 ! 2011-09-29 - Georg Alexander Krocker
  - Added some Variables to ZooDll class: hasRich, isMuon, and isMuonLoose, class
    version 1->2
- - Added cloneDistance to ZooTrackInfo, class version 3->4 
+ - Added cloneDistance to ZooTrackInfo, class version 3->4
+
 ! 2011-09-27 - Manuel Tobias Schiller
  - added polarity member and corresponding method of ZooEv demand increase of
    class version number near the end (from "ClassDef(ZooEv,8)" to
-   "ClassDef(Zoo,9)")
+   "ClassDef(ZooEv,9)")
  - fixed standalone Makefiles in Zoo and examples to use the compiler versions
    used to compile ROOT (should solve link-time errors on systems like SLC5
    where cc and gcc refer to different versions of gcc)
