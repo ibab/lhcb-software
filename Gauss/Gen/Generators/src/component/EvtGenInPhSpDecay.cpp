@@ -77,14 +77,14 @@ EvtGenInPhSpDecay::EvtGenInPhSpDecay( const std::string& type,
     // statistics
     m_tot_calls ( 0.0 ) ,
     m_num_evts ( 0.0 ) ,
-    m_ave_eff ( 0.0 ) ,
-    m_limit ( 1000 )
+    m_ave_eff ( 0.0 ) 
 {
     // Declare IEvtGenInPhSpDecay interface
     declareInterface<IDecayTool>( this ) ;
     //number of bins for q2
     declareProperty("NumQ2Bins" , m_q2nbins = 100 ) ;
     declareProperty("MaxQ2Bins" , m_q2nmax  = 19 ) ;
+    declareProperty("MaxEvtGenCalls" , m_limit  = 1000 ) ;
 }
 //=============================================================================
 // Destructor

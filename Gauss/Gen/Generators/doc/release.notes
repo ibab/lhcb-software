@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-09-28 - Alex Shires
+ - Added configurable call limit to EvtGenInPhSpDecay
+
 ! 2011-09-28 - Patrick Robbe
  - Rename EvtGenDecayInPhSp as EvtGenInPhSpDecay
 
