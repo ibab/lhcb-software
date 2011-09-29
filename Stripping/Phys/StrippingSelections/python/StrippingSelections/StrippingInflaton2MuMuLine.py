@@ -6,7 +6,7 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Michel De Cian']
-__date__ = '07/09/2011'
+__date__ = '29/09/2011'
 __version__ = '$Revision: 1.0 $'
 
 __all__ = ('StrippingInflaton2MuMuConf',
@@ -88,7 +88,7 @@ def makeLong(name) :
     """
     from Configurables import OfflineVertexFitter
     Detached2mu = CombineParticles("Combine"+name)
-    Detached2mu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
+    Detached2mu.DecayDescriptor = "KS0 -> mu+ mu-"
     Detached2mu.addTool( OfflineVertexFitter() )
     Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
@@ -123,7 +123,7 @@ def makeDownstream(name) :
     """
     from Configurables import OfflineVertexFitter
     Detached2mu = CombineParticles("Combine"+name)
-    Detached2mu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
+    Detached2mu.DecayDescriptor = "KS0 -> mu+ mu-"
     Detached2mu.addTool( OfflineVertexFitter() )
     Detached2mu.VertexFitters.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False

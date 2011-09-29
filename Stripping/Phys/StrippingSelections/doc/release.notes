@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-29 - Michel De Cian
+ - Changed DecayDescriptor in StrippingInflaton2MuMu
+
 !========================= StrippingSelections v3r8 2011-09-15 =========================
 ! 2011-09-15 - Rob Lambert
 - Fixed logic error in streaming/splitting
