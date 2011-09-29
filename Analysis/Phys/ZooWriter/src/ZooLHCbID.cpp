@@ -54,7 +54,7 @@ std::ostream& operator<<(std::ostream& os, const ZooLHCbID& id)
 	    // (and have the user make sense of the hex dump ;)
 	    os.setf(std::ios_base::hex); os << std::setfill('0');
 	    os << "ZooLHCbID type 0x" << std::setw(1) <<
-		id.channeltype() << " (";
+		id.channeltype() << std::setfill(' ') << " (";
 	    switch (id.channeltype()) {
 		case ZooLHCbID::Velo:    os << "Velo   "; break;
 		case ZooLHCbID::TT:      os << "TT     "; break;
@@ -66,7 +66,8 @@ std::ostream& operator<<(std::ostream& os, const ZooLHCbID& id)
 		case ZooLHCbID::VeloPix: os << "VeloPix"; break;
 		default:                 os << "Unknown"; break;
 	    }
-	    os << ") opaque channel id 0x" << std::setw(7) << id.channel();
+	    os << ") opaque channel id 0x" << std::setw(7) <<
+		std::setfill('0') << id.channel() << std::setfill(' ');
 	    break;
     }
     // restore flags

@@ -38,7 +38,15 @@
 #pragma link C++ class ZooPackedVertex+;
 #pragma link C++ class ZooPackedParticle+;
 
+#pragma link C++ class ZooKeyValueBlock+;
+#pragma link C++ class ZooKeyValueBlock::const_iterator+;
+#pragma link C++ class ZooKeyValueBlock::r_proxy+;
+#pragma link C++ class ZooKeyValueBlock::rw_proxy+;
+#pragma link C++ function operator<<(std::ostream&, const ZooKeyValueBlock&);
+
+#pragma link C++ class ZooLHCbID+;
 #pragma link C++ class ZooLHCbIDBlock+;
+#pragma link C++ function operator<<(std::ostream&, const ZooLHCbID&);
 
 #pragma link C++ class ZooMCGenEventInfo+;
 #pragma link C++ class ZooOccupancy+;
@@ -58,6 +66,10 @@
 #pragma link C++ class ZooEv+;
 #pragma link C++ class ZooMCBkg+;
 #pragma link C++ class ZooHitPattern+;
+#pragma link C++ function operator&(const ZooHitPattern&, const ZooHitPattern&);
+#pragma link C++ function operator|(const ZooHitPattern&, const ZooHitPattern&);
+#pragma link C++ function operator^(const ZooHitPattern&, const ZooHitPattern&);
+#pragma link C++ function operator~(const ZooHitPattern&);
 #pragma link C++ class ZooTrackExtraInfo+;
 #pragma link C++ class ZooTrackInfo+;
 #pragma link C++ class ZooTreefitInfo+;

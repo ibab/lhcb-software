@@ -13,6 +13,8 @@
 #include <bitset>
 #include <limits>
 #include <cassert>
+#include <iostream>
+#include <cstdio>
 #include <algorithm>
 #include <utility>
 
@@ -42,6 +44,7 @@
 #include "ZooTriggerDecisions.h"
 #include "ZooOccupancy.h"
 #include "ZooLHCbID.h"
+#include "ZooKeyValueBlock.h"
 
 typedef ROOT::Math::PxPyPzEVector     zooLorentzVector; 
 typedef ROOT::Math::XYZPoint          XYZPoint;
@@ -850,28 +853,49 @@ ZooHitPattern operator^(const ZooHitPattern& p1, const ZooHitPattern& p2);
 /// bitwise complement
 ZooHitPattern operator~(const ZooHitPattern& other);
 
-class ZooTrackExtraInfo: public TObject
+/// ExtraInfo map of tracks (key-value pairs mapping unsigned to float)
+class ZooTrackExtraInfo: public ZooKeyValueBlock
 {
  public:
-  typedef std::pair<UInt_t, Float_t> KeyValuePair;
-  typedef std::vector<KeyValuePair> KeyValueVector;
+  typedef ZooKeyValueBlock::KeyValuePair KeyValuePair;
+  typedef ZooKeyValueBlock::KeyValueVector KeyValueVector;
+  /// destructor
   virtual ~ZooTrackExtraInfo();
-  /// check if track extra info exists
-  bool exists(unsigned key) const;
-  /// return value of track extra info
-  float value(unsigned key) const;
   /// default constructed (needed for ROOT I/O)
-  ZooTrackExtraInfo() {}
+  ZooTrackExtraInfo() { }
   /// constructor to be used by anyone but ROOT
-  ZooTrackExtraInfo(KeyValueVector& extrainfo);
+  ZooTrackExtraInfo(KeyValueVector& extrainfo) :
+      ZooKeyValueBlock(extrainfo) { }
+  /// copy constructor
+  ZooTrackExtraInfo(const ZooTrackExtraInfo& extrainfo) :
+      ZooKeyValueBlock(extrainfo) { }
+  /// assignment
+  const ZooTrackExtraInfo& operator=(const ZooTrackExtraInfo& extrainfo)
+  { ZooKeyValueBlock::operator=(extrainfo); return *this; }
+  /// enforce read-only access
+  r_proxy operator[](unsigned key) { return get_r_proxy(key); }
   
  private:
-  typedef std::vector<UInt_t> KeyVector;
-  typedef std::vector<Float_t> ValueVector;
-  KeyVector m_idx;
-  ValueVector m_val;
-  
-  ClassDef(ZooTrackExtraInfo, 2);
+  /// forbidden
+  ZooTrackExtraInfo(const ZooKeyValueBlock&);
+  /// forbidden
+  const ZooTrackExtraInfo& operator=(const ZooKeyValueBlock& extrainfo);
+  /// forbidden
+  float erase(unsigned);
+  /// forbidden
+  float insert(unsigned, float);
+  /// forbidden
+  float modify(unsigned, float);
+  /// forbidden
+  const_iterator erase(const const_iterator&);
+  /// forbidden
+  unsigned capacity() const;
+  /// forbidden
+  void reserve(unsigned);
+  /// forbidden
+  void clear();
+
+  ClassDef(ZooTrackExtraInfo, 3);
 };
 
 /** @class ZooTrack
@@ -1411,41 +1435,33 @@ class ZooP : public TObject
  *  to implement for public release.
  *  reads info(int ,double) method of LHCb::Particle
  */
-class ZooParticleInfo: public TObject
+class ZooParticleInfo: public ZooKeyValueBlock
 {
  public:
-  typedef std::pair<UInt_t, Float_t> KeyValuePair;
-  typedef std::vector<KeyValuePair> KeyValueVector;
-  /// check if the property "key" exists
-  bool exists(unsigned key) const;
-  /// get the value of the property "key"
-  float value(unsigned key) const;
- protected:
-  /// modify a value
-  bool modify(unsigned key, float val);
-  /// add an info to an existing ntuple
-  int insert(unsigned key, float val);
-  /// deprecated method. don't expect compatibility with exists() and value()
-  bool insert_unsorted(unsigned key, float val);
- public:
-  /// default constructor. Needed for ROOT
-  ZooParticleInfo() {}
-  /// usefull constructor. used in ZooWriter
-  ZooParticleInfo(KeyValueVector& extrainfo);
+  typedef ZooKeyValueBlock::KeyValuePair KeyValuePair;
+  typedef ZooKeyValueBlock::KeyValueVector KeyValueVector;
+  /// destructor
   virtual ~ZooParticleInfo();
-  /// print all properties to stdout
-  void dump();
+  /// default constructed (needed for ROOT I/O)
+  ZooParticleInfo() { }
+  /// constructor to be used by anyone but ROOT
+  ZooParticleInfo(KeyValueVector& extrainfo) :
+      ZooKeyValueBlock(extrainfo) { }
+  /// copy constructor
+  ZooParticleInfo(const ZooParticleInfo& extrainfo) :
+      ZooKeyValueBlock(extrainfo) { }
+  /// assignment
+  const ZooParticleInfo& operator=(const ZooParticleInfo& extrainfo)
+  { ZooKeyValueBlock::operator=(extrainfo); return *this; }
+  
  private:
-  typedef std::vector<UInt_t> KeyVector;
-  typedef std::vector<Float_t> ValueVector;
-  KeyVector m_idx;
-  ValueVector m_val;
+  /// forbidden
+  ZooParticleInfo(const ZooKeyValueBlock&);
+  /// forbidden
+  const ZooParticleInfo& operator=(const ZooKeyValueBlock& extrainfo);
 
-  friend class ZooReader;
-
-  ClassDef(ZooParticleInfo,2);
+  ClassDef(ZooParticleInfo, 3);
 };
-
 
 #endif /* __ZOO_H */
 

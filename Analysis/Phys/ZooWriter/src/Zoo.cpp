@@ -57,38 +57,6 @@ const ZooHitPattern& ZooHitPattern::operator ^= (const ZooHitPattern& other)
     return *this;
 }
 
-bool ZooTrackExtraInfo::exists(unsigned key) const
-{
-    return std::binary_search(m_idx.begin(), m_idx.end(), key);
-}
-
-float ZooTrackExtraInfo::value(unsigned key) const
-{
-    KeyVector::const_iterator it =
-	std::lower_bound(m_idx.begin(), m_idx.end(), key);
-    if (it != m_idx.end())
-	return m_val[it - m_idx.begin()];
-    else
-	return std::numeric_limits<float>::quiet_NaN();
-}
-
-ZooTrackExtraInfo::ZooTrackExtraInfo(KeyValueVector& extrainfo)
-{
-    using namespace boost::lambda;
-    m_idx.reserve(extrainfo.size());
-    m_val.reserve(extrainfo.size());
-    //the next two lines break with boost 1.44 so we have to specify the return type of bind explicitely
-    std::sort(extrainfo.begin(), extrainfo.end(),
-	    bind<unsigned int>(&KeyValuePair::first, _1) < bind<unsigned int>(&KeyValuePair::first, _2));
-    for (std::size_t i = 0; i < extrainfo.size(); ++i) {
-	// skip duplicate keys
-	if (i && extrainfo[i - 1].first == extrainfo[i].first)
-	    continue;
-	m_idx.push_back(extrainfo[i].first);
-	m_val.push_back(extrainfo[i].second);
-    }
-}
-
 void ZooEv::Clear()
 {
     m_particles = 0; m_mcParticles = 0; m_trackmult = 0; m_nbMCPVs = 0;
@@ -141,90 +109,6 @@ ZooHitPattern ZooHitPattern::complement() const
     p.m_tt = ~m_tt;
     p.m_muon = ~m_muon;
     return p;
-}
-
-bool ZooParticleInfo::exists(unsigned key) const
-{
-    return std::binary_search(m_idx.begin(), m_idx.end(), key);
-}
-
-float ZooParticleInfo::value(unsigned key) const
-{
-    KeyVector::const_iterator it =
-	std::lower_bound(m_idx.begin(), m_idx.end(), key);
-    if (it != m_idx.end())
-	return m_val[it - m_idx.begin()];
-    else
-	return std::numeric_limits<float>::quiet_NaN();
-}
-
-ZooParticleInfo::ZooParticleInfo(KeyValueVector& extrainfo)
-{
-    using namespace boost::lambda;
-    m_idx.reserve(extrainfo.size());
-    m_val.reserve(extrainfo.size());
-    //the next two lines breake with boost 1.44 so we have to specify the return type of bind explicitely
-    std::sort(extrainfo.begin(), extrainfo.end(),
-	    bind<unsigned int>(&KeyValuePair::first, _1) < bind<unsigned int>(&KeyValuePair::first, _2));
-    for (std::size_t i = 0; i < extrainfo.size(); ++i) {
-	// skip duplicate keys
-	if (i && extrainfo[i - 1].first == extrainfo[i].first)
-	    continue;
-	m_idx.push_back(extrainfo[i].first);
-	m_val.push_back(extrainfo[i].second);
-    }
-}
-
-int ZooParticleInfo::insert(unsigned key, float val)
-{
-    // okay, this looks ugly. I tried std algorithms and failed.
-    unsigned lower = 0;
-    for (unsigned k = 0 ; k < m_idx.size() ; ++k) {
-	if (key == m_idx[k]) {
-	    m_val[k] = val;
-	    return 0;
-	}
-	if (key > m_idx[k]) lower++;
-    }
-    if (m_idx.size() == lower) {
-	m_idx.push_back(key);
-	m_val.push_back(val);
-	return 0;
-    }
-    m_idx.push_back(m_idx.back());
-    m_val.push_back(m_val.back()); 
-
-    for (unsigned k = m_idx.size()-2 ; k > lower ; --k) {
-	m_idx[k] = m_idx[k-1];
-	m_val[k] = m_val[k-1];
-    }
-   m_idx[lower] = key;
-   m_val[lower] = val;
-   return 0;
-
-}
-
-bool ZooParticleInfo::insert_unsorted(unsigned key, float val) {
-  if (exists(key)) return modify(key, val);
-  m_idx.push_back(key);
-  m_val.push_back(key);
-  return true;
-}
-
-bool ZooParticleInfo::modify(unsigned key, float val) {
-    for (unsigned k = 0 ; k < m_idx.size() ; ++k) {
-      if (key == m_idx[k]) {
-        m_val[k] = val;
-        return true;
-      }
-    }
-    return false;
-}
-
-void ZooParticleInfo::dump() {
-  for (unsigned k = 0 ; k < m_idx.size() ; ++k) {
-    printf("%d\t%f\n",m_idx[k],m_val[k]);
-  }
 }
 
 ZooP::~ZooP() { }
