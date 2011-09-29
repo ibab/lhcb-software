@@ -35,6 +35,9 @@
 
 #include "ZooObjectManager.h"
 #include "ZooPacked.h"
+#include "ZooPackedState.h"
+#include "ZooPackedVertex.h"
+#include "ZooPackedParticle.h"
 #include "ZooPackedStates.h"
 #include "ZooTriggerDecisions.h"
 #include "ZooOccupancy.h"
@@ -55,6 +58,7 @@ class ZooStable : public TObject
   ZooStable(int trackType, int charge) :
     m_trackType(trackType), m_charge(charge) {
   }
+  virtual ~ZooStable();
  
   ///Gives back the track type from which the particle was build:
   int trackType() const { return m_trackType; };
@@ -104,6 +108,7 @@ class ZooTreefitInfo : public TObject
     m_decVtxChi2(chi2),
     m_decVtxNDoF(ndof) {
   }
+  virtual ~ZooTreefitInfo();
   Float_t  measuredMass()    const { return m_measuredMass; }
   Float_t  measuredMassErr() const { return m_measuredMassErr; }
   Float_t  fDistance()       const { return m_fD; }
@@ -163,6 +168,7 @@ class ZooDecay : public TObject
     m_fD(fd), m_fDErr(fderr), m_fDChi2(fdchi2), m_ct(ct), m_ctErr(cterr),
     m_ctChi2(ctChi2), m_decVtxChi2(chi2), m_isolation(iso), m_decVtxNDoF(ndof){ 
   }
+  virtual ~ZooDecay();
   
   float measuredMass()    const { return m_measuredMass; }
   float measuredMassErr() const { return m_measuredMassErr; }
@@ -269,7 +275,7 @@ class ZooMCP : public TObject
 
     public:
 	ZooMCP() : m_pid(0), m_key(-1), m_mcTrackInfo(0), m_flags(0) { }
-	virtual ~ZooMCP() { }
+	virtual ~ZooMCP();
 	
 	const ZooMCP* Mo(unsigned i)          const { return m_mother[i]; }
 	unsigned      NMo()                   const { return m_mother.size(); }
@@ -373,6 +379,7 @@ class ZooTagging : public TObject
 	    m_muonTagDecision(0), m_osKaonTagDecision(0),
 	    m_ssKaonTagDecision(0),  m_ssPionTagDecision(0), m_vtxTagDecision(0)
         { }
+	virtual ~ZooTagging();
 
 	int     tagDecision()       const { return m_tagDecision; };
 	int     osTagDecision()     const { return m_osTagDecision; };
@@ -454,6 +461,8 @@ class ZooMCBkg : public TObject
 	    isFromPV = 4
 	};
 
+	virtual ~ZooMCBkg();
+
 	int Category()   const { return m_category; };
 	unsigned flags() const {return m_flags; }
 
@@ -484,6 +493,7 @@ class ZooTrigger : public TObject
 	    std::fill(m_tos, m_tos + TriggerDecisions::NTriggerDecisionWords, 0);
 	    std::fill(m_tps, m_tps + TriggerDecisions::NTriggerDecisionWords, 0);
 	}
+	virtual ~ZooTrigger();
 
 	// backward compatible or of all bits
 	bool L0Dec(void)   const { return m_L0Dec; }; 
@@ -665,6 +675,7 @@ class ZooTrigger : public TObject
 class ZooGhostCategory : public TObject
 {
     public:
+	virtual ~ZooGhostCategory();
 	int ghostCategory() const { return m_ghostCategory; };
 
     private:
@@ -679,6 +690,7 @@ class ZooGhostCategory : public TObject
 class ZooDLL : public TObject
 {
     public:
+	virtual ~ZooDLL();
 	float  DLLe()   const { return m_DLLe; };
 	float  DLLk()   const { return m_DLLk; };
 	float  DLLmu()  const { return m_DLLmu; };
@@ -708,6 +720,7 @@ class ZooDLL : public TObject
 class ZooLinks : public TObject
 { 
     public:
+	virtual ~ZooLinks();
 	/// size of linker table
 	unsigned NLinks() const { return m_fracs.size(); }
 	/// size of linker table
@@ -776,6 +789,7 @@ class ZooHitPattern : public TObject
 	    m_itTopBottom(itTopBottom), m_itAC(itAC),
 	    m_tt(tt), m_muon(muon){ 
 	}
+	virtual ~ZooHitPattern();
 
 	/// get pattern Velo A side R sensors
 	std::bitset<23> veloAR() const { return std::bitset<23>(m_veloAR); }
@@ -841,6 +855,7 @@ class ZooTrackExtraInfo: public TObject
  public:
   typedef std::pair<UInt_t, Float_t> KeyValuePair;
   typedef std::vector<KeyValuePair> KeyValueVector;
+  virtual ~ZooTrackExtraInfo();
   /// check if track extra info exists
   bool exists(unsigned key) const;
   /// return value of track extra info
@@ -867,21 +882,23 @@ class ZooTrackInfo : public TObject
     public:
 
 	ZooTrackInfo() :
-	    m_chi2(-1.), m_flags(UShort_t(-1)), m_ndf(-1), m_nmeas(0), m_nlhcbids(0),
-	    m_nVeloIDs(0), m_nTTIDs(0), m_nITIDs(0), m_nOTIDs(0), m_nMuonIDs(0),
-	    m_type(UChar_t(-1)), m_history(UChar_t(-1)),
-    m_patstate(UChar_t(-1)), m_fitstate(UChar_t(-1)),m_cloneDist(-1){
-	}
+	    m_chi2(-1.), m_cloneDist(-1), m_flags(UShort_t(-1)), m_ndf(-1),
+	    m_nmeas(0), m_nlhcbids(0), m_nVeloIDs(0), m_nTTIDs(0), m_nITIDs(0),
+	    m_nOTIDs(0), m_nMuonIDs(0), m_type(UChar_t(-1)),
+	    m_history(UChar_t(-1)), m_patstate(UChar_t(-1)),
+	    m_fitstate(UChar_t(-1)) { }
 
 	ZooTrackInfo(double chi2, int ndf, int nmeas, int nlhcbids,
 		int nVeloIDs, int nTTIDs, int nITIDs, int nOTIDs, int nMuonIDs,
-               int type, int flags, int history, int patstate, int fitstate, int cloneDist) :
-	    m_chi2(chi2), m_flags(flags), m_ndf(ndf), m_nmeas(nmeas),
-	    m_nlhcbids(nlhcbids), m_nVeloIDs(nVeloIDs), m_nTTIDs(nTTIDs),
-	    m_nITIDs(nITIDs), m_nOTIDs(nOTIDs), m_nMuonIDs(nMuonIDs),
-	    m_type(type), m_history(history),
-    m_patstate(patstate), m_fitstate(fitstate),m_cloneDist(cloneDist){
-	}
+		int type, int flags, int history, int patstate, int fitstate,
+		int cloneDist) :
+	    m_chi2(chi2), m_cloneDist(cloneDist), m_flags(flags), m_ndf(ndf),
+	    m_nmeas(nmeas), m_nlhcbids(nlhcbids), m_nVeloIDs(nVeloIDs),
+	    m_nTTIDs(nTTIDs), m_nITIDs(nITIDs), m_nOTIDs(nOTIDs),
+	    m_nMuonIDs(nMuonIDs), m_type(type), m_history(history),
+	    m_patstate(patstate), m_fitstate(fitstate) { }
+
+	virtual ~ZooTrackInfo();
 
 	double chi2()       const { return m_chi2; }
 	int ndf()           const { return m_ndf; }//for compatibility reasons
@@ -900,7 +917,7 @@ class ZooTrackInfo : public TObject
 	int history()       const { return m_history; }
 	int patRecoStatus() const { return m_patstate; }
 	int fitStatus()     const { return m_fitstate; }
-  int cloneDist()  const{ return m_cloneDist;}
+	int cloneDist()  const{ return m_cloneDist;}
 
 
 	const ZooPackedStates* states() const { 
@@ -1005,6 +1022,7 @@ class ZooMCGenEventInfo : public TObject
 	ZooMCGenEventInfo(const std::vector<Short_t>& processTypes) :
 	    m_processTypes(processTypes)
         { }
+	virtual ~ZooMCGenEventInfo();
 
 	/// return vector of process types
 	const std::vector<Short_t>& processTypes() const { return m_processTypes; }
@@ -1163,7 +1181,7 @@ class ZooEv : public TObject
 
 	ZooEv() { Clear(); } 
 
-	virtual ~ZooEv() { }    
+	virtual ~ZooEv();
 
 	int nTracksVelo() const { return m_nTracksVelo; }
 	int nTracksVeloBackward() const { return m_nTracksVeloBackward; }
@@ -1219,7 +1237,7 @@ class ZooP : public TObject
  public:
   
   ZooP() : m_info(ZooObjectID::maxid) { }
-  virtual ~ZooP() { }
+  virtual ~ZooP();
   
   const ZooP* Mo(unsigned i) const { return m_mother[i]; }
   unsigned    NMo()          const { return m_mother.size(); }
@@ -1414,6 +1432,7 @@ class ZooParticleInfo: public TObject
   ZooParticleInfo() {}
   /// usefull constructor. used in ZooWriter
   ZooParticleInfo(KeyValueVector& extrainfo);
+  virtual ~ZooParticleInfo();
   /// print all properties to stdout
   void dump();
  private:
