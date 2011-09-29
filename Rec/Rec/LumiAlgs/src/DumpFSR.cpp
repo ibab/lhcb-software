@@ -1,4 +1,3 @@
-// $Id: DumpFSR.cpp,v 1.4 2010-05-13 11:57:05 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DumpFSR );
-
+DECLARE_ALGORITHM_FACTORY( DumpFSR )
 
 //=============================================================================
 // Standard constructor, initializes variables

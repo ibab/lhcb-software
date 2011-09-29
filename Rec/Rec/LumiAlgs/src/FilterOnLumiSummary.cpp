@@ -1,4 +1,3 @@
-// $Id: FilterOnLumiSummary.cpp,v 1.1 2010-02-12 16:56:42 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FilterOnLumiSummary );
+DECLARE_ALGORITHM_FACTORY( FilterOnLumiSummary )
 
 //=============================================================================
 // Standard constructor, initializes variables

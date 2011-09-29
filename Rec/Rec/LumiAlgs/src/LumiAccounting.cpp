@@ -1,4 +1,3 @@
-// $Id: LumiAccounting.cpp,v 1.5 2009-11-11 09:25:39 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiAccounting );
+DECLARE_ALGORITHM_FACTORY( LumiAccounting )
 
 //=============================================================================
 // Standard constructor, initializes variables

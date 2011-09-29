@@ -1,4 +1,3 @@
-// $Id: LumiReadBackFSR.cpp,v 1.1 2009-06-12 08:17:50 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiReadBackFSR );
+DECLARE_ALGORITHM_FACTORY( LumiReadBackFSR )
 
 
 //=============================================================================

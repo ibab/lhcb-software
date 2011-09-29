@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-09-29 - Marco Cattaneo
+ - Bug fixes in GetIntegratedLuminosity.cpp:
+   . Integrated luminosity was not computed if msgLevel > INFO
+   . Base class finalize was never called
+ - Fixes to trivial icc remarks
+
 !========================= LumiAlgs v7r0 2011-09-15 =========================
 ! 2011-09-15 - Marco Cattaneo
  - Update LumiAlgsExclusions.py to follow verbosity change in ROOT persistency

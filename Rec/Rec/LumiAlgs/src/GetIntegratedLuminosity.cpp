@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetIntegratedLuminosity );
+DECLARE_ALGORITHM_FACTORY( GetIntegratedLuminosity )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -83,8 +83,6 @@ StatusCode GetIntegratedLuminosity::execute() {
 StatusCode GetIntegratedLuminosity::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   
-  StatusCode sc = StatusCode::SUCCESS ;
-  
   std::string fromlumi = "FromLumi_";
   Tuple tuple = nTuple("LumiTuple");
   
@@ -138,9 +136,11 @@ StatusCode GetIntegratedLuminosity::finalize() {
     tuple->column("IntegratedLuminosityErr", -IntegratedLuminosityErr);
       
   }//write dummy values
-  
-  sc  = tuple->write();
-  return sc; 
+
+  StatusCode sc = tuple->write();
+  if( sc.isFailure() ) {
+    warning() << "Failure writing the LumiTuple" << endmsg;
+  }
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
@@ -159,34 +159,34 @@ int GetIntegratedLuminosity::check() {
   std::vector< std::string > evAddresses = navigatorTool->navigate(fileRecordRoot, m_EventCountFSRName);
   for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
       iAddr != evAddresses.end() ; ++iAddr ){
-    if ( msgLevel(MSG::INFO) ) {
-      if (msgLevel(MSG::DEBUG)) debug() << "ev address: " << (*iAddr) << endmsg;
-      std::string eventCountRecordAddress = *iAddr;
-      // read EventCountFSR 
-      if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
-        Warning("An EventCount Record was not found").ignore();
-        if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
-      } else {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << eventCountRecordAddress << " found" << endmsg ;
-        LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
-        // look at the EventCountFSR
-        if (msgLevel(MSG::DEBUG)) debug() << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << endmsg;
-        if (msgLevel(MSG::DEBUG)) debug() << " Event Count FSR Flag " << eventCountFSR->statusFlag()  << endmsg; 
-        if (msgLevel(MSG::DEBUG)) debug() << " Event Count FSR Input : " << eventCountFSR->input() << endmsg; 
-        if (msgLevel(MSG::DEBUG)) debug()  << "Event Count FSR output : " << eventCountFSR->output()  << endmsg; 
-       	if ( eventCountFSR->statusFlag()  == LHCb::EventCountFSR::VERIFIED ){
-          if (msgLevel(MSG::DEBUG)) debug ()      << "These files are checked : " 
-                                                  <<   eventCountFSR->statusFlag()  << endmsg;
-          checkTheFSR = 1;
-        }//check the flag
-	
-        else {
-          if (msgLevel(MSG::DEBUG)) debug() << "These files were not checked yet : "
-                                            <<   eventCountFSR->statusFlag() << endmsg; 
-          checkTheFSR = -1;
-        }//check the flag 
-      }//the eventcount was found
-    }
+    if (msgLevel(MSG::DEBUG)) debug() << "ev address: " << (*iAddr) << endmsg;
+    std::string eventCountRecordAddress = *iAddr;
+    // read EventCountFSR 
+    if ( !exist<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress) ) {
+      Warning("An EventCount Record was not found").ignore();
+      if ( msgLevel(MSG::DEBUG) ) debug() << eventCountRecordAddress << " not found" << endmsg ;
+    } else {
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << eventCountRecordAddress << " found" << endmsg ;
+      LHCb::EventCountFSR* eventCountFSR = get<LHCb::EventCountFSR>(m_fileRecordSvc, eventCountRecordAddress);
+      // look at the EventCountFSR
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << eventCountRecordAddress << ": EventCountFSR: " << *eventCountFSR << endmsg;
+        debug() << " Event Count FSR Flag " << eventCountFSR->statusFlag()  << endmsg; 
+        debug() << " Event Count FSR Input : " << eventCountFSR->input() << endmsg; 
+        debug()  << "Event Count FSR output : " << eventCountFSR->output()  << endmsg; 
+      }
+      if ( eventCountFSR->statusFlag()  == LHCb::EventCountFSR::VERIFIED ){
+        if (msgLevel(MSG::DEBUG)) debug ()      << "These files are checked : " 
+                                                <<   eventCountFSR->statusFlag()  << endmsg;
+        checkTheFSR = 1;
+      }//check the flag
+      
+      else {
+        if (msgLevel(MSG::DEBUG)) debug() << "These files were not checked yet : "
+                                          <<   eventCountFSR->statusFlag() << endmsg; 
+        checkTheFSR = -1;
+      }//check the flag 
+    }//the eventcount was found
   }  
   return (checkTheFSR);
 }

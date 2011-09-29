@@ -1,4 +1,3 @@
-// $Id: LumiCheckCondDB.cpp,v 1.8 2010-05-13 11:57:05 rlambert Exp $
 // Include files 
  
 // from Gaudi
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiCheckCondDB );
+DECLARE_ALGORITHM_FACTORY( LumiCheckCondDB )
 
 
 //=============================================================================
@@ -81,7 +80,7 @@ StatusCode LumiCheckCondDB::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // check the DB in execution mode
-  StatusCode rc = checkDB("execute");
+  checkDB("execute").ignore();
 
   return StatusCode::SUCCESS;
 }
@@ -94,7 +93,7 @@ StatusCode LumiCheckCondDB::stop() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Stop" << endmsg;
 
   // check the DB in stop mode
-  StatusCode rc = checkDB("stop");
+  checkDB("stop").ignore();
 
   return GaudiAlgorithm::stop();  // must be called after all other actions
 }
@@ -123,7 +122,7 @@ void LumiCheckCondDB::handle( const Incident& incident )
   {
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Incident: BeginInputFile" << endmsg;
     // check the DB in file-open mode
-    StatusCode rc = checkDB("BeginInputFile");
+    checkDB("BeginInputFile").ignore();
   }
 #endif
 

@@ -1,4 +1,3 @@
-// $Id: GetLumiParameters.cpp,v 1.1 2010-11-20 08:17:50 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GetLumiParameters );
+DECLARE_TOOL_FACTORY( GetLumiParameters )
 
 //=============================================================================
 // Standard constructor, initializes variables

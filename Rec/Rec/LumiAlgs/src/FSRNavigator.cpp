@@ -1,4 +1,3 @@
-// $Id: FSRNavigator.cpp,v 1.1 2009-06-12 08:17:50 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FSRNavigator );
+DECLARE_TOOL_FACTORY( FSRNavigator )
 
 //=============================================================================
 // Standard constructor, initializes variables

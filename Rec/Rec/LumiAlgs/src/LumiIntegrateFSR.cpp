@@ -1,4 +1,3 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.8 2010-05-13 11:57:05 rlambert Exp $
 // Include files 
  
 // from Gaudi
@@ -28,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR );
+DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR )
 
 
 //=============================================================================

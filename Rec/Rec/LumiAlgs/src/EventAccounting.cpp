@@ -1,4 +1,3 @@
-// $Id: EventAccounting.cpp,v 1.2 2009-11-12 16:54:30 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EventAccounting );
+DECLARE_ALGORITHM_FACTORY( EventAccounting )
 
 //=============================================================================
 // Standard constructor, initializes variables

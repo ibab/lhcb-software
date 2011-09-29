@@ -1,4 +1,3 @@
-// $Id: ILumiIntegrator.h,v 1.1 2009-06-12 08:17:50 panmanj Exp $
 #ifndef ILUMIINTEGRATOR_H 
 #define ILUMIINTEGRATOR_H 1
 
@@ -14,7 +13,7 @@ namespace LHCb {
   class LumiFSR;
   class TimeSpanFSR;
   class LumiIntegral;
-};
+}
 
 static const InterfaceID IID_ILumiIntegrator ( "ILumiIntegrator", 1, 0 );
 

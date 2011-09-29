@@ -1,4 +1,3 @@
-// $Id: IFSRNavigator.h,v 1.1 2009-06-12 08:17:50 panmanj Exp $
 #ifndef IFSRNAVIGATOR_H 
 #define IFSRNAVIGATOR_H 1
 
@@ -13,7 +12,7 @@
 namespace LHCb {
   class LumiFSR;
   class LumiIntegral;
-};
+}
 
 static const InterfaceID IID_IFSRNavigator ( "IFSRNavigator", 1, 0 );
 

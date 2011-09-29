@@ -1,4 +1,3 @@
-// $Id: PropagateFSRs.cpp,v 1.1 2010-03-26 11:43:18 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PropagateFSRs );
+DECLARE_ALGORITHM_FACTORY( PropagateFSRs )
 
 //=============================================================================
 // Standard constructor, initializes variables

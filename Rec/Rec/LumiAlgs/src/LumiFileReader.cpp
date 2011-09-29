@@ -1,4 +1,3 @@
-// $Id: LumiFileReader.cpp,v 1.2 2009-10-09 15:51:08 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiFileReader );
+DECLARE_ALGORITHM_FACTORY( LumiFileReader )
 
 
 //=============================================================================

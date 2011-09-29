@@ -1,4 +1,3 @@
-// $Id: TimeAccounting.cpp,v 1.1 2010-01-04 16:31:22 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TimeAccounting );
+DECLARE_ALGORITHM_FACTORY( TimeAccounting )
 
 //=============================================================================
 // Standard constructor, initializes variables

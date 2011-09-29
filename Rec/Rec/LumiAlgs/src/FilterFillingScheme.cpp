@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
  
 // from Gaudi
@@ -215,8 +214,6 @@ bool FilterFillingScheme::processDB() {
     if ( msgLevel(MSG::DEBUG) ) debug() << "filled bucket at tested location: " << index << " " << scheme[index] << " - return false " << endmsg;
     return false;
   }
-
-  return true;
 }
 
 //=============================================================================
