@@ -5,6 +5,9 @@
 #
 # release history
 # v0.1	2011-09-28 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	initial release
+# v0.2	2011-09-30 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	fixed problem with multiple subdirectories in build
 #
 # todo
 # - tested my examples, wait for feedback from other people
@@ -143,8 +146,9 @@ allsrc = $(filter-out $(alldicts), $(csrc) $(ccsrc) $(f77src))
     local-distclean doxy subdirs-all subdirs-dep subdirs-clean \
     subdirs-distclean strip strip-local subdirs-strip
 ifneq ($(strip $(SUBDIRS)),)
-.PHONY: $(SUBDIRS)-all $(SUBDIRS)-dep $(SUBDIRS)-clean \
-    $(SUBDIRS)-distclean $(SUBDIRS)-strip
+.PHONY: $(patsubst %,%-all,$(SUBDIRS)) $(patsubst %,%-dep,$(SUBDIRS)) \
+    $(patsubst %,%-clean,$(SUBDIRS)) $(patsubst %,%-distclean,$(SUBDIRS)) \
+    $(patsubst %,%-strip,$(SUBDIRS))
 endif
 
 all:
@@ -182,21 +186,21 @@ doxy: $(allsrc) Doxyfile
 	doxygen Doxyfile
 
 ifneq ($(strip $(SUBDIRS)),)
-subdirs-all: $(SUBDIRS)-all
-subdirs-dep: $(SUBDIRS)-dep
-subdirs-clean: $(SUBDIRS)-clean
-subdirs-distclean: $(SUBDIRS)-distclean
-subdirs-strip: $(SUBDIRS)-strip
+subdirs-all: $(patsubst %,%-all,$(SUBDIRS))
+subdirs-dep: $(patsubst %,%-dep,$(SUBDIRS))
+subdirs-clean: $(patsubst %,%-clean,$(SUBDIRS))
+subdirs-distclean: $(patsubst %,%-distclean,$(SUBDIRS))
+subdirs-strip: $(patsubst %,%-strip,$(SUBDIRS))
 
-$(SUBDIRS)-all:
+$(patsubst %,%-all,$(SUBDIRS)):
 	$(MAKE) -C $(patsubst %-all,%,$@) all
-$(SUBDIRS)-dep:
+$(patsubst %,%-dep,$(SUBDIRS)):
 	$(MAKE) -C $(patsubst %-dep,%,$@) dep
-$(SUBDIRS)-clean:
+$(patsubst %,%-clean,$(SUBDIRS)):
 	$(MAKE) -C $(patsubst %-clean,%,$@) clean
-$(SUBDIRS)-distclean:
+$(patsubst %,%-distclean,$(SUBDIRS)):
 	$(MAKE) -C $(patsubst %-distclean,%,$@) distclean
-$(SUBDIRS)-strip:
+$(patsubst %,%-strip,$(SUBDIRS)):
 	$(MAKE) -C $(patsubst %-strip,%,$@) strip
 else
 subdirs-all:

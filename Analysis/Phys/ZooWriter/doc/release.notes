@@ -3,6 +3,9 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-09-30 - Manuel Tobias Schiller
+ - fixed problem with multiple SUBDIRS in Zoo/Rules.mk
+
 ! 2011-09-29 - Manuel Tobias Schiller
  - have ZooTrackExtraInfo and ZooParticleInfo derive from the same base class,
    ZooKeyValueBlock, so we have only one piece of code to maintain
