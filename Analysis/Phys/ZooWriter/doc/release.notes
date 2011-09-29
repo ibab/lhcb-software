@@ -3,6 +3,10 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-09-29 - Paul Seyfert
+ - removed hard coded input filename in ZooOptionsReader, use argv instead:
+   no need to recompile for new input file, once compiled reads every ntuple
+
 ! 2011-09-29 - Georg Alexander Krocker
  - Added some Variables to ZooDll class: hasRich, isMuon, and isMuonLoose, class
    version 1->2

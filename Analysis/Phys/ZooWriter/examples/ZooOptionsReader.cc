@@ -48,7 +48,13 @@ int main(int argc, char** argv)
     //tuple files it is possible to read in more than one file, e.g. from
     //splitted sub-jobs
     boost::shared_ptr<TChain> chain(new TChain("Options"));
-    chain->Add("$ZOOWRITERROOT/options/MC.root");
+    if (2>argc) {
+      std::cout << "USAGE ./ZooOptionsReader <filenames>" << std::endl;
+      return 1;
+    }
+    for (int i = 1 ; i < argc ; ++i) {
+      chain->Add(argv[i]);
+    }
 
     StringArrayProperty      *m_L0Name = 0;
     StringArrayProperty      *m_Hlt1Name = 0;
