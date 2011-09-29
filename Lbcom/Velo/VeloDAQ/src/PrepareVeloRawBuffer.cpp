@@ -3,6 +3,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/RawEvent.h"
+#include "VeloEvent/InternalVeloCluster.h"
 
 #include "VeloDet/DeVelo.h"
 
@@ -13,7 +14,7 @@
 #include "VeloClusterWord.h"
 #include "VeloRawBankVersions.h"
 #include "VeloRawWordSizes.h"
-#include "InternalVeloClusterPtrLessThan.h"
+#include "VeloClusterPtrLessThan.h"
 #include "PrepareVeloRawBuffer.h"
 
 
@@ -110,7 +111,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
 
   // Then sort the clusters by sensor number and local coordinate
   std::sort( m_sortedClusters.begin(), m_sortedClusters.end(), 
-      VeloDAQ::internalVeloClusterPtrLessThan);
+      VeloDAQ::veloClusterPtrLessThan());
 
   // dump input clusters to console, if requested
   if (m_dumpInputClusters) dumpInputClusters();

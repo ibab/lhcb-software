@@ -15,7 +15,6 @@
 
 #include "DecodeRawBankToLiteClusters.h"
 #include "DecodeRawBankToClusters.h"
-#include "VeloClusterPtrLessThan.h"
 
 #include "DecodeVeloRawBuffer.h"
 #include "VeloRawBankDecoder.h"

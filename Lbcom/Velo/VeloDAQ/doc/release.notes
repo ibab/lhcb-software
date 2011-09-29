@@ -3,6 +3,11 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2011-09-29 - Kurt Rinnert
+ - merged source coode for less-than predicate of internal and standard VELO
+   cluster pointers.
+ - added new algorithm to encode raw banks from VELO clusters
+
 !========================= VeloDAQ v6r4 2011-07-27 =========================
 ! 2011-07-19 - Kurt Rinnert
  - added swtich to ZS decoder to allow decoding of clusters in the presence of
