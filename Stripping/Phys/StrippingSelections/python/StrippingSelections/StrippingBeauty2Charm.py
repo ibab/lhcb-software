@@ -60,7 +60,7 @@ config = {
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
     'BPVIPCHI2_MAX' : 25,
-    'BPVLTIME_MIN'  : '0.3*ps',
+    'BPVLTIME_MIN'  : '0.2*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
     'AM_MAX'        : '7000*MeV', # B->Dh+-h0 sets this to 5800*MeV
