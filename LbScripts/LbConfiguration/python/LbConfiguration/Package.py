@@ -145,7 +145,7 @@ def _getSVNPackage(packagename):
                 package, project = l.split()[:2]
                 if "/" in package :
                     hat, package = package.split("/")
-                if packagename == package :
+                if packagename == package and project.upper() in [x.upper() for x in project_names] :
                     pj = PackageConf(package)
                     pj.setHat(hat)
                     pj.setProject(project)
