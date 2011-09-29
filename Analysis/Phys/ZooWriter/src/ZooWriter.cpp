@@ -1428,7 +1428,8 @@ void ZooWriter::writeTrackInfo(ZooP* zp, const LHCb::Particle* p)
 		    tr->flags(), 
 		    (int)tr->history(), 
 		    (int)tr->patRecStatus(),
-		    (int)tr->fitStatus()));
+		    (int)tr->fitStatus(),
+		    (int)tr->info(LHCb::Track::CloneDist, -1.)));
 	if (m_writeLHCbIDs) {
 	    const std::vector<LHCb::LHCbID>& ids = tr->lhcbIDs();
 	    ztri->setLhcbids(
@@ -1555,6 +1556,11 @@ void ZooWriter::writeDLL (ZooP* zp, const LHCb::Particle* p){
 	dll->m_DLLk  = p->proto()->info(LHCb::ProtoParticle::CombDLLk, -999.);
 	dll->m_DLLmu = p->proto()->info(LHCb::ProtoParticle::CombDLLmu, -999.);
 	dll->m_DLLp  = p->proto()->info(LHCb::ProtoParticle::CombDLLp, -999.);
+	dll->m_hasRich = (int) p->proto()->hasInfo( LHCb::ProtoParticle::RichPIDStatus );
+	if (p->proto()->muonPID()!=0){
+	    dll->m_isMuon  = (int) p->proto()->muonPID()->IsMuon();
+	    dll->m_isMuonLoose  = (int) p->proto()->muonPID()->IsMuonLoose();
+	} 
     } else {
 	zp->AssignInfo<ZooDLL>(dll);
     }

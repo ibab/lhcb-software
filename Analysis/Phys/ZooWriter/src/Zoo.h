@@ -683,16 +683,25 @@ class ZooDLL : public TObject
 	float  DLLk()   const { return m_DLLk; };
 	float  DLLmu()  const { return m_DLLmu; };
 	float  DLLp()   const { return m_DLLp; };
+	bool   isMuon() const { return m_isMuon; };
+	bool   isMuonLoose() const { return m_isMuonLoose; };
+	bool   hasRich() const { return m_hasRich; };
+
+
 
     private:
 	Float_t m_DLLe;
 	Float_t m_DLLk;
 	Float_t m_DLLmu;
 	Float_t m_DLLp;
+	Short_t m_isMuon;
+	Short_t m_isMuonLoose;
+	Short_t m_hasRich;
+
 
 	friend class ZooWriter;
 
-	ClassDef(ZooDLL,1)
+	ClassDef(ZooDLL,2)
 };
 
 /// particle-particle linker table (based on hit content of tracks)
@@ -861,17 +870,17 @@ class ZooTrackInfo : public TObject
 	    m_chi2(-1.), m_flags(UShort_t(-1)), m_ndf(-1), m_nmeas(0), m_nlhcbids(0),
 	    m_nVeloIDs(0), m_nTTIDs(0), m_nITIDs(0), m_nOTIDs(0), m_nMuonIDs(0),
 	    m_type(UChar_t(-1)), m_history(UChar_t(-1)),
-	    m_patstate(UChar_t(-1)), m_fitstate(UChar_t(-1)){ 
+    m_patstate(UChar_t(-1)), m_fitstate(UChar_t(-1)),m_cloneDist(-1){
 	}
 
 	ZooTrackInfo(double chi2, int ndf, int nmeas, int nlhcbids,
 		int nVeloIDs, int nTTIDs, int nITIDs, int nOTIDs, int nMuonIDs,
-		int type, int flags, int history, int patstate, int fitstate) :
+               int type, int flags, int history, int patstate, int fitstate, int cloneDist) :
 	    m_chi2(chi2), m_flags(flags), m_ndf(ndf), m_nmeas(nmeas),
 	    m_nlhcbids(nlhcbids), m_nVeloIDs(nVeloIDs), m_nTTIDs(nTTIDs),
 	    m_nITIDs(nITIDs), m_nOTIDs(nOTIDs), m_nMuonIDs(nMuonIDs),
 	    m_type(type), m_history(history),
-	    m_patstate(patstate), m_fitstate(fitstate){ 
+    m_patstate(patstate), m_fitstate(fitstate),m_cloneDist(cloneDist){
 	}
 
 	double chi2()       const { return m_chi2; }
@@ -891,6 +900,8 @@ class ZooTrackInfo : public TObject
 	int history()       const { return m_history; }
 	int patRecoStatus() const { return m_patstate; }
 	int fitStatus()     const { return m_fitstate; }
+  int cloneDist()  const{ return m_cloneDist;}
+
 
 	const ZooPackedStates* states() const { 
 	  return reinterpret_cast<const ZooPackedStates*>(m_states.GetObject()); }
@@ -948,6 +959,9 @@ class ZooTrackInfo : public TObject
 
     private:
 	Float_t m_chi2;	
+	//FIXME: for the moment save this as an int but in reality this is a float
+	//check if we need floating point precision
+	Int_t m_cloneDist;
 	Short_t m_flags;	
 	Char_t m_ndf;		
 	UChar_t m_nmeas;	
@@ -958,6 +972,8 @@ class ZooTrackInfo : public TObject
 	UChar_t m_nOTIDs;
 	UChar_t m_nMuonIDs;
 	
+
+
 	// these can be made into Int_t members if ever required
 	UChar_t m_type;		
 	UChar_t m_history;	
@@ -976,7 +992,7 @@ class ZooTrackInfo : public TObject
 	TRef m_expectedLhcbids;
 	TRef m_collectedLhcbids;
 
-	ClassDef(ZooTrackInfo, 3)
+	ClassDef(ZooTrackInfo, 4)
 };
 
 /// generator level info on generated event

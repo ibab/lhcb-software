@@ -3,6 +3,11 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-09-29 - Georg Alexander Krocker
+ - Added some Variables to ZooDll class: hasRich, isMuon, and isMuonLoose, class
+   version 1->2
+ - Added cloneDistance to ZooTrackInfo, class version 3->4 
+
 ! 2011-09-27 - Manuel Tobias Schiller
  - added polarity member and corresponding method of ZooEv demand increase of
    class version number near the end (from "ClassDef(ZooEv,8)" to
