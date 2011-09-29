@@ -4,7 +4,8 @@
 # =============================================================================
 ## @file dst-explorer
 #
-#  Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
+#  Trivial Bender-based script to check trigger decisions 
+#                                                 for certain (stripping) line
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -28,10 +29,9 @@
 #                 by $Author$
 # =============================================================================
 
-python -i $BENDERROOT/python/Bender/DstExplorer.py $* 
+python -i $BENDERROOT/python/Bender/CheckTrg.py $* 
 
 # =============================================================================
 # The END 
 # =============================================================================
-
 

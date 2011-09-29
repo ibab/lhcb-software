@@ -24,6 +24,65 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-09-29 - Vanya Belyaev
+
+ - add simple useful script to check trigger decision for certain line:
+
+    trg-check [options] the_line file1 [ file2[ ...]]
+
+     >>> run(1000) 
+
+     >>> alg.trgDecs()
+
+     >>> run(1000)
+
+  	  >>> alg.trgDecs() 
+
+
+ "the_line" should be the full (u)DST path , e.g.:
+
+    /Event/Leptonic/Phys/DoubleDiMuonForCharmAssociative[/Particles]
+
+ "typical output" :
+
+ **************************************************************
+  Triggers for  chi_b2(1P)
+ **************************************************************
+ Hlt1_TIS chi_b2(1P)   #lines:     0 #events 6     
+  (100.00+-16.67 )        TOTAL 
+ Hlt1_TOS chi_b2(1P)   #lines:     5 #events 6     
+  ( 66.67+-19.25 )        Hlt1DiMuonHighMassDecision 
+  ( 33.33+-19.25 )        Hlt1DiMuonLowMassDecision 
+  ( 16.67+-15.21 )        Hlt1SingleMuonHighPTDecision 
+  ( 16.67+-15.21 )        Hlt1TrackAllL0Decision 
+  ( 33.33+-19.25 )        Hlt1TrackMuonDecision 
+  (100.00+-16.67 )        TOTAL 
+ Hlt2_TIS chi_b2(1P)   #lines:     0 #events 6     
+  (100.00+-16.67 )        TOTAL 
+ Hlt2_TOS chi_b2(1P)   #lines:    10 #events 6     
+  ( 66.67+-19.25 )        Hlt2DiMuonBDecision 
+  ( 16.67+-15.21 )        Hlt2DiMuonDetachedDecision 
+  ( 16.67+-15.21 )        Hlt2DiMuonDetachedHeavyDecision 
+  ( 16.67+-15.21 )        Hlt2DiMuonDetachedJPsiDecision 
+  ( 33.33+-19.25 )        Hlt2DiMuonJPsiHighPTDecision 
+  ( 16.67+-15.21 )        Hlt2DiMuonPsi2SHighPTDecision 
+  ( 16.67+-15.21 )        Hlt2DoubleDiMuonDecision 
+  ( 50.00+-20.41 )        Hlt2ExpressJPsiDecision 
+  ( 16.67+-15.21 )        Hlt2SingleMuonHighPTDecision 
+  ( 16.67+-15.21 )        Hlt2SingleMuonVHighPTDecision 
+  (100.00+-16.67 )        TOTAL 
+ L0_TIS chi_b2(1P)   #lines:     1 #events 6     
+  ( 16.67+-15.21 )        L0PhotonDecision 
+  (100.00+-16.67 )        TOTAL 
+ L0_TOS chi_b2(1P)   #lines:     3 #events 6     
+  ( 50.00+-20.41 )        L0DiMuonDecision 
+  ( 16.67+-15.21 )        L0HadronDecision 
+  (100.00+-16.67 )        L0MuonDecision 
+  (100.00+-16.67 )        TOTAL 
+ *************************************************************
+
+ 
+
 ! ==================== Phys/Bender v18r0 2011-09-26 ===========================
 
 ! 2011-09-26 - Vanya Belyaev

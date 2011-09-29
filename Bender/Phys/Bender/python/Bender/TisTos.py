@@ -54,8 +54,9 @@ __all__= (
     'tistos'       , ## fill N-tuple with TisTos information
     )
 # ==============================================================================
-from LoKiCore.basic import cpp
-from Bender.Main    import SUCCESS, Algo 
+from   LoKiCore.basic  import cpp
+from   Bender.Main     import SUCCESS, Algo
+import LHCbMath.Types 
 # ==============================================================================
 ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
 # ==============================================================================
@@ -195,8 +196,7 @@ def decisions ( self             ,
     for t in trigs :
         if not tis.has_key(t) : tis[t]  = 1 
         else                  : tis[t] += 1 
-
-
+        
     for i in ( 'Hlt1' , 'Hlt2' ) :
         
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
@@ -204,7 +204,7 @@ def decisions ( self             ,
                                                ITriggerSelectionTisTos.kAnything     , ## TIS
                                                ITriggerSelectionTisTos.kTrueRequired , ## TOS
                                                ITriggerSelectionTisTos.kAnything     ) ## TPS
-        tos = triggers[ i + '_TOS'] 
+        tos = triggers[ i + '_TOS']
         if not tos.has_key('TOTAL') : tos['TOTAL']  = 1
         else                        : tos['TOTAL'] += 1
         for t in trigs :
@@ -261,7 +261,10 @@ def trgDecs ( self            ,
         
     if not isinstance ( triggers , dict ) : 
         return self.Warning ( 'Invalid argument "triggers"' , SUCCESS )
-            
+    
+    VE = cpp.Gaudi.Math.ValueWithError
+    be = cpp.Gaudi.Math.binomEff 
+
     for part in triggers :
         
         trigs = self.triggers[part]
@@ -276,16 +279,19 @@ def trgDecs ( self            ,
         
         tkeys = trigs.keys()
         tkeys.sort()
-        
+
         for k in tkeys :
             
-            trg = trigs[ k ]
-            
-            print k , part, '  #lines:', len(trg)
+            trg = trigs[ k ]            
+            tot  = trg['TOTAL']
+            print k , part, '  #lines: %5d #events %-5d ' %  ( max( len(trg)-1 , 0 ) , tot ) 
             keys = trg.keys()
-            keys.sort() 
+            keys.sort()
+            
             for k in keys :
-                print ' %6.2f  %s ' % ( float(trg[k])/trg['TOTAL']*100 , k )
+                v   = trg[k]
+                eff = be ( v , tot ) * 100 
+                print ' %s  \t %s ' % ( eff.toString ("(%6.2f+-%5.2f )") , k ) 
 
 
     print 90*'*'

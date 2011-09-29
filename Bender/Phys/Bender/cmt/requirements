@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v18r0
+version             v18r1
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -43,7 +43,7 @@ alias bender_MC    "benderMc"
 alias dstExplorer  "dst_explorer"
 alias dst_Explorer "dst_explorer"
 alias Dst_Explorer "dst_explorer"
-alias Dst_explorer "dst_explorer"
+alias check_trg    "trg_check" 
 
 # =============================================================================
 # The END
