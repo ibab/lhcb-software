@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r1 2011-09-29 =========================
 ! 2011-09-29 - Marco Cattaneo
  - Bug fixes in GetIntegratedLuminosity.cpp:
    . Integrated luminosity was not computed if msgLevel > INFO
