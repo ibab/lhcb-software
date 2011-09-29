@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-29 - Mat Charles
+ - Bugfix to D2HHLTUnbiased in Stripping17/LineConfigDictionaries_Charm.py
+
 ! 2011-09-29 - Anton Poluektov 
  - Updated Beauty2Charm dictionary in Stripping17/LineConfigDictionaries_GTWG.py
 
