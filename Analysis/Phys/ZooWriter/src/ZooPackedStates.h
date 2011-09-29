@@ -7,6 +7,7 @@
 #include <TClonesArray.h>
 
 #include "ZooPacked.h"
+#include "ZooPackedState.h"
 
 //// class to hold a objects at given z
 class ZooPackedStates : public TObject

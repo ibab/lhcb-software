@@ -139,6 +139,8 @@ class ZooPackedStorage : public TObject
 	    std::fill(m_arr, m_arr + nDim, std::numeric_limits<PackedT>::min());
 	}
 
+	virtual ~ZooPackedStorage();
+
 #ifndef __CINT__
 	/// templated constructor for anything remotely array-like
 	/** this constructor gives trouble with CINT; it's not needed
@@ -279,6 +281,8 @@ class ZooPackedStorageWithError : public TObject
 	{
 	    Class()->IgnoreTObjectStreamer();
 	}
+
+	virtual ~ZooPackedStorageWithError();
 
 #ifndef __CINT__
 	/// constructor from a Vector and its covariance matrix
@@ -446,122 +450,6 @@ typedef ZooPackedStorage<ZooPackedUnits::particle, 7> ZooPackedParticleVector;
 /// packed particle vector with error
 typedef ZooPackedStorageWithError<ZooPackedUnits::particle,
 	ZooPackedUnits::particlecov, 7> ZooPackedParticleVectorWithError;
-
-/// packed track state at given z
-class ZooPackedState : public ZooPackedStateVectorWithError
-{
-    public:
-	ZooPackedState() : m_z(std::numeric_limits<PackedT>::min()) { }
-
-	template<typename V> ZooPackedState(
-		UnpackedT z, const V& vector, const Matrix& cov) :
-	    ZooPackedStateVectorWithError(vector, cov)
-        { setZ(z); }
-
-	/// return z of state
-	UnpackedT z() const
-	{ return UnitsT::unpack(m_z); }
-
-	void setZ(UnpackedT z)
-	{ m_z =  UnitsT::pack(z); }
-
-    private:
-	PackedT m_z;
-	ClassDef(ZooPackedState, 1);
-};
-
-/// packed vertex
-class ZooPackedVertex : public TObject
-{
-    public:
-	typedef ZooPackedPositionWithError::Vector Vector;
-	typedef ZooPackedPositionWithError::Matrix Matrix;
-
-	ZooPackedVertex() :
-	    m_chi2(-1.f), m_ndof(-1)
-        { }
-
-	template<typename P> ZooPackedVertex(
-		const P& pos, const Matrix& cov, double chi2, short nDoF) :
-	    m_chi2(chi2), m_ndof(nDoF), m_pos(pos, cov)
-        { }
-
-	template<typename P>
-	void set(const P& pos, Matrix& cov,
-		double chi2, short nDoF)
-	{
-	    m_pos.set(pos, cov);
-	    m_ndof = nDoF;
-	    m_chi2 = chi2;
-	}
-
-	/// return chi^2 of vertex fit
-	double chi2() const { return m_chi2; }
-	/// return number of degrees of freedom of vertex fit
-	short nDoF() const { return m_ndof; }
-
-	/// return vertex position
-	const Vector pos() const { return m_pos; }
-	/// return vertex position
-	operator const ROOT::Math::XYZPoint() const { return m_pos; }
-	/// return vertex covariance
-	const Matrix cov() const { return m_pos; }
-	/// return "raw" packed position with error
-	ZooPackedPositionWithError& packedPosWithErr() { return m_pos; }
-
-    private:
-	Float_t m_chi2;
-	Short_t m_ndof;
-	ZooPackedPositionWithError m_pos;
-	ClassDef(ZooPackedVertex, 1);
-};
-
-/// packed particle
-class ZooPackedParticle : public TObject
-{
-    private:
-	ZooPackedParticleVectorWithError m_particle;
-    public:
-	typedef ZooPackedParticleVectorWithError::Vector Vector;
-	typedef ZooPackedParticleVectorWithError::Matrix Matrix;
-	/// default constructor
-	ZooPackedParticle() { Class()->IgnoreTObjectStreamer(); }
-	/// constructor taking position/momentum-vector and its covariance
-	template<typename V> ZooPackedParticle(
-		const V& posmomentum, const Matrix& cov) :
-	    m_particle(posmomentum, cov)
-	{ Class()->IgnoreTObjectStreamer(); }
-	/// constructor taking position/momentum-vector and its covariance
-	template<typename VP, typename VM> ZooPackedParticle(
-		const VP& pos, const VM& mom, const Matrix& cov) :
-	    m_particle(Vector(pos.x(), pos.y(), pos.z(),
-			mom.x(), mom.y(), mom.z(), mom.t()), cov)
-	{ Class()->IgnoreTObjectStreamer(); }
-
-	/// return position
-	const ROOT::Math::XYZPoint pos() const
-	{
-	    Vector tmp = m_particle;
-	    return ROOT::Math::XYZPoint(tmp[0], tmp[1], tmp[2]);
-	}
-	/// return momentum
-	const ROOT::Math::PxPyPzEVector momentum() const
-	{
-	    Vector tmp = m_particle;
-	    return ROOT::Math::PxPyPzEVector(tmp[3], tmp[4], tmp[5], tmp[6]);
-	}
-	/// return covariance matrix for vector (position, momentum)
-	const Matrix cov() const { return m_particle; }
-
-	/// return underlying ZooPackedParticleVectorWithError
-	const ZooPackedParticleVectorWithError& particleVector() const
-	{ return m_particle; }
-	/// return underlying ZooPackedParticleVectorWithError
-	ZooPackedParticleVectorWithError& particleVector()
-	{ return m_particle; }
-
-	ClassDef(ZooPackedParticle, 1);
-};
 
 #endif // ZOOPACKED_H
 

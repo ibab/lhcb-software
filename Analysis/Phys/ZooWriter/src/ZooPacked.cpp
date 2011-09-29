@@ -1,7 +1,5 @@
 #include "ZooPacked.h"
 
-#include <TBuffer.h>
-
 namespace ZooPackedUnits {
     template<>
 	const length::unpacked length::unit[n] = { 1e-4, 1e-4, 1e-4 };
@@ -62,9 +60,23 @@ namespace ZooPackedUnits {
 	    false, false, false, false, false };
 }
 
-////////////////////////////////////////////////////////////////////////
-// ClassImp directives
-////////////////////////////////////////////////////////////////////////
+template<typename U, unsigned N> ZooPackedStorage<U, N>::~ZooPackedStorage() { }
+template<typename BaseUnit, typename OffDiagUnit, unsigned N>
+ZooPackedStorageWithError<BaseUnit, OffDiagUnit, N>::~ZooPackedStorageWithError() { }
+
+// force instatiation of templates
+template class ZooPackedStorage<ZooPackedUnits::length, 3>;
+template class ZooPackedStorageWithError<ZooPackedUnits::length,
+	 ZooPackedUnits::lengthcov, 3>;
+template class ZooPackedStorage<ZooPackedUnits::energy, 4>;
+template class ZooPackedStorageWithError<ZooPackedUnits::energy,
+	 ZooPackedUnits::energycov, 4>;
+template class ZooPackedStorage<ZooPackedUnits::state, 5>;
+template class ZooPackedStorageWithError<ZooPackedUnits::state,
+	 ZooPackedUnits::statecov, 5>;
+template class ZooPackedStorage<ZooPackedUnits::particle, 7>;
+template class ZooPackedStorageWithError<ZooPackedUnits::particle,
+	 ZooPackedUnits::particlecov, 7>;
 
 ClassImp(ZooPackedPosition);
 ClassImp(ZooPackedPositionWithError::BaseVector);
@@ -85,9 +97,5 @@ ClassImp(ZooPackedParticleVector);
 ClassImp(ZooPackedParticleVectorWithError::BaseVector);
 ClassImp(ZooPackedParticleVectorWithError::OffDiagVector);
 ClassImp(ZooPackedParticleVectorWithError);
-
-ClassImp(ZooPackedState);
-ClassImp(ZooPackedVertex);
-ClassImp(ZooPackedParticle);
 
 // vim:tw=78:sw=4:ft=cpp
