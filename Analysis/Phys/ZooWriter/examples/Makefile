@@ -1,6 +1,6 @@
 # which subdirectories and targets need to be built
 SUBDIRS = Zoo
-TARGETS = ZooReader ZooOptionsReader
+TARGETS = ZooReader ZooReader-complicated ZooOptionsReader
 
 include Rules.mk
 
