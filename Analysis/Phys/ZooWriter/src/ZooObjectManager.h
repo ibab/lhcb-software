@@ -105,6 +105,7 @@ template<typename OBJ> class ZooObjRefArray : public TObject
 	TRefArray m_refs;
     public:
 	ZooObjRefArray() { Class()->IgnoreTObjectStreamer(); }
+	virtual ~ZooObjRefArray();
 	unsigned size() const { return m_refs.GetEntriesFast(); }
 	
 	const OBJ* operator[](unsigned idx) const
@@ -133,6 +134,7 @@ class ZooObjClonesArray : public TObject
 	    m_clones(c, 1024), m_sz(0),
 	    m_name(std::string(Class()->GetName()) + "_" + c->GetName())
         { }
+	virtual ~ZooObjClonesArray();
 	/// return a name that gives a clue as to what the contents are
 	virtual const char* GetName() const { return m_name.c_str(); }
 	/// clear the clones array

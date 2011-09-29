@@ -48,8 +48,17 @@ void ZooObjectManager::Clear()
     }
 }
 
+ZooObjClonesArray::~ZooObjClonesArray() { }
+template<typename OBJ> ZooObjRefArray<OBJ>::~ZooObjRefArray() { }
+
+// force template instatiation
+template class ZooObjRefArray<ZooP>;
+template class ZooObjRefArray<ZooMCP>;
+template class ZooObjRefArray<ZooPackedVertex>;
+
 ClassImp(ZooObjClonesArray);
 ClassImp(ZooPArray);
 ClassImp(ZooMCPArray);
+ClassImp(ZooVertexArray);
 
 // vim:sw=4:tw=78:ft=cpp
