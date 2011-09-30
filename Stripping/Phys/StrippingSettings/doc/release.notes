@@ -4,6 +4,7 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r8 2011-09-30 ===================
 ! 2011-09-30 - Jibo He
  - Revert Rob's changes to SL conf dicts in Stripping17
  - Copied Stripping17 conf dicts to StrippingDev
