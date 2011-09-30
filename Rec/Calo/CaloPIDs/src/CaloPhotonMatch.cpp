@@ -62,7 +62,18 @@ public:
   {
     StatusCode sc = CaloTrackMatch::initialize () ;
     if ( sc.isFailure() ) { return sc ; }
-    m_showerMax = calo()->plane( CaloPlane::ShowerMax ) ;
+    if (calo()->index() ==  CaloCellCode::EcalCalo){
+      m_showerMaxLocation = LHCb::State::ECalShowerMax ;
+      m_showerMax = calo()->plane( CaloPlane::ShowerMax ) ;
+    }
+    else if (calo()->index() ==  CaloCellCode::HcalCalo){
+      m_showerMaxLocation = LHCb::State::MidHCal ;
+      m_showerMax = calo()->plane( CaloPlane::Middle ) ;
+    }
+    else{
+      return Error ( "initialize: calorimeter niether Ecal nor Hcal") ;
+    }
+    
     return StatusCode::SUCCESS ;
   } ;
 public:
@@ -115,8 +126,7 @@ protected:
     , m_tBad ( 0 )
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
-    // 
-    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal       ) ;
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal  ) ;
     _setProperty ( "Tolerance"    , "15"    ) ; // 15 millimeters
     _setProperty ( "Extrapolator" , "TrackRungeKuttaExtrapolator/Regular" ) ;
     //    _setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
@@ -126,13 +136,14 @@ protected:
 private:
   typedef CaloTrackMatch::Match_<2> Match ;
   //
-  const LHCb::CaloPosition* m_position   ;
-  Match                     m_caloMatch  ;
-  Match                     m_trackMatch ;
-  Gaudi::Plane3D            m_plane      ;
-  Gaudi::Plane3D            m_showerMax  ;
-  const LHCb::CaloPosition* m_cBad       ;
-  const LHCb::Track*        m_tBad       ;
+  const LHCb::CaloPosition* m_position          ;
+  Match                     m_caloMatch         ;
+  Match                     m_trackMatch        ;
+  Gaudi::Plane3D            m_plane             ;
+  Gaudi::Plane3D            m_showerMax         ;
+  const LHCb::CaloPosition* m_cBad              ;
+  const LHCb::Track*        m_tBad              ;
+  LHCb::State::Location     m_showerMaxLocation ;
 } ;
 // ============================================================================
 DECLARE_TOOL_FACTORY(CaloPhotonMatch) ;
@@ -177,7 +188,7 @@ StatusCode CaloPhotonMatch::match
   // get the correct state 
   const LHCb::State* st = 0 ;
   { 
-    st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
+    st = CaloTrackTool::state ( *trObj , m_showerMaxLocation ) ;
     if ( 0 == st ) 
     {
       StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
@@ -186,10 +197,10 @@ StatusCode CaloPhotonMatch::match
         m_tBad = trObj ;
         return Error ( "match(): failure from propagate (1) " , sc ) ; 
       }
-      _state().setLocation(  LHCb::State::ECalShowerMax ) ;
+      _state().setLocation( m_showerMaxLocation ) ;
       // ugly, but efficient 
       const_cast<LHCb::Track*> ( trObj ) -> addToStates ( _state() ) ;
-      st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
+      st = CaloTrackTool::state ( *trObj , m_showerMaxLocation ) ;
     }
     // check the state, propagate if needed  
     if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) )  ) 

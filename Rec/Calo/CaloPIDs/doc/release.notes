@@ -5,6 +5,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2011-09-30 - Olivier Deschamps for Victor Coco
+  - CaloPhotonMatch : fix Hcal matching setup
+
 !========================= CaloPIDs v5r9 2011-04-27 =========================
 ! 2011-04-24 - Olivier Deschamps
   - update CaloProcessor configurable with 'ExternalClusters' slot
