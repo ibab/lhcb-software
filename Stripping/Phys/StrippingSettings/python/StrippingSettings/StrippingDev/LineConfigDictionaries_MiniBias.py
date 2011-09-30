@@ -5,12 +5,13 @@ Line config dictionaries for MiniBias.
 
 MiniBias = {
     'BUILDERTYPE'	:	'MiniBiasConf',
-    'CONFIG'	: {
-    'L0AnyLine_Prescale': 1.,
-    'L0AnyLine_RE': "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
-    'NoBiasLine_Prescale': 0.1,
-    'NoBiasLine_RE': "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))"
-    },
+    'CONFIG'   : {"NoBiasLine_RE"       : "(HLT_PASS_RE('Hlt1.*NoBias.*Decision'))",
+                  "NoBiasLine_Rate" : 1,
+                  "NoBiasLine_Limiter" : "Hlt1MBNoBiasODINFilter",
+                  "L0AnyLine_RE"        : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
+                  "L0AnyLine_Rate"  : 1,
+                  "L0AnyLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler"
+                  },
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'MiniBias' ]
     }

@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-30 - Jibo He
+ - Revert Rob's changes to SL conf dicts in Stripping17
+ - Copied Stripping17 conf dicts to StrippingDev
+ - Updated dbase of Stripping17 and StrippingDev
+
 ! 2011-09-29 - Mat Charles
  - Bugfix to D2HHLTUnbiased in Stripping17/LineConfigDictionaries_Charm.py
 

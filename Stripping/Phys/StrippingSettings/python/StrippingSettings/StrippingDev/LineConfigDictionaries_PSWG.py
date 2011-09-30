@@ -698,7 +698,7 @@ FullDSTDiElectron = {
         'Jpsi2ee_PT'                                    :  2000.  ,  # MeV
         'Jpsi2ee_TisTosSpecs'                           : { "Hlt1Global%TIS" : 0, "Hlt2Global%TIS" : 0 }
         },
-    'STREAMS' : [ 'Dielectron' ],
+    'STREAMS' : [ 'Radiative' ],
     'WGs'    : [ 'PSWG' ]
     }
 
@@ -834,12 +834,12 @@ Ccbar2PpbarDetached = {
         'LinePostscale'    :     1.  ,
         
         'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
-        'ProtonPT'         :   550.  , # MeV
+        'ProtonPT'         :  1500.  , # MeV
         'ProtonP'          :    -2.  , # MeV
         'ProtonTRCHI2DOF'  :     5.  ,
-        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
-        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
-        'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>9)",
+        'ProtonPIDppi'     :    15.  , # CombDLL(p-pi)
+        'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
+        'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>16)",
         'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
         'CombMinMass'      :  2650.  , # MeV, before Vtx fit
         'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit

@@ -28,9 +28,9 @@ D02KPiPi0 = {
                    ,'D0MaxIPChi2'        : 9         # unitless
                    ,'D0MinDIRA'          : 0.9999    # unitless
                    ,'D0MinVVDChi2'       : 64        # unitless
-                   ,'MergedLinePrescale'   : 1.        # unitless
+                   ,'MergedLinePrescale'   : 0.5        # unitless
                    ,'MergedLinePostscale'  : 1.        # unitless
-                   ,'ResolvedLinePrescale' : 1.        # unitless
+                   ,'ResolvedLinePrescale' : 0.5        # unitless
                    ,'ResolvedLinePostscale': 1.        # unitless
                    },
    'STREAMS' : ['Calibration'],
@@ -68,7 +68,7 @@ NoPIDDstarWithD02RSKPi = {
     ##
     , 'Monitor'          : False           ## Activate the monitoring?
     },
-    'STREAMS' : [ 'Calibration' ],
+    'STREAMS' : [ 'PID' ],
     'WGs'    : ['ALL']
     }
 
@@ -83,7 +83,7 @@ InclPhi={
                 , 'LowPtPrescale'       : 0.0040   # adimensional 
                 , 'LDPrescale'          : 0.0002   # adimensional 
                 },
-    'STREAMS' : [ 'Calibration' ],
+    'STREAMS' : [ 'PID' ],
     'WGs'    : ['ALL']
     }
 
@@ -137,7 +137,7 @@ V0ForPID = {
     'LamLLIsMUON_Prescale_HiP' : 1.000 ,
     'LamDDIsMUON_Prescale'     : 1.000   
      },
-    'STREAMS' : [ 'Calibration' ],
+    'STREAMS' : [ 'PID' ],
     'WGs'    : ['ALL']
     }
 
@@ -145,33 +145,37 @@ V0ForPID = {
 Jpsi2eeForElectronID = {
     'BUILDERTYPE'	: 'ElectronIDConf',
     'CONFIG'	: {
-        'LinePrescale'            :    1.   ,
-        'LinePostscale'           :    1.   ,
-        'HltFilter'               : None    ,
+        'JpsiLinePrescale'            :   0.5   ,
+        'JpsiLineHltFilter'           : None    ,
 
         'Both_PT'                 :  500.   ,  # MeV
         'Both_P'                  : 3000.   ,  # MeV
         'Both_TRCHI2DOF'          :    5.   ,
-        'Both_MIPCHI2'            :   25.   ,
+        'Both_MIPCHI2'            :    9.   ,
         
         'Tag_PT'                  : 1500.   ,  # MeV
         'Tag_P'                   : 6000.   ,  # MeV
         'Tag_PIDe'                :    5.   ,
-        'Tag_MIPCHI2'             :   25.   ,
+        'Tag_MIPCHI2'             :    9.   ,
 
         'Probe_PT'                :  500.   ,  # MeV
         'Probe_P'                 : 3000.   ,  # MeV
-        'Probe_MIPCHI2'           :   25.   ,
-
+        'Probe_MIPCHI2'           :    9.   ,
+        
         'eeCombMinMass'           : 2100.   ,  # MeV         
         'eeCombMaxMass'           : 4300.   ,  # MeV   
         'eeVCHI2PDOF'             :    9.   ,  
         'eeMinMass'               : 2200.   ,  # MeV 
         'eeMaxMass'               : 4200.   ,  # MeV
-        'eePT'                    : 2000.   , 
-                
-        'eeDLS'                   :   50.   ,
-        'eeVZ'                    : -1.0e+9    # mm   
+
+        'JpsiLineCut'             : "(PT>2.*GeV) & (BPVDLS>50) ",      
+        
+        'Bu2JpsieeKLine_Prescale'  :  1,
+        'Bu2JpsieeKLine_HltFilter' : None,
+        'Bu2JpsieeKLine_KaonCut'   : "(TRCHI2DOF<4) & (PT>1.0*GeV) & (PIDK >0) & (BPVIPCHI2()>9)",
+        'Bu2JpsieeKLine_JpsiCut'   : "(BPVDLS>5)",
+        'Bu2JpsieeKLine_BuComCut'  : "in_range(4.1*GeV,AM,6.1*GeV)",
+        'Bu2JpsieeKLine_BuMomCut'  : "in_range(4.2*GeV,M, 6.0*GeV) & (VFASPF(VCHI2PDOF)<9)"
         },
     'STREAMS' : [ 'Calibration' ],
     'WGs'    : ['ALL']
@@ -181,7 +185,7 @@ Jpsi2eeForElectronID = {
 MuIDCalib = {
     'BUILDERTYPE' : 'MuIDCalibConf',
     'WGs'         : [ 'ALL' ],
-    'STREAMS'     : [ 'Calibration' ],
+    'STREAMS'     : [ 'PID' ],
     'CONFIG'      : {
     'PromptPrescale'           : 0.0,
     'DetachedPrescale'         : 1.,
@@ -228,22 +232,22 @@ TrackEffVeloMuon = {
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'Calibration' ],
     'CONFIG' : {
-    "TrChi2Mu":		5.	# adimensional
-    ,	"JpsiPt":		0.5	# GeV
-    ,	"TrPt":			100.	# MeV
-    ,	"TrP":			5.	# GeV
-    ,	"LongP":		7.	# GeV
-    ,	"MuDLL":		1.	# adimensional
-    ,	"VertChi2":		2.	# adimensional
-    ,	"MassPreComb":		1000.	# MeV
-    ,	"MassPostComb":		400.	# MeV
-    ,	"Prescale":		0.5	# adimensional
-    ,	"Postscale":		1.	# adimensional
-    ,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-    ,	'HLT1PassOnAll': True
-    ,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-    ,	'HLT2PassOnAll': False
-    }
+                        "TrChi2Mu":             5.      # adimensional
+                ,       "JpsiPt":               0.5     # GeV
+                ,       "TrPt":                 100.    # MeV
+                ,       "TrP":                  5.      # GeV
+                ,       "LongP":                7.      # GeV
+                ,       "MuDLL":                1.      # adimensional
+                ,       "VertChi2":             2.      # adimensional
+                ,       "MassPreComb":          1000.   # MeV
+                ,       "MassPostComb":         400.    # MeV
+                ,       "Prescale":             0.22    # adimensional
+                ,       "Postscale":            1.      # adimensional
+                ,       'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+                ,       'HLT1PassOnAll': True
+                ,       'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
+                ,       'HLT2PassOnAll': False
+                        }
     }
 
 TrackEffMuonTT = {

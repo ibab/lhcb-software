@@ -521,9 +521,9 @@ D2XMuMuMicro = {
 DstarD02xx = {
     'BUILDERTYPE' : 'StrippingDstarD02xxConf',
     'CONFIG':  {
-                   'PrescalepipiBox'     : 0.5
+                   'PrescalepipiBox'     : 1.
                  , 'PrescalemumuBox'     : 1.
-                 , 'PrescaleKpiBox'    : 0.3
+                 , 'PrescaleKpiBox'    : 1.
                  , 'PrescaleemuBox'    : 1.
                  , 'PrescaleeKBox'    : 1.
                  , 'PrescaleepiBox'    : 1.
@@ -820,7 +820,7 @@ D2HHLTUnbiased = {
         , 'Dstar_AMDiff_MAX'          :  160.0     * MeV
         , 'Dstar_MDiff_MAX'           :  155.0     * MeV
         , 'Dstar_VCHI2VDOF_MAX'       :  100.0
-        , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+        , 'HltFilter'          : "HLT_PASS_RE('Hlt1(MB|CharmCalibrationNoBias).*')"
         , 'PrescaleD02HH'             :    1.0
         , 'PrescaleDstar2D0Pi_D02HH'  :    1.0
         , 'PostscaleD02HH'            :    1.0

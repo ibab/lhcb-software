@@ -29,32 +29,31 @@ Beauty2Charm = {
     },
     "Pi0" : { # Cuts made on all pi0's
     'PT_MIN'        : '500*MeV',
-    'P_MIN'         : '2000*MeV',
+    'P_MIN'         : '1000*MeV',
     'CHILDCL1_MIN'  : 0.25,
-    'CHILDCL2_MIN'  : 0.25
+    'CHILDCL2_MIN'  : 0.25,
+    'FROM_B_P_MIN'  : '2000*MeV'
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV'
     },
     "B2X" : { # Cuts made on all B's and Lb's used in all lines
-    'AMAXDOCA_MAX'  : '1.0*mm',
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
     'BPVIPCHI2_MAX' : 25,
-    'BPVLTIME_MIN'  : '0.3*ps',
+    'BPVLTIME_MIN'  : '0.2*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
-    'AM_MAX'        : '7000*MeV',
-    'B2CBBDT_MIN'   : 0.05,
-    'NOIP_BPVVDCHI2_MIN' : 0
+    'AM_MAX'        : '7000*MeV', # B->Dh+-h0 sets this to 5800*MeV
+    'B2CBBDT_MIN'   : 0.05
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
-    'AMAXDOCA_MAX'  : '1.0*mm',
+    'AMAXDOCA_MAX'  : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
@@ -97,7 +96,7 @@ Beauty2Charm = {
     #'B02D0DKBeauty2CharmLine' : 0.1
     },
     'GECNTrkMax'   : 500
-    }, 
+  }, 
   'STREAMS' : [ 'Bhadron' ],
   'WGs' : [ 'GammaFromTrees' ]
 }
@@ -155,7 +154,7 @@ UnbiasedB2DPi = {
 Bu2D0h_D02KShh_NoPID = {
     'BUILDERTYPE' : 'StrippingBu2D0h_D02KShh_NoPIDConf',
     'CONFIG' : {#almost offline sel cuts 8/2/2011 (D daughter pi/K IPchi2s looser, Ks DD daughter pi PID cut looser)
-                        'PrescaleLL'    : 1.0 
+                           'PrescaleLL'    : 1.0 
                         ,  'PostscaleLL'   : 1.0
                         #B cuts, LL seln
                        ,  'BFlightCHI2_LL'        : 169. 
@@ -169,9 +168,9 @@ Bu2D0h_D02KShh_NoPID = {
                        ,  'DVertexCHI2_LL'     : 4.     
                        ,  'DdaughterIPCHI2_LL' : 16.
                        #KS and KS daughter pi cuts, LL seln
-                       ,  'KSFlightCHI2_LL'    : 4.
-                       ,  'KSVertexCHI2_LL'    : 16.
-                       ,  'KSdaughterPiIPCHI2_LL' : 9.
+                      # ,  'KSFlightCHI2_LL'    : 4.
+                      # ,  'KSVertexCHI2_LL'    : 16.
+                      # ,  'KSdaughterPiIPCHI2_LL' : 9.
                        ,  'PrescaleDD'    : 1.0 
                        ,  'PostscaleDD'   : 1.0
                        #B cuts, DD seln
@@ -186,9 +185,9 @@ Bu2D0h_D02KShh_NoPID = {
                        ,  'DVertexCHI2_DD'     : 16.        
                        ,  'DdaughterIPCHI2_DD' : 9.
                         #KS and KS daughter pi cuts, DD seln
-                       ,  'KSFlightCHI2_DD'    : 4.
-                       ,  'KSVertexCHI2_DD'    : 16.
-                       ,  'KSdaughterPiIPCHI2_DD' : 6.25
+                      # ,  'KSFlightCHI2_DD'    : 4.
+                      # ,  'KSVertexCHI2_DD'    : 16.
+                      # ,  'KSdaughterPiIPCHI2_DD' : 6.25
  	}, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
@@ -197,7 +196,7 @@ Bu2D0h_D02KShh_NoPID = {
 Bu2D0h_D02KShh_NoPID_WS = {
     'BUILDERTYPE' : 'StrippingBu2D0h_D02KShh_NoPID_WSConf',
     'CONFIG' : {#almost offline sel cuts 8/2/2011 (D daughter pi/K IPchi2s looser)
-                        'PrescaleLL'    : 0.15 
+                           'PrescaleLL'    : 0.15 
                         ,  'PostscaleLL'   : 1.0
                         #B cuts, LL seln
                        ,  'BFlightCHI2_LL'        : 169. 
@@ -211,9 +210,9 @@ Bu2D0h_D02KShh_NoPID_WS = {
                        ,  'DVertexCHI2_LL'     : 4.     
                        ,  'DdaughterIPCHI2_LL' : 16.
                        #KS and KS daughter pi cuts, LL seln
-                       ,  'KSFlightCHI2_LL'    : 4.
-                       ,  'KSVertexCHI2_LL'    : 16.
-                       ,  'KSdaughterPiIPCHI2_LL' : 9.
+                      # ,  'KSFlightCHI2_LL'    : 4.
+                      # ,  'KSVertexCHI2_LL'    : 16.
+                      # ,  'KSdaughterPiIPCHI2_LL' : 9.
                        ,  'PrescaleDD'    : 0.15 
                        ,  'PostscaleDD'   : 1.0
                        #B cuts, DD seln
@@ -228,19 +227,17 @@ Bu2D0h_D02KShh_NoPID_WS = {
                        ,  'DVertexCHI2_DD'     : 16.        
                        ,  'DdaughterIPCHI2_DD' : 9.
                         #KS and KS daughter pi cuts, DD seln
-                       ,  'KSFlightCHI2_DD'    : 4.
-                       ,  'KSVertexCHI2_DD'    : 16.
-                       ,  'KSdaughterPiIPCHI2_DD' : 6.25
+                      # ,  'KSFlightCHI2_DD'    : 4.
+                      # ,  'KSVertexCHI2_DD'    : 16.
+                      # ,  'KSdaughterPiIPCHI2_DD' : 6.25
  		}, 
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'GammaFromTrees' ]
 }
 
-
 B2twobody = {
     'BUILDERTYPE' : 'B2nbodyConf',
-    'CONFIG' : {  'nbody':              2,
-                  'prescale':           0.5, 
+    'CONFIG' : {  'nbody':                2,
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,
@@ -264,6 +261,8 @@ B2twobody = {
                   'doKS':             False,
                   'doJp':              True,
                   'doDS':              True,
+                  'prescale':           1.0,
+                  'MaxTrLong':           70,
                   'MinPiPt':         1000.0,
                   'MinPiIPChi2DV':     25.0,
                   'MaxPiChi2':          4.0,
@@ -390,8 +389,7 @@ B2twobody = {
 
 B2threebody = {
     'BUILDERTYPE' : 'B2nbodyConf',
-    'CONFIG' : {  'nbody':              3,
-                  'prescale':           0.5, 
+    'CONFIG' : {  'nbody':                3,
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,
@@ -415,6 +413,8 @@ B2threebody = {
                   'doKS':             False,
                   'doJp':              True,
                   'doDS':              True,
+                  'prescale':           1.0,
+                  'MaxTrLong':           70,
                   'MinPiPt':         1000.0,
                   'MinPiIPChi2DV':     25.0,
                   'MaxPiChi2':          4.0,
@@ -541,8 +541,7 @@ B2threebody = {
 
 B2fourbody = {
     'BUILDERTYPE' : 'B2nbodyConf',
-    'CONFIG' : {  'nbody':              4,
-                  'prescale':           0.5, 
+    'CONFIG' : { 'nbody':                 4,
                   'MinBMass':        4700.0,
                   'MaxBMass':        8000.0,
                   'MinBPt':          5000.0,
@@ -566,6 +565,8 @@ B2fourbody = {
                   'doKS':             False,
                   'doJp':              True,
                   'doDS':              True,
+                  'prescale':           1.0,
+                  'MaxTrLong':           70,
                   'MinPiPt':         1000.0,
                   'MinPiIPChi2DV':     25.0,
                   'MaxPiChi2':          4.0,

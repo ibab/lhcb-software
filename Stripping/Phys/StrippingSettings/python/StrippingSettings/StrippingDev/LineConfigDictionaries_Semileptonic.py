@@ -14,14 +14,11 @@ Bd2DstarMuNu = {
                 #muon paramters # loose # Tight
                 'MuPT'        : 700, # 800  # MeV
                 'MuTrPID'     :-20,  # -5   
-                'MuIPChi2'    :  0,  # 4    
                 #kaon parameters
                 'KPT'         : 350, # 350  # MeV
-                'KIPChi2'     :  0,  # 4    
                 'KTrPID'      : -5,  #-5    
                 #pion parameters
                 'PiPT'        : 350, # MeV
-                'PiIPChi2'    :  0, # 4    
                 #D0-resonance parameters
                 'D0MassW'     : 60, # 40    # MeV
                 'D0_BPVVDCHI2': 50,
@@ -33,27 +30,24 @@ Bd2DstarMuNu = {
                 'B0d_VCHI2'    : 10, # 10 # 
                 'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
                 'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
-                },
+                  },
       'Tight'   : {'Prescale'    : 1.0 ,
                  'Postscale'   : 1.0 ,
                  #muon paramters # 
                  'MuPT'        : 800, # MeV
                  'MuTrPID'     :-5,
-                 'MuIPChi2'    : 4,
                  #kaon parameters
                  'KPT'         : 350, # MeV
-                 'KIPChi2'     : 4,
                  'KTrPID'      :-5, 
                  #pion parameters
                  'PiPT'        : 350, # MeV
-                 'PiIPChi2'    : 4,
                  #D0-resonance parameters
-                 'D0MassW'     : 40, # MeV
+                 'D0MassW'     : 60, # MeV
                  'D0_BPVVDCHI2': 50,
                  #Dstar-resonance parameters
                  'Dstar_PT'     : 1250, #  MeV
                  'Dstar_VCHI2'  : 20, 
-                 'DstarMassW'   : 50, 
+                 'DstarMassW'   : 70, 
                  #Bd-resonance parameters
                  'B0d_VCHI2'    : 10, 
                  'B0dD0_DeltaZVtx' : -2.5, # mm
@@ -283,7 +277,7 @@ B2XuMuNu = {
     'BUILDERTYPE' : 'B2XuMuNuBuilder',
     'CONFIG' :  {
     #Muons
-    "MuonTRCHI2"          : 6.   ,#adimensional
+    "MuonTRCHI2"          : 4.   ,#adimensional
     "MuonP"               : 3000. ,#MeV
     "MuonPT"              : 1000. ,#MeV
     "MuonPIDK"            : 0.    ,#adimensional
@@ -311,15 +305,19 @@ B2XuMuNu = {
     #        "KaonMINIP"          : 0.05  ,#mm
     "KaonMINIPCHI2"       : 16     ,#adminensional
     #Rho channel
-    "RhoMassWindow"       : 190.  ,#MeV
+    "RhoMassWindow"       : 150.  ,#MeV
     "RhoVCHI2DOF"         : 6    ,#adimensional
     "RhoPT"               : 500.  ,#MeV
     "RhoLeadingPionPT"    : 800.  ,#MeV
     #        "RhoMINIP"           : 0.05  ,#mm 
-    "RhoMINIPCHI2"        : 4     ,#adimensional
+        "RhoMINIPCHI2"        : 4     ,#adimensional
     "RhoChPionPT"         : 300.  ,#MeV
     "RhoChPionTRCHI2"     : 10.  ,#MeV
     "RhoChPionPIDK"       : -10.   ,#adminensional
+    "RhoFDCHI2"           : 100.  ,#adimensional
+    "RhoFD"               : 6,#mm?
+    "RhoIPMin"            : 0.3   ,#mm    
+    "RhoDIRA"             : 0.9,
     #        "RhoChPionMINIP"     : 0.05  ,#mm
     "RhoChPionMINIPCHI2"  : 9     ,#adimensional
     #K* channel
@@ -336,21 +334,25 @@ B2XuMuNu = {
     "KstarChPionPT"       : 100.  ,#MeV
     "KstarChPionTRCHI2"   : 10.  ,#MeV
     "KstarChPionPIDK"     : -10.   ,#adminensional
+    "KstarFDCHI2"         : 100,  #adiminseional
+    "KstarFD"               : 5,#mm?
+    "KstarIPMin"          : 0.13   ,#mm   
     #        "KstarChPionMINIP"    : 0.05  ,#mm
     "KstarChPionMINIPCHI2": 9     ,#adimensional
     "KstarLeadingPionPT"  : 800.  ,#MeV
     #Xu
     "PiMuMassLowLoose"    : 1230. ,#MeV
     "KMuMassLowTight"     : 1370. ,#MeV
-    "RhoMuMassLowTight"   : 1360. ,#MeV
-    "KstarMuMassLowTight" : 1400. ,#MeV
+    "RhoMuMassLowTight"   : 2000. ,#MeV
+    "KstarMuMassLowTight" : 2000. ,#MeV
     #B
     "BVCHI2DOF"           : 4     ,#adminensional
     "BDIRA"               : 0.99,  #adminensional
     "BFDCHI2LOW"             : 15,   #adimensional
     "BFDCHI2HIGH"             : 225,   #adimensional
-    "XMuMassUpper"        : 5500 # MeV
-                     },
+    "XMuMassUpper"        : 5500, # MeV
+    "Enu"                 : 1850  #MeV
+    },
     'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic'] 
     }
@@ -358,7 +360,7 @@ B2XuMuNu = {
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
     'CONFIG' :  {
-        "PrescalD0Mu"    : 0.5
+     "PrescalD0Mu"    : 0.5
     ,"MINIPCHI2"      : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
     ,"TRCHI2Loose"   : 5.0    # adimensiional    
@@ -381,7 +383,7 @@ B2DMuNuX = {
     ,"MINIPCHI2Loose" : 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
     ,"PhiVCHI2"      :25.0    #adimensiional
-    ,"PhiMassWin"    :60      #adimensiional
+    ,"PhiMassWin"    :50      #adimensiional
     },
     'STREAMS' : ['Semileptonic'] ,
     'WGs'    : ['Semileptonic'] 
@@ -390,25 +392,20 @@ B2DMuNuX = {
 
 DstarVeryLooseWithD02Kpi = {
     'BUILDERTYPE' : 'DstarVeryLooseWithD02KpiOneLineConf',
-    'CONFIG' : {'Prescale'    : 0.08 ,
-                'Postscale'   : 1.0 ,
-                #kaon parameters
-                'KPT'         : 350,# MeV
-                #'KTrChi2'     :  8,
-                'KIPChi2'     :  0,
-                'KTrPID'      : -5,
-                #pion parameters
-                'PiPT'        : 350, # MeV
-                #'PiTrChi2'    :  8, # 10   # 5
-                'PiIPChi2'    :  0, # 4    # 4
-                #D0-resonance parameters
-                'D0MassW'     : 60, # 40  # 40 #MeV
-                'D0_BPVVDCHI2': 50,
-                #Dstar-resonance parameters
-                #'slowPiTrChi2': 8, # 10 # 5
-                'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
-                'Dstar_VCHI2' : 25, # 20 # 15
-                'DstarMassW'  : 80 # 50 # 80 MeV
+    'CONFIG' : {  'Prescale'    : 0.03 ,
+                  'Postscale'   : 1.0 ,
+                  #kaon parameters
+                  'KPT'         : 350,# MeV
+                  'KTrPID'      : -5,
+                  #pion parameters
+                  'PiPT'        : 350, # MeV
+                  #D0-resonance parameters
+                  'D0MassW'     : 60, # 40  # 40 #MeV
+                  'D0_BPVVDCHI2': 50,
+                  #Dstar-resonance parameters
+                  'Dstar_PT'    : 1250, # 1250 # 1250 # MeV
+                  'Dstar_VCHI2' : 25, # 20 # 15
+                  'DstarMassW'  : 80 # 50 # 80 MeV
                 },
     'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
@@ -417,11 +414,11 @@ DstarVeryLooseWithD02Kpi = {
 DForBSemi = {
     'BUILDERTYPE'	: 'DforBSemiLinesConf',
     'CONFIG'	: {
-     "DpPreScale"    : 0.02
+    "DpPreScale"    : 0.01
     ,"DsPreScale"    : 0.02
-    ,"LcPreScale"    : 0.05
+    ,"LcPreScale"    : 0.02
     ,"MINIPCHI2"     : 9.0    # adimensiional
-    ,"TRCHI2"        : 5.0   # adimensiional
+    ,"TRCHI2"        : 3.0   # adimensiional
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"PT"            : 300.0  # MeV
@@ -431,7 +428,7 @@ DForBSemi = {
     ,"DsAMassWin"    : 100.0  # MeV
     ,"DsIP"          : 7.4    # mm
     ,"DsVCHI2DOF"    : 6.0    # adimensiional
-    ,"DDocaChi2Max"  : 20   #adimensiional 
+    ,"DDocaChi2Max"  : 20   #adimensiional  
      },
     'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
@@ -442,11 +439,11 @@ DForBSemi = {
 D0ForBXX = {
     'BUILDERTYPE'	: 'D0forBXXLinesConf',
     'CONFIG'	: {
-     "PreScale"      : 0.015   # adimensiional
+    "PreScale"      : 0.005   # adimensiional
     ,"PreScaleRS"   : 1.0    # adimensiional
     ,"PreScaleWS"   : 0.2    # adimensiional
     ,"MINIPCHI2"     : 9.0   # adimensiional
-    ,"TRCHI2"        : 5.0   # adimensiional
+    ,"TRCHI2"        : 3.0   # adimensiional
     ,"KaonPIDK"      : 4.0   # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
     ,"PT"            : 300.0  # MeV
@@ -458,7 +455,7 @@ D0ForBXX = {
     ,"D0IP"          : 0.2    #mm
     ,"D0K3PiIP"      : 0.2    #mm
     ,"D0VCHI2DOF"    : 6.0   # adimensiional
-    ,"DDocaChi2Max" : 20   #adimensiional
+    ,"DDocaChi2Max" : 20   #adimensiional 
      },
     'STREAMS' : ['CharmCompleteEvent'],
     'WGs'    : ['Semileptonic'] 
