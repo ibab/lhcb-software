@@ -14,7 +14,7 @@ try:
     from base64 import standard_b64encode as encode
     from base64 import standard_b64decode as decode
 except ImportError:
-    from base64 import encode, decode
+    from base64 import encode, decode #@UnusedImport
 
 
 import os
