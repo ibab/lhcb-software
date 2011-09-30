@@ -288,6 +288,17 @@ def dumpXMLConf():
     return doc.toprettyxml(encoding="UTF-8")
 # ------------------------------------------------------------------------------------
 
+def _getSVNProject(projectname):
+    """
+    extract project informations directly from SVN top properties. This
+    function is used as a fallback if this very file doesn't contain any
+    informations about that projectname.
+    @param projectname: name of the project to get the configuration
+    @type projectname: string
+    """
+    pass
+
+
 def getProject(projectname):
     """ return the static instance of the project configuration by name """
     pj = None
@@ -298,6 +309,7 @@ def getProject(projectname):
         return pj
     else:
         raise ProjectConfException, "No such project configuration"
+
 
 def isProject(projectname):
     isproject = True
