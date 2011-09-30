@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r9 2011-09-30 =========================
 ! 2011-09-30 - Cibran Santamarina
  - StrippingBs2PhiKst0.py: Fixing an bug in the IP cut of the phi daughters. 
 
