@@ -6,7 +6,7 @@ Bs -> phi phi stripping selection.
 Provides class StrippingBs2PhiPhiConf with methods to return stripping line objects.
 
 Exports the following stripping lines as instance data members:
-- Bs2PhiPhiLine      : main line with phi mass window of +/- 25 MeV/cc 
+- Bs2PhiPhiLine      : main line with phi mass window of +/- 25 MeV/cc
 - Bs2PhiPhiWideLine  : prescaled phi sideband line with MM(phi) < 1100 MeV/cc
 - lines              : list with both lines
 
@@ -66,7 +66,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
     def __init__(self, name, config) :
       LineBuilder.__init__(self, name, config)
-      
+
       self.Bs2PhiPhiLine     = self._Bs2PhiPhi_X_Line( name,        config, False )
       self.Bs2PhiPhiWideLine = self._Bs2PhiPhi_X_Line( name+"Wide", config, True )
       self.registerLine( self.Bs2PhiPhiLine )
@@ -74,7 +74,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
 
     def _Bs2PhiPhi_X_Line( self, name, config, wide ) :
-           
+
             Phi2KK_DC = "(PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
             Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)&(ADOCACHI2CUT(40, ''))" % config
 
@@ -102,7 +102,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
     	    #print Bs2PhiPhi_CC
     	    #print Bs2PhiPhi_MC
             #print "Prescale: ", ps
-	    
+
 	    #_stdLooseKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
 
             _Bs2PhiPhiLooseDetachedPhi2KK = CombineParticles(
@@ -110,14 +110,14 @@ class StrippingBs2PhiPhiConf(LineBuilder):
                           , DaughtersCuts = {"K+": Phi2KK_DC}
                           , CombinationCut = Phi2KK_CC
                           , MotherCut = Phi2KK_MC
-                       )    
+                       )
 
 
     	    _Bs2PhiPhi = CombineParticles(
              DecayDescriptor =  "B_s0 -> phi(1020) phi(1020)"
     	    , DaughtersCuts   = {"phi(1020)" : Bs2PhiPhi_DC}
             , CombinationCut  = Bs2PhiPhi_CC
-            , MotherCut       = Bs2PhiPhi_MC 
+            , MotherCut       = Bs2PhiPhi_MC
             )
 
 

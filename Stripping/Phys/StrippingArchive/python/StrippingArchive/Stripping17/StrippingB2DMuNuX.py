@@ -1,9 +1,9 @@
 """
-Module for construct B semileptonic inclusive channels:
+Module for constructing B semileptonic inclusive channels:
 B->D0XMuNu, D+XMuNu, Ds+XMuNu, Lc+XMuNu with
-D0->Kpi, D+->Kpipi, KKPi, Ds+ -> KKPi and Lc+->PKPi
+D0->Kpi, D0->KK, D0->pipi, D+->Kpipi, KKPi, Ds+ -> KKPi and Lc+->PKPi, Ds->(Phi->KK)Pi
 """
-__author__ = ['Liming Zhang']
+__author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
 __version__ = '$Revision: 1.4 $'
 
@@ -135,6 +135,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     Algorithm = self._D02KKFilter(),
                                     RequiredSelections = [self.selKaon] )
 
+        self.seld02pipi = Selection( "D02PiPifor" + name,
+                                     Algorithm = self._D02PiPiFilter(),
+                                     RequiredSelections = [self.selPion] )
+
         self.seld02k3pi = Selection( "D02K3Pifor" + name,
                                     Algorithm = self._D02K3PiFilter(),
                                     RequiredSelections = [self.selKaon, StdLoosePions] )        
@@ -172,7 +176,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                  BDIRA = config['BDIRA'],
                                  DZ = config['DZ']
                                  )                   
-                                               
+
+        self.selb2D0MuXpipi = makeb2DMuX('b2D0MuXpipi' + name,
+                                 DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
+                                 MuSel = self.selmuon, 
+                                 DSel = self.seld02pipi,
+                                 BVCHI2DOF = config['BVCHI2DOF'],
+                                 BDIRA = config['BDIRA'],
+                                 DZ = config['DZ']
+                                 )                   
+
         self.selb2D0MuXK3Pi = makeb2DMuX('b2D0MuXK3Pi' + name,
                                  DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
                                  MuSel = self.selmuonTOS, 
@@ -229,7 +242,12 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                           , prescale = 1
                                           , selection = self.selb2D0MuXKK
                                           )
-        
+
+        self.b2D0MuXpipiLine = StrippingLine('b2D0MuXpipi' + name + 'Line'
+                                           , prescale = 1
+                                           , selection = self.selb2D0MuXpipi
+                                           )
+
         self.b2D0MuXK3PiLine = StrippingLine('b2D0MuXK3Pi' + name + 'Line'
                                          , prescale = 1
                                          , selection = self.selb2D0MuXK3Pi
@@ -262,6 +280,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2LcMuXLine)
         self.registerLine(self.b2D0MuXK3PiLine)
         self.registerLine(self.b2D0MuXKKLine)
+        self.registerLine(self.b2D0MuXpipiLine)
         self.registerLine(self.b2DsMuXPhiPiLine)
 
     def _muonFilter( self ):
@@ -310,7 +329,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _decayDescriptors = [ '[D0 -> K- pi+]cc' ]
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02kpi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
@@ -320,11 +339,21 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _decayDescriptors = [ 'D0 -> K- K+' ]
         _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02kk = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
         return _d02kk
+
+    def _D02PiPiFilter( self ):
+        _decayDescriptors = [ 'D0 -> pi- pi+' ]
+        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(SUMTREE( PT,  ISBASIC )>1400.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
+        _d02pipi = CombineParticles( DecayDescriptors = _decayDescriptors,
+                                    CombinationCut = _combinationCut,
+                                    MotherCut = _motherCut)                            
+        return _d02pipi
 
     def _D02K3PiFilter( self ):
         _decayDescriptors = [ '[D0 -> K- pi+ pi- pi+]cc' ]
@@ -333,7 +362,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                            "& (TRCHI2DOF < %(TRCHI2)s)" % self.__confdict__}
         _motherCut = " (ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (INTREE((ABSID=='pi+')& (PT > %(KPiPT)s *MeV) &(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)))" \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _d02k3pi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                      DaughtersCuts = _daughtersCuts,
                                      CombinationCut = _combinationCut,
@@ -344,7 +373,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _decayDescriptors = [ '[D+ -> K- pi+ pi+]cc' ]
         _combinationCut = "(ADAMASS('D+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _dp2kpipi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                    
@@ -355,7 +384,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                              "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                             "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                             "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _ds2kkpi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                             
@@ -368,7 +397,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)  &  (PIDp> %(KaonPIDK)s) & (PIDp-PIDK>1.0e-10)" % self.__confdict__}
         _combinationCut = "(ADAMASS('Lambda_c+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(ADMASS('Lambda_c+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                            "& (BPVVDCHI2 > %(DsFDCHI2)s) & (SUMTREE( PT,  ISBASIC )>1800.*MeV) & (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _lambdac = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     DaughtersCuts = _daughtersCuts,
                                     CombinationCut = _combinationCut,
@@ -380,7 +409,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 800.*MeV) & (ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2)> %(MINIPCHI2Loose)s) " % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s) & (BPVIP()< %(DsIP)s *mm)"  % self.__confdict__
+                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _ds2phipi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                       CombinationCut = _combinationCut,
                                       MotherCut = _motherCut)                             

@@ -156,7 +156,7 @@ def makePhi2KK( name,
     _params = locals()
     _code = " (MINTREE('K+'==ABSID,PIDK)> %(KaonPIDK)s)"    \
             "& (MINTREE(ABSID=='K+',PT)> %(KaonPT)s *MeV)"  \
-            "& (MIPCHI2DV(PRIMARY)> %(KaonIPCHI2)s)"        \
+            "& (MINTREE(ABSID=='K+',MIPCHI2DV(PRIMARY))> %(KaonIPCHI2)s)"        \
             "& (ADMASS('phi(1020)') < %(PhiMassWin)s *MeV)" \
             "& (PT > %(PhiPT)s *MeV)" \
             "& (VFASPF(VCHI2/VDOF) < %(PhiVCHI2)s)" % _params
