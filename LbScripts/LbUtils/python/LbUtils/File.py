@@ -3,8 +3,7 @@
 
 from LbUtils.afs.directory import AFSLock, AFSLockFile
 
-from shutil import copy2
-
+import shutil
 
 import logging
 import fnmatch
@@ -92,7 +91,7 @@ def copyTree(src, dst, symlinks=False, ignore=None):
                         os.symlink(linkto, dstname)
                         copyStat(srcname, dstname)
                     else :
-                        copy2(srcname, dstname)
+                        shutil.copy2(srcname, dstname)
             copyStat(root, dstroot)
         except (IOError, os.error), why:
             errors.append((srcname, dstname, str(why)))
@@ -104,6 +103,37 @@ def copyTree(src, dst, symlinks=False, ignore=None):
                 errors.append((root, dstroot, str(why)))
         for d in dirs_to_remove :
             dirs.remove(d)
+
+def move(src, dst):
+    """
+    copy of the shutil.move function that moves properly links across filesystems. It
+    also fix windows attributes from tarball expansion.
+    @param src: source
+    @param dst: destination
+    """
+
+    real_dst = dst
+    if os.path.isdir(dst):
+        real_dst = os.path.join(dst, _basename(src))
+        if os.path.exists(real_dst):
+            raise shutil.Error, "Destination path '%s' already exists" % real_dst
+    try:
+        os.rename(src, real_dst)
+    except OSError:
+        if os.path.isdir(src):
+            if _destinsrc(src, dst):
+                raise shutil.Error, "Cannot move a directory '%s' into itself '%s'." % (src, dst)
+            shutil.copytree(src, real_dst, symlinks=True)
+            shutil.rmtree(src)
+        elif os.path.islink(src) :
+            # treats correctly symlinks across filesystems
+            linkto = os.readlink(src)
+            os.symlink(linkto, real_dst)
+            os.unlink(src)
+        else:
+            shutil.copy2(src, real_dst)
+            os.unlink(src)
+
 
 def getEmpyFiles(topdir, filterfunc=None, extlist=None):
     """
@@ -171,6 +201,11 @@ def computeMD5Sum(fname, buffer_size=2**13):
     return m.hexdigest()
 
 def checkMD5Sum(fname, md5sum):
+    """
+    Check a file against a reference md5 sum
+    @param fname:
+    @param md5sum:
+    """
     good = False
     loc_md5sum = computeMD5Sum(fname)
     if loc_md5sum == md5sum :

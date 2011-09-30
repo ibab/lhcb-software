@@ -1,3 +1,7 @@
+2011-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/File.py: added move function that treats correctly top level links.
+
 2011-09-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/VCS.py: added the splitlines function from LbRelease.rcs.
