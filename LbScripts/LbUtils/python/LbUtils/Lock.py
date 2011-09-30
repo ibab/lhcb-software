@@ -6,9 +6,9 @@ Module which implements simple file-based locking mechanism
 import os, time, sys
 
 if sys.version_info[:3] >= (2,6,0) :
-    from hashlib import md5
+    from hashlib import md5 #@UnusedImport
 else :
-    from md5 import md5
+    from md5 import md5 #@Reimport
 
 
 
@@ -97,8 +97,8 @@ class Lock(object):
                 ret = os.system(c)
                 if ret != 0:
                     return ret
-                
-                
+
+
 ##########################################################
 # A set of object for providing simple, cross-platform file locking
 
@@ -111,13 +111,13 @@ class Lock2(object):
     def __init__(self, filename, timeout=5, step=0.1):
         """
         Create a ``Lock`` object on file ``filename``
-        
+
         ``timeout`` is the time in seconds to wait before timing out, when
         attempting to acquire the lock.
-        
+
         ``step`` is the number of seconds to wait in between each attempt to
         acquire the lock.
-        
+
         """
         self.timeout = timeout
         self.step = step
@@ -128,13 +128,13 @@ class Lock2(object):
         """
         Lock the file for access by creating a directory of the same name (plus
         a trailing underscore).
-        
+
         The file is only locked if you use this class to acquire the lock
         before accessing.
-        
+
         If ``force`` is ``True`` (the default), then on timeout we forcibly
         acquire the lock.
-        
+
         If ``force`` is ``False``, then on timeout a ``Lock2Error`` is raised.
         """
         if self.locked:
@@ -148,7 +148,7 @@ class Lock2(object):
                     raise os.error
                 else:
                     os.mkdir(name)
-            except os.error, err:
+            except os.error:
                 time.sleep(self.step)
             else:
                 self.locked = True
@@ -161,7 +161,7 @@ class Lock2(object):
     def unlock(self, ignore=True):
         """
         Release the lock.
-        
+
         If ``ignore`` is ``True`` and removing the lock directory fails, then
         the error is surpressed. (This may happen if the lock was acquired
         via a timeout.)
@@ -171,14 +171,14 @@ class Lock2(object):
         self.locked = False
         try:
             os.rmdir(self._mungedname())
-        except os.error, err:
+        except os.error:
             if not ignore:
                 raise Lock2Error('unlocking appeared to fail - %s' %
                     self.filename)
 
     def _mungedname(self):
         """
-        Override this in a subclass if you want to change the way ``Lock2`` 
+        Override this in a subclass if you want to change the way ``Lock2``
         creates the directory name.
         """
         return self.filename + '_'
@@ -191,13 +191,13 @@ class Lock2(object):
 class Lock2File(Lock2):
     """
     A file like object with an exclusive lock, whilst it is open.
-    
+
     The lock is provided by the ``Lock2`` class, which creates a directory
     with the same name as the file (plus a trailing underscore), to indicate
     that the file is locked.
-    
+
     This is simple and cross platform, with some limitations :
-    
+
         * Unusual process termination could result in the directory
           being left.
         * The process acquiring the lock must have permission to create a
@@ -211,20 +211,20 @@ class Lock2File(Lock2):
         """
         Create a file like object that is locked (using the ``Lock2`` class)
         until it is closed.
-        
+
         The file is only locked against another process that attempts to
         acquire a lock using ``Lock2`` (or ``Lock2File``).
-        
+
         The lock is released automatically when the file is closed.
-        
+
         The filename, mode and bufsize arguments have the same meaning as for
         the built in function ``open``.
-        
+
         The timeout and step arguments have the same meaning as for a ``Lock2``
         object.
-        
+
         The force argument has the same meaning as for the ``Lock2.lock`` method.
-        
+
         A ``Lock2File`` object has all the normal ``file`` methods and
         attributes.
         """
@@ -237,7 +237,7 @@ class Lock2File(Lock2):
     def close(self, ignore=True):
         """
         close the file and release the lock.
-        
+
         ignore has the same meaning as for ``Lock2.unlock``
         """
         self._file.flush()
