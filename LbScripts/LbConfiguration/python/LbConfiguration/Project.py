@@ -1,7 +1,10 @@
 """ general configuration for projects """
 #@PydevCodeAnalysisIgnore
 
+from LbConfiguration.Repository import getRepositories
 from LbConfiguration.Platform import binary_list, getBinaryOpt
+
+from LbUtils.VCS import splitlines
 
 import logging
 import sys
@@ -296,10 +299,22 @@ def _getSVNProject(projectname):
     @param projectname: name of the project to get the configuration
     @type projectname: string
     """
-    pass
+    log = logging.getLogger()
+    reps = getRepositories(protocol="anonymous")
+    for name in reps:
+        url = str(reps[name])
+        log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+        rep = reps[name]
+        if hasattr(rep, "getProperty") :
+            for l in splitlines(rep.getProperty("packages")) :
+                project = l.strip()
+                if projectname.upper() == project.upper() :
+                    pj = ProjectConf(project)
+                    return pj
+    return None
 
 
-def getProject(projectname):
+def getProject(projectname, svn_fallback=False):
     """ return the static instance of the project configuration by name """
     pj = None
     for p in project_list:
@@ -307,6 +322,12 @@ def getProject(projectname):
             pj = p
     if pj :
         return pj
+    elif svn_fallback:
+        pj = _getSVNProject(projectname)
+        if not pj :
+            raise ProjectConfException, "No such project configuration"
+        else :
+            return pj
     else:
         raise ProjectConfException, "No such project configuration"
 

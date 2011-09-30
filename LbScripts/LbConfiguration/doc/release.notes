@@ -1,6 +1,8 @@
 2011-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/Project.py: added _getSVNProject empty function.
+	* python/LbConfiguration/Project.py:
+	- added _getSVNProject empty function.
+	- added fallback on SVN for getProject function.
 	* python/LbConfiguration/Package.py: made _getSVNPackage case insensitive on the
 	package name.
 
