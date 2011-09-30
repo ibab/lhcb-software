@@ -137,7 +137,7 @@ def _getSVNPackage(packagename):
     reps = getRepositories(protocol="anonymous")
     for name in reps:
         url = str(reps[name])
-        log.info("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+        log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
         rep = reps[name]
         if hasattr(rep, "getProperty") :
             for l in splitlines(rep.getProperty("packages")) :
@@ -164,7 +164,7 @@ def getPackage(packagename, svn_fallback=False):
     elif svn_fallback:
         pj = _getSVNPackage(packagename)
         if not pj :
-            raise PackageConfException
+            raise PackageConfException, "No such package configuration"
         else :
             return pj
     else:
