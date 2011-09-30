@@ -9,3 +9,8 @@ def getStatusOutput(cmdline):
     status = p.returncode
     return status, output
 
+def createStdMD5File(filename):
+    
+    
+    pass
+

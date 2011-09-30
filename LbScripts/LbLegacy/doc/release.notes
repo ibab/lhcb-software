@@ -1,5 +1,6 @@
 2011-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* tests/MD5Test.py: New file for md5 check sums.
 	* python/LbLegacy/install_project.py:
 	- factored out the md5 extraction to extractMD5SumFromFile
 	- use the new getPackage version (with SVN fallback) instead of the plain package_names for the
