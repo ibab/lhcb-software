@@ -5,6 +5,7 @@
 	- factored out the md5 extraction to extractMD5SumFromFile
 	- use the new getPackage version (with SVN fallback) instead of the plain package_names for the
 	  datapackage identification.
+	- generalised getMD5FileName. Now it also works with html files.
 
 2011-09-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

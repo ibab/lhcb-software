@@ -669,9 +669,9 @@ def isTarBall(filename):
 
 def calculateMD5(filename):
     if python_version >= (2,6,0) :
-        from hashlib import md5
+        from hashlib import md5 #@UnusedImport
     else :
-        from md5 import md5
+        from md5 import md5 #@Reimport
     m = md5()
     f = open(filename, "rb")
     buf = f.read(2 ** 13)
@@ -726,9 +726,21 @@ def isMD5Valid(url, filename):
         installed from a previous installation """
     pass
 
+
 def getMD5FileName(filename):
-    fc = filename.split(".")
-    name = ".".join(fc[:-2]) + ".md5"
+    """
+    extract the name of the corresponding MD5 sum check file
+    it strips all the file extensions.
+    @param filename: initial file name
+    """
+    while True :
+        froot = os.path.splitext(filename)[0]
+        if froot == filename :
+            break
+        else :
+            filename = froot
+
+    name = ".".join([filename, "md5"])
     return name
 
 # --------------------------------------------------------------------------------------
