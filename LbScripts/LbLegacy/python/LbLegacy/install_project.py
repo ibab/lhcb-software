@@ -690,6 +690,11 @@ def removeReferenceMD5(fnm, dest):
         except:
             log.warning("Can't remove file %s" % filename)
 
+def extractMD5SumFromFile(filename):
+    ftext = open(filename).read()
+    return ftext.split()[0]
+
+
 def getReferenceMD5(url, filen, dest):
     log = logging.getLogger()
     md5name = getMD5FileName(filen)
@@ -700,8 +705,8 @@ def getReferenceMD5(url, filen, dest):
         filename = retrieve(url + '/' + md5name, filename)[0]
     else:
         log.warning("Can't retrieve %s" % md5name)
-    for line in open(filename, "r").readlines():
-        md5sum = line.split(" ")[0]
+
+    md5sum = extractMD5SumFromFile(filename)
     return md5sum
 
 def checkMD5(url, filenm, dest):
@@ -882,11 +887,12 @@ def getProjectList(name, version, binary=None, recursive=True):
     project_list = {}
     html_list = []
 
-    import LbConfiguration.Platform
-    import LbConfiguration.Package
+    import LbConfiguration.Platform #@UnusedImport
+    import LbConfiguration.Package #@UnusedImport
 
-    if name in LbConfiguration.Package.package_names :
-        p = LbConfiguration.Package.getPackage(name)
+    p = LbConfiguration.Package.getPackage(name, svn_fallback=True)
+
+    if p :
         tar_file = p.tarBallName(version)
     elif name in lcg_tar:
         tar_file = "_".join([name, version])
@@ -1413,15 +1419,16 @@ def showCompatibleConfigs():
 #
 def getVersionList(pname, ver=None):
     from LbConfiguration.Version import sortStrings
-    from LbConfiguration.Package import package_names, getPackage
+    from LbConfiguration.Package import getPackage
 
     datapackage = False
 
     log = logging.getLogger()
     log.debug('Browsing versions for %s ' % pname)
 
-    if pname.upper() in [ x.upper() for x in package_names] :
-        p = getPackage(pname)
+    p = getPackage(pname, svn_fallback=True)
+
+    if p :
         PROJECT = p.project().upper()
         datapackage = True
     else :
@@ -1466,16 +1473,16 @@ def listVersions(pname, ver=None):
         log.info(l)
 
 def doesVersionExist(vlist, pname, version, cmt_config=None):
-    from LbConfiguration.Package import package_names, getPackage
+    from LbConfiguration.Package import getPackage
     from LbConfiguration.Project import project_names, getProject
 
     exist = False
 
     isproj = False
 
-    if pname in package_names :
-        p = getPackage(pname)
-    elif pname in project_names:
+    p = getPackage(pname, svn_fallback=True)
+
+    if ( not p ) and  pname in project_names:
         p = getProject(pname)
         isproj = True
 
