@@ -3,6 +3,8 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+! 2011-09-30 - Jibo He
+ - Updated cmt/requirements
 
 </PRE><H1><A NAME=v3r0>2011-09-07 StrippingSys v3r0 </A></H1><PRE>
 Stripping for 2011 re-processing attempt to reduce the bandwidth (stripping17)
