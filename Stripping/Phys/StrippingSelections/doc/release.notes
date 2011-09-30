@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-09-30 - Alessandra Borgia
+ - StrippingB2DMuNuX.py.: added a new line, B->D0MuNu, D0->PiPi for SL Acp measurement. Also, removed an unnecessary cut in all the lines (DsIP). 
+
 ! 2011-09-29 - Michel De Cian
  - Changed DecayDescriptor in StrippingInflaton2MuMu
 
