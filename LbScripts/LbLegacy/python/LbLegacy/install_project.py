@@ -20,7 +20,7 @@ import random
 import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 
-script_version = '110920'
+script_version = '111003'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r4p1"
@@ -406,7 +406,7 @@ def createDir(here , logname):
     if checkWriteAccess(here) :
         good = True
         if not os.path.isdir(this_log_dir):
-            os.mkdir(this_log_dir)
+            safeMakeDirs(this_log_dir)
         elif logname:
             if os.path.exists(os.path.join(this_log_dir, logname + '_old')):
                 os.remove(logname + '_old')
@@ -417,11 +417,9 @@ def createDir(here , logname):
             if os.path.isdir(os.path.join(here, dirnm)):
                 log.debug('%s exists in %s ' % (dirnm, here))
             else:
-                os.mkdir(dirnm)
-                log.debug('%s has been created in %s ' % (dirnm, here))
+                safeMakeDirs(dirnm)
                 if dirnm == 'lcg':
-                    os.mkdir(os.path.join(dirnm, 'external'))
-                    log.debug('%s has been created in %s ' % (os.path.join(dirnm, 'external'), here))
+                    safeMakeDirs(os.path.join(dirnm, 'external'))
                 if dirnm == 'lhcb':
                     if multiple_mysiteroot :
                         found_dbase = False
@@ -435,21 +433,21 @@ def createDir(here , logname):
                             if os.path.isdir(os.path.join(b, 'TOOLS')) :
                                 found_tools = True
                         if not found_dbase :
-                            os.mkdir(os.path.join(dirnm, 'DBASE'))
+                            safeMakeDirs(os.path.join(dirnm, 'DBASE'))
                         if not found_param :
-                            os.mkdir(os.path.join(dirnm, 'PARAM'))
+                            safeMakeDirs(os.path.join(dirnm, 'PARAM'))
                         if not found_tools :
-                            os.mkdir(os.path.join(dirnm, 'TOOLS'))
+                            safeMakeDirs(os.path.join(dirnm, 'TOOLS'))
                         if found_dbase or found_param or found_tools:
-                            os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
-                            os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
+                            safeMakeDirs(os.path.join(dirnm, 'EXTRAPACKAGES'))
+                            safeMakeDirs(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
                             f = open(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
                             f.write("project EXTRAPACKAGES \n\n")
                             f.close()
                     else :
-                        os.mkdir(os.path.join(dirnm, 'DBASE'))
-                        os.mkdir(os.path.join(dirnm, 'PARAM'))
-                        os.mkdir(os.path.join(dirnm, 'TOOLS'))
+                        safeMakeDirs(os.path.join(dirnm, 'DBASE'))
+                        safeMakeDirs(os.path.join(dirnm, 'PARAM'))
+                        safeMakeDirs(os.path.join(dirnm, 'TOOLS'))
                 if fix_perm :
                     changePermissions(dirnm, recursive=True)
             if dirnm == "tmp" :
@@ -1130,24 +1128,20 @@ def getProjectTar(tar_list, already_present_list=None):
                 if fname.find('GENSER_v') != -1:
                 # the GENSER project as such does not exist anylonger in LCG
                     os.chdir(this_lcg_dir)
-                    if not os.path.exists('GENSER'): os.mkdir('GENSER')
+                    safeMakeDirs('GENSER')
                     os.chdir('GENSER')
-                    if not os.path.exists('GENSER_' + pack_ver[1]): os.mkdir('GENSER_' + pack_ver[1])
+                    safeMakeDirs('GENSER_' + pack_ver[1])
                 os.chdir(pack_ver[3])
-                if not os.path.exists(pack_ver[2]):
-                    os.mkdir(pack_ver[2])
-                    log.info('mkdir %s in %s ' % (pack_ver[2], pack_ver[3]))
+                safeMakeDirs(pack_ver[2])
 
             if os.path.realpath(os.getcwd()) == os.path.realpath(this_lhcb_dir) :
                 # if binary is requested and InstallArea does not exist : set it
                 if pack_ver[2] :
                     os.chdir(os.path.join(this_lhcb_dir, pack_ver[0], pack_ver[0] + '_' + pack_ver[1]))
                     if not os.path.exists(os.path.join('InstallArea', pack_ver[2])):
-                        log.debug('mkdir InstallArea')
-                        if not os.path.exists('InstallArea'):
-                            os.mkdir ('InstallArea')
+                        safeMakeDirs("InstallArea")
                         os.chdir('InstallArea')
-                        os.mkdir(pack_ver[2])
+                        safeMakeDirs(pack_ver[2])
                 if sys.platform != 'win32' :
                     try :
                         from LbLegacy.ProjectLinks import fixLinks
@@ -1384,8 +1378,7 @@ def getBootScripts():
             getFile(url_dist + 'LBSCRIPTS/', scripttar)
             this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
             this_targz_dir = targz_dir.split(os.pathsep)[0]
-            if not os.path.isdir(this_bootscripts_dir) :
-                os.mkdir(this_bootscripts_dir)
+            safeMakeDirs(this_bootscripts_dir)
             checkWriteAccess(this_bootscripts_dir)
             os.chdir(this_bootscripts_dir)
             rc = unTarFileInTmp(os.path.join(this_targz_dir, scripttar), os.getcwd(), overwrite=True)
@@ -2019,10 +2012,13 @@ def safeMove(src, dst):
         fixWinAttrib(dst)
 
 def safeMakeDirs(path):
+    log = logging.getLogger()
     if not os.path.exists(path) :
         if os.path.islink(path) :
             os.unlink(path)
+            log.debug("Removed broken link %s" % path)
         os.makedirs(path)
+        log.debug("Created directory %s" % path)
 
 def addSoft(srcdir, dstdir, overwrite=False):
     log = logging.getLogger()

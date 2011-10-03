@@ -1,5 +1,6 @@
 2011-10-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: replaced plain mkdirs with safeMakeDirs that first remove broken links if it exists.
 	* scripts/mkLCGCMTtar: converted binary type for gcc. This one expose the host tag for its binary version
 	and we need to use the target tag when building the tarballs.
 
