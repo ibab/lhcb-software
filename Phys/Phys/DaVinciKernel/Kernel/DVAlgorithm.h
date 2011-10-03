@@ -142,17 +142,20 @@ public: // IDVAlgorithm
    *  implementation does not derive from GaudiAlgorithm 
    */
   virtual const GaudiAlgorithm* gaudiAlg() const { return this; }
+
   /// get the best related primary vertex 
   virtual const LHCb::VertexBase* bestVertex(const LHCb::Particle* particle) const 
   {
     return i_bestVertex(particle);
   }
+
   /// get all loaded input particles 
   virtual const LHCb::Particle::Range particles() const 
   {
     return LHCb::Particle::Range ( m_inputParts.begin() ,
                                    m_inputParts.end()   ) ; 
   }
+
   /** direct const access to container of input primary vertices.
    *  @author Juan Palacios juan.palacios@nikhef.nl
    */
@@ -162,6 +165,7 @@ public: // IDVAlgorithm
       get<LHCb::RecVertex::Range>( m_PVLocation ) : 
       LHCb::RecVertex::Range();
   }
+
   /** Accessor for IDistanceCalculator tools by name/typename/nickname
    *  @see IDistanceCalculator
    *  @param name the tool name/typename/nickname
@@ -176,6 +180,7 @@ public: // IDVAlgorithm
         m_distanceCalculatorNames , 
         m_distanceCalculators     , this ) ;
   }
+
   /** Accessor for ILifetimeFitter tools by name/typename/nickname
    *  @see ILifetimeFitter
    *  @param name the tool name/typename/nickname
@@ -189,6 +194,7 @@ public: // IDVAlgorithm
         m_lifetimeFitterNames ,
         m_lifetimeFitters     , this ) ; 
   }
+
   /** Accessor for IVertexFit tools by name/typename/nickname
    *  @see IVertexFit
    *  @param name the tool name/typename/nickname
@@ -202,6 +208,7 @@ public: // IDVAlgorithm
         m_vertexFitNames ,
         m_vertexFits     , this ) ;
   } 
+
   /** Accessor for IParticleReFitter tools by name/typename/nickname
    *  @see IParticleReFitter
    *  @param name the tool name/typename/nickname
@@ -215,6 +222,7 @@ public: // IDVAlgorithm
         m_particleReFitterNames ,
         m_particleReFitters     , this ) ; 
   }
+
   /** Accessor for IDecayTreeFit tools by name/typename/nickname
    *  @see IDecayTreeFit
    *  @param name the tool name/typename/nickname
@@ -228,6 +236,7 @@ public: // IDVAlgorithm
         m_decayTreeFitterNames ,
         m_decayTreeFitters     , this ) ; 
   }
+
   /** Accessor for IParticleCombiner tools by name/typename/nickname
    *  @see IParticleCombiner
    *  @param name the tool name/typename/nickname
@@ -241,6 +250,7 @@ public: // IDVAlgorithm
         m_particleCombinerNames ,
         m_particleCombiners     , this ) ;
   }
+
   /** Accessor for IMassFit tools by name/typename/nickname
    *  @see IMassFit
    *  @param name the tool name/typename/nickname
@@ -254,6 +264,7 @@ public: // IDVAlgorithm
         m_massFitterNames ,
         m_massFitters     , this ) ; 
   }
+
   /** Accessor for IDirectionFit tools by name/typename/nickname
    *  @see IDirectionFit
    *  @param name the tool name/typename/nickname
@@ -267,12 +278,13 @@ public: // IDVAlgorithm
         m_directionFitterNames ,
         m_directionFitters     , this ) ; 
   }
+
   /** Accessor for IPVReFitter tools by name/typename/nickname
    *  @see IPVReFitter
    *  @param name the tool name/typename/nickname
    *  @return pointer to aquired tool 
    */
-  const  IPVReFitter* 
+  const IPVReFitter* 
   primaryVertexReFitter ( const std::string& name = "" ) const 
   {
     return getTool<IPVReFitter>
@@ -280,6 +292,7 @@ public: // IDVAlgorithm
         m_pvReFitterNames ,
         m_pvReFitters     , this ) ; 
   }
+
   /** Accessor for Particle Filter Tool
    *  @see IPArticleFilter
    *  @param name the tool name/typename/nickname
@@ -293,9 +306,11 @@ public: // IDVAlgorithm
         m_filterNames , 
         m_filters     , this ) ;
   }
+
   // ==========================================================================
 public:
   // ==========================================================================
+
   /// Overridden from Gaudi Algo to produce a warning if not called by user
   virtual void setFilterPassed (bool state);  
 
@@ -309,12 +324,14 @@ public:
   virtual StatusCode finalize ();  
 
   // Get decay descriptor
-  const std::string& getDecayDescriptor()const {
+  const std::string& getDecayDescriptor()const
+  {
     return m_decayDescriptor;
   }  
 
   // Set decay descriptor
-  void setDecayDescriptor(const std::string& dd) {
+  void setDecayDescriptor(const std::string& dd)
+  {
     m_decayDescriptor = dd;
   }  
 
@@ -332,9 +349,9 @@ public:
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    if ( 0!=m_pvRelator ) return m_pvRelator;
-    const std::string& pvRelatorName = onOffline()->relatedPVFinderType();
-    return getTool<IRelatedPVFinder>(pvRelatorName, m_pvRelator, this) ;      
+    return ( m_pvRelator ? m_pvRelator :
+             getTool<IRelatedPVFinder>(onOffline()->relatedPVFinderType(), 
+                                       m_pvRelator, this ) );
   }
 
   /**
@@ -344,10 +361,10 @@ public:
    **/
   inline const IPVReFitter* defaultPVReFitter() const
   {
-    if (0!=m_defaultPVReFitter) return m_defaultPVReFitter;
-    return getTool<IPVReFitter>( "", 
-                                 m_pvReFitterNames ,
-                                 m_pvReFitters     , this ) ; 
+    return ( m_defaultPVReFitter ? m_defaultPVReFitter :
+             getTool<IPVReFitter>( "", 
+                                   m_pvReFitterNames ,
+                                   m_pvReFitters     , this ) ); 
   }
 
   /**
@@ -407,8 +424,9 @@ public:
    *
    **/
   inline void relate(const LHCb::Particle*   particle, 
-                     const LHCb::VertexBase* vertex) const {
-    if (0!=particle && 0!= vertex ) m_p2PVMap[particle]=vertex;
+                     const LHCb::VertexBase* vertex) const 
+  {
+    if ( particle && vertex ) { m_p2PVMap[particle] = vertex; }
   }
 
   /**
@@ -419,7 +437,8 @@ public:
    * @author Juan Palacios palacios@physik.uzh.ch
    *
    **/
-  inline void unRelatePV(const LHCb::Particle* particle) const {
+  inline void unRelatePV(const LHCb::Particle* particle) const
+  {
     m_p2PVMap.erase(particle);
   }
   
@@ -439,14 +458,16 @@ public:
   */
 
   /// Tagging Tool
-  inline IBTaggingTool* flavourTagging() const {
+  inline IBTaggingTool* flavourTagging() const 
+  {
     return getTool<IBTaggingTool>(m_taggingToolName, 
                                   m_taggingTool, 
                                   this );
   }
   
-  /// Descnedants
-  inline IParticleDescendants* descendants() const {
+  /// Descendants
+  inline IParticleDescendants* descendants() const
+  {
     return getTool<IParticleDescendants>(m_descendantsName,
                                          m_descendants);
   }
@@ -503,8 +524,10 @@ protected:
   template<class TYPE> 
   TYPE* getTool ( const std::string& name, 
                   TYPE*& t,
-                  const IInterface* ptr=NULL ) const {
-    if ( 0==t ) {  // the tool is already located properly?
+                  const IInterface* ptr=NULL ) const 
+  {
+    if ( !t ) 
+    {  // the tool is already located properly?
       t = tool<TYPE>( name, ptr )  ;// else get it
     }
     return t ;
@@ -516,7 +539,8 @@ protected:
    *
    * @return vector or strings with TES input locations
    */
-  inline const std::vector<std::string>& inputLocations() const {
+  inline const std::vector<std::string>& inputLocations() const
+  {
     return m_inputLocations;
   }
   
@@ -526,11 +550,10 @@ protected:
    *
    * @return vector or strings with TES input locations
    */
-  inline std::vector<std::string>& inputLocations() {
+  inline std::vector<std::string>& inputLocations()
+  {
     return m_inputLocations;
   }
-  
-
 
   /// the actual tyep for mapping "tool nickname -> the actual type/name"
   typedef std::map<std::string,std::string> ToolMap     ;
@@ -560,26 +583,28 @@ protected:
                   STORAGE&           toolMap       ,  
                   const IInterface*  parent = NULL )  const
   {
+    TYPE* t = NULL;
     // look within the local list of already located tools of given type 
     typename STORAGE::iterator ifind = toolMap.find ( nickName ) ;
     // tool is in the list?
     if ( toolMap.end() != ifind ) 
     {
-      TYPE* tool = ifind->second ;
-      if ( 0 == tool ) 
+      t = ifind->second ;
+      if ( !t ) 
       { Exception ( "getTool<" + System::typeinfoName( typeid ( TYPE ) ) 
                     + ">('" + nickName + "'): tool points to NULL" ) ; }
-      return tool ;
     }
-    // get the actual tool type 
-    ToolMap::const_iterator iname = nameMap.find ( nickName ) ;
-    // locate the tool 
-    TYPE* t = tool<TYPE>
-      ( nameMap.end() != iname ? iname->second : nickName , parent ) ;
-    // add the located tool into the container 
-    typename STORAGE::value_type value( nickName , t ) ;
-    toolMap.insert( value ) ;
-    //
+    else
+    {
+      // get the actual tool type 
+      ToolMap::const_iterator iname = nameMap.find ( nickName ) ;
+      // locate the tool 
+      t = tool<TYPE>
+        ( nameMap.end() != iname ? iname->second : nickName , parent ) ;
+      // add the located tool into the container 
+      typename STORAGE::value_type value( nickName , t ) ;
+      toolMap.insert( value ) ;
+    }
     return t ;                                               // RETURN 
   }
 
@@ -596,13 +621,14 @@ protected:
   /// @attention if <b>particle</b> is on the TES they will not be saved 
   /// by default, special action is required via over-writing of _saveInTES.
   ///
-  inline void markParticle(const LHCb::Particle* particle) {
+  inline void markParticle(const LHCb::Particle* particle) 
+  {
     if ( m_parts.end() == std::find ( m_parts.begin() , 
                                       m_parts.end()   ,  
-                                      particle )        ) {
+                                      particle )        ) 
+    {
       m_parts.push_back(particle);
     }
-    
   }
   
   /// Mark particles for saving, ignoring it's decay tree.
@@ -618,12 +644,10 @@ protected:
   /// by default, special action is required via over-writing of _saveInTES.
   ///
   template<class PARTICLES>
-  inline void markParticles(const PARTICLES& particles) {
-
-    typename PARTICLES::const_iterator iPart = particles.begin();
-    typename PARTICLES::const_iterator iPartEnd = particles.end();
-    for ( ; iPart!=iPartEnd; ++iPart) markParticle(*iPart);
-    
+  inline void markParticles(const PARTICLES& particles) 
+  {
+    for ( typename PARTICLES::const_iterator iPart = particles.begin();
+          iPart != particles.end(); ++iPart ) { markParticle(*iPart); }
   }
 
   /// Mark a decay tree for saving. Scans decay tree marking
@@ -646,10 +670,10 @@ protected:
   /// Ownership remains unchanged (either client's or TES).
   ///
   template <class PARTICLES>
-  inline void markTrees(const PARTICLES heads) {
-    typename PARTICLES::const_iterator iHead = heads.begin();
-    typename PARTICLES::const_iterator iHeadEnd = heads.end();
-    for ( ; iHead!=iHeadEnd; ++iHead) markTree(*iHead);
+  inline void markTrees(const PARTICLES heads) 
+  {
+    for ( typename PARTICLES::const_iterator iHead = heads.begin(); 
+          iHead != heads.end(); ++iHead) { markTree(*iHead); }
   }
 
   /// Clone a particle and mark for saving. Scans descendants cloning
@@ -677,9 +701,8 @@ protected:
   template <class PARTICLES>
   void cloneAndMarkTrees(const PARTICLES& heads)
   {
-    typename PARTICLES::const_iterator iHead = heads.begin();
-    typename PARTICLES::const_iterator iHeadEnd = heads.end();
-    for ( ; iHead!=iHeadEnd; ++iHead) cloneAndMarkTree(*iHead);    
+    for ( typename PARTICLES::const_iterator iHead = heads.begin();
+          iHead != heads.end(); ++iHead) { cloneAndMarkTree(*iHead); }
   }
 
   ///
@@ -688,7 +711,8 @@ protected:
   /// @param head (INPUT) Particle, head of decays to be stored. 
   ///      Algorithm takes over ownership. Element <b>must be on the heap</b>.
   ///
-  inline void markNewTree(const LHCb::Particle* head) {
+  inline void markNewTree(const LHCb::Particle* head) 
+  {
     DaVinci::Utils::findDecayTree( head, m_parts, m_secVerts, &m_inTES);
   }
 
@@ -699,29 +723,32 @@ protected:
   ///      Algorithm takes over ownership. Elements <b>must be on the heap</b>.
   ///
   template<class PARTICLES>
-  inline void markNewTrees(const PARTICLES& heads) {
-    typename PARTICLES::const_iterator iHead = heads.begin();
-    typename PARTICLES::const_iterator iHeadEnd = heads.end();
-    for( ; iHead != iHeadEnd; ++iHead ) markNewTree(*iHead);
-
+  inline void markNewTrees(const PARTICLES& heads) 
+  {
+    for ( typename PARTICLES::const_iterator iHead = heads.begin(); 
+          iHead != heads.end(); ++iHead ) { markNewTree(*iHead); }
   }
 
   /// Return the output location where data will be written to the TES 
-  inline const std::string& outputLocation() const {
+  inline const std::string& outputLocation() const
+  {
     return m_outputLocation;
   }  
   /// Return the output location where Particles will be written to the TES 
-  inline const std::string& particleOutputLocation() const {
+  inline const std::string& particleOutputLocation() const
+  {
     return m_particleOutputLocation;
   }
   /// Return the output location where decay vertices will be written 
   /// to the TES 
-  inline const std::string& decayVertexOutputLocation() const {
+  inline const std::string& decayVertexOutputLocation() const
+  {
     return m_decayVertexOutputLocation;
   }
 
   /// Return the output location where data will be written to the TES 
-  inline const std::string& tableOutputLocation() const {
+  inline const std::string& tableOutputLocation() const 
+  {
     return m_tableOutputLocation;
   }
 
@@ -729,21 +756,23 @@ protected:
   /// nothing is there. Does not invoke any calculations.
   inline const LHCb::VertexBase* getStoredBestPV(const LHCb::Particle* particle) const 
   {
-    return ( hasStoredRelatedPV(particle) ) ? m_p2PVMap[particle] : 0 ;  
+    return ( hasStoredRelatedPV(particle) ) ? m_p2PVMap[particle] : NULL ;  
   }
   
   /// Inline access to local input Particle storage.
-  inline const LHCb::Particle::ConstVector& i_particles() const {
+  inline const LHCb::Particle::ConstVector& i_particles() const
+  {
     return m_inputParts;
   }
 
   /// Inline access to local marked Particle storage.
-  inline const LHCb::Particle::ConstVector& i_markedParticles() const {
+  inline const LHCb::Particle::ConstVector& i_markedParticles() const
+  {
     return m_parts;
   }
 
 private:
-
+  
   /// Initialise relative Inputs to account for RootInTES
   /// Initialise Particle->PV relations input locations.
   void initializeLocations();
@@ -763,32 +792,36 @@ private:
 
   /// Take a range of Particle -> PV relations and store them locally,
   /// overwriting existing relations with the same From.
-  void loadRelations(const Particle2Vertex::Table::Range relations);
+  void loadRelations(const Particle2Vertex::Table::Range& relations);
 
   /// Does the particle have a relation to a PV stored in the local
   /// relations table?
-  inline bool hasStoredRelatedPV(const LHCb::Particle* particle) const {
+  inline bool hasStoredRelatedPV(const LHCb::Particle* particle) const 
+  {
     return m_p2PVMap.find(particle) != m_p2PVMap.end();
   }
   
-
   /// Does the event have more than 1 primary vertex?
-  inline bool multiPV() const {
+  inline bool multiPV() const 
+  {
     return this->primaryVertices().size() > 1;
   }
 
   /// Should PVs be re-fitted when bestVertex is asked for?  
-  inline bool refitPVs() const {
+  inline bool refitPVs() const
+  {
     return m_refitPVs;
   }
 
   /// Should Particle->PV relations table be used?
-  inline bool useP2PV() const {
+  inline bool useP2PV() const 
+  {
     return m_refitPVs ? true : m_useP2PV;
   }
 
   /// Should Particle->PV relations be stored in the TES? 
-  inline bool saveP2PV() const {
+  inline bool saveP2PV() const 
+  {
     return m_writeP2PV && !m_noPVs ;
   }
 
@@ -799,27 +832,24 @@ private:
   /// best PV relations and store them on the local map.
   void buildP2PVMap() const;
   
-
   /// Mark a local PV for saving.
   const LHCb::RecVertex* mark(const LHCb::RecVertex* PV) const;
 
   template<class PARTICLES>
-  void i_markTrees(const PARTICLES& heads) {
-
+  void i_markTrees(const PARTICLES& heads) 
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "markTrees" << endmsg;
 
-    typename PARTICLES::const_iterator iHead = heads.begin();
-    typename PARTICLES::const_iterator iHeadEnd = heads.end();
-
-    for( ; iHead != iHeadEnd; ++iHead ) {
-      if (msgLevel(MSG::VERBOSE)) {
-        verbose() << "Getting\n" << *iHead << endmsg;
+    for( typename PARTICLES::const_iterator iHead = heads.begin(); 
+         iHead != heads.end(); ++iHead )
+    {
+      if (msgLevel(MSG::VERBOSE))
+      {
+        verbose() << "Getting " << *iHead << endmsg;
       }
       // Find all descendendant from this particle
       DaVinci::Utils::findDecayTree( *iHead, m_parts, m_secVerts, &m_inTES);
     }
-
-    return ;
 
   }
 
@@ -941,16 +971,17 @@ protected:
   /// Concrete Type of ParticleDescendants  tool
   std::string m_descendantsName;
 
-  /// 
+  /// OnOffline tool (whatever that does....)
   mutable IOnOffline* m_onOffline;
 
-  ///
+  /// Find the related PV
   mutable IRelatedPVFinder* m_pvRelator;
   
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
 
 private:
+
   /// Decay description (Property)
   std::string m_decayDescriptor;
   /// avoid the writeup of empty containers 
@@ -958,11 +989,6 @@ private:
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
-  /// Count number of times selection filter is used 
-  /// (= number of times alg is called)
-  int m_countFilterWrite ;
-  /// Number of passing events
-  int m_countFilterPassed ;
 
   /// Re-fit PVs. Default: false.
   bool m_refitPVs;
@@ -1014,25 +1040,25 @@ private:
 
   public:
 
+    /// Constructor with data values
     DVAlgorithmGuard(LHCb::Particle::ConstVector& inputParticles,
                      LHCb::Particle::ConstVector& localParticles,
                      LHCb::Vertex::ConstVector& localSecondaryVertices,
                      LHCb::RecVertex::ConstVector& primaryVertices,
-                     P2PVMap& tableP2PV)
-      :
-      m_guardInputP(inputParticles),
-      m_guardLocalP(localParticles),
-      m_guardLocalSV(localSecondaryVertices),
-      m_guardPV(primaryVertices),
-      m_table(tableP2PV)
-    {}
-    
-    ~DVAlgorithmGuard() { 
-      m_table.clear();
-    }
+                     P2PVMap& tableP2PV )
+      : m_guardInputP  ( inputParticles         ),
+        m_guardLocalP  ( localParticles         ),
+        m_guardLocalSV ( localSecondaryVertices ),
+        m_guardPV      ( primaryVertices        ),
+        m_table        ( tableP2PV              )
+    { }
+
+    /// Destructor    
+    ~DVAlgorithmGuard() { m_table.clear(); }
     
   private:
 
+    /// Disallow default constructor
     DVAlgorithmGuard();
 
   private:
@@ -1056,9 +1082,11 @@ inline
 const LHCb::IParticlePropertySvc* 
 DVAlgorithm::ppSvc() const 
 { 
-  if ( 0 != m_ppSvc ) { return m_ppSvc ; }
-  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true ) ;
-  return m_ppSvc ;
+  if ( !m_ppSvc ) 
+  {
+    m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true ) ;
+  }
+  return m_ppSvc;
 }
 // ============================================================================
 /*  helper method to get a proper ParticleProperty for the given name  
@@ -1071,7 +1099,7 @@ const LHCb::ParticleProperty*
 DVAlgorithm::pid ( const std::string& name ) const 
 {
   const LHCb::ParticleProperty* pp = ppSvc()->find( name ) ;
-  if ( 0 == pp ) 
+  if ( !pp ) 
   { Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ) ; }
   return pp ;
 } 
@@ -1085,7 +1113,7 @@ const LHCb::ParticleProperty*
 DVAlgorithm::pid ( const LHCb::ParticleID& id ) const 
 {
   const LHCb::ParticleProperty* pp = ppSvc()->find ( id ) ;
-  if ( 0 == pp ) { Error ( "pid() : invalid LHCb::ParticleProperty!" ) ; }
+  if ( !pp ) { Error ( "pid() : invalid LHCb::ParticleProperty!" ) ; }
   return pp ;
 }
 // ==========================================================================

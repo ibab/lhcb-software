@@ -4,14 +4,15 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2011-09-19 - Chris Jones
+ - Various minor improvements and tidy updates to DVAlgorithm, found during 
+   the hunt for the 2011 reprocessing stripping seg. fault bug.
 
-!========================= DaVinciKernel v10r2 2011-06-16 =========================
+!======================== DaVinciKernel v10r2 2011-06-16 ====================
+
 ! 2011-05-22 - Vanya Belyaev
-
  - DVAlgorithm
-
     move _saveInTES from private to protected section 
-
  - Increase to v10r1
 
 !======================== DaVinciKernel v10r0p1 2011-04-21 ==================
