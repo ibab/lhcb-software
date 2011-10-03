@@ -42,6 +42,16 @@ Purpose: LHCb Simulation program
    scattering. It has the same options as the LHCb list.
    . G4EmStandardPhysics_LHCbTest.{hh,cc}
 
+========================= EvtGen v12r5 2011-09-24 ===========================
+! 2011-09-24 - John Back
+ - Return a boolean flag for EvtParticle::generateMassTree() that is set to
+   false (such that EvtParticle::isDecayed() = false) if there is a problem
+   with the mass generation of the daughters of a given parent particle decay.
+   This stops further processing of the problematic decay with no code abort.
+   Some changes to EvtAbsLineShape to prevent code aborts when the parent
+   particle mass is not high enough to generate the resonance daughter mass.
+   Also added a EvtParticle::getName() function to return the particle name.
+
 !=============================================================================
 </PRE><H1><A NAME="v40r3">2011-09-20 - GaussSys v40r3</A></H1><PRE>
 <H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02

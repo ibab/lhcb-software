@@ -13,7 +13,7 @@ use Gauss               v40r4   Sim
 # Generator packages: Basic configuration
 use GenCuts             v1r1    Gen
 use GENSER              v9r2    Gen
-use EvtGen              v12r4   Gen
+use EvtGen              v12r5   Gen
 use Mint                v1r0    Gen    # Additions to EvtGen
 use EvtGenExtras        v3r0    Gen
 use Generators          v11r1   Gen
