@@ -239,7 +239,7 @@ def getLCGBinary(workdir, extname, binary):
 
 def get_native_versions(native_version, binary):
     if debug_flag == 1:
-        print 'get_native_versions',native_version,binary
+        print 'get_native_versions', native_version, binary
     here = os.getcwd()
 
     packages_versions = {}
@@ -247,19 +247,19 @@ def get_native_versions(native_version, binary):
     #build cmtcmd
     if plugins_flag == 1:
         print 'build PLUGINS tar file'
-        if os.path.isfile(os.path.join(os.environ['LHCBRELEASES'],'context','requirements')):
-            os.environ['CMTUSERCONTEXT'] = os.path.join(os.environ['LHCBRELEASES'],'context')
+        if os.path.isfile(os.path.join(os.environ['LHCBRELEASES'], 'context', 'requirements')):
+            os.environ['CMTUSERCONTEXT'] = os.path.join(os.environ['LHCBRELEASES'], 'context')
             cmtcmd = 'cmt show macros native > '
     else:
         NAME, version, Name, NameSys, release_area = get_base_project(native_version)
         CMTPATH = get_cmtpath(native_version)
         lcgv = get_lcg_version(CMTPATH)
-        native_cmt = os.path.join(os.environ[release_area],NAME,native_version,NameSys,'cmt')
+        native_cmt = os.path.join(os.environ[release_area], NAME, native_version, NameSys, 'cmt')
         if not os.path.exists(native_cmt) :
-            native_cmt = os.path.join(os.environ[release_area],NAME,native_version,NameSys,version,'cmt')
+            native_cmt = os.path.join(os.environ[release_area], NAME, native_version, NameSys, version, 'cmt')
         os.chdir(native_cmt)
         if debug_flag == 1:
-            print 'get_native_version - %s %s %s %s '%(release_area,native_cmt,os.getenv('CMTPATH'),lcgv)
+            print 'get_native_version - %s %s %s %s '%(release_area, native_cmt, os.getenv('CMTPATH'), lcgv)
         if NAME != 'LHCBGRID':
             packages_versions['LCGCMT'] = [lcgv, lcgv, binary]
         cmtshow = "cmt %s show " % getCMTExtraTags(binary)
@@ -289,6 +289,15 @@ def get_native_versions(native_version, binary):
         if not packages_versions[pak][0] :
             print "%s has no version. Removing it from the list" % pak
             del packages_versions[pak]
+
+    if binary.startswith("i686"):
+        for pak in packages_versions.keys() :
+            content = packages_versions[pak]
+            if content[2].startwith("x86_64") :
+                print "Replacing binary for %s" % pak
+                newbin = content[2].replace("x86_64", "i686")
+                newpath = content[3].replace("x86_64", "i686")
+                packages_versions[pak] = [content[0], content[1], newbin, newpath]
 
     os.chdir(here)
 
