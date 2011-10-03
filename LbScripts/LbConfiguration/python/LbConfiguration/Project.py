@@ -306,7 +306,7 @@ def _getSVNProject(projectname):
         log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
         rep = reps[name]
         if hasattr(rep, "getProperty") :
-            for l in splitlines(rep.getProperty("packages")) :
+            for l in splitlines(rep.getProperty("projects")) :
                 project = l.strip()
                 if projectname.upper() == project.upper() :
                     pj = ProjectConf(project)
