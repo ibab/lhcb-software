@@ -4,7 +4,7 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
-! 2011-10-02 - Marco Clemencic
+! 2011-10-03 - Marco Clemencic
  - Fixed bug #87392: Event time not set correctly on first event
 
 !========================= DetDescSvc v3r3 2011-08-30 =========================
