@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-10-02 - Marco Clemencic
+ - Added test exposing bug #87392: Event time not set correctly on first event
+
 !========================= LHCbAlgs v2r42 2011-08-29 =========================
 ! 2011-08-10 - Patrick Koppenburg
  - Task #21133:
@@ -19,7 +22,7 @@
 
 ! 2011-08-08 - Patrick Koppenburg
  - New algorithm OfflineRateLimiter that limits the rate wrt to some
-   trigger line. Allows to keep 1 Hz of NoBias in te stripping 
+   trigger line. Allows to keep 1 Hz of NoBias in te stripping
    irrespective of the actual input rate.\
  - OfflineDeterministicParescaler : made some methods and properties
    protected to allow OfflineRateLimiter to inherit from them.
@@ -45,14 +48,14 @@
  - AlgorithmCorreations : Fix bug https://savannah.cern.ch/bugs/index.php?82587
 
 ! 2011-05-18 - Marco Cattaneo
- - If OutputLevel is VERBOSE, TESFingerPrint now sends its statistics also to 
+ - If OutputLevel is VERBOSE, TESFingerPrint now sends its statistics also to
    the MessageSvc
 
 ! 2011-05-17 - Illya Shapoval
- - Added an algorithm to produce the TES finger print (quantitative image). Two 
+ - Added an algorithm to produce the TES finger print (quantitative image). Two
  heuristics levels are possible:
    + Plain data objects statistics through the store ('Low' level);
-   + Mentioned above + more closer look on the container object contents 
+   + Mentioned above + more closer look on the container object contents
    ('Medium' level).
  Files added: TESFingerPrint.cpp, TESFingerPrint.h
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+
+from Configurables import EventClockSvc, RecEventTime, FakeEventTime
+from Configurables import LHCbAlgsTest__CreateFakeRecHeader as CreateFakeRecHeader
+from Configurables import LHCbAlgsTest__PrintEventTime as PrintEventTime
+from Configurables import LoadDDDB, DDDBConf
+
+# Prepare the EventClockSvc and add the decoder
+ecs = EventClockSvc()
+#ecs.OutputLevel = DEBUG
+ecs.addTool(RecEventTime, "EventTimeDecoder")
+tdl = ecs.EventTimeDecoder
+
+# Prepare the algorithm to generate fake RecHeaders
+cfh = CreateFakeRecHeader("Test_InjectTime")
+cfh.addTool(FakeEventTime, "EventTimeDecoder")
+cfh.EventTimeDecoder.StartTime = 1000000000
+cfh.EventTimeDecoder.TimeStep = 1000000000
+
+# Load a detector element
+loadAlg = LoadDDDB()
+loadAlg.Node = "/dd/Structure/LHCb"
+DDDBConf()
+
+app = ApplicationMgr(TopAlg = [PrintEventTime("Test_Time1"), loadAlg, PrintEventTime("Test_Time2")],
+                     EvtSel = "NONE",
+                     EvtMax = 3,
+                     ExtSvc = [ToolSvc(), cfh])
+
+EventDataSvc(ForceLeaves = True)
+
+
+#MessageSvc(OutputLevel = DEBUG)
+
+</text></argument>
+<argument name="validator"><text>
+# pre-process stdout to keep only the lines we need
+filtered = "\n".join([ l.rstrip() for l in stdout.splitlines()
+                       if l.startswith("Test_")
+                          or ("Application Manager Started" in l) ])
+
+findReferenceBlock("""
+ApplicationMgr       INFO Application Manager Started successfully
+Test_InjectTime      INFO Adding RecHeader with event time 1.0
+Test_Time1           INFO Current event time: 0.0
+Test_Time2           INFO Current event time: 1.0
+Test_InjectTime      INFO Adding RecHeader with event time 2.0
+Test_Time1           INFO Current event time: 2.0
+Test_Time2           INFO Current event time: 2.0
+Test_InjectTime      INFO Adding RecHeader with event time 3.0
+Test_Time1           INFO Current event time: 3.0
+Test_Time2           INFO Current event time: 3.0
+""", stdout = filtered)
+</text></argument>
+</extension>
