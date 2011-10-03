@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef PATKERNEL_IPATTTCOUNTER_H 
 #define PATKERNEL_IPATTTCOUNTER_H 1
 
@@ -12,7 +11,7 @@
 namespace LHCb{
   class MCParticle;
   class LHCbID;
-};
+}
 
 
 static const InterfaceID IID_IPatTTCounter ( "IPatTTCounter", 1, 0 );

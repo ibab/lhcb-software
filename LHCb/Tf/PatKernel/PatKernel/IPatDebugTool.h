@@ -1,4 +1,3 @@
-// $Id: IPatDebugTool.h,v 1.1 2008-12-04 09:07:35 cattanem Exp $
 #ifndef PATKERNEL_IPATDEBUGTOOL_H 
 #define PATKERNEL_IPATDEBUGTOOL_H 1
 
@@ -11,7 +10,7 @@
 
 namespace LHCb{
   class LHCbID;
-};
+}
 
 static const InterfaceID IID_IPatDebugTool ( "IPatDebugTool", 1, 0 );
 

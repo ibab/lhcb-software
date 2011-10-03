@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-10-03 - Marco Cattaneo
+ - Fix icc remarks
+
 !========================= PatKernel v2r4 2011-04-04 =========================
 ! 2011-04-04 - Marco Cattaneo
  - Remove obsolete file PatKernel_dll.cpp
