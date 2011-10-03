@@ -24,6 +24,7 @@
 #include "G4EmExtraPhysics.hh"
 #include "G4EmStandardPhysics_option1LHCb.hh"
 #include "G4EmStandardPhysics_option1NoApplyCuts.hh"
+#include "G4EmStandardPhysics_LHCbTest.hh"
 
 // Ion and hadrons
 #include "G4IonPhysics.hh"
@@ -69,6 +70,8 @@ typedef GiGaExtPhysics< G4EmStandardPhysics_option1LHCb > EmStdLHCbPhysFactory;
 DECLARE_TOOL_FACTORY( EmStdLHCbPhysFactory );
 typedef GiGaExtPhysics< G4EmStandardPhysics_option1NoApplyCuts > EmStdOpt1NoCutsPhysFactory;
 DECLARE_TOOL_FACTORY( EmStdOpt1NoCutsPhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics_LHCbTest > EmStdLHCbTestPhysFactory;
+DECLARE_TOOL_FACTORY( EmStdLHCbTestPhysFactory );
 
 typedef GiGaExtPhysics< G4EmExtraPhysics > EmExtraPhysFactory;
 DECLARE_TOOL_FACTORY( EmExtraPhysFactory );
@@ -170,8 +173,24 @@ public:
                           "Use new MS models for electrons and positrons");
   }
   inline G4EmStandardPhysics_option1LHCb *newInstance(const std::string &/*name*/, int verbosity) const {
-    std::cout << "LHCb option 1, applycut = " << m_applyCuts << std::endl;
     return new G4EmStandardPhysics_option1LHCb(verbosity, m_applyCuts, m_newForE);
+  }
+private:
+  bool m_applyCuts;
+  bool m_newForE;
+};
+
+template <>
+class GiGaExtPhysicsExtender<G4EmStandardPhysics_LHCbTest> {
+public:
+  inline void addPropertiesTo(AlgTool *tool) {
+    tool->declareProperty("ApplyCuts", m_applyCuts = true, 
+                          "Apply production cuts to all EM processes for the LHCb EM constructor");
+    tool->declareProperty("NewModelForE", m_newForE = true,
+                          "Use new MS models for electrons and positrons");
+  }
+  inline G4EmStandardPhysics_LHCbTest *newInstance(const std::string &/*name*/, int verbosity) const {
+    return new G4EmStandardPhysics_LHCbTest(verbosity, m_applyCuts, m_newForE);
   }
 private:
   bool m_applyCuts;
