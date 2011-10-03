@@ -244,7 +244,7 @@ def uPlot ( pdf            ,
     if func :
         func.SetLineWidth ( 3 )
         func.SetLineColor ( 2 )
-        func.ResetBit     ( 1 << 512 )
+        func.ResetBit     ( 1 << 9 )
         
     return res , histo
 
