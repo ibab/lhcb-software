@@ -6,6 +6,8 @@
 
 ! 2011-10-02 - Marco Clemencic
  - Added test exposing bug #87392: Event time not set correctly on first event
+ - Adapted TestTimeDecoderOdin to the new behavior of EventClockSvc.
+   (fix to bug #87392)
 
 !========================= LHCbAlgs v2r42 2011-08-29 =========================
 ! 2011-08-10 - Patrick Koppenburg

@@ -1,5 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.10 2009-01-23 13:09:15 cattanem Exp $
-// Include files 
+// Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDetDataSvc.h"
@@ -33,12 +32,12 @@ EventClockSvc::EventClockSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("EventTimeDecoder", m_eventTimeDecoderName = "FakeEventTime"   );
 
   declareProperty("InitialTime",      m_initialTime          = 0                 );
-  
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-EventClockSvc::~EventClockSvc() {}; 
+EventClockSvc::~EventClockSvc() {}
 
 //=============================================================================
 // IInterface implementation
@@ -52,7 +51,7 @@ StatusCode EventClockSvc::queryInterface(const InterfaceID& riid, void** ppvUnkn
   return Service::queryInterface(riid,ppvUnknown);
 }
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode EventClockSvc::initialize() {
   // base class initialization
@@ -94,11 +93,14 @@ StatusCode EventClockSvc::initialize() {
   }
 
   // Set the first event time at initialization.
-  Gaudi::Time initTime;
-  if (m_initialTime)
-    initTime = Gaudi::Time(m_initialTime);
-  else
-    initTime = Gaudi::Time::current();
+  Gaudi::Time initTime = m_eventTimeDecoder->getTime(); // try to get the actual event time
+  if (initTime.ns() == 0) {
+    // no event time available yet, use the configuration
+    if (m_initialTime)
+      initTime = Gaudi::Time(m_initialTime);
+    else
+      initTime = Gaudi::Time::current();
+  }
   if( log.level() <= MSG::DEBUG )
     log << MSG::DEBUG << "Initialize event time to " << initTime << endmsg;
   m_detDataSvc->setEventTime(initTime);
@@ -117,7 +119,7 @@ StatusCode EventClockSvc::initialize() {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 StatusCode EventClockSvc::finalize ( ) {
   // local finalization

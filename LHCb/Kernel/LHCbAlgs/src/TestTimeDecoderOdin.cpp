@@ -46,6 +46,11 @@ TestTimeDecoderOdin::~TestTimeDecoderOdin() {}
 //=========================================================================
 Gaudi::Time TestTimeDecoderOdin::getTime ( ) const {
 
+  // As a real EventTimeDecoder, the event time can be retrieved only in RUNNING
+  // state, i.e. when the event can be loaded.
+  if (FSMState() != Gaudi::StateMachine::RUNNING)
+    return Gaudi::Time::epoch();
+
   static Gaudi::Time last_time(0);
 
   LHCb::ODIN *odin = new LHCb::ODIN();

@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -35,7 +35,7 @@ FakeEventTime::FakeEventTime( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-FakeEventTime::~FakeEventTime() {} 
+FakeEventTime::~FakeEventTime() {}
 
 //=========================================================================
 //  Initialization
@@ -44,7 +44,7 @@ StatusCode FakeEventTime::initialize ( ) {
   // base class initialization
 	StatusCode sc = AlgTool::initialize();
 	if (!sc.isSuccess()) return sc;
-  
+
   // local initialization
 	MsgStream log(msgSvc(),name());
   if( log.level() <= MSG::DEBUG )
@@ -72,6 +72,11 @@ StatusCode FakeEventTime::finalize ( ) {
 //  Return the time of current event
 //=========================================================================
 Gaudi::Time FakeEventTime::getTime ( ) const {
+
+  // As a real EventTimeDecoder, the event time can be retrieved only in RUNNING
+  // state, i.e. when the event can be loaded.
+  if (FSMState() != Gaudi::StateMachine::RUNNING)
+    return Gaudi::Time::epoch();
 
   // Here we should get the time from the EventDataSvc
   Gaudi::Time currentTime(m_startTime);
