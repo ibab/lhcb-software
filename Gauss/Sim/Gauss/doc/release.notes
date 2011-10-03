@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v40r4 2011-10-03 ============================
+! 2011-10-03 - Gloria Corti
+ - Update configurable to be able to use LHCbTest and combination with options.
+   Also introuduce optional 'other' in physics list dictionary for higgses.
+
 !========================= Gauss v40r3 2011-09-20 ============================
 ! 2011-09-20 - Gloria Corti
  - Use latest release of ParamFiles

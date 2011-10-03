@@ -68,7 +68,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"       : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1','Rich2'], "CALO":['Spd','Prs','Ecal','Hcal'], "MUON":['Muon'],"MAGNET": True }
        ,"DetectorMoni"      : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1','Rich2'], "CALO":['Spd','Prs','Ecal','Hcal'], "MUON":['Muon'],"MAGNET": True }
        ,"SpilloverPaths"    : []
-       ,"PhysicsList"       : {"Em":'Opt1', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True}
+       ,"PhysicsList"       : {"Em":'Opt1', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
        ,"DeltaRays"         : True
        ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
        ,"BeamMomentum"      : 5.0*SystemOfUnits.TeV
@@ -100,7 +100,7 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorSim"    : """ Dictionary specifying the detectors to simulated (should be in geometry): """
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
-       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE'], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False] """
+       ,'PhysicsList'    : """ Name of physics modules to be passed 'Em':['Std','Opt1,'Opt2','Opt3','NoCuts','LHCb', 'LHCbNoCuts', 'LHCbOldForE', 'LHCbNoCutsOldForE', 'LHCbTest', 'LHCbTestNoCut' ], 'GeneralPhys':[True,False], 'Hadron':['LHEP','QGSP','QGSP_BERT','QGSP_BERT_HP','QGSP_BERT_CHIPS','FTFP_BERT'], 'LHCbPhys': [True,False], 'Other': [''] """
        ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
        ,'Phases'         : """ List of phases to run (Generator, Simulation, GenToMCTree) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
@@ -1182,7 +1182,10 @@ class Gauss(LHCbConfigurableUser):
         emPhys     = self.getProp('PhysicsList')['Em']
         lhcbPhys   = self.getProp('PhysicsList')['LHCbPhys']
         genPhys    = self.getProp('PhysicsList')['GeneralPhys']
-
+        otherPhys  = ''
+        if self.getProp('PhysicsList').has_key('Other'):
+            otherPhys = self.getProp('PhysicsList')['Other']
+        
         def gef(name):
             import Configurables
             return getattr(Configurables, "GiGaExtPhysics_%s_" % name)
@@ -1202,7 +1205,10 @@ class Gauss(LHCbConfigurableUser):
         elif(emPhys == "NoCuts"):
             addConstructor("G4EmStandardPhysics_option1NoApplyCuts", "EmOpt1NoCutsPhysics")
         elif(emPhys.find("LHCb") != -1):
-            addConstructor("G4EmStandardPhysics_option1LHCb", "EmOpt1LHCbPhysics")
+            if(emPhys.find("Test") != -1 ):
+                addConstructor("G4EmStandardPhysics_LHCbTest", "EmOpt1LHCbPhysics")
+            else:
+                addConstructor("G4EmStandardPhysics_option1LHCb", "EmOpt1LHCbPhysics")
             # overwrite cuts depending on choice of list
             if(emPhys.find("NoCuts") != -1 ):
                 gmpl.EmOpt1LHCbPhysics.ApplyCuts = False
@@ -1268,7 +1274,7 @@ class Gauss(LHCbConfigurableUser):
         
         ## --- LHCb specific physics: 
         if  (lhcbPhys == True):
-        ## LHCb specific RICH processes
+        ## LHCb specific RICH processes to add if rich sim is enabled
             gmpl.PhysicsConstructors.append("GiGaPhysConstructorOp")
             gmpl.PhysicsConstructors.append("GiGaPhysConstructorHpd")
         ## LHCb particles unknown to default Geant4
@@ -1277,7 +1283,16 @@ class Gauss(LHCbConfigurableUser):
             log.warning("The lhcb-related physics (RICH processed, UnknowParticles) is disabled")
         else:        
             raise RuntimeError("Unknown setting for LHCbPhys PhysicsList chosen ('%s')"%lhcbPhys)
-        
+
+        ## and other exotic physics
+        if (otherPhys == 'Higgs'):
+            log.info("Enabling physics processe for Higgs particles")
+            gmpl.PhysicsConstructors.append("GiGaHiggsParticles")
+        else:
+            if (otherPhys != '' ):
+               raise RuntimeError("Unknown setting for OtherPhys PhysicsList chosen ('%s')"%otherPhys) 
+       
+             
     ##
     ##
     ## Apply the configuration
