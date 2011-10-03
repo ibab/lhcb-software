@@ -1,4 +1,3 @@
-// $Id: LHCbIDsToMCParticles.cpp,v 1.3 2009-02-24 16:58:28 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -12,7 +11,7 @@
 #include "Event/OTTime.h"
 #include "Event/MuonCoord.h"
 
-DECLARE_TOOL_FACTORY( LHCbIDsToMCParticles );
+DECLARE_TOOL_FACTORY( LHCbIDsToMCParticles )
 using namespace LHCb;
 
 LHCbIDsToMCParticles::LHCbIDsToMCParticles(const std::string& type,
@@ -32,7 +31,7 @@ LHCbIDsToMCParticles::LHCbIDsToMCParticles(const std::string& type,
 
   // constructer
   declareInterface<ILHCbIDsToMCParticles>(this);
-};
+}
 
 LHCbIDsToMCParticles::~LHCbIDsToMCParticles(){
   // destructer

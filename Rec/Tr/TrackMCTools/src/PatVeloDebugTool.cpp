@@ -1,4 +1,3 @@
-// $Id: PatVeloDebugTool.cpp,v 1.2 2007-11-09 10:44:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatVeloDebugTool );
+DECLARE_TOOL_FACTORY( PatVeloDebugTool )
 
 
 //=============================================================================

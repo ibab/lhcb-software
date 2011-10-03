@@ -1,4 +1,3 @@
-// $Id: PatDebugTrackTool.cpp,v 1.1 2009-04-01 08:50:27 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -17,8 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatDebugTrackTool );
-
+DECLARE_TOOL_FACTORY( PatDebugTrackTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

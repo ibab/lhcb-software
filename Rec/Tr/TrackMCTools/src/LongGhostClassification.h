@@ -29,12 +29,18 @@ public:
   virtual bool isGhost(LHCbIDs::const_iterator& start, 
                        LHCbIDs::const_iterator& stop) const;
 
+  virtual bool isGhost(const LHCb::Track& aTrack) const;
+
  private:
 
  virtual void specific(LHCbIDs::const_iterator& start, 
                        LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
-
 };
 
+// Dummy override to avoid "partially overridden" warnings from icc
+inline bool LongGhostClassification::isGhost(const LHCb::Track& aTrack) const 
+{
+  return TrackGhostClassificationBase::isGhost(aTrack);
+}
 #endif

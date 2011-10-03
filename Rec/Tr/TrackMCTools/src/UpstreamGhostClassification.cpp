@@ -1,4 +1,3 @@
-// $Id: UpstreamGhostClassification.cpp,v 1.1 2008-02-04 08:52:00 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -18,7 +17,7 @@ UpstreamGhostClassification::UpstreamGhostClassification(const std::string& type
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 UpstreamGhostClassification::~UpstreamGhostClassification(){
   // destructer

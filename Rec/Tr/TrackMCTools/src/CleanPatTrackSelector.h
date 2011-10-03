@@ -1,4 +1,3 @@
-// $Id: CleanPatTrackSelector.h,v 1.5 2009-03-24 15:14:23 mneedham Exp $
 #ifndef _CleanPatTrackSelector_H
 #define _CleanPatTrackSelector_H
 
@@ -22,7 +21,7 @@
 
 namespace LHCb{
   class MCParticle;
-};
+}
 
 class IMCParticleSelector;
 

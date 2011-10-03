@@ -6,6 +6,10 @@
 
 ! 2011-10-03 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
+ - Fix icc remarks and warnings
+ - Remove obsolete file TrackMCTools_dll.cpp
+ - Bug fix in TrackGhostClassificationBase::fromPhi : was returning True if
+   ancestor of first particle was Phi, without checking second particle
 
 !========================= TrackMCTools v3r0p1 2011-01-17 =========================
 ! 2011-01-17 - Olivier Callot

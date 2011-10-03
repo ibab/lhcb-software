@@ -1,4 +1,3 @@
-// $Id: LHCbIDsToMCHits.cpp,v 1.3 2010-04-13 09:53:39 cocov Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -14,7 +13,7 @@
 #include "Event/MuonCoord.h"
 
 
-DECLARE_TOOL_FACTORY( LHCbIDsToMCHits );
+DECLARE_TOOL_FACTORY( LHCbIDsToMCHits )
 using namespace LHCb;
 
 LHCbIDsToMCHits::LHCbIDsToMCHits(const std::string& type,
@@ -37,7 +36,7 @@ LHCbIDsToMCHits::LHCbIDsToMCHits(const std::string& type,
 
   // constructer
   declareInterface<ILHCbIDsToMCHits>(this);
-};
+}
 
 LHCbIDsToMCHits::~LHCbIDsToMCHits(){
   // destructer

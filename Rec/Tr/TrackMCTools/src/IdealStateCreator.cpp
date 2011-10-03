@@ -1,4 +1,3 @@
-// $Id: IdealStateCreator.cpp,v 1.21 2010-04-12 12:34:34 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +24,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( IdealStateCreator );
+DECLARE_TOOL_FACTORY( IdealStateCreator )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -58,7 +57,7 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-IdealStateCreator::~IdealStateCreator() {};
+IdealStateCreator::~IdealStateCreator() {}
 
 //=============================================================================
 // Initialization

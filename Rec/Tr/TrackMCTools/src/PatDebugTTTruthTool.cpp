@@ -1,4 +1,3 @@
-// $Id: PatDebugTTTruthTool.cpp,v 1.3 2008-06-18 07:40:07 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -23,8 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatDebugTTTruthTool );
-
+DECLARE_TOOL_FACTORY( PatDebugTTTruthTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

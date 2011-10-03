@@ -74,7 +74,7 @@ public:
                LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
-  virtual void specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  void specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
   virtual void specific(LHCbIDs::const_iterator& start, 

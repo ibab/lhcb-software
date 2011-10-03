@@ -1,4 +1,3 @@
-// $Id: TTrackGhostClassification.cpp,v 1.3 2007-05-31 15:21:38 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -24,7 +23,7 @@ TTrackGhostClassification::TTrackGhostClassification(const std::string& type,
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 StatusCode TTrackGhostClassification::initialize(){
 

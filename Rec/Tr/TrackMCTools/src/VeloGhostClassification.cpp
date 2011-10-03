@@ -1,5 +1,3 @@
-// $Id: VeloGhostClassification.cpp,v 1.4 2008-02-04 08:52:00 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -22,7 +20,7 @@ VeloGhostClassification::VeloGhostClassification(const std::string& type,
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 VeloGhostClassification::~VeloGhostClassification(){
   // destructer

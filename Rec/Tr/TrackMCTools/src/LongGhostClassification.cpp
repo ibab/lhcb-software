@@ -1,4 +1,3 @@
-// $Id: LongGhostClassification.cpp,v 1.7 2009-06-04 15:54:01 smenzeme Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -18,7 +17,7 @@ LongGhostClassification::LongGhostClassification(const std::string& type,
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 LongGhostClassification::~LongGhostClassification(){
   // destructer

@@ -1,5 +1,3 @@
-// $Id: DownstreamGhostClassification.cpp,v 1.1 2008-02-04 08:52:00 mneedham Exp $
-// GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Kernel/VeloChannelID.h"
@@ -18,7 +16,7 @@ DownstreamGhostClassification::DownstreamGhostClassification(const std::string& 
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 DownstreamGhostClassification::~DownstreamGhostClassification(){
   // destructer

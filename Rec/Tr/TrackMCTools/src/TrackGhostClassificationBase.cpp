@@ -21,7 +21,7 @@ TrackGhostClassificationBase::TrackGhostClassificationBase(const std::string& ty
 
   // constructer
   declareInterface<ITrackGhostClassification>(this);
-};
+}
 
 TrackGhostClassificationBase::~TrackGhostClassificationBase(){
   // destructer
@@ -53,7 +53,7 @@ void TrackGhostClassificationBase::generic(const LHCb::Track& aTrack,
   LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
   LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
   generic(start,stop,tinfo);
-};
+}
 
 void TrackGhostClassificationBase::specific(const LHCb::Track& aTrack, 
                                             LHCb::GhostTrackInfo& tinfo) const{
@@ -214,9 +214,9 @@ bool TrackGhostClassificationBase::fromPhi(LHCb::GhostTrackInfo::LinkPair& p1,
 
   const MCParticle* m1 = 0; const MCParticle* m2 = 0;
   if (p1.first != 0) m1 = p1.first->mother();
-  if (p2.first != 0 )m2 = p2.first->mother();
+  if (p2.first != 0) m2 = p2.first->mother();
   bool phi = false;
-  if ((m1 !=0 && m1->particleID().abspid() == 333 ) || (m1 !=0 && m1->particleID().abspid() == 333)) phi = true;
+  if ((m1 !=0 && m1->particleID().abspid() == 333 ) || (m2 !=0 && m2->particleID().abspid() == 333)) phi = true;
   return phi; 
 }
 
@@ -301,7 +301,7 @@ bool TrackGhostClassificationBase::isGhost(const LHCb::Track& aTrack) const {
  LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
  LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
  return isGhost(start, stop);
-};
+}
 
 
 bool TrackGhostClassificationBase::isGhost(LHCbIDs::const_iterator& start, 

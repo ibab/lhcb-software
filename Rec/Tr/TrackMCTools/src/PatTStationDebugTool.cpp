@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -18,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatTStationDebugTool );
-
+DECLARE_TOOL_FACTORY( PatTStationDebugTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

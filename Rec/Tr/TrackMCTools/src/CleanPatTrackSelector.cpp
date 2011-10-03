@@ -12,7 +12,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( CleanPatTrackSelector );
+DECLARE_TOOL_FACTORY( CleanPatTrackSelector )
 
 CleanPatTrackSelector::CleanPatTrackSelector( const std::string& type,
                               const std::string& name,

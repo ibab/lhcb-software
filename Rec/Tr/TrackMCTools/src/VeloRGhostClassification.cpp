@@ -1,4 +1,3 @@
-// $Id: VeloRGhostClassification.cpp,v 1.3 2007-05-31 15:21:39 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -18,7 +17,7 @@ VeloRGhostClassification::VeloRGhostClassification(const std::string& type,
                      const IInterface* parent):
   TrackGhostClassificationBase(type, name, parent){
 
-};
+}
 
 VeloRGhostClassification::~VeloRGhostClassification(){
   // destructer
