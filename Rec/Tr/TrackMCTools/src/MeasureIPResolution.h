@@ -1,13 +1,16 @@
-// $Id: $
 #ifndef MEASUREIPRESOLUTION_H 
 #define MEASUREIPRESOLUTION_H 1
 
 // Include files
+#include <string>
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Event/MCParticle.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+namespace LHCb {
+  class IParticlePropertySvc;
+  class MCParticle;
+}
 
 /** @class MeasureIPResolution MeasureIPResolution.h
  *  Measure the IP resolution of Velo tracks
@@ -32,7 +35,7 @@ protected:
   
 private:
   std::string m_containerName;
-  IParticlePropertySvc* m_ppSvc;
+  mutable LHCb::IParticlePropertySvc* m_ppSvc; ///< Pointer to particle property service
 
   int m_nTracks;
   double m_averX;

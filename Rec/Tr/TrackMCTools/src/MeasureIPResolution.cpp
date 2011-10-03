@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -7,6 +6,8 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Linker/LinkedTo.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "MeasureIPResolution.h"
@@ -18,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MeasureIPResolution );
+DECLARE_ALGORITHM_FACTORY( MeasureIPResolution )
 
 
 //=============================================================================
@@ -44,7 +45,7 @@ StatusCode MeasureIPResolution::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   m_nTracks     = 0;
   m_averX       = 0.;
@@ -168,11 +169,10 @@ StatusCode MeasureIPResolution::finalize() {
 void MeasureIPResolution::printMCParticle ( const LHCb::MCParticle* part ) {
   const LHCb::MCParticle* mother = part;
   const LHCb::MCVertex*   vert   = part->originVertex();
-  ParticleProperty* pp;
   double p = double( int(  part->p() ) /1000. );
   info() << "MC: [" << p << " GeV]";
   while ( 0 != mother ) {
-    pp = m_ppSvc->findByStdHepID( mother->particleID().pid() );
+    const LHCb::ParticleProperty* pp = m_ppSvc->find( mother->particleID() );
     if ( 0 == pp ) {
       info() << mother->key() << "[" << mother->particleID().pid() <<"]";
     } else {

@@ -1,4 +1,3 @@
-// $Id: DebugTrackingLosses.cpp,v 1.1 2009-04-01 09:03:56 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +12,8 @@
 #include "Linker/LinkedFrom.h"
 #include "Linker/LinkedTo.h"
 #include "Event/ProcStatus.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "DebugTrackingLosses.h"
@@ -24,8 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DebugTrackingLosses );
-
+DECLARE_ALGORITHM_FACTORY( DebugTrackingLosses )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -57,7 +57,7 @@ StatusCode DebugTrackingLosses::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
   m_eventNumber = 0;
   return StatusCode::SUCCESS;
 }
@@ -230,11 +230,10 @@ StatusCode DebugTrackingLosses::execute() {
 void DebugTrackingLosses::printMCParticle ( const LHCb::MCParticle* part ) {
   const LHCb::MCParticle* mother = part;
   const LHCb::MCVertex*   vert   = part->originVertex();
-  ParticleProperty* pp;
   double p = double( int(  part->p() ) /1000. );
   info() << "MC: [" << p << " GeV]";
   while ( 0 != mother ) {
-    pp = m_ppSvc->findByStdHepID( mother->particleID().pid() );
+    const LHCb::ParticleProperty* pp = m_ppSvc->find( mother->particleID() );
     if ( 0 == pp ) {
       info() << mother->key() << "[" << mother->particleID().pid() <<"]";
     } else {

@@ -1,12 +1,15 @@
-// $Id: DebugTrackingLosses.h,v 1.1 2009-04-01 09:03:56 ocallot Exp $
 #ifndef DEBUGTRACKINGLOSSES_H 
 #define DEBUGTRACKINGLOSSES_H 1
 
 // Include files
+#include <vector>
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+
+namespace LHCb {
+  class IParticlePropertySvc;
+}
 
 /** @class DebugTrackingLosses DebugTrackingLosses.h
  *  Debug which MCParticles are not reconstructed.
@@ -29,7 +32,7 @@ protected:
   void printMCParticle ( const LHCb::MCParticle* part );
   
 private:
-  IParticlePropertySvc* m_ppSvc;
+  mutable LHCb::IParticlePropertySvc* m_ppSvc; ///< Pointer to particle property service
 
   bool m_velo;
   bool m_forward;

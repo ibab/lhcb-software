@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-10-03 - Marco Cattaneo
+ - Migrate to LHCb::ParticlePropertySvc
+
 !========================= TrackMCTools v3r0p1 2011-01-17 =========================
 ! 2011-01-17 - Olivier Callot
  - In fact the code for PatTSTationDebufTool wasn't committed. Now this is done.
