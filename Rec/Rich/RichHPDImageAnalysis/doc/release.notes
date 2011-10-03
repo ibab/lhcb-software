@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2011-10-03 - Chris Jones
+ - Fix incorrect usage of std::unique to remove duplicates
+
 ! 2011-09-02 - Chris Jones
  - Improve the sorting operator of Pixels.
  - Various script improvements.
