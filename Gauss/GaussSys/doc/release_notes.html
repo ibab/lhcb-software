@@ -4,6 +4,45 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v40r4">2011-10-03 - GaussSys v40r4</A></H1><PRE>
+<H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v33r0 (and Gaudi v22r4)</b>
+   AppConfig v3r*,
+   DecFiles v23r*, 
+   <b>ParamFiles v8r5</b>, 
+   SQLDDDB v6r*, FieldMap v5r*,
+   <b>pythia 6.425.2</b>, photos 215.4, <b>lhapdf 5.8.5</b> 
+   (via LCG_GeneratorsInterfaces)
+   <b>HepMC 2.06.05</b> (via LCG_Interfaces)
+   <b>Geant4 v94r2p1 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   XmlVis v1r13,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   <b>pythia8 153</b> (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+ - Temporarily use Geant4/G4LHCblists to pick up latest version without a new
+   release of Geant4.
+
+!========================= Gauss v40r4 2011-10-03 ============================
+! 2011-10-03 - Gloria Corti
+ - Update configurable to be able to use LHCbTest and combination with options.
+   Also introuduce optional 'other' in physics list dictionary for higgses.
+
+!====================== GaussPhysics v7r2 2011-10-03 =========================
+! 2011-10-03 - Gloria Corti
+ - Add new physics list for LHCbTest, similar to LHCb but with modifications
+   by Matt Reid (requires G4LHCblists v2r2)
+
+!======================== G4LHCblists v2r2 2011-10-03 ========================
+! 2011-10-03 - Gloria Corti
+ - Add new list with suggestion from Matt Reid for improvement of Multiple
+   scattering. It has the same options as the LHCb list.
+   . G4EmStandardPhysics_LHCbTest.{hh,cc}
+
+!=============================================================================
 </PRE><H1><A NAME="v40r3">2011-09-20 - GaussSys v40r3</A></H1><PRE>
 <H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
    </A></H2>

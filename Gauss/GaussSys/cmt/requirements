@@ -1,5 +1,5 @@
 package GaussSys
-version v40r3
+version v40r4
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v40r3   Sim
+use Gauss               v40r4   Sim
 
 # Generator packages: Basic configuration
 use GenCuts             v1r1    Gen
@@ -55,7 +55,8 @@ use GaussTools          v16r0     Sim
 use GaussRICH		v11r5     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
-use GaussPhysics	v7r1	  Sim
+use G4LHCblists         v2r2      Geant4   # Temporarily
+use GaussPhysics	v7r2	  Sim
 use GaussUMC            v1r1      Sim
 use GaussCherenkov      v1r1      Sim
 
