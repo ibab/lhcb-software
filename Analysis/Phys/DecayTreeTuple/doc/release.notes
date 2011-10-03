@@ -4,10 +4,14 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
-! 2011-09-27 - Marco Gersabeck
- - TupleToolPropertime: add option FitToPV to allow measuring proper time w.r.t. their best PV for all particles
+! 2011-10-03 - Chris Jones
+ - Fix the incorrect usage of std::unique to remove duplicates
 
-!========================= DecayTreeTuple v3r17 2011-09-15 =========================
+! 2011-09-27 - Marco Gersabeck
+ - TupleToolPropertime: add option FitToPV to allow measuring proper time w.r.t.
+   their best PV for all particles
+
+!=================== DecayTreeTuple v3r17 2011-09-15 =========================
 ! 2011-09-07 - Patrick Koppenburg
  - TupleToolEventInfo : add field polarity
  - TupleToolMuonPid: comment out unused IsMuonTight. Causes a warning.

@@ -58,8 +58,8 @@ StatusCode TupleToolMCTruth::initialize(){
                                              this);
 
    //initialise the tools
+  m_toolList.erase( std::unique(m_toolList.begin(),m_toolList.end()), m_toolList.end() );
   std::sort( m_toolList.begin(), m_toolList.end() );
-  std::unique( m_toolList.begin(), m_toolList.end() );
   for( std::vector<std::string>::const_iterator it = m_toolList.begin(); m_toolList.end()!=it ; ++it )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Adding the tool " << *it << endmsg ;

@@ -88,8 +88,9 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   if (msgLevel(MSG::DEBUG)) debug() << "Initialized " << name()
                                     << " with decay " << decay() << endreq;
 
+  m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()), 
+                      m_stufferList.end());
   std::sort( m_stufferList.begin(), m_stufferList.end() );
-  std::unique( m_stufferList.begin(), m_stufferList.end() );
 
   return StatusCode::StatusCode( test );
 }
