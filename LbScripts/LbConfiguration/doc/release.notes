@@ -1,3 +1,8 @@
+2011-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/Project.py: fixed log message.
+	* LbConfiguration/tests/ProjectTest.py: added test for _getSVNProject.
+
 2011-10-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: fixed _getSVNProject. It was getting the wrong property.

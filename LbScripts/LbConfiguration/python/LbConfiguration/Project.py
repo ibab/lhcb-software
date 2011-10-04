@@ -303,7 +303,7 @@ def _getSVNProject(projectname):
     reps = getRepositories(protocol="anonymous")
     for name in reps:
         url = str(reps[name])
-        log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+        log.debug("Looking for package '%s' in '%s' (%s)", projectname, name, url)
         rep = reps[name]
         if hasattr(rep, "getProperty") :
             for l in splitlines(rep.getProperty("projects")) :
