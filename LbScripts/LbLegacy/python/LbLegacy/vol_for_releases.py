@@ -18,7 +18,7 @@ import sys, os
 def create_volume(pname,pversion,size=0):
     log = logging.getLogger()
 
-    projconf = getProject(pname)
+    projconf = getProject(pname, svn_fallback=True)
 
     if not size :
         size = projconf.FullSize()

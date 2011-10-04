@@ -1,3 +1,8 @@
+2011-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbLegacy/python/LbLegacy/install_project.py: use the SVN fallback for the project configuration.
+	* LbLegacy/python/LbLegacy/vol_for_releases.py: idem.
+
 2011-10-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: replaced plain mkdirs with safeMakeDirs that first remove broken links if it exists.

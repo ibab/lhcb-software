@@ -899,6 +899,7 @@ def getProjectList(name, version, binary=None, recursive=True):
 
     import LbConfiguration.Platform #@UnusedImport
     import LbConfiguration.Package #@UnusedImport
+    import LbConfiguration.Project #@UnusedImport
 
     p = LbConfiguration.Package.getPackage(name, svn_fallback=True)
 
@@ -909,11 +910,15 @@ def getProjectList(name, version, binary=None, recursive=True):
         if binary :
             tar_file += "_%s" % binary
     else:
-        tar_file = name.upper() + "_" + name.upper()
-        if version != 0 :
-            tar_file += "_%s" % version
-        if binary:
-            tar_file += "_%s" % binary
+        pj = LbConfiguration.Project.getProject(name, svn_fallback=True)
+        if pj :
+            tar_file = pj.tarBallName(version, binary)
+        else :
+            tar_file = name.upper() + "_" + name.upper()
+            if version != 0 :
+                tar_file += "_%s" % version
+            if binary:
+                tar_file += "_%s" % binary
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
@@ -1216,7 +1221,7 @@ def getProjectTar(tar_list, already_present_list=None):
 
                 try :
                     from LbConfiguration.Project import getProject, ProjectConfException
-                    prj = getProject(pack_ver[0])
+                    prj = getProject(pack_ver[0], svn_fallback=True)
                     if prj :
                         cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
                         postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
@@ -1479,7 +1484,7 @@ def listVersions(pname, ver=None):
 
 def doesVersionExist(vlist, pname, version, cmt_config=None):
     from LbConfiguration.Package import getPackage
-    from LbConfiguration.Project import project_names, getProject
+    from LbConfiguration.Project import getProject
 
     exist = False
 
@@ -1487,9 +1492,10 @@ def doesVersionExist(vlist, pname, version, cmt_config=None):
 
     p = getPackage(pname, svn_fallback=True)
 
-    if ( not p ) and  pname in project_names:
-        p = getProject(pname)
-        isproj = True
+    if not p :
+        p = getProject(pname, svn_fallback=True)
+        if p :
+            isproj = True
 
     for l in vlist :
         if not cmt_config :
