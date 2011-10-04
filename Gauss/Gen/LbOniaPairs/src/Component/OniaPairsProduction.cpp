@@ -155,7 +155,19 @@ StatusCode OniaPairsProduction::initialize()
     Pythia::pydat1().mstu( 25 ) = 1 ;
     Pythia::pypars().mstp( 122 ) = 1 ;
   */
+
+  OniaPairs::SetPar ( "ECM", m_ecm ) ;
   
+  OniaPairs::SetPar ( "PSI1S1S", m_psi1S1S ) ;
+  OniaPairs::SetPar ( "PSI1S2S", m_psi1S2S ) ;
+  OniaPairs::SetPar ( "PSI2S2S", m_psi2S2S ) ;
+
+  OniaPairs::SetPar ( "UPS1S1S", m_ups1S1S ) ;
+  OniaPairs::SetPar ( "UPS1S2S", m_ups1S2S ) ;
+  OniaPairs::SetPar ( "UPS1S3S", m_ups1S3S ) ;
+  OniaPairs::SetPar ( "UPS2S2S", m_ups2S2S ) ;
+  OniaPairs::SetPar ( "UPS2S3S", m_ups2S3S ) ;
+  OniaPairs::SetPar ( "UPS3S3S", m_ups3S3S ) ;  
   
   // my user process number
   m_userProcess = 6 ;
