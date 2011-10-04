@@ -63,11 +63,16 @@ StatusCode OdinTimeDecoder::initialize() {
 //=========================================================================
 LHCb::ODIN *OdinTimeDecoder::getODIN() const
 {
-  // Decode the ODIN bank.
-  m_odinDecoder->execute();
-  // @FIXME: we must get the ODIN object from where the Tool created it
-  if ( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    return get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  // Check if the root of the transient store is available before calling the
+  // ODIN decoder. (e. g. during the initialize)
+  DataObject *tmp;
+  if (LIKELY( evtSvc()->findObject("", tmp).isSuccess() )) {
+    // Decode the ODIN bank.
+    m_odinDecoder->execute();
+    // @FIXME: we must get the ODIN object from where the Tool created it
+    if ( LIKELY(exist<LHCb::ODIN>(LHCb::ODINLocation::Default)) ){
+      return get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+    }
   }
   return 0;
 }
@@ -76,11 +81,6 @@ LHCb::ODIN *OdinTimeDecoder::getODIN() const
 //  Return the time of current event
 //=========================================================================
 Gaudi::Time OdinTimeDecoder::getTime ( ) const {
-
-  // Do not try to call the ODIN Decoder if we are not in RUNNING state.
-  /// @todo use some better condition (e.g. the global state)
-  if (UNLIKELY(FSMState() != Gaudi::StateMachine::RUNNING))
-    return Gaudi::Time::epoch();
 
   static Gaudi::Time last_time(0);
 
