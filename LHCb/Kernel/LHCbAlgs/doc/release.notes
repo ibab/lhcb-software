@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-10-04 - Marco Clemencic
+ - Fixed a problem in  OdinTimeDecoder after the fix to bug #87392.
+   Do not try to get RawEvent if invoked during the initialize.
+
 ! 2011-10-03 - Marco Clemencic
  - Added test exposing bug #87392: Event time not set correctly on first event
  - Adapted TestTimeDecoderOdin to the new behavior of EventClockSvc.

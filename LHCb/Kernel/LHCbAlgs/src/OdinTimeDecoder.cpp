@@ -77,6 +77,11 @@ LHCb::ODIN *OdinTimeDecoder::getODIN() const
 //=========================================================================
 Gaudi::Time OdinTimeDecoder::getTime ( ) const {
 
+  // Do not try to call the ODIN Decoder if we are not in RUNNING state.
+  /// @todo use some better condition (e.g. the global state)
+  if (UNLIKELY(FSMState() != Gaudi::StateMachine::RUNNING))
+    return Gaudi::Time::epoch();
+
   static Gaudi::Time last_time(0);
 
   LHCb::ODIN *odin = getODIN();
