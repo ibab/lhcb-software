@@ -41,7 +41,6 @@
 #include "GaudiKernel/Vector3DTypes.h"
 
 // RichDet
-#include "RichDet/DeRichHPDPanel.h"
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
