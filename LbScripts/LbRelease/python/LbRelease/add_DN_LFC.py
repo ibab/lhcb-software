@@ -6,11 +6,11 @@
 #version : 1.0
 #date : 01/08/2008
 
-import sys, socket, string, os
+import sys, socket, os
 import lfc, getopt
 def checkEnv():
     hostname = socket.gethostname()
-    if string.find( hostname, "volhcb" ) < 0:
+    if hostname.find("volhcb") < 0 :
         print "Please log as root on one of the volhcbXX machines at CERN"
         return - 1
     user = os.getuid()
@@ -62,7 +62,7 @@ def checkDir ( nickname ):
         print "Directory exists "
         return 0
     else:
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print  "There was an error while looking for " + dirname + ": Error " + str( err_num ) + " (" + err_string + ")"
         if err_num == 2:
@@ -71,7 +71,7 @@ def checkDir ( nickname ):
         else:
             return - 3
 
-def createDir ( dirname, nickname ):
+def createDir ( dirname, _nickname ):
 
     res = lfc.lfc_mkdir( dirname, 0777 )
     if res == 0 :
@@ -80,7 +80,7 @@ def createDir ( dirname, nickname ):
         #res = lfc.lfc_rmdir(dirname)
         return - 1
     else :
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print  "There was an error while creating " + dirname + " Error " + str( err_num ) + " (" + err_string + ")"
         return - 2
@@ -91,7 +91,7 @@ def createUser ( userDN, userid ):
         print "User created " + userDN
         return 0
     else :
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         # error not due to userDN exists
         if err_num != 17 :
@@ -102,13 +102,13 @@ def createUser ( userDN, userid ):
             print "UserDN already exists"
             return 0
 
-def delUser ( userDN, userid ):
+def delUser ( userDN, _userid ):
     res = lfc.lfc_rmusrmap( 0, userDN )
     if res == 0:
         print "User has been removed from userinfo"
         return 0
     else:
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print "There was an error while deleting user: Error " + str( err_num ) + " (" + err_string + ")"
         return - 1
@@ -120,7 +120,7 @@ def rmDir( nickname ):
         print "user dir has been removed "
         return 0
     else:
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print "There was an error while deleting dir: Error " + str( err_num ) + " (" + err_string + ")"
         return - 1
@@ -135,7 +135,7 @@ def getUserID ( userDN ):
         print "Did not find the corresponding userid for " + userDN
         return - 1
     else :
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print  "There was an error while looking at userid for " + userDN + " Error " + str( err_num ) + " (" + err_string + ")"
         return - 1
@@ -150,7 +150,7 @@ def getUserName ( userID ):
             print "Did not find the corresponding username for " + str( userID )
         return "ERROR"
     else :
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print  "There was an error while looking at username for " + str( userID ) + " Error " + str( err_num ) + " (" + err_string + ")"
         return "ERROR"
@@ -163,14 +163,14 @@ def updateDirPerm ( userid, nickname, userDN ) :
         print "Owner directory updated"
         return 0
     else :
-        err_num = lfc.cvar.serrno
+        err_num = lfc.cvar.serrno #@UndefinedVariable
         err_string = lfc.sstrerror( err_num )
         print  "There was an error while updating ownerid for " + dirname + " Error " + str( err_num ) + " (" + err_string + ")"
         return - 1
 
 def getOwnerACL ( nickname ):
     dirname = "/grid/lhcb/user/" + nickname[0] + "/" + nickname
-    nentries, acls_list = lfc.lfc_getacl( dirname, lfc.CA_MAXACLENTRIES )
+    _nentries, acls_list = lfc.lfc_getacl( dirname, lfc.CA_MAXACLENTRIES )
     if len( acls_list ) > 0:
         for i in acls_list:
             if i.a_type == 1:
@@ -198,7 +198,7 @@ def main () :
     os.environ["X509_USER_KEY"] = "/etc/grid-security/hostkey.pem"
     os.environ["LFC_HOST"] = "lfc-lhcb.cern.ch"
     try:
-        opts, args = getopt.getopt( sys.argv[1:], "hfun:v", ["help", "force", "userDN=", "nickname="] )
+        opts, _ = getopt.getopt( sys.argv[1:], "hfun:v", ["help", "force", "userDN=", "nickname="] )
     except getopt.GetoptError, err:
     # print help information and exit:
         print str( err ) # will print something like "option -a not recognized"

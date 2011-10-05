@@ -1,3 +1,17 @@
+2011-10-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	Major clean up of Pydev Code Analysis warningsf for
+	* LbRelease/python/LbRelease/add_DN_LFC.py
+	* LbRelease/python/LbRelease/AfsProjectSpace.py
+	* LbRelease/python/LbRelease/LHCbNightlies.py
+	* LbRelease/python/LbRelease/LHCbNightliesWebpage.py
+	* LbRelease/python/LbRelease/NightliesXML.py
+	* LbRelease/python/LbRelease/SvnChecker/_test.py
+	* LbRelease/python/LbRelease/SvnChecker/Core.py
+	* LbRelease/python/LbRelease/SvnChecker/LHCbCheckers.py
+	* LbRelease/python/LbRelease/SvnTools/Package.py
+	* LbRelease/python/LbRelease/TarBall.py
+
 2011-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/SvnTools/Project.py: cleaned up unsed variables and imports.

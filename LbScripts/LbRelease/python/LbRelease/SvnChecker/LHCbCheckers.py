@@ -8,7 +8,9 @@ Created on Nov 25, 2010
 '''
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
-from StdCheckers import *
+from StdCheckers import AllPaths, PackageTag, ProjectTag
+from StdCheckers import TagIntermediateDirs, TagRemoval, AllowedUsers, ValidXml, OnPath
+from StdCheckers import PropertyChecker
 from Core import Failure
 
 __all__ = ("validTag", "librarian", "nightlyConf", "uniquePackages")

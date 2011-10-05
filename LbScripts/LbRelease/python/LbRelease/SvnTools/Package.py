@@ -6,10 +6,9 @@ __all__=["getRequirements","getNotes","diffNotes","checkOrDiff","diffContainer"]
 
 from LbConfiguration.Repository import getRepositories
 from LbRelease import rcs
-from LbRelease.rcs import _cvs as cvs, _svn as svn
 from LbUtils import LockOnPrintThread
 from LbUtils.CMT.Parse import parseReq
-import threading, thread, string, sys, Queue
+import thread, Queue
 from LbUtils.Processes import callCommand
 
 url = str(getRepositories()["lbsvn"])
@@ -61,7 +60,7 @@ def checkOrDiff(package, versions=[], dodiff=True):
             )
     if len(versions)==1:
         return '=== '+package+' '+versions[0]+' OK ===\n'
-    
+
     if len(versions)>2:
         raise KeyError, "You sent more than two versions to diff, please send only one"
     if not lbsvn.hasVersion(package, versions[1]):
@@ -72,7 +71,7 @@ def checkOrDiff(package, versions=[], dodiff=True):
             )
     if not dodiff:
         return '=== '+package+' '+versions[0]+' OK ===\n'
-    
+
     path1=lbsvn.url(package,versions[0])
     path2=lbsvn.url(package,versions[1])
     diffs=callCommand("svn","diff","--summarize",path1,path2)[0].strip()
@@ -90,13 +89,13 @@ def checkOrDiff(package, versions=[], dodiff=True):
                 diffs=diffs.replace(path2,package+'/')
         else:
             diffs=diffs.replace(path2,package)
-    
+
     if len(diffs):
         result=('=== '+package+' '+versions[0]+
                 '->'+versions[1] +' ===\n')
         result=result+diffNotes(getNotes(path1),getNotes(path2))+diffs+'\n'
         return result
-    
+
     #if there are no diffs, state that the two are equal
     return ('=== '+package+' '+versions[0]+
             '='+versions[1] +' ===\n')
@@ -107,7 +106,7 @@ def diffContainer(package,versions):
     Take package:versions from this container package
     Use SVN to get the differences between them
     """
-    #prepare first package 
+    #prepare first package
     if not lbsvn.hasVersion(package, versions[0]):
         result=(
             "====================\n" +
@@ -116,30 +115,30 @@ def diffContainer(package,versions):
             )
         print result.strip()
         return
-    
+
     if versions[1] is not None:
         checkRes=checkOrDiff(package,versions)
         print checkRes.strip()
     else:
         checkRes=checkOrDiff(package,[versions[0],"trunk"])
         print checkRes.strip()
-    
+
     path1=lbsvn.url(package,versions[0])
     requirements1=getRequirements(path1)
-    
+
     #parse requirements file
     package_versions1=parseReq(requirements1)
     for pack in package_versions1:
         if "*" in package_versions1[pack]:
             package_versions1[pack]="trunk"
-    
+
     #diff_package_versions is the dictionary {'package' : ['v1', 'v2']} for diffing
     diff_package_versions={}
-    
-    
+
+
     #if a second version was given, compare with a different sys container, now parse that container
     if versions[1] is not None:
-        #prepare second package 
+        #prepare second package
         if not lbsvn.hasVersion(package, versions[1]):
             result=(
                 "====================\n" +
@@ -150,30 +149,30 @@ def diffContainer(package,versions):
             return
         path2=lbsvn.url(package,versions[1])
         requirements2=getRequirements(path2)
-        
+
         #parse requirements file
         package_versions2=parseReq(requirements2)
         for pack in package_versions2:
             if "*" in package_versions2[pack]:
                 package_versions2[pack]="trunk"
-        
+
         #separate out packages for diffing
         removed_packages=[package for package in package_versions1
                            if package not in package_versions2]
-        
+
         added_packages=[package for package in package_versions2
                         if package not in package_versions1]
-        
+
         shared_packages=[package for package in package_versions2
                          if package in package_versions1]
-        
+
         #print information about packages where no diff is required
         for package in removed_packages:
             print '=== '+package+' '+package_versions1[package]+' REMOVED ==='
-            
+
         for package in added_packages:
             print '=== '+package+' '+package_versions2[package]+' ADDED   ==='
-        
+
         #separate packages which are identical to those which must be diffed
         for package in shared_packages:
             if package_versions1[package]==package_versions2[package]:
@@ -184,27 +183,27 @@ def diffContainer(package,versions):
     else:
         for package in package_versions1:
             diff_package_versions[package]=[package_versions1[package],'trunk']
-    
+
     #create list of packages as a queue
     packagePool=Queue.Queue()
-    
+
     for package in diff_package_versions:
         packagePool.put(package)
-    
+
     def method(self, item):
         return checkOrDiff( item, self.package_versions[item])
-    
+
     #loop over threads, see the class for more details
     lock=thread.allocate_lock()
     thethreads=[]
-    for i in range(20):
+    for _i in range(20):
         t = LockOnPrintThread(packagePool, lock)
         t.package_versions=diff_package_versions
         t.method=method
         thethreads.append(t)
         #t = checkExistanceAndDiffs( packagePool,lock,diff_package_versions)
         t.start()
-    
+
     for t in thethreads:
         while not t.done:
             pass

@@ -17,9 +17,12 @@ __all__ = ("Transaction",
            "Failure",
            "run")
 
-from svn.core import *
-from svn.repos import *
-from svn.fs import *
+from svn.core import svn_path_canonicalize, svn_stream_read, svn_stream_close
+from svn.repos import svn_repos_fs, svn_repos_open
+from svn.fs import svn_fs_open_txn, svn_fs_txn_root, svn_fs_paths_changed
+from svn.fs import svn_fs_copied_from, svn_fs_check_path, svn_fs_txn_prop, svn_fs_node_prop
+from svn.fs import svn_fs_file_contents, svn_fs_file_length
+
 
 class Transaction(object):
     """

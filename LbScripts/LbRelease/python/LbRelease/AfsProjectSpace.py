@@ -12,8 +12,7 @@ from LbUtils.Storage import convert
 
 from subprocess import Popen, PIPE
 import sys
-import logging, logging.handlers
-
+import logging.handlers
 
 def check_space(thelog):
     nb_line = 0

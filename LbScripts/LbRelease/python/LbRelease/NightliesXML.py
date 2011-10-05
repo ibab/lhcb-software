@@ -1,17 +1,18 @@
+#@PydevCodeAnalysisIgnore
 import os, sys, shutil
 import re, pickle, time, datetime, copy
 import codecs, cgi
 import xml.dom as xmlDOM
 
 def unique(seq, keepstr=True):
-  print "uniquefy"
-  if seq is None:
-    return []
-  t = type(seq)
-  if t==str:
-    t = (list, ''.join)[bool(keepstr)]
-  seen = []
-  return t(c for c in seq if not (c in seen or seen.append(c)))
+    print "uniquefy"
+    if seq is None:
+        return []
+    t = type(seq)
+    if t==str:
+        t = (list, ''.join)[bool(keepstr)]
+    seen = []
+    return t(c for c in seq if not (c in seen or seen.append(c)))
 
 class messageXML:
     def __init__(self,xmlTitle="LHCbNightlies"):
@@ -42,13 +43,13 @@ class messageXML:
         return self.xmlDoc.toprettyxml()
 #    def setXMLNodeAttribute(self,childPar,motherList = ["root"],attributeMap = None,namespace = "LHCbNightlies"):
 #        '''add an attribute to a node'''
-#        child = str(childPar) 
+#        child = str(childPar)
 #        mother = str(motherPar)
 #        if motherPar is None or mother.lower() == "root":
-#            
+#
 #        else:
-#            childList = self.xmlDoc.getElementsByTagName(mother)    
-#        
+#            childList = self.xmlDoc.getElementsByTagName(mother)
+#
 #            for attribute,value in attributeMap.iteritems():
 #                xmlNode.setAttribute(str(attribute),str(value))
 
@@ -118,7 +119,7 @@ class messageXML:
         if listReverse:
             branchList.reverse()
         if branchList[-1] != str(self.xmlDoc.documentElement.nodeName):
-             branchList.append(str(self.xmlDoc.documentElement.nodeName))
+            branchList.append(str(self.xmlDoc.documentElement.nodeName))
         self.foundLeafList = []
         self.foundNodesList = self.getLineage(branchList[0])
         for foundNodesListIterator in self.foundNodesList:
@@ -135,7 +136,7 @@ class messageXML:
         else:
             for arrayIterator in listArray:
                 if isinstance(arrayIterator,list):
-                  self.keyList.append(arrayIterator[0])
+                    self.keyList.append(arrayIterator[0])
             return self.keyList
 
     def _listValues(self,listArray = []):
@@ -156,7 +157,7 @@ class messageXML:
             if tagKey in nodeMap and nodeMap[tagKey]==tagValue:
                 tagTrue = True
         return tagTrue
-                
+
 
     def appendNode(self,childPar,motherList = [],attributeMap = {},textString = None,namespace = "LHCbNightlies"):
         '''Append a child node to the XML document
@@ -172,7 +173,7 @@ class messageXML:
             else:
                 raise TypeError('a list of mother nodes or a string was expected')
         if (len(motherList) == 0) or (motherList[-1] != str(self.xmlDoc.documentElement.nodeName)):
-             motherList.insert(0,str(self.xmlDoc.documentElement.nodeName))
+            motherList.insert(0,str(self.xmlDoc.documentElement.nodeName))
         child = str(childPar)
         motherObjectList = self.getLeaf(motherList)
         for motherObject in motherObjectList:
@@ -201,15 +202,15 @@ class messageXML:
         #newXMLChild.appendChild(commentNode)
 
         if namespace is None:
-          namespace = self.namespace
+            namespace = self.namespace
         if attributeMap is None:
-          attributeMap = {}
+            attributeMap = {}
         else:
-          for attribute,value in attributeMap.iteritems():
-            newXMLChild.setAttribute(str(attribute),str(value))
+            for attribute,value in attributeMap.iteritems():
+                newXMLChild.setAttribute(str(attribute),str(value))
         if textString is not None:
-          textElement = self.xmlDoc.createTextNode(str(textString))
-          newXMLChild.appendChild(textElement)
+            textElement = self.xmlDoc.createTextNode(str(textString))
+            newXMLChild.appendChild(textElement)
 
         appendedChild = motherObject.appendChild(newXMLChild)
         return appendedChild
@@ -221,7 +222,7 @@ class messageXML:
             else:
                 raise TypeError('a list of mother nodes or a string was expected')
         if (len(motherList) == 0) or (motherList[-1] != str(self.xmlDoc.documentElement.nodeName)):
-             motherList.insert(0,str(self.xmlDoc.documentElement.nodeName))
+            motherList.insert(0,str(self.xmlDoc.documentElement.nodeName))
         motherObjectList = self.getLeaf(motherList)
         for motherObject in motherObjectList:
             for attributeKey in attributeMap.keys():
@@ -236,16 +237,16 @@ class messageXML:
         return motherObjectList
 
     def modifySpecificNode(self,motherObject,attributeMap = {},textString = None,namespace = "LHCbNightlies"):
-      for attributeKey in attributeMap.keys():
-        try:
-          motherObject.removeAttribute(attributeKey)
-        except:
-          pass
-        motherObject.setAttribute(attributeKey,attributeMap[attributeKey])
-        if textString is not None:
-          textElement = self.xmlDoc.createTextNode(str(textString))
-          motherObject.appendChild(textElement)
-      return motherObject
+        for attributeKey in attributeMap.keys():
+            try:
+                motherObject.removeAttribute(attributeKey)
+            except:
+                pass
+            motherObject.setAttribute(attributeKey,attributeMap[attributeKey])
+            if textString is not None:
+                textElement = self.xmlDoc.createTextNode(str(textString))
+                motherObject.appendChild(textElement)
+        return motherObject
 
     def findNode(self,nodeNamePar,namespace = "LHCbNightlies"):
         '''returns a list of found elements'''
@@ -254,7 +255,7 @@ class messageXML:
 
     def appendText(self,nodeElementPar = None,textString = None):
         '''append a text object to an element
-        if the element does not exist the text 
+        if the element does not exist the text
         is appended to the document root'''
         if textString is None or nodeElementPar is None:
             pass
@@ -273,7 +274,7 @@ class messageXML:
         file = open(fileName, "w")
         self.xmlDoc.writexml(file, "\n", "  ")
         file.close()
-    
+
 #     class sanitizeElement:
 #         def __init__(self,element):
 #             self.selement=element
@@ -281,7 +282,7 @@ class messageXML:
 
 #             if element is not None:
 #                 self.notNone=True
-#             else: 
+#             else:
 #                 self.notNone=False
 #         def getNotNone(self):
 #             return self.notNone

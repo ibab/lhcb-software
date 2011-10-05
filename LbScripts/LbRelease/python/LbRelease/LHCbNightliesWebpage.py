@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#@PydevCodeAnalysisIgnore
 #############################################################################
 # File moved from LCG Nightlies repository, as the original is not used any #
 # more in the LCG Nightlies and the modifications done are LHCb specific.   #
@@ -116,7 +116,7 @@ def showAll(htmlFile, xmlData, generalConf, slotList, historyFromSvn = False):
         for sl in configHistory[dayn]._slotList:
             if sl.getName() not in slots and sl.getName() not in hideSlots:
                 slots.append(sl.getName())
-                slotList.append(sl)		
+                slotList.append(sl)
                 for p in sl.getProjects(hideDisabled=False):
                     pName = p.getName()
                     if pName not in projList: projList.append(pName)
@@ -138,14 +138,14 @@ def showAll(htmlFile, xmlData, generalConf, slotList, historyFromSvn = False):
     htmlFile.write( '</title>'+"\n")
 
     htmlFile.write( """
-        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css"> 
- 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script> 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script> 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script> 
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
+        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css">
 
-<script type="text/javascript"> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script>
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script>
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
 function genrss() {
     $.typ = 'all'
     if ($("input[id='build']:checked").val() == 'build') { $.typ = 'build' }
@@ -169,7 +169,7 @@ $(document).ready(function() {
   $('#left input, #left select, #left radio, #right input, #right select, #right radio').bind('blur keyup change', genrss);
 genrss();
 });
-</script> 
+</script>
 """)
 
     htmlFile.write( '    <META HTTP-EQUIV="expires" CONTENT="Wed, 19 Feb 2003 08:00:00 GMT">'+"\n")
@@ -493,13 +493,13 @@ genrss();
                     </div>
                     <div id="live-result"></div>""")
 
-#    htmlFile.write("""        
+#    htmlFile.write("""
 #                    <div id="d_clip_button" style="border:1px solid black; padding:1px;">copy</div>
 #                <script language="JavaScript">
 #                        var clip = new ZeroClipboard.Client();
 #                        clip.setHandCursor( true );
 #                        clip.setCSSEffects( true );
-#                        clip.addEventListener( 'mouseDown', function(client) { 
+#                        clip.addEventListener( 'mouseDown', function(client) {
 #                            clip.setText( document.getElementById('live-result').value );
 #                        } );
 #//                        clip.setText( $('#live-result').val() );
@@ -578,9 +578,9 @@ genrss();
             htmlFile.write( '      <td><b>Version</b></td> ')
 
             stampDay = day[:3]
-          
+
             xmlSlotNode = xmlData.appendSpecificNode("slot",xmlDayNode,{"name":strStrip(slotObj.getName())})
-          
+
             for platObj in slotObj.getPlatforms():
                 plat = platObj.getName()
                 timeStamp = None
@@ -618,7 +618,7 @@ genrss();
                 for iter in slotObj.waitForFlag():
                     if iter is not None:
                         waitForPlat = iter+plat
-                        waitForIs = True                    
+                        waitForIs = True
 
                 if timeStamp:
                     # get rid of seconds
@@ -631,7 +631,7 @@ genrss();
                         htmlFile.write( '<br/>('+timeStamp+')')
                     else:
                         htmlFile.write( '<br/><font style="background-color: yellow">(%s)</font>' % timeStamp)
-                        
+
                     htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s" target="_blank">%s</a> ' % (slotObj.getName(), plat, rssHtml))
                     if waitForIs:
                         if os.path.exists(waitForPlat):
@@ -675,20 +675,20 @@ genrss();
                     htmlFile.write( '      <td bgcolor="#D3D3D3">'+projectTag+'</td>\n')
                 else:
                     htmlFile.write( '      <td bgcolor="'+wheat+'">'+projectTag+'</td>\n')
-                    
+
                 for platObj in slotObj.getPlatforms():
                     xmlPlatformNode = xmlData.appendSpecificNode("platform",xmlProjectNode,{"name":strStrip(plat)})
                     if timeStamp:
                         xmlData.modifySpecificNode(xmlPlatformNode,{"platCompleted":strStrip(timeStamp),"platReady":"True"})
                         if waitForIs:
-                            xmlData.modifySpecificNode(xmlSlotNode,{"platDepends":"True"})          
+                            xmlData.modifySpecificNode(xmlSlotNode,{"platDepends":"True"})
                             if os.path.exists(waitForPlat):
                                 xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"True"})
                             else:
                                 xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"False"})
                     else:
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) != 'FALSE' and os.path.exists(stampFileNameStarted):
-                            xmlData.modifySpecificNode(xmlPlatformNode,{"platReady":"False"})          
+                            xmlData.modifySpecificNode(xmlPlatformNode,{"platReady":"False"})
 
                     plat = platObj.getName()
 
@@ -905,7 +905,7 @@ genrss();
         htmlFile.write(str(divdata))
     htmlFile.write( "\n<!-- end STAT divs -->\n")
 
-    
+
     htmlFile.write( '<table width="80%" border="0">'+" \n")
     htmlFile.write( '  <tr>'+" \n")
     htmlFile.write( '    <td align="left"><span style="font-family:Arial; color=#000000; font-weight: bold; font-size: 13pt" >System health messages</span></td>'+" \n")
@@ -1051,7 +1051,7 @@ def generateIndexSVN(resultFileName, svnNow=False):
 
     indexFile = open(tmpFileName, 'w')
     xmlData = messageXML()
-    
+
     showAll(indexFile, xmlData, configHistory[0]._generalConfig, configHistory[0]._slotList, historyFromSvn = True)
     indexFile.close()
     xmlData.writeDoc(xmlTmpFileName)

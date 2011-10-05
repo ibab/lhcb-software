@@ -1,4 +1,4 @@
-
+#@PydevCodeAnalysisIgnore
 import os, sys, shutil
 import re, pickle, time, datetime
 import codecs, cgi
@@ -18,7 +18,7 @@ def fork_call(func):
             time.sleep(10)
             sys.exit()
     return f
-def ignore_exception(func): 
+def ignore_exception(func):
     def f(self, *args, **kwargs):
         try:
             return func(self, *args, **kwargs)
@@ -32,7 +32,7 @@ def ignore_exception(func):
     return f
 
 ##########################################################################################
-# before in LCG part: LHCbCheckLogFiles.py 
+# before in LCG part: LHCbCheckLogFiles.py
 
 def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = True, createSummaryLogFile = True):
     tagName = projObj.getTag()
@@ -58,7 +58,7 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
                  ]
     regexWarning = [re.compile('.*warning[: ].*', re.I)
                    ]
-    
+
     regexCoverity = [re.compile('.*cov-.*', re.I)
                      ,re.compile('.*Coverity warning[: ].*', re.I)
                      ,re.compile('.*Coverity error[: ].*', re.I)
@@ -67,8 +67,8 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
     # + filter for further Coverity annotations
     # + mismatch between checked and existing files --> append to the general log
     # # --> add coverity to packagesList as pseudo-Package? --> ad regexp to packageStart
-    
-    
+
+
 #    ignoreErrors = config.get('ignoreErrors', [])
 #    ignoreErrorsCounters = [0]*len(ignoreErrors)
 #    ignoreWarnings = config.get('ignoreWarnings', [])
@@ -84,7 +84,7 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
 #    errorList = []   # elements should be pairs: [['error/warn. message', [line number, line number, ...]]
 #    warningList = []
 
-    
+
     class StringMatcher(object):
         def __init__(self, s):
             self.string = s
@@ -111,10 +111,10 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
     errorExclusions = map(StringMatcher, config.get('ignoreErrors', [])) + map(REMatcher, config.get('ignoreErrorsRegex', []))
     warningExclusions = map(StringMatcher, config.get('ignoreWarnings', [])) + map(REMatcher, config.get('ignoreWarningsRegex', []))
     # Exclusions for coverity-expressions --> would need to change BaseConfiguration as well -- thartman - 2011.05.19
-    # implement some unifying scheme for all types of warnings/errors/etc. 
+    # implement some unifying scheme for all types of warnings/errors/etc.
     coverityExclusions = map(StringMatcher, config.get('ignoreCoverity', [])) + map(REMatcher, config.get('ignoreCoverityRegex', []))
     # coverityExclusions = ()
-    
+
     def isIgnored(matchers, test):
         for m in matchers:
             if m(test):
@@ -152,7 +152,7 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
 
     for counter, line in enumerate(logData):
         countLine(regexError, errorList, line, counter) or countLine(regexWarning, warningList, line, counter) or countLine(regexCoverity, coverityList, line, counter)
-    
+
     for k in filter(errorIgnored, errorList.keys()):
         del errorList[k]
     for k in filter(warningIgnored, warningList.keys()):
@@ -271,7 +271,7 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
             package = packagesList[packageInfo(x)]
             htmlData.append('{id: "warning%s", block: "package%s", line: %s},' % (str(wcounter), str(package[1]), str(x) ))
             wcounter += 1
-            
+
     coverityCounter = 1
     for iterator1 in coverityList:
         if coverityList[iterator1].count == 0: continue
@@ -311,7 +311,7 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
         htmlData.append('<h3>Ignored warnings:</h3>')
     for iterator1 in coverityExclusions:
         if iterator1.count > 0: htmlData.append(iterator1.html())
-        
+
     htmlData.append('<h3>Shortcuts:</h3>')
     htmlData.append('<ul>')
     if errorTypeCount: htmlData.append('<li><a href="#summary_errors">Summary of errors</a>')
@@ -377,7 +377,7 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
                 wcounter += 1
             htmlData.append('</ul><hr />')
 
-            
+
     coverityCounter = 1
     if coverityTypeCount:
         htmlData.append('<h3 id="summary_coverity">Summary of Coverity messages:</h3><hr />')
@@ -531,7 +531,7 @@ class LHCbProjectBuilder(object):
             except OSError:
                 self.system('echo "warning: OSError while changing permissions for removing"' )
                 pass
-        
+
         if '%CMTCONFIG%' in self.slot._buildDir:
             _fixPerms((os.sep.join([self.slot.buildDir(), projectName])))
             shutil.rmtree(os.sep.join([self.slot.buildDir(), projectName]), ignore_errors=True)
@@ -781,7 +781,7 @@ class LHCbProjectBuilder(object):
     @ignore_exception
     def build(self):
         print "[LHCb] build"
-        
+
         if 'COVERITY' in os.environ.get('CMTEXTRATAGS',''):
             self.coverityBuild = True
 
@@ -805,7 +805,7 @@ class LHCbProjectBuilder(object):
             derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS'])
         else:
             self.coverityBuild = False
-        
+
         os.environ['CMTCONFIG'] = self.plat
         logdir = os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'logs'])
         if not os.path.exists(logdir):
@@ -814,7 +814,7 @@ class LHCbProjectBuilder(object):
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
-        
+
         if '-icc' in os.environ['CMTCONFIG']:
             self.iccSetup()
             os.environ['CMTEXTRATAGS'] = os.environ['CMTEXTRATAGS'].replace('use-distcc,','').replace('use-distcc','')
@@ -880,7 +880,7 @@ class LHCbProjectBuilder(object):
             os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
         else:
             os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            
+
         if self.coverityBuild is True:
             #make list of derived model files in 'derivedModelsDir':
             if os.path.exists(derivedModelsDir):
@@ -902,7 +902,7 @@ class LHCbProjectBuilder(object):
             #    shutil.rmtree(coverityDirINT, ignore_errors=True)
             self.system('echo "(1) Created intermediate directory %s"' % (coverityDirINT))
             os.makedirs(coverityDirINT)
-            
+
             self.system('echo "(1) cov-build --dir %s make -j 20 -l 16"' % (coverityDirINT))
             #########################################
             ###returnCode = self.system('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir))
@@ -936,12 +936,12 @@ class LHCbProjectBuilder(object):
                     prev = ''
                 file('%s/../strip-path.list' % (coverityDir),'w').write('%s --strip-path %s/ --strip-path %s/' % (prev, self.generatePath(self.slot, self.project, 'TAG', self.projName),self.generatePath(self.slot, self.project, 'TAG', self.projName.upper()) ) )
 
-                
+
                 self.system('echo "(2) ***************************************************"')
                 ### cov-analyze via analyze-submit.sh
                 self.system('echo "(2) starting cov-analyze with "')
                 self.system('echo "(2) /build/coverity/analyze-submit.sh %s %s"' % (coverityDirINT,derivedModelsDir))
-                self.system('/build/coverity/analyze-submit.sh %s %s' % (coverityDirINT,derivedModelsDir) ) 
+                self.system('/build/coverity/analyze-submit.sh %s %s' % (coverityDirINT,derivedModelsDir) )
                 ### cov-analyze directly
                 #self.system('echo "%scov-analyze --dir %s  --enable-callgraph-metrics --enable-parse-warnings --all %s"' % (self.coverityPath, coverityDirINT, derivedModelsList))
                 #self.system('%scov-analyze --dir %s  --enable-callgraph-metrics --enable-parse-warnings --all %s' % (self.coverityPath, coverityDirINT, derivedModelsList))
@@ -955,7 +955,7 @@ class LHCbProjectBuilder(object):
                 #    self.system('echo "(3) %s not ready; wait 60 seconds"' % (os.sep.join([coverityDirINT,'c/output/.cache/models'])))
                 #if waitTimer==15:
                 #    self.system('echo "(3) %s not ready after 15 minutes; gave up waiting"' % (os.sep.join([coverityDirINT,'c/output/.cache/models'])))
-                    
+
                 self.system('echo "(3) cov-collect-models --dir %s -of %s/%s.xmldb"' % (coverityDirINT, derivedModelsDir, covName))
                 self.system('%scov-collect-models --dir %s -of %s/%s.xmldb' % (self.coverityPath ,coverityDirINT, derivedModelsDir, covName))
                 if os.path.exists('%s/%s_trunk.xmldb.lock' % (derivedModelsDir,covName)):
@@ -1048,15 +1048,15 @@ class LHCbProjectBuilder(object):
             coverityLogPath = os.path.join(coverityDir,'INT','build-log.txt')
         else:
            self.system('echo "Coverity error: Did not find build log in %s nor in %s, please check"' % (coverityDirINT,os.path.join(coverityDir,'INT','build-log.txt')))
-            
+
         self.system('echo "Coverity message: search for build-log %s"' % (coverityLogPath))
 
         try:
             if os.path.exists(coverityLogPath):
                 self.system('echo "Coverity message: compare analyzed and existing source files from %s"' % (coverityLogPath))
-                coverityBuildLogFile = open(coverityLogPath,'r') 
+                coverityBuildLogFile = open(coverityLogPath,'r')
                 checkedFileList = []
-                        
+
                 for line in coverityBuildLogFile:
                     if line.find("Emit") > -1:
                         checkedFileList.append(line.split("'")[1])
@@ -1069,7 +1069,7 @@ class LHCbProjectBuilder(object):
                     if os.path.exists(coveritySourcePath):
                         sourceFileList = []
                         sourceFileCounter = 0
-            
+
                         for PathIterator in os.walk(coveritySourcePath):
                             for FileIterator in PathIterator[2]:
                                 if FileIterator.endswith(".cpp"):
@@ -1095,14 +1095,14 @@ class LHCbProjectBuilder(object):
 ##         except IOError as (errno, strerror):
 ##              self.system('echo "Coverity error: IOError while comparing checked and existing files: %s -- %s"' (errno, strerror))
 ##         except Exception as (errno, strerror):
-##              self.system('echo "Coverity error: unexpected error. Break with exception: %s -- %s' % (errno,strerror))                
+##              self.system('echo "Coverity error: unexpected error. Break with exception: %s -- %s' % (errno,strerror))
 ##              pass
         except IOError:
             self.system('echo "Coverity error: IOError while comparing checked and existing files"' )
         except Exception:
-            self.system('echo "Coverity error: unexpected error. Break with exception"')                
+            self.system('echo "Coverity error: unexpected error. Break with exception"')
             pass
-        
+
 
     @ignore_exception
     def docs(self):
@@ -1206,10 +1206,10 @@ class LHCbProjectBuilder(object):
                 logData = ''.join(file(os.path.join(self.slot.buildDir(), 'www', '%s.%s_%s-%s.log' % (self.slot.getName(), self.day, tagName, self.plat)), 'r').readlines())
                 server.saveLog(self.day, self.slot.getName(), tagName, self.plat, 3, logData)
 ##             except Exception as (errno, strerror):
-##                 self.system('echo "warning: writing Windows logs to nightlies server failed: %s -- %s' % (errno,stderror))     
+##                 self.system('echo "warning: writing Windows logs to nightlies server failed: %s -- %s' % (errno,stderror))
 ##                 pass
             except Exception:
-                self.system('echo "warning: writing Windows logs to nightlies server failed"')     
+                self.system('echo "warning: writing Windows logs to nightlies server failed"')
                 pass
         #end of: writing logs directly to Nightlies server (for Windows)
 
@@ -1254,7 +1254,7 @@ class LHCbProjectBuilder(object):
                                    os.path.join(releasePath, self.projName.upper(), tagName),
                                    lambda path: (copyNotShared and pathBinaryMatch(path, self.plat)) or (copyShared and pathSharedMatch(path))
                     )
-    
+
                 if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 ##         except IOError as (errno, strerror): #no AFS token on Windows
 ##             self.system('echo "warning: IOError: probably no AFS token on Windows, writing logs failed: %s -- %s' % (errno,stderror))
@@ -1277,7 +1277,7 @@ class LHCbProjectBuilder(object):
 
     @fork_call
     def test(self):
-        from checkTestLogs import checkTestLogs 
+        from checkTestLogs import checkTestLogs
         import datetime
         print "[LHCb] test"
         self.disableLCG_NIGHTLIES_BUILD()
@@ -1632,9 +1632,9 @@ class LHCbProjectBuilder(object):
             else:
                 os.environ[x] = "%s%s%s" % (envChange[x], os.pathsep, os.environ[x])
 
-    
 
-            
+
+
 import BaseServer
 
 class LHCbServer(BaseServer.Server):
@@ -1660,7 +1660,7 @@ class LHCbServer(BaseServer.Server):
         # find a slot object in configuration
         from configuration import Configuration
         conf = Configuration()
-        conf.readConf(configFile=None, configContents=self.config) 
+        conf.readConf(configFile=None, configContents=self.config)
         slotObj = conf.findSlot(slot, conf._slotList)
 
         # if doesn't exist, create isStarted file

@@ -6,10 +6,13 @@ Created on Nov 24, 2010
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 import unittest
-from Core import *
-from StdCheckers import *
+
 import LHCbCheckers
 from Core import FakeTransaction
+from Core import Failure, Success
+from StdCheckers import AllowedUsers
+from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
+from StdCheckers import TagIntermediateDirs, ValidXml
 
 class Test(unittest.TestCase):
 

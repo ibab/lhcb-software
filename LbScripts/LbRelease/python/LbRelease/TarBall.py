@@ -293,9 +293,9 @@ def generateDataHTML(package, version, top_dir=None, output_dir=None) :
         maindir = os.path.join(top_dir, pkg_conf.releasePrefix())
         version = str(Version.getVersionsFromDir(maindir, pattern=None, reverse=True)[0])
         log.debug("Guessed version for %s is %s" % (pkg_conf.Name(), version))
-    prefix = pkg_conf.releasePrefix(version)
-    pkg_path = os.path.join(top_dir, prefix)
-    pkg = CMT.Package(pkg_path)
+#    prefix = pkg_conf.releasePrefix(version)
+#    pkg_path = os.path.join(top_dir, prefix)
+#    pkg = CMT.Package(pkg_path)
 
 def generateTar(project, version=None, cmtconfig=None,
                 top_dir=None, output_dir=None, overwrite=False,
@@ -619,7 +619,7 @@ def checkTar(project, version=None, cmtconfig=None, input_dir=None,
 
 #=========================================================================
 def generateLCGHTML(project, version, cmtconfig=None, input_dir=None):
-    log = logging.getLogger()
+#    log = logging.getLogger()
     prj_conf = Project.getProject(project)
     if not input_dir :
         input_dir = prj_conf.HTMLDir()
