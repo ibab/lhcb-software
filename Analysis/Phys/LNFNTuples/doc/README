@@ -1,0 +1,71 @@
+################################################################################
+!! Important !!  This version of the tupletools has been tested with DV v28r3p1 
+################################################################################
+
+
+
+1. Getpack Phys/DecayTreeTuple and copy TupleToolMuonVariables.cpp and TupleToolMuonIDCalib.cpp (and .h)  files into its src directory
+
+
+
+2. Add the line  
+use   MuonDet            v*    Det
+to the requirements file of DecayTreeTuple package
+
+
+
+3. Small changes in some Standard TupleTools to reduce ntuple size:
+
+---> In TupleToolTrackInfo, comment out the lines to fill TRACH_PCHI2 and TRACK_GHOSTPROB and TRACK_KEY
+
+---> In TupleToolPropertime, put a check to fill only for B candidate, i.e.  abs( part->particleID().pid() ) >500
+
+---> In TupleToolPID, comment out the lines to fill the NN variables and add some variables as in doc/TupleToolPID_modified.cpp 
+
+---> In TupleToolGeometry, 
+     a. in the method 'fillVertex()', comment out the filling of errors and cov matrices 
+     b. comment out the function to fill the _ORIVX
+     c. comment out the filling of the NEXTBEST IP and IPCHI2
+     d. Put a check to fill MINIP and MINIPCHI2 only for final state particles i.e.  P->isBasicParticle() 
+     e. Put a check to fill _OWNPV and ENDVERTEX variables only for the B only i.e. abs (p->particleID().pid())>500 
+     (As an example, look at doc/TupleToolGeometry_modified.cpp)
+
+---> In TupleToolTISTOS, 
+     If doing the muonIDcalib, add a check to fill trigger decision only for the muons
+     Else, add a check to fill trigger decision only for the B (see doc/TupleToolTISTOS_modified.cpp)
+ 
+
+
+4. In Phys/DecayTreeTuple/cmt, do
+   cmt make
+   sourse setup.(c)sh
+
+
+
+
+5. In file BsMuMuNtuples.py 
+
+--   Change the input DST file
+
+--   Review the TupleTool list 
+
+--   If you want to run the TupleToolMuonIDCalib, set 
+   muID= True
+   this will make sure the code picks up the FOI parameters
+   (!! also make sure you have the correct line in TupleToolTISTOS.cpp !!)
+
+--   If you want to run on the grid, set
+   Usegrid = True
+
+--   Other things to look at to make sure your options are compatible with the files you are running over/whatever you are trying to do:
+        trigger lines to store
+        the location of the stripped candidates
+        the decay for which you want to make the ntuple (currently it makes 5 trees for the signal and control channels)
+        the DataType and database tags 
+
+
+
+
+
+
+
