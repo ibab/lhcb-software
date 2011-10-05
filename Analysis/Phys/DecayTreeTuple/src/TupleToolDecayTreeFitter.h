@@ -123,7 +123,6 @@ public:
   ///  Fill lifetime information
   ///  Fill fit inforation for top decay
   StatusCode fillDecay(const DecayTreeFitter::Fitter& fitter, 
-                       const LHCb::Particle* P,
                        const std::string& prefix, 
                        TupleMap& tMap) const;
   ///  Fill lifetime information
@@ -131,6 +130,12 @@ public:
                     const LHCb::Particle* P,
                     const std::string& prefix, 
                     TupleMap& tMap) const;
+
+  ///  Fill momentum and mass information
+  StatusCode fillMomentum(const DecayTreeFitter::Fitter& fitter, 
+                          const LHCb::Particle* P,
+                          const std::string& prefix, 
+                          TupleMap& tMap) const;
 
   double sumPT(const LHCb::RecVertex*) const ; ///< sum of pt in pv
   ///  Fill PV information

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Patrick Koppenburg
+ - TupleToolDecayTree: add mass for intermediate states when Verbose is True
+
 ! 2011-10-03 - Chris Jones
  - Fix the incorrect usage of std::unique to remove duplicates
 
