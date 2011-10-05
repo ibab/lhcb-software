@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Chris Jones
+ - Adapt to small changes made in SmartID tool, to make it PD neutral
+
 !========================= RichReadout v2r13 2011-04-11 =========================
 ! 2011-02-19 - Chris Jones
  - Fix coverity defect

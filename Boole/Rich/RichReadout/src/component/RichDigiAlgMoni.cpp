@@ -434,7 +434,7 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
     ++nHPDs[hpdID.rich()];
     // Centre point of HPD in local coords
     Gaudi::XYZPoint hpdGlo;
-    const StatusCode sc = m_smartIDTool->hpdPosition(hpdID,hpdGlo);
+    const StatusCode sc = m_smartIDTool->pdPosition(hpdID,hpdGlo);
     if ( sc.isFailure() ) continue;
     const Gaudi::XYZPoint hpdLoc = m_smartIDTool->globalToPDPanel(hpdGlo);
     // create histo title
