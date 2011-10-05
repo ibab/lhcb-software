@@ -2,6 +2,10 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Kurt Rinnert
+ - Added TEll1 event info to DeVeloSensor to propagate deconding problems to
+   downstream algorithms (requested by HLT).
+
 !========================= VeloDet v13r15 2011-07-25 =========================
 ! 2011-07-20 - Marco Cattaneo
  - In velodet.veloaligncond.updates test, use GaudiConf.QMTest.LHCbExclusions

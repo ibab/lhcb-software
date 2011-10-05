@@ -421,9 +421,48 @@ public:
 
   };
 
-  // condition related public methods
+  /** @class DeVeloSensor::Tell1EventInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
+   *
+   *  Provides event-specific TELL1 information.
+   *  This information is only valid after the VELO ZS decoding stage.
+   *  The default state after construction or reset is 'bad', that is
+   *  the TELL1 is considered to have an error and the bank is 
+   *  considered not to have been decoded. The decoder will reset
+   *  and then change these flags to the true value in each event. 
+   *
+   *  @author Kurt Rinnert
+   *  @date   2011-10-05
+   */
+  class Tell1EventInfo {
+
+    public:
+
+      Tell1EventInfo() 
+        : m_hasError(true) 
+        , m_wasDecoded(false) 
+      { ; }
+
+      void reset() const { m_hasError=true; m_wasDecoded=false; }
+      void setHasError( const bool flag ) const { m_hasError=flag; }
+      void setWasDecoded( const bool flag ) const { m_wasDecoded=flag; }
+
+      bool hasError() const { return m_hasError; };
+      bool wasDecoded() const { return m_wasDecoded; };
+
+    private:
+
+      mutable bool m_hasError;
+      mutable bool m_wasDecoded;
+  };
+
+  // condition and event related public methods
 
 public:
+  /** Retrieve event-specific TELL1 information. 
+   *  This information is only valid after the decoding stage.
+   */
+  const Tell1EventInfo& tell1EventInfo() const { return m_tell1EventInfo; }
+
   /** Check whether this sensor is read out at all (cached condition).
    *  This information is based on CondDB, i.e. it can change
    *  with time.
@@ -549,6 +588,9 @@ private:
 
   /// cached Message Stream object
   mutable MsgStream * m_msgStream;
+
+  /// event-specific TELL1 info
+  Tell1EventInfo m_tell1EventInfo;
 
 };
 #endif // VELODET_DEVELOSENSOR_H
