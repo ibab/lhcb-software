@@ -166,7 +166,8 @@ void EvtPto3PAmpFactory::processAmp(EvtComplex c, std::vector<std::string> vv, b
       
     // TYPE stanza
     
-    assert(vv[++i] == "TYPE");
+    std::string typeName = vv[++i];
+    assert(typeName == "TYPE");
     std::string type = vv[++i];
     if(_verbose) printf("Propagator type %s\n",vv[i].c_str());
     

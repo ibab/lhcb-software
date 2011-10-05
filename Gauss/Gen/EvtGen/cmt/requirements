@@ -20,8 +20,8 @@ use         photos++     v*  LCG_GeneratorsInterfaces
 use         tauola++     v*  LCG_GeneratorsInterfaces
 
 macro photos++_native_version 3.0
-macro tauola++_native_version 1.0.4
-macro pythia8_native_version 150
+macro tauola++_native_version 1.0.5.p1
+macro pythia8_native_version 153
 
 include_dirs  $(EVTGENROOT) 
 

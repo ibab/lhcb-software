@@ -159,7 +159,7 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
       
       assert(conjugate == false);
       conjugate = true;
-      assert(!isKeyword(v[++i]));
+      i++;
       _dm =  strtod(v[i++].c_str(),tc);
       _mixAmpli = strtod(v[i++].c_str(),tc);
       _mixPhase = strtod(v[i++].c_str(),tc);
@@ -213,7 +213,8 @@ void EvtMultiChannelParser::parseComplexCoef(size_t& i, const std::vector<std::s
   // place holder for strtod
   char** tc = 0;
 
-  assert(v[i++] == std::string("COEFFICIENT"));
+  std::string coefString = v[i++];
+  assert(coefString == std::string("COEFFICIENT"));
 
   if(v[i] == std::string("POLAR_DEG")) {
 

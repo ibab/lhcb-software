@@ -85,6 +85,7 @@ void EvtDDalitz::init(){
   EvtId d1=getDaug(0);
   EvtId d2=getDaug(1);
   EvtId d3=getDaug(2);
+    
   _flag=0;
   if ( parnum == D0 ) {
     //look for either a K- pi+ pi0 or K0bar pi+ pi-
@@ -254,6 +255,20 @@ void EvtDDalitz::init(){
      if ( d2==KM && d3==KP && d1==PIP ) { _flag=6; _d1=1; _d2=2; _d3=0; }
      if ( d3==KM && d1==KP && d2==PIP ) { _flag=6; _d1=2; _d2=0; _d3=1; }
      if ( d3==KM && d2==KP && d1==PIP ) { _flag=6; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIM && d2==PIP && d3==KP ) { _flag=9; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIM && d3==PIP && d2==KP ) { _flag=9; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIM && d1==PIP && d3==KP ) { _flag=9; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIM && d3==PIP && d1==KP ) { _flag=9; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIM && d1==PIP && d2==KP ) { _flag=9; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIM && d2==PIP && d1==KP ) { _flag=9; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIM && d2==PIP && d3==PIP ) { _flag=11; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIM && d3==PIP && d2==PIP ) { _flag=11; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIM && d1==PIP && d3==PIP ) { _flag=11; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIM && d3==PIP && d1==PIP ) { _flag=11; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIM && d1==PIP && d2==PIP ) { _flag=11; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIM && d2==PIP && d1==PIP ) { _flag=11; _d1=2; _d2=1; _d3=0; }
   }
 
   if ( parnum == DSM ) {
@@ -263,6 +278,66 @@ void EvtDDalitz::init(){
      if ( d2==KP && d3==KM && d1==PIM ) { _flag=6; _d1=1; _d2=2; _d3=0; }
      if ( d3==KP && d1==KM && d2==PIM ) { _flag=6; _d1=2; _d2=0; _d3=1; }
      if ( d3==KP && d2==KM && d1==PIM ) { _flag=6; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIP && d2==PIM && d3==KM ) { _flag=9; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIP && d3==PIM && d2==KM ) { _flag=9; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIP && d1==PIM && d3==KM ) { _flag=9; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIP && d3==PIM && d1==KM ) { _flag=9; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIP && d1==PIM && d2==KM ) { _flag=9; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIP && d2==PIM && d1==KM ) { _flag=9; _d1=2; _d2=1; _d3=0; }
+     
+     if ( d1==PIP && d2==PIM && d3==PIM ) { _flag=11; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIP && d3==PIM && d2==PIM ) { _flag=11; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIP && d1==PIM && d3==PIM ) { _flag=11; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIP && d3==PIM && d1==PIM ) { _flag=11; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIP && d1==PIM && d2==PIM ) { _flag=11; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIP && d2==PIM && d1==PIM ) { _flag=11; _d1=2; _d2=1; _d3=0; }
+     
+  }
+  if ( parnum == DP ) {
+     if ( d1==KM && d2==KP && d3==PIP ) { _flag=7; _d1=0; _d2=1; _d3=2; }
+     if ( d1==KM && d3==KP && d2==PIP ) { _flag=7; _d1=0; _d2=2; _d3=1; }
+     if ( d2==KM && d1==KP && d3==PIP ) { _flag=7; _d1=1; _d2=0; _d3=2; }
+     if ( d2==KM && d3==KP && d1==PIP ) { _flag=7; _d1=2; _d2=0; _d3=1; }
+     if ( d3==KM && d1==KP && d2==PIP ) { _flag=7; _d1=1; _d2=2; _d3=0; }
+     if ( d3==KM && d2==KP && d1==PIP ) { _flag=7; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIM && d2==PIP && d3==KP ) { _flag=8; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIM && d3==PIP && d2==KP ) { _flag=8; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIM && d1==PIP && d3==KP ) { _flag=8; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIM && d3==PIP && d1==KP ) { _flag=8; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIM && d1==PIP && d2==KP ) { _flag=8; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIM && d2==PIP && d1==KP ) { _flag=8; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIM && d2==PIP && d3==PIP ) { _flag=10; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIM && d3==PIP && d2==PIP ) { _flag=10; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIM && d1==PIP && d3==PIP ) { _flag=10; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIM && d3==PIP && d1==PIP ) { _flag=10; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIM && d1==PIP && d2==PIP ) { _flag=10; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIM && d2==PIP && d1==PIP ) { _flag=10; _d1=2; _d2=1; _d3=0; }
+
+  }
+  if ( parnum == DM ) {
+     if ( d1==KP && d2==KM && d3==PIM ) { _flag=7; _d1=0; _d2=1; _d3=2; }
+     if ( d1==KP && d3==KM && d2==PIM ) { _flag=7; _d1=0; _d2=2; _d3=1; }
+     if ( d2==KP && d1==KM && d3==PIM ) { _flag=7; _d1=1; _d2=0; _d3=2; }
+     if ( d2==KP && d3==KM && d1==PIM ) { _flag=7; _d1=2; _d2=0; _d3=1; }
+     if ( d3==KP && d1==KM && d2==PIM ) { _flag=7; _d1=1; _d2=2; _d3=0; }
+     if ( d3==KP && d2==KM && d1==PIM ) { _flag=7; _d1=2; _d2=1; _d3=0; } 
+    
+     if ( d1==PIP && d2==PIM && d3==KM ) { _flag=8; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIP && d3==PIM && d2==KM ) { _flag=8; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIP && d1==PIM && d3==KM ) { _flag=8; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIP && d3==PIM && d1==KM ) { _flag=8; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIP && d1==PIM && d2==KM ) { _flag=8; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIP && d2==PIM && d1==KM ) { _flag=8; _d1=2; _d2=1; _d3=0; }
+
+     if ( d1==PIP && d2==PIM && d3==PIM ) { _flag=10; _d1=0; _d2=1; _d3=2; }
+     if ( d1==PIP && d3==PIM && d2==PIM ) { _flag=10; _d1=0; _d2=2; _d3=1; }
+     if ( d2==PIP && d1==PIM && d3==PIM ) { _flag=10; _d1=1; _d2=0; _d3=2; }
+     if ( d2==PIP && d3==PIM && d1==PIM ) { _flag=10; _d1=1; _d2=2; _d3=0; }
+     if ( d3==PIP && d1==PIM && d2==PIM ) { _flag=10; _d1=2; _d2=0; _d3=1; }
+     if ( d3==PIP && d2==PIM && d1==PIM ) { _flag=10; _d1=2; _d2=1; _d3=0; }
   }
 
   if ( _flag==6) {
@@ -280,13 +355,17 @@ void EvtDDalitz::initProbMax() {
 
 //probmax different for different modes!  
 
-  if ( _flag==1 ) {setProbMax(9.6);}
+  if ( _flag==1 ) {setProbMax(1000000);}
   if ( _flag==2 ) {setProbMax(147.9);}
   if ( _flag==3 ) {setProbMax(5000.0);}
   if ( _flag==4 ) {setProbMax(3000.0);}
   if ( _flag==5 ) {setProbMax(10000000.0);}
   if ( _flag==6 ) {setProbMax(50000.0);}
-
+  if ( _flag==7 ) {setProbMax(50000.0);}
+  if ( _flag==8 ) {setProbMax(1000000);}
+  if ( _flag==9 ) {setProbMax(1000000);}
+  if ( _flag==10 ) {setProbMax(1000000);}
+  if ( _flag==11 ) {setProbMax(1000000);}
 }
 
 void EvtDDalitz::decay( EvtParticle *p){
@@ -339,18 +418,35 @@ void EvtDDalitz::decay( EvtParticle *p){
 
   if ( _flag==1) {
 
-//have a D+ -> K- pi+ pi+ decay, or charge conjugate
-//Anjos etal e691 - Phys Rev D48, 56 (1993) 
-    EvtResonance DplusRes11(p4_p,moms1,moms2,0.78,-60.0,0.0498,0.89610,1);
-    EvtResonance DplusRes12(p4_p,moms3,moms1,0.78,-60.0,0.0498,0.89610,1);//K*(892)
+   //  //have a D+ -> K- pi+ pi+ decay, or charge conjugate
+//     //Anjos etal e691 - Phys Rev D48, 56 (1993) 
+    // EvtResonance DplusRes11(p4_p,moms1,moms2,0.78,-60.0,0.0498,0.89610,1);
+//     EvtResonance DplusRes12(p4_p,moms3,moms1,0.78,-60.0,0.0498,0.89610,1);//K*(892)
     
-    EvtResonance DplusRes21(p4_p,moms1,moms2,0.53,132.0,0.287,1.429,0);
-    EvtResonance DplusRes22(p4_p,moms3,moms1,0.53,132.0,0.287,1.429,0);//K*(1430)
+//     EvtResonance DplusRes21(p4_p,moms1,moms2,0.53,132.0,0.287,1.429,0);
+//     EvtResonance DplusRes22(p4_p,moms3,moms1,0.53,132.0,0.287,1.429,0);//K*(1430)
     
-    EvtResonance DplusRes31(p4_p,moms1,moms2,0.47,-51.0,0.323,1.714,1);
-    EvtResonance DplusRes32(p4_p,moms3,moms1,0.47,-51.0,0.323,1.714,1);//K*(1680)
+//     EvtResonance DplusRes31(p4_p,moms1,moms2,0.47,-51.0,0.323,1.714,1);
+//     EvtResonance DplusRes32(p4_p,moms3,moms1,0.47,-51.0,0.323,1.714,1);//K*(1680)
     
-    amp = amp + oneby2*(-DplusRes11.resAmpl()+DplusRes12.resAmpl()) + oneby2*(DplusRes21.resAmpl() + DplusRes22.resAmpl()) + oneby2*(-DplusRes31.resAmpl()+ DplusRes32.resAmpl());
+//     amp = amp + oneby2*(-DplusRes11.resAmpl()+DplusRes12.resAmpl()) + oneby2*(DplusRes21.resAmpl() + DplusRes22.resAmpl()) + oneby2*(-DplusRes31.resAmpl()+ DplusRes32.resAmpl());
+ 
+
+//    EvtResonance DplusRes11(p4_p,moms1,moms2,amp,phase,width,mass,L);
+    //CLEO-c p15,arxiv:0802.4214v2 
+    EvtResonance2 DplusRes11(p4_p,moms1,moms2,1.0, 0.0, 0.0503, 0.896, 1, true);
+    EvtResonance2 DplusRes12(p4_p,moms3,moms1,1.0, 0.0, 0.0503, 0.896, 1, true);//K*(892)
+    EvtResonance2 DplusRes21(p4_p,moms1,moms2,3.0, 49.7-180.0, 0.164, 1.463, 0);
+    EvtResonance2 DplusRes22(p4_p,moms3,moms1,3.0, 49.7-180.0, 0.164, 1.463, 0);//K*(1430)
+    EvtResonance2 DplusRes31(p4_p, moms1, moms2, 0.96, -29.9+180.0, 0.109, 1.4324, 2, true);     
+    EvtResonance2 DplusRes32(p4_p, moms3, moms1, 0.96, -29.9+180.0, 0.109, 1.4324, 2, true);// K*_2(1430)
+    EvtResonance2 DplusRes41(p4_p,moms1,moms2, 6.5, 29.0, 0.323, 1.717, 1, true);
+    EvtResonance2 DplusRes42(p4_p,moms3,moms1, 6.5, 29.0, 0.323, 1.717, 1, true);//K*(1680)
+    EvtResonance2 DplusRes51(p4_p,moms1,moms2, 5.01, -163.7+180.0, 0.470, 0.809, 0);
+    EvtResonance2 DplusRes52(p4_p,moms3,moms1, 5.01, -163.7+180.0, 0.470, 0.809, 0);//kappa(800)
+    double pi180inv = 1.0/EvtConst::radToDegrees;  
+    amp = EvtComplex(7.4*cos((-18.4+180.0)*pi180inv),7.4*sin((-18.4+180.0)*pi180inv))+ oneby2*(-DplusRes11.resAmpl()+DplusRes12.resAmpl()) + oneby2*(DplusRes21.resAmpl() + DplusRes22.resAmpl()) + oneby2*(DplusRes31.resAmpl()+ DplusRes32.resAmpl()) + oneby2*(-DplusRes41.resAmpl()+ DplusRes42.resAmpl()) + oneby2*(DplusRes51.resAmpl()+ DplusRes52.resAmpl());
+    //amp = amp+oneby2*(-DplusRes11.resAmpl()+DplusRes12.resAmpl());
     
  }
   
@@ -517,6 +613,7 @@ void EvtDDalitz::decay( EvtParticle *p){
 
 
   // Ds -> K K pi
+  //Babar, arxiv:1011.4190
   if(_flag==6) {
      EvtResonance2 DsKKpiRes1(p4_p, moms3, moms1, 1.0, 0.0, 0.0455, 0.8944, 1, true); // K*(892)
      EvtResonance2 DsKKpiRes2(p4_p, moms3, moms1, 1.48, 138., 0.290, 1.414, 0); // K*_0(1430)
@@ -529,7 +626,102 @@ void EvtDDalitz::decay( EvtParticle *p){
 
   }
 
+  //D+ -> K K pi
+  //CLEO PRD 78, 072003 (2008) Fit A
+  if(_flag==7) {
+    EvtResonance2 DpKKpiRes1(p4_p, moms3, moms1, 1.0, 0.0, 0.0503, 0.8960, 1, true); // K*(892)
+    EvtResonance2 DpKKpiRes2(p4_p, moms3, moms1, 3.7, 73.0, 0.290, 1.414, 0); // K*_0(1430)
+    EvtResonance2 DpKKpiRes3(p4_p, moms1, moms2, 1.189, -179.0+180.0, 0.00426, 1.019455, 1, true); // phi(1020)
+    EvtResonance2 DpKKpiRes4(p4_p, moms1, moms2, 1.72, 123., 0.265, 1.474, 0); // a_0(1450)
+    EvtResonance2 DpKKpiRes5(p4_p, moms1, moms2, 1.9, -52.0+180.0, 0.15, 1.68, 1, true); // phi(1680)
+    EvtResonance2 DpKKpiRes6(p4_p, moms3, moms1, 6.4, 150., 0.109, 1.4324, 2, true); // K*_2(1430)    
+    double pi180inv = 1.0/EvtConst::radToDegrees;    
+    amp = EvtComplex(5.1*cos((53.0)*pi180inv),5.1*sin((53.0)*pi180inv)) +
+      DpKKpiRes1.resAmpl() + DpKKpiRes2.resAmpl() + DpKKpiRes3.resAmpl()
+      + DpKKpiRes4.resAmpl() + DpKKpiRes5.resAmpl() + DpKKpiRes6.resAmpl();
+  }
+  
+//D+ -> K pi pi WS (DCS)
+  //FOCUS PLB 601 10 (2004) ; amplitudes there are individually normalized (although not explicit in the paper)
+  // thus the magnitudes appearing below come from dividing the ones appearing in the paper by the sqrt of the
+  // integral over the DP of the corresponding squared amplitude. Writing as pi- pi+ K+ so pipi resonances are (12)
+  // and Kpi resonances are (31); masses and widths corresponds to PDG 2010
+  if(_flag==8) {
+    EvtResonance2 DpKpipiDCSRes1(p4_p, moms1, moms2, 1.0, 0.0, 0.149, 0.775, 1, true); // rho(770)
+    EvtResonance2 DpKpipiDCSRes2(p4_p, moms3, moms1, 1.0971, -167.1, 0.0487, 0.896, 1, true); // K*(890)
+    EvtResonance2 DpKpipiDCSRes3(p4_p, moms1, moms2, 0.4738, -134.5, 0.059, 0.972, 0); // f0(980) as simple BW
+    EvtResonance2 DpKpipiDCSRes4(p4_p, moms3, moms1, 2.2688, 54.4, 0.109, 1.432, 2, true); // K*2(1430)
+    amp = DpKpipiDCSRes1.resAmpl() + DpKpipiDCSRes2.resAmpl() + DpKpipiDCSRes3.resAmpl()
+      + DpKpipiDCSRes4.resAmpl();
+  }
 
+  //Ds+ -> K pi pi WS (CS)
+  //FOCUS PLB 601 10 (2004) ; amplitudes there are individually normalized (although not explicit in the paper)
+  // thus the magnitudes appearing below come from dividing the ones appearing in the paper by the sqrt of the
+  // integral over the DP of the corresponding squared amplitude. Writing as pi- pi+ K+ so pipi resonances are (12)
+  // and Kpi resonances are (31); masses and widths corresponds to PDG 2010
+  // PROBLEM: by simply doing the procedure for D+, the resulting DP and projections do not resemble what is
+  // in the paper; the best model is by adding 180 to the vector Kpi resonances
+  if(_flag==9) {
+    EvtResonance2 DsKpipiCSRes1(p4_p, moms1, moms2, 1.0, 0.0, 0.149, 0.775, 1, true); // rho(770)
+    EvtResonance2 DsKpipiCSRes2(p4_p, moms3, moms1, 0.7236, -18.3, 0.0487, 0.896, 1, true); // K*(890)
+    EvtResonance2 DsKpipiCSRes3(p4_p, moms3, moms1, 2.711, 145.2, 0.232, 1.414, 1, true); // K*(1410)
+    EvtResonance2 DsKpipiCSRes4(p4_p, moms3, moms1, 1.7549, 59.3, 0.270, 1.425, 0); // K*0(1430)
+    EvtResonance2 DsKpipiCSRes5(p4_p, moms1, moms2, 7.0589, -151.7, 0.400, 1.465, 1, true); // rho(1450)
+    double pi180inv = 1.0/EvtConst::radToDegrees; 
+    amp = EvtComplex(3.98*cos(43.1*pi180inv),3.98*sin(43.1*pi180inv)) + DsKpipiCSRes1.resAmpl()
+         + DsKpipiCSRes2.resAmpl() + DsKpipiCSRes3.resAmpl() + DsKpipiCSRes4.resAmpl()
+         + DsKpipiCSRes5.resAmpl();
+  }
+  // D+ -> pi- pi+ pi+  from E791  [PRL 86 770 (2001)]
+  // masses and widths below correspond to what they used; there, the amplitudes were individually normalized
+  // (although not explicit) so magnitudes here are obtained after correcting for that
+  // Breit-Wigner has a factor of (-1) there which changes the relative phase of the NR wrt to the resonances
+  // thus the NR magnitude is set as negative
+  if(_flag==10) {
+    EvtResonance2 DppipipiRes11(p4_p, moms1, moms2, 1.0, 0.0, 0.150, 0.769, 1, true); // rho(770)
+    EvtResonance2 DppipipiRes12(p4_p, moms3, moms1, 1.0, 0.0, 0.150, 0.769, 1, true); // rho(770)
+    EvtResonance2 DppipipiRes21(p4_p, moms1, moms2, 2.2811,  205.7, 0.324, 0.478, 0); // sigma(500)
+    EvtResonance2 DppipipiRes22(p4_p, moms3, moms1, 2.2811,  205.7, 0.324, 0.478, 0); // sigma(500)
+    EvtResonance2 DppipipiRes31(p4_p, moms1, moms2, 0.4265,  165.0, 0.044, 0.977, 0); // f0(980) simple BW
+    EvtResonance2 DppipipiRes32(p4_p, moms3, moms1, 0.4265,  165.0, 0.044, 0.977, 0); // f0(980) simple BW
+    EvtResonance2 DppipipiRes41(p4_p, moms1, moms2, 2.0321,   57.3, 0.185, 1.275, 2, true); // f2(1270)
+    EvtResonance2 DppipipiRes42(p4_p, moms3, moms1, 2.0321,   57.3, 0.185, 1.275, 2, true); // f2(1270)
+    EvtResonance2 DppipipiRes51(p4_p, moms1, moms2, 0.7888,  105.4, 0.173, 1.434, 0); // f0(1370)
+    EvtResonance2 DppipipiRes52(p4_p, moms3, moms1, 0.7888,  105.4, 0.173, 1.434, 0); // f0(1370)
+    EvtResonance2 DppipipiRes61(p4_p, moms1, moms2, 0.7363,  319.1, 0.310, 1.465, 1, true); // rho(1450)
+    EvtResonance2 DppipipiRes62(p4_p, moms3, moms1, 0.7363,  319.1, 0.310, 1.465, 1, true); // rho(1450)
+    double pi180inv = 1.0/EvtConst::radToDegrees;  
+    amp = EvtComplex(-3.98*cos(57.3*pi180inv),-3.98*sin(57.3*pi180inv))
+        +  (DppipipiRes11.resAmpl() - DppipipiRes12.resAmpl())  //spin1
+        +  (DppipipiRes21.resAmpl() + DppipipiRes22.resAmpl()) + (DppipipiRes31.resAmpl() + DppipipiRes32.resAmpl())
+        +  (DppipipiRes41.resAmpl() + DppipipiRes42.resAmpl()) + (DppipipiRes51.resAmpl() + DppipipiRes52.resAmpl())
+        +  (DppipipiRes61.resAmpl() - DppipipiRes62.resAmpl());  //spin1
+  }
+  // Ds+ -> pi- pi+ pi+  from E791  [PRL 86 765 (2001)]
+  // masses and widths below correspond to what they used; there, the amplitudes were individually normalized
+  // (although not explicit) so magnitudes here are obtained after correcting for that
+  // Breit-Wigner has a factor of (-1) there which changes the relative phase of the NR wrt to the resonances
+  // thus the NR magnitude is set as negative
+  if(_flag==11) {
+    EvtResonance2 DspipipiRes11(p4_p, moms1, moms2, 0.288, 109., 0.150, 0.769, 1, true); // rho(770)
+    EvtResonance2 DspipipiRes12(p4_p, moms3, moms1, 0.288, 109., 0.150, 0.769, 1, true); // rho(770)
+    EvtResonance2 DspipipiRes21(p4_p, moms1, moms2, 1.0, 0.0, 0.044, 0.977, 0); // f0(980) simple BW
+    EvtResonance2 DspipipiRes22(p4_p, moms3, moms1, 1.0, 0.0, 0.044, 0.977, 0); // f0(980) simple BW
+    EvtResonance2 DspipipiRes31(p4_p, moms1, moms2, 1.075, 133., 0.185, 1.275, 2, true); // f2(1270)
+    EvtResonance2 DspipipiRes32(p4_p, moms3, moms1, 1.075, 133., 0.185, 1.275, 2, true); // f2(1270)
+    EvtResonance2 DspipipiRes41(p4_p, moms1, moms2, 2.225, 198., 0.173, 1.434, 0); // f0(1370)
+    EvtResonance2 DspipipiRes42(p4_p, moms3, moms1, 2.225, 198., 0.173, 1.434, 0); // f0(1370)
+    EvtResonance2 DspipipiRes51(p4_p, moms1, moms2, 1.107, 162., 0.310, 1.465, 1, true); // rho(1450)
+    EvtResonance2 DspipipiRes52(p4_p, moms3, moms1, 1.107, 162., 0.310, 1.465, 1, true); // rho(1450)
+    double pi180inv = 1.0/EvtConst::radToDegrees;  
+    amp = EvtComplex(-0.723*cos(181.*pi180inv),-0.723*sin(181.*pi180inv))
+        +  (DspipipiRes11.resAmpl() - DspipipiRes12.resAmpl())  //spin1
+        +  (DspipipiRes21.resAmpl() + DspipipiRes22.resAmpl()) + (DspipipiRes31.resAmpl() + DspipipiRes32.resAmpl())
+        +  (DspipipiRes41.resAmpl() + DspipipiRes42.resAmpl())
+        +  (DspipipiRes51.resAmpl() - DspipipiRes52.resAmpl());  //spin1
+  } 
+  
   vertex(amp);
 
   return ;

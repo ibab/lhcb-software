@@ -378,7 +378,7 @@ public:
   //lange - April 29, 2002
   void setId(EvtId id) { _id=id;}
   void initDecay(bool useMinMass=false);
-  void generateMassTree();
+  bool generateMassTree();
 
   double compMassProb();
 
@@ -404,7 +404,9 @@ public:
   double* decayProb() {return _decayProb;}
   void setDecayProb( double p);
 
-  
+  // Return the name of the particle (from the EvtId number)
+  std::string getName();
+   
 protected:
 
   void setp( double e, double px, double py, double pz) { 

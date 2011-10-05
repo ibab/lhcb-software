@@ -4,6 +4,24 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - John Back
+ - Update various classes to include recent fixes and changes made to the
+   v12r2b branch (see below). Also update the versions of the external 
+   generators in the cmt/requirements file. 
+  1) Changes to EvtParticle::generateMassTree() to not abort the code if
+     the parent mass is below the threshold to generate the required decay.
+     Now it just stops the particle decay; before there was an abort.
+     This keeps the EvtParticle::isDecayed() boolean set to false.
+  2) Protection against negative square-root values in EvtGenKine p3 momentum 
+     component which was giving NaN values to boost/spin matrix calculations. 
+  3) Fixed array index increments in various initialisation assert checks
+     in the EvtMultiChannelParser and EvtPto3PAmpFactory classes for the
+     Pto3P Dalitz plot model (a specific problem for optimised builds).
+  4) Added getName() to EvtParticle and EvtId classes to help identify 
+     EvtParticles during testing instead of relying on EvtId numbers.
+  5) Updated various D Dalitz decay models in EvtDDalitz.
+  6) Some changes to debug/error output report levels in a few classes.
+
 ! 2011-08-11 - John Back
  - Major changes to use Pythia 8 instead of Pythia 6, including the use of
    the new C++ interfaced packages of Photos and Tauola (with the new model 

@@ -22,7 +22,7 @@
 #define EVTID_HH
 
 #include <iostream>
-//class ostream;
+#include <string>
 
 class EvtId {
 
@@ -45,6 +45,8 @@ public:
 
   int isAlias() const { return _id!=_alias;}
 
+  std::string getName() const;
+
 private:
 
   //particle number 0..n. The order of particles are determined 
@@ -58,4 +60,3 @@ private:
 }; 
 
 #endif
-

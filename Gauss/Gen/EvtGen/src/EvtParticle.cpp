@@ -420,7 +420,18 @@ void EvtParticle::decay(){
 
   //if there are already daughters, then this step is already done!
   // figure out the masses
-  if ( _ndaug == 0 ) generateMassTree();
+  bool massTreeOK(true);
+  if ( _ndaug == 0 ) {
+    massTreeOK = generateMassTree();
+  }
+
+  if (massTreeOK == false) {
+    report(INFO,"EvtGen")<<"Could not decay "<<EvtPDL::name(p->getId())
+			 <<" with mass "<<p->mass()
+			 <<" to decay channel number "<<_channel<<endl;
+    _isDecayed = false;
+    return;
+  }
   
   static EvtId BS0=EvtPDL::getId("B_s0");
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
@@ -448,7 +459,10 @@ void EvtParticle::decay(){
   return;  
 }
 
-void EvtParticle::generateMassTree() {
+bool EvtParticle::generateMassTree() {
+
+  bool isOK(true);
+
   double massProb=1.;
   double ranNum=2.;
   int counter=0;
@@ -478,11 +492,15 @@ void EvtParticle::generateMassTree() {
 	}
 	else {
 	  report(INFO,"EvtGen") << "Sorry, no luck finding a valid set of masses.  This may be a pathological combo\n";
+	  isOK = false;
 	  break;
 	}
       }
     }
   }
+
+  return isOK;
+
 }
 
 double EvtParticle::compMassProb() {
@@ -1055,7 +1073,8 @@ double EvtParticle::initializePhaseSpace(
     //but keep the decay channel of the parent.
     this->deleteDaughters(t1);
     this->makeDaughters(numdaughter,daughters);
-    this->generateMassTree();
+    bool massTreeOK = this->generateMassTree();
+    if (massTreeOK == false) {return 0.0;}
   }
 
   double weight=0.;
@@ -1180,4 +1199,11 @@ void EvtParticle::setDecayProb(double prob) {
 
   if ( _decayProb == 0 )  _decayProb=new double;
   *_decayProb=prob;
+}
+
+std::string EvtParticle::getName() {
+  
+  std::string theName = _id.getName();
+  return theName;
+
 }

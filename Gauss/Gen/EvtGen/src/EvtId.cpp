@@ -39,3 +39,8 @@ int EvtId::isConjugate(const EvtId & id) const {
   return EvtPDL::getStdHep(*this) == - EvtPDL::getStdHep(id);
 }
 
+std::string EvtId::getName() const {
+
+  return EvtPDL::name(*this);
+
+}

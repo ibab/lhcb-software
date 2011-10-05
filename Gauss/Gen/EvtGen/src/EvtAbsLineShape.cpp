@@ -120,11 +120,12 @@ double EvtAbsLineShape::getRandMass(EvtId *parId, int /* nDaug */, EvtId * /*dau
   //its not flat - but generated according to a BW
 
   if (maxMass>0&&maxMass<_massMin) {
-    report(ERROR,"EvtGen") << "In EvtAbsLineShape::getRandMass"<<endl;
-    report(ERROR,"EvtGen") << "Decaying particle "<<EvtPDL::name(*parId)
-                           << " with mass "<<maxMass<<endl;
-    report(ERROR,"EvtGen") << " to particle" 
-                           << " with a minimal mass of "<< _massMin<<endl;
+    report(DEBUG,"EvtGen") << "In EvtAbsLineShape::getRandMass:"<<endl;
+    report(DEBUG,"EvtGen") << "Cannot create a particle with a minimal mass of "
+                           << _massMin << " from a "<<EvtPDL::name(*parId)
+                           << " decay with available left-over mass-energy " << maxMass
+                           << ". Returning 0.0 mass. The rest of this decay chain will probably fail..." << endl;
+    return 0.0;
   }
 
   double mMin=_massMin;

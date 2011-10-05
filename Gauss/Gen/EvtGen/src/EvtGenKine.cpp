@@ -66,7 +66,10 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[30], EvtVector4R p4[30],
      energy = ( mp*mp + mass[0]*mass[0] -
               mass[1]*mass[1] ) / ( 2.0 * mp );
 
-     p3 = sqrt( energy*energy - mass[0]*mass[0] );
+     p3 = 0.0;
+     if (energy > mass[0]) {
+       p3 = sqrt( energy*energy - mass[0]*mass[0] );
+     }
 
      p4[0].set( energy, 0.0, 0.0, p3 );
 
