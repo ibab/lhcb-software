@@ -24,8 +24,8 @@ namespace Rich
   /// Total number of HPD panels
   static const unsigned int NTotalHPDPanels = 4;
 
-  /// Number of HPD panels per RICH detector
-  static const unsigned int NHPDPanelsPerRICH = 2;
+  /// Number of PD panels per RICH detector
+  static const unsigned int NPDPanelsPerRICH  = 2;
 
   /** @enum Rich::Side
    *
