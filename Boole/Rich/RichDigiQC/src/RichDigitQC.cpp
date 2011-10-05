@@ -232,7 +232,7 @@ StatusCode DigitQC::finalize()
       const Rich::DAQ::HPDHardwareID    hID ( m_richSys->hardwareID( (*iHPD).first ) );
       const Rich::DAQ::Level1HardwareID l1ID( m_richSys->level1HardwareID( (*iHPD).first ) );
       Gaudi::XYZPoint hpdGlo;
-      const StatusCode sc = m_smartIDs->hpdPosition( (*iHPD).first, hpdGlo );
+      const StatusCode sc = m_smartIDs->pdPosition( (*iHPD).first, hpdGlo );
       if (sc.isFailure()) continue;
       const Gaudi::XYZPoint hpdLoc       ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID]  += (*iHPD).second;
