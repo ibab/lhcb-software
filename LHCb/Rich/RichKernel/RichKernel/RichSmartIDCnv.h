@@ -133,7 +133,8 @@ namespace Rich
     /// Returns the 'global' HPD number in a RICH column
     inline int _numInCol() const
     {
-      return ( ( Rich::Rich1 == smartID().rich() && Rich::bottom == smartID().panel() ) ?
+      return ( ( Rich::Rich1 == smartID().rich() && 
+                 Rich::bottom == smartID().panel() ) ?
                ( smartID().hpdNumInCol() ) :
                ( _nHPDsPerCol() - 1 - smartID().hpdNumInCol() ) );
     }
