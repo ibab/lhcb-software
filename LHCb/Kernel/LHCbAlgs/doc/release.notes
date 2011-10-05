@@ -4,6 +4,35 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Vanya Belyaev
+
+ - Add new algorithms for copy/link data in TES:
+
+   *  @code
+   *
+   *  from Configurables import Gaudi__DataCopy
+   *
+   *  rootInTes = '/Event/Leptonic/'
+   *  rawEvt  = Gaudi_DataCopy ( 'CopyRawEvt' , 
+   *                             What   =      '/Event/DAQ/RawEvent' , 
+   *                             Target = rootInTes + 'DAQ/RawEvent' ) 
+   *
+   *  @endcode
+   *
+ 
+   *  @code
+   *
+   *  from Configurables import Gaudi__DataLink
+   *
+   *  rootInTes = '/Event/Leptonic/'
+   *  rawEvt  = Gaudi_DataLink ( 'CopyRawEvt' , 
+   *                             What   =      '/Event/DAQ/RawEvent' , 
+   *                             Target = rootInTes + 'DAQ/RawEvent' ) 
+   *
+   *  @endcode
+   *
+
+
 ! 2011-10-04 - Marco Clemencic
  - Fixed a problem in  OdinTimeDecoder after the fix to bug #87392.
    Do not try to get RawEvent if the Event Store is not ready.
