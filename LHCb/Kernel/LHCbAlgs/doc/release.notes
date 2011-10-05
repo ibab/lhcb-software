@@ -4,10 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r43 2011-10-05 =========================
 ! 2011-10-05 - Vanya Belyaev
-
  - Add new algorithms for copy/link data in TES:
-
    *  @code
    *
    *  from Configurables import Gaudi__DataCopy
@@ -31,7 +30,6 @@
    *
    *  @endcode
    *
-
 
 ! 2011-10-04 - Marco Clemencic
  - Fixed a problem in  OdinTimeDecoder after the fix to bug #87392.
