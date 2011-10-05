@@ -71,7 +71,7 @@ namespace Rich
       mutable Rndm::Numbers m_rndm;
 
       /// The fraction of pixels to reject
-      double m_rejFrac[Rich::NRiches][Rich::NHPDPanelsPerRICH];
+      double m_rejFrac[Rich::NRiches][Rich::NPDPanelsPerRICH];
 
     };
 

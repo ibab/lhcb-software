@@ -35,7 +35,7 @@
 // RichDet
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
-#include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichPDPanel.h"
 #include "RichDet/DeRichSphMirror.h"
 
 namespace Rich
@@ -95,15 +95,15 @@ namespace Rich
       const std::string & pdPanelName( const Rich::DetectorType rich,
                                        const Rich::Side         panel ) const;
 
-      /** Get the correct DeRichHPD object for the given RichSmartID
-       *  @param[in] hpdID The RichSmartID for the HPD
-       *  @return Pointer to the associated DeRichHPD object
+      /** Get the correct DeRichPD object for the given RichSmartID
+       *  @param[in] hpdID The RichSmartID for the PD
+       *  @return Pointer to the associated DeRichPD object
        */
-      inline const DeRichHPD * deHPD( const LHCb::RichSmartID hpdID ) const
+      inline const DeRichPD * dePD( const LHCb::RichSmartID pdID ) const
       {
-        return (m_hpdPanels[hpdID.rich()][hpdID.panel()])->deHPD(hpdID);
+        return (m_pdPanels[pdID.rich()][pdID.panel()])->dePD(pdID);
       }
-
+      
       /// Get the local ring for the given segment and hypo
       const LHCb::RichRecRing * ckRing( LHCb::RichRecSegment * segment,
                                         const Rich::ParticleIDType hypo ) const;
@@ -111,10 +111,10 @@ namespace Rich
     private: // definitions
 
       /// photodetector panels per rich
-      typedef boost::array<const DeRichHPDPanel*, Rich::NHPDPanelsPerRICH> HPDPanelsPerRich;
+      typedef boost::array<const DeRichPDPanel*, Rich::NPDPanelsPerRICH> PDPanelsPerRich;
 
       /// photodetector for each rich
-      typedef boost::array<HPDPanelsPerRich, Rich::NRiches> RichHPDPanels;
+      typedef boost::array<PDPanelsPerRich, Rich::NRiches> RichPDPanels;
 
     private: // Private data
 
@@ -131,7 +131,7 @@ namespace Rich
       double m_qEffPedLoss;
 
       /// HPD panels
-      RichHPDPanels m_hpdPanels;
+      RichPDPanels m_pdPanels;
 
       /// JO flag to switch between simple or detail HPD description in ray tracing
       bool m_useDetailedHPDsForRayT;

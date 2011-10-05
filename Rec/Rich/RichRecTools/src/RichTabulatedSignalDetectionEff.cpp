@@ -24,7 +24,7 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff )
 
 // Standard constructor
-  TabulatedSignalDetectionEff::
+TabulatedSignalDetectionEff::
 TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
@@ -60,11 +60,11 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
-  // HPD panels
-  m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich1,Rich::top));
-  m_hpdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich1,Rich::bottom));
-  m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich2,Rich::left));
-  m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich2,Rich::right));
+  // PD panels
+  m_pdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich1,Rich::top));
+  m_pdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich1,Rich::bottom));
+  m_pdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich2,Rich::left));
+  m_pdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich2,Rich::right));
 
   // the ray-tracing mode
   LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
@@ -91,7 +91,7 @@ StatusCode TabulatedSignalDetectionEff::initialize()
     debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
     debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
     debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
-    debug() << " HPD quartz window efficiency = " << qEff << endmsg
+    debug() << " PD quartz window efficiency  = " << qEff << endmsg
             << " Digitisation pedestal eff.   = " << pLos << endmsg;
   }
 
@@ -104,7 +104,7 @@ TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType hypo ) const
 {
   // Make a CK ring for this segment and hypo. Used to work out which mirrors
-  // and HPDs we need to sample the reflectivities and Q.E. values from
+  // and PDs we need to sample the reflectivities and Q.E. values from
 
   LHCb::RichRecRing * newRing = NULL;
 
@@ -168,72 +168,73 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     return 0;
   }
 
-  typedef Rich::Map<const LHCb::RichSmartID,unsigned int> HPDCount;
+  typedef Rich::Map<const LHCb::RichSmartID,unsigned int> PDCount;
   typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
 
-  HPDCount hpdCount;
+  PDCount pdCount;
   MirrorCount primMirrCount, secMirrCount;
-  unsigned int totalInHPD(0);
+  unsigned int totalInPD(0);
   for ( LHCb::RichRecPointOnRing::Vector::const_iterator iP = m_last_ring->ringPoints().begin();
         iP != m_last_ring->ringPoints().end(); ++iP )
   {
     if ( (*iP).acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
     {
       // Count accepted points
-      ++totalInHPD;
-      // Count HPDs hit by this ring
-      ++hpdCount [ (*iP).smartID() ];
+      ++totalInPD;
+      // Count PDs hit by this ring
+      ++pdCount [ (*iP).smartID() ];
       // Count primary mirrors
       if ( (*iP).primaryMirror()   ) { ++primMirrCount [ (*iP).primaryMirror()   ]; }
       // Count secondary mirrors
       if ( (*iP).secondaryMirror() ) { ++secMirrCount  [ (*iP).secondaryMirror() ]; }
     }
   }
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Found " << totalInHPD << " usable ring points out of "
-            << m_last_ring->ringPoints().size() << endmsg;
-  if ( 0 == totalInHPD ) { return 0; }
 
-  // Get weighted average HPD Q.E.
-  double hpdQEEff(0);
-  if ( !hpdCount.empty() )
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " -> Found " << totalInPD << " usable ring points out of "
+            << m_last_ring->ringPoints().size() << endmsg;
+  if ( 0 == totalInPD ) { return 0; }
+
+  // Get weighted average PD Q.E.
+  double pdQEEff(0);
+  if ( !pdCount.empty() )
   {
-    totalInHPD = 0;
-    for ( HPDCount::const_iterator iHPD = hpdCount.begin();
-          iHPD != hpdCount.end(); ++iHPD )
+    totalInPD = 0;
+    for ( PDCount::const_iterator iPD = pdCount.begin();
+          iPD != pdCount.end(); ++iPD )
     {
       // Count HPDs
-      totalInHPD += iHPD->second;
-      // get pointer to HPD
-      const DeRichHPD * hpd = deHPD( iHPD->first );
+      totalInPD += iPD->second;
+      // get pointer to PD
+      const DeRichPD * pd = dePD( iPD->first );
       // add up Q.E. eff
-      hpdQEEff += (double)(iHPD->second) * (*(hpd->hpdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
+      pdQEEff += (double)(iPD->second) * (*(pd->pdQuantumEff()))[energy*Gaudi::Units::eV]/100 ;
     }
     // normalise the result
-    hpdQEEff /= (double)(totalInHPD);
+    pdQEEff /= (double)(totalInPD);
   }
   else
   {
-    hpdQEEff = 1;
-    Warning( "No HPDs found -> Assuming Av. HPD Q.E. of 1", StatusCode::SUCCESS );
+    pdQEEff = 1;
+    Warning( "No PDs found -> Assuming Av. PD Q.E. of 1", StatusCode::SUCCESS );
   }
 
   // Weighted primary mirror reflectivity
   double primMirrRefl(0);
   if ( !primMirrCount.empty() )
   {
-    totalInHPD = 0;
+    totalInPD = 0;
     for ( MirrorCount::const_iterator iPM = primMirrCount.begin();
           iPM != primMirrCount.end(); ++iPM )
     {
       // count mirrors
-      totalInHPD += iPM->second;
+      totalInPD += iPM->second;
       // add up mirror refl.
       primMirrRefl +=
         (double)(iPM->second) * (*(iPM->first->reflectivity()))[energy*Gaudi::Units::eV];
     }
     // normalise the result
-    primMirrRefl /= (double)(totalInHPD);
+    primMirrRefl /= (double)(totalInPD);
   }
   else
   {
@@ -245,18 +246,18 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   double secMirrRefl(0);
   if ( !secMirrCount.empty() )
   {
-    totalInHPD = 0;
+    totalInPD = 0;
     for ( MirrorCount::const_iterator iSM = secMirrCount.begin();
           iSM != secMirrCount.end(); ++iSM )
     {
       // count mirrors
-      totalInHPD += iSM->second;
+      totalInPD += iSM->second;
       // add up mirror refl.
       secMirrRefl +=
         (double)(iSM->second) * (*(iSM->first->reflectivity()))[energy*Gaudi::Units::eV];
     }
     // normalise the result
-    secMirrRefl /= (double)(totalInHPD);
+    secMirrRefl /= (double)(totalInPD);
   }
   else
   {
@@ -265,15 +266,15 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   }
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Av. HPD Q.E. = " << hpdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
+    debug() << " -> Av. PD Q.E. = " << pdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
             << " Sec. Mirr. Refl. " << secMirrRefl << endmsg;
 
   // return overall efficiency
-  return m_qEffPedLoss * hpdQEEff * primMirrRefl * secMirrRefl;
+  return m_qEffPedLoss * pdQEEff * primMirrRefl * secMirrRefl;
 }
 
 //================================================================================
-// The HPD panel location
+// The PD panel location
 //================================================================================
 const std::string &
 TabulatedSignalDetectionEff::pdPanelName( const Rich::DetectorType rich,
