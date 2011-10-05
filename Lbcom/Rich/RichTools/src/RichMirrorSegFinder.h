@@ -113,7 +113,9 @@ namespace Rich
   private: // classes
 
     /// Functor to sort RichSmartIDs by Rich then panel numbers
-    class SortByDistFromBeam : std::binary_function< const DeRichSphMirror*, const DeRichSphMirror*, bool >
+    class SortByDistFromBeam : std::binary_function< const DeRichSphMirror*, 
+                                                     const DeRichSphMirror*, 
+                                                     bool >
     {
     public:
       /** Sort operator for the Spherical mirrors
@@ -134,17 +136,17 @@ namespace Rich
 
   private: // data
 
-    /// Enumeration for falt and spherical mirror types
+    /// Enumeration for flat and spherical mirror types
     enum mirrorType { sph = 0, sec = 1 };
 
     /// Pointers to the spherical mirror detector elements
-    std::vector<const DeRichSphMirror*> m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH];
+    std::vector<const DeRichSphMirror*> m_sphMirrors[Rich::NRiches][Rich::NPDPanelsPerRICH];
 
     /// Pointers to the secondary (spherical) mirror detector elements
-    std::vector<const DeRichSphMirror*> m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH];
+    std::vector<const DeRichSphMirror*> m_secMirrors[Rich::NRiches][Rich::NPDPanelsPerRICH];
 
     /// The last found mirror number for each RICH and HPD panel
-    mutable const DeRichSphMirror* m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+    mutable const DeRichSphMirror* m_lastFoundMirror[Rich::NRiches][Rich::NPDPanelsPerRICH][2];
 
     /// Max distance to accept mirror
     mutable double m_maxDist[Rich::NRiches][2];

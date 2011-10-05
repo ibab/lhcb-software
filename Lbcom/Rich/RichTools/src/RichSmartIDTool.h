@@ -25,7 +25,7 @@
 #include "RichKernel/RichPixelCluster.h"
 
 // RichDet
-#include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichPDPanel.h"
 #include "RichDet/DeRichSystem.h"
 
 namespace Rich
@@ -41,7 +41,7 @@ namespace Rich
    *  @date   2003-10-28
    *
    *  @todo Move application of panel offset in RichSmartIDTool::globalToPDPanel
-   *        into DeRichHPDPanel class
+   *        into DeRichPDPanel class
    */
   //-----------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ namespace Rich
     /// Standard constructor
     SmartIDTool( const std::string& type,
                  const std::string& name,
-                 const IInterface* parent);
+                 const IInterface* parent );
 
     virtual ~SmartIDTool( ); ///< Destructor
 
@@ -71,19 +71,21 @@ namespace Rich
     virtual StatusCode globalPosition ( const Rich::HPDPixelCluster& cluster,
                                         Gaudi::XYZPoint& detectPoint ) const;
 
+    // CRJ : Comment out as HPD specific and only used in one monitor so not critical
     // Converts a RichSmartID channel identification into a position in
-    //  global LHCb coordinates, on the pixel anode chip.
-    virtual StatusCode anodeGlobalPosition ( const LHCb::RichSmartID smartid,
-                                             Gaudi::XYZPoint& detectPoint ) const;
+    // global LHCb coordinates, on the pixel anode chip.
+    //virtual StatusCode anodeGlobalPosition ( const LHCb::RichSmartID smartid,
+    //                                         Gaudi::XYZPoint& detectPoint ) const;
 
+    // CRJ : Comment out as HPD specific and only used in one monitor so not critical
     // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates,
-    //  on the pixel anode chip.
-    virtual StatusCode anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
-                                             Gaudi::XYZPoint& detectPoint ) const;
+    // on the pixel anode chip.
+    //virtual StatusCode anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
+    //                                         Gaudi::XYZPoint& detectPoint ) const;
 
-    // Converts an HPD RichSmartID identification into a position in global LHCb coordinates.
-    virtual StatusCode hpdPosition ( const LHCb::RichSmartID hpdid,
-                                     Gaudi::XYZPoint& hpdPoint ) const;
+    // Converts an PD RichSmartID identification into a position in global LHCb coordinates.
+    virtual StatusCode pdPosition ( const LHCb::RichSmartID pdid,
+                                    Gaudi::XYZPoint& pdPoint ) const;
 
     // Computes the global position coordinate for a given position in local
     virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint,
@@ -113,15 +115,15 @@ namespace Rich
   private:
 
     /// photodetector panels per rich
-    typedef std::vector<const DeRichHPDPanel*> HPDPanelsPerRich;
+    typedef std::vector<const DeRichPDPanel*> PDPanelsPerRich;
 
     /// typedef for photodetector for each rich
-    typedef std::vector<HPDPanelsPerRich> RichHPDPanels;
+    typedef std::vector<PDPanelsPerRich> RichPDPanels;
 
   private:
 
     /// photodetector for each rich
-    RichHPDPanels m_photoDetPanels;
+    RichPDPanels m_photoDetPanels;
 
     /** List of active RichSmartIDs
      *  @todo Make this get updated as needed */

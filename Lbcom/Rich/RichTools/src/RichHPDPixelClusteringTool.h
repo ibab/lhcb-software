@@ -36,7 +36,7 @@ namespace Rich
      *  An implementation of the HPD pixel clustering tool interface.
      *
      *  This implementation forms simple clusters of connected (direct neighbours) pixels
-     *
+     *      info() << mindeltaLL << endmsg;
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   21/03/2006
      *
@@ -102,7 +102,7 @@ namespace Rich
           if ( smartIDs.front().pixelSubRowDataIsValid() )
           {
             // use own method for ALICE mode
-            std::sort( smartIDs.begin(), smartIDs.end(), SortALICEIDs() );
+            std::stable_sort( smartIDs.begin(), smartIDs.end(), SortALICEIDs() );
           }
           else
           {

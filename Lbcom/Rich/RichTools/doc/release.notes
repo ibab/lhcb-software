@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Chris Jones
+ - Various changes to make things PD (HPD/MaPMT) neutral.
+
 !========================= RichTools v2r37 2011-08-31 =========================
 ! 2011-07-29 - Chris Jones
  - Lower default 'hot pixel' fraction from 90% to 50% of consecutive events.

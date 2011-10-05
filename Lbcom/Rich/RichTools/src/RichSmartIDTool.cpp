@@ -25,7 +25,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool )
                                   const IInterface* parent )
     : Rich::ToolBase   ( type, name, parent ),
       m_photoDetPanels ( Rich::NRiches,
-                         HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) )
+                         PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL) )
 {
   // Interface
   declareInterface<ISmartIDTool>(this);
@@ -54,7 +54,7 @@ StatusCode Rich::SmartIDTool::initialize()
     for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel]
-        = getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
+        = getDet<DeRichPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Stored photodetector panel "
                 << m_photoDetPanels[rich][panel]->name()
@@ -114,43 +114,43 @@ Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
 // Returns the position of a RichSmartID cluster in global coordinates
 // on the anode pixel chip
 //=============================================================================
-StatusCode
-Rich::SmartIDTool::anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
-                                         Gaudi::XYZPoint& detectPoint ) const
-{
-  // Default return status is OK
-  StatusCode sc = StatusCode::SUCCESS;
-  // reset global coordinate to zero
-  detectPoint = Gaudi::XYZPoint(0,0,0);
-  // does cluster have any hits !!
-  if ( !cluster.smartIDs().empty() )
-  {
-    // get position for each point in cluster
-    for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-          iS != cluster.smartIDs().end(); ++iS )
-    {
-      Gaudi::XYZPoint tmpP;
-      sc = sc && anodeGlobalPosition(*iS,tmpP);
-      detectPoint += (Gaudi::XYZVector)tmpP;
-    }
-    // normalise
-    detectPoint /= (double)cluster.size();
-  }
-  return sc;
-}
+// StatusCode
+// Rich::SmartIDTool::anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
+//                                          Gaudi::XYZPoint& detectPoint ) const
+// {
+//   // Default return status is OK
+//   StatusCode sc = StatusCode::SUCCESS;
+//   // reset global coordinate to zero
+//   detectPoint = Gaudi::XYZPoint(0,0,0);
+//   // does cluster have any hits !!
+//   if ( !cluster.smartIDs().empty() )
+//   {
+//     // get position for each point in cluster
+//     for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+//           iS != cluster.smartIDs().end(); ++iS )
+//     {
+//       Gaudi::XYZPoint tmpP;
+//       sc = sc && anodeGlobalPosition(*iS,tmpP);
+//       detectPoint += (Gaudi::XYZVector)tmpP;
+//     }
+//     // normalise
+//     detectPoint /= (double)cluster.size();
+//   }
+//   return sc;
+// }
 
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
 // on the anode pixel chip
 //=============================================================================
-StatusCode
-Rich::SmartIDTool::anodeGlobalPosition ( const LHCb::RichSmartID smartID,
-                                         Gaudi::XYZPoint& detectPoint ) const
-{
-  // Should maybe update detPointOnAnode method to return its own StatusCode ?
-  detectPoint = m_photoDetPanels[smartID.rich()][smartID.panel()]->detPointOnAnode(smartID);
-  return StatusCode::SUCCESS;
-}
+// StatusCode
+// Rich::SmartIDTool::anodeGlobalPosition ( const LHCb::RichSmartID smartID,
+//                                          Gaudi::XYZPoint& detectPoint ) const
+// {
+//   // Should maybe update detPointOnAnode method to return its own StatusCode ?
+//   detectPoint = m_photoDetPanels[smartID.rich()][smartID.panel()]->detPointOnAnode(smartID);
+//   return StatusCode::SUCCESS;
+// }
 
 //=============================================================================
 // Returns the global position of a local coordinate, in the given RICH panel
@@ -167,11 +167,11 @@ Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
 StatusCode
-Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid,
-                                 Gaudi::XYZPoint& hpdPoint ) const
+Rich::SmartIDTool::pdPosition ( const LHCb::RichSmartID pdid,
+                                Gaudi::XYZPoint& pdPoint ) const
 {
-  // Create temporary RichSmartIDs for two corners of the HPD wafer
-  LHCb::RichSmartID id1(hpdid), id0(hpdid);
+  // Create temporary RichSmartIDs for two corners of the PD wafer
+  LHCb::RichSmartID id1(pdid), id0(pdid);
   id0.setPixelRow(10);
   id0.setPixelCol(10);
   id1.setPixelRow(21);
@@ -181,10 +181,10 @@ Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid,
   Gaudi::XYZPoint a,b;
   const StatusCode sc = globalPosition(id0,a) && globalPosition(id1,b);
 
-  // return average position (i.e. HPD centre)
-  hpdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()),
-                              0.5*(a.y()+b.y()),
-                              0.5*(a.z()+b.z()) );
+  // return average position (i.e. PD centre)
+  pdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()),
+                             0.5*(a.y()+b.y()),
+                             0.5*(a.z()+b.z()) );
 
   return sc;
 }
@@ -278,7 +278,7 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
   if ( m_readoutChannels.empty() )
   {
 
-    // Reserve size ( RICH1 + RICH2 )
+    // Reserve rough size ( RICH1 + RICH2 )
     m_readoutChannels.reserve( 400000 );
 
     StatusCode sc = StatusCode::SUCCESS;
@@ -293,7 +293,7 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
     sc = sc && m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
-    if ( sc.isFailure() ) Exception( "Problem reading readout channel lists from DeRichHPDPanels" );
+    if ( sc.isFailure() ) Exception( "Problem reading readout channel lists from DeRichPDPanels" );
 
     // Sort the list
     SmartIDSorter::sortByRegion(m_readoutChannels);
@@ -333,7 +333,7 @@ Rich::SmartIDTool::pdPanelName( const Rich::DetectorType rich,
   
   const std::vector< std::string > & locs
     = deRich[rich]->paramVect<std::string>("HPDPanelDetElemLocations");
-  if ( locs.size() != Rich::NHPDPanelsPerRICH )
+  if ( locs.size() != Rich::NPDPanelsPerRICH )
   {
     Exception( "Wrong number of HPDPanelDetElemLocations" );
   }

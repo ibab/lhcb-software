@@ -33,7 +33,7 @@ Rich::RayTracing::RayTracing( const std::string& type,
     m_mirrorSegFinder         ( NULL                ),
     m_rich                    ( Rich::NRiches, NULL ),
     m_photoDetPanels          ( Rich::NRiches,
-                                HPDPanelsPerRich(Rich::NHPDPanelsPerRICH,NULL) ),
+                                PDPanelsPerRich(Rich::NPDPanelsPerRICH,NULL) ),
     m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
     m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
     m_secMirrorSegRows        ( Rich::NRiches, 0    ),
@@ -78,7 +78,7 @@ StatusCode Rich::RayTracing::initialize()
     for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] =
-        getDet<DeRichHPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
+        getDet<DeRichPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Stored photodetector panel " << m_photoDetPanels[rich][panel]->name() << endmsg;
     }

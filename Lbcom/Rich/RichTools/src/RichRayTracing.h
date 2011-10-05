@@ -37,7 +37,7 @@
 // RichDet
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSphMirror.h"
-#include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichPDPanel.h"
 #include "RichDet/Rich1DTabProperty.h"
 #include "RichDet/DeRichBeamPipe.h"
 
@@ -204,12 +204,12 @@ namespace Rich
     std::vector< const DeRich* > m_rich;
 
     /// photodetector panels per rich
-    typedef std::vector<const DeRichHPDPanel*> HPDPanelsPerRich;
+    typedef std::vector<const DeRichPDPanel*> PDPanelsPerRich;
     /// typedef for photodetector for each rich
-    typedef std::vector<HPDPanelsPerRich> RichHPDPanels;
+    typedef std::vector<PDPanelsPerRich> RichPDPanels;
 
     /// photodetector for each rich
-    RichHPDPanels m_photoDetPanels;
+    RichPDPanels m_photoDetPanels;
 
     std::vector<int> m_sphMirrorSegRows; ///< Number of primary mirror rows in each RICH
     std::vector<int> m_sphMirrorSegCols; ///< Number of primary mirror columns in each RICH
