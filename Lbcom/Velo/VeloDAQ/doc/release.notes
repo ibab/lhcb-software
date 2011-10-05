@@ -3,6 +3,11 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2011-10-05 - Kurt Rinnert
+ - Changed ZS decoder so it maintains event specific information in
+   DeVeloSensor::Tell1EventInfo (requested by HLT). No change in behaviour as
+   no client code for the new feature exists yet.
+
 ! 2011-09-29 - Kurt Rinnert
  - merged source coode for less-than predicate of internal and standard VELO
    cluster pointers.

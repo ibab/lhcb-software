@@ -98,6 +98,15 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::execute() {
 
+  // reset TELL1 event info on all sensors to 'bad'.
+  // it is necessary to do this here to handle the case of unknown source
+  // IDs correctly.
+  for ( std::vector<DeVeloSensor*>::const_iterator si=m_velo->sensorsBegin();
+      si != m_velo->sensorsEnd();
+      ++si ) {
+    (*si)->tell1EventInfo().reset();
+  }
+
   // fetch raw bank in any case
   if (!exist<LHCb::RawEvent>(m_rawEventLocation) ) {
     if( msgLevel( MSG::DEBUG ) )
@@ -179,15 +188,25 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
       VeloDAQ::decodeRawBankToLiteClusters(rawBank,sensor,
           m_assumeChipChannelsInRawBuffer,
           fastCont, byteCount, m_ignoreErrors);
-    if( nClusters == -1 && !m_ignoreErrors ) {
-      if ( msgLevel( MSG::DEBUG ) ) debug() << "Header error bit set in raw bank source ID " 
-        << rb->sourceID() << endmsg;
-      failEvent(format("Header error bit set in the VELO, bank source ID %i",
-            rb->sourceID()),
-          "HeaderErrorVeloBuffer",HeaderErrorBit,false);
-      // no clusters produced so continue
-      continue;
+
+    // reset the TELL1 event info in case the flags for this sensor were cleared in
+    // a another decoder branch
+    sensor->tell1EventInfo().reset();
+
+    if( nClusters == -1 ) {
+      if ( !m_ignoreErrors ) {
+        if ( msgLevel( MSG::DEBUG ) ) debug() << "Header error bit set in raw bank source ID " 
+          << rb->sourceID() << endmsg;
+        failEvent(format("Header error bit set in the VELO, bank source ID %i",
+              rb->sourceID()),
+            "HeaderErrorVeloBuffer",HeaderErrorBit,false);
+        // no clusters produced so continue
+        continue;
+      }
+    } else { // there was no error, update TELL1 event info
+      sensor->tell1EventInfo().setHasError(false);
     }
+
     if (rb->size() != byteCount) {      
       if ( msgLevel( MSG::DEBUG ) ) debug() << "Byte count mismatch between RawBank size and decoded bytes." 
         << " RawBank: " << rb->size() 
@@ -202,6 +221,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloLiteClusters(const std::vector<LHCb:
           fastCont->back().channelID().sensor() == badSensor ) {
         fastCont->pop_back(); // actually the only deletion method of FastClusterContainer!
       }
+      // a wrong byte count is also considered an error
+      sensor->tell1EventInfo().setHasError(true);
+    } else { // we got clusters decoded from this bank, update TELL1 event info
+      sensor->tell1EventInfo().setWasDecoded(true); 
     }
   }
   if( fastCont->size() > m_maxVeloClusters){
@@ -254,6 +277,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       continue;
     }
 
+    // reset the TELL1 event info in case the flags for this sensor were cleared in
+    // a another decoder branch
+    sensor->tell1EventInfo().reset();
+
     unsigned int bankVersion = m_forcedBankVersion ? m_forcedBankVersion : rb->version();
 
     int nClusters = 0;
@@ -282,15 +309,21 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
             "UnsupportedBufferVersion",UnsupportedBufferVersion,false);
         continue;
     }
-    if( nClusters == -1 && !m_ignoreErrors){
-      debug() << "Header error bit set in raw bank source ID " 
-        << rb->sourceID() << endmsg;
-      failEvent(format("Header error bit set in the VELO, bank source ID %i",
-            rb->sourceID()),
-          "HeaderErrorVeloBuffer",HeaderErrorBit,false);
-      // no clusters produced so continue
-      continue;
+
+    if( nClusters == -1 ) {
+      if ( !m_ignoreErrors ){
+        debug() << "Header error bit set in raw bank source ID " 
+          << rb->sourceID() << endmsg;
+        failEvent(format("Header error bit set in the VELO, bank source ID %i",
+              rb->sourceID()),
+            "HeaderErrorVeloBuffer",HeaderErrorBit,false);
+        // no clusters produced so continue
+        continue;
+      }
+    } else { // there was no error, update TELL1 event info
+      sensor->tell1EventInfo().setHasError(false);
     }
+    
     if (rb->size() != byteCount) {      
       if ( msgLevel( MSG::DEBUG ) ) debug() << "Byte count mismatch between RawBank size and decoded bytes." 
         << " RawBank: " << rb->size() 
@@ -305,6 +338,10 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       while( iClus != clusters->end() && 
           (*iClus)->channelID().sensor() != badSensor )  ++iClus;
       clusters->erase(iClus,clusters->end());
+      // a wrong byte count is also considered an error
+      sensor->tell1EventInfo().setHasError(true);
+    } else { // we got clusters decoded from this bank, update TELL1 event info
+      sensor->tell1EventInfo().setWasDecoded(true); 
     }
 
   }
