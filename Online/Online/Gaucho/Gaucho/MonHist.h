@@ -41,6 +41,9 @@ private:
   int m_ny;           /* Number of y bins */
   double m_ymin;     /* Minimum y */
   double m_ymax;     /* Maximum y */
+  int m_nz;           /* Number of y bins */
+  double m_zmin;     /* Minimum y */
+  double m_zmax;     /* Maximum y */
   int m_addoff;
 
   double *m_hentries;
@@ -50,12 +53,15 @@ private:
   int m_blocksize;
   TAxis *m_Xaxis;
   TAxis *m_Yaxis;
+  TAxis *m_Zaxis;
 //  char **m_Xlabels;
 //  char **m_Ylabels;
   std::vector<std::string> m_Xlabels;
   std::vector<std::string> m_Ylabels;
+  std::vector<std::string> m_Zlabels;
   int m_xlablen;
   int m_ylablen;
+  int m_zlablen;
   IMessageSvc* m_msgsvc;
   void _clear();
   void setup(IMessageSvc* msgSvc, const std::string& source, const AIDA::IBaseHistogram *aidahist);

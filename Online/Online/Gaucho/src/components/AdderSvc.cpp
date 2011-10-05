@@ -69,6 +69,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_pMonitorSvc = 0;
   m_phistsvc    = 0;
   m_arrhist     = 0;
+  m_MyServiceName = name;
 }
 
 AdderSvc::~AdderSvc()
@@ -229,6 +230,7 @@ StatusCode AdderSvc::start()
   m_adder->m_histo = m_arrhist;
   m_adder->m_rectmo = m_recvtmo;
   m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
+  m_adder->m_MyServiceName = m_MyServiceName;
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
   if (m_isSaver)
@@ -256,6 +258,7 @@ StatusCode AdderSvc::start()
   m_EoRadder->m_noRPC = true;
   m_EoRadder->setIsSaver(m_isSaver);
   m_EoRadder->m_rectmo = 500*m_recvtmo;
+  m_EoRadder->m_MyServiceName = m_MyServiceName;
   m_EoRadder->Configure();
   m_AdderSys->Add(m_EoRadder);
   if (m_isSaver)

@@ -12,6 +12,7 @@
 #include "Gaucho/Utilities.h"
 #include "Gaucho/AddTimer.h"
 #include"Gaucho/BRTL_Lock.h"
+#include "dis.hxx"
 #define ADD_HISTO 1
 #define ADD_COUNTER 2
 
@@ -136,6 +137,9 @@ namespace AIDA
   class IHistogram1D;
 }
 class IGauchoMonitorSvc;
+
+class TimeoutCmd;
+
 class MonAdder
 {
 public:
@@ -155,6 +159,7 @@ public:
   std::string m_NamePrefix;
   std::string m_outsvcname;
   INServiceMap m_inputServicemap;
+  std::string m_MyServiceName;
 //  OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
@@ -173,6 +178,7 @@ public:
   ObjSerializer *m_ser;
   ObjSerializer *m_RPCser;
   std::string    m_serviceName;
+  std::string    m_cmdname;
   bool           m_expandRate;
   bool           m_IsEOR;
   bool           m_noRPC;
@@ -183,6 +189,8 @@ public:
 //  std::string m_NamePrefix;
   DimBuffBase *m_oldProf;
 public:
+  static DimServerDns *m_DimDns;
+  TimeoutCmd *m_Dimcmd;
   BRTLLock *m_lockid;
   BRTLLock m_maplock;
   bool m_dohisto;
@@ -253,5 +261,21 @@ public:
   void start();
   void stop();
   virtual void Update()=0;
+};
+
+
+class TimeoutCmd : public DimCommand
+{
+public:
+  MonAdder *m_adder;
+  TimeoutCmd(DimServerDns *dns, char *nam,MonAdder *tis): DimCommand(dns,nam,"I")
+  {
+    m_adder = tis;
+  };
+  virtual void commandHandler()
+  {
+    printf("Received timeout command Handler called... Calling timeout handler\n");
+    m_adder->TimeoutHandler();
+  }
 };
 #endif

@@ -18,7 +18,9 @@ void AddTimer::timerHandler ( void )
 //  try
 //  {
 //  printf("Timeout from Adder %s\n",m_owner->m_MyName.c_str());
-    m_owner->TimeoutHandler();
+  int arg = 1;
+  DimClient::sendCommandNB(m_owner->m_cmdname.c_str(),&arg,sizeof(arg));
+//    m_owner->TimeoutHandler();
 //  }
 //  catch(const std::exception& e)
 //  {

@@ -105,6 +105,13 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
           ndble = 2*(s->nxbin+2)*(s->nybin+2);
           break;
         }
+      case H_3DIM:
+        {
+          //2*(m_nx+2)*(m_ny+2)
+          DimHistbuff3 *s = (DimHistbuff3*)srch;
+          ndble = 2*(s->nxbin+2)*(s->nybin+2)*(s->nzbin+2);
+          break;
+        }
       case H_PROFILE:
       case H_RATE:
         {

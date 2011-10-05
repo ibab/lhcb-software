@@ -529,7 +529,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
 }
 
 void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
-  std::string> &idList, bool reset, bool save, int &, TDirectory* rootdir)
+  std::string> &idList, bool reset, bool save, int &level, TDirectory* rootdir)
 {
   MsgStream msg(msgSvc(), name());
   std::vector<IRegistry*> leaves;
@@ -637,17 +637,17 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<
       }
 
       // not an histogram: must be a directory: create corresponding TDirectory
-//      dyn_string *rootDirs = Strsplit((char*) id.c_str(), (char*) "/");
-//      TDirectory* newdir = rootdir;
-//      if (NULL != newdir)
-//      {
-//        newdir = rootdir->mkdir(rootDirs->at(rootDirs->size() - 1).c_str());
-//        newdir->cd();
-//      }
-//      int newLevel = level + 1;
-//      if (newLevel >= 10)
-//        continue;
-//      histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
+      dyn_string *rootDirs = Strsplit((char*) id.c_str(), (char*) "/");
+      TDirectory* newdir = rootdir;
+      if (NULL != newdir)
+      {
+        newdir = rootdir->mkdir(rootDirs->at(rootDirs->size() - 1).c_str());
+        newdir->cd();
+      }
+      int newLevel = level + 1;
+      if (newLevel >= 10)
+        continue;
+      histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
     }
   }
   catch (const std::exception &ex)

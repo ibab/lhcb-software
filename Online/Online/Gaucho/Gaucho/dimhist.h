@@ -69,5 +69,14 @@ public:
   int ylablen;
   int ylaboff;
 };
+class DimHistbuff3 : public DimHistbuff2
+{
+public:
+  int nzbin;
+  double zmin;
+  double zmax;
+  int zlablen;
+  int zlaboff;
+};
 
 #endif

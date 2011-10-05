@@ -56,5 +56,6 @@ private:
   bool m_isEOR;
   bool m_started;
   int  m_SaveInterval; //in seconds
+  std::string m_MyServiceName;
 };
 #endif // ONLINE_GAUCHO_ADDERSVC_H

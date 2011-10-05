@@ -3,6 +3,7 @@
 #include "TH1D.h"
 #include "TProfile.h"
 #include "TH2D.h"
+#include "TH3D.h"
 #include "TPad.h"
 #include "TCanvas.h"
 TCanvas *canv;
@@ -47,6 +48,11 @@ void CycleFn(void * ,void *,int , MonMap *hm, MonAdder *)
           stype = (char*)"H_2DIM";
           break;
         }
+        case H_3DIM:
+        {
+          stype = (char*)"H_3DIM";
+          break;
+        }
         case C_STATENT:
         {
           stype = (char*)"C_STATENT";
@@ -83,6 +89,14 @@ void CycleFn(void * ,void *,int , MonMap *hm, MonAdder *)
           DimHistbuff2 *p=(DimHistbuff2*)i->second;
           printf("\t\t%s %s. Dimension %d #x-bins %d #y-bins %d Nentries %lli\n",stype,nam,p->dim,p->nxbin,p->nybin,(long long)p->nentries);
           TH2D *r=(TH2D *)ro;
+          if (draw) r->Draw();
+          break;
+        }
+        case H_3DIM:
+        {
+          DimHistbuff3 *p=(DimHistbuff3*)i->second;
+          printf("\t\t%s %s. Dimension %d #x-bins %d #y-bins %d Nentries %lli\n",stype,nam,p->dim,p->nxbin,p->nybin,(long long)p->nentries);
+          TH3D *r=(TH3D *)ro;
           if (draw) r->Draw();
           break;
         }

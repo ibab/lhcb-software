@@ -3,40 +3,96 @@
 #include "$INFOOPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc",
+					"AdderSvc/AdderSvcSF",
 					"AdderSvc/GauchoHistAdder",
-					"AdderSvc/GauchoCountAdder"
+					"AdderSvc/GauchoCountAdder",
+					"AdderSvc/MEPrxHistAdder",
+					"AdderSvc/MEPrxCountAdder",
+					"AdderSvc/EVTProdCountAdder",
+					"AdderSvc/DiskWRCountAdder"
 					};
+//ApplicationMgr.ExtSvc               += {"MemTrnd"
+//					};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
-MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
+//MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
 
 //MessageSvc.fifoPath                = "$LOGFIFO";
 //MessageSvc.LoggerOnly              = true;  // Set to false for stdout
 HistogramPersistencySvc.Warnings   = false;
 
+//MemTrnd.PartitionName              = @OnlineEnv.PartitionName;
+//MemTrnd.TrendInterval                = 30;
 
-GauchoHistAdder.MyName             = "<part>_<node>_me_00";
-GauchoHistAdder.PartitionName      = "LHCb";
+AdderSvc.MyName                    = "<part>_<node>_Adder_00";
+AdderSvc.PartitionName             = @OnlineEnv.PartitionName;
+AdderSvc.TaskPattern               = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+AdderSvc.ServicePattern            = "MON_<part>_hlt[a-z][0-9][0-9]_Adder/Histos/";
+AdderSvc.AdderClass                = "hists";
+AdderSvc.InDNS                     = "hlt01";
+
+AdderSvcSF.MyName                  = "<part>_<node>_AdderSF_00";
+AdderSvcSF.PartitionName           = @OnlineEnv.PartitionName;
+AdderSvcSF.TaskPattern             = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+AdderSvcSF.ServicePattern          = "MON_hlt[a-z][0-9][0-9]_Adder_01/Histos/";
+AdderSvcSF.AdderClass              = "hists";
+AdderSvcSF.InDNS                   = "hlt01";
+
+GauchoHistAdder.MyName             = "<part>_<node>_GauchoJob_00";
+GauchoHistAdder.PartitionName      = @OnlineEnv.PartitionName;
 GauchoHistAdder.TaskPattern        = "HLT[a-z][0-9][0-9]_Adder_(.*)";
 GauchoHistAdder.ServicePattern     = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Histos/";
 GauchoHistAdder.AdderClass         = "hists";
 GauchoHistAdder.InDNS              = "hlt01";
-//GauchoHistAdder.ExpandRate         = true;
+GauchoHistAdder.ExpandRate         = true;
 GauchoHistAdder.SaveSetTaskName    = "GauchoJob";
-//GauchoHistAdder.IsSaver            = true;
-//GauchoHistAdder.SaveRootDir        = "/hist/Savesets";
-//GauchoHistAdder.SaveInterval       = 900; // Save snapshot every 2 minutes
+GauchoHistAdder.IsSaver            = false;
+GauchoHistAdder.SaveRootDir        = "/hist/Savesets";
+GauchoHistAdder.SaveInterval       = 900; // Save snapshot every 2 minutes
 
-GauchoCountAdder.MyName            = "<part>_<node>_me_00";
+GauchoCountAdder.MyName            = "<part>_<node>_GauchoJob_00";
 GauchoCountAdder.PartitionName     = @OnlineEnv.PartitionName;
 GauchoCountAdder.TaskPattern       = "HLT[a-z][0-9][0-9]_Adder_(.*)";
 GauchoCountAdder.ServicePattern    = "MON_<part>_hlt[a-z][0-9][0-9]_GauchoJob/Counter/";
 GauchoCountAdder.AdderClass        = "Counter";
 GauchoCountAdder.InDNS             = "hlt01";
 
+MEPrxHistAdder.MyName              = "<part>_<node>_MEPrx_00";
+MEPrxHistAdder.PartitionName       = @OnlineEnv.PartitionName;
+MEPrxHistAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+MEPrxHistAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_MEPrx/Histos/";
+MEPrxHistAdder.AdderClass          = "hists";
+MEPrxHistAdder.InDNS               = "hlt01";
+
+MEPrxCountAdder.MyName              = "<part>_<node>_MEPrx_00";
+MEPrxCountAdder.PartitionName       = @OnlineEnv.PartitionName;
+MEPrxCountAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+MEPrxCountAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_MEPrx/Counter/";
+MEPrxCountAdder.AdderClass          = "Counter";
+MEPrxCountAdder.InDNS               = "hlt01";
+
+DiskWRCountAdder.MyName              = "<part>_<node>_DiskWR_00";
+DiskWRCountAdder.PartitionName       = @OnlineEnv.PartitionName;
+DiskWRCountAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+DiskWRCountAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_DiskWR/Counter/";
+DiskWRCountAdder.AdderClass          = "Counter";
+DiskWRCountAdder.InDNS               = "hlt01";
+
+EVTProdCountAdder.MyName              = "<part>_<node>_EVTProd_00";
+EVTProdCountAdder.PartitionName       = @OnlineEnv.PartitionName;
+EVTProdCountAdder.TaskPattern         = "HLT[a-z][0-9][0-9]_Adder_(.*)";
+EVTProdCountAdder.ServicePattern      = "MON_<part>_hlt[a-z][0-9][0-9]_EVTProd/Counter/";
+EVTProdCountAdder.AdderClass          = "Counter";
+EVTProdCountAdder.InDNS               = "hlt01";
+
+MEPrxCountAdder.ReceiveTimeout     = 4;
+EVTProdCountAdder.ReceiveTimeout   = 12;
+DiskWRCountAdder.ReceiveTimeout   = 12;
 GauchoHistAdder.ReceiveTimeout     = 12;
 GauchoCountAdder.ReceiveTimeout    = 12;
+MEPrxHistAdder.ReceiveTimeout      = 12;
 

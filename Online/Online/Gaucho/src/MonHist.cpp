@@ -14,6 +14,7 @@
 
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogram3D.h"
 #include "AIDA/IProfile1D.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include "Gaucho/dimhist.h"
@@ -228,6 +229,13 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
       rhist->SetName(source.c_str());
       m_rootobj = rhist;
     }
+  else if( 0 != dynamic_cast<const AIDA::IHistogram3D * >(aidahist) )
+    {
+      m_type = H_3DIM;
+      MyTH3D *rhist = (MyTH3D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IHistogram3D *>(dynamic_cast<const AIDA::IHistogram3D* >(aidahist)));
+      rhist->SetName(source.c_str());
+      m_rootobj = rhist;
+    }
   else
     {
       msg << MSG::ERROR << "Unknown histogram type. Source " << source << endreq;
@@ -270,9 +278,11 @@ void MonHist::resetup(void)
     case H_1DIM:
     case H_2DIM:
     case H_PROFILE:
+    case H_3DIM:
     {
       m_Xlabels.clear();
       m_Ylabels.clear();
+      m_Zlabels.clear();
 //      deallocPtr(m_Xlabels);
 //      if (m_Xlabels != 0)
 //      {
@@ -287,6 +297,7 @@ void MonHist::resetup(void)
 //      }
       m_xlablen = 0;
       m_ylablen = 0;
+      m_zlablen = 0;
       setup(m_msgsvc);
     }
     case H_RATE:
@@ -367,6 +378,27 @@ void MonHist::setup(IMessageSvc* msgs)
       m_hdrlen = sizeof(DimHistbuff2)+titlen()+1+namelength()+1;
       break;
     }
+    case H_3DIM:
+    {
+      m_type = H_3DIM;
+      MyTH2D *rhist = (MyTH2D*)m_rootobj;
+      m_hentries = rhist->GetEntryArr();
+      m_hsumw2 = rhist->GetSumw2Arr();
+      m_rootobj = rhist;
+      m_name = rhist->GetName();
+      m_namelen = m_name.length();
+      m_title = rhist->GetTitle();
+      m_bookopts = std::string(rhist->GetOption());
+//      printf("+++++++++++++++++++++++++++++++2Dim Histogram. Name %s, Title %s \n",m_name, m_title);
+      m_title = m_title+MonHist::optsep+m_bookopts;
+      m_titlen = m_title.length();
+      m_Xaxis =  rhist->GetXaxis();
+      m_Yaxis = rhist->GetYaxis();
+      m_Zaxis = rhist->GetZaxis();
+      m_blocksize = rhist->fN*sizeof(double);
+      m_hdrlen = sizeof(DimHistbuff3)+titlen()+1+namelength()+1;
+      break;
+    }
     default:
     {
       msg << MSG::ERROR << "MonHist Setup: Unknown histogram type" << endreq;
@@ -381,6 +413,9 @@ void MonHist::setup(IMessageSvc* msgs)
   m_xlablen = 0;
   m_Xlabels.clear();
   m_Ylabels.clear();
+  m_nz = 0;
+  m_zlablen = 0;
+  m_Zlabels.clear();
   switch (m_type)
   {
     case H_1DIM:
@@ -409,6 +444,24 @@ void MonHist::setup(IMessageSvc* msgs)
       m_ylablen = GetBinLabels(m_Yaxis,m_Ylabels);
       m_hdrlen += m_xlablen;
       m_hdrlen += m_ylablen;
+      break;
+    }
+    case H_3DIM:
+    {
+      m_ny = m_Yaxis->GetNbins();
+      m_ymin = m_Yaxis->GetXmin();
+      m_ymax = m_Yaxis->GetXmax();
+      m_nz = m_Zaxis->GetNbins();
+      m_zmin = m_Zaxis->GetXmin();
+      m_zmax = m_Zaxis->GetXmax();
+      m_hdrlen = sizeof(DimHistbuff3)+titlen()+1+namelength()+1;
+      m_buffersize = 2*m_blocksize;
+      m_xlablen = GetBinLabels(m_Xaxis,m_Xlabels);
+      m_ylablen = GetBinLabels(m_Yaxis,m_Ylabels);
+      m_zlablen = GetBinLabels(m_Zaxis,m_Zlabels);
+      m_hdrlen += m_xlablen;
+      m_hdrlen += m_ylablen;
+      m_hdrlen += m_zlablen;
       break;
     }
     default:
@@ -519,35 +572,41 @@ void *MonHist::cpytitle(void *ptr)  const
 
 void MonHist::clear()
 {
-  if (m_rootobj == 0) return;
-  switch(m_type)
-    {
+  if (m_rootobj == 0)
+    return;
+  switch (m_type)
+  {
     case H_1DIM:
-      {
-	((TH1D*)m_rootobj)->Reset();
-	break;
-      }
+    {
+      ((TH1D*) m_rootobj)->Reset();
+      break;
+    }
     case H_2DIM:
-      {
-	((TH2D*)m_rootobj)->Reset();
-	break;
-      }
+    {
+      ((TH2D*) m_rootobj)->Reset();
+      break;
+    }
+    case H_3DIM:
+    {
+      ((TH3D*) m_rootobj)->Reset();
+      break;
+    }
     case H_PROFILE:
     case H_RATE:
-      {
-	((TProfile*) m_rootobj)->Reset();
-	break;
-      }
-    case C_STATENT:
-      {
-	((StatEntity*)m_rootobj)->reset();
-	break;
-      }
-    default:
-      {
-	break;
-      }
+    {
+      ((TProfile*) m_rootobj)->Reset();
+      break;
     }
+    case C_STATENT:
+    {
+      ((StatEntity*) m_rootobj)->reset();
+      break;
+    }
+    default:
+    {
+      break;
+    }
+  }
 }
 
 int MonHist::serialize(void* &ptr)
@@ -604,6 +663,7 @@ int MonHist::serialize(void* &ptr)
 
   DimHistbuff1 *pp = (DimHistbuff1*)ptr;
   DimHistbuff2 *pp2 = (DimHistbuff2*)ptr;
+  DimHistbuff3 *pp3 = (DimHistbuff3*)ptr;
   pp->nxbin = m_nx;
   pp->xmin  = m_xmin;
   pp->xmax  = m_xmax;
@@ -622,11 +682,37 @@ int MonHist::serialize(void* &ptr)
   char *nam=0;
   char *xtits=0;
   char *ytits=0;
+  char *ztits=0;
   double *ntries=0;
   double *errp=0;
 //  double *sumbin;
   switch(m_type)
   {
+    case H_3DIM:
+    {
+      pp->nameoff = sizeof(DimHistbuff2);
+      pp->dim = 3;
+      pp->titoff  = pp->nameoff+namelength();
+      pp->xlaboff = pp->titoff+pp->titlen;
+      nam = (char*)AddPtr(pp,pp->nameoff);
+      tit = (char*)AddPtr(pp,pp->titoff);
+      ntries = (double*)AddPtr(ptr,pp->dataoff);
+      errp  = (double*)AddPtr(ntries,m_blocksize);
+      xtits = (char*)AddPtr(pp,pp->xlaboff);
+      pp2->nybin = m_ny;
+      pp2->ymin  = m_ymin;
+      pp2->ymax  = m_ymax;
+      pp2->ylablen = m_ylablen;
+      pp2->ylaboff = pp->xlaboff+pp2->xlablen;
+      ytits = (char*)AddPtr(pp2,pp2->ylaboff);
+      pp3->nzbin = m_nz;
+      pp3->zmin  = m_zmin;
+      pp3->zmax  = m_zmax;
+      pp3->zlablen = m_zlablen;
+      pp3->zlaboff = pp2->ylaboff+pp2->ylablen;
+      ztits = (char*)AddPtr(pp3,pp3->zlaboff);
+      break;
+    }
     case H_2DIM:
     {
       pp->nameoff = sizeof(DimHistbuff2);
@@ -696,6 +782,17 @@ int MonHist::serialize(void* &ptr)
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
       cpyBinLabels(ytits,m_Ylabels,m_ny);
+      status  = 0;
+      break;
+    }
+    case H_3DIM:
+    {
+      cpyBinLabels(xtits,m_Xlabels,m_nx);
+      pp->nentries = ((TH3D*)m_rootobj)->GetEntries();
+      memcpy(ntries,m_hentries,m_blocksize);
+      memcpy(errp,m_hsumw2,m_blocksize);
+      cpyBinLabels(ytits,m_Ylabels,m_ny);
+      cpyBinLabels(ztits,m_Zlabels,m_nz);
       status  = 0;
       break;
     }
@@ -779,6 +876,11 @@ void MonHist::List()
     case H_2DIM:
     {
       typ="H_2DIM";
+      break;
+    }
+    case H_3DIM:
+    {
+      typ="H_3DIM";
       break;
     }
     case H_PROFILE:
@@ -890,6 +992,54 @@ void *MonHist::de_serialize(void *ptr, char *nam)
       {
         char *xl = (char*)AddPtr(b,b->ylaboff);
         SetBinLabels(&h->fYaxis,xl);
+      }
+      TH1::AddDirectory(dirstat);
+      return h;
+      break;
+    }
+    case  H_3DIM:
+    {
+      DimHistbuff3 *b=(DimHistbuff3*)ptr;
+      char *tit = (char*)AddPtr(b,b->titoff);
+//      if (m_rootdeser != 0)
+//      {
+//        delete m_rootdeser;
+//        m_rootdeser = 0;
+//      }
+      std::string titopt = tit;
+      std::string bopt;
+      size_t seppos;
+      seppos = titopt.find(MonHist::optsep);
+      if (seppos != std::string::npos)
+      {
+        bopt = titopt.substr(seppos+MonHist::optsep.length());
+        titopt.erase(seppos);
+      }
+      MyTH3D *h = (MyTH3D*)new TH3D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax,b->nzbin,b->zmin,b->zmax);
+//      this->m_rootdeser  = h;
+      mhentries = h->GetEntryArr();
+      mhsumw2 = h->GetSumw2Arr();
+//      m_hsumw = h->GetSumwArr();
+      h->SetEntries( b->nentries);
+      double *ents = (double*)AddPtr(b,b->dataoff);
+      mblocksize = (b->nxbin+2)*(b->nybin+2)*(b->nybin+2)*sizeof(double);
+      double *errp = (double*)AddPtr(ents,mblocksize);
+      memcpy(mhentries,ents,mblocksize);
+      memcpy(mhsumw2,errp,mblocksize);
+      if (b->xlablen > 0)
+      {
+        char *xl = (char*)AddPtr(b,b->xlaboff);
+        SetBinLabels(&h->fXaxis,xl);
+      }
+      if (b->ylablen > 0)
+      {
+        char *xl = (char*)AddPtr(b,b->ylaboff);
+        SetBinLabels(&h->fYaxis,xl);
+      }
+      if (b->zlablen > 0)
+      {
+        char *zl = (char*)AddPtr(b,b->zlaboff);
+        SetBinLabels(&h->fZaxis,zl);
       }
       TH1::AddDirectory(dirstat);
       return h;

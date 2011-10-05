@@ -10,6 +10,7 @@
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram1D.h"
 static int mpty;
+DimServerDns *MonAdder::m_DimDns = 0;
 typedef std::pair<std::string, MonObj*> MonPair;
 extern "C"
 {
@@ -42,6 +43,8 @@ MonAdder::MonAdder()
   m_timer = 0;
   m_disableOutput = false;
   m_histo = 0;
+//  m_DimDns = 0;
+  m_Dimcmd = 0;
 }
 
 MonAdder::~MonAdder()
@@ -62,6 +65,8 @@ MonAdder::~MonAdder()
   deletePtr(m_ser);
   deletePtr(m_RPCser);
   deletePtr(m_rpc);
+  deletePtr(m_Dimcmd);
+  deletePtr(m_DimDns);
 }
 
 void MonAdder::Configure()
@@ -72,6 +77,16 @@ void MonAdder::Configure()
     toLowerCase(nodename);
     m_name= "MON_" + m_MyName;
   }
+  m_cmdname = m_MyServiceName+"/"+m_serviceName+"/Timeout";
+//  DimClient::getDnsNode();
+  if (m_DimDns == 0)
+  {
+    std::string dnsname = DimClient::getDnsNode();
+    m_DimDns = new DimServerDns(dnsname.c_str());
+    m_DimDns->autoStartOn();
+    DimServer::start(m_DimDns, (char*)((RTL::processName()+"//").c_str()));
+  }
+  m_Dimcmd = new TimeoutCmd(m_DimDns,(char*)m_cmdname.c_str(),this);
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
@@ -370,7 +385,7 @@ void MonAdder::TimeoutHandler()
 {
   INServIter i;
 //  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
-//  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
+  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
   DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {

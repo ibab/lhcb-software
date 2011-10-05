@@ -1,6 +1,7 @@
 #include "TH1D.h"
 #include "TProfile.h"
 #include "TH2D.h"
+#include "TH3D.h"
 #include "TArrayD.h"
 class MyTH1D : public TH1D
 {
@@ -41,6 +42,13 @@ public:
 };
 
 class MyTH2D : public TH2D
+{
+public:
+  friend class MonHist;
+  double *GetEntryArr(void){return fArray;};
+  double *GetSumw2Arr(void){return GetSumw2()->GetArray();};
+};
+class MyTH3D : public TH3D
 {
 public:
   friend class MonHist;
