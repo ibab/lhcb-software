@@ -60,21 +60,21 @@ class RCSUnknownVersionError(RCSError):
         return "Cannot find version '%(version)s' for module '%(module)s'" % self.__dict__
 
 _versionFilter = None
-def setVersionFilter(filter = None):
+def setVersionFilter(filter_ = None):
     global _versionFilter
-    if filter is None:
-        # The default version filter does no check
-        filter = lambda version: version
-    _versionFilter = filter
-# Set the default version filter
+    if filter_ is None:
+        # The default version filter_ does no check
+        filter_ = lambda version: version
+    _versionFilter = filter_
+# Set the default version filter_
 setVersionFilter()
 
-def filterSortVersions(tags, filter = None):
-    if filter == None:
-        filter = _versionFilter
+def filterSortVersions(tags, filter_ = None):
+    if filter_ == None:
+        filter_ = _versionFilter
     versions = []
     for t in tags:
-        version = filter(t)
+        version = filter_(t)
         if version is not None:
             versions.append((version, t))
     versions.sort(reverse = True)
@@ -559,7 +559,7 @@ class SubversionCmd(RevisionControlSystem):
                 matches = candidates
         return matches
 
-    def _propGet(self, property, path = None):
+    def _propGet(self, property_name, path = None):
         """
         Returns the value of the requested property for the specified path.
         If no path is specified, the root of the repository is used.
@@ -570,7 +570,7 @@ class SubversionCmd(RevisionControlSystem):
             path = "/".join([self.repository, path])
         else:
             path = self.repository
-        out, _err, _retcode = _svn("propget", property, path)
+        out, _err, _retcode = _svn("propget", property_name, path)
         return out
 
     @property

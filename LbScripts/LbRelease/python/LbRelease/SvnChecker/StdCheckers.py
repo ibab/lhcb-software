@@ -20,9 +20,9 @@ class PropertyChecker(Checker):
     The constructor argument 'mandatory' (defaulted to True) tells if the
     absence of a the requested property must be considered a failure or not.
     """
-    def __init__(self, property, check = None, mandatory = True):
+    def __init__(self, property_name, check = None, mandatory = True):
         super(PropertyChecker, self).__init__()
-        self.property = property
+        self.property = property_name
         if check is None:
             self.check = lambda _: True
         else:
@@ -71,11 +71,11 @@ class ForeachPath(Checker):
     """
     Wrapper to group a PathChecker instance and makes them a Checker.
     """
-    def __init__(self, checker, filter = "", stop_if = False):
+    def __init__(self, checker, filter_ = "", stop_if = False):
         """
         Initialize the instance.
 
-        @param filter: an optional callable or a regular expression to select
+        @param filter_: an optional callable or a regular expression to select
         the files over which to iterate.
         """
         super(ForeachPath, self).__init__()
@@ -83,13 +83,13 @@ class ForeachPath(Checker):
         self.checker = checker
 
         self._regexp = None
-        if hasattr(filter, "__call__"): # callable
-            self.filter = filter
-        elif hasattr(filter, "match"): # regular expression
-            self.filter = filter.match
+        if hasattr(filter_, "__call__"): # callable
+            self.filter = filter_
+        elif hasattr(filter_, "match"): # regular expression
+            self.filter = filter_.match
         else:
-            self._regexp = filter
-            self.filter = re.compile(filter).match
+            self._regexp = filter_
+            self.filter = re.compile(filter_).match
 
         self.stop_if = stop_if
 
@@ -111,17 +111,17 @@ class ForeachPath(Checker):
             r += ", %r" % self.stop_if
         return r + ")"
 
-def AnyPath(checker, filter = ""):
+def AnyPath(checker, filter_ = ""):
     """
     Apply the PathChecker to all the paths ensuring that at least one is OK.
     """
-    return ForeachPath(checker, filter, True)
+    return ForeachPath(checker, filter_, True)
 
-def AllPaths(checker, filter = ""):
+def AllPaths(checker, filter_ = ""):
     """
     Apply the PathChecker to all the paths ensuring that all of them are OK.
     """
-    return ForeachPath(checker, filter, False)
+    return ForeachPath(checker, filter_, False)
 
 class OnPath(Checker):
     """
@@ -140,17 +140,17 @@ class TagCheckerBase(PathChecker):
     """
     Checker class for package tags.
     """
-    def __init__(self, format = None):
+    def __init__(self, formatString = None):
         """
-        @param format: optional regular expression to validate the tag directory
+        @param formatString: optional regular expression to validate the tag directory
         name (the default is the standard LHCb tag names).
         """
         super(TagCheckerBase, self).__init__()
 
-        if format is None:
+        if formatString is None:
             self._formatString = _versionFormat
         else:
-            self._formatString = format
+            self._formatString = formatString
         self.format = re.compile(self._formatString)
 
     def _validCopy(self, src, dest):
@@ -158,7 +158,7 @@ class TagCheckerBase(PathChecker):
 
     def __call__(self, txn, path):
         try:
-            id, src = txn.copied_from(path)
+            _id, src = txn.copied_from(path)
             if not src:
                 return (False, "Only copies are allowed")
             if not self._validCopy(src, path):

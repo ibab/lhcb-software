@@ -106,11 +106,11 @@ class SVNReposInfo( RepositoryInfo ):
         else:
             url = "%(_protocol)s://%(host)s%(_path)s"
         return url % self.__dict__
-    def getProperty(self, property, path=None):
+    def getProperty(self, property_name, path=None):
         """
         get the property as text
-        @param property: property name
-        @type property: string
+        @param property_name: property name
+        @type property_name: string
         @param path: relative path in the repository
         @type path: string
         """
@@ -120,6 +120,6 @@ class SVNReposInfo( RepositoryInfo ):
             path = "/".join([self.repository, path])
         else:
             path = self.__str__()
-        out, _err, _retcode = svn_command("propget", property, path)
+        out, _err, _retcode = svn_command("propget", property_name, path)
         return out
 

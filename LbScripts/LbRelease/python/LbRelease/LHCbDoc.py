@@ -346,9 +346,9 @@ class Doc(object):
             else:
                 # convert the number at the end of the last doc name
                 # to a number and increment it by 1
-                id = docs[-1].split("_")[-1].lstrip("0")
-                if id:
-                    n = int(id) + 1
+                id_n = docs[-1].split("_")[-1].lstrip("0")
+                if id_n:
+                    n = int(id_n) + 1
                 else:
                     # this happens when the latest is "DOC_000000"
                     n = 1
@@ -788,12 +788,12 @@ class Doc(object):
         else:
             dotdata = ""
         cmd = ["dot"]
-        for format in ["png", "svg", "eps", "fig"]:
-            if type(format) is tuple:
-                format, extension = format
+        for format_name in ["png", "svg", "eps", "fig"]:
+            if type(format_name) is tuple:
+                format_name, extension = format_name
             else:
-                extension = format
-            cmd.append("-T%s" % format)
+                extension = format_name
+            cmd.append("-T%s" % format_name)
             cmd.append("-o%s" %
                        os.path.join(self.path, destination, "dependencies.%s" % extension))
         dotfile = os.path.join(self.path, destination, "dependencies.dot")

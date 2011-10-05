@@ -32,11 +32,11 @@ def setLogLevelCallBack(option, opt_str, value, parser):
         log.info("setting log level to %s" % value)
         setattr(parser.values, option.dest, value)
 
-def addDefaultLogger(parser, format=None):
+def addDefaultLogger(parser, log_format=None):
     console = logging.StreamHandler()
-    if not format:
-        format = _default_log_format
-    formatter = logging.Formatter(format)
+    if not log_format:
+        log_format = _default_log_format
+    formatter = logging.Formatter(log_format)
     console.setFormatter(formatter)
     log = logging.getLogger()
     log.addHandler(console)

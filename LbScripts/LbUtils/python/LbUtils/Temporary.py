@@ -24,7 +24,7 @@ else:
 
 class TempDir(object):
     """Class to create a temporary directory."""
-    def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
+    def __init__(self, suffix="", prefix="tmp", base_dir=None, keep_var="KEEPTEMPDIR"):
         """Constructor.
 
         'keep_var' is used to define which environment variable will prevent the
@@ -33,7 +33,7 @@ class TempDir(object):
         The other arguments are the same as tempfile.mkdtemp.
         """
         self._keep_var = keep_var
-        self._name = mkdtemp(suffix, prefix, dir)
+        self._name = mkdtemp(suffix, prefix, base_dir)
 
     def getName(self):
         """Returns the name of the temporary directory"""

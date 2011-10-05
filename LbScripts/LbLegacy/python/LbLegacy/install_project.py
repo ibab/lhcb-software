@@ -770,17 +770,17 @@ def getPackVer(fname):
             binary_list.append(extra_binary)
         for b in binary_list:
             if fname.find(b) != -1:
-                bin = b
+                binary = b
                 if fname.find('_' + b) != -1 :
                     ffile = fname[:fname.find('_' + b)]
                 else :
                     ffile = fname[:fname.find('.tar.gz')]
                 break
             else:
-                bin = None
+                binary = None
                 ffile = fname[:fname.find('.tar.gz')]
     else :
-        bin = None
+        binary = None
         ffile = fname[:fname.find('.tar.gz')]
     packver = ffile.split('_')
     vers = packver[-1]
@@ -819,7 +819,7 @@ def getPackVer(fname):
             file_base.append(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES', name, vers))
         for bd in base_dir :
             file_base.append(os.path.join(bd, packver[0], name, vers))
-    return (name, vers, bin, file_path, file_base)
+    return (name, vers, binary, file_path, file_base)
 
 #
 #  get the project_list =====================================================
@@ -1580,22 +1580,22 @@ def removeProject(project, pvers):
         VERSION = PROJECT + '_' + pvers
 
         flist = os.listdir(this_html_dir)
-        for file in flist:
-            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1 :
-                os.remove(os.path.join(this_html_dir, file))
-                log.info('remove %s' % os.path.join(this_html_dir, file))
+        for filen in flist:
+            if filen.find(VERSION + '.') != -1 or filen.find(VERSION + '_') != -1 :
+                os.remove(os.path.join(this_html_dir, filen))
+                log.info('remove %s' % os.path.join(this_html_dir, filen))
 
         flist = os.listdir(this_targz_dir)
-        for file in flist:
-            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1:
-                os.remove(os.path.join(this_targz_dir, file))
-                log.info('remove %s' % os.path.join(this_targz_dir, file))
+        for filen in flist:
+            if filen.find(VERSION + '.') != -1 or filen.find(VERSION + '_') != -1:
+                os.remove(os.path.join(this_targz_dir, filen))
+                log.info('remove %s' % os.path.join(this_targz_dir, filen))
 
         flist = os.listdir(this_log_dir)
-        for file in flist:
-            if file.find(VERSION + '.') != -1 or file.find(VERSION + '_') != -1:
-                os.remove(os.path.join(this_log_dir, file))
-                log.info('remove %s' % os.path.join(this_log_dir, file))
+        for filen in flist:
+            if filen.find(VERSION + '.') != -1 or filen.find(VERSION + '_') != -1:
+                os.remove(os.path.join(this_log_dir, filen))
+                log.info('remove %s' % os.path.join(this_log_dir, filen))
 
         if os.path.isdir(os.path.join(head, PROJECT, VERSION)):
             shutil.rmtree(os.path.join(head, PROJECT, VERSION))
@@ -1606,22 +1606,22 @@ def removeProject(project, pvers):
     else:
         proj_vers = project + '_' + pvers
         flist = os.listdir(this_html_dir)
-        for file in flist:
-            if file.find(proj_vers) != -1 :
-                os.remove(os.path.join(this_html_dir, file))
-                log.info('remove %s' % os.path.join(this_html_dir, file))
+        for filen in flist:
+            if filen.find(proj_vers) != -1 :
+                os.remove(os.path.join(this_html_dir, filen))
+                log.info('remove %s' % os.path.join(this_html_dir, filen))
 
         flist = os.listdir(this_targz_dir)
-        for file in flist:
-            if file.find(proj_vers + '.') != -1 or file.find(proj_vers + '_') != -1:
-                os.remove(os.path.join(this_targz_dir, file))
-                log.info('remove %s \n' % os.path.join(this_targz_dir, file))
+        for filen in flist:
+            if filen.find(proj_vers + '.') != -1 or filen.find(proj_vers + '_') != -1:
+                os.remove(os.path.join(this_targz_dir, filen))
+                log.info('remove %s \n' % os.path.join(this_targz_dir, filen))
 
         flist = os.listdir(this_log_dir)
-        for file in flist:
-            if file.find(proj_vers + '.') != -1 or file.find(proj_vers + '_') != -1:
-                os.remove(os.path.join(this_log_dir, file))
-                log.info('remove %s' % os.path.join(this_log_dir, file))
+        for filen in flist:
+            if filen.find(proj_vers + '.') != -1 or filen.find(proj_vers + '_') != -1:
+                os.remove(os.path.join(this_log_dir, filen))
+                log.info('remove %s' % os.path.join(this_log_dir, filen))
 
         head = this_contrib_dir
         if os.path.isdir(os.path.join(head, project, pvers)):

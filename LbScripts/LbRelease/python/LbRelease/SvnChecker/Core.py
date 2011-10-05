@@ -120,9 +120,9 @@ class Transaction(object):
         k = self.change_kind(path)
         s = "%s %s" % (k, path)
         if k != "D":
-            id, src = self.copied_from(path)
+            id_n, src = self.copied_from(path)
             if src:
-                s += " (from %s:%d)" % (src, id)
+                s += " (from %s:%d)" % (src, id_n)
         return s
 
     def __str__(self):
@@ -201,9 +201,9 @@ class FakeTransaction(object):
         k = self.change_kind(path)
         s = "%s %s" % (k, path)
         if k != "D":
-            id, src = self.copied_from(path)
+            id_, src = self.copied_from(path)
             if src:
-                s += " (from %s:%d)" % (src, id)
+                s += " (from %s:%d)" % (src, id_)
         return s
 
     def __str__(self):

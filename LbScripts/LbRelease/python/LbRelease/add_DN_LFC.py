@@ -126,9 +126,9 @@ def rmDir( nickname ):
         return - 1
 
 def getUserID ( userDN ):
-    result, list = lfc.lfc_getusrmap()
+    result, u_list = lfc.lfc_getusrmap()
     if ( result == 0 ):
-        for i in list:
+        for i in u_list:
             if i.username == userDN:
                 print "userDN exists mapped to " + str( i.userid )
                 return i.userid
@@ -141,9 +141,9 @@ def getUserID ( userDN ):
         return - 1
 
 def getUserName ( userID ):
-    result, list = lfc.lfc_getusrmap()
+    result, u_list = lfc.lfc_getusrmap()
     if ( result == 0 ):
-        for i in list:
+        for i in u_list:
             if i.userid == userID:
                 print "userID exists mapped to " + str( i.username )
                 return i.username

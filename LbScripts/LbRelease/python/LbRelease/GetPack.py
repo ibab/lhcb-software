@@ -952,7 +952,7 @@ class GetPack(Script):
         impl = xml.dom.getDOMImplementation()
         doc = impl.createDocument(None, "projects", None)
 
-        def nestedAdd(dict, path, value = None):
+        def nestedAdd(dict_var, path, value = None):
             """
             Add an entry to a nested dictionary.
             """
@@ -962,12 +962,12 @@ class GetPack(Script):
                 parent, child = path.split("/", 1)
                 # ensure that we have a dictionary to pass to the recursion
                 # (needed if a hat appears as a package too)
-                if parent not in dict or not hasattr(dict[parent], "__setitem__"):
-                    dict[parent] = {}
-                nestedAdd(dict[parent], child, value)
+                if parent not in dict_var or not hasattr(dict_var[parent], "__setitem__"):
+                    dict_var[parent] = {}
+                nestedAdd(dict_var[parent], child, value)
             else:
-                if not path in dict: # do not overwrite
-                    dict[path] = value
+                if not path in dict_var: # do not overwrite
+                    dict_var[path] = value
 
         def dict2tree(parent, dct, top = True):
             """
@@ -1104,7 +1104,7 @@ class GetPack(Script):
             else:
                 print self._makeListXML(doPackages = False)
 
-    def list(self):
+    def list(self): #@ReservedAssignment
         """
         Produce the list of packages/projects/versions in plain text or XML.
         """

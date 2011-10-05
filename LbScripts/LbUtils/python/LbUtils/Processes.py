@@ -7,11 +7,11 @@ import commands # subprocess module depends on Python version
 
 class FormatedPs(object):
     __codes = ['C', 'G', 'P', 'U', 'a', 'c', 'g', 'n', 'p', 'r', 't', 'u', 'x', 'y', 'z']
-    def _test_format(self, format):
-        result = [ p for p in format if p not in self.__codes ]
-        if 'a' in format and (format[-1] != 'a' or format.count('a') != 1): result.append('a')
+    def _test_format(self, format_list):
+        result = [ p for p in format_list if p not in self.__codes ]
+        if 'a' in format_list and (format_list[-1] != 'a' or format_list.count('a') != 1): result.append('a')
         return result
-    def __init__(self, format):
+    def __init__(self, format_list):
         """ FormatedPs(listOfParameters) -> object
 
         Example: FormatedPs(['p', 'P', 'a'])
@@ -37,14 +37,14 @@ class FormatedPs(object):
         For more details check: man ps.
         """
         self.invalidFormat = False
-        if not format or self._test_format(format):
+        if not format_list or self._test_format(format_list):
             print "Invalid format."
             self.invalidFormat = True
             return
-        format = [ '%'+p for p in format ]
-        _processes = commands.getoutput('ps -eo "' + ' '.join(format) + '"').split('\n')
+        format_list = [ '%'+p for p in format_list ]
+        _processes = commands.getoutput('ps -eo "' + ' '.join(format_list) + '"').split('\n')
         self.fields = _processes[0].split()
-        self.fieldsCount = len(format)
+        self.fieldsCount = len(format_list)
         self.processes = [ [x.strip() for x in row.split(None, self.fieldsCount - 1)] for row in _processes[1:] if len(row) > 0 ]
     def values(self):
         """ returns dictionary with the following keys:
