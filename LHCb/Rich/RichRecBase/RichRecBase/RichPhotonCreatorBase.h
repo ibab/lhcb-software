@@ -34,9 +34,6 @@
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichHashMap.h"
 
-// RichDet
-#include "RichDet/DeRichHPDPanel.h"
-
 namespace Rich
 {
   namespace Rec
@@ -270,9 +267,6 @@ namespace Rich
 
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
-
-      /// Photon detector panels
-      const DeRichHPDPanel* m_hpdPanels[Rich::NRiches][Rich::NHPDPanelsPerRICH];
 
       /// Number of events processed tally
       unsigned int m_Nevts;

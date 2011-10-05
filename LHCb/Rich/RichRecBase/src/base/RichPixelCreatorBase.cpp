@@ -41,8 +41,8 @@ namespace Rich
         m_clusterHits   ( Rich::NRiches, false ),
         m_noClusterFinding ( false ),
         m_usedDets      ( Rich::NRiches, true  ),
-        m_begins        ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
-        m_ends          ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
+        m_begins        ( boost::extents[Rich::NRiches][Rich::NPDPanelsPerRICH] ),
+        m_ends          ( boost::extents[Rich::NRiches][Rich::NPDPanelsPerRICH] ),
         m_Nevts         ( 0 ),
         m_hasBeenCalled ( false ),
         m_applyPixelSuppression ( true  )
@@ -433,7 +433,7 @@ namespace Rich
         LHCb::RichRecPixels::iterator iPix = richPixels()->begin();
         Rich::DetectorType rich      = (*iPix)->detector();
         Rich::Side        panel      = (*iPix)->panel().panel();
-        LHCb::RichSmartID hpd        = (*iPix)->hpd().hpdID();
+        LHCb::RichSmartID hpd        = (*iPix)->hpd().pdID();
         Rich::DetectorType lastrich  = rich;
         Rich::Side        lastpanel  = panel;
         LHCb::RichSmartID lasthpd    = hpd;
@@ -460,9 +460,9 @@ namespace Rich
             m_richEnd[lastrich] = iPix;
             lastrich            = rich;
           }
-          if ( hpd != (*iPix)->hpd().hpdID() )
+          if ( hpd != (*iPix)->hpd().pdID() )
           {
-            hpd                 = (*iPix)->hpd().hpdID();
+            hpd                 = (*iPix)->hpd().pdID();
             m_hpdIts[hpd].first = iPix;
             m_hpdIts[lasthpd].second = iPix;
             lasthpd             = hpd;
@@ -541,9 +541,9 @@ namespace Rich
     }
 
     IPixelCreator::PixelRange
-    PixelCreatorBase::range( const LHCb::RichSmartID hpdID ) const
+    PixelCreatorBase::range( const LHCb::RichSmartID pdID ) const
     {
-      HPDItMap::iterator i = m_hpdIts.find(hpdID);
+      HPDItMap::iterator i = m_hpdIts.find(pdID);
       return ( i == m_hpdIts.end() ?
                IPixelCreator::PixelRange(richPixels()->begin()) :
                IPixelCreator::PixelRange(i->second.first,i->second.second) );

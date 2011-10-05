@@ -64,7 +64,7 @@
             
         <constructor 
                 desc     = "Constructor from segment information" 
-                initList = "m_nEmittedPhotons(), m_nDetectablePhotons(),m_nSignalPhotons(), m_nScatteredPhotons(), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(), m_geomEfficiencyScat(), m_averageCKTheta(), m_ckThetaResolution(), m_averageCKRadiusLocal(), m_avSaturatedRadiusLocal(-999), m_trackSegment(segment), m_pdPanelHitPointForcedSide(Rich::NHPDPanelsPerRICH), m_pdPanelHitPointForcedSideLocal(Rich::NHPDPanelsPerRICH), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings()" >
+                initList = "m_nEmittedPhotons(), m_nDetectablePhotons(),m_nSignalPhotons(), m_nScatteredPhotons(), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(), m_geomEfficiencyScat(), m_averageCKTheta(), m_ckThetaResolution(), m_averageCKRadiusLocal(), m_avSaturatedRadiusLocal(-999), m_trackSegment(segment), m_pdPanelHitPointForcedSide(Rich::NPDPanelsPerRICH), m_pdPanelHitPointForcedSideLocal(Rich::NPDPanelsPerRICH), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings()" >
                 <arg const="FALSE"                 name="segment" type="LHCb::RichTrackSegment*"  />
                 <arg const="FALSE" inout="BYVALUE" name="pTrk"    type="LHCb::RichRecTrack*"     />
                 <arg const="TRUE"  inout="BYVALUE" name="enBins"  type="unsigned int"      />
@@ -166,7 +166,7 @@
 
         <method 
                 const = "FALSE" 
-                desc  = "Set the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                desc  = "Set the average radius of the Cherenkov Ring on the PD detector plane, in local coordinates, for given particle ID type" 
                 name  = "setAverageCKRadiusLocal">
                 <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
                 <arg const="TRUE" inout="BYVALUE" name="radius" type="LHCb::RichRecSegment::FloatType"                />
@@ -287,7 +287,7 @@
 
         <method 
                 const = "TRUE" 
-                desc  = "Get the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                desc  = "Get the average radius of the Cherenkov Ring on the PD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
                 type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
@@ -422,7 +422,7 @@
         />
         
         <attribute 
-                desc        = "The geometrical efficiency for a given hypothesis, binned per HPD" 
+                desc        = "The geometrical efficiency for a given hypothesis, binned per PD" 
                 init        = "Rich::NParticleTypes,PDGeomEffs() " 
                 name        = "geomEfficiencyPerPD" 
                 type        = "std::vector&lt;Rich::Map&lt;LHCb::RichSmartID::KeyType,LHCb::RichRecSegment::FloatType&gt; &gt;"
@@ -518,14 +518,14 @@
         />
 
         <method 
-                desc  = "Retrieve const The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                desc  = "Retrieve const The average radius of the Cherenkov Ring on the PD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
                 const = "TRUE" 
                 type  = "const Rich::HypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_averageCKRadiusLocal.object(); </code>
         </method>
         <method 
-                desc  = "Retrieve The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                desc  = "Retrieve The average radius of the Cherenkov Ring on the PD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
                 const = "FALSE" 
                 type  = "Rich::HypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
@@ -534,7 +534,7 @@
         <attribute 
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
-                desc        = "The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                desc        = "The average radius of the Cherenkov Ring on the PD detector plane, in local coordinates, for given particle ID type" 
                 name        = "averageCKRadiusLocal" 
                 type        = "Rich::ObjPtn&lt; Rich::HypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
@@ -569,27 +569,27 @@
         />
         
         <attribute
-                desc        = "Ray traced HPD panel impact point in global coordinates" 
+                desc        = "Ray traced PD panel impact point in global coordinates" 
                 name        = "pdPanelHitPoint" 
                 type        = "Gaudi::XYZPoint"
         />
             
         <attribute 
-                desc        = "Ray traced HPD panel impact point in local coordinates" 
+                desc        = "Ray traced PD panel impact point in local coordinates" 
                 name        = "pdPanelHitPointLocal" 
                 type        = "Gaudi::XYZPoint"
         />
 
         <attribute
-                desc        = "Ray traced HPD panel impact point in global coordinates, when forced to go to a given panel side" 
+                desc        = "Ray traced PD panel impact point in global coordinates, when forced to go to a given panel side" 
                 name        = "pdPanelHitPointForcedSide" 
                 type        = "LHCb::FastAllocVector&lt; Gaudi::XYZPoint &gt;"
-                init        = "Rich::NHPDPanelsPerRICH"
+                init        = "Rich::NPDPanelsPerRICH"
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
         />
         <method 
-                desc  = "Set the Ray traced HPD panel impact point in global coordinates for the given forced side" 
+                desc  = "Set the Ray traced PD panel impact point in global coordinates for the given forced side" 
                 name  = "setPdPanelHitPoint" 
                 type  = "void" >
                 <arg const="TRUE"                 name="point" type="Gaudi::XYZPoint"/>
@@ -598,7 +598,7 @@
         </method>
         <method 
                 const = "TRUE" 
-                desc  = "Get the Ray traced HPD panel impact point in global coordinates for the given forced side" 
+                desc  = "Get the Ray traced PD panel impact point in global coordinates for the given forced side" 
                 name  = "pdPanelHitPoint" 
                 type  = "const Gaudi::XYZPoint &amp;" >
                 <arg const="TRUE" inout="BYVALUE" name="side"  type="Rich::Side"     />
@@ -606,15 +606,15 @@
         </method>
             
         <attribute 
-                desc        = "Ray traced HPD panel impact point in local coordinates, when forced to go to a given panel side" 
+                desc        = "Ray traced PD panel impact point in local coordinates, when forced to go to a given panel side" 
                 name        = "pdPanelHitPointForcedSideLocal" 
                 type        = "LHCb::FastAllocVector&lt; Gaudi::XYZPoint &gt;"
-                init        = "Rich::NHPDPanelsPerRICH"
+                init        = "Rich::NPDPanelsPerRICH"
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
         />
         <method 
-                desc  = "Set the Ray traced HPD panel impact point in local coordinates for the given forced side" 
+                desc  = "Set the Ray traced PD panel impact point in local coordinates for the given forced side" 
                 name  = "setPdPanelHitPointLocal" 
                 type  = "void" >
                 <arg const="TRUE"                 name="point" type="Gaudi::XYZPoint"/>
@@ -623,7 +623,7 @@
         </method>
         <method 
                 const = "TRUE" 
-                desc  = "Get the Ray traced HPD panel impact point in local coordinates for the given forced side" 
+                desc  = "Get the Ray traced PD panel impact point in local coordinates for the given forced side" 
                 name  = "pdPanelHitPointLocal" 
                 type  = "const Gaudi::XYZPoint &amp;" >
                 <arg const="TRUE" inout="BYVALUE" name="side"  type="Rich::Side"     />
@@ -700,14 +700,14 @@
         </method>
 
         <method 
-                desc  = "Retrieve const The Expected Rings for each mass hypothesis" 
+                desc  = "Retrieve the expected rings for each mass hypothesis with readonly acccess" 
                 name  = "hypothesisRings" 
                 const = "TRUE" 
                 type  = "const Rich::HypoData&lt;LHCb::RichRecRing*&gt; &amp;" >
                 <code> return *m_hypothesisRings.object(); </code>
         </method>
         <method 
-                desc  = "Retrieve The Expected Rings for each mass hypothesis" 
+                desc  = "Retrieve the expected rings for each mass hypothesis with read/write access" 
                 name  = "hypothesisRings" 
                 const = "FALSE" 
                 type  = "Rich::HypoData&lt;LHCb::RichRecRing*&gt; &amp;" >
@@ -722,8 +722,8 @@
         />
 
         <attribute 
-                desc        = "The RichSmartID identifier for the HPD closest to the ray traced impact point on the HPD panel" 
-                name        = "closestHPD" 
+                desc        = "The RichSmartID identifier for the PD closest to the ray traced impact point on the PD panel" 
+                name        = "closestPD" 
                 type        = "LHCb::RichSmartID"
         />  
 

@@ -4,7 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecBase v4r8 2011-09-06 =========================
+! 2011-10-05 - Chris Jones
+ - Small changes to start to make things PD neutral (HPD/MaPMT).
+
+!========================= RichRecBase v4r8 2011-09-06 =======================
 ! 2011-09-02 - Chris Jones
  - Use stable_sort instead of sort when sorting the pixels.
 

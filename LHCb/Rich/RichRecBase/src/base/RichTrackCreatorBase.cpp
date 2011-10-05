@@ -253,13 +253,13 @@ namespace Rich
       if ( OK )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "   -> Segment traces to HPD panel at " << hitPoint << endmsg;
+          verbose() << "   -> Segment traces to PD panel at " << hitPoint << endmsg;
 
         // set global hit point
         newSegment->setPdPanelHitPoint( hitPoint );
 
-        // set closest HPD
-        newSegment->setClosestHPD(photon.smartID().hpdID());
+        // set closest PD
+        newSegment->setClosestPD(photon.smartID().pdID());
 
         // Get PD panel hit point in local coordinates
         newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
@@ -281,7 +281,7 @@ namespace Rich
           newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
           newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint), Rich::left );
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "    -> Segment force traces to left/top HPD panel at " << hitPoint << endmsg;
+            verbose() << "    -> Segment force traces to left/top PD panel at " << hitPoint << endmsg;
         }
 
         // right/bottom

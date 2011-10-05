@@ -48,7 +48,6 @@ PhotonCreatorBase::PhotonCreatorBase( const std::string& type,
   if ( contextContains("HLT") )
   {
     m_nSigma = list_of (3.5) (2.8) (3.0) ;
-
   }
   else // Offline settings
   {
@@ -117,29 +116,6 @@ StatusCode PhotonCreatorBase::initialize()
   acquireTool( "RichCherenkovResolution", m_ckRes );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
-  // Get the HPD panels
-  DetectorElement* deRich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
-  DetectorElement* deRich2 = getDet<DetectorElement>(DeRichLocations::Rich2);
-
-  if ( deRich1->exists("HPDPanelDetElemLocations") )
-  {
-    const std::vector<std::string> r1PanelLoc =
-      deRich1->paramVect<std::string>("HPDPanelDetElemLocations");
-    m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(r1PanelLoc[0]);
-    m_hpdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichHPDPanel>(r1PanelLoc[1]);
-    const std::vector<std::string> r2PanelLoc =
-      deRich2->paramVect<std::string>("HPDPanelDetElemLocations");
-    m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(r2PanelLoc[0]);
-    m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(r2PanelLoc[1]);
-  }
-  else
-  {
-    m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(DeRichLocations::Rich1TopPanel);
-    m_hpdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichHPDPanel>(DeRichLocations::Rich1BottomPanel);
-    m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(DeRichLocations::Rich2LeftPanel);
-    m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(DeRichLocations::Rich2RightPanel);
-  }
-
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   incSvc()->addListener( this, IncidentType::EndEvent   );
@@ -149,7 +125,7 @@ StatusCode PhotonCreatorBase::initialize()
   {
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    if (  msgLevel(MSG::DEBUG) )
       debug() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad]
               << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad]
               << " rad : Tol. " << boost::format("%5.3f") % m_nSigma[rad] << " sigma "
@@ -158,17 +134,15 @@ StatusCode PhotonCreatorBase::initialize()
 
   m_pidTypes = m_richPartProp->particleTypes();
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
     debug() << "Maximum HPD pixels (Aero/R1Gas/R2Gas) = " << m_maxHPDOccForReco << endmsg;
-
     debug() << "Particle types considered = " << m_pidTypes << endmsg;
-    
     debug() << "Maximum number of photon candidates per event = " << m_maxPhotons << endmsg;
-
     if ( m_rejAeroPhotsIfGas )
       debug() << "Will reject Aerogel photons if pixel has a Rich1 Gas photon" << endmsg;
   }
-
+  
   return sc;
 }
 
