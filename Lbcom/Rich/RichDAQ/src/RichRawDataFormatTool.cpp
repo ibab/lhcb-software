@@ -866,7 +866,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           {
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
-                 << ingressWord.ingressID() << " HPD " << *iHPD << " is HARDWARE suppressed";
+                 << ingressWord.ingressID() << " Input " << *iHPD << " is HARDWARE suppressed";
             Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
           }
 
@@ -900,7 +900,10 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             }
             catch ( const GaudiException & expt )
             {
-              Error( expt.message() ).ignore();
+              std::ostringstream errMsg;
+              errMsg << "'" << expt.message() << "' | L1HardID=" << L1ID 
+                     << " Ingress=" << ingressWord.ingressID() << " Input=" << *iHPD;
+              Error( errMsg.str() ).ignore();
             }
             // If the HPD smartID was successfully found, continue with decoding
             if ( hpdID.isValid() )

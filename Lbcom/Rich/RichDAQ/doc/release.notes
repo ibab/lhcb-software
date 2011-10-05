@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Chris Jones
+ - Minor improvements to a few decoding error messages
+
 !========================= RichDAQ v3r33 2011-07-27 =========================
 ! 2011-07-22 - Chris Jones
  - Disable by default decoding check that compares L1 number in data for each
