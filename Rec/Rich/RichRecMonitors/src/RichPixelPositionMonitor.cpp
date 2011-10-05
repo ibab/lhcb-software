@@ -25,13 +25,13 @@ using namespace Rich::Rec::MC;
 DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor )
 
 // Standard constructor, initializes variables
-PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
-                                            ISvcLocator* pSvcLocator)
-  : HistoAlgBase     ( name, pSvcLocator ),
-    m_richRecMCTruth ( NULL ),
-    m_mcTool         ( NULL ),
-    m_idTool         ( NULL ),
-    m_richSys        ( NULL ) 
+  PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
+                                              ISvcLocator* pSvcLocator)
+    : HistoAlgBase     ( name, pSvcLocator ),
+      m_richRecMCTruth ( NULL ),
+      m_mcTool         ( NULL ),
+      m_idTool         ( NULL ),
+      m_richSys        ( NULL )
 {
   declareProperty( "N2DBins", m_n2DBins = 500 );
 }
@@ -95,11 +95,11 @@ StatusCode PixelPositionMonitor::execute()
     // local position on HPD panels
     const Gaudi::XYZPoint & lPos = pixel->localPosition();
     // position on anode in global coords
-    Gaudi::XYZPoint anodeGlobal;
-    StatusCode sc = m_idTool->anodeGlobalPosition( pixel->hpdPixelCluster(), anodeGlobal );
-    if ( sc.isFailure() ) { Warning( "Problem with getting anode global position" ); continue; }
+    //Gaudi::XYZPoint anodeGlobal;
+    //StatusCode sc = m_idTool->anodeGlobalPosition( pixel->hpdPixelCluster(), anodeGlobal );
+    //if ( sc.isFailure() ) { Warning( "Problem with getting anode global position" ); continue; }
     // position on anode in local coords
-    const Gaudi::XYZPoint anodeLocal = m_idTool->globalToPDPanel(anodeGlobal);
+    //const Gaudi::XYZPoint anodeLocal = m_idTool->globalToPDPanel(anodeGlobal);
 
     // Which detector ?
     const Rich::DetectorType rich = pixel->detector();
@@ -113,7 +113,7 @@ StatusCode PixelPositionMonitor::execute()
 
     // Centre point of HPD
     Gaudi::XYZPoint hpdGlo;
-    sc = m_idTool->hpdPosition(pdID,hpdGlo);
+    StatusCode sc = m_idTool->pdPosition(pdID,hpdGlo);
     if ( sc.isFailure() ) { Warning( "Problem with get HPD position" ); continue; }
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
 
@@ -164,8 +164,8 @@ StatusCode PixelPositionMonitor::execute()
     plot2D( lPos.x(), lPos.y(), hid(rich,"obsXYloc"), "Observed hits yVx local",
             xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
 
-    plot2D( anodeLocal.x(), anodeLocal.y(), hid(rich,"obsXYAnodeloc"), "Observed hits yVx anode local",
-            xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
+    //plot2D( anodeLocal.x(), anodeLocal.y(), hid(rich,"obsXYAnodeloc"), "Observed hits yVx anode local",
+    //        xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
 
     // global - local correlations
     profile1D( lPos.x(), gPos.x(), hid(rich,"gloLocCorrX"), "Global X versus Local X",
@@ -181,17 +181,17 @@ StatusCode PixelPositionMonitor::execute()
             order.minGlobalPixelX()-0.5,  order.maxGlobalPixelX()+0.5,
             order.minGlobalPixelY()-0.5,  order.maxGlobalPixelY()+0.5,
             order.totalNumInGlobalX()+1,  order.totalNumInGlobalY()+1 );
-    plot2D( order.globalPixelX(), 
+    plot2D( order.globalPixelX(),
             lPos.X(),
             //gPos.X(),
-            hid(rich,side,"gPixXVlocalX"), "Anode local X versus 'global' pixel X",
+            hid(rich,side,"gPixXVlocalX"), "local X versus 'global' pixel X",
             order.minGlobalPixelX()-0.5,  order.maxGlobalPixelX()+0.5,
             xMinPDLoc[rich], xMaxPDLoc[rich],
             order.totalNumInGlobalX()+1, m_n2DBins );
     plot2D( order.globalPixelY(),
             lPos.Y(),
             //gPos.Y(),
-            hid(rich,side,"gPixYVlocalY"), "Anode local Y versus 'global' pixel Y",
+            hid(rich,side,"gPixYVlocalY"), "local Y versus 'global' pixel Y",
             order.minGlobalPixelY()-0.5,  order.maxGlobalPixelY()+0.5,
             yMinPDLoc[rich], yMaxPDLoc[rich],
             order.totalNumInGlobalY()+1, m_n2DBins );
@@ -254,9 +254,9 @@ StatusCode PixelPositionMonitor::execute()
         {
           // Compare position on HPD entrance window
           const Gaudi::XYZPoint & mcPoint = mcPhot->pdIncidencePoint();
-	  plot2D( mcPoint.x(), mcPoint.y(), 
-		  hid(rich,"mcRichHitGloXvY"), "MCRichHits : Global coordinates",
-		  xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], m_n2DBins,m_n2DBins );
+          plot2D( mcPoint.x(), mcPoint.y(),
+                  hid(rich,"mcRichHitGloXvY"), "MCRichHits : Global coordinates",
+                  xMinPDGlo[rich], xMaxPDGlo[rich], yMinPDGlo[rich], yMaxPDGlo[rich], m_n2DBins,m_n2DBins );
           plot1D( gPos.X()-mcPoint.X(), hid(rich,"pdImpX"),
                   "dX global on HPD entry window : CK signal only", -30, 30 );
           plot1D( gPos.Y()-mcPoint.Y(), hid(rich,"pdImpY"),
@@ -267,9 +267,9 @@ StatusCode PixelPositionMonitor::execute()
                   "dR global on HPD entry window : CK signal only",  0,  10 );
           // MC point in local coordinates
           const Gaudi::XYZPoint mcPointLoc = m_idTool->globalToPDPanel(mcPoint);
-	  plot2D( mcPointLoc.x(), mcPointLoc.y(), 
-		  hid(rich,"mcRichHitLocXvY"), "MCRichHits : Local coordinates",
-		  xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
+          plot2D( mcPointLoc.x(), mcPointLoc.y(),
+                  hid(rich,"mcRichHitLocXvY"), "MCRichHits : Local coordinates",
+                  xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], m_n2DBins,m_n2DBins );
           plot1D( lPos.X()-mcPointLoc.X(), hid(rich,"pdImpXloc"),
                   "dX local on HPD entry window : CK signal only", -30, 30 );
           plot1D( lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYloc"),
@@ -284,9 +284,9 @@ StatusCode PixelPositionMonitor::execute()
           plot2D( lPos.Y()-hpdLoc.Y(), lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYlocVY"),
                   "dY V Y local on HPD entry window : CK signal only", -35, 35, -8, 8 );
           const double R   = std::sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) +
-					gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
+                                        gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
           const double McR = std::sqrt( gsl_pow_2(mcPointLoc.X()-hpdLoc.X()) +
-					gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
+                                        gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
           plot2D( R, R-McR, hid(rich,"pdImpRlocVR"),
                   "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
           if ( msgLevel(MSG::VERBOSE) )
@@ -297,22 +297,22 @@ StatusCode PixelPositionMonitor::execute()
                       << " : MC HPD window = " << mcPointLoc << endmsg;
           }
         }
-        // MC to rec position on HPD anode
-	const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
-	// position on anode in local coords
-	const Gaudi::XYZPoint mcPointOnAnodeLoc = m_idTool->globalToPDPanel(mcPointOnAnode);
-	plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"), 
-		"dX on HPD Anode : Global LHCb Coords", -1, 1 );
-	plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"), 
-		"dY on HPD Anode : Global LHCb Coords", -1, 1 );
-	plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"), 
-		"dZ on HPD Anode : Global LHCb Coords", -1, 1 );
-	plot1D( anodeLocal.x() - mcPointOnAnodeLoc.x(), hid(rich,side,"anodeXDiffLocal"), 
-		"dX on HPD Anode : HPD Panel local Coords", -1, 1 );
-	plot1D( anodeLocal.y() - mcPointOnAnodeLoc.y(), hid(rich,side,"anodeYDiffLocal"), 
-		"dY on HPD Anode : HPD Panel local Coords", -1, 1 );
-	plot1D( anodeLocal.z() - mcPointOnAnodeLoc.z(), hid(rich,side,"anodeZDiffLocal"), 
-		"dZ on HPD Anode : HPD Panel local Coords", -1, 1 );
+//         // MC to rec position on HPD anode
+//         const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
+//         // position on anode in local coords
+//         const Gaudi::XYZPoint mcPointOnAnodeLoc = m_idTool->globalToPDPanel(mcPointOnAnode);
+//         plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"),
+//                 "dX on HPD Anode : Global LHCb Coords", -1, 1 );
+//         plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"),
+//                 "dY on HPD Anode : Global LHCb Coords", -1, 1 );
+//         plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"),
+//                 "dZ on HPD Anode : Global LHCb Coords", -1, 1 );
+//         plot1D( anodeLocal.x() - mcPointOnAnodeLoc.x(), hid(rich,side,"anodeXDiffLocal"),
+//                 "dX on HPD Anode : HPD Panel local Coords", -1, 1 );
+//         plot1D( anodeLocal.y() - mcPointOnAnodeLoc.y(), hid(rich,side,"anodeYDiffLocal"),
+//                 "dY on HPD Anode : HPD Panel local Coords", -1, 1 );
+//         plot1D( anodeLocal.z() - mcPointOnAnodeLoc.z(), hid(rich,side,"anodeZDiffLocal"),
+//                 "dZ on HPD Anode : HPD Panel local Coords", -1, 1 );
       }
     }
 
@@ -360,7 +360,7 @@ StatusCode PixelPositionMonitor::execute()
     const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpdID);
     // Centre point of HPD in local coords
     Gaudi::XYZPoint hpdGlo;
-    const StatusCode sc = m_idTool->hpdPosition(hpdID,hpdGlo);
+    const StatusCode sc = m_idTool->pdPosition(hpdID,hpdGlo);
     if ( sc.isFailure() ) { Warning( "Problem getting HPD position" ); continue; }
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
     // create histo title
