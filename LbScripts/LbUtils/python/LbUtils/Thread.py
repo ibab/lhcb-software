@@ -1,7 +1,7 @@
 """
 Module for handy threading classes
 """
-import threading, thread, string, sys, Queue
+import threading, Queue
 
 class LockOnPrintThread(threading.Thread):
     """
@@ -33,7 +33,7 @@ class LockOnPrintThread(threading.Thread):
                     self.lock.release()
             except Queue.Empty:
                 self.done=True
-    
+
     def method(self,item):
         """
         A const method on any class variables, must return a string
