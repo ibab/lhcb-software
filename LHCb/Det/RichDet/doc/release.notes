@@ -4,6 +4,13 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-10-05 - Chris Jones
+ - Preliminary changes for future MaPMT support
+  + add new DeRichPD and DeRichPDPanel classes that the HPD specific DeRichHPD 
+    and DeRichHPDPanel classes now inherit from. provide the generic methods 
+    needed by any PD type (HPD or MaPMT). Used in the recosntruction, so it
+    becomes neutral to the PD technology.
+
 !========================= RichDet v16r6 2011-08-30 =========================
 ! 2011-08-22 - Chris Jones
  - Add DeRichRadiator::Vector to python dictionary

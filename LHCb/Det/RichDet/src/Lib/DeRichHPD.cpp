@@ -44,7 +44,7 @@ namespace
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichHPD::DeRichHPD ( const std::string & name ) :
-  DeRichBase             ( name  ),
+  DeRichPD               ( name  ),
   m_deSiSensor           ( NULL  ),
   m_pvWindow             ( NULL  ),
   m_windowSolid          ( NULL  ),
@@ -60,7 +60,6 @@ DeRichHPD::DeRichHPD ( const std::string & name ) :
   m_siliconHalfLengthY   ( 0     ),
   m_magnificationCoef1   ( 0     ),
   m_magnificationCoef2   ( 0     ),
-  m_hpdQuantumEffFunc    ( NULL  ),
   m_ownHPDQEFunc         ( false ),
   m_refactParams         ( 4, 0  ),
   m_UseHpdMagDistortions ( true  ),
@@ -102,9 +101,9 @@ void DeRichHPD::cleanUpInterps()
     delete m_magMapR[field];     m_magMapR[field]     = NULL;
     delete m_magMapPhi[field];   m_magMapPhi[field]   = NULL;
   }
-  if ( m_hpdQuantumEffFunc && m_ownHPDQEFunc )
+  if ( m_pdQuantumEffFunc && m_ownHPDQEFunc )
   {
-    delete m_hpdQuantumEffFunc; m_hpdQuantumEffFunc = NULL;
+    delete m_pdQuantumEffFunc; m_pdQuantumEffFunc = NULL;
   }
 }
 
@@ -153,9 +152,9 @@ StatusCode DeRichHPD::initialize ( )
   // register updates for the locally cached geometry information
   // Probably recalculates more than strictly needed, but easier and safer to
   // do it all, as it should be a rare thing, so CPU is not a problem.
-  updMgrSvc()->registerCondition( this, geometry(),               
+  updMgrSvc()->registerCondition( this, geometry(),
                                   &DeRichHPD::updateGeometry );
-  updMgrSvc()->registerCondition( this, m_deSiSensor->geometry(), 
+  updMgrSvc()->registerCondition( this, m_deSiSensor->geometry(),
                                   &DeRichHPD::updateGeometry );
 
   //if(m_UseRandomBField) init_mm();
@@ -238,7 +237,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
     debug() << "Updating Q.E. for HPD:" << m_number << endmsg;
 
   // If we own the function object, delete it first
-  if ( m_ownHPDQEFunc ) delete m_hpdQuantumEffFunc;
+  if ( m_ownHPDQEFunc ) delete m_pdQuantumEffFunc;
 
   // get quantum efficiency tabulated property from LHCBCOND if available
   if ( deRichSys()->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
@@ -254,7 +253,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
               << " from " << qePath+hID << endmsg;
       return StatusCode::FAILURE;
     }
-    m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
+    m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
     m_ownHPDQEFunc = true;
   }
   else // use copy number to locate QE
@@ -263,7 +262,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
     {
       // use common QE for all HPDs
       SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
-      m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
+      m_pdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
       m_ownHPDQEFunc = false;
     }
     else
@@ -278,7 +277,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
                 << " from " << hpdQuantumEffCond.path() << endmsg;
         return StatusCode::FAILURE;
       }
-      m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
+      m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
       m_ownHPDQEFunc = true;
     }
   }
@@ -422,7 +421,7 @@ StatusCode DeRichHPD::updateGeometry()
     m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winInR));
 
   // from silicon sensor to HPD including misalignment
-  m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse(); 
+  m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
 
   return StatusCode::SUCCESS;
 }
@@ -440,18 +439,18 @@ StatusCode DeRichHPD::updateDemagProperties()
   {
     // Initialise the demagnifcation
     sc = fillHpdDemagTable(field);
-    if (sc.isFailure()) 
+    if (sc.isFailure())
     {
-      fatal() << "Could not initialise demagnification table for HPD:" 
+      fatal() << "Could not initialise demagnification table for HPD:"
               << m_number <<endmsg;
       return sc;
     }
 
     // Initialise the magnification
     sc = fillHpdMagTable(field);
-    if (sc.isFailure()) 
+    if (sc.isFailure())
     {
-      fatal() << "Could not initialise magnification table for HPD:" 
+      fatal() << "Could not initialise magnification table for HPD:"
               << m_number << endmsg;
       return sc;
     }
@@ -468,12 +467,12 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 
   std::ostringstream paraLoc, detLoc;
   paraLoc << "hpd" << m_number << "_sim";
-  const std::vector<double> & coeff_sim = 
+  const std::vector<double> & coeff_sim =
     m_demagConds[field]->paramVect<double>(paraLoc.str());
   detLoc << XmlHpdDemagPath << "Sim_" << m_number;
   SmartDataPtr<TabulatedProperty> dem ( dataSvc(), detLoc.str() );
 
-  if (!dem) 
+  if (!dem)
   {
     error() << "Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
     return StatusCode::FAILURE;
@@ -518,14 +517,14 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
     double r_anode = 0, phi_anode = 0;
     const double r_cathode = m_activeRadius/totbins * (double)i;
 
-    if ( m_UseBFieldTestMap ) 
+    if ( m_UseBFieldTestMap )
     {
 
       //calculate r_anode and deltaphi from hpd test data
       r_anode   =     demag( r_cathode, BLong );
       phi_anode = Delta_Phi( r_cathode, BLong );
 
-    } 
+    }
     else
     { //evaluate distorsions from condDB parameters
 
@@ -560,7 +559,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 //=========================================================================
 StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 {
-  
+
   std::ostringstream paraLoc;
   paraLoc << "hpd" << m_number << "_rec";
   const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
@@ -587,20 +586,20 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
   const double& phi_a3 = coeff_rec.at(7);
 
   // Reconstruction from anode->cathode
-  for ( int i = 0; i < totbins+1; ++i ) 
+  for ( int i = 0; i < totbins+1; ++i )
   {
 
-    const double r_anode = 
+    const double r_anode =
       std::min(m_siliconHalfLengthX,m_siliconHalfLengthY)/totbins * (double)i;
     double r_cathode = 0, phi_cathode = 0;
 
-    if ( m_UseBFieldTestMap ) 
+    if ( m_UseBFieldTestMap )
     {
       //calculate r_cathode and deltaphi from hpd test data
       r_cathode   =        mag( r_anode, 0 );
       phi_cathode = -Delta_Phi( r_cathode, 0 );
 
-    } 
+    }
     else
     { //evaluate distorsions from condDB parameters
 
@@ -719,7 +718,7 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
   // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
   // The difference is that Ra is now positive.
   // Chose the solution with the minus sign
-  double rCathode = 
+  double rCathode =
     ( m_deMagFactor[1] > 1e-6 ?
       ((m_deMagFactor[0]-std::sqrt(gsl_pow_2(m_deMagFactor[0])-4*m_deMagFactor[1]*rAnode))/
        (2*m_deMagFactor[1])) :
@@ -840,4 +839,17 @@ StatusCode DeRichHPD::detectionPoint ( const double fracPixelCol,
     magnifyToGlobalMagnetOFF ( detectPoint, photoCathodeSide ) ;
   detectPoint = geometry()->toLocal(detectPoint);
   return sc;
+}
+
+//=========================================================================
+// Converts a RichSmartID to a point in global coordinates.
+//=========================================================================
+StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
+                                       Gaudi::XYZPoint& detectPoint,
+                                       bool photoCathodeSide ) const
+{
+  detectPoint = pointOnSilicon(smartID);
+  return ( ( m_UseHpdMagDistortions || fabs(magSvc()->signedRelativeCurrent()) > 0.5 ) ?
+           magnifyToGlobalMagnetON  ( detectPoint, photoCathodeSide ) :
+           magnifyToGlobalMagnetOFF ( detectPoint, photoCathodeSide ) );
 }

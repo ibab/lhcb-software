@@ -17,13 +17,10 @@
 #include "DetDesc/IPVolume.h"
 
 // LHCbKernel
-#include "Kernel/RichSmartID.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
 // RichDet
-#include "RichDet/DeRichBase.h"
-#include "RichDet/Rich1DTabFunc.h"
-#include "RichDet/Rich1DTabProperty.h"
+#include "RichDet/DeRichPD.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -34,6 +31,7 @@
 // External declarations
 extern const CLID CLID_DERichHPD;
 
+//=============================================================================
 /** @class DeRichHPD RichDet/DeRichHPD.h
  *
  * Class for generic info about HPDs
@@ -41,14 +39,15 @@ extern const CLID CLID_DERichHPD;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
  */
-class DeRichHPD: public DeRichBase
+//=============================================================================
+class DeRichHPD : public DeRichPD
 {
 
 public:
   /**
    * Constructor for this class
    */
-  DeRichHPD(const std::string & name = "");
+  explicit DeRichHPD( const std::string & name = "" );
 
   /**
    * Default destructor
@@ -92,7 +91,7 @@ public:
    */
   Gaudi::XYZPoint windowCentreInIdeal() const
   {
-    return ( geometry()->toGlobalMatrixNominal() * 
+    return ( geometry()->toGlobalMatrixNominal() *
              m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winInR)) );
   }
 
@@ -114,40 +113,18 @@ public:
     return geometry()->toGlobal( m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winOutR)) );
   }
 
-  /** @brief Converts a RichSmartID to a point in global coordinates.
-   *  The point can be given either on the inside of the HPD window (photocathode) if
-   *  photoCathodeSide=true or on the outside including refraction correction if
-   *  photoCathodeSide=false
-   *
-   *  @param[in]  smartID     The RichSmartID pixel channel ID
-   *  @param[out] detectPoint The position in global coordinates
-   *  @param[in]  photoCathodeSide Set to false to include refraction on HPD window
-   *  @return StatusCode indicating if the conversion was successful or not
-   *  @retval StatusCoe::SUCCESS Conversion was successful
-   *  @retval StatusCode::FAILURE Conversion failed
-   */
-  StatusCode detectionPoint ( const LHCb::RichSmartID smartID,
-                              Gaudi::XYZPoint& detectPoint,
-                              bool photoCathodeSide = false ) const;
+  // @brief Converts a RichSmartID to a point in global coordinates.
+  virtual StatusCode detectionPoint ( const LHCb::RichSmartID smartID,
+                                      Gaudi::XYZPoint& detectPoint,
+                                      bool photoCathodeSide = false ) const;
 
 
-  /** @brief Converts an x,y point from the anode to the photocathode in the
-   * coordinate system of the HPD.
-   *  The point can be given either on the inside of the HPD window (photocathode) if
-   *  photoCathodeSide=true or on the outside including refraction correction if
-   *  photoCathodeSide=false
-   *
-   *  @param[in]  anodePoint The <x,y> pair on the anode in pixel coordinates
-   *  @param[out] detectPoint The position in HPD coordinates
-   *  @param[in]  photoCathodeSide Set to false to include refraction on HPD window
-   *  @return StatusCode indicating if the conversion was successful or not
-   *  @retval StatusCoe::SUCCESS Conversion was successful
-   *  @retval StatusCode::FAILURE Conversion failed
-   */
-  StatusCode detectionPoint ( const double fracPixelCol, 
-                              const double fracPixelRow,
-                              Gaudi::XYZPoint& detectPoint,
-                              const bool photoCathodeSide = true ) const;
+  // Converts an x,y point from the anode to the photocathode in the
+  // coordinate system of the HPD.
+  virtual StatusCode detectionPoint ( const double fracPixelCol,
+                                      const double fracPixelRow,
+                                      Gaudi::XYZPoint& detectPoint,
+                                      const bool photoCathodeSide = true ) const;
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
    *  @param[in] smartID The RichSmartID for the HPD channel
@@ -189,16 +166,6 @@ public:
   inline const Rich::TabulatedFunction1D* magnification_RtoPhi( const int field = 0 ) const
   {
     return m_magMapPhi[ field > 0 ? 1 : 0 ];
-  }
-
-  /** Retrieves the HPD Quantum Efficiency interpolation function.
-   * For a given Photon Momentum in eV
-   * returns the HPD Quantum Efficiency percentage.
-   * @return pointer to the interpolation function for QuantumEff(PhotMom)
-   */
-  inline const Rich::TabulatedProperty1D* hpdQuantumEff() const
-  {
-    return m_hpdQuantumEffFunc;
   }
 
   /** Converts the given RichSmartID to the position on the silicon wafer,
@@ -317,7 +284,7 @@ private: // functions
 
   /// Initialise the HPD quantum eff function
   StatusCode initHpdQuantumEff();
-  
+
   /// Access magnetic field service on demand
   ILHCbMagnetSvc * magSvc() const;
 
@@ -377,7 +344,7 @@ private: // data
   double m_siliconHalfLengthX;  ///< Si sensor half size in x
   double m_siliconHalfLengthY;  ///< Si sensor half size in y
 
-  /// The demagnification factor of the HPD.  Element [0] is the linear
+  /// The demagnification factor of the HPD. Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
   double m_magnificationCoef1;
@@ -392,9 +359,6 @@ private: // data
   /// Interpolated function for HPD phi for magnification
   std::vector<Rich::TabulatedFunction1D*> m_magMapPhi;
 
-  ///< Interpolated property for HPD quantum efficiency
-  mutable const Rich::TabulatedProperty1D* m_hpdQuantumEffFunc;
-
   /// Demagnification parameters condition
   std::vector< SmartRef<Condition> > m_demagConds;
 
@@ -404,10 +368,10 @@ private: // data
   std::vector<double> m_refactParams; ///< refraction parameters for quartz window
 
   /// Flag to indicate the full treatment of magnetic distortions should be performed
-  bool   m_UseHpdMagDistortions; 
+  bool m_UseHpdMagDistortions;
 
   /// Turns on the use of a test field map
-  bool   m_UseBFieldTestMap;
+  bool m_UseBFieldTestMap;
 
   /// magnitude of the longitudinal B field
   double m_LongitudinalBField;
@@ -435,22 +399,9 @@ private: // data
 };
 
 //=========================================================================
-// Converts a RichSmartID to a point in global coordinates.
-//=========================================================================
-inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
-                                              Gaudi::XYZPoint& detectPoint,
-                                              bool photoCathodeSide ) const
-{
-  detectPoint = pointOnSilicon(smartID);
-  return ( ( m_UseHpdMagDistortions || fabs(magSvc()->signedRelativeCurrent()) > 0.5 ) ?
-           magnifyToGlobalMagnetON  ( detectPoint, photoCathodeSide ) :
-           magnifyToGlobalMagnetOFF ( detectPoint, photoCathodeSide ) );
-}
-
-//=========================================================================
 //  convert a RichSmartID to a point on the anode (global coord system)
 //=========================================================================
-inline Gaudi::XYZPoint 
+inline Gaudi::XYZPoint
 DeRichHPD::detPointOnAnode( const LHCb::RichSmartID smartID ) const
 {
   return ( m_deSiSensor->geometry()->toGlobal( pointOnSilicon(smartID) ) );

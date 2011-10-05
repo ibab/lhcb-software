@@ -4,7 +4,9 @@
   <class name="DeRich1"                   />
   <class name="DeRich2"                   />
   <class name="DeRichBeamPipe"            />
+  <class name="DeRichPD"                  />
   <class name="DeRichHPD"                 />
+  <class name="DeRichPDPanel"             />
   <class name="DeRichHPDPanel"            />
   <class name="DeRichRadiator"            />
   <class name="DeRichRadiator::Vector"    />
