@@ -81,10 +81,23 @@ void MonAdder::Configure()
 //  DimClient::getDnsNode();
   if (m_DimDns == 0)
   {
-    std::string dnsname = DimClient::getDnsNode();
-    m_DimDns = new DimServerDns(dnsname.c_str());
-    m_DimDns->autoStartOn();
-    DimServer::start(m_DimDns, (char*)((RTL::processName()+"//").c_str()));
+    std::string cdnsname = DimClient::getDnsNode();
+    std::string sdnsname = DimServer::getDnsNode();
+    toLowerCase(cdnsname);
+    toLowerCase(sdnsname);
+    if (sdnsname == std::string("localhost"))
+    {
+      sdnsname = RTL::nodeNameShort();
+      toLowerCase(sdnsname);
+    }
+    dyn_string *cdns = Strsplit(cdnsname.c_str(),".");
+    dyn_string *sdns = Strsplit(sdnsname.c_str(),".");
+    if (cdns->at(0) != sdns->at(0))
+    {
+      m_DimDns = new DimServerDns(cdnsname.c_str());
+      m_DimDns->autoStartOn();
+      DimServer::start(m_DimDns, (char*)((RTL::processName()+"//").c_str()));
+    }
   }
   m_Dimcmd = new TimeoutCmd(m_DimDns,(char*)m_cmdname.c_str(),this);
   m_timer = new AddTimer(this,m_rectmo);
