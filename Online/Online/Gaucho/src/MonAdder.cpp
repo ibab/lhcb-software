@@ -77,7 +77,7 @@ void MonAdder::Configure()
     toLowerCase(nodename);
     m_name= "MON_" + m_MyName;
   }
-  m_cmdname = m_MyServiceName+"/"+m_serviceName+"/Timeout";
+  m_cmdname = nodename+"/"+m_MyServiceName+"/"+m_serviceName+"/Timeout";
 //  DimClient::getDnsNode();
   if (m_DimDns == 0)
   {
