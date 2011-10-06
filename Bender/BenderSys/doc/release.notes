@@ -24,16 +24,47 @@
 </PRE>
 
 
-<A NAME=v18r0>2011-09-26 Bender v18r0 based on the DaVinci v29r0</A>
+<A NAME=v18r1>2011-10-06 Bender v18r1 based on the DaVinci v29r1</A>
 </H1>	
 
 <PRE>		
-The version is rather similar  to v17r4, but it is based on fresh DaVinci v29r5
+The version is rather similar  to v18r0, but it is based on fresh DaVinci v29r1
 and thus in this way it picks up many goodies and fixes.
 
 It also contains many useful fixes for dst-explorer, 
 in particular (if available)
 it accepts the bare LFNs for input.
+ 
+</PRE>
+
+
+<A NAME=v18r0>2011-09-26 Bender v18r0 based on the DaVinci v29r0</A>
+</H1>	
+
+<PRE>		
+The version is rather similar  to v17r4, but it is based on fresh DaVinci v29r0
+and thus in this way it picks up many goodies and fixes.
+
+<li>
+It also contains many useful fixes for dst-explorer, 
+in particular (if available)
+it accepts the bare LFNs for input.
+<li>
+It also contains new useful script trg-check for fast cheking of trigger lines,
+e.g. get the list of relevalt Tis/Tos lines for given selection
+<li>
+It also picks up the extention of very useful Juan's functions for 
+configurtaion of root-in-tes for MicroDst processing.
+This configuration is done in 100% backward compatible way 
+and applicable for all stripping rounds starting 
+from 13b (including).
+In particular it copies/links ODIN, RawEvent, RecSummary and few other 
+objects into stream-specific location, making thye uDST analysis very 
+easy and transparent, e.g. there is no need to specify the ugly 
+default arguments for HASRECSUMMARY/RECSUMMARY functors..
+<li>
+To use all these goodies one should <b>NOT</b> activate DaVinci 
+property "UseTrigRawEvent"
  
 </PRE>
 
