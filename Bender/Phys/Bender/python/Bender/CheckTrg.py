@@ -283,7 +283,7 @@ if '__main__' == __name__ :
         Simulation      = options.Simulation       ,
         Persistency     = options.Persistency      ,
         EventPreFilters = fltrs.filters('Filters') ,
-        UseTrigRawEvent = True                     , 
+        UseTrigRawEvent = False , #True                     , 
         InputType       = InputType                ,
         Lumi            = False          
         )
@@ -311,8 +311,10 @@ if '__main__' == __name__ :
         
     if rootInTES: 
         # ------- decoding set-up start ----------
-        from MicroDSTConf.TriggerConfUtils import configureL0AndHltDecoding
-        configureL0AndHltDecoding(rootInTES)
+        #from MicroDSTConf.TriggerConfUtils import configureL0AndHltDecoding
+        #from Bender.uDstTisTos import configureL0AndHltDecoding
+        from Bender.MicroDST import uDstConf 
+        uDstConf(rootInTES)
         # ------- decoding set-up end  -----------
         
     
@@ -358,8 +360,7 @@ if '__main__' == __name__ :
     mainSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence', True )
     mainSeq.Members += [ alg.name() ]
 
-    
-    
+        
     ## initialize and read the first 1000 event
     gaudi.run( options.Nevents )
 
@@ -367,8 +368,8 @@ if '__main__' == __name__ :
     # dod = gaudi.service('DataOnDemandSvc' )
     # dod.Dump = True
     
-    print 'Line     : ' , Line
-    print 'RootInTES: ' , rootInTES
+    print '  Line     : ' , Line
+    print '  RootInTES: ' , rootInTES
     
     alg.trgDecs()
 

@@ -220,6 +220,9 @@ def extendfile2 ( filename , castor = False ) :
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
     #
+    #fname = ioh.dressFile ( filename , 'I')
+    #print ' EXTENFILE2, name ##' + fname + '##'
+    #return fname 
     return ioh.dressFile ( filename , 'I')
 
 # =============================================================================

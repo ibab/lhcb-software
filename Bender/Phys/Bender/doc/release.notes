@@ -24,6 +24,40 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v18r0 2011-09-26 ===========================
+
+! 2011-10-06 - Vanya Belyaev
+
+ - add module MicroDST that contains backward compatible 
+   configuration of "rootintes" for microDST.
+
+   the usage is trivial:
+
+       rootInTes = 'Event/Leptonic'
+
+       from Bender.MicroDST import mDstConf 
+ 
+       mDstConf ( rootInTes ) 
+
+   Essentialy it relies on Juan's TriggerconfUtils module
+   a top of it following action is performed :
+
+    - ODIN       is copied/linked into "root-in-tes" location 
+    - RawEvent   is copied/linked into "root-in-tes" location 
+    - RecSummary is copied/linked into 'toot-in-tes' location 
+
+  as a result for uDst processing no modification/tricks are required, 
+  and no ugly manipulaitons with non-default argumens 
+  for HASRECSUMMARY/RECSUMMARY are needed
+ 
+  The modifications are universla and in this way 
+  totally backward compatible:
+  the same code applies for any stripping >= 13b 
+ 
+
+  NOTE: Obviously way one should *NEVER* activate 
+        the "UseTrigRawEvent" property of DaVinci configurable 
+
 ! 2011-09-29 - Vanya Belyaev
 
  - add simple useful script to check trigger decision for certain line:
