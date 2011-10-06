@@ -184,11 +184,12 @@ void MessagePresenter::UpdateRight()
         fListBox863->GetEntry(k)->SetBackgroundColor(Pyellow);
       if (l==3)
         fListBox863->GetEntry(k)->SetBackgroundColor(Pred);
-      k++;
+      ++k;
 
     }
   }
-  else{
+  else
+  {
 
     itbegin = values.find(names[i]);
     itend = values.find(names[i]);
@@ -329,17 +330,19 @@ void MessagePresenter::UpdateView()
 
 void MessagePresenter::getwarnings(const char * fname)
 {
-  char cstr[1512];
-  if (fname)
+  const std::string sfname = ( fname ? fname : "" );
+  if ( !sfname.empty() )
   {
-    FILE *F = fopen(fname,"r");
+
+    FILE * F = fopen(sfname.c_str(),"r");
     if (!F)
     {
-      printf("Cant open %s\n",fname);
+      std::cout << "Failed to open " << sfname << std::endl;
     }
     else
     {
-      while (fgets(cstr,1511,F))
+      char cstr[1512];
+      while ( fgets ( cstr, 1511, F ) )
       {
         const int s = strlen(cstr);
         cstr[s-1] = '\0';
@@ -356,8 +359,6 @@ void MessagePresenter::getwarnings(const char * fname)
 
 void MessagePresenter::addwarning(const std::string & msg,const int ref)
 {
-  //cout << "Adding " << msg << endl;
-
   //  ifstream F("warnings");
   TDatime t;
   //cout<<cstr<<endl;
@@ -382,7 +383,8 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
   if (level=="2") ilevel=2;
   if (level=="3") ilevel=3;
 
-  if (ilevel==3 && FLITEOUT && ref==1){
+  if (ilevel==3 && FLITEOUT && ref==1)
+  {
     std::string cmd = "flite/bin/flite -t \""+ sstr.substr(position1+3) + "\" -o msg.wav && play msg.wav &";
     printf(cmd.c_str());
     system(cmd.c_str());
@@ -408,20 +410,21 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
   {
     levels.insert(std::pair<std::string,int>(key,ilevel));
   }
-  else{
-    //int i = (*it).second;
+  else
+  {
     if (ilevel > (*it).second) (*it).second = ilevel;
   }
 
   std::map<std::string,std::vector<std::string>*>::iterator its;
   its = values.find(key);
-  if (its == values.end())
+  if ( its == values.end() )
   {
-    std::vector<std::string> * s = new  std::vector<std::string>;
+    std::vector<std::string> * s = new std::vector<std::string>;
     s->push_back(val);
     values.insert(std::pair<std::string,std::vector<std::string>*>(key,s));
   }
-  else{
+  else
+  {
     (*its).second->push_back(val);
   }
 
@@ -440,7 +443,6 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
   }
 
   //    if (i%5==1)sleep(3);
-
 }
 
 int MessagePresenter::GetXtra(const std::string & str, 
@@ -603,7 +605,7 @@ void MessagePresenter::DoClose()
   writeCacheFile(true);
 
   //  close all active sockets
-  for(unsigned int i = 0;i<socklist.size();++i)
+  for ( unsigned int i = 0; i<socklist.size(); ++i )
   {
     if (socklist[i])
     {
@@ -797,9 +799,9 @@ void MessagePresenter::display()
 
   //=====================================
 
-  TGFont *ufont;         // will reflect user font changes
-  ufont = gClient->GetFont("-adobe-helvetica-bold-r-*-*-14-*-*-*-*-*-iso8859-1");
-  TGGC   *uGC;           // will reflect user GC changes
+  TGFont *ufont = gClient->GetFont("-adobe-helvetica-bold-r-*-*-14-*-*-*-*-*-iso8859-1");
+  //TGFont *ufont = gClient->GetFont("-adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-iso8859-1");
+  //TGFont *ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-10-*-*-*-*-*-iso8859-1");
   // graphics context changes
 
   GCValues_t valStopped;
@@ -809,7 +811,7 @@ void MessagePresenter::display()
   valStopped.fFillStyle = kFillSolid;
   valStopped.fFont = ufont->GetFontHandle();
   valStopped.fGraphicsExposures = kFALSE;
-  uGC = gClient->GetGC(&valStopped, kTRUE);
+  TGGC   *uGC = gClient->GetGC(&valStopped, kTRUE);
   //
 
   // NM: don't bother to set the layout here since it's set again lather in the function Layout.
@@ -909,23 +911,24 @@ void MessagePresenter::messageloop( const char * host, const char * file )
   std::vector<proto *> protolist;
   std::vector<int> connlist;
 
-  if (strcmp(host,"NULL")!=0){
-
-    string s = host;
+  if ( strcmp(host,"NULL") != 0 )
+  {
+    const string s = host;
     string str = s;
 
     std::string::size_type position1;
-    // cout << "Trying Servers:"<<endl;
-    while ((position1 = str.find(","))!=string::npos){
-      // cout << str.substr(0,position1)<<endl;;
+    //std::cout << "Trying Servers ' ";
+    while ( (position1 = str.find(",")) != string::npos ) 
+    {
       serverlist.push_back(str.substr(0,position1));
+      //std::cout << str.substr(0,position1) << " ";
       str = str.substr(position1+1);
     }
-    // cout << str<<endl;;
     serverlist.push_back(str);
+    //std::cout << str << " '" << std::endl;
 
     hostS = "";
-    for (unsigned int i = 0;i<serverlist.size();++i)
+    for ( unsigned int i = 0; i<serverlist.size(); ++i )
     {
       std::string hostpart,portpart;
       portpart="12346";
@@ -958,7 +961,7 @@ void MessagePresenter::messageloop( const char * host, const char * file )
     checkCacheFileLength();
     readCacheFile();
 
-    while (1)
+    while ( true )
     {
 
       //fStatusBar528->SetText(TGString("Connecting to ")+TGString(host));
@@ -1028,7 +1031,19 @@ void MessagePresenter::messageloop( const char * host, const char * file )
               gSystem->ProcessEvents();
             }
 
-            writeCacheFile();
+            // every now and then, check the cache file length
+            // otherwise just write
+            static time_t lastLengthCheck = time(NULL);
+            const time_t timeNow = time(NULL);
+            if ( (timeNow-lastLengthCheck) >= 15*60 )
+            {
+              checkCacheFileLength();
+              lastLengthCheck = timeNow;
+            }
+            else
+            {
+              writeCacheFile();
+            }
 
           }
           if (r==-1){
@@ -1100,14 +1115,15 @@ void MessagePresenter::checkCacheFileLength()
   else
   {
     const unsigned int maxSize = fNumberEntry670->GetIntNumber();
-    //cout << "Checking cache file size " << maxSize << endl;
     char cstr[1512];
     std::vector<std::string> lines;
-    while (fgets(cstr,1511,F))
+    unsigned int line = 0;
+    while ( fgets ( cstr, 1511, F ) && line++ < maxSize )
     {
       const int s = strlen(cstr);
       cstr[s-1] = '\0';
       const std::string sstr = cstr;
+      //std::cout << "line " << line << " " << sstr << std::endl;
       lines.push_back(sstr);
       //cout << "Read " << sstr << " from cache file" << endl;
     }
@@ -1122,6 +1138,7 @@ void MessagePresenter::checkCacheFileLength()
     }
     cachedWarnings.clear();
   }
+
 }
 
 void MessagePresenter::writeCacheFile(const bool force)
@@ -1129,7 +1146,6 @@ void MessagePresenter::writeCacheFile(const bool force)
   if ( writeCacheON && !cachedWarnings.empty() )
   {
     static time_t lastWrite       = time(NULL);
-    static time_t lastLengthCheck = time(NULL);
 
     // get the time now
     const time_t timeNow = time(NULL);
@@ -1155,17 +1171,8 @@ void MessagePresenter::writeCacheFile(const bool force)
 
       // clear the list of messages to write out
       cachedWarnings.clear();      
-
-      // every now and then, check the cache file length
-      if ( force || (timeNow-lastLengthCheck) >= 15*60 )
-      {
-        checkCacheFileLength();
-        lastLengthCheck = timeNow;
-      }
-
     }
   }
-
 }
 
 void MessagePresenter::readCacheFile()
@@ -1197,15 +1204,20 @@ int main(int /* argc */, char ** argv){
     new TApplication("MessagePresenter",&dummy_argc,dummy_argv);
   MessagePresenter mp;//(NULL,100,100);
   mp.display();
+  //std::cout << "Display done" << std::endl;
   //mp.messageloop(argv[1],argv[2]);
 
   // NM: modified the following line to couple with warning message:
   // "deprecated conversion from string constant to char*"
-  if (argv[1]==NULL){
+  if (argv[1]==NULL)
+  {
     mp.messageloop();
   }
-  else mp.messageloop(argv[1],argv[2]);
-
+  else 
+  {
+    mp.messageloop(argv[1],argv[2]);
+  }
+ 
   delete TApp;
 
   return 0;
