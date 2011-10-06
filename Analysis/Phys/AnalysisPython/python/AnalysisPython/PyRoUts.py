@@ -1872,11 +1872,22 @@ def _h_sum_ ( h    ,
     """
     return _h_accumulate_ ( h , cut = lambda s : low<=s[1].value()<=high ) 
 
+# =============================================================================
+## simple scaling
+def _h_scale_ ( histo , val = 1.0 ) :
+    """
+    Scale the histogram to certain integral
+    """
+    histo.Scale ( float(val) / histo.accumulate().value() )
+    
+             
 ROOT.TH1  . accumulate = _h_accumulate_ 
 ROOT.TH1F . sum        = _h_sum_ 
 ROOT.TH1D . sum        = _h_sum_
 ROOT.TH1F . integral   = _h_sum_ 
 ROOT.TH1D . integral   = _h_sum_
+ROOT.TH1F . scale      = _h_scale_ 
+ROOT.TH1D . scale      = _h_scale_ 
 # =============================================================================
 ## adjust the "efficiency"
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
