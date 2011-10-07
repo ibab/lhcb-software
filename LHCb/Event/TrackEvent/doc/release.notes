@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2011-10-07 - Marco Cattaneo
+ - Fix trivial icc warning
+
 !========================= TrackEvent v5r12 2011-04-04 =========================
 ! 2011-03-17 - Wenbin Qian
   - add PatVeloPix History for track

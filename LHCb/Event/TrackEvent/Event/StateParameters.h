@@ -27,7 +27,7 @@ namespace StateParameters
   static const double ZMidT     =  8520. * Gaudi::Units::mm;
   static const double ZEndTT    =  2700. * Gaudi::Units::mm;
   static const double ZEndVelo  =   770. * Gaudi::Units::mm;
-};
+}
 
 // ----------------------------------------------------------------------------
 //   end of namespace
