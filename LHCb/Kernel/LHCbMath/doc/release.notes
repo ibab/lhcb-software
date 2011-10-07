@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-10-07 - Marco Cattaneo
+ - Mask a couple of ICC warnings and remarks from Boost, resulting from
+   inclusion of Digit.h
+
 !========================= LHCbMath v3r27 2011-08-30 =========================
 ! 2011-08-26 - Alexander Mazurov
  - Updates to ValueWithError's parser functions. This version works only with
@@ -21,8 +25,6 @@
 !========================= LHCbMath v3r26 2011-07-25 =========================
 ! 2011-07-18 - Vanya Belyaev
  - add few more functions into dictionary
-
-
 
 ! 2011-07-17 - Vanya Belyaev
  - add rounding and related functions

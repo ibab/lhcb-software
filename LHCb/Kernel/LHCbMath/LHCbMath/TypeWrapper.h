@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 #ifndef LHCBMATH_TYPEWRAPPER_H 
 #define LHCBMATH_TYPEWRAPPER_H 1
@@ -9,6 +8,10 @@
 // ============================================================================
 // Boost 
 // ============================================================================
+#ifdef __INTEL_COMPILER        // Disable ICC warnings and remarks
+  #pragma warning(disable:279) // BOOST_ASSERT controlling expression is constant
+  #pragma warning(push)
+#endif
 #include "boost/call_traits.hpp"
 // ============================================================================
 namespace Gaudi
@@ -58,6 +61,9 @@ namespace Gaudi
   } // end of namespace Gaudi::Math 
   // ==========================================================================
 } // end of namespace Gaudi 
+#ifdef __INTEL_COMPILER
+  #pragma warning(pop)        // Reenable ICC warning 279
+#endif
 // ============================================================================
 // The END 
 // ============================================================================

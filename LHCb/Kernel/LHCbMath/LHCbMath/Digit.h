@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 #ifndef LHCBMATH_DIGIT_H 
 #define LHCBMATH_DIGIT_H 1
@@ -13,6 +12,10 @@
 // ============================================================================
 // Boost
 // ============================================================================
+#ifdef __INTEL_COMPILER        // Disable ICC warnings and remarks
+  #pragma warning(disable:177) // boost::lambda declared but never referenced
+  #pragma warning(push)
+#endif
 #include "boost/integer_traits.hpp"
 #include "boost/static_assert.hpp"
 // ============================================================================
@@ -485,8 +488,9 @@ namespace Gaudi
       return static_cast<TYPE>( (val/aux1)%aux2 ) ;                   // RETURN
       // ======================================================================
     }
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(pop)
+#ifdef __INTEL_COMPILER
+  #pragma warning(pop)        // Reenable ICC remark 2259
+  #pragma warning(pop)        // Reenable ICC remark 177
 #endif
     // ========================================================================
   } // end of namespace Gaudi::Math
