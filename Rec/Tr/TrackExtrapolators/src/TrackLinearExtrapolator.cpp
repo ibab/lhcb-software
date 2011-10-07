@@ -7,7 +7,14 @@
 #include "Event/TrackParameters.h"
 
 // local
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrackLinearExtrapolator.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -62,7 +69,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   
   // Propagate to the point
   return TrackExtrapolator::propagate( state, zNew, pid );
-};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -75,6 +82,6 @@ TrackLinearExtrapolator::TrackLinearExtrapolator(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackLinearExtrapolator::~TrackLinearExtrapolator() {};
+TrackLinearExtrapolator::~TrackLinearExtrapolator() {}
 
 //=============================================================================

@@ -5,7 +5,14 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/IDetectorElement.h"
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // IMaterialLocator::intersect" only partially overridden
+  #pragma warning(push)
+#endif
 #include "DetailedMaterialLocator.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 #include <boost/lambda/lambda.hpp>
 using namespace boost::lambda ;

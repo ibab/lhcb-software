@@ -7,9 +7,6 @@
 // from TrackExtrapolators
 #include "TrackExtrapolator.h"
 
-//#include "GaudiKernel/Vector3DTypes.h"
-//#include "GaudiKernel/Point3DTypes.h"
-
 class ILHCbMagnetSvc ;
 #include "DetDesc/MagneticFieldGrid.h"
 #include "Kernel/ILHCbMagnetSvc.h"

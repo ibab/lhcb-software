@@ -426,6 +426,6 @@ TrackExtrapolator::TrackExtrapolator( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackExtrapolator::~TrackExtrapolator() {}; 
+TrackExtrapolator::~TrackExtrapolator() {}
 
 //=============================================================================

@@ -14,7 +14,7 @@
 
 namespace MaterialLocatorUtils {
   class PVolumeWrapper ;
-} ;
+}
 
 /** @class SimplifiedMaterialLocator SimplifiedMaterialLocator.h \
  *         "SimplifiedMaterialLocator.h"

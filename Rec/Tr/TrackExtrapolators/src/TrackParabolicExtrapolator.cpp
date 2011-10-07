@@ -18,7 +18,14 @@ using namespace Gaudi::Units;
 #include "Event/TrackParameters.h"
 
 // Local 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrackParabolicExtrapolator.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -156,7 +163,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   else { sc = TrackExtrapolator::propagate(state, P.z()+*sol3, pid); }
   
   return sc;
-};
+}
 
 //=============================================================================
 // Update the transport matrix
@@ -217,4 +224,4 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   transMat(4,3) = 0 ;
   transMat(4,4) = 1 ;
 
-};
+}

@@ -75,7 +75,7 @@ inline double pointerror(const LHCb::StateVector& begin,
   if(fabs(dz)> TrackParameters::propagationTolerance) {
     double tx = (end.x() - begin.x())/dz ;
     double ty = (end.y() - begin.y())/dz ;
-    double dz = mid.z() - begin.z() ;
+           dz = mid.z() - begin.z() ;
     double dx = begin.x() + dz*tx - mid.x() ;
     double dy = begin.y() + dz*ty - mid.y() ;
     rc = std::sqrt(dx*dx+dy*dy) ;
@@ -214,7 +214,7 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
   }
   
   return intersepts.size() ;
-} ;
+}
 
 size_t MaterialLocatorBase::intersect( const LHCb::StateVector& origin, 
 				       const LHCb::StateVector& target,
@@ -227,7 +227,7 @@ size_t MaterialLocatorBase::intersect( const LHCb::StateVector& origin,
     intersect(traj,intersepts) ;
   }
   return intersepts.size() ;
-} ;
+}
 
 void
 MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
@@ -261,7 +261,7 @@ MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
     double z2 = std::min( zmax, std::max(it->z1,it->z2)) ;
     double thickness = z2 - z1 ; // negative thickness means no overlap
     if( thickness > TrackParameters::propagationTolerance ) {
-      double thickness = z2-z1 ;
+      double thickness = z2 - z1 ; // Why this? Was something else intended?
       
       // create a state. probably it is faster not to create it. but then we need to reset the noise every time.
       LHCb::State state ;
@@ -271,10 +271,10 @@ MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
       
       // now add the wall
       if( applyScatteringCorrection ) {
-	m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
+        m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
       }
       if( applyEnergyLossCorrection) {
-	dedxtool->correctState( state, it->material, thickness, upstream, pid );
+        dedxtool->correctState( state, it->material, thickness, upstream, pid );
       }
       
       // add the change in qOverP

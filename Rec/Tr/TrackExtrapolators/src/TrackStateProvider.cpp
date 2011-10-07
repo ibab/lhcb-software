@@ -115,10 +115,11 @@ namespace {
     return lhs->z() < rhs->z() ;
   }
   
-  inline bool equalStateZ(const LHCb::State* lhs, const LHCb::State* rhs)
-  {
-    return std::abs(lhs->z() - rhs->z()) < TrackParameters::propagationTolerance ;
-  }
+  // This function is never used, commented to fix icc remark
+  //  inline bool equalStateZ(const LHCb::State* lhs, const LHCb::State* rhs)
+  //  {
+  //    return std::abs(lhs->z() - rhs->z()) < TrackParameters::propagationTolerance ;
+  //  }
   
   // The TrackCache is basically just an 'extendable' TrackTraj
   class TrackCache : public LHCb::TrackTraj {

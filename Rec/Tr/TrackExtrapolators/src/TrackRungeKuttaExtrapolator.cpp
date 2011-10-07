@@ -1,4 +1,11 @@
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrackRungeKuttaExtrapolator.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h"
 #include <sstream>
@@ -29,8 +36,9 @@ namespace {
     double& tx() { return parameters(2) ; }
     double& ty() { return parameters(3) ; }
     
-    double x() const { return parameters(0) ; }
-    double y() const { return parameters(1) ; }
+    // avoid function declared but not referenced warnings from icc
+    //    double x() const { return parameters(0) ; }
+    //    double y() const { return parameters(1) ; }
     double tx() const { return parameters(2) ; }
     double ty() const { return parameters(3) ; }
 
@@ -70,18 +78,21 @@ namespace {
     double& dTxdQoP0() { return matrix(2,2) ; }
     double& dTydQoP0() { return matrix(3,2) ; }
 
-    double dXdTx0()  const { return matrix(0,0) ; }
-    double dYdTx0()  const { return matrix(1,0) ; }
+    // avoid function declared but not referenced warnings from icc
+    //    double dXdTx0()  const { return matrix(0,0) ; }
+    //    double dYdTx0()  const { return matrix(1,0) ; }
     double dTxdTx0() const { return matrix(2,0) ; }
     double dTydTx0() const { return matrix(3,0) ; }
     
-    double dXdTy0()  const { return matrix(0,1) ; }
-    double dYdTy0()  const { return matrix(1,1) ; }
+    // avoid function declared but not referenced warnings from icc
+    //    double dXdTy0()  const { return matrix(0,1) ; }
+    //    double dYdTy0()  const { return matrix(1,1) ; }
     double dTxdTy0() const { return matrix(2,1) ; }
     double dTydTy0() const { return matrix(3,1) ; }
     
-    double dXdQoP0()  const { return matrix(0,2) ; }
-    double dYdQoP0()  const { return matrix(1,2) ; }
+    // avoid function declared but not referenced warnings from icc
+    //    double dXdQoP0()  const { return matrix(0,2) ; }
+    //    double dYdQoP0()  const { return matrix(1,2) ; }
     double dTxdQoP0() const { return matrix(2,2) ; }
     double dTydQoP0() const { return matrix(3,2) ; }
   } ; 

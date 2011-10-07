@@ -22,7 +22,14 @@
 #include "TrackInterfaces/IMaterialLocator.h"
 
 // Local 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackExtrapolator::propagate" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrackMasterExtrapolator.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 using namespace Gaudi;
 using namespace Gaudi::Units;
