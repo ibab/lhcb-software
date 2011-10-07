@@ -10,7 +10,7 @@ def getStatusOutput(cmdline):
     return status, output
 
 def createStdMD5File(filename):
-    
-    
+
+
     pass
 

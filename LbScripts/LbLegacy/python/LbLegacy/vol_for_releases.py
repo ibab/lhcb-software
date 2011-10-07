@@ -15,7 +15,7 @@ import logging
 import sys, os
 
 #-----------------------------------------------------------------------------------
-def create_volume(pname,pversion,size=0):
+def create_volume(pname, pversion, size=0):
     log = logging.getLogger()
 
     projconf = getProject(pname, svn_fallback=True)
@@ -29,22 +29,22 @@ def create_volume(pname,pversion,size=0):
 # project directory, afs group, volume root
     PNAME = projconf.NAME()
     P_DIR = projconf.ReleaseArea()
-    root  = projconf.AFSVolumeRoot()
+    root = projconf.AFSVolumeRoot()
     group = projconf.AFSLibrarianGroup()
 
 # set the volume name
     PN = projconf.AFSVolumeName()
-    vol_name = 'q.'+root+'.'+PN+'_'+pversion
+    vol_name = 'q.' + root + '.' + PN + '_' + pversion
 
 # check PNAME project existence
-    if not os.path.exists(os.path.join(P_DIR,PNAME)):
-        log.error( 'The project %s does not exist on %s' % (PNAME, P_DIR))
+    if not os.path.exists(os.path.join(P_DIR, PNAME)):
+        log.error('The project %s does not exist on %s' % (PNAME, P_DIR))
         sys.exit()
     else:
-        if os.path.exists(os.path.join(P_DIR,PNAME,PNAME+'_'+pversion)):
-            log.warning('The version %s of the project %s already exists'%(pversion, projconf.Name()))
+        if os.path.exists(os.path.join(P_DIR, PNAME, PNAME + '_' + pversion)):
+            log.warning('The version %s of the project %s already exists' % (pversion, projconf.Name()))
             return
-    PPATH = os.path.join(P_DIR, PNAME, PNAME+'_'+pversion)
+    PPATH = os.path.join(P_DIR, PNAME, PNAME + '_' + pversion)
 
 
 # create the new volume

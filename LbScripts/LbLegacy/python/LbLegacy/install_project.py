@@ -177,7 +177,7 @@ def retrieve(url, dest):
     debugmsglist = []
     debugmsglist.append("Block count %d" % _block_count)
     debugmsglist.append("Block size %d" % _block_size)
-    debugmsglist.append("File size %d" % _file_size )
+    debugmsglist.append("File size %d" % _file_size)
     log.debug("\t".join(debugmsglist))
     _block_size = 0
     _block_count = 0
@@ -325,7 +325,7 @@ def changePermissions(directory, recursive=True):
         if recursive :
             for root, dirs, files in os.walk(directory, topdown=True) :
                 for d in dirs :
-                    fixWinAttrib(os.path.join(root,d))
+                    fixWinAttrib(os.path.join(root, d))
                 for f in files :
                     os.chmod(os.path.join(root, f), stat.S_IWRITE)
 
@@ -477,13 +477,13 @@ def fixCMTSetup(cmt_mgr_dir):
                 log.info("Fixing %s" % sfile)
                 sfile_lines.insert(0, "%s\n" % gard_line)
                 if s == "sh" :
-                    for i,l in zip(range(len(sfile_lines)),sfile_lines) :
+                    for i, l in zip(range(len(sfile_lines)), sfile_lines) :
                         if l.startswith("CMTROOT=") :
                             new_l = 'if [[ ! -n "$CMTROOT" ]]; then\n  %sfi\n' % l
                             sfile_lines[i] = new_l
                             break
                 elif s == "csh" :
-                    for i,l in zip(range(len(sfile_lines)),sfile_lines) :
+                    for i, l in zip(range(len(sfile_lines)), sfile_lines) :
                         if l.startswith("setenv CMTROOT ") :
                             new_l = "if ( ! $?CMTROOT ) then\n  %sendif\n" % l
                             sfile_lines[i] = new_l
@@ -628,7 +628,7 @@ def getFile(url, fname):
         local_retries = nb_retries + 1
         hasbeendownloaded = False
         while (not hasbeendownloaded and (local_retries > 0)) :
-            log.info("Retrieving %s" % url +fname)
+            log.info("Retrieving %s" % url + fname)
             h = retrieve(url + fname, dest)[1]
             if h.type.find(filetype) == -1:
                 log.warning("Can't download %s - retry" % fname)
@@ -666,7 +666,7 @@ def isTarBall(filename):
 # --------------------------------------------------------------------------------------
 
 def calculateMD5(filename):
-    if python_version >= (2,6,0) :
+    if python_version >= (2, 6, 0) :
         from hashlib import md5 #@UnusedImport
     else :
         from md5 import md5 #@Reimport
@@ -851,7 +851,7 @@ except ImportError:
         for b in binary_list :
             if core_name.endswith(b) :
                 binary = b
-                core_name = core_name.replace("_%s" %b, "")
+                core_name = core_name.replace("_%s" % b, "")
                 break
 
         cptes = core_name.split("_")
@@ -877,7 +877,7 @@ except ImportError:
 
 
 def getUnknowTarBallNameItems(tb_name, binary):
-    corename = tb_name.replace(".tar.gz","")
+    corename = tb_name.replace(".tar.gz", "")
     s_binary = None
     if corename.endswith(binary) :
         s_binary = binary
@@ -1071,7 +1071,7 @@ def checkInstalledProjects(project_list):
 
 def updateLHCbProjectPath(mysiteroot):
     cmtprojpathlist = _multiPathJoin(mysiteroot, "lhcb").split(os.pathsep)
-    cmtprojpathlist += _multiPathJoin(mysiteroot, os.path.join("lcg","external")).split(os.pathsep)
+    cmtprojpathlist += _multiPathJoin(mysiteroot, os.path.join("lcg", "external")).split(os.pathsep)
     if os.environ.has_key("LHCBPROJECTPATH") :
         cmtprojpathlist += os.environ["LHCBPROJECTPATH"].split(os.pathsep)
     finalcmtlist = []
@@ -1245,7 +1245,7 @@ def getProjectTar(tar_list, already_present_list=None):
                     gencmd = "%s" % genlogscript
                     if debug_flag :
                         gencmd += " --debug"
-                    gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3],"InstallArea"))
+                    gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3], "InstallArea"))
                     log.info("Running: python %s" % gencmd)
                     os.system("python %s" % gencmd)
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
@@ -1328,7 +1328,7 @@ def getMySelf():
     new_install = "latest_%s" % the_install
     if  not os.path.exists(the_install) and _this_file :
         shutil.copy(_this_file, the_install)
-        log.debug("Copied %s to %s" % (_this_file, the_install) )
+        log.debug("Copied %s to %s" % (_this_file, the_install))
     if os.path.exists(new_install) :
         os.remove(new_install)
     inst_loc = url_dist
@@ -2303,7 +2303,7 @@ def parseArgs():
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', "retrytime=", "nofixperm", "version",
-             "compatible-configs", "latest-data-link","url",
+             "compatible-configs", "latest-data-link", "url",
              "boot-scripts="])
 
     except getopt.GetoptError, err:

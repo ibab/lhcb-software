@@ -31,7 +31,7 @@ data_files = {'XmlDDDB':'DBASE_Det_XmlDDDB',
 
 ext_lhcb = ['LCGCMT', 'GENSER', 'OpenScientist']
 
-lcg_projects =['LCGCMT', 'SEAL','POOL','GENSER','COOL','GDML','CORAL','RELAX']
+lcg_projects = ['LCGCMT', 'SEAL', 'POOL', 'GENSER', 'COOL', 'GDML', 'CORAL', 'RELAX']
 
 lhcb_projects = {'GAUDI':'Gaudi',
                    'LHCB':'LHCb',
@@ -76,14 +76,14 @@ applications = {'GAUSS':'Sim/Gauss',
                 'LHCB':'Ex/',
                 'GAUDI':'GaudiExamples'}
 
-lhcb_binary = ['slc4_ia32_gcc34_dbg','slc4_ia32_gcc34',
-               'slc4_ia32_gcc345_dbg','slc4_ia32_gcc345',
-               'slc4_amd64_gcc34_dbg','slc4_amd64_gcc34',
-               'slc3_ia32_gcc323_dbg','slc3_ia32_gcc323',
-               'x86_64-slc5-gcc34-opt','x86_64-slc5-gcc34-dbg',
-               'x86_64-slc5-gcc43-opt','x86_64-slc5-gcc43-dbg',
-               'win32_vc71_dbg','win32_vc71',
-               'osx104_ia32_gcc401_dbg','osx104_ia32_gcc401']
+lhcb_binary = ['slc4_ia32_gcc34_dbg', 'slc4_ia32_gcc34',
+               'slc4_ia32_gcc345_dbg', 'slc4_ia32_gcc345',
+               'slc4_amd64_gcc34_dbg', 'slc4_amd64_gcc34',
+               'slc3_ia32_gcc323_dbg', 'slc3_ia32_gcc323',
+               'x86_64-slc5-gcc34-opt', 'x86_64-slc5-gcc34-dbg',
+               'x86_64-slc5-gcc43-opt', 'x86_64-slc5-gcc43-dbg',
+               'win32_vc71_dbg', 'win32_vc71',
+               'osx104_ia32_gcc401_dbg', 'osx104_ia32_gcc401']
 
 lhcb_vol_size = {'GAUDI':'3000000',
                  'LHCB' :'8000000',
