@@ -170,6 +170,7 @@ void *MonAdder::ReAllocate(int incsiz)
     {
       free(m_buffer);
       m_buffersize = 0;
+      m_buffer = 0;
     }
   }
   return m_buffer;
