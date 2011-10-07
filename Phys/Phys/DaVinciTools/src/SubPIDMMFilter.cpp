@@ -10,20 +10,20 @@
 /** @class SubstitutePID
  *  Simple algorithm to substitute PID and filter on resulting MM.
  *
- *  @code 
- * 
+ *  @code
+ *
  *  from Configurables import SubPIDMMFilter
- * 
+ *
  *  alg = SubPIDMMFilter('D2HH', Code="ALL", MinMM=1764, MaxMM=1964,
  *                       PIDs = [['K+','pi+']])
- *  
- *  @endcode 
  *
- *  Changes PIDs to K+ pi+ and passes if 1764 < MM < 1964.  
+ *  @endcode
+ *
+ *  Changes PIDs to K+ pi+ and passes if 1764 < MM < 1964.
  *
  *  @author Mike Williams
  *  @date 2011-07-22
- * 
+ *
  *                    $Revision$
  *  Last modification $Date$
  *                by  $Author$
@@ -33,9 +33,9 @@ class SubPIDMMFilter : public FilterDesktop {
   friend class AlgFactory<SubPIDMMFilter>;
 
 public:
-  virtual StatusCode initialize(); 
-  virtual StatusCode finalize(); 
-  virtual StatusCode _saveInTES(); 
+  virtual StatusCode initialize();
+  virtual StatusCode finalize();
+  virtual StatusCode _saveInTES();
   virtual void writeEmptyTESContainers();
 
 protected:
@@ -43,15 +43,15 @@ protected:
   virtual ~SubPIDMMFilter();
 
 public:
-  virtual StatusCode filter(const LHCb::Particle::ConstVector& input, 
-			    LHCb::Particle::ConstVector& filtered);
+  virtual StatusCode filter(const LHCb::Particle::ConstVector& input,
+                            LHCb::Particle::ConstVector& filtered);
 
   bool substitute(LHCb::Particle* p,int which);
 
 private:
   SubPIDMMFilter();
   SubPIDMMFilter(const SubPIDMMFilter&);
-  SubPIDMMFilter& operator=(const SubPIDMMFilter&);     
+  SubPIDMMFilter& operator=(const SubPIDMMFilter&);
 
   std::vector<std::vector<std::string> > m_names;
   std::vector<std::vector<LHCb::ParticleID> > m_pids;
@@ -76,7 +76,7 @@ StatusCode SubPIDMMFilter::initialize() {
     }
   }
   return StatusCode::SUCCESS ;
-} 
+}
 
 StatusCode SubPIDMMFilter::finalize() {return FilterDesktop::finalize();}
 
@@ -87,24 +87,24 @@ SubPIDMMFilter::SubPIDMMFilter(const std::string& name,ISvcLocator* pSvc):
   declareProperty("PIDs", m_names, "list of list of PIDs (names) to use");
 }
 
-StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input, 
-				  LHCb::Particle::ConstVector& output){
+StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
+                                  LHCb::Particle::ConstVector& output){
   LHCb::Particle::ConstVector filtered ;
   filtered.reserve(input.size());
-  LoKi::select(input.begin(),input.end(), 
-	       std::back_inserter(filtered),predicate());
+  LoKi::select(input.begin(),input.end(),
+               std::back_inserter(filtered),predicate());
   int size = m_pids.size();
-  for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin(); 
+  for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
       filtered.end() != ip; ++ip) {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     for(int i = 0; i < size; i++){
       LHCb::DecayTree tree(*p);
       if(!substitute(tree.head(),i)) return StatusCode::FAILURE;
-      double mm = tree.head()->measuredMass(); 
+      double mm = tree.head()->measuredMass();
       if(mm > m_mmMin && mm < m_mmMax){
-	markNewTree(tree.head()); // mark & store new decay tree          
-	output.push_back  ( tree.release () ) ;
+        markNewTree(tree.head()); // mark & store new decay tree
+        output.push_back  ( tree.release () ) ;
       }
     }
   }
@@ -125,7 +125,7 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
       oldMom = d->momentum();
       newMom = Gaudi::LorentzVector();
       newMom.SetXYZT(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
-		     ::sqrt(oldMom.P2() + newMass*newMass)) ;
+                     ::sqrt(oldMom.P2() + newMass*newMass)) ;
       d->setMomentum(newMom) ;
       d->setMeasuredMass(newMass);
       energySum += d->momentum().E() ;
@@ -133,7 +133,7 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
       pySum += d->momentum().Py();
       pzSum += d->momentum().Pz();
       index++;
-    }    
+    }
     newMom = Gaudi::LorentzVector();
     newMom.SetXYZT(pxSum, pySum, pzSum, energySum);
     p->setMomentum(newMom);
@@ -144,8 +144,8 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
 
 StatusCode SubPIDMMFilter::_saveInTES () { return DVAlgorithm::_saveInTES() ; }
 
-void SubPIDMMFilter::writeEmptyTESContainers() { 
-  DVAlgorithm::writeEmptyTESContainers() ; 
+void SubPIDMMFilter::writeEmptyTESContainers() {
+  DVAlgorithm::writeEmptyTESContainers() ;
 }
 
 // ============================================================================

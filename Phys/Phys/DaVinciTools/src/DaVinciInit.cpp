@@ -36,14 +36,13 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( DaVinciInit )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 DaVinciInit::DaVinciInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : LbAppInit ( name , pSvcLocator )
-    , m_lastMem(0)
+  : LbAppInit ( name , pSvcLocator ),
+    m_lastMem ( 0                  )
 {
   declareProperty("PrintEvent", m_print =  false, "Print Event and Run Number");
   declareProperty("Increment", m_increment = 100, 
@@ -72,48 +71,54 @@ StatusCode DaVinciInit::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DaVinciInit::execute() {
+StatusCode DaVinciInit::execute()
+{
 
-  StatusCode sc = LbAppInit::execute(); // must be executed first
+  const StatusCode sc = LbAppInit::execute(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
+
   // Plot the memory usage
   m_memoryTool->execute();
 
   // Get the run and event number from the ODIN bank
-  if ( m_print ){
-    if ( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )){
-      const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-      unsigned int runNumber = odin->runNumber();
-      ulonglong    evtNumber = odin->eventNumber();
-      this->printEventRun( evtNumber, runNumber );
-    } else Warning("No ODIN bank",StatusCode::SUCCESS,1);
+  if ( m_print )
+  {
+    if ( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ))
+    {
+      const LHCb::ODIN * odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+      this->printEventRun( odin->eventNumber(), odin->runNumber() );
+    } 
+    else
+    {
+      Warning("No ODIN bank",StatusCode::SUCCESS,1);
+    }
   }
   
-  counter("Events")++ ;
-  unsigned int nev = counter("Events").nEntries() ;
-  unsigned long mem = System::virtualMemory();
+  ++counter("Events");
+
+  const unsigned long nev = counter("Events").nEntries();
+  const unsigned long mem = System::virtualMemory();
 
   if (msgLevel(MSG::DEBUG)) debug() << nev << " memory: " << mem << " KB" << endmsg ;
   
-  if ( 0 == m_lastMem ) m_lastMem = mem ;
-  else if ( m_increment>0 && 0 == nev%m_increment) {
-    if ( m_lastMem != mem ){
-      if ( m_lastMem < mem ){
-        info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
-               << " (" << mem-m_lastMem << "KB, " << 100.*(mem-m_lastMem)/m_lastMem << "%)" 
-               << " in last " << m_increment << " events" << endmsg ;
-      }
-      else {
-        info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
-               << " (-" << m_lastMem-mem << "KB, -" << 100.*(m_lastMem-mem)/m_lastMem << "%)" 
-               << " in last " << m_increment << " events" << endmsg ;
-      }
+  if ( 0 == m_lastMem )
+  {
+    m_lastMem = mem;
+  }
+  else if ( UNLIKELY( 0 == nev%m_increment && m_increment > 0 ) ) 
+  {
+    if ( m_lastMem != mem )
+    {
+      const long memDiff = (long)(mem-m_lastMem);
+      info() << "Memory has changed from " << m_lastMem << " to " << mem << "  KB" 
+             << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)" 
+             << " in last " << m_increment << " events" << endmsg ;
     }
     
-    m_lastMem = mem ;
+    m_lastMem = mem;
   }
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
