@@ -185,6 +185,64 @@ def retrieve(url, dest):
 
     return fname, finfo
 
+project_conf_cache = []
+
+def getCachedProjectConf(name):
+    """
+    cache of the project configurations already found.
+    @param name: name of the project
+    @type name: string
+    """
+    import LbConfiguration.Project #@UnusedImport
+    import LbConfiguration.Package
+    global project_conf_cache
+    log = logging.getLogger()
+    p = None
+    exclude_list  = [x.name() for x in project_conf_cache]
+    exclude_list += [x.name() for x in package_conf_cache]
+    exclude_list += [x.upper() for x in LbConfiguration.Package.package_names]
+    if name.upper() not in exclude_list :
+        p = LbConfiguration.Project.getProject(name, svn_fallback=True, raise_exception=False)
+        if p :
+            project_conf_cache.append(p)
+    else :
+        for x in project_conf_cache :
+            if name.upper() == x.NAME() :
+                log.debug("getting %s project configuration from the cache" % name)
+                p = x
+                break
+    return p
+
+
+package_conf_cache = []
+
+def getCachedPackageConf(name):
+    """
+    cache of the package configurations already found.
+    @param name: name of the package
+    @type name: string
+    """
+    import LbConfiguration.Package #@UnusedImport
+    import LbConfiguration.Project
+    global package_conf_cache
+    log = logging.getLogger()
+    p = None
+    exclude_list  = [x.name() for x in package_conf_cache]
+    exclude_list += [x.name() for x in project_conf_cache]
+    exclude_list += [x.lower() for x in LbConfiguration.Project.project_names]
+    if name.lower() not in exclude_list :
+        p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
+        if p :
+            package_conf_cache.append(p)
+    else :
+        for x in package_conf_cache :
+            if name.lower() == x.name() :
+                log.debug("getting %s package configuration from the cache" % name)
+                p = x
+                break
+    return p
+
+
 
 #----------------------------------------------------------------------------------
 
@@ -898,10 +956,8 @@ def getProjectList(name, version, binary=None, recursive=True):
     html_list = []
 
     import LbConfiguration.Platform #@UnusedImport
-    import LbConfiguration.Package #@UnusedImport
-    import LbConfiguration.Project #@UnusedImport
 
-    p = LbConfiguration.Package.getPackage(name, svn_fallback=True)
+    p = getCachedPackageConf(name)
 
     if p :
         tar_file = p.tarBallName(version)
@@ -910,7 +966,7 @@ def getProjectList(name, version, binary=None, recursive=True):
         if binary :
             tar_file += "_%s" % binary
     else:
-        pj = LbConfiguration.Project.getProject(name, svn_fallback=True)
+        pj = getCachedProjectConf(name)
         if pj :
             tar_file = pj.tarBallName(version, binary)
         else :
@@ -1220,18 +1276,23 @@ def getProjectTar(tar_list, already_present_list=None):
 
 
                 try :
-                    from LbConfiguration.Project import getProject, ProjectConfException
-                    prj = getProject(pack_ver[0], svn_fallback=True)
+                    if "/" in pack_ver[0] :
+                        p_name = pack_ver[0].split("/")[-1]
+                    else :
+                        p_name = pack_ver[0]
+                    prj = getCachedProjectConf(p_name)
                     if prj :
                         cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
                         postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
                         if os.path.exists(os.path.join(postinstallscr)) :
-                            registerPostInstallCommand(pack_ver[0],
+                            registerPostInstallCommand(p_name,
                                                        "python %s" % postinstallscr,
                                                        cmtcontainer)
+                    else :
+                        pkg = getCachedPackageConf(p_name)
+                        if pkg :
+                            pass
                 except ImportError:
-                    pass
-                except ProjectConfException:
                     pass
                 if pack_ver[0] == "LBSCRIPTS" :
                     updateLHCbProjectPath(os.environ["MYSITEROOT"])
@@ -1429,14 +1490,13 @@ def showCompatibleConfigs():
 #
 def getVersionList(pname, ver=None):
     from LbConfiguration.Version import sortStrings
-    from LbConfiguration.Package import getPackage
 
     datapackage = False
 
     log = logging.getLogger()
     log.debug('Browsing versions for %s ' % pname)
 
-    p = getPackage(pname, svn_fallback=True)
+    p = getCachedPackageConf(pname)
 
     if p :
         PROJECT = p.project().upper()
@@ -1483,17 +1543,15 @@ def listVersions(pname, ver=None):
         log.info(l)
 
 def doesVersionExist(vlist, pname, version, cmt_config=None):
-    from LbConfiguration.Package import getPackage
-    from LbConfiguration.Project import getProject
 
     exist = False
 
     isproj = False
 
-    p = getPackage(pname, svn_fallback=True)
+    p = getCachedPackageConf(pname)
 
     if not p :
-        p = getProject(pname, svn_fallback=True)
+        p = getCachedProjectConf(pname)
         if p :
             isproj = True
 
@@ -1518,9 +1576,9 @@ def getProjectVersions(pname, cmt_config=None):
 
     version_list = []
 
-    if pname in package_names :
+    if pname.upper() in [x.upper() for x in package_names] :
         ispack = True
-    elif pname in project_names:
+    elif pname.upper() in [x.upper() for x in project_names] :
         isproj = True
 
 
@@ -1771,7 +1829,7 @@ def createBaseDirs(pname, pversion):
     bootscripts_dir = _multiPathJoin(mysiteroot, "bootscripts")
     targz_dir = _multiPathJoin(mysiteroot, "targz")
 
-    if sys.platform != "win32" :
+    if sys.platform != "win32" and "USER" in os.environ :
         tmp_dir = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
     else :
         tmp_dir = _multiPathJoin(mysiteroot, "tmp")

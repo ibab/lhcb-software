@@ -1,3 +1,10 @@
+2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbLegacy/python/LbLegacy/install_project.py: implement cache for project and package configuration. This
+	prevent too many useless connection to SVN if the package/project is not know. To be
+	noted that a proper abstraction of the configuration from both package and projects would
+	be better.
+
 2011-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbLegacy/python/LbLegacy/install_project.py: use the SVN fallback for the project configuration.
