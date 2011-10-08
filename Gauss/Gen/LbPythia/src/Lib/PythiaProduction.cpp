@@ -192,13 +192,13 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pypars parp 91 1.0" ) ;
   m_defaultSettings.push_back( "pypars parp 149 0.02" ) ;
   m_defaultSettings.push_back( "pypars parp 150 0.085" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 11 0.5" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 11 0.4" ) ;
   m_defaultSettings.push_back( "pydat1 parj 12 0.4" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 13 0.79" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 14 0.0" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 13 0.769" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 14 0.09" ) ;
   m_defaultSettings.push_back( "pydat1 parj 15 0.018" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 16 0.054" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 17 0.131" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 16 0.0815" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 17 0.0815" ) ;
   m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
   m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
 } ;

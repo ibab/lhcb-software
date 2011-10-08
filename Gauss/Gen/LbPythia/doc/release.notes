@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-10-08 - Patrick Robbe
+ - PythiaProduction.cpp: set new Pythia tuning for B** as default
+
 !========================= LbPythia v10r0 2011-07-23 =========================
 ! 2011-07-23 - Gloria Corti
  - Apply pattern not to build on windows, so that conditional use can be
