@@ -2,7 +2,9 @@
 #@PydevCodeAnalysisIgnore
 
 from LbConfiguration.Repository import getRepositories
+from LbConfiguration.External import external_projects
 from LbUtils.VCS import splitlines
+
 
 import logging
 import sys, os
@@ -134,26 +136,28 @@ def _getSVNPackage(packagename):
     @type packagename: string
     """
     log = logging.getLogger()
-    reps = getRepositories(protocol="anonymous")
-    for name in reps:
-        url = str(reps[name])
-        log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
-        rep = reps[name]
-        if hasattr(rep, "getProperty") :
-            for l in splitlines(rep.getProperty("packages")) :
-                hat = None
-                package, project = l.split()[:2]
-                if "/" in package :
-                    hat, package = package.split("/")
-                if packagename.lower() == package.lower() and project.upper() in [x.upper() for x in project_names] :
-                    pj = PackageConf(package)
-                    pj.setHat(hat)
-                    pj.setProject(project)
-                    return pj
+    if packagename.upper() not in [ x.upper() for x in external_projects] :
+        reps = getRepositories(protocol="anonymous")
+
+        for name in reps:
+            url = str(reps[name])
+            log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+            rep = reps[name]
+            if hasattr(rep, "getProperty") :
+                for l in splitlines(rep.getProperty("packages")) :
+                    hat = None
+                    package, project = l.split()[:2]
+                    if "/" in package :
+                        hat, package = package.split("/")
+                    if packagename.lower() == package.lower() and project.upper() in [x.upper() for x in project_names] :
+                        pj = PackageConf(package)
+                        pj.setHat(hat)
+                        pj.setProject(project)
+                        return pj
     return None
 
 
-def getPackage(packagename, svn_fallback=False):
+def getPackage(packagename, svn_fallback=False, raise_exception=True):
     """ return the static instance of the package configuration by name """
     pj = None
     for p in package_list:
@@ -163,11 +167,11 @@ def getPackage(packagename, svn_fallback=False):
         return pj
     elif svn_fallback:
         pj = _getSVNPackage(packagename)
-        if not pj :
+        if not pj and raise_exception :
             raise PackageConfException, "No such package configuration"
         else :
             return pj
-    else:
+    elif raise_exception :
         raise PackageConfException, "No such package configuration"
 
 

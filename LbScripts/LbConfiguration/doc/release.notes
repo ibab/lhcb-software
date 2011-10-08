@@ -1,3 +1,10 @@
+2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/Package.py:
+	- added flag to prevent exception raising.
+	- filterout external projects for SVN searching
+	* LbConfiguration/python/LbConfiguration/Project.py: idem
+
 2011-10-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/Project.py: fixed log message.

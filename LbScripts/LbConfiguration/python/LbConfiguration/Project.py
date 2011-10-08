@@ -3,6 +3,7 @@
 
 from LbConfiguration.Repository import getRepositories
 from LbConfiguration.Platform import binary_list, getBinaryOpt
+from LbConfiguration.External import external_projects
 
 from LbUtils.VCS import splitlines
 
@@ -300,21 +301,22 @@ def _getSVNProject(projectname):
     @type projectname: string
     """
     log = logging.getLogger()
-    reps = getRepositories(protocol="anonymous")
-    for name in reps:
-        url = str(reps[name])
-        log.debug("Looking for package '%s' in '%s' (%s)", projectname, name, url)
-        rep = reps[name]
-        if hasattr(rep, "getProperty") :
-            for l in splitlines(rep.getProperty("projects")) :
-                project = l.strip()
-                if projectname.upper() == project.upper() :
-                    pj = ProjectConf(project)
-                    return pj
+    if projectname.upper() not in [ x.upper() for x in external_projects] :
+        reps = getRepositories(protocol="anonymous")
+        for name in reps:
+            url = str(reps[name])
+            log.debug("Looking for package '%s' in '%s' (%s)", projectname, name, url)
+            rep = reps[name]
+            if hasattr(rep, "getProperty") :
+                for l in splitlines(rep.getProperty("projects")) :
+                    project = l.strip()
+                    if projectname.upper() == project.upper() :
+                        pj = ProjectConf(project)
+                        return pj
     return None
 
 
-def getProject(projectname, svn_fallback=False):
+def getProject(projectname, svn_fallback=False, raise_exception=True):
     """ return the static instance of the project configuration by name """
     pj = None
     for p in project_list:
@@ -324,11 +326,11 @@ def getProject(projectname, svn_fallback=False):
         return pj
     elif svn_fallback:
         pj = _getSVNProject(projectname)
-        if not pj :
+        if not pj and raise_exception :
             raise ProjectConfException, "No such project configuration"
         else :
             return pj
-    else:
+    elif raise_exception :
         raise ProjectConfException, "No such project configuration"
 
 
