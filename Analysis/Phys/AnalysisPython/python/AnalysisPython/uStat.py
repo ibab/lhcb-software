@@ -118,12 +118,14 @@ def uCalc ( pdf            ,
     """
     Calculate U-statistics 
     """
-    cpp = AnalysisPython.PyRoUts.cpp
-    sc  = cpp.Analysis.UStat.calculate ( pdf   ,
-                                         data  ,
-                                         histo ,
-                                         args  )
-    return histo 
+    cpp   = AnalysisPython.PyRoUts.cpp
+    tStat = ROOT.Double(-1)
+    sc    = cpp.Analysis.UStat.calculate ( pdf   ,
+                                           data  ,
+                                           histo ,
+                                           tStat ,
+                                           args  )
+    return histo, tStat 
     
     numEntries = data.numEntries ()
     dim        = args.getSize    ()
@@ -233,11 +235,11 @@ def uPlot ( pdf            ,
 
     if not args : args = pdf.getObservables ( data )
     
-    uCalc ( pdf       ,
-            args      ,
-            data      ,
-            histo     ,
-            silent    )    
+    h,tStat = uCalc ( pdf       ,
+                      args      ,
+                      data      ,
+                      histo     ,
+                      silent    )    
     
     res  = histo.Fit         ( 'pol0' , 'SLQ0+' )
     func = histo.GetFunction ( 'pol0' )
@@ -246,7 +248,7 @@ def uPlot ( pdf            ,
         func.SetLineColor ( 2 )
         func.ResetBit     ( 1 << 9 )
         
-    return res , histo
+    return res , histo, float(tStat)
 
 # ===========================================================================
 

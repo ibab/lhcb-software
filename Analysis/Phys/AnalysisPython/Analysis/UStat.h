@@ -37,11 +37,19 @@ namespace Analysis
     // ========================================================================
   public: 
     // ========================================================================
+    /** calculate U-statistics 
+     *  @param pdf   (input) PDF
+     *  @param data  (input) data 
+     *  @param hist  (update) the histogram with U-statistics 
+     *  @param tStat (update) value for T-statistics 
+     *  @param args  (input)  the arguments
+     */
     static StatusCode calculate
-    ( const RooAbsPdf&  pdf  , 
-      const RooDataSet& data ,  
-      TH1&        hist     ,
-      RooArgSet * args = 0 );
+    ( const RooAbsPdf&  pdf       , 
+      const RooDataSet& data      ,  
+      TH1&              hist      ,
+      double&           tStat     ,
+      RooArgSet *       args  = 0 ) ;
     // ========================================================================
   };
   // ==========================================================================

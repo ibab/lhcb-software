@@ -5,6 +5,9 @@
 // STD& STL 
 // ============================================================================
 #include <cmath>
+#include <vector>
+#include <algorithm>
+#include <numeric>
 // ============================================================================
 // ROOT & RooFit 
 // ============================================================================
@@ -19,6 +22,10 @@
 #include "RooRealVar.h"
 #include "RooDataSet.h"
 #include "RooGlobalFunc.h"
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/Power.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -63,15 +70,32 @@ namespace
     return std::sqrt ( result ) ;
   }
   // ==========================================================================
-  const double pi = TMath::Pi() ;
+  /// get the volume of n-ball with unit radius 
+  double nBallVolume ( const unsigned int n )
+  {
+    return 
+      0 == n ?  0.0 :  // 0-ball : nothing 
+      1 == n ?  2.0 :  // 1-ball : interval 
+      2 == n ? M_PI :  // 2-ball : circle 
+      2 * M_PI / double ( n ) * nBallVolume ( n - 2 ) ;
+  } ;
   // ==========================================================================
 } //                                                 end of anonymous namespace  
 // ============================================================================
+/*  calculate U-statistics 
+ *  @param pdf   (input) PDF
+ *  @param data  (input) data 
+ *  @param hist  (update) the histogram with U-statistics 
+ *  @param args  (input)  the arguments
+ *  @param tStat (output,optional) value for T-statistics 
+ */
+// ============================================================================
 StatusCode Analysis::UStat::calculate
-( const RooAbsPdf&  pdf  , 
-  const RooDataSet& data ,  
-  TH1&        hist ,
-  RooArgSet*  args )
+( const RooAbsPdf&  pdf   , 
+  const RooDataSet& data  ,  
+  TH1&              hist  ,
+  double&           tStat ,
+  RooArgSet*        args  ) 
 {
   //
   if ( 0 == args ) { args = pdf.getObservables ( data ) ; }
@@ -79,11 +103,15 @@ StatusCode Analysis::UStat::calculate
   if ( 0 == args )             { return StatusCode( InvalidArgs ) ; }
   //
   const unsigned int dim    = args->getSize   () ;
-  if ( 1 != dim && 2 != dim ) { return StatusCode( InvalidDims ) ; }
+  if ( 1 > dim  ) { return StatusCode( InvalidDims ) ; }
+  const double volume = nBallVolume ( dim ) ;
+  //
+  typedef std::vector<double> TStat ;
+  TStat tstat ;
   //
   const RooDataSet*  cloned = (RooDataSet*)data.Clone() ;
-  const unsigned int num    = data.numEntries () ;
   //
+  const unsigned int num    = data.numEntries () ;
   boost::progress_display show_progress ( num ) ;
   //
   const RooArgSet * event_x = 0 ;
@@ -134,21 +162,37 @@ StatusCode Analysis::UStat::calculate
     //
     delete event_i ; 
     //
-    const double val1 = 
-      1 == dim ? 2  * min_distance : 
-      2 == dim ? pi * min_distance * min_distance : 0.0 ;
+    // volume of n-ball: 
+    const double val1 = volume * Gaudi::Math::pow ( min_distance , dim ) ;
     //
     const double value = std::exp ( -val1 * num * pdfValue ) ;
     //
     hist.Fill ( value ) ;
     //
+    tstat.push_back ( value ) ; 
+    //
   } 
   delete cloned ;
+  //
+  // calculate T-statistics
+  //
+  std::sort ( tstat.begin() , tstat.end() ) ;
+  double tS = 0 ;
+  double nD = tstat.size() ;
+  for ( TStat::const_iterator t = tstat.begin() ; tstat.end() != t  ; ++t ) 
+  {
+    const double e = ( double ( t - tstat.begin() + 1 ) )  / nD ;
+    const double d = (*t) - e ;
+    //
+    tS += d * d ;
+  }
+  // finally return the value:
+  tStat = tS ;
   //
   return StatusCode::SUCCESS ;
 }
 
- 
+
 // ============================================================================
 // The END 
 // ============================================================================

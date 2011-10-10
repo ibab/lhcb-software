@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+
+! 2011-10-10 - Vanya Belyaev
+ - UStat: extend for tetss of any dimensions ...
+   add T-value calculation
+
 ! 2011-10-03 - Vanya Belyaev
  - minor fix in uStat.py
 
