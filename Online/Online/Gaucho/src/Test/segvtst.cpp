@@ -5,7 +5,7 @@
  *      Author: Beat Jost
  */
 
-#include "../Gaucho/SegvHandler.h"
+#include "Gaucho/SegvHandler.h"
 int main(int argc, char *argv[])
 {
   SegvHandler *h = new SegvHandler();
