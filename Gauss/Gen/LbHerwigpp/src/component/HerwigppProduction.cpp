@@ -26,7 +26,8 @@
 #include "Handlers/EventHandler.h"
 #include "PDF/PartonExtractor.h"
 #include "PDF/PDF.h"
-#include "ThePEG/Vectors/HepMCConverter.h"
+#include "Vectors/HepMCConverter.h"
+#include ""
 
 // Generators 
 #include "Generators/IBeamTool.h"
@@ -210,6 +211,20 @@ StatusCode HerwigppProduction::initializeGenerator( )
       ThePEG::Repository::exec(*cmd, std::cout);
     }
   
+  // set the random seed for Herwig++ (convert uniform to long uniform)
+  std::string rnd = 
+    "set /Herwig/Generators/LHCGenerator:RandomNumberGenerator:Seed "
+    + int2string(static_cast<int>(m_random.shoot() * 2147483647));
+  always() << rnd << endmsg;
+  ThePEG::Repository::exec(rnd, std::cout);
+  
+  // set the diffractive pomeron data table path
+  std::string dif = "set /Herwig/Partons/PomeronPDF:RootName "+lcgExternal
+    +"/MCGenerators/herwig++/"+herwigppVersion+"/"+cmtConfig
+    +"/share/Herwig++/PDF/diffraction/";
+  always() << dif << endmsg;
+  ThePEG::Repository::exec(dif, std::cout);
+
   // run user command vector
   debug() << "Processing job option commands" << endmsg;
   for (CommandVector::const_iterator cmd = m_commandVector.begin();
@@ -258,13 +273,9 @@ StatusCode HerwigppProduction::generateEvent( HepMC::GenEvent* theEvent,
 					      LHCb::GenCollision * 
 					      /*theCollision*/ ) 
 {
-  // set the random seed
-  std::string rnd = 
-    "set /Herwig/Generators/LHCGenerator:RandomNumberGenerator:Seed "
-    + double2string(m_random.shoot());
-  debug() << rnd << endmsg;
-  ThePEG::Repository::exec(rnd, std::cout);
-  
+  // mucking around with random numbers
+  ThePEG::StandardRandom::setSeed(0);
+  ThePEG::StandardRandom::setSeed(25);
   // check generator object is valid
   debug() << "Entered generateEvent"  << endmsg;
   assert(m_herwigpp);
@@ -554,6 +565,16 @@ StatusCode HerwigppProduction::setupForcedFragmentation( const int
 {
   return StatusCode::SUCCESS ;  
 }
+
+//=============================================================================
+// convert int to string
+//=============================================================================
+std::string HerwigppProduction::int2string( int num )
+{
+  std::ostringstream stream;
+  stream << num;
+  return stream.str();
+}  
 
 //=============================================================================
 // convert double to string

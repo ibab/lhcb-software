@@ -75,6 +75,9 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool
   
 protected:
 
+  /// convert an integer to a string
+  virtual std::string int2string(int num) ;
+
   /// convert a double to a string
   virtual std::string double2string(double num) ;
 
