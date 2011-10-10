@@ -32,6 +32,7 @@ use  DisplVerticesMC            v1r4     Phys   # Victor Coco
 use  DecayTreeTuple             v3r17    Phys   # Rob Lambert
 use  JetAccessories		v1r1	 Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r2	 Phys   # Victor Coco, Cedric Potterat
+use  HltSelChecker              v12r1    Hlt    # Patrick Koppenburg
 ####################################################################
 #
 use AnalysisPython              v2r5     Phys
