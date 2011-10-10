@@ -7,7 +7,7 @@
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( ITExpectedHits );
+DECLARE_TOOL_FACTORY( ITExpectedHits )
 
 ITExpectedHits::ITExpectedHits(const std::string& type,
                                const std::string& name,
@@ -121,7 +121,7 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
 
   return StatusCode::SUCCESS;
 
-};
+}
 
 bool ITExpectedHits::insideLayer(const DeSTLayer* layer,
                                  const Line3D& line) const{

@@ -1,5 +1,3 @@
-// $Id: TsaSeedAddHits.cpp,v 1.10 2010-04-21 09:35:41 mneedham Exp $
-
 #ifdef _WIN32
 #pragma warning ( disable : 4244 ) // conversion double to float in root
 #endif
@@ -17,7 +15,7 @@
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( SeedAddHits );
+DECLARE_TOOL_FACTORY( SeedAddHits )
 
 SeedAddHits::SeedAddHits(const std::string& type,
                          const std::string& name,

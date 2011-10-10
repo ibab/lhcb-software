@@ -1,5 +1,3 @@
-// $:  $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -31,7 +29,7 @@ typedef Tf::Tsa::TStationHitManager::HitRange Hits;
 
 
 // factory defs
-DECLARE_ALGORITHM_FACTORY( Seed );
+DECLARE_ALGORITHM_FACTORY( Seed )
 
 Seed::Seed(const std::string& name,
            ISvcLocator* pSvcLocator):

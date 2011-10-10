@@ -1,4 +1,3 @@
-// $Id: TsaDataDebugAlg.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -16,7 +15,7 @@
 using namespace Tf::Tsa;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DataDebugAlg );
+DECLARE_ALGORITHM_FACTORY( DataDebugAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

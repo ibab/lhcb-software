@@ -1,5 +1,3 @@
-// $Id: TsaStubLinker.cpp,v 1.4 2007-12-08 15:46:43 mschille Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -15,7 +13,7 @@ using namespace boost;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( StubLinker );
+DECLARE_TOOL_FACTORY( StubLinker )
 
 StubLinker::StubLinker(const std::string& type,
                        const std::string& name,
@@ -33,7 +31,7 @@ StubLinker::StubLinker(const std::string& type,
 
   declareInterface<ITsaStubLinker>(this);
 
-};
+}
 
 StubLinker::~StubLinker(){
   // destructor

@@ -1,5 +1,3 @@
-// $Id: TTGenericTracking.cpp,v 1.6 2010-02-17 12:53:51 raaij Exp $
-
 // boost
 #include <boost/foreach.hpp>
 
@@ -26,7 +24,7 @@ using namespace Gaudi::Units;
 using namespace boost::assign;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TTGenericTracking );
+DECLARE_ALGORITHM_FACTORY( TTGenericTracking )
 
 //--------------------------------------------------------------------
 //

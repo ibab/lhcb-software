@@ -1,5 +1,3 @@
-// $Id: TsaSelectorBase.cpp,v 1.5 2009-07-02 10:43:04 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -26,7 +24,7 @@ SelectorBase::SelectorBase(const std::string& type,
   declareProperty("fracUsed", m_fracUsed = 0.35);
 
   declareInterface<ITsaSeedStep>(this);
-};
+}
 
 SelectorBase::~SelectorBase(){
   // destructer

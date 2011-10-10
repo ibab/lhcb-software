@@ -10,4 +10,4 @@
 // Instantiate an instance of the TT station hit manager for the Tsa extended hits
 template class Tf::TTStationHitManager<Tf::Tsa::SeedingHit>;
 typedef Tf::TTStationHitManager<Tf::Tsa::SeedingHit> TsaTTStationHitManager;
-DECLARE_TOOL_FACTORY( TsaTTStationHitManager );
+DECLARE_TOOL_FACTORY( TsaTTStationHitManager )

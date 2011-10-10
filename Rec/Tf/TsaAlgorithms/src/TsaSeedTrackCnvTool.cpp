@@ -1,4 +1,3 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.7 2008-10-24 13:33:34 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +26,7 @@
 using namespace Tf::Tsa;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SeedTrackCnvTool );
+DECLARE_TOOL_FACTORY( SeedTrackCnvTool )
 
 
 //=============================================================================

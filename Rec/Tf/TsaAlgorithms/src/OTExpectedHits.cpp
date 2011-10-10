@@ -1,5 +1,3 @@
-// $Id: OTExpectedHits.cpp,v 1.2 2007/08/28 10:46:35 jonrob Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -12,7 +10,7 @@
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( OTExpectedHits );
+DECLARE_TOOL_FACTORY( OTExpectedHits )
 
 OTExpectedHits::OTExpectedHits(const std::string& type,
                                const std::string& name,
@@ -21,7 +19,7 @@ OTExpectedHits::OTExpectedHits(const std::string& type,
 
   // constructer
   declareInterface<IOTExpectedHits>(this);
-};
+}
 
 OTExpectedHits::~OTExpectedHits(){
   // destructer

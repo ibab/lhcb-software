@@ -1,4 +1,3 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.6 2010-04-21 09:35:41 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -11,7 +10,7 @@
 
 using namespace Tf::Tsa;
 
-DECLARE_ALGORITHM_FACTORY( SeedTrackCnv );
+DECLARE_ALGORITHM_FACTORY( SeedTrackCnv )
 
 SeedTrackCnv::SeedTrackCnv(const std::string& name,
                            ISvcLocator* pSvcLocator):

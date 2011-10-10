@@ -1,11 +1,16 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.10 2010-04-21 09:35:41 mneedham Exp $
-
 #include <algorithm>
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
+  #pragma warning(push)
+#endif
 #include "TsaOTStereoSearch.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 // BOOST !
 #include <boost/assign/std/vector.hpp>
@@ -18,7 +23,7 @@ using namespace boost;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( OTStereoSearch );
+DECLARE_TOOL_FACTORY( OTStereoSearch )
 
 OTStereoSearch::OTStereoSearch(const std::string& type,
                                const std::string& name,
@@ -42,10 +47,7 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
 
   // constructer
   declareInterface<ITsaSeedStep>(this);
-
-  
-
-};
+}
 
 OTStereoSearch::~OTStereoSearch(){
   // destructer
@@ -228,3 +230,8 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
   } // station
 
 }
+
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif

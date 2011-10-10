@@ -1,5 +1,3 @@
-// $Id: TsaXProjSelector.cpp,v 1.1.1.1 2007-08-14 13:50:47 jonrob Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -16,7 +14,7 @@
 using namespace boost::lambda;
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( XProjSelector );
+DECLARE_TOOL_FACTORY( XProjSelector )
 
 XProjSelector::XProjSelector(const std::string& type,
                              const std::string& name,

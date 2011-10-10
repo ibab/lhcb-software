@@ -115,5 +115,4 @@ int SeedLineFit::fit( SeedTrack* seed) const
   msgStream() << MSG::DEBUG  << " -> SeedTrack after fit " << *seed << endreq;
 
   return nIt;
-};
-
+}

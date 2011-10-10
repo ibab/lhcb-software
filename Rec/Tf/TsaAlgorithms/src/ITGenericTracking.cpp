@@ -1,6 +1,3 @@
-// $Id: ITGenericTracking.cpp,v 1.13 2009-08-06 18:12:29 smenzeme Exp $
-
-
 #ifdef _WIN32
 #pragma warning ( disable : 4244 ) // conversion double to float in root
 #endif
@@ -59,7 +56,7 @@ using namespace LHCb;
 
 using namespace boost::lambda;
 
-DECLARE_ALGORITHM_FACTORY( ITGenericTracking );
+DECLARE_ALGORITHM_FACTORY( ITGenericTracking )
 
 //--------------------------------------------------------------------
 //

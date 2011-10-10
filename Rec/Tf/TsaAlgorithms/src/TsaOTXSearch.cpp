@@ -1,10 +1,15 @@
-// $Id: TsaOTXSearch.cpp,v 1.9 2010-04-21 09:35:41 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
+  #pragma warning(push)
+#endif
 #include "TsaOTXSearch.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 // BOOST !
 #include <boost/assign/std/vector.hpp>
@@ -21,7 +26,7 @@ using namespace boost;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( OTXSearch );
+DECLARE_TOOL_FACTORY( OTXSearch )
 
 OTXSearch::OTXSearch(const std::string& type,
                      const std::string& name,
@@ -50,7 +55,7 @@ OTXSearch::OTXSearch(const std::string& type,
 
   declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
 
-};
+}
 
 OTXSearch::~OTXSearch(){
   // destructer
@@ -107,8 +112,8 @@ StatusCode OTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
           if ( sx > m_sxMax ) break;
 
           std::vector<SeedHit*>& skip = hit1->skip();
-          std::vector<SeedHit*>::iterator it = std::find(skip.begin(),skip.end(),hit2);
-          if (it != skip.end()) continue;
+          std::vector<SeedHit*>::iterator itSkip = std::find(skip.begin(),skip.end(),hit2);
+          if (itSkip != skip.end()) continue;
 
           if ( fabs(x1*m_xsParam - sx) > m_xsCut) continue;
           const double dth = atan( sx ) - atan( (x1 - (z1-TsaConstants::zMagnet)*sx)*TsaConstants::oneOverZMagnet );
@@ -304,3 +309,9 @@ void OTXSearch::loadData(std::vector<SeedHit*> hits[6]) const
 }
 
 #undef CALL_MEMBER_FN
+
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif
+

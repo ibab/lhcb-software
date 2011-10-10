@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2011-10-10 - Marco Cattaneo
+ - Mask remaining icc warnings, fix a few remarks
+
 !========================= TsaAlgorithms v3r24 2011-02-02 =========================
 ! 2011-01-27 - Stephanie Hansmann-Menzemer
 - use early data tuning as default

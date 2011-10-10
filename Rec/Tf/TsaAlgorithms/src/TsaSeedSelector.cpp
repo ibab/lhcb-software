@@ -1,5 +1,3 @@
-// $Id: TsaSeedSelector.cpp,v 1.5 2010-04-21 09:35:41 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -14,7 +12,7 @@
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( SeedSelector );
+DECLARE_TOOL_FACTORY( SeedSelector )
 
 SeedSelector::SeedSelector(const std::string& type,
                            const std::string& name,

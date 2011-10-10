@@ -1,14 +1,17 @@
-
-// $Id: TsaITXSearch.cpp,v 1.9 2010-04-21 09:35:40 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
+  #pragma warning(push)
+#endif
 #include "TsaITXSearch.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 #include "TsaKernel/SeedTrack.h"
 
 #include "TsaKernel/TsaConstants.h"
-//#include "TsaKernel/STCluster.h"
 
 #include <utility>
 #include <algorithm>
@@ -27,7 +30,7 @@ using namespace boost;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( ITXSearch );
+DECLARE_TOOL_FACTORY( ITXSearch )
 
 ITXSearch::ITXSearch(const std::string& type,
                      const std::string& name,
@@ -53,7 +56,7 @@ ITXSearch::ITXSearch(const std::string& type,
   declareProperty("collectPolicy", m_collectPolicy = "Linear");
   declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
 
-};
+}
 
 ITXSearch::~ITXSearch(){
   // destructer
@@ -271,3 +274,8 @@ void ITXSearch::loadData(std::vector<SeedHit*> hits[6]) const
 }
 
 #undef CALL_MEMBER_FN
+
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif

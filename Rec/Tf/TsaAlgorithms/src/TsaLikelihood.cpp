@@ -1,5 +1,3 @@
-// $Id: TsaLikelihood.cpp,v 1.7 2010-04-21 09:35:40 mneedham Exp $
-
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -25,7 +23,7 @@ using namespace boost::assign;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( Likelihood );
+DECLARE_TOOL_FACTORY( Likelihood )
 
 Likelihood::Likelihood(const std::string& type,
                        const std::string& name,
@@ -43,7 +41,7 @@ Likelihood::Likelihood(const std::string& type,
   declareProperty("outlierCut", m_outlierCut = 6.0);
 
   declareInterface<ITsaSeedStep>(this);
-};
+}
 
 Likelihood::~Likelihood(){
   // destructer

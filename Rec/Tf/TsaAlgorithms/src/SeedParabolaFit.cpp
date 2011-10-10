@@ -108,7 +108,7 @@ int SeedParabolaFit::fit( SeedTrack* seed, const double &csth ) const {
   }
   seed->setXChi2( chi2 );
   return nIt;
-};
+}
 
 
 int SeedParabolaFit::refit( SeedTrack* seed, const double &csth ) const{
@@ -168,4 +168,4 @@ int SeedParabolaFit::refit( SeedTrack* seed, const double &csth ) const{
   }
   seed->setXChi2( chi2 );
   return 1;
-};
+}

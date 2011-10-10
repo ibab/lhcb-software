@@ -1,11 +1,16 @@
-// $Id: TsaITStereoSearch.cpp,v 1.11 2010-04-21 09:35:40 mneedham Exp $
-
 #include <algorithm>
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
+  #pragma warning(push)
+#endif
 #include "TsaITStereoSearch.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 #include "SeedLineFit.h"
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedFun.h"
@@ -18,7 +23,7 @@ using namespace boost;
 
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( ITStereoSearch );
+DECLARE_TOOL_FACTORY( ITStereoSearch )
 
 ITStereoSearch::ITStereoSearch(const std::string& type,
                                const std::string& name,
@@ -39,7 +44,7 @@ ITStereoSearch::ITStereoSearch(const std::string& type,
   // constructer
   declareInterface<ITsaSeedStep>(this);
 
-};
+}
 
 ITStereoSearch::~ITStereoSearch(){
   // destructer
@@ -103,8 +108,8 @@ StatusCode ITStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
             
             select.clear();
             for ( int lay = lay1; lay <= lay2; ++lay ) {
-              for ( std::vector<SeedHit*>::iterator it = yHits[lay].begin(); yHits[lay].end() != it; ++it ) {
-                SeedHit* hit = (*it);
+              for ( std::vector<SeedHit*>::iterator itY = yHits[lay].begin(); yHits[lay].end() != itY; ++itY ) {
+                SeedHit* hit = (*itY);
                 if ( lay == lay1 && hit == hit1 ) continue;
                 if ( lay == lay2 && hit == hit2 ) continue;
                 if ( fabs( hit->y()-y1w-sy*(hit->z() - z1) ) < m_win ) select.push_back( hit );
@@ -117,8 +122,8 @@ StatusCode ITStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
               iSel[0] = hit1;
               iSel[1] = hit2;
               nSel = 2;
-              for ( std::vector<SeedHit*>::iterator it = select.begin(); select.end() != it; ++it ) {
-                iSel[nSel] = *it;
+              for ( std::vector<SeedHit*>::iterator itSel = select.begin(); select.end() != itSel; ++itSel ) {
+                iSel[nSel] = *itSel;
                 if ( nSel < 29 ) ++nSel;
               }
             }
@@ -183,3 +188,7 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
   }
 }
 
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif
