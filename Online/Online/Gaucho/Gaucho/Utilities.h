@@ -84,4 +84,5 @@ dyn_string *Strsplit(const char *s, char *del);
 dyn_string *Strsplit(char *s, const char *del);
 dyn_string *Strsplit(const char *s, const char *del);
 void StringReplace(std::string &in, const char *patt, std::string &repl);
+void *Memcpy (void *d, void *s,size_t n);
 #endif /* UTILITIES_H_ */

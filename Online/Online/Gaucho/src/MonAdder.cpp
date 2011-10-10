@@ -508,7 +508,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     m_reference = current;
     memset(m_buffer,0,m_buffersize);
     m_hmap.clear();
-    memcpy(p,buff,siz);
+    Memcpy(p,buff,siz);
     m_usedSize = siz;
     void *bend = AddPtr(p,siz);
     void *hstart = AddPtr(p,sizeof(SerialHeader));

@@ -10,6 +10,7 @@
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram.h"
+#include "Gaucho/SegvHandler.h"
 
 DECLARE_SERVICE_FACTORY(AdderSvc)
 
@@ -49,6 +50,10 @@ public:
 
 AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_incidentSvc(0)
 {
+  if (M_SegvHandler == 0)
+  {
+    new SegvHandler();
+  }
   declareProperty("MyName",          m_MyName       = "");
   declareProperty("InDNS",           m_InputDNS     = "");
   declareProperty("SaveRootDir",     m_SaveRootDir  = "/home/beat/Hist/Savesets");

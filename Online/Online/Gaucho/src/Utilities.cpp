@@ -55,4 +55,7 @@ unsigned long long GetTime()
   timstamp += tv.tv_usec*1000;
   return timstamp;
 }
-
+void *Memcpy(void *d, void *s,size_t n)
+{
+  return memcpy(d,s,n);
+}

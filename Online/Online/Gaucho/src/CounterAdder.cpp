@@ -138,7 +138,7 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
       if (p!=0)
       {
         p = AddPtr(p,csiz);
-        memcpy(p,srch,hsiz);
+        Memcpy(p,srch,hsiz);
         m_usedSize += hsiz;
         char *nam = (char*)AddPtr(srch,srch->nameoff);
         m_hmap.insert(std::make_pair(nam,p));
