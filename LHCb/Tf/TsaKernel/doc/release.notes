@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-10-10 - Marco Cattaneo
+ - Mark an icc warning, fix a remark
+
 !======================= TsaKernel v3r6 2010-04-26 ==-========================
 ! 2010-04-07 - Wouter Hulsbergen
  - Replaced Loki::Range with Gaudi::Range

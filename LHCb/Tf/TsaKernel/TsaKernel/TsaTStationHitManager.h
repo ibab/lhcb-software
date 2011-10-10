@@ -4,8 +4,6 @@
  *
  *  Header file for class : Tf::Tsa::TStationHitManager
  *
- *  $Id: TsaTStationHitManager.h,v 1.1 2007-10-23 17:21:53 smenzeme Exp $
- *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
  */
@@ -14,7 +12,14 @@
 #ifndef TSAALGORITHMS_TSATSTATIONHITMANAGER_H
 #define TSAALGORITHMS_TSATSTATIONHITMANAGER_H 1
 
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
+  #pragma warning(push)
+#endif
 #include "TfKernel/TStationHitManager.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 #include "TsaKernel/TsaSeedingHit.h"
 

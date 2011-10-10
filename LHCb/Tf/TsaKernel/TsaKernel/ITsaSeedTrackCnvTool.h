@@ -1,4 +1,3 @@
-// $Id: ITsaSeedTrackCnvTool.h,v 1.1 2007-11-02 15:03:12 albrecht Exp $
 #ifndef TSAKERNEL_ITSASEEDTRACKCNVTOOL_H 
 #define TSAKERNEL_ITSASEEDTRACKCNVTOOL_H 1
 
@@ -20,7 +19,7 @@ static const InterfaceID IID_ITsaSeedTrackCnvTool ( "ITsaSeedTrackCnvTool", 1, 0
  */
 namespace LHCb{
   class Track;
-};
+}
 
 namespace Tf
 {
