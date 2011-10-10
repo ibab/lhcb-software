@@ -168,7 +168,6 @@
      <code>
         bool overlap = false;
         if (channelID().uniqueSector() == testCluster->channelID().uniqueSector()){
-          std::vector&lt;LHCb::STChannelID&gt; chans = channels();
           std::vector&lt;LHCb::STChannelID&gt; testchans = testCluster->channels();
           for (std::vector&lt;LHCb::STChannelID&gt;::const_iterator iterC1 = testchans.begin();
                 iterC1 != testchans.end() &amp;&amp; overlap == false ; ++iterC1){

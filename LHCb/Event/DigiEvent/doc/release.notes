@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2011-10-10 M Needham
+ - Remove unused variable in STCluster class overlap method
+
 !========================= DigiEvent v2r19 2011-07-25 =========================
 ! 2011-06-28 - Eduardo Rodrigues
  - Added copy constructor and clone method to VeloCluster class
