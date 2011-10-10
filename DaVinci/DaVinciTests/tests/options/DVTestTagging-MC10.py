@@ -16,7 +16,7 @@ from Configurables import GaudiSequencer
 from Configurables import CheatedSelection
 
 cheatsel = CheatedSelection("CheatedSelection")
-cheatsel.InputLocations = [ "Phys/TaggingPions" ]
+cheatsel.Inputs = [ "Phys/TaggingPions" ]
 cheatsel.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
 cheatsel.OutputLevel = 6
 
@@ -29,7 +29,7 @@ location = "Phys/CheatedSelection"
 from Configurables import BTagging, BTaggingTool, BTaggingChecker
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ location ]
+tag.Inputs = [ location ]
 tag.OutputLevel = 3
 
 tag.addTool( BTaggingTool )
@@ -38,7 +38,7 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ location ]
+tagcheck.Inputs = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
 
 MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
@@ -55,7 +55,7 @@ DaVinci().CondDBtag = 'sim-20101210-vc-md100'
 DaVinci().DDDBtag = "head-20101206"
 DaVinci().Simulation    = True
 from Configurables import StoreExplorerAlg, PrintDecayTree
-PrintDecayTree().InputLocations = [ location ] 
+PrintDecayTree().Inputs = [ location ] 
 DaVinci().MoniSequence = [   #PrintDecayTree()
                              cheatsel
                             ,tag

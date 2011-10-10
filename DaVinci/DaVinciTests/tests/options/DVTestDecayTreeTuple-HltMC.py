@@ -21,7 +21,7 @@ CS.configure()
 
 from Configurables import DecayTreeTuple
 importOptions("$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2JpsiPhiDetachedBsCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").Inputs = ["Hlt2Bs2JpsiPhiDetachedBsCombine"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B_s0 -> (^phi(1020) -> ^K+ ^K-) (^J/psi(1S) -> ^mu+ ^mu-)"
 DaVinci().MoniSequence += [ DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().EvtMax = 100

@@ -23,7 +23,7 @@ tuple.ToolList +=  [
     , "TupleToolMCTruth"
     , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["StdLooseJpsi2MuMu"]
+tuple.Inputs = ["Phys/StdLooseJpsi2MuMu"]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 # tuple.OutputLevel = 1 
 ########################################################################

@@ -36,7 +36,7 @@ from Configurables import CombineParticles
 Bu2LLK09_DiLepton = CombineParticles("Bu2LLK09_DiLepton")
 Sel09Bu2LLKFilterSequence.Members += [ Bu2LLK09_DiLepton ]
 
-Bu2LLK09_DiLepton.InputLocations = [ "StdLooseElectrons", "StdLooseMuons" ]
+Bu2LLK09_DiLepton.Inputs = [ "Phys/StdLooseElectrons", "Phys/StdLooseMuons" ]
 Bu2LLK09_DiLepton.DecayDescriptors = [ "J/psi(1S) -> e+ e-", "J/psi(1S) -> mu+ mu-" ]
 
 Bu2LLK09_DiLepton.DaughtersCuts = {"e+" : leptoncut, "mu+" : leptoncut }
@@ -47,8 +47,8 @@ Bu2LLK09_DiLepton.MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
 #
 Presel09Bu2LLK = CombineParticles("Presel09Bu2LLK")
 Sel09Bu2LLKFilterSequence.Members += [ Presel09Bu2LLK ]
-Presel09Bu2LLK.InputLocations  = [ "Bu2LLK09_DiLepton",
-                                   "StdLooseKaons"]
+Presel09Bu2LLK.Inputs  = [ "Phys/Bu2LLK09_DiLepton",
+                           "Phys/StdLooseKaons"]
 Presel09Bu2LLK.DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc"
 Presel09Bu2LLK.DaughtersCuts = { "K+"        : kaoncut ,
                               "J/psi(1S)" : llcut }
@@ -59,7 +59,7 @@ Presel09Bu2LLK.MotherCut = bcut
 #
 from Configurables import FilterDesktop
 Sel09Bu2LLK = FilterDesktop("Sel09Bu2LLK")
-Sel09Bu2LLK.InputLocations  = ["Presel09Bu2LLK"]
+Sel09Bu2LLK.Inputs  = ["Phys/Presel09Bu2LLK"]
 Sel09Bu2LLK.Code = hardkaon+" & ("+hardelectron+" | "+hardmuon+" ) & "+harddilepton+" & "+hardB
 Sel09Bu2LLKFilterSequence.Members += [ Sel09Bu2LLK ]
 

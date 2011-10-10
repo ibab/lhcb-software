@@ -23,10 +23,10 @@ for i in MassRanges :
     name = ln+"_"+hn
     location = "/Event/SeqJpsi_" + name + "/Phys/SelJpsi_" + name
     pJpsi = PrintDecayTree('PrintJpsi_'+name,
-                           InputLocations = [ location  ])
+                           Inputs = [ location  ])
     DaVinci().UserAlgorithms += [ pJpsi ]
     f = FilterDesktop('Filter_'+name,
-                      InputLocations = [ location  ],
+                      Inputs = [ location  ],
                       Code = "(MIPCHI2DV(PRIMARY) > 2)")
     DaVinci().UserAlgorithms += [ f ]
     

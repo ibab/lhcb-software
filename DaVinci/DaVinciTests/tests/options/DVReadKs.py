@@ -27,7 +27,7 @@ locs = []
 for i in algs :
     locs.append( head+i )
 
-CC = CountParticles(InputLocations = locs )
+CC = CountParticles(Inputs = locs )
 ##############################################################################
 #
 # DaVinci

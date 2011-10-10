@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-10-10 - Chris Jones
+ - Replace InputLocations with Inputs in qmtest options
+
 ! 2011-10-06 - Chris Jones
  - Update options for flagging tagging test to use an MC10 data file.
 

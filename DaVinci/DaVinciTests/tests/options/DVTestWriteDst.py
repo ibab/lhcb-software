@@ -15,12 +15,7 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
-#
-# Get a J/psi
-#
-jpsi = FilterDesktop('MyJpsi')
-jpsi.InputLocations = [ 'StdLooseJpsi2MuMu' ]
-jpsi.Code = "ALL"
+
 #
 # get DoD muons
 #
@@ -56,7 +51,7 @@ for i in MassRanges :
                         RequiredSelections = [ MyLooseJpsi ])
 
     printer  = PrintDecayTree("Print_"+name,
-                              InputLocations = [SelJpsi.outputLocation()])    
+                              Inputs = [SelJpsi.outputLocation()])    
 
     SeqJpsi = SelectionSequence('SeqJpsi_'+name
                                 , TopSelection = SelJpsi
