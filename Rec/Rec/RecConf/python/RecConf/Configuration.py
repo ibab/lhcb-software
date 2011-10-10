@@ -278,7 +278,7 @@ class RecMoniConf(LHCbConfigurableUser):
 
             # Overall time
             overallTime = RecProcessingTimeMoni("OverallEventProcTime")
-            overallTime.Algorithms = ["BrunelSequencer"]
+            overallTime.Algorithms = ["PhysicsSeq"]
             seq.Members += [overallTime]
 
             # Tracking

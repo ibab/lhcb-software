@@ -4,6 +4,11 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-10-10 - Chris Jones
+ - Change the number of the sequencer used for the inclusive timing monitor
+   from "BrunelSequencer" to "PhysicsSeq" to avoid problems with the monitor
+   timing a still running sequence.
+
 !========================= RecConf v2r3 2011-08-31 =========================
 ! 2011-09-02 - Mariusz Witek
  - modify RecConf/Configuration.py to disable radial cut for primary vertices
