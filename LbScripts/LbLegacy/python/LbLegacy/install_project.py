@@ -253,24 +253,24 @@ def getCachedPackageConf(name):
 _postinstall_commands = {}
 
 
-def registerPostInstallCommand(project, command, dirname=None):
+def registerPostInstallCommand(project, version, command, dirname=None):
     global _postinstall_commands
     log = logging.getLogger()
-    if _postinstall_commands.has_key(project) :
-        cmdlist = _postinstall_commands[project]
+    if (project, version) in _postinstall_commands.keys() :
+        cmdlist = _postinstall_commands[(project,version)]
     else :
         cmdlist = []
     cmdlist.append((command, dirname))
-    _postinstall_commands[project] = cmdlist
+    _postinstall_commands[(project,version)] = cmdlist
     if dirname :
-        log.debug("Registered PostInstall for %s: \"%s\" in %s" % (project, command, dirname))
+        log.debug("Registered PostInstall for %s %s: \"%s\" in %s" % (project, version, command, dirname))
     else :
-        log.debug("Registered PostInstall for %s: \"%s\"" % (project, command))
+        log.debug("Registered PostInstall for %s %s: \"%s\"" % (project, version, command))
 
 
-def callPostInstallCommand(project):
+def callPostInstallCommand(project, version):
     log = logging.getLogger()
-    projcmds = _postinstall_commands.get(project, None)
+    projcmds = _postinstall_commands.get((project,version), None)
     here = None
     if projcmds :
         for c in projcmds :
@@ -278,16 +278,16 @@ def callPostInstallCommand(project):
                 here = os.getcwd()
                 os.chdir(c[1])
             os.system("%s" % c[0])
-            log.info("Executing PostInstall for %s: \"%s\" in %s" % (project, c[0], c[1]))
+            log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
             if here :
                 os.chdir(here)
     else :
-        log.debug("Project %s has no postinstall command" % project)
+        log.debug("Project %s %s has no postinstall command" % (project, version))
 
 
-def isProjectRegistered(project):
+def isProjectRegistered(project,version):
     registered = False
-    if project in _postinstall_commands.keys() :
+    if (project, version) in _postinstall_commands.keys() :
         registered = True
     return registered
 
@@ -1285,17 +1285,18 @@ def getProjectTar(tar_list, already_present_list=None):
                     else :
                         p_name = pack_ver[0]
                     prj = getCachedProjectConf(p_name)
+                    postinstallscr = None
                     if prj :
                         cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
                         postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
-                        if os.path.exists(os.path.join(postinstallscr)) :
-                            registerPostInstallCommand(p_name,
-                                                       "python %s" % postinstallscr,
-                                                       cmtcontainer)
                     else :
                         pkg = getCachedPackageConf(p_name)
                         if pkg :
-                            pass
+                            cmtcontainer = os.path.join(pack_ver[3], "cmt")
+                            postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
+                    if postinstallscr and os.path.exists(postinstallscr) :
+                        registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postinstallscr, cmtcontainer)
+
                 except ImportError:
                     pass
                 if pack_ver[0] == "LBSCRIPTS" :
@@ -1370,10 +1371,13 @@ def getProjectTar(tar_list, already_present_list=None):
                                     log.debug("linking %s -> %s" % (targetf, sourcef))
 
 
-
-            prj = pack_ver[0]
-            if isProjectRegistered(prj) :
-                callPostInstallCommand(prj)
+            if "/" in pack_ver[0] :
+                prj = pack_ver[0].split("/")[-1]
+            else :
+                prj = pack_ver[0]
+            ver = pack_ver[1]
+            if isProjectRegistered(prj, ver) :
+                callPostInstallCommand(prj, ver)
 
             setInstalled(fname)
         else :

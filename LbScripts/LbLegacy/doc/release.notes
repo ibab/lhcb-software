@@ -1,8 +1,10 @@
 2011-10-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: implemented -t option to pass custom temporary base directory.
+	* python/LbLegacy/install_project.py:
+	- implemented -t option to pass custom temporary base directory.
 	It is then randomly seeded. Please note that the safest is to used the canonical system one. ie: "-t $TMPDIR" or
 	"-t /tmp"
+	- added post install action for data packages. Now it also tries to look for PostInstall.py in <packgage>/<ver>/cmt
 
 2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
