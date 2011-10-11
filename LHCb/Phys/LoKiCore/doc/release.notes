@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-08-05 - Roel Aaij
+ - Fix a bug in the copy constructor of Scalers::RateLimitV. On copy, an
+   additional random offset was added to the initial offset. The offset is now
+   set to a new number from the same domain.
+
 !========================= LoKiCore v11r3 2011-08-29 =========================
 ! 2011-08-05 - Marco Clemencic
  - Modified the implementation of LoKi::TES::Stat to be independent of the

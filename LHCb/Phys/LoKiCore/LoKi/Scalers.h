@@ -237,9 +237,11 @@ namespace LoKi
     private:
       // ======================================================================
       /// Tick interval 
-      mutable long double m_interval ;                         // Tick interval 
+      mutable long double m_interval ;                     //     tick interval 
       /// the next tick 
-      mutable long double m_next     ;                         // the next tick 
+      mutable long double m_next     ;                     //     the next tick 
+      /// the previous tick 
+      mutable long double m_previous ;                     // the previous tick 
       // ======================================================================
     };
     // ========================================================================

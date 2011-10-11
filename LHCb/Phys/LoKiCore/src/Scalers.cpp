@@ -194,16 +194,17 @@ std::ostream& LoKi::Scalers::Skipper::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Scalers::RateLimitV::RateLimitV
-( const double                       maxRate , 
-  const LoKi::Scalers::RateLimitType flag    ) 
-  : LoKi::Functor<void,bool> () 
-  , LoKi::Listener           () 
+( const double                       maxRate ,
+  const LoKi::Scalers::RateLimitType flag    )
+  : LoKi::Functor<void,bool> ()
+  , LoKi::Listener           ()
   , m_rateSvc   ()
-  , m_uniform   ( 0.0 , 1.0 ) 
-  , m_rate      ( maxRate   ) 
-  , m_limitType ( flag      ) 
-  , m_interval  ( 1 ) 
-  , m_next      ( 1 ) 
+  , m_uniform   ( 0.0 , 1.0 )
+  , m_rate      ( maxRate   )
+  , m_limitType ( flag      )
+  , m_interval  ( 1 )
+  , m_next      ( 1 )
+  , m_previous  ( 1 )
 {
   initialize_ ( s_RATESVC ) ;
 }
@@ -226,6 +227,7 @@ LoKi::Scalers::RateLimitV::RateLimitV
   , m_limitType ( flag      ) 
   , m_interval  ( 1 ) 
   , m_next      ( 1 )
+  , m_previous  ( 1 )
 {
   initialize_ ( s_RATESVC ) ;
 }
@@ -248,6 +250,7 @@ LoKi::Scalers::RateLimitV::RateLimitV
   , m_limitType ( flag      ) 
   , m_interval  ( 1 ) 
   , m_next      ( 1 ) 
+  , m_previous  ( 1 )
 {
   initialize_ ( service ) ;
 }
@@ -264,16 +267,18 @@ void LoKi::Scalers::RateLimitV::initialize_ ( const std::string& svc )
   Assert ( !(!m_rateSvc) , "IReferenceRate* is invalid" ) ;
   //
   if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
-  m_next = m_rateSvc -> tick () ;
+  m_previous = m_rateSvc -> tick () ;
   //
   // randomize initial phase in case of perioding limiter
+  double offset = 0;
   switch ( limitType() ) 
   {
   case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    m_next += m_interval * m_uniform ( m_next ) ;  break ;
+    offset = m_interval * m_uniform ( m_previous ) ;  break ;
   default:
-    m_next += 1 ; // wait at least one tick..
+    offset = 1 ; // wait at least one tick..
   }
+  m_next = m_previous + offset;
   //
   // subscribe the incident:
   //
@@ -299,19 +304,21 @@ LoKi::Scalers::RateLimitV::RateLimitV
   , m_uniform   ( right.m_uniform   ) 
   , m_rate      ( right.m_rate      ) 
   , m_limitType ( right.m_limitType ) 
-  , m_interval  ( right.m_interval  ) 
-  , m_next      ( right.m_next      ) 
+  , m_interval  ( right.m_interval  )
+  , m_previous  ( right.m_previous  )
 {
   // randomize initial phase in case of periodic limiter
+  double offset = 0.;
   switch ( limitType() ) 
   {
   case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    m_next += m_interval * m_uniform ( m_next ) ; break ;
+    offset = m_interval * m_uniform ( 0 ) ; break ;
   case LoKi::Scalers::RandomLimiter : 
-    m_next += 1 + m_interval * -std::log ( m_uniform ( m_next ) ) ; break ;
+    offset = 1 + m_interval * -std::log ( m_uniform ( 0 ) ) ; break ;
   default:
-    m_next += 1 ; // wait at least one tick
+    offset = 1 ; // wait at least one tick
   }
+  m_next = m_previous + offset;
 }
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -351,10 +358,11 @@ bool LoKi::Scalers::RateLimitV::eval
     // recompute interval -- the rate of the rateSvc may have changed!
     m_interval = m_rateSvc->rate() / m_rate ; 
 
+    m_previous = m_next;
     switch ( limitType() ) 
     {
     case LoKi::Scalers::RandomLimiter : 
-      m_next += m_interval * -std::log ( m_uniform ( m_next ) ) ; break ;
+      m_next += m_interval * -std::log ( m_uniform( 0 ) ) ; break ;
     default:
       m_next += m_interval ;
     } 
@@ -389,21 +397,23 @@ LoKi::Scalers::RateLimitV::getService
  *  @param incident (INPUT) incident to listen
  */
 // ===========================================================================
-void LoKi::Scalers::RateLimitV:: handle ( const Incident& /* incident */ ) 
+void LoKi::Scalers::RateLimitV::handle( const Incident& /* incident */ ) 
 {
   //
   if ( 0 < m_rate ) { m_interval = m_rateSvc->rate() / m_rate ; }
-  m_next = m_rateSvc -> tick () ;
+  m_previous = m_rateSvc -> tick () ;
   //
   // randomize initial phase in case of perioding limiter
+  double offset = 0;
   switch ( limitType() ) 
   {
   case LoKi::Scalers::RandomPhasePeriodicLimiter : 
-    m_next += m_interval * m_uniform ( m_next ) ; break ;
+    offset = m_interval * m_uniform ( 0 ) ; break ;
   default:
-    m_next += 1 ; // wait at least one tick...
+    offset = 1 ; // wait at least one tick...
   }
   //
+  m_next = m_previous + offset;
 }
 // ===========================================================================
 std::ostream& LoKi::Scalers::RateLimitV::fillStream( std::ostream& s ) const 
