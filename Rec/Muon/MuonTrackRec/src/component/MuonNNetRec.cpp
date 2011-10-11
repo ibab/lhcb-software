@@ -1,8 +1,6 @@
-// $Id: MuonNNetRec.cpp,v 1.29 2010-05-04 14:36:32 ggiacomo Exp $
-
 #include <list>
 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiAlg/ISequencerTimerTool.h"
 // from TrackEvent
@@ -19,8 +17,6 @@
 #include "MuonInterfaces/IMuonTrackMomRec.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonNNetRec.h"
-//tools
-#include "TrackInterfaces/ITrackMomentumEstimate.h"
 using namespace LHCb;
 using namespace std;
 
@@ -31,7 +27,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonNNetRec );
+DECLARE_TOOL_FACTORY( MuonNNetRec )
 
 
 //=============================================================================
@@ -114,25 +110,25 @@ StatusCode MuonNNetRec::initialize ()
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }
   
   m_decTool = tool<IMuonHitDecode>(m_decToolName);
   if(!m_decTool){
-    error()<<"error retrieving the muon decoding tool "<<endreq;
+    error()<<"error retrieving the muon decoding tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
   m_padTool = tool<IMuonPadRec>(m_padToolName);
   if(!m_padTool){
-    error()<<"error retrieving the muon pad rec. tool "<<endreq;
+    error()<<"error retrieving the muon pad rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
   m_clusterTool = tool<IMuonClusterRec>(m_clusterToolName);
   if(!m_clusterTool){
-    error()<<"error retrieving the cluster rec. tool "<<endreq;
+    error()<<"error retrieving the cluster rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
   // switch off xtalk code if we're doing real clustering
@@ -142,7 +138,7 @@ StatusCode MuonNNetRec::initialize ()
     //tool for calculating the transverse momentum  
     m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
     if(!m_momentumTool){
-      error()<<"error retrieving the momentum rec. tool "<<endreq;
+      error()<<"error retrieving the momentum rec. tool "<<endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -269,9 +265,8 @@ StatusCode MuonNNetRec::muonNNetMon(){
   std::list< MuonNeuron* > neurons;
   int Nneurons = 0;
   std::vector<MuonHit*>::const_iterator ihT,ihH; 
-  MuonHit *head, *tail;
   for(ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){
-    
+    MuonHit *head, *tail;
     // skip a station for efficiency studies
     int stT = (*ihT)->station();
     if (stT == m_skipStation) continue;
@@ -449,7 +444,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
     // kill double length neurons if there is a unit length one 
     nl1 = neurons.begin();
     for(; nl1 != neurons.end(); nl1++){
-      (*nl1)->killDoubleLength(  (const float) m_acut );
+      (*nl1)->killDoubleLength((float) m_acut );
     }
   }
   

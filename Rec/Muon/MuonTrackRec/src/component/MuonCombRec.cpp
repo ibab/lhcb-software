@@ -1,4 +1,3 @@
-// $Id: MuonCombRec.cpp,v 1.16 2010-02-19 14:53:44 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -7,7 +6,7 @@
 #endif
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
@@ -43,7 +42,7 @@ using namespace boost::assign;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonCombRec );
+DECLARE_TOOL_FACTORY( MuonCombRec )
 
 
 //=============================================================================
@@ -164,7 +163,7 @@ StatusCode MuonCombRec::initialize() {
   debug()<<"Retrieve MuonDet"<<endmsg;
   m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    error()<<"error retrieving Muon Detector geometry "<<endreq;
+    error()<<"error retrieving Muon Detector geometry "<<endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -172,7 +171,7 @@ StatusCode MuonCombRec::initialize() {
   debug()<<"Retrieve hit decoding"<<endmsg;
   m_decTool = tool<IMuonHitDecode>(m_decToolName);
   if(!m_decTool){
-    error()<<"error retrieving the muon decoding tool "<<endreq;
+    error()<<"error retrieving the muon decoding tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -180,7 +179,7 @@ StatusCode MuonCombRec::initialize() {
   debug()<<"Retrieve pad decoding"<<endmsg;
   m_padTool = tool<IMuonPadRec>(m_padToolName);
   if(!m_padTool){
-    error()<<"error retrieving the muon pad rec. tool "<<endreq;
+    error()<<"error retrieving the muon pad rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -189,7 +188,7 @@ StatusCode MuonCombRec::initialize() {
   debug()<<"Retrieve pad position tool"<<endmsg;
   m_clusterTool = tool<IMuonClusterRec>(m_clusterToolName);
   if(!m_clusterTool){
-    error()<<"error retrieving the cluster rec. tool "<<endreq;
+    error()<<"error retrieving the cluster rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -199,7 +198,7 @@ StatusCode MuonCombRec::initialize() {
   //calculate the transverse momentum  
   m_momentumTool = tool<IMuonTrackMomRec>("MuonTrackMomRec");
   if(!m_momentumTool){
-    error()<<"error retrieving the momentum rec. tool "<<endreq;
+    error()<<"error retrieving the momentum rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -325,7 +324,7 @@ StatusCode MuonCombRec::initialize() {
   setSkipStation(m_optSkipStation); // WARNING ! this resets m_recDone to "false"
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main reconstruction steering routine
@@ -419,7 +418,7 @@ StatusCode MuonCombRec::muonTrackFind() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //========================================================================
 // track reconstruction 
@@ -486,7 +485,7 @@ StatusCode MuonCombRec::muonSearch() {
                   <<(*xtit)->region()<<" "
                   <<(*xtit)->X()<<" "
                   <<(*xtit)->Y()<<" "
-                  <<(*xtit)->Z()<<" alreadyUsed= "<<alreadyUsed<<endreq;
+                  <<(*xtit)->Z()<<" alreadyUsed= "<<alreadyUsed<<endmsg;
         }
       }
       if(alreadyUsed) continue;
@@ -548,9 +547,9 @@ StatusCode MuonCombRec::muonSearch() {
       SSSeedX =  SSx/n;
       SSSeedY =  SSy/n;
       debug() <<"original seed x: "<<(*isSS)->x()
-              <<" average x: "<<SSSeedX<<endreq; 
+              <<" average x: "<<SSSeedX<<endmsg; 
       debug() <<"original seed y: "<<(*isSS)->y()
-              <<" average y: "<<SSSeedY<<endreq;
+              <<" average y: "<<SSSeedY<<endmsg;
       
       // here defines in which region lies the average x in case of xtalk cluster
       // by construction, the region is that of the hit closer to the hit cm
@@ -575,8 +574,8 @@ StatusCode MuonCombRec::muonSearch() {
       }
     }
     
-    debug() <<" +++++++++++++++++++ new seed "<<endreq;          
-    debug() <<"seed "<<SSSeedX<<" "<<SSSeedY<<" REGION "<< regionSS<<endreq;
+    debug() <<" +++++++++++++++++++ new seed "<<endmsg;          
+    debug() <<"seed "<<SSSeedX<<" "<<SSSeedY<<" REGION "<< regionSS<<endmsg;
     
 
     std::vector<MuonHit*> bestCandidate(5); // best candidates in M1,..,M4
@@ -645,7 +644,7 @@ StatusCode MuonCombRec::muonSearch() {
       
       debug() << "M"<<is+1<<" extrapolation  x = " << x << " y = "<< y
               << " BCx = "<< bestCandidate[is]->x()
-              << " BCy = "<< bestCandidate[is]->y() <<endreq;
+              << " BCy = "<< bestCandidate[is]->y() <<endmsg;
       
       // extrapolate the best candidate to the next station.
       // extrapolation is along the previous pair of hits in x and towards
@@ -697,11 +696,11 @@ StatusCode MuonCombRec::muonSearch() {
     
   }
   
-  debug()<<"number of muon Tracks "<<m_tracks.size()<<endreq;
+  debug()<<"number of muon Tracks "<<m_tracks.size()<<endmsg;
 
   return StatusCode::SUCCESS;
   
-};
+}
 
 //========================================================================
 // match hits with the track extrapolation
@@ -871,10 +870,10 @@ StatusCode MuonCombRec::cloneKiller()
         
         if(dist1>dist2){
           (*it1)->setClone();
-          debug()<< "First track is a clone"<<endreq;
+          debug()<< "First track is a clone"<<endmsg;
         }else{
           (*it2)->setClone();
-          debug()<< "Second track is a clone"<<endreq;
+          debug()<< "Second track is a clone"<<endmsg;
         }
       }
     }
@@ -882,7 +881,7 @@ StatusCode MuonCombRec::cloneKiller()
   
   return StatusCode::SUCCESS;
   
-};
+}
 
 //========================================================================
 // tag clone tracks if M2, M3 hits are shared
@@ -936,17 +935,17 @@ StatusCode MuonCombRec::strongCloneKiller()
         
         if(dist1>dist2){
           (*it1)->setClone();
-          debug()<< "First track is a clone"<<endreq;
+          debug()<< "First track is a clone"<<endmsg;
         }else{
           (*it2)->setClone();
-          debug()<< "Second track is a clone"<<endreq;
+          debug()<< "Second track is a clone"<<endmsg;
         }
       }
     }
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //========================================================================
 // create a temporary array of hits sorted by station/region
@@ -956,18 +955,18 @@ StatusCode MuonCombRec::sortMuonHits()
 {
   // fill the sorted hit array for later track reconstruction
 
-  std::vector<MuonHit*>::iterator ih=m_trackhits.begin();
-  for(; ih != m_trackhits.end(); ih++){
-    int station = (*ih)->station();
-    int region  = (*ih)->region();
+  std::vector<MuonHit*>::iterator ith=m_trackhits.begin();
+  for(; ith != m_trackhits.end(); ith++){
+    int station = (*ith)->station();
+    int region  = (*ith)->region();
     int key = station*4+region;
-    m_sortedHits[key]->push_back(*ih);
+    m_sortedHits[key]->push_back(*ith);
   }
   
   if ( msgLevel(MSG::DEBUG) ){
     std::vector< std::vector<MuonHit*>* >::iterator ish;
-    std::vector<MuonHit*>::iterator ih;
     for(ish=m_sortedHits.begin() ; ish !=m_sortedHits.end() ; ish++){
+      std::vector<MuonHit*>::iterator ih;
       for(ih=(*ish)->begin() ; ih !=(*ish)->end() ; ih++){
         debug()<<"sorted hit stored station: "<<(*ih)->station()
                <<" sorted hit stored  region: "<<(*ih)->region()

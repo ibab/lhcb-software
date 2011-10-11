@@ -1,8 +1,7 @@
-// $Id: MuonHitDecode.cpp,v 1.5 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 
 // local
@@ -14,7 +13,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( MuonHitDecode );
+DECLARE_TOOL_FACTORY( MuonHitDecode )
 
 
 MuonHitDecode::MuonHitDecode( const std::string& type,
@@ -54,13 +53,13 @@ StatusCode MuonHitDecode::initialize() {
 
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }  
 
   m_recTool = tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_recTool){
-    error()<<"error retrieving the muon raw buffer decoding tool "<<endreq;
+    error()<<"error retrieving the muon raw buffer decoding tool "<<endmsg;
   }  
   m_tilesAndTDC.clear(); m_tilesAndTDC.reserve(5000);
   m_hits.clear(); m_hits.reserve(5000);
@@ -84,7 +83,7 @@ StatusCode MuonHitDecode::decodeRawData() {
   for(int i=-TAENum;i<=TAENum;i++){
     if (!exist<LHCb::RawEvent>(locBX(i) + LHCb::RawEventLocation::Default))
       continue;
-    debug()<<"Looking at BX: "<<i<<" "<<locBX(i)<<endreq;
+    debug()<<"Looking at BX: "<<i<<" "<<locBX(i)<<endmsg;
 
     // get tiles from the raw buffer
     LHCb::RawEvent* raw = get<LHCb::RawEvent>
@@ -103,11 +102,11 @@ StatusCode MuonHitDecode::decodeRawData() {
 
     m_tilesAndTDC.insert(m_tilesAndTDC.end(), tileAndTDC.begin(), tileAndTDC.end());
     debug()<<"Size of tileAndTDC tmp container in bunch "<< i <<
-      " is: "<<tileAndTDC.size()<<endreq;
+      " is: "<<tileAndTDC.size()<<endmsg;
     tileAndTDC.clear();
     m_recTool->forceReset();
   }
-  debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endreq;
+  debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endmsg;
 
   // create list of MuonLogHit objects
   for(it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); it++){
@@ -125,7 +124,7 @@ StatusCode MuonHitDecode::decodeRawData() {
     
     m_hits.push_back(newhit);
   }
-  debug()<<"Size of MuonLogHit container is: "<<m_hits.size()<<endreq;
+  debug()<<"Size of MuonLogHit container is: "<<m_hits.size()<<endmsg;
   
 
   m_hitsDecoded = true;

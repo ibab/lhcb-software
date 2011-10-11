@@ -1,4 +1,3 @@
-
 !-----------------------------------------------------------------------------
 ! Package     : Muon/MuonTrackRec
 ! Responsible : Giovanni Passaleva / Giacomo Graziani
@@ -8,6 +7,11 @@
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
+
+! 2011-10-11 - Marco Cattaneo
+ - Fix icc warning and remarks
+ - Replace obsolete DeclareFactoryEntries.h by ToolFactory.h
+ - Replace obsolete endreq by endmsg
 
 !========================= MuonTrackRec v3r5 2011-04-27 =========================
 ! 2011-04-11 - Jeroen Van Tilburg

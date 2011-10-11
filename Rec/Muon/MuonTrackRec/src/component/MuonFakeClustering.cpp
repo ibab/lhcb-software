@@ -1,8 +1,7 @@
-// $Id: MuonFakeClustering.cpp,v 1.2 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 // local
 #include "MuonFakeClustering.h"
@@ -21,7 +20,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonFakeClustering );
+DECLARE_TOOL_FACTORY( MuonFakeClustering )
 
 
 
@@ -47,12 +46,12 @@ StatusCode MuonFakeClustering::initialize () {
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }
   m_posTool = tool<IMuonFastPosTool>(m_posToolName);
   if(!m_posTool) {
-    error()<<"error retrieving the muon position tool "<<endreq;
+    error()<<"error retrieving the muon position tool "<<endmsg;
     return StatusCode::FAILURE;
   }
   

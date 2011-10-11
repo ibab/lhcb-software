@@ -1,6 +1,5 @@
-// $Id: MuonTrackMomRec.cpp,v 1.1 2010-02-10 19:20:17 ggiacomo Exp $
 // Include files 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/PhysicalConstants.h" 
 #include "Kernel/IBIntegrator.h"
 
@@ -31,7 +30,7 @@
 // 2010-02-10 : Giacomo Graziani
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MuonTrackMomRec );
+DECLARE_TOOL_FACTORY( MuonTrackMomRec )
 
 
 MuonTrackMomRec::MuonTrackMomRec( const std::string& type,
@@ -166,7 +165,7 @@ StatusCode MuonTrackMomRec::recMomentum(MuonTrack* track,
   }  
   else {
     // can't estimate momentum or charge
-    error() << "B integral is 0!" << endreq;
+    error() << "B integral is 0!" << endmsg;
     sc = StatusCode::FAILURE;
     return sc;
   }

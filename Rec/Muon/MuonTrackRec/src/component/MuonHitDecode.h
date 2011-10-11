@@ -64,10 +64,10 @@ public:
                            int region)  {return (float)(0.*station*region);}
   virtual float padSizeYvx(int station,			    
                            int region)  {return (float)(0.*station*region);}
-  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q, 
-                                          unsigned int s, 
-                                          unsigned int r, 
-                                          short int io, 
+  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q,
+                                          unsigned int s,
+                                          unsigned int r,
+                                          short int io,
                                           unsigned int ch) 
   { q=s=r=ch;io=0; return NULL;}
   virtual std::string& ecsChamberName(int region,

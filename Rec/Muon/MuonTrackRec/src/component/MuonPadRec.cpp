@@ -1,7 +1,6 @@
-// $Id: MuonPadRec.cpp,v 1.5 2010-02-10 19:20:17 ggiacomo Exp $
 #include <vector>
 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "Kernel/MuonTileID.h"
 #include "MuonDet/DeMuonDetector.h"
@@ -22,7 +21,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonPadRec );
+DECLARE_TOOL_FACTORY( MuonPadRec )
 
 
 MuonPadRec::MuonPadRec( const std::string& type,
@@ -69,7 +68,7 @@ StatusCode 	MuonPadRec::initialize ()
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }  
   
@@ -123,7 +122,7 @@ StatusCode MuonPadRec::buildLogicalPads(const std::vector<MuonLogHit*> *myhits )
           // get mapping of input to output from region
           // in fact we are reversing the conversion done in the digitisation
           int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);     
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endmsg;
           
           if(1 == NLogicalMap){
             // straight copy of the input + making SmartRefs to the MuonDigits
@@ -145,7 +144,7 @@ StatusCode MuonPadRec::buildLogicalPads(const std::vector<MuonLogHit*> *myhits )
     m_padsReconstructed = true;
   }
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -222,7 +221,7 @@ StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits,
                                               << *(iOne->first->tile()) << " and "
                                               << *(iTwo->first->tile()) << " times="
                                               << iOne->first->time()<< " and "
-                                              << iTwo->first->time()   <<      endreq;
+                                              << iTwo->first->time()   <<      endmsg;
           
           m_pads.push_back(current);
         } 

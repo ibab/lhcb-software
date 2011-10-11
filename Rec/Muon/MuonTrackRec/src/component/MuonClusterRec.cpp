@@ -1,4 +1,3 @@
-// $Id: MuonClusterRec.cpp,v 1.6 2010-02-17 14:59:29 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +20,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonClusterRec );
+DECLARE_TOOL_FACTORY( MuonClusterRec )
 
 
 
@@ -48,12 +47,12 @@ StatusCode MuonClusterRec::initialize () {
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }
   m_posTool = tool<IMuonFastPosTool>(m_posToolName);
   if(!m_posTool) {
-    error()<<"error retrieving the muon position tool "<<endreq;
+    error()<<"error retrieving the muon position tool "<<endmsg;
     return StatusCode::FAILURE;
   }
   

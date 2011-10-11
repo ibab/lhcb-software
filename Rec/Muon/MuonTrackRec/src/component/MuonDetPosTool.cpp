@@ -1,6 +1,4 @@
-// $Id: MuonDetPosTool.cpp,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
-
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
 
@@ -13,7 +11,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonDetPosTool );
+DECLARE_TOOL_FACTORY( MuonDetPosTool )
 
 MuonDetPosTool::MuonDetPosTool( const std::string& type,
                                 const std::string& name,
@@ -35,7 +33,7 @@ StatusCode MuonDetPosTool::initialize ()
   if (!sc) return sc;
   m_muonDetector = getDet<DeMuonDetector>(DeMuonLocation::Default);
   if(!m_muonDetector){
-    err()<<"error retrieving the Muon detector element "<<endreq;
+    err()<<"error retrieving the Muon detector element "<<endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
