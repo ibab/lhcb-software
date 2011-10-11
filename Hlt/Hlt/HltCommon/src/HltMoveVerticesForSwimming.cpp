@@ -104,20 +104,20 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   debug() << "About to get the offline particles" << endmsg;
 
   //Check if particles exist
-  if (!exist<Particles>(m_Bcontainer+"/Particles")) return sc;
+  if (!exist<Particle::Range>(m_Bcontainer+"/Particles")) return sc;
 
   debug() << "The particles exist, will now get them" << endmsg;
 
-  Particles* pars = get<Particles>(m_Bcontainer+"/Particles");
+  Particle::Range pars = get<Particle::Range>(m_Bcontainer+"/Particles");
   if (msgLevel(MSG::DEBUG)) {
-    if (pars == 0) verbose() << " no particles found! " << endmsg;
-    else verbose() << " particles found " << pars->size() << endmsg;
+    if (!pars) verbose() << " no particles found! " << endmsg;
+    else verbose() << " particles found " << pars.size() << endmsg;
   }   
-  if (pars == 0) return sc;
+  if (!pars) return sc;
   
   debug() << "About to check if only one particle in the event" << endmsg;
   //If more than one particle quit!
-  if (pars->size() != 1) return sc;
+  if (pars.size() != 1) return sc;
   debug() << "About to check if there are any PVs in the event!" << endmsg;
   //If no PVs quit!
   if (m_selections.input<1>()->empty()) return sc;
@@ -168,10 +168,10 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   }      
   //Now get the best PV for the particle
   debug() << "About to get the related PV" << endmsg;
-  const LHCb::VertexBase* offPV  = m_finder->relatedPV(*(pars->begin()), LHCb::RecVertex::ConstVector(offPVs.begin(), offPVs.end()));
+  const LHCb::VertexBase* offPV  = m_finder->relatedPV(pars[0], LHCb::RecVertex::ConstVector(offPVs.begin(), offPVs.end()));
   LHCb::VertexBase* offPV_Clone = offPV->clone();
 
-  sc = move_PVs(*(pars->begin()),offPV_Clone);
+  sc = move_PVs(pars[0],offPV_Clone);
   
   int ncan = m_selections.output()->size();
   debug() << " candidates found " << ncan << endmsg;
@@ -179,7 +179,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   
 }
 //=============================================================================
-StatusCode HltMoveVerticesForSwimming::move_PVs(LHCb::Particle* myB, LHCb::VertexBase* offPV){
+StatusCode HltMoveVerticesForSwimming::move_PVs(const LHCb::Particle* myB, LHCb::VertexBase* offPV){
 //Move the PVs
 
   StatusCode sc = StatusCode::SUCCESS;  

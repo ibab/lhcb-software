@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2011-10-11 - Roel Aaij
+ - Use LHCb::Particle::Range in HltMoveVerticesForSwimming
+
 !========================== HltCommon v8r2   2011-06-24 ==================
 ! 2011-06-22 - Albert Puig
  - Rewritten HltL0CaloCandidates to build clusters from L0CaloCandidates

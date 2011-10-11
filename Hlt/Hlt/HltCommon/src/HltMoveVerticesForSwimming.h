@@ -34,7 +34,7 @@ public:
 
 private:
 
-  StatusCode move_PVs(LHCb::Particle*,LHCb::VertexBase*);
+  StatusCode move_PVs(const LHCb::Particle*,LHCb::VertexBase*);
 
   Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::RecVertex> m_selections;
 
