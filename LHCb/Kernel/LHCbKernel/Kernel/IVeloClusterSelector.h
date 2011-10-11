@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef IVELOCLUSTERSELECTOR_H 
 #define IVELOCLUSTERSELECTOR_H 1
 
@@ -13,7 +12,7 @@
 // Forward declarations
 namespace LHCb {
   class VeloCluster;
-};
+}
 
 
 static const InterfaceID IID_IVeloClusterSelector ( "IVeloClusterSelector", 1, 0 );

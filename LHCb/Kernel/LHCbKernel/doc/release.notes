@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-10-11 - Marco Cattaneo
+ - Fix trivial ICC remarks
+
 ! 2011-10-05 - Chris Jones
  - Rename NHPDPanelsPerRICH as NPDPanelsPerRICH and NTotalHPDPanels as 
    NTotalPDPanels in RichSide.h, to be PD 'neutral'

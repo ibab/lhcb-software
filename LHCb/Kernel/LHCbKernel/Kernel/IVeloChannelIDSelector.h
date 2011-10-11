@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef IVELOCHANNELIDSELECTOR_H 
 #define IVELOCHANNELIDSELECTOR_H 1
 
@@ -13,7 +12,7 @@
 // Forward declarations
 namespace LHCb {
   class VeloChannelID;
-};
+}
 
 
 static const InterfaceID IID_IVeloChannelIDSelector ( "IVeloChannelIDSelector", 1, 0 );

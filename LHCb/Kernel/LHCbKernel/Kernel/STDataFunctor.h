@@ -204,19 +204,5 @@ public:
     return ((!obj) ? false : testID.uniqueSector() >obj->channelID().uniqueSector());
   }
 };
-};
-
-
+}
 #endif // _STDataFunctor_H_
-
-
-
-
-
-
-
-
-
-
-
-
