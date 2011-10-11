@@ -5,6 +5,7 @@
 	It is then randomly seeded. Please note that the safest is to used the canonical system one. ie: "-t $TMPDIR" or
 	"-t /tmp"
 	- added post install action for data packages. Now it also tries to look for PostInstall.py in <packgage>/<ver>/cmt
+	- registered an "atexit" function in order to do a final removal of the temporary directory if mdtemp was used.
 
 2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

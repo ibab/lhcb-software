@@ -430,7 +430,7 @@ def createTmpDirectory():
 
 def destroyTmpDirectory():
     log = logging.getLogger()
-    log.info('     Removing %s' % getTmpDirectory())
+    log.debug('Removing %s' % getTmpDirectory())
     removeAll(getTmpDirectory())
 
 def cleanTmpDirectory():
@@ -2442,6 +2442,7 @@ def parseArgs():
         if key in ('-t', '--tmp-dir'):
             try :
                 cur_tmp_dir = mkdtemp(dir=value)
+                atexit.register(destroyTmpDirectory)
             except:
                 cur_tmp_dir = value
 
