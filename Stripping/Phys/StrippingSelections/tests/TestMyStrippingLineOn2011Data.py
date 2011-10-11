@@ -45,10 +45,8 @@ ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
 
 from Configurables import CondDB
-CondDB(UseOracle = True)
-DaVinci().DDDBtag  = "head-20110722"
-DaVinci().CondDBtag = "head-20110722"
-
+DaVinci().DDDBtag  = "head-20110914"
+DaVinci().CondDBtag = "head-20110914"
 
 DaVinci().PrintFreq = 2000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
@@ -60,4 +58,4 @@ DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType  = "2011"
 DaVinci().InputType = "SDST"
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco11a_Run97120_SDSTs.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco11aNewRoot_Run97120_SDSTs.py")

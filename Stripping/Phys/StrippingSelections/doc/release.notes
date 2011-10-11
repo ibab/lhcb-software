@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-10-11 - Jibo He
+ - tests/TestMyStrippingLineOn2011Data.py
+  . Updated to use Root format test files, and new database tags. 
+
 !========================= StrippingSelections v3r9 2011-09-30 =========================
 ! 2011-09-30 - Cibran Santamarina
  - StrippingBs2PhiKst0.py: Fixing an bug in the IP cut of the phi daughters. 
