@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-10-11 - Roel Aaij
+ - Add microdst elements to configure cloning of swimming results.
+
 !========================= DSTWriters v4r0 2011-09-07 =========================
 ! 2011-08-23 - Rob Lambert
  - Suppress duplication of RecHeader and RecSummary, add in the

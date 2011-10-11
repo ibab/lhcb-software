@@ -13,9 +13,11 @@ __all__ = ( 'CloneRecHeader',
             'GlobalEventCounters',
             'CloneParticleTrees',
             'ClonePVs',
+            'CloneSwimmingReports',
             'CloneMCInfo',
             'CloneBTaggingInfo',
             'ClonePVRelations',
+            'CloneTPRelations',
             'ReFitAndClonePVs',
             'CloneL0DUReport',
             'CloneHltDecReports',
@@ -66,7 +68,18 @@ class GlobalEventCounters(MicroDSTElement) :
                                                            'GlobalEventCounters'))
         cloner.Location = self.branch + "/GlobalEventCounters"
         return [cloner]
-    
+
+class CloneSwimmingReports(MicroDSTElement):
+    def __init__(self, inputSwimmingReports = 'Swimming/Reports', branch='') :
+        MicroDSTElement.__init__(self, branch)
+        self._inputSwimmingReports = inputSwimmingReports
+    def __call__(self, sel) :
+        from Configurables import CopySwimmingReports
+        cloner=CopySwimmingReports(self.personaliseName(sel, 'CopySwimmingReports'))
+        cloner.InputLocation = self._inputSwimmingReports
+        self.setOutputPrefix(cloner)
+        return [cloner]
+
 class CloneParticleTrees(MicroDSTElement) :
 
     def __init__(self, branch='', copyProtoParticles = True) :
@@ -142,7 +155,7 @@ class CloneBTaggingInfo(MicroDSTElement) :
         from Configurables import CopyFlavourTag
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging(self.personaliseName(sel,'BTagging'))
-        BTagAlgo.InputLocations=self.dataLocations(sel,"")
+        BTagAlgo.Inputs=self.dataLocations(sel,"")
         cloner = CopyFlavourTag(self.personaliseName(sel,
                                                      "CopyFlavourTag"))
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
@@ -179,6 +192,26 @@ class ClonePVRelations(MicroDSTElement) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
+class CloneTPRelations(MicroDSTElement) :
+    """
+    Prepares a CopyParticle2TPRelations generator.
+    Constructor arguments:
+    location : name of the TES leaf where the Particle->TP relations are stored.
+    clonePVs : Clone the target swimming reports?
+    branch   : TES branch for output relations table, appended to '/Event'.
+    """
+    def __init__(self, location, cloneReports=True, branch = '') :
+        MicroDSTElement.__init__(self, branch)
+        self.location = location
+        self.cloneReports = cloneReports
+    def __call__(self, sel) :
+        from Configurables import CopyParticle2TPRelations
+        cloner = CopyParticle2TPRelations(self.personaliseName(sel, "CopyP2TP_"+self.location))
+        cloner.InputLocations = self.dataLocations(sel, self.location)
+        if self.cloneReports == False:
+            cloner.ClonerType = 'NONE'
+        self.setOutputPrefix(cloner)
+        return [cloner]
 
 class ReFitAndClonePVs(MicroDSTElement) :
     '''
@@ -196,12 +229,12 @@ class ReFitAndClonePVs(MicroDSTElement) :
 
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations, PVReFitterAlg, BestPVAlg
-        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'),
-                                 ParticleInputLocations = self.dataLocations(sel, 'Particles') )
-        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'),
-                           P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV') )
-        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'),
-                                          InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV') )
+        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'))
+        refitPVs.ParticleInputLocations = self.dataLocations(sel, 'Particles')
+        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
+        bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
+        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
         self.setOutputPrefix(cloner)
         return [refitPVs, bestPV, cloner]
         
@@ -241,13 +274,14 @@ class CloneRawBanks(MicroDSTElement) :
     branch: TES branch of output.
     
     """
-    def __init__(self, branch = '', banks = [], inputRawEvent="/DAQ/RawEvent") :
+    def __init__(self, branch = '', banks = [], inputRawEvent = "/DAQ/RawEvent"):
         MicroDSTElement.__init__(self, branch)
         self.banks = list(banks)
+        self.inputRawEvent = inputRawEvent
     def __call__(self, sel) :
         from Configurables import RawEventSelectiveCopy
         rawBankCopy = RawEventSelectiveCopy(self.personaliseName(sel, 'CloneRawBank'))
-        rawBankCopy.InputRawEventLocation=inputRawEvent
+        rawBankCopy.InputRawEventLocation = self.inputRawEvent
         rawBankCopy.RawBanksToCopy = self.banks 
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
         return [rawBankCopy]
@@ -262,7 +296,7 @@ class CloneBackCat(MicroDSTElement) :
         from Configurables import Particle2BackgroundCategoryRelationsAlg
         from Configurables import CopyParticle2BackgroundCategory
         backCatAlg = Particle2BackgroundCategoryRelationsAlg(self.personaliseName(sel,'BackCatAlg'))
-        backCatAlg.InputLocations=self.dataLocations(sel,"Particles")
+        backCatAlg.Inputs=self.dataLocations(sel,"Particles")
         cloner =  CopyParticle2BackgroundCategory(self.personaliseName(sel, 'CopyP2BackCat'))
         cloner.InputLocations = self.dataLocations(sel,"P2BCRelations")
         self.setOutputPrefix(cloner)
