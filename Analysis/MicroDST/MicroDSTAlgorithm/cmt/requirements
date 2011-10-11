@@ -18,6 +18,7 @@ use LinkerEvent        v*  Event
 use RecEvent           v*  Event
 use DAQEvent           v*  Event
 use HltEvent           v*  Event
+use SwimmingEvent      v*  Event
 use MicroDst           v*  Event
 
 use MicroDSTInterfaces v*  MicroDST

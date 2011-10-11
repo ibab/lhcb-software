@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2011-10-11 - Roel Aaij
+ - Add algorithms to copy SwimmingReport and Particle2TPRelations
+
 !========================= MicroDSTAlgorithm v5r4 2011-06-17 =========================
 ! 2011-05-18 - Marco Cattaneo
  - Change dependency from Phys/DaVinciMaps to Event/MicroDst. Needs LHCB >= v32r4
