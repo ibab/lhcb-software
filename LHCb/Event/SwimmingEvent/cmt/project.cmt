@@ -1,6 +1,0 @@
-project LHCb_v33r0
-
-use LHCB LHCB_v33r0 
-
-build_strategy with_installarea
-structure_strategy without_version_directory
