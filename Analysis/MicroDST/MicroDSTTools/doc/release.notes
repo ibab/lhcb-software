@@ -6,6 +6,9 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2011-10-11 - Roel Aaij
+ - Add SwimmingReportCloner.
+
 !======================= MicroDSTTools v2r1p2 2011-04-29 =====================
 ! 2011-04-08 - Juan Palacios
  - src/MCVertexCloner.cpp
