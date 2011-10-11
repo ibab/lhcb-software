@@ -1,0 +1,1 @@
+include ${LBCONFIGURATIONROOT}/data/Makefile
