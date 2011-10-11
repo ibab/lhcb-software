@@ -1,4 +1,3 @@
-// $Id: MuonTrack.cpp,v 1.4 2010-05-06 07:59:14 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonInterfaces/MuonTrack.h"
 #include "MuonInterfaces/MuonLogPad.h"
@@ -15,7 +14,7 @@ namespace MuonTrackRec {
   DLLEXPORT bool PhysTiming = false;
   DLLEXPORT bool IsCosmic = false;
   DLLEXPORT bool IsPhysics = false;
-};
+}
 #undef MUONTRACKRECNMSPC
 
 //=============================================================================

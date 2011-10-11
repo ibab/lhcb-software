@@ -3,8 +3,10 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
-!========================= MuonInterfaces v1r2p1 2010-10-25 =========================
+! 2011-10-11 - Marco Cattaneo
+ - Trivial fix to icc remark
 
+!======================= MuonInterfaces v1r2p1 2010-10-25 ===================
 ! 2010-08-24 - Pere Mato
  - Added explicit [missing] dependency to Event/DAQEvent package. Only needed for the CMake tests. 
 

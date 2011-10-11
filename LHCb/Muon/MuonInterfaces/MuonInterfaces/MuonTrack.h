@@ -1,13 +1,9 @@
-// $Id: MuonTrack.h,v 1.2 2010-05-04 14:35:18 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
 // Include files
 #include <GaudiKernel/StatusCode.h>
 #include <GaudiKernel/Point4DTypes.h>
-//#include "Math/Point3D.h"
-//#include "Math/Vector3D.h"
-//#include "Math/GenVector/VectorUtil.h"
 #include "MuonInterfaces/MuonHit.h"
 #include <vector>
 #include <iostream>
@@ -34,7 +30,7 @@ namespace MuonTrackRec {
   EXTERN bool PhysTiming;
   EXTERN bool IsCosmic;
   EXTERN bool IsPhysics;
-};
+}
 #endif  // MUONTRACKRECNMSPC
 #undef EXTERN
 
