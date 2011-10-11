@@ -9,4 +9,5 @@
   <class name = "ICloneRecVertex" />
   <class name = "ICloneTrack" />
   <class name = "ICloneVertex" />
+  <class name = "ICloneSwimmingReport" />
 </lcgdict>

@@ -16,6 +16,7 @@ use GaudiKernel        v*
 use MCEvent            v*  Event
 use PhysEvent          v*  Event
 use RecEvent           v*  Event
+use SwimmingEvent      v*  Event
 
 # =============== include directories =========================================
 apply_pattern install_more_includes more=MicroDST

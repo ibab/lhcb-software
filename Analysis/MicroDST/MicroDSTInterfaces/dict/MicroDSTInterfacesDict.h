@@ -16,5 +16,6 @@
 #include "MicroDST/ICloneRecVertex.h"
 #include "MicroDST/ICloneTrack.h"
 #include "MicroDST/ICloneVertex.h"
+#include "MicroDST/ICloneSwimmingReport.h"
 
 #endif // DICT_MICRODSTINTERFACESDICT_H
