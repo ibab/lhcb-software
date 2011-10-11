@@ -19,6 +19,7 @@ import logging
 import random
 import socket
 from urllib import urlretrieve, urlopen, urlcleanup
+from tempfile import mkdtemp
 
 script_version = '111003'
 python_version = sys.version_info[:3]
@@ -32,8 +33,8 @@ line_size = 120
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-site_subdirs = ['lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp', 'etc']
-lcg_tar      = ["LCGCMT", "LCGGrid", "LCGGanga"]
+site_subdirs = [ 'lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp', 'etc' ]
+lcg_tar      = [ "LCGCMT", "LCGGrid", "LCGGanga" ]
 # dynamic modules
 
 LbLegacy = None
@@ -50,6 +51,7 @@ etc_dir = None
 bootscripts_dir = None
 targz_dir = None
 tmp_dir = None
+cur_tmp_dir = None # current tmp directory. Unique. Not chained
 boot_script_loc = None
 
 # global creation mask
@@ -119,6 +121,8 @@ def usage() :
       --dev-install        : use the devel location for the self-update
       -u or --url          : use of different distribution location
       -B or --boot-scripts : prepend boot scripts location (LbScripts base dir). For debug purposes.
+      -t or --tmp-dir      : give the base tmp directory instead of the std $MYSITEROOT/tmp/$USER. mkdtemp
+                             is used to make the directory unique.
 
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
@@ -412,7 +416,7 @@ def checkWriteAccess(directory):
 #----------------------------------------------------------------------------
 
 def getTmpDirectory():
-    return tmp_dir.split(os.pathsep)[0]
+    return cur_tmp_dir
 
 def createTmpDirectory():
     log = logging.getLogger()
@@ -453,7 +457,7 @@ def getSourceCmd():
 #
 # create subdirectories if they don't exist ===============================
 #
-def createDir(here , logname):
+def createDir(here, logname):
     log = logging.getLogger()
 
     log.info('create necessary sub-directories')
@@ -1801,6 +1805,7 @@ def createBaseDirs(pname, pversion):
     global cmtconfig
     global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir, etc_dir
     global bootscripts_dir, targz_dir, tmp_dir
+    global cur_tmp_dir
 
 
     log = logging.getLogger()
@@ -1833,6 +1838,9 @@ def createBaseDirs(pname, pversion):
         tmp_dir = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
     else :
         tmp_dir = _multiPathJoin(mysiteroot, "tmp")
+
+    if not cur_tmp_dir :
+        cur_tmp_dir = tmp_dir.split(os.pathsep)[0]
 
     logname = None
 
@@ -2342,6 +2350,7 @@ def parseArgs():
     global dev_install
     global url_dist
     global boot_script_loc
+    global cur_tmp_dir
 
 
 
@@ -2356,13 +2365,13 @@ def parseArgs():
         usage()
         sys.exit(2)
     try:
-        opts, args = getopt.getopt(arguments, "hdflrbp:v:c:ng:s:Cu:B:",
+        opts, args = getopt.getopt(arguments, "hdflrbp:v:c:ng:s:Cu:B:t:",
             ['help', 'debug', 'full', 'list', 'remove', 'binary=',
              'project=', 'cmtversion=', 'nocheck',
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', "retrytime=", "nofixperm", "version",
              "compatible-configs", "latest-data-link", "url",
-             "boot-scripts="])
+             "boot-scripts=","tmp-dir="])
 
     except getopt.GetoptError, err:
         print str(err)
@@ -2426,6 +2435,11 @@ def parseArgs():
             url_dist = value
         if key in ('-B', '--boot-scripts'):
             boot_script_loc = value
+        if key in ('-t', '--tmp-dir'):
+            try :
+                cur_tmp_dir = mkdtemp(dir=value)
+            except:
+                cur_tmp_dir = value
 
     if not url_dist.endswith("/") :
         url_dist += "/"
@@ -2441,8 +2455,6 @@ def parseArgs():
 
     return pname, pversion, binary
 
-def cleanPath(pathname):
-    pass
 
 def checkMySiteRoot():
     global multiple_mysiteroot

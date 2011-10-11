@@ -1,3 +1,9 @@
+2011-10-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: implemented -t option to pass custom temporary base directory.
+	It is then randomly seeded. Please note that the safest is to used the canonical system one. ie: "-t $TMPDIR" or
+	"-t /tmp"
+
 2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbLegacy/python/LbLegacy/install_project.py: implement cache for project and package configuration. This
