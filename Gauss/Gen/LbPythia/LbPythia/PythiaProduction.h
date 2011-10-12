@@ -148,5 +148,7 @@ private:
   // ==========================================================================
   std::ostream* m_HEPEVT_errors ;
   // ==========================================================================
+
+  std::vector<int> m_updatedParticles;
 };
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H

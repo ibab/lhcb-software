@@ -4,6 +4,10 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-10-12 - Pieter David
+ - PythiaProduction: add a property to specify particles whose properties should be reset to the values in the ParticlePropertySvc at every call of initializeGenerator
+   for production of Higgs-through-Hidden Valley decay
+
 ! 2011-10-08 - Patrick Robbe
  - PythiaProduction.cpp: set new Pythia tuning for B** as default
 

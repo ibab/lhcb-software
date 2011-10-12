@@ -94,6 +94,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
   /// the file to dump the HEPEVT inconsistencies 
   , m_inconsistencies ( "HEPEVT_inconsistencies.out" ) 
   , m_HEPEVT_errors ( 0 ) 
+    // list of particles whose properties should *always* be taken from the ParticlePropertySvc
+  , m_updatedParticles (   ) // TODO declare this one: vector<int> m_updatedParticles
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
@@ -114,6 +116,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
     ( "Inconsistencies" , 
       m_inconsistencies , 
       "The file to dump HEPEVT inconsinstencies" ) ;
+
+  declareProperty( "UpdatedParticles", m_updatedParticles, "Particles (specified by their pdgID's) whose properties should *always* be taken from the ParticlePropertySvc, regardless of Pythia defaults or other input files" );
   
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
@@ -478,6 +482,15 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
+
+  // Reset the "updated particles" to their defaults
+  if ( m_updatedParticles.size() != 0 ) {
+    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc" , true);
+    for ( std::vector<int>::const_iterator it = m_updatedParticles.begin(); it != m_updatedParticles.end(); ++it ) {
+      updateParticleProperties(ppSvc->findByStdHepID(*it));
+    }
+    release(ppSvc);
+  }
 
   return sc ;
 }
