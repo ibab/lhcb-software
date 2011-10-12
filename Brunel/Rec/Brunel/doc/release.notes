@@ -7,6 +7,12 @@ Purpose: LHCb reconstruction program
   . Complete the migration to LHCb::ParticlePropertySvc (TrackMCTools) 
   . Minor improvements to Rich decoding error messages (RichDAQ)
 
+- Changes to example options
+  . Add COLLISION11_25.py, example options for processing 2011 25ns fill
+
+- Changes to tests
+  . Add brunel2011-25ns.qmt, to test COLLISION11_25.py
+
 </PRE><H1><A NAME=v41r0>2011-09-21 Brunel v41r1</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
  Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
