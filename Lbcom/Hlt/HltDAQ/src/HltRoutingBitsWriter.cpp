@@ -1,4 +1,3 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.17 2010-08-25 07:01:52 rlambert Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -274,3 +273,8 @@ StatusCode HltRoutingBitsWriter::execute() {
 
   return StatusCode::SUCCESS;
 }
+
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif

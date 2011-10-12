@@ -158,13 +158,20 @@ namespace ConfigTarFileAccessSvc_details {
         if (i->second.compressed) {
 #ifndef _WIN32
             io::filtering_istream in;
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // gzip.hpp(551) controlling expression constant
+  #pragma warning(push)
+#endif
             in.push(io::gzip_decompressor());
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 279
+  #pragma warning(pop)
+#endif
             in.push(io::slice(m_file,i->second.offset,i->second.size));
             // suggest an 8K buffer size as hint -- most config items are smaller than that...
             io::copy(in, os, 8192);
 #else 
             return false;
-#endif
+#endif // _WIN32
         } else {
             // suggest an 8K buffer size as hint -- most config items are smaller than that...
             io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);

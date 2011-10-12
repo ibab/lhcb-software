@@ -1,4 +1,3 @@
-// $Id$
 #ifndef CONFIGZIPFILEACCESSSVC_H 
 #define CONFIGZIPFILEACCESSSVC_H 1
 
@@ -23,7 +22,7 @@
 
 namespace ConfigZipFileAccessSvc_details  {
    class ZipFile;
-};
+}
 
 class ConfigZipFileAccessSvc : public Service,
                             virtual public IConfigAccessSvc {
