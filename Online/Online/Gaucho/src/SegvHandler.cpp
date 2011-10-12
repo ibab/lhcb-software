@@ -17,16 +17,37 @@ static void segvhandler (int sig, siginfo_t *siginfo, void *context)
   printf("%s",str);
   if (M_SegvHandler != 0)
   {
-    M_SegvHandler->oldact.sa_sigaction(sig,siginfo,context);
+    if ((M_SegvHandler->oldact.sa_flags & SA_SIGINFO) != 0)
+    {
+      M_SegvHandler->oldact.sa_sigaction(sig,siginfo,context);
+    }
+    else
+    {
+      if (M_SegvHandler->oldact.sa_handler == SIG_DFL)
+      {
+        _exit(0);
+      }
+      else if (M_SegvHandler->oldact.sa_handler == SIG_IGN)
+      {
+        return;
+      }
+      else
+      {
+        M_SegvHandler->oldact.sa_handler(sig);
+      }
+    }
   }
 }
 SegvHandler::SegvHandler()
 {
-  memset (&act,0,sizeof(act));
-  act.sa_sigaction = &segvhandler;
-  act.sa_flags = SA_SIGINFO;
-  sigaction(SIGSEGV,&act,&oldact);
-  M_SegvHandler = this;
+  if (M_SegvHandler == 0)
+  {
+    memset (&act,0,sizeof(act));
+    act.sa_sigaction = &segvhandler;
+    act.sa_flags = SA_SIGINFO;
+    sigaction(SIGSEGV,&act,&oldact);
+    M_SegvHandler = this;
+  }
 }
 
 SegvHandler::~SegvHandler()
