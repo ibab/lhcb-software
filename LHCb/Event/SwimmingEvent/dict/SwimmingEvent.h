@@ -24,7 +24,7 @@ namespace {
    typedef std::map<std::string, bool> map_sb;
    typedef std::map<std::string, std::map<int, bool> > map_sinfo;
 
-   struct _Instantiations {
+   struct __Instantiations {
       // begin instantiations
       // Persistency
       LHCb::SwimmingReport::Container     _sr0;
@@ -42,7 +42,9 @@ namespace {
       std::vector<LHCb::TurningPoint>              _tp4;
       std::vector<LHCb::TurningPoint*>             _tp5;
 
-      GaudiDict::Relation2DDict<LHCb::Particle,LHCb::SwimmingReport> _r0;
+      // Dicts for relations table
+      GaudiDict::Relation2DDict<LHCb::Particle, LHCb::SwimmingReport> _r0;
+      GaudiDict::Relation2DDict<LHCb::SwimmingReport, LHCb::Particle> _r1;
 
       // Dicts for python usage
       // map<int, bool>

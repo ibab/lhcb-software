@@ -44,23 +44,41 @@
   <class pattern = "std::pair<std::string,std::map*>" />
 
   <class name="LHCb::Relation2D<LHCb::Particle,LHCb::SwimmingReport>" 
-         id="86C52D4E-0000-0000-0000-000000000000" />
-  <class name="IRelation2D<LHCb::Particle,LHCb::SwimmingReport>" /> 
-  <class name="IRelation<LHCb::Particle,LHCb::SwimmingReport>" /> 
-  <class name="Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport>" /> 
-  <class name="std::vector<Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport> >" /> 
+         id="80E09471-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::Relation2D<LHCb::SwimmingReport,LHCb::Particle>" 
+         id="F760D3EB-0000-0000-0000-000000000000" />
+
+  <class name="IRelation2D<LHCb::Particle,LHCb::SwimmingReport>" /> 
+  <class name="IRelation2D<LHCb::SwimmingReport,LHCb::Particle>" /> 
+  <class name="IRelation<LHCb::Particle,LHCb::SwimmingReport>" /> 
+  <class name="IRelation<LHCb::SwimmingReport,LHCb::Particle>" /> 
+  <class name="Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport>" /> 
+  <class name="Relations::Entry_<LHCb::SwimmingReport,LHCb::Particle>" /> 
   <class name="Relations::Range_<std::vector<Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport> > >" >
-     <field name="m_begin" transient="true" />
-     <field name="m_end"   transient="true" />
+    <field name="m_begin" transient="true" />
+    <field name="m_end"   transient="true" />
+  </class> 
+  <class name="Relations::Range_<std::vector<Relations::Entry_<LHCb::SwimmingReport,LHCb::Particle> > >" >
+    <field name="m_begin" transient="true" />
+    <field name="m_end"   transient="true" />
   </class> 
   <class name="Relations::Relation2<LHCb::Particle,LHCb::SwimmingReport>" >
-     <field name="m_inverse" transient="true" />
+    <field name="m_inverse" transient="true" />
+  </class> 
+  <class name="Relations::Relation2<LHCb::SwimmingReport,LHCb::Particle>" >
+    <field name="m_inverse" transient="true" />
   </class> 
   <class name="Relations::Relation<LHCb::Particle,LHCb::SwimmingReport>" >
-     <field name="m_inverse_aux" transient="true" />
+    <field name="m_inverse_aux" transient="true" />
+  </class> 
+  <class name="Relations::Relation<LHCb::SwimmingReport,LHCb::Particle>" >
+    <field name="m_inverse_aux" transient="true" />
   </class> 
   <class name="Relations::RelationBase<LHCb::Particle,LHCb::SwimmingReport>" /> 
+  <class name="Relations::RelationBase<LHCb::SwimmingReport,LHCb::Particle>" /> 
+  <class name="std::vector<Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport> >" /> 
+  <class name="std::vector<Relations::Entry_<LHCb::SwimmingReport,LHCb::Particle> >" /> 
 
   <class pattern="Relations::Pointer<*>"   /> 
   <class pattern="Relations::Reference<*>" /> 
@@ -71,31 +89,31 @@
   <class pattern="std::pair<__gnu_cxx::*" />
 
   <class pattern="IRelation*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="LHCb::Relation*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::Relation*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::Entry_*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::WEntry_*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::Range_*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::Pointer*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="Relations::Reference*">
-     <method name="="/>
+    <method name="="/>
   </class>
   <class pattern="std::vector&lt;Relations::*&gt;">
-     <method name="="/>
+    <method name="="/>
   </class>
 
   </exclusion>
