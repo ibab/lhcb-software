@@ -61,6 +61,7 @@ use RecEvent              v2r39   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r3    Event   # Chris Jones
 use TrackEvent            v5r12   Event   # Wouter Hulsbergen
 use VeloEvent             v16r10  Event   # Tomasz Szumlak, Chris Parkes
+use SwimmingEvent         v1r0    Event   # Roel Aaij, Vava Gligorov
 
 # LHCb  Examples
 use DetCondExample        v11r10  Ex      # Marco Clemencic
