@@ -34,6 +34,7 @@ int main(int, char**) {
     ContextFactory* ctxt = new ContextFactory(&mgr, raw_mask);
     mgr.adoptContextFactory(ctxt);
 
+    typedef FrameworkTest::AlgorithmConfig CFG;
 #if 0
     const char* null_mask[]  = {0};
     const char* i_mask[]     = {"VXD_HITS","TRACKER_HITS","ECAL_HITS","MUON_HITS",0};
@@ -45,12 +46,12 @@ int main(int, char**) {
     const char* c_out_mask[] = {"VXD_TRACKS","TRACKER_TRACKS",0};
     const char* out_mask[]   = {"VXD_TRACKS","TRACKER_TRACKS",0};
 
-    ExecutorFactory* in  = new AEF<input>(10,"IN", &mgr, raw_mask, i_mask, make_pair(10,5));
-    ExecutorFactory* f0  = new AEF<char> (10,"A",  &mgr, a_in_mask, a_out_mask, make_pair(50,10));
-    ExecutorFactory* f1  = new AEF<int>  (10,"B",  &mgr, b_in_mask, b_out_mask, make_pair(200,10));
-    ExecutorFactory* f2  = new AEF<long> (10,"C",  &mgr, c_in_mask, c_out_mask, make_pair(50,10));
-    ExecutorFactory* f3  = new AEF<long> (10,"D",  &mgr, c_in_mask, c_out_mask, make_pair(500,10));
-    ExecutorFactory* out = new AEF<input>(10,"OUT",&mgr, out_mask,  null_mask, make_pair(50,10));
+    ExecutorFactory* in  = new AEF<CFG>(10,CFG("IN", &mgr, raw_mask, i_mask, 10,5));
+    ExecutorFactory* f0  = new AEF<CFG>(10,CFG("A",  &mgr, a_in_mask, a_out_mask, 50,10));
+    ExecutorFactory* f1  = new AEF<CFG>(10,CFG("B",  &mgr, b_in_mask, b_out_mask, 200,10));
+    ExecutorFactory* f2  = new AEF<CFG>(10,CFG("C",  &mgr, c_in_mask, c_out_mask, 50,10));
+    ExecutorFactory* f3  = new AEF<CFG>(10,CFG("D",  &mgr, c_in_mask, c_out_mask, 500,10));
+    ExecutorFactory* out = new AEF<CFG>(10,CFG("OUT",&mgr, out_mask,  null_mask, 50,10));
 
     out->initialize();
     f3->initialize();
@@ -59,45 +60,44 @@ int main(int, char**) {
     f0->initialize();
     in->initialize();
 #else
-
     {
       const char* inputs[] = {"PandoraPFANewClusters", "MCParticle", "PandoraPFANewPFOs",
         "RelationCaloHit", "LDCTracksMCP", "LDCTracks",0};
       const char* outputs[] = {"CalohitMCTruthLink", "ClusterMCTruthLink", "MCParticlesSkimmed",
         "RecoMCTruthLink", "TrackMCTruthLink",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyRecoMCTruthLinker",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyRecoMCTruthLinker",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"TPCLowPtCollection", "TPCCollection", "TPCSpacePointCollection",0};
       const char* outputs[] = {"AllTPCTrackerHits",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyTPCDigiProcessor",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyTPCDigiProcessor",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"ETDCollection",0};
       const char* outputs[] = {"ETDTrackerHits",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyETDDigiProcessor",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyETDDigiProcessor",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"FTDTrackerHits", "SITTrackerHits", "VTXTrackerHits",0};
       const char* outputs[] = {"SiTracks", "SiTracksMCP",0};
-      ExecutorFactory* f = new AEF<long>(10,"MySiliconTrackingCLIC",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MySiliconTrackingCLIC",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"EcalBarrelCollection", "HcalBarrelRegCollection",0};
       const char* outputs[] = {"ECALBarrel", "ECALEndcap", "ECALOther",
         "HCALBarrel", "HCALEndcap", "HCALOther", "RelationCaloHit",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyILDCaloDigi",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyILDCaloDigi",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"SETCollection", "SITCollection", "VXDCollection",0};
       const char* outputs[] = {"SETTrackerHits", "SITTrackerHits", "VTXTrackerHits",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyVTXDigiProcessor",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyVTXDigiProcessor",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"LDCTracks",0};
       const char* outputs[] = {"KinkRecoParticles", "KinkVertices", "ProngRecoParticles",
         "ProngVertices", "SplitRecoParticles", "SplitVertices",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyKinkFinder",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyKinkFinder",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"ECALBarrel", "HCALBarrel", "KinkVertices",
@@ -106,23 +106,23 @@ int main(int, char**) {
         "LDCTracks", "V0Vertices",0};
       const char* outputs[] = {"PandoraPFANewClusters", "PandoraPFANewPFOs", "PandoraPFANewReclusterMonitoring",
         "PandoraPFANewReclusterRelations",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyMarlinPandora",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyMarlinPandora",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"AllTPCTrackerHits",0};
       const char* outputs[] = {"DroppedTPCTrackeHits", "TPCTracksMCP", "TPCTracks",
         "UsedTPCTrackerHits",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyLEPTrackingProcessor",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyLEPTrackingProcessor",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"LDCTracks",0};
       const char* outputs[] = {"V0RecoParticles", "V0Vertices",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyV0Finder",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyV0Finder",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"FTDCollection",0};
       const char* outputs[] = {"FTDTrackerHits",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyNewFTDDigiProcessor",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyNewFTDDigiProcessor",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"ETDTrackerHits", "FTDTrackerHits", "SETTrackerHits",
@@ -130,12 +130,12 @@ int main(int, char**) {
         "TPCTracks", "TPCTracksMCP", "VTXTrackerHits",0};
       const char* outputs[] = {"LDCTracks", "LDCTracksMCP", "RefittedTPCTracks",
         "RefittedSiTracks", "RefittedSiTracksMCP", "RefittedTPCTracksMCP",0};
-      ExecutorFactory* f = new AEF<long>(10,"MyFullLDCTracking",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MyFullLDCTracking",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
     {
       const char* inputs[] = {"MuonPlugCollection",0};
       const char* outputs[] = {"MUON", "RelationMuonHit",0};
-      ExecutorFactory* f = new AEF<long>(10,"MySimpleMuonDigi",&mgr,inputs, outputs, make_pair(500,10)); f->initialize();
+      ExecutorFactory* f = new AEF<CFG>(10,CFG("MySimpleMuonDigi",&mgr,inputs, outputs, 500,10)); f->initialize();
     }
 #endif
     const char* line = "====================================================";

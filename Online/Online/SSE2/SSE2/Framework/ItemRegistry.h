@@ -3,6 +3,7 @@
 
 // C++ include files
 #include <map>
+#include <string>
 #include <vector>
 
 // Framework include files
@@ -23,20 +24,25 @@ namespace Framework {
   */
   class ItemRegistry   {
   public:
-    typedef AVXHeap                  Mask_t;
-    typedef std::map<int,size_t>     Items_t;
-
+    typedef AVXHeap                   Mask_t;
+    typedef std::map<int,size_t>      Items_t;
+    typedef std::map<int,std::string> StringMap;
   protected:
     /// AVX item mask
     Mask_t  _mask;
     /// map of hashed items
     Items_t _items;
-
+    /// Map of string values
+    StringMap m_stringMap;
   public:
     /// Default constructor
     ItemRegistry()  {}
     /// Default destructor
     virtual ~ItemRegistry() {}
+    /// Lookup value by bit
+    std::string lookup(int bit) const;
+    /// Print missing bits
+    void printMissing(const AVXMemory& required, const AVXMemory& availible) const;
     /// Register a sinlge item
     template <typename T> int    registerItem(const T& item);
     /// Register a group of items

@@ -6,6 +6,7 @@
 // C++ include files
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 using namespace Framework;
 using namespace std;
@@ -47,6 +48,33 @@ void ExecutorFactory::PrintMissing::operator()(const ExecutorFactory* f)  {
 /// Initialize the factory
 int ExecutorFactory::initialize()   throw (std::runtime_error)  {
   throw std::runtime_error("ExecutorFactory::initialize> FAILED to create instance.");
+}
+
+/// Shutdown the whole stuff
+void ExecutorFactory::shutdown(bool delete_instances) {
+  if ( delete_instances ) {
+    for(Executors::iterator i=m_executors.begin(); i != m_executors.end(); ++i)
+      delete *i;
+    m_executors.clear();
+  }
+}
+
+/// Print statistics
+void ExecutorFactory::printStatistics()  const {
+  double time=0e0, time2=0e0, calls=0e0, err=0e0;
+  for(Executors::const_iterator i=m_executors.begin(); i != m_executors.end(); ++i) {
+    const Timing& t = (*i)->timing();
+    calls += double(t.numCalls());
+    time2 += t.totalTimeSqr();
+    time  += t.totalTime();
+  }
+  if ( calls>0.9 ) {
+    time2 /= calls;
+    time  /= calls;
+    err = std::sqrt(std::fabs(time2-time*time));
+  }
+  ::lib_rtl_output(LIB_RTL_ALWAYS," %-36s    %10.2f +- %10.2f seconds  [%ld instances/%ld calls]\n",
+		   m_name.c_str(), time, err, long(m_executors.size()),long(calls));
 }
 
 /// Set the input mask bits

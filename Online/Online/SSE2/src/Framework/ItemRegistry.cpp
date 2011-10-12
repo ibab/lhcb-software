@@ -16,10 +16,13 @@ namespace Framework {
     if ( i != _items.end() )  {
       return (*i).second;
     }
+    char text[64];
     size_t len = _items.size();
     _items[hash] = len;
     _mask.extend(len);
     _mask.set_bit(len);
+    ::sprintf(text,"Hash-item-%016lX",long(hash));
+    m_stringMap[len] = text;
     return len;
   }
 
@@ -67,7 +70,26 @@ namespace Framework {
 
   /// Register a single item if type string
   template <> int ItemRegistry::registerItem<string>(const string& item)  {
-    return registerItem<size_t>(hash32(item));
+    int result = registerItem<size_t>(hash32(item));
+    m_stringMap[result] = item;
+    return result;
+  }
+
+  string ItemRegistry::lookup(int bit)  const {
+    StringMap::const_iterator i=m_stringMap.find(bit);
+    if ( i == m_stringMap.end() )  return "Unknown";
+    return (*i).second;
+  }
+
+  /// Print missing bits
+  void ItemRegistry::printMissing(const AVXMemory& required, const AVXMemory& availible) const {
+    AVXMemory::Registers r = required;
+    for(size_t i=0; i<r.second; ++i) {
+      if ( required.test_bit(i) && !availible.test_bit(i) ) {
+	string miss = lookup(i);
+	cout << "Missing IO Bit[" << i << "] " << " : " << miss << endl;	
+      }
+    }
   }
 
   /// Register a single item if type char

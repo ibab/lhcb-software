@@ -3,50 +3,48 @@
 #include "Framework/ItemRegistry.h"
 #include "Algorithm.h"
 #include "RTL/rtl.h"
+#include <cmath>
 
 using namespace std;
 using namespace Framework;
 using namespace FrameworkTest;
 
 /// Default constructor
-IODef::IODef() : vector<string>() {
-}
+IODef::IODef() : vector<string>() {}
 
 /// Initializing constructor
-IODef::IODef(const char* in[])  {
-  for (size_t i=0; in[i]; ++i) {
-    this->push_back(in[i]);
-  }
-}
+IODef::IODef(const char* in[])    {  for (size_t i=0; in[i]; ++i)this->push_back(in[i]);  }
 
 /// Copy constructor
-IODef::IODef(const IODef& c) : vector<string>(c) {
-}
+IODef::IODef(const StrVector& c) : vector<string>(c) {}
 
-int FrameworkTest::A__declareIO(Framework::ExecutorFactory* f,const StrVector& in, const StrVector& out)  {
+/// Copy constructor
+IODef::IODef(const IODef& c) : vector<string>(c) {}
+
+int FrameworkTest::A__declareIO(Framework::ExecutorFactory* f,const AlgorithmConfig* config)  {
   DataflowMgr* mgr = (DataflowMgr*)f->param();
   ItemRegistry& reg = mgr->dataRegistry();
-  ItemRegistry::Mask_t maskIn  = reg.registerItems(in);
-  ItemRegistry::Mask_t maskOut = reg.registerItems(out);
+  ItemRegistry::Mask_t maskIn  = reg.registerItems(config->inputs);
+  ItemRegistry::Mask_t maskOut = reg.registerItems(config->outputs);
   f->setInputMask(maskIn);
   f->setOutputMask(maskOut);
   mgr->adoptFactory(f);
   return 1;
 }
-#include <cmath>
+
 /// Event callback
-int FrameworkTest::A__execute(void* instance, const type_info& /* t */,const string& n, void* par, const void* arg)   {
+int FrameworkTest::A__execute(void* instance, const type_info& /* t */,void* evt_context, const AlgorithmConfig* config)   {
   //Algorithm* a = (Algorithm*)instance;
-  EventContext* context = (EventContext*)par;
-  pair<int, int>* tmo = (pair<int, int>*)arg;
+  EventContext* context = (EventContext*)evt_context;
   double r1 = double(::rand())/double(RAND_MAX);
   double r2 = double(::rand())/double(RAND_MAX);
-  double sleep = ::abs(::sqrt(-2.*::log(r1)) * ::cos(2*3.14159*r2)) * double(tmo->second) + double(tmo->first);
+  double sleep = ::abs(::sqrt(-2.*::log(r1)) * ::cos(2*3.14159*r2)) * config->timeSigma + config->time;
+  sleep = config->time;
   sleep *= 1.0;
   ::lib_rtl_output(LIB_RTL_INFO,MSG_SRC_FMT"'%s': Executing. Context:0x%p [%d] time:%7.2f\n",
-    "Algorithm", instance, n.c_str(), context, context->id(),sleep);
+    "Algorithm", instance, config->name.c_str(), context, context->id(),sleep);
   if ( sleep > 0 )   {
-    ::lib_rtl_sleep(int(sleep));
+    ::lib_rtl_usleep(int(sleep));
   }
   return 1;
 }

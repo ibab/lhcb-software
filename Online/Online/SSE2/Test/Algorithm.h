@@ -15,20 +15,53 @@
 */ 
 namespace FrameworkTest  {
   typedef std::vector<std::string> StrVector;
+  typedef const void* ClientData;
   struct ContextFactory;
+  struct AlgorithmConfig;
+  template <class T> struct Algorithm;
 
+  int A__execute(void* instance, const std::type_info& typ, void* evt_context, const AlgorithmConfig* config);
+  int A__declareIO(Framework::ExecutorFactory* f, const AlgorithmConfig* config);
+
+  /**@class IODef Algorithm.h Framework/Algorithm.h
+  *
+  *  @author  M.Frank
+  *  @version 1.0
+  *  @date    10/06/2011
+  *
+  */
   struct IODef : public StrVector  {
     /// Default constructor
     IODef();
     /// Initializing constructor
     IODef(const char* in[]);
+    /// Initializing constructor
+    IODef(const StrVector& c);
     /// Copy constructor
     IODef(const IODef& c);
   };
 
-
-  int A__execute(void* instance, const std::type_info& typ, const std::string& n, void* ctxt,const void* arg);
-  int A__declareIO(Framework::ExecutorFactory* f, const StrVector& in, const StrVector& out);
+  /**@class AlgorithmConfig Algorithm.h Framework/Algorithm.h
+  *
+  *  @author  M.Frank
+  *  @version 1.0
+  *  @date    10/06/2011
+  *
+  */
+  struct AlgorithmConfig {
+    AlgorithmConfig(const std::string& n, ClientData d, const IODef& i, const IODef& o, float t, float s) 
+     : name(n), param(d), inputs(i), outputs(o), time(t), timeSigma(s)    {    }
+    /// Executor factory name (=name of created instances)
+    std::string name;
+    /// Creation parameter
+    ClientData  param;
+    /// Input IO mask
+    StrVector   inputs;
+    /// Output IO mask
+    StrVector   outputs;
+    float       time;
+    float       timeSigma;
+  };
 
   /**@class Algorithm Algorithm.h Framework/Algorithm.h
   *
@@ -38,38 +71,26 @@ namespace FrameworkTest  {
   *
   */
   template <class T> struct Algorithm   {
-    typedef std::pair<int, int> Arg;
-    StrVector   inputs;
-    StrVector   outputs;
-    std::string name;
-    const void* param;
-    Arg         arg;
-
+    const AlgorithmConfig* config;
     /// Initializing constructor
-    Algorithm(const std::string& n, const void* p, const StrVector& in, const StrVector& out, const Arg& a) 
-      : inputs(in), outputs(out), name(n), param(p), arg(a)
-    {                            }
+    Algorithm(const AlgorithmConfig* c) : config(c)  {                                }
     /// Default destructor
-    virtual ~Algorithm()      {                                                }
+    virtual ~Algorithm()      {                                                       }
     /// Object initialization
-    int initialize()          {  return A__declareIO(this,inputs,outputs);     }
+    int initialize()          {  return A__declareIO(this,config);                    }
     /// Object finalization
-    int finalize()            {  return 1;                                     }
+    int finalize()            {  return 1;                                            }
     /// Event callback
-    int execute(void* ctxt)   {  return A__execute(this,typeid(*this),name,ctxt,&arg);   }
+    int execute(void* ctxt)   {  return A__execute(this,typeid(*this),ctxt,config);   }
   };
 
   template <class T> 
   struct AlgorithmExecutor : public Framework::Executor {
-    typedef const void* ClientData;
-    typedef std::pair<int, int> Arg;
-    T   m_alg;
+    T     m_alg;
   public:
     /// Initializing constructor
-    AlgorithmExecutor(Framework::ExecutorFactory* f, Framework::InstanceMask& mask, size_t serial, const std::string& n,
-      ClientData p, const StrVector& in, const StrVector& out, const Arg& arg)
-      : Executor(f, mask, serial), m_alg(n,p,in,out,arg)
-    {}
+  AlgorithmExecutor(Framework::ExecutorFactory* f, Framework::InstanceMask& mask, size_t serial, const AlgorithmConfig* c)
+    : Executor(f,mask,serial), m_alg(c) {}
     /// Executor override: Setup internal processor and run
     virtual Framework::Status execute(Framework::EventContext* context)   {
       int sc = m_alg.execute(context);
@@ -84,26 +105,27 @@ namespace FrameworkTest  {
   * @date    20/06/2011
   */
  template <class T> struct AlgorithmExecutorFactory : public Framework::ExecutorFactory {
-    typedef std::pair<int, int> Arg;
-    /// Input IO mask
-    StrVector m_in;
-    /// Output IO mask
-    StrVector m_out;
-    /// Argument 
-    Arg       m_arg;
+   typedef T                        config_t;
+   typedef Algorithm<config_t>      alg_t;
+   typedef AlgorithmExecutor<alg_t> exec_t;
+   // Startup data
+   config_t m_config;
+
   public:
     /// Standard constructor
-    AlgorithmExecutorFactory(size_t mx, const std::string& nam, ClientData par, const IODef& in, const IODef& out, const Arg& arg) 
-    : Framework::ExecutorFactory(mx, nam, par), m_in(in), m_out(out), m_arg(arg)
-    {    }
+  AlgorithmExecutorFactory(size_t mx, const config_t& c)
+    : Framework::ExecutorFactory(mx, c.name, c.param), m_config(c) {}
+
     /// Standard destructor
     virtual ~AlgorithmExecutorFactory() {}
+
     /// Object initialization
     virtual int initialize()  throw (std::runtime_error)
-    {  return A__declareIO(this,m_in,m_out);     }
+   {  return A__declareIO(this,&m_config);                   }
+
     /// Setup internal processor and run
-    virtual Framework::Executor* createInstance()
-    {  return new AlgorithmExecutor<Algorithm<T> >(this,m_idle,m_instances,name(),param(),m_in,m_out,m_arg);}
+    virtual Framework::Executor* createInstance()  throw (std::runtime_error)
+   {  return new exec_t(this,m_idle,m_instances,&m_config);  }
   };
   
   /** @class AlgorithmExecutorFactory Algorithm.h Tests/Algorithm.h
@@ -134,7 +156,7 @@ namespace FrameworkTest  {
     /// Declare input data content to data registry
     virtual Framework::Status declareData();
     /// Create a new event context. On error the returned context is invalid (NULL)
-    virtual Framework::EventContext* create()  {  return new Framework::EventContext(m_id++, m_mask); }
+    virtual Framework::EventContext* create()  {  return new Framework::EventContext(m_id++,m_mask); }
   };
 }
 #endif // FRAMEWORKTEST_ALGORITHM_H

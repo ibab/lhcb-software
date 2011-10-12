@@ -4,6 +4,7 @@
 // Framework include files
 #include "Framework/Status.h"
 #include "Framework/IOPort.h"
+#include "Framework/Timing.h"
 
 // C++ include files
 #include <stdexcept>
@@ -19,6 +20,7 @@ namespace Framework {
   class ExecutorFactory;
   class EventContext;
   class Executor;
+  class Monitor;
 
   /**@class ExecutorFactory ExecutorFactory.h Framework/ExecutorFactory.h
   *
@@ -103,15 +105,24 @@ namespace Framework {
     Executor* getFreeInstance();
     /// Initialize the factory
     virtual int initialize() throw (std::runtime_error);
+    /// Print statistics
+    void printStatistics()  const;
+    /// Shutdown the whole stuff
+    virtual void shutdown(bool delete_instances);
   };
 
   class Executor  {
+  protected:
+
     /// Reference to factory the executor belongs to
     ExecutorFactory* m_fac;
     /// Alias to the factory's instance mask
     InstanceMask&    m_mask;
     /// Serial identifier of this executor
     size_t           m_serial;
+    /// Timing measurements
+    Timing           m_time;
+
   public:
     /// Initializing constructor
     Executor(ExecutorFactory* fac, InstanceMask& mask, size_t serial);
@@ -119,6 +130,8 @@ namespace Framework {
     virtual ~Executor();
     /// Release instance. If the refeence count reaches NULL, delete the object
     unsigned long release();
+    /// Access process
+    const Timing& timing() const             { return m_time;                     }
     /// Accessor: Executor factory
     ExecutorFactory* factory()  const        { return m_fac;                      }
     /// Access  the identifier
@@ -131,6 +144,8 @@ namespace Framework {
     void returnInstance()                    { m_mask.set_bit(m_serial);          }
     /// Setup internal processor and run
     virtual Status execute(EventContext*)    { return Status::ERROR;              }
+    /// Save monitoring information
+    void monitor(const struct timeval& start, const struct timeval& stop);
   };
 }      /* End namespace      */
 #endif /* FRAMEWORK_IEXECUTOR_H */

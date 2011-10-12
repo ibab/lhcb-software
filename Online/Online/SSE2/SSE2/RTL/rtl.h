@@ -301,7 +301,6 @@ namespace RTL  {
   /// Access error string from integer error code.
   const char* errorString(int status);
 
-#if 0
   /**@class CLU rtl.h RTL/rtl.h
     * 
     * Small helper class to interprete command line options
@@ -331,7 +330,6 @@ namespace RTL  {
     int getopt(const char* name, int nchars, double& value);
     int getopt(const char* name, int nchars, std::string& value);
   };
-#endif
 }
 #endif
 #undef __CXX_CONST

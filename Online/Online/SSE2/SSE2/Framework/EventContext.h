@@ -4,6 +4,7 @@
 // Framework include files
 #include "Framework/IOPort.h"
 #include "Framework/Status.h"
+#include <sys/time.h>
 
 /*
 *    Framework namespace declaration
@@ -28,17 +29,28 @@ namespace Framework {
     AlgorithmMask  _algMask;
     AlgorithmMask  _doneMask;
     long _id;
+    struct timeval _start;
   public:
     typedef DataMask Mask;
-    EventContext(long id) : _id(id)               {                                      }
-    EventContext(long id,const IOMask& m):_id(id) {  _ioMask.mask_or(m);                 }
+
+    /// Default constructor
+    EventContext(long id);
+    /// Initializing constructor
+    EventContext(long id,const IOMask& m);
+    /// Default destructor
     virtual ~EventContext()                       {                                      }
+    /// Get the current time stamp
+    struct timeval now() const;
+    /// Calculate the execution time of the entrie event
+    struct timeval execTime() const;
+    /// Access the start time of this event
+    struct timeval start() const                  {  return _start;                      }
     long id() const                               {  return _id;                         }
     //bool operator<(const EventContext& c) const {  return _ioMask.less(c._ioMask);     }
     void dumpIO(const std::string& txt)  const    {  _ioMask.dump(txt);                  }
     bool matchIO(const EventContext& other) const {  return _ioMask.match(other._ioMask);}
-    void addData(const IOMask& other)             {  _ioMask.mask_or(other);       }
-    bool matchIO(const IOMask& other) const       {  return _ioMask.match(other);  }
+    void addData(const IOMask& other)             {  _ioMask.mask_or(other);             }
+    bool matchIO(const IOMask& other) const       {  return _ioMask.match(other);        }
     void clearAlgBit(size_t bit)                  {  _algMask.clear_bit(bit);            }
     void clearDoneBit(size_t bit)                 {  _doneMask.clear_bit(bit);           }
     void setAlgMask(const AlgorithmMask& mask)    {

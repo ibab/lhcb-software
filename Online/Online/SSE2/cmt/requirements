@@ -3,6 +3,7 @@ version v1r4
 
 branches  cmt doc src
 use GaudiPolicy v*
+use ROOT        v* LCG_Interfaces
 
 apply_pattern install_more_includes more=SSE2
 library       SSE2   ../src/Framework/*.cpp \
@@ -15,15 +16,23 @@ apply_pattern ld_library_path
 
 macro_append  use_includes            ' $(ppcmd)$(ONLINE_install_include)/SSE2 '
 
-application SSE2Test  ../src/SSE/*.cpp
+application SSE2Test                ../src/SSE/*.cpp
 macro_append SSE2Test_use_linkopts  " -ldl -lrt -pthread " WIN32 " "
 macro_append SSE2Test_dependencies  " SSE2 "
-macro_append sse3_cppflags " -DRUN_TESTS=4 "
+macro_append SSE2Test_cppflags          " -DRUN_TESTS=4 "
 
-application ThreadTest  ../src/run/*.cpp
+application ThreadTest  ../src/run/run.cpp
 macro_append ThreadTest_use_linkopts  " -ldl -lrt -pthread " WIN32 " "
 macro_append ThreadTest_dependencies  " SSE2 "
 
+application lbTest      ../src/run/lbTest.cpp
+macro_append lbTest_use_linkopts  " -ldl -lrt -pthread " WIN32 " "
+macro_append lbTest_dependencies  " SSE2 "
+
+application rootTest      ../src/run/rootTest.cpp
+macro_append rootTest_cppflags          " -DNO_ACLIK "
+macro_append lbTest_use_linkopts  " -ldl -lrt -pthread " WIN32 " "
+macro_append lbTest_dependencies  " SSE2 "
 
 private
 macro_append  use_includes ' $(ppcmd)"$(SSE2ROOT)/SSE2" '

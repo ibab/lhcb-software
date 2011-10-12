@@ -4,6 +4,7 @@
 // Framework include files
 #include "Framework/IOPort.h"
 #include "Framework/Worker.h"
+#include "Framework/Timing.h"
 #include "Framework/IDataflowMgr.h"
 #include "Framework/EventContext.h"
 
@@ -24,6 +25,7 @@ namespace Framework {
   class ExecutorFactory;
   class ItemRegistry;
   class Executor;
+  class Monitor;
   class Worker;
 
   /** @class DataflowMgr DataflowMgr.h Framework/DataflowMgr.h
@@ -41,7 +43,7 @@ namespace Framework {
     typedef std::vector<ExecutorFactory*>        Executors;
 
     /// Lock handle to lock the thread
-    lib_rtl_lock_t      m_lock;
+    lib_rtl_lock_t       m_lock;
     /// Event handle to resume work matching
     lib_rtl_event_t      m_evt;
     /// Idle Worker container
@@ -58,8 +60,17 @@ namespace Framework {
     ItemRegistry*        m_dataRegistry;
     /// Event context creator
     EventContextFactory* m_contextFactory;
+    /// Monitoring instance
+    Monitor*             m_monitor;
     EventContext::AlgorithmMask m_algMask;
-
+    struct timeval       m_start;
+    struct timeval       m_fini;
+    /// Execution time collector for complete events
+    Timing               m_time;
+    /// Execution time collector for submitting new events
+    Timing               m_submit;
+    /// Execution time collector for completed events
+    Timing               m_complete;
     /// State 
     enum State { OFFLINE=1, STARTING=2, RUNNING=3, PAUSED=4, STOPPING=5, STOPPED=6 };
     State                m_state;
@@ -86,6 +97,13 @@ namespace Framework {
     /// Worker call: Signal master, that the thread is ready to receive work
     virtual Status workerActive(Worker* worker);
 
+    /// Worker call: finish the work and put worker back into sleep mode _after_ call return
+    virtual Status workerDone(Worker* worker, 
+			      Executor* executor, 
+			      EventContext* context, 
+			      const struct timeval& start,
+			      const struct timeval& stop);
+
   public:
     /// Standard constructor. Thread is automatically started and put "on hold"
     explicit DataflowMgr();
@@ -93,20 +111,28 @@ namespace Framework {
     /// Default destructor. Thread is stopped
     virtual ~DataflowMgr();
 
+    /// Access to the registry
     ItemRegistry& dataRegistry() const { return *m_dataRegistry; }
 
     /// Access manager state
     virtual State state() const        { return m_state;         }
 
+    /// Set monitor entity
+    void setMonitor(Monitor* mon)      { m_monitor = mon;        }
 
-    /// Worker call: finish the work and put worker back into sleep mode _after_ call return
-    Status workerDone(Worker* worker, Executor* executor, EventContext* context);
+    /// Print execution statistics summary
+    void printStatistics()   const;
+
+    /// Shutdown the whole stuff
+    void shutdown(bool print_statistics=false, bool delete_factories=true);
 
     /// Worker call: Signal master that the work is done and the worker is up for new stuff
     Status workerIdle(Worker* worker);
 
     /// Match workers to executors as long as work and workers are availible
     Status matchWork();
+
+    /// Schedule next worker(s) according to mask of availible data and required algorithms
     Status match(EventContext& mask);
 
     /// Add new processor factory 

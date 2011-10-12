@@ -1,0 +1,50 @@
+
+# DO NOT DELETE
+
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TFile.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TDirectoryFile.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TDirectory.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TNamed.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TObject.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/Rtypes.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/RConfig.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/RVersion.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/DllImport.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/Rtypeinfo.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/snprintf.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/strlcpy.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TGenericClassInfo.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TSchemaHelper.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TStorage.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TVersionCheck.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/Riosfwd.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TBuffer.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TString.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TMathBase.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TList.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TSeqCollection.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TCollection.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TIterator.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TDatime.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TUUID.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TUrl.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TMap.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/THashTable.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TBranch.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TObjArray.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TAttFill.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TDataType.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TDictionary.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/Property.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TTree.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TAttLine.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TAttMarker.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TArrayD.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TArray.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TArrayI.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TClass.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TObjString.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TVirtualTreePlayer.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/TROOT.h
+./../src/run/rootTest_cpp.so: /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/cintdictversion.h /sw/lib/lcg/external/ROOT/5.30.00/x86_64-slc5-gcc43-opt/root/include/RVersion.h
+rootTest_cpp__ROOTBUILDVERSION= 5.30/00

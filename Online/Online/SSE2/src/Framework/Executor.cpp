@@ -1,4 +1,8 @@
+// Framework includes
 #include "Framework/IExecutor.h"
+
+// C/C++ include files
+#include <sys/time.h>
 
 using namespace Framework;
 
@@ -16,4 +20,9 @@ Executor::~Executor()   {
 unsigned long Executor::release()   {
   delete this;
   return 0;
+}
+
+/// Save monitoring information
+void Executor::monitor(const struct timeval& start, const struct timeval& stop) {
+  m_time.collect(start,stop);
 }
