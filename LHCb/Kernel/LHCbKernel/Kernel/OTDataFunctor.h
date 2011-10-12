@@ -198,9 +198,7 @@ public:
   }
 };
 
-};
-
-
+}
 #endif // OTSIMULATION_OTDATAFUNCTOR_H
 
 
