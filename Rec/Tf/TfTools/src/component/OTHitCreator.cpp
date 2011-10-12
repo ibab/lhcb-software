@@ -220,7 +220,7 @@ namespace Tf
 
   }
 
-  DECLARE_TOOL_FACTORY( OTHitCreator );
+  DECLARE_TOOL_FACTORY( OTHitCreator )
 
 
   OTHitCreator::OTHitCreator(const std::string& type,

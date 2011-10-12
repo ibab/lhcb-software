@@ -8,7 +8,7 @@
 #include "boost/array.hpp"
 #include "boost/foreach.hpp"
 
-DECLARE_ALGORITHM_FACTORY( FlagHitsForPatternReco );
+DECLARE_ALGORITHM_FACTORY( FlagHitsForPatternReco )
 
 FlagHitsForPatternReco::FlagHitsForPatternReco(const std::string& name,
 	ISvcLocator* pSvcLocator):
@@ -269,7 +269,7 @@ StatusCode FlagHitsForPatternReco::execute()
     }
 
     return StatusCode::SUCCESS;
-};
+}
 
 void FlagHitsForPatternReco::readOTString(const char* oldstring)
 {

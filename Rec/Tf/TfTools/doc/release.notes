@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2011-10-12 - Marco Cattaneo
+ - Mask an icc warning, fix icc remarks
+
 !========================= TfTools v1r15 2011-07-27 =========================
 ! 2011-07-21 - Alexandr Kozlinskiy
  - Added if(msgLevel(MSG::DEBUG)) test for debug message.

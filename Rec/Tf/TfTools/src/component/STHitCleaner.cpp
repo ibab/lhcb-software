@@ -1,4 +1,3 @@
-// $Id: STHitCleaner.cpp,v 1.1.1.1 2007-10-09 17:30:06 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -16,7 +15,7 @@
 using namespace Tf;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( STHitCleaner );
+DECLARE_TOOL_FACTORY( STHitCleaner )
 
 //=============================================================================
 // Standard constructor, initializes variables

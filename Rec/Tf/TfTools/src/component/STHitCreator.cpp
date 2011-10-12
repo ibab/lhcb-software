@@ -1,10 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file STHitCreator.cpp
  *
  *  Implementation file for class : Tf::STHitCreator
- *
- *  $Id: STHitCreator.cpp,v 1.9 2010-04-07 05:13:57 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -312,7 +309,7 @@ namespace Tf
   } ;
   
   typedef STHitCreator<IT> ITHitCreator ;
-  DECLARE_TOOL_FACTORY( ITHitCreator );
+  DECLARE_TOOL_FACTORY( ITHitCreator )
   
   struct TT {
     static std::string defaultDetectorLocation() { return DeSTDetLocation::location("TT") ; }
@@ -324,7 +321,7 @@ namespace Tf
   } ;
   
   typedef STHitCreator<TT> TTHitCreator ;
-  DECLARE_TOOL_FACTORY( TTHitCreator );
+  DECLARE_TOOL_FACTORY( TTHitCreator )
 
 
 

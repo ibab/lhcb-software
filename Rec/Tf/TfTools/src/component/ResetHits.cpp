@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( ResetHits );
+DECLARE_ALGORITHM_FACTORY( ResetHits )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,7 +34,7 @@ ResetHits::ResetHits( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ResetHits::~ResetHits() {};
+ResetHits::~ResetHits() {}
 
 //=============================================================================
 // Initialization
@@ -52,8 +52,7 @@ StatusCode ResetHits::initialize() {
     if ( sc.isFailure() ) return sc;
   
   return StatusCode::SUCCESS;
-};
-
+}
 
 
 //=============================================================================
@@ -69,6 +68,6 @@ StatusCode ResetHits::execute() {
    m_tthitcreator->resetUsedFlagOfHits();
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

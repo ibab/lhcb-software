@@ -1,5 +1,3 @@
-// $Id: DefaultVeloRHitManager.cpp,v 1.1.1.1 2007-10-09 17:30:06 smenzeme Exp $
-
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -14,7 +12,7 @@
 //-----------------------------------------------------------------------------
 namespace Tf {
 
-DECLARE_TOOL_FACTORY( DefaultVeloRHitManager );
+DECLARE_TOOL_FACTORY( DefaultVeloRHitManager )
 
 
 //=============================================================================

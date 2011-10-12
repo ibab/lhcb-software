@@ -13,7 +13,7 @@
 #include "PatKernel/PatTStationHitManager.h"
 
 
-DECLARE_TOOL_FACTORY( PatTStationHitManager );
+DECLARE_TOOL_FACTORY( PatTStationHitManager )
 
 //=============================================================================
 // Standard constructor, initializes variables

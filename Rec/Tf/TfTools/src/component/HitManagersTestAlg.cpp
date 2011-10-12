@@ -1,4 +1,3 @@
-// $Id: HitManagersTestAlg.cpp,v 1.1.1.1 2007-10-09 17:30:06 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -12,16 +11,16 @@
 // Instantiate instances of the hit managers
 template class Tf::TStationHitManager<Tf::HitManagersTestAlg::TestHit>;
 typedef Tf::TStationHitManager<Tf::HitManagersTestAlg::TestHit> MyTStationHitManager;
-DECLARE_TOOL_FACTORY( MyTStationHitManager );
+DECLARE_TOOL_FACTORY( MyTStationHitManager )
 template class Tf::TTStationHitManager<Tf::HitManagersTestAlg::TestHit >;
 typedef Tf::TTStationHitManager< Tf::HitManagersTestAlg::TestHit > MyTTStationHitManager;
-DECLARE_TOOL_FACTORY( MyTTStationHitManager );
+DECLARE_TOOL_FACTORY( MyTTStationHitManager )
 //-----------------------------------------------------------------------------
 
 using namespace Tf;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HitManagersTestAlg );
+DECLARE_ALGORITHM_FACTORY( HitManagersTestAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,10 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file TsaTStationHitManager.cpp
  *
  *  Implemetnation file for class : Tf::Tsa::TStationHitManager
- *
- *  $Id: TsaTStationHitManager.cpp,v 1.2 2008-05-29 10:55:36 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -22,7 +19,7 @@
 using namespace Tf::Tsa;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TStationHitManager );
+DECLARE_TOOL_FACTORY( TStationHitManager )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -53,3 +50,8 @@ Tf::Tsa::TStationHitManager::createHit( const Tf::OTHit & othit ) const
 }
 
 //=============================================================================
+
+// Not sure why this helps here, but it does suppress the warning!
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:279)  // BOOST_ASSERT controlling expression is constant
+#endif
