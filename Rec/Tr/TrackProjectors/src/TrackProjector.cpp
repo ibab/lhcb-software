@@ -1,4 +1,3 @@
-// $Id: TrackProjector.cpp,v 1.20 2009-11-13 12:40:10 wouter Exp $
 // Include files 
 
 // local
@@ -28,7 +27,7 @@ using namespace LHCb;
 using namespace ROOT::Math;
 using ROOT::Math::SMatrix;
 
-DECLARE_TOOL_FACTORY( TrackProjector );
+DECLARE_TOOL_FACTORY( TrackProjector )
 
 //-----------------------------------------------------------------------------
 /// Retrieve the chi squared of the (last) projection
@@ -72,7 +71,7 @@ StatusCode TrackProjector::initialize()
 //-----------------------------------------------------------------------------
 /// Destructor
 //-----------------------------------------------------------------------------
-TrackProjector::~TrackProjector() {};
+TrackProjector::~TrackProjector() {}
 
 
 // trivial helpers to make code clearer...
@@ -87,10 +86,10 @@ namespace
     return d;
   }
 
-  double dot( const DualVector& a, const Gaudi::XYZVector& b )
-  {
-    return a(0,0)*b.X() + a(0,1)*b.Y() + a(0,2)*b.Z();
-  }
+  //  double dot( const DualVector& a, const Gaudi::XYZVector& b )
+  //  {
+  //    return a(0,0)*b.X() + a(0,1)*b.Y() + a(0,2)*b.Z();
+  //  }
 }
 
 //-----------------------------------------------------------------------------

@@ -1,4 +1,3 @@
-// $Id: TrackProjectorSelector.cpp,v 1.5 2010-04-13 09:34:28 cocov Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@ using namespace Gaudi;
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackProjectorSelector );
+DECLARE_TOOL_FACTORY( TrackProjectorSelector )
 //-----------------------------------------------------------------------------
 /// Standard constructor, initializes variables
 //-----------------------------------------------------------------------------
@@ -49,7 +48,7 @@ TrackProjectorSelector::TrackProjectorSelector( const std::string& type,
 //-----------------------------------------------------------------------------
 /// Destructor
 //-----------------------------------------------------------------------------
-TrackProjectorSelector::~TrackProjectorSelector() {};
+TrackProjectorSelector::~TrackProjectorSelector() {}
 
 //-----------------------------------------------------------------------------
 /// Initialize

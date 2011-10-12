@@ -1,14 +1,7 @@
-
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
-// from GaudiKernel
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-// from OTDet
-#include"OTDet/DeOTDetector.h"
 
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
@@ -24,14 +17,21 @@
 #include "Kernel/AlignTraj.h"
 
 // local
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackProjector::project" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrajOTProjector.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 // Namespaces
 using namespace Gaudi;
 using namespace LHCb;
 using ROOT::Math::SMatrix;
 
-DECLARE_TOOL_FACTORY( TrajOTProjector );
+DECLARE_TOOL_FACTORY( TrajOTProjector )
 
 StatusCode TrajOTProjector::project( const StateVector& statevector,
                                      const Measurement& meas )

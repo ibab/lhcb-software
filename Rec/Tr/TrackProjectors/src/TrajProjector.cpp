@@ -1,4 +1,3 @@
-// $Id: TrajProjector.cpp,v 1.13 2010-04-13 09:34:28 cocov Exp $
 // Include files 
 
 // from Gaudi
@@ -33,25 +32,25 @@ struct ST {
 };
 
 typedef TrajProjector<ST> TrajSTProjector;
-DECLARE_TOOL_FACTORY( TrajSTProjector );
+DECLARE_TOOL_FACTORY( TrajSTProjector )
 
 struct Velo {
   static double defaultTolerance() { return 0.0005*Gaudi::Units::mm; }
 };
 
 typedef TrajProjector<Velo> TrajVeloProjector;
-DECLARE_TOOL_FACTORY( TrajVeloProjector );
+DECLARE_TOOL_FACTORY( TrajVeloProjector )
 
 struct VeloPix {
   static double defaultTolerance() { return 0.0005*Gaudi::Units::mm; }
 };
 
 typedef TrajProjector<VeloPix> TrajVeloPixProjector;
-DECLARE_TOOL_FACTORY( TrajVeloPixProjector );
+DECLARE_TOOL_FACTORY( TrajVeloPixProjector )
 
 struct Muon {
   static double defaultTolerance() { return 0.002*Gaudi::Units::mm; }
 };
 
 typedef TrajProjector<Muon> TrajMuonProjector;
-DECLARE_TOOL_FACTORY( TrajMuonProjector );
+DECLARE_TOOL_FACTORY( TrajMuonProjector )

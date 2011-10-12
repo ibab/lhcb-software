@@ -7,7 +7,14 @@
 #include "Event/OTMeasurement.h"
 #include "Event/StateVector.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#ifdef __INTEL_COMPILER         // Disable ICC warning
+  #pragma warning(disable:654)  // ITrackProjector::project" only partially overridden
+  #pragma warning(push)
+#endif
 #include "TrajOTProjector.h"
+#ifdef __INTEL_COMPILER         // Re-enable ICC warning 654
+  #pragma warning(pop)
+#endif
 
 class TrajOTCosmicsProjector : public TrajOTProjector 
 {
@@ -33,7 +40,7 @@ private:
 
 //----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrajOTCosmicsProjector );
+DECLARE_TOOL_FACTORY( TrajOTCosmicsProjector )
 
 StatusCode TrajOTCosmicsProjector::initialize()
 {

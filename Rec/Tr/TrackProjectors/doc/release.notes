@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2011-10-12 - Marco Cattaneo
+ - Mask icc warnings and fix icc remarks
+
 !========================= TrackProjectors v2r29p1 2011-06-15 =========================
 ! 2011-05-12 Wouter Hulsbergen
  - small bug fix in error assigned to OT hits in ambiguity fit ('prefit')
