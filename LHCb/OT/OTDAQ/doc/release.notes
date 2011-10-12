@@ -3,6 +3,9 @@
 ! Package manager : J.Amoraal
 !------------------------------------------------------------------------------
 
+! 2011-10-12 - Marco Cattaneo
+ - Fix icc remark
+
 ! 2011-09-27 - Alexandr Kozlinskiy
  - IOTRawBankDecoder extended with method isTotalNumberOfHitsLessThen(nmax)
    with trivial default implementation. The nontrivial implementation
