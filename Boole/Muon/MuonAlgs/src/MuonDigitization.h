@@ -97,7 +97,7 @@ private:
   static std::string numsta[5];
   static std::string TESPathOfHitsContainer[4];
   static const int OriginOfHitsContainer[5];
-  
+  static const int spillTimeOffset[6];  
   Rndm::Numbers m_flatDist;
 int m_hitNotInGap;
   };

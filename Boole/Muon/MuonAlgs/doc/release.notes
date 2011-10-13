@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+! 2011-10-13 - Alessia Satta
+ - Fix spillover for MC11
 
 !========================= MuonAlgs v6r9p1 2010-06-23 ========================
 ! 2010-06-15 - Marco Cattaneo

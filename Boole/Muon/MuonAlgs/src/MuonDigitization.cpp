@@ -21,6 +21,8 @@ DECLARE_ALGORITHM_FACTORY( MuonDigitization );
 //reserve space for static variable
 std::string MuonDigitization::spill[6] = 
 {"/LHCBackground","","/Prev","/PrevPrev","/Next","/NextNext"};
+const int MuonDigitization::spillTimeOffset[6] =
+{0, 0, -1,-2,1,2};
 std::string MuonDigitization::numreg[4] = 
 {"1","2","3","4"};
 std::string MuonDigitization::numsta[5]= 
@@ -68,6 +70,7 @@ StatusCode MuonDigitization::initialize()
   }
   
   m_numberOfEvents = m_numberOfSpilloverEvents+1;
+  m_numberOfEvents = 4+1;
   m_numberOfEventsNeed=5;	
 
   // initialize some basic geometrical information
@@ -378,16 +381,10 @@ MuonDigitization::createInput(
   
   //loop over the containers
   std::vector<MuonPhPreInput> keepTemporary[20] ;	
-  //  for(int iterRegion=0;iterRegion<m_partition;iterRegion++){    
-    //  std::vector<MuonPhPreInput> keepTemporary ;		 
-    //int station=iterRegion/m_regionNumber+1;
-    //int region=iterRegion%m_regionNumber+1;   
+//    info()<<" quanti eventi "<<m_numberOfEvents<<endreq;
   for (int ispill=0; ispill<=m_numberOfEvents;ispill++){
     long spillTime=0;     
-    if(ispill==0){       
-    }else {
-      spillTime=(long)(-(ispill-1)*m_BXTime);
-    }
+    spillTime=spillTimeOffset[ispill]*m_BXTime;
      
     for(int container=0; container<m_container;container++){				
       std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
@@ -398,6 +395,7 @@ MuonDigitization::createInput(
       SmartDataPtr<LHCb::MCHits> hitPointer(eventSvc(),path);
       LHCb::MCHits::const_iterator iter;	 
       if(hitPointer!=0){
+
         for (iter=(hitPointer)->begin();iter<(hitPointer)->end();iter++){
           std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
             listph;
@@ -428,12 +426,6 @@ MuonDigitization::createInput(
             distanceFromBoundary[3]=dist[3];
             
             MuonPhPreInput* inputPointer = new  MuonPhPreInput;           
-          //  LHCb::MuonTileID tile ;            
-          //  m_muonDetector->Chamber2Tile(hitChamber, hitStation,  
-           //                              hitRegion,tile);
-           // unsigned int hitQuarter=tile.quarter();
-            //             info()<<" hitQuarter "<<hitQuarter<<" "<<hitStation<<" "<<
-            //  hitRegion<<" "<<hitChamber<<" "<<hitGap<<endmsg;
             if(m_verboseDebug) debug()<<" adding pch "<<hitStation<<" "<<
               hitRegion<<" "<<hitChamber<<" "<<hitQuarter<<"  "<<fe.getReadout()<<endmsg;
             
@@ -453,10 +445,6 @@ MuonDigitization::createInput(
             //a lightparticle impacting the center of the pc. has....
             
             double xcenter, ycenter,zcenter;
-            //info()<<"before pccenter"<<hitChamber<<" "<<hitStation<<" "<<
-            //hitRegion<<" "<<hitGap<<" "<<fe.getFEIDX()<<" "<<fe.getFEIDY()<<endmsg;             
-            //info()<<" dete "<<m_muonDetector->getPhChannelNX(0,hitStation,hitRegion)<<
-            //" "<<m_muonDetector->getPhChannelNY(0,hitStation,hitRegion)<<endmsg;
             
             
             StatusCode sc=m_muonDetector->
