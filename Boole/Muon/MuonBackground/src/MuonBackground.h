@@ -151,8 +151,9 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal);
   
   DeMuonDetector* m_muonDetector;
   
-int m_chamberInRegion[20];
+  int m_chamberInRegion[20];
   std::string m_persType;
+  bool m_alreadyIni;
 };
 
 

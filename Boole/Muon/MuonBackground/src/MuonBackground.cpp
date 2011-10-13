@@ -21,6 +21,7 @@
 // Event model
 #include "Event/MCHit.h"
 #include "Event/GenCollision.h"
+#include "Event/BeamParameters.h"
 
 // local
 #include "MuonBackground.h"
@@ -70,6 +71,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
   declareProperty("SpilloverPathsSize", m_readSpilloverEvents=0 ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
+  m_alreadyIni=false;
 }
 
 //=============================================================================
@@ -174,18 +176,17 @@ StatusCode MuonBackground::initialize() {
         }
       }
     }
-    if( m_readSpilloverEvents > 4 ) {
-      warning() << "Cannot have " << m_readSpilloverEvents
-                << " SpilloverPathSize, set to 4" << endmsg;
+    if( m_readSpilloverEvents > 0 ) {
+      warning() << "SpilloverEvents are present so run the Muon Background for all of them "<<endmsg;
       m_readSpilloverEvents = 4;
     }
 
+   
   }else if(m_type==FlatSpillover){
     if( m_readSpilloverEvents > 1 )
       warning() << "Ignoring SpillOverNumber job option, always 1 for flat spillover" << endmsg;
-    m_readSpilloverEvents=1;
+    m_readSpilloverEvents=0;
     m_luminosityFactor=m_luminosity/2.0;   
-    //    m_readSpilloverEvents=m_numberOfFlatSpill;    
   }
 
   // Release interface, no longer needed  
@@ -199,11 +200,12 @@ StatusCode MuonBackground::initialize() {
 //=============================================================================
 StatusCode MuonBackground::execute() {
 
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << m_readSpilloverEvents<<endreq;
   StatusCode sc;
   
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
     sc=calculateNumberOfCollision(ispill);    
+    verbose()<<"spill "<<ispill<<" "<<sc<<endreq;	
     if(sc.isFailure()){
       //      error()<<" no collision in spill "<<ispill<<endreq;
       
@@ -265,6 +267,19 @@ StatusCode MuonBackground::execute() {
         }        
       }      
     }else if(m_type==FlatSpillover){
+      // value of nu in the evnts
+      if(!m_alreadyIni){
+        debug()<<" Initializing the luminosity for flast spillover simulation "<<endmsg;
+        LHCb::BeamParameters* beam=get<LHCb::BeamParameters>(LHCb::BeamParametersLocation::Default);
+        if(beam){
+          info()<<" beam nu "<<beam->nu()<<" "<<beam->luminosity()<<endmsg;
+          m_luminosityFactor=beam->luminosity()/(2.0e+32);
+          info()<<" luminosity factor "<<m_luminosityFactor<<endmsg;
+          m_alreadyIni=true;
+        }else{
+          info()<<"could not access beam parameter information "<<endmsg;
+        }
+      }   
       //for flat spillover the spill events have no meaning....
       //thus take care of deleting allocated menory
       if(ispill>0) {
