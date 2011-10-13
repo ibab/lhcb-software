@@ -21,6 +21,5 @@ apply_pattern install_more_includes more=Event
 apply_pattern reflex_dictionary dictionary=SwimmingEvent \
 		headerfiles=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.h \
 		selectionfile=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.xml
-
-# Make the linker library
-#============================================================================
+macro_append SwimmingEventDict_cppflags "" \
+             target-icc " -wd191" 

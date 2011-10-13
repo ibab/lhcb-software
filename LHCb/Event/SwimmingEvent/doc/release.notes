@@ -4,6 +4,9 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2011-10-13 - Roel Aaij
+ - Update requirements to suppress icc warnings.
+
 ! 2011-10-12 - Roel Aaij
  - Add additional classed to the dictionary for the relations table.
 
