@@ -5,43 +5,30 @@
 package       LbHerwigpp
 version       v1r0
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches      LbHerwigpp doc cmt src
 
-# Its own include (not exported to project)
+# Local include directory (not exported to project).
 #============================================================================
 include_dirs  $(LBHERWIGPPROOT)
-
-# Set native versions of new required software
-#============================================================================
-macro herwig++_native_version "2.5.0"
-macro thepeg_native_version   "1.7.0"
-
-# For some reason the ThePEG include path is not set correctly
-#============================================================================
-include_dirs $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/include
 
 # Used packages.
 #============================================================================
 use           Generators       v*    Gen
+use           herwig++         v*    LCG_GeneratorsInterfaces
 use           thepeg           v*    LCG_GeneratorsInterfaces
 
-# Component library building rule
+# Set native versions of required software.
+#============================================================================
+macro herwig++_native_version "2.5.1"
+macro thepeg_native_version   "1.7.1"
+
+# Component library building rules.
 #============================================================================
 library       LbHerwigpp           component/*.cpp
 library	      LbHerwigppRandom     Lib/*.cpp
 
-# define component and linker library link options
+# Define component and linker library link options.
 #============================================================================
-apply_pattern component_library library=LbHerwigpp 
- 
-# define environment variables for herwig++ and thepeg modules and repository
-#============================================================================
-set HERWIGPPMODULES $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version)/$(CMTCONFIG)/lib/Herwig++
-set THEPEGMODULES $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
-set HERWIGPPREPO $(LCG_external)/MCGenerators/herwig++/$(herwig++_native_version)/$(CMTCONFIG)/share/Herwig++/
-
-# load library path
-#============================================================================
-path_append LD_LIBRARY_PATH $(LCG_external)/MCGenerators/thepeg/$(thepeg_native_version)/$(CMTCONFIG)/lib/ThePEG
+apply_pattern component_library library=LbHerwigpp

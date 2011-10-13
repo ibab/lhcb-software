@@ -2,7 +2,8 @@
 // Include files.
 //=============================================================================
 
-// Gaudi
+// Gaudi.
+#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -11,35 +12,36 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
  
-// Event
+// Event.
 #include "Event/GenCollision.h"
 
-// ThePEG
-#include "Repository/EventGenerator.h"
-#include "Repository/Repository.h"
-#include "Persistency/PersistentIStream.h"
-#include "Utilities/DynamicLoader.h"
-#include "Utilities/Debug.h"
-#include "EventRecord/Event.h"
-#include "EventRecord/SubProcess.h"
-#include "Handlers/XComb.h"
-#include "Handlers/EventHandler.h"
-#include "PDF/PartonExtractor.h"
-#include "PDF/PDF.h"
+// ThePEG.
+#include "ThePEG/Repository/EventGenerator.h"
+#include "ThePEG/Repository/Repository.h"
+#include "ThePEG/Persistency/PersistentIStream.h"
+#include "ThePEG/Utilities/DynamicLoader.h"
+#include "ThePEG/Utilities/Debug.h"
+#include "ThePEG/EventRecord/Event.h"
+#include "ThePEG/EventRecord/SubProcess.h"
+#include "ThePEG/Handlers/XComb.h"
+#include "ThePEG/Handlers/EventHandler.h"
+#include "ThePEG/PDF/PartonExtractor.h"
+#include "ThePEG/PDF/PDF.h"
 #include "ThePEG/Vectors/HepMCConverter.h"
-#include "Repository/UseRandom.h"
+#include "ThePEG/Repository/UseRandom.h"
 
-// Generators 
+// Generators .
+#include "Generators/IProductionTool.h"
 #include "Generators/IBeamTool.h"
 
-// HepMC
+// HepMC.
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
 
-// STL
+// STL.
 #include "limits.h"
 
-// Local
+// Local.
 #include "HerwigppProduction.h"
 
 //-----------------------------------------------------------------------------
@@ -49,7 +51,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of tool factory.
-DECLARE_TOOL_FACTORY( HerwigppProduction );
+DECLARE_TOOL_FACTORY(HerwigppProduction);
 
 
 //=============================================================================
@@ -66,13 +68,16 @@ namespace ThePEG {
 //=============================================================================
 // Default constructor.
 //=============================================================================
-HerwigppProduction::HerwigppProduction( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
-  : GaudiTool ( type, name , parent ) {
-  declareInterface< IProductionTool >( this ) ;
-  declareProperty( "Commands" , m_commandVector ) ;
-  declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
+HerwigppProduction::HerwigppProduction(const std::string& type,
+				       const std::string& name,
+				       const IInterface* parent)
+  : GaudiTool (type, name, parent) {
+  declareInterface<IProductionTool>(this);
+  declareProperty("Commands", m_userSettings);
+  declareProperty("BeamToolName", m_beamToolName = "CollidingBeams");
+  declareProperty("PrintEvent", m_printEvent = false);
+  declareProperty("WriteEvent", m_writeEventOutput = "");
+  declareProperty("ReadEvent", m_readEventInput = "");
   
   always() << "============================================================="
            << endmsg;
@@ -80,12 +85,21 @@ HerwigppProduction::HerwigppProduction( const std::string& type,
   always() << "============================================================="
            << endmsg;
   
-  // set default Herwig++ settings
-  m_defaultSettings.clear();
-  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:DebugLevel 1");
+  // Create default Herwig++ settings.
   m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:PrintEvent 0");
   m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:MaxErrors 10000");
   m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:NumberOfEvents 100000");
+
+  // Create minbias Herwig++ settings.
+  m_minbiasSettings.push_back("insert /Herwig/MatrixElements/SimpleQCD:MatrixElements[0] /Herwig/MatrixElements/MEMinBias");
+  m_minbiasSettings.push_back("set /Herwig/Cuts/JetKtCut:MinKT 0.0*GeV");
+  m_minbiasSettings.push_back("set /Herwig/Cuts/QCDCuts:MHatMin 0.0*GeV");
+  m_minbiasSettings.push_back("set /Herwig/Cuts/QCDCuts:X1Min 0.055");
+  m_minbiasSettings.push_back("set /Herwig/Cuts/QCDCuts:X2Min 0.055");
+  m_minbiasSettings.push_back("set /Herwig/UnderlyingEvent/MPIHandler:IdenticalToUE 0");
+  m_minbiasSettings.push_back("set /Herwig/UnderlyingEvent/MPIHandler:softInt Yes");
+  m_minbiasSettings.push_back("set /Herwig/UnderlyingEvent/MPIHandler:twoComp Yes");
+  m_minbiasSettings.push_back("set /Herwig/UnderlyingEvent/MPIHandler:DLmode 3");
 }
 
 //=============================================================================
@@ -97,11 +111,23 @@ HerwigppProduction::~HerwigppProduction( ) { }
 // Initialize the class.
 //=============================================================================
 StatusCode HerwigppProduction::initialize( ) {  
+
   // Initialize gaudi tool.
-  debug() << "Entered initialize()" << endmsg;
+  debug() << "Entered initialize." << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure())
     Exception("Gaudi Tool failed to initialize");
+
+  // Determine the message level (maps ALWAYS -> Level 9, every step).
+  int msgLvl = this->msgLevel() * 1.3;
+  debug() << "Herwig++ printing at message level: " << msgLvl << endmsg;
+  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:DebugLevel " + numToString(msgLvl));
+
+  // Set the HepMC output file if requested.
+  if (m_writeEventOutput != "")
+    m_hepmcOut = new HepMC::IO_GenEvent(m_writeEventOutput.c_str(),
+					std::ios::out);
+  else m_hepmcOut = 0;
 
   // Initialize random number service.
   IRndmGenSvc *i = 0;
@@ -109,13 +135,13 @@ StatusCode HerwigppProduction::initialize( ) {
     i = svc<IRndmGenSvc>("RndmGenSvc" , true);
   }
   catch (const GaudiException &exc) {
-    Exception( "RndmGenSvc not found to initialize Herwig++ random engine" );
+    Exception( "RndmGenSvc not found to initialize Herwig++ random engine." );
   }
 
   // Initialize random number generator.
   sc = m_random.initialize(i, Rndm::Flat(0,1));
   if ( sc.isFailure() )
-    Exception( "Random seed generator for Herwig++ failed to initialize");
+    Exception( "Random seed generator for Herwig++ failed to initialize.");
   
   // Initialize the beam tool.
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
@@ -138,20 +164,17 @@ StatusCode HerwigppProduction::initialize( ) {
   m_beamTool->getMeanBeams(pBeam1, pBeam2);  
   
   // Find beam masses.
-  double mass1 = (m_ppSvc -> findByStdHepID(m_id1)) -> mass();
-  double mass2 = (m_ppSvc -> findByStdHepID(m_id2)) -> mass();
+  double mass1 = (m_ppSvc->findByStdHepID(m_id1))->mass();
+  double mass2 = (m_ppSvc->findByStdHepID(m_id2))->mass();
   
   // Calculate center of mass energy.
   m_cme = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
              sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/Gaudi::Units::GeV;
   
   // Set the generator beams.
-  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:LuminosityFunction:Energy "+double2string(m_cme));
-  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:BeamA "+double2string(m_id1));
-  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:BeamB "+double2string(m_id2));
-
-  // Turn off the diffractive model (causes path issues).
-  m_defaultSettings.push_back("set /Herwig/Particles/pomeron:PDF /Herwig/Partons/NoPDF");
+  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:LuminosityFunction:Energy " + numToString(m_cme));
+  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:BeamA " + numToString(m_id1));
+  m_defaultSettings.push_back("set /Herwig/Generators/LHCGenerator:EventHandler:BeamB " + numToString(m_id2));
 
   return initializeGenerator();
 }
@@ -161,55 +184,56 @@ StatusCode HerwigppProduction::initialize( ) {
 //=============================================================================
 StatusCode HerwigppProduction::initializeGenerator( ) {
   debug() << "Entered initializeGenerator()"  << endmsg;
-  // FIX ME - should not hard code verions but ENV variables are not set!!!!
-  std::string herwigppVersion = "2.5.0";
-  std::string thepegVersion = "1.7.0";
 
-  // Pull the module and repository paths from system environment.
-  std::string lcgExternal = System::getEnv("LCG_external_area");
-  std::string cmtConfig   = System::getEnv("CMTCONFIG");
-  std::string herwigppModules = lcgExternal+"/MCGenerators/herwig++/"
-    +herwigppVersion+"/"+cmtConfig+"/lib/Herwig++/";
-  std::string thepegModules = lcgExternal+"/MCGenerators/thepeg/"
-    +thepegVersion+"/"+cmtConfig+"/lib/ThePEG/";
-  std::string herwigppRepo = lcgExternal+"/MCGenerators/herwig++/"
-    +herwigppVersion+"/"+cmtConfig+"/share/Herwig++/HerwigDefaults.rpo";
-
-  // Include Herwig++ and ThePEG module directories.
-  debug() << "Num search paths = " 
-	  << ThePEG::DynamicLoader::allPaths().size() << endmsg;
-  if (ThePEG::DynamicLoader::allPaths().size() < 3) {
-    ThePEG::DynamicLoader::prependPath(herwigppModules);
-    ThePEG::DynamicLoader::prependPath(thepegModules);
-  }
+  // Print Herwig++ and ThePEG module directory paths (debug only).
+  debug() << "There are " 
+	  << ThePEG::DynamicLoader::allPaths().size()
+	  << " ThePEG search paths." << endmsg;
   for (std::vector<std::string>::const_iterator path = 
 	 ThePEG::DynamicLoader::allPaths().begin(); path !=
 	 ThePEG::DynamicLoader::allPaths().end(); path++)
     debug() << "Using path: " << *path << endmsg;
   
   // Load the default Herwig++ repository.
+  std::string herwigppRepo = System::getEnv("HERWIGPPROOT") 
+    + "/share/Herwig++/HerwigDefaults.rpo";
   debug() << "Loading Herwig++ repo from " << herwigppRepo << endmsg;
   ThePEG::Repository::load(herwigppRepo);
-  debug() << "Loaded Herwig++ repository" << endmsg;
+  debug() << "Loaded Herwig++ repository." << endmsg;
   
-  // Set the default Herwig++ parameters.
-  debug() << "Setting default parameters" << endmsg;
+  // Get corrected diffractive PDF paths.
+  std::string pomeronPath = System::getEnv("HERWIGPPROOT") 
+    + "/share/Herwig++/PDF/diffraction/";
+  m_defaultSettings.push_back("set /Herwig/Partons/PomeronPDF:RootName " + pomeronPath);
+
+  // Set the default Herwig++ settings.
+  always() << "Processing default settings." << endmsg;
   for (CommandVector::const_iterator cmd = m_defaultSettings.begin();
        cmd != m_defaultSettings.end(); ++cmd) {
     always() << *cmd << endmsg;
     ThePEG::Repository::exec(*cmd, std::cout);
   }
   
-  // Run user command vector.
-  debug() << "Processing job option commands" << endmsg;
-  for (CommandVector::const_iterator cmd = m_commandVector.begin();
-       cmd != m_commandVector.end(); ++cmd) {
-    always() << replaceSpecialCharacters(*cmd) << endmsg;
-    ThePEG::Repository::exec(replaceSpecialCharacters(*cmd), std::cout);
+  // Set minbias or user settings.
+  if (m_userSettings.size() == 0) {
+    always() << "Processing minbias settings." << endmsg;
+    for (CommandVector::const_iterator cmd = m_minbiasSettings.begin();
+	 cmd != m_minbiasSettings.end(); ++cmd) {
+      always() << replaceSpecialCharacters(*cmd) << endmsg;
+      ThePEG::Repository::exec(replaceSpecialCharacters(*cmd), std::cout);
+    }
+  }
+  else {
+    always() << "Processing user settings." << endmsg;
+    for (CommandVector::const_iterator cmd = m_userSettings.begin();
+	 cmd != m_userSettings.end(); ++cmd) {
+      always() << replaceSpecialCharacters(*cmd) << endmsg;
+      ThePEG::Repository::exec(replaceSpecialCharacters(*cmd), std::cout);
+    }
   }
   
   // Update the repository.
-  debug() << "Updating repository" << endmsg;
+  debug() << "Updating repository." << endmsg;
   ThePEG::Repository::update();
 
   // Create initial temporary Herwig++ generator.
@@ -219,7 +243,7 @@ StatusCode HerwigppProduction::initializeGenerator( ) {
     ThePEG::Repository::GetObject<ThePEG::EGPtr>
     ("/Herwig/Generators/LHCGenerator");
   try {
-    debug() << "Reducing repository to single LHC generator run"  << endmsg;
+    debug() << "Reducing repository to single LHC generator run."  << endmsg;
     tmpHW = ThePEG::Repository::makeRun(tmpEG, "LHCb");
   }
   catch (ThePEG::Exception& e) {
@@ -256,13 +280,13 @@ StatusCode HerwigppProduction::generateEvent( HepMC::GenEvent* theEvent,
 
   // Set the Herwig++ random generator seed.
   m_herwigpp->accessRandom()->setSeed(rnd);
-  debug() << "Random seed set to " << rnd << endmsg;
+  debug() << "Random seed set to " << rnd << "." << endmsg;
 
   // Check generator object is valid.
-  debug() << "Entered generateEvent"  << endmsg;
   assert(m_herwigpp);
 
   // Generate the event.
+  debug() << "Generating an event."  << endmsg;
   m_event = m_herwigpp->shoot();
   m_nEvents++;
 
@@ -274,9 +298,7 @@ StatusCode HerwigppProduction::generateEvent( HepMC::GenEvent* theEvent,
 // Write the HEPMC container (for debugging purposes).
 //=============================================================================
 StatusCode HerwigppProduction::writeEvent(HepMC::GenEvent* theEvent) {
-  HepMC::IO_GenEvent hepmcio("herwigpp.data",std::ios::out);
-  hepmcio << theEvent;
-  
+  m_hepmcOut->write_event(theEvent);
   return StatusCode::SUCCESS;
 }
 
@@ -302,7 +324,7 @@ StatusCode HerwigppProduction::printEvent(HepMC::GenEvent* theEvent) {
 // Fill the HEPMC container from a file (for debugging purposes).
 //=============================================================================
 StatusCode HerwigppProduction::readEvent(HepMC::GenEvent* theEvent) {
-  std::ifstream file("herwigpp.dat");
+  std::ifstream file(m_readEventInput.c_str());
   HepMC::IO_GenEvent hepmcio(file);
   hepmcio.fill_next_event(theEvent);
   return StatusCode::SUCCESS;
@@ -314,14 +336,14 @@ StatusCode HerwigppProduction::readEvent(HepMC::GenEvent* theEvent) {
 //=============================================================================
 StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent) {
   // Convert event record to HepMC.
-  debug() << "Herwig++ converting event to HepMC"  << endmsg;
+  debug() << "Herwig++ converting event to HepMC."  << endmsg;
   ThePEG::HepMCConverter<HepMC::GenEvent>::convert(*m_event, *theEvent, true,
 						   ThePEG::MeV,
 						   ThePEG::millimeter);
-  debug() << "Herwig++ converted event to HepMC"  << endmsg;
+  debug() << "Herwig++ converted event to HepMC."  << endmsg;
 
   // Fix vertex positions.
-  debug() << "Herwig++ fixing HepMC vertex positions" << endmsg;
+  debug() << "Herwig++ fixing HepMC vertex positions." << endmsg;
   std::vector<HepMC::GenVertex*> vertices;
   for (HepMC::GenEvent::vertex_iterator v = theEvent->vertices_begin();
        v != theEvent->vertices_end(); v++)
@@ -332,7 +354,7 @@ StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent) {
       vertices[vertex - 1]->set_position(vertices[vertex]->position());
   
   // Fix particle codes.
-  debug() << "Herwig++ fixing HepMC particle status codes" << endmsg;
+  debug() << "Herwig++ fixing HepMC particle status codes." << endmsg;
   for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
        p != theEvent->particles_end(); p++) {
     // Set generator specific particles to status 3.
@@ -342,12 +364,12 @@ StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent) {
   }
   
   // Get random seeds.
-  debug() << "Herwig++ recording random seeds to HepMC" << endmsg;
+  debug() << "Herwig++ recording random seeds to HepMC." << endmsg;
   std::vector<long> seeds(1,static_cast<long>(m_seed));
   theEvent->set_random_states(seeds);
 
   // Manually add PDF to event record.
-  debug() << "Herwig++ adding PDF info to HepMC"  << endmsg;
+  debug() << "Herwig++ adding PDF info to HepMC."  << endmsg;
   
   // Determine incoming partons.
   ThePEG::tSubProPtr subprocess = m_event->primarySubProcess();
@@ -380,7 +402,16 @@ StatusCode HerwigppProduction::toHepMC(HepMC::GenEvent* theEvent) {
   // Add the info to the event record.
   HepMC::PdfInfo pdfInfo(id1, id2, x1, x2, Q, pdf1, pdf2);
   theEvent->set_pdf_info(pdfInfo);
-  debug() << "Herwig++ added PDF info to HepMC"  << endmsg;
+  debug() << "Herwig++ added PDF info to HepMC."  << endmsg;
+
+  // Read the event if requested.
+  if (m_readEventInput != "") readEvent(theEvent);
+  
+  // Write the event if requested.
+  if (m_writeEventOutput != "") writeEvent(theEvent);
+
+  // Print the event if requested.
+  if (m_printEvent) printEvent(theEvent);
 
   return StatusCode::SUCCESS;
 }
@@ -392,33 +423,38 @@ StatusCode HerwigppProduction::finalize( )
 {
   // Print summary info.
   assert(m_herwigpp);
-  m_herwigpp->finalize();
-  always() << "Cross Section: " << m_herwigpp->integratedXSec() << " +- "
-	   << m_herwigpp->integratedXSecErr() << endmsg;
+  std::cout << "==============================================================================\n";
+  std::cout << "Herwig++ Event Summary\n";
+  std::cout << "==============================================================================\n";
+  m_herwigpp->currentEventHandler()->statistics(std::cout);
 
+  // Finalize the generator.
+  m_herwigpp->finalize();
 
   // Clean up ThePEG.
   ThePEG::Repository::cleanup();
 
-  // Remove the generator object.
+  // Delete the generator object.
   delete m_herwigpp;
 
-  return GaudiTool::finalize( );
-}  
+  // Delete the HepMC object,
+  if (m_hepmcOut) delete m_hepmcOut;
 
+  return GaudiTool::finalize( );
+}
 
 //=============================================================================
 // Set a particle as stable.
 //=============================================================================
-void HerwigppProduction::setStable( const ParticleProperty * thePP ) 
-{
+void HerwigppProduction::setStable(const ParticleProperty *thePP) {
+
   // Grab the particle data.
   ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pdgID());
 
   // If Herwig++ particle exists form the command string and execute.
   if (pd) {
-    std::string cmd = "set /Herwig/Particles/"+pd->PDGName()
-      +":Stable Stable";
+    std::string cmd = "set /Herwig/Particles/" + pd->PDGName()
+      + ":Stable Stable";
     debug() << cmd << endmsg;
     ThePEG::Repository::exec(cmd, std::cout);
   }
@@ -427,58 +463,41 @@ void HerwigppProduction::setStable( const ParticleProperty * thePP )
 //=============================================================================
 // Update the properties for a particle.
 //=============================================================================
-void HerwigppProduction::updateParticleProperties( const ParticleProperty * 
-						   thePP) {
+void HerwigppProduction::updateParticleProperties(const ParticleProperty
+						  *thePP) {
   // Grab the particle data from the Herwig++ repository.
   ThePEG::PDPtr pd = m_herwigpp->getParticleData(thePP->pdgID());
   
   if (pd) {
-      // Grab particle name.
-      std::string name = "set /Herwig/Particles/"+pd->PDGName();
-      
-      // Convert relevant quantities.
-      double width, lifetime, mass, charge;
-      if (thePP -> lifetime() == 0)
-	width = 0;
-      else
-	width = Gaudi::Units::hbarc/(thePP->lifetime()
-				     *Gaudi::Units::c_light
-				     *Gaudi::Units::GeV);
-      lifetime = thePP->lifetime()*Gaudi::Units::c_light;
-      mass     = thePP->mass()/Gaudi::Units::GeV;
-      charge   = thePP->charge()*3;
-      
-      // Create command vector.
-      std::vector<std::string> cmds;
-      cmds.push_back(name+":NominalMass "+double2string(mass));
-      cmds.push_back(name+":Charge "+double2string(charge));
-      cmds.push_back(name+":LifeTime "+double2string(lifetime));
-      cmds.push_back(name+":Width "+double2string(width));
-      cmds.push_back(name+":WidthUpCut "+double2string(thePP->maxWidth()));
-      
-      /*
-	The following code allows for the antiparticle for a particle to be
-	set within the Herwig++ repository. It forces all particle properties
-	to be the same, so this method should not be called because it will
-	cause previous properties to be reset.
-      */
-      /*
-      const ParticleProperty *theAP = thePP->antiParticle();
-      ThePEG::PDPtr ad = m_herwigpp->getParticleData(theAP->pdgID());
-      if (ad)
-	{
-	  std::string antiname = "makeanti /Herwig/Particles/"+pd->PDGName()
-	    +" /Herwig/Particles/"+ad->PDGName();
-	  cmds.push_back(antiname);
-	}
-      */
-
-      // Run commands on the Herwig++ repository.
-      for (std::vector<std::string>::iterator cmd = cmds.begin();
-	   cmd != cmds.end(); cmd++) {
-	debug() << *cmd << endmsg;
-	ThePEG::Repository::exec(*cmd, std::cout);
-      }
+    // Grab particle name.
+    std::string name = "set /Herwig/Particles/"+pd->PDGName();
+    
+    // Convert relevant quantities.
+    double width, lifetime, mass, charge;
+    if (thePP -> lifetime() == 0)
+      width = 0;
+    else
+      width = Gaudi::Units::hbarc/(thePP->lifetime()
+				   *Gaudi::Units::c_light
+				   *Gaudi::Units::GeV);
+    lifetime = thePP->lifetime()*Gaudi::Units::c_light;
+    mass     = thePP->mass()/Gaudi::Units::GeV;
+    charge   = thePP->charge()*3;
+    
+    // Create command vector.
+    std::vector<std::string> cmds;
+    cmds.push_back(name+":NominalMass " + numToString(mass));
+    cmds.push_back(name+":Charge " + numToString(charge));
+    cmds.push_back(name+":LifeTime " + numToString(lifetime));
+    cmds.push_back(name+":Width " + numToString(width));
+    cmds.push_back(name+":WidthUpCut " + numToString(thePP->maxWidth()));
+    
+    // Run commands on the Herwig++ repository.
+    for (std::vector<std::string>::iterator cmd = cmds.begin();
+	 cmd != cmds.end(); cmd++) {
+      debug() << *cmd << endmsg;
+      ThePEG::Repository::exec(*cmd, std::cout);
+    }
   }
 }
 
@@ -499,33 +518,33 @@ void HerwigppProduction::turnOffFragmentation( ) {
 //=============================================================================
 // Dummy functions.
 //=============================================================================
-void HerwigppProduction::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {}
+void HerwigppProduction::savePartonEvent(HepMC::GenEvent */* theEvent */) {}
 
-void HerwigppProduction::retrievePartonEvent( HepMC::GenEvent * 
-					      /* theEvent */ ) {}
+void HerwigppProduction::retrievePartonEvent(HepMC::GenEvent * 
+					      /* theEvent */) {}
 
-StatusCode HerwigppProduction::hadronize( HepMC::GenEvent * /*theEvent*/ , 
-					  LHCb::GenCollision * 
-					  /*theCollision*/ ) {
+StatusCode HerwigppProduction::hadronize(HepMC::GenEvent */*theEvent*/, 
+					 LHCb::GenCollision
+					 */*theCollision*/) {
   return StatusCode::SUCCESS;
 }
 
-void HerwigppProduction::printRunningConditions( ) {}
+void HerwigppProduction::printRunningConditions() {}
 
-bool HerwigppProduction::isSpecialParticle( const ParticleProperty * 
-					    /*thePP*/ ) const { 
+bool HerwigppProduction::isSpecialParticle(const ParticleProperty * 
+					   /*thePP*/) const { 
   return false;
 }
 
-StatusCode HerwigppProduction::setupForcedFragmentation( const int 
-							 /*thePdgId*/ ) {
+StatusCode HerwigppProduction::setupForcedFragmentation(const int
+							/*thePdgId*/ ) {
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Convert double to string.
 //=============================================================================
-std::string HerwigppProduction::double2string( double num ) {
+std::string HerwigppProduction::numToString( double num ) {
   std::ostringstream stream;
   stream << num;
   return stream.str();
@@ -534,14 +553,6 @@ std::string HerwigppProduction::double2string( double num ) {
 //=============================================================================
 // Replace special characters.
 //=============================================================================
-/*
-  Decay channels within Herwig++ must be semicolon-delimited (page 
-  117 of the Herwig++ manual). Unfortunately,
-  the strings imported from the options file must also be semicolon-delimited
-  and so consequently individual decay channels cannot be set! To work around
-  this issue we use the special character "\s" to denote a semicolon in the
-  options file, and replace this with an actual ";" in the following code.
-*/
 std::string HerwigppProduction::replaceSpecialCharacters( std::string str ) {
   size_t found;
 
