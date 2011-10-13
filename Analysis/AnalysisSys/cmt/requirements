@@ -1,24 +1,25 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version           v7r0
+version v7r0
 
 branches doc cmt
 
 ####################################################################
+
 use  AnalysisConf               v2r0     Phys   # Patrick Koppenburg, Juan Palacios
 use  DSTWriters                 v4r0     Phys   # Juan Palacios
 use  DSTWriterTests             v2r3     Phys   # Juan Palacios
-#===================================================================
-#use  AnalysisDict               v1r0     Phys   # TEMPORARY!
-#===================================================================
+
 use  FlavourTagging             v12r5    Phys   # Marc Grabalosa
 
 use  DaVinciMonitors            v1r15    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
 use  KaliCalo                   v4r12    Phys   # Vanya Belyaev
+
 ####################################################################
+
 #use  DaVinciMCKernel            v4r2     Phys   # Juan Palacios
-use  DaVinciMCTools     	v10r0     Phys   # Juan Palacios
+use  DaVinciMCTools     	v10r0    Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r4     Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1     Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r3     Phys   # Vanya Belyaev
@@ -33,11 +34,12 @@ use  DecayTreeTuple             v3r17    Phys   # Rob Lambert
 use  JetAccessories		v1r1	 Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v1r2	 Phys   # Victor Coco, Cedric Potterat
 use  HltSelChecker              v12r1    Hlt    # Patrick Koppenburg
+
 ####################################################################
-#
+
 use AnalysisPython              v2r5     Phys
 use PyAna                       v1r3     Analysis
-#
+
 ####################################################################
 use  MicroDSTBase        	v3r1p1  MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r6    MicroDST # Juan Palacios
@@ -46,9 +48,14 @@ use  MicroDSTAlgorithm   	v5r4    MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10   MicroDST # Juan Palacios
 
 ####################################################################
+
 use Analysis            	v10r2   Tutorial          # P. Koppenburg
 use LoKiExample         	v8r8    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r14   Ex                # Juan Palacios
+
+####################################################################
+
+use TrackSmearing               v1r1    Phys   # Alex Shires
 
 # Declare this as a container package
 apply_pattern container_package

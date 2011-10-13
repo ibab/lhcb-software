@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+! 2011-10-13 - Chris Jones
+ - Add Phys/TrackSmearing moved from Erasmus
+
 </PRE><H1><A NAME=v7r0>2011-09-07 Analysis v7r0 </A></H1><PRE>
 
 Based on Phys v13r0, for the 2011 Stripping17.
