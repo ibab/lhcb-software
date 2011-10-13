@@ -1,0 +1,15 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/TrackSmearing
+! Responsible : Sascha Stahl
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2011-05-01 - Alex Shires
+ - Added protection to phi bin calculation in getSigma method
+   to avoid 2*PI rounding up out of range
+
+! 2011-04-23
+ - Cleaned the code, you have now three choices how to smear
+
+! 2011-04-20 - Sascha Stahl
+ - first release of the track smearing tool 

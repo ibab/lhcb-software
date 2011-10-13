@@ -1,0 +1,31 @@
+#============================================================================
+# Created    : 2011-04-12
+# Maintainer : Alexander Shires
+#============================================================================
+package           TrackSmearing
+version           v1r1
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+use   DaVinciKernel   v*     Phys
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TrackSmearing    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TrackSmearing
+
+macro_append TrackSmearing_shlibflags "-lHist" \
+    WIN32 "libHist.lib"
