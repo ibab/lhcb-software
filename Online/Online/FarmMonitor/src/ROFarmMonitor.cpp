@@ -173,17 +173,6 @@ void ROFarmMonitor::initialize ( ) {
       myPart->recoNodes.push_back( "mona0907" );
       myPart->recoNodes.push_back( "mona0908" );
       myPart->recoNodes.push_back( "mona0909" );
-      myPart->recoNodes.push_back( "mona0910" );
-      myPart->recoNodes.push_back( "mona0911" );
-      myPart->recoNodes.push_back( "mona0912" );
-      myPart->recoNodes.push_back( "mona0913" );
-      myPart->recoNodes.push_back( "mona0914" );
-      myPart->recoNodes.push_back( "mona0915" );
-      myPart->recoNodes.push_back( "mona0916" );
-      myPart->recoNodes.push_back( "mona0917" );
-      myPart->recoNodes.push_back( "mona0918" );
-      myPart->recoNodes.push_back( "mona0919" );
-      myPart->recoNodes.push_back( "mona0920" );
     }
 
     if ( 0 == m_test ) {
@@ -691,6 +680,23 @@ void ROFarmMonitor::update( )   {
       }
 
       if ( 0 < sumRec.tsk() ) {
+      //== If too many lines, compress: sum tasks per node
+        if ( int( recCounters.size() ) + 2 > (*itP)->moniServices.end() - itS ) {
+          if ( 2 < m_print ) std::cout << "Compress Reco by farm " << std::endl;
+          std::vector<RONodeCounter> farmCounters;
+          std::string farmName = "";
+          for ( itN = recCounters.begin(); recCounters.end() != itN; ++itN ) {
+            std::string myName =  (*itN).name();
+            if ( myName.substr(0,2) != farmName ) {
+              farmName = (*itN).name().substr(0,2);
+              std::string temp = "mona09"+farmName;
+              RONodeCounter farm( temp.c_str() );
+              farmCounters.push_back( farm );
+            }
+            farmCounters.back().sum( *itN);
+          }
+          recCounters = farmCounters;
+        }
         if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( blank );
         if ( (*itP)->moniServices.end() != itS ) (*itS++)->update( sumRec );
         for ( itN = recCounters.begin(); recCounters.end() != itN; ++itN ) {
