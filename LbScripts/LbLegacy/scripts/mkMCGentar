@@ -76,8 +76,12 @@ def get_native_versions(native_version):
             vers = fdline.split("'")[1]
             packages_versions[pack] = vers
 
+    packages_homes = {}
+    for p in packages_versions :
+        packages_homes[p] = os.popen("cmt show macro_value %s_home" % p).read()[:-1]
+
     os.chdir(release_area)
-    return packages_versions
+    return packages_versions, packages_homes
 
 #
 #  get MCGen tar file names ===============================================
@@ -95,22 +99,31 @@ def get_MCGen_tar_name(root,gen,native,bin):
     return name
 
 
+def get_MCGen_base(package_home, genname, genversion):
+    return os.path.dirname(os.path.dirname(os.path.dirname(package_home)))
+
 #
 #  get tar files from lcg  ==================================================
 #
-def get_tar_files(packages_versions,binary_dir):
+def get_tar_files(packages_versions, packages_homes, binary_dir):
     if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
 
     GENSER_vers = 'GENSER_'+packages_versions['GENSER']
     tarfile = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.tar.gz')
     md5file = os.path.join(lhcbtar,GENSER_vers+'_'+binary_dir+'.md5')
-    MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
 
     os.chdir(tmpdir.getName())
-    if not os.path.exists('MCGenerators'): os.mkdir('MCGenerators')
-    os.chdir('MCGenerators')
-    print 'get_tar_files -', os.getcwd()
+
     for key in packages_versions.keys():
+        gen_base = get_MCGen_base(packages_homes[key], key, packages_versions[key])
+        gen_root = os.path.basename(gen_base)
+        MCGen_tar_dir = os.path.join(lcg_dir,'MCGenerators','distribution')
+        if gen_root :
+            if not os.path.exists(gen_root):
+                os.mkdir(gen_root)
+            os.chdir(gen_root)
+        print 'get_tar_files -', os.getcwd()
+
         value = packages_versions[key]
         file = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
         if debug_flag == 1: print 'get_tar_files %s '%(file)
@@ -138,19 +151,14 @@ def get_tar_files(packages_versions,binary_dir):
                         print "%s/share/PDFsets/cteq6ll.LHpdf found in %s" % (key_value, file)
                 os.remove(file)
 
-    os.chdir(tmpdir.getName())
-    str = 'tar zcf '+tarfile+' MCGenerators'
+        os.chdir(tmpdir.getName())
+
+    str = 'tar zcf '+tarfile+' '+' '.join(os.listdir(tmpdir.getName()))
     rc = os.system(str)
     if rc == 0:
-        os.system('rm -fr %s' % os.path.join(tmpdir.getName(), "MCGenerators"))
-        logfile.write('%s tar file for %s has been written and relevant %s directory removed '%(GENSER_vers, binary_dir, os.path.join(tmpdir.getName(), "MCGenerators"))+'\n')
         md5sum = calculateMD5(tarfile)
         mdf = open(md5file,"w")
         mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
-        logfile.write('%s md5 file for %s has been written'%(GENSER_vers,binary_dir)+'\n')
-    else:
-        logfile.write('%s tar file for %s has not been written '%(GENSER_vers,binary_dir)+'\n')
-
 
 
 #
@@ -167,9 +175,7 @@ if __name__ == "__main__":
 
     logname = os.path.join(here,'mkMCGentar.log')
     if os.path.exists(logname): os.remove(logname)
-    logfile = open(logname,'w')
     str = " =========== "+time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())+"\n"
-    logfile.write(str)
 
     if sys.platform == 'win32':
         rmcmd = 'rmdir /s/q '
@@ -207,14 +213,13 @@ if __name__ == "__main__":
         if key in ('-n', '--native'):
             native_version = value
 
-    logfile.write('debug_flag %s, binary %s from %s '%(debug_flag,binary,native_version)+'\n')
 
-    packages_versions = get_native_versions(native_version)
+    packages_versions, packages_homes = get_native_versions(native_version)
     if debug_flag == 1:
         print ' packages_versions = ', packages_versions
+        print ' packages_homes = ', packages_homes
 
     if packages_versions.has_key('GENSER') != 1:
-        logfile.write('GENSER is not required - exit \n')
         sys.exit()
     else:
-        rc = get_tar_files(packages_versions,binary)
+        rc = get_tar_files(packages_versions, packages_homes, binary)

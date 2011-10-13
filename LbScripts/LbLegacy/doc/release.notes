@@ -1,3 +1,8 @@
+2011-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkMCGentar: global fix for generator comming from a different location than the
+	regular MCGenerators directory.
+
 2011-10-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py:
