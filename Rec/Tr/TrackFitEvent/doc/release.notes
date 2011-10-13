@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2011-10-13 - Marco Cattaneo
+ - FitNode.h: remove obsolete member variable, fixes coverity defects
+              19690, 19691, 19692
+
 !========================= TrackFitEvent v5r11 2011-07-28 =========================
 ! 2011-06-20 - Alexandr Kozlinskiy
  - Use trajector.endRange/beginRange instead of module().wireLingth

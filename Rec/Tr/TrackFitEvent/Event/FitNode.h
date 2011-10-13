@@ -1,4 +1,3 @@
-// $Id: FitNode.h,v 1.27 2009-09-25 09:04:35 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -363,7 +362,6 @@ namespace LHCb
     Gaudi::TrackVector    m_transportVector;       ///< transport vector for propagation from previous node to this one
     Gaudi::TrackSymMatrix m_noiseMatrix;           ///< noise in propagation from previous node to this one
     double                m_deltaEnergy;           ///< change in energy in propagation from previous node to this one
-    bool                  m_transportIsSet;        ///< Flag for transport params
     double                m_refResidual;           ///< residual of the reference    
     FilterStatus          m_filterStatus[2] ;      ///< Status of the Node in the fit process
     CachedBool            m_hasInfoUpstream[2] ;   ///< Are the nodes with active measurement upstream of this node?
