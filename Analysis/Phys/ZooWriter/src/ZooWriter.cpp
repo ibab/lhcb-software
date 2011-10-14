@@ -459,7 +459,7 @@ StatusCode ZooWriter::execute()
     }
 
     // write selected particle collections
-    unsigned selectionid = 0;
+    unsigned selectionid = -1;
     BOOST_FOREACH(ZooWriterContext::KnownSelection& s, sel()) {
   ++selectionid;
 	if ( !exist<LHCb::Particle::Range>( s.collection ) ) continue;
