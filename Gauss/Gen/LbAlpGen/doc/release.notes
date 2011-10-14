@@ -5,6 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2011-10-14 - Gloria Corti
+ - Use alpgen from LCG_GeneratorsInterfaces
+
 !========================== LbAlpGen v1r0 2007-08-10 ==========================
 ! 2007-07-31 - Vanya BELYAEV
  - Couple of minor fixes for ALPGEN generator

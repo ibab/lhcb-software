@@ -16,6 +16,7 @@ include_dirs      $(LBALPGENROOT)
 set               LBALPGENOPTS $(LBALPGENROOT)/options 
 
 # =============== dependencies ================================================
+use               alpgen       v* LCG_GeneratorsInterfaces
 use               LbPythia     v* Gen 
 use               Boost        v* LCG_Interfaces 
 
