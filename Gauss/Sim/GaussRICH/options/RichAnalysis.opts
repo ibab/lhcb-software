@@ -16,12 +16,12 @@ GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet4=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=true;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet3=false;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCounting=true;
-GiGa.EventSeq.RichG4Event.RichG4EventActivateCountingFullAcc=true;
+GiGa.EventSeq.RichG4Event.RichG4EventActivateCountingFullAcc=false;
 //GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
 GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseSaturatedHit=true;
 GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
-GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=true;
+GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=false;
 
  GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
