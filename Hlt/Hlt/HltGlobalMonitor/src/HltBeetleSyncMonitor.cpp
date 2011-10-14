@@ -4,6 +4,7 @@
 // ============================================================================
 // STD&STL
 // ============================================================================
+#include <iostream>
 #include <string>
 #include <map>
 // ============================================================================
@@ -107,13 +108,17 @@ void HltBeetleSyncMonitor::monitor() {
    }
 
    // Check for presence of SPD in L0DU
-   typedef std::map<std::string, std::pair<int, double> > dataMap_t;
-   const dataMap_t& dm = l0du->dataMap();
+   typedef std::map<std::string, LHCb::L0DUElementaryData* > dataMap_t;
+   const LHCb::L0DUConfig* config = l0du->configuration();
+   if ( !l0du->valid() || !config )
+      return;
+
+   const dataMap_t& dm = config->data();
    dataMap_t::const_iterator it = dm.find("Spd(Mult)");
    if (it == dm.end()) {
       return;
    } else {
-      double nSPD = it->second.second;
+      double nSPD = it->second->value();
       double nIT = itClusters->size();
       double nVelo = veloClusters->size();
 
