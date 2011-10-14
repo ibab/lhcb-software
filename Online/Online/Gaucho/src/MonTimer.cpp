@@ -14,6 +14,7 @@ MonTimer::~MonTimer( )
 
 void MonTimer::timerHandler ( void )
 {
+  m_lock.lockMutex();
   {
     bool need_return = false;
     MonSubSys::_Lock l(m_Hsys);
@@ -35,11 +36,12 @@ void MonTimer::timerHandler ( void )
       printf("MonTimer: Unknown Exception.\n");
       need_return = true;
     }
-    if ( need_return ) {
+    if ( need_return )
+    {
+      m_lock.unlockMutex();
       return;
     }
   }
-  m_lock.lockMutex();
 //  m_Hsys->Lock();
   m_Hsys->m_genSrv->Update();
 //  m_Hsys->unLock();
