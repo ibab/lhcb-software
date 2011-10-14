@@ -1,13 +1,14 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set>
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
+    <text>$BOOLEOPTS/Boole-MC10.py</text>
+    <text>$BOOLEOPTS/MC10-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Gauss-v37r0-30000000-100ev-20091112-vc-md100.sim' TYP='POOL_ROOTTREE' OPT='READ'"]; Boole().DataType="MC09";</text>
+    <text>from Boole.Configuration import *; Boole().DigiType="Minimal";</text>
   </set></argument>
-  <argument name="reference"><text>../refs/fixedfile-gauss-v37r0-mc09-sim.ref</text></argument>
+  <argument name="reference"><text>../refs/boole-mc10-notruth.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
 validateWithReference(preproc = preprocessor)

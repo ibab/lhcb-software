@@ -3,17 +3,31 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v23r1>2011-10-17 Boole v23r1</A></H1><PRE>
+This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Production release for MC11 simulation.
+ - No longer compatible with MC09
+
  - Changes to example options:
    . Remove Boole-FEST09.py, use $APPCONFIGOPTS/Boole/FEST-L0Yes.py instead
+   . Remove Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py, MC09-Files.py
+   . Remove Spillover-Files.py (was an MC09 file)
 
  - Changes to tests
    . Rename boole-fest09 to boole-fest, using an MC10 sim file instead of MC09
+   . Replace boole-mc09-notruth with boole-mc10-notruth
+   . Replace fixedfile-gauss-v37r0-mc09-sim by fixedfile-gauss-v39r4-mc10-sim,
+     tests also FlatSpillover on MC10
+   . Change boole-mc10 to fill also expert histos, replaces boole-mc09-withtruth
+   . Remove boole-spillover, will be done in an MC11 test
 
 </PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Production release for MC11 simulation.
+ - Development release for MC11 simulation.
 
  - Changes to configuration:
    . Add NextNext to default spillover paths KnownSpillPaths

@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
+  <argument name="args"><set>
+    <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
+    <text>$APPCONFIGOPTS/Boole/DataType-2010.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; from Configurables import LHCbApp, L0Conf; LHCbApp().DDDBtag="head-20101206"; LHCbApp().CondDBtag="sim-20101210-vc-md100"; L0Conf().TCK = '0x002A'; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2010/v39r4/30000000-100ev-20110902-MC10.sim' TYP='POOL_ROOTTREE' OPT='READ'"];</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/fixedfile-gauss-v39r4-mc10-sim.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>

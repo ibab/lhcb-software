@@ -1,5 +1,6 @@
-package Boole
-version           v23r0
+package           Boole
+version           v23r1
+# Remember to change version also in ../job/valgrind.py, ../job/Boole_Ganga.py
 
 branches doc cmt job options
 
