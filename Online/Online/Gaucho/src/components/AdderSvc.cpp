@@ -75,6 +75,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   m_phistsvc    = 0;
   m_arrhist     = 0;
   m_MyServiceName = name;
+  m_AdderSys = 0;
 }
 
 AdderSvc::~AdderSvc()
