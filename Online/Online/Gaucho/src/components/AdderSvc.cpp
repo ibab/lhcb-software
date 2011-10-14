@@ -317,6 +317,11 @@ StatusCode AdderSvc::finalize()
     m_SaveTimer->Stop();
     deletePtr(m_SaveTimer);
   }
+  if (m_AdderSys != &AdderSys::Instance())
+  {
+    printf("****** m_AdderSys was overwritten!!! Reestablishing it...\n");
+    m_AdderSys = &AdderSys::Instance();
+  }
   if (m_AdderSys !=0)  m_AdderSys->stop();
   if (m_adder != 0)
   {
