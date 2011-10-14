@@ -4,6 +4,9 @@
 ! Purpose     : Add various types of background in the muon system : 
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
+! 2011-10-14 - Alessia Satta
+ - Fix for MC10 compatibilities (GenHeader)
+
 ! 2011-10-13 - Alessia Satta
  - Fix Spillover treatment (generalization to 50ns)
  - Fix for automatic normalization of Flat Spillover to luminosity

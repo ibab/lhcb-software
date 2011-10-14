@@ -154,6 +154,7 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal);
   int m_chamberInRegion[20];
   std::string m_persType;
   bool m_alreadyIni;
+  int m_BXFillFill;
 };
 
 

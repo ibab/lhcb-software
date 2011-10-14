@@ -21,7 +21,8 @@
 // Event model
 #include "Event/MCHit.h"
 #include "Event/GenCollision.h"
-#include "Event/BeamParameters.h"
+#include "Event/GenHeader.h"
+//#include "Event/BeamParameters.h"
 
 // local
 #include "MuonBackground.h"
@@ -71,6 +72,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
   declareProperty("SpilloverPathsSize", m_readSpilloverEvents=0 ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
+  declareProperty("NBXFillFill" , m_BXFillFill=1280 ) ;
   m_alreadyIni=false;
 }
 
@@ -270,14 +272,17 @@ StatusCode MuonBackground::execute() {
       // value of nu in the evnts
       if(!m_alreadyIni){
         debug()<<" Initializing the luminosity for flast spillover simulation "<<endmsg;
-        LHCb::BeamParameters* beam=get<LHCb::BeamParameters>(LHCb::BeamParametersLocation::Default);
+//        LHCb::BeamParameters* beam=get<LHCb::BeamParameters>(LHCb::BeamParametersLocation::Default);
+        LHCb::GenHeader* beam=get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
         if(beam){
-          info()<<" beam nu "<<beam->nu()<<" "<<beam->luminosity()<<endmsg;
-          m_luminosityFactor=beam->luminosity()/(2.0e+32);
+//          info()<<" beam nu "<<beam->nu()<<" "
+          info()<<"luminosity "<<beam->luminosity()<<" "<<m_BXFillFill<<endmsg;
+          m_luminosityFactor=(beam->luminosity()*m_BXFillFill)/(2.0e+21);
           info()<<" luminosity factor "<<m_luminosityFactor<<endmsg;
           m_alreadyIni=true;
         }else{
           info()<<"could not access beam parameter information "<<endmsg;
+
         }
       }   
       //for flat spillover the spill events have no meaning....
