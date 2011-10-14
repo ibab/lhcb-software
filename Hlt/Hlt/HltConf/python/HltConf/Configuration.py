@@ -29,6 +29,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableMonitoring"               : False      # enable embedded monitoring in FilterDesktop/CombineParticles
                 , "EnableHltGlobalMonitor"         : True
                 , "EnableHltL0GlobalMonitor"       : True
+                , "EnableBeetleSyncMonitor"        : False
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
@@ -41,7 +42,8 @@ class HltConf(LHCbConfigurableUser):
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : False
-                , "LumiBankKillerPredicate"        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"  
+                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"  
+                , 'BeetleSyncMonitorRate'          : 5000
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
@@ -598,17 +600,20 @@ class HltConf(LHCbConfigurableUser):
         """
         define end sequence (mostly for persistence + monitoring)
         """
-        from Configurables       import GaudiSequencer as Sequence
-        from Configurables       import HltGlobalMonitor, HltL0GlobalMonitor
-        from Configurables       import bankKiller
-        from Configurables       import LoKi__HDRFilter   as HltFilter
-        from Configurables       import HltSelReportsMaker, HltSelReportsWriter
-        from Configurables       import HltDecReportsWriter
-        from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
-        from Configurables       import HltRoutingBitsWriter
-        from Configurables       import HltLumiWriter
-        from Configurables       import DeterministicPrescaler as Prescale
-        
+        from Configurables        import GaudiSequencer as Sequence
+        from Configurables        import HltGlobalMonitor, HltL0GlobalMonitor
+        from Configurables        import HltBeetleSyncMonitor
+        from Configurables        import bankKiller
+        from Configurables        import LoKi__HDRFilter   as HltFilter
+        from Configurables        import HltSelReportsMaker, HltSelReportsWriter
+        from Configurables        import HltDecReportsWriter
+        from Configurables        import HltVertexReportsMaker, HltVertexReportsWriter
+        from Configurables        import HltRoutingBitsWriter
+        from Configurables        import HltLumiWriter
+        from Configurables        import DeterministicPrescaler as Prescale
+        from HltLine.HltDecodeRaw import DecodeIT, DecodeVELO, DecodeL0DU
+        from Configurables        import LoKi__VoidFilter as Filter
+
         sets = self.settings()
         if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
@@ -616,15 +621,27 @@ class HltConf(LHCbConfigurableUser):
             #  TODO: check not explicitly set if so, provide warning....
             self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
             self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
+            self.EnableBeetleSyncMonitor  = ( 'EnableBeetleSyncMonitor'  in strip )
             self.EnableHltSelReports      = ( 'EnableHltSelReports'      in strip )
             self.EnableHltVtxReports      = ( 'EnableHltVtxReports'      in strip )
             self.EnableLumiEventWriting   = ( 'EnableLumiEventWriting'   in strip )
-                        
-        # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
+
+        # Setup the beetle sync sequence
+        BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
+        BeetleMonitorAccept.ModeOR = True
+        BeetleMonitor = Sequence( 'BeetleSyncMonitorSequence' )
+        BeetleMonitor.Members = [ Filter( 'BeetleSyncScaler',
+                                          Code = 'RATE(%d)' % self.getProp('BeetleSyncMonitorRate') ) ]
+        BeetleMonitor.Members += DecodeL0DU.members() + DecodeVELO.members() \
+                                 + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
+        BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
+        # note: the following is a list and not a dict, as we depend on the
+        # order of iterating through it!!!
         from Configurables import Hlt__Line as Line
-        _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
-                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
-                , ( "EnableHltL0GlobalMonitor" ,[ HltL0GlobalMonitor] )
+        _list = ( ( "EnableHltRoutingBits",     [ HltRoutingBitsWriter ] )
+                , ( "EnableHltGlobalMonitor",   [ HltGlobalMonitor ] )
+                , ( "EnableHltL0GlobalMonitor", [ HltL0GlobalMonitor ] )
+                , ( "EnableBeetleSyncMonitor",  [ lambda : BeetleMonitorAccept ] )
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )

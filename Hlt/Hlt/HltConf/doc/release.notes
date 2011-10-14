@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-10-14 - Roel Aaij
+ - Add monitoring of number of IT and VELO hits vs SPD multiplicity to the
+   HltEndSequence.
+
 !========================== HltConf v9r11 2011-08-29 ==========================
 ! 2011-08-29 - Roel Aaij
  - Add selection id for Hlt1L0CaloCandidates.
