@@ -40,9 +40,9 @@ void MonTimer::timerHandler ( void )
     }
   }
   m_lock.lockMutex();
-  m_Hsys->Lock();
+//  m_Hsys->Lock();
   m_Hsys->m_genSrv->Update();
-  m_Hsys->unLock();
+//  m_Hsys->unLock();
   m_lock.unlockMutex();
 }
 
