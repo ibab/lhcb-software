@@ -171,7 +171,7 @@ void DisplayHistogram::normalizeReference ( ) {
     std::string sopt;
     if ( hasOption("REF", &sopt) ) refOption = sopt;
     if (pres::s_Entries == refOption) {
-      normFactor = m_rootHistogram->Integral() * m_rootHistogram->GetEntries() / m_referenceHist->GetEntries();
+      normFactor = m_rootHistogram->GetEntries();
     } else if (pres::s_Area == refOption) {
       normFactor = m_rootHistogram->Integral();
     }
