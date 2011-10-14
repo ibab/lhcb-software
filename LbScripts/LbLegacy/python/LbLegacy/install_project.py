@@ -285,7 +285,7 @@ def callPostInstallCommand(project, version):
         log.debug("Project %s %s has no postinstall command" % (project, version))
 
 
-def isProjectRegistered(project,version):
+def isPostInstallRegistered(project, version):
     registered = False
     if (project, version) in _postinstall_commands.keys() :
         registered = True
@@ -1299,7 +1299,8 @@ def getProjectTar(tar_list, already_present_list=None):
 
                 except ImportError:
                     pass
-                if pack_ver[0] == "LBSCRIPTS" :
+                # fall back procedure for LbScripts if there is no PostInstall.py script
+                if pack_ver[0] == "LBSCRIPTS" and not isPostInstallRegistered(pack_ver[0], pack_ver[1]):
                     updateLHCbProjectPath(os.environ["MYSITEROOT"])
                     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
                     if boot_script_loc :
@@ -1376,7 +1377,7 @@ def getProjectTar(tar_list, already_present_list=None):
             else :
                 prj = pack_ver[0]
             ver = pack_ver[1]
-            if isProjectRegistered(prj, ver) :
+            if isPostInstallRegistered(prj, ver) :
                 callPostInstallCommand(prj, ver)
 
             setInstalled(fname)
@@ -1862,30 +1863,6 @@ def createBaseDirs(pname, pversion):
 
     return logname
 
-# install main logging script
-def installLoginScripts():
-    log = logging.getLogger()
-    found = False
-    this_maindir = os.path.dirname(log_dir.split(os.pathsep)[0])
-    if not "LbLogin.csh" in os.listdir(this_maindir) :
-        for l in log_dir.split(os.pathsep) :
-            maindir = os.path.dirname(l)
-            if "LbLogin.csh" in os.listdir(maindir) :
-                found = True
-                break
-        if found :
-            for f in os.listdir(maindir) :
-                if f.startswith("LbLogin.") :
-                    sourcef = os.path.join(maindir, f)
-                    targetf = os.path.join(this_maindir, f)
-                    if sys.platform != "win32" :
-                        os.symlink(sourcef, targetf)
-                        log.debug("linking %s -> %s" % (targetf, sourcef))
-                    else :
-                        shutil.copy(sourcef, targetf)
-                        log.debug("copying %s to %s" % (sourcef, targetf))
-        else :
-            log.error("cannot find LbLogin scripts")
 #
 #  install one project #################################################
 #
