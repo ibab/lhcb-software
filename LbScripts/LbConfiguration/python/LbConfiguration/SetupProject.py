@@ -419,23 +419,8 @@ def _GetVersionTuple(pattern, versions):
             match = v
             break # exit the loop at the first match
     if not found and pattern is None: # fall back solution
-        # FIXME: Special hack for the transition from Dirac v4 to LHCbDirac v5.
-        # Starting from Dirac v5, to use Dirac functionalities we have to do
-        # "SetupProject LHCbDirac" even if "SetupProject Dirac" will succeed
-        # because the plain Dirac project will not be usable.
-        # The hack is to ignore too recent versions of Dirac when the user did
-        # not specify any.
-        if versions[0][0].lower() == "dirac":
-            match = None
-            for v in version_strings:
-                if not (v.startswith("v5") or v.startswith("v6")):
-                    match = v
-                    break
-            if match is None:
-                return None
-        else:
-            # Normal behavior
-            match = version_strings[0] # latest version
+        # Normal behavior
+        match = version_strings[0] # latest version
 
     # Now that we have a string (and not a pattern), we can extract the tuple
     for vers_tuple in versions:
@@ -806,8 +791,6 @@ def FixProjectCase(project):
     If the project is not known, the name is returned unchanged.
     """
     proj = project.lower()
-    if proj == 'dirac':
-        proj = 'lhcbdirac'
 
     for p in project_names:
         if p.lower() == proj:

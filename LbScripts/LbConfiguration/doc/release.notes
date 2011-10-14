@@ -1,3 +1,7 @@
+2011-10-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: removed DIRAC/LHCbDIRAC hacks
+
 2011-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/Package.py:
