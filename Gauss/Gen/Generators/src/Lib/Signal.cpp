@@ -302,10 +302,12 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
 HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector & 
                                               theParticleList , 
                                               bool & isInverted ,
-                                              bool & hasFlipped ) {
+                                              bool & hasFlipped , 
+					      bool & hasFailed ) {
   HepMC::GenParticle * theSignal ;
   isInverted = false ;
   hasFlipped = false ;
+  hasFailed = false ;
 
   unsigned int nPart = theParticleList.size() ;
   if ( nPart > 1 ) {
@@ -329,7 +331,10 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
   // now force the particle to decay
   if ( m_cpMixture ) 
 	if ( m_decayTool ) m_decayTool -> enableFlip() ;
-  if ( m_decayTool ) m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
+  if ( m_decayTool ) {
+    StatusCode sc = m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
+    if ( ! sc.isSuccess() ) hasFailed = true ;
+  }
   
   return theSignal ;
 }

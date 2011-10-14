@@ -768,6 +768,10 @@ const {
   m_gen -> generateDecay( thePart ) ;
   if ( msgLevel( MSG::DEBUG ) ) thePart -> printTree() ;
 
+  // Check EvtGen result:
+  if ( ! thePart -> isDecayed() ) 
+    return Error( "EvtGen particle not decayed" ) ;
+
   return StatusCode::SUCCESS ;
 }
 

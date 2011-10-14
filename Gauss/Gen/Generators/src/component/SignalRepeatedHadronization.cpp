@@ -82,6 +82,9 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
   // Memorize the flip of the event
   bool hasFlipped = false ;
 
+  // Check if problem in EvtGen
+  bool hasFailed = false ;
+
   LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   HepMC::GenParticle * theSignal ;
@@ -131,8 +134,16 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
             // and force the decay at the same time
             isInverted = false ;
             hasFlipped = false ;
+	    hasFailed  = false ;
             theSignal = chooseAndRevert( theParticleList , isInverted , 
-                                         hasFlipped ) ;
+                                         hasFlipped , hasFailed ) ;
+
+	    if ( hasFailed ) {
+	      Error( "Skip Event" ) ;
+	      HepMCUtils::RemoveDaughters( theSignal ) ;
+	      return false ;
+	    }
+
             theParticleList.clear() ;
             theParticleList.push_back( theSignal ) ;
 

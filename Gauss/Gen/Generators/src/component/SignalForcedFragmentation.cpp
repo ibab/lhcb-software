@@ -81,6 +81,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
   // Memorize if signal has been inverted (not used here)
   bool isInverted = false ;
   bool dummyHasFlipped = false ;
+  bool hasFailed = false ;
 
   // Create an origin vertex at (0,0,0,0) for the signal particle at rest
   HepMC::GenVertex * theVertex =  
@@ -109,7 +110,8 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
     theSignalAtRest -> set_pdg_id( theSignalPID ) ;
   }
 
-  m_decayTool -> generateSignalDecay( theSignalAtRest , flip ) ;
+  sc = m_decayTool -> generateSignalDecay( theSignalAtRest , flip ) ;
+  if ( ! sc.isSuccess() ) return false ;
 
   bool result = false ;  
 
@@ -144,10 +146,16 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
 
         HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList , 
                                                           isInverted ,
-                                                          dummyHasFlipped ) ;
+                                                          dummyHasFlipped , 
+							  hasFailed ) ;
 
         // Erase daughters of signal particle
         HepMCUtils::RemoveDaughters( theSignal ) ;
+	
+	if ( hasFailed ) {
+	  Error( "Skip event" ) ;
+	  return false  ;
+	}
         
         theParticleList.clear() ;
         theParticleList.push_back( theSignal ) ;

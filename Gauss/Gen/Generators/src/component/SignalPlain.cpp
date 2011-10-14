@@ -53,6 +53,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
   // Memorize if the particle is inverted
   bool isInverted = false ;
   bool hasFlipped = false ;
+  bool hasFailed = false ;
   LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   
@@ -77,8 +78,15 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
           // choose randomly one particle and force the decay
           hasFlipped = false ;
           isInverted = false ;
+	  hasFailed  = false ;
           HepMC::GenParticle * theSignal =
-            chooseAndRevert( theParticleList , isInverted , hasFlipped ) ;
+            chooseAndRevert( theParticleList , isInverted , hasFlipped , hasFailed ) ;
+	  if ( hasFailed ) {
+	    HepMCUtils::RemoveDaughters( theSignal ) ;
+	    Error( "Skip event" ) ;
+	    return false ;
+	  }
+
           theParticleList.clear() ;
           theParticleList.push_back( theSignal ) ;
 

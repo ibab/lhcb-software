@@ -228,7 +228,7 @@ StatusCode Generation::execute() {
               ++itEvents ) {
           sc = decayEvent( *itEvents ) ;
           (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
-          if ( ! sc.isSuccess() ) return sc ;
+          if ( ! sc.isSuccess() ) goodEvent = false ;
           sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
           if ( ! sc.isSuccess() ) return sc ;
         }

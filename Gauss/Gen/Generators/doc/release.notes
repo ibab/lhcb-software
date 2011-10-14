@@ -5,6 +5,16 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2011-10-14 - Patrick Robbe
+ - EvtGenDecay.cpp
+ - SignalPlain.cpp
+ - SignalForcedFragmentation.cpp
+ - SignalRepeatedHadronization.cpp
+ - Generation.cpp
+ - Signal.cpp
+ - Signal.h
+   Modifications to skip event in case of EvtGen failure
+
 ! 2011-09-28 - Alex Shires
  - Added configurable call limit to EvtGenInPhSpDecay
 

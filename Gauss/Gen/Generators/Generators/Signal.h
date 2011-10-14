@@ -150,7 +150,8 @@ protected:
    */
   HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ,
                                         bool & isInverted , 
-                                        bool & hasFlipped ) ;
+                                        bool & hasFlipped ,
+					bool & hasFailed ) ;
 
   /** Ensures correct multiplicity of signal particles with an accept/reject
    *  algorithm.
