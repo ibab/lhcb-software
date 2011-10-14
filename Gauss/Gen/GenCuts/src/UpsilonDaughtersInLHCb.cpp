@@ -136,8 +136,12 @@ bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
   bool hasFlipped = false ;
   HepMC::GenParticle * theSignal ;
   theSignal = theParticleVector.front() ;  
-  m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
-  
+  StatusCode sc = m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
+  if ( ! sc.isSuccess() ) {
+    Error( "Skip event" ) ;
+    return false ;
+  }
+
   // To do the cut
   //--------------------------------------------------------------------  
   ParticleVector::iterator itp ;

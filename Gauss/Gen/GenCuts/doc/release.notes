@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-10-14 - Patrick Robbe
+ - UpsilonDaughtersInLHCb.cpp: skip event in case of failure in EvtGen
+
 !========================== GenCuts v1r1 2011-09-19 ========================== 
 ! 2011-09-19 - Gloria Corti
  - Port cut from Adam Webber that was in branch of Gen/Generators package and
