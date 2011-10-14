@@ -143,7 +143,7 @@ def usage() :
 
 #----------------------------------------------------------------------------------
 
-def systemCall(command, workdir=None):
+def systemCall(command, workdir=None, env=None):
     """
     simple wrapper for shell system execution with or without the
     subprocess module.
@@ -154,13 +154,14 @@ def systemCall(command, workdir=None):
     """
     try :
         from subprocess import Popen
-        p = Popen(command, shell=True, cwd=workdir)
+        p = Popen(command, shell=True, cwd=workdir, env=env)
         rc = os.waitpid(p.pid, 0)[1]
     except :
         # fallback if subprocess doesn't exist
         if workdir :
             here = os.getcwd()
             os.chdir(workdir)
+        os.environ.update(env)
         rc = os.system(command)
         if workdir:
             os.chdir(here)
@@ -274,6 +275,7 @@ def getCachedPackageConf(name):
 #----------------------------------------------------------------------------------
 
 _postinstall_commands = {}
+_post_install_env = {}
 
 
 def registerPostInstallCommand(project, version, command, dirname=None):
@@ -291,25 +293,24 @@ def registerPostInstallCommand(project, version, command, dirname=None):
         log.debug("Registered PostInstall for %s %s: \"%s\"" % (project, version, command))
 
 
-post_install_env = {}
 
 def callPostInstallCommand(project, version):
 
     # get base environment to run the post install script.
     # has to be done only once per session
-    global post_install_env
-    if not post_install_env :
-        post_install_env = dict(os.environ)
+    global _post_install_env
+    if not _post_install_env :
+        _post_install_env = dict(os.environ)
         from LbConfiguration.LbLogin import getLbLoginEnv
         tmp_env = getLbLoginEnv("--mysiteroot=%s" % os.environ["MYSITEROOT"])
-        post_install_env.update(tmp_env)
+        _post_install_env.update(tmp_env)
 
     log = logging.getLogger()
     projcmds = _postinstall_commands.get((project,version), None)
     here = None
     if projcmds :
         for c in projcmds :
-            rc = systemCall("%s" % c[0], c[1])
+            rc = systemCall("%s" % c[0], c[1], _post_install_env)
             log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
             if rc != 0 :
                 log.error("PostInstall command for %s %s returned %d" % rc)
@@ -324,6 +325,85 @@ def isPostInstallRegistered(project, version):
     if (project, version) in _postinstall_commands.keys() :
         registered = True
     return registered
+
+#----------------------------------------------------------------------------------
+
+_update_commands = {}
+
+
+def registerUpdateCommand(project, version, command, dirname=None):
+    global _update_commands
+    log = logging.getLogger()
+    if (project, version) in _update_commands.keys() :
+        cmdlist = _update_commands[(project,version)]
+    else :
+        cmdlist = []
+    cmdlist.append((command, dirname))
+    _update_commands[(project,version)] = cmdlist
+    if dirname :
+        log.debug("Registered Update for %s %s: \"%s\" in %s" % (project, version, command, dirname))
+    else :
+        log.debug("Registered Update for %s %s: \"%s\"" % (project, version, command))
+
+
+
+def callUpdateCommand(project, version):
+
+    # get base environment to run the post install script.
+    # has to be done only once per session
+    global _post_install_env
+    if not _post_install_env :
+        _post_install_env = dict(os.environ)
+        from LbConfiguration.LbLogin import getLbLoginEnv
+        tmp_env = getLbLoginEnv("--mysiteroot=%s" % os.environ["MYSITEROOT"])
+        _post_install_env.update(tmp_env)
+
+    log = logging.getLogger()
+    projcmds = _update_commands.get((project,version), None)
+    here = None
+    if projcmds :
+        for c in projcmds :
+            rc = systemCall("%s" % c[0], c[1], _post_install_env)
+            log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
+            if rc != 0 :
+                log.error("PostInstall command for %s %s returned %d" % rc)
+            if here :
+                os.chdir(here)
+    else :
+        log.debug("Project %s %s has no postinstall command" % (project, version))
+
+
+def isUpdateRegistered(project, version):
+    registered = False
+    if (project, version) in _update_commands.keys() :
+        registered = True
+    return registered
+
+def registerProjectCommand(pack_ver, flavor="PostInstall"):
+    postscr_name = "%s.py" % flavor
+    try :
+        if "/" in pack_ver[0] :
+            p_name = pack_ver[0].split("/")[-1]
+        else :
+            p_name = pack_ver[0]
+        prj = getCachedProjectConf(p_name)
+        postscr = None
+        if prj :
+            cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
+            postscr = os.path.join(cmtcontainer, postscr_name)
+        else :
+            pkg = getCachedPackageConf(p_name)
+            if pkg :
+                cmtcontainer = os.path.join(pack_ver[3], "cmt")
+                postscr = os.path.join(cmtcontainer, "PostInstall.py")
+        if postscr and os.path.exists(postscr) :
+            if flavor == "PostInstall" :
+                registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+            if flavor == "Update" :
+                registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+    except ImportError:
+        pass
+
 
 #----------------------------------------------------------------------------
 #
@@ -1190,6 +1270,7 @@ def getProjectTar(tar_list, already_present_list=None):
 
     for fname in tar_list.keys():
         log.info('-' * line_size)
+        pack_ver = getPackVer(fname)
         if not isInstalled(fname) or overwrite_mode :
             log.debug(fname)
             if tar_list[fname] == "source":
@@ -1215,7 +1296,6 @@ def getProjectTar(tar_list, already_present_list=None):
             # untar the file
             log.debug('untar file %s' % fname)
             rc = unTarFileInTmp(os.path.join(this_targz_dir, fname), os.getcwd(), overwrite=overwrite_mode)
-            pack_ver = getPackVer(fname)
             if rc != 0 and (pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
                 removeAll(pack_ver[3])
                 log.info('Cleaning up %s' % pack_ver[3])
@@ -1312,27 +1392,8 @@ def getProjectTar(tar_list, already_present_list=None):
                                 log.debug("linking %s -> %s" % (lg, pack_ver[1]))
                                 os.symlink(pack_ver[1], lg)
 
+                registerProjectCommand(pack_ver, "PostInstall")
 
-                try :
-                    if "/" in pack_ver[0] :
-                        p_name = pack_ver[0].split("/")[-1]
-                    else :
-                        p_name = pack_ver[0]
-                    prj = getCachedProjectConf(p_name)
-                    postinstallscr = None
-                    if prj :
-                        cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
-                        postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
-                    else :
-                        pkg = getCachedPackageConf(p_name)
-                        if pkg :
-                            cmtcontainer = os.path.join(pack_ver[3], "cmt")
-                            postinstallscr = os.path.join(cmtcontainer, "PostInstall.py")
-                    if postinstallscr and os.path.exists(postinstallscr) :
-                        registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postinstallscr, cmtcontainer)
-
-                except ImportError:
-                    pass
                 # fall back procedure for LbScripts if there is no PostInstall.py script
                 if pack_ver[0] == "LBSCRIPTS" and not isPostInstallRegistered(pack_ver[0], pack_ver[1]):
                     updateLHCbProjectPath(os.environ["MYSITEROOT"])
@@ -1419,6 +1480,8 @@ def getProjectTar(tar_list, already_present_list=None):
             log.info('%s is already installed' % fname)
             if already_present_list != None:
                 already_present_list.append(tar_list[fname])
+
+        registerProjectCommand(pack_ver, "Update")
 
     os.chdir(here)
 

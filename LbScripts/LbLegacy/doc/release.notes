@@ -3,6 +3,9 @@
 	* python/LbLegacy/install_project.py:
 	- added hook for post installation of LbScripts
 	- wrapped os.system call to rather use the subprocess module when possible.
+	- added environment passing to systemCall
+	- added infrastructure in order to call an update script each time that that project
+	  is listed in the dependencies.
 
 2011-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
