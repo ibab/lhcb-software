@@ -1,6 +1,8 @@
 2011-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: added hook for post installation of LbScripts
+	* python/LbLegacy/install_project.py:
+	- added hook for post installation of LbScripts
+	- wrapped os.system call to rather use the subprocess module when possible.
 
 2011-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

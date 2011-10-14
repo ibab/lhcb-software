@@ -143,6 +143,29 @@ def usage() :
 
 #----------------------------------------------------------------------------------
 
+def systemCall(command, workdir=None):
+    """
+    simple wrapper for shell system execution with or without the
+    subprocess module.
+    @param command: command to be executed
+    @type command: string
+    @param workdir: directory where the command has to be executed
+    @type workdir: string
+    """
+    try :
+        from subprocess import Popen
+        p = Popen(command, shell=True, cwd=workdir)
+        rc = os.waitpid(p.pid, 0)[1]
+    except :
+        # fallback if subprocess doesn't exist
+        if workdir :
+            here = os.getcwd()
+            os.chdir(workdir)
+        rc = os.system(command)
+        if workdir:
+            os.chdir(here)
+    return rc
+
 
 def initRandSeed():
     random.seed("%d-%s" % (os.getpid(), socket.getfqdn()))
@@ -268,17 +291,28 @@ def registerPostInstallCommand(project, version, command, dirname=None):
         log.debug("Registered PostInstall for %s %s: \"%s\"" % (project, version, command))
 
 
+post_install_env = {}
+
 def callPostInstallCommand(project, version):
+
+    # get base environment to run the post install script.
+    # has to be done only once per session
+    global post_install_env
+    if not post_install_env :
+        post_install_env = dict(os.environ)
+        from LbConfiguration.LbLogin import getLbLoginEnv
+        tmp_env = getLbLoginEnv("--mysiteroot=%s" % os.environ["MYSITEROOT"])
+        post_install_env.update(tmp_env)
+
     log = logging.getLogger()
     projcmds = _postinstall_commands.get((project,version), None)
     here = None
     if projcmds :
         for c in projcmds :
-            if c[1] :
-                here = os.getcwd()
-                os.chdir(c[1])
-            os.system("%s" % c[0])
+            rc = systemCall("%s" % c[0], c[1])
             log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
+            if rc != 0 :
+                log.error("PostInstall command for %s %s returned %d" % rc)
             if here :
                 os.chdir(here)
     else :
@@ -363,10 +397,10 @@ def fixWinAttrib(dirpath):
         if os.listdir(dirpath) :
             here = os.getcwd()
             os.chdir(dirpath)
-            os.system("attrib -R -A -H /S /D")
+            systemCall("attrib -R -A -H /S /D")
             os.chdir(here)
     else :
-        os.system("attrib -R -A -H %s" % dirpath)
+        systemCall("attrib -R -A -H %s" % dirpath)
 
 
 def changePermissions(directory, recursive=True):
@@ -617,7 +651,7 @@ def getCMT(version=0):
         # install CMT
         os.chdir(os.path.join(this_contrib_dir, 'CMT', cmtvers, 'mgr'))
         if sys.platform == 'win32':
-            rc = os.system('call INSTALL.bat')
+            rc = systemCall('call INSTALL.bat')
         else:
             output = commands.getstatusoutput('./INSTALL')[1]
             for l in output.split("\n") :
@@ -1314,7 +1348,7 @@ def getProjectTar(tar_list, already_present_list=None):
                         gencmd += " --debug"
                     gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3], "InstallArea"))
                     log.info("Running: python %s" % gencmd)
-                    os.system("python %s" % gencmd)
+                    systemCall("python %s" % gencmd)
                     prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
                     if sys.platform != "win32" :
                         if os.path.exists(prodlink) :
