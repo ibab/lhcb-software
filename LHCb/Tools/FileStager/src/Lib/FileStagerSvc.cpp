@@ -400,8 +400,8 @@ void FileStagerSvc::stage()
             ++tries;
             // If the file is already there, no need to copy
             fs::path temporary( stageFile->temporary() );
-            if ( fs::exists( temporary ) 
-                 && fs::file_size( temporary ) == stageFile->size() ) 
+            if ( fs::exists( temporary )
+                 && fs::file_size( temporary ) / 1024 == stageFile->size() )
                break;
 
             // try to copy a few times
@@ -531,14 +531,12 @@ void FileStagerSvc::removeFile( const_original_iterator it )
    if ( !m_keepFiles && fs::exists( p ) ) {
       // Remove the file
       fs::remove( p );
+      if ( outputLevel() <=  MSG::VERBOSE ) {
+         verbose() << "Deleted file " << temporary << endmsg;
+      }
    }
    file->setStaged( false );
    file->setGood( false );
-
-   if ( outputLevel() <=  MSG::VERBOSE ) {
-      verbose() << "Deleted file " << temporary << endmsg;
-   }
-
 }
 
 //=============================================================================

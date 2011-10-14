@@ -16,8 +16,6 @@ namespace Gaudi  {
 // Forward declarations
 class IFileCatalog;
 
-class RawDataConnectionEntry;
-
 /** @class StagedIODataManager
  * Same functionality implementation with the IODataManager except for
  * connectDataIO() method which checks via the FileStageSvc if a local copy

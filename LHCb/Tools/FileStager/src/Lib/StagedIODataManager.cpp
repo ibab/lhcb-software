@@ -187,12 +187,26 @@ StatusCode StagedIODataManager::disconnect(Connection* con)
       FidMap::iterator j = m_fidMap.find(dataset);
       if ( j != m_fidMap.end() )
       {
-         std::string fid = (*j).second;
+         std::vector<FidMap::iterator> toRemove( 1, j );
+         std::string fid;
+         while ( true ) {
+            FidMap::iterator it = m_fidMap.find(j->second);
+            if ( it != m_fidMap.end() ) toRemove.push_back( it );
+            if ( it == m_fidMap.end() ) {
+               break;
+            } else if ( it->first == it->second ) {
+               fid = it->second;
+               break;
+            }
+            j = it;
+         }
+
          std::string gfal_name = "gfal:guid:" + fid;
+         for ( std::vector<FidMap::iterator>::const_iterator it = toRemove.begin(), end = toRemove.end();
+               it != end; ++it ) {
+            m_fidMap.erase(*it);
+         }
          ConnectionMap::iterator i=m_connectionMap.find(fid);
-         m_fidMap.erase(j);
-         if ( (j=m_fidMap.find(fid)) != m_fidMap.end() )
-            m_fidMap.erase(j);
          if ( (j=m_fidMap.find(gfal_name)) != m_fidMap.end() )
             m_fidMap.erase(j);
          if ( i != m_connectionMap.end() )
@@ -223,10 +237,8 @@ StatusCode StagedIODataManager::disconnect(Connection* con)
 StatusCode StagedIODataManager::reconnect(Entry* e)
 {
    StatusCode sc = S_ERROR;
-   if ( e && e->connection )
-   {
-      switch(e->ioType)
-      {
+   if ( e && e->connection ) {
+      switch(e->ioType) {
       case Connection::READ:
          sc = e->connection->connectRead();
          break;
@@ -238,27 +250,21 @@ StatusCode StagedIODataManager::reconnect(Entry* e)
       default:
          return S_ERROR;
       }
-      if ( sc.isSuccess() && e->ioType == Connection::READ )
-      {
+      if ( sc.isSuccess() && e->ioType == Connection::READ ) {
          std::vector<Entry*> to_retire;
          e->connection->resetAge();
-         for(ConnectionMap::iterator i=m_connectionMap.begin(); i!=m_connectionMap.end();++i)
-         {
+         for(ConnectionMap::iterator i=m_connectionMap.begin(); i!=m_connectionMap.end();++i) {
             IDataConnection* c = (*i).second->connection;
-            if ( e->connection != c && c->isConnected() && !(*i).second->keepOpen )
-            {
+            if ( e->connection != c && c->isConnected() && !(*i).second->keepOpen ) {
                c->ageFile();
-               if ( c->age() > m_ageLimit )
-               {
+               if ( c->age() > m_ageLimit ) {
                   to_retire.push_back((*i).second);
                }
             }
          }
-         if ( !to_retire.empty() )
-         {
+         if ( !to_retire.empty() ) {
             MsgStream log(msgSvc(),name());
-            for(std::vector<Entry*>::iterator j=to_retire.begin(); j!=to_retire.end();++j)
-            {
+            for(std::vector<Entry*>::iterator j=to_retire.begin(); j!=to_retire.end();++j) {
                IDataConnection* c = (*j)->connection;
                c->disconnect();
                log << MSG::INFO << "Disconnect from dataset " << c->pfn()
@@ -490,7 +496,6 @@ StagedIODataManager::connectDataIO(int typ, IoType rw, CSTR dataset, CSTR techno
             }
             Entry* e = new Entry(technology, keep_open, rw, connection);
             // Here we open the file!
-            log << MSG::DEBUG << "calling reconnect" << endmsg;
             if ( !reconnect(e).isSuccess() )
             {
                delete e;
