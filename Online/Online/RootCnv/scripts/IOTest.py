@@ -16,6 +16,17 @@ from Gaudi.Configuration import *
 from GaudiKernel import *
 
 input_file = 'castor://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/LHCb/Collision11/SEMILEPTONIC.DST/00012569/0000/00012569_00000004_1.semileptonic.dst?svcClass=lhcbdisk'
+input_file = 'root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2010/BHADRON.DST/00008399/0000/00008399_00001052_1.bhadron.dst?svcClass=lhcbdisk'
+
+#------------------------------------------------------------------------------------------------
+def storeExplorer(load=1,freq=0.0001,name='StoreExplorerAlg'):
+  from Configurables import StoreExplorerAlg
+  alg                = StoreExplorerAlg(name)
+  alg.Load           = load
+  alg.PrintFreq      = freq
+  return alg
+
+#------------------------------------------------------------------------------------------------
 
 if len(sys.argv)>1:
   input_file = sys.argv[1]
@@ -24,6 +35,7 @@ appConf = ApplicationMgr(OutputLevel = INFO)
 appConf.HistogramPersistency  = "NONE";
 appConf.ExtSvc.append('Gaudi::IODataManager/IODataManager')
 appConf.ExtSvc.append('Gaudi::RootCnvSvc/RootCnvSvc')
+appConf.TopAlg.append(storeExplorer(freq=1.0))
 
 EventDataSvc().RootCLID         = 1
 EventDataSvc().EnableFaultHandler = True
