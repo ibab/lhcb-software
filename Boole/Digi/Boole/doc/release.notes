@@ -10,6 +10,9 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  - Production release for MC11 simulation.
  - No longer compatible with MC09
 
+ - Changes to configurable:
+   . Set number of beam crossings for flat spillover to 250 for 2010 and 1 for 2009
+
  - Changes to example options:
    . Remove Boole-FEST09.py, use $APPCONFIGOPTS/Boole/FEST-L0Yes.py instead
    . Remove Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py, MC09-Files.py
@@ -22,6 +25,9 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
      tests also FlatSpillover on MC10
    . Change boole-mc10 to fill also expert histos, replaces boole-mc09-withtruth
    . Remove boole-spillover, will be done in an MC11 test
+
+ - Changes to references to reflect changes in Boole v23r1 output:
+   . Adapt to updates in Muon spillover 
 
 </PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0

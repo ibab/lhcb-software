@@ -96,6 +96,8 @@ class Boole(LHCbConfigurableUser):
     def defineDB(self):
         if self.getProp("DataType") == "DC06" :
             raise RuntimeError( "DC06 data type no longer supported. Please use an earlier Boole version" )
+        if self.getProp("DataType") == "MC09" :
+            raise RuntimeError( "MC09 data type no longer supported. Please use an earlier Boole version" )
             
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","DataType"])
@@ -263,9 +265,13 @@ class Boole(LHCbConfigurableUser):
             GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonLowEnergy") ]
             importOptions( "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts" )
             if ((not tae) and ( not self.getProp("IgnoreFlatSpillover") )):
-                GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonFlatSpillover") ]
+                flatSpillover = MuonBackground("MuonFlatSpillover")
+                GaudiSequencer("InitMuonSeq").Members += [ flatSpillover ]
+                if self.getProp("DataType") == "2010" :
+                    flatSpillover.NBXFillFill = 250
+                if self.getProp("DataType") == "2009" :
+                    flatSpillover.NBXFillFill = 1
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
-
 
     def configureDigi(self,digiDets):
         """
