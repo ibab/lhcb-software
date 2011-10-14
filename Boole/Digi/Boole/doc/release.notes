@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to example options:
+   . Remove Boole-FEST09.py, use $APPCONFIGOPTS/Boole/FEST-L0Yes.py instead
+
+ - Changes to tests
+   . Rename boole-fest09 to boole-fest, using an MC10 sim file instead of MC09
+
 </PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
