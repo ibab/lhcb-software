@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v9r2
+version v9r2p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,27 +19,23 @@ use GaudiPolicy  v*
 macro photos_native_version "215.4"
 use photos v* LCG_GeneratorsInterfaces
 
+
 #-- LHAPDF
 #============================================================================
 macro lhapdf_native_version "5.8.5"
 use lhapdf v* LCG_GeneratorsInterfaces
-set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/lhapdf/PDFsets
+set LHAPATH $(lhapdf_path)/share/lhapdf/PDFsets
+
 
 #-- Herwig and Jimmy
 #============================================================================
 macro herwig_native_version "6.510.3"
 macro jimmy_native_version "4.31.3"
 
+
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
 macro alpgen_native_version "2.1.3d"
-macro alpgen_path  $(LCG_external)/MCGenerators/alpgen/$(alpgen_native_version)
-macro alpgen_home  $(alpgen_path)/$(LCG_system)
-macro alpgen_linkopts "-L$(alpgen_home)/lib/archive \
-                        -lalpgen "
-macro alpsho_linkopts "-L$(alpgen_home)/lib \
-                        -lalpsho " 
-macro alpgen_name "alpgen"
 
 
 #-- Pythia 8
