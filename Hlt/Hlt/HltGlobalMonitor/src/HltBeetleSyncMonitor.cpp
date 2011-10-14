@@ -76,8 +76,10 @@ StatusCode HltBeetleSyncMonitor::initialize()
 
    m_SPDIT = book2D("SPDvsIT", "SPD multiplicity. vs. IT hits",
                     0., 1200., 120, 0., 5000., 100);
+   declareInfo("SPDvsIT", m_SPDIT, "SPD multiplicity vs IT hits.");
    m_SPDVelo = book2D("SPDvsVelo", "SPD multiplicity vs. Velo hits",
                       0., 1200., 120, 0., 10000., 100);
+   declareInfo("SPDvsVelo", m_SPDVelo, "SPD multiplicity vs Velo hits.");
 
    return StatusCode::SUCCESS;
 }
