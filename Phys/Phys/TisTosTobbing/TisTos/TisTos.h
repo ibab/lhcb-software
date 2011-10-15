@@ -141,7 +141,7 @@ public:
     // sort hits
     std::sort( copied.begin(), copied.end() ) ;
     // eliminate duplicates
-    std::unique( copied.begin(), copied.end() ) ;
+    copied.erase( std::unique( copied.begin(), copied.end() ), copied.end() ) ;
     return copied;
   }
   
