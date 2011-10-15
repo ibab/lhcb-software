@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-10-15 - V. Gligorov
+ - First commit of TupleToolSwimmingInfo for holding acceptance
+   information from the swimming code.
+
 ! 2011-10-05 - Patrick Koppenburg
  - TupleToolDecayTree: add mass for intermediate states when Verbose is True
 
