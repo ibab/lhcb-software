@@ -37,8 +37,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolDecay::TupleToolDecay( const std::string& type,
-				const std::string& name,
-				const IInterface* parent )
+                                const std::string& name,
+                                const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_hasMatched( false )
   , m_myName(name)
@@ -61,7 +61,7 @@ TupleToolDecay::~TupleToolDecay() {}
 
 StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
-  
+
   m_isMC = isMC ;
 
   if (msgLevel(MSG::DEBUG)) debug() << "TupleToolDecay::initialize " << dcy << " " << isMC << endmsg ;
@@ -75,7 +75,7 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   else {
     m_myName = m_myName.substr( pname.size()+1 );
   }
-  
+
   bool test = true ;
   if (m_isMC){
     m_mcdkFinder = tool<IMCDecayFinder>("MCDecayFinder", this );
@@ -88,9 +88,9 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   if (msgLevel(MSG::DEBUG)) debug() << "Initialized " << name()
                                     << " with decay " << decay() << endreq;
 
-  m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()), 
-                      m_stufferList.end());
   std::sort( m_stufferList.begin(), m_stufferList.end() );
+  m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()),
+                      m_stufferList.end());
 
   return StatusCode::StatusCode( test );
 }

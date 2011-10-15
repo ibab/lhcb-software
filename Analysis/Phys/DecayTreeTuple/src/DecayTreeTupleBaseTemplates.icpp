@@ -197,8 +197,8 @@ template<class ITUPLETOOL>
 void initializeStufferTools(std::vector< ITUPLETOOL* >& pTools){
   if(msgLevel(MSG::VERBOSE)) verbose() << "input tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
 
-  m_toolList.erase( std::unique(m_toolList.begin(),m_toolList.end()), m_toolList.end() );
   std::sort( m_toolList.begin(), m_toolList.end() );
+  m_toolList.erase( std::unique(m_toolList.begin(),m_toolList.end()), m_toolList.end() );
 
   if(msgLevel(MSG::VERBOSE)) verbose() << "unique tool list " << m_toolList << " size " << m_toolList.size() << endmsg;
 
