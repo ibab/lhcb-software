@@ -210,8 +210,8 @@ def uCalc ( pdf            ,
 #   @param silent (input) keep the silence 
 def uPlot ( pdf            ,
             data           ,
-            bins   = 20    ,
-            args   = None ,
+            bins   = None  ,
+            args   = None  ,
             silent = False ) :
     """
     Make the plot of U-statistics 
@@ -227,8 +227,25 @@ def uPlot ( pdf            ,
     >>> histo.Draw()             ## plot the results  
 
     """
+
+    if not bins or bins <= 0 :
+        nEntries = float(data.numEntries())
+        bins = 10 
+        for nbins in ( 50  ,
+                       40  ,
+                       25  ,
+                       20  ,
+                       16  ,
+                       10  ,
+                       8   ,
+                       5   ) :
+            if nEntries/nbins < 100 : continue  
+            bins = nbins
+            break
+        print '#bins %s' % bins 
+        
     hID = AnalysisPython.PyRoUts.hID
-    
+
     histo = ROOT.TH1F ( hID () ,'U-statistics', bins , 0 , 1 )
     histo.Sumw2      (   )
     histo.SetMinimum ( 0 )

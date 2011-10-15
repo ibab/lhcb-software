@@ -786,6 +786,28 @@ def _h3_iteritems_ ( h3 ) :
             
 ROOT.TH3F  . iteritems     = _h3_iteritems_
 ROOT.TH3D  . iteritems     = _h3_iteritems_
+
+
+
+# =============================================================================
+## iterate over items in TAxis
+def _a_iteritems_ ( axis ) :
+    """
+    Iterate over items in axis 
+    
+    >>> axis = ...
+    >>> for ibin,low,center,high in axis.iteritems() : 
+    
+    """
+    for i in axis :
+
+        l = axis.GetBinLowEdge ( i )
+        c = axis.GetBinCenter  ( i )
+        u = axis.GetBinUpEdge  ( i )
+
+        yield i,l,c,u
+
+ROOT.TAxis. iteritems     = _a_iteritems_
         
 # =============================================================================
 # Decorate fit results 
@@ -1081,7 +1103,6 @@ ROOT.TH1.__floordiv__  = binomEff_h1
 ROOT.TH2.__floordiv__  = binomEff_h2
 ROOT.TH3.__floordiv__  = binomEff_h3
 
-
 # =============================================================================
 ## operation with the histograms 
 def _h1_oper_ ( h1 , h2 , oper ) :
@@ -1093,6 +1114,16 @@ def _h1_oper_ ( h1 , h2 , oper ) :
     #
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
+    #
+    if   isinstance ( h2 , ( int , long , float ) ) :
+        v1 = float  ( h2 ) 
+        h2 = lambda s : VE ( v1 , 0 )
+    elif isinstance ( h2 ,    VE ) :
+        v1 =          h2  
+        h2 = lambda s : v1  
+    elif isinstance ( h2 ,   ROOT.TF1 ) :
+        v1 =          h2  
+        h2 = lambda s : VE ( v1 ( s.value() ) , 0 )  
     #
     for i1,x1,y1 in h1.iteritems() :
         #
@@ -1109,6 +1140,41 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         result.SetBinError   ( i1 , v.error () )
         
     return result
+
+
+# =============================================================================
+## operation with the histograms 
+def _h1_ioper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    print ' h2', h2, type(h2) , VE(h2,0)
+    #
+    if   isinstance ( h2 , ( int , long , float ) ) :
+        v1 = float  ( h2 ) 
+        h2 = lambda s : VE ( v1 , 0 )
+    elif isinstance ( h2 ,    VE ) :
+        v1 =          h2  
+        h2 = lambda s : v1  
+    elif isinstance ( h2 ,   ROOT.TF1 ) :
+        v1 =          h2  
+        h2 = lambda s : VE ( v1 ( s.value() ) , 0 )  
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        y2 = h2 ( x1.value() ) 
+        #
+        v = VE ( oper ( y1 , y2 ) ) 
+        #
+        if not v.isfinite() : continue 
+        #
+        h1.SetBinContent ( i1 , v.value () ) 
+        h1.SetBinError   ( i1 , v.error () )
+        
+    return h1 
 
 # =============================================================================
 ##  Division with the histograms 
@@ -1163,7 +1229,7 @@ def _h1_chi2_ ( h1 , h2 ) :
 ##  ``Average'' of the histograms 
 def _h1_mean_ ( h1 , h2 ) :
     """
-    ``Chi2-tension'' the histogram
+    ``Mean'' the histograms
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.mean ( y ) ) 
 
@@ -1203,7 +1269,81 @@ ROOT.TH1.__pow__   = _h1_pow_
 ROOT.TH1.  frac    = _h1_frac_
 ROOT.TH1.  asym    = _h1_asym_
 ROOT.TH1.  chi2    = _h1_chi2_
-ROOT.TH1.  average = _h1_chi2_
+ROOT.TH1.  average = _h1_mean_
+
+
+# =============================================================================
+##  Division with the histograms 
+def _h1_idiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    """
+    return _h1_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+##  Division with the histograms 
+def _h1_imul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    """
+    return _h1_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+##  Addition with the histograms 
+def _h1_iadd_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    """
+    return _h1_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+##  Subtraction of the histograms 
+def _h1_isub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram 
+    """
+    return _h1_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
+ROOT.TH1.__idiv__   = _h1_idiv_
+ROOT.TH1.__imul__   = _h1_imul_
+ROOT.TH1.__iadd__   = _h1_iadd_
+ROOT.TH1.__isub__   = _h1_isub_
+
+
+# =============================================================================
+##  Division with the histograms 
+def _h1_rdiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : y/x ) 
+# =============================================================================
+##  Division with the histograms 
+def _h1_rmul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : y*x ) 
+# =============================================================================
+##  Addition with the histograms 
+def _h1_radd_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : y+x ) 
+# =============================================================================
+##  Subtraction of the histograms 
+def _h1_rsub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram 
+    """
+    return _h1_oper_ ( h1 , h2 , lambda x,y : y-x ) 
+# =============================================================================
+ROOT.TH1D.__rdiv__   = _h1_rdiv_
+ROOT.TH1D.__rmul__   = _h1_rmul_
+ROOT.TH1D.__radd__   = _h1_radd_
+ROOT.TH1D.__rsub__   = _h1_rsub_
+ROOT.TH1F.__rdiv__   = _h1_rdiv_
+ROOT.TH1F.__rmul__   = _h1_rmul_
+ROOT.TH1F.__radd__   = _h1_radd_
+ROOT.TH1F.__rsub__   = _h1_rsub_
 
 # =============================================================================
 ## operation with the histograms 
@@ -1216,6 +1356,9 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     #
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
+    #
+    if   isinstance ( h2 , (int,long,float) ) : h2 = lambda x,y : VE(h2,0)
+    elif isinstance ( h2 ,  VE              ) : h2 = lambda x,y :    h2 
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
@@ -1232,7 +1375,6 @@ def _h2_oper_ ( h1 , h2 , oper ) :
         result.SetBinError   ( ix1 , iy1 , v.error () )
         
     return result
-
 
 # =============================================================================
 ##  Division with the histograms 
