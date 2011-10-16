@@ -47,7 +47,7 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
 
   std::vector<double> raw, dec, tau,ip; 
   typedef std::map<std::string, std::vector<double> > MapType;
-  MapType line_decisions;  
+  MapType line_decisions, track_infos;  
 
   P2TPRelation* relatePart;
   if (exist<P2TPRelation>(m_swimRelTableLoc) ) {
@@ -56,12 +56,14 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
 
   if( P ){
     bool test = true;
+    
+    P2TPRelation::Range range = relatePart->relations(P);
+    if (range.size() == 0 or range.size() > 1) return StatusCode::FAILURE;
+    
+    LHCb::SwimmingReport* thisPartReport = range.begin()->to();
+    tPoints turns  = thisPartReport->turningPoints(m_swimRepsStage); 
+    
     if( !P->isBasicParticle() ) {
-      P2TPRelation::Range range = relatePart->relations(P);
-      if (range.size() == 0 or range.size() > 1) return StatusCode::FAILURE;
-      LHCb::SwimmingReport* thisPartReport = range.begin()->to();
-
-      tPoints turns  = thisPartReport->turningPoints(m_swimRepsStage); 
       for (tPoints::const_iterator itPoints = turns.begin(); itPoints != turns.end(); ++itPoints) {
         raw.push_back((*itPoints).raw());
         dec.push_back((*itPoints).dec());
@@ -69,18 +71,18 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
         ip.push_back( (*itPoints).ip( ));
         //Decisions must not change between turning points
         std::vector<std::string> line_decisions_at_turning_point = (*itPoints).decisions();
-        //if (itPoints == turns.begin()) {
-        //  for ( std::vector<std::string>::const_iterator linename = line_decisions_at_turning_point.begin();
-        //        linename != line_decisions_at_turning_point.end(); ++linename) {
-            //line_decisions[*linename] = ();
-        //    line_decisions[*linename].push_back((*itPoints).decision(*linename));
-        //  } 
-        //} else {
+        if (itPoints == turns.begin()) {
+          for ( std::vector<std::string>::const_iterator linename = line_decisions_at_turning_point.begin();
+                linename != line_decisions_at_turning_point.end(); ++linename) {
+            line_decisions[*linename] = std::vector<double>();
+            line_decisions[*linename].push_back((*itPoints).decision(*linename));
+          } 
+        } else {
           for ( std::vector<std::string>::const_iterator linename = line_decisions_at_turning_point.begin();
                 linename != line_decisions_at_turning_point.end(); ++linename) {
             line_decisions[*linename].push_back((*itPoints).decision(*linename));
           } 
-        //}
+        }
       }
       test &= tuple->farray( prefix+"_TP_RAW", raw ,prefix+"_nTP",maxTurns );
       test &= tuple->farray( prefix+"_TP_DEC", dec ,prefix+"_nTP",maxTurns );
@@ -90,7 +92,26 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
         test &= tuple->farray( prefix+"_TP_DEC_"+(it->first), line_decisions[it->first], prefix+"_nTP",maxTurns );
       } 
       
-    }
+    } else { 
+      for (tPoints::const_iterator itPoints = turns.begin(); itPoints != turns.end(); ++itPoints) {
+        std::vector<std::string> child_info_names = (*itPoints).infoNames();
+        if (itPoints == turns.begin()) {
+          for ( std::vector<std::string>::const_iterator infoname = child_info_names.begin();
+                infoname != child_info_names.end(); ++infoname) {
+            track_infos[*infoname] = std::vector<double>();
+            track_infos[*infoname].push_back((*itPoints).participated(*infoname,*P));
+          }
+        } else {
+          for ( std::vector<std::string>::const_iterator infoname = child_info_names.begin();
+                infoname != child_info_names.end(); ++infoname) {
+            track_infos[*infoname].push_back((*itPoints).participated(*infoname,*P));
+          }
+        }
+      }
+      for (MapType::const_iterator it = track_infos.begin(); it != track_infos.end(); ++it) {
+        test &= tuple->farray( prefix+"_TP_DEC_"+(it->first), track_infos[it->first], prefix+"_nTP",maxTurns );
+      }
+    }  
 
   }
   return StatusCode::FAILURE;
