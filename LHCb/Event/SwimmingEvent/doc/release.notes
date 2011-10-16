@@ -6,9 +6,10 @@
 
 ! 2011-10-16 - Roel Aaij
  - Add function to calculate the hash of an LHCb::Particle using its particle ID 
-   and the LHCbIDs of its track.
+   and the LHCbIDs of its track. If a particle is composite the particle IDs of
+   all daughters and lhcbIDs of all basic particle daughters are used.
  - Change key of daughter information in TurningPoint to size_t and use the hash
-   of the particle to entre the information. 
+   of the particle to enter the information. 
 
 ! 2011-10-13 - Roel Aaij
  - Update requirements to suppress icc warnings.

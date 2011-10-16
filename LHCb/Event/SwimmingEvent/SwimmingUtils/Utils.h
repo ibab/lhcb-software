@@ -17,6 +17,18 @@
 
 namespace {
    GaudiUtils::Hash<std::vector<unsigned int> > _hash;
+
+   void decayTree(const LHCb::Particle& p, LHCb::Particle::ConstVector& particles) {
+      particles.push_back(&p);
+      if (!p.isBasicParticle()) {
+         typedef SmartRefVector<LHCb::Particle> Daughters;
+         const Daughters& daughters = p.daughters();
+         for (Daughters::const_iterator it = daughters.begin(), end = daughters.end();
+              it != end; ++it) {
+            decayTree(**it, particles);
+         }
+      }
+   }
 }
 
 namespace GaudiUtils {
@@ -26,24 +38,35 @@ template <> struct Hash<const LHCb::Particle&>
 { 
    size_t operator() (const LHCb::Particle& p) const
    {
-      const LHCb::ProtoParticle* pp = p.proto();
-      if (!pp) {
-         throw GaudiException("Need access to proto particle to compute hash",
-                              "Hash<const LHCb::Particle&>", StatusCode::FAILURE);
-      }
-      const LHCb::Track* track = pp->track();
-      if (!track) {
-         throw GaudiException("Need access to track to compute hash",
-                              "Hash<const LHCb::Particle&>", StatusCode::FAILURE);
-      }
-      const std::vector<LHCb::LHCbID>& lhcbIDs = track->lhcbIDs();
+      LHCb::Particle::ConstVector particles;
+      decayTree(p, particles);
       std::vector<unsigned int> ids;
-      ids.reserve(lhcbIDs.size() + 1);
-      // Add the pid so that different Particles from the same ProtoParticle have different hashes.
-      ids.push_back(p.particleID().pid());
-      // Add lhcbIDs
-      std::transform(lhcbIDs.begin(), lhcbIDs.end(), std::back_inserter(ids),
-                     std::mem_fun_ref(&LHCb::LHCbID::lhcbID));
+      ids.reserve(80);
+      
+      for (LHCb::Particle::ConstVector::const_iterator it = particles.begin(), end = particles.end();
+           it != end; ++it) {
+         const LHCb::Particle* particle = *it;
+
+         // Add the pid so that both different decay trees and Particles from the same ProtoParticle
+         // have different hashes.
+         ids.push_back(particle->particleID().pid());
+         if (!particle->isBasicParticle()) continue;
+
+         const LHCb::ProtoParticle* pp = particle->proto();
+         if (!pp) {
+            throw GaudiException("Need access to proto particle to compute hash",
+                                 "Hash<const LHCb::Particle&>", StatusCode::FAILURE);
+         }
+         const LHCb::Track* track = pp->track();
+         if (!track) {
+            throw GaudiException("Need access to track to compute hash",
+                                 "Hash<const LHCb::Particle&>", StatusCode::FAILURE);
+         }
+         const std::vector<LHCb::LHCbID>& lhcbIDs = track->lhcbIDs();
+         // Add lhcbIDs
+         std::transform(lhcbIDs.begin(), lhcbIDs.end(), std::back_inserter(ids),
+                        std::mem_fun_ref(&LHCb::LHCbID::lhcbID));
+      }
       return _hash(ids);
    }
 };
