@@ -11,8 +11,6 @@
 #include <Event/TurningPoint.h>
 #include <Event/SwimmingReport.h>
 
-#include <SwimmingUtils/Utils.h>
-
 // end include files
 namespace {
 
