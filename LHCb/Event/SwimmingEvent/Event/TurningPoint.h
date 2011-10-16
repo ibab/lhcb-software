@@ -5,6 +5,7 @@
 // Include files
 #include <map>
 #include <string>
+#include <sstream>
 
 // Gaudi
 #include <GaudiKernel/GaudiException.h>
@@ -200,10 +201,9 @@ public:
       if (it != m_decisions.end()) {
          return it->second;
       } else {
-         std::string msg = "Decision with name ";
-         msg += name;
-         msg += " does not exist.";
-         throw GaudiException(msg, "TurningPoint", StatusCode::FAILURE);
+         std::stringstream msg;
+         msg << "Decision with name " << name << " does not exist.";
+         throw GaudiException(msg.str(), "TurningPoint", StatusCode::FAILURE);
       }
 
    }
@@ -224,10 +224,9 @@ public:
       if (it != m_info.end()) {
          return it->second;
       } else {
-         std::string msg = "DaughterInfo with name ";
-         msg += name;
-         msg += " does not exist.";
-         throw GaudiException(msg, "TurningPoint", StatusCode::FAILURE);
+         std::stringstream msg;
+         msg << "DaughterInfo with name " << name << " does not exist.";
+         throw GaudiException(msg.str(), "TurningPoint", StatusCode::FAILURE);
       }
    }
 
@@ -239,12 +238,10 @@ public:
       if (it != i.end()) {
          return it->second;
       } else {
-         std::string msg = "No entry present for daughter with hash ";
-         msg += h;
-         msg += " in info with with name ";
-         msg += name;
-         msg += ".";
-         throw GaudiException(msg, "TurningPoint", StatusCode::FAILURE);
+         std::stringstream msg;
+         msg << "No entry present for daughter with hash " << h 
+             << " in info with with name " << name << ".";
+         throw GaudiException(msg.str(), "TurningPoint", StatusCode::FAILURE);
       }
    }
 
