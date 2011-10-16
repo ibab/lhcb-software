@@ -13,6 +13,9 @@
 // LHCb
 #include <Event/Particle.h>
 
+// local
+#include <SwimmingUtils/Utils.h>
+
 #ifdef _WIN32
 // Avoid conflict of Windows macro with std::max
 #ifndef NOMINMAX
@@ -69,7 +72,7 @@ public:
    TurningPoint(const double raw, const double tau,
                 const double ip, const double dec,
                 const std::map<std::string, bool>& decisions,
-                const std::map<std::string, std::map<int, bool> >& info)
+                const std::map<std::string, std::map<size_t, bool> >& info)
       : m_raw(raw),
         m_tau(tau),
         m_ip(ip),
@@ -97,7 +100,7 @@ public:
    TurningPoint(const double raw, const double tau,
                 const double ip, const double dec,
                 const std::map<std::string, bool>& decisions,
-                const std::map<std::string, std::map<int, bool> >& info,
+                const std::map<std::string, std::map<size_t, bool> >& info,
                 const std::map<std::string, double>& extra)
       : m_raw(raw),
         m_tau(tau),
@@ -208,16 +211,16 @@ public:
    std::vector<std::string> infoNames() const
    {
       std::vector<std::string> names;
-      for (std::map<std::string, std::map<int, bool> >::const_iterator it = m_info.begin(),
+      for (std::map<std::string, std::map<size_t, bool> >::const_iterator it = m_info.begin(),
               end = m_info.end(); it != end; ++it) {
          names.push_back(it->first);
       }
       return names;
    }
 
-   const std::map<int, bool>& info(const std::string& name) const
+   const std::map<size_t, bool>& info(const std::string& name) const
    {
-      std::map<std::string, std::map<int, bool> >::const_iterator it = m_info.find(name);
+      std::map<std::string, std::map<size_t, bool> >::const_iterator it = m_info.find(name);
       if (it != m_info.end()) {
          return it->second;
       } else {
@@ -230,13 +233,14 @@ public:
 
    bool participated(const std::string& name, const LHCb::Particle& daughter) const
    {
-      const std::map<int, bool>& i = info(name);
-      std::map<int, bool>::const_iterator it = i.find(daughter.key());
+      const std::map<size_t, bool>& i = info(name);
+      size_t h = Swimming::hashParticle(daughter);
+      std::map<size_t, bool>::const_iterator it = i.find(h);
       if (it != i.end()) {
          return it->second;
       } else {
-         std::string msg = "No entry present for daughter with key ";
-         msg += daughter.key();
+         std::string msg = "No entry present for daughter with hash ";
+         msg += h;
          msg += " in info with with name ";
          msg += name;
          msg += ".";
@@ -285,7 +289,7 @@ private:
    double m_dec;
 
    std::map<std::string, bool> m_decisions;
-   std::map<std::string, std::map<int, bool> > m_info;
+   std::map<std::string, std::map<size_t, bool> > m_info;
    std::map<std::string, double> m_extra;
 
 };

@@ -4,6 +4,12 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2011-10-16 - Roel Aaij
+ - Add function to calculate the hash of an LHCb::Particle using its particle ID 
+   and the LHCbIDs of its track.
+ - Change key of daughter information in TurningPoint to size_t and use the hash
+   of the particle to entre the information. 
+
 ! 2011-10-13 - Roel Aaij
  - Update requirements to suppress icc warnings.
 

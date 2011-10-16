@@ -2,13 +2,16 @@
 #define DICT_LCGDICT_H 1
 
 // begin include files
-#include <map>
+#include <cstddef>
 #include <string>
+#include <map>
+
+#include <Relations/RelationsDict.h>
 
 #include <Event/TurningPoint.h>
 #include <Event/SwimmingReport.h>
 
-#include <Relations/RelationsDict.h>
+#include <SwimmingUtils/Utils.h>
 
 // end include files
 namespace {
@@ -20,9 +23,10 @@ namespace {
    //    virtual ~_tmp(){}
    // };
 
-   typedef std::map<int, bool> map_ib;
+   typedef std::map<size_t, bool> map_ulb;
+   typedef std::map<const size_t, bool> map_culb;
    typedef std::map<std::string, bool> map_sb;
-   typedef std::map<std::string, std::map<int, bool> > map_sinfo;
+   typedef std::map<std::string, std::map<size_t, bool> > map_sinfo;
 
    struct __Instantiations {
       // begin instantiations
@@ -47,22 +51,27 @@ namespace {
       GaudiDict::Relation2DDict<LHCb::SwimmingReport, LHCb::Particle> _r1;
 
       // Dicts for python usage
-      // map<int, bool>
-      map_ib _m00;
-      map_ib::iterator _i00;
-      map_ib::const_iterator _i01;
+      // map<size_t, bool>
+      map_ulb _m00;
+      map_ulb::iterator _i00;
+      map_ulb::const_iterator _i01;
 
-      // map<int, bool> auxilliary
-      std::pair<int,bool> _p00;
-      std::pair<map_ib::iterator, bool> _p01;
+      map_culb _m01;
+      map_culb::iterator _i02;
+      map_culb::const_iterator _i03;
 
-      // map<string, map<int, bool> >
+      // map<size_t, bool> auxilliary
+      std::pair<size_t,bool> _p00;
+      std::pair<const size_t,bool> _p01;
+      std::pair<map_culb::iterator, bool> _p02;
+
+      // map<string, map<size_t, bool> >
       map_sinfo _m10;
       map_sinfo::iterator _i10;
       map_sinfo::const_iterator _i11;
 
-      // map<string, map<int, bool> > auxilliary
-      std::pair<std::string, map_ib> _p10;
+      // map<string, map<size_t, bool> > auxilliary
+      std::pair<std::string, map_ulb> _p10;
       std::pair<map_sinfo::iterator, bool> _p11;
 
       // map<string, bool>
