@@ -1,4 +1,3 @@
-// $Id: TrackExpectedHitsXYZTool.cpp,v 1.2 2010/02/01 15:55:31 mschille Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -55,7 +54,7 @@ class CollectionFailure : public std::exception
 // 2010-07-02 : Georg Alexander Krocker <krocker@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackExpectedHitsXYZTool );
+DECLARE_TOOL_FACTORY( TrackExpectedHitsXYZTool )
 
 /// default constructor for HitPatternXYZ struct
 TrackExpectedHitsXYZTool::HitPatternXYZ::HitPatternXYZ()

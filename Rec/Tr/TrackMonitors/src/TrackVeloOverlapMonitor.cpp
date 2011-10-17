@@ -1,4 +1,3 @@
-// $Id: TrackVeloOverlapMonitor.cpp,v 1.2 2010/04/27 07:38:21 wouter Exp $
 // Include files 
 
 // from std
@@ -99,7 +98,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackVeloOverlapMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackVeloOverlapMonitor )
 
 TrackVeloOverlapMonitor::TrackVeloOverlapMonitor( const std::string& name,
 				ISvcLocator* pSvcLocator)

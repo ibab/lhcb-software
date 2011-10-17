@@ -117,11 +117,13 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackITOverlapMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackITOverlapMonitor )
 
 TrackITOverlapMonitor::TrackITOverlapMonitor( const std::string& name,
 				ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
+    m_tracktypeh1(0),
+    m_numregionsh1(0),
     m_ithitcreator("Tf::STHitCreator<Tf::IT>/ITHitCreator"),
     m_maxDistance(10.* Gaudi::Units::mm ),
     m_maxTrackError(1.0 * Gaudi::Units::mm )

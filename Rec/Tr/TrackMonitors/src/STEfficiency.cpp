@@ -1,4 +1,3 @@
-// $Id: STEfficiency.cpp,v 1.9 2010-04-07 21:44:41 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +54,7 @@ using namespace boost::assign;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STEfficiency );
+DECLARE_ALGORITHM_FACTORY( STEfficiency )
 
 
 //=============================================================================
@@ -66,7 +65,9 @@ STEfficiency::STEfficiency( const std::string& name,
   : TrackMonitorBase ( name , pSvcLocator ),
     m_totalExpected( 0u ),
     m_totalFound( 0u ),
-    m_binSize( 10000. )
+    m_NbrOfCuts( 0u ),
+    m_binSize( 10000. ),
+    m_binNumber( 0u )
 {
   declareProperty( "DetType"         , m_detType =  "IT" );
   declareProperty( "ExpectedHitsTool", m_expectedHitsTool =
@@ -84,6 +85,9 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "Types"           , m_wantedTypes = list_of( 3 ) );
   declareProperty( "TakeEveryHit"    , m_everyHit = true );
   declareProperty( "MinDistToEdge"   , m_minDistToEdge = -1. );
+
+  m_whichCut[0] = 0u;
+  m_whichCut[1] = 0u;
 }
 
 //=============================================================================

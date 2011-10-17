@@ -1,4 +1,3 @@
-// $Id: TrackMuonMatchMonitor.cpp,v 1.3 2010-03-19 15:17:52 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +29,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackMuonMatchMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackMuonMatchMonitor )
 
 
 //=============================================================================
@@ -38,7 +37,7 @@ DECLARE_ALGORITHM_FACTORY( TrackMuonMatchMonitor );
 //=============================================================================
 TrackMuonMatchMonitor::TrackMuonMatchMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator ), m_muonDet(0), m_extrapolator(0)
 {
   declareProperty( "TracksLocation"     , m_tTracksLocation      = TrackLocation::Default     );
   declareProperty( "Extrapolator"       , m_nExtrapolator        = "TrackLinearExtrapolator"  );

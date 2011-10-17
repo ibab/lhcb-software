@@ -49,7 +49,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackDiMuonMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackDiMuonMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -64,7 +64,8 @@ TrackDiMuonMonitor::TrackDiMuonMonitor( const std::string& name,
     m_maxMass(4.0*Gaudi::Units::GeV),
     m_minJPsiMass(3.065*Gaudi::Units::GeV),
     m_maxJPsiMass(3.125*Gaudi::Units::GeV),
-    m_maxChi2TwoProngVertex(25)
+    m_maxChi2TwoProngVertex(25),
+    m_muonmass(0.)
 {
   declareProperty( "TrackLocation", m_trackInputLocation = LHCb::TrackLocation::Muon );
   declareProperty( "DiMuonLocation", m_dimuonOutputLocation = "Rec/Vertex/DiMuon" ) ;

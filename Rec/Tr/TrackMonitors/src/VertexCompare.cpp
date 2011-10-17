@@ -1,4 +1,3 @@
-// $Id: VertexCompare.cpp,v 1.1 2010/03/01 15:58:08 pmorawsk Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,7 +12,7 @@
 #include "Event/L0DUReport.h"
 #include "GaudiUtils/HistoStats.h"
 #include "AIDA/IHistogram1D.h"
-#include <TRandom.h>
+//#include <TRandom.h>
 
 // local
 #include "VertexCompare.h"
@@ -23,14 +22,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VertexCompare);
+DECLARE_ALGORITHM_FACTORY(VertexCompare)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 VertexCompare::VertexCompare(const std::string& name,
                  ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg (name,pSvcLocator)
+  : GaudiTupleAlg (name,pSvcLocator), m_forcedBtool(0)
 {
 //     declareProperty("nTracksToBeRecble",  m_nTracksToBeRecble = 5);
     declareProperty("produceNtuple",      m_produceNtuple     = true);
@@ -43,7 +42,7 @@ VertexCompare::VertexCompare(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VertexCompare::~VertexCompare() {};
+VertexCompare::~VertexCompare() {}
 
 //=============================================================================
 // Initialization
@@ -54,7 +53,7 @@ StatusCode VertexCompare::initialize() {
 
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -70,7 +69,7 @@ StatusCode VertexCompare::initialize() {
   m_nPartVtx  = 0;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -290,8 +289,7 @@ StatusCode VertexCompare::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
-
+}
 
 //=============================================================================
 //  Finalize
@@ -301,22 +299,22 @@ StatusCode VertexCompare::finalize() {
   if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
 
-  info() << " ============================================" << endreq;
-  info() << " Efficiencies for reconstructed vertices:    " << endreq;
-  info() << " ============================================" << endreq;
-  info() << " " << endreq;
+  info() << " ============================================" << endmsg;
+  info() << " Efficiencies for reconstructed vertices:    " << endmsg;
+  info() << " ============================================" << endmsg;
+  info() << " " << endmsg;
 
   info() << " There are " << m_nVtx
-         << " pairs of vertices in processed events" << endreq;
+         << " pairs of vertices in processed events" << endmsg;
 //   info() << " PV is isolated if dz to closest reconstructible MC PV >  "
-//          << m_dzIsolated << " mm" << endreq;
+//          << m_dzIsolated << " mm" << endmsg;
 //   std::string ff = "by counting tracks";
 // /*  if ( !m_matchByTracks )*/ ff = "by dz distance";
 //   info() << " Two splited vertices matched:  "
-//          <<  ff << endreq;
+//          <<  ff << endmsg;
 
 
-//   info() << " " << endreq;
+//   info() << " " << endmsg;
 //     printRat("All",       m_nPartVtx,       m_nVtx );
 
   const AIDA::IHistogram1D* dx = histo( HistoID(1021) ) ;
@@ -326,44 +324,44 @@ StatusCode VertexCompare::finalize() {
   const AIDA::IHistogram1D* dz = histo( HistoID(1023) ) ;
   const AIDA::IHistogram1D* pullz = histo( HistoID(1033) ) ;
   if( dx ) {
-    info() << "      ---------------------------------------" << endreq;
+    info() << "      ---------------------------------------" << endmsg;
     info() << "dx:    "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           dx->mean(), Gaudi::Utils::HistoStats::meanErr(dx),
-          dx->rms(), Gaudi::Utils::HistoStats::rmsErr(dx)) << endreq ;
+          dx->rms(), Gaudi::Utils::HistoStats::rmsErr(dx)) << endmsg ;
   }
   if( dy ) {
     info() << "dy:    "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           dy->mean(), Gaudi::Utils::HistoStats::meanErr(dy),
-          dy->rms(), Gaudi::Utils::HistoStats::rmsErr(dy)) << endreq ;
+          dy->rms(), Gaudi::Utils::HistoStats::rmsErr(dy)) << endmsg ;
   }
   if( dz ) {
     info() << "dz:    "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           dz->mean(), Gaudi::Utils::HistoStats::meanErr(dz),
-          dz->rms(), Gaudi::Utils::HistoStats::rmsErr(dz)) << endreq ;
+          dz->rms(), Gaudi::Utils::HistoStats::rmsErr(dz)) << endmsg ;
   }
-  info() << "      ---------------------------------------" << endreq;
+  info() << "      ---------------------------------------" << endmsg;
   if( pullx ) {
     info() << "pullx: "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           pullx->mean(), Gaudi::Utils::HistoStats::meanErr(pullx),
-          pullx->rms(), Gaudi::Utils::HistoStats::rmsErr(pullx)) << endreq ;
+          pullx->rms(), Gaudi::Utils::HistoStats::rmsErr(pullx)) << endmsg ;
   }
   if( pully ) {
     info() << "pully: "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           pully->mean(), Gaudi::Utils::HistoStats::meanErr(pully),
-          pully->rms(), Gaudi::Utils::HistoStats::rmsErr(pully)) << endreq ;
+          pully->rms(), Gaudi::Utils::HistoStats::rmsErr(pully)) << endmsg ;
   }
   if( pullz ) {
     info() << "pullz: "
      << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
           pullz->mean(), Gaudi::Utils::HistoStats::meanErr(pullz),
-          pullz->rms(), Gaudi::Utils::HistoStats::rmsErr(pullz)) << endreq ;
+          pullz->rms(), Gaudi::Utils::HistoStats::rmsErr(pullz)) << endmsg ;
   }
-  info() << " ============================================" << endreq;
+  info() << " ============================================" << endmsg;
 //
   return GaudiTupleAlg::finalize();  // Must be called after all other actions
 }
@@ -413,7 +411,7 @@ void VertexCompare::printRat(std::string mes, int a, int b) {
   }
   pmes+= " : ";
 
-  info() << pmes << format(" %6.3f ( %7d / %8d )", rat,a,b) << endreq;
+  info() << pmes << format(" %6.3f ( %7d / %8d )", rat,a,b) << endmsg;
 }
 
 
@@ -444,11 +442,11 @@ bool VertexCompare::getInputVertices( std::vector<LHCb::RecVertex*>& vecOfVertic
   }
 
   if ( verticesName1 == "none" ) {
-    debug() << " Vertices 1 not specified " << verticesName1 << endreq;
+    debug() << " Vertices 1 not specified " << verticesName1 << endmsg;
     return false;
   }
     if ( verticesName2 == "none" ) {
-    debug() << " Vertices 2 not specified " << verticesName2 << endreq;
+    debug() << " Vertices 2 not specified " << verticesName2 << endmsg;
     return false;
   }
 
@@ -458,14 +456,14 @@ bool VertexCompare::getInputVertices( std::vector<LHCb::RecVertex*>& vecOfVertic
   try {
     recoVertices1  = get<LHCb::RecVertices>( verticesName1 );
   } catch (...) {
-    debug() << " No vertices at " << verticesName1 << endreq;
+    debug() << " No vertices at " << verticesName1 << endmsg;
     return false;
   }
 
   try {
     recoVertices2  = get<LHCb::RecVertices>( verticesName2 );
   } catch (...) {
-    debug() << " No vertices at " << verticesName2 << endreq;
+    debug() << " No vertices at " << verticesName2 << endmsg;
     return false;
   }
   

@@ -1,4 +1,3 @@
-// $Id: $
 #include "GaudiKernel/AlgFactory.h"
 
 #include "HitEffPlotter.h"
@@ -20,14 +19,16 @@
 // 2010-06-10 : Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( HitEffPlotter );
+DECLARE_ALGORITHM_FACTORY( HitEffPlotter )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
     HitEffPlotter::HitEffPlotter(const std::string& name, ISvcLocator* pSvcLocator)
-: GaudiHistoAlg(name, pSvcLocator)
+      : GaudiHistoAlg(name, pSvcLocator), m_veloExpectation(0),
+        m_ttExpectation(0), m_itExpectation(0), m_otExpectation(0),
+        m_xyzExpectation(0)
 {
     declareProperty("InputCollection", m_inputCollection = LHCb::TrackLocation::Default);
 }

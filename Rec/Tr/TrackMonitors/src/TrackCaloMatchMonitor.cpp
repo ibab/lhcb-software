@@ -68,7 +68,7 @@ private:
 } ;
  
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackCaloMatchMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackCaloMatchMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -106,7 +106,7 @@ StatusCode TrackCaloMatchMonitor::initialize()
   if ( sc.isFailure() ) return sc;             // error printed already by GaudiAlgorithm
   sc = m_extrapolator.retrieve() ;
   if ( sc.isFailure() ) {
-    error() << "Could not retrieve extrapolator" << endreq ;
+    error() << "Could not retrieve extrapolator" << endmsg ;
     return sc;
   }
 
@@ -129,7 +129,7 @@ StatusCode TrackCaloMatchMonitor::initialize()
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
     m_geometricZ = m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()).z() ;
   } else {
-    error() << "Unknown calo system: " << m_caloName << endreq ;
+    error() << "Unknown calo system: " << m_caloName << endmsg ;
     sc = StatusCode::FAILURE ; 
   }
 
@@ -169,7 +169,7 @@ StatusCode TrackCaloMatchMonitor::initialize()
 	  << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
 	  << " zoffset: " << m_caloDet->zOffset()
 	  << " geometric Z: " << m_geometricZ
-	  << " zsize:   " << m_caloDet->zSize() << endreq ;
+	  << " zsize:   " << m_caloDet->zSize() << endmsg ;
   
   return sc;
 }

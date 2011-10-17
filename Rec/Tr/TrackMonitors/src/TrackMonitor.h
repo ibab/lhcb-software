@@ -1,4 +1,3 @@
-// $Id: TrackMonitor.h,v 1.7 2010-04-07 21:44:10 wouter Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -47,9 +46,6 @@ class TrackMonitor : public TrackMonitorBase {
   void findRefStates(const LHCb::Track& track,
 		     const LHCb::State*& firstMeasurementState,
 		     const LHCb::State*& lastMeasurementState) const ;
-
-  double m_xMax;
-  double m_yMax;
 
   const DeVelo*        m_veloDet ;
   

@@ -44,7 +44,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -52,6 +52,7 @@ DECLARE_ALGORITHM_FACTORY( TrackParticleMonitor );
 TrackParticleMonitor::TrackParticleMonitor( const std::string& name,
 					ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ), 
+    m_magfieldsvc(0),
     m_stateprovider("TrackStateProvider"),
     m_minMass(0*Gaudi::Units::GeV),
     m_maxMass(120.0*Gaudi::Units::GeV)
@@ -108,7 +109,7 @@ StatusCode TrackParticleMonitor::execute()
   setHistoTopDir("Track/") ;
 
   LHCb::Particle::Range particles  = get<LHCb::Particle::Range>(m_inputLocation) ;
-  //debug() << "particles: " << particles.size() << endreq ;
+  //debug() << "particles: " << particles.size() << endmsg ;
   
   BOOST_FOREACH( const LHCb::Particle* particle, particles) {
     

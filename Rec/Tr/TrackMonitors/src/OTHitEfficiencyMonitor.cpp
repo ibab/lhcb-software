@@ -173,7 +173,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTHitEfficiencyMonitor );
+DECLARE_ALGORITHM_FACTORY( OTHitEfficiencyMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -183,7 +183,8 @@ OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator ),
     m_decoder("OTRawBankDecoder"),
     m_interpolator("TrackInterpolator"),
-    m_linearextrapolator("TrackLinearExtrapolator")
+    m_linearextrapolator("TrackLinearExtrapolator"),
+    m_otdet(0), m_efficiencyPerModulePr(0), m_efficiencyPerOtisPr(0)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "MinOTHits",m_minOTHitsPerTrack = 15   ) ;

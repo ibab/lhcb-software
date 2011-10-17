@@ -1,4 +1,3 @@
-// $Id: TrackMonitor.cpp,v 1.28 2010-04-07 21:44:10 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -43,7 +42,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 
-DECLARE_ALGORITHM_FACTORY( TrackMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables

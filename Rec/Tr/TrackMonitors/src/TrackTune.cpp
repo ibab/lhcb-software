@@ -1,4 +1,3 @@
-// $Id: $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -13,10 +12,10 @@
 #include "Kernel/ParticleProperty.h"
 
 
-DECLARE_ALGORITHM_FACTORY( TrackTune );
+DECLARE_ALGORITHM_FACTORY( TrackTune )
 
 TrackTune::TrackTune(const std::string& name, ISvcLocator* pSvc):
- GaudiTupleAlg(name,pSvc)
+  GaudiTupleAlg(name,pSvc), m_minMass(0.), m_maxMass(0.)
 {
 
   declareProperty("ParticleLocation", m_particleLocation = "/Event/Dimuon/Phys/SelDiMuonInciLoose/Particles");

@@ -1,4 +1,3 @@
-// $Id: TrackMonitorBase.cpp,v 1.4 2010-04-07 21:30:23 wouter Exp $
 // Include files 
 #include "TrackMonitorBase.h"
 #include "Event/Track.h"
@@ -9,7 +8,7 @@
 //=============================================================================
 TrackMonitorBase::TrackMonitorBase( const std::string& name,
                                     ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg( name , pSvcLocator ),
+  GaudiHistoAlg( name , pSvcLocator ), m_poca(0), m_pIMF(0), m_extrapolator(0),
   m_allString("ALL"){
 
   declareProperty( "TracksInContainer",
@@ -23,7 +22,7 @@ TrackMonitorBase::TrackMonitorBase( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackMonitorBase::~TrackMonitorBase() {}; 
+TrackMonitorBase::~TrackMonitorBase() {}
 
 //=============================================================================
 // Initialization. Check parameters

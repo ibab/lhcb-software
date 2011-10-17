@@ -1,5 +1,4 @@
 #include "GaudiKernel/AlgFactory.h" 
-//#include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TrackInterfaces/ITrackProjector.h"
@@ -150,15 +149,15 @@ private:
 } ;
  
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackAlignMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackAlignMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TrackAlignMonitor::TrackAlignMonitor( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator ),
-    m_projector("TrackProjector")
+  : GaudiHistoAlg( name , pSvcLocator ), 
+    m_projector("TrackProjector"), m_velo(0), m_it(0), m_ot(0), m_tt(0)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "UseLocalFrame", m_useLocalFrame = true );
@@ -200,7 +199,7 @@ StatusCode TrackAlignMonitor::finalize()
 {
   StatusCode sc = m_projector.release() ;
   if(sc.isFailure()) return sc ;
-  info() << "Number of elements in jacobian map: " << m_jacobians.size() << endreq ;
+  info() << "Number of elements in jacobian map: " << m_jacobians.size() << endmsg ;
   delete m_velo ;
   delete m_ot ;
   delete m_it ;

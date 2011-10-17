@@ -4,6 +4,13 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-10-17 - Marco Cattaneo
+ - Fix icc remarks
+ - Replace endreq by endmsg
+ - Fix coverity UNINIT_CTOR defects 20151, 19696, 19695, 19694, 19693, 17731,
+   17730, 17729, 17728, 17727, 17726, 28264, 28263, 23982, 23979, 23978, 23976, 
+   23975, 23074
+
 !========================= TrackMonitors v1r34 2011-09-06 =========================
 ! 2011-09-05 - Wouter Hulsbergen
  - Added histograms for IT overlap residuals by stack for use in DQ monitoring

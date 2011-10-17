@@ -1,4 +1,3 @@
-// $Id: PitchResTool.cpp,v 1.5 2009-12-07 10:54:58 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -21,7 +20,7 @@
 // 2008-06-05 : Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PitchResTool );
+DECLARE_TOOL_FACTORY( PitchResTool )
 
 
 //=============================================================================
@@ -30,7 +29,7 @@ DECLARE_TOOL_FACTORY( PitchResTool );
 PitchResTool::PitchResTool(const std::string& type,
                            const std::string& name,
                            const IInterface* parent)
-  : GaudiTool(type, name, parent)
+  : GaudiTool(type, name, parent), m_extrapolator(0)
 {
   declareInterface<IPitchResTool>(this);
   declareProperty("TrackExtrapolatorName",

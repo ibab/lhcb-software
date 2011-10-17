@@ -38,7 +38,6 @@ private:
   ToolHandle<ITrackVertexer> m_vertexer ;
   IPVOfflineTool* m_toolpv;
   std::string m_trackContainerName;
-  double m_maxLongTrackChisqPerDof ;
   size_t m_PV_trackmin;
   double m_zpvmin ;
   double m_zpvmax ;
@@ -54,7 +53,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackPV2HalfAlignMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackPV2HalfAlignMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -95,7 +94,7 @@ StatusCode TrackPV2HalfAlignMonitor::initialize()
   if ( sc.isFailure() ) return sc;              // error printed already by GaudiAlgorithm
   sc = m_vertexer.retrieve() ;
   if( sc.isFailure() ) {
-    error() << "Couldn't retrieve vertexing tool" << endreq ;
+    error() << "Couldn't retrieve vertexing tool" << endmsg ;
     return sc ;
   }
 

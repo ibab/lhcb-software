@@ -59,7 +59,8 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackTimingMonitor );
+
+DECLARE_ALGORITHM_FACTORY( TrackTimingMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -67,10 +68,12 @@ DECLARE_ALGORITHM_FACTORY( TrackTimingMonitor );
 TrackTimingMonitor::TrackTimingMonitor(const std::string& name,
 				       ISvcLocator* pSvcLocator ) :
   GaudiTupleAlg( name , pSvcLocator ),
+  m_timerTool(0),
+  m_tracker(0),
   m_decoder("OTRawBankDecoder")  
 {
   
-};
+}
 
 //=============================================================================
 // Destructor

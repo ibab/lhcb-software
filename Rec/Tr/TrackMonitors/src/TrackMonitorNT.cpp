@@ -1,4 +1,3 @@
-// $Id: TrackMonitorNT.cpp,v 1.10 2009-11-22 00:19:09 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -11,13 +10,6 @@
 #include "Kernel/LHCbID.h"
 #include "Event/FitNode.h"
 #include "Kernel/HitPattern.h"
-
-// Det
-//#include "STDet/DeSTDetector.h"
-//#include "STDet/DeITDetector.h"
-
-// gsl
-//#include "gsl/gsl_math.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -76,7 +68,7 @@ private:
   
 };
 
-DECLARE_ALGORITHM_FACTORY( TrackMonitorNT );
+DECLARE_ALGORITHM_FACTORY( TrackMonitorNT )
 
 //=============================================================================
 // Standard constructor, initializes variables

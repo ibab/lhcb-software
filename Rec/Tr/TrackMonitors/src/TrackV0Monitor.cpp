@@ -32,14 +32,14 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackV0Monitor );
+DECLARE_ALGORITHM_FACTORY( TrackV0Monitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TrackV0Monitor::TrackV0Monitor( const std::string& name,
 				ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator )
+  : GaudiHistoAlg( name , pSvcLocator ), m_pionmass(0.), m_protonmass(0.)
 {
   declareProperty( "V0Location", m_v0Location = LHCb::TwoProngVertexLocation::Default ) ;
 }

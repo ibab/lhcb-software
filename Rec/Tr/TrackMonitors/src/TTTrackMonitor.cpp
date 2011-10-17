@@ -1,4 +1,3 @@
-// $Id: TTTrackMonitor.cpp,v 1.11 2010-04-07 21:46:18 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -31,7 +30,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 
-DECLARE_ALGORITHM_FACTORY( TTTrackMonitor );
+DECLARE_ALGORITHM_FACTORY( TTTrackMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -44,6 +43,9 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("minNumITHits", m_minNumTTHits = 2u); 
   declareProperty("InputData" , m_clusterLocation = STClusterLocation::TTClusters);
   setSplitByType(false) ;
+  // dummy intialization, redone in initialize
+  m_xMax = 0.;
+  m_yMax = 0.;
 }
 
 //=============================================================================

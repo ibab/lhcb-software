@@ -91,7 +91,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackVertexMonitor );
+DECLARE_ALGORITHM_FACTORY( TrackVertexMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
