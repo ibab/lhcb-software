@@ -8,9 +8,9 @@
 from Gaudi.Configuration import *
 from Configurables import Boole, LHCbApp
 
-# L0 TCK for MC11 - to be checked!
+# L0 TCK for MC11
 from Configurables import L0Conf
-L0Conf().TCK = '0x002A'
+L0Conf().TCK = '0x0037'
 
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
