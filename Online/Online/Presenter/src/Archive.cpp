@@ -107,7 +107,7 @@ Archive::listAvailableRootFiles(const boost::filesystem::path & dirPath,
   std::string partition( m_presenterInfo -> currentPartition() ) ;
   for ( boost::gregorian::day_iterator dateIterator(datePeriod.begin());
         dateIterator <= datePeriod.end(); ++dateIterator) {
-    if (m_verbosity >= pres::Verbose)
+    //if (m_verbosity >= pres::Verbose)
       std::cout << "Date: "
                 << boost::gregorian::to_simple_string(*dateIterator)
                 << std::endl;
@@ -126,7 +126,7 @@ Archive::listAvailableRootFiles(const boost::filesystem::path & dirPath,
                 << std::setfill('0') << std::setw(2) << day   << pres::s_slash;
 
     boost::filesystem::path pathOfTheDay(dayLocation.str());
-    if (m_verbosity >= pres::Verbose)
+    //if (m_verbosity >= pres::Verbose)
       std::cout << "Seeking in: " << pathOfTheDay << std::endl;
 
     boost::filesystem::directory_iterator end_itr;
@@ -134,9 +134,13 @@ Archive::listAvailableRootFiles(const boost::filesystem::path & dirPath,
       for ( boost::filesystem::directory_iterator itr(pathOfTheDay);
             itr != end_itr; ++itr) {
         if (is_regular(itr->path()) &&
-            pres::s_rootFileExtension == extension(itr->path()) )
+            pres::s_rootFileExtension == extension(itr->path()) ){
           foundRootFiles.push_back(itr->path());
+        }
       }
+    } else {
+      std::cout << " --- non existent area !"<< std::endl;
+      
     }
   }
 
@@ -147,7 +151,7 @@ Archive::listAvailableRootFiles(const boost::filesystem::path & dirPath,
           foundFilesIt != foundRootFiles.end() ; ++foundFilesIt )
       std::cout << "available file: " << *foundFilesIt << std::endl;
   }
-
+  std::cout << " *** Found " << foundRootFiles.size() << " files" << std::endl;
   return foundRootFiles;
 }
 
@@ -352,8 +356,7 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
         fileTimeFound = (((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data();
         fileTime = boost::posix_time::from_iso_string(fileTimeFound);
 
-        bool acceptSvs =
-          (taskNameFound == taskname && (!fileTime.is_not_a_date_time()));
+        bool acceptSvs = (taskNameFound == taskname && (!fileTime.is_not_a_date_time()));
         // for EFF tasks, require also the end of run flag
         // (histograms not reset during run)
         if (isEFF) {
@@ -364,16 +367,20 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
 
         if (acceptSvs) {
           if ( ( fileTime <= endTime ) && ( fileTime >= startTime ) ) {
-            //if (m_verbosity >= pres::Verbose)
-            std::cout << "using file: " << (*foundSavesetsIt).leaf() << std::endl ;
+            //std::cout << "using file: " << (*foundSavesetsIt).leaf() << std::endl ;
             foundRootFiles.push_back(*foundSavesetsIt);
-          } else if (fileTime < startTime) {
-            if (fileDateMatchGroup) {
-              fileDateMatchGroup->Delete();
-              delete fileDateMatchGroup;
-              fileDateMatchGroup = 0;
+          } else if ( fileTime < startTime) {
+            std::string run = (((TObjString *)fileDateMatchGroup->At(2))->GetString()).Data();
+            std::cout << "Ignore file " << (*foundSavesetsIt).leaf() << " run string '" << run 
+                      << "' time " << fileTimeFound << std::endl;
+            if ( "" != run ) {
+              if (fileDateMatchGroup) {
+                fileDateMatchGroup->Delete();
+                delete fileDateMatchGroup;
+                fileDateMatchGroup = 0;
+              }
+              break;
             }
-            break;
           }
         }
       }

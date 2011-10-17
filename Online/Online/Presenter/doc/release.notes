@@ -4,8 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-10-17 - Olivier Callot
+ - Protect against files without run number in history by time mode.
+
 ! 2011-10-14 - Olivier Callot
- - Revert to teh old code for normalizing reference by number of entries
+ - Revert to the old code for normalizing reference by number of entries
 
 ! 2011-09-28 - Olivier Callot
  - Update the normalisation o fthe reference on refresh
