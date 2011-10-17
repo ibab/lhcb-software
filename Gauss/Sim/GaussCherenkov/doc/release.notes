@@ -4,6 +4,10 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+!======================== GaussCherenkov v1r1p1 2011-10-17 ===================
+! 2011-10-17 - Sajan Easo
+ - Remove use of Gauss
+
 !========================= GaussCherenkov v1r1 2011-09-20 ====================
 !2011-08-22 - Sajan Easo
  - Comment out the obsolete G4MultipleScattering.hh which caused compilation issues
