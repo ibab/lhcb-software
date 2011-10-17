@@ -1255,6 +1255,154 @@ def updateLHCbProjectPath(mysiteroot):
     os.environ["LHCBPROJECTPATH"] = os.pathsep.join(finalcmtlist)
 
 
+def scriptsPostInstall(pack_ver):
+    """
+    post install script for LbScripts if it doesn't provide one.
+    @param mysiteroot: full list of install dirs os.pathsep separated
+    @type mysiteroot: string
+    """
+    log = logging.getLogger()
+    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
+    updateLHCbProjectPath(os.environ["MYSITEROOT"])
+    log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
+    if boot_script_loc :
+        # for debugging
+        genlogscript = os.path.join(boot_script_loc, "InstallArea", "scripts", "generateLogin")
+    else :
+        genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
+
+    gencmd = "%s" % genlogscript
+    if debug_flag :
+        gencmd += " --debug"
+    gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3], "InstallArea"))
+    log.info("Running: python %s" % gencmd)
+    systemCall("python %s" % gencmd)
+    prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
+    if sys.platform != "win32" :
+        if os.path.exists(prodlink) :
+            if os.path.islink(prodlink) :
+                os.remove(prodlink)
+                os.symlink(pack_ver[0] + '_' + pack_ver[1], prodlink)
+                log.debug("linking %s -> %s" % (prodlink, pack_ver[0] + '_' + pack_ver[1]))
+            else :
+                log.error("%s is not a link. Please remove this file/directory" % prodlink)
+    else :
+        if os.path.exists(prodlink) :
+            if os.path.isdir(prodlink) :
+                removeAll(prodlink)
+                shutil.copytree(pack_ver[0] + '_' + pack_ver[1], prodlink)
+                log.debug("Copying %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
+            else :
+                log.error("%s is not a directory. Please remove this file" % prodlink)
+    my_dir = os.path.dirname(this_lhcb_dir)
+    selected_script_dir = os.path.join(prodlink, "InstallArea", "scripts")
+    if not os.path.exists(selected_script_dir) :
+        selected_script_dir = os.path.join(pack_ver[3], "InstallArea", "scripts")
+    for f in os.listdir(selected_script_dir) :
+        if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
+            sourcef = os.path.join(selected_script_dir, f)
+            targetf = os.path.join(my_dir, f)
+            if os.path.islink(targetf) or os.path.isfile(targetf):
+                os.remove(targetf)
+            if sys.platform == "win32" :
+                shutil.copy(sourcef, targetf)
+                log.debug("copying %s into %s" % (sourcef, targetf))
+            else :
+                sourcef = sourcef.replace(my_dir, "", 1)
+                while sourcef.startswith("/") or sourcef.startswith("\\") :
+                    sourcef = sourcef[1:]
+                os.symlink(sourcef, targetf)
+                log.debug("linking %s -> %s" % (targetf, sourcef))
+    etc_scripts = [ "LbLogin", "group_login", "group_shell", "LHCb"]
+    my_etc_dir = os.path.join(my_dir, "etc")
+    for s in etc_scripts :
+        for f in os.listdir(selected_script_dir) :
+            if f.startswith("%s." % s) and not (f.endswith(".zsh") or f.endswith(".py")):
+                sourcef = os.path.join(selected_script_dir, f)
+                targetf = os.path.join(my_etc_dir, f)
+                if os.path.islink(targetf) or os.path.isfile(targetf):
+                    os.remove(targetf)
+                if sys.platform == "win32" :
+                    shutil.copy(sourcef, targetf)
+                    log.debug("copying %s into %s" % (sourcef, targetf))
+                else :
+                    sourcef = sourcef.replace(my_dir, "", 1)
+                    while sourcef.startswith("/") or sourcef.startswith("\\") :
+                        sourcef = sourcef[1:]
+                    sourcef = os.path.join(os.pardir, sourcef)
+                    os.symlink(sourcef, targetf)
+                    log.debug("linking %s -> %s" % (targetf, sourcef))
+
+
+def fixDataPackages(pack_ver):
+    log = logging.getLogger()
+
+    if multiple_mysiteroot :
+        if os.path.isdir('EXTRAPACKAGES'):
+            extradir = None
+            if pack_ver[3].find('DBASE') != -1 :
+                extradir = 'DBASE'
+            elif pack_ver[3].find('PARAM') != -1 :
+                extradir = 'PARAM'
+            elif pack_ver[3].find('TOOLS') != -1 :
+                extradir = 'TOOLS'
+            if extradir is not None :
+                f = os.path.join(pack_ver[0], pack_ver[1])
+                tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
+                safeMakeDirs(tdir)
+                shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
+                if fix_perm :
+                    changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
+                shutil.rmtree(extradir, ignore_errors=True)
+    if latest_data_link and (pack_ver[3].find('DBASE') != -1 or pack_ver[3].find('PARAM') != -1 or pack_ver[3].find('TOOLS') != -1):
+        # create link to the latest version "v99r9" if requested
+        f = os.path.join(pack_ver[0], pack_ver[1])
+        extradir = None
+        if pack_ver[3].find('DBASE') != -1 :
+            extradir = 'DBASE'
+        elif pack_ver[3].find('PARAM') != -1 :
+            extradir = 'PARAM'
+        elif pack_ver[3].find('TOOLS') != -1 :
+            extradir = 'TOOLS'
+        exdir = os.path.join('EXTRAPACKAGES', f)
+        regul_dir = os.path.join(extradir, f)
+        if os.path.exists(regul_dir) :
+            tg_dir = regul_dir
+        else :
+            tg_dir = exdir
+        if os.path.isdir(tg_dir) :
+            tdir = os.path.dirname(tg_dir)
+            ltg_list = []
+            if extradir == "TOOLS" :
+                ltg = os.path.join(tdir, "pro")
+                ltg_list.append(ltg)
+            else :
+                ltg = os.path.join(tdir, "v999r0")
+                ltg_list.append(ltg)
+                try:
+                    import re
+                    vs = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
+                    m = vs.match(pack_ver[1])
+                    if m :
+                        majv = m.group(1)
+                        ltg = os.path.join(tdir, "v%sr99" % majv)
+                        ltg_list.append(ltg)
+                except :
+                    pass
+            for lg in ltg_list :
+                if os.path.islink(lg) or os.path.isfile(lg):
+                    os.remove(lg)
+                elif os.path.isdir(lg) :
+                    shutil.rmtree(lg, ignore_errors=True)
+                if sys.platform == "win32" :
+                    log.debug("copying %s to %s" % (pack_ver[1], lg))
+                    shutil.copytree(tg_dir, lg)
+                else :
+                    log.debug("linking %s -> %s" % (lg, pack_ver[1]))
+                    os.symlink(pack_ver[1], lg)
+
+
+
 #
 #  download project tar files ================================================
 #
@@ -1328,144 +1476,14 @@ def getProjectTar(tar_list, already_present_list=None):
                         fixLinks(pack_ver[3])
                     except :
                         log.warning("Cannot use fixLinks")
-                if multiple_mysiteroot :
-                    if os.path.isdir('EXTRAPACKAGES'):
-                        extradir = None
-                        if pack_ver[3].find('DBASE') != -1 :
-                            extradir = 'DBASE'
-                        elif pack_ver[3].find('PARAM') != -1 :
-                            extradir = 'PARAM'
-                        elif pack_ver[3].find('TOOLS') != -1 :
-                            extradir = 'TOOLS'
-                        if extradir is not None :
-                            f = os.path.join(pack_ver[0], pack_ver[1])
-                            tdir = os.path.dirname(os.path.join('EXTRAPACKAGES', f))
-                            safeMakeDirs(tdir)
-                            shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
-                            if fix_perm :
-                                changePermissions(os.path.join('EXTRAPACKAGES', f), recursive=True)
-                            shutil.rmtree(extradir, ignore_errors=True)
-                if latest_data_link and (pack_ver[3].find('DBASE') != -1 or pack_ver[3].find('PARAM') != -1 or pack_ver[3].find('TOOLS') != -1):
-                    # create link to the latest version "v99r9" if requested
-                    f = os.path.join(pack_ver[0], pack_ver[1])
-                    extradir = None
-                    if pack_ver[3].find('DBASE') != -1 :
-                        extradir = 'DBASE'
-                    elif pack_ver[3].find('PARAM') != -1 :
-                        extradir = 'PARAM'
-                    elif pack_ver[3].find('TOOLS') != -1 :
-                        extradir = 'TOOLS'
-                    exdir = os.path.join('EXTRAPACKAGES', f)
-                    regul_dir = os.path.join(extradir, f)
-                    if os.path.exists(regul_dir) :
-                        tg_dir = regul_dir
-                    else :
-                        tg_dir = exdir
-                    if os.path.isdir(tg_dir) :
-                        tdir = os.path.dirname(tg_dir)
-                        ltg_list = []
-                        if extradir == "TOOLS" :
-                            ltg = os.path.join(tdir, "pro")
-                            ltg_list.append(ltg)
-                        else :
-                            ltg = os.path.join(tdir, "v999r0")
-                            ltg_list.append(ltg)
-                            try:
-                                import re
-                                vs = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
-                                m = vs.match(pack_ver[1])
-                                if m :
-                                    majv = m.group(1)
-                                    ltg = os.path.join(tdir, "v%sr99" % majv)
-                                    ltg_list.append(ltg)
-                            except :
-                                pass
-                        for lg in ltg_list :
-                            if os.path.islink(lg) or os.path.isfile(lg):
-                                os.remove(lg)
-                            elif os.path.isdir(lg) :
-                                shutil.rmtree(lg, ignore_errors=True)
-                            if sys.platform == "win32" :
-                                log.debug("copying %s to %s" % (pack_ver[1], lg))
-                                shutil.copytree(tg_dir, lg)
-                            else :
-                                log.debug("linking %s -> %s" % (lg, pack_ver[1]))
-                                os.symlink(pack_ver[1], lg)
+
+                fixDataPackages(pack_ver)
 
                 registerProjectCommand(pack_ver, "PostInstall")
 
                 # fall back procedure for LbScripts if there is no PostInstall.py script
                 if pack_ver[0] == "LBSCRIPTS" and not isPostInstallRegistered(pack_ver[0], pack_ver[1]):
-                    updateLHCbProjectPath(os.environ["MYSITEROOT"])
-                    log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
-                    if boot_script_loc :
-                        # for debugging
-                        genlogscript = os.path.join(boot_script_loc, "InstallArea", "scripts", "generateLogin")
-                    else :
-                        genlogscript = os.path.join(pack_ver[3], "InstallArea", "scripts", "generateLogin")
-
-                    gencmd = "%s" % genlogscript
-                    if debug_flag :
-                        gencmd += " --debug"
-                    gencmd += " --without-python --no-cache -m %s --login-version=%s %s" % (os.environ["MYSITEROOT"], pack_ver[1], os.path.join(pack_ver[3], "InstallArea"))
-                    log.info("Running: python %s" % gencmd)
-                    systemCall("python %s" % gencmd)
-                    prodlink = os.path.join(os.path.dirname(pack_ver[3]), "prod")
-                    if sys.platform != "win32" :
-                        if os.path.exists(prodlink) :
-                            if os.path.islink(prodlink) :
-                                os.remove(prodlink)
-                                os.symlink(pack_ver[0] + '_' + pack_ver[1], prodlink)
-                                log.debug("linking %s -> %s" % (prodlink, pack_ver[0] + '_' + pack_ver[1]))
-                            else :
-                                log.error("%s is not a link. Please remove this file/directory" % prodlink)
-                    else :
-                        if os.path.exists(prodlink) :
-                            if os.path.isdir(prodlink) :
-                                removeAll(prodlink)
-                                shutil.copytree(pack_ver[0] + '_' + pack_ver[1], prodlink)
-                                log.debug("Copying %s to %s" % (pack_ver[0] + '_' + pack_ver[1], prodlink))
-                            else :
-                                log.error("%s is not a directory. Please remove this file" % prodlink)
-                    my_dir = os.path.dirname(this_lhcb_dir)
-                    selected_script_dir = os.path.join(prodlink, "InstallArea", "scripts")
-                    if not os.path.exists(selected_script_dir) :
-                        selected_script_dir = os.path.join(pack_ver[3], "InstallArea", "scripts")
-                    for f in os.listdir(selected_script_dir) :
-                        if f.startswith("LbLogin.") and not (f.endswith(".zsh") or f.endswith(".py")):
-                            sourcef = os.path.join(selected_script_dir, f)
-                            targetf = os.path.join(my_dir, f)
-                            if os.path.islink(targetf) or os.path.isfile(targetf):
-                                os.remove(targetf)
-                            if sys.platform == "win32" :
-                                shutil.copy(sourcef, targetf)
-                                log.debug("copying %s into %s" % (sourcef, targetf))
-                            else :
-                                sourcef = sourcef.replace(my_dir, "", 1)
-                                while sourcef.startswith("/") or sourcef.startswith("\\") :
-                                    sourcef = sourcef[1:]
-                                os.symlink(sourcef, targetf)
-                                log.debug("linking %s -> %s" % (targetf, sourcef))
-                    etc_scripts = [ "LbLogin", "group_login", "group_shell", "LHCb"]
-                    my_etc_dir = os.path.join(my_dir, "etc")
-                    for s in etc_scripts :
-                        for f in os.listdir(selected_script_dir) :
-                            if f.startswith("%s." % s) and not (f.endswith(".zsh") or f.endswith(".py")):
-                                sourcef = os.path.join(selected_script_dir, f)
-                                targetf = os.path.join(my_etc_dir, f)
-                                if os.path.islink(targetf) or os.path.isfile(targetf):
-                                    os.remove(targetf)
-                                if sys.platform == "win32" :
-                                    shutil.copy(sourcef, targetf)
-                                    log.debug("copying %s into %s" % (sourcef, targetf))
-                                else :
-                                    sourcef = sourcef.replace(my_dir, "", 1)
-                                    while sourcef.startswith("/") or sourcef.startswith("\\") :
-                                        sourcef = sourcef[1:]
-                                    sourcef = os.path.join(os.pardir, sourcef)
-                                    os.symlink(sourcef, targetf)
-                                    log.debug("linking %s -> %s" % (targetf, sourcef))
-
+                    scriptsPostInstall(pack_ver)
 
             if "/" in pack_ver[0] :
                 prj = pack_ver[0].split("/")[-1]
