@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-10-17 - Roel Aaij
+ - Update TupleToolSwimmingInfo to fill false everywhere if the global Hlt or
+   stripping decision is false.
+
 ! 2011-10-15 - V. Gligorov
  - First commit of TupleToolSwimmingInfo for holding acceptance
    information from the swimming code.
