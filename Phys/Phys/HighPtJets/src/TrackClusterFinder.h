@@ -45,7 +45,7 @@ public:
 
 private:
   void getPeak(std::vector<tmpTrack> tmpTracks, int& index, int& multPeak);
-  std::string m_inputTracks;
+  std::vector<std::string> m_inputTracks;
   std::string m_inputPVsName;
   LHCb::RecVertices* m_inputPVs;
   int m_minWeightSeed;
@@ -56,6 +56,8 @@ private:
   double m_min2ndJetPt;
   unsigned int m_jetMult;
   double m_maxRPV;
-
+  unsigned int m_nrPVs;
+  double m_minSumEt;
+  
 };
 #endif // TrackClusterFinder_H
