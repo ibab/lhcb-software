@@ -1,3 +1,7 @@
+2011-10-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/File.py: added safe remove tree function.
+
 2011-10-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbUtils/python/LbUtils/Thread.py: clean up of Pydev Code Analysis warnings.

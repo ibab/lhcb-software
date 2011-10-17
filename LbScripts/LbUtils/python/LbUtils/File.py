@@ -134,6 +134,21 @@ def move(src, dst):
             shutil.copy2(src, real_dst)
             os.unlink(src)
 
+def removeTree(dirpath):
+    """
+    Recursively remove directories and files.
+    """
+    try :
+        shutil.rmtree(path, ignore_errors=True)
+    except :
+        if os.path.exists(path) :
+            if os.path.isdir(path) and not os.path.islink(path):
+                lst = os.listdir(path)
+                for p in lst:
+                    removeAll(os.path.join(path, p))
+                os.rmdir(path)
+            else:
+                os.remove(path)
 
 def getEmpyFiles(topdir, filterfunc=None, extlist=None):
     """
