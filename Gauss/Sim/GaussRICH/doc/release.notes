@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+!========================= GaussRICH v11r6 2011-10-17 ========================
 !2011-10-14 - Sajan Easo
 - Modified the RichAnalysis.opts to avoid some debug printout at initialization.
 !========================= GaussRICH v11r5 2011-09-20 ========================
