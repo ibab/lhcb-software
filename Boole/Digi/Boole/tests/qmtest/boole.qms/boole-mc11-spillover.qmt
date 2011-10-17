@@ -12,4 +12,7 @@
 from Boole.QMTest.BooleExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>boole.boole-mc11</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
 </extension>

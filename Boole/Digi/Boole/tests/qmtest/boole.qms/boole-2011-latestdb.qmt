@@ -7,12 +7,26 @@
     <text>$APPCONFIGOPTS/Boole/DataType-2011.py</text>
     <text>$BOOLEOPTS/MC11-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; Boole().Histograms="Expert";</text>
+    <text>from Boole.Configuration import *; Boole().Histograms="Expert"; from Configurables import FPEAuditor; FPEAuditor().DisableTrapFor=["VeloSim"];</text>
    </set></argument>
   <argument name="reference"><text>../refs/boole-mc11.ref</text></argument>
   <argument name="validator"><text>
-from Boole.QMTest.BooleExclusions import preprocessor
-validateWithReference(preproc = preprocessor)
+from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
+preprocessor = BoolePreprocessor + \
+  LineSkipper(["ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255"]) + \
+  LineSkipper(["ToolSvc.RichRaw...   INFO "]) + \
+  LineSkipper(["ToolSvc.RichRaw...   INFO "]) + \
+  LineSkipper(["OTTimeClassific...   INFO "]) + \
+  LineSkipper(["ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 63'"]) + \
+  RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics", orig = r'0/0/2/0', repl = r'0/0/1/0') + \
+  RegexpReplacer(when = "RootHistSvc          INFO Writing ROOT histograms to", orig = r'ev-expert-histos.root', repl = r'ev-histos.root') + \
+  RegexpReplacer(when = "MoniOTSeq            INFO Member list:", orig = r'MCOTDepositMonitor, OTTimeChecker, OTTimeMonitor, OTTimeClassification', repl = r'MCOTDepositMonitor')
+histPreprocessor = \
+  RegexpReplacer(when = "ITClusterMonitor  SUCCESS Booked ", orig = r'1579 Histogram\(s\) : 1D=1565 2D=8 1DProf=5 2DProf=1', repl = r'14 Histogram(s) : 1D=9 2D=4 1DProf=1') + \
+  RegexpReplacer(when = "TTClusterMonitor  SUCCESS Booked ", orig = r'1458 Histogram\(s\) : 1D=1444 2D=8 1DProf=5 2DProf=1', repl = r'18 Histogram(s) : 1D=13 2D=4 1DProf=1') + \
+  RegexpReplacer(when = "MCTTDepositMonitorSUCCESS Booked ", orig = r'6 Histogram\(s\) : 1D=4 2D=2', repl = r'4 Histogram(s) : 1D=4') + \
+  RegexpReplacer(when = "MCITDepositMonitorSUCCESS Booked ", orig = r'7 Histogram\(s\) : 1D=4 2D=3', repl = r'4 Histogram(s) : 1D=4')
+validateWithReference(stdout=histPreprocessor(stdout), preproc=preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
     <tuple><text>boole.boole-mc11</text><enumeral>PASS</enumeral></tuple>

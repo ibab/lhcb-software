@@ -25,8 +25,8 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
    . Replace fixedfile-gauss-v37r0-mc09-sim by fixedfile-gauss-v39r4-mc10-sim,
      tests also FlatSpillover on MC10
    . Change boole-mc10 to fill also expert histos, replaces boole-mc09-withtruth
-   . Remove boole-spillover, will be done in an MC11 test
-   . Add boole-mc11, boole-mc11-spillover, boole-2011-latestdb
+   . Replace boole-spillover by boole-mc11-spillover
+   . Add boole-2011-latestdb, tests also mc11
 
  - Changes to references to reflect changes in Boole v23r1 output:
    . Adapt to updates in Muon spillover 
