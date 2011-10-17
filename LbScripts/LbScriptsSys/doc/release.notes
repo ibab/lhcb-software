@@ -1,3 +1,7 @@
+2011-10-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/PostInstall.py: full implementation of the post-install script for LbScripts.
+
 2011-10-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/PostInstall.py: added skeleton PostInstall.py for this very project.
