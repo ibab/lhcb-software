@@ -3,6 +3,7 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!========================= LbBcVegPy v4r1 2011-10-17 =========================
 ! 2011-09-28 - Patrick Robbe
  - BcDaughtersInLHCb: move to MCInterfaces package
 
