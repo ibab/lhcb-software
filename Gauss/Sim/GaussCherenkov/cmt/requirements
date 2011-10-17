@@ -18,7 +18,7 @@ use RichKernel    v*   Rich
 use RichDet       v*   Det
 use Relations     v*   Kernel
 use GaussRICH     v*   Sim
-use Gauss         v*   Sim
+
 
 use  LinkerEvent  v*   Event
 
