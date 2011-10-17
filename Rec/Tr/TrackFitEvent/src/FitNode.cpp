@@ -441,6 +441,7 @@ namespace LHCb {
         KalmanFitResult* kfr = this->getParent();
         if (!kfr->inError())
           kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::Other ) ;
+        return ;
       }
       
       const LHCb::State& nextPredictedState = nextnode->predictedState(Forward) ;
