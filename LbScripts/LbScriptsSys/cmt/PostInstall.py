@@ -5,15 +5,15 @@ import sys
 import os
 
 # bootstraping the location of the file
-_this_file = os.path.abspath(sys.argv[0])
-_cmt_dir = os.path.dirname(_this_file)
-_sys_dir = os.path.dirname(_cmt_dir)
-_prj_dir = os.path.dirname(_sys_dir)
-_ia_dir = os.path.join(_prj_dir, "InstallArea" )
-_iapy_dir = os.path.join(_ia_dir, "python")
-_iascr_dir = os.path.join(_ia_dir, "scripts")
+_this_file = os.path.abspath(sys.argv[0]) # this very file full location
+_cmt_dir = os.path.dirname(_this_file) # location of the parent directory to this file aka "cmt"
+_sys_dir = os.path.dirname(_cmt_dir) # location of the Sys package aka <project>Sys
+_prj_dir = os.path.dirname(_sys_dir) # location of the project instance
+_ia_dir = os.path.join(_prj_dir, "InstallArea" ) # location of the project InstallArea
+_iapy_dir = os.path.join(_ia_dir, "python") # location of the python dir in the IA
+_iascr_dir = os.path.join(_ia_dir, "scripts") # location of the scripts dir in the IA
 
-if os.path.isdir(_iapy_dir) :
+if os.path.isdir(_iapy_dir) : # in order to use my own tools
     sys.path.insert(0, _iapy_dir)
 
 from LbUtils.Script import Script
