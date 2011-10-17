@@ -1,4 +1,3 @@
-// $Id: SeedTrack.h,v 1.4 2009-05-29 13:38:52 cattanem Exp $
 #ifndef SEEDTRACK_H
 #define SEEDTRACK_H 1
 
@@ -514,7 +513,7 @@ namespace Tf
     }
 
     inline void SeedTrack::setYerr( const int i, const double value ) {
-      if (i < CovX::static_size) m_yErr[i] = value;
+      if (i < CovY::static_size) m_yErr[i] = value;
     }
 
     inline void SeedTrack::addToYPnts(const SeedPnt& pnt){

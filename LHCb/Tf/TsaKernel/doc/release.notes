@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-10-17 - Marco Cattaneo
+ - Fix typo in TsaKernel/SeedTrack.h, coverity bug 22106
+
 ! 2011-10-10 - Marco Cattaneo
  - Mark an icc warning, fix a remark
 
