@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-05-24 - David Hutchcroft
+ - Suppress the creation of noise only channels which are later killed to 
+   prevent FPE exceptions
+
 !========================= VeloSimulation v3r10 2011-06-15 =========================
 ! 2011-05-24 - David Hutchcroft
  - Added a variable response verse radius to match data and later to 

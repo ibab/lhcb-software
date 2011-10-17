@@ -930,6 +930,7 @@ void VeloSim::noiseSim(){
             if( m_uniformDist() > m_noiseTailProbSingle/m_noiseTailProb ) continue;
             threshold = m_thresholdSingle;
           }
+          if(!sens->OKStrip(stripArrayIndex))  continue; //unconnected strip
           LHCb::VeloChannelID stripKey(sensorNo,stripArrayIndex);
           // find strip in list.
           LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
