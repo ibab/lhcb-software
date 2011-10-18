@@ -3,11 +3,46 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2011-10-19 Boole v23r1</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Production release for MC11 simulation.
+ - No longer compatible with MC09
+
+ - New tuning:
+   . Set number of beam crossings for Muon flat spillover to 250 for 2010 
+     and 1 for 2009 (default for 2011 is 1280)
+   . New tuning for spillover in Muon (MuonBackground v2r11, MuonAlgs v6r10)
+   . Prevent creation of random noise in known Velo bad channels, avoids
+     FPEs (VeloSimulation v3r11)
+
+ - Bug fixes:
+   . Fix IOExtension problem in Ganga when PFN has svcClass (GaudiConf v15r2) 
+
+ - Changes to example options:
+   . Remove Boole-FEST09.py, use $APPCONFIGOPTS/Boole/FEST-L0Yes.py instead
+   . Remove Boole-MC09-NoTruth.py, Boole-MC09-WithTruth.py, MC09-Files.py
+   . Remove Spillover-Files.py (was an MC09 file)
+   . Add MC11-Files.py (example input file for MC11)
+
+ - Changes to tests
+   . Rename boole-fest09 to boole-fest, using an MC10 sim file instead of MC09
+   . Replace boole-mc09-notruth with boole-mc10-notruth
+   . Replace fixedfile-gauss-v37r0-mc09-sim by fixedfile-gauss-v39r4-mc10-sim,
+     tests also FlatSpillover on MC10
+   . Change boole-mc10 to fill also expert histos, replaces boole-mc09-withtruth
+   . Replace boole-spillover by boole-mc11-spillover
+   . Add boole-2011-latestdb, tests also mc11
+
+ - Changes to references to reflect changes in Boole v23r1 output:
+   . Adapt to updates in Muon spillover 
+
+</PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
+This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Development release for MC11 simulation.
 
  - Changes to persistency:
   . Output files are now in ROOT format by default, can be read by Brunel v40r0
