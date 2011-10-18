@@ -42,10 +42,8 @@ def initialise():
         #LHCbApp().CondDBtag = "head-20110524"
         
         DDDBConf(DataType = "2011")
-        #LHCbApp().DDDBtag   = "head-20110302"
-        #LHCbApp().CondDBtag = "head-20110622"
-        LHCbApp().DDDBtag   = "head-20110722" 
-        LHCbApp().CondDBtag = "head-20110722"
+        LHCbApp().DDDBtag   = "head-20110914"
+        LHCbApp().CondDBtag = "head-20110914"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -303,9 +301,13 @@ def getRunFillData(rootfiles):
         # Load the list of root files
         files = rootFileListFromTextFile(rootfiles)
 
-        # Load the raw cached run data
-        RunCacheName = "RunInfoCache.pck.bz2"
-        runTimeCache = loadDict(RunCacheName)
+        # Load the bookkeeping DB cache
+        BookKeepingDBCacheName = "BookKeepingDBCache.pck.bz2"
+        bkDBCache = loadDict(BookKeepingDBCacheName)
+        
+        # Load the RUn DB cache
+        RunDBCacheName = "RunDBCache.pck.bz2"
+        runDBCache = loadDict(RunDBCacheName)
 
         # Loop over the sorted run list and get the runfilldata
         tmpTime = 0
@@ -314,10 +316,11 @@ def getRunFillData(rootfiles):
             
             # Get run start and stop times from cache if there
             res = { 'OK' : False }
-            if run in runTimeCache.keys() : res = runTimeCache[run]
+            if run in bkDBCache.keys() : res = bkDBCache[run]
 
             if not res['OK'] :
-                print "  -> Need to query the Bookkeeping DB ..."
+                
+                print "  -> Need to query the Bookkeeping DB ... Run", run
                 from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
                 while not res['OK'] and nTries < 10:
@@ -327,7 +330,16 @@ def getRunFillData(rootfiles):
                         import time
                         time.sleep(5)
                     res = BookkeepingClient().getRunInformations(int(run))
-                if res['OK'] : runTimeCache[run] = res
+                if res['OK'] : bkDBCache[run] = res
+
+            rundb_res = { }
+            if run in runDBCache.keys() :
+                rundb_res = runDBCache[run]
+            else:
+                # Access the RUN DB as well
+                print "  -> Need to query the Run DB ... Run", run
+                rundb_res = getRunDBInfo(int(run))
+                runDBCache[run] = rundb_res
                 
             if res['OK'] :
 
@@ -341,22 +353,89 @@ def getRunFillData(rootfiles):
                 # Field polarity ?
                 polarity = getFieldPolarity(res)
 
+                # TCK
+                tck = res['Value']['Tck']
+
+                # Find the entry for 90000000 (FULL stream)
+                tag = -1
+                iStream = 0
+                for i in res['Value']['Stream'] :
+                    if i == 90000000 : tag = iStream
+                    iStream += 1
+
+                # Number events in FULL stream
+                nEventsPhys = 0
+                if tag > 0 : nEventsPhys = res['Value']['Number of events'][tag]
+
+                # Luminosity for FULL stream
+                lumi = 0
+                if tag > 0 : lumi = res['Value']['luminosity'][tag]
+
+                # Moore Version
+                mooreV = "Unknown"
+                if "programVersion" in rundb_res.keys() : mooreV = rundb_res["programVersion"]
+
+                # AvInstLumi
+                avInLumi = 0
+                if "avLumi" in rundb_res.keys() : avInLumi = 1.0e30 * float(rundb_res["avLumi"])
+
+                # Av Mu
+                avMu = 0
+                if "avMu" in rundb_res.keys() : avMu = float(rundb_res["avMu"])
+
+                # Beta *
+                betaStar = 0
+                if "betaStar" in rundb_res.keys() : betaStar = float(rundb_res["betaStar"])
+
+                # L0 Rate
+                avL0Rate = 0
+                if "avL0PhysRate" in rundb_res.keys() : avL0Rate = float(rundb_res["avL0PhysRate"])
+
+                # Hlt Rate
+                avHltRate = 0
+                if "avHltPhysRate" in rundb_res.keys() : avHltRate = float(rundb_res["avHltPhysRate"])
+
+                # deadtime
+                avPhysDeadtime = 0
+                if "avPhysDeadTime" in rundb_res.keys() : avPhysDeadtime = float(rundb_res["avPhysDeadTime"])
+
+                # Mag current
+                magCurrent = 0
+                if "magnetCurrent" in rundb_res.keys() : magCurrent = float(rundb_res["magnetCurrent"])
+
                 # Fill data for this run
                 runfilldata["RunData"][run] = { "Start" : start,
                                                 "Stop"  : stop,
                                                 "Fill"  : fill,
-                                                "FieldPolarity" : polarity }
-                
+                                                "FieldPolarity" : polarity,
+                                                "PhysEvents" : nEventsPhys,
+                                                "Luminosity" : lumi,
+                                                "MooreVersion" : mooreV,
+                                                "AvInstLuminosity" : avInLumi,
+                                                "AvMu"           : avMu,
+                                                "BetaStar"       : betaStar,
+                                                "AvL0PhysRate"   : avL0Rate,
+                                                "AvHLTPhysRate"  : avHltRate,
+                                                "AvPhysDeadtime" : avPhysDeadtime,
+                                                "MagnetCurrent"  : magCurrent,
+                                                "TCK" : tck }
+               
                 if fill not in runfilldata["FillData"].keys():
                     runfilldata["FillData"][fill] = { "Start" : start,
                                                       "Stop"  : stop,
                                                       "FieldPolarity" : polarity,
-                                                      "Files" : []  }
+                                                      "TCK" : tck,
+                                                      "MooreVersion" : mooreV,
+                                                      "BetaStar" : betaStar,
+                                                      "PhysEvents" : nEventsPhys,
+                                                      "Luminosity" : lumi,
+                                                      "MagnetCurrent" : magCurrent,
+                                                      "Files" : [] }
                 fillData = runfilldata["FillData"][fill]
                 if fillData["Start"] > start : fillData["Start"] = start
                 if fillData["Stop"]  < stop  : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
-                print " -> Run", run, "Fill", fill, polarity, "is from", start, "to", stop
+                print " -> Run", run, "Fill", fill, polarity, tck, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
                 if unixEndTime > tmpTime :
                     tmpTime = unixEndTime
@@ -378,10 +457,23 @@ def getRunFillData(rootfiles):
 
         # Pickle the caches
         pickleDict(RootFileNameMD5CacheName,rootFileMD5Cache)
-        pickleDict(RunCacheName,runTimeCache)
+        pickleDict(BookKeepingDBCacheName,bkDBCache)
+        pickleDict(RunDBCacheName,runDBCache)
 
     # Return the Run Time Information
     return runfilldata
+
+def getRunDBInfo(run):
+
+    import urllib, json
+
+    # Read from the Run DB via the web
+    data = urllib.urlopen("http://lbrundb.cern.ch/api/run/"+str(run)).read()
+
+    # convert to a python dictionary
+    res = json.loads(data)
+
+    return res
 
 def getFieldPolarity(res):
 
@@ -678,6 +770,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
     # Run range for including in the fitted data
     minMaxFillForFit = [0,9999999]  # All fills/runs
 
+    # Data for HPD occupancy text file
+    hpdOccForText = { }
+
     for hpd,data in plotData.iteritems():
 
         # HPD copy number
@@ -830,6 +925,10 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                     yPlots[polarity].Fill( values['ShiftY'][0] )
                     rPlots[polarity].Fill( values['Radius'][0] )
                     oPlots[polarity].Fill( values['Occupancy'][0] )
+
+                    # text data for occupancies
+                    if hpd not in hpdOccForText.keys() : hpdOccForText[hpd] = { }
+                    hpdOccForText[hpd][fl] = values['Occupancy'][0]
                         
             else :
 
@@ -999,6 +1098,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
                     oPlotsS[polarity].Draw()
                     oPlots[polarity].Draw('SAME')
                 if createHPDOccUpdate : printCanvas()
+
                 # ======================================================================================
 
                 # Save fit results
@@ -1007,6 +1107,9 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
 
     # Close the PDF 
     printCanvas(']')
+
+    # Create text files
+    if createHPDOccUpdate : createHPDOccTextFile(type,hpdOccForText,basename,runFillData)
 
     # Resort the data as run as primary key
     alignData = { }
@@ -1217,6 +1320,49 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
             print " -> Skipping", type, flag, "from DB slice update"
 
     print "Done ..."
+
+def createHPDOccTextFile(type,hpdOccForText,basename,runFillData):
+
+    textFileName = "results/"+basename+".txt"
+    print "Opening text file", textFileName
+    textFile = open(textFileName,'w')
+
+    line = "Run Fill Polarity MooreVersion TCK PhysEvents AvLumi AvMu BetaStar AvL0PhysRate AvHLTPhysRate AvPhysDeadtime MagnetCurrent StartDate StartTime "
+    hpds = [ ]
+    for hpd in hpdOccForText.keys() :
+        line += "HPD" + str(hpd) + " "
+        hpds += [hpd]
+    textFile.write(line+"\n")
+
+    fls = [ ]
+    for hpd in hpdOccForText.keys() :
+        for fl in hpdOccForText[hpd]:
+            if fl not in fls : fls += [fl]
+
+    for fl in sorted(fls) :
+        line  = str(fl) + " "
+        line += str(runFillData[type+"Data"][fl]["Fill"]) + " "
+        line += str(runFillData[type+"Data"][fl]["FieldPolarity"]) + " "
+        line += str(runFillData[type+"Data"][fl]["MooreVersion"]) + " "
+        line += str(runFillData[type+"Data"][fl]["TCK"]) + " "
+        line += str(runFillData[type+"Data"][fl]["PhysEvents"]) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["AvInstLuminosity"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["AvMu"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["BetaStar"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["AvL0PhysRate"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["AvHLTPhysRate"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["AvPhysDeadtime"] ) + " "
+        line += str( '%g' % runFillData[type+"Data"][fl]["MagnetCurrent"] ) + " "
+        line += str(runFillData[type+"Data"][fl]["Start"]) + " "
+        for hpd in hpds :
+            data = 0
+            if hpd in hpdOccForText.keys() :
+                if fl in hpdOccForText[hpd].keys():
+                    data = hpdOccForText[hpd][fl]
+            line += str('%g' % data) + " "
+        textFile.write(line+"\n")
+
+    print "Text Summary Done ..."
 
 def magFromRadius(radius):
     if radius == 0 :
