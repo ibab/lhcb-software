@@ -469,85 +469,85 @@ StatusCode MuonIDAlg::initialize() {
         if (msgLevel(MSG::DEBUG) ) debug()  << "Initialise: Reading parameters for DLL_flag=1 mode from conditions database:"  
                                             << endmsg;
         m_nMupBinsR1 = nMupBins->param<int>("nMupBinsR1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> nMupBinsR1:" << m_nMupBinsR1 << endmsg;
         m_nMupBinsR2 = nMupBins->param<int>("nMupBinsR2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> nMupBinsR2:" << m_nMupBinsR2 << endmsg;
         m_nMupBinsR3 = nMupBins->param<int>("nMupBinsR3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> nMupBinsR3:" << m_nMupBinsR3 << endmsg;
         m_nMupBinsR4 = nMupBins->param<int>("nMupBinsR4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> nMupBinsR4:" << m_nMupBinsR4 << endmsg;
 
         m_MupBinsR1 = MupBins->paramVect<double>("MupBinsR1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MupBinsR1:" << m_MupBinsR1 << endmsg;
         m_MupBinsR2 = MupBins->paramVect<double>("MupBinsR2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MupBinsR2:" << m_MupBinsR2 << endmsg;
         m_MupBinsR3 = MupBins->paramVect<double>("MupBinsR3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MupBinsR3:" << m_MupBinsR3 << endmsg;
         m_MupBinsR4 = MupBins->paramVect<double>("MupBinsR4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
 
         // Muons - Region1:
         m_MuLanParR1_1 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_1:" << m_MuLanParR1_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_1:" << m_MuLanParR1_1 << endmsg;
         m_MuLanParR1_2 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_2:" << m_MuLanParR1_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_2:" << m_MuLanParR1_2 << endmsg;
         m_MuLanParR1_3 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_3:" << m_MuLanParR1_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_3:" << m_MuLanParR1_3 << endmsg;
         m_MuLanParR1_4 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_4:" << m_MuLanParR1_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_4:" << m_MuLanParR1_4 << endmsg;
         m_MuLanParR1_5 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_5:" << m_MuLanParR1_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_5:" << m_MuLanParR1_5 << endmsg;
         m_MuLanParR1_6 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_6");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_6:" << m_MuLanParR1_6 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_6:" << m_MuLanParR1_6 << endmsg;
         m_MuLanParR1_7 = MuLandauParameterR1->paramVect<double>("MuLandauParameterR1_7");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR1_7:" << m_MuLanParR1_7 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR1_7:" << m_MuLanParR1_7 << endmsg;
 
         // Muons - Region2:
         m_MuLanParR2_1 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_1:" << m_MuLanParR2_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR2_1:" << m_MuLanParR2_1 << endmsg;
         m_MuLanParR2_2 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_2:" << m_MuLanParR2_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR2_2:" << m_MuLanParR2_2 << endmsg;
         m_MuLanParR2_3 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_3:" << m_MuLanParR2_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR2_3:" << m_MuLanParR2_3 << endmsg;
         m_MuLanParR2_4 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_4:" << m_MuLanParR2_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR2_4:" << m_MuLanParR2_4 << endmsg;
         m_MuLanParR2_5 = MuLandauParameterR2->paramVect<double>("MuLandauParameterR2_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR2_5:" << m_MuLanParR2_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR2_5:" << m_MuLanParR2_5 << endmsg;
 
         // Muons - Region3:
         m_MuLanParR3_1 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_1:" << m_MuLanParR3_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR3_1:" << m_MuLanParR3_1 << endmsg;
         m_MuLanParR3_2 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_2:" << m_MuLanParR3_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR3_2:" << m_MuLanParR3_2 << endmsg;
         m_MuLanParR3_3 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_3:" << m_MuLanParR3_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR3_3:" << m_MuLanParR3_3 << endmsg;
         m_MuLanParR3_4 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_4:" << m_MuLanParR3_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR3_4:" << m_MuLanParR3_4 << endmsg;
         m_MuLanParR3_5 = MuLandauParameterR3->paramVect<double>("MuLandauParameterR3_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR3_5:" << m_MuLanParR3_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR3_5:" << m_MuLanParR3_5 << endmsg;
 
         // Muons - Region4:
         m_MuLanParR4_1 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_1:" << m_MuLanParR4_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR4_1:" << m_MuLanParR4_1 << endmsg;
         m_MuLanParR4_2 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_2:" << m_MuLanParR4_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR4_2:" << m_MuLanParR4_2 << endmsg;
         m_MuLanParR4_3 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_3:" << m_MuLanParR4_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR4_3:" << m_MuLanParR4_3 << endmsg;
         m_MuLanParR4_4 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_4:" << m_MuLanParR4_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR4_4:" << m_MuLanParR4_4 << endmsg;
         m_MuLanParR4_5 = MuLandauParameterR4->paramVect<double>("MuLandauParameterR4_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> MuLandauParameterR4_5:" << m_MuLanParR4_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> MuLandauParameterR4_5:" << m_MuLanParR4_5 << endmsg;
 
 
         // Non-Muons - Region 1-2-3-4:
         m_NonMuLanParR1 = NonMuLandauParameterR1->paramVect<double>("NonMuLandauParameterR1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> NonMuLandauParameterR1:" << m_NonMuLanParR1 << endmsg;
         m_NonMuLanParR2 = NonMuLandauParameterR2->paramVect<double>("NonMuLandauParameterR2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR2:" << m_NonMuLanParR2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> NonMuLandauParameterR2:" << m_NonMuLanParR2 << endmsg;
         m_NonMuLanParR3 = NonMuLandauParameterR3->paramVect<double>("NonMuLandauParameterR3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR3:" << m_NonMuLanParR3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> NonMuLandauParameterR3:" << m_NonMuLanParR3 << endmsg;
         m_NonMuLanParR4 = NonMuLandauParameterR4->paramVect<double>("NonMuLandauParameterR4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> NonMuLandauParameterR4:" << m_NonMuLanParR4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> NonMuLandauParameterR4:" << m_NonMuLanParR4 << endmsg;
 
         // step for the integral
         m_x = step->param<double>("step");
@@ -620,61 +620,61 @@ StatusCode MuonIDAlg::initialize() {
         if (msgLevel(MSG::DEBUG) ) debug()  << "==> MupBinsR4:" << m_MupBinsR4 << endmsg;
 	
 	m_tanhScaleFactorsR1 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR1:" << m_tanhScaleFactorsR1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhScaleFactorsR1:" << m_tanhScaleFactorsR1 << endmsg;
 	m_tanhScaleFactorsR2 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR2:" << m_tanhScaleFactorsR2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhScaleFactorsR2:" << m_tanhScaleFactorsR2 << endmsg;
 	m_tanhScaleFactorsR3 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR3:" << m_tanhScaleFactorsR3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhScaleFactorsR3:" << m_tanhScaleFactorsR3 << endmsg;
 	m_tanhScaleFactorsR4 = tanhScaleFactors->paramVect<double>("tanhScaleFactorsR4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhScaleFactorsR4:" << m_tanhScaleFactorsR4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhScaleFactorsR4:" << m_tanhScaleFactorsR4 << endmsg;
 	
 	m_tanhCumulHistoMuonR1_1 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_1:" << m_tanhCumulHistoMuonR1_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_1:" << m_tanhCumulHistoMuonR1_1 << endmsg;
 	m_tanhCumulHistoMuonR1_2 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_2:" << m_tanhCumulHistoMuonR1_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_2:" << m_tanhCumulHistoMuonR1_2 << endmsg;
 	m_tanhCumulHistoMuonR1_3 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_3:" << m_tanhCumulHistoMuonR1_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_3:" << m_tanhCumulHistoMuonR1_3 << endmsg;
 	m_tanhCumulHistoMuonR1_4 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_4:" << m_tanhCumulHistoMuonR1_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_4:" << m_tanhCumulHistoMuonR1_4 << endmsg;
 	m_tanhCumulHistoMuonR1_5 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_5:" << m_tanhCumulHistoMuonR1_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_5:" << m_tanhCumulHistoMuonR1_5 << endmsg;
 	m_tanhCumulHistoMuonR1_6 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_6");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_6:" << m_tanhCumulHistoMuonR1_6 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_6:" << m_tanhCumulHistoMuonR1_6 << endmsg;
 	m_tanhCumulHistoMuonR1_7 = tanhCumulHistoMuonR1->paramVect<double>("tanhCumulHistoMuonR1_7");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR1_7:" << m_tanhCumulHistoMuonR1_7 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR1_7:" << m_tanhCumulHistoMuonR1_7 << endmsg;
 
 	m_tanhCumulHistoMuonR2_1 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_1:" << m_tanhCumulHistoMuonR2_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR2_1:" << m_tanhCumulHistoMuonR2_1 << endmsg;
 	m_tanhCumulHistoMuonR2_2 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_2:" << m_tanhCumulHistoMuonR2_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR2_2:" << m_tanhCumulHistoMuonR2_2 << endmsg;
 	m_tanhCumulHistoMuonR2_3 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_3:" << m_tanhCumulHistoMuonR2_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR2_3:" << m_tanhCumulHistoMuonR2_3 << endmsg;
 	m_tanhCumulHistoMuonR2_4 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_4:" << m_tanhCumulHistoMuonR2_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR2_4:" << m_tanhCumulHistoMuonR2_4 << endmsg;
 	m_tanhCumulHistoMuonR2_5 = tanhCumulHistoMuonR2->paramVect<double>("tanhCumulHistoMuonR2_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR2_5:" << m_tanhCumulHistoMuonR2_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR2_5:" << m_tanhCumulHistoMuonR2_5 << endmsg;
 
 	m_tanhCumulHistoMuonR3_1 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_1:" << m_tanhCumulHistoMuonR3_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR3_1:" << m_tanhCumulHistoMuonR3_1 << endmsg;
 	m_tanhCumulHistoMuonR3_2 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_2:" << m_tanhCumulHistoMuonR3_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR3_2:" << m_tanhCumulHistoMuonR3_2 << endmsg;
 	m_tanhCumulHistoMuonR3_3 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_3:" << m_tanhCumulHistoMuonR3_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR3_3:" << m_tanhCumulHistoMuonR3_3 << endmsg;
 	m_tanhCumulHistoMuonR3_4 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_4:" << m_tanhCumulHistoMuonR3_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR3_4:" << m_tanhCumulHistoMuonR3_4 << endmsg;
 	m_tanhCumulHistoMuonR3_5 = tanhCumulHistoMuonR3->paramVect<double>("tanhCumulHistoMuonR3_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR3_5:" << m_tanhCumulHistoMuonR3_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR3_5:" << m_tanhCumulHistoMuonR3_5 << endmsg;
 
 	m_tanhCumulHistoMuonR4_1 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_1");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_1:" << m_tanhCumulHistoMuonR4_1 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_1:" << m_tanhCumulHistoMuonR4_1 << endmsg;
 	m_tanhCumulHistoMuonR4_2 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_2");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_2:" << m_tanhCumulHistoMuonR4_2 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_2:" << m_tanhCumulHistoMuonR4_2 << endmsg;
 	m_tanhCumulHistoMuonR4_3 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_3");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_3:" << m_tanhCumulHistoMuonR4_3 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_3:" << m_tanhCumulHistoMuonR4_3 << endmsg;
 	m_tanhCumulHistoMuonR4_4 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_4");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_4:" << m_tanhCumulHistoMuonR4_4 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_4:" << m_tanhCumulHistoMuonR4_4 << endmsg;
 	m_tanhCumulHistoMuonR4_5 = tanhCumulHistoMuonR4->paramVect<double>("tanhCumulHistoMuonR4_5");
-        if (msgLevel(MSG::DEBUG) ) debug()  << "==> tanhCumulHistoMuonR4_5:" << m_tanhCumulHistoMuonR4_5 << endmsg;
+        if (msgLevel(MSG::VERBOSE) ) verbose()  << "==> tanhCumulHistoMuonR4_5:" << m_tanhCumulHistoMuonR4_5 << endmsg;
         }
         else {  
           warning()  << "Initialise: Parameters for dllFlag==4 MuonProb not found in Conditions database."
@@ -965,7 +965,7 @@ StatusCode MuonIDAlg::initialize() {
   if ( sc2.isFailure() ) return Error(" Normalizations of Landaus not properly set ",sc2);
 
   // Print tanh(dist2) parameters
-  if((4 == m_dllFlag || 3 == m_dllFlag) && msgLevel(MSG::DEBUG)){
+  if((4 == m_dllFlag || 3 == m_dllFlag) && msgLevel(MSG::VERBOSE)){
     debug() << "Initialize: tanh(dist2) parameters:" << endmsg;
     debug() << "Initialize: m_nMupBinsR1: " << m_nMupBinsR1 << endmsg;
     for(int iR=0;iR<4;++iR){
@@ -2104,7 +2104,7 @@ StatusCode MuonIDAlg::preSelection(LHCb::MuonPID * pMuid, bool &passed){
 //=============================================================================
 StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
 
-  if (msgLevel(MSG::DEBUG) ) debug()  << "setCoords:"  << endmsg;
+  if (msgLevel(MSG::VERBOSE) ) verbose()  << "setCoords:"  << endmsg;
   int station;
   for(station = 0 ; station < m_NStation ; station++){
     int region;
@@ -2112,7 +2112,7 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
 
       if( !m_coordPos[station*m_NRegion + region].empty() ){
 
-      if (msgLevel(MSG::DEBUG) ) debug()  << "           station " << station << " region " << region
+      if (msgLevel(MSG::VERBOSE) ) verbose()  << "           station " << station << " region " << region
                                           << " mapInRegion: " << m_mudet->mapInRegion(station,region ) << endmsg;
 
         std::vector<coordExtent_>::const_iterator itPos;
@@ -2134,13 +2134,13 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
 
-            if (msgLevel(MSG::DEBUG) ) {
-              debug()  << "              FOIfactor : " << m_foifactor << endmsg;
+            if (msgLevel(MSG::VERBOSE) ) {
+              verbose()  << "              FOIfactor : " << m_foifactor << endmsg;
 
-              debug()  << "              ratioX = " << fabs( x - m_trackX[station])
-                       << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = "
+              verbose()  << "              ratioX = " << fabs( x - m_trackX[station])
+                       << " ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = "
                        << foiXDim <<" foiYDim = " << foiYDim <<endmsg;
-              debug()  << "              padX = " << dx << " padY = " << dy << endmsg;
+              verbose()  << "              padX = " << dx << " padY = " << dy << endmsg;
             }
 
             // it is in the window
@@ -2151,8 +2151,8 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
             bool uncrossed = ((m_mudet->mapInRegion(station,region ) != 1) && ((itPos->m_pCoord)->uncrossed()));
 
             if ( !uncrossed ) m_occupancyWithCrossing[station]++; // Occupancy requiring x,y crossing
-            if (msgLevel(MSG::DEBUG) ) {
-                debug()  << "              Checking crossing: uncrossed: " << ((itPos->m_pCoord)->uncrossed()) << " add hit? " << !uncrossed
+            if (msgLevel(MSG::VERBOSE) ) {
+                verbose()  << "              Checking crossing: uncrossed: " << ((itPos->m_pCoord)->uncrossed()) << " add hit? " << !uncrossed
                          << " m_occupancyAll = " << m_occupancyAll[station]
                          << " m_occupancyWithCrossing = " << m_occupancyWithCrossing[station] << endmsg;
             }
@@ -2161,7 +2161,7 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
             if ( !m_use_uncrossed && uncrossed ) continue;
 	    m_muonMap[pMuid].push_back(itPos->m_pCoord);
 
-            if (msgLevel(MSG::DEBUG) )  debug()  << "              m_muonMap size: " << m_muonMap[pMuid].size()  << endmsg;
+            if (msgLevel(MSG::VERBOSE) )  verbose()  << "              m_muonMap size: " << m_muonMap[pMuid].size()  << endmsg;
 
             // also need track angle in X in M2-M3 for angle matching
             int nCoord = m_occupancyAll[station];
@@ -2409,12 +2409,12 @@ int MuonIDAlg::GetPbin(double p, int region){
   case 3:{ pBins = &m_MupBinsR3; break;}
   case 4:{ pBins = &m_MupBinsR4; break;}
   }
-  if (msgLevel(MSG::DEBUG) ) debug() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " 
+  if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin: region+1 " << region+1 << " p " <<  p << " pBins vector address: " 
                                      << pBins << endmsg;
   if(0 == pBins)
     Warning("GetPbin: No match to a pBins vector. Null pBins pointer",StatusCode::SUCCESS).ignore();
   for(unsigned int iBin=0; iBin<pBins->size();++iBin){
-    if (msgLevel(MSG::DEBUG) ) debug() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
+    if (msgLevel(MSG::VERBOSE) ) verbose() << "GetPbin:\tiBin " <<  iBin << " pBins[iBin] " << (*pBins)[iBin] << endmsg;
     if(p < (*pBins)[iBin]) return iBin;
   }
   return pBins->size();  // last bin. npBins goes from 0 to (Gaias npBin)+1
@@ -2874,12 +2874,12 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
   mtrack->setHistory(LHCb::Track::MuonID);
 
 
-  mtrack->addInfo(300,Quality);
-  mtrack->addInfo(301,mupid.PreSelMomentum());
-  mtrack->addInfo(302,mupid.InAcceptance());
-  mtrack->addInfo(303,mupid.IsMuonLoose());
-  mtrack->addInfo(304,mupid.IsMuon());
-  mtrack->addInfo(310,mupid.IsMuonTight());
+  mtrack->addInfo(LHCb::Track::MuonChi2perDoF,Quality);
+  mtrack->addInfo(LHCb::Track::MuonMomentumPreSel,mupid.PreSelMomentum());
+  mtrack->addInfo(LHCb::Track::MuonInAcceptance,mupid.InAcceptance());
+  mtrack->addInfo(LHCb::Track::IsMuonLoose,mupid.IsMuonLoose());
+  mtrack->addInfo(LHCb::Track::IsMuon,mupid.IsMuon());
+  mtrack->addInfo(LHCb::Track::IsMuonTight,mupid.IsMuonTight());
 
   double Dist=-1.;
   double DLL=-1.;
@@ -2892,14 +2892,14 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
   if (msgLevel(MSG::DEBUG) ) debug()<< "makeMuonTrack:: Key, p,Dist, DLL, NShared: "
                                     <<mtrack->key()<< " " << mtrack->p() << " " << Dist<<" "<<DLL<<" "<<NShared<<endmsg;
 
-  mtrack->addInfo(305,Dist);
-  mtrack->addInfo(306,DLL);
-  mtrack->addInfo(307,NShared);
+  mtrack->addInfo(LHCb::Track::MuonDist2,Dist);
+  mtrack->addInfo(LHCb::Track::MuonDLL,DLL);
+  mtrack->addInfo(LHCb::Track::MuonNShared,NShared);
 
-  double CLQuality=-1.;
-  double CLArrival=-1.;
-  mtrack->addInfo(308,CLQuality);
-  mtrack->addInfo(309,CLArrival);
+  //double CLQuality=-1.;
+  //double CLArrival=-1.;
+  //mtrack->addInfo(LHCb::Track::MuonCLQuality,CLQuality);
+  //mtrack->addInfo(LHCb::Track::MuonCLArrival,CLArrival);
 
 
   return mtrack;

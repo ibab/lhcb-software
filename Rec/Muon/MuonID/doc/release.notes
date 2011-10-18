@@ -4,6 +4,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= MuonID v9r1 2011-08-31 =========================
+
+! 2011-10-18 - J. Helder Lopes
+ - Add additional info to Muon tracks using enums instead of hardcoded numbers.
+ - Move the level of many log messages from DEBUG to VERBOSE.
+
 ! 2011-08-29 - Roel Aaij
  - Only look for RecHeader when the MSG level is DEBUG and never warn about
    it's absence.
