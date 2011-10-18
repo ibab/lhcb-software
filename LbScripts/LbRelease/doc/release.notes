@@ -1,6 +1,10 @@
+2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v4r5
+
 2011-10-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	Major clean up of Pydev Code Analysis warningsf for
+	Major clean up of Pydev Code Analysis warnings for
 	* LbRelease/python/LbRelease/add_DN_LFC.py
 	* LbRelease/python/LbRelease/AfsProjectSpace.py
 	* LbRelease/python/LbRelease/LHCbNightlies.py

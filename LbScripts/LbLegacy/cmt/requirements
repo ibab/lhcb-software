@@ -1,5 +1,5 @@
 package LbLegacy
-version v4r4p1
+version v4r5
 
 use LbScriptsPolicy v*
 use LbUtils v*

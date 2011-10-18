@@ -1,3 +1,7 @@
+2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r5
+
 2011-10-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: removed DIRAC/LHCbDIRAC hacks

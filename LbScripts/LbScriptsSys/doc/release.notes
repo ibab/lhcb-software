@@ -1,3 +1,77 @@
+2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r5
+
+	LbConfiguration:
+	* python/LbConfiguration/LbLogin.py:
+	- forces the usage of the usage of the LCG python if a specific version
+	  of python is requested.
+	- python/LbConfiguration/LbLogin.py: added the "-w" option in order to do partial selection of the CMTCONFIG. For
+	  example "LbLogin -w i686" will select the best i686 CMTCONFIG for the platform. The order of selection is
+	  defined in LbConfiguration.Platform (EXPERIMENTAL).
+	* python/LbConfiguration/SetupProject.py (Marco Cl.):
+	- fixed bug #86875 Added the possibility to pretend we are on CVMFS via an environment
+	  variable (SP_FAKE_CVMFS).
+	- removed DIRAC/LHCbDIRAC hacks
+	* python/LbConfiguration/Package.py: 
+	- added Det/STSQLDDDB in the list of supported packages.
+	- added SVN fallback to getPackage.
+	- added security check when retrieving packages from SVN. It checks that
+	  the containing project is in the supported ones list.
+	- added flag to prevent exception raising.
+	- filterout external projects for SVN searching
+	* python/LbConfiguration/Project.py: 
+	- added fallback on SVN for getProject function.
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py:
+	- factored out the fallback post install script for LbScripts
+        - factored out the post manipulation of data packages.
+	- added hook for post installation of LbScripts
+	- wrapped os.system call to rather use the subprocess module when possible.
+	- added environment passing to systemCall
+	- added infrastructure in order to call an update script each time that that project
+	  is listed in the dependencies.
+	- implemented -t option to pass custom temporary base directory. It is then randomly seeded.
+	  Please note that the safest is to used the canonical system one. ie: "-t $TMPDIR" or "-t /tmp"
+	- added post install action for data packages. Now it also tries to look for PostInstall.py in <packgage>/<ver>/cmt
+	- registered an "atexit" function in order to do a final removal of the temporary directory if mdtemp was used.
+	- use the SVN fallback for the project configuration.
+	- implement cache for project and package configuration. This
+	  prevent too many useless connection to SVN if the package/project is not known. To be
+	  noted that a proper abstraction of the configuration from both package and projects would
+	  be better.
+	- fixed the safeMove function that treats correctly links (at the first level) that are moved
+	  across filesystems.
+	- added safeMakeDirs that removes correctly broken links on the target directory.
+	- replaced plain mkdirs with safeMakeDirs that first remove broken links if it exists.
+	- factored out the md5 extraction to extractMD5SumFromFile
+	- use the new getPackage version (with SVN fallback) instead of the plain package_names for the
+	  datapackage identification.
+	- generalised getMD5FileName. Now it also works with html files.
+	* scripts/mkMCGentar: global fix for generator comming from a different location than the
+	regular MCGenerators directory.
+	* scripts/mkLCGCMTtar: converted binary type for gcc. This one exposes the host tag for its binary version
+	and we need to use the target tag when building the tarballs.
+	* scripts/mkLHCbtar: added calculation of the MD5 sum for the distribution.htm file.
+
+	LbRelease:
+	* Major clean up of Pydev Code Analysis warnings
+	* python/LbRelease/GetPack.py: factored out utilities placed in LbUtils.VCS.
+
+	LbUtils:
+	* python/LbUtils/File.py: added safe remove tree function.
+	* LbUtils/python/LbUtils/Thread.py: clean up of Pydev Code Analysis warnings.
+	* python/LbUtils/File.py: added move function that treats correctly top level links.
+	* python/LbUtils/VCS.py: New file. collected various utilities from LbConfiguration.Repository
+	and LbRelease.rcs.
+	* python/LbUtils/Path.py: added function to remove entries from a given os.pathsep separated path.
+
+	LbScriptsSys:
+	* added cmt/PostInstall.py script for the generation and installation of the 
+	login scripts.
+
+
 2011-10-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/PostInstall.py: full implementation of the post-install script for LbScripts.
