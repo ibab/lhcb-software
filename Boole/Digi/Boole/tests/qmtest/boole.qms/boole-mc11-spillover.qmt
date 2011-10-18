@@ -6,8 +6,6 @@
     <text>$APPCONFIGOPTS/Boole/DataType-2011.py</text>
     <text>$APPCONFIGOPTS/Boole/EnableSpillover-50ns.py</text>
     <text>$BOOLEOPTS/MC11-Files.py</text>
-    <text>--option</text>
-    <text>from Configurables import FPEAuditor; FPEAuditor().DisableTrapFor=["VeloSim"];</text>
    </set></argument>
   <argument name="reference"><text>../refs/boole-mc11-spillover.ref</text></argument>
   <argument name="validator"><text>

@@ -7,7 +7,7 @@
     <text>$APPCONFIGOPTS/Boole/DataType-2011.py</text>
     <text>$BOOLEOPTS/MC11-Files.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; Boole().Histograms="Expert"; from Configurables import FPEAuditor; FPEAuditor().DisableTrapFor=["VeloSim"];</text>
+    <text>from Boole.Configuration import *; Boole().Histograms="Expert";</text>
    </set></argument>
   <argument name="reference"><text>../refs/boole-mc11.ref</text></argument>
   <argument name="validator"><text>

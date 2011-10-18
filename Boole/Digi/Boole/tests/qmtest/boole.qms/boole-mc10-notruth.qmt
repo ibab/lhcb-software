@@ -8,9 +8,39 @@
     <text>--option</text>
     <text>from Boole.Configuration import *; Boole().DigiType="Minimal";</text>
   </set></argument>
-  <argument name="reference"><text>../refs/boole-mc10-notruth.ref</text></argument>
+  <argument name="reference"><text>../refs/boole-mc10.ref</text></argument>
   <argument name="validator"><text>
-from Boole.QMTest.BooleExclusions import preprocessor
-validateWithReference(preproc = preprocessor)
+from Boole.QMTest.BooleExclusions import preprocessor as BoolePreprocessor
+from GaudiTest import FilePreprocessorSequence
+preprocessor = BoolePreprocessor + \
+  RegexpReplacer(when = "RootHistSvc          INFO Writing ROOT histograms to", orig = r'ev-histos.root', repl = r'ev-expert-histos.root') + \
+  LineSkipper(["LinkTrSeq            INFO Member list:"]) + \
+  LineSkipper(["LinkRichSeq          INFO Member list:"]) + \
+  LineSkipper(["Rich::MC::MCRic...   INFO Will only store MCParticle references for main event"]) + \
+  LineSkipper(["LinkMuonSeq          INFO Member list:"]) + \
+  LineSkipper(["LinkL0Seq            INFO Member list:"]) + \
+  LineSkipper(["MoniOTSeq            INFO Member list: MCOTDepositMonitor"]) + \
+  LineSkipper(["ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255"]) + \
+  LineSkipper(["PrepareDIGI          INFO Member list: "]) + \
+  RegexpReplacer(when = "DigiWriter           INFO Data source: EventDataSvc output: DATAFILE=", orig = r'ev-Minimal.digi', repl = r'ev.digi') + \
+  RegexpReplacer(when = "RawWriter            INFO Data source: EventDataSvc output: DATAFILE=", orig = r'ev-Minimal.mdf', repl = r'ev.mdf') + \
+  LineSkipper(["OTTimeClassific..."]) + \
+  LineSkipper(["MCRichDigitSumm..."]) + \
+  RegexpReplacer(when = "LHCb::RawDataCn...   INFO ", orig = r'ev-Minimal.mdf', repl = r'ev.mdf') + \
+  RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics", orig = r'0/0/2/0', repl = r'0/0/1/0') + \
+  LineSkipper(["ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 63'"]) + \
+  RegexpReplacer(when = "DataOnDemandSvc      INFO Handled ", orig = r'1070', repl = r'1110')
+histPreprocessor = \
+  RegexpReplacer(when = "MoniOTSeq            INFO Member list", orig = r'MoniOTSeq            INFO Member list: MCOTDepositMonitor', repl = r'OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1') + \
+  RegexpReplacer(when = "LinkL0Seq            INFO Member list", orig = r'LinkL0Seq            INFO Member list:', repl = r'OTTimeChecker     SUCCESS Booked 12 Histogram(s) : 1D=12') + \
+  RegexpReplacer(when = "LinkMuonSeq          INFO Member list", orig = r'LinkMuonSeq          INFO Member list:', repl = r'OTTimeClassific...SUCCESS Booked 2 Histogram(s) : 1D=1 2D=1') + \
+  RegexpReplacer(when = "ITClusterMonitor  SUCCESS Booked ", orig = r'14 Histogram\(s\) : 1D=9 2D=4 1DProf=1', repl = r'1595 Histogram(s) : 1D=1581 2D=8 1DProf=5 2DProf=1') + \
+  RegexpReplacer(when = "TTClusterMonitor  SUCCESS Booked ", orig = r'18 Histogram\(s\) : 1D=13 2D=4 1DProf=1', repl = r'1425 Histogram(s) : 1D=1411 2D=13 2D=8 1DProf=5 2DProf=1') + \
+  RegexpReplacer(when = "MCTTDepositMonitorSUCCESS Booked ", orig = r'4 Histogram\(s\) : 1D=4', repl = r'6 Histogram(s) : 1D=4 2D=2') + \
+  RegexpReplacer(when = "MCITDepositMonitorSUCCESS Booked ", orig = r'4 Histogram\(s\) : 1D=4', repl = r'7 Histogram(s) : 1D=4 2D=3')
+validateWithReference(stdout=histPreprocessor(stdout), preproc=preprocessor)
 </text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>boole.boole-mc10</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
 </extension>

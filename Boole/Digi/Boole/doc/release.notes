@@ -29,7 +29,8 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
    . Add boole-2011-latestdb, tests also mc11
 
  - Changes to references to reflect changes in Boole v23r1 output:
-   . Adapt to updates in Muon spillover 
+   . Adapt to updates in Muon spillover
+   . Adapt to FPE fixes in VeloSim
 
 </PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
