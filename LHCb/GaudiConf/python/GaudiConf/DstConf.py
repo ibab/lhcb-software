@@ -413,7 +413,8 @@ class DstConf(LHCbConfigurableUser):
         if self.getProp( "DstType" ).upper() != "RDST":
             unpackMuons = UnpackTrack( name       = "UnpackMuonTracks",
                                        OutputName = "/Event/Rec/Track/Muon",
-                                       InputName  = "/Event/pRec/Track/Muon" )
+                                       InputName  = "/Event/pRec/Track/Muon",
+                                       AncestorFor= "/Event/pRec/Track/Muon" )
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
 
     def _unpackMuonPIDs(self):

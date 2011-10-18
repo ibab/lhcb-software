@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-10-18 - J. Helder Lopes
+ - Set the AncestorFor property of UnpackMuonTracks in DstConf.py to the same 
+   path as InputName, to allow the ancestor track association.
+
 !========================= GaudiConf v15r2 2011-09-27 =========================
 ! 2011-09-26 - Rob Lambert
  - Fix IOExtension problem with svcClass.
