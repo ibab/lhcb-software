@@ -320,13 +320,13 @@ def getRunFillData(rootfiles):
 
             if not res['OK'] :
                 
-                print "  -> Need to query the Bookkeeping DB ... Run", run
+                print " -> Need to query the Bookkeeping DB ... Run", run
                 from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
                 while not res['OK'] and nTries < 10:
                     nTries = nTries + 1
                     if nTries > 1 :
-                        print "   -> Problem querying DB -> Will try again after 5 secs ..."
+                        print "  -> Problem querying DB -> Will try again after 5 secs ..."
                         import time
                         time.sleep(5)
                     res = BookkeepingClient().getRunInformations(int(run))
@@ -337,7 +337,7 @@ def getRunFillData(rootfiles):
                 rundb_res = runDBCache[run]
             else:
                 # Access the RUN DB as well
-                print "  -> Need to query the Run DB ... Run", run
+                print " -> Need to query the Run DB ... Run", run
                 rundb_res = getRunDBInfo(int(run))
                 runDBCache[run] = rundb_res
                 
@@ -435,7 +435,7 @@ def getRunFillData(rootfiles):
                 if fillData["Start"] > start : fillData["Start"] = start
                 if fillData["Stop"]  < stop  : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
-                print " -> Run", run, "Fill", fill, polarity, tck, "is from", start, "to", stop
+                print "  -> Run", run, "Fill", fill, polarity, tck, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
                 if unixEndTime > tmpTime :
                     tmpTime = unixEndTime
