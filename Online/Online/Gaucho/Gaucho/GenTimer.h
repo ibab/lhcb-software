@@ -1,6 +1,7 @@
 #ifndef GENTIMER_H
 #define GENTIMER_H
 #include "RTL/rtl.h"
+#include "Gaucho/BRTL_Lock.h"
 #define TIMER_PREC_SEC 0
 #define TIMER_PREC_MILLI 1
 #define TIMER_PREC_MICRO 2
@@ -25,6 +26,7 @@ protected:
   int m_type;
   void makeDeltaT(void);
 public:
+  BRTLLock m_lock;
   GenTimer(void *arg, int period = 10000,int typ=TIMER_TYPE_PERIODIC+TIMER_MODIFYER_SYNCHRONIZED);
 // Period is in milli-seconds...
   virtual ~GenTimer(void);

@@ -74,6 +74,7 @@ void GenTimer::Start()
 
 void GenTimer::Stop()
 {
+  m_lock.lockMutex();
   if (m_thread != 0)
   {
     m_ForceExit = true;
@@ -81,6 +82,7 @@ void GenTimer::Stop()
     ::lib_rtl_join_thread(m_thread);
     m_thread = 0;
   }
+  m_lock.unlockMutex();
 }
 
 void GenTimer::makeDeltaT()
@@ -186,8 +188,10 @@ void *GenTimer::ThreadRoutine()
       status = nanosleep(&req,&req);
       if (status == 0)
       {
+        m_lock.lockMutex();
         makeDeltaT();
         timerHandler();
+        m_lock.unlockMutex();
         break;
       }
       else if (errno == EINTR)

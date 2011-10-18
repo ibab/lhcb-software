@@ -13,6 +13,5 @@ public:
   virtual ~MonTimer(void);
   void timerHandler ( void );
   void Stop();
-  BRTLLock m_lock;
 };
 #endif  // ONLINE_GAUCHO_MONTIMER_H

@@ -5,6 +5,7 @@ AddTimer::AddTimer(MonAdder *tis, int period, int typ) : GenTimer((void*)tis,per
 {
   m_owner = tis;
   m_dueTime = 0;
+  this->m_lock.m_name = m_owner->m_name+"_AddTimerLock";
 }
 
 AddTimer::~AddTimer( )
@@ -19,9 +20,7 @@ void AddTimer::timerHandler ( void )
 //  {
 //  printf("Timeout from Adder %s\n",m_owner->m_MyName.c_str());
   int arg = 1;
-  m_Lock.lockMutex();
   DimClient::sendCommandNB(m_owner->m_cmdname.c_str(),&arg,sizeof(arg));
-  m_Lock.unlockMutex();
 //    m_owner->TimeoutHandler();
 //  }
 //  catch(const std::exception& e)
@@ -37,7 +36,5 @@ void AddTimer::timerHandler ( void )
 
 void AddTimer::Stop()
 {
-  m_Lock.lockMutex();
   GenTimer::Stop();
-  m_Lock.unlockMutex();
 }

@@ -7,7 +7,6 @@ class MonAdder;
 class AddTimer : public GenTimer
 {
   MonAdder *m_owner;
-  BRTLLock m_Lock;
 public:
   AddTimer(MonAdder *tis, int period = 5, int typ = 0);
   virtual ~AddTimer(void);

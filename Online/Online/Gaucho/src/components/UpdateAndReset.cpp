@@ -486,8 +486,8 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     }
     else
     {
-       if (isFromEndOfRun)  tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root";
-       else tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
+       if (isFromEndOfRun)  tmpfile = dirName + "/" + taskName + "-0-" + timestr + "-EOR.root";
+       else tmpfile = dirName + "/" + taskName + "-0-" + timestr + ".root";
     }
    // std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
    // if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root";
