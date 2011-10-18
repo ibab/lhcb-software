@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-10-18 - Jibo He
+ - tests/TestMyStrippingLineOn2011Data.py
+  . Updated test sample to Reco12 data
+ - Removed old (files being deleted) test samples
+
 ! 2011-10-11 - Jibo He
  - tests/TestMyStrippingLineOn2011Data.py
   . Updated to use Root format test files, and new database tags. 

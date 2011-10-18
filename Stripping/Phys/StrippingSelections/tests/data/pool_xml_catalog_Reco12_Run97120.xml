@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="a6aa0dd6-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000005.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000005.raw"/>
+     </logical>
+   </File>
+
+  <File ID="78ED5170-ACE4-E011-8B89-E0CB4E553693">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000175_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000175_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="854c60a0-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000085.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000085.raw"/>
+     </logical>
+   </File>
+
+  <File ID="BC600A92-ACE4-E011-82F5-00261834B5C6">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000184_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000184_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="3568b750-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000077.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000077.raw"/>
+     </logical>
+   </File>
+
+  <File ID="43cfa1b0-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000054.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000054.raw"/>
+     </logical>
+   </File>
+
+  <File ID="208B6661-ACE4-E011-BD78-E0CB4E29C50F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000215_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000215_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="D445487F-ACE4-E011-9B74-E0CB4E29C4BA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000195_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000195_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="962CEC82-ACE4-E011-B974-E0CB4E19F96C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000149_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000149_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="84b4a208-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000033.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000033.raw"/>
+     </logical>
+   </File>
+
+  <File ID="A2D97C61-ACE4-E011-8E51-90E6BAE8CC0C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000148_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000148_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="905583ee-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000003.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000003.raw"/>
+     </logical>
+   </File>
+
+  <File ID="e7da8fb0-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000017.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000017.raw"/>
+     </logical>
+   </File>
+
+  <File ID="49b3a0d2-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000029.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000029.raw"/>
+     </logical>
+   </File>
+
+  <File ID="1E23C661-ACE4-E011-B682-E0CB4E55363B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000158_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000158_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="a7c369cc-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000062.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000062.raw"/>
+     </logical>
+   </File>
+
+  <File ID="243953FA-ABE4-E011-83AF-90E6BA19A20B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000140_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000140_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="ea2c34de-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000044.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000044.raw"/>
+     </logical>
+   </File>
+
+  <File ID="C8CDF064-ACE4-E011-820A-90E6BA19A266">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000217_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000217_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="62FBFEAC-ACE4-E011-8043-90E6BA442F21">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000189_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000189_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="80E0C777-ACE4-E011-8669-485B39800B77">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000155_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000155_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="3803FD8A-ACE4-E011-8098-E0CB4E29C51B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000186_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000186_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="3840FCD0-ACE4-E011-8222-E0CB4E29C504">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000183_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000183_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="1965b1ea-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000024.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000024.raw"/>
+     </logical>
+   </File>
+
+  <File ID="52AE337B-ACE4-E011-872D-90E6BA0D09CA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000191_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000191_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="c555dd12-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000066.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000066.raw"/>
+     </logical>
+   </File>
+
+  <File ID="E4B44D7D-ACE4-E011-BFA1-00261834B5D2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000203_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000203_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="bb289eda-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000014.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000014.raw"/>
+     </logical>
+   </File>
+
+  <File ID="0CDE155A-ACE4-E011-96B6-90E6BA442F05">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000144_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000144_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="304A1985-ACE4-E011-9BD3-90E6BA0D09B8">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000168_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000168_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="16D2FC9C-ACE4-E011-930B-90E6BA19A24A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000192_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000192_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="43d0c162-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000053.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000053.raw"/>
+     </logical>
+   </File>
+
+  <File ID="79df1baa-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000059.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000059.raw"/>
+     </logical>
+   </File>
+
+  <File ID="7475AD9F-ACE4-E011-84AA-E0CB4E1A115D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000166_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000166_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="26BF6078-ACE4-E011-8EFB-E0CB4E55363A">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000160_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000160_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="0589a72e-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000072.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000072.raw"/>
+     </logical>
+   </File>
+
+  <File ID="255806fe-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000075.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000075.raw"/>
+     </logical>
+   </File>
+
+  <File ID="821E118F-ACE4-E011-81A5-E0CB4E1A118C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000157_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000157_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="49b3fa32-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000028.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000028.raw"/>
+     </logical>
+   </File>
+
+  <File ID="60495691-ACE4-E011-8758-E0CB4E29C4BB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000182_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000182_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="A0C7DEEF-ACE4-E011-9F7E-E0CB4E5536AA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000190_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000190_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="563D106B-ACE4-E011-891A-90E6BA0D0990">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000151_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000151_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="058a72a8-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000073.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000073.raw"/>
+     </logical>
+   </File>
+
+  <File ID="f59746d2-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000070.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000070.raw"/>
+     </logical>
+   </File>
+
+  <File ID="e7da545a-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000018.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000018.raw"/>
+     </logical>
+   </File>
+
+  <File ID="198b6c5e-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000049.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000049.raw"/>
+     </logical>
+   </File>
+
+  <File ID="E08BA66A-ACE4-E011-BC70-90E6BA0D0990">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000169_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000169_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="4E5874F8-ACE4-E011-A271-E0CB4E1A114C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000138_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000138_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="364DDA83-ACE4-E011-86AD-E0CB4E29C4D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000156_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000156_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="35693158-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000078.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000078.raw"/>
+     </logical>
+   </File>
+
+  <File ID="CCF8E1FD-ACE4-E011-8B6F-E0CB4E29C4D1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000204_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000204_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="f735f550-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000095.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000095.raw"/>
+     </logical>
+   </File>
+
+  <File ID="867F1700-ADE4-E011-86C4-E0CB4E29C4D1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000198_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000198_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="2a10c2fa-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000025.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000025.raw"/>
+     </logical>
+   </File>
+
+  <File ID="c6e92e76-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000091.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000091.raw"/>
+     </logical>
+   </File>
+
+  <File ID="54786073-ACE4-E011-A2A4-E0CB4EA0A934">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000196_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000196_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="198bfca0-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000050.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000050.raw"/>
+     </logical>
+   </File>
+
+  <File ID="d524d824-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000068.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000068.raw"/>
+     </logical>
+   </File>
+
+  <File ID="E8522568-ACE4-E011-B097-E0CB4E19F973">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000216_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000216_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="74EF1517-ADE4-E011-BC0B-E0CB4E29C4D5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000200_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000200_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="66685c30-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000056.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000056.raw"/>
+     </logical>
+   </File>
+
+  <File ID="1288FECF-ACE4-E011-A28A-485B39800BF0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000199_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000199_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="d52546f6-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000067.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000067.raw"/>
+     </logical>
+   </File>
+
+  <File ID="7AB2B4F5-ACE4-E011-8262-E0CB4EA0A92E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000206_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000206_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="6E38A40F-ACE4-E011-9D87-E0CB4E1A1195">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000141_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000141_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="7560662a-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000032.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000032.raw"/>
+     </logical>
+   </File>
+
+  <File ID="0877A774-ACE4-E011-B648-E0CB4E1A1169">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000163_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000163_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="d777c646-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000041.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000041.raw"/>
+     </logical>
+   </File>
+
+  <File ID="0589f03a-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000071.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000071.raw"/>
+     </logical>
+   </File>
+
+  <File ID="f7362336-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000096.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000096.raw"/>
+     </logical>
+   </File>
+
+  <File ID="fae2fd86-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000020.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000020.raw"/>
+     </logical>
+   </File>
+
+  <File ID="F6AAEC7B-ACE4-E011-88DE-485B39800BD5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000179_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000179_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="880b35c0-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000035.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000035.raw"/>
+     </logical>
+   </File>
+
+  <File ID="a797e1ae-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000036.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000036.raw"/>
+     </logical>
+   </File>
+
+  <File ID="449EF973-ACE4-E011-92DC-90E6BAE8CC1F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000181_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000181_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="0E90C450-ADE4-E011-8261-E0CB4E1A114C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000209_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000209_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="02E6A39B-ACE4-E011-AD89-E0CB4E19F9BD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000162_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000162_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="A652F5B6-ACE4-E011-B925-E0CB4E29C4FC">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000177_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000177_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="5579d3be-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000030.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000030.raw"/>
+     </logical>
+   </File>
+
+  <File ID="d80afabe-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000069.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000069.raw"/>
+     </logical>
+   </File>
+
+  <File ID="6a03bfc8-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000082.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000082.raw"/>
+     </logical>
+   </File>
+
+  <File ID="a7c275d0-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000063.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000063.raw"/>
+     </logical>
+   </File>
+
+  <File ID="1CD75890-ACE4-E011-9BAF-485B39800B7D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000185_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000185_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="a6a9dcb2-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000004.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000004.raw"/>
+     </logical>
+   </File>
+
+  <File ID="07075214-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000047.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000047.raw"/>
+     </logical>
+   </File>
+
+  <File ID="38672116-ADE4-E011-8E00-E0CB4E29C4D5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000202_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000202_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="305dcc36-b7fd-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000099.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000099.raw"/>
+     </logical>
+   </File>
+
+  <File ID="5A8D6C92-ACE4-E011-9190-E0CB4E1A118C">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000193_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000193_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="49b44316-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000027.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000027.raw"/>
+     </logical>
+   </File>
+
+  <File ID="F232BB88-ACE4-E011-8EBD-90E6BA19A23E">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000165_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000165_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="43d106b8-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000055.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000055.raw"/>
+     </logical>
+   </File>
+
+  <File ID="6a042436-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000083.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000083.raw"/>
+     </logical>
+   </File>
+
+  <File ID="34b71456-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000051.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000051.raw"/>
+     </logical>
+   </File>
+
+  <File ID="30631ec0-b7fd-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000101.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000101.raw"/>
+     </logical>
+   </File>
+
+  <File ID="B89A2D93-ACE4-E011-8460-90E6BA442F30">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000172_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000172_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="98f5ac42-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000088.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000088.raw"/>
+     </logical>
+   </File>
+
+  <File ID="c6e9f7de-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000090.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000090.raw"/>
+     </logical>
+   </File>
+
+  <File ID="00F411A9-ACE4-E011-B735-90E6BA442F32">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000212_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000212_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="845A4AEF-ACE4-E011-9748-90E6BAE8CC08">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000210_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000210_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="04860F7F-ACE4-E011-B9C2-485B39800B9D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000178_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000178_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="cd3b96b8-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000016.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000016.raw"/>
+     </logical>
+   </File>
+
+  <File ID="9055f9d2-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000006.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000006.raw"/>
+     </logical>
+   </File>
+
+  <File ID="7233CD64-ACE4-E011-84A3-E0CB4E553644">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000159_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000159_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="4E0AEF99-ACE4-E011-9D41-E0CB4E4408F3">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000205_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000205_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="B254C4F8-ABE4-E011-9019-E0CB4E1A1149">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000146_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000146_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="a798666a-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000037.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000037.raw"/>
+     </logical>
+   </File>
+
+  <File ID="d7782168-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000042.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000042.raw"/>
+     </logical>
+   </File>
+
+  <File ID="b95d280e-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000039.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000039.raw"/>
+     </logical>
+   </File>
+
+  <File ID="36DEBE7C-ACE4-E011-9A36-E0CB4E29C505">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000176_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000176_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="0233719A-ACE4-E011-A020-485B39800BC7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000213_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000213_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="f736ad2e-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000097.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000097.raw"/>
+     </logical>
+   </File>
+
+  <File ID="196630ac-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000023.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000023.raw"/>
+     </logical>
+   </File>
+
+  <File ID="32189d3a-b7fd-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000102.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000102.raw"/>
+     </logical>
+   </File>
+
+  <File ID="84b47512-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000034.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000034.raw"/>
+     </logical>
+   </File>
+
+  <File ID="0707bcfe-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000048.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000048.raw"/>
+     </logical>
+   </File>
+
+  <File ID="fae362d0-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000021.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000021.raw"/>
+     </logical>
+   </File>
+
+  <File ID="cd3b29a8-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000015.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000015.raw"/>
+     </logical>
+   </File>
+
+  <File ID="bb283bf2-b7f9-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000013.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000013.raw"/>
+     </logical>
+   </File>
+
+  <File ID="57e3fbfa-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000080.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000080.raw"/>
+     </logical>
+   </File>
+
+  <File ID="ea2ced20-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000043.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000043.raw"/>
+     </logical>
+   </File>
+
+  <File ID="D83A739C-ACE4-E011-BF0D-485B39800BBD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000154_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000154_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="6EDBE363-ACE4-E011-B0C5-E0CB4E1A117F">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000214_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000214_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="E21F9496-ACE4-E011-A21B-90E6BA19A226">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000188_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000188_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="D6BC56A2-ACE4-E011-AB5F-E0CB4E19F975">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000208_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000208_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="32cb50e2-b7fd-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000100.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000100.raw"/>
+     </logical>
+   </File>
+
+  <File ID="D0F8D308-ACE4-E011-A034-E0CB4E29C4C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000142_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000142_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="DA65147E-ACE4-E011-82A3-00261834B575">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000150_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000150_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="0CCC9172-ACE4-E011-852E-E0CB4E1A118D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000174_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000174_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="966827d4-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000086.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000086.raw"/>
+     </logical>
+   </File>
+
+  <File ID="64E3C57E-ACE4-E011-AA95-485B39800BA0">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000161_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000161_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="B2938534-ACE4-E011-91D8-E0CB4E55367D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000207_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000207_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="F42B5152-ACE4-E011-B03C-E0CB4E29C4D5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000139_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000139_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="1964ec74-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000022.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000022.raw"/>
+     </logical>
+   </File>
+
+  <File ID="a7c2f5aa-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000064.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000064.raw"/>
+     </logical>
+   </File>
+
+  <File ID="C49B955F-ACE4-E011-99BF-E0CB4EA0A8D7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000171_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000171_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="c6ea4aae-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000092.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000092.raw"/>
+     </logical>
+   </File>
+
+  <File ID="0EFF6834-ACE4-E011-BC26-E0CB4E55367D">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000145_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000145_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="4A57507C-ACE4-E011-9E1B-E0CB4E29C4DD">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000197_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000197_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="DAB9EE5E-ACE4-E011-AD40-485B39800BDA">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000170_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000170_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="44608D78-ACE4-E011-8B38-E0CB4E4408F7">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000164_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000164_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="b731419e-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000089.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000089.raw"/>
+     </logical>
+   </File>
+
+  <File ID="66688930-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000057.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000057.raw"/>
+     </logical>
+   </File>
+
+  <File ID="57e44c68-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000081.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000081.raw"/>
+     </logical>
+   </File>
+
+  <File ID="428C2291-ACE4-E011-98B3-90E6BA442F15">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000194_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000194_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="b95cbf18-b7fa-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000038.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000038.raw"/>
+     </logical>
+   </File>
+
+  <File ID="424A6333-ACE4-E011-9076-E0CB4E19F965">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000147_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000147_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="3ED57913-ACE4-E011-BC88-485B39800C37">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000143_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000143_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="7427AB7C-ACE4-E011-97C2-E0CB4E5536A2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000180_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000180_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="79dee23e-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000058.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000058.raw"/>
+     </logical>
+   </File>
+
+  <File ID="4E5957B0-ACE4-E011-BD11-90E6BA0D09BB">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000187_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000187_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="5819F057-ACE4-E011-BAA0-90E6BA442EF1">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000167_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000167_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="35685382-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000076.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000076.raw"/>
+     </logical>
+   </File>
+
+  <File ID="C649FD8D-ACE4-E011-B50F-90E6BA19A20B">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000211_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000211_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="287CF06F-ACE4-E011-9DF6-E0CB4E29C4D2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000153_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000153_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="9667ba56-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000087.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000087.raw"/>
+     </logical>
+   </File>
+
+  <File ID="303AFC89-ACE4-E011-936C-E0CB4E29C4E2">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000201_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000201_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="9A41877E-ACE4-E011-8B9F-E0CB4E1A1177">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000173_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000173_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="e5b5bd74-b7fc-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000094.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000094.raw"/>
+     </logical>
+   </File>
+
+  <File ID="360FCA90-ACE4-E011-93B8-E0CB4E5536A5">
+     <physical>
+       <pfn filetype="ROOT" name="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000152_1.sdst?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/validation/Collision11/SDST/00012401/0000/00012401_00000152_1.sdst"/>
+     </logical>
+   </File>
+
+  <File ID="93e3cd3e-b7fb-11e0-9b5f-00259012194e">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000061.raw?svcClass=lhcbdisk"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97120/097120_0000000061.raw"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>
