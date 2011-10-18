@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v40r5 2011-10-17 ============================
+!========================= Gauss v40r5 2011-10-18 ============================
+! 2011-10-18 - Gloria Corti
+ - Use first version of DecFiles for MC11: DecFiles v24r*
+
 ! 2011-10-17 - Gloria Corti
  - Increase version
 
