@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= VeloSimulation v3r11 2011-10-18 =========================
 ! 2011-05-24 - David Hutchcroft
  - Suppress the creation of noise only channels which are later killed to 
    prevent FPE exceptions
