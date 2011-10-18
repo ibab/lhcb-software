@@ -95,15 +95,15 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
             }
          }
          // Fill tuple from vectors
-         test &= tuple->farray( prefix+"_TP_RAW", raw ,prefix+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_TP_DEC", dec ,prefix+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_TP_TAU", tau ,prefix+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_TP_IP" , ip  ,prefix+"_nTP",maxTurns );
+         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_RAW", raw ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_DEC", dec ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_TAU", tau ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_IP" , ip  ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
          BOOST_FOREACH(const MapType::value_type& entry, line_decisions) {
             test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
                                   prefix + "_nTP", maxTurns);
          }
-      } else { 
+      } else if (m_swimRepsStage == "Trigger") { //The each track part is only for the trigger
          // Loop over turning points to fill info names and insert vectors
          MapType track_infos;
          const tPoints& turns = report->turningPoints(m_swimRepsStage);
@@ -124,8 +124,8 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
          }
          // Fill tuple with infos
          BOOST_FOREACH(const MapType::value_type& entry, track_infos) {
-            test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
-                                  prefix + "_nTP", maxTurns);
+            test &= tuple->farray(prefix + "_"+m_swimRepsStage+"_TP_DEC_" + entry.first, entry.second,
+                                  prefix + "_"+m_swimRepsStage+"_nTP", maxTurns);
          }
       }
    }
