@@ -324,7 +324,7 @@ StatusCode MonitorSvc::i_start()
 
 StatusCode MonitorSvc::i_stop()
 {
-  DimLock l;
+//  DimLock l;
   if (m_CntrMgr != 0)
   {
     m_CntrMgr->open();
