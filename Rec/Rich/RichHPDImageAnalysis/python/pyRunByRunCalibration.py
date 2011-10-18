@@ -305,9 +305,9 @@ def getRunFillData(rootfiles):
         BookKeepingDBCacheName = "BookKeepingDBCache.pck.bz2"
         bkDBCache = loadDict(BookKeepingDBCacheName)
         
-        # Load the RUn DB cache
-        RunDBCacheName = "RunDBCache.pck.bz2"
-        runDBCache = loadDict(RunDBCacheName)
+        # Load the Run DB cache for Run info
+        RunDBRunCacheName = "RunDBRunCache.pck.bz2"
+        runDBRunCache = loadDict(RunDBRunCacheName)
 
         # Loop over the sorted run list and get the runfilldata
         tmpTime = 0
@@ -320,7 +320,7 @@ def getRunFillData(rootfiles):
 
             if not res['OK'] :
                 
-                print " -> Need to query the Bookkeeping DB ... Run", run
+                print " -> Need to query the Bookkeeping DB for run", run, "..."
                 from LHCbDIRAC.NewBookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
                 nTries = 0
                 while not res['OK'] and nTries < 10:
@@ -333,13 +333,13 @@ def getRunFillData(rootfiles):
                 if res['OK'] : bkDBCache[run] = res
 
             rundb_res = { }
-            if run in runDBCache.keys() :
-                rundb_res = runDBCache[run]
+            if run in runDBRunCache.keys() :
+                rundb_res = runDBRunCache[run]
             else:
                 # Access the RUN DB as well
-                print " -> Need to query the Run DB ... Run", run
-                rundb_res = getRunDBInfo(int(run))
-                runDBCache[run] = rundb_res
+                print " -> Need to query the Run DB for run", run, "...."
+                rundb_res = getRunDBRunInfo(int(run))
+                runDBRunCache[run] = rundb_res
                 
             if res['OK'] :
 
@@ -458,12 +458,12 @@ def getRunFillData(rootfiles):
         # Pickle the caches
         pickleDict(RootFileNameMD5CacheName,rootFileMD5Cache)
         pickleDict(BookKeepingDBCacheName,bkDBCache)
-        pickleDict(RunDBCacheName,runDBCache)
+        pickleDict(RunDBRunCacheName,runDBRunCache)
 
     # Return the Run Time Information
     return runfilldata
 
-def getRunDBInfo(run):
+def getRunDBRunInfo(run):
 
     import urllib, json
 
