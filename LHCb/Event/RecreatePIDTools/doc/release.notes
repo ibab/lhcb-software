@@ -4,6 +4,10 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2011-10-18 - J. Helder Lopes
+ - Add MuonPIDStatus to protoparticle additional info even if IsMuonLoose = 0, to 
+   make it consistent with associated MuonPID object.
+
 !========================= RecreatePIDTools v1r3 2011-02-22 =========================
 ! 2011-02-11 - Chris Jones
  - Fix various icc remarks
