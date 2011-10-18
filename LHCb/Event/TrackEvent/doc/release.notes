@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2011-10-18 - J. Helder Lopes
+ - Renamed and documented the additional info associated to Muon tracks in Track.xml
+
 ! 2011-10-07 - Marco Cattaneo
  - Fix trivial icc warning
 

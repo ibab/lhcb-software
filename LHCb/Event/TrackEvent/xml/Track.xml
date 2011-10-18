@@ -181,11 +181,17 @@
         <enumval name = "AdditionalInfo201"  value = "201" desc="OBSOLETE, may exist in some 2008/09 files"/>
         <enumval name = "AdditionalInfo202"  value = "202" desc="OBSOLETE, may exist in some 2008/09 files"/>
 
-        <enumval name = "AdditionalInfo300"  value = "300" desc="OBSOLETE, may exist in some 2009 files"/>
-        <enumval name = "AdditionalInfo301"  value = "301" desc="OBSOLETE, may exist in some 2009 files"/>
-        <enumval name = "AdditionalInfo302"  value = "302" desc="OBSOLETE, may exist in some 2009 files"/>
-        <enumval name = "AdditionalInfo303"  value = "303" desc="OBSOLETE, may exist in some 2009 files"/>
-        <enumval name = "AdditionalInfo304"  value = "304" desc="OBSOLETE, may exist in some 2009 files"/>
+        <enumval name = "MuonChi2perDoF"  value = "300" desc="Chi2/nDoF of muon track fit"/>
+        <enumval name = "MuonMomentumPreSel"  value = "301" desc="1 if pass Momentum pre-selection, 0 if not"/>
+        <enumval name = "MuonInAcceptance"  value = "302" desc="1 if in Muon system InAcceptance, 0 if not"/>
+        <enumval name = "IsMuonLoose"  value = "303" desc="1 if pass IsMuonLoose criteria, 0 if not"/>
+        <enumval name = "IsMuon"  value = "304" desc="1 if pass IsMuon criteria, 0 if not"/>
+        <enumval name = "MuonDist2"  value = "305" desc="Squared distance of the closest muon hit to the extrapolated track"/>
+        <enumval name = "MuonDLL"  value = "306" desc="DLL (from muon system only)"/>
+        <enumval name = "MuonNShared"  value = "307" desc="NShared (number of additional IsMuon tracks with at least one shared hit with the current track and a smaller Dist value)"/>
+        <enumval name = "MuonCLQuality"  value = "308" desc="CLQuality"/>
+        <enumval name = "MuonCLArrival"  value = "309" desc="CLArrival"/>
+        <enumval name = "IsMuonTight"  value = "310" desc="1 if pass IsMuonTight criteria, 0 if not"/>
 
        </enum>
 
