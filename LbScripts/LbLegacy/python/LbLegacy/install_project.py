@@ -404,6 +404,19 @@ def registerProjectCommand(pack_ver, flavor="PostInstall"):
     except ImportError:
         pass
 
+_updated_items = {}
+
+def isUpdated(pname, pversion):
+    updated = False
+    if (pname, pversion) in _updated_items :
+        if _updated_items[(pname, pversion)] :
+            updated = True
+
+    return updated
+
+def setUpdated(pname, pversion):
+    _updated_items[(pname, pversion)] = True
+
 
 #----------------------------------------------------------------------------
 #
@@ -1241,6 +1254,8 @@ def checkInstalledProjects(project_list):
             log.error("%s is not installed" % f)
             sys.exit("some projects are not installed. Exiting ...")
     sys.exit()
+
+
 #----------------------------------------------------------------------------------
 
 def updateLHCbProjectPath(mysiteroot):
@@ -1419,6 +1434,11 @@ def getProjectTar(tar_list, already_present_list=None):
     for fname in tar_list.keys():
         log.info('-' * line_size)
         pack_ver = getPackVer(fname)
+        if "/" in pack_ver[0] :
+            pname = pack_ver[0].split("/")[-1]
+        else :
+            pname = pack_ver[0]
+        pversion = pack_ver[1]
         if not isInstalled(fname) or overwrite_mode :
             log.debug(fname)
             if tar_list[fname] == "source":
@@ -1485,13 +1505,8 @@ def getProjectTar(tar_list, already_present_list=None):
                 if pack_ver[0] == "LBSCRIPTS" and not isPostInstallRegistered(pack_ver[0], pack_ver[1]):
                     scriptsPostInstall(pack_ver)
 
-            if "/" in pack_ver[0] :
-                prj = pack_ver[0].split("/")[-1]
-            else :
-                prj = pack_ver[0]
-            ver = pack_ver[1]
-            if isPostInstallRegistered(prj, ver) :
-                callPostInstallCommand(prj, ver)
+            if isPostInstallRegistered(pname, pversion) :
+                callPostInstallCommand(pname, pversion)
 
             setInstalled(fname)
         else :
@@ -1499,7 +1514,12 @@ def getProjectTar(tar_list, already_present_list=None):
             if already_present_list != None:
                 already_present_list.append(tar_list[fname])
 
-        registerProjectCommand(pack_ver, "Update")
+        if not isUpdated(pname, pversion) :
+            registerProjectCommand(pack_ver, "Update")
+
+        if isUpdateRegistered(pname, pversion) and not isUpdated(pname, pversion) :
+            callUpdateCommand(pname, pversion)
+            setUpdated(pname, pversion)
 
     os.chdir(here)
 
