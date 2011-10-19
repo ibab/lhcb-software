@@ -151,6 +151,7 @@ class FitAmpIncoherentSum
 
   void printLargestAmp(std::ostream& os = std::cout);
   virtual void print(std::ostream& os=std::cout) const;
+  virtual void printNonZero(std::ostream& os=std::cout) const;
 
   friend class FitAmplitude;
 

@@ -163,6 +163,15 @@ void SumOfFitAmpLists::print(std::ostream& os) const{
     if(0 != _listOfLists[i]) _listOfLists[i]->print(os);
   }
 }
+void SumOfFitAmpLists::printNonZero(std::ostream& os) const{
+  os << "SumOfFitAmpList with " << _listOfLists.size()
+     << " components:" << endl;
+  for(unsigned int i=0; i < _listOfLists.size(); i++){
+    os << " ------ " <<  i << " ----- "  << endl;
+    if(0 != _listOfLists[i]) _listOfLists[i]->printNonZero(os);
+  }
+  os << " =========================== " << endl;
+}
 
 // ------
 

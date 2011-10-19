@@ -27,6 +27,7 @@ class ILookLikeFitAmpSum
     makeEventGenerator(TRandom* rnd=gRandom)=0;
 
   virtual void print(std::ostream& os=std::cout) const=0;
+  virtual void printNonZero(std::ostream& os=std::cout) const=0;
 
   virtual DalitzBWBoxSet makeBWBoxes(TRandom* rnd=gRandom)=0;
 

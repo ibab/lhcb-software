@@ -155,6 +155,7 @@ class FitAmpSum
   }
 
   virtual void print(std::ostream& os=std::cout) const;
+  virtual void printNonZero(std::ostream& os=std::cout) const;
   virtual void printValues(std::ostream& os=std::cout) ;
 
   virtual ~FitAmpSum();

@@ -98,23 +98,22 @@ void ParticlePropertiesList::fillDirList(){
   }
 
 //   Get directory to MINTROOT
-  char * Mintevn;
+
+
+  std::string MintRoot(".");
+  char * Mintevn(0);
   Mintevn = getenv ("MINTROOT");
-  if (Mintevn==NULL)
-  {
-	  Mintevn = "UNKNOWN";
+  if (NULL != Mintevn){
+    MintRoot = Mintevn;
   }
-	//  printf ("The current path is: %s",pPath);
+
+  std::string DecFilesRoot("UNKNOWN");
   char * DecFiles;
   DecFiles = getenv ("DECFILESROOT");
-    if (DecFiles==NULL)
-    {
-    	DecFiles = "UNKNOWN";
-    }
-
-  std::string MintRoot = Mintevn;
-  std::string DecFilesRoot = DecFiles;
-
+  if (NULL != DecFiles){
+    DecFilesRoot = DecFiles;
+  }
+  
   _dirList.push_back("");
   _dirList.push_back("./");
   _dirList.push_back(DecFilesRoot+"/MintData/");

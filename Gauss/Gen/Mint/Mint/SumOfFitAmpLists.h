@@ -62,6 +62,7 @@ class SumOfFitAmpLists
     makeEventGenerator(TRandom* rnd=gRandom);
 
   virtual void print(std::ostream& os=std::cout) const;
+  virtual void printNonZero(std::ostream& os=std::cout) const;
 
 };
 

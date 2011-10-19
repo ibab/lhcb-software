@@ -245,6 +245,15 @@ void FitAmpSum::print(std::ostream& os) const{
        << endl;
   }
 }
+void FitAmpSum::printNonZero(std::ostream& os) const{
+   os << "FitAmpSum::print\n====================";
+
+  for(unsigned int i=0; i<_fitAmps.size(); i++){
+    if(_fitAmps[i]->isZero()) continue;
+    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+       << endl;
+  }
+}
 void FitAmpSum::printValues(std::ostream& os){
    os << "FitAmpSum::print\n====================";
 
