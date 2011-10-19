@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoParticleCALOBaseAlg.h
  *
  * Header file for algorithm ChargedProtoParticleCALOBaseAlg
- *
- * CVS Log :-
- * $Id: ChargedProtoParticleCALOBaseAlg.h,v 1.1 2009-08-29 20:37:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -22,10 +18,8 @@
 #include "Event/ProtoParticle.h"
 
 // from CaloUtils
-#include "CaloUtils/ICaloElectron.h"
 #include "CaloUtils/Calo2Track.h"
 #include "Event/CaloDataFunctor.h"
-#include "CaloDet/DeCalorimeter.h"
 #include "CaloUtils/CaloAlgUtils.h"
 
 // Relations

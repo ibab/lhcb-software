@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-10-19 - Marco Cattaneo
+ - Fix coverity defects 23869, 23870, 23871 (UNINIT_CTOR)
+ - Remove some unnecessary includes
+
 ! 2011-10-19 - Chris Jones
  - Update ChargedProtoParticleMoni to define a ProtoParticle as having Muon
    information when LHCb::ProtoParticle::InAccMuon is present in the 

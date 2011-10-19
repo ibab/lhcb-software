@@ -1,11 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoParticleAddEcalInfo.h
  *
  * Header file for algorithm ChargedProtoParticleAddEcalInfo
- *
- * CVS Log :-
- * $Id: ChargedProtoParticleAddEcalInfo.h,v 1.1 2009-08-29 20:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -15,8 +11,8 @@
 #ifndef GLOBALRECO_ChargedProtoParticleAddEcalInfo_H
 #define GLOBALRECO_ChargedProtoParticleAddEcalInfo_H 1
 
-// from Gaudi
 #include "ChargedProtoParticleCALOBaseAlg.h"
+#include "CaloUtils/ICaloElectron.h"
 
 /** @class ChargedProtoParticleAddEcalInfo ChargedProtoParticleAddEcalInfo.h
  *

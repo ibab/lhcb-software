@@ -26,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddVeloInfo )
 ChargedProtoParticleAddVeloInfo::
 ChargedProtoParticleAddVeloInfo( const std::string& name,
                                  ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_velodEdx(0)
 {
   // default locations from context()
   if ( context() == "HLT" || context() == "Hlt" )

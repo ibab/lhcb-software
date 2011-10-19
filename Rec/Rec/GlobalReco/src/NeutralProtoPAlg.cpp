@@ -1,4 +1,3 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.23 2010-04-14 12:50:19 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -33,7 +32,8 @@ DECLARE_ALGORITHM_FACTORY( NeutralProtoPAlg )
   , m_clusterMass_bad   ( -1.e+6 )
   , m_photonID_bad      ( -1.e+6 )
   , m_light_mode        ( false )
-  , m_first(true){
+  , m_first(true)
+  , m_estimator(0) {
 
   // declare the properties
   declareProperty ( "HyposLocations"        , m_hyposLocations   ) ;
