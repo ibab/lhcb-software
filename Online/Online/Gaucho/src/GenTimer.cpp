@@ -12,7 +12,7 @@
 #define onesec_mili (unsigned long long)(1000000)
 #endif
 #define onesec_nano (unsigned long long)(1000000000)
-
+#include "dim/dic.hxx"
 namespace
 {
   int ThreadRoutine_C(void* arg)
@@ -74,7 +74,8 @@ void GenTimer::Start()
 
 void GenTimer::Stop()
 {
-  m_lock.lockMutex();
+//  m_lock.lockMutex();
+  dim_lock();
   if (m_thread != 0)
   {
     m_ForceExit = true;
@@ -82,7 +83,8 @@ void GenTimer::Stop()
     ::lib_rtl_join_thread(m_thread);
     m_thread = 0;
   }
-  m_lock.unlockMutex();
+  dim_unlock();
+//  m_lock.unlockMutex();
 }
 
 void GenTimer::makeDeltaT()
@@ -188,10 +190,12 @@ void *GenTimer::ThreadRoutine()
       status = nanosleep(&req,&req);
       if (status == 0)
       {
-        m_lock.lockMutex();
+//        m_lock.lockMutex();
+        dim_lock();
         makeDeltaT();
         timerHandler();
-        m_lock.unlockMutex();
+        dim_unlock();
+//        m_lock.unlockMutex();
         break;
       }
       else if (errno == EINTR)
