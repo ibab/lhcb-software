@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v23r1>2011-10-19 Boole v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2011-10-20 Boole v23r1</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
@@ -11,8 +11,12 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  - No longer compatible with MC09
 
  - New tuning:
-   . Set number of beam crossings for Muon flat spillover to 250 for 2010 
-     and 1 for 2009 (default for 2011 is 1280)
+   . Remove Boole().IgnoreFlatSpillover option, now always set. Default number of
+     beam crossings for flat spillover is 1296, set to 344 for 2010, 4 for 2009
+     (Boole, MuonBackground v2r11)
+   . Do not explicitly enable Muon low energy background, it is now run by 
+     default for main events plus (if any) spillover events (max 4) 
+     (MuonBackground v2r11)
    . New tuning for spillover in Muon (MuonBackground v2r11, MuonAlgs v6r10)
    . Prevent creation of random noise in known Velo bad channels, avoids
      FPEs (VeloSimulation v3r11)
@@ -34,9 +38,6 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
    . Change boole-mc10 to fill also expert histos, replaces boole-mc09-withtruth
    . Replace boole-spillover by boole-mc11-spillover
    . Add boole-2011-latestdb, tests also mc11
-
- - Changes to references to reflect changes in Boole v23r1 output:
-   . Adapt to updates in Muon spillover 
 
 </PRE><H1><A NAME=v23r0>2011-09-22 Boole v23r0</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
