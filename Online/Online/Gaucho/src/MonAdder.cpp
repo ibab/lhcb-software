@@ -399,7 +399,7 @@ void MonAdder::TimeoutHandler()
 {
   INServIter i;
 //  ::lib_rtl_output(LIB_RTL_INFO,"MonAdder Timeout handler for expected time %lli\n",m_reference);
-  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
+//  printf("MonAdder Timeout handler for expected time %lli\n",m_reference);
   DimLock l;
   for (i=this->m_inputServicemap.begin();i!=m_inputServicemap.end();i++)
   {
