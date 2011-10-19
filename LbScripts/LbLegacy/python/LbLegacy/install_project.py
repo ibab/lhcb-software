@@ -143,7 +143,7 @@ def usage() :
 
 #----------------------------------------------------------------------------------
 
-def systemCall(command, workdir=None, env=None):
+def systemCall(command, workdir=os.getcwd(), env=None):
     """
     simple wrapper for shell system execution with or without the
     subprocess module.
@@ -156,15 +156,17 @@ def systemCall(command, workdir=None, env=None):
         from subprocess import Popen
         p = Popen(command, shell=True, cwd=workdir, env=env)
         rc = os.waitpid(p.pid, 0)[1]
-    except :
+    except ImportError:
         # fallback if subprocess doesn't exist
         if workdir :
+            this_env = dict(os.environ)
             here = os.getcwd()
             os.chdir(workdir)
         os.environ.update(env)
         rc = os.system(command)
         if workdir:
             os.chdir(here)
+            os.environ = this_env
     return rc
 
 
@@ -224,11 +226,11 @@ def getCachedProjectConf(name):
     import LbConfiguration.Project #@UnusedImport
     import LbConfiguration.Package
     global project_conf_cache
-    log = logging.getLogger()
     p = None
     exclude_list  = [x.name() for x in project_conf_cache]
     exclude_list += [x.name() for x in package_conf_cache]
     exclude_list += [x.upper() for x in LbConfiguration.Package.package_names]
+    exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
     if name.upper() not in exclude_list :
         p = LbConfiguration.Project.getProject(name, svn_fallback=True, raise_exception=False)
         if p :
@@ -236,7 +238,6 @@ def getCachedProjectConf(name):
     else :
         for x in project_conf_cache :
             if name.upper() == x.NAME() :
-                log.debug("getting %s project configuration from the cache" % name)
                 p = x
                 break
     return p
@@ -250,14 +251,14 @@ def getCachedPackageConf(name):
     @param name: name of the package
     @type name: string
     """
-    import LbConfiguration.Package #@UnusedImport
+    import LbConfiguration.Package
     import LbConfiguration.Project
     global package_conf_cache
-    log = logging.getLogger()
     p = None
     exclude_list  = [x.name() for x in package_conf_cache]
     exclude_list += [x.name() for x in project_conf_cache]
     exclude_list += [x.lower() for x in LbConfiguration.Project.project_names]
+    exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
     if name.lower() not in exclude_list :
         p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
         if p :
@@ -265,7 +266,6 @@ def getCachedPackageConf(name):
     else :
         for x in package_conf_cache :
             if name.lower() == x.name() :
-                log.debug("getting %s package configuration from the cache" % name)
                 p = x
                 break
     return p
@@ -299,23 +299,30 @@ def callPostInstallCommand(project, version):
     # get base environment to run the post install script.
     # has to be done only once per session
     global _post_install_env
+    log = logging.getLogger()
     if not _post_install_env :
         _post_install_env = dict(os.environ)
         from LbConfiguration.LbLogin import getLbLoginEnv
-        tmp_env = getLbLoginEnv("--mysiteroot=%s" % os.environ["MYSITEROOT"])
-        _post_install_env.update(tmp_env)
-
-    log = logging.getLogger()
+        llsargs = []
+        if debug_flag :
+            llsargs.append("--debug")
+        else :
+            llsargs.append("--silent")
+        llsargs.append("--shell=sh")
+        llsargs.append("--mysiteroot=%s" % os.environ["MYSITEROOT"])
+        llsargs.append("--scripts-version=%s" % lbscripts_version)
+        llsargs.append("--cmtconfig=%s" % cmtconfig)
+        log.debug("Running LbLogin %s" % " ".join(llsargs))
+        tmp_env = getLbLoginEnv(llsargs)
+        for var in tmp_env.keys() :
+            _post_install_env[var] = tmp_env[var]
     projcmds = _postinstall_commands.get((project,version), None)
-    here = None
     if projcmds :
         for c in projcmds :
-            rc = systemCall("%s" % c[0], c[1], _post_install_env)
-            log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
+            log.debug("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
+            rc = systemCall(c[0], workdir=c[1], env=_post_install_env)
             if rc != 0 :
-                log.error("PostInstall command for %s %s returned %d" % rc)
-            if here :
-                os.chdir(here)
+                log.error("PostInstall command for %s %s returned %d" % (project, version, rc))
     else :
         log.debug("Project %s %s has no postinstall command" % (project, version))
 
@@ -352,25 +359,34 @@ def callUpdateCommand(project, version):
     # get base environment to run the post install script.
     # has to be done only once per session
     global _post_install_env
+
+    log = logging.getLogger()
     if not _post_install_env :
         _post_install_env = dict(os.environ)
         from LbConfiguration.LbLogin import getLbLoginEnv
-        tmp_env = getLbLoginEnv("--mysiteroot=%s" % os.environ["MYSITEROOT"])
-        _post_install_env.update(tmp_env)
-
-    log = logging.getLogger()
+        llsargs = []
+        if debug_flag :
+            llsargs.append("--debug")
+        else :
+            llsargs.append("--silent")
+        llsargs.append("--shell=sh")
+        llsargs.append("--mysiteroot=%s" % os.environ["MYSITEROOT"])
+        llsargs.append("--scripts-version=%s" % lbscripts_version)
+        llsargs.append("--cmtconfig=%s" % cmtconfig)
+        log.debug("Running LbLogin %s" % " ".join(llsargs))
+        tmp_env = getLbLoginEnv(llsargs)
+        for var in tmp_env.keys() :
+            _post_install_env[var] = tmp_env[var]
     projcmds = _update_commands.get((project,version), None)
-    here = None
     if projcmds :
         for c in projcmds :
-            rc = systemCall("%s" % c[0], c[1], _post_install_env)
+            rc = systemCall("%s" % c[0], workdir=c[1], env=_post_install_env)
             log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
             if rc != 0 :
                 log.error("PostInstall command for %s %s returned %d" % rc)
-            if here :
-                os.chdir(here)
     else :
         log.debug("Project %s %s has no postinstall command" % (project, version))
+    return rc
 
 
 def isUpdateRegistered(project, version):
@@ -488,10 +504,7 @@ def fixWinAttrib(dirpath):
     os.chmod(dirpath, stat.S_IWRITE)
     if os.path.isdir(dirpath):
         if os.listdir(dirpath) :
-            here = os.getcwd()
-            os.chdir(dirpath)
-            systemCall("attrib -R -A -H /S /D")
-            os.chdir(here)
+            systemCall("attrib -R -A -H /S /D", workdir=dirpath)
     else :
         systemCall("attrib -R -A -H %s" % dirpath)
 
@@ -1087,6 +1100,7 @@ def getProjectList(name, version, binary=None, recursive=True):
     html_list = []
 
     import LbConfiguration.Platform #@UnusedImport
+    import LbConfiguration.Package
 
     p = getCachedPackageConf(name)
 
@@ -1167,8 +1181,6 @@ def getProjectList(name, version, binary=None, recursive=True):
                     fname = fname.replace(pack_ver[2], newbin)
                 project_list[fname] = "source"
                 html_list.append(fname)
-    log.debug('project_list %s' % project_list)
-    log.debug('html_list %s' % html_list)
 
     os.chdir(here)
 
@@ -1179,9 +1191,10 @@ def getProjectList(name, version, binary=None, recursive=True):
                 _, s_version, s_binary = getUnknowTarBallNameItems(tb_name, binary)
             if s_name and s_version :
                 if not (s_name.upper() == name.upper() and s_version == version and s_binary == binary) :
-                    sub_project_list, sub_html_list = getProjectList(s_name, s_version, s_binary)
-                    updateProjectList(sub_project_list, project_list)
-                    updateHTMLList(sub_html_list, html_list)
+                    if s_name.upper() not in [x.upper() for x in LbConfiguration.Package.project_names] :
+                        sub_project_list, sub_html_list = getProjectList(s_name, s_version, s_binary)
+                        updateProjectList(sub_project_list, project_list)
+                        updateHTMLList(sub_html_list, html_list)
 
     return project_list, html_list
 
@@ -1518,8 +1531,9 @@ def getProjectTar(tar_list, already_present_list=None):
             registerProjectCommand(pack_ver, "Update")
 
         if isUpdateRegistered(pname, pversion) and not isUpdated(pname, pversion) :
-            callUpdateCommand(pname, pversion)
-            setUpdated(pname, pversion)
+            rc = callUpdateCommand(pname, pversion)
+            if rc == 0 :
+                setUpdated(pname, pversion)
 
     os.chdir(here)
 
@@ -2365,6 +2379,7 @@ def untarFile(fname, output_path=""):
                 strcmd = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
             if output_path :
                 strcmd += " --directory=%s " % output_path
+            tar_output = None
             try:
                 for l in tarFileList(filename) :
                     if os.path.isfile(l) :
@@ -2375,8 +2390,9 @@ def untarFile(fname, output_path=""):
                 log.warning('exception in: %s' % strcmd)
                 log.warning('%s removed' % filename)
                 log.warning('tar command output:')
-                for l in tar_output.split("\n") :
-                    log.warning(l)
+                if tar_output :
+                    for l in tar_output.split("\n") :
+                        log.warning(l)
                 if os.path.exists(md5filename):
                     os.remove(md5filename)
                     log.info('%s removed' % md5filename)

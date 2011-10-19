@@ -69,11 +69,14 @@ class PostInstallScript(Script):
             gencmd.append("--debug")
         gencmd.append("--without-python")
         gencmd.append("--no-cache")
-        gencmd.append("-m %s" % self._mysiteroot)
+        gencmd.append("-m")
+        gencmd.append(self._mysiteroot)
         gencmd.append("--login-version=%s" % self._scripts_version)
         gencmd.append(_ia_dir)
-        log.info("Running: python %s" % gencmd)
-        rc = callCommand("python %s" % " ".join(gencmd), report_failure=True)
+        log.info("Running: python %s" % " ".join(gencmd))
+#        rc = callCommand("python",*gencmd, report_failure=True)
+        rc = os.system("python %s" % " ".join(gencmd))
+
 
         return rc
 
@@ -139,7 +142,8 @@ class PostInstallScript(Script):
         log = logging.getLogger()
         rc = 0
         etc_scripts = [ "LbLogin", "group_login", "group_shell", "LHCb"]
-        my_etc_dir = os.path.join(self._mysiteroot.split(os.pathsep)[0], "etc")
+        my_dir = self._mysiteroot.split(os.pathsep)[0]
+        my_etc_dir = os.path.join(my_dir, "etc")
         prodlink = self._prodlink
         selected_script_dir = os.path.join(prodlink, "InstallArea", "scripts")
         if not os.path.exists(selected_script_dir) :
