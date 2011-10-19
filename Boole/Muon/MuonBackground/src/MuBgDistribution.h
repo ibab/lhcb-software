@@ -36,7 +36,7 @@ private:
   std::vector<Rndm::Numbers*> m_pointerToDistributions;
   std::vector<bool> m_pointerToFlags;
   
-  int m_nbinx,m_nbiny;
+  int m_nbinx;
   float m_xmin,m_xmax,m_ymin,m_ymax;
   int m_dimension;
   

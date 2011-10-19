@@ -1,4 +1,3 @@
-// $Id: MuBgDistribution.cpp,v 1.5 2007-06-08 15:35:40 asatta Exp $
 // Include files 
 #include <iostream>  
 
