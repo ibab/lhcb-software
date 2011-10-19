@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes in Brunel v41r2 output:
   . Complete the migration to LHCb::ParticlePropertySvc (TrackMCTools) 
   . Minor improvements to Rich decoding error messages (RichDAQ)
+  . Fixes to MuonPID status in ProtoParticle (Savannah task 23459)
 
 - Changes to example options
   . Add COLLISION11_25.py, example options for processing 2011 25ns fill
