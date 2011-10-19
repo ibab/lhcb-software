@@ -6,7 +6,7 @@
  */
 
 #include "Gaucho/SegvHandler.h"
-int main(int argc, char *argv[])
+int main(int , char **)
 {
   SegvHandler *h = new SegvHandler();
   int *p=(int *)7;
