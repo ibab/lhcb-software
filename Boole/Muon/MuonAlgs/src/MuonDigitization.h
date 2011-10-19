@@ -58,6 +58,8 @@ public:
   StatusCode createLogicalChannel(MuonDigitizationData
                                   <MuonCardiacChannelOutput>& PhyChaOutput,
                                   LHCb::MCMuonDigits & mcDigitContainer);
+  
+
   StatusCode createRAWFormat(LHCb::MCMuonDigits & mcDigitContainer, 
                                  LHCb::MuonDigits & digitContainer);
   StatusCode addChamberNoise();
@@ -67,7 +69,6 @@ public:
 private:
   int m_numberOfEvents;
   int m_numberOfEventsNeed;
-  int m_numberOfSpilloverEvents; ///< Option to set max no. of spillover events
   double m_BXTime;
   double m_gate;
   bool m_applyTimeJitter;
@@ -88,7 +89,7 @@ private:
   int m_container;
   unsigned int m_TimeBits;
   double m_timeBin;
-  
+  double m_dialogLength;  
   MuonDetectorResponse detectorResponse;
   DeMuonDetector* m_muonDetector;
 

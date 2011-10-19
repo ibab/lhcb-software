@@ -39,7 +39,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
   :  GaudiAlgorithm(name, pSvcLocator)
 {
-  declareProperty("SpilloverPathsSize", m_numberOfSpilloverEvents = 0) ;
+  //declareProperty("SpilloverPathsSize", m_numberOfSpilloverEvents = 0) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
   declareProperty("TimeGate" , m_gate=25.0) ;
   declareProperty("TimeBits" , m_TimeBits=4) ;
@@ -52,6 +52,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
   declareProperty("ApplyDeadtime" , m_applyDeadtime=true) ;  
   declareProperty("ApplyDialogDeadtime" , m_applyDialogDeadtime=true) ;
   declareProperty("ApplyTimeAdjustment",m_applyTimeAdjustment=true);
+  declareProperty("DialogLength",m_dialogLength=28);
   declareProperty("RegisterPhysicalChannelOutput",
                    m_registerPhysicalChannelOutput=false);
 m_hitNotInGap=0;
@@ -63,13 +64,6 @@ StatusCode MuonDigitization::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
 
-  if( m_numberOfSpilloverEvents > 4 ) {
-    warning() << "Cannot have " << m_numberOfSpilloverEvents 
-              << " SpilloverPathSize, set to 4" << endmsg;
-    m_numberOfSpilloverEvents = 4;
-  }
-  
-  m_numberOfEvents = m_numberOfSpilloverEvents+1;
   m_numberOfEvents = 4+1;
   m_numberOfEventsNeed=5;	
 
@@ -227,8 +221,12 @@ MsgStream log(msgSvc(), name());
   //bool test=true;
   // debug()<<"pappa rrr"<<endmsg; 
   if(m_applyDialogDeadtime){
+ 
+   
     
     sc=createLogicalChannel(CardiacChannelOutput, *mcDigitContainer);
+    
+
   }
   else{
     sc=createLogicalChannel(PhysicalChannelOutput, *mcDigitContainer);
@@ -262,7 +260,7 @@ StatusCode MuonDigitization::addChamberNoise(){
 
   MsgStream log(msgSvc(), name()); 
   int container=1;
-  for (int ispill=1;ispill<m_numberOfEvents+1;ispill++){
+  for (int ispill=1;ispill<=m_numberOfEvents;ispill++){
 		//double shiftOfTOF=-m_BXTime*ispill;
     ObjectVector<LHCb::MCHit>* hitsContainer = new 
       ObjectVector<LHCb::MCHit>();
@@ -839,66 +837,77 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
     if(!PhysicalChannelOutput.isEmpty(i)){				
       for(iterInput=PhysicalChannelOutput.getPartition(i)->begin();
           iterInput<PhysicalChannelOutput.getPartition(i)->end();iterInput++){
-        MuonCardiacChID cardiacChTileID;
-        
-        (*iterInput)->calculateCardiacORID(cardiacChTileID,
-                       m_muonDetector);
+
+
+        LHCb::MuonTileID phChTileID[2];
+        int numberOfTileID;
+
+        (*iterInput)->calculateTileID(numberOfTileID,phChTileID,m_muonDetector);
+
         //        info()<<"ii "<<i<<" "<< cardiacChTileID<<endmsg;
-        bool alreadyExist=false;
-        MuonPhysicalChannelOutput* jout=
-          static_cast< MuonPhysicalChannelOutput* >(*(iterInput));
-        //info()<<((*iterInput)->phChInfo()).isAlive()<<endmsg;
-      
-        if(!CardiacChannelOutput.isEmpty(i)){
-           for(iterOutput=CardiacChannelOutput.getPartition(i)->begin();
-               iterOutput<CardiacChannelOutput.getPartition(i)->end();
-               iterOutput++){
-             if(((*iterOutput)->chID())==cardiacChTileID){
-               (*iterOutput)->addPhyChannel(jout);
-               alreadyExist=true;
-             }
-             
-           }
-           
-        }
-        //info()<<" alreadyExist= "<<alreadyExist<<endmsg;
-        
-        
-        if(!alreadyExist){
+
+        for(int iTile=0;iTile<numberOfTileID;iTile++){
+
+          bool alreadyExist=false;
+          MuonPhysicalChannelOutput* jout=
+            static_cast< MuonPhysicalChannelOutput* >(*(iterInput));
+          //info()<<((*iterInput)->phChInfo()).isAlive()<<endmsg;
           
-          MuonCardiacChannelOutput* objToAdd=new 
-            MuonCardiacChannelOutput(cardiacChTileID);
-          objToAdd->addPhyChannel(jout);
-          StatusCode asc=CardiacChannelOutput.addMuonObject(i,objToAdd);
-          if(asc.isFailure())debug()<<"unable to add chardiac channel "<<endmsg;
+          if(!CardiacChannelOutput.isEmpty(i)){
+            for(iterOutput=CardiacChannelOutput.getPartition(i)->begin();
+                iterOutput<CardiacChannelOutput.getPartition(i)->end();
+                iterOutput++){
+              if(((*iterOutput)->chID())==phChTileID[iTile]){
+                (*iterOutput)->addPhyChannel(jout);
+                alreadyExist=true;
+              }
+              
+            }
+            
+          }
+          //info()<<" alreadyExist= "<<alreadyExist<<endmsg;
+        
+        
+          if(!alreadyExist){
+            
+            MuonCardiacChannelOutput* objToAdd=new 
+              MuonCardiacChannelOutput(phChTileID[iTile]);
+            objToAdd->addPhyChannel(jout);
+            StatusCode asc=CardiacChannelOutput.addMuonObject(i,objToAdd);
+            if(asc.isFailure())debug()<<"unable to add chardiac channel "<<endmsg;
+            
+          }
           
         }
         
       }
-      
     }
-
-
-   if(!CardiacChannelOutput.isEmpty(i)){				
+    
+    
+    
+    if(!CardiacChannelOutput.isEmpty(i)){				
       for(iterOutput=CardiacChannelOutput.getPartition(i)->begin();
           iterOutput<CardiacChannelOutput.getPartition(i)->end();iterOutput++){
-        (*iterOutput)-> processForDeadTime(25, (float)m_gate);
+        (*iterOutput)-> processForDeadTime(m_dialogLength, (float)m_gate);
         //        (*iterOutput)-> setFiringTime(); 
         //  info()<<" dopo il deadtime "<< (*iterOutput)->chInfo().isAlive()<<endmsg;
         
       }
-   }
-   
+    }
+    
   }
   
-
+  
   //info()<<" pre new ch  size "<<endmsg;
   
  
-   return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
+
  
+
+
 
 StatusCode MuonDigitization::
 applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
@@ -1206,11 +1215,12 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
   return StatusCode::SUCCESS;
 }
 
+  
 StatusCode MuonDigitization::
 createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
                      PhyChaOutput, LHCb::MCMuonDigits& mcDigitContainer){
 	MsgStream log(msgSvc(), name()); 
-  //  int flag=0;
+  
   int countDigits=0;
   for(int i=0; i<m_partition; i++){
     MuonCardiacChannelOutputs::const_iterator iter =
@@ -1218,210 +1228,50 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
     LHCb::MCMuonDigits::iterator iterDigit;        
     for(iter=PhyChaOutput.getPartition(i)->begin();iter<
           PhyChaOutput.getPartition(i)->end();iter++){	
-     //  if(m_verboseDebug){
-//         debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endmsg;}
-//if((*iter)->
-//info()<<" "<<(*iter)->
-      LHCb::MuonTileID phChTileID[2];
-      int numberOfTileID;  
-      if(m_verboseDebug) info()<<"FE ID "<<
-        (*iter)->chID().getID()<<endmsg;
-      if(m_verboseDebug)info()<<"FE ID "<<
-                          (*iter)->chID().getID()<<endmsg; 
-       if(m_verboseDebug)info()<<" prima "<< (**iter).chID()<<endmsg;
-      (*iter)->calculateTileID(numberOfTileID,phChTileID,m_muonDetector);
-       if(m_verboseDebug)info()<< (**iter).chID()<<endmsg;
-      
-      if( m_verboseDebug)info()<<" after tile calculation " 
-                               << numberOfTileID<<" "<<endmsg;
-      if( m_verboseDebug)info()<<" tile  " << 
-                                phChTileID[0]<< phChTileID[1]<<" "<<endmsg;
-      
-      //
-      // loop over possible phchtileID (1 or 2 if double mapping)
-      //
-    
-    
-      for(int iTile=0;iTile<numberOfTileID;iTile++){
-        bool found=false; 
-        //
-        // loop over already created Digits
-        //         
+      LHCb::MuonTileID phChTileID=(*iter)->chID();
 
-                if(m_verboseDebug){info()<<" deg "<<  phChTileID[iTile].layout()<<" "<<
-          phChTileID[iTile].station()<<" "<< phChTileID[iTile].region()<<" "<<
-          phChTileID[iTile].quarter()<<" "<< phChTileID[iTile].nX()<<" "<<
-                                     phChTileID[iTile].nY()<<endmsg;
-                }
-                
-        if(m_verboseDebug){
-          debug()<<" Loop on mappings "<<
-            iTile<<" "<<numberOfTileID<<endmsg;}      
-        if(m_verboseDebug) debug()<<" Loop on mappings "<<
-            iTile<<" "<<numberOfTileID<<endmsg;       
-        for(iterDigit=mcDigitContainer.begin(); 
-            iterDigit<mcDigitContainer.end()&&!found; iterDigit++){
-          LHCb::MuonTileID tile=(*iterDigit)->key();
-          //
-          // tile is the key of the existing Digit, phChTileID[] 
-          // is the just created ID of the ph.ch.
-          //                
-               
-          if(tile==phChTileID[iTile]){
-            if( m_verboseDebug)info()<<
-                                 " Loop on mappings found already "
-                                     <<tile<<" "<<endmsg;
-                      if( m_verboseDebug) 
-            info()<<"  "<<
-              (*iterDigit)->DigitInfo().isAlive()
-                  <<" "<<(*iter)->chInfo().isAlive()
-                  <<endmsg;
-            found=true;
-            // Digit already exists, update bits and links
-            std::vector<MuonHitTraceBack>::iterator iterOnHits;
-            std::vector<MuonHitTraceBack*>::iterator iterOnHitsCardiac;
-            std::vector<LHCb::MCMuonHitHistory>::iterator iterOnHitsInDigit;
-            if((*iterDigit)->DigitInfo().isAlive()&&
-               (*iter)->chInfo().isAlive()){
-              //both fired
-              if((*iterDigit)->firingTime()>(*iter)->firingTime()){
-                (*iter)->setNotFiringDigit();
-                
-              }else{
-                (*iterDigit)->setFiringTime((*iter)->firingTime());
-                (*iterDigit)->DigitInfo().setNatureHit((*iter)
-                                                       ->chInfo().
-                                                       natureOfHit());
-                (*iterDigit)->DigitInfo().setBXIDFlagHit((*iter)
-                                                              ->chInfo().
-                                                         BX());
-                for(iterOnHitsInDigit=(*iterDigit)->HitsHistory().begin();
-                    iterOnHitsInDigit<(*iterDigit)->HitsHistory().end();
-                    iterOnHitsInDigit++){
-                       (*iterOnHitsInDigit).setFiredFlag(0);						 
-                }
-              }
-            }
-            
-            if((*iterDigit)->DigitInfo().isAlive()&&!((*iter)
-                                                           ->chInfo().
-                                                      isAlive())){
-              // only one is fired	
-              
-            }
-            if(!((*iterDigit)->DigitInfo().isAlive())&&
-               ((*iter)->chInfo().isAlive())){
-              // only one is fired	
-             //  info()<<" importante "<<
-//                 (*iterDigit)->DigitInfo().isAlive()  
-//                     <<endmsg;
-              (*iterDigit)->setFiringTime((*iter)->firingTime());
-              (*iterDigit)->DigitInfo().setNatureHit((*iter)
-                                                     ->chInfo().
-                                                     natureOfHit());
-              (*iterDigit)->DigitInfo().setBXIDFlagHit((*iter)
-                                                       ->chInfo().
-                                                       BX());  
-              (*iterDigit)->DigitInfo().setSecondPart(0);   
-              (*iterDigit)->DigitInfo().setAliveDigit(1);
-                   
-              if( m_verboseDebug)info()<<" importante "<<
-                                   (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endmsg;
-            }
-            if(!((*iterDigit)->DigitInfo().isAlive())&&
-               !((*iter)->chInfo().isAlive())){
-              if( m_verboseDebug)info()<<
-                                   " molto importante "<<
-                                   (*iterDigit)->DigitInfo().isAlive()  
-                                    <<endmsg;                   
-              // both not fired
-              if((*iterDigit)->DigitInfo().isInDeadTime()||	
-                 (*iter)->chInfo().isInDeadTime()){
-                (*iterDigit)->DigitInfo().setDeadtimeDigit(1);
-              }					
-              if((*iterDigit)->DigitInfo().isDeadForChamberInefficiency()
-                 ||	(*iter)->chInfo().isDeadForChamberInefficiency()){
-                (*iterDigit)->DigitInfo().setChamberInefficiencyDigit(1);
-              }					
-              if((*iterDigit)->DigitInfo().isDeadByTimeJitter() ||	
-                 (*iter)->chInfo().isDeadByTimeJitter() ){
-                (*iterDigit)->DigitInfo().setTimeJitteredDigit(1);
-              }					
-              if((*iterDigit)->DigitInfo().isDeadByTimeAdjustment() 
-                 ||	(*iter)->chInfo().isDeadByTimeAdjustment() ){
-                (*iterDigit)->DigitInfo().setTimeAdjDigit(1) ;
-              }					
-              if((*iterDigit)->DigitInfo().isAliveByTimeAdjustment() 
-                 ||	(*iter)->chInfo().isAliveByTimeAdjustment() ){
-                (*iterDigit)->DigitInfo().setAliveTimeAdjDigit(1);
-              }					
-              if((*iterDigit)->DigitInfo().isDeadByGeometry() 
-                 ||	(*iter)->chInfo().isDeadByGeometry() ){
-                (*iterDigit)->DigitInfo().setGeometryInefficiency(1);
-              }		
-            }
-            // add links to the hits 		
-            
-            std::vector<MuonHitTraceBack*>::iterator iterstart
-              =(*iter)->hitsTraceBack().begin();		
-            std::vector<MuonHitTraceBack*>::iterator iterstop=
-              (*iter)->hitsTraceBack().end();									
-            for(iterOnHitsCardiac=iterstart;
-                     iterOnHitsCardiac!=iterstop;
-                iterOnHitsCardiac++){
-              // info()<<" add hits "<<(*iter)->hitsTraceBack().size()<<endmsg;
-              // info()<<" add hits "<< iterOnHitsCardiac<<endmsg;
-              
-              //if((*iter)->hitsTraceBack().end()==iterOnHitsCardiac)
-                //  info()<<" add hits at the end"<<endmsg;
-              
-              (*iterDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
-                                                    getMCMuonHistory());
-                   (*iterDigit)->addToMCHits((*iterOnHitsCardiac)->getMCHit());
-            }                 
-          }
-        }
-        
-        if(!found){
-          //          if( m_verboseDebug)
-        //   info()<<
-//             " create new Digit with tile "<<
-//             phChTileID[iTile]<<" "<<iTile<<endmsg;
-          std::vector<MuonHitTraceBack*>::iterator iterOnHitsCardiac;
-          LHCb::MCMuonDigit* newMCDigit=new 
-            LHCb::MCMuonDigit(phChTileID[iTile]);
-          std::vector<MuonHitTraceBack*> pippo;
-          pippo=(*iter)->hitsTraceBack();
-          
-          for(iterOnHitsCardiac=pippo.begin();
-              iterOnHitsCardiac!=pippo.end();
-              iterOnHitsCardiac++){ 
-            // info()<<"a new  hit to add "<<(*iter)->hitsTraceBack().size()<<endmsg;
-            (newMCDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
+      std::vector<MuonHitTraceBack*>::iterator iterOnHitsCardiac;
+      LHCb::MCMuonDigit* newMCDigit=new 
+        LHCb::MCMuonDigit(phChTileID);
+      std::vector<MuonHitTraceBack*> pippo;
+      pippo=(*iter)->hitsTraceBack();
+      
+      for(iterOnHitsCardiac=pippo.begin();
+          iterOnHitsCardiac!=pippo.end();
+          iterOnHitsCardiac++){ 
+        // info()<<"a new  hit to add "<<(*iter)->hitsTraceBack().size()<<endmsg;
+        (newMCDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
                                                   getMCMuonHistory());
-            // info()<<"a new  hit to add "<<endmsg;
-            
-            newMCDigit->addToMCHits((*iterOnHitsCardiac)->getMCHit());
-            // info()<<" hit added "<<endmsg;
-            //          (*iter)->chInfo()  
-          }
+        // info()<<"a new  hit to add "<<endmsg;
+        
+        newMCDigit->addToMCHits((*iterOnHitsCardiac)->getMCHit());
+        // info()<<" hit added "<<endmsg;
+        //          (*iter)->chInfo()  
+      }
+      
+      newMCDigit->setDigitInfo((*iter)->chInfo());
+      if((*iter)->hasFired())
+        {
           
-          newMCDigit->setDigitInfo((*iter)->chInfo());
           newMCDigit->setFiringTime((*iter)->firingTime());
+        }
+          
           //info()<<(*iter)->firingTime()<<" qui "
           //     <<(*iter)->chInfo().isAlive()<<endmsg;
-          mcDigitContainer.insert(newMCDigit); 
-          ++countDigits;
-        }
+      mcDigitContainer.insert(newMCDigit); 
+      ++countDigits;
         
-      }
-                
+      
     }
+    
+    
   }
+  
+  
   debug()<<" MC Digits created "<<countDigits<<endmsg; 
   return StatusCode::SUCCESS;
 }
+
   
 
 

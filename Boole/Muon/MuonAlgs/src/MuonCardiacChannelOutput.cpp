@@ -30,164 +30,16 @@ void  MuonCardiacChannelOutput::addPhyChannel(MuonPhysicalChannelOutput* value)
 	}
 };
 
-// std::vector<MuonPhysicalChannelOutput*>&  MuonCardiacChannelOutput::retrievePhyChannel()
-// {
-//   return   m_phChannel;
-  
-// }
 
-void MuonCardiacChannelOutput::calculateTileID(int & numberTileOutput,
-                                               LHCb::MuonTileID tileChID[2],
-                                               DeMuonDetector* muonDetector)
-{
-  
- 
-  bool debug=false;
-//  debug=true;  
-  unsigned int station=chID().getStation();
-  unsigned int region=chID().getRegion();
-  unsigned int chamber=chID().getChamber();
-  unsigned int readout=chID().getReadout();
-  unsigned int quadrant=chID().getQuadrant();
-  unsigned int idX=chID().getChIDX()*muonDetector->getCardiacORX(station*4+region,readout);
-  unsigned int idY=chID().getChIDY()*muonDetector->getCardiacORY(station*4+region,readout);
-  unsigned int newidX,newidY;
-  unsigned int idXGlobal,idYGlobal;
-  unsigned int idLogX,idLogY;
-  int numberOfTileCreated=0;
-  unsigned int numberOfPCX, numberOfPCY;
-
-
-  if(debug){
-    std::cout<<station<<" "<<region<<" "<<chamber<<" "<<quadrant<<" "<<
-      idX<<" "<<idY<<std::endl;
-  }
-  
-  newidX=0;
-  newidY=0;
-  numberOfPCX=0;
-  numberOfPCY=0;
-  numberTileOutput=0;
-  // loop over FE channel readout
-  //
-  if(debug)std::cout<<muonDetector->readoutInRegion(station,region)<<std::endl;
-  
-  for (int readoutNumber=0;readoutNumber<(int)muonDetector->
-         getLogMapInRegion(station,region);readoutNumber++){
-    //
-    // check if current readout coincides with one of the LogMap readouts
-    //
-    if(debug) std::cout<<"logmap type, readout "<<
-                muonDetector->getLogMapRType(readoutNumber,station,region)<<" "<<
-                readout<<" "<<readoutNumber<<
-                std::endl;
-    
-    if(muonDetector->getLogMapRType(readoutNumber,station,region)==readout){
-      // define order of FE channel according to the MuonTileID 
-      //conventions: from 0,0 left,bottom to radial coordinates
-      //
-      for(int countReadout=0; countReadout<muonDetector->
-            readoutInRegion(station,region);countReadout++){
-        if(  muonDetector->getLogMapRType(readoutNumber,station,region)==
-             muonDetector->getReadoutType(countReadout,station,region)){
-          numberOfPCX=muonDetector->
-            getPhChannelNX(countReadout,station,region);
-          numberOfPCY=muonDetector->
-            getPhChannelNY(countReadout,station,region);
-          if(debug) std::cout<<"channels "<<countReadout<<" "<<station<<" "<<region<<" "
-                             <<numberOfPCX<<" "<<
-                      numberOfPCY<<std::endl;
-          
-          
-        }
-      }
-      
-      // 
-      // FE ch address relative to the chamber transformed 
-      //in quadrant reference system
-      //
-      if(quadrant==0){
-        newidX=idX; 
-        newidY=idY;
-      }else if(quadrant==3){
-        newidX=numberOfPCX-idX-1; 
-        newidY=idY;                          
-      }else if(quadrant==2){
-        newidX=numberOfPCX-idX-1; 
-        newidY=numberOfPCY-idY-1;
-      }else if(quadrant==1){
-        newidX=idX;
-        newidY=numberOfPCY-idY-1;
-      }
-      // 
-      // FE ch address in the whole quadrant
-        //
-      LHCb::MuonTileID chaTile;
-      StatusCode sc=
-        muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
-      if(sc.isFailure()&&debug)std::cout<<" non identified the tile "<<endreq;
-      
-      idXGlobal=newidX+chaTile.nX()*numberOfPCX;
-      idYGlobal=newidY+chaTile.nY()*numberOfPCY;
-      if(debug)std::cout<<"cha tile "<<chaTile.nX()<<" "<<chaTile.nY()<<std::endl;
-      
-      if(debug)std::cout<< idXGlobal<<" "<< idYGlobal<<std::endl;
-      
-      //
-      //  compute Logical Channel address now
-      //
-      idLogX=idXGlobal/muonDetector->
-        getLogMapMergex(readoutNumber,station,region);    
-      idLogY=idYGlobal/muonDetector->
-        getLogMapMergey(readoutNumber,station,region);   
-      //
-      // create the tile of the phys chan
-      //  
-      if(debug)std::cout<<  idLogX <<" "<< idLogY<<std::endl;
-      if(debug)std::cout<< muonDetector->
-                 getLogMapMergex(readoutNumber,station,region)<<" "<<
-                 muonDetector->
-                 getLogMapMergey(readoutNumber,station,region)<<std::endl;
-      
-      
-      ++numberTileOutput;
-      
-      MuonLayout layout(muonDetector->getLayoutX(readoutNumber,station,region),
-                        muonDetector->
-                          getLayoutY(readoutNumber,station,region));   
-      if(debug)std::cout<<"Layout "<<muonDetector->getLayoutX(readoutNumber,station,region)<<" "
-                        <<muonDetector->getLayoutY(readoutNumber,station,region)<<std::endl;
-      
-      tileChID[numberOfTileCreated].setLayout(layout);
-      tileChID[numberOfTileCreated].setStation(station);
-      //        phChTileID[numberOfTileCreated].setReadout(usefullPointer->
-      //                                                   getLogMapRType
-      //                                                   (readoutNumber,part));
-      tileChID[numberOfTileCreated].setRegion(region);
-      tileChID[numberOfTileCreated].setQuarter(quadrant);
-      tileChID[numberOfTileCreated].setX(idLogX);
-      tileChID[numberOfTileCreated].setY(idLogY);        
-      ++numberOfTileCreated;
-    }else{
-    }
-  }
-  
-}
 
 void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
 {
 
   fillhitsTraceBack() ;
-  //check the hit contente 
-    std::vector<MuonHitTraceBack*>::iterator ithit;
- //   std::cout<<" new ch  size "<<hitsTraceBack().size()<<std::endl;
-//   for(ithit=hitsTraceBack().begin();
-//       ithit<hitsTraceBack().end();ithit++){
-//  std::cout<<" prima info a new hit "<<std::endl;
-//  std::cout<<"  prima a new hit "<<(*ithit) ->getMCMuonHistory()<<std::endl;;
-//   }
-        
- 
+  //check the hit content
+  std::vector<MuonHitTraceBack*>::iterator ithit;
+  
+  
 //  std::cout<<" new cardiaca channel "<<std::endl;
   std::stable_sort(m_timeList.begin(),m_timeList.end(),SortPhyChOutInTime());
   
@@ -198,11 +50,17 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
   double lenghtOfDeadtime=lenghtOfDead;;
   for(it=m_timeList.begin();it<m_timeList.end();it++){ 
     double timeOfHit=(*it).first;
-  //  std::cout<<chID()<<" "<<timeOfHit<<std::endl;
+    //  std::cout<<chID()<<" "<<timeOfHit<<std::endl;
     if(timeOfHit<timeOfStartOfDeadtime+lenghtOfDeadtime){
       //        hit in deadtime
       (*it).second.setDeadTime();
-      (*it).second.setHitDialogDeadtime();
+      //(*it).second.setHitDialogDeadtime();
+      //now add the info at the level of PCChinfo
+      //      if(timeOfHit>0&&timeOfHit<timeGate){
+      
+      //  MuonPhysicalChannelOutput* pchtochange= getPhCh ((*it).second);
+      //  pchtochange-> phChInfo().setDialogDeadtimeDigit(1);
+      // }
       
     }else{
       
@@ -219,7 +77,7 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
   
   for(it=m_timeList.begin();it<m_timeList.end();it++){ 
     double timeOfHit=(*it).first;
-        //std::cout<<" time "<<(*it).first<<" "<<((*it).second).getDeadTime()<<std::endl;
+    
     bool dead=((*it).second).getDeadTime();
     if(!dead&&timeOfHit>0&&timeOfHit<timeGate){
       if(fired)std::cout<<" two times "<<timeOfHit<<" "
@@ -228,11 +86,7 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
       //      m_phChInfo=((*it).second).getPhyChOut()->phChInfo();
       fired=true;
       setChInfoFiring((*it).second);
-    
-      //std::cout<<" fired "<<m_phChInfo.isAlive()<<" "<<
-      //  (((*it).second).getPhyChOut()->phChInfo()).isAlive()<<std::endl;
-//      break;
-      
+      m_fired=true;          
     }
   }
   //if all not fired put the info of the one that would have 
@@ -241,20 +95,9 @@ void MuonCardiacChannelOutput::processForDeadTime(float value, float timeGate)
   
 
 
-
-  for(it=m_timeList.begin();it<m_timeList.end();it++){ 
-    //if(((*it).second).getPhyChOut()-> phChInfo().isAlive()){
-      //       m_phChInfo=((*it).second).getPhyChOut()->phChInfo();
-      fired=true;
-      setChInfoNotFiringDueDeadtime((*it).second);
-      break;
-      //}
-  }
-if(fired)return;
-  // if there was no firing then set the first one
-  //  it=m_timeList.begin();
-  setChInfoNotFiring();
-  //m_phChInfo=(*(m_phChannel.begin())->phChInfo();
+  UpdateMCInfo();
+  
+ 
 
 }
 void MuonCardiacChannelOutput::fillhitsTraceBack() 
@@ -291,6 +134,33 @@ void MuonCardiacChannelOutput::fillhitsTraceBack()
   
   
   //create the list  now 
+}
+
+
+void MuonCardiacChannelOutput::UpdateMCInfo()
+{
+  std::vector<MuonPhysicalChannelOutput*>::iterator iterpc;
+  
+  //loop on all ph ch and create the MCMuonDigitInfo for the Cardiac ch.
+  if(!m_fired){
+    //set the MCMuonDigitInfo equal to the first 
+    m_phChInfo.setDigitInfo(((*m_phChannel.begin())->phChInfo()).DigitInfo());
+    
+    for(iterpc=m_phChannel.begin();iterpc!=m_phChannel.end(); iterpc++){
+      if(iterpc==m_phChannel.begin())continue;
+      LHCb::MCMuonDigitInfo other= (*iterpc)->phChInfo();
+      if( other.isInDeadTime()) m_phChInfo.setDeadtimeDigit(1);
+      if( other.isDeadForChamberInefficiency()) m_phChInfo.setChamberInefficiencyDigit(1);
+      if( other.isDeadByTimeJitter()) m_phChInfo.setTimeJitteredDigit(1);
+      if( other.isDeadByTimeAdjustment()) m_phChInfo.setTimeAdjDigit(1);
+   
+      if( other.isDeadByGeometry()) m_phChInfo.setGeometryInefficiency(1);
+      if( other.isInDialogDeadTime()) m_phChInfo.setDialogDeadtimeDigit(1);          
+    }
+     m_phChInfo.setAliveDigit(0);
+  }
+  //now the retrieve of the firing info and setting of it
+  
 }
 
 void MuonCardiacChannelOutput::setNotFiringDigit()
@@ -345,10 +215,10 @@ void MuonCardiacChannelOutput::setChInfoFiring(MuonCardiacTraceBack pointer)
   MuonPhysicalChannelOutput* phchannel=getPhCh(pointer);
   m_phChInfo=phchannel->phChInfo();
 
-  
+     m_phChInfo.setAliveDigit(1);
 
 }
-void MuonCardiacChannelOutput::setChInfoNotFiringDueDeadtime(MuonCardiacTraceBack pointer)
+  /*void MuonCardiacChannelOutput::setChInfoNotFiringDueDeadtime(MuonCardiacTraceBack pointer)
 {
   //this hit has fired the electronics ...
   //but the dialog is in deadtime
@@ -358,15 +228,15 @@ void MuonCardiacChannelOutput::setChInfoNotFiringDueDeadtime(MuonCardiacTraceBac
   m_phChInfo.setAliveDigit(0);
   
 
-}
-void MuonCardiacChannelOutput::setChInfoNotFiring()
+  }*/
+   /*void MuonCardiacChannelOutput::setChInfoNotFiring()
 {
   //there is no hit that has fired the electronics ...
   //so get the first ch and copy such info
 //std::cout<<(*(m_phChannel.begin()))->phChInfo().isAlive()<<std::endl;
   m_phChInfo=(*(m_phChannel.begin()))->phChInfo();
                m_phChInfo.setAliveDigit(0);
-}
+               }*/
   
 
 MuonPhysicalChannelOutput* MuonCardiacChannelOutput::getPhCh(MuonCardiacTraceBack pointer)

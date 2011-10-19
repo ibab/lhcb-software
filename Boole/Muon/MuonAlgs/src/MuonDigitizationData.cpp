@@ -7,6 +7,7 @@
 #include "MuonPhysicalChannel.h" 
 #include "MuonPhysicalChannelOutput.h" 
 #include "MuonCardiacChannelOutput.h"
+//#include "MuonODEOutput.h"
 
 #ifdef _WIN32
 #pragma warning ( disable : 4661 ) // No suitable definition provided for explicit template instantiation request
@@ -159,6 +160,7 @@ template class  MuonDigitizationData<MuonPhyChannelInput>;
 template class  MuonDigitizationData<MuonPhysicalChannel>;
 template class  MuonDigitizationData<MuonPhysicalChannelOutput>;
 template class  MuonDigitizationData<MuonCardiacChannelOutput>;
+//template class  MuonDigitizationData<MuonODEOutput>;
 
 #endif
 
