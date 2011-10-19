@@ -9,5 +9,4 @@ from Gaudi.Configuration import importOptions
 
 importOptions("$APPCONFIGOPTS/Boole/Default.py")
 importOptions("$APPCONFIGOPTS/Boole/DataType-2010.py")
-importOptions("$APPCONFIGOPTS/Boole/IgnoreFlatSpillover.py")
  

@@ -48,7 +48,6 @@ class Boole(LHCbConfigurableUser):
        ,"MoniSequence"        : []
        ,"FilterSequence"      : []
        ,"EnablePack"          : True
-       ,"IgnoreFlatSpillover" : False 
        ,"Persistency"         : None
         }
 
@@ -83,7 +82,6 @@ class Boole(LHCbConfigurableUser):
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
-       ,'IgnoreFlatSpillover' : """ Turn on/off the simulation of flat spillover in muon  """
        ,'Persistency'  : """ Overwrite the default persistency with something else. """
         }
 
@@ -238,7 +236,7 @@ class Boole(LHCbConfigurableUser):
             if tae:
                 killPaths = self.KnownSpillPaths
             else:
-                self.enableSpillover()
+                self.setOtherProp(SimConf(),"SpilloverPaths")
                 # Kill any spillover paths not required
                 for spill in self.KnownSpillPaths:
                     if spill not in spillPaths:
@@ -264,13 +262,13 @@ class Boole(LHCbConfigurableUser):
             from Configurables import MuonBackground
             GaudiSequencer("InitMuonSeq").Members += [ MuonBackground("MuonLowEnergy") ]
             importOptions( "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts" )
-            if ((not tae) and ( not self.getProp("IgnoreFlatSpillover") )):
+            if not tae:
                 flatSpillover = MuonBackground("MuonFlatSpillover")
                 GaudiSequencer("InitMuonSeq").Members += [ flatSpillover ]
                 if self.getProp("DataType") == "2010" :
-                    flatSpillover.NBXFillFill = 250
+                    flatSpillover.NBXFullFull = 344
                 if self.getProp("DataType") == "2009" :
-                    flatSpillover.NBXFillFill = 1
+                    flatSpillover.NBXFullFull = 4
                 importOptions( "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts" )
 
     def configureDigi(self,digiDets):
@@ -591,17 +589,6 @@ class Boole(LHCbConfigurableUser):
             if "L0" in taeDets:
                 self.configureDigiL0( GaudiSequencer("Digi%sL0Seq"%taeSlot), taeSlot )
             
-
-    def enableSpillover(self):
-        """
-        switch to generate spillover events.
-        """
-        from Configurables import MuonBackground, MuonDigitization
-        MuonDigitization().SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
-        MuonBackground("MuonLowEnergy").SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
-
-        self.setOtherProp(SimConf(),"SpilloverPaths")
-
 
     def defineMonitors(self):
         # get all defined monitors
