@@ -119,6 +119,7 @@ void ParticlePropertiesList::fillDirList(){
   _dirList.push_back(DecFilesRoot+"/MintData/");
   _dirList.push_back(MintRoot+"/src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../../Mojito/ParticleProperties/src/");
+  _dirList.push_back("../../../../src/Mojito/ParticleProperties/src/");
   _dirList.push_back("../../ParticleProperties/src/");
   _dirList.push_back("../ParticleProperties/src/");
   _dirList.push_back("./ParticleProperties/src/");
