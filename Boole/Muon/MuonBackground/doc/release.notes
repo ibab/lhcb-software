@@ -4,6 +4,8 @@
 ! Purpose     : Add various types of background in the muon system : 
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
+! 2011-10-19 - Alessia Satta
+ - Update default value and remove obsolete options
 
 !========================= MuonBackground v2r11 2011-10-18 =========================
 ! 2011-10-14 - Alessia Satta

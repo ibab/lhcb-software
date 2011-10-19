@@ -70,9 +70,9 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
   declareProperty("BackgroundType" , m_typeOfBackground ) ;
   declareProperty("RadialUnit" , m_unitLength=10.0 ) ;
-  declareProperty("SpilloverPathsSize", m_readSpilloverEvents=0 ) ;
+//  declareProperty("SpilloverPathsSize", m_readSpilloverEvents=0 ) ;
   declareProperty("DebugHistos" , m_histos=false ) ;
-  declareProperty("NBXFillFill" , m_BXFillFill=1280 ) ;
+  declareProperty("NBXFullFull" , m_BXFillFill=1296 ) ;
   m_alreadyIni=false;
 }
 
@@ -178,15 +178,11 @@ StatusCode MuonBackground::initialize() {
         }
       }
     }
-    if( m_readSpilloverEvents > 0 ) {
-      warning() << "SpilloverEvents are present so run the Muon Background for all of them "<<endmsg;
-      m_readSpilloverEvents = 4;
-    }
+    warning() << "The low energy background is run by default for main events plus (if any) spillover events (max 4)" <<endmsg;
+    m_readSpilloverEvents = 4;
 
    
   }else if(m_type==FlatSpillover){
-    if( m_readSpilloverEvents > 1 )
-      warning() << "Ignoring SpillOverNumber job option, always 1 for flat spillover" << endmsg;
     m_readSpilloverEvents=0;
     m_luminosityFactor=m_luminosity/2.0;   
   }
@@ -276,9 +272,9 @@ StatusCode MuonBackground::execute() {
         LHCb::GenHeader* beam=get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
         if(beam){
 //          info()<<" beam nu "<<beam->nu()<<" "
-          info()<<"luminosity "<<beam->luminosity()<<" "<<m_BXFillFill<<endmsg;
-          m_luminosityFactor=(beam->luminosity()*m_BXFillFill)/(2.0e+21);
-          info()<<" luminosity factor "<<m_luminosityFactor<<endmsg;
+          verbose()<<"luminosity "<<beam->luminosity()<<" "<<m_BXFillFill<<endmsg;
+          m_luminosityFactor=(beam->luminosity()*m_BXFillFill)/(2.0e+32/(Gaudi::Units::cm2*Gaudi::Units::s));
+          info()<<" luminosity factor "<<m_luminosityFactor<<" compared to default 2*10^32 cm-2 s-1 "<<endmsg;
           m_alreadyIni=true;
         }else{
           info()<<"could not access beam parameter information "<<endmsg;
