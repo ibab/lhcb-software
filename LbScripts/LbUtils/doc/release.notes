@@ -1,5 +1,9 @@
 2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v3r5p1
+
+2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/Log.py: don't add a streamhandler if there is already one.
 
 2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

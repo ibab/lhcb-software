@@ -1,4 +1,9 @@
-2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+        * cmt/requirements: release of version v6r5p1
+	- fixed a few release glitches concerining install_project.py
+
+2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
         * cmt/PostInstall.py: fixed a few release glitches.
 
