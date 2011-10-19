@@ -208,7 +208,7 @@ private: // methods
 
   /// Save the image to disk
   void saveImage ( TCanvas * canvas,
-                   const std::string name );
+                   const std::string& filename );
 
   /// Fill a description into a text box on the given canvas
   void fillLabelBox() const;
@@ -366,11 +366,15 @@ private: // data
   Int_t           TrackNumDof;
   Int_t           TrackType;
   Int_t           TrackHistory;
+  Float_t         _TrackNumDof;  // temp fix
+  Float_t         _TrackType;    // temp fix
+  Float_t         _TrackHistory; // temp fix
   Float_t         RichDLLe;
   Float_t         RichDLLmu;
   Float_t         RichDLLpi;
   Float_t         RichDLLk;
   Float_t         RichDLLp;
+  Float_t         RichDLLbt;
   Int_t           RichUsedAero;
   Int_t           RichUsedR1Gas;
   Int_t           RichUsedR2Gas;
@@ -382,6 +386,7 @@ private: // data
   Float_t         MuonBkgLL;
   Float_t         MuonMuLL;
   Float_t         MuonNShared;
+  Int_t           MuonIsLooseMuon;
   Int_t           MuonIsMuon;
   Float_t         MuonInAcc;
   Float_t         InAccSpd;
@@ -397,6 +402,9 @@ private: // data
   Float_t         CaloChargedEcal;
   Float_t         CaloSpdE;
   Float_t         CaloPrsE;
+  Float_t   CaloEcalChi2;
+  Float_t   CaloClusChi2;
+  Float_t   CaloBremChi2;
   Float_t         CaloEcalE;
   Float_t         CaloHcalE;
   Float_t         CaloTrajectoryL;
@@ -411,6 +419,12 @@ private: // data
   Float_t         CombDLLpi;
   Float_t         CombDLLk;
   Float_t         CombDLLp;
+  Float_t ProbNNe;
+  Float_t ProbNNmu;
+  Float_t ProbNNpi;
+  Float_t ProbNNk;
+  Float_t ProbNNp;
+  Float_t ProbNNghost;
   Float_t         VeloCharge;
   Int_t           MCParticleType;
   Float_t         MCParticleP;
@@ -429,6 +443,7 @@ private: // data
   TBranch        *b_RichDLLpi;   //!
   TBranch        *b_RichDLLk;   //!
   TBranch        *b_RichDLLp;   //!
+  TBranch        *b_RichDLLbt;   //!
   TBranch        *b_RichUsedAero;   //!
   TBranch        *b_RichUsedR1Gas;   //!
   TBranch        *b_RichUsedR2Gas;   //!
@@ -440,6 +455,7 @@ private: // data
   TBranch        *b_MuonBkgLL;   //!
   TBranch        *b_MuonMuLL;   //!
   TBranch        *b_MuonNShared;   //!
+  TBranch        *b_MuonIsLooseMuon;   //!
   TBranch        *b_MuonIsMuon;   //!
   TBranch        *b_MuonInAcc;   //!
   TBranch        *b_InAccSpd;   //!
@@ -455,6 +471,9 @@ private: // data
   TBranch        *b_CaloChargedEcal;   //!
   TBranch        *b_CaloSpdE;   //!
   TBranch        *b_CaloPrsE;   //!
+  TBranch        *b_CaloEcalChi2;
+  TBranch        *b_CaloClusChi2;
+  TBranch        *b_CaloBremChi2;
   TBranch        *b_CaloEcalE;   //!
   TBranch        *b_CaloHcalE;   //!
   TBranch        *b_CaloTrajectoryL;   //!
@@ -469,6 +488,12 @@ private: // data
   TBranch        *b_CombDLLpi;   //!
   TBranch        *b_CombDLLk;   //!
   TBranch        *b_CombDLLp;   //!
+  TBranch * b_ProbNNe;
+  TBranch * b_ProbNNmu;
+  TBranch * b_ProbNNpi;
+  TBranch * b_ProbNNk;
+  TBranch * b_ProbNNp;
+  TBranch * b_ProbNNghost;
   TBranch        *b_VeloCharge;   //!
   TBranch        *b_MCParticleType;   //!
   TBranch        *b_MCParticleP;   //!

@@ -52,7 +52,7 @@ bool GlobalPID::passBasicPIDDet() const
   if ( config.mustHaveECALorPRSorRICH && !hasRichInfo() && !hasPrsInfo() && !hasEcalInfo() ) return false;
   // cannot apply muon sel due to fact protos only have info for IDed muons
   // must, for the moment, assume all protos have muons info
-  if ( config.mustHaveMUON    && !hasMuonInfo()    ) return false;
+  if ( config.mustHaveMUON && !hasMuonInfo()    ) return false;
   return true;
 }
 
@@ -99,6 +99,11 @@ void GlobalPID::makeCurve(const Long64_t nTracks)
     nb = fChain->GetEntry(jentry);
     nbytes += nb;
     //------------------------------------------------------------------------------
+
+    // temp fix up
+    TrackNumDof = (Int_t)_TrackNumDof;
+    TrackType = (Int_t)_TrackType;
+    TrackHistory = (Int_t)_TrackHistory;
 
     // pid det selection
     if ( !passBasicPIDDet()    ) continue;
@@ -623,14 +628,15 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("TrackP", &TrackP, &b_TrackP);
   fChain->SetBranchAddress("TrackPt", &TrackPt, &b_TrackPt);
   fChain->SetBranchAddress("TrackChi2PerDof", &TrackChi2PerDof, &b_TrackChi2PerDof);
-  fChain->SetBranchAddress("TrackNumDof", &TrackNumDof, &b_TrackNumDof);
-  fChain->SetBranchAddress("TrackType", &TrackType, &b_TrackType);
-  fChain->SetBranchAddress("TrackHistory", &TrackHistory, &b_TrackHistory);
+  fChain->SetBranchAddress("TrackNumDof", &_TrackNumDof, &b_TrackNumDof);
+  fChain->SetBranchAddress("TrackType", &_TrackType, &b_TrackType);
+  fChain->SetBranchAddress("TrackHistory", &_TrackHistory, &b_TrackHistory);
   fChain->SetBranchAddress("RichDLLe", &RichDLLe, &b_RichDLLe);
   fChain->SetBranchAddress("RichDLLmu", &RichDLLmu, &b_RichDLLmu);
   fChain->SetBranchAddress("RichDLLpi", &RichDLLpi, &b_RichDLLpi);
   fChain->SetBranchAddress("RichDLLk", &RichDLLk, &b_RichDLLk);
   fChain->SetBranchAddress("RichDLLp", &RichDLLp, &b_RichDLLp);
+  fChain->SetBranchAddress("RichDLLbt", &RichDLLbt, &b_RichDLLbt);
   fChain->SetBranchAddress("RichUsedAero", &RichUsedAero, &b_RichUsedAero);
   fChain->SetBranchAddress("RichUsedR1Gas", &RichUsedR1Gas, &b_RichUsedR1Gas);
   fChain->SetBranchAddress("RichUsedR2Gas", &RichUsedR2Gas, &b_RichUsedR2Gas);
@@ -642,6 +648,7 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("MuonBkgLL", &MuonBkgLL, &b_MuonBkgLL);
   fChain->SetBranchAddress("MuonMuLL", &MuonMuLL, &b_MuonMuLL);
   fChain->SetBranchAddress("MuonNShared", &MuonNShared, &b_MuonNShared);
+  fChain->SetBranchAddress("MuonIsLooseMuon", &MuonIsLooseMuon, &b_MuonIsLooseMuon);
   fChain->SetBranchAddress("MuonIsMuon", &MuonIsMuon, &b_MuonIsMuon);
   fChain->SetBranchAddress("MuonInAcc", &MuonInAcc, &b_MuonInAcc);
   fChain->SetBranchAddress("InAccSpd", &InAccSpd, &b_InAccSpd);
@@ -657,6 +664,9 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("CaloChargedEcal", &CaloChargedEcal, &b_CaloChargedEcal);
   fChain->SetBranchAddress("CaloSpdE", &CaloSpdE, &b_CaloSpdE);
   fChain->SetBranchAddress("CaloPrsE", &CaloPrsE, &b_CaloPrsE);
+  fChain->SetBranchAddress("CaloEcalChi2", &CaloEcalChi2, &b_CaloEcalChi2);
+  fChain->SetBranchAddress("CaloClusChi2", &CaloClusChi2, &b_CaloClusChi2);
+  fChain->SetBranchAddress("CaloBremChi2", &CaloBremChi2, &b_CaloBremChi2);
   fChain->SetBranchAddress("CaloEcalE", &CaloEcalE, &b_CaloEcalE);
   fChain->SetBranchAddress("CaloHcalE", &CaloHcalE, &b_CaloHcalE);
   fChain->SetBranchAddress("CaloTrajectoryL", &CaloTrajectoryL, &b_CaloTrajectoryL);
@@ -671,6 +681,12 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("CombDLLpi", &CombDLLpi, &b_CombDLLpi);
   fChain->SetBranchAddress("CombDLLk", &CombDLLk, &b_CombDLLk);
   fChain->SetBranchAddress("CombDLLp", &CombDLLp, &b_CombDLLp);
+  fChain->SetBranchAddress("ProbNNe",&ProbNNe,&b_ProbNNe);
+  fChain->SetBranchAddress("ProbNNmu",&ProbNNmu,&b_ProbNNmu);
+  fChain->SetBranchAddress("ProbNNpi",&ProbNNpi,&b_ProbNNpi);
+  fChain->SetBranchAddress("ProbNNk",&ProbNNk,&b_ProbNNk);
+  fChain->SetBranchAddress("ProbNNp",&ProbNNp,&b_ProbNNp);
+  fChain->SetBranchAddress("ProbNNghost",&ProbNNghost,&b_ProbNNghost);
   fChain->SetBranchAddress("VeloCharge", &VeloCharge, &b_VeloCharge);
   fChain->SetBranchAddress("MCParticleType", &MCParticleType, &b_MCParticleType);
   fChain->SetBranchAddress("MCParticleP", &MCParticleP, &b_MCParticleP);
@@ -701,24 +717,25 @@ void GlobalPID::Show(Long64_t entry)
 
 // method to save image files from a canvas
 void GlobalPID::saveImage ( TCanvas * canvas,
-                            std::string name )
+                            const std::string& filename )
 {
   if ( canvas )
   {
+    std::string _name = filename;
     typedef std::map<std::string,bool> LocalFileMap;
     static LocalFileMap fileMap;
     bool goOn(true);
     while ( goOn )
     {
-      LocalFileMap::iterator iF = fileMap.find(name);
+      LocalFileMap::iterator iF = fileMap.find(_name);
       if ( iF != fileMap.end() )
       {
-        name = "NEWFIG_"+name;
+        _name = "NEWFIG_"+_name;
       } else { goOn = false; }
     }
-    fileMap[name] = true;
-    std::cout << "Printing image " << name << std::endl;
-    canvas->SaveAs( name.c_str() );
+    fileMap[_name] = true;
+    std::cout << "Printing image " << _name << std::endl;
+    canvas->SaveAs( _name.c_str() );
   }
 }
 

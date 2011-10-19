@@ -82,7 +82,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     if ( !track ) continue;
 
     // make a tuple
-    Tuple tuple = nTuple("protoPtuple", "ProtoParticle PID Information");
+    Tuple tuple = nTuple("protoPtuple","ProtoParticle PID Information");
 
     // Status Code for filling the ntuple
     StatusCode sc = StatusCode::SUCCESS;
@@ -96,6 +96,12 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "TrackNumDof",     proto->info ( LHCb::ProtoParticle::TrackNumDof, 0 ) );
     sc = sc && tuple->column( "TrackType",       proto->info ( LHCb::ProtoParticle::TrackType, 0 ) );
     sc = sc && tuple->column( "TrackHistory",    proto->info ( LHCb::ProtoParticle::TrackHistory, 0 ) );
+    //sc = sc && tuple->column( "TrackP",          track->p()  );
+    //sc = sc && tuple->column( "TrackPt",         track->pt() );
+    //sc = sc && tuple->column( "TrackChi2PerDof", track->chi2PerDoF() );
+    //sc = sc && tuple->column( "TrackNumDof",     track->nDoF() );
+    //sc = sc && tuple->column( "TrackType",       track->type() );
+    //sc = sc && tuple->column( "TrackHistory",    track->history() );
 
     // rich
     static LHCb::RichPID tmpRPID;
@@ -106,9 +112,9 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
     sc = sc && tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
     sc = sc && tuple->column( "RichDLLbt",     proto->info ( LHCb::ProtoParticle::RichDLLbt, 0 ) );
-    sc = sc && tuple->column( "RichUsedAero",  tmpRPID.usedAerogel()  );
-    sc = sc && tuple->column( "RichUsedR1Gas", tmpRPID.usedRich1Gas() );
-    sc = sc && tuple->column( "RichUsedR2Gas", tmpRPID.usedRich2Gas() );
+    sc = sc && tuple->column( "RichUsedAero",     tmpRPID.usedAerogel()  );
+    sc = sc && tuple->column( "RichUsedR1Gas",    tmpRPID.usedRich1Gas() );
+    sc = sc && tuple->column( "RichUsedR2Gas",    tmpRPID.usedRich2Gas() );
     sc = sc && tuple->column( "RichAboveElThres", tmpRPID.electronHypoAboveThres() );
     sc = sc && tuple->column( "RichAboveMuThres", tmpRPID.muonHypoAboveThres() );
     sc = sc && tuple->column( "RichAbovePiThres", tmpRPID.pionHypoAboveThres() );

@@ -119,7 +119,7 @@ StatusCode ChargedProtoParticleMoni::execute()
                "% ProtoParticles with RICH info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Muon INFO
-    const bool hasMUON = proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus);
+    const bool hasMUON = proto->hasInfo(LHCb::ProtoParticle::InAccMuon);
     if ( hasMUON ) { ++tally.muonTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasMUON,
                type.str()+"protosWithMUON",

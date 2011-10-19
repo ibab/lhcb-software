@@ -4,7 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-!========================= GlobalReco v6r38 2011-07-27 =========================
+! 2011-10-19 - Chris Jones
+ - Update ChargedProtoParticleMoni to define a ProtoParticle as having Muon
+   information when LHCb::ProtoParticle::InAccMuon is present in the 
+   ProtoPaticle
+
+!========================= GlobalReco v6r38 2011-07-27 =======================
 ! 2011-07-26 - Chris Jones
  - Some minor improvements to the charged ProtoParticle monitor
 
