@@ -181,10 +181,8 @@ class PhysConf(LHCbConfigurableUser) :
                 ]
                 )
             dataOnDemand.AlgMap[ filtered ] = fltr.getFullName() 
-            dataOnDemand.Dump = True
+            #dataOnDemand.Dump = True
             
-        dataOnDemand.OutputLevel = 1
-
 #
 # LoKi
 #

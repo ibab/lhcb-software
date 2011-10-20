@@ -5,7 +5,11 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Chris Jones
+ - Don't force the OutputLevel for DataOnDemand to 1 or dump the entire mappings
+
 !========================= PhysConf v1r12 2011-09-07 =========================
+
 ! 2011-08-25 - Rob Lambert
  - Added SteerRawLocations.py Simple functions to steer raw event locations
 	def setTriggerRawEventLocation(location="/Event/Trigger/RawEvent"):
