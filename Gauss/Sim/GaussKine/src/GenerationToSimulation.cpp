@@ -454,12 +454,10 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
     HepMC::GenVertex   * V = P -> end_vertex() ;
     if ( 0 != V ) result = V -> position() ; 
     else error() << "The beam particles have no end vertex !" << endreq ;
-    return result ;
   } else if ( 0 != genEvent -> signal_process_vertex() ) { 
   // Second option, use the signal vertex stored in HepMC 
     HepMC::GenVertex * V = genEvent -> signal_process_vertex() ;
     result = V -> position() ;
-    return result ;
   } else {
   // Last option, take the production or end vertex of the particle with bar code 1
     HepMC::GenParticle * P = genEvent -> barcode_to_particle( 1 ) ;
@@ -474,10 +472,8 @@ Gaudi::LorentzVector GenerationToSimulation::primaryVertex( const HepMC::GenEven
                      << endreq ;
       }
     } else error() << "No particle with barcode equal to 1 !" << endreq ;
-    return result ;
   }
-  // If none of the above works, print an error message and use (0,0,0)
-  error() << "Cannot determine primary vertex !" << endreq ;
+
   return result ;
 }
 

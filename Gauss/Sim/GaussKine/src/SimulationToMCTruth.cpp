@@ -54,6 +54,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
   , m_particleContainer( 0 )
   , m_vertexContainer  ( 0 )
   , m_mcHeader         ( 0 )  
+  , m_ppSvc            ( 0 )
   , m_intermediatePDG  ( 0 )
 { 
   declareProperty( "Particles", 

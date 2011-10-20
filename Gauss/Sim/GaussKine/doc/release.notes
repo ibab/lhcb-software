@@ -4,6 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - SimulationToMCTruth
+ - GenerationToSimulation
+   fix coverity warnings
+
 !========================= GaussKine v4r0 2010-05-09 ========================= 
 ! 2010-05-03 - Gloria CORTI
  - Remove obsolete algorithms that were used in DC06 to pass the generator
