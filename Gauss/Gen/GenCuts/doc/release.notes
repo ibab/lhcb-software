@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - Fix coverity warnings
+
 !========================== GenCuts v1r2 2011-10-17 ========================== 
 ! 2011-10-14 - Patrick Robbe
  - UpsilonDaughtersInLHCb.cpp: skip event in case of failure in EvtGen

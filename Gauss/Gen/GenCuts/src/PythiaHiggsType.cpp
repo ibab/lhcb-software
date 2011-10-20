@@ -41,7 +41,10 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
     m_motheroflepton   ( ) ,
     m_MinMass          (-1.),
     m_nbbquarks        ( 1          ) ,
-    m_motherofb_id     ( "H_10" ) 
+    m_motherofb_id     ( "H_10" ) ,
+    m_motherofb_pid    ( 0 ) ,
+    m_b_pid            ( 0 ) ,
+    m_ppSvc            ( 0 )
 {
   declareInterface< IGenCutTool >( this ) ;
 

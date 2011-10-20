@@ -32,7 +32,7 @@ DECLARE_TOOL_FACTORY( BiasedBB );
 //=============================================================================
 BiasedBB::BiasedBB( const std::string& type , const std::string& name ,
                     const IInterface* parent )
-  : GaudiTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) , m_deltaPhiCut( false ) {
     declareInterface< IGenCutTool >( this ) ;
     declareProperty( "EtaMax" , m_etaMax = 4.7 ) ;
     declareProperty( "EtaMin" , m_etaMin = 2.2 ) ;
