@@ -23,7 +23,7 @@ MuonPhysicalChannelOutput::MuonPhysicalChannelOutput
 void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, 
                                                  LHCb::MuonTileID phChTileID[2],DeMuonDetector* muonDetector){  
   
-  bool debug=false;
+  //bool debug=false;
   
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
@@ -38,10 +38,6 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
   int numberOfTileCreated=0;
   unsigned int numberOfPCX, numberOfPCY;
 
-  if(debug){
-    std::cout<<station<<" "<<region<<" "<<chamber<<" "<<quadrant<<" "<<
-      idX<<" "<<idY<<std::endl;
-  } 
 
   newidX=0;
   newidY=0;
@@ -50,17 +46,12 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
   numberTileOutput=0;
   // loop over FE channel readout
   //
-  if(debug)std::cout<<muonDetector->readoutInRegion(station,region)<<std::endl;
 
   for (int readoutNumber=0;readoutNumber<(int)muonDetector->
          getLogMapInRegion(station,region);readoutNumber++){
     //
     // check if current readout coincides with one of the LogMap readouts
     //
-    if(debug) std::cout<<"logmap type, readout "<<
-                muonDetector->getLogMapRType(readoutNumber,station,region)<<" "<<
-                readout<<" "<<readoutNumber<<
-                std::endl;
     
     if(muonDetector->getLogMapRType(readoutNumber,station,region)==readout)
     {
@@ -77,9 +68,6 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
             getPhChannelNX(countReadout,station,region);
           numberOfPCY=muonDetector->
             getPhChannelNY(countReadout,station,region);
-          if(debug) std::cout<<"channels "<<countReadout<<" "<<station<<" "<<region<<" "
-                             <<numberOfPCX<<" "<<
-                      numberOfPCY<<std::endl;
           
           
         }
@@ -106,13 +94,14 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
       // FE ch address in the whole quadrant
       //
       LHCb::MuonTileID chaTile;
-      muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
-      
+      StatusCode sc=
+           muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
+      if(sc.isFailure()){
+          numberTileOutput=0;
+          return;
+      }
       idXGlobal=newidX+chaTile.nX()*numberOfPCX;
       idYGlobal=newidY+chaTile.nY()*numberOfPCY;
-      if(debug)std::cout<<"cha tile "<<chaTile.nX()<<" "<<chaTile.nY()<<std::endl;
-      
-      if(debug)std::cout<< idXGlobal<<" "<< idYGlobal<<std::endl;
       
       //
       //  compute Logical Channel address now
@@ -124,11 +113,6 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
       //
       // create the tile of the phys chan
       //  
-      if(debug)std::cout<<  idLogX <<" "<< idLogY<<std::endl;
-      if(debug)std::cout<< muonDetector->
-                 getLogMapMergex(readoutNumber,station,region)<<" "<<
-                 muonDetector->
-                 getLogMapMergey(readoutNumber,station,region)<<std::endl;
       
       
       ++numberTileOutput;
@@ -136,8 +120,6 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
       MuonLayout layout(muonDetector->getLayoutX(readoutNumber,station,region),
                         muonDetector->
                         getLayoutY(readoutNumber,station,region));   
-      if(debug)std::cout<<"Layout "<<muonDetector->getLayoutX(readoutNumber,station,region)<<" "
-                        <<muonDetector->getLayoutY(readoutNumber,station,region)<<std::endl;
       
       phChTileID[numberOfTileCreated].setLayout(layout);
       phChTileID[numberOfTileCreated].setStation(station);

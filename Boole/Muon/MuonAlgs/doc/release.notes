@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+! 2011-10-20 - Alessia Satta
+ - Fix uncheck statsucode
+
 ! 2011-10-19 - Alessia Satta
  - Update deadtime description
 
