@@ -10,7 +10,7 @@
     LineSkipper([&quot;INFO Connected to database&quot;]) + \
     LineSkipper([&quot;INFO Disconnect from database after being idle&quot;]) + \
     LineSkipper([&quot;Generation.FixedLumi&quot;]) + \
-    LineSkipper([&quot;Generation.GaussGenMemory&quot;]) + \
+    LineSkipper([&quot;GaussGen.GaussGenMemory&quot;]) + \
     LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
 validateWithReference(preproc = preprocessor)
 </text></argument><argument name="resources"><set/></argument><argument name="stdin"><text/></argument></extension>
