@@ -470,7 +470,10 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     this->m_monsvc->Lock();
     unsigned long long dtim = tim-m_time0;
     double ftim = dtim/1000000000;
-    m_histo->fill(ftim);
+    if (m_histo != 0)
+    {
+      m_histo->fill(ftim);
+    }
     //printf("HistAdder UNLocking MonitorSvc\n");
     this->m_monsvc->UnLock();
   }
