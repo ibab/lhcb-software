@@ -8,6 +8,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - CaloSensDet.cpp
+ - GetCaloHitsAlg.cpp:
+   fix coverity warnings
+
 !========================= GaussCalo v9r3 2009-04-06 ==========================
 ! 2009-03-26 - Patrick Robbe
  - GetCaloHitsAlg: add possibility to change MCParticles location by option

@@ -90,6 +90,7 @@ CaloSensDet::CaloSensDet
   //
   , m_caloName           ( DeCalorimeterLocation::Ecal ) 
   , m_calo               ( 0 ) 
+  , m_caloID             ( 0 ) 
   ///
   , m_zmin               ( -1 * CLHEP::km )  // minimal z of forbidden zone 
   , m_zmax               (  1 * CLHEP::km )  // maximal z of forbidden zone 

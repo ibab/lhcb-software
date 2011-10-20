@@ -36,7 +36,9 @@ DECLARE_ALGORITHM_FACTORY( GetCaloHitsAlg );
 //=============================================================================
 GetCaloHitsAlg::GetCaloHitsAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) {
+  : GaudiAlgorithm ( name , pSvcLocator ) ,
+    m_gigaSvc( 0 ) , 
+    m_gigaKineCnvSvc( 0 ) {
     declareProperty( "GiGaService" , m_gigaSvcName = "GiGa" ) ;
     declareProperty( "KineCnvService" , 
                      m_kineSvcName = IGiGaCnvSvcLocation::Kine ) ;
