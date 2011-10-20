@@ -4,6 +4,13 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - ParticleGun.cpp
+ - OTCosmic.cpp
+ - BeamShape.cpp
+ - RichPatternGun.cpp:
+   fix coverity warnings
+
 !========================== LbPGuns v2r0 2011-07-23 ==========================
 ! 2011-07-15 - Gloria Corti
  - Apply pattern not to build on windows, so that conditional use can be

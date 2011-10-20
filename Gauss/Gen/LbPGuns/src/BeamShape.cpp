@@ -28,7 +28,15 @@ DECLARE_TOOL_FACTORY( BeamShape );
 BeamShape::BeamShape( const std::string& type ,
                   const std::string& name , 
                   const IInterface* parent )
-  : GaudiTool( type , name, parent ) {
+  : GaudiTool( type , name, parent ) , 
+    m_xSigma( 0. ) , 
+    m_ySigma( 0. ) ,
+    m_pxCenter( 0. ) ,
+    m_pyCenter( 0. ) ,
+    m_pxSigma( 0. ) , 
+    m_pySigma( 0. ) ,
+    m_mass( 0. ) 
+{
     declareInterface< IParticleGunTool >( this ) ;
 
     // Beam Centroid

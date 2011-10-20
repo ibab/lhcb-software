@@ -23,6 +23,8 @@ DECLARE_ALGORITHM_FACTORY( RichPatternGun );
 RichPatternGun::RichPatternGun( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) : 
   GaudiAlgorithm(name, pSvcLocator) , 
+  m_curx( 0 ) , 
+  m_cury( 0 ) ,
   m_minx( -400 ) , 
   m_miny( -300 ) ,
   m_maxx(  400 ) ,
