@@ -43,7 +43,14 @@ DECLARE_TOOL_FACTORY( Pythia8Production );
 Pythia8Production::Pythia8Production( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent ) , m_defaultSettings() , m_pythia( 0 ) {
+  : GaudiTool ( type, name , parent ) , m_defaultSettings() , 
+    m_id1( 0 ) , 
+    m_id2( 0 ) , 
+    m_engCM( 0. ) ,
+    m_beamTool( 0 ) ,
+    m_pythia( 0 ) ,
+    m_nEvents( 0 ) ,
+    m_randomEngine( 0 ) {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;

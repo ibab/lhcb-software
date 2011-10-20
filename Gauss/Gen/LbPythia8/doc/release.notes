@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - Pythia8Production: fix coverity warnings
+
 !========================= LbPythia8 v2r2 2011-07-24 =========================
 ! 2011-07-24 - Gloria Corti
  - Apply pattern not to build on windows, so that conditional use can be
