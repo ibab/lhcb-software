@@ -6,7 +6,7 @@
 Upcom::UPCOM* Upcom::s_upcom =0;
 
 // Constructor
-Upcom::Upcom() { }
+Upcom::Upcom() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Upcom::~Upcom() { }
@@ -44,7 +44,7 @@ double& Upcom::fbcc() {
 // access pmomup in common
 double& Upcom::pmomup(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenPmomup() || j  < 1 || j  > depthPmomup()) {
+  if( i < 1 || j > lenPmomup() || j  < 1 || i  > depthPmomup()) {
     m_realdummy = -999.;
     return m_realdummy;
   }
@@ -54,7 +54,7 @@ double& Upcom::pmomup(int i, int j) {
 // access colmat in common
 std::complex<double>& Upcom::colmat(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenColmat() || j  < 1 || j  > depthColmat()) {
+  if( i < 1 || j > lenColmat() || j  < 1 || i  > depthColmat()) {
     m_complexdummy = std::complex< double >(-999.,-999.);
     return m_complexdummy;
   }
@@ -74,7 +74,7 @@ std::complex<double>& Upcom::bundamp(int n) {
 // access pmomzero in common
 double& Upcom::pmomzero(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenPmomzero() || j  < 1 || j  > depthPmomzero()) {
+  if( i < 1 || j > lenPmomzero() || j  < 1 || i  > depthPmomzero()) {
     m_realdummy = -999.;
     return m_realdummy;
   }

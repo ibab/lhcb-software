@@ -6,7 +6,7 @@
 Totcross::TOTCROSS* Totcross::s_totcross =0;
 
 // Constructor
-Totcross::Totcross() { }
+Totcross::Totcross() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Totcross::~Totcross() { }

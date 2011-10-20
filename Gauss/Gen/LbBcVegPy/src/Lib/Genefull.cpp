@@ -6,7 +6,7 @@
 Genefull::GENEFULL* Genefull::s_genefull =0;
 
 // Constructor
-Genefull::Genefull() { }
+Genefull::Genefull() : m_dummy( 0 ) , m_realdummy( 0. ) , m_booldummy( true ) { }
 
 // Destructor
 Genefull::~Genefull() { }

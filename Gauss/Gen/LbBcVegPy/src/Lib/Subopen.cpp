@@ -6,7 +6,7 @@
 Subopen::SUBOPEN* Subopen::s_subopen =0;
 
 // Constructor
-Subopen::Subopen() { }
+Subopen::Subopen() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Subopen::~Subopen() { }

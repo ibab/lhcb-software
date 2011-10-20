@@ -6,7 +6,7 @@
 Coloct::COLOCT* Coloct::s_coloct =0;
 
 // Constructor
-Coloct::Coloct() { }
+Coloct::Coloct() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Coloct::~Coloct() { }

@@ -6,7 +6,7 @@
 Rconst::RCONST* Rconst::s_rconst =0;
 
 // Constructor
-Rconst::Rconst() { }
+Rconst::Rconst() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Rconst::~Rconst() { }

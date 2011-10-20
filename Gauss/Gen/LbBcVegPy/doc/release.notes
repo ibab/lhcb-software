@@ -3,6 +3,32 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2011-10-20 - Patrick Robbe
+ . src/Lib/Funtrans.cpp
+ . src/Lib/Intinif.cpp
+ . src/Lib/Genefull.cpp
+ . src/Lib/Outpdf.cpp
+ . src/Lib/Colflow.cpp
+ . src/Lib/Intinip.cpp
+ . src/Lib/Octmatrix.cpp
+ . src/Lib/Counter.cpp
+ . src/Lib/Confine.cpp 
+ . src/Lib/Grade.cpp
+ . src/Lib/Coloct.cpp
+ . src/Lib/Upcom.cpp
+ . src/Lib/Mixevnt.cpp
+ . src/Lib/Vegasinf.cpp
+ . src/Lib/Wavezero.cpp
+ . src/Lib/Usertran.cpp
+ . src/Lib/Qqbar.cpp
+ . src/Lib/Rconst.cpp
+ . src/Lib/Subopen.cpp
+ . src/Lib/Totcross.cpp
+ . src/Lib/Loggrade.cpp
+ . src/Lib/Hepeup.cpp
+ . src/Lib/Vegcross.cpp:
+   Fix coverity warnings
+
 !========================= LbBcVegPy v4r1 2011-10-17 =========================
 ! 2011-09-28 - Patrick Robbe
  - BcDaughtersInLHCb: move to MCInterfaces package

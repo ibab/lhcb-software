@@ -6,7 +6,7 @@
 Loggrade::LOGGRADE* Loggrade::s_loggrade =0;
 
 // Constructor
-Loggrade::Loggrade() { }
+Loggrade::Loggrade() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Loggrade::~Loggrade() { }

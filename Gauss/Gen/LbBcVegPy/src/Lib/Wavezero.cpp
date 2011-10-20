@@ -6,7 +6,7 @@
 Wavezero::WAVEZERO* Wavezero::s_wavezero =0;
 
 // Constructor
-Wavezero::Wavezero() { }
+Wavezero::Wavezero() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Wavezero::~Wavezero() { }

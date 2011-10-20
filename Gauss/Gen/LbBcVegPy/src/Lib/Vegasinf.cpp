@@ -6,7 +6,7 @@
 Vegasinf::VEGASINF* Vegasinf::s_vegasinf =0;
 
 // Constructor
-Vegasinf::Vegasinf() { }
+Vegasinf::Vegasinf() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Vegasinf::~Vegasinf() { }

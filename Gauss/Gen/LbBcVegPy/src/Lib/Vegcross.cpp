@@ -6,7 +6,7 @@
 Vegcross::VEGCROSS* Vegcross::s_vegcross =0;
 
 // Constructor
-Vegcross::Vegcross() { }
+Vegcross::Vegcross() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Vegcross::~Vegcross() { }

@@ -6,7 +6,7 @@
 Confine::CONFINE* Confine::s_confine =0;
 
 // Constructor
-Confine::Confine() { }
+Confine::Confine() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Confine::~Confine() { }

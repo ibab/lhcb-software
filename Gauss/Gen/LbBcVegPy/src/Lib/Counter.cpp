@@ -6,7 +6,7 @@
 Counter::COUNTER* Counter::s_counter =0;
 
 // Constructor
-Counter::Counter() { }
+Counter::Counter() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Counter::~Counter() { }

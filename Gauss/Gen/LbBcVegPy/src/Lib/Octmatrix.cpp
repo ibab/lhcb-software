@@ -6,7 +6,7 @@
 Octmatrix::OCTMATRIX* Octmatrix::s_octmatrix =0;
 
 // Constructor
-Octmatrix::Octmatrix() { }
+Octmatrix::Octmatrix() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Octmatrix::~Octmatrix() { }

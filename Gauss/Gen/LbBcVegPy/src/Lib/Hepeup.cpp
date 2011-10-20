@@ -6,7 +6,7 @@
 Hepeup::HEPEUP* Hepeup::s_hepeup =0;
 
 // Constructor
-Hepeup::Hepeup() { }
+Hepeup::Hepeup() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Hepeup::~Hepeup() { }
@@ -70,7 +70,7 @@ int& Hepeup::istup(int n) {
 // access mothup in common
 int& Hepeup::mothup(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenMothup() || j  < 1 || j  > depthMothup()) {
+  if( i < 1 || j > lenMothup() || j  < 1 || i > depthMothup()) {
     m_dummy = -999;
     return m_dummy;
   }
@@ -80,7 +80,7 @@ int& Hepeup::mothup(int i, int j) {
 // access icolup in common
 int& Hepeup::icolup(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenIcolup() || j  < 1 || j  > depthIcolup()) {
+  if( i < 1 || j > lenIcolup() || j  < 1 || i  > depthIcolup()) {
     m_dummy = -999;
     return m_dummy;
   }
@@ -90,7 +90,7 @@ int& Hepeup::icolup(int i, int j) {
 // access pup in common
 double& Hepeup::pup(int i, int j) {
   init(); // check COMMON is initialized
-  if( i < 1 || i > lenPup() || j  < 1 || j  > depthPup()) {
+  if( i < 1 || j > lenPup() || j  < 1 || i  > depthPup()) {
     m_realdummy = -999.;
     return m_realdummy;
   }

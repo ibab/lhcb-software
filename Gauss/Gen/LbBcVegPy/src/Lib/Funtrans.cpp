@@ -6,7 +6,7 @@
 Funtrans::FUNTRANS* Funtrans::s_funtrans =0;
 
 // Constructor
-Funtrans::Funtrans() { }
+Funtrans::Funtrans() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Funtrans::~Funtrans() { }

@@ -6,7 +6,7 @@
 Outpdf::OUTPDF* Outpdf::s_outpdf =0;
 
 // Constructor
-Outpdf::Outpdf() { }
+Outpdf::Outpdf() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Outpdf::~Outpdf() { }

@@ -6,7 +6,7 @@
 Mixevnt::MIXEVNT* Mixevnt::s_mixevnt =0;
 
 // Constructor
-Mixevnt::Mixevnt() { }
+Mixevnt::Mixevnt() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Mixevnt::~Mixevnt() { }

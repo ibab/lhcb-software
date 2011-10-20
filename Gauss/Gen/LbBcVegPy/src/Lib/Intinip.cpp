@@ -6,7 +6,7 @@
 Intinip::INTINIP* Intinip::s_intinip =0;
 
 // Constructor
-Intinip::Intinip() { }
+Intinip::Intinip() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Intinip::~Intinip() { }

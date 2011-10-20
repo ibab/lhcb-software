@@ -6,7 +6,7 @@
 Intinif::INTINIF* Intinif::s_intinif =0;
 
 // Constructor
-Intinif::Intinif() { }
+Intinif::Intinif() : m_dummy( 0 ) , m_realdummy( 0. )  { }
 
 // Destructor
 Intinif::~Intinif() { }

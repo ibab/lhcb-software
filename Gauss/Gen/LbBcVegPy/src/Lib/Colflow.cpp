@@ -6,7 +6,7 @@
 Colflow::COLFLOW* Colflow::s_colflow = 0;
 
 // Constructor
-Colflow::Colflow() { }
+Colflow::Colflow() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Colflow::~Colflow() { }

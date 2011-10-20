@@ -6,7 +6,7 @@
 Qqbar::QQBAR* Qqbar::s_qqbar =0;
 
 // Constructor
-Qqbar::Qqbar() { }
+Qqbar::Qqbar() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Qqbar::~Qqbar() { }

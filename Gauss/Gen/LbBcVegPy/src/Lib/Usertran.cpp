@@ -6,7 +6,7 @@
 Usertran::USERTRAN* Usertran::s_usertran =0;
 
 // Constructor
-Usertran::Usertran() { }
+Usertran::Usertran() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Usertran::~Usertran() { }
