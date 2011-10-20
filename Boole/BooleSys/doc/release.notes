@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v23r1>2011-10-20 Boole v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2011-10-21 Boole v23r1</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
@@ -18,6 +18,7 @@ This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
      default for main events plus (if any) spillover events (max 4) 
      (MuonBackground v2r11)
    . New tuning for spillover in Muon (MuonBackground v2r11, MuonAlgs v6r10)
+   . New tuning of Muon deadtime simulation (MuonAlgs v6r10)
    . Prevent creation of random noise in known Velo bad channels, avoids
      FPEs (VeloSimulation v3r11)
 
