@@ -39,7 +39,23 @@ DECLARE_TOOL_FACTORY( TimeCorrSource );
 TimeCorrSource::TimeCorrSource(const std::string& type,
                                    const std::string& name,
                                    const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent ) 
+  : GaudiHistoTool ( type, name , parent ) ,
+    m_overrideSource( 0. ) , 
+    m_luminosity( 0. ) ,
+    m_counter( 0 ) ,
+    m_sumOfWeights( 0. ) ,
+    m_rootFile( 0 ) ,
+    m_evtTree( 0 ) ,
+    m_partTree( 0 ) ,
+    m_zGen( 0. ) ,
+    m_xyDistGen( 0 ) ,
+    m_pxVSrGen( 0 ) , 
+    m_pyVSrGen( 0 ) , 
+    m_pzVSrGen( 0 ) , 
+    m_absPGen( 0 ) ,
+    m_thetaGen( 0 ) ,
+    m_timeGen( 0 ) ,
+    m_ppSvc( 0 ) 
 {
 
   declareInterface<IMIBSource>(this);

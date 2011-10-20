@@ -5,6 +5,9 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe
+ - TimeCorrSource.cpp: fix coverity warnings
+
 !============================ LbMIB v5r0 2011-07-23 ==========================
 ! 2011-06-19 - Patrick Robbe
  - TimCorrSource.cpp: fix compilation warnings
