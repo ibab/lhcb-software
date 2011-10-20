@@ -27,7 +27,10 @@ Lhacontrol::~Lhacontrol() { }
 void Lhacontrol::setlhaparm( int n , const std::string & value ) {
   char * arg = new char[ 20 ] ; 
   strncpy( arg , value.c_str() , value.size() ) ;
-  if ( n < 1 || n > lenlhaparm() ) return ;
+  if ( n < 1 || n > lenlhaparm() ) { 
+    delete [] arg ;
+    return ; 
+  }
 #ifdef WIN32
   GSETLHAPARM( & n , arg , strlen( arg ) ) ;
 #else

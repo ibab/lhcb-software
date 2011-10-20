@@ -635,6 +635,8 @@ double EvtGenDecay::branching( const EvtId& id ) const {
     int index = EvtDecayTable::inChannelList( EvtId( id.getId(), id.getId() ),
                                               theDecAlias -> getNDaug( ) ,
                                               daugs_scratch ) ;
+    if ( -1 == index ) return 1. ;
+
     EvtDecayBase * theTrueDecay = 
       EvtDecayTable::getDecay( id.getId() , index ) ;
 

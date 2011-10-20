@@ -271,32 +271,34 @@ StatusCode Generation::execute() {
   }
 
   itEvents = theEvents->begin();
-  for( LHCb::GenCollisions::const_iterator it = theCollisions->begin();
-       theCollisions->end() != it; ++it ) {
-    
-    // HepMCEvent
-    LHCb::HepMCEvent* theHepMCEvent = new LHCb::HepMCEvent();
-    theHepMCEvent->setGeneratorName( (*itEvents)->generatorName() );
-    (*theHepMCEvent->pGenEvt()) = (*(*itEvents)->pGenEvt());
-    eventsInTES->insert( theHepMCEvent );
-    ++itEvents;
-    
-    // GenCollision
-    LHCb::GenCollision* theGenCollision = new LHCb::GenCollision();
-    theGenCollision->setIsSignal( (*it)->isSignal() );
-    theGenCollision->setProcessType( (*it)->processType() );
-    theGenCollision->setSHat( (*it)->sHat() );
-    theGenCollision->setTHat( (*it)->tHat() );
-    theGenCollision->setUHat( (*it)->uHat() );
-    theGenCollision->setPtHat( (*it)->ptHat() );
-    theGenCollision->setX1Bjorken( (*it)->x1Bjorken() );
-    theGenCollision->setX2Bjorken( (*it)->x2Bjorken() );
-    theGenCollision->setEvent( theHepMCEvent );
-    collisionsInTES->insert( theGenCollision );
-    
-    // GenHeader
-    theGenHeader->addToCollisions( theGenCollision );
-    
+  if ( 0 < nPileUp ) {
+    for( LHCb::GenCollisions::const_iterator it = theCollisions->begin();
+	 theCollisions->end() != it; ++it ) {
+      
+      // HepMCEvent
+      LHCb::HepMCEvent* theHepMCEvent = new LHCb::HepMCEvent();
+      theHepMCEvent->setGeneratorName( (*itEvents)->generatorName() );
+      (*theHepMCEvent->pGenEvt()) = (*(*itEvents)->pGenEvt());
+      eventsInTES->insert( theHepMCEvent );
+      ++itEvents;
+      
+      // GenCollision
+      LHCb::GenCollision* theGenCollision = new LHCb::GenCollision();
+      theGenCollision->setIsSignal( (*it)->isSignal() );
+      theGenCollision->setProcessType( (*it)->processType() );
+      theGenCollision->setSHat( (*it)->sHat() );
+      theGenCollision->setTHat( (*it)->tHat() );
+      theGenCollision->setUHat( (*it)->uHat() );
+      theGenCollision->setPtHat( (*it)->ptHat() );
+      theGenCollision->setX1Bjorken( (*it)->x1Bjorken() );
+      theGenCollision->setX2Bjorken( (*it)->x2Bjorken() );
+      theGenCollision->setEvent( theHepMCEvent );
+      collisionsInTES->insert( theGenCollision );
+      
+      // GenHeader
+      theGenHeader->addToCollisions( theGenCollision );
+      
+    }
   }
 
   // Clear and delete the temporary containers
