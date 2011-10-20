@@ -38,7 +38,16 @@ DECLARE_TOOL_FACTORY( HijingProduction );
 HijingProduction::HijingProduction(const std::string& type,
                                    const std::string& name,
                                    const IInterface* parent)
-  : GaudiTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) ,
+    m_beam_to_use( 1 ) , 
+    m_efrm( 0. ) ,
+    m_iap( 0 ) ,
+    m_izp( 0 ) ,
+    m_iat( 0 ) ,
+    m_izt( 0 ) ,
+    m_bmin( 0. ) ,
+    m_bmax( 0. ) 
+{
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
   m_defaultSettings.clear() ;
