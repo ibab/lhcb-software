@@ -6,7 +6,7 @@
 Pydat1::PYDAT1* Pydat1::s_pydat1 =0;
 
 // Constructor
-Pydat1::Pydat1() { }
+Pydat1::Pydat1() : m_dummy( 0 ) , m_realdummy( 0. )  { }
 
 // Destructor
 Pydat1::~Pydat1() { }

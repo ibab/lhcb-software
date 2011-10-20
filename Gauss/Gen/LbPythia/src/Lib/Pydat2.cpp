@@ -8,7 +8,7 @@
 Pydat2::PYDAT2* Pydat2::s_pydat2 =0;
 
 // Constructor
-Pydat2::Pydat2() { }
+Pydat2::Pydat2() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Pydat2::~Pydat2() { }

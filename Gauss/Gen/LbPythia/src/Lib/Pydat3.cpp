@@ -8,7 +8,7 @@
 Pydat3::PYDAT3* Pydat3::s_pydat3 =0;
 
 // Constructor
-Pydat3::Pydat3() { }
+Pydat3::Pydat3() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Pydat3::~Pydat3() { }

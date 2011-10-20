@@ -71,7 +71,13 @@ JetProduction::JetProduction( const std::string& type,
     m_had_mstu_2 ( 0 ) , 
     // list of particles to be printed using PyList(12)
     m_pdtlist    (   ) ,    
-    m_index ( -1 )
+    m_nEvents( 0 ) ,
+    m_index ( -1 ) ,
+    m_particlesdiff( 0 ) ,
+    m_energydiff( 0 ) ,
+    m_thetadiff( 0 ) ,
+    m_phidiff( 0 ) ,
+    m_RGS( 0 ) 
 {
   declareInterface< IProductionTool >( this ) ;
 

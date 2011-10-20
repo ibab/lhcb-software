@@ -61,7 +61,7 @@ const double& Pyssmt::smw(int i) const {
 
 const double& Pyssmt::sfmix(int i, int j) const 
 {
-  if ( i<0 || i>s_lenSfmix || j<0 || j>s_widthSfmix ) {
+  if ( i<0 || j>s_lenSfmix || j<0 || i>s_widthSfmix ) {
     std::cout << "Pyssmt: attempt to read or write SFMIX out of bounds" 
               << std::endl ;
     m_realdummy=-999.0;

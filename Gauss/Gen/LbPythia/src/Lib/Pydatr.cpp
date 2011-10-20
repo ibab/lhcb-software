@@ -6,7 +6,7 @@
 Pydatr::PYDATR* Pydatr::s_pydatr =0;
 
 // Constructor
-Pydatr::Pydatr() { }
+Pydatr::Pydatr() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Pydatr::~Pydatr() { }

@@ -6,7 +6,7 @@
 Pyint2::PYINT2* Pyint2::s_pyint2 =0;
 
 // Constructor
-Pyint2::Pyint2() { }
+Pyint2::Pyint2() : m_dummy( 0 ) , m_realdummy( 0. )  { }
  
 // Destructor
 Pyint2::~Pyint2() { }

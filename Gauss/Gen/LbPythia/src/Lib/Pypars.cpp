@@ -5,7 +5,7 @@
 Pypars::PYPARS* Pypars::s_pypars =0;
 
 // Constructor
-Pypars::Pypars() { }
+Pypars::Pypars() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Pypars::~Pypars() { }

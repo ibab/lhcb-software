@@ -4,6 +4,19 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-10-20 - Patrick Robbe 
+ - JetProduction.cpp
+ - Pyssmt.cpp
+ - PythiaProduction.cpp
+ - Pyint2.cpp
+ - Pysubs.cpp
+ - Pydat1.cpp
+ - Pydatr.cpp
+ - Pydat2.cpp
+ - Pydat3.cpp
+ - Pypars.cpp
+   fix coverity warnings
+
 !========================= LbPythia v10r1 2011-10-17 =========================
 ! 2011-10-12 - Pieter David
  - PythiaProduction: add a property to specify particles whose properties should be reset to the values in the ParticlePropertySvc at every call of initializeGenerator

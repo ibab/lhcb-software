@@ -8,7 +8,7 @@
 Pysubs::PYSUBS* Pysubs::s_pysubs =0;
 
 // Constructor
-Pysubs::Pysubs() { }
+Pysubs::Pysubs() : m_dummy( 0 ) , m_realdummy( 0. ) { }
 
 // Destructor
 Pysubs::~Pysubs() { }
