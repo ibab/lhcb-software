@@ -586,11 +586,12 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   }
   const Gaudi::XYZPoint p0 (  v0->point3d() ) ;
   // check for production vertex 
-  if ( 0 < m_maxZproduction   && std::fabs( p0.Z() ) > m_maxZproduction    ) 
-  { return false ; }
-  if ( 0 < m_maxRhoProduction && p0.Rho()       > m_maxRhoProduction  ) 
-  { return false ; }
-  
+  if( ! m_forceNoCutAcceptance ){  
+    if ( 0 < m_maxZproduction   && std::fabs( p0.Z() ) > m_maxZproduction    ) 
+    { return false ; }
+    if ( 0 < m_maxRhoProduction && p0.Rho()       > m_maxRhoProduction  ) 
+    { return false ; }
+  }
   // check for decay vertex 
   const HepMC::GenVertex* ve = p->end_vertex() ;
   if( ! m_forceNoCutAcceptance ){  
