@@ -189,21 +189,15 @@ def extendfile2 ( filename , castor = False ) :
     Helper function to 'extend' the short file name 
     """
     ##
-    if 0 <= filename.find(' '        ) : return filename
-    if 0 <= filename.find('DATAFILE=') : return filename
+    from GaudiPython.Bindings import _gaudi
+    ##
+    if 0 <= filename.find ( ' '         ) : return filename
+    if 0 <= filename.find ( 'DATAFILE=' ) : return filename
     ##
     ## @see extendfile1 
     filename = extendfile1 ( filename , castor ) 
     ##
     ##
-    #
-    # pattern = "DATAFILE='%s' %s OPT='READ'"
-    # typ     = "TYPE='POOL_ROOTTREE'"
-    #
-    # if 0 <= filename.find ( '.mdf' ) : typ = "SVC='LHCb::MDFSelector'"
-    # if 0 <= filename.find ( '.raw' ) : typ = "SVC='LHCb::MDFSelector'"
-    #
-    # return pattern %  ( filename , typ )
     #
     from GaudiConf import IOHelper
     if 0 < filename.find ( '.mdf' ) or \
@@ -214,15 +208,12 @@ def extendfile2 ( filename , castor = False ) :
     else :
         ioh = IOHelper ( Input = 'ROOT' , Output = 'ROOT' )
         #
-    from GaudiPython.Bindings import _gaudi
     iohstr = str(ioh) 
     if not _gaudi and not _local_dict_.has_key( iohstr ) : 
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
+        ##
     #
-    #fname = ioh.dressFile ( filename , 'I')
-    #print ' EXTENFILE2, name ##' + fname + '##'
-    #return fname 
     return ioh.dressFile ( filename , 'I')
 
 # =============================================================================

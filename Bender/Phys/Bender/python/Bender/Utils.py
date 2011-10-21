@@ -159,7 +159,7 @@ def setData ( files , catalogs = [] , castor = False ) :
     """
 
     from GaudiPython.Bindings import _gaudi
-    
+        
     if   type ( files    ) is str   : files    =      [ files    ]
     elif type ( files    ) is tuple : files    = list ( files    ) 
     if   type ( catalogs ) is str   : catalogs =      [ catalogs ]    
@@ -171,6 +171,11 @@ def setData ( files , catalogs = [] , castor = False ) :
         catalogs = [ c for c in catalogs ] 
     
     if not _gaudi :               ## here we deal with configurables!
+
+        from Configurables import Gaudi__RootCnvSvc
+        rcnv = Gaudi__RootCnvSvc ( 'RootCnvSvc' )
+        rcnv.CacheBranches = [   ]
+        rcnv.VetoBranches  = ['*']    
 
         if files :
             
@@ -188,6 +193,11 @@ def setData ( files , catalogs = [] , castor = False ) :
             FileCatalog   ( Catalogs = catalogs )
             
     else :                        ## here we deal with the actual components
+
+
+        rcnv = _gaudi.service('Gaudi::RootCnvSvc/RootCnvSvc')
+        rcnv.CacheBranches = [   ]
+        rcnv.VetoBranches  = ['*']    
         
         if files :
             
@@ -196,6 +206,7 @@ def setData ( files , catalogs = [] , castor = False ) :
         
             _e = _gaudi.evtSel()
             _e.open ( files )
+            
         if catalogs :
             _f = _gaudi.service ( 'FileCatalog' )
             _f.Catalogs = catalogs
