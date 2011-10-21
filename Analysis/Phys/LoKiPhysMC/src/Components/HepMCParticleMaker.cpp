@@ -10,6 +10,7 @@
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/IParticleMaker.h"
+#include "MCInterfaces/IHepMCParticleSelector.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -31,6 +32,7 @@
 #include "Relations/IRelation.h"
 #include "Relations/IRelation2D.h"
 #include "Relations/Relation2D.h"
+
 // ============================================================================
 // LoKiPhysMC
 // ============================================================================
@@ -43,6 +45,8 @@
 // DaVinciMCKernel
 // ============================================================================
 #include "Kernel/MCParticleMakerBase.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+
 // ============================================================================
 namespace LoKi 
 {
@@ -69,6 +73,8 @@ namespace LoKi
    *
    *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
    *  @date 2006-09-25
+   *  @modifications Victor Coco victor.coco@cern.ch
+   *  @date 2009-10-25
    */
   // ==========================================================================
   class HepMCParticleMaker 
@@ -105,17 +111,18 @@ namespace LoKi
       , m_addresses ( 1 , LHCb::HepMCEventLocation::Default )
       //
       , m_particles () 
-      , m_mothers   () 
+      , m_mothers   ()
+      , m_useSelector(false)
+      
       //
       , m_ids  ( LoKi::Cuts::GNONE ) 
       , m_moms ( LoKi::Cuts::GALL  ) 
-      //  
       , m_forceNoCutAcceptance ( false )
-      //
+      // 
       , m_charged    ( LoKi::Cuts::GALL ) 
       , m_gamma      ( LoKi::Cuts::GALL ) 
       , m_chargedcut ( LoKi::Cuts::GALL ) 
-      , m_gammacut   ( LoKi::Cuts::GALL )
+      , m_gammacut   ( LoKi::Cuts::GALL ) 
       //
       , m_minPtGamma     (  150.0 * Gaudi::Units::MeV     ) 
       , m_minThetaGamma  ( ( 32.0 * Gaudi::Units::cm    ) / 
@@ -132,7 +139,9 @@ namespace LoKi
       //
       , m_maxZproduction   ( 50 * Gaudi::Units::cm ) 
       , m_maxRhoProduction (  5 * Gaudi::Units::cm ) 
-      , m_minZend          ( 50 * Gaudi::Units::cm ) 
+      , m_minZend          ( 50 * Gaudi::Units::cm )
+      , m_partonicmode   (false)
+      //        , m_OutputTable ("Relations/Phys/StdHepMCParticlesRef2HepMC")
     {
       //
       declareInterface<IParticleMaker>(this);
@@ -148,6 +157,8 @@ namespace LoKi
       declareProperty ( "Particles"        , m_particles        ) ;
       declareProperty ( "From"             , m_mothers          ) ;
       declareProperty ( "ForceNoAcceptanceCut"   , m_forceNoCutAcceptance ) ;
+      declareProperty ( "UseSelector"    , m_useSelector   ) ;
+      declareProperty ( "MotherSelectorName" , m_motherSelector );
       //
       declareProperty ( "MinPtGamma"       , m_minPtGamma       ) ;
       declareProperty ( "MinThetaGamma"    , m_minThetaGamma    ) ;
@@ -162,6 +173,10 @@ namespace LoKi
       declareProperty ( "MaxZProduction"   , m_maxZproduction   ) ;
       declareProperty ( "MaxRhoProduction" , m_maxRhoProduction ) ;
       declareProperty ( "MinZend"          , m_minZend          ) ;
+
+      declareProperty ( "PartonicMode"     , m_partonicmode ) ;
+      
+      //      declareProperty ( "OutputTable"          , m_OutputTable         ) ;
       // 
       setProperty     ( "SmearParticle"    , false ) ;
     } 
@@ -193,12 +208,15 @@ namespace LoKi
     typedef std::vector<std::string> IDs    ;
     IDs                 m_particles         ;
     IDs                 m_mothers           ;
+    bool                m_useSelector       ;
+    std::string         m_motherSelector    ;
     //
     LoKi::Types::GCut   m_ids               ;
     LoKi::Types::GCut   m_moms              ;
     //
     bool    m_forceNoCutAcceptance   ;
-    //
+    //std::string         m_OutputTable       ;
+    
     LoKi::Types::GCut   m_charged           ;
     LoKi::Types::GCut   m_gamma             ;
     LoKi::Types::GCut   m_chargedcut        ;
@@ -217,29 +235,64 @@ namespace LoKi
     double              m_maxZproduction    ;
     double              m_maxRhoProduction  ;
     double              m_minZend           ;
+
+    bool                m_partonicmode            ;
+
+    IParticlePropertySvc* m_ppSvc;
+    IHepMCParticleSelector*     m_motherSelectorTool;
     //
     // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi 
+
+
 // ============================================================================
 // standard initialization of the tool 
 // ============================================================================
 StatusCode LoKi::HepMCParticleMaker::initialize() 
 {
+  //
   StatusCode sc = MCParticleMakerBase::initialize() ;
 
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+
   if ( sc.isFailure() ) { return sc ; }
+
   // locate LoKi service (needed for some functions) 
   LoKi::ILoKiSvc* loki = svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   if ( 0 == loki ) { return StatusCode::FAILURE ; }
-  //
-  if ( m_particles.empty() ) 
+
+  // check the status of mother control...
+  // if mother should be chosen from ID
+  if ( !m_mothers.empty() ) 
+  {
+    m_moms = m_mothers[0] == LoKi::Cuts::GABSID ;
+    for ( IDs::const_iterator id = m_mothers.begin()+1 ; 
+          m_mothers.end() != id ; ++id ) 
+    { 
+      if( m_partonicmode && (  "b" != (*id) &&  "g" != (*id) &&  "u" != (*id) &&  "d" != (*id) &&  "s" != (*id) &&  "c" != (*id)))
+      { return Error ( "Some of the particles are not parton while the partonic mode is set" ) ; }
+      m_moms = m_moms || (*id)== LoKi::Cuts::GABSID ;
+    }
+  }
+  
+  if ( m_useSelector){
+    // check that a mother container location have been specified  
+    if ( m_motherSelector.empty()){
+      return Error ( "No HepMC mother selector have been specified!" ) ;
+    }
+    m_motherSelectorTool = tool<IHepMCParticleSelector>(m_motherSelector ,m_motherSelector, this );
+  }
+  
+  // Check the list of particles to be created
+  if ( m_particles.empty() )
   { return Error ( "Empty list of particles!" ) ; }
   //
   using namespace LoKi::Cuts ;
-  //
+
   m_ids = m_particles[0] == GABSID ;
+
   for ( IDs::const_iterator id = m_particles.begin()+1 ; 
         m_particles.end() != id ; ++id ) 
   { m_ids = m_ids || (*id)== GABSID ; }
@@ -248,22 +301,19 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
     << " Particles to be selected: " 
     << Gaudi::Utils::toString ( m_particles ) 
     << " Cut to be used " << m_ids << endreq ;  
-  //
-  if ( !m_mothers.empty() ) 
-  {
-    m_moms = m_mothers[0] == GID ;
-    for ( IDs::const_iterator id = m_mothers.begin()+1 ; 
-          m_mothers.end() != id ; ++id ) 
-    { m_moms = m_moms || (*id)== GID ; }
-  }
+
+  if(m_partonicmode)info()<<"Partonic Mode on"<<endreq;
   
-  
-  m_gamma = "gamma" == GID ;
+  // if partonic mode, skip acceptance cut
+  if (m_partonicmode) return StatusCode::SUCCESS ;
+
+  m_gamma = ("gamma" == GID || "KL0" == GABSID|| "n0" == GABSID);
+
 
   m_charged = 
     ( "e+"  == GABSID || "mu+" == GABSID || 
       "pi+" == GABSID || "K+"  == GABSID || "p+" == GABSID ) ;
-
+  
   m_gammacut = GALL ;
   m_chargedcut = GALL ;  
 
@@ -293,14 +343,13 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
     if ( 0 < m_maxThetaCharged ) 
     {  m_chargedcut = m_chargedcut &&  m_maxThetaCharged > GTHETA  ; }
   }
-  
   info()
     << " Gammas: "           << m_gamma   
     << " Cuts for gammas: "  << m_gammacut   
     << " Charged: "          << m_charged 
     << " Cuts for charged: " << m_chargedcut 
     << endreq ;
-  
+
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -344,6 +393,8 @@ namespace
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
      !Relations::IsConvertible<const T1*,const void*>::same)
+
+
 // ============================================================================
 // create the particles 
 // ============================================================================
@@ -353,56 +404,110 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
   // avoid long names 
   using namespace LoKi        ;
   using namespace LoKi::Types ;
-  using namespace LoKi::Cuts  ; 
-  
-  //
+  using namespace LoKi::Cuts  ;
+
+
+  // Create the relation table between Particles and GenParticles
   typedef LHCb::Relation2D<LHCb::Particle,HepMC::GenParticle*> Table ;
   BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::RC2HepMC2D));
-  
-  
-  Table* table = 0 ;
-  if ( !outputTable().empty() ) 
+  Table* table = 0 ;  
+  if ( !outputTable().empty()  ) 
   {
     table = new Table(100) ;
-    put ( table , outputTable() ) ;
+    put ( table , outputTable()  ) ;
   }
-  
   const size_t N0 = particles.size() ;
-  
+
   typedef LoKi::GenTypes::GenContainer Container ;
   
-  GCut cut = m_ids && UseIt( this ) ;
+  // Set the main cut (should have the ID of m_ids and pass the use function)
+  GCut cut = m_ids ;
+  if ( !m_partonicmode ) cut = cut && UseIt( this );
+  else cut = cut  &&  GSTATUS != 3 ;
+
+  // The major cut to find mother
+  GCut m_motherCut = m_moms;
   
-  if ( !m_mothers.empty() ) 
-  {
-    Container moms ;
-    moms.reserve ( 500 ) ;
+  if (! m_mothers.empty() && m_useSelector){
+    GCut m_momsSel = GNONE;
+    Container mothersSelected ;
+    // get the mother vector
     for ( Addresses::const_iterator iaddr = m_addresses.begin() ; 
           m_addresses.end() != iaddr ; ++iaddr ) 
     {
-      const LHCb::HepMCEvent::Container* events =
-        get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
-      /// copy good particles 
-      LoKi::Extract::genParticles 
-        ( events , std::back_inserter( moms ) , m_moms ) ;
+      const LHCb::HepMCEvent::Container* events =  get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
+      LoKi::Extract::genParticles ( events , std::back_inserter( mothersSelected  ) , m_moms) ;
+    }   
+    // for each element of the vector, put the energy and pt equality as cut
+    for  ( Container::const_iterator ip = mothersSelected.begin() ; mothersSelected.end() != ip ; ++ip )
+    {
+      if (m_motherSelectorTool->accept(*ip)){
+        always()<<"A MOOOOOOOOOOOOOOOOOOOOOOOOOOOOTHER IS FOUND...................."<<endreq;
+        
+        m_momsSel = m_momsSel || ( GE(*ip) == GE ) ; 
+      }
+    }  
+    m_motherCut = m_motherCut && m_momsSel;
+  }
+
+  // Add a FIX for DC06 Hidden valley partons
+  /*if( !m_mothers.empty()){ 
+    if ( m_mothers[0] == "H_30")
+    {
+      Warning("You are using a DC06 fix... probably because you ask H_30 mother and the fix was not removed");
+      GCut m_momsSel = GNONE;
+      Container mothersSelected ;
+      for ( Addresses::const_iterator iaddr = m_addresses.begin() ; 
+            m_addresses.end() != iaddr ; ++iaddr ) 
+      {
+        const LHCb::HepMCEvent::Container* events =  get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
+        LoKi::Extract::genParticles ( events , std::back_inserter( mothersSelected  ) , m_moms) ;
+      }   
+      // for each element of the vector, put the energy and pt equality as cut
+      for  ( Container::const_iterator ip = mothersSelected.begin() ; mothersSelected.end() != ip ; ++ip )
+      {
+        if (m_motherCut(*ip)){
+          double liftetime = (((*ip)->end_vertex()->point3d().x()-(*ip)->production_vertex()->point3d().x())*
+                                  ((*ip)->end_vertex()->point3d().x()-(*ip)->production_vertex()->point3d().x()) +
+                                  ((*ip)->end_vertex()->point3d().y()-(*ip)->production_vertex()->point3d().y())*
+                                  ((*ip)->end_vertex()->point3d().y()-(*ip)->production_vertex()->point3d().y())+
+                                  ((*ip)->end_vertex()->point3d().z()-(*ip)->production_vertex()->point3d().z())*
+                                  ((*ip)->end_vertex()->point3d().z()-(*ip)->production_vertex()->point3d().z()));
+          if(liftetime>0.0000000001){m_momsSel = m_momsSel || ( GE(*ip) == GE ) ;}
+        }
+      }
+      m_motherCut = m_motherCut && m_momsSel;
     }
-    if ( moms.empty() ) 
-    { Warning ( "No valid mother particles are selected, empty result is expected") ;}
+    }*/
+  
+  
+  // get all the particles that satisfy the mother cut and update the global cut
+  if ( !m_mothers.empty()  ) 
+  {
+    // select all HepMC particles as mother 
+    Container moms ;
+    //moms.reserve ( 1000 ) ;
+    for ( Addresses::const_iterator iaddr = m_addresses.begin() ; 
+          m_addresses.end() != iaddr ; ++iaddr ) 
+    {
+      const LHCb::HepMCEvent::Container* events = get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
+      /// copy good particles matching with m_moms cut (mother ID or E/PT equality depending on the mother source or ALL if no mother)
+      LoKi::Extract::genParticles ( events , std::back_inserter( moms ) , m_motherCut ) ;
+    }
+    if ( moms.empty() )  Warning ( "No valid mother particles are selected, empty result is expected") ;
     cut = cut && GFROMTREE( moms.begin() , moms.end() ) ;
   }
+  
 
   // collect "good" particles into the container 
   Container good ;
-  good.reserve ( 500 ) ;
+  good.reserve ( 2000 ) ;
   {
-    for ( Addresses::const_iterator iaddr = m_addresses.begin() ; 
-          m_addresses.end() != iaddr ; ++iaddr ) 
+    for ( Addresses::const_iterator iaddr = m_addresses.begin() ;  m_addresses.end() != iaddr ; ++iaddr ) 
     {
-      const LHCb::HepMCEvent::Container* events =
-        get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
-      /// copy good particles 
-      LoKi::Extract::genParticles 
-        ( events , std::back_inserter( good ) , cut ) ;
+      const LHCb::HepMCEvent::Container* events =    get<LHCb::HepMCEvent::Container> ( *iaddr ) ;
+      /// copy good particles
+      LoKi::Extract::genParticles ( events , std::back_inserter( good ) , cut ) ;
     }  
   }
   // convert good generator particles into recontructed particles 
@@ -410,6 +515,7 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
   for ( Container::const_iterator ip = good.begin() ; good.end() != ip ; ++ip ) 
   {
     const HepMC::GenParticle* p = *ip ;
+    
     if ( 0 == p ) { continue ; };
     // create new particle 
     LHCb::Particle* particle = new LHCb::Particle() ;
@@ -430,7 +536,6 @@ StatusCode LoKi::HepMCParticleMaker::makeParticles
   
   // MANDATORY CALL FOR i_sort after i_push !
   if ( 0 != table ) { table->i_sort() ; }  // ATTENTION! 
-  
   // some decorations 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   {
@@ -501,14 +606,14 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
     if (ve ==0) {return true;}
     if (ve !=0) {return false;}
   }
-  
-  
+
   // other particles 
   return true ;
 }
+
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker)
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker);
 // ============================================================================
 // The END 
 // ============================================================================
