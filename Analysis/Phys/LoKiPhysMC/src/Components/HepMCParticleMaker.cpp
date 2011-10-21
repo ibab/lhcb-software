@@ -109,11 +109,13 @@ namespace LoKi
       //
       , m_ids  ( LoKi::Cuts::GNONE ) 
       , m_moms ( LoKi::Cuts::GALL  ) 
-      // 
+      //  
+      , m_forceNoCutAcceptance ( false )
+      //
       , m_charged    ( LoKi::Cuts::GALL ) 
       , m_gamma      ( LoKi::Cuts::GALL ) 
       , m_chargedcut ( LoKi::Cuts::GALL ) 
-      , m_gammacut   ( LoKi::Cuts::GALL ) 
+      , m_gammacut   ( LoKi::Cuts::GALL )
       //
       , m_minPtGamma     (  150.0 * Gaudi::Units::MeV     ) 
       , m_minThetaGamma  ( ( 32.0 * Gaudi::Units::cm    ) / 
@@ -145,6 +147,7 @@ namespace LoKi
       
       declareProperty ( "Particles"        , m_particles        ) ;
       declareProperty ( "From"             , m_mothers          ) ;
+      declareProperty ( "ForceNoAcceptanceCut"   , m_forceNoCutAcceptance ) ;
       //
       declareProperty ( "MinPtGamma"       , m_minPtGamma       ) ;
       declareProperty ( "MinThetaGamma"    , m_minThetaGamma    ) ;
@@ -193,6 +196,8 @@ namespace LoKi
     //
     LoKi::Types::GCut   m_ids               ;
     LoKi::Types::GCut   m_moms              ;
+    //
+    bool    m_forceNoCutAcceptance   ;
     //
     LoKi::Types::GCut   m_charged           ;
     LoKi::Types::GCut   m_gamma             ;
@@ -252,35 +257,42 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
     { m_moms = m_moms || (*id)== GID ; }
   }
   
-  m_gamma = "gamma" == GID ;
   
-  m_gammacut = GALL && 0 < GPZ ;
-  if ( 0 <  m_minPtGamma    ) 
-  { m_gammacut = m_gammacut && m_minPtGamma < GPT ; }
-  if ( 0 <  m_minThetaGamma ) 
-  {
-    m_gammacut = m_gammacut && 
-      ( m_minThetaGamma < atan2 ( abs ( GPX ) , GPZ ) ||  
-        m_minThetaGamma < atan2 ( abs ( GPY ) , GPZ ) ) ;  
-  }
-  if ( 0 <  m_maxThetaXGamma ) 
-  { m_gammacut = m_gammacut && m_maxThetaXGamma > atan2 ( abs ( GPX ) , GPZ ) ; }
-  if ( 0 <  m_maxThetaYGamma ) 
-  { m_gammacut = m_gammacut && m_maxThetaYGamma > atan2 ( abs ( GPY ) , GPZ ) ; }
+  m_gamma = "gamma" == GID ;
 
   m_charged = 
     ( "e+"  == GABSID || "mu+" == GABSID || 
       "pi+" == GABSID || "K+"  == GABSID || "p+" == GABSID ) ;
-  
+
+  m_gammacut = GALL ;
   m_chargedcut = GALL ;  
-  if ( 0 < m_minPCharged ) 
-  {  m_chargedcut = m_chargedcut &&  m_minPCharged     < GP      ; }
-  if ( 0 < m_minPtCharged ) 
-  {  m_chargedcut = m_chargedcut &&  m_minPtCharged    < GPT     ; }
-  if ( 0 < m_minThetaCharged ) 
-  {  m_chargedcut = m_chargedcut &&  m_minThetaCharged < GTHETA  ; }
-  if ( 0 < m_maxThetaCharged ) 
-  {  m_chargedcut = m_chargedcut &&  m_maxThetaCharged > GTHETA  ; }
+
+  if( ! m_forceNoCutAcceptance ) {
+    m_gammacut = GALL && 0 < GPZ ;
+    if ( 0 <  m_minPtGamma    ) 
+    { m_gammacut = m_gammacut && m_minPtGamma < GPT ; }
+    if ( 0 <  m_minThetaGamma ) 
+    {
+      m_gammacut = m_gammacut && 
+        ( m_minThetaGamma < atan2 ( abs ( GPX ) , GPZ ) ||  
+          m_minThetaGamma < atan2 ( abs ( GPY ) , GPZ ) ) ;  
+    }
+    if ( 0 <  m_maxThetaXGamma ) 
+    { m_gammacut = m_gammacut && m_maxThetaXGamma > atan2 ( abs ( GPX ) , GPZ ) ; }
+    if ( 0 <  m_maxThetaYGamma ) 
+    { m_gammacut = m_gammacut && m_maxThetaYGamma > atan2 ( abs ( GPY ) , GPZ ) ; }
+
+  
+    m_chargedcut = GALL ;  
+    if ( 0 < m_minPCharged ) 
+    {  m_chargedcut = m_chargedcut &&  m_minPCharged     < GP      ; }
+    if ( 0 < m_minPtCharged ) 
+    {  m_chargedcut = m_chargedcut &&  m_minPtCharged    < GPT     ; }
+    if ( 0 < m_minThetaCharged ) 
+    {  m_chargedcut = m_chargedcut &&  m_minThetaCharged < GTHETA  ; }
+    if ( 0 < m_maxThetaCharged ) 
+    {  m_chargedcut = m_chargedcut &&  m_maxThetaCharged > GTHETA  ; }
+  }
   
   info()
     << " Gammas: "           << m_gamma   
@@ -288,7 +300,7 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
     << " Charged: "          << m_charged 
     << " Cuts for charged: " << m_chargedcut 
     << endreq ;
-
+  
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
@@ -476,15 +488,21 @@ bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   
   // check for decay vertex 
   const HepMC::GenVertex* ve = p->end_vertex() ;
-  if ( 0 != ve ) 
-  {
-    const Gaudi::XYZPoint pe ( ve->point3d() ) ;
-    if ( 0 < m_minZend  && pe.Z() < m_minZend ) { return false ; }  
+  if( ! m_forceNoCutAcceptance ){  
+    if ( 0 != ve ) 
+    {
+      const Gaudi::XYZPoint pe ( ve->point3d() ) ;
+      if ( 0 < m_minZend  && pe.Z() < m_minZend ) { return false ; }  
+    }
+    if      ( m_gamma   ( p ) ) { return m_gammacut   ( p ) ; }
+    else if ( m_charged ( p ) ) { return m_chargedcut ( p ) ; }
+  }
+  else{
+    if (ve ==0) {return true;}
+    if (ve !=0) {return false;}
   }
   
-  if      ( m_gamma   ( p ) ) { return m_gammacut   ( p ) ; }
-  else if ( m_charged ( p ) ) { return m_chargedcut ( p ) ; }
-
+  
   // other particles 
   return true ;
 }

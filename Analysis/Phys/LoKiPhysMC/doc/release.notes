@@ -5,6 +5,10 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-10-21 - Victor Coco
+ - HepMCParticleMaker.cpp : add ForceNoCut option to get the full stable particle
+   set with no geometrical/kinematical cuts.
+
 !========================= LoKiPhysMC v9r3 2011-06-17 =========================
 ! 2011-06-04 - Vanya Belyaev
  - remove some code 
