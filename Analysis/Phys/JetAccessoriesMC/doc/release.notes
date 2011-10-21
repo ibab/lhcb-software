@@ -6,6 +6,11 @@
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+! 2011-10-21 - Victor Coco
+ - minor modification to StdHepMCParticles.py config to use the new ForceNoAcceptanceCut option
+
+
 ! 2011-09-23 - Albert Bursche
 
 Added the criterion "Is MC particle in HepMC jet?"

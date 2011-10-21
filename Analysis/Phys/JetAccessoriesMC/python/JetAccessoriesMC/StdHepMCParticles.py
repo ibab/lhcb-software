@@ -44,17 +44,7 @@ class StdHepMCParticlesConf() :
         self.__confdict__= config
         if self.__confdict__.has_key("InAcceptance"):
             if not self.__confdict__['InAcceptance'] and not self.__confdict__['PartonicMode']  :        
-                self.__confdict__['MinPtGamma'] = 0.
-                self.__confdict__['MinThetaGamma'] = 0.
-                self.__confdict__['MaxThetaXGamma'] = 10.
-                self.__confdict__['MaxThetaYGamma'] = 10.
-                self.__confdict__['MinPCharged'] = 0.
-                self.__confdict__['MinPtCharged'] = 0.
-                self.__confdict__['MinThetaCharged'] = 0.
-                self.__confdict__['MaxThetaCharged'] = 10.
-                self.__confdict__['MaxZProduction'] = 0.
-                self.__confdict__['MaxRhoProduction'] = 0.
-                self.__confdict__['MinZend'] = 1000000000.
+                self.__confdict__['ForceNoAcceptanceCut'] = True
         self.name = name
         self.Alg = self.configure()
 
