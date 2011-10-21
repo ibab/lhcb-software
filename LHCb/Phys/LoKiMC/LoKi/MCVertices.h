@@ -32,6 +32,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
@@ -242,8 +246,9 @@ namespace LoKi
      *  simple adapter function which allows to use MC Veretx function as 
      *  MC particle function
      *  Adapter makes use of MCParticle::originVertex function 
-     *  @see MCParticle
-     *  @see MCVertex 
+     *  @see LHCb::MCParticle
+     *  @see LHCb::MCVertex 
+     *  @see LoKi::Cuts::MCVXFUN 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
@@ -274,6 +279,65 @@ namespace LoKi
     private:
       // ======================================================================
       LoKi::MCTypes::MCVFun m_fun ;
+      // ======================================================================
+    };
+    // ========================================================================    
+    /** @class MCVFunction
+     *  simple adapter function which allows to use MC Veretx function as 
+     *  MC particle function
+     *  Adapter makes use of MCParticle::originVertex function 
+     *  @see LHCb::MCParticle
+     *  @see LHCb::MCVertex 
+     *  @see LoKi::Cuts::MCVFUN 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2004-07-07
+     */
+    class GAUDI_API MCVFunction : public LoKi::MCVertices::MCVFunAsMCFun 
+    {
+    public:
+      // ======================================================================
+      enum {
+        Regular  =  0 ,
+        Last     = -1 ,
+        Origin   = -2 ,
+        Primary  = -3 
+      } ;
+      // ======================================================================      
+    public:
+      // ======================================================================
+      /** constructor from MC Vertex fuction
+       *  @param func vertex function tobe applied 
+       *  @param index vertex index :  
+       *         -1   - the last vertex  in the list 
+       *         -2   - the origin vertex 
+       *         -3   - the primary ertex 
+       */
+      MCVFunction ( const LoKi::MCTypes::MCVFunc& func  , 
+                    const int                     index ) ;
+      /// constructor from MC Vertex fuction and vertex selection 
+      MCVFunction ( const LoKi::MCTypes::MCVFunc& func  , 
+                    const LoKi::MCTypes::MCVCuts& cuts  ) ;
+      /// constructor from MC Vertex fuction and vertex selection 
+      MCVFunction ( const LoKi::MCTypes::MCVCuts& cuts  ,
+                    const LoKi::MCTypes::MCVFunc& func  ) ;                                 
+      /// virtual descructor 
+      virtual ~MCVFunction () ;
+      /// clone method (mandatory!)
+      virtual  MCVFunction* clone() const ;
+      /// the only one essential method 
+      virtual  result_type    operator() ( argument p ) const ;      
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+      // ======================================================================
+    private:
+      // ======================================================================
+      MCVFunction () ;
+      // ======================================================================
+    private:
+      // ======================================================================      
+      bool                  m_case   ; 
+      int                   m_index  ;
+      LoKi::MCTypes::MCVCut m_cut    ;        
       // ======================================================================
     };
     // ========================================================================

@@ -20,6 +20,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
@@ -353,6 +357,33 @@ namespace LoKi
      *  @date   2004-03-01 
      */
     typedef LoKi::MCVertices::MCVPFunAsMCFun                         MCVPXFUN ;
+    // ========================================================================    
+    /** the adaptor for MC vertex function to be interpreted as 
+     *  MC particle function
+     *  it acts using the rule 
+     *  
+     *  @code 
+     *
+     *  result = fun( MCParticle* p ) = vfun( p->primaryVertex() ) 
+     *  
+     *  @endcode 
+     * 
+     *  Usage:
+     * 
+     *  @code 
+     *
+     *  const MCParticle* p = ... ;
+     *  // z-coordinate of the first end-vertex:
+     *  MCFun fun = MCVFUN ( 0 , MCVZ ) ;
+     *  const double z = fun ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCVertices::MCVFunction
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-10-21
+     */
+    typedef LoKi::MCVertices::MCVFunction                              MCVFUN ;
     // ========================================================================    
     const LoKi::Constant<const LHCb::MCVertex*,bool>   MCVTRUE     ( true  )  ;
     // ========================================================================    

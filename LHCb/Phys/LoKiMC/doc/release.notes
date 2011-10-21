@@ -14,6 +14,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-10-21 - Vanya Belyaev
+
+ - MCVFUN 
+   adaptor for MC-vertex 
+
 !========================= LoKiMC v10r2 2011-07-25 =========================
 ! 2011-07-23 - Vanya Belyaev
  - more decorators for LHCb.MCParticle 

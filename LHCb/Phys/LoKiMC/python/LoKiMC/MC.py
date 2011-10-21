@@ -440,7 +440,6 @@ if not hasattr ( LHCb.MCParticle , 'Range'       ) :
 if not hasattr ( LHCb.MCVertex   , 'Range'       ) :
     LHCb.MCVertex.Range   = cpp.Gaudi.NamedRange_ ( LHCb.MCVertex.ConstVector   )
 
-
 for r in ( LHCb.MCParticle.Range ,
            LHCb.MCVertex.Range   ,
            cpp.Gaudi.Range_ ( LHCb.MCParticle.ConstVector ) ,
@@ -452,7 +451,6 @@ for r in ( LHCb.MCParticle.Range ,
     r.__getslice__ = _LCD . _slice_
     r.__getitem__  =    r . __call__ 
     r.__setitem__  =          None
-
     
 if not hasattr ( LHCb.MCParticle , 'Container' ) :
     LHCb.MCParticle.Container = cpp.KeyedContainer(LHCb.MCParticle,'Containers::KeyedObjectManager<Containers::hashmap>')

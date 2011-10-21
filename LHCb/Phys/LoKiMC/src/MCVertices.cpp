@@ -350,6 +350,127 @@ std::ostream& LoKi::MCVertices::MCVPFunAsMCFun::fillStream
 // ============================================================================
 
 
+// ============================================================================
+/* constructor from MC Vertex fuction
+ *  @param func vertex function tobe applied 
+ *  @param index vertex index :  
+ *         -1   - the last vertex  in the list 
+ *         -2   - the origin  vertex 
+ *         -3   - the mother  vertex 
+ *         -4   - the primary vertex 
+ */
+// ============================================================================
+LoKi::MCVertices::MCVFunction::MCVFunction 
+( const LoKi::MCTypes::MCVFunc& func  , 
+  const int                     index ) 
+  : LoKi::MCVertices::MCVFunAsMCFun ( func ) 
+  , m_case  ( true  ) 
+  , m_index ( index )
+  , m_cut   ( LoKi::Constant<const LHCb::MCVertex*,bool>( false ) ) 
+{}
+// ============================================================================
+// constructor from MC Vertex fuction and vertex selection
+// ============================================================================
+LoKi::MCVertices::MCVFunction::MCVFunction
+( const LoKi::MCTypes::MCVFunc& func , 
+  const LoKi::MCTypes::MCVCuts& cuts ) 
+  : LoKi::MCVertices::MCVFunAsMCFun ( func ) 
+  , m_case  ( false  ) 
+  , m_index ( 0      )
+  , m_cut   ( cuts   ) 
+{}
+// ============================================================================
+// constructor from MC Vertex fuction and vertex selection
+// ============================================================================
+LoKi::MCVertices::MCVFunction::MCVFunction
+( const LoKi::MCTypes::MCVCuts& cuts , 
+  const LoKi::MCTypes::MCVFunc& func ) 
+  : LoKi::MCVertices::MCVFunAsMCFun ( func ) 
+  , m_case  ( false  ) 
+  , m_index ( 0      )
+  , m_cut   ( cuts   ) 
+{}
+// ============================================================================
+// virtual descructor 
+// ============================================================================
+LoKi::MCVertices::MCVFunction::~MCVFunction(){}
+// ============================================================================
+// clone method (mandatory!)
+// ============================================================================
+LoKi::MCVertices::MCVFunction*
+LoKi::MCVertices::MCVFunction::clone() const
+{ return new LoKi::MCVertices::MCVFunction ( *this ) ; }
+// ============================================================================
+std::ostream& LoKi::MCVertices::MCVFunction::fillStream
+( std::ostream& s ) const
+{
+  if ( m_case ) 
+  { return s << "MCVFUN("<< func() << "," << m_index << ")" ; }
+  //
+  return   s << "MCVFUN("<< func() << "," << m_cut   << ")" ;
+} 
+// ============================================================================
+// the only one essential method 
+// ============================================================================
+LoKi::MCVertices::MCVFunction::result_type 
+LoKi::MCVertices::MCVFunction::operator()
+  ( LoKi::MCVertices::MCVFunction::argument p ) const
+{
+  //
+  if ( 0 == p ) 
+  {
+    Warning ( "MCParticle* points to NULL, return -1e+9 ");
+    return -1.e+9 ;
+  }
+  //
+  const LHCb::MCVertex* v = 0 ;
+  //
+  if      ( m_case && Origin   == m_index  ) 
+  {
+    //
+    v = p -> originVertex() ;
+    if ( 0 == v ) { Warning ( " Origin     MCVertex* points to NULL" ) ; }
+    //
+    return func() ( v ) ;
+  }
+  else if ( m_case && Primary == m_index ) 
+  {
+    //
+    v = p -> primaryVertex() ;
+    if ( 0 == v ) { Warning ( " Primary    MCVertex* points to NULL" ) ; }
+    //
+    return func() ( v ) ;
+  }
+  //
+  typedef SmartRefVector<LHCb::MCVertex> EV ;
+  const EV& evs = p->endVertices() ;
+  //
+  if (  evs.empty() ) { Warning ( " Empty EndVertices list " ) ; }
+  //
+  if      ( m_case && Last == m_index ) 
+  {
+    if ( !evs.empty() ) { v = evs.back() ; }
+    return func() ( v ) ;
+  }
+  else if ( m_case &&  0 <= m_index && m_index < (long) evs.size() ) 
+  {
+    v = evs[ m_index ] ;
+    return func() ( v ) ;
+  }
+  else if ( m_case )
+  {
+    Error ( " Invalid EndVertices index" ) ; 
+    return func() ( v ) ;
+  }
+  // now we deal with cuts:
+  EV::const_iterator igood = std::find_if ( evs.begin() , evs.end() , m_cut  ) ;
+  //
+  if ( evs.end() != igood ){ v = *igood ; }
+  else { Error ( " No proper vertex is found " ) ; }
+  //
+  return func() ( v ) ;  
+  //
+}
 
 // ============================================================================
 // The END 
