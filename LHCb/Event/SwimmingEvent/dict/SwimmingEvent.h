@@ -4,7 +4,12 @@
 // begin include files
 #include <cstddef>
 #include <string>
+#include <vector>
 #include <map>
+
+#include <GaudiKernel/SmartRefVector.h>
+#include <GaudiKernel/SmartRef.h>
+#include <GaudiKernel/KeyedContainer.h>
 
 #include <Relations/RelationsDict.h>
 
@@ -14,15 +19,7 @@
 // end include files
 namespace {
 
-   // template<class T> class _tmp {
-   //    typedef T& reference;
-
-   //    _tmp(){}
-   //    virtual ~_tmp(){}
-   // };
-
    typedef std::map<size_t, bool> map_ulb;
-   typedef std::map<const size_t, bool> map_culb;
    typedef std::map<std::string, bool> map_sb;
    typedef std::map<std::string, std::map<size_t, bool> > map_sinfo;
 
@@ -52,21 +49,13 @@ namespace {
       // map<size_t, bool>
       map_ulb _m00;
       map_ulb::iterator _i00;
-      map_ulb::const_iterator _i01;
-
-      map_culb _m01;
-      map_culb::iterator _i02;
-      map_culb::const_iterator _i03;
 
       // map<size_t, bool> auxilliary
       std::pair<size_t,bool> _p00;
-      std::pair<const size_t,bool> _p01;
-      std::pair<map_culb::iterator, bool> _p02;
 
       // map<string, map<size_t, bool> >
       map_sinfo _m10;
       map_sinfo::iterator _i10;
-      map_sinfo::const_iterator _i11;
 
       // map<string, map<size_t, bool> > auxilliary
       std::pair<std::string, map_ulb> _p10;
@@ -75,12 +64,26 @@ namespace {
       // map<string, bool>
       map_sb _m20;
       map_sb::iterator _i20;
-      map_sb::const_iterator _i21;
 
       // map<string, bool> auxilliary
-      std::pair<std::string,bool> _p20;
+      std::pair<std::string, bool> _p20;
       std::pair<map_sb::iterator, bool> _p21;
-    
+
+#ifndef WIN32
+      // Windows somehow doesn't like the first item of a pair to be const.
+      map_ulb::const_iterator _i01;
+
+      typedef std::map<const size_t, bool> map_culb;
+      map_culb _m01;
+      map_culb::iterator _i02;
+      map_culb::const_iterator _i03;
+      std::pair<map_culb::iterator, bool> _p02;
+ 
+      map_sb::const_iterator _i21;
+      map_sinfo::const_iterator _i11;
+
+      std::pair<const size_t,bool> _p01;
+#endif
       // end instantiations
    };
 }

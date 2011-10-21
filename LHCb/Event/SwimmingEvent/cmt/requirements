@@ -18,8 +18,17 @@ use   GaudiKernel     v*
 apply_pattern install_more_includes more=Event
 
 #===========================================================================
+macro extra_gccxmlflags "" WIN32 "-DGOD_NOALLOC -D__CINT__ -U__MINGW32__ -DWIN32"
 apply_pattern reflex_dictionary dictionary=SwimmingEvent \
-		headerfiles=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.h \
-		selectionfile=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.xml
+              headerfiles=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.h \
+              selectionfile=$(SWIMMINGEVENTROOT)/dict/SwimmingEvent.xml \
+              options="--no_membertypedefs $(extra_gccxmlflags)"
 macro_append SwimmingEventDict_cppflags "" \
-             target-icc " -wd191" 
+             target-icc " -wd191" \
+             WIN32      " /wd4373"
+
+macro_append cppflags "" WIN32 " -DGOD_NOALLOC "
+
+private
+# Patch for gccxml bug with assert statement on Windows
+

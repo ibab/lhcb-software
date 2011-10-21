@@ -125,7 +125,7 @@ public:
    /// Check if a stage is present
    bool hasStage(const std::string& stage) const
    {
-      return m_turningPoints.count(stage);
+      return m_turningPoints.count(stage) != 0;
    }
    
    /// Get the turningpoints for a stage

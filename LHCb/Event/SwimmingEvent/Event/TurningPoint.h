@@ -233,10 +233,12 @@ public:
    std::vector<std::string> extraNames() const
    {
       std::vector<std::string> names;
+#ifndef WIN32
       for (std::map<std::string, double>::const_iterator it = m_extra.begin(),
               end = m_extra.end(); it != end; ++it) {
          names.push_back(it->first);
       }
+#endif
       return names;
    }
 
@@ -244,7 +246,11 @@ public:
    {
       std::map<std::string, double>::const_iterator it = m_extra.find(name);
       if (it != m_extra.end()) {
+#ifndef WIN32
          return it->second;
+#else
+         return 0.;
+#endif
       } else {
          std::string msg = "Extra turningpoint with name ";
          msg += name;
@@ -256,10 +262,13 @@ public:
    std::vector<std::string> decisions() const
    {
       std::vector<std::string> d;
-      for (std::map<std::string,bool>::const_iterator it = m_decisions.begin(),
-              end = m_decisions.end(); it != end; ++it) {
+#ifndef WIN32
+      typedef std::map<std::string,bool> map_t;
+      for (map_t::const_iterator it = m_decisions.begin(), end = m_decisions.end();
+           it != end; ++it) {
          d.push_back(it->first);
       }
+#endif
       return d;
    }
 
@@ -267,7 +276,11 @@ public:
    {
       std::map<std::string, bool>::const_iterator it = m_decisions.find(name);
       if (it != m_decisions.end()) {
+#ifndef WIN32
          return it->second;
+#else
+         return true;
+#endif
       } else {
          std::stringstream msg;
          msg << "Decision with name " << name << " does not exist.";
@@ -279,10 +292,12 @@ public:
    std::vector<std::string> infoNames() const
    {
       std::vector<std::string> names;
+#ifndef WIN32
       for (std::map<std::string, std::map<size_t, bool> >::const_iterator it = m_info.begin(),
               end = m_info.end(); it != end; ++it) {
          names.push_back(it->first);
       }
+#endif
       return names;
    }
 
@@ -300,11 +315,16 @@ public:
 
    bool participated(const std::string& name, const LHCb::Particle& daughter) const
    {
-      const std::map<size_t, bool>& i = info(name);
       size_t h = Swimming::hashParticle(daughter);
-      std::map<size_t, bool>::const_iterator it = i.find(h);
+      typedef std::map<size_t, bool> map_t;
+      const map_t& i = info(name);
+      map_t::const_iterator it = i.find(h);
       if (it != i.end()) {
+#ifndef WIN32
          return it->second;
+#else
+         return true;
+#endif
       } else {
          std::stringstream msg;
          msg << "No entry present for daughter with hash " << h 
