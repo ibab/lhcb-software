@@ -5,9 +5,16 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-10-22 - Vanya Belyaev
+
+ - some fixes in the histogram operations 
+
+! 2011-10-20 - Vanya Belyaev
+
+ - small change in PyRoUts 
 
 ! 2011-10-10 - Vanya Belyaev
- - UStat: extend for tetss of any dimensions ...
+ - UStat: extend for tests of any dimensions ...
    add T-value calculation
 
 ! 2011-10-03 - Vanya Belyaev

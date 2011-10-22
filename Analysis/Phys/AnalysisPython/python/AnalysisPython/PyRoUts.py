@@ -107,6 +107,14 @@ if not hasattr ( VE , 'isfinite' ) :
     _is_finite_ .__doc__ += '\n' + isfinite. __doc__
     VE.isfinite = _is_finite_
 
+if not hasattr ( VE , '__float__' ) :
+    def _float_ ( self ) :
+        """
+        Conversion to float 
+        """
+        return s.value ()
+    VE.__float__ = _float_
+
 SE.__repr__ = lambda s : 'Stat: '+ s.toString()
 SE.__str__  = lambda s : 'Stat: '+ s.toString()
 
@@ -1123,7 +1131,7 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         h2 = lambda s : v1  
     elif isinstance ( h2 ,   ROOT.TF1 ) :
         v1 =          h2  
-        h2 = lambda s : VE ( v1 ( s.value() ) , 0 )  
+        h2 = lambda s : VE ( v1 ( float ( s ) , 0 ) ) 
     #
     for i1,x1,y1 in h1.iteritems() :
         #
@@ -1161,7 +1169,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
         h2 = lambda s : v1  
     elif isinstance ( h2 ,   ROOT.TF1 ) :
         v1 =          h2  
-        h2 = lambda s : VE ( v1 ( s.value() ) , 0 )  
+        h2 = lambda s : VE ( v1 ( float ( s ) , 0 ) )    
     #
     for i1,x1,y1 in h1.iteritems() :
         #
@@ -2019,8 +2027,32 @@ def _h_sum_ ( h    ,
 def _h_scale_ ( histo , val = 1.0 ) :
     """
     Scale the histogram to certain integral
+
+    >>> h = ...
+    >>> h.scale ( 15 )
+    
     """
-    histo.Scale ( float(val) / histo.accumulate().value() )
+    factor  = 0.0
+    val     = float(val)
+    if 0   != val :
+
+        total = VE()
+        for ibin in histo :
+            total += histo[ ibin ]
+        total = total.value()
+        
+        if 0 != total :
+            factor = val/total
+
+    if not histo.GetSumw2() : histo.Sumw2()
+
+    for ibin in histo :
+
+        value          = histo [ ibin ]
+        value         *= factor
+        histo[ ibin ]  = value 
+
+    return histo
     
              
 ROOT.TH1  . accumulate = _h_accumulate_ 
@@ -2028,8 +2060,7 @@ ROOT.TH1F . sum        = _h_sum_
 ROOT.TH1D . sum        = _h_sum_
 ROOT.TH1F . integral   = _h_sum_ 
 ROOT.TH1D . integral   = _h_sum_
-ROOT.TH1F . scale      = _h_scale_ 
-ROOT.TH1D . scale      = _h_scale_ 
+ROOT.TH1  . scale      = _h_scale_ 
 # =============================================================================
 ## adjust the "efficiency"
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
