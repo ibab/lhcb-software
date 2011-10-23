@@ -771,7 +771,7 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       return true; 
    } else if ( result = ba::find_first( remote, "root:" ) ) {
       // xrootd needs no changes, command is xrdcp
-      command = "xrdcp";
+      command = "xrdcp -s";
       return true;
   } else if ( m_stageLocalFiles && ( result = ba::find_first( remote, "file:" ) ) ) {
       // local file, perhaps nfs or other networked filesystem
