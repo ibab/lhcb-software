@@ -15,20 +15,6 @@ namespace bl = boost::lambda;
 //
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
-namespace {
-    class histoGuard {
-    public:
-        histoGuard(bool switchOff,HltAlgorithm& parent) : m_parent(parent), m_flag( parent.produceHistos() && switchOff) {
-            if (m_flag) m_parent.setProduceHistos(false);
-        }
-        ~histoGuard() {
-            if (m_flag) m_parent.setProduceHistos(true);
-        }
-    private:
-        HltAlgorithm& m_parent;
-        bool m_flag;
-    };
-}
 // ============================================================================
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator,
@@ -101,13 +87,21 @@ StatusCode HltAlgorithm::sysExecute() {
   StatusCode sc = StatusCode::SUCCESS;
 
   // switch of histogramming for this event only if so requested
-  histoGuard guard( m_histogramUpdatePeriod>0 && (counter("#accept").nEntries() % m_histogramUpdatePeriod !=0), *this );
+  bool switchOff = m_histogramUpdatePeriod > 0 && ((counter("#accept").nEntries() % m_histogramUpdatePeriod) !=0);
+  bool produced = produceHistos();
+  if (switchOff && produced) {
+     setProduceHistos(false);
+  }
 
   sc = beginExecute();
   if (sc.isFailure()) return sc;
   sc = HltBaseAlg::sysExecute();
   if (sc.isFailure()) return sc;
   sc = endExecute();
+
+  if (switchOff && produced) {
+     setProduceHistos(true);
+  }
 
   return sc;
 

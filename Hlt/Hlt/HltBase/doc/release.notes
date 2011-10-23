@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2011-10-23 - Roel Aaij
+ - Remove histoguard wrapper classed causing gcc warning. It was only used
+   in a single place.
+
 !========================= HltBase v12r2 2011-10-19 =========================
 ! 2011-08-26 - Roel Aaij
  - Remove obsolete definition of operator<< for Gaudi::Histo1DDef.
