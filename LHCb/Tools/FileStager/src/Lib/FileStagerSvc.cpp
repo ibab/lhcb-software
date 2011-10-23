@@ -765,7 +765,15 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       // gsidcap or dcap needs no changes, command is dccp
       command = "dccp -A";
       return true;
-   } else if ( m_stageLocalFiles && ( result = ba::find_first( remote, "file:" ) ) ) {
+   } else if ( result = ba::find_first( remote, "dcap:" ) ) {
+      // gsidcap or dcap needs no changes, command is dccp
+      command = "dccp -A";
+      return true; 
+   } else if ( result = ba::find_first( remote, "root:" ) ) {
+      // xrootd needs no changes, command is xrdcp
+      command = "xrdcp";
+      return true;
+  } else if ( m_stageLocalFiles && ( result = ba::find_first( remote, "file:" ) ) ) {
       // local file, perhaps nfs or other networked filesystem
       ba::erase_range( remote, result );
       command = "cp";

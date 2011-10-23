@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-10-23 - Roel Aaij
+ - Add xrdcp support for root:// PFNs.
+
 ! 2011-10-14 - Roel Aaij
  - Fix a bug in disconnect logic.
 
