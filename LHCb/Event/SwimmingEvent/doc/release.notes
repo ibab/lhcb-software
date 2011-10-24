@@ -4,6 +4,7 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+!========================== SwimmingEvent v1r0 2011-10-24 =======================
 ! 2011-10-21 - Roel Aaij
  - Make the package compile on Windows by setting some ifdefs in the convenience
    functions in TurningPoint and removing some instantiations for python usage
