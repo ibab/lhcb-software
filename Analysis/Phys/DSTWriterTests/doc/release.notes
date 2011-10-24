@@ -4,6 +4,9 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+! 2011-10-24 - Chris Jones
+ - Fix check_dst_contents.py to work with IOHelper
+
 ! ========================== DstwriterTests v2r3 2011-03-10 ==================
 
 ! 2011-03-10 - Juan Palacios

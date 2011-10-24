@@ -19,6 +19,7 @@ if __name__ == '__main__' :
     from GaudiConf.Configuration import *
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
+    from GaudiConf import IOHelper
 
     from DSTWriterTests.default_args import parser
     parser.remove_option('--branch')
@@ -40,8 +41,10 @@ if __name__ == '__main__' :
     lhcbApp = LHCbApp(DDDBtag = 'default',
                       CondDBtag = 'default')
 
+    IOHelper().inputFiles([filename])
+
     appMgr = AppMgr(outputlevel=4)
-    appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
+    #appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
     appMgr.initialize()
 
     import atexit
@@ -53,7 +56,7 @@ if __name__ == '__main__' :
 
     nextEvent = Functors.NextEvent(appMgr, nevents)
 
-    evtSel.open(filename)
+    #evtSel.open(filename)
 
     nEvents=0
     nSelEvents = {}
