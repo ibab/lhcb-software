@@ -3,7 +3,7 @@
 # Maintainer : Gerhard raven 
 #============================================================================
 package           HltCommon
-version           v8r2
+version           v8r2p1
 
 # Structure
 #============================================================================
@@ -21,13 +21,13 @@ use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
 use LoKiTrigger         v*    Phys
-use LoKiHlt         v*    Phys
-use LoKiTracks         v*    Phys
+use LoKiHlt             v*    Phys
+use LoKiTracks          v*    Phys
 
 use TrackInterfaces     v*    Tr
-use HltInterfaces     v*    Kernel
+use HltInterfaces       v*    Kernel
 
-use Boost        v*   LCG_Interfaces
+use Boost               v*   LCG_Interfaces
 
 use LoKi                v*    Phys
 
