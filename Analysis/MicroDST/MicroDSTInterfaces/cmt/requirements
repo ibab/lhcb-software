@@ -6,7 +6,7 @@
 #==============================================================================
 
 package MicroDST/MicroDSTInterfaces
-version v1r6
+version v1r7
 
 # =============== structure ===================================================
 branches MicroDST cmt doc dict
