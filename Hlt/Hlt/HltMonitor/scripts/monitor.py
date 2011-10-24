@@ -29,18 +29,20 @@ def configureInput( run_info, n_processes, options ) :
 
     dirname = prefix[ options.source ] + '/%(runID)s' % run_info
     files = sorted( os.listdir( dirname ) )[ : options.NFiles ]
-    n_files = len( files )
-    min_length = ( n_files - n_files % n_processes ) / n_processes
-    lists = []
-    low = 0
-    rest = n_files % n_processes
-    for i in range( n_processes ):
-        up = low + min_length
-        if rest != 0:
-            up += 1
-            rest -= 1
-        lists.append( [ fmt( os.path.join(dirname,f) ) for f in files[ low : up ] ] )
-        low = up
+    lists = [[] for i in xrange(n_processes)]
+    for i, f in enumerate(files):
+        index = i % n_processes
+        lists[index].append(fmt(os.path.join(dirname,f)))
+    ## low = 0
+    ## rest = n_files % n_processes
+    ## for i in range( n_processes ):
+    ##     up = low + min_length
+    ##     if rest != 0:
+    ##         up += 1
+    ##         rest -= 1
+    ##     lists.append( [ fmt( os.path.join(dirname,f) ) for f in files[ low : up ] ] )
+    ##     low = up
+    print lists
     return lists
 
 def run( options, args ):

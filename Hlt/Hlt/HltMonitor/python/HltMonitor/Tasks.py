@@ -33,7 +33,6 @@ class Monitor( Task ):
         if 'Catalogs' in self._config.keys():
             FileCatalog().Catalogs = self._config[ 'Catalogs' ]
         
-	importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
 	importOptions('$STDOPTS/DecodeRawEvent.py')
 	EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
 	from Configurables import DataOnDemandSvc
@@ -88,7 +87,7 @@ class Monitor( Task ):
             if not self._evtSvc[ 'DAQ' ]:
                 self.done()
                 break
-            elif not self._filter.filterPassed():
+            elif not self.filterPassed():
                 self._condition.release()
                 continue
             # Get the event time
@@ -124,6 +123,9 @@ class Monitor( Task ):
 
     def name( self ):
         return self._name
+
+    def filterPassed( self ):
+        return self._filter.filterPassed()
 
 class SubMonitor( object ):
     def __init__( self, monitor_type, name ):
@@ -185,7 +187,8 @@ class CombinedMonitor( Monitor ):
             mon._evtSvc = self._evtSvc
             mon._pre_init()
 
-        self._appMgr.initialize() 
+        if not self._appMgr.state() == 2:
+            self._appMgr.initialize() 
 
         for sub in self._monitors.values():
             mon = sub.monitor()
@@ -206,15 +209,14 @@ class CombinedMonitor( Monitor ):
             if not self._evtSvc[ 'DAQ' ]:
                 self.done()
                 break
-            elif not self._filter.filterPassed():
-                self._condition.release()
-                continue
 
             info = {}
             for n, sub in self._monitors.iteritems():
                 # Get the event time
                 infos = []
                 sub_mon = sub.monitor()
+                if not sub_mon.filterPassed():
+                    continue
                 sub_info = sub_mon.make_info()
                 if sub_info: infos.append( sub_info )
                 sub_info = None

@@ -4,6 +4,9 @@
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
 
+! 2011-10-24 - Roel Aaij
+ - Fix bug in CombinedMonitor.
+
 ! 2011-09-01 - Roel Aaij
  - Protect against run number not being defined in ProcessWrapper.
 
