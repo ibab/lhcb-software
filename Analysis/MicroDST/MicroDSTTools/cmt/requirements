@@ -6,7 +6,7 @@
 #==============================================================================
 
 package MicroDST/MicroDSTTools
-version v2r1p2
+version v2r2
 
 # =============== structure ===================================================
 branches src cmt doc
