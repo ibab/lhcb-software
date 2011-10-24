@@ -24,6 +24,7 @@ SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*100
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
   m_filenamesvc =0;
+  m_dontdimlock = true;
 }
 
 SaveTimer::~SaveTimer( )

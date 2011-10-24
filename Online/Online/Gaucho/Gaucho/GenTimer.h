@@ -27,6 +27,7 @@ protected:
   void makeDeltaT(void);
 public:
   BRTLLock m_lock;
+  bool m_dontdimlock;
   GenTimer(void *arg, int period = 10000,int typ=TIMER_TYPE_PERIODIC+TIMER_MODIFYER_SYNCHRONIZED);
 // Period is in milli-seconds...
   virtual ~GenTimer(void);

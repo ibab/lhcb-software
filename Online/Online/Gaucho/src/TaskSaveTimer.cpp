@@ -26,6 +26,7 @@ TaskSaveTimer::TaskSaveTimer(MonSubSys *add, int period) : GenTimer((void*)add,p
   TH1D::SetDefaultSumw2();
   TH2D::SetDefaultSumw2();
   TProfile::SetDefaultSumw2();
+  m_dontdimlock = true;
 }
 
 TaskSaveTimer::~TaskSaveTimer( )

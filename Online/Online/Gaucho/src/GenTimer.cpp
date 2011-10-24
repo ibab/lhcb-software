@@ -36,6 +36,7 @@ GenTimer::GenTimer(void *arg, int period, int typ)
   m_thread       = 0;
   m_extlastdelta = 0;
   m_ForceExit    = false;
+  m_dontdimlock = false;
 }
 
 GenTimer::~GenTimer( )
@@ -191,10 +192,10 @@ void *GenTimer::ThreadRoutine()
       if (status == 0)
       {
 //        m_lock.lockMutex();
-        dim_lock();
+        if (!m_dontdimlock) dim_lock();
         makeDeltaT();
         timerHandler();
-        dim_unlock();
+        if (!m_dontdimlock) dim_unlock();
 //        m_lock.unlockMutex();
         break;
       }
