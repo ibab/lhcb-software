@@ -1,3 +1,8 @@
+2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/afs/volume.py: factor out the maximal length for a volume name (22) into
+	the MAX_NAME_LENGTH variable.
+
 2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r5p1

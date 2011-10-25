@@ -6,6 +6,10 @@ from subprocess import Popen, PIPE
 import re
 import logging
 
+# the overall length of a volume name is 31 characters. But it has to allow a ".readonly" extension
+# when a replica is created. So the max number of characters for the volume name is 22.
+MAX_NAME_LENGTH = 22
+
 class HasNoMountPoint(Exception):
     """ Exception for volume without any mount point """
     pass
@@ -163,9 +167,7 @@ def createVolume(path, volume_name, quota = None, user = None, group = None):
     @return: Volume instance
     """
 
-    # the overall length of a volume name is 31 characters. But it has to allow a ".readonly" extension
-    # when a replica is created. So the max number of characters for the volume name is 22.
-    if len(volume_name) > 22 :
+    if len(volume_name) > MAX_NAME_LENGTH :
         raise BadVolumeName, "Volume name %s is too long. volume names are limited to 22 characters." % volume_name
     if not user:
         import getpass
