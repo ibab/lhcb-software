@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+
+! 2011-10-25 - Cédric Potterat
+ - Update of UpdateJetsWithVtx.cpp for a general purpose.
+
 ! 2011-09-30 - Victor Coco
  - Update ParticleFlow4Jets algoerithm (HCAL, candidate banning, possible usage of V0s)
  - Added more refine configuration ParticleFlow_Config.py
