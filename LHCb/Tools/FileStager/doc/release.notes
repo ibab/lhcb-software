@@ -8,6 +8,7 @@
  - Add finding of garbage.exe in C++ to cover running from pickled options (like
    on the grid) in case the package is not released.
  - Reorder PFN parsing to correctly pickup xrootd at Cern and RAL.
+ - Allow a PFN which is only a filename, no directories.
 
 ! 2011-10-23 - Roel Aaij
  - Add xrdcp support for root:// PFNs.
