@@ -163,46 +163,51 @@ if '__main__' == __name__ :
     iEvent = 0
     while iEvent != options.nEvents :
         #
-        iEvent += 1
-        #
         sc = run(1)
         if sc.isFailure()       : break
         #
         if not evtSvc['/Event'] : break
         ##
+        iEvent += 1
+        #
         nodes = evtSvc.nodes ( node      = options.LocationRoot ,
                                forceload = True                 )
+        if not nodes :
+            print "warning: no nodes are selected for Root:'%s'" % options.LocationRoot
+            
         for loc in nodes :
             data = evtSvc[loc]
-            if data :
-                addEntry(nSelEvents, loc, 1)
-                if hasattr(data, 'size'   ) : addEntry ( nObjects , loc , data.size())
-                if hasattr(data, '__len__') : addEntry ( nObjects , loc , len(data))
-                else                        : addEntry ( nObjects , loc , 1)
-        
-    nObjects.keys().sort()
-    length = len(sorted(nObjects.keys(), cmp = lambda x,y : cmp(len(y), len(x)))[0])+2
-    
-    _printMessage = ''
-    
-    outputFile = open ( options.OutputFile, 'w')
-    
+            if not data :
+                addEntry ( nSelEvents , loc , 0 )
+                addEntry ( nObjects   , loc , 0 )
+            else :
+                addEntry ( nSelEvents , loc , 1 )
+                if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
+                elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
+                else                             : addEntry ( nObjects , loc , 1            )
+
+
     keys = nObjects.keys()
     keys.sort()
-
-    length = len(sorted(nObjects.keys(), cmp = lambda x,y : cmp(len(y), len(x)))[0])+2-7
-
-    lline   = ' +'+(length+47)*'-'+'+\n'
-    outputFile.write(lline)
-    _printMessage += lline
     
-    message = ' | %7s | %15s | %7s | %4s | %6s |\n' % ( ' Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
+    length  = 25
+    for key in keys : length = max ( length , len  ( key ) ) 
+    length += 2-7
+        
+    _printMessage = []
+    outputFile    = open ( options.OutputFile, 'w')
+    
+    lline   = ' +' + ( length + 58 ) * '-' + '+'
+    outputFile.write(lline + '\n')
+    _printMessage += [ lline ] 
+    
+    message = ' | %8s | %15s | %7s | %4s | %6s |' % ( 'Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
     message = " | %s %s" % ( 'Location'.ljust(length) , message )
-
-    outputFile.write(message)
-    _printMessage += message
-    outputFile.write(lline)
-    _printMessage += lline
+    
+    outputFile.write(message + '\n')
+    _printMessage += [ message ] 
+    outputFile.write(lline   + '\n')
+    _printMessage += [ lline   ]
     
     for loc in keys :
         item     = nObjects[loc]
@@ -210,28 +215,31 @@ if '__main__' == __name__ :
         l = loc.replace('/Event/','')
         
         if item.Min() != item.Max() or 0 != item.rms() or  0 != item.meanErr() : 
-            message = ' | %7g | %7.1f+-%-6.1f | %-7.1f | %4d | %-6d |\n' % ( item.sum     () ,
-                                                                       item.mean    () ,
-                                                                       item.meanErr () ,
-                                                                       item.rms     () ,
-                                                                       long ( item.Min () ) ,
-                                                                       long ( item.Max () ) )
+            message = ' | %8g | %7.1f+-%-6.1f | %-7.1f | %4d | %-6d |' % ( item.sum     () ,
+                                                                           item.mean    () ,
+                                                                           item.meanErr () ,
+                                                                           item.rms     () ,
+                                                                           long ( item.Min () ) ,
+                                                                           long ( item.Max () ) )
         else :
-            message = ' | %7d | %7d%8s | %7s | %4s | %6s |\n' % ( long ( item.sum  ()  ) ,
-                                                                  long ( item.mean ()  ) , '' , '' , '', '' ) 
+            message = ' | %8d | %7d%8s | %7s | %4s | %6s |' % ( long ( item.sum  ()  ) ,
+                                                                long ( item.mean ()  ) , '' , '' , '', '' ) 
             
         message = " | %s %s" % ( l.ljust(length) , message )
 
-        outputFile.write(message)
-        _printMessage += message
-
-    outputFile.write(lline)
-    _printMessage += lline
+        outputFile.write(message + '\n')
+        _printMessage += [ message ] 
         
-    outputFile.write("Analysed " + str(iEvent) + " events")
+    outputFile.write(lline + '\n')
+    _printMessage += [ lline ] 
+    
+    outputFile.write(  "   Analysed " + str(iEvent) + " events")
+    _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
+
 
     print '\n\n\n'
-    print _printMessage
+    for m in _printMessage : print m 
+    # print _printMessage
     print '\n\n\n'
 
     

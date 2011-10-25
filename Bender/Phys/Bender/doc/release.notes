@@ -26,10 +26,46 @@
 
 ! 2011-10-25 - Vanya Belyaev
 
- - add enw script 
-     dst-dump 
+ - add new script  dst-dump 
 
    to dump the content of (x)DST
+
+  +----------------------------------------------------------------------------------------------------------------+
+  | Location                                                |   Total  |       Mean      |   rms   |  min |   max  |
+  +----------------------------------------------------------------------------------------------------------------+
+  | DAQ/ODIN                                                |      218 |       1         |         |      |        |
+  | PsiDiGamma/DAQ/ODIN                                     |      218 |       1         |         |      |        |
+  | PsiDiGamma/Dimuon/Phys/StdAllLooseMuons/Particles       |      436 |       2         |         |      |        |
+  | PsiDiGamma/Dimuon/Rec/Vertex/Primary                    |      235 |     1.1+-0.0    | 0.3     |    1 | 3      |
+  | PsiDiGamma/Phys/SelBsPsiEta/FlavourTags                 |      669 |     3.2+-0.3    | 3.6     |    1 | 31     |
+  | PsiDiGamma/Phys/SelBsPsiEta/Particle2VertexRelations    |      207 |       1         |         |      |        |
+  | PsiDiGamma/Phys/SelBsPsiEta/Particles                   |      669 |     3.1+-0.2    | 3.6     |    0 | 31     |
+  | PsiDiGamma/Phys/SelBsPsiEta/decayVertices               |      669 |     3.2+-0.3    | 3.6     |    1 | 31     |
+  | PsiDiGamma/Phys/SelBsPsiPi0/FlavourTags                 |      105 |     1.8+-0.2    | 1.6     |    1 | 11     |
+  | PsiDiGamma/Phys/SelBsPsiPi0/Particle2VertexRelations    |       59 |       1         |         |      |        |
+  | PsiDiGamma/Phys/SelBsPsiPi0/Particles                   |      105 |     0.6+-0.1    | 1.3     |    0 | 11     |
+  | PsiDiGamma/Phys/SelBsPsiPi0/decayVertices               |      105 |     1.8+-0.2    | 1.6     |    1 | 11     |
+  | PsiDiGamma/Phys/SelGoodPsi/Particles                    |      218 |       1         |         |      |        |
+  | PsiDiGamma/Phys/SelGoodPsi/decayVertices                |      218 |       1         |         |      |        |
+  | PsiDiGamma/Phys/StdLooseResolvedEta/Particles           |     1501 |     7.3+-0.4    | 6.2     |    3 | 48     |
+  | PsiDiGamma/Phys/StdLooseResolvedPi0/Particles           |      279 |     4.7+-0.4    | 3.3     |    3 | 19     |
+  | PsiDiGamma/Rec/Calo/Electrons                           |       77 |     1.1+-0.0    | 0.3     |    1 | 2      |
+  | PsiDiGamma/Rec/Calo/Photons                             |     1233 |     5.7+-0.2    | 2.9     |    2 | 19     |
+  | PsiDiGamma/Rec/Header                                   |      218 |       1         |         |      |        |
+  | PsiDiGamma/Rec/Muon/MuonPID                             |      436 |       2         |         |      |        |
+  | PsiDiGamma/Rec/ProtoP/Charged                           |      436 |       2         |         |      |        |
+  | PsiDiGamma/Rec/ProtoP/Neutrals                          |      894 |     4.1+-0.2    | 2.8     |    2 | 17     |
+  | PsiDiGamma/Rec/Rich/PIDs                                |      436 |       2         |         |      |        |
+  | PsiDiGamma/Rec/Summary                                  |      218 |       1         |         |      |        |
+  | PsiDiGamma/Rec/Track/Best                               |      436 |       2         |         |      |        |
+  | PsiDiGamma/Rec/Vertex/Primary                           |      629 |     2.9+-0.1    | 1.1     |    1 | 6      |
+  | Rec/Header                                              |      218 |       1         |         |      |        |
+  +----------------------------------------------------------------------------------------------------------------+
+    Analysed 218 events
+
+
+
+  
 
 ! 2011-10-21 - Vanya Belyaev
 
