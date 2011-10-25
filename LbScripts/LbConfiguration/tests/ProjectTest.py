@@ -1,6 +1,8 @@
 from LbConfiguration.Project import getTarBallName, ProjectConfException
 from LbConfiguration.Project import dumpXMLConf
 from LbConfiguration.Project import _getSVNProject
+from LbConfiguration.Project import getProject
+from LbUtils.afs.volume import BadVolumeName
 
 import unittest
 import logging
@@ -28,6 +30,16 @@ class ProjectTestCase(unittest.TestCase):
     def testSVNProject(self):
         p = _getSVNProject("Gaudi")
         self.assertEqual("Gaudi", p.Name())
+    def testAFSReleaseVolumeName(self):
+        p = getProject("Integration")
+        self.assertEqual(p.AFSVolumeShortName(), "IN")
+        self.assertEqual(p.AFSVolumeName(), "INTEG")
+        self.assertEqual(p.AFSReleaseVolumeName("v1r0"), "q.lhcb.INTEG_v1r0")
+        ver = "v1000r1234"
+        self.assertEqual(p.AFSReleaseVolumeName(ver), "q.lhcb.IN_%s" % ver)
+        ver = "v1000000000r123456789"
+        self.assertRaises(BadVolumeName, p.AFSReleaseVolumeName, ver)
+
 
 if __name__ == '__main__':
     log = logging.getLogger()

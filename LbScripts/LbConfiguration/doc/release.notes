@@ -1,3 +1,10 @@
+2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py:
+	- added short cuts for volume names per project.
+	- added AFSReleaseVolumeName function to get the name per version.
+	* tests/ProjectTest.py: added test for AFSReleaseVolumeName
+
 2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r5p1

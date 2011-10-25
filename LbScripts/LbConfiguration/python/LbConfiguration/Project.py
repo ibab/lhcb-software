@@ -6,6 +6,7 @@ from LbConfiguration.Platform import binary_list, getBinaryOpt
 from LbConfiguration.External import external_projects
 
 from LbUtils.VCS import splitlines
+from LbUtils.afs.volume import MAX_NAME_LENGTH, BadVolumeName
 
 import logging
 import sys
@@ -21,6 +22,40 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
                   "Stripping" ]
+
+afs_volume_short_names = { "Gaudi"      : "GA",
+                           "LHCb"       : "LH",
+                           "Lbcom"      : "LO",
+                           "Rec"        : "RE",
+                           "Boole"      : "BO",
+                           "Brunel"     : "BR",
+                           "Gauss"      : "GS",
+                           "Phys"       : "PH",
+                           "Analysis"   : "AN",
+                           "Hlt"        : "HL",
+                           "Alignment"  : "AL",
+                           "MOORE"      : "MO",
+                           "Online"     : "ON",
+                           "Euler"      : "EU",
+                           "Geant4"     : "G4",
+                           "DaVinci"    : "DV",
+                           "Bender"     : "BE",
+                           "Orwell"     : "OR",
+                           "Panoramix"  : "PA",
+                           "LbScripts"  : "LB",
+                           "Dirac"      : "DI",
+                           "LHCbGrid"   : "LG",
+                           "Panoptes"   : "PT",
+                           "Curie"      : "CI",
+                           "Vetra"      : "VE",
+                           "Compat"     : "CO",
+                           "VanDerMeer" : "VA",
+                           "Ganga"      : "GG",
+                           "LHCbDirac"  : "LD",
+                           "Integration": "IN",
+                           "Erasmus"    : "ER",
+                           "Feicim"     : "FE",
+                           "Stripping"  : "ST"}
 
 # ------------------------------------------------------------------------------------
 
@@ -167,6 +202,8 @@ class ProjectConf(ProjectBaseConf):
         self.setProperty("AFSVolumeName", self._afsvolumename)
     def AFSVolumeName(self):
         return self._afsvolumename
+    def AFSVolumeShortName(self):
+        return afs_volume_short_names[self.Name()]
     def setAFSVolumeRoot(self, volroot):
         """set the name of the volume name to be used for new AFS volume"""
         self._afsvolumeroot = volroot
@@ -178,6 +215,16 @@ class ProjectConf(ProjectBaseConf):
         self._afslibgroup = group
     def AFSLibrarianGroup(self):
         return self._afslibgroup
+    def AFSReleaseVolumeName(self, version):
+        log = logging.getLogger()
+        volname = "q.%s.%s_%s" % (self.AFSVolumeRoot(), self.AFSVolumeName(), version)
+        if len(volname) > MAX_NAME_LENGTH :
+            log.warn("The volume name %s is too long" % volname)
+            volname = "q.%s.%s_%s" % (self.AFSVolumeRoot(), self.AFSVolumeShortName(), version)
+            log.warning("Using %s instead" % volname)
+            if len(volname) > MAX_NAME_LENGTH:
+                raise BadVolumeName, "%s is still too long" % volname
+        return volname
     def setExtraExe(self, exedict):
         """ set the list of extra executable to be build in the project """
         self._extraexe = exedict
