@@ -2,8 +2,6 @@
 # =============================================================================
 # $Id$ 
 # =============================================================================
-# $URL$
-# =============================================================================
 ## @file Bender/DstExplorer.py
 #
 #  Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
@@ -123,12 +121,19 @@ __all__     = ()  ## nothing to import
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 
-# =============================================================================
-if '__main__' == __name__ :
-
+## create the parser
+def makeParser ( usage = None ,
+                 vers  = None ) :
+    """
+    Create the parser 
+    """
+    #
+    if not usage : usage = __usage__
+    if not vers  : vers  = __version__
+    #
     from optparse import OptionParser as OptParser
-    parser = OptParser( usage   = __usage__   ,
-                        version = ' %prog '  + __version__ )
+    parser = OptParser( usage   = usage            ,
+                        version = ' %prog ' + vers )
     
     ##
     parser.add_option (
@@ -193,50 +198,30 @@ if '__main__' == __name__ :
         default = False   
         )
     ## 
+    return parser
 
-    (options,arguments) = parser.parse_args() 
-
+# =============================================================================
+## configure the application form parser data  
+def configure ( options , arguments ) :
+    """
+    Configure the application from parser data 
+    """
+    #
     ## redefine output level for 'quiet'-mode
     if options.OutputLevel > 5 : options.OutputLevel = 5
     if options.OutputLevel < 0 : options.OutputLevel = 0
     if options.Quiet and 4 > options.OutputLevel :
         options.OutputLevel = 4
-
-    print 120*'*'
-    if options.Quiet :
-        print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
-    else :
-        print __doc__
-    
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
-    print 120*'*'
-    
-    ## Files must be specfied are mandatory!
-    if not arguments :
-        parser.error ( 'No input files are specified' ) 
-
-
+        
     if options.Simulation and '2009' == options.DataType :
         options.DataType = 'MC09'
     if options.Simulation and '2010' == options.DataType :
         options.DataType = 'MC10'
             
-
     #
     ## start the actual action:
     #
-
-    
-    if options.Simulation : 
-        from Bender.MainMC   import *
-    else                  : 
-        from Bender.Main     import *
-    
-    from Gaudi.Configuration import * 
     from Configurables       import DaVinci
-
     
     daVinci = DaVinci (
         DataType    = options.DataType    ,
@@ -244,10 +229,10 @@ if '__main__' == __name__ :
         Persistency = options.Persistency , 
         Lumi        = False              
         )
-    
+
     if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
         #
-        ## try to use the latest availabel tags:
+        ## try to use the latest available tags:
         #
         from Configurables import CondDB    
         CondDB ( UseLatestTags = [ options.DataType ] )
@@ -267,6 +252,7 @@ if '__main__' == __name__ :
         Reset all DaVinci sequences
         """
         from Gaudi.Configuration import allConfigurables 
+        from Gaudi.Configuration import getConfigurable 
         for seq in ( 'DaVinciInitSeq'      ,
                      'DaVinciMainSequence' ,
                      'DaVinciSequence'     ,
@@ -291,13 +277,45 @@ if '__main__' == __name__ :
             ioh.setupServices()
             
 
+    from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction ( _action )
     
     ## get xml-catalogs (if specified) 
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
     
     ## set input data
+    from Bender.Main import setData 
     setData ( arguments , catalogs , options.Castor  )
+    
+    
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 120*'*'
+    
+    print ' Author  : ', __author__ 
+    print ' Version : ', __version__ 
+    print ' Date    : ', __date__ 
+    
+
+    parser = makeParser  ()
+    
+    options , arguments = parser.parse_args()
+    
+    print 120*'*'
+    if options.Quiet :
+        print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
+    else :
+        print __doc__
+
+    
+    ## Files must be specfied are mandatory!
+    if not arguments : parser.error ( 'No input files are specified' ) 
+    
+    configure ( options , arguments ) 
+    
+    if options.Simulation : from Bender.MainMC   import *
+    else                  : from Bender.Main     import *
     
     ## instantiate the application manager 
     gaudi=appMgr ()

@@ -4,7 +4,7 @@
 # =============================================================================
 ## @file dst-explorer
 #
-#  Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
+#  Trivial Bender-based script to explore the content of (x,mu,s,r,fm,...)DSTs
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>

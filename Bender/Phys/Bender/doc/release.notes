@@ -24,6 +24,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-10-25 - Vanya Belyaev
+
+ - add enw script 
+     dst-dump 
+
+   to dump the content of (x)DST
+
 ! 2011-10-21 - Vanya Belyaev
 
  - split Fixes.py into Fixes_Gaudi.py and Fixes_LoKi.py

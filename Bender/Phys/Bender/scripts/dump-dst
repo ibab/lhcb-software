@@ -1,10 +1,10 @@
-#!/bin/sh 
+#!/bin/bash 
 # =============================================================================
-# $Id$ 
+# $Id:$ 
 # =============================================================================
-## @file dst_explorer
+## @file dump-dst
 #
-#  Trivial Bender-based script to explore the content of (x,mu,s,r,fm,...)DSTs
+#  Trivial Bender-based script to dump the content of (x,mu,s,r,fm,...)DSTs
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -20,15 +20,15 @@
 #  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software''
 #
-#  @date   2010-09-10
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2011-10-25
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 129602 $
+#  Last modification $Date: 2011-09-29 19:04:25 +0200 (Thu, 29 Sep 2011) $
+#                 by $Author: ibelyaev $
 # =============================================================================
 
-python -i $BENDERROOT/python/Bender/DstExplorer.py $* 
+python $BENDERROOT/python/Bender/DstDump.py $* 
 
 # =============================================================================
 # The END 

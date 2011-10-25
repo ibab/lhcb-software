@@ -44,6 +44,9 @@ alias dstExplorer  "dst_explorer"
 alias dst_Explorer "dst_explorer"
 alias Dst_Explorer "dst_explorer"
 alias check_trg    "trg_check" 
+alias dump_dst     "dst_dump" 
+alias dst_content  "dst_dump" 
+
 
 # =============================================================================
 # The END
