@@ -84,11 +84,13 @@ FileStagerSvc::FileStagerSvc( const string& name, ISvcLocator* svcLoc )
    declareProperty( "CopyTries", m_copyTries = 5, "Retry copying if it fails." );
    declareProperty( "StageLocalFiles", m_stageLocalFiles = false,
                     "Stage files beginning with file:." );
-   declareProperty( "DataManagerName",
-                    m_dataManagerName = "Gaudi::StagedIODataManager/IODataManager" ,
-                    "Name of the IODataManager to use for proper disconnection." );
    declareProperty( "GarbageCollectorCommand", m_garbageCommand = "garbage.exe" ,
                     "Command for the garbage collector." );
+   declareProperty( "CheckForLocalGarbageCollector", m_checkLocalGarbage = true,
+                    "Check if the garbage collector command is in the local directory." );
+   // declareProperty( "DataManagerName",
+   //                  m_dataManagerName = "Gaudi::StagedIODataManager/IODataManager" ,
+   //                  "Name of the IODataManager to use for proper disconnection." );
 
 }
 
@@ -108,8 +110,7 @@ StatusCode FileStagerSvc::initialize()
    // Remove trailing slashes
    ba::trim_right_if( m_tmpdir, ba::is_any_of( "/" ) );
 
-   // Check if the base dir exists. FIXME create it if possible and clean up
-   // correctly later.
+   // Check if the base dir exists.
    if ( !fs::exists( m_tmpdir ) ) {
       error() << "Base temp dir " << m_tmpdir << " does not exist." << endmsg;
       sc = StatusCode::FAILURE;
@@ -138,14 +139,6 @@ StatusCode FileStagerSvc::initialize()
       sc = StatusCode::FAILURE;
       return sc;
    }
-
-   // Get the datamanager to be able to properly disconnect files when we
-   // remove them.
-   // m_dataManager = serviceLocator()->service( m_dataManagerName, false );
-   // if ( !m_dataManager.isValid() ) {
-   //    error() << "Error getting IODataManager Service!" << endmsg;
-   //    return StatusCode::FAILURE;
-   // }
 
    // Submit the garbage collector if not keeping files
    if ( !m_keepFiles ) sc = garbage();
@@ -593,8 +586,18 @@ StatusCode FileStagerSvc::garbage()
    // Create the arguments
    int ppid = getpid();
 
+   fs::path command(m_garbageCommand);
+   if (m_checkLocalGarbage) {
+      // Check if the garbage command is in the current dir, if so, use it. If not try 
+      // the command as is.
+      fs::path current = fs::initial_path();
+      for (fs::directory_iterator it(current); it != fs::directory_iterator(); ++it) {
+         if (it->path().string().find(command.filename()) != std::string::npos) 
+            command = it->path();
+      }
+   }
    vector< string > arguments;
-   arguments += m_garbageCommand, lexical_cast< string >( ppid ), m_tmpdir;
+   arguments += command.filename(), lexical_cast< string >( ppid ), m_tmpdir;
     
    // Put the arguments into the correct format for execvp
    size_t n = arguments.size();
@@ -627,7 +630,7 @@ StatusCode FileStagerSvc::garbage()
          _exit( 0 );
       }
 
-      execvp( m_garbageCommand.c_str(), args );
+      execvp( command.string().c_str(), args );
 
       // exec should not return, but we got something.
       // delete memory reserved for args

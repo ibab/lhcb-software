@@ -1,6 +1,6 @@
 
 
-def configureFileStager( keep = False, tmpdir = None ):
+def configureFileStager( keep = False, tmpdir = None, garbageCommand = 'garbage.exe' ):
     import os
     if os.name != 'posix': return
     
@@ -31,14 +31,11 @@ def configureFileStager( keep = False, tmpdir = None ):
     elif "TMPDIR" in environ.keys():
         tempdir = environ[ "TMPDIR" ]
     else:
-        tempdir = "/tmpdir"
+        tempdir = "."
     FileStagerSvc().Tempdir = tempdir
-    files = listdir( '.' )
-    command = "garbage.exe"
-    if command in files:
-        command = "./" + command
-    FileStagerSvc().GarbageCollectorCommand = command
     FileStagerSvc().KeepFiles = keep
+    FileStagerSvc().GarbageCollectorCommand = garbageCommand
+    FileStagerSvc().CheckForLocalGarbageCollector = True
 
     # Configure other services to use the correct ones
     RawDataCnvSvc( 'RawDataCnvSvc' ).DataManager = mgr.getFullName() 

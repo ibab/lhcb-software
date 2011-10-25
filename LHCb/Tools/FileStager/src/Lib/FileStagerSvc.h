@@ -134,7 +134,7 @@ private:
    const_original_iterator m_stageIt;
 
    // Services
-   SmartIF< Gaudi::IIODataManager > m_dataManager;
+   // SmartIF< Gaudi::IIODataManager > m_dataManager;
 
    // Properties
    std::string m_tmpdir;
@@ -145,8 +145,9 @@ private:
    bool m_initialized;
    bool m_retry;
    bool m_stageLocalFiles;
-   std::string m_dataManagerName;
+   // std::string m_dataManagerName;
    std::string m_garbageCommand;
+   bool m_checkLocalGarbage;
    bool m_keepFiles;
 
    // Helper Methods
