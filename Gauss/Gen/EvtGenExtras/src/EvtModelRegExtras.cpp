@@ -5,6 +5,7 @@
 #include "EvtGenModels/Evtbs2llGammaMNT.hh"
 #include "EvtGenModels/EvtDTohhhh.hh"
 #include "EvtGenModels/EvtbsToLLLL.hh"
+#include "EvtGenModels/EvtbTosllMSExt.hh"
 
 //we use auto_ptr here to show explicit transfer of ownership
 std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
@@ -15,6 +16,7 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
         models -> push_back( new Evtbs2llGammaMNT() );
         models -> push_back( new EvtDTohhhh() );
         models -> push_back( new EvtbsToLLLL() );
+        models -> push_back( new EvtbTosllMSExt() );
 	return std::auto_ptr<const EvtModelList>(models);
 	
 }

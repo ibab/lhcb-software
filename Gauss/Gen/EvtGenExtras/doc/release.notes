@@ -4,6 +4,11 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2011-10-25 - Nikolai Nikitin
+ - Added a model for simulation of the rare semileptonic decays. The model is
+   based on the BSTOLLMS decay model, but includes a possibility to simulate
+   different New Physics scenarios by varying of the Wilson Coefficients.
+
 ! 2011-10-24 - Nikolai Nikitin
  - Added new QED-based model for the B(d,s) -> 4 leptons decays (BQTOLLLL)
 
