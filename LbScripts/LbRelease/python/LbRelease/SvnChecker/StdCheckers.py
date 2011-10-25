@@ -134,7 +134,7 @@ class OnPath(Checker):
         return self.checker(txn, self.path)
 
 tagsFilter = r".*/tags/.*"
-_versionFormat = r"^((v\d+r\d+(p\d+)?(-pre\d*)?)|(\w+_\d{8}[a-z]?))$"
+_versionFormat = r"^((v\d+r\d+(p\d+)?(g\d+)?(-pre\d*)?)|(\w+_\d{8}[a-z]?))$"
 
 class TagCheckerBase(PathChecker):
     """

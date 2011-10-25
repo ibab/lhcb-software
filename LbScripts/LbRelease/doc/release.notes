@@ -1,3 +1,7 @@
+2011-10-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease/python/LbRelease/SvnChecker/StdCheckers.py: extended version format, allow 'gX'
+
 2011-10-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r5
