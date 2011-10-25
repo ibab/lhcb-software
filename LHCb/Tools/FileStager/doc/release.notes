@@ -4,6 +4,11 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-10-25 - Roel Aaij
+ - Add finding of garbage.exe in C++ to cover running from pickled options (like
+   on the grid) in case the package is not released.
+ - Reorder PFN parsing to correctly pickup xrootd at Cern and RAL.
+
 ! 2011-10-23 - Roel Aaij
  - Add xrdcp support for root:// PFNs.
 

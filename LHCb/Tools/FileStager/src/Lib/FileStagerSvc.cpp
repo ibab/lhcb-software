@@ -739,7 +739,7 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       ba::erase_range( remote, result );
    }
    
-   re = "^((?:rfio)|(?:castor)|(?:root):)//(?:\\w\\.\\w\\.\\w:\\d+/+castor)";
+   re = "^((?:rfio)|(?:castor):)//(?:\\w\\.\\w\\.\\w:\\d+/+castor)";
    if ( regex_search( remote.begin(), remote.end(), match, re, flags ) ) {
       boost::iterator_range< string::iterator >
          range( match[ 1 ].first, match[ 1 ].second );
@@ -756,9 +756,9 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       ba::erase_range( remote, result );
       command = "rfcp";
       return true;
-   } else if ( result = ba::find_first( remote, "/castor" ) ) {
-      // castor file, no protocol specification
-      command = "rfcp";
+   } else if ( result = ba::find_first( remote, "root:" ) ) {
+      // xrootd needs no changes, command is xrdcp
+      command = "xrdcp -s";
       return true;
    } else if ( result = ba::find_first( remote, "srm:" ) ) {
       // srm does not need changes, command is lcg-cp
@@ -768,13 +768,9 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       // gsidcap or dcap needs no changes, command is dccp
       command = "dccp -A";
       return true;
-   } else if ( result = ba::find_first( remote, "dcap:" ) ) {
-      // gsidcap or dcap needs no changes, command is dccp
-      command = "dccp -A";
-      return true; 
-   } else if ( result = ba::find_first( remote, "root:" ) ) {
-      // xrootd needs no changes, command is xrdcp
-      command = "xrdcp -s";
+   } else if ( result = ba::find_first( remote, "/castor" ) ) {
+      // castor file, no protocol specification
+      command = "rfcp";
       return true;
   } else if ( m_stageLocalFiles && ( result = ba::find_first( remote, "file:" ) ) ) {
       // local file, perhaps nfs or other networked filesystem
