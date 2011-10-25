@@ -1,0 +1,101 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/Swimming
+! Responsible : Vladimir Gligorov
+! Purpose     : Scripts for swimming the HLT/Stripping/Offline selections
+!               for lifetime measurements 
+!-----------------------------------------------------------------------------
+
+! 2011-10-25 - Roel Aaij
+ - Add OutputType property to allow DaVinci to write a DST when swimming the
+   stripping.
+
+! 2011-10-24 - Roel Aaij, Vava Gligorov
+ - Add configuration class and functions to run the swimming using gaudirun.py
+ - Add example scripts for use with gaudirun.py to example
+ - Small fix for odin check in RunSwimming.py
+
+! 2011-10-20 - Roel Aaij
+ - For a final refined turning point, the last interval is moved forward by half
+   the final granularity to avoid a systematic downward bias (swimming is always
+   left to right).
+ - Use pprint to make debug more readable (but also more lines).
+ - Add AppMgr.stop, finalize, exit at the end.
+
+! 2011-10-19 - Roel Aaij
+ - Fixed some HltDecLast fallout from a previous change.
+ - And reverted the fix because an important aspect was overlooked.
+
+! 2011-10-16 - Roel Aaij
+ - Add DecayTreeTuple.py, an example script to write a DecayTreeTuple from
+   either a DST or a MicroDST.
+ - Use hashParticle from SwimmingEvent to calculate a hash for an
+   LHCb::Particle and use it to store the daughter information.
+
+! 2011-10-12 - Roel Aaij
+ - Change custom map.__call__ into more natural __setitem__
+
+! 2011-10-11 - Roel Aaij
+ - Many changes, mainly:
+   . Use new event model classes to persist swimming result.
+   . Update the way trigger results are passed around.
+   . Write the swimming result to the MicroDST.
+   . Add candidate selection possibility, currently deterministic random or
+     the first candidate.
+   . In case of non-trivial candidate selection, put the selected candidate 
+     in a special location for swimming.
+   . Add functions and dictionary for deterministic random selection.
+
+!============================== v2r1 07-09-2011 ===============================
+! 2011-09-07 - V. Gligorov
+ - Many small bugfixes and updates to the code.
+   . Save decisions of all triggers if swimming more than one trigger at once
+   . Save which tracks participated in which trigger decision
+ - Write out muDST file at the end of swimming the stripping.     
+
+!============================== v2r0 14-08-2011 ===============================
+! 2011-08-14 - V. Gligorov
+ - Update to 2011 data.
+ - Includes the following changes :
+   . Added code to get VELO geometric acceptance for each track at each
+     turning point.
+   . Added trigger tranformations for 2011 data.
+   . Rewritten event loop which no longer needs to rewind events in order to swim
+     them. Many thanks to Marco Clemencic and Gerhard Raven for hints and tips
+     in this respect. The timing to swim a single event is now ~10s/event for HLT,
+     ~4s/event for Stripping. 
+ 
+!============================== v1r2 29-05-2011  ===============================
+
+! 2011-05-29 - V. Gligorov
+ - Fix bug in swimming range when refining a turning point. 
+ - Tag v1r2
+
+!============================== v1r1p1 18-04-2011 ==============================
+
+! 2011-04-18 - Diego Martinez Santos
+ - Make version v1r1p1
+
+! 2011-04-17 - V. Gligorov
+ - Small bugfix for the options "-n" and "-s" which specify the number of
+   events to run over and the first event to run over respectively. 
+
+!============================== v1r1 16-04-2011 ==============================
+
+! 2011-04-16 - Vladimir Gligorov
+ - Update of the code. Setup options moved into separate files where possible.
+   TisTos code moved into its own script, SwimmingTisTos.py.
+ - Added functionality to store information on how many of the final state
+   tracks from the signal candidate were reconstructed in HLT1/2, and how
+   many of these tracks were TOS with respect to the signal trigger in HLT1. 
+
+!============================== v1r0 13-04-2011 ==============================
+
+! 2011-04-13 - Vladimir Gligorov
+  - First commit of the code which used to live in Hlt2CommissioningScripts.
+    This has been broken up into several smaller scripts. 
+    . RunSwimming   : is the main script which controls the event loop
+    . RefineTPs     : controls the recursive refinement of the turning points
+    . HltTransforms : contains the transformations which allow swimming from TCKs 
+    . SwimmingUtils : contains miscallaneous helper functions
+    . Globals       : contains a helper class to pass "globals" (e.g. the TES)
+                      between the various modules

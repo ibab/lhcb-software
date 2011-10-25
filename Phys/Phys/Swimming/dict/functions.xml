@@ -1,0 +1,5 @@
+<lcgdict>
+  <function name="Random::mix32" />
+  <function name="Random::mix64" />
+  <function name="Random::mixString" />
+</lcgdict>
