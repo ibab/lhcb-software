@@ -29,12 +29,10 @@ def create_volume(pname, pversion, size=0):
 # project directory, afs group, volume root
     PNAME = projconf.NAME()
     P_DIR = projconf.ReleaseArea()
-    root = projconf.AFSVolumeRoot()
     group = projconf.AFSLibrarianGroup()
 
 # set the volume name
-    PN = projconf.AFSVolumeName()
-    vol_name = 'q.' + root + '.' + PN + '_' + pversion
+    vol_name = projconf.AFSReleaseVolumeName(pversion)
 
 # check PNAME project existence
     if not os.path.exists(os.path.join(P_DIR, PNAME)):

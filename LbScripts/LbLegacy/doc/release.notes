@@ -1,3 +1,13 @@
+2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/vol_for_releases.py: use the AFSReleaseVolumeName method to
+	get the name of the volume.
+
+2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkMCGentar: removed the stripping of the "p" patch version for the GENSER
+	tarball.
+
 2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r5p1
