@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-10-25 - Chris Jones
+ - Update the RadiatorTool to load the required radiator detector elements
+   on demand, instead of during initialize().
+
 ! 2011-10-05 - Chris Jones
  - Various changes to make things PD (HPD/MaPMT) neutral.
 

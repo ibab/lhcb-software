@@ -60,9 +60,6 @@ namespace Rich
 
     virtual ~RadiatorTool( ); ///< Destructor
 
-    // Initialization of the tool after creation
-    virtual StatusCode initialize();
-
     // Finalization of the tool
     virtual StatusCode finalize();
 
@@ -86,8 +83,12 @@ namespace Rich
 
   private:
 
-    /// UMS update
-    StatusCode radiatorUpdate();
+    /// Load the given radiator detector element
+    void loadRadiator( const Rich::RadiatorType radiator );
+
+    StatusCode updateRich1Gas();    ///< UMS update for Rich1Gas
+    StatusCode updateRich2Gas();    ///< UMS update for Rich2Gas
+    StatusCode updateAerogel();     ///< UMS update for Aerogel
 
   private: // classes
 

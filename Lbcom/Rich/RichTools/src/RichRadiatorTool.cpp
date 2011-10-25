@@ -27,11 +27,11 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RadiatorTool::RadiatorTool( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-  : Rich::ToolBase ( type, name, parent   ),
-    m_radiators    ( Rich::NRadiatorTypes )
+  Rich::RadiatorTool::RadiatorTool( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+    : Rich::ToolBase ( type, name, parent   ),
+      m_radiators    ( Rich::NRadiatorTypes )
 {
   declareInterface<IRadiatorTool>(this);
 }
@@ -43,29 +43,6 @@ Rich::RadiatorTool::~RadiatorTool() {}
 //=============================================================================
 
 //=============================================================================
-// initialize
-//=============================================================================
-StatusCode Rich::RadiatorTool::initialize ( )
-{
-  // intialise base class
-  StatusCode sc = Rich::ToolBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // UMS dependencies
-  updMgrSvc()->registerCondition( this, DeRichLocations::Rich1Gas, 
-                                  &Rich::RadiatorTool::radiatorUpdate );
-  updMgrSvc()->registerCondition( this, DeRichLocations::Rich2Gas, 
-                                  &Rich::RadiatorTool::radiatorUpdate );
-  updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel, 
-                                  &Rich::RadiatorTool::radiatorUpdate );
-  
-  // run first update
-  sc = sc && radiatorUpdate();
-
-  return sc;
-}
-
-//=============================================================================
 // finalize
 //=============================================================================
 StatusCode Rich::RadiatorTool::finalize()
@@ -75,19 +52,56 @@ StatusCode Rich::RadiatorTool::finalize()
 }
 
 //=============================================================================
+
+void Rich::RadiatorTool::loadRadiator( const Rich::RadiatorType radiator )
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  if      ( radiator == Rich::Rich1Gas )
+  {
+    sc = updateRich1Gas();
+    updMgrSvc()->registerCondition( this, DeRichLocations::Rich1Gas,
+                                    &Rich::RadiatorTool::updateRich1Gas );
+  }
+  else if ( radiator == Rich::Rich2Gas )
+  {
+    sc = updateRich2Gas();
+    updMgrSvc()->registerCondition( this, DeRichLocations::Rich2Gas,
+                                    &Rich::RadiatorTool::updateRich2Gas );
+  }
+  else if ( radiator == Rich::Aerogel )
+  {
+    sc = updateAerogel();
+    updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel,
+                                    &Rich::RadiatorTool::updateAerogel );
+  }
+  if ( sc.isFailure() )
+  {
+    std::ostringstream mess;
+    mess << "Problem loading radiator " << radiator;
+    Exception( mess.str() );
+  }
+}
+
+//=============================================================================
 // UMS update
 //=============================================================================
-StatusCode Rich::RadiatorTool::radiatorUpdate()
-{
 
-  // RICH1 gas
+StatusCode Rich::RadiatorTool::updateRich1Gas()
+{
   m_radiators[Rich::Rich1Gas].clear();
   m_radiators[Rich::Rich1Gas].push_back( getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) );
+  return StatusCode::SUCCESS;
+}
 
-  // RICH2 gas
+StatusCode Rich::RadiatorTool::updateRich2Gas()
+{
   m_radiators[Rich::Rich2Gas].clear();
   m_radiators[Rich::Rich2Gas].push_back( getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) );
+  return StatusCode::SUCCESS;
+}
 
+StatusCode Rich::RadiatorTool::updateAerogel()
+{
   // aerogel
   m_radiators[Rich::Aerogel].clear();
   const DeRichMultiSolidRadiator * aerogel
@@ -98,23 +112,11 @@ StatusCode Rich::RadiatorTool::radiatorUpdate()
   {
     m_radiators[Rich::Aerogel].push_back( *dRad );
   }
+
   // Sort by distance from beam line
   std::stable_sort( m_radiators[Rich::Aerogel].begin(),
                     m_radiators[Rich::Aerogel].end(),
                     SortByDistFromBeam() );
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Radiator information update" << endmsg;
-    debug() << " -> Using the following DeRichRadiators :" << endmsg;
-    for ( unsigned int i=0; i<m_radiators.size(); ++i )
-    {
-      for ( unsigned int j=0; j<m_radiators[i].size(); ++j )
-      {
-        debug() << "  -> " << m_radiators[i][j]->name() << endmsg;
-      }
-    }
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -131,6 +133,12 @@ Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
 
   // tally for the number of intersections
   unsigned int totalIntersections( 0 );
+
+  // Make sure radiator is loaded
+  if ( m_radiators[radiator].empty() ) 
+  {
+    const_cast<Rich::RadiatorTool*>(this)->loadRadiator(radiator); 
+  }
 
   // loop over all volumes for given radiator
   /** @todo With aerogel sub-tiles, there are now a lot of volumes
