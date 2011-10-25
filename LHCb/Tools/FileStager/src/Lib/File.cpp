@@ -115,7 +115,7 @@ boost::uintmax_t get_size( const string& command, const unsigned int lineno,
       }
       ret = pclose( pipe );
    }
-   if ( ret < 0 ) {
+   if ( ret != 0 ) {
       string error = "Executing " + command + " failed.";
       throw GaudiException( error, "Error getting size.", StatusCode::FAILURE );
    } else {
