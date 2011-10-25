@@ -68,7 +68,7 @@ def get_native_versions(native_version):
     else:
         GENSERVERSION = value
 
-    packages_versions['GENSER'] = GENSERVERSION.split('p')[0]
+    packages_versions['GENSER'] = GENSERVERSION
 
     for fdline in os.popen('cmt show macros native').readlines():
         if fdline.find('config_version') == -1:
