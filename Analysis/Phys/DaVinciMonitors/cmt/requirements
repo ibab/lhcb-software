@@ -22,6 +22,8 @@ use HltEvent            v* Event
 use LinkerEvent        v*    Event
 use RecEvent           v* Event
 use TrackEvent         v* Event
+use MuonTools	       v* Muon
+
 
 include_path      none
 #============================================================================
