@@ -2,7 +2,7 @@ from Configurables import Swimming
 from Gaudi.Configuration import *
 
 Swimming().DataType = '2011'
-Swimming().EvtMax = 25
+Swimming().EvtMax = -1
 Swimming().Simulation = False
 Swimming().DDDBtag = "head-20110722"
 Swimming().CondDBtag = "head-20110901"
@@ -16,7 +16,7 @@ Swimming().Hlt2Triggers = ["Hlt2DiMuonJPsiDecision", "Hlt2DiMuonDetachedJPsiDeci
 Swimming().OffCands = "/Event/SingleCandidate"
 Swimming().TransformName = '2011_WithBeamSpotFilter'
 Swimming().SelectMethod = 'random'
-Swimming().UseFileStager = True
+Swimming().OutputType = 'DST'
 
 from Configurables import CondDB
 CondDB(UseOracle = True)

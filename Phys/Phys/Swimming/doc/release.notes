@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-10-26 - Roel Aaij
+ - Fix 2 bugs (3 letters...)
+
 ! 2011-10-25 - Roel Aaij
  - Add OutputType property to allow DaVinci to write a DST when swimming the
    stripping.

@@ -39,12 +39,11 @@ swimOffsel              = Swimming().getProp('SwimOffSel')
 
 writerName = None
 if not swimStripping:
-    writeName = 'Writer'
-if Swimming().getProp('OutputType') == 'MDST':
+    writerName = 'Writer'
+elif Swimming().getProp('OutputType') == 'MDST':
     writerName = 'MicroDSTMainSeq'
 elif Swimming().getProp('OutputType') == 'DST':
     writerName = 'FullDSTMainSeq'
-
 def SwimmingEventLoop(main, gaudi, nEvents):
     import GaudiPython
     StatusCode = GaudiPython.gbl.StatusCode
