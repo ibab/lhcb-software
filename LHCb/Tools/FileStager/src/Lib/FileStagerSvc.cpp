@@ -159,16 +159,31 @@ StatusCode FileStagerSvc::finalize()
    if ( !m_keepFiles ) {
       verbose() << "Killing garbage collector" << endmsg;
       kill( m_garbagePID, SIGTERM );
+      boost::this_thread::sleep( pt::seconds( 5 ) );
       int err = 0;
-      while ( waitpid( m_garbagePID, &err, 0) == -1 )
-         if ( errno != EINTR ) {
-            warning() << "Interrupted while waiting for the garbage collector " 
-                      << "to exit." << endmsg;
+      unsigned int waited = 0;
+      while ( waited < 60 ) {
+         pid_t r = waitpid( m_garbagePID, &err, WNOHANG);
+         if ( r == 0 ) {
+            boost::this_thread::sleep( pt::seconds( 1 ) );
+            waited += 1;
+         } else if ( r == -1 ) {
+            if ( errno == EINTR ) {
+               warning() << "Interrupted while waiting for the garbage collector " 
+                         << "to exit." << endmsg;
+               break;
+            }
+         } else {
             break;
          }
+      }
       if ( err < 0 ) {
          warning() << "The garbage collector exited with an error: " 
                    << strerror( err ) << endmsg;
+      } else if ( waited == 60 ) {
+         warning() << "The garbage collector has taken more than a minute " 
+                   << "to exit, trying to kill harder." << endmsg;
+         kill( m_garbagePID, -9);
       }
    }
    if ( !sc.isSuccess() ) {

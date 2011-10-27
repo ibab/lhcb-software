@@ -20,7 +20,8 @@ std::string tmpdir;
 void cleanup( int )
 {
    fs::path p( tmpdir );
-   fs::remove_all( tmpdir );
+   if ( fs::exists(p) )
+      fs::remove_all( tmpdir );
    exit( 0 );
 }
 #endif
@@ -68,6 +69,10 @@ int main( int argc, char* argv[] )
    } catch ( const boost::bad_any_cast& e ) {
       cout << "dir is not a correct string" << endl;
       cout << "usage: garbage.exe pid dir" << endl;
+      return -2;
+   }
+   if ( !fs::exists( fs::path( tmpdir ) ) ) {
+      cout << "Directory " << tmpdir << " does not exist!" << endl;
       return -2;
    }
 
