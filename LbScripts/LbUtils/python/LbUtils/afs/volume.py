@@ -168,7 +168,7 @@ def createVolume(path, volume_name, quota = None, user = None, group = None):
     """
 
     if len(volume_name) > MAX_NAME_LENGTH :
-        raise BadVolumeName, "Volume name %s is too long. volume names are limited to 22 characters." % volume_name
+        raise BadVolumeName, "Volume name %s is too long. volume names are limited to %s characters." % (volume_name, MAX_NAME_LENGTH)
     if not user:
         import getpass
         user = getpass.getuser()
