@@ -8,6 +8,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2011-10-27 - Victor Coco
+ - Fix add protection against non existant conatainer candidate banning 
+   Add vertex association in ParticleFlow4Jets.cpp
+
+! 2011-10-27 - Victor Coco
  - Add candidate banning for composite particles in ParticleFlow4Jets
 
 ! 2011-10-25 - Cédric Potterat

@@ -3,7 +3,7 @@ __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow4Jets, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC )
+from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow4Jets, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg)
 
 
 #####################################
@@ -58,7 +58,7 @@ from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelect
 
 
 class ParticleFlowConf:
-    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s'],  _MCSeq = False , _params = {} ):
+    def __init__(self, _name, _InputParticles = ['Photons','NeutralHadrons','Charged','Pi0s','V0s'], _MCSeq = False , _params = {} ):
          self.name = _name
          self.InputParticles = _InputParticles
          self.MC = _MCSeq
@@ -69,9 +69,10 @@ class ParticleFlowConf:
                           'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
                           'MaxMatchHCALTrSmallE': 25.,'MaxMatchHCALTrMediumE':16. ,'MaxMatchHCALTrLargeE':16. ,'MaxMatchHCALTr_T': 16.,
                           'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
-                          'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. 
+                          'MinPhotonIDMax4ResolvedPi0':  -2.,'MinPhotonIDMin4ResolvedPi0':-4., 'MinInfMomentumCut':10. ,
+                          'VerticesLocation':"Rec/Vertex/Primary",
+                          'CandidateToBanLocation':''
                            }
-         
          # set the datafile
          self.algorithms = []
          self.setupParam(_params)
@@ -99,7 +100,7 @@ class ParticleFlowConf:
             if params.has_key(key): self.__dict__[key] = params[key]
             else: self.__dict__[key] = self.paramDef[key]
 
-   
+
     
     ## Configure the jet maker
     def setupPF(self ):
@@ -118,6 +119,8 @@ class ParticleFlowConf:
         pLocations = []
         
         alg.UseTTrackBanning = True
+        alg.CandidateToBanLocation = self.CandidateToBanLocation
+        alg.VerticesLocation = self.VerticesLocation
         
         for t in self.InputParticles:
             if t=='Photons':

@@ -1,6 +1,7 @@
 // $Id: $
 // Include files 
 #include <boost/foreach.hpp>
+#include "boost/algorithm/string/replace.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -22,8 +23,11 @@
 // Relations
 #include "Relations/IRelation.h"
 #include "Relations/IRelationWeighted2D.h"
+#include "Kernel/Particle2Vertex.h"
+#include "Relations/Get.h"
 // local
 #include "ParticleFlow4Jets.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ParticleFlow4Jets
@@ -123,6 +127,8 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
   declareProperty( "MinHCALE",m_minHCALE = 2000.,
                    "Minimum value to take a HCAL cluster into account");
   declareProperty( "UseTTrackBanning", m_banFromTTrack = true, "Use TTrack to ban neutrals");
+  declareProperty( "VerticesLocation", m_verticesLocation = LHCb::RecVertexLocation::Primary 
+                   , "Location of vertices to which charged paritcles should be related");
 
 }
 //=============================================================================
@@ -147,6 +153,11 @@ StatusCode ParticleFlow4Jets::initialize() {
   if(m_ttExpectation == 0)
     m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");  
 
+  m_pf2verticesLocation = m_PFOutputLocation ;
+  boost::replace_last(m_pf2verticesLocation,"/Particles","/Particle2VertexRelations");
+
+  
+  m_pvRelator = tool<IRelatedPVFinder>("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2", this);
 
   // ParticleProperty
   LHCb::IParticlePropertySvc* ppSvc = 0;
@@ -190,7 +201,6 @@ StatusCode ParticleFlow4Jets::initialize() {
         << m_Chi2HCAL1Cut  <<endmsg;
   info()<<"|--> MaxMatchHCALTr for P > "<<m_Chi2HCAL1CutEValue<<" : " << m_Chi2HCAL2Cut  <<endmsg;
   
-  
 
   return StatusCode::SUCCESS;
 }
@@ -227,6 +237,9 @@ StatusCode ParticleFlow4Jets::execute() {
   LHCb::Particles* BannedPFParticles = new LHCb::Particles();
   put( BannedPFParticles , m_PFBannedOutputLocation );
 
+  // Create the particle to vertex relation table
+  Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
+
   // Map of ECAL clusters to Ban
   BannedIDMap BannedECALClusters;  
   // Map of HCAL clusters to Ban
@@ -241,7 +254,9 @@ StatusCode ParticleFlow4Jets::execute() {
           if(daughtersV0.at(i) != NULL)
             if(daughtersV0.at(i)->proto() != NULL)
               m_trackKeyToBan[daughtersV0.at(i)->proto()->track()->key()]=daughtersV0.at(i)->proto()->track();
-        PFParticles->insert( v0->clone());
+        LHCb::Particle* PFV0 = v0->clone();
+        relate2Vertex( PFV0 , *table );
+        PFParticles->insert( PFV0 );
       }
     }
   }
@@ -314,10 +329,10 @@ StatusCode ParticleFlow4Jets::execute() {
       }
       // Save the particle
       if (tag == KeepInPF){
-        PFParticles->insert( MakeParticle( ch_pp , -1 ) );
+        PFParticles->insert( MakeParticle( ch_pp , -1 , *table ) );
       }
       else if (tag ==  KeepInPFBanned ){
-        BannedPFParticles->insert( MakeParticle( ch_pp , InfMom ) );
+        BannedPFParticles->insert( MakeParticle( ch_pp , InfMom , *table) );
       }
       else if (tag == Unknown ){
         Warning("Unknow status for this charged particle");
@@ -585,6 +600,7 @@ StatusCode ParticleFlow4Jets::execute() {
       }
     }
   }
+  put( table, m_pf2verticesLocation );
   
   debug()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<endreq;
   
@@ -607,7 +623,8 @@ StatusCode ParticleFlow4Jets::finalize() {
 //=============================================================================
 // Create Particle from ProtoParticle with best PID
 //=============================================================================
-LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp , int banType ){
+LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp ,
+                                                  int banType , Particle2Vertex::WTable& table ){
   
   bool pid_found(false);
 
@@ -690,7 +707,13 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
   //Remaining info at the first state...
   StatusCode sc = m_p2s->state2Particle( tk->firstState(), p );
 
-  return p.clone();
+  LHCb::Particle* PFp = p.clone();
+  if ( tk->type() == LHCb::Track::Long ||tk->type() == LHCb::Track::Upstream ){
+    relate2Vertex(PFp,table);
+  }
+  
+
+  return PFp;
 }
 
 //=============================================================================
@@ -721,7 +744,10 @@ int ParticleFlow4Jets::tagTrack( const LHCb::Track* track )
     //Check that this track is not a clone of one of the banned ones
     for (std::map< int , const LHCb::Track* >::const_iterator itr = m_trackKeyToBan.begin(); m_trackKeyToBan.end()!= itr; ++itr){
       double cloneDist = kullbeckLieblerDist((*itr).second->firstState(),track->firstState());
-      if(cloneDist<5000.)return RejectBanCluster;
+      if(cloneDist<5000.){
+        return RejectBanCluster;
+      }
+      
     }
   }
   verbose()<<"selectTrack: Check inf mom..."<<endreq;
@@ -805,27 +831,38 @@ StatusCode ParticleFlow4Jets::loadDatas() {
           m_electronPPkeys.push_back((electron)->proto()->key());
     }    
   }
-
+  
   // Eventually store track keys of candidates that need to be banned
   if(m_banCandidatesLocation!=""){
-    const LHCb::Particles* particleToBan = get<LHCb::Particles>( m_banCandidatesLocation ) ;
-    BOOST_FOREACH(const LHCb::Particle* cand, *particleToBan ){
-      LHCb::Particle::ConstVector particleToBan_daug = cand->daughtersVector();
-      if ( particleToBan_daug.size() == 0 ){
-        if (cand->proto()==0)continue;
-        if (cand->proto()->track()==0)continue;
-        m_trackKeyToBan[cand->proto()->track()->key()]=cand->proto()->track();
-      }
-      else{
-        BOOST_FOREACH(const LHCb::Particle* cand_d, particleToBan_daug ){
-          if (cand_d->proto()==0)continue;
-          if (cand_d->proto()->track()==0)continue;
-          m_trackKeyToBan[cand->proto()->track()->key()]=cand_d->proto()->track();
+    if (exist<LHCb::Particles> (m_banCandidatesLocation)){
+      const LHCb::Particles* particleToBan = get<LHCb::Particles>( m_banCandidatesLocation ) ;
+    
+      BOOST_FOREACH(const LHCb::Particle* cand, *particleToBan ){
+        LHCb::Particle::ConstVector particleToBan_daug = cand->daughtersVector();
+        if ( particleToBan_daug.size() == 0 ){
+          if (cand->proto()==0)continue;
+          if (cand->proto()->track()==0)continue;
+          m_trackKeyToBan[cand->proto()->track()->key()]=cand->proto()->track();
+        }
+        else{
+          for(LHCb::Particle::ConstVector::const_iterator i_p = particleToBan_daug.begin() ;
+              particleToBan_daug.end() != i_p ; ++i_p ){
+            if ((*i_p)->proto()==0)continue;
+            if ((*i_p)->proto()->track()==0)continue;
+            m_trackKeyToBan[(*i_p)->proto()->track()->key()]=(*i_p)->proto()->track();
+          }
         }
       }
     }
   }
   
+  // Load the vertices container
+  if (! exist<LHCb::RecVertex::Range>(m_verticesLocation) ){
+    return Warning("No Vertices at "+m_verticesLocation);
+  }
+  else{
+    m_vertices = get<LHCb::RecVertex::Range>(m_verticesLocation);
+  }
 
   return StatusCode::SUCCESS ;
 
@@ -855,4 +892,18 @@ double ParticleFlow4Jets::kullbeckLieblerDist( const LHCb::State& c1,
  
    // trace
    return Gaudi::Math::trace(diff) + Similarity(invSum,diffVec);
+}
+
+//=============================================================================
+// Add the PF particle 2 Vertex relation in the main relation table
+//=============================================================================
+void ParticleFlow4Jets::relate2Vertex( const LHCb::Particle* p , Particle2Vertex::WTable& table)
+{  
+  
+  const Particle2Vertex::LightWTable bestPVTable = 
+    m_pvRelator->relatedPVs(p, 
+                            LHCb::VertexBase::ConstVector(m_vertices.begin(), 
+                                                          m_vertices.end()));
+  const Particle2Vertex::LightWTable::Range range = bestPVTable.relations();
+  table.merge(range);
 }

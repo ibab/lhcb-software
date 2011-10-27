@@ -22,6 +22,8 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Relations/RelationWeighted1D.h"
+#include "Kernel/IRelatedPVFinder.h"
+#include "Kernel/Particle2Vertex.h"
 
 
 #include "Event/TrackUnitsConverters.h"
@@ -59,9 +61,12 @@ private:
 
   int tagTrack( const LHCb::Track* track );
 
-  LHCb::Particle * MakeParticle( const LHCb::ProtoParticle * pp , int banType );
+  LHCb::Particle * MakeParticle( const LHCb::ProtoParticle * pp , int banType , Particle2Vertex::WTable& table);
 
   double kullbeckLieblerDist(const LHCb::State& c1, const LHCb::State& c2) const;
+
+  void relate2Vertex(const LHCb::Particle* p , Particle2Vertex::WTable& table);
+  
 
 
   
@@ -86,6 +91,8 @@ private:
 
   IProtoParticleFilter* m_filterGhost ;
 
+  IRelatedPVFinder* m_pvRelator ;
+
   std::vector< std::string > m_particleLocations;
 
   std::map< std::string , std::vector< LHCb::Particles* > > m_particleContainers;
@@ -93,6 +100,12 @@ private:
   std::map< std::string , const LHCb::CaloClusters* > m_clusterContainers;
 
   std::map< std::string , LHCb::ProtoParticles* > m_protoParticles;
+
+  LHCb::RecVertex::Range m_vertices;
+  
+  std::string m_verticesLocation ;
+
+  std::string m_pf2verticesLocation ;
 
   std::string m_PFOutputLocation ;
 
