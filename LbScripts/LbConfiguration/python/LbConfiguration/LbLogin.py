@@ -952,9 +952,18 @@ class LbLoginScript(SourceScript):
 
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
 
-            if not opts.use_cmtextratags :
-                if os.environ.has_key("CMTEXTRATAGS") :
-                    del os.environ["CMTEXTRATAGS"]
+
+            if opts.use_cmtextratags :
+                if "CMTEXTRATAGS" in os.environ.keys() :
+                    extra_args_list = os.environ["CMTEXTRATAGS"].replace(",", " ").split()
+                    extra_args_list.append("NO_PYTHON_LIBPATH")
+                    os.environ["CMTEXTRATAGS"] = " ".join(extra_args_list)
+                else :
+                    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+            else :
+                os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+
+
             if opts.compat_prepend is None :
                 try :
                     SetupProject().main(setupprojargs)
