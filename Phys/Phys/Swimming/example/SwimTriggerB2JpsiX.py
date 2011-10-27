@@ -17,6 +17,10 @@ Swimming().OffCands = "/Event/SingleCandidate"
 Swimming().TransformName = '2011_WithBeamSpotFilter'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
+Swimming().UseFileStager = True
+
+from Configurables import FileStagerSvc
+FileStagerSvc().OutputLevel = 1
 
 from Configurables import CondDB
 CondDB(UseOracle = True)

@@ -222,8 +222,15 @@ def ConfigureMoore():
     myswimmer.OutputSelection   = config.getProp('OutPVSel')
     myswimmer.OutputLevel       = 4
 
-    ApplicationMgr().TopAlg.insert(0, deathstar)
+    class Deathstar(object):
+        def __init__(self, seq):
+            self._seq = seq
+        def insert(self):
+            ApplicationMgr().TopAlg.insert(0, self._seq)
 
+    d = Deathstar(deathstar)
+    appendPostConfigAction(d.insert)
+    
 def ConfigureDaVinci():
     config = Swimming()
     from Configurables import DaVinci

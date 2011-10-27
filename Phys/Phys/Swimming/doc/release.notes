@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-10-27 - Roel Aaij
+ - Add Hlt node killing sequence as postConfigAction.
+
 !====================== Phys/Swimming v2r2 2011-10-26 =======================
 ! 2011-10-26 - Roel Aaij
  - Fix 2 bugs (3 letters...)
