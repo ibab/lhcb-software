@@ -183,7 +183,7 @@ StatusCode FileStagerSvc::finalize()
       } else if ( waited == 60 ) {
          warning() << "The garbage collector has taken more than a minute " 
                    << "to exit, trying to kill harder." << endmsg;
-         kill( m_garbagePID, -9);
+         kill( m_garbagePID, SIGKILL );
       }
    }
    if ( !sc.isSuccess() ) {

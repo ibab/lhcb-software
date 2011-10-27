@@ -7,6 +7,8 @@
 ! 2011-10-27 - Roel Aaij
  - Add a timeout of a minute to waiting for the garbage collector to complete its
    cleanup.
+ - Improve the regex used to find the xrootd host.
+ - Improve garbage collector.
 
 !========================= FileStager v1r3 2011-10-26 =========================
 ! 2011-10-25 - Roel Aaij
