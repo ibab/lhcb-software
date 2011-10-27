@@ -157,7 +157,7 @@ StatusCode FastVeloTracking::execute() {
       }
       if ( m_doTiming ) m_timerTool->stop( m_timeFwd4 );
     }
-    
+
     if ( !m_onlyForward ) {
       if ( m_doTiming ) m_timerTool->start( m_timeBkwd4 );
       for ( sensorNb = m_hitManager->firstRSensor(); m_hitManager->lastRSensor() > sensorNb+8; ++sensorNb ) {
@@ -167,7 +167,7 @@ StatusCode FastVeloTracking::execute() {
       if ( m_doTiming ) m_timerTool->stop( m_timeBkwd4 );
     }
   }
-  
+
   //== Find triplets if not HLT1, backward and/or forward
   if ( !m_HLT1Only ) {
     if ( !m_onlyBackward ) {
@@ -195,13 +195,13 @@ StatusCode FastVeloTracking::execute() {
     makeSpaceTracks( *itT );
   }
   if ( m_doTiming ) m_timerTool->stop( m_timeSpace );
-  
+
   //== Perform the recovery, starting from Phi hits, with some constraints:
   //== Not HLT1, not too many tracks, space has foudn some OR there were not that many.
 
   if ( !m_HLT1Only &&
        m_maxRZForExtra > m_tracks.size() &&
-       ( m_tracks.size() * 0.5 <=  m_spaceTracks.size() || 
+       ( m_tracks.size() * 0.5 <=  m_spaceTracks.size() ||
          m_tracks.size() < 20 ) ) {
     if ( m_doTiming ) m_timerTool->start( m_timeUnused );
     findUnusedPhi();
@@ -940,7 +940,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
 
         double dist = (*itH)->distance( xPred, yPred );
         if ( dist < minDist || dist > maxDist ) continue;
-        
+
         double a = (*itH)->a();
         double b = (*itH)->b();
         double c = (*itH)->c();
@@ -960,7 +960,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           y   = ( - c - a * x ) / b;
         }
         (*itH)->setGlobalPosition( x, y );
-        double dSin = ((y-y0) * m_cosPhi - (x-x0) * m_sinPhi)/rPred;
+        double dSin = ( y * m_cosPhi - x * m_sinPhi)/rPred;
         (*itH)->setGlobal( dSin );
 
         if ( m_debug && matchKey( *itH ) ) {
@@ -1014,7 +1014,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   if ( 3 > minNbPhi ) minNbPhi = 3;
 
   if ( m_debug ) {
-    info() << "Space search from station " <<  firstStation << " to " << lastStation 
+    info() << "Space search from station " <<  firstStation << " to " << lastStation
            << " minNbPhi " << minNbPhi << endmsg;
     printCoords( input.rHits(), "R  " );
     sensor = first;
@@ -1047,7 +1047,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   s3 = s2 + stationStep;
 
   bool hasFullLength = false;
-  
+
   for ( int iCase = 0; 5 > iCase; ++iCase ) {
     if ( 2 == iCase ) s3 += stationStep;
     if ( 3 == iCase ) s2 += stationStep;
@@ -1057,179 +1057,177 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
       if ( 0 == iCase && 0 != (*itH1)->nbUsed() ) continue;
       z1 = (*itH1)->z();
       double rPred = input.rInterpolated( z1 );
-      double minDelta2 = 1.e9;
+      double minDelta2 = m_maxDelta2;
       FastVeloHit* best2 = NULL;
       for ( itH2 = goodPhiHits[s2].begin(); goodPhiHits[s2].end() != itH2; ++itH2 ) {
         if ( 0 == iCase && 0 != (*itH2)->nbUsed() ) continue;
         double dist = fabs( ( (*itH2)->global() - (*itH1)->global() ) * rPred / ( (*itH2)->z() - z1 ) );
         if ( minDelta2 > dist ) {
-          minDelta2 = dist;
           best2 = *itH2;
-        }
-      }
-      if ( m_debug && best2 != NULL ) {
-        info() << "+++ iCase " << iCase << " Try pair with minDelta2 = " << minDelta2 << " s3 = " << s3 << endmsg;
-        printCoord( *itH1, "s1" );
-        printCoord( best2, "s2" );
-      }
-      if ( minDelta2 > m_maxDelta2 ) continue;
-
-      //== Check that this pair is not already on an existing candidate
-      bool reject = false;
-      for ( FastVeloTracks::iterator itT = newTracks.begin(); newTracks.end() != itT ; ++itT ) {
-        if ( std::find( (*itT).phiHits().begin(), (*itT).phiHits().end(), *itH1 ) != (*itT).phiHits().end() ) {
-          if ( std::find( (*itT).phiHits().begin(), (*itT).phiHits().end(), best2 ) != (*itT).phiHits().end() ) {
-            reject = true;
-            break;
+          if ( m_debug  ) {
+            info() << "+++ iCase " << iCase << " Try pair with dist = " << dist << " s3 = " << s3 << endmsg;
+            printCoord( *itH1, "s1" );
+            printCoord( best2, "s2" );
           }
-        }
-      }
-      if ( reject ) {
-        if ( m_debug ) info() << "Already used hits..." << endmsg;
-        continue;
-      }
 
-      double dz = z1 - best2->z();
-      double tx = ( (*itH1)->xGlobal() - best2->xGlobal() ) / dz;
-      double ty = ( (*itH1)->yGlobal() - best2->yGlobal() ) / dz;
-      double x0 = (*itH1)->xGlobal() - tx * z1;
-      double y0 = (*itH1)->yGlobal() - ty * z1;
-
-      double minDelta3 = 1.e9;
-      FastVeloHit* best3 = NULL;
-      for ( itH3 = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH3; ++itH3 ) {
-        if ( 0 == iCase && 0 != (*itH3)->nbUsed() ) continue;
-        if ( 1 == iCase &&
-             0 == (*itH1)->nbUsed() &&
-             0 == (best2)->nbUsed() &&
-             0 == (*itH3)->nbUsed()) continue;  // already tried in iCase = 0.
-        double dist = (*itH3)->chi2( x0 + (*itH3)->z() * tx, y0 + (*itH3)->z() * ty );
-        if ( minDelta3 > dist ) {
-          minDelta3 = dist;
-          best3 = *itH3;
-        }
-      }
-      if ( minDelta3 > 4 * m_maxChi2ToAdd ) continue;
-      if ( m_debug ) {
-        info() << "+++ Found triplet with minDelta3 = " << minDelta3 << endmsg;
-        printCoord( *itH1, "s1" );
-        printCoord( best2, "s2" );
-        printCoord( best3, "s3" );
-      }
-
-      //== Update Z of the R sensors
-      for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-        FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
-        double x = x0 + tx * sensor->z();
-        double y = y0 + ty * sensor->z();
-        (*itH)->setZ( sensor->z( x, y ) );
-      }
-      FastVeloTrack temp;
-      temp.setPhiClusters( input, x0, tx, y0, ty, *itH1, best2, best3 );
-      if ( m_debug ) printTrack( temp, "Initial track" );
-      bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
-      if ( !ok ) {
-        if ( m_debug ) info() << "Triplet not acceptable: not enough good phi " << endmsg;
-        continue;
-      }
-      if ( inOverlap ) {
-        temp.addBestClusterOtherSensor( goodPhiHits[s1], m_maxChi2ToAdd );
-        temp.addBestClusterOtherSensor( goodPhiHits[s2], m_maxChi2ToAdd );
-        temp.addBestClusterOtherSensor( goodPhiHits[s3], m_maxChi2ToAdd );
-        ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
-        if ( !ok ) {
-          if ( m_debug ) info() << "After adding other side: Not enough phi " << endmsg;
-          continue;
-        }
-      }
-      temp.updateRParameters();
-
-      int nbMissed = 0;
-      double lastZ = best3->z();
-      for ( unsigned int s = s3 + stationStep; lastStation+stationStep != s; s += stationStep ){
-        if ( goodPhiHits[s].size() != 0 ) {
-          if ( m_debug ) {
-            info() << "Try to add more on station " << s << endmsg;
-            for ( itH = goodPhiHits[s].begin(); goodPhiHits[s].end() != itH; ++itH ) {
-              info() << format( "Dist%8.3f Chi2%8.2f", temp.distance( *itH ), temp.chi2( *itH ) );
-              printCoord( *itH, "Selected " );
+          //== Check that this pair is not already on an existing candidate
+          bool reject = false;
+          for ( FastVeloTracks::iterator itT = newTracks.begin(); newTracks.end() != itT ; ++itT ) {
+            if ( std::find( (*itT).phiHits().begin(), (*itT).phiHits().end(), *itH1 ) != (*itT).phiHits().end() ) {
+              if ( std::find( (*itT).phiHits().begin(), (*itT).phiHits().end(), best2 ) != (*itT).phiHits().end() ) {
+                reject = true;
+                break;
+              }
             }
           }
-          double addChi2 = m_maxChi2ToAdd;
-          if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 140. ) addChi2 = 4 * addChi2;
-          bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
-          if ( !ok ) {
-            nbMissed++;
-          } else {
-            if ( inOverlap ) temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2ToAdd );
-            if ( m_debug ) printTrack( temp, "After adding" );
+          if ( reject ) {
+            if ( m_debug ) info() << "Already used hits..." << endmsg;
+            continue;
           }
-        } else {
-          nbMissed++;
-        }
-        if ( nbMissed  > 2 ) break;
-      }
-      temp.updateRParameters();
-      ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
-      if ( !ok ) {
-        if ( m_debug ) info() << "Rejected , not enough phi = "
-                              << temp.phiHits().size() << " for " << minNbPhi << endreq;
-        continue;
-      }
 
-      //== Overall quality should be good enough...
-      if ( m_maxQFactor < temp.qFactor() ) {
-        if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-        continue;
-      }
+          double dz = z1 - best2->z();
+          double tx = ( (*itH1)->xGlobal() - best2->xGlobal() ) / dz;
+          double ty = ( (*itH1)->yGlobal() - best2->yGlobal() ) / dz;
+          double x0 = (*itH1)->xGlobal() - tx * z1;
+          double y0 = (*itH1)->yGlobal() - ty * z1;
 
-      //== Check that the R hits are within the correct zone
-      int nbOutOfZone = 0;
-      for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-        FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
-        double x = temp.xAtHit( *itH ) - sensor->xCentre();
-        double y = temp.yAtHit( *itH ) - sensor->yCentre();
-        if ( isVertical && fabs(x) > fabs(y) + 0.1 ) ++nbOutOfZone;
-        if (!isVertical && fabs(x) < fabs(y) - 0.1 ) ++nbOutOfZone;
-      }
-      if ( nbOutOfZone > 1 ) {
-        if ( m_debug ) {
-          info() << "The azimuth is incompatible with the R zone" << endmsg;
+          double minDelta3 = 1.e9;
+          FastVeloHit* best3 = NULL;
+          for ( itH3 = goodPhiHits[s3].begin(); goodPhiHits[s3].end() != itH3; ++itH3 ) {
+            if ( 0 == iCase && 0 != (*itH3)->nbUsed() ) continue;
+            if ( 1 == iCase &&
+                 0 == (*itH1)->nbUsed() &&
+                 0 == (best2)->nbUsed() &&
+                 0 == (*itH3)->nbUsed()) continue;  // already tried in iCase = 0.
+            double dist = (*itH3)->chi2( x0 + (*itH3)->z() * tx, y0 + (*itH3)->z() * ty );
+            if ( minDelta3 > dist ) {
+              minDelta3 = dist;
+              best3 = *itH3;
+            }
+          }
+          if ( minDelta3 > 4 * m_maxChi2ToAdd ) continue;
+          if ( m_debug ) {
+            info() << "+++ Found triplet with minDelta3 = " << minDelta3 << endmsg;
+            printCoord( *itH1, "s1" );
+            printCoord( best2, "s2" );
+            printCoord( best3, "s3" );
+          }
+
+          //== Update Z of the R sensors
+          for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
+            FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
+            double x = x0 + tx * sensor->z();
+            double y = y0 + ty * sensor->z();
+            (*itH)->setZ( sensor->z( x, y ) );
+          }
+          FastVeloTrack temp;
+          temp.setPhiClusters( input, x0, tx, y0, ty, *itH1, best2, best3 );
+          if ( m_debug ) printTrack( temp, "Initial track" );
+          bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
+          if ( !ok ) {
+            if ( m_debug ) info() << "Triplet not acceptable: not enough good phi " << endmsg;
+            continue;
+          }
+          if ( inOverlap ) {
+            temp.addBestClusterOtherSensor( goodPhiHits[s1], m_maxChi2ToAdd );
+            temp.addBestClusterOtherSensor( goodPhiHits[s2], m_maxChi2ToAdd );
+            temp.addBestClusterOtherSensor( goodPhiHits[s3], m_maxChi2ToAdd );
+            ok = temp.removeWorstMultiple( m_maxChi2PerHit, 3 );
+            if ( !ok ) {
+              if ( m_debug ) info() << "After adding other side: Not enough phi " << endmsg;
+              continue;
+            }
+          }
+          temp.updateRParameters();
+
+          int nbMissed = 0;
+          double lastZ = best3->z();
+          for ( unsigned int s = s3 + stationStep; lastStation+stationStep != s; s += stationStep ){
+            if ( goodPhiHits[s].size() != 0 ) {
+              if ( m_debug ) {
+                info() << "Try to add more on station " << s << endmsg;
+                for ( itH = goodPhiHits[s].begin(); goodPhiHits[s].end() != itH; ++itH ) {
+                  info() << format( "Dist%8.3f Chi2%8.2f", temp.distance( *itH ), temp.chi2( *itH ) );
+                  printCoord( *itH, "Selected " );
+                }
+              }
+              double addChi2 = m_maxChi2ToAdd;
+              if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 140. ) addChi2 = 4 * addChi2;
+              bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
+              if ( !ok ) {
+                nbMissed++;
+              } else {
+                if ( inOverlap ) temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2ToAdd );
+                if ( m_debug ) printTrack( temp, "After adding" );
+              }
+            } else {
+              nbMissed++;
+            }
+            if ( nbMissed  > 2 ) break;
+          }
+          temp.updateRParameters();
+          ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+          if ( !ok ) {
+            if ( m_debug ) info() << "Rejected , not enough phi = "
+                                  << temp.phiHits().size() << " for " << minNbPhi << endreq;
+            continue;
+          }
+
+          //== Overall quality should be good enough...
+          if ( m_maxQFactor < temp.qFactor() ) {
+            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+            continue;
+          }
+
+          //== Check that the R hits are within the correct zone
+          int nbOutOfZone = 0;
           for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
             FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
             double x = temp.xAtHit( *itH ) - sensor->xCentre();
             double y = temp.yAtHit( *itH ) - sensor->yCentre();
-            info() << format( "x%8.3f y%8.3f ", x, y );
-            printCoord( *itH, "Out" );
+            if ( isVertical && fabs(x) > fabs(y) + 0.1 ) ++nbOutOfZone;
+            if (!isVertical && fabs(x) < fabs(y) - 0.1 ) ++nbOutOfZone;
+          }
+          if ( nbOutOfZone > 1 ) {
+            if ( m_debug ) {
+              info() << "The azimuth is incompatible with the R zone" << endmsg;
+              for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
+                FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
+                double x = temp.xAtHit( *itH ) - sensor->xCentre();
+                double y = temp.yAtHit( *itH ) - sensor->yCentre();
+                info() << format( "x%8.3f y%8.3f ", x, y );
+                printCoord( *itH, "Out" );
+              }
+            }
+            continue;
+          }
+          //== Check that there are phi hits on the same side as the R hits...
+          int nbPhiLeft = 0;
+          int nbPhiRight = 0;
+          for ( itH = temp.phiHits().begin(); temp.phiHits().end() != itH ; ++itH ) {
+            if (  m_hitManager->sensor( (*itH)->sensor() )->isRight() ) {
+              nbPhiRight++;
+            } else {
+              nbPhiLeft++;
+            }
+          }
+          if ( nbLeft * nbPhiLeft + nbRight * nbPhiRight == 0 ) {
+            if ( m_debug ) {
+              info() << "Phi and R are all on opposite sides: Left R " << nbLeft << " Phi " << nbPhiLeft
+                     << "  Right R " << nbRight << " phi " << nbPhiRight << ". Reject" << endmsg;
+            }
+            continue;
+          }
+
+          if ( ok ) {  //== Store it.
+            if ( m_debug ) {
+              info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
+              printTrack( temp );
+            }
+            newTracks.push_back( temp );
+            if ( temp.phiHits().size() >= temp.rHits().size() ) hasFullLength = true;
           }
         }
-        continue;
-      }
-      //== Check that there are phi hits on the same side as the R hits...
-      int nbPhiLeft = 0;
-      int nbPhiRight = 0;
-      for ( itH = temp.phiHits().begin(); temp.phiHits().end() != itH ; ++itH ) {
-        if (  m_hitManager->sensor( (*itH)->sensor() )->isRight() ) {
-          nbPhiRight++;
-        } else {
-          nbPhiLeft++;
-        }
-      }
-      if ( nbLeft * nbPhiLeft + nbRight * nbPhiRight == 0 ) {
-        if ( m_debug ) {
-          info() << "Phi and R are all on opposite sides: Left R " << nbLeft << " Phi " << nbPhiLeft 
-                 << "  Right R " << nbRight << " phi " << nbPhiRight << ". Reject" << endmsg;
-        }
-        continue;
-      }
-      
-      if ( ok ) {  //== Store it.
-        if ( m_debug ) {
-          info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
-          printTrack( temp );
-        }
-        newTracks.push_back( temp );
-        if ( temp.phiHits().size() >= temp.rHits().size() ) hasFullLength = true;
       }
     }
     if ( iCase > 0 && hasFullLength ) break;
@@ -1262,7 +1260,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
           ok = false;
         }
-        
+
         if ( ok ) {  //== Store it.
           if ( m_debug ) {
             info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
@@ -1427,7 +1425,7 @@ void FastVeloTracking::findUnusedPhi( ) {
     maxQFactor         =  2.;
     lastSensor         = firstSensor - 30;
   }
-  
+
   for ( int phi0 = firstSensor; lastSensor <= phi0; --phi0 ) {
     int phi1 = phi0 - 2;
     int phi2 = phi1 - 2;
@@ -1469,7 +1467,7 @@ void FastVeloTracking::findUnusedPhi( ) {
                   info() << " ++ D2 " << d2 ;
                   printCoord( *itH2, " : " );
                 }
-                
+
                 if ( fabs( d2 ) > phiUnusedSecondTol ) continue;
 
                 if ( m_debug ) {
@@ -1482,8 +1480,8 @@ void FastVeloTracking::findUnusedPhi( ) {
                 int rZone = 0;
                 if ( fabs( xSeed - r0->xCentre() ) > fabs( ySeed - r0->yCentre() ) ) rZone = 1;
                 if ( xSeed * ySeed > 0 ) rZone = 3 - rZone;
-                if ( m_debug ) info() << "Looking in R zone " << rZone << " sensor " << r0->number() 
-                                      << " xSeed " << xSeed << " ySeed " << ySeed 
+                if ( m_debug ) info() << "Looking in R zone " << rZone << " sensor " << r0->number()
+                                      << " xSeed " << xSeed << " ySeed " << ySeed
                                       << " xCentre " << r0->xCentre() << " yCentre " << r0 -> yCentre() << endmsg;
                 for ( FastVeloHits::const_iterator itR0 = r0->hits(rZone).begin();
                       r0->hits(rZone).end() != itR0; ++itR0 ) {
@@ -1498,7 +1496,7 @@ void FastVeloTracking::findUnusedPhi( ) {
                   if ( xSeed < 0 ) spaceZone = 4 + rZone;
                   temp.setPhiClusters( *itR0, spaceZone, *itH0, *itH1, *itH2 );
                   temp.updatePhiWeights();
-                  
+
                   if ( m_debug ) {
                     double xLocal = temp.xAtZ( r1->z() ) - r1->xCentre();
                     double yLocal = temp.yAtZ( r1->z() ) - r1->yCentre();
@@ -1509,7 +1507,7 @@ void FastVeloTracking::findUnusedPhi( ) {
 
                   if ( !temp.addBestRCluster( r1, 400.) ) continue;
                   temp.updatePhiWeights();
-                  
+
                   if ( 0 == temp.rHits().back()->nbUsed() ) nbUnused++;
                   if ( m_debug ) {
                     double xLocal = temp.xAtZ( r2->z() ) - r2->xCentre();
@@ -1521,7 +1519,7 @@ void FastVeloTracking::findUnusedPhi( ) {
 
                   if ( !temp.addBestRCluster( r2, m_maxChi2ToAdd ) ) continue;
                   if ( 0 == temp.rHits().back()->nbUsed() ) nbUnused++;
-                  
+
                   if ( m_debug ) {
                     info() << format( "qFactor %8.3f NbUnused%2d  ", temp.qFactor(), nbUnused );
                     printCoord(  temp.rHits().back(), "R2  " );
@@ -1541,8 +1539,8 @@ void FastVeloTracking::findUnusedPhi( ) {
                     int phiZone = 0;
                     double rInPhi = temp.rAtZ( phiSensor->z() );
                     if ( temp.rAtZ( phiSensor->z() ) > phiSensor->rMax( 0 ) ) phiZone = 1;
-                    for ( FastVeloHits::iterator itH = phiSensor->hits(phiZone).begin(); 
-                            phiSensor->hits(phiZone).end() != itH ; ++itH ) {
+                    for ( FastVeloHits::iterator itH = phiSensor->hits(phiZone).begin();
+                          phiSensor->hits(phiZone).end() != itH ; ++itH ) {
                       (*itH)->setPhiWeight(rInPhi );
                     }
                     if ( !temp.addBestPhiCluster( phiSensor->hits(phiZone), m_maxChi2ToAdd ) ) nMiss++;

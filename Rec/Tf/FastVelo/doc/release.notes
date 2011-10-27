@@ -4,6 +4,14 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-10-27 - Olivier Callot
+ - Loop on phi pair combination, not only the best one. Improve efficiency
+   for tracks at large IP. Increases the ghost rate by 0.5%
+
+! 2011-10-20 - Olivier Callot
+ - Change the definition of dSin (remove centre offset ) in space search. 
+   Gains some tracks...
+
 ! 2011-06-23 - V. Gligorov
  - Update default cut in FastTTValidation to 3.
 
