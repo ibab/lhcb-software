@@ -131,7 +131,7 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
 
   // Get the Histos as needed
   AIDA::IProfile1D   * h1D = getHisto(l1ID);
-  AIDA::IHistogram2D * h2D = ( l1ID != -1 ? NULL :
+  AIDA::IHistogram2D * h2D = ( l1ID == -1 ? NULL :
                                richHisto2D( HID("decodingErrorsByBoard") ) );
 
   // Get L1 Copy Number
