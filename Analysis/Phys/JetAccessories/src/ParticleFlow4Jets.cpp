@@ -810,11 +810,22 @@ StatusCode ParticleFlow4Jets::loadDatas() {
   if(m_banCandidatesLocation!=""){
     const LHCb::Particles* particleToBan = get<LHCb::Particles>( m_banCandidatesLocation ) ;
     BOOST_FOREACH(const LHCb::Particle* cand, *particleToBan ){
-      if (cand->proto()==0)continue;
-      if (cand->proto()->track()==0)continue;
-      m_trackKeyToBan[cand->proto()->track()->key()]=cand->proto()->track();
+      LHCb::Particle::ConstVector particleToBan_daug = cand->daughtersVector();
+      if ( particleToBan_daug.size() == 0 ){
+        if (cand->proto()==0)continue;
+        if (cand->proto()->track()==0)continue;
+        m_trackKeyToBan[cand->proto()->track()->key()]=cand->proto()->track();
+      }
+      else{
+        BOOST_FOREACH(const LHCb::Particle* cand_d, particleToBan_daug ){
+          if (cand_d->proto()==0)continue;
+          if (cand_d->proto()->track()==0)continue;
+          m_trackKeyToBan[cand->proto()->track()->key()]=cand_d->proto()->track();
+        }
+      }
     }
   }
+  
 
   return StatusCode::SUCCESS ;
 

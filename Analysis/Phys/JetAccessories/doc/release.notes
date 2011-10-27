@@ -7,6 +7,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-10-27 - Victor Coco
+ - Add candidate banning for composite particles in ParticleFlow4Jets
 
 ! 2011-10-25 - Cédric Potterat
  - Update of UpdateJetsWithVtx.cpp for a general purpose.
