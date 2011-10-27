@@ -68,12 +68,12 @@ StatusCode DataDecodingErrorMoni::prebookHistograms()
                  "DAQ Decoding Error Types", "Error Rate (%)", labels() );
 
   richHisto2D( HID("decodingErrorsByBoard"),
-               "DAQ Decoding Error Rates by UKL1 Board (%)",
+               "DAQ Decoding Errors by UKL1 Board",
                0.5, nL1s    + 0.5, nL1s,
                0.5, nlabels + 0.5, nlabels,
                "UKL1 Copy Number", "",
-               "Error Rate (%)", BinLabels(), labels() );
-
+               "# of errors", BinLabels(), labels() );
+  
   return StatusCode::SUCCESS;
 }
 
