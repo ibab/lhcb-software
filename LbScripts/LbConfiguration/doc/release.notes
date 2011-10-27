@@ -1,10 +1,12 @@
 2011-10-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: added the NO_PYTHON_LIBPATH tag to the
-	default CMTEXTRATAGS list passed to SetupProject. This will prevent the setup of the
-	LD_LIBRARY_PATH for python. This is not needed since python is linked statically to
-	libpython.so. And this causes bad interferences with the system python (/usr/bin/python
-	which is not linked statically).
+	* scripts/generateLogin: set CMTEXTRATAGS to NO_PYTHON_LIBPATH for the cache generation.
+	* python/LbConfiguration/LbLogin.py:
+	- factored out the CMTEXTRATAGS tweaking in a separate method.
+	- added the NO_PYTHON_LIBPATH tag to the default CMTEXTRATAGS list passed to SetupProject.
+	This will prevent the setup of the LD_LIBRARY_PATH for python. This is not needed since python
+	is linked statically to libpython.so. And this causes bad interferences with the system
+	python (/usr/bin/python which is not linked statically).
 
 2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

@@ -854,6 +854,28 @@ class LbLoginScript(SourceScript):
                     ev["CMTPATH"] = ev["User_release_area"]
                     log.debug("CMTPATH is set to %s" % ev["CMTPATH"])
 
+    def setExtraTags(self):
+        """
+        setup the canonical CMTEXTRATAGS environment variable that has to be used
+        by "SetupProject LbScripts". By default and unless specified on the command line
+        only "NO_PYTHON_LIBPATH" is passed.
+        """
+        opts = self.options
+        log  = logging.getLogger()
+        if opts.use_cmtextratags :
+            if "CMTEXTRATAGS" in os.environ.keys() :
+                extra_args_list = os.environ["CMTEXTRATAGS"].replace(",", " ").split()
+                extra_args_list.append("NO_PYTHON_LIBPATH")
+                # according to the documentation tags are space separated.
+                # but "," do work as well.
+                os.environ["CMTEXTRATAGS"] = " ".join(extra_args_list)
+            else :
+                os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+        else :
+            os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+
+        log.debug("CMTEXTRATAGS is set to %s" % os.environ.get("CMTEXTRATAGS", None))
+
     def setupCompat(self):
         """ preset the compat entries before the call to SetupProject """
         log = logging.getLogger()
@@ -951,17 +973,7 @@ class LbLoginScript(SourceScript):
 
 
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
-
-
-            if opts.use_cmtextratags :
-                if "CMTEXTRATAGS" in os.environ.keys() :
-                    extra_args_list = os.environ["CMTEXTRATAGS"].replace(",", " ").split()
-                    extra_args_list.append("NO_PYTHON_LIBPATH")
-                    os.environ["CMTEXTRATAGS"] = " ".join(extra_args_list)
-                else :
-                    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
-            else :
-                os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+            self.setExtraTags()
 
 
             if opts.compat_prepend is None :
