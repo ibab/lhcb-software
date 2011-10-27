@@ -1,5 +1,7 @@
 2011-10-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: added fake usage of the future NO_PYTHON_LIBPATH which is not yet provided
+	by LCGCMG. Without this CMT fails badly.
 	* scripts/generateLogin: set CMTEXTRATAGS to NO_PYTHON_LIBPATH for the cache generation.
 	* python/LbConfiguration/LbLogin.py:
 	- factored out the CMTEXTRATAGS tweaking in a separate method.

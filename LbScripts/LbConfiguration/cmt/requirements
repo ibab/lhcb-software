@@ -31,6 +31,9 @@ macro_append projectaliases_dependencies " LbConfiguration_python "
 cmtpath_pattern \
 	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup
 
+macro fake_python_libpath_macro "" NO_PYTHON_LIBPATH ""
+
+
 private
 
 
@@ -54,4 +57,6 @@ apply_pattern generateShellLogin shell=sh
 apply_pattern generateShellLogin shell=bat
 
 
+
 end_private
+
