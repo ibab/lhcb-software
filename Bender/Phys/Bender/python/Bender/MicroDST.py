@@ -95,11 +95,15 @@ def uDstConf ( rootInTes ) :
                      Target = rootInTes +     'DAQ/ODIN' )
     summary = Link ( 'LinkSummary'                       ,
                      What   =      '/Event/Rec/Summary'  ,
-                     Target = rootInTes + 'Rec/Summary'  )
+                     Target = rootInTes + 'Rec/Summary'  )    
+    header  = Link ( 'LinkHeader'                        ,
+                     What   =       '/Event/Rec/Header'  ,
+                     Target = rootInTes +  'Rec/Header'  )
     
     dod.AlgMap [ rawEvt  . Target ] = rawEvt 
     dod.AlgMap [ odin    . Target ] = odin
     dod.AlgMap [ summary . Target ] = summary
+    dod.AlgMap [ header  . Target ] = header
 
     #
     ##
