@@ -7,6 +7,7 @@
 	This will prevent the setup of the LD_LIBRARY_PATH for python. This is not needed since python
 	is linked statically to libpython.so. And this causes bad interferences with the system
 	python (/usr/bin/python which is not linked statically).
+	- fixed usage of the "debug" argument that was not working after the introduction of the "-w" option.
 
 2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

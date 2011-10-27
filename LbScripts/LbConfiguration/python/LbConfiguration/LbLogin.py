@@ -808,19 +808,18 @@ class LbLoginScript(SourceScript):
         if self.platform == "win32" :
             ev["PYTHON_BINOFFSET"] = ""
 
-
-        if debug :
-            ev["CMTOPT"] = getBinaryOpt(theconf)
-            ev["CMTDEB"] = theconf
-        else :
-            ev["CMTDEB"] = getBinaryDbg(theconf)
-            ev["CMTOPT"] = theconf
+        ev["CMTOPT"] = getBinaryOpt(theconf)
         log.debug("CMTOPT is set to %s" % ev["CMTOPT"])
+
+        ev["CMTDEB"] = getBinaryDbg(theconf)
         log.debug("CMTDEB is set to %s" % ev["CMTDEB"])
 
-        ev["CMTCONFIG"] = ev["CMTOPT"]
-        if debug or sys.platform == "win32":
+
+        if debug or sys.platform == "win32" :
             ev["CMTCONFIG"] = ev["CMTDEB"]
+            log.debug("CMTDEB is set to %s" % ev["CMTDEB"])
+        else :
+            ev["CMTCONFIG"] = ev["CMTOPT"]
         log.debug("CMTCONFIG is set to %s" % ev["CMTCONFIG"])
 
 
@@ -1064,5 +1063,5 @@ class LbLoginScript(SourceScript):
 
 
 if __name__ == '__main__':
-    sys.exit(LbLoginScript(usage="%prog [options]").run())
+    sys.exit(LbLoginScript(usage="%prog [options] [debug]").run())
 
