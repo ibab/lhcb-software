@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-10-27 - Victor Coco
+ - Rethinking of the jet to vertex association. Modification in LoKiJetMakerAlg
+   Vertex association in LoKiFastJetMaker is removed. 
 
 !================== LoKiJets v6r0 2011-04-29 ===============================
 LoKiJets add new methods with multi PV, move codes in JetAccessories(MC) 

@@ -10,11 +10,14 @@
 // ============================================================================
 #include "LoKi/Algo.h"
 #include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
+#include "LoKi/ParticleContextCuts.h"
 // ============================================================================
 // DaVinci Kernel 
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IJetMaker.h"
+#include "Kernel/Particle2Vertex.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -55,12 +58,17 @@ namespace LoKi
       // 
       , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
+      , m_associate2Vertex ( false  )
     { 
       // 
       declareProperty 
         ( "JetMaker"  , 
           m_makerName , 
           "Type type/name of jet-maker tool (IJetMaker interface)") ;  
+      declareProperty 
+        ( "Associate2Vertex"  , 
+          m_associate2Vertex , 
+          "Jet reconstruction per vertex") ;  
       //
     }
     /// destructor
@@ -89,6 +97,9 @@ namespace LoKi
     std::string      m_makerName ; // jet maker name  
     /// maker
     const IJetMaker* m_maker     ; // jet maker to be used 
+    /// associate two vertex?
+    bool m_associate2Vertex      ; // make jet per vertex
+    
     // ========================================================================    
   };
   // ==========================================================================
@@ -109,33 +120,67 @@ StatusCode LoKi::JetMaker::analyse   ()
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
-  // select all input particles
-  Range all = select ( "all" , LoKi::Cuts::PALL ) ;
-  // input container of "particles"
-  IJetMaker::Jets jets ;
-  
-  if ( 0 == m_maker ) 
-  { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
-  
 
-   // make the jets 
-  StatusCode sc = m_maker->makeJets ( all.begin () , all.end   () , jets  ) ;
+  if ( m_associate2Vertex ){
+    
+    LoKi::Types::Fun bestVertexKey = LoKi::Cuts::BPV(LoKi::Cuts::VX);
 
-  if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
+    const LHCb::RecVertex::Range pvs = this->primaryVertices () ;
+    for ( LHCb::RecVertex::Range::const_iterator i_pv = pvs.begin() ; pvs.end() != i_pv ; i_pv++ )
+    {
+      // Select all neutrals + all downstream + only long and upstream associated to this particular vertex
+      Range part = 
+        select ( "part" , LoKi::Cuts::Q == 0 || ( LHCb::Track::Downstream == LoKi::Cuts::TRTYPE || ( bestVertexKey == LoKi::Cuts::VX( *i_pv) ) ) ) ;
+      
+      // input container of "particles"
+      IJetMaker::Jets jets ;
+      
+      if ( 0 == m_maker ) 
+      { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+      // make the jets 
+      StatusCode sc = m_maker->makeJets ( part.begin () , part.end   () , jets  ) ;
+      
+      if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
+      
+      // save all jets
+      while ( !jets.empty() ) 
+      {
+        LHCb::Particle* jet = jets.back() ;
+        this->relate ( jet , *i_pv );
+        save ( "jets" , jet ).ignore() ;
+        jets.pop_back() ;
+        delete jet ;
+      }
+    }
+  }
+  else{
 
- 
-  // save all jets
-  while ( !jets.empty() ) 
-  {
-    LHCb::Particle* jet = jets.back() ;
-    save ( "jets" , jet ).ignore() ;
-    jets.pop_back() ;
-    delete jet ;
+    Range all = select ( "all" , LoKi::Cuts::PALL ) ;
+    // input container of "particles"
+    IJetMaker::Jets jets ;
+    
+    if ( 0 == m_maker ) 
+    { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+    
+    
+    // make the jets 
+    StatusCode sc = m_maker->makeJets ( all.begin () , all.end   () , jets  ) ;
+    
+    if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
+    
+    
+    // save all jets
+    while ( !jets.empty() ) 
+    {
+      LHCb::Particle* jet = jets.back() ;
+      save ( "jets" , jet ).ignore() ;
+      jets.pop_back() ;
+      delete jet ;
+    }
   }
   
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
   { counter ( "#jets" ) += selected ("jets").size() ; }
-  
   setFilterPassed ( true ) ;
   
   return StatusCode::SUCCESS ;
