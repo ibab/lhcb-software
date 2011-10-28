@@ -154,8 +154,9 @@ StatusCode ParticleFlow4Jets::initialize() {
     m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");  
 
   m_pf2verticesLocation = m_PFOutputLocation ;
+  m_pfbanned2verticesLocation = m_PFBannedOutputLocation ;
   boost::replace_last(m_pf2verticesLocation,"/Particles","/Particle2VertexRelations");
-
+  boost::replace_last(m_pfbanned2verticesLocation,"/Particles","/Particle2VertexRelations");
   
   m_pvRelator = tool<IRelatedPVFinder>("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2", this);
 
@@ -239,6 +240,7 @@ StatusCode ParticleFlow4Jets::execute() {
 
   // Create the particle to vertex relation table
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
+  Particle2Vertex::WTable* tableBanned = new Particle2Vertex::WTable();
 
   // Map of ECAL clusters to Ban
   BannedIDMap BannedECALClusters;  
@@ -332,7 +334,7 @@ StatusCode ParticleFlow4Jets::execute() {
         PFParticles->insert( MakeParticle( ch_pp , -1 , *table ) );
       }
       else if (tag ==  KeepInPFBanned ){
-        BannedPFParticles->insert( MakeParticle( ch_pp , InfMom , *table) );
+        BannedPFParticles->insert( MakeParticle( ch_pp , InfMom , *tableBanned) );
       }
       else if (tag == Unknown ){
         Warning("Unknow status for this charged particle");
@@ -601,6 +603,7 @@ StatusCode ParticleFlow4Jets::execute() {
     }
   }
   put( table, m_pf2verticesLocation );
+  put( tableBanned, m_pfbanned2verticesLocation );
   
   debug()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<endreq;
   

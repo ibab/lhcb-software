@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-10-28 - Victor Coco
+ - Add the vertex association for the banned particles in ParticleFlow4Jets
+
 ! 2011-10-27 - Victor Coco
  - Fix add protection against non existant conatainer candidate banning 
    Add vertex association in ParticleFlow4Jets.cpp

@@ -106,6 +106,7 @@ private:
   std::string m_verticesLocation ;
 
   std::string m_pf2verticesLocation ;
+  std::string m_pfbanned2verticesLocation ;
 
   std::string m_PFOutputLocation ;
 
