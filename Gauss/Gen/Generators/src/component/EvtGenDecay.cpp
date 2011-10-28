@@ -43,6 +43,10 @@
 #include "Generators/StreamForGenerator.h"
 #include "Generators/IProductionTool.h"
 
+//EvtGen holding tool
+#include "IEvtGenTool.h"
+//#include "EvtGenTool.h"
+
 // Calls to FORTRAN routines
 #ifdef WIN32
 extern "C" {
@@ -124,6 +128,11 @@ StatusCode EvtGenDecay::initialize( ) {
   MsgStream * msg = new MsgStream( msgSvc() , name() ) ;
   StreamForGenerator::getStream() = msg ;
 
+  //EvtGenTool
+  debug() << "Getting EvtGenTool" << endmsg ;
+  m_evtgentool = tool<IEvtGenTool>("EvtGenTool") ;
+
+
   // Find Generic DECAY.DEC file
   // Default location (if not specified in job options is
   // $DECFILESROOT/dkfiles/DECAY.DEC
@@ -161,9 +170,17 @@ StatusCode EvtGenDecay::initialize( ) {
   EvtAbsRadCorr* isrEngine = 0;//dummy needed for compile
 
   // create EvtGen engine from decay file, evt.pdl file and random engine
-  m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
-                       m_randomEngine, isrEngine, models.get()) ;
-
+  if (m_evtgentool->isInit() ) {
+      m_gen = m_evtgentool->getEvtGen() ;
+  }
+  else {
+      m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
+                           m_randomEngine, isrEngine, models.get()) ;
+      m_evtgentool->setEvtGen( m_gen ) ;
+  }
+  //m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
+  //                    m_randomEngine, isrEngine, models.get()) ;
+  
   // Remove temporary file if not asked to keep it
   if ( ! m_keepTempEvtFile ) boost::filesystem::remove( evtPdlFile ) ;
 
@@ -244,8 +261,11 @@ StatusCode EvtGenDecay::finalize() {
 #else
     photos_end__() ;
 #endif
-  }  
+  } 
+
  
+  release( m_evtgentool ) ;
+
   boost::filesystem::remove( m_photosTempFilename ) ;
 	
   delete StreamForGenerator::getStream() ;
@@ -573,7 +593,7 @@ const EvtId EvtGenDecay::getSignalAlias( int pdgId ) const {
   else if ( EvtPDL::getStdHep( trueId ) == 
             EvtPDL::getStdHep( EvtPDL::chargeConj( m_signalId ) ) )
     return EvtPDL::chargeConj( m_signalId ) ;
-  
+  debug() << m_signalId << '\t' << trueId << '\t' << EvtPDL::getStdHep( trueId ) << '\t' << EvtPDL::getStdHep( m_signalId ) << endmsg ; 
   Exception( "There is no signal ID corresponding to the pdgId" ) ;
   return m_signalId ;
 }

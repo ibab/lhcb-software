@@ -34,6 +34,9 @@
 // from MCInterfaces
 #include "MCInterfaces/IDecayTool.h"
 
+// from Generators
+#include "IEvtGenTool.h"
+
 // from EvtGen
 #include "EvtGenBase/EvtId.hh"
 
@@ -149,7 +152,9 @@ public:
  
   EvtGen * m_gen ; ///< EvtGen engine
 
-  EvtRandomEngine * m_randomEngine ; ///< Random Engine to use in EvtGen
+  EvtRandomEngine * m_randomEngine ; ///< Random Engine to use in EvtGeni
+
+  IEvtGenTool * m_evtgentool ;
 
 private:
 
