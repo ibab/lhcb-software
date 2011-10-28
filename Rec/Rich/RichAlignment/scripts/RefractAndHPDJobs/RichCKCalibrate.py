@@ -119,11 +119,11 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # Number of target events to process
     if jobType == "RefInCalib" :
-        nEventsTotal    = 1000000
-        nFilesMax       = 150
+        nEventsTotal    = 100000
+        nFilesMax       = 100
     else:
-        nEventsTotal    = 1000000
-        nFilesMax       = 150
+        nEventsTotal    = 100000
+        nFilesMax       = 100
 
     # Base Job Name
     basejobname = jobType
@@ -132,35 +132,46 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # My input sandboxs
     mySandBox     = [ ]
-    mySandBoxFLNs = [ ]
+    mySandBoxLFNs = [ ]
 
     # List of DB related options to add to extraopts
     dbopts = [ ]
 
-    # Main DBs
-    # LHCbCond
-    #Cond = "LHCBCOND-AeroSubTiles-20110709.db"
+    # Main LHCbCond
+    #Cond = "LHCBCOND-2001RePro.db"
     #dbopts += ["CondDB().PartitionConnectionString[\"LHCBCOND\"] = \"sqlite_file:"+Cond+"/LHCBCOND\"\n"]
     ##dbopts += ["LHCbApp().CondDBtag = \"HEAD\"\n"]
     #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
     #uploadFile("databases/"+Cond,lfnname)
-    #mySandBoxFLNs += [lfnname]
-    # DDDB
-    #Cond = "DDDB-AeroSubTiles-20110709.db"
+    #mySandBoxLFNs += [lfnname]
+    
+    # Main DDDB
+    #Cond = "DDDB-2001RePro.db"
     #dbopts += ["CondDB().PartitionConnectionString[\"DDDB\"] = \"sqlite_file:"+Cond+"/DDDB\"\n"]
     ##dbopts += ["LHCbApp().DDDBtag = \"HEAD\"\n"]
     #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
     #uploadFile("databases/"+Cond,lfnname)
-    #mySandBoxFLNs += [lfnname]
+    #mySandBoxLFNs += [lfnname]
+
+    # DDDB Slice
+    #Cond = "JulyAugustOnly-OT-DDDB.db"
+    #dbopts += ["CondDB().addLayer(dbFile = \""+Cond+"\", dbName = \"DDDB\")\n"]
+    ###dbopts += ["LHCbApp().DDDBtag = \"HEAD\"\n"]
+    #lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+Cond
+    #uploadFile("databases/"+Cond,lfnname)
+    #mySandBoxLFNs += [lfnname]
 
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # Corrections
-    dbFiles += ["2011MirrorAlign-22082011"]
-    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-24082011"]
-    dbFiles += ["2011-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-24082011"]
-         
+    # Corrections RICH
+    dbFiles += ["2011MirrorAlign-27102011"]
+    dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-21102011"]
+    dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-21102011"]
+
+    # Tracking
+    #dbFiles += ["TrackingDB-v5.6series","Velo2011"] 
+
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
@@ -168,7 +179,8 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        dbFiles += ["RefInCalib-2011_BR-v40r1-24082011"]
+        #pass
+        dbFiles += ["RefInCalib-2011-NewTkRichAlign-V1_BR-v40r1-21102011"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -179,7 +191,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
         lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile+".db"
         if not uploadFile("databases/"+dbFile+".db",lfnname) : return False
         # Add to LFNs sandbox
-        mySandBoxFLNs += [lfnname]
+        mySandBoxLFNs += [lfnname]
 
     # Loop over the list of pickled run data files
     print "Submitting jobs for RunData", pickledRunsList
@@ -198,7 +210,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
             nJob += 1
 
             # LFNs for this run
-            lfns = RunLFNs[run]
+            lfns = sorted(RunLFNs[run])
             if len(lfns)>0 :
 
                 # Construct the job name
@@ -246,7 +258,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                         j.inputdata = LHCbDataset(lfns)
                     else:
                         import random
-                        j.inputdata = LHCbDataset(random.sample(lfns,nFiles))
+                        j.inputdata = LHCbDataset(sorted(random.sample(lfns,nFiles)))
 
                     # Split job into 1 file per subjob
                     j.splitter = DiracSplitter ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
@@ -264,7 +276,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
                     # Optional input files
                     j.inputsandbox             = mySandBox
-                    j.backend.inputSandboxLFNs = mySandBoxFLNs
+                    j.backend.inputSandboxLFNs = mySandBoxLFNs
 
                     # Enable automatic job re-submission
                     j.do_auto_resubmit = True
@@ -307,8 +319,10 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     minMaxScale = [999.0,-999.0]
     if 'Rich1Gas' == rad :
         minMaxCKRes = (0.0014,0.00185)
+        maxDeltaTheta = 0.00003
     else:
         minMaxCKRes = (0.00063,0.00075)
+        maxDeltaTheta = 0.00001
 
     # Raw mean and sigma
     ckmeans  = { }
@@ -319,10 +333,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # Max/min run range
     #minMaxRun = [ 0, 99999999 ]
     minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
-    #minMaxRun = [ 91000, 99999999 ] # After TS
-    #minMaxRun = [ 90549, 90574 ]
-    #minMaxRun = [ 93098, 93127 ] # Fill 1855
-    #minMaxRun = [ 93511, 93723 ] # Fills 1867, 1868 and 1871
+    #minMaxRun = [ 101372, 99999999 ] # Second phase of 2011 RePro
 
     # Bad runs to always skip
     badRuns = [ 89537 ]
@@ -348,7 +359,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
                 scale = nScaleFromShift(fitResultRes,rad)
                 if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
                 if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
-                calibrations[run] = scale
+                calibrations[run] = { "ScaleFactor" : scale, "ThetaShift" : fitResultRes['Mean'] }
                 ckmeans[run]  = fitResultRes['Mean']
                 cksigmas[run] = fitResultRes['Sigma']
                 ckraws[run]   = fitResultRaw['Mean']
@@ -376,10 +387,17 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     # 1D Plot of scale factors
     scaleHist = TH1F( "scaleFactors", rad+" (n-1) Scale Factors",
                       100, 0.999*minMaxScale[0], 1.0001*minMaxScale[1] )
+    scaleHist.GetXaxis().SetTitle("(n-1) corrections")
+
+    # 1D Plot of theta shifts
+    dThetaHist = TH1F( "deltaTheta", rad+" <Delta CK Theta>",
+                       100, -1.001*maxDeltaTheta, 1.001*maxDeltaTheta )
+    dThetaHist.GetXaxis().SetTitle("<Delta CK Theta> / mrad")
 
     # 1D Plot of Fitted CK resolutions
     ckResHist = TH1F( "ckRes", rad+" Delta CK Theta Resolution",
                       100, 0.99*minMaxCKRes[0], 1.001*minMaxCKRes[1] )
+    ckResHist.GetXaxis().SetTitle("Delta CK Theta Resolution / mrad")
 
     # Open text file for shifts
     textFileName = "results/"+fileNameRoot+".txt"
@@ -400,7 +418,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     ckexp     = array('d')
     ckexpErr  = array('d')
     for run in sorted(calibrations.keys()):
-        scale   = calibrations[run]
+        scale   = calibrations[run]["ScaleFactor"]
         ckmean  = ckmeans[run]
         cksigma = cksigmas[run]
         raw     = ckraws[run]
@@ -423,6 +441,7 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         # Fill 1D histo(s)
         scaleHist.Fill(scale[0])
         ckResHist.Fill(cksigma[0])
+        dThetaHist.Fill(ckmean[0])
 
     # Make the plots
     if len(runs) > 0 :
@@ -442,6 +461,11 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
         ckexpTrend.GetXaxis().SetTitle("LHCb Run Number")
         ckexpTrend.GetYaxis().SetTitle("<Expected CK Theta> / mrad")
         ckexpTrend.Draw("ALP")
+        printCanvas()
+
+        meanFitFunc = TF1("CKMean"+rad,"gaus",-maxDeltaTheta,maxDeltaTheta)
+        dThetaHist.Fit(meanFitFunc,"QR")
+        dThetaHist.Draw('E')
         printCanvas()
             
         meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
@@ -855,15 +879,23 @@ def getControlJobList(name="",BrunelVer="v40r1",statuscodes=['completed'],
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
 def nScaleFromShift(shift,rad='Rich1Gas'):
+
     # As of RICH S/W meeting 3/9/2010
     #slope = 38.2388535346
     #if rad == 'Rich2Gas': slope = 68.2
-    # Test values
-    slope = 38.151
-    if rad == 'Rich2Gas': slope = 68.248
+
+    # 2011-NewTkRichAlign-V1
+    #slope = 38.0
+    #if rad == 'Rich2Gas': slope = 68.5
+
+    # Final tuning for 2011 repro
+    slope = 38.1
+    if rad == 'Rich2Gas': slope = 65.25
+    
     # Compute the scale factor and its error
     result = 1.0 + (shift['Mean'][0]*slope)
     error  = shift['Mean'][1]*slope
+    
     # Return the values
     return [result,error]
 
@@ -1278,7 +1310,7 @@ def checkInputDataReplicas(lfns):
 def filesPerJob(nFiles):
     if nFiles == 1  : return 1
     if nFiles == 2  : return 2
-    if nFiles == 3  : return 2
+    if nFiles == 3  : return 3
     if nFiles == 4  : return 2
     if nFiles == 5  : return 3
     if nFiles == 6  : return 3
@@ -1286,8 +1318,11 @@ def filesPerJob(nFiles):
     if nFiles == 8  : return 4
     if nFiles == 9  : return 3
     if nFiles == 10 : return 5
+    if nFiles == 12 : return 4
+    if nFiles == 18 : return 6
     if nFiles < 20  : return 5
-    return 6
+    if nFiles < 100 : return 6
+    return 10
 
 def removeCalibrationDataSet(name,BrunelVer="v40r1"):
     from Ganga.GPI import jobtree

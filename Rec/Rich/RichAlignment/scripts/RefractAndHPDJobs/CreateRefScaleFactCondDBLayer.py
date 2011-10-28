@@ -6,6 +6,8 @@ import os, bz2
 import pickle
 import datetime, time
 import DIRAC
+#import GaudiPython
+#from GaudiPython import gbl
 
 def usage():
   print 'Usage: %s <name>' %(Script.scriptName)
@@ -16,6 +18,49 @@ args = Script.getPositionalArgs()
 if len(args) < 1:
   usage()
   DIRAC.exit(2)
+
+def iToolSvc():
+  import GaudiPython
+  return GaudiPython.AppMgr().toolSvc()
+
+def msgSvc():
+  import GaudiPython
+  return GaudiPython.AppMgr().service('MessageSvc','IMessageSvc')
+
+def umsSvc():
+  import GaudiPython
+  GaudiPython.AppMgr().createSvc('UpdateManagerSvc')
+  return GaudiPython.AppMgr().service('UpdateManagerSvc','IUpdateManagerSvc')
+
+def iDetDataSvc():
+  import GaudiPython
+  return GaudiPython.AppMgr().service('DetectorDataSvc','IDetDataSvc')
+
+def initialise():
+    
+  # Initialise a few things
+  from Configurables import DDDBConf, CondDB, LHCbApp, CondDBAccessSvc
+  cDB = CondDB()
+  
+  #DDDBConf(DataType = "2009")
+  #LHCbApp().DDDBtag   = "head-20110303"
+  #LHCbApp().CondDBtag = "head-20110524"
+  
+  #DDDBConf(DataType = "2010")
+  #LHCbApp().DDDBtag   = "head-20110303"
+  #LHCbApp().CondDBtag = "head-20110524"
+  
+  DDDBConf(DataType = "2011")
+  #LHCbApp().DDDBtag   = "head-20110302"
+  #LHCbApp().CondDBtag = "head-20110622"
+  LHCbApp().DDDBtag   = "head-20110722" 
+  LHCbApp().CondDBtag = "head-20110722"
+  
+  # Set message level to info and above only
+  msgSvc().setOutputLevel(3)
+  
+  # Finally, initialize GaudiPython
+  GaudiPython.AppMgr().initialize()
 
 def dateString():
   import datetime
@@ -93,21 +138,33 @@ def fillDB(calibration,db,runsTimes,rad):
   # Add a null entry covering all periods
   #db.storeXMLString( path, genXML(1.0,0), cool.ValidityKeyMin, cool.ValidityKeyMax )
 
+  # Refractive index tool
+  #refTool = iToolSvc().retrieveTool("Rich::TabulatedRefractiveIndex","RefIndex",0,True)
+
   # Loop over runs to fill the conditions
   for run in sorted(calibration.keys()):
-    scaleF = calibration[run]
 
-    # Run IOV
+    # Get the sacle factor
+    scaleF = calibration[run]["ScaleFactor"]
+
+    # Average time for this run
+    #runAvtime = ( getUNIXTime(runsTimes["RunTimes"][run]["Start"]) +
+    #              getUNIXTime(runsTimes["RunTimes"][run]["Stop"]) ) / 2
+    # Set UMS to the average time for this run/fill
+    #iDetDataSvc().setEventTime( gbl.Gaudi.Time(runAvtime) )
+    #umsSvc().newEvent()
+    
+    # IOV for conditions
     dStartTime = runsTimes["RunTimes"][run]["Start"]
     #dStopTime  = runsTimes["RunTimes"][run]["Stop"]
-    #dStopTime  = runsTimes["GlobalStopTime"]
+    dStopTime  = runsTimes["GlobalStopTime"]
     #dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
     #dStopTime  = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
-    dStopTime  = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
+    #dStopTime  = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
-    #stopTime  = getUNIXTime( dStopTime  )
-    stopTime  = 9223372036854775807 # cool.ValidityKeyMax
+    stopTime  = getUNIXTime( dStopTime  )
+    #stopTime  = 9223372036854775807 # cool.ValidityKeyMax
 
     # Scale factor
     scale = '%g' % scaleF[0]
@@ -165,6 +222,8 @@ def getRunTimes(calibrations):
   return times
 
 # ======================================================================================
+
+#initialise()
 
 # Name of calibrations
 rootName = str(args[0])

@@ -32,13 +32,13 @@ lastmonth     = int(args[3])
 lastday       = int(args[4])
 
 if 2009 == year :
-  ConfigV = 'Collision09'
+  ConfigV = ['Collision09']
 elif 2010 == year :
-  ConfigV = 'Collision10'
+  ConfigV = ['Collision10']
 elif 2011 == year :
-  ConfigV = 'Collision11'
+  ConfigV = ['Collision11','Collision11_25']
 elif 2012 == year :
-  ConfigV = 'Collision12'
+  ConfigV = ['Collision12']
 else:
   print 'Unknown year', year
   DIRAC.exit(2)
@@ -77,35 +77,50 @@ else:
   for run in runs :
     nRun += 1
 
-    type = 91000000 # EXPRESS Stream
-    if year == 2009 : type = 90000000 # Use full stream for 2009
-    if run > 77595 and run < 77624 :
-      print "Warning : run", run, "had no EXPRESS stream :( Using FULL instead"
-      type = 90000000 # FULL Stream
-  
-    # Raw files
-    bkDict = { 'ConfigName'           : 'LHCb',
-               'ConfigVersion'        : ConfigV,
-               'ProcessingPass'       : procpass,
-               'FileType'             : 'ALL',
-               'StartRun'             : run,
-               'EndRun'               : run,
-               'EventType'            : type }
-    resultB = database.getFilesWithGivenDataSets(bkDict)
-    if not resultB['OK']:
-      print resultB['Message']
-      allOK = False
-    else:
-      tmpLFNList = [ ]
-      for lfn in resultB['Value']:
-        filetype = lfn.split('.')[1]
-        if filetype == 'dst' or filetype == 'raw':
-          tmpLFNList += ["LFN:"+lfn]
-      if len(tmpLFNList) > 0 :
-        RunLFNs[run] = tmpLFNList
-        print "(", nRun, "of", len(runs), ") Selected", len(RunLFNs[run]), "LFNs for run", run, ConfigV
+    for config in ConfigV :
+
+      type = 91000000 # EXPRESS Stream
+      if year == 2009 : type = 90000000 # Use full stream for 2009
+      if run > 77595  and run < 77624  : # Express disappeared for unknown reasons
+        type = 90000000 # FULL Stream
+      if run > 100256 and run < 102177 : # Express turned off by accident after 09/2011 TS
+        type = 90000000 # FULL Stream
+      if config == 'Collision11_25' : # No express for 2011 25ns tests
+        type = 90000000 # FULL Stream
+
+      typeS = "EXPRESS"
+      if type == 90000000 : typeS = "FULL"
+
+      # Raw files
+      bkDict = { 'ConfigName'           : 'LHCb',
+                 'ConfigVersion'        : config,
+                 'ProcessingPass'       : procpass,
+                 'FileType'             : 'ALL',
+                 'StartRun'             : run,
+                 'EndRun'               : run,
+                 'EventType'            : type }
+      resultB = database.getFilesWithGivenDataSets(bkDict)
+      
+      if not resultB['OK']:
+        print resultB['Message']
+        allOK = False
       else:
-        print "(", nRun, "of", len(runs), ") No data selected for run", run, ConfigV
+        tmpLFNList = [ ]
+        for lfn in resultB['Value']:
+          filetype = lfn.split('.')[1]
+          if filetype == 'dst' or filetype == 'raw':
+            tmpLFNList += ["LFN:"+lfn]
+        tmpLFNList.sort()
+        if len(tmpLFNList) > 0 :
+          if run not in RunLFNs.keys() : RunLFNs[run] = [ ]
+          RunLFNs[run] += tmpLFNList
+
+    nLFNs = 0
+    if run in RunLFNs.keys() : nLFNs = len(RunLFNs[run])
+    if nLFNs > 0 :
+      print "(", nRun, "of", len(runs), ") Selected", nLFNs, "LFNs for run", run, ConfigV
+    else:
+      print "(", nRun, "of", len(runs), ") No data selected for run", run, ConfigV
         
 if allOK :
     

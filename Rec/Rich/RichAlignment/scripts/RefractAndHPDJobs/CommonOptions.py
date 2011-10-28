@@ -13,16 +13,18 @@ from Configurables import Brunel, LHCbApp, CondDB
 
 # For 2011 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2011.py")
-LHCbApp().DDDBtag   = "head-20110722" 
-LHCbApp().CondDBtag = "head-20110722"
+LHCbApp().DDDBtag   = "head-20110914" 
+LHCbApp().CondDBtag = "head-20110914"
 
 # Aerogel Sub Tiles
-CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
-CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
+#CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
+#CondDB().LocalTags["DDDB"]     = ["rich1-20110624"]
 
 # Initial IOV time
+# http://www.onlineconversion.com/unix_time.htm
 from Configurables import EventClockSvc
-EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
+#EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
+EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
 
 # No output files
 Brunel().OutputType = "None"
@@ -77,3 +79,9 @@ long.EnablePerPDColPlots = True
 longT = Rich__Rec__MC__RecoQC("RiCKResLongTight")
 longT.EnablePerPDPlots    = True
 longT.EnablePerPDColPlots = True
+
+# Flip the panels for background shape studies
+#rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
+
+# Don't reject HLT error events
+#Brunel().VetoHltErrorEvents = False 
