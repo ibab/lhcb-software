@@ -4,6 +4,11 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2011-10-28 - Marco Clemencic
+ - Fixed a bug in the test partprop.usesvc1: GaudiPython script used as an
+   option file.
+ - Added the test-time dependency on DDDB.
+
 !========================= PartProp v1r10 2011-07-25 =========================
 ! 2011-07-21 - Marco Cattaneo
  - Create MSG::VERBOSE and MSG::DEBUG messages only when output level requires

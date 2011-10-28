@@ -1,4 +1,4 @@
-#!/usr/bin/env gaudirun.py
+#!/usr/bin/env python
 # =============================================================================
 ## @file
 #  The configurationi file to run QMTest for the package Kernel/PartProp

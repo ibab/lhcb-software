@@ -41,7 +41,11 @@ alias dump_particle_properties    "dump_ParticleProperties"
 alias ParticleProperties          "dump_ParticleProperties"
 alias ParticlePropertiesTable     "dump_ParticleProperties"
 
-
+private
+# required by the tests
+macro use_DDDB "" QMTest "DDDB * Det"
+use $(use_DDDB)
+end_private
 # =============================================================================
 # The END 
 # =============================================================================
