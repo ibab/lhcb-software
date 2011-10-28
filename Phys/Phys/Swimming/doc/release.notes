@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-10-28 - Roel Aaij
+ - Fix for looping over candidates in SwimmingTisTos when swimming the
+   stripping.
+
 !====================== Phys/Swimming v2r2 2011-10-28 =======================
 ! 2011-10-28 - Roel Aaij
  - Add all information to first and last turningpoints instead of storing only

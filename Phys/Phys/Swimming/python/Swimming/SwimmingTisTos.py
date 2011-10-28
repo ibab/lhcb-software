@@ -74,21 +74,25 @@ def evaluateTisTos(myGlobs,mycand):
         if myGlobs.DEBUGMODE :
             print "Evaluating TISTOS for stripping"
             print "Will look for candidates at", myGlobs.triggers
-        if not myGlobs.TES[myGlobs.triggers+"/Particles"] :
+        candidates = myGlobs.TES[myGlobs.triggers+"/Particles"]
+        if not candidates:
             if myGlobs.DEBUGMODE :
                 print "Found no candidates, returning false" 
             return myGlobs.StrDecFalse
         else :
-            if myGlobs.DEBUGMODE :
-                print "Found", myGlobs.TES[myGlobs.triggers + "/Particles"].size(), "candidates"
-                print "About to match them"
-            if myGlobs.TES[myGlobs.triggers + "/Particles"].size() == 0:
+            if candidates.size() == 0:
+                if myGlobs.DEBUGMODE :
+                    print "0 candidates found, return False"
                 return myGlobs.StrDecFalse
             else :
-                for cand in myGlobs.TES[myGlobs.triggers + "/Particles"] :
+                if myGlobs.DEBUGMODE :
+                    print "Found", candidates.size(), "candidates"
+                    print "About to match them"
+                for i in xrange(candidates.size()):
+                    cand = candidates(i)
                     if myGlobs.DEBUGMODE :
                         print "########################"
-                        "About to match these two canidates"
+                        "About to match these two candidates"
                         print cand,mycand
                         print "########################"
                     if matchCands(myGlobs,mycand,cand):
