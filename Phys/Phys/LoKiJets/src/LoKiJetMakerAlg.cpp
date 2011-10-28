@@ -120,25 +120,38 @@ StatusCode LoKi::JetMaker::analyse   ()
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
+  using namespace LoKi::Cuts ;
 
   if ( m_associate2Vertex ){
     
-    LoKi::Types::Fun bestVertexKey = LoKi::Cuts::BPV(LoKi::Cuts::VX);
+    LoKi::Types::Fun bestVertexKey = BPV(VX);
 
+    Range part = select("part",PALL);
+    
     const LHCb::RecVertex::Range pvs = this->primaryVertices () ;
     for ( LHCb::RecVertex::Range::const_iterator i_pv = pvs.begin() ; pvs.end() != i_pv ; i_pv++ )
     {
-      // Select all neutrals + all downstream + only long and upstream associated to this particular vertex
-      Range part = 
-        select ( "part" , LoKi::Cuts::Q == 0 || ( LHCb::Track::Downstream == LoKi::Cuts::TRTYPE || ( bestVertexKey == LoKi::Cuts::VX( *i_pv) ) ) ) ;
-      
+      IJetMaker::Input inputs;
+      for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
+        if (Q(*i_p) == 0 ){
+          if ( ABSID(*i_p) != 310 && ABSID(*i_p) != 3122 ) inputs.push_back(*i_p) ;
+          else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
+          else continue ;
+        }
+        else{
+          if ( LHCb::Track::Downstream == TRTYPE(*i_p) ) inputs.push_back(*i_p) ;
+          else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
+          else continue ;
+        }
+      }
+
       // input container of "particles"
       IJetMaker::Jets jets ;
       
       if ( 0 == m_maker ) 
       { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
       // make the jets 
-      StatusCode sc = m_maker->makeJets ( part.begin () , part.end   () , jets  ) ;
+      StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
       
       if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
       
