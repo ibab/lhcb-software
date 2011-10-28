@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-10-28 - Roel Aaij
+ - Add all information to first and last turningpoints instead of storing only
+   the global decision.
+
 ! 2011-10-27 - Roel Aaij
  - Add Hlt node killing sequence as postConfigAction.
 

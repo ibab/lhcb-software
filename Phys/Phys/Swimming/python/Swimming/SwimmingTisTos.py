@@ -28,6 +28,7 @@ def evaluateTisTos(myGlobs,mycand):
     if not myGlobs.swimStripping :
         myGlobs.tistostool.setOfflineInput()
         myGlobs.tistostool.addToOfflineInput(mycand)
+        globalPass = True
         for level in myGlobs.triggers :
             passedlevel = False
             for trigger in level :
@@ -37,7 +38,7 @@ def evaluateTisTos(myGlobs,mycand):
                 else :
                     decisions[trigger] = False
             if not passedlevel:
-                return myGlobs.HltDecFalse
+                globalPass = False
 
         # So it passed the trigger, now we need to evaluate
         # which tracks caused HLT1 to fire, and which were
@@ -46,32 +47,33 @@ def evaluateTisTos(myGlobs,mycand):
         appendToFSP(mycand,finalstateparts_mycand)
         daughterInfo = defaultdict(dict)
         for fsp in finalstateparts_mycand :
-            myGlobs.tistostool.setOfflineInput()
-            myGlobs.tistostool.setOfflineInput(fsp)
+            if globalPass:
+                myGlobs.tistostool.setOfflineInput()
+                myGlobs.tistostool.setOfflineInput(fsp)
             h = hashParticle(fsp)
             # First how many fired HLT1 
             for trigger in myGlobs.triggers[0]:
-                daughterInfo['trTOS_'+trigger][h] = isTos(myGlobs, trigger) or isTob(myGlobs, trigger)
+                daughterInfo['trTOS_'+trigger][h] = globalPass and (isTos(myGlobs, trigger) or isTob(myGlobs, trigger))
             # Did this track play a part in the HLT2 yes?
             for trigger in myGlobs.triggers[1]:
-                daughterInfo['trTOS_'+trigger][h] = isTob(myGlobs, trigger)
+                daughterInfo['trTOS_'+trigger][h] = globalPass and isTob(myGlobs, trigger)
 
             # Now how many were recod in HLT1
-            daughterInfo['trRec_HLT1'][h] = isTos(myGlobs,myGlobs.hlt1recoline)
+            daughterInfo['trRec_HLT1'][h] = globalPass and isTos(myGlobs,myGlobs.hlt1recoline)
             # Now how many were recod in HLT2
-            daughterInfo['trRec_HLT2'][h] = isTos(myGlobs,myGlobs.hlt2recoline)
+            daughterInfo['trRec_HLT2'][h] = globalPass and isTos(myGlobs,myGlobs.hlt2recoline)
             # Now the VELO acceptance
             from GetVeloAcceptance import trackInVELOAcceptance
             iv3 = trackInVELOAcceptance(mycand, fsp.proto().track(), 3)
             iv5 = trackInVELOAcceptance(mycand, fsp.proto().track(), 5)
-            daughterInfo['trRec_VELO_OFF'][h]   = iv3
-            daughterInfo['trRec_VELO_HLT1'][h]  = iv5
+            daughterInfo['trRec_VELO_OFF'][h]   = globalPass and iv3
+            daughterInfo['trRec_VELO_HLT1'][h]  = globalPass and iv5
                     
-        return (True, decisions, dict(daughterInfo))
+        return (globalPass, decisions, dict(daughterInfo))
     else :
         if myGlobs.DEBUGMODE :
             print "Evaluating TISTOS for stripping"
-            print "Will look for candidates at",myGlobs.triggers 
+            print "Will look for candidates at", myGlobs.triggers
         if not myGlobs.TES[myGlobs.triggers+"/Particles"] :
             if myGlobs.DEBUGMODE :
                 print "Found no candidates, returning false" 
@@ -92,11 +94,11 @@ def evaluateTisTos(myGlobs,mycand):
                     if matchCands(myGlobs,mycand,cand):
                         # If we're not swimming the offline selection, we're done
                         if not myGlobs.swimOffline :
-                            return (True, {myGlobs.triggers : True}, {})
+                            return myGlobs.StrDecTrue
                         # Import offline selection
                         OffSelFunc = __import__('Swimming.' + myGlobs.offSelName).OffSelFunc
                         if OffSelFunc(myGlobs,mycand):
-                            return (True, {myGlobs.triggers : True}, {})
+                            return myGlobs.StrDecTrue
         return myGlobs.StrDecFalse
 #
 #

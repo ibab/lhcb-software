@@ -43,7 +43,9 @@ class globalParams:
         # - The first value is a global Pass/Fail
         # - The second a {name : boolean} where the name is a trigger
         # decision or a stripping candidate location
-        # - The third is only filled for the trigger with a {name : {FSP.key() : boolean}}
-        self.HltDecFalse            = (False, {}, {})
-        self.StrDecFalse            = (False, {}, {})
-        self.StrDecTrue             = (True , {}, {})
+        # - The third is only filled for when swimming the trigger with a {name : {FSP.key() : boolean}}
+        if not swimStripping:
+            self.HltDecFalse = (False, {}, {})
+        else:
+            self.StrDecFalse = (False, {triggers : False}, {})
+            self.StrDecTrue  = (True , {triggers : True },  {})
