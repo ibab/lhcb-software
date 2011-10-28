@@ -2060,7 +2060,126 @@ ROOT.TH1F . sum        = _h_sum_
 ROOT.TH1D . sum        = _h_sum_
 ROOT.TH1F . integral   = _h_sum_ 
 ROOT.TH1D . integral   = _h_sum_
-ROOT.TH1  . scale      = _h_scale_ 
+ROOT.TH1  . scale      = _h_scale_
+
+
+HStats   = cpp.Gaudi.Utils.HStats
+
+# =============================================================================
+## calculate bin-by-bin momenta 
+def _h1_moment_ ( h1 , order ) :
+    """
+    Get ``bin-by-bin''-moment around the specified value
+    
+    >>> histo = ...
+    >>> mom   = histo.moment ( 4 , 0 ) 
+    """
+    #
+    m = HStats.moment    ( h1 , order )
+    e = HStats.momentErr ( h1 , order )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e )
+
+_h1_moment_ .__doc__ += '\n' + HStats.moment    .__doc__
+_h1_moment_ .__doc__ += '\n' + HStats.momentErr .__doc__
+
+# =============================================================================
+## calculate bin-by-bin central momenta 
+def _h1_central_moment_ ( h1 , order ) :
+    """
+    Get ``bin-by-bin'' central moment
+    
+    >>> histo = ...
+    >>> cmom  = histo.centralMoment ( 4 ) 
+    """
+    #
+    m = HStats.centralMoment    ( h1 , order )
+    e = HStats.centralMomentErr ( h1 , order )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e ) 
+
+_h1_central_moment_ .__doc__ += '\n' + HStats.centralMoment    .__doc__
+_h1_central_moment_ .__doc__ += '\n' + HStats.centralMomentErr .__doc__
+
+# =============================================================================
+## get skewness
+def _h1_skewness_ ( h1 ) :
+    """
+    Get the skewness
+
+    >>> histo = ...
+    >>> skew  = histo.skewness () 
+    """
+    m = HStats.skewness    ( h1 )
+    e = HStats.skewnessErr ( h1 )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e ) 
+
+_h1_skewness_ .__doc__ += '\n' + HStats.skewness    .__doc__
+_h1_skewness_ .__doc__ += '\n' + HStats.skewnessErr .__doc__
+
+# =============================================================================
+## get kurtosis
+def _h1_kurtosis_ ( h1 ) :
+    """
+    Get the kurtosis
+
+    >>> histo = ...
+    >>> k     = histo.kurtosis () 
+    """
+    m = HStats.kurtosis    ( h1 )
+    e = HStats.kurtosisErr ( h1 )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e ) 
+
+_h1_kurtosis_ .__doc__ += '\n' + HStats.kurtosis    .__doc__
+_h1_kurtosis_ .__doc__ += '\n' + HStats.kurtosisErr .__doc__
+
+# =============================================================================
+## get mean
+def _h1_mean_ ( h1 ) :
+    """
+    Get the mean
+
+    >>> histo = ...
+    >>> k     = histo.mean () 
+    """
+    m = HStats.mean    ( h1 )
+    e = HStats.meanErr ( h1 )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e ) 
+
+_h1_mean_ .__doc__ += '\n' + HStats.mean    .__doc__
+_h1_mean_ .__doc__ += '\n' + HStats.meanErr .__doc__
+
+# =============================================================================
+## get mean
+def _h1_rms_ ( h1 ) :
+    """
+    Get the rms
+    
+    >>> histo = ...
+    >>> s     = histo.rms () 
+    """
+    m = HStats.rms    ( h1 )
+    e = HStats.rmsErr ( h1 )
+    #
+    return VE ( m , e*e )  if 0<= e  else VE ( m , -e*e ) 
+
+_h1_rms_ .__doc__ += '\n' + HStats.rms    .__doc__
+_h1_rms_ .__doc__ += '\n' + HStats.rmsErr .__doc__
+
+for h in ( ROOT.TH1F , ROOT.TH1D ) :
+    
+    h.mean           = _h1_mean_
+    h.rms            = _h1_rms_
+    h.skewness       = _h1_skewness_
+    h.kurtosis       = _h1_kurtosis_
+    h.moment         = _h1_moment_
+    h.centralMoment  = _h1_central_moment_
+    #
+    h.nEff           = h.GetEffectiveEntries 
+
 # =============================================================================
 ## adjust the "efficiency"
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :

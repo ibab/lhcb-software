@@ -10,6 +10,7 @@
 #include "Analysis/PySelector.h"
 #include "Analysis/RooMakeHistos.h"
 #include "Analysis/UStat.h"
+#include "Analysis/HStats.h"
 // ============================================================================
 /** @file 
  *

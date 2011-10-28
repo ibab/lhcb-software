@@ -38,6 +38,9 @@ macro_append       ROOT_linkopts " -lPyROOT " \
 macro_append       ROOT_linkopts " -lRooFitCore " \
                    target-winxp  " libRooFitCore.lib " 
 
+macro_append       ROOT_linkopts " -lHist " \
+                   target-winxp  " libHist.lib " 
+
 macro_append       AnalysisPythonLib_dependencies     " AnalysisPythonGen "
 macro_append       AnalysisPythonDict_dependencies    " AnalysisPythonLib "
 

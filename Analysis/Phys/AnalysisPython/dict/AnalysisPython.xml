@@ -17,6 +17,7 @@
   <class    name = "Analysis::Process"       />
   <class    name = "Analysis::RooMakeHistos" />
   <class    name = "Analysis::UStat"         />
+  <class    name = "Gaudi::Utils::HStats"    />
   
 </lcgdict> 
 
