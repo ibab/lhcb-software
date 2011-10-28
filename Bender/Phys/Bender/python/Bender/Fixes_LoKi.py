@@ -111,6 +111,15 @@ for t in  ( Gaudi.Range_      ( std.vector ( 'const LHCb::Particle*'     ) ) ,
             
 print '*'*120
 
+
+# =============================================================================
+## fix for LoKiPhys 
+LHCb.Particle.Container = cpp.KeyedContainer(LHCb.Particle,'Containers::KeyedObjectManager<Containers::hashmap>')
+LHCb.Particle.Selection = cpp.SharedObjectsContainer (LHCb.Particle)
+
+LHCb.Particle.Selection.__iter__    = _iter_  
+        
+
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120

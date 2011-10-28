@@ -24,6 +24,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-10-28 - Vanya Belyaev
+
+ - fix iterator sfomr SharedObjectsContainer 
+
+    many thanks to Roel for the kind help
+
+
 ! 2011-10-25 - Vanya Belyaev
 
  - add new script  dst-dump 
