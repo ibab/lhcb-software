@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2011-10-28 - Vanya Belyaev
+ - more fixes in PyRoUts 
+
 ! 2011-10-22 - Vanya Belyaev
 
  - some fixes in the histogram operations 

@@ -1616,7 +1616,7 @@ ROOT.TH3.  average = _h3_mean_
 def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
 
     """
-    Make graph using primitive data
+    Make graph using the primitive data
     """
     if  isinstance ( x , dict ) and not y and not ex and not ey : 
         _x = []
