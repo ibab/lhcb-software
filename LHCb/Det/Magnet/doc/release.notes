@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2011-10-29 - Chris Jones
+ - Update MagneticFieldSvc to cache the field polarity (Down or Up) and return
+   this, instead of calculating it each time MagneticFieldSvc::isDown()
+   is called.
+
 !========================= Magnet v7r3 2011-08-30 =========================
 ! 2011-08-04 - Marco Cattaneo
  - Fix UNINIT_CTOR coverity defects 22922, 22923, 22924

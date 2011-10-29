@@ -67,7 +67,8 @@ public:
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                  Gaudi::XYZVector& fvec ) const {
+                                  Gaudi::XYZVector& fvec ) const 
+  {
     fvec = m_magFieldGrid.fieldVector(xyz) ; 
     return StatusCode::SUCCESS ;
   }
@@ -76,30 +77,24 @@ public:
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @return fvec Magnectic field vector.
    */
-  virtual Gaudi::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const {
-    return m_magFieldGrid.fieldVector(xyz) ; 
-  }
+  Gaudi::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const;
 
   /// Returns the field grid
-  virtual const LHCb::MagneticFieldGrid* fieldGrid() const {
+  virtual const LHCb::MagneticFieldGrid* fieldGrid() const
+  {
     return &m_magFieldGrid ; 
   }
 
-  bool   useRealMap() const; ///< True is using real map
+  bool useRealMap() const; ///< True is using real map
 
-  double signedRelativeCurrent() const {
-    
-    int sign = +1;
-    if (isDown())
-      sign = -1;
-
+  double signedRelativeCurrent() const 
+  {
+    const int sign = ( isDown() ? -1 : +1 );
     return std::abs(m_magFieldGrid.scaleFactor())*sign;
   }
 
-  bool isDown() const {
-    Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
-    return bf.y() < 0 ? true : false ;}
-
+  // True if the down polarity map is loaded
+  virtual bool isDown() const;
  
 private:
 
@@ -108,6 +103,9 @@ private:
   StatusCode initializeWithCondDB();    ///< default get magnet data from CondDB
   StatusCode initializeWithoutCondDB(); ///< alternative get magnet data from job options
   StatusCode i_updateConditions();       ///< Reads from conditions
+  void cacheFieldPolarity();
+
+private:
 
   // Properties to configure the service
   bool m_UseConditions;      ///< Get data from CondDB or options. Default CondDB
@@ -138,6 +136,8 @@ private:
 
   MagneticFieldGridReader m_magFieldGridReader ;
   LHCb::MagneticFieldGrid m_magFieldGrid ;
+
+  bool m_isDown; ///< Cache the field polarity
 
 };
 

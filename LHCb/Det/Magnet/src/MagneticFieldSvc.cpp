@@ -29,19 +29,21 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
-                                    ISvcLocator* svc ) : Service( name, svc ),
-                                                         m_forcedToUseDownMap(false),
-							 m_forcedToUseUpMap(false),
-                                                         m_forcedScaleFactor (9999),
-							 m_mapFromOptions(false),
-							 m_mapFilesUpPtr(0),
-                                                         m_mapFilesDownPtr(0),
-                                                         m_scaleUpPtr(0),
-                                                         m_scaleDownPtr(0),
-                                                         m_currentPtr(0),
-                                                         m_updMgrSvc(0),
-                                                         m_magFieldGridReader(*msgSvc())
+  MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
+                                      ISvcLocator* svc )
+    : Service( name, svc ),
+      m_forcedToUseDownMap(false),
+      m_forcedToUseUpMap(false),
+      m_forcedScaleFactor (9999),
+      m_mapFromOptions(false),
+      m_mapFilesUpPtr(0),
+      m_mapFilesDownPtr(0),
+      m_scaleUpPtr(0),
+      m_scaleDownPtr(0),
+      m_currentPtr(0),
+      m_updMgrSvc(0),
+      m_magFieldGridReader(*msgSvc()),
+      m_isDown(false)
 {
 
   m_constFieldVector.push_back( 0. );
@@ -54,14 +56,14 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   }
   else
     m_mapFilePath  = "";
-  
-  declareProperty( "NominalCurrent", m_nominalCurrent = 5850, 
+
+  declareProperty( "NominalCurrent", m_nominalCurrent = 5850,
                    "Nominal magnet current in Amps" );
-  declareProperty( "FieldMapPath",  m_mapFilePath, 
+  declareProperty( "FieldMapPath",  m_mapFilePath,
                    "Directory where field map files are located, including trailing separator" );
   declareProperty( "UseConditions", m_UseConditions = true );
   declareProperty( "UseSetCurrent", m_UseSetCurrent = false );
-  declareProperty( "FieldMapFiles", m_mapFileNames, 
+  declareProperty( "FieldMapFiles", m_mapFileNames,
                    "Vector of file names for the field map. If set, over-rides CondDB value" );
   declareProperty( "ForcedSignedCurrentScaling",   m_forcedScaleFactor = 9999,
                    "Factor by which to rescale the field map. If set, over-rides CondDB value" );
@@ -89,42 +91,52 @@ StatusCode MagneticFieldSvc::initialize()
   if( status.isFailure() ) return status;
 
   status = service("UpdateManagerSvc",m_updMgrSvc);
-  if ( status.isFailure() ) {
+  if ( status.isFailure() )
+  {
     MsgStream log(msgSvc(), name());
     log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
     return status;
   }
 
-  if( m_useConstField ) {
+  if ( m_useConstField )
+  {
     // Constant field requested, do not use any field map
     MsgStream log(msgSvc(), name());
     log << MSG::WARNING << "using constant magnetic field with field vector "
         << m_constFieldVector << " (Tesla)" << endmsg;
-    
+
     m_magFieldGridReader.fillConstantField( Gaudi::XYZVector(m_constFieldVector[0] * Gaudi::Units::tesla,
-							     m_constFieldVector[1] * Gaudi::Units::tesla,
-							     m_constFieldVector[2] * Gaudi::Units::tesla),
-					    m_magFieldGrid ) ;
-    
+                                                             m_constFieldVector[1] * Gaudi::Units::tesla,
+                                                             m_constFieldVector[2] * Gaudi::Units::tesla),
+                                            m_magFieldGrid ) ;
+
     // register anyway with UpdateManagerSvc, so clients can register callbacks
     // transparently, even if they are never going to be called
     m_updMgrSvc->registerCondition(this);
 
-    return StatusCode::SUCCESS;
   }
-  
-  if( m_UseConditions ) {
-    // Normal case, use conditions database
-    status = initializeWithCondDB();
+  else
+  {
+
+    if ( m_UseConditions ) 
+    {
+      // Normal case, use conditions database
+      status = initializeWithCondDB();
+    }
+    else 
+    {
+      status = initializeWithoutCondDB();
+      // register anyway with UpdateManagerSvc, so clients can register callbacks
+      // transparently, even if they are never going to be called
+      m_updMgrSvc->registerCondition(this);
+    }
+
   }
-  else {
-    status = initializeWithoutCondDB();
-    // register anyway with UpdateManagerSvc, so clients can register callbacks
-    // transparently, even if they are never going to be called
-    m_updMgrSvc->registerCondition(this);
-  }
-  
-  return status;  
+
+  // update the cached field polarity
+  cacheFieldPolarity();
+
+  return status;
 }
 
 //=============================================================================
@@ -139,14 +151,11 @@ StatusCode MagneticFieldSvc::finalize()
 bool MagneticFieldSvc::useRealMap() const
 //=============================================================================
 {
-  if( m_mapFileNames.size() == 4 )
-    return true;
-  else
-    return false;
+  return ( m_mapFileNames.size() == 4 );
 }
 
 //=============================================================================
-StatusCode MagneticFieldSvc::initializeWithCondDB() 
+StatusCode MagneticFieldSvc::initializeWithCondDB()
 //=============================================================================
 {
   MsgStream log(msgSvc(), name());
@@ -164,14 +173,14 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
   // FieldMap file name(s). If not over-ridden by options, get from CondDB
 
   if( m_mapFileNames.size() != 0 ) {
-    log << MSG::WARNING 
+    log << MSG::WARNING
         << "Requested condDB but using manually set field map file name(s) = "
         << m_mapFileNames << endmsg;
-    
+
     m_mapFromOptions = true;
-    StatusCode sc = m_mapFileNames.size() == 1 ? 
-      m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) : 
-      m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ; 
+    StatusCode sc = m_mapFileNames.size() == 1 ?
+      m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+      m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
     if( !sc.isSuccess() ) return sc ;
   }
   else {
@@ -181,11 +190,11 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesDown,
                                     &MagneticFieldSvc::i_updateConditions, m_mapFilesDownPtr );
   }
-  
+
 
   // Scaling factor. If not over-ridden by options, get it from Options
   if(m_forcedScaleFactor < 9998. ) {
-    log << MSG::WARNING 
+    log << MSG::WARNING
         << "Requested condDB but using manually set signed scale factor = "
         << m_forcedScaleFactor  << endmsg;
     m_magFieldGrid.setScaleFactor( m_forcedScaleFactor ) ;
@@ -197,20 +206,20 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleDown,
                                     &MagneticFieldSvc::i_updateConditions, m_scaleDownPtr );
   }
-  
+
   // Initialize the service using the current conditions values
   return m_updMgrSvc->update(this);
 
 }
 
 //=============================================================================
-StatusCode MagneticFieldSvc::initializeWithoutCondDB() 
+StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 //=============================================================================
 {
 
   MsgStream log(msgSvc(), name());
   log << MSG::WARNING << "Not using CondDB, entirely steered by options" << endmsg;
-  
+
   if( m_mapFileNames.size() == 0 ) {
     log << MSG::ERROR << "Field Map filename(s) not set" << endmsg;
     return StatusCode::FAILURE;
@@ -224,13 +233,12 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
     scaleFactor = 1.;
     if( UNLIKELY(log.level() <= MSG::DEBUG) )
       log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
-   }
-  
+  }
+
   m_magFieldGrid.setScaleFactor( scaleFactor ) ;
 
-
   // update the field
-  StatusCode sc = m_mapFileNames.size() == 1 ?
+  const StatusCode sc = m_mapFileNames.size() == 1 ?
     m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
     m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
 
@@ -240,8 +248,8 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 //=============================================================================
 // QueryInterface
 //=============================================================================
-StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid, 
-                                             void** ppvInterface      ) 
+StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
+                                             void** ppvInterface      )
 {
   if ( IMagneticFieldSvc::interfaceID().versionMatch(riid) ) {
     *ppvInterface = (IMagneticFieldSvc*)this;
@@ -255,9 +263,8 @@ StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
   return Service::queryInterface(riid,ppvInterface);
 }
 
-
 //=============================================================================
-StatusCode MagneticFieldSvc::i_updateConditions() 
+StatusCode MagneticFieldSvc::i_updateConditions()
 //=============================================================================
 {
   MsgStream log(msgSvc(), name());
@@ -265,65 +272,105 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     log << MSG::DEBUG << "updateConditions called" << endmsg;
 
   if (m_forcedToUseDownMap && m_forcedToUseUpMap)
-    log << MSG::WARNING 
+    log << MSG::WARNING
         << "inconsistent settings, forced to use Down AND Uo map = " << endmsg;
 
   double polarity = 0;
-  
-  if( m_forcedToUseDownMap) 
+
+  if( m_forcedToUseDownMap)
     polarity = -1.0;
   if (m_forcedToUseUpMap)
     polarity = +1.0;
 
   if (!m_forcedToUseDownMap && !m_forcedToUseUpMap)
     polarity = m_currentPtr->param<int>("Polarity");
-  
-  // Update the scale factor
-  if(m_forcedScaleFactor > 9998. ){
 
-    double current = m_currentPtr->param<double>("Current");
-    
+  // Update the scale factor
+  if(m_forcedScaleFactor > 9998. )
+  {
+
+    const double current = m_currentPtr->param<double>("Current");
+
     std::vector<double> coeffs;
     if( polarity > 0 )
+    {
       coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
+    }
     else
+    {
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
-  
-    double scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
+    }
+
+    const double scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
     m_magFieldGrid.setScaleFactor( scaleFactor ) ;
   }
-   
+
   // Update the field map file
   StatusCode sc ;
-  if( !m_mapFromOptions) {
-    
+  if( !m_mapFromOptions)
+  {
+
     // Convention used: positive polarity is "Up" (+y), negative is "Down" (-y)
     std::vector<std::string> files;
     if( polarity > 0 )
+    {
       files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
+    }
     else
+    {
       files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");
-    
+    }
+
     // append the path
-    for ( std::vector<std::string>::iterator iF = files.begin(); iF != files.end(); ++iF ) 
+    for ( std::vector<std::string>::iterator iF = files.begin(); iF != files.end(); ++iF )
+    {
       *iF = m_mapFilePath + *iF ;
+    }
 
     // test the cache
-    if(  m_mapFileNames != files ) {
+    if(  m_mapFileNames != files )
+    {
       // update the cache
       m_mapFileNames = files ;
       // update the field
-      sc = m_mapFileNames.size() == 1 ?
-        m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
-        m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
+      sc = ( m_mapFileNames.size() == 1 ?
+             m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+             m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ) ;
       if( UNLIKELY(log.level() <= MSG::DEBUG) )
         log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
     }
   }
-  
-  log << MSG::INFO << "Map scaled by factor " << m_magFieldGrid.scaleFactor()
-      << " with polarity internally used: " << polarity <<" signed relative current: "<<signedRelativeCurrent()<<endmsg;
- 
+
+  // update the cached field polarity
+  cacheFieldPolarity();
+
+  log << MSG::INFO
+      << "Map scaled by factor " << m_magFieldGrid.scaleFactor()
+      << " with polarity internally used: " << polarity
+      <<" signed relative current: " << signedRelativeCurrent()
+      << endmsg;
+
   return sc ;
 }
 
+//=============================================================================
+
+Gaudi::XYZVector MagneticFieldSvc::fieldVector( const Gaudi::XYZPoint& xyz ) const
+{
+  return m_magFieldGrid.fieldVector(xyz) ;
+}
+
+//=============================================================================
+
+bool MagneticFieldSvc::isDown() const
+{
+  return m_isDown ;
+}
+
+//=============================================================================
+
+void MagneticFieldSvc::cacheFieldPolarity()
+{
+  const Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
+  m_isDown = bf.y() < 0 ;
+}
