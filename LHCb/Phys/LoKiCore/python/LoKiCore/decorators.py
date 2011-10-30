@@ -502,6 +502,7 @@ def decorateFunctionOps ( funcs , opers ) :
     _max_abs_element_ = None
 
     _fetch_           = None
+    _sort_            = None 
     
     _sum_             = None
     _product_         = None
@@ -1482,6 +1483,21 @@ def decorateFunctionOps ( funcs , opers ) :
             """
             return opers.__fetch__ ( s , *a )
         _fetch_ . __doc__  += opers.__fetch__ . __doc__
+        
+    # 'sort' 
+    if hasattr ( opers , '__sort__' ) :
+        def _sort_ ( s , *a ) :
+            """
+            Sort the stream, and (optionally) select the first N-elements
+
+            >>> fun = sort ( PT )
+
+            >>> fun = sort ( PT , 5 ) ## select not more that 5 elements  
+            
+            Uses:\n
+            """
+            return opers.__sort__ ( s , *a )
+        _sort_ . __doc__  += opers.__sort__ . __doc__
 
     # decorate the functions 
     for fun in funcs :
@@ -1556,7 +1572,8 @@ def decorateFunctionOps ( funcs , opers ) :
         if _sum_             : fun . __sum__             = _sum_       #
         if _product_         : fun . __product__         = _product_   #
 
-        if _fetch_           : fun . __fetch__           = _fetch_      #
+        if _fetch_           : fun . __fetch__           = _fetch_     #
+        if _sort_            : fun . __sort__            = _sort_      #
 
         if _mean_            : fun . __mean__            = _mean_       #
         if _meanErr_         : fun . __meanErr__         = _meanErr_    #

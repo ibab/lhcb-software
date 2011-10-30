@@ -496,23 +496,45 @@ namespace LoKi
                 const Cuts&  cut , const double init = 0 )
       { return LoKi::sum ( fun , cut , init ) ; }
       // ======================================================================
-      // product over the stream 
+    public: // product over the stream 
+      // ======================================================================
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __product__ ( const Func&  fun , const double init = 1 ) 
       { return LoKi::product ( fun , init ) ; }
-      // sum over the stream 
+      // ======================================================================
+    public : // sum over the stream 
+      // ======================================================================
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __product__ ( const Func&  fun , 
                     const Cuts&  cut , const double init = 1 )
       { return LoKi::product ( fun , cut , init ) ; }
-      // fetch from the stream 
+      // ======================================================================
+    public : // fetch from the stream 
+      // ======================================================================
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __fetch__ ( const Func&        fun   , 
                   const unsigned int index ,  
                   const double       bad   )
       { return LoKi::fetch ( fun , index , bad ) ; }
       // ======================================================================
-      // statistics 
+    public: // sort the stream 
+      // ======================================================================      
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
+      __sort__ ( const Func&        fun              , 
+                 const int          N         = -1   , 
+                 const bool         ascending = true )
+      {
+        if ( ascending ) 
+        { return LoKi::Functors::Sort_<TYPE2,double,true>  ( fun , N ) ; }
+        return   LoKi::Functors::Sort_<TYPE2,double,false> ( fun , N ) ;
+      }
+      // ======================================================================
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
+      __sort__ ( const Func&        fun , 
+                 const LoKi::Sort&  s   ) 
+      { return __sort__ ( fun , s.N() , s.ascending() ) ; }
+      // ======================================================================
+    public: // statistics 
       // ======================================================================
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __mean__   ( const Func& fun   )
@@ -821,6 +843,22 @@ namespace LoKi
       ( const  Map& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<double> ( dump ) ; }
       // ======================================================================
+    public : // get the first N
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rshift__ 
+      ( const  Map& fun , const LoKi::FirstN& fn  ) 
+      { return fun >> LoKi::Functors::FirstN_<double> ( fn ) ; }
+      // ======================================================================
+    public : // reverse 
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
+      __rshift__ 
+      ( const  Map& fun , const LoKi::Reverse& /* fn */ ) 
+      { return fun >> LoKi::Functors::Reverse_<double>() ; }
+      // ======================================================================
     public: // gate-2 
       // ======================================================================
       // __rrshift__  : gate 
@@ -981,6 +1019,22 @@ namespace LoKi
       __rshift__ 
       ( const Pipe& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public: // the first N elements 
+      // ======================================================================
+      // __rshift__  : dump
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const Pipe& fun , const LoKi::FirstN& fn ) 
+      { return fun >> LoKi::Functors::FirstN_<TYPE> ( fn) ; }
+      // ======================================================================
+    public : // reverse 
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Pipe& fun , const LoKi::Reverse& /* fn */ ) 
+      { return fun >> LoKi::Functors::Reverse_<TYPE>() ; }
       // ======================================================================
     public: // gate-2
       // ======================================================================      
@@ -1271,6 +1325,22 @@ namespace LoKi
       __rshift__ 
       ( const Source& fun , const LoKi::Dump& dump  ) 
       { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public: // the first N elements 
+      // ======================================================================
+      // __rshift__  : dump
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source& fun , const LoKi::FirstN& fn ) 
+      { return fun >> LoKi::Functors::FirstN_<TYPE> ( fn ) ; }
+      // ======================================================================
+    public : // reverse 
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Source& fun , const LoKi::Reverse& /* fn */ ) 
+      { return fun >> LoKi::Functors::Reverse_<TYPE>() ; }
       // ======================================================================
     public: // cause 
       // ======================================================================

@@ -691,7 +691,7 @@ def count ( cut ) :
 #    " ... >> fetch ( PT , 1 , -1 )  >> ... "  #
 #
 #
-#    " ... >> fetch ( PT > 1 * GeV )  "  # terminate stream 
+#    " ... >> fetch ( PT > 1 * GeV , 0 )  "  # terminate stream 
 #
 #  @endcode     
 #
@@ -1005,6 +1005,30 @@ def cause ( fun1 , fun2 ) :
 
 
 # =============================================================================
+## sort the stream  (and get the first N-elements)
+#
+#  @code
+#
+#    >>> stream >> sort ( PT )
+#
+#    >>> stream >> sort ( PT , 5 ) ## get no more than 5 elements 
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-10-30
+def sort( fun , *args ) :
+    """
+    sort the stream  (and get the first N-elements)
+    
+    >>> stream >> sort ( PT )
+    
+    >>> stream >> sort ( PT , 5 ) ## get no more than 5 elements 
+    
+    """    
+    return fun.__sort__ ( *args  ) 
+
+# =============================================================================
 def mark ( tree ) :
     """
     Create the 'marked' tree:
@@ -1249,9 +1273,19 @@ def vct_from_list  ( lst , *args ) :
 
 
 # =============================================================================
+## @see LoKi::FirstN
+def first_n ( N ) :
+    """
+    helper object to selexct the first N-elements from the stream 
+    """
+    return LoKi.FirstN( N )
+
+# =============================================================================
 ## @see LoKi::Dump
-Dump = LoKi.Dump
-dump = LoKi.Dump ()
+Dump    = LoKi.Dump
+dump    = LoKi.Dump ()
+## @see LoKi::Reverse 
+reverse = LoKi.Reverse()
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -4,7 +4,7 @@
      * CVS tag:$Name: not supported by cvs2svn $, version $Revision$ 
      * ======================================================================== 
      * @file
-     * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
+     * The selection file to build Reflex dictionaries for Phys/LoKiCore package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2006-02-06
      * ========================================================================
@@ -41,6 +41,9 @@
   <function name = "LoKi::Print::toString" />
 
   <class name    = "LoKi::Dump"            />
+  <class name    = "LoKi::FirstN"          />
+  <class name    = "LoKi::Reverse"         />
+  <class name    = "LoKi::Sort"            />
   <class name    = "LoKi::Timer"           />
   <class name    = "LoKi::DecayChainBase"  />  
   

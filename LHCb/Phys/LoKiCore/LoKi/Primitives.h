@@ -1996,6 +1996,17 @@ namespace LoKi
       : m_two ( fun1 , fun2 ) 
       , m_cmp ( cmp ) 
     {}
+    // ========================================================================
+    /** constructor 
+     *  @param fun1 the first functor 
+     *  @param fun2 the second functor 
+     *  @param cmp the comparison criteria
+     */
+    Compare ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
+              const compare&  cmp  = compare() )
+      : m_two ( fun1 , fun1 ) 
+      , m_cmp ( cmp ) 
+    {}
     /// copy constructor 
     Compare ( const Compare& right ) 
       : m_two ( right.m_two ) 
@@ -2009,10 +2020,17 @@ namespace LoKi
         typename LoKi::Functor<TYPE,TYPE2>::argument a2 ) const
     { return m_cmp ( m_two.fun1 ( a1 ) , m_two.fun2 ( a2 ) ) ; }
     // ========================================================================
+  public:
+    // ========================================================================
+    /// get the first functor 
+    const function& func1 () const { return m_two.func1 () ; }
+    /// get the second functor 
+    const function& func2 () const { return m_two.func2 () ; }
+    // ========================================================================
   private:
     // ========================================================================
-    // no default constructor 
-    Compare(){}
+    /// no default constructor 
+    Compare(){}                                       // no default constructor 
     // ========================================================================
   private:
     // ========================================================================
@@ -2020,6 +2038,20 @@ namespace LoKi
     compare   m_cmp  ;
     // ========================================================================
   };
+  // ==========================================================================
+  template <class TYPE,class TYPE2,bool> struct Cmp ;
+  // ==========================================================================
+  template <class TYPE,class TYPE2>
+  struct Cmp<TYPE,TYPE2,true>
+  {
+    typedef Compare<TYPE,std::less<TYPE2>,TYPE2>     Type ;
+  } ;
+  // ==========================================================================
+  template <class TYPE,class TYPE2>
+  struct Cmp<TYPE,TYPE2,false>
+  {
+    typedef Compare<TYPE,std::greater<TYPE2>,TYPE2>  Type ;
+  } ;
   // ==========================================================================
   /** @class Identity
    *  the simple trivial functor 
@@ -2038,6 +2070,8 @@ namespace LoKi
     /// MANDATORY": the only one essential method 
     virtual  typename LoKi::Functor<TYPE,TYPE2>::result_type operator () 
       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const { return a ; }    
+    /// OPTIONAL: the nice printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const ;
     // ========================================================================
   } ;
   // ==========================================================================
@@ -2739,6 +2773,12 @@ namespace LoKi
     unsigned int                          m_j2  ;                  // the index 
     // ========================================================================
   };  
+  // ==========================================================================
+  // OPTIONAL: the nice printout 
+  // ==========================================================================
+  template <class TYPE, class TYPE2>
+  std::ostream& Identity<TYPE,TYPE2>::fillStream ( std::ostream& s ) const 
+  { return s << "I" ; }
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

@@ -26,6 +26,7 @@
 #include "LoKi/Algs.h"
 #include "LoKi/Primitives.h"
 #include "LoKi/Dump.h"
+#include "LoKi/FirstN.h"
 #include "LoKi/Timers.h"
 // ============================================================================
 // Boost 
@@ -1818,6 +1819,169 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class FirstN_
+     *  get the first N-elements from the stream 
+     *  @thanks Roel AAIJ
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-18
+     */
+    template <class TYPE>
+    class FirstN_ : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >
+    {
+    public:
+      // =====================================================================
+      /// the constructor
+      FirstN_ ( const unsigned int N )
+        : LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
+        , m_N ( N ) 
+      {}
+      /// the constructor
+      FirstN_ ( const LoKi::FirstN& N  )
+        : LoKi::Functor< std::vector<TYPE> , std::vector<TYPE> > ()
+        , m_N ( N ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~FirstN_ () {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  FirstN_ * clone() const { return new FirstN_ ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::result_type 
+      operator() ( typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::argument a ) const 
+      {
+        //
+        if ( a.size() <= m_N.n() ) { return a ; }                 // RETURN 
+        //
+        return typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::result_type 
+          ( a.begin() , a.begin() + m_N.n() ) ;  
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      FirstN_ () ;                        // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// number of eleemtns to be selected :
+      LoKi::FirstN m_N ;                 // number of elements to be selected 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Reverse_
+     *  reverse order of elements in the stream 
+     *  @thanks Roel AAIJ
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-18
+     */
+    template <class TYPE>
+    class Reverse_ : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >
+    {
+    public:
+      // =========================================================================
+      /// the constructor 
+      Reverse_ () : LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > () {}
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Reverse_ () {}
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  Reverse_* clone() const { return new Reverse_ ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::result_type 
+      operator() ( typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::argument a ) const 
+      {
+        typename LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> >::result_type r = a ;
+        std::reverse ( r.begin() , r.end() ) ;
+        return r ;
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Sort_
+     *  get the first N-element of sorted input sequence
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-02-27
+     */
+    template < class TYPE               , 
+               class TYPE2     = double ,
+               bool  ASCENDING = true   >  
+    class Sort_ : public LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > 
+    {
+    protected:
+      // ======================================================================
+      /// the base class 
+      typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> > uBase    ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from the function
+       *  @param fun the function 
+       *  @param init the initial value for summation 
+       */
+      Sort_ ( const LoKi::Functor<TYPE,TYPE2>& fun        ,
+              const int                        N   = -1   )
+        : LoKi::Functor< std::vector<TYPE>,std::vector<TYPE> > () 
+        , m_cmp  ( fun )
+        , m_sort ( N , ASCENDING ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Sort_ () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Sort_* clone() const { return new Sort_ ( *this ) ; }
+      /// MANDATORY: the only one essential method:
+      virtual typename uBase::result_type operator() 
+        ( typename uBase::argument a ) const
+      {
+        // nothing to select => nothing to sort 
+        if ( 0 == this->N() ) { return typename uBase::result_type() ; }
+        //
+        typename uBase::result_type r = a ;
+        if ( this->all() || (unsigned) this->N() >= a.size() ) 
+        {
+          std::stable_sort ( r.begin () , r.end   () , this->m_cmp ) ;
+          return r ;
+        }
+        //
+        std::partial_sort  ( r.begin ()                 , 
+                             r.begin () + this -> N()   , 
+                             r.end   () , this -> m_cmp ) ;
+        return typename uBase::result_type ( r.begin () , 
+                                             r.begin () + this -> N () );
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { 
+        s << " sort ( " << this->m_cmp.func1() ;
+        //
+        if      ( ASCENDING && this->m_sort.all() ) { return s << ") " ; }
+        else if ( ASCENDING ) 
+        { return  s << ", " << this -> N() << ") "        ; }
+        //
+        return    s << ", " << this -> N() << ", False) " ;
+      }
+      // ======================================================================
+    public:
+      // ======================================================================
+      int  N   ( ) const { return this->m_sort.N   () ; }
+      bool all ( ) const { return this->m_sort.all () ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Sort_ () ;                             // default constructor is disabled 
+      // ======================================================================      
+    protected:
+      // ======================================================================
+      /// the comparison criteria 
+      typename LoKi::Cmp<TYPE,TYPE2,ASCENDING>::Type  m_cmp ; // the comparison criteria 
+      /// sorting options 
+      LoKi::Sort m_sort ;
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class Dump_
      *  Helper class to dump the content of the flow 
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -2535,18 +2699,52 @@ namespace LoKi
     return LoKi::Functors::Fetch<TYPE,TYPE2> ( fun , index , bad ) ;
   }
   // ==========================================================================
+  /** sort the input sequence 
+   *  @see LoKi::Functors::Sort_
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-10-30
+   */
+  template <class TYPE, class TYPE2>
+  LoKi::Functors::Sort_<TYPE,TYPE2> 
+  sort ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
+  { return LoKi::Functors::Sort_<TYPE,TYPE2>( fun ) ; }
+  // ==========================================================================
+  /** sort the sequence and get the first N-elements 
+   *  @see LoKi::Functors::Sort_
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-10-30
+   */
+  template <class TYPE, class TYPE2>
+  LoKi::Functors::Sort_<TYPE,TYPE2> 
+  sort ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+         const int                        N   ) 
+  { return LoKi::Functors::Sort_<TYPE,TYPE2>( fun , N ) ; }
+  // ==========================================================================
+  /** sort the sequence and get the first N-elements 
+   *  @see LoKi::Functors::Sort_
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2011-10-30
+   */
+  template <class TYPE, class TYPE2>
+  LoKi::Functors::Sort_<TYPE,TYPE2> 
+  sort ( const int                        N   ,
+         const LoKi::Functor<TYPE,TYPE2>& fun )
+  { return LoKi::Functors::Sort_<TYPE,TYPE2>( fun , N ) ; }
+  // ==========================================================================
 } //                                                      end of namespace LoKi 
 // ============================================================================     
 // the specific printpout
 // ============================================================================     
 template <class TYPE>
-std::ostream& LoKi::Functors::Empty<TYPE>::fillStream
+std::ostream& 
+LoKi::Functors::Empty<TYPE>::fillStream
 ( std::ostream& s ) const { return s << "empty_" ; }
 // ============================================================================     
 // the specific printpout
 // ============================================================================     
 template <class TYPE>
-std::ostream& LoKi::Functors::Size<TYPE>::fillStream
+std::ostream& 
+LoKi::Functors::Size<TYPE>::fillStream
 ( std::ostream& s ) const { return s << "size_" ; }
 // ============================================================================     
 // the specific printpout
@@ -2555,6 +2753,20 @@ template <class TYPE>
 std::ostream& 
 LoKi::Functors::Unique<TYPE>::fillStream
 ( std::ostream& s ) const { return s << "unique_" ; }
+// ============================================================================
+// the specific printpout
+// ============================================================================     
+template <class TYPE>
+std::ostream& 
+LoKi::Functors::FirstN_<TYPE>::fillStream
+( std::ostream& s ) const { return s << m_N ; }
+// ============================================================================
+// the specific printpout
+// ============================================================================     
+template <class TYPE>
+std::ostream& 
+LoKi::Functors::Reverse_<TYPE>::fillStream
+( std::ostream& s ) const { return s << "reverse" ; }
 // ============================================================================
 
 
