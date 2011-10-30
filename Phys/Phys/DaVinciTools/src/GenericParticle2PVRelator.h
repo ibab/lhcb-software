@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.17 2010-05-14 08:31:36 jpalac Exp $
+// $Id$
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 

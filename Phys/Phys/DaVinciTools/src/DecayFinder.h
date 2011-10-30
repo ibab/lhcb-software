@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.15 2009-08-31 13:06:41 ibelyaev Exp $
+// $Id$
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 

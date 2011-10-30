@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.11 2010-06-01 09:40:25 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

@@ -1,4 +1,4 @@
-// $Id: P2PVLogic.h,v 1.2 2009-07-23 08:51:12 jpalac Exp $
+// $Id$
 #ifndef P2PVLOGIC_H 
 #define P2PVLOGIC_H 1
 

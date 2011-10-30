@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.h,v 1.6 2010-07-10 14:22:38 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef FILTERDESKTOP_H 
 #define FILTERDESKTOP_H 1
@@ -90,6 +90,10 @@
  *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef,nl
  *  @date 2008-09-22
+ *  
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
  */
 class FilterDesktop : public DVAlgorithm
 {
@@ -175,7 +179,6 @@ protected:
   // ==========================================================================
 protected:
   // ==========================================================================
-
   /// Get the related PV of particle and relate it to clone.
   void cloneP2PVRelation
   ( const LHCb::Particle*   particle ,

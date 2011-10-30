@@ -1,4 +1,4 @@
-// $Id: BestPVAlg.h,v 1.2 2010-08-04 14:52:55 jpalac Exp $
+// $Id$
 #ifndef BESTPVALG_H 
 #define BESTPVALG_H 1
 

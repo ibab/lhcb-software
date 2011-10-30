@@ -1,4 +1,4 @@
-// $Id: CheckVeloOverlap.cpp,v 1.10 2007-01-15 10:32:27 jpalac Exp $
+// $Id$
 
 // Include files 
 

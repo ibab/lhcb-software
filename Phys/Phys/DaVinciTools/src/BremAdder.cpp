@@ -1,4 +1,4 @@
-// $Id: BremAdder.cpp,v 1.4 2007-03-05 10:08:34 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

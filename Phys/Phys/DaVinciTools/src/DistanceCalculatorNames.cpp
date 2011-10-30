@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorNames.cpp,v 1.1 2008-10-20 14:53:34 jpalac Exp $
+// $Id$
 // Include files
 // local
 #include "DistanceCalculatorNames.h"

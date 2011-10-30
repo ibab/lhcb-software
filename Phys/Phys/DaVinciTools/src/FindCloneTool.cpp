@@ -1,4 +1,4 @@
-// $Id: FindCloneTool.cpp,v 1.4 2010-01-29 11:57:40 rlambert Exp $
+// $Id$
 
 // Include files 
 

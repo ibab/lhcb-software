@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.11 2010-06-03 12:06:54 jpalac Exp $
+// $Id$
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 

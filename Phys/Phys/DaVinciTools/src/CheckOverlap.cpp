@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.18 2009-09-17 07:24:13 jpalac Exp $
+// $Id$
 
 // Include files
 

@@ -1,4 +1,4 @@
-// $Id: DaVinciInit.cpp,v 1.1 2009-03-02 21:10:02 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

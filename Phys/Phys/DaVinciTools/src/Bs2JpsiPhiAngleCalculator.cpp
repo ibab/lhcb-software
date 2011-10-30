@@ -1,4 +1,4 @@
-// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.7 2010-04-21 09:59:24 gcowan Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

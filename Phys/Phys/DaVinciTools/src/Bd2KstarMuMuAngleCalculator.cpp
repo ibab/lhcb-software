@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.8 2010-08-23 09:01:04 tblake Exp $
+// $Id$
 // Include files 
 // from Gaudi
 

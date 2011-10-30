@@ -1,4 +1,4 @@
-// $Id: P2PVWithIP.cpp,v 1.1 2008-10-20 15:15:40 jpalac Exp $
+// $Id$
 // Include files
 
 // from Gaudi

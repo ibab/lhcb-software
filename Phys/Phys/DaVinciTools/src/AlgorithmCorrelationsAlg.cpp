@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelationsAlg.cpp,v 1.3 2008-10-31 18:41:39 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

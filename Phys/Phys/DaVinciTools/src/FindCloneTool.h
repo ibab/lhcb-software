@@ -1,4 +1,4 @@
-// $Id: FindCloneTool.h,v 1.2 2008-08-04 16:31:29 pkoppenb Exp $
+// $Id$
 #ifndef FINDCLONETOOL_H 
 #define FINDCLONETOOL_H 1
 

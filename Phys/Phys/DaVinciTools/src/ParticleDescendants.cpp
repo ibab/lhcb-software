@@ -1,4 +1,4 @@
-// $Id: ParticleDescendants.cpp,v 1.3 2007-01-15 10:32:37 jpalac Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

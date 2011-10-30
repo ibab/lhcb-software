@@ -1,4 +1,4 @@
-// $Id: FilterEventList.cpp,v 1.1 2009-08-18 08:20:06 rlambert Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

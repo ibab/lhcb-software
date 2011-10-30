@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.h,v 1.4 2010-05-04 21:30:17 tblake Exp $
+// $Id$
 #ifndef BD2KSTARMUMUANGLECALCULATOR_H 
 #define BD2KSTARMUMUANGLECALCULATOR_H 1
 

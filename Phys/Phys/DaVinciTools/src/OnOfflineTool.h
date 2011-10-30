@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.10 2009-08-13 10:48:16 ibelyaev Exp $
+// $Id$
 // ============================================================================
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1

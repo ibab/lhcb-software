@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelationsAlg.h,v 1.3 2008-10-31 18:41:39 pkoppenb Exp $
+// $Id$
 #ifndef SELRESULTCOMBINATORICS_H 
 #define SELRESULTCOMBINATORICS_H 1
 

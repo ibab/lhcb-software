@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.31 2010-07-10 14:22:37 ibelyaev Exp $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,6 +23,17 @@
 // local 
 // ============================================================================
 #include "FilterDesktop.h"
+// ============================================================================
+/** @file 
+ *  Implementation for for class FilterDesktop 
+ *  @see FilterDesktop
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef,nl
+ *  @date 2008-09-22
+ *  
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
+ */
 // ============================================================================
 namespace 
 {
@@ -363,7 +374,7 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
   StatusCode sc = filter ( particles , m_accepted ) ;
   
   // store particles in DVAlgorithm local container
-  // thi ssection has been moved into "filter"-method 
+  // this section has been moved into "filter"-method 
   // this -> markParticles ( m_accepted ) ;
   // this -> markTrees     ( m_accepted ) ;
   

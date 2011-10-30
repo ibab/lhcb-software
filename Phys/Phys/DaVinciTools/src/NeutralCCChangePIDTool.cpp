@@ -1,4 +1,4 @@
-// $Id: NeutralCCChangePIDTool.cpp,v 1.3 2007-08-22 16:40:28 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

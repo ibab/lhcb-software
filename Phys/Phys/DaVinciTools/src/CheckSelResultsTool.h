@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.h,v 1.3 2010-06-01 09:40:25 pkoppenb Exp $
+// $Id$
 #ifndef CHECKSELRESULTSTOOL_H 
 #define CHECKSELRESULTSTOOL_H 1
 

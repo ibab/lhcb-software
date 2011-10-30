@@ -1,4 +1,4 @@
-// $Id: ParticleDescendants.h,v 1.2 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id$
 #ifndef PARTICLEDESCENDANTS_H 
 #define PARTICLEDESCENDANTS_H 1
 

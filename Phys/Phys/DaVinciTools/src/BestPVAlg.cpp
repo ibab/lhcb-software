@@ -1,4 +1,4 @@
-// $Id: BestPVAlg.cpp,v 1.2 2010-08-04 14:52:55 jpalac Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

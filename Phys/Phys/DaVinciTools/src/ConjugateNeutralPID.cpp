@@ -1,4 +1,4 @@
-// $Id: ConjugateNeutralPID.cpp,v 1.4 2008-04-17 16:18:44 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

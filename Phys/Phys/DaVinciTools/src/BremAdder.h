@@ -1,4 +1,4 @@
-// $Id: BremAdder.h,v 1.3 2006-12-07 17:58:44 odescham Exp $
+// $Id$
 #ifndef BREMADDER_H 
 #define BREMADDER_H 1
 

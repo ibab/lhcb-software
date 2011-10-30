@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.30 2010-08-11 11:57:30 gligorov Exp $
+// $Id$
 // Include files
 
 // from Gaudi

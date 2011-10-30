@@ -1,4 +1,4 @@
-// $Id: P2VVAngleCalculator.cpp,v 1.3 2008-06-04 16:21:02 pkoppenb Exp $
+// $Id$
 // Include files 
 
 // from Gaudi

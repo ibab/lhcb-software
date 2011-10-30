@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.11 2009-09-11 17:13:17 jonrob Exp $
+// $Id$
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 

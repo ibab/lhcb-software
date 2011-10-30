@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.23 2009-08-31 13:06:41 ibelyaev Exp $
+// $Id$
 // Include files 
 #include <list>
 #include <functional>

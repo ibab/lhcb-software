@@ -3,6 +3,19 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-10-30 - Vanya Belyaev
+ - add new algorithm, FilterStream, that is a small variation of
+   FilterDesktop but acts on the whole stream , and in this way
+   allows e.g. to select the best candidate 
+
+  * 
+  *   myAlg = FilterStream ( ... ) 
+  * 
+  *   myAlg.Code = """
+  *       select      ( PT > 5 * GeV           )  >> 
+  *       min_element ( DTF_CHI2NDOF (  True ) ) 
+  *       """
+
 ! 2011-10-07 - Chris Jones
  - Update last fix to avoid if statement and two print blocks
 

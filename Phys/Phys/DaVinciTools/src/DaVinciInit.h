@@ -1,4 +1,4 @@
-// $Id: DaVinciInit.h,v 1.1 2009-03-02 21:10:02 pkoppenb Exp $
+// $Id$
 #ifndef DAVINCIINIT_H 
 #define DAVINCIINIT_H 1
 

@@ -1,4 +1,4 @@
-// $Id: RemoveClones.h,v 1.1 2008-08-04 10:00:58 pkoppenb Exp $
+// $Id$
 #ifndef REMOVECLONES_H 
 #define REMOVECLONES_H 1
 

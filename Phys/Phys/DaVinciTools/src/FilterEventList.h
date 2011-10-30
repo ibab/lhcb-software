@@ -1,4 +1,4 @@
-// $Id: FilterEventList.h,v 1.1 2009-08-18 08:20:06 rlambert Exp $
+// $Id$
 #ifndef FILTEREVENTLIST_H 
 #define FILTEREVENTLIST_H 1
 

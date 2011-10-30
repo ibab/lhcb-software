@@ -1,4 +1,4 @@
-// $Id: Bs2JpsiPhiAngleCalculator.h,v 1.1 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id$
 #ifndef BS2JPSIPHIANGLECALCULATOR_H 
 #define BS2JPSIPHIANGLECALCULATOR_H 1
 

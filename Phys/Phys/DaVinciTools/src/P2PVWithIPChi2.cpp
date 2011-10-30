@@ -1,4 +1,4 @@
-// $Id: P2PVWithIPChi2.cpp,v 1.1 2008-10-20 15:15:59 jpalac Exp $
+// $Id$
 /** @class P2PVWithIPChi2 P2PVWithIPChi2.cpp
  *  
  *

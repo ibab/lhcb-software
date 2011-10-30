@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorNames.h,v 1.1 2008-10-20 14:53:34 jpalac Exp $
+// $Id$
 #ifndef DISTANCECALCULATORNAMES_H 
 #define DISTANCECALCULATORNAMES_H 1
 

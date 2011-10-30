@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.11 2010-01-14 08:03:01 pkoppenb Exp $
+// $Id$
 // ============================================================================
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1

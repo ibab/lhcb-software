@@ -1,4 +1,4 @@
-// $Id: P2VVAngleCalculator.h,v 1.2 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id$
 #ifndef B2LLXANGLETOOL_H 
 #define B2LLXANGLETOOL_H 1
 

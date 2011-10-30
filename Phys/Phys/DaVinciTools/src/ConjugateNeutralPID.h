@@ -1,4 +1,4 @@
-// $Id: ConjugateNeutralPID.h,v 1.1 2006-12-18 11:17:00 jpalac Exp $
+// $Id$
 #ifndef CONJUGATENEUTRALPID_H 
 #define CONJUGATENEUTRALPID_H 1
 
