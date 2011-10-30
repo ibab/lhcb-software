@@ -70,7 +70,7 @@ print 'inp2 >> sym_difference ( X > -5 , X < 5 )  :%s ' % ( inp2 >> sym_differen
 print 'inp2 >> includes       ( X > -5 , X > 0 )  :%s ' % ( inp2 >> includes        ( X > -5 , X > 0 ) )
 
 print 'inp2 >> sum ( X          )    :%s ' % ( inp2 >> sum ( X          ) )
-print 'inp2 >> sqrt( sum ( X**2 ) ) :%s ' % ( inp2 >> sqrt ( sum ( X**2 ) ) )
+print 'inp2 >> sqrt( sum ( X**2 ) )  :%s ' % ( inp2 >> sqrt ( sum ( X**2 ) ) )
 print 'inp2 >> sum ( X , X <  0 )    :%s ' % ( inp2 >> sum ( X , X <  0 ) )
 print 'inp2 >> sum ( X , X >= 0 )    :%s ' % ( inp2 >> sum ( X , X >= 0 ) )
 

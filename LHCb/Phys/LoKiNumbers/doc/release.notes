@@ -18,6 +18,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-10-30 - Vanya Belyaev
+ - update for stream sorting functors 
+
 !========================= LoKiNumbers v10r1 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
  - add helper functor for ``smart'' creation of RecSummary functors 

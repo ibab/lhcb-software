@@ -260,6 +260,30 @@ namespace LoKi
       __rrshift__ ( const Pipe& fun , const double val ) 
       { return fun ( std::vector<double>( 1 , val ) ) ; }
       // ======================================================================
+    public : // add the dumps
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Pipe& fun , const LoKi::Dump& dump  ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public : // get the first N
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Pipe& fun , const LoKi::FirstN& fn  ) 
+      { return fun >> LoKi::Functors::FirstN_<TYPE> ( fn ) ; }
+      // ======================================================================
+    public : // reverse 
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Pipe& fun , const LoKi::Reverse& /* fn */ ) 
+      { return fun >> LoKi::Functors::Reverse_<TYPE> () ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __tee__ 
@@ -431,6 +455,30 @@ namespace LoKi
       ( const Source& fun , const Func&    fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
       // ======================================================================
+    public : // add the dumps
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Source& fun , const LoKi::Dump& dump  ) 
+      { return fun >> LoKi::Functors::Dump_<TYPE> ( dump ) ; }
+      // ======================================================================
+    public : // get the first N
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Source& fun , const LoKi::FirstN& fn  ) 
+      { return fun >> LoKi::Functors::FirstN_<TYPE> ( fn ) ; }
+      // ======================================================================
+    public : // reverse 
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const  Source& fun , const LoKi::Reverse& /* fn  */ ) 
+      { return fun >> LoKi::Functors::Reverse_<TYPE> () ; }
+      // ======================================================================
     public:
       // ======================================================================
       // _union_ 
@@ -575,6 +623,8 @@ namespace LoKi
   } // end of namespace LoKi::Dicts 
   // ==========================================================================
 } // end of namespace LoKi
+// ============================================================================
+/// specify the proper printout for identity 
 // ============================================================================
 namespace
 {
