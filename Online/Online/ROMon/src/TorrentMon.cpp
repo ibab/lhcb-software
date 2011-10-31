@@ -19,6 +19,7 @@
 // C++ includes 
 #include <cstdlib>
 #include <cstring>
+#include <climits>
 
 using namespace BitTorrent;
 

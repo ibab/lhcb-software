@@ -30,8 +30,8 @@
 namespace ROMon {
 
   // Forward declarations
-  class  BootNodeStatusset;
-  struct FarmBenchStats;
+  class BootNodeStatusset;
+  class FarmBenchStats;
   class Nodeset;
 
   /**@class BenchmarkDisplay ROMon.h GaudiOnline/FarmDisplay.h
