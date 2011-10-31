@@ -118,6 +118,11 @@ class Volume(object):
             quota_size = Unit(int(quota_size), "KB")
             quota_size.setDisplay(display_size)
         return quota_size
+    def isFull(self):
+        is_full = False
+        if self.usedSpace() >= self.quota() :
+            is_full = True
+        return is_full
     def setQuota(self, quota):
         log = logging.getLogger()
         p = Popen(["afs_admin", "set_quota", self._mtpoints[0].name(), quota], stdout=PIPE, stderr=PIPE)
