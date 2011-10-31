@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-10-31 - Chris Jones
+ - Fix silly type conversion typo in the DAQ decoding errors monitor
+
 ! 2011-10-27 - Chris Jones
  - Change the title of the DAQ decoding errors by board histogram
  - Fix a bug in the fill of the 2D decoding errors histogram
@@ -11,7 +14,7 @@
 ! 2011-09-22 - Chris Jones
  - Avoid multiple ODIN TES requests per event in DataDecodingErrorMoni
 
-!========================= RichRecQC v2r54 2011-08-31 =========================
+!========================= RichRecQC v2r54 2011-08-31 ========================
 ! 2011-08-15 - Chris Jones
  - Add a 2D plot to the decoding errors monitor to show the number of each 
    error type, for each L1 board, by copy number.

@@ -60,7 +60,16 @@ const Rich::HistoAlgBase::BinLabels & DataDecodingErrorMoni::labels()
 StatusCode DataDecodingErrorMoni::prebookHistograms()
 {
   const unsigned int nlabels = labels().size();
-  const unsigned int nL1s    = m_RichSys->level1HardwareIDs().size();
+  const Rich::DAQ::Level1HardwareIDs & L1s = m_RichSys->level1HardwareIDs();
+  const unsigned int nL1s    = L1s.size();
+
+  BinLabels l1HardIDLabels(nL1s);
+  for ( Rich::DAQ::Level1HardwareIDs::const_iterator iL1H = L1s.begin();
+        iL1H != L1s.end(); ++iL1H )
+  {
+    Rich::DAQ::Level1CopyNumber copyN = m_RichSys->copyNumber(*iL1H);
+    l1HardIDLabels[copyN.data()] = (std::string)(*iL1H);
+  }
 
   richProfile1D( HID("decodingErrors"),
                  "DAQ Decoding Error Rates (%)",
@@ -68,11 +77,11 @@ StatusCode DataDecodingErrorMoni::prebookHistograms()
                  "DAQ Decoding Error Types", "Error Rate (%)", labels() );
 
   richHisto2D( HID("decodingErrorsByBoard"),
-               "DAQ Decoding Errors by UKL1 Board",
+               "DAQ Decoding Errors by UKL1 Hardware ID",
                0.5, nL1s    + 0.5, nL1s,
                0.5, nlabels + 0.5, nlabels,
-               "UKL1 Copy Number", "",
-               "# of errors", BinLabels(), labels() );
+               "UKL1 Hardware ID", "",
+               "# of errors", l1HardIDLabels, labels() );
   
   return StatusCode::SUCCESS;
 }
@@ -150,28 +159,29 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
     const Rich::DAQ::L1IngressHeader & ingressHeader = ingressInfo.ingressHeader();
 
     // Check if all HPDs are suppressed
-    fillPlots( copyN, 1, ingressHeader.hpdsSuppressed() ? 100.0 : 0.0, h1D, h2D );
+    fillPlots( copyN, 1, ingressHeader.hpdsSuppressed(), h1D, h2D );
 
     // Check BX ID between Rich and ODIN
-    fillPlots( copyN, 2, BXID(m_odin->bunchId()) != ingressHeader.bxID() ? 100.0 : 0.0, h1D, h2D );
-
+    const bool bxIDOK = BXID(m_odin->bunchId()) == ingressHeader.bxID();
+    fillPlots( copyN, 2, !bxIDOK, h1D, h2D );
+    
     // Loop over HPDs in this ingress
     for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
           iHPD != (*iIn).second.hpdData().end(); ++iHPD )
     {
       const bool inhibit = (*iHPD).second.header().inhibit();
       // inhibited HPDs
-      fillPlots( copyN, 3, inhibit ? 100.0 : 0.0, h1D, h2D );
+      fillPlots( copyN, 3, inhibit, h1D, h2D );
       if ( !inhibit )
       {
         // Invalid HPD (BD lookup error)
-        fillPlots( copyN, 4, !(*iHPD).second.hpdID().isValid() ? 100.0 : 0.0, h1D, h2D );
+        fillPlots( copyN, 4, !(*iHPD).second.hpdID().isValid(), h1D, h2D );
         // Event IDs
-        fillPlots( copyN, 5,
-                   ( (*iIn).second.ingressHeader().eventID() !=
-                     (*iHPD).second.header().eventID() ? 100.0 : 0.0 ), h1D, h2D );
+        const bool evtIDOK = ( ingressHeader.eventID() == 
+                               (*iHPD).second.header().eventID() );
+        fillPlots( copyN, 5, !evtIDOK, h1D, h2D );
         // HPD header in extended mode
-        fillPlots( copyN, 6, (*iHPD).second.header().extendedFormat() ? 100.0 : 0.0, h1D, h2D );
+        fillPlots( copyN, 6, (*iHPD).second.header().extendedFormat(), h1D, h2D );
       }
     } // loop over HPDs
 
