@@ -1,6 +1,9 @@
 2011-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/afs/volume.py: added the isFull method to the volume class.
+	* python/LbUtils/afs/volume.py:
+	- added the isFull method to the volume class.
+	- added remainingSpace method.
+	- added relative option to remainingSpace and usedSpace methods.
 
 2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

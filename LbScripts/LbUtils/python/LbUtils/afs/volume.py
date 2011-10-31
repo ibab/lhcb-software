@@ -82,7 +82,16 @@ class Volume(object):
             if p.wait() != 0:
                 raise IOError, "Could not flush volume %s" % self._name
 
-    def usedSpace(self, display_size=None):
+    def usedSpace(self, display_size=None, relative=False):
+        """
+        Return the original used space (integer number of KB) of the AFS volume
+        @param display_size: unit to used for the conversion
+        @type display_size: string as described in LbUtils.Storage,
+                            "B", "KB", ... , "human"
+        @param relative: computes the ratio to the quota instead of the absolute
+                         value. The result is a float in the range [0.0, 1.0]
+        @type relative: boolean
+        """
         log = logging.getLogger()
         used_size = 0
         exp = re.compile("%s\s+\d+\s+(\d+)\s+" % re.escape(self._name))
@@ -96,11 +105,37 @@ class Volume(object):
             log.error(line[:-1])
         if p.wait() != 0:
             raise IOError, "Could not get used space of volume %s" % self._name
-        if display_size :
-            used_size = Unit(int(used_size), "KB")
+        used_size = int(used_size)
+        if relative :
+            used_size = float(used_size)/float(self.quota())
+        elif display_size :
+            used_size = Unit(used_size, "KB")
             used_size.setDisplay(display_size)
         return used_size
+    def remainingSpace(self, display_size=None, relative=False):
+        """
+        Return the remaining space (integer number of KB) of the AFS volume
+        @param display_size: unit to used for the conversion
+        @type display_size: string as described in LbUtils.Storage,
+                            "B", "KB", ... , "human"
+        @param relative: computes the ratio to the quota instead of the absolute
+                         value. The result is a float in the range [0.0, 1.0]
+        @type relative: boolean
+        """
+        remaining_space = self.quota() - self.usedSpace()
+        if relative:
+            remaining_space = float(remaining_space)/float(self.quota())
+        elif display_size :
+            remaining_space = Unit(remaining_space, "KB")
+            remaining_space.setDisplay(display_size)
+        return remaining_space
     def quota(self, display_size=None):
+        """
+        Return the original quota (KB) of the AFS volume
+        @param display_size: unit to be used for the display.
+        @type display_size: string as described in LbUtils.Storage,
+                            "B", "KB", ... , "human"
+        """
         log = logging.getLogger()
         quota_size = 0
         exp = re.compile("%s\s+(\d+)\s+\d+\s+" % re.escape(self._name))
@@ -114,18 +149,22 @@ class Volume(object):
             log.error(line[:-1])
         if p.wait() != 0:
             raise IOError, "Could not get quota of volume %s" % self._name
+        quota_size = int(quota_size)
         if display_size :
-            quota_size = Unit(int(quota_size), "KB")
+            quota_size = Unit(quota_size, "KB")
             quota_size.setDisplay(display_size)
         return quota_size
     def isFull(self):
+        """
+        returns true if the used space is greater or equal to the quota.
+        """
         is_full = False
         if self.usedSpace() >= self.quota() :
             is_full = True
         return is_full
     def setQuota(self, quota):
         log = logging.getLogger()
-        p = Popen(["afs_admin", "set_quota", self._mtpoints[0].name(), quota], stdout=PIPE, stderr=PIPE)
+        p = Popen(["afs_admin", "set_quota", self._mtpoints[0].name(), str(quota)], stdout=PIPE, stderr=PIPE)
         for line in p.stdout.xreadlines() :
             log.debug(line[:-1])
         for line in p.stderr.xreadlines() :
