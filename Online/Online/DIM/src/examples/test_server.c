@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 {
 	int i, id, *ptr;
 	char aux[80];
-	char name[84], name1[132];
+	char name[84];
 	int on = 0;
 	long dnsid = 0;
 	char extra_dns[128];

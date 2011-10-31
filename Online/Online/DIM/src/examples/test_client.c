@@ -63,8 +63,8 @@ void rout( tag, buf, size )
 char *buf;
 int *tag, *size;
 {
-	char *format;
 /*
+	char *format;
 	format = dic_get_format(0);
 	printf("Received format = %s %08x, %d\n",format, format, *size);
 */
