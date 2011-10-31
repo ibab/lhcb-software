@@ -1,3 +1,7 @@
+2011-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkLHCbtar: added exception raising if a tar command fails.
+
 2011-10-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/vol_for_releases.py: use the AFSReleaseVolumeName method to

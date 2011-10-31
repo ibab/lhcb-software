@@ -16,7 +16,11 @@ import re
 
 script_version = '091013'
 
+
 from LbConfiguration.Package import package_names, getPackage
+
+class MakeLHCbTarException(Exception): pass
+
 
 LHCBTAR = os.getenv('LHCBTAR')
 HTMLDIR = os.path.join(LHCBTAR, 'html')
@@ -198,7 +202,8 @@ def make_tar(pname, pversion, binary=''):
                 sys.exit('no library for this binary %s ' % (binary))
 
 # tar files location: tar files are stored in $LHCBTAR/<PROJECT> or in $LHCBTAR/source
-    if os.path.exists(os.path.join(LHCBTAR, PACK)): TARSRC = PACK
+    if os.path.exists(os.path.join(LHCBTAR, PACK)):
+        TARSRC = PACK
     TARDIR = os.path.join(LHCBTAR, TARSRC)
 
 #
@@ -373,6 +378,8 @@ def make_tar(pname, pversion, binary=''):
         else:
             str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + maindir
         tar_status, output = getStatusOutput(str)
+        if tar_status != 0 :
+            raise MakeLHCbTarException("The status for the command '%s' is %d" % (str, tar_status) )
         print 'make_tar: %s tar status= %s' % (tarfile, tar_status)
     else:
         exclude_list = ' --exclude=' + ' --exclude='.join(exclude_binary)
@@ -380,6 +387,8 @@ def make_tar(pname, pversion, binary=''):
         binlist = output.replace('\n', ' ')
         str = 'tar ' + exclude_list + ' -zcvf ' + tarfile + ' ' + binlist
         tar_status, output = getStatusOutput(str)
+        if tar_status != 0 :
+            raise MakeLHCbTarException("The status for the command '%s' is %d" % (str, tar_status) )
         print  ' make_tar: %s tar status= %s' % (tarfile, tar_status)
 
 #
@@ -444,6 +453,9 @@ def data_files_tar(pname, pversion):
     str = 'tar ' + deref + ' -zcvf ' + tarfile + ' ' + TARSRC + '/cmt ' + maindir
     print str
     tar_status, output = getStatusOutput(str)
+    if tar_status != 0 :
+        raise MakeLHCbTarException("The status for the command '%s' is %d" % (str, tar_status) )
+
     print 'data_files_tar: %s tar status= %s ' % (tarfile, tar_status)
 
     if tar_status == 0:
