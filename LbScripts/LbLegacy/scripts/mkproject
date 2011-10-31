@@ -35,6 +35,8 @@ from LbUtils.afs.volume import Volume
 import logging
 import sys, os, getopt, time, fnmatch
 
+class MakeProjectException(Exception): pass
+
 script_version = '110301'
 script_name = 'mkproject'
 python_version = sys.version_info[:3]
