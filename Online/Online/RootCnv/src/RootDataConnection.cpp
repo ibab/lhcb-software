@@ -473,9 +473,15 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
 	}
 	if ( nb == 0 && pObj->clID() == CLID_DataObject) {
 	  TFile* f = b->GetFile();
-	  if ( f->GetVersion() < 52400 ) {
+	  int vsn = f->GetVersion();
+	  if ( vsn < 52400 ) {
 	    // For Gaudi v21r5 (ROOT 5.24.00b) DataObject::m_version was not written!
 	    // Still this call be well be successful.
+	    nb = 1;
+	  }
+	  else if ( vsn>1000000 && (vsn%1000000)<52400 ) {
+	    // dto. Some POOL files have for unknown reasons a version
+	    // not according to ROOT standards. Hack this explicitly.
 	    nb = 1;
 	  }
 	}

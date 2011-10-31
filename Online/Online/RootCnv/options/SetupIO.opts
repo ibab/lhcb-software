@@ -11,3 +11,4 @@ EventSelector.PrintFreq    = 500;
 EventDataSvc.RootCLID      = 1;
 ReadAlg.OutputLevel        = 4;
 RootCnvSvc.CacheSize       = 50000000;
+ApplicationMgr.SvcOptMapping    += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };

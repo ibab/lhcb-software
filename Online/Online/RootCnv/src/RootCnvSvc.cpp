@@ -50,6 +50,7 @@ namespace {
   static map<string, TClass*> s_classesNames;
   static map<CLID, TClass*>   s_classesClids;
 }
+#define MBYTE 1024*1024
 
 // Standard constructor
 RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
@@ -64,8 +65,8 @@ RootCnvSvc::RootCnvSvc(CSTR nam, ISvcLocator* svc)
   declareProperty("EnableIncident",   m_incidentEnabled     = true);
   declareProperty("RecordsName",      m_recordName          = "/FileRecords");
 
-  declareProperty("CacheSize",        m_setup->basketSize   = 40000000);
-  declareProperty("CacheSize",        m_setup->cacheSize    = 10000000);
+  declareProperty("BasketSize",       m_setup->basketSize   = 40*MBYTE);
+  declareProperty("CacheSize",        m_setup->cacheSize    = 10*MBYTE);
   declareProperty("AutoFlush",        m_setup->autoFlush    = 100);
   declareProperty("LearnEntries",     m_setup->learnEntries = 10);
   declareProperty("LoadSection",      m_setup->loadSection  = "Event");
@@ -214,7 +215,6 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
   try {
     IDataConnection* c = m_ioMgr->connection(dataset);
     bool fire_incident = false;
-    //bool enable_stats = false;
     *con = 0;
     if ( !c )  {
       auto_ptr<IDataConnection> connection(new RootDataConnection(this,dataset,m_setup));
@@ -224,7 +224,12 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
       c = sc.isSuccess() ? m_ioMgr->connection(dataset) : 0;
       if ( c )   {
         fire_incident = m_incidentEnabled && (0 != (mode&(IDataConnection::UPDATE|IDataConnection::READ)));
-        //enable_stats  = !m_ioPerfStats.empty() && 0 != (mode&IDataConnection::READ);
+	if ( 0 != (mode&IDataConnection::READ) ) {
+	  if ( !m_ioPerfStats.empty() ) {
+	    RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
+	    pc->enableStatistics(m_setup->loadSection);
+	  }
+	}
         connection.release();
       }
       else  {
@@ -234,7 +239,6 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
     if ( pc )  {
       if ( !pc->isConnected() ) pc->connectRead();
-      //if ( enable_stats ) pc->enableStatistics(m_section);
       *con = pc;
       pc->resetAge();
       pc->addClient(this);

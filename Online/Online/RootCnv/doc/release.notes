@@ -4,6 +4,11 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2011-10-31 - Markus Frank
+ - Fix bug #88049: RootCnv has problems reading POOL XDST
+   For unknown reasons some pool files have a funny file version number.
+   Explicitly handle this case.
+
 !========================= RootCnv v1r9 2011-10-11 =========================
 ! 2011-10-11 - Markus Frank
  - Fix bug for programming the branch cache properly
