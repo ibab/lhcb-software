@@ -47,7 +47,7 @@ int main(int , char *argv[]) // Taskname, DNS Node
   printf ("Retrieved %d Counters\n", (int)objs.size());
   for (unsigned int i=0;i<objs.size();i++)
   {
-    printf ("Counter %s at address %llx data \n",hsts[i].c_str(), (long long unsigned int)objs[i]);
+    printf ("Counter %s at address %llx data ",hsts[i].c_str(), (long long unsigned int)objs[i]);
     switch (objs[i]->type)
     {
       case   C_INT:
