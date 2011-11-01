@@ -63,6 +63,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SwimmingPrefix"     : '/Event/Swimming' # The TES location of the swimming reports
         , "SelectMethod"       : 'random'        # The method for selecting offline candidates (random, first, or '')
         , "UseFileStager"      : False           # Use the file stager.
+        , "WriteFSR"           : True            # Write FSRs in output DST.
        }
 
     _propertyDocDct = {  
@@ -111,6 +112,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SwimmingPrefix"     : """ The TES prefix used for swimming objects."""
         , "SelectMethod"       : """ The method for selecting offline candidates (random, first, or '')"""
         , "UseFileStager"      : """ Use the file stager. """
+        , "WriteFSR"           : """ Write FSRs in output DST. """
         }
 
     __used_configurables__ = [
@@ -145,12 +147,12 @@ class Swimming(LHCbConfigurableUser) :
         from Configurables import DataOnDemandSvc
 
         app = LHCbApp()
-        self.setOtherProps(app, ['EvtMax', 'SkipEvents', 'Simulation', 'DataType'])
+        self.setOtherProps(app, ['EvtMax', 'SkipEvents', 'Simulation', 'DataType',
+                                 'Persistency'])
 
         CaloDstUnPackConf ( Enable = True )
         DstConf           ( EnableUnpack = True )
 
-        IODataManager().UseGFAL=False
         importOptions("$STDOPTS/DecodeRawEvent.py")
         appConf = ApplicationMgr()
         appConf.HistogramPersistency = 'ROOT'
@@ -158,15 +160,11 @@ class Swimming(LHCbConfigurableUser) :
         EventSelector().PrintFreq = -1
         EventSelector().OutputLevel = 6 
 
-        # Persistency
-        p = self.getProp('Persistency')
-        from GaudiConf import IOHelper
-        helper = IOHelper(p, p)
-
         # FileStager
         if self.getProp('UseFileStager'):
             from FileStager.Configuration import configureFileStager
             configureFileStager()
+        IODataManager().UseGFAL=False
 
         # Disable muons in TisTosTool
         from Configurables import TriggerTisTos
@@ -189,13 +187,14 @@ def ConfigureMoore():
     deathstar.Members       = [mykiller]
     from Swimming import MooreSetup
     #
-    Moore().InitialTCK = config.getProp('TCK')
-    Moore().Simulation = config.getProp('Simulation')
-    Moore().DataType   = config.getProp('DataType')
-    Moore().DDDBtag    = config.getProp('DDDBtag')
-    Moore().CondDBtag  = config.getProp('CondDBtag')
-    Moore().outputFile = config.getProp('OutputFile')
-    Moore().WriteFSR = False
+    Moore().InitialTCK  = config.getProp('TCK')
+    Moore().Simulation  = config.getProp('Simulation')
+    Moore().DataType    = config.getProp('DataType')
+    Moore().DDDBtag     = config.getProp('DDDBtag')
+    Moore().CondDBtag   = config.getProp('CondDBtag')
+    Moore().outputFile  = config.getProp('OutputFile')
+    Moore().WriteFSR    = config.getProp('WriteFSR')
+    Moore().Persistency = config.getProp('Persistency')
     Moore().WriterRequires = []
     # Add extra locations to writer
     from Configurables import InputCopyStream
@@ -292,12 +291,13 @@ def ConfigureDaVinci():
     deathstar.Members       = [mykiller]
 
     # Configure DaVinci
-    DaVinci().InputType     = 'DST'
-    DaVinci().DataType      = config.getProp('DataType')
-    DaVinci().Simulation    = config.getProp('Simulation')
-    DaVinci().DDDBtag       = config.getProp('DDDBtag')
-    DaVinci().CondDBtag     = config.getProp('CondDBtag')
-
+    DaVinci().InputType   = 'DST'
+    DaVinci().DataType    = config.getProp('DataType')
+    DaVinci().Simulation  = config.getProp('Simulation')
+    DaVinci().DDDBtag     = config.getProp('DDDBtag')
+    DaVinci().CondDBtag   = config.getProp('CondDBtag')
+    DaVinci().Persistency = config.getProp('Persistency')
+    
     # The sequence for the swimming has to be configured 
     # by hand inserting the node killer before it
     DaVinci().appendToMainSequence( [deathstar] )
@@ -338,11 +338,11 @@ def ConfigureDaVinci():
                                            inputRawEvent = 'DAQ/RawEvent')]
         elementsConf = { 'default' : SwimmingElements }
         dstWriter = MicroDSTWriter('MicroDST',
-                                   StreamConf           = streamConf,
-                                   MicroDSTElements     = elementsConf,
-                                   WriteFSR = False,
-                                   OutputFileSuffix     = 'Swimming',
-                                   SelectionSequences   = [selectionSeq])
+                                   StreamConf         = streamConf,
+                                   MicroDSTElements   = elementsConf,
+                                   WriteFSR           = config.getProp('WriteFSR'),
+                                   OutputFileSuffix   = 'Swimming',
+                                   SelectionSequences = [selectionSeq])
     elif config.getProp('OutputType') == 'DST':
         from DSTWriters.__dev__.streamconf import OutputStreamConf
         from DSTWriters.__dev__.Configuration import SelDSTWriter
@@ -353,10 +353,10 @@ def ConfigureDaVinci():
         SelDSTWriterElements = {'default' : []}
         SelDSTWriterConf = {'default' : streamConf}
         dstWriter = SelDSTWriter('FullDST',
-                                 StreamConf = SelDSTWriterConf,
-                                 MicroDSTElements = SelDSTWriterElements,
-                                 WriteFSR = False,
-                                 OutputFileSuffix = 'Swimming',
+                                 StreamConf         = SelDSTWriterConf,
+                                 MicroDSTElements   = SelDSTWriterElements,
+                                 WriteFSR           = config.getProp('WriteFSR'),
+                                 OutputFileSuffix   = 'Swimming',
                                  SelectionSequences = [selectionSeq])
 
     DaVinci().appendToMainSequence([dstWriter.sequence()])
