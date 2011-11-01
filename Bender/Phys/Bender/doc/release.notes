@@ -24,6 +24,15 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-11-01 - Vanya Belyaev
+
+ - minor fix in CheckTrg 
+
+   Without the fix one needs to specify full TES/DST location.
+   The "short" form does not work.
+
+   Thanks to Adam Webber for providing microDST for tests...
+
 ! ==================== Phys/Bender v18r2 2011-09-26 ===========================
 
 ! 2011-11-01 - Vanya Belyaev

@@ -230,13 +230,13 @@ if '__main__' == __name__ :
     Files = arguments [1:] 
         
     if not 0 <= Line.find ('Phys') :
-        parser.error ( 'Invalid line name %s' % options.Line  ) 
+        parser.error ( 'Invalid line name %s' % Line  ) 
 
     if     0 != Line.find ('/Event/') :
-        parser.error ( 'Invalid line name %s' % options.Line  ) 
+        parser.error ( 'Invalid line name %s' % Line  ) 
 
     if not 0 <= Line.find ('/Particles') :
-        Line = options.Line + '/Particles'
+        Line = Line + '/Particles'
         
     if 0>= options.Nevents <= 0 and -1 != nEvents : 
         nEvents = 1000
