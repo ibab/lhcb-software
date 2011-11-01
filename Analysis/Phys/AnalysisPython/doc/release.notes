@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r6 2011-11-01 =========================
+
+! 2011-11-01 - Vanya Belyaev
+ - tagged as v2r6 to be released witgh Bender v18r2 
+
+
 ! 2011-10-28 - Vanya Belyaev
 
  - add few more decorations into PyRoUts 
