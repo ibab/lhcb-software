@@ -21,9 +21,33 @@
 ! with the smear campaign of Dr.O.Callot et al.: 
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
+
+</PRE>
+<A NAME=v18r2>2011-11-01 Bender v18r2 based on the DaVinci v29r1</A>
+</H1>	
+
+<PRE>		
+The version is rather similar  to v18r1, but it is based on fresh DaVinci v29r1
+and thus in this way it picks up many goodies and fixes.
+
+<li> It also contains many useful fixes for dst-explorer, in particular (if available)
+      it accepts the bare LFNs for input.
+</li>
+
+<li> The fixed version of MicroDST module allows better treatment of 
+     new micro-DSTs
+</li>
+ 
+<li> It also constains new script dst-dump to dump the content of (s,x,u,fm,...)DST
+</li>
+
+<li> This version comes with Phys/AnalysisPython. It contains 
+     the new code for uStat evaluation and numerous fixes for PyRoUts module
+</li>
+
 </PRE>
 
-
+</PRE>
 <A NAME=v18r1>2011-10-06 Bender v18r1 based on the DaVinci v29r1</A>
 </H1>	
 
