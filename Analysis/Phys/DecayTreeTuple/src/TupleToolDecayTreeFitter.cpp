@@ -291,7 +291,9 @@ std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Par
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
     const VertexBase* bpv = m_dva->bestPV( P );
-    oriVx.push_back(bpv);
+    if (bpv) oriVx.push_back(bpv);
+    else if ( m_constrainToOriginVertex) 
+      Warning("NULL bestPV while constraining to origin vertex. Fit will be ignored.",1,StatusCode::SUCCESS).ignore();
     // all the other ones 
     /// @todo : keep only the related ones
     for (LHCb::RecVertex::Range::const_iterator pv = m_dva->primaryVertices().begin() ; 

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-01 - Patrick Koppenburg
+ - TupleToolDecayTreeFitter : Fix bug 88365
+
 ! 2011-10-17 - Roel Aaij
  - Update TupleToolSwimmingInfo to fill false everywhere if the global Hlt or
    stripping decision is false.
