@@ -9,7 +9,7 @@
 int main(int , char **)
 {
   new SegvHandler();
-  M_SegvHandler->oldact = M_SegvHandler->oldact;
+//  M_SegvHandler->oldact = M_SegvHandler->oldact;
   int *p=(int *)7;
 
   int i;
