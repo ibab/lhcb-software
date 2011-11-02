@@ -21,6 +21,10 @@
 #include <cstring>
 #include <climits>
 
+#if defined(WIN32) && !defined(PATH_MAX)
+#define PATH_MAX _PATH_MAX
+#endif
+
 using namespace BitTorrent;
 
 /// Reset object structure
