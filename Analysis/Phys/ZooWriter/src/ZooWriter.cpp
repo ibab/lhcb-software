@@ -92,6 +92,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	opttree->Branch( "InputCollections",     &o_sel_collections);
 	opttree->Branch( "DecayName" ,           &o_sel_names);
 	opttree->Branch( "WriteMC",              &base->m_writeMC);
+  opttree->Branch( "WriteMCtrees",         &base->m_writeMCtrees);
 	opttree->Branch( "MCList",               &base->m_MCList);
 	opttree->Branch( "WriteDLL",             &base->m_writeDLL);
 	opttree->Branch( "IntelligentPV",        &base->m_intelligentPV);
@@ -269,6 +270,7 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     declareProperty( "InputCollections",     m_sel_collections);
     declareProperty( "DecayName" ,           m_sel_names);
     declareProperty( "WriteMC",              m_writeMC = false);
+    declareProperty( "WriteMCtrees",         m_writeMCtrees = false);
     declareProperty( "MCList",               m_MCList);
     declareProperty( "WriteDLL",             m_writeDLL = false);
     declareProperty( "IntelligentPV",        m_intelligentPV = false);
@@ -868,6 +870,13 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 	    objman()->getMappingFor<ZooMCP>(mcp);
 	if (zmcp)
 	    zp->AssignInfo(zmcp);
+
+  if (p->isBasicParticle() && m_writeMCtrees && mcp) {
+    const LHCb::MCParticle* buffer = mcp;
+    while (buffer->mother())
+      buffer = buffer->mother();
+    GetSaved(buffer);
+  }
 	
 	ZooGhostCategory * ghostCat = zp->AddInfo<ZooGhostCategory>(*objman());
 	ghostCat->m_ghostCategory = 0;

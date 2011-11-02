@@ -192,6 +192,7 @@ class ZooWriter : public DVAlgorithm {
 	std::string              m_filename;
 	std::string              m_treename;
 	bool                     m_writeMC;
+  bool                     m_writeMCtrees;
 	std::vector<int>         m_MCList;
 	bool                     m_writeDLL;
 	bool                     m_writeStates;

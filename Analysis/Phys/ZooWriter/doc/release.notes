@@ -3,6 +3,16 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-11-02 - Paul Seyfert
+ - another method of MC truth writing.
+   in contrast to the automatic association with the bkg category:
+       write everything related to the reconstructed particle
+       (not only the particle where /most/ tracks are comming from)
+   in contrast to an empty MCList:
+       write only those generated MCParticles which have at least one stable
+       decay product in the reconstructed decay chain of an input collection
+   default: not activated
+
 ! 2011-10-14 - Paul Seyfert
  - bugfix for decayname counters in summary message
 
