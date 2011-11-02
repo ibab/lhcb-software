@@ -427,8 +427,9 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         CombineDiMuon.MotherCut     = DiMuonCuts
 
         from StandardParticles import StdLooseMuons, StdVeryLooseMuons
-        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
-        
+        #Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
+         
         from PhysSelPython.Wrappers import Selection
         SelDiMuon = Selection("Sel_" + lName + "_DiMuon", Algorithm = CombineDiMuon, RequiredSelections = [ Muons ] )
         return SelDiMuon

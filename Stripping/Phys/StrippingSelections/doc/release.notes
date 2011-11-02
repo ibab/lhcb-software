@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-11-02 - Alex Shires
+ - python/StrippingSelections/Bd2KstarMuMu
+   changed muon container used in dimuon to escape pt cut!
+
 ! 2011-10-18 - Jibo He
  - tests/TestMyStrippingLineOn2011Data.py
   . Updated test sample to Reco12 data
