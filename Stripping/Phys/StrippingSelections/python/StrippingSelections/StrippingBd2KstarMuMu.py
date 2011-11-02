@@ -426,8 +426,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         CombineDiMuon.DaughtersCuts = { "mu+" : MuonCuts, "mu-" : MuonCuts }
         CombineDiMuon.MotherCut     = DiMuonCuts
 
-        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
-        #Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        #Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
         Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
          
         from PhysSelPython.Wrappers import Selection
@@ -444,8 +444,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         CombineDiMuonSS.DaughtersCuts = { "mu+" : MuonCuts, "mu-" : MuonCuts }
         CombineDiMuonSS.MotherCut     = DiMuonCuts
 
-        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
-        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
         
         from PhysSelPython.Wrappers import Selection
         SelDiMuonSS = Selection("Sel_" + lName + "_DiMuonSS", Algorithm = CombineDiMuonSS, RequiredSelections = [ Muons ] )
@@ -456,11 +456,11 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         '''
         Create a new dimuon from scratch
         '''
-        from StandardParticles import StdNoPIDsMuons, StdVeryLooseMuons
+        from StandardParticles import StdAllNoPIDsMuons, StdAllVeryLooseMuons
         
 
-        #_requires =  [StdNoPIDsMuons, StdVeryLooseMuons] 
-        _requires =  [StdNoPIDsMuons] 
+        #_requires =  [StdAllNoPIDsMuons, StdAllVeryLooseMuons] 
+        _requires =  [StdAllNoPIDsMuons] 
 
         from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
 
@@ -475,8 +475,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
 
         CombineDiMuonLowP.MotherCut     = DiMuonCuts
 
-        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
-        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
         
         from PhysSelPython.Wrappers import Selection
         SelDiMuonLowP = Selection("Sel_" + lName + "_DiMuonLowP", Algorithm = CombineDiMuonLowP ,RequiredSelections = _requires )
@@ -486,8 +486,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         '''
         Clone the StdVeryLooseDiMuon to build same sign candidates
         '''
-        from StandardParticles import StdNoPIDsMuons, StdVeryLooseMuons
-        _requires =  [StdNoPIDsMuons] 
+        from StandardParticles import StdAllNoPIDsMuons, StdAllVeryLooseMuons
+        _requires =  [StdAllNoPIDsMuons] 
         from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
         muhigh = '(0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) '
         mulow = '(0.5>PPINFO(LHCb.ProtoParticle.InAccMuon,-1)) &  ( PIDmu > 3.0 )' 
@@ -502,8 +502,8 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
        
         CombineDiMuonSSLowP.MotherCut     = DiMuonCuts
 
-        from StandardParticles import StdLooseMuons, StdVeryLooseMuons
-        Muons = StdLooseMuons if IsMuonFlag else StdVeryLooseMuons
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
         
         from PhysSelPython.Wrappers import Selection
         SelDiMuonSSLowP = Selection("Sel_" + lName + "_DiMuonSSLowP", Algorithm = CombineDiMuonSSLowP, RequiredSelections = _requires )

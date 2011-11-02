@@ -6,6 +6,11 @@
 
 ! 2011-11-02 - Alex Shires
  - python/StrippingSelections/Bd2KstarMuMu
+ - python/StrippingSelections/B2XMuMu
+   changed muon container to escape pt cut!
+
+! 2011-11-02 - Alex Shires
+ - python/StrippingSelections/Bd2KstarMuMu
    changed muon container used in dimuon to escape pt cut!
 
 ! 2011-10-18 - Jibo He

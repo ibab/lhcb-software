@@ -146,9 +146,9 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Muons__(self, conf):
         """
-        Filter muons from StdLooseMuons
+        Filter muons from StdAllLooseMuons
         """  
-        _muons = AutomaticData(Location = 'Phys/StdLooseMuons/Particles')
+        _muons = AutomaticData(Location = 'Phys/StdAllLooseMuons/Particles')
         _filter = FilterDesktop( Code = self.__MuonCuts__(conf) ) 
         _sel = Selection("Selection_"+self.name+"_Muons",
                          RequiredSelections = [ _muons ] ,
