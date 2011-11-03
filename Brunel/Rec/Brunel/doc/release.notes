@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configurable
+  . Print Magnetic Field polarity also when ProductionMode is True
+
 - Changes to references to reflect changes in Brunel v41r2 output:
   . Complete the migration to LHCb::ParticlePropertySvc (TrackMCTools) 
   . Minor improvements to Rich decoding error messages (RichDAQ)

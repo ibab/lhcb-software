@@ -366,6 +366,12 @@ class Brunel(LHCbConfigurableUser):
         self.setOtherProps(RecSysConf(), ["OutputLevel"])
         self.setOtherProps(RecMoniConf(),["OutputLevel"])
 
+        # Always print Magnetic Field used
+        from Configurables import MagneticFieldSvc
+        magSvc = MagneticFieldSvc()
+        if not magSvc.isPropertySet("OutputLevel") :
+            magSvc.setProp("OutputLevel", INFO)
+
         # Switch off LoKi banner
         from Configurables import LoKiSvc
         LoKiSvc().Welcome = False
