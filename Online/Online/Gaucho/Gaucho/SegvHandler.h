@@ -16,6 +16,5 @@ public:
   SegvHandler();
   ~SegvHandler();
 };
-static SegvHandler *M_SegvHandler = 0;
 
 #endif /* SEGVHANDLER_H_ */

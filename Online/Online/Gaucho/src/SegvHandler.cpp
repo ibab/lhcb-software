@@ -9,8 +9,11 @@
 #include <unistd.h>
 #include <string.h>
 #include "Gaucho/SegvHandler.h"
-static void segvhandler (int sig, siginfo_t *siginfo, void *context)
-{
+
+
+static SegvHandler *M_SegvHandler = 0;
+
+static void segvhandler (int sig, siginfo_t *siginfo, void *context)   {
   char str[255];
   snprintf (str,255,"********SEGVHANDLER: Received signal %d, Faulting Address: %llx Access error: %s\n",sig,
       (unsigned long long )siginfo->si_addr, (siginfo->si_code == 1) ? "Address Not Mapped" : "insufficient Access Rights" );
@@ -38,6 +41,7 @@ static void segvhandler (int sig, siginfo_t *siginfo, void *context)
     }
   }
 }
+
 SegvHandler::SegvHandler()
 {
   if (M_SegvHandler == 0)

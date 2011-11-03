@@ -8,7 +8,7 @@
 #include "Gaucho/SegvHandler.h"
 int main(int , char **)
 {
-  new SegvHandler();
+  SegvHandler handler();
 //  M_SegvHandler->oldact = M_SegvHandler->oldact;
   int *p=(int *)7;
 
