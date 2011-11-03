@@ -12,6 +12,7 @@ DalitzHistoStackSet::DalitzHistoStackSet()
   , _ncol(0)
   , _palette(0)
   , _max(0)
+  , _min(0)
   , _h2ForPalette(0)
 {
 }
@@ -60,11 +61,12 @@ void DalitzHistoStackSet::makeH2ForPalette() const{
   gStyle->SetPalette(_ncol, _palette);
   gStyle->SetNumberContours(_ncol);
 
+
   counted_ptr<TH2F> h2(new TH2F("blub", "bla", 2, 0, 2, 2, 0, 2));
-  h2->Fill(0.5, 0.5, 1.e-10);
-  h2->Fill(1.5, 0.5, -1.e-10);
+  h2->Fill(0.5, 0.5, 0.5*_min);
+  h2->Fill(1.5, 1.5, _min);
   h2->Fill(0.5, 1.5, 0.5*_max);
-  h2->Fill(1.5, 1.5, _max);
+  h2->Fill(1.5, 0.5, _max);
   TCanvas can;
   h2->Draw("COLZ");
   can.Print("colourScale.eps");
@@ -115,7 +117,7 @@ bool DalitzHistoStackSet::draw(const std::string& baseName
   return sc;
 }
 
-void DalitzHistoStackSet::setColourPalette(int nCol, int* pal, double max){
+void DalitzHistoStackSet::setColourPalette(int nCol, int* pal, double max, double min){
   if(0 == pal) return;
   if(0 == nCol) return;
 
@@ -124,6 +126,7 @@ void DalitzHistoStackSet::setColourPalette(int nCol, int* pal, double max){
   _palette = new int[_ncol];
   for(int i=0; i < _ncol; i++) _palette[i] = pal[i];
   _max = max;
+  _min = min;
 }
 
 DalitzHistoStackSet::~DalitzHistoStackSet(){
