@@ -97,7 +97,7 @@ void BusySvc::getBogus(double &bogus)
   }
   fclose(g);
   bogus = bogo;
-  printf ("Bogomips %f %f\n",bogo,bogus);
+//  printf ("Bogomips %f %f\n",bogo,bogus);
   return;
 }
 void BusySvc::calcIdle()
@@ -136,6 +136,6 @@ void BusySvc::calcIdle()
   }
   m_idlebogus = p_id*m_bogus;
   m_busybogus = (1.0-p_id)*m_bogus;
-  printf ("Idle Percentage %f weighted %f\n",p_id, m_idlebogus);
+//  printf ("Idle Percentage %f weighted %f\n",p_id, m_idlebogus);
   fclose(f);
 }
