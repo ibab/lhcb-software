@@ -1,0 +1,18 @@
+package GCD
+version v1r0
+
+branches  cmt
+use Boost             v* LCG_Interfaces
+use LCG_Configuration v*
+use LCG_Settings      v*
+
+include_path none
+macro GCD_home    '/home/frankm/tmp/libdispatch'
+macro KQUEUE_home '/home/frankm/tmp/libkqueue-0.9.2'
+include_dirs  $(GCD_home)/include $(KQUEUE_home)/include
+
+macro GCD_linkopts " -L$(GCD_home)/lib -ldispatch -L$(KQUEUE_home)/lib -lkqueue "
+path_remove LD_LIBRARY_PATH '/libkqueue-'
+path_remove LD_LIBRARY_PATH '/libdispatch/'
+path_append LD_LIBRARY_PATH $(GCD_home)/lib
+path_append LD_LIBRARY_PATH $(KQUEUE_home)/lib
