@@ -56,4 +56,7 @@ macro_append  RateTest_dependencies    " GauchoLib "
 application segvtst group=tests ../src/Test/segvtst.cpp
 macro_append  segvtst_dependencies    " GauchoLib "
 
+#application procfstst group=tests ../src/Test/procfstst.cpp
+#macro_append  _dependencies    " GauchoLib "
+
 ##macro_append Gaucho_shlibflags " -pthread " WIN32 ""
