@@ -5,6 +5,7 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!====================== Phys/Swimming v2r2 2011-11-03 =======================
 ! 2011-11-03 - V. Gligorov
  - Fix small bug in configurable to enable "Inputs" property to do something
  - Add two new HLT transforms which do not forward upgrade all HLT1 tracks
@@ -18,7 +19,6 @@
  - Fix for looping over candidates in SwimmingTisTos when swimming the
    stripping.
 
-!====================== Phys/Swimming v2r2 2011-10-28 =======================
 ! 2011-10-28 - Roel Aaij
  - Add all information to first and last turningpoints instead of storing only
    the global decision.
