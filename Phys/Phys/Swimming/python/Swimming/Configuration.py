@@ -159,6 +159,8 @@ class Swimming(LHCbConfigurableUser) :
         appConf.ExtSvc += ['DataOnDemandSvc']
         EventSelector().PrintFreq = -1
         EventSelector().OutputLevel = 6 
+        if not (self.getProp('Input') == []) :
+            EventSelector().Input = self.getProp('Input') 
 
         # FileStager
         if self.getProp('UseFileStager'):
@@ -291,7 +293,7 @@ def ConfigureDaVinci():
     deathstar.Members       = [mykiller]
 
     # Configure DaVinci
-    DaVinci().InputType   = 'DST'
+    DaVinci().InputType   = config.getProp('InputType')
     DaVinci().DataType    = config.getProp('DataType')
     DaVinci().Simulation  = config.getProp('Simulation')
     DaVinci().DDDBtag     = config.getProp('DDDBtag')

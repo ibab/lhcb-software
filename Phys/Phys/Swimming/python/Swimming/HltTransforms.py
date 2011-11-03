@@ -31,6 +31,16 @@ def getTransform(name,triggerstorun) :
                                               "'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}},
             '.*HltUnit/.*': {'Preambulo' : {'HltCopySelection<LHCb::RecVertex>/Hlt1PreparePV3D':
                                             'HltMoveVerticesForSwimming/HltMovePVs4Swimming'}}}
+  elif name == "2011_NoBeamSpotFilter_NoRecoLines" :
+    PrescalerFiddlePrefix = 'DeterministicPrescaler/'
+    PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
+    PrescalerFiddle = "".join(['(?!%s)'%trigger for trigger in triggerstorun]) 
+    return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'}},
+            'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
+            'GaudiSequencer/.*' : {'Members':{"'HltCopySelection<LHCb::RecVertex>/Hlt1PreparePV3D'":
+                                              "'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}},
+            '.*HltUnit/.*': {'Preambulo' : {'HltCopySelection<LHCb::RecVertex>/Hlt1PreparePV3D':
+                                            'HltMoveVerticesForSwimming/HltMovePVs4Swimming'}}}
   elif name == "2011_WithBeamSpotFilter" :
     PrescalerFiddlePrefix = 'DeterministicPrescaler/'
     PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global)(?!Hlt1TrackPhoton).*PreScaler'
@@ -43,5 +53,14 @@ def getTransform(name,triggerstorun) :
             '.*HltUnit/Hlt1TrackPhotonUnit' : {'Code' : {"Velo.*EMPTY":"VeloCandidates>>LooseForward>>FitTrack>>SINK( 'Hlt1TrackPhotonDecision' )>>~TC_EMPTY"}},
             '.*HltPV3D': {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
             'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}} 
+  elif name == "2011_WithBeamSpotFilter_NoRecoLines" :
+    PrescalerFiddlePrefix = 'DeterministicPrescaler/'
+    PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
+    PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
+    print PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix
+    return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'}},
+            'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
+            '.*HltPV3D': {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
+            'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}}
   else :
     return {}
