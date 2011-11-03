@@ -8,18 +8,17 @@ Swimming().DDDBtag = 'head-20110914'
 Swimming().CondDBtag = 'head-20110914'
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
-Swimming().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/r/raaij/Swimming/SwimTrigDST_0x00730035.dst'"]
+Swimming().Input = ["DATAFILE='PFN:castor:/afs/cern.ch/user/g/gligorov/w0/cmtuser/DaVinci_HEAD/Phys/Swimming/example/SwimTrigDST.dst'"]
 Swimming().SwimStripping = True
-Swimming().StrippingStream = 'DiMuon'
+Swimming().StrippingStream = 'CharmCompleteEvent'
 Swimming().StrippingVersion = 'Stripping17'
-Swimming().StrippingFile = 'B2JpsiXforBeta_s'
-Swimming().StrippingLine = 'BetaS'
-Swimming().StripCands = '/Event/Phys/BetaSBs2JpsiPhiDetachedLine'
-Swimming().OffCands = '/Event/SingleCandidate'
+Swimming().StrippingFile = 'D2hh'
+Swimming().StrippingLine = 'D2hh'
+Swimming().StripCands = '/Event/Phys/D2hhPromptD2KPiLine'
+Swimming().OffCands = '/Event/CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'MDST'
 Swimming().UseFileStager = True
-Swimming().Debug = True
 
 from Configurables import CondDB
 CondDB(UseOracle = False, DisableLFC = True)

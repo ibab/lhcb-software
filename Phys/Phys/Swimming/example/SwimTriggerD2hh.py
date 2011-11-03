@@ -10,9 +10,9 @@ Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
 Swimming().OutputFile = 'SwimTrigDST.dst'
 Swimming().SwimStripping = False
-Swimming().TCK = '0x006D0032'
-Swimming().Hlt1Triggers = ["Hlt1TrackAllL0Decision"]#, "Hlt1TrackMuonDecision"]
-Swimming().Hlt2Triggers = ["Hlt2CharmHadD02HH_D02KPiDecision"]#, "Hlt2DiMuonDetachedJPsiDecision"]
+Swimming().TCK = '0x00730035'
+Swimming().Hlt1Triggers = ["Hlt1TrackAllL0Decision"]
+Swimming().Hlt2Triggers = ["Hlt2CharmHadD02HH_D02KPiDecision"]
 Swimming().OffCands = "/Event/CharmCompleteEvent/Phys/D2hhPromptD2KPiLine"
 Swimming().TransformName = '2011_WithBeamSpotFilter'
 Swimming().SelectMethod = 'random'
@@ -24,7 +24,7 @@ from Configurables import FileStagerSvc
 FileStagerSvc().OutputLevel = 1
 
 from Configurables import CondDB
-CondDB(UseOracle = True)
+CondDB(UseOracle = False, DisableLFC = True )
 
 # Configure Moore to swim the trigger
 from Swimming.Configuration import ConfigureMoore

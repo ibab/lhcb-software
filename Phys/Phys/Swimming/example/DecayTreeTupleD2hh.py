@@ -19,7 +19,7 @@ MessageSvc().Format = "% F%30W%S%15W%R%T %0W%M"
 
 ## mDST paths
 locationRoot = '/Event'
-selectionPath = 'SingleCandidate'
+selectionPath = 'CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
 particlePath = selectionPath + '/Particles'
 #pvLocation = 'Rec/Vertex/Primary'
 
@@ -52,24 +52,24 @@ dtt = DecayTreeTuple (
     WriteP2PVRelations = False,
     )
 
-dtt.Decay = "B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)"
+dtt.Decay = "[[D0]cc -> ^K- ^pi+]cc"
 if mDST: dtt.RootInTES = locationRoot
 
 from DecayTreeTuple.Configuration import *
 ## Add appropriate tools
 
 dtt.addBranches({
-    "B" : "B_s0 : B_s0 -> (J/psi(1S) => mu+ mu-) (phi(1020) -> K+ K-)"
+    "D" : "D0 : [[D0]cc -> K- pi+]cc"
 })
 
-dtt.B.addTupleTool('TupleToolPropertime')
-ttsi = dtt.B.addTupleTool('TupleToolSwimmingInfo/TriggerInfo')
-ttsis = dtt.B.addTupleTool('TupleToolSwimmingInfo/StrippingInfo')
+dtt.D.addTupleTool('TupleToolPropertime')
+ttsi = dtt.D.addTupleTool('TupleToolSwimmingInfo/TriggerInfo')
+ttsis = dtt.D.addTupleTool('TupleToolSwimmingInfo/StrippingInfo')
 ttsi.ReportsLocation = selectionPath + '/P2TPRelations'
 ttsis.ReportsLocation = selectionPath + '/P2TPRelations'
 ttsis.ReportStage = "Stripping"
 
-tttt = dtt.B.addTupleTool('TupleToolTISTOS')
+tttt = dtt.D.addTupleTool('TupleToolTISTOS')
 tttt.TriggerList = ['Hlt1TrackAllL0Decision', 'Hlt1TrackMuonDecision', 'Hlt1DiMuonHighMassDecision',
                     'Hlt2DiMuonDetachedJpsiDecision', 'Hlt2DiMuonJpsiDecision']
 tttt.VerboseHlt1 = True
