@@ -1,9 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Swimming
-! Responsible : Vladimir Gligorov
+! Responsible : Vladimir Gligorov, Roel Aaij
 ! Purpose     : Scripts for swimming the HLT/Stripping/Offline selections
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
+
+! 2011-11-03 - V. Gligorov
+ - Fix small bug in configurable to enable "Inputs" property to do something
+ - Add two new HLT transforms which do not forward upgrade all HLT1 tracks
+   in all events, to save time in production.
+ - Add new example scripts for swimming D2hh to the examples directory.  
 
 ! 2011-11-01 - Roel Aaij
  - Add WriteFSR property to steer the writing of FSRs in the output file.
