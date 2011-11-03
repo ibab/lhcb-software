@@ -50,10 +50,7 @@ public:
 
 AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_incidentSvc(0)
 {
-  if (M_SegvHandler == 0)
-  {
-    new SegvHandler();
-  }
+  SegvHandler::instance();
   declareProperty("MyName",          m_MyName       = "");
   declareProperty("InDNS",           m_InputDNS     = "");
   declareProperty("SaveRootDir",     m_SaveRootDir  = "/home/beat/Hist/Savesets");

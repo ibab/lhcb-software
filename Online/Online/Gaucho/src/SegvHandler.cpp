@@ -11,10 +11,10 @@
 #include "Gaucho/SegvHandler.h"
 
 
-static SegvHandler *M_SegvHandler = 0;
-
 static void segvhandler (int sig, siginfo_t *siginfo, void *context)   {
   char str[255];
+  SegvHandler *M_SegvHandler = &SegvHandler::instance();
+
   snprintf (str,255,"********SEGVHANDLER: Received signal %d, Faulting Address: %llx Access error: %s\n",sig,
       (unsigned long long )siginfo->si_addr, (siginfo->si_code == 1) ? "Address Not Mapped" : "insufficient Access Rights" );
   printf("%s",str);
@@ -42,20 +42,21 @@ static void segvhandler (int sig, siginfo_t *siginfo, void *context)   {
   }
 }
 
+SegvHandler& SegvHandler::instance() 
+{
+  static SegvHandler inst;
+  return inst;
+}
+
 SegvHandler::SegvHandler()
 {
-  if (M_SegvHandler == 0)
-  {
-    memset (&act,0,sizeof(act));
-    act.sa_sigaction = &segvhandler;
-    act.sa_flags = SA_SIGINFO;
-    sigaction(SIGSEGV,&act,&oldact);
-    M_SegvHandler = this;
-  }
+  memset (&act,0,sizeof(act));
+  act.sa_sigaction = &segvhandler;
+  act.sa_flags = SA_SIGINFO;
+  sigaction(SIGSEGV,&act,&oldact);
 }
 
 SegvHandler::~SegvHandler()
 {
   sigaction(SIGSEGV,&oldact,&act);
-  M_SegvHandler = 0;
 }

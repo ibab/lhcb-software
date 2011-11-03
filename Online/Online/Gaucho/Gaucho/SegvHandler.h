@@ -10,11 +10,13 @@
 #define SEGVHANDLER_H_
 class SegvHandler
 {
-public:
-  struct sigaction act;
-  struct sigaction oldact;
+ private:
   SegvHandler();
   ~SegvHandler();
+ public:
+  struct sigaction act;
+  struct sigaction oldact;
+  static SegvHandler& instance();
 };
 
 #endif /* SEGVHANDLER_H_ */
