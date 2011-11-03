@@ -19,6 +19,7 @@ class DalitzHistoStackSet : public DalitzSet<THStack>{
   int  _ncol;
   int* _palette;
   double _max;
+  double _min;
 
   mutable MINT::counted_ptr<TH2F> _h2ForPalette;
 
@@ -38,7 +39,7 @@ class DalitzHistoStackSet : public DalitzSet<THStack>{
 	    , const std::string& drawOpt="HIST"
 	    , const std::string& format="eps") const;
 
-  void setColourPalette(int nCol, int* pal, double max);
+  void setColourPalette(int nCol, int* pal, double max, double min = 0.000001);
 
   virtual ~DalitzHistoStackSet();
 };
