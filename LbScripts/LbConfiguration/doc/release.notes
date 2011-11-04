@@ -1,3 +1,8 @@
+2011-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Package.py: added WG/RDConfig WG/CharmConfig to the list of supported
+	"data" packages.
+
 2011-10-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: added fake usage of the future NO_PYTHON_LIBPATH which is not yet provided

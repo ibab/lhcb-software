@@ -38,7 +38,9 @@ package_names = ['XmlDDDB',
                  'Emacs',
                  'eclipse',
                  'jre',
-                 'CPConfig']
+                 'CPConfig',
+                 'RDConfig',
+                 'CharmConfig']
 
 class PackageConfException(Exception):
     pass
@@ -268,3 +270,8 @@ eclipse.setProject("TOOLS")#IGNORE:E0602
 CPConfig.setHat("WG")#IGNORE:E0602
 CPConfig.setProject("DBASE")#IGNORE:E0602
 
+RDConfig.setHat("WG")#IGNORE:E0602
+RDConfig.setProject("DBASE")#IGNORE:E0602
+
+CharmConfig.setHat("WG")#IGNORE:E0602
+CharmConfig.setProject("DBASE")#IGNORE:E0602
