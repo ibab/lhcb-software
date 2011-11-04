@@ -8,7 +8,10 @@ def setTriggerRawEventLocation(location="/Event/Trigger/RawEvent"):
     see task #217176
     This will be there on SDST and MicroDST
     """
-    from Configurables import OdinTimeDecoder, ODINDecodeTool, HltDecReportsDecoder, HltSelReportsDecoder, L0CaloCandidatesFromRaw, L0DUFromRawAlg, L0DUFromRawTool, L0MuonCandidatesFromRaw, L0MuonOutputs, DecodePileUpData
+    from Configurables import ( OdinTimeDecoder, ODINDecodeTool, HltDecReportsDecoder,
+                                HltSelReportsDecoder, L0CaloCandidatesFromRaw,
+                                L0DUFromRawAlg, L0DUFromRawTool, L0MuonCandidatesFromRaw,
+                                L0MuonOutputs, DecodePileUpData )
     
     OdinTimeDecoder().addTool( ODINDecodeTool, 'ODINDecodeTool' )
     OdinTimeDecoder().ODINDecodeTool.RawEventLocation = location

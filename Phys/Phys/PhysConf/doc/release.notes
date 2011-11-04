@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-11-04 - Chris Jones
+ - Import MicroDST.py from Bender, to provide a temporary workaroubnd to set
+   up the various event locations needed when running on uDSTs
+
 ! 2011-10-20 - Chris Jones
  - Don't force the OutputLevel for DataOnDemand to 1 or dump the entire mappings
 
