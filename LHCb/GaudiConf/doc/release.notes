@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-11-04 - Marco Cattaneo
+ - In IOHelper().SetupServices() disable by default the ROOT tree caches. Can
+   be overridden by setting the RootCnv options externally 
+
 ! 2011-11-04 - Patrick Robbe
  - IOHelper.py: add "xdigi" file extension to list of known extensions
 

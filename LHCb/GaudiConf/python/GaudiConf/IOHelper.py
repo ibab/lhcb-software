@@ -405,6 +405,9 @@ class IOHelper(object):
             from Configurables import Gaudi__RootCnvSvc
             #it's important also to enable the incidents for FSRs
             rootSvc = Gaudi__RootCnvSvc( "RootCnvSvc", EnableIncident = 1 )
+            # disable caches by default
+            if not rootSvc.isPropertySet("VetoBranches")  : rootSvc.VetoBranches = ["*"]
+            if not rootSvc.isPropertySet("CacheBranches") : rootSvc.CacheBranches = [] 
             EventPersistencySvc().CnvServices += [ rootSvc ]
             ApplicationMgr().ExtSvc           += [ rootSvc ]
 
