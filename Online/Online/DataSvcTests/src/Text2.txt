@@ -1,0 +1,49 @@
+use dynamic_cast:DataSvc, RegistryEntry
+=======================================
+        Func          Func+Child           Hit
+        Time   %         Time      %      Count  Function
+---------------------------------------------------------
+     325.721  25.4      325.721  25.4   521552 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::assign(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int,unsigned int) (msvcp60.dll)
+     291.303  22.7     1145.407  89.2   360652 DataSvc::retrieveEntry(class RegistryEntry *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class RegistryEntry * &) (datasvc.obj)
+     261.980  20.4      375.821  29.3   360715 RegistryEntry::i_findLeaf(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &) (registryentry.obj)
+     143.341  11.2      143.341  11.2   721373 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::find(char const *,unsigned int,unsigned int) (msvcp60.dll)
+      60.146   4.7       60.146   4.7   813924 RegistryEntry::name(void) (registryentry.obj)
+      46.541   3.6       46.541   3.6   521855 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::_Tidy(bool) (msvcp60.dll)
+      44.150   3.4     1250.425  97.4        1 DataSvc_Test1::large(bool,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool) (datasvc.test.obj)
+      28.430   2.2     1181.726  92.1   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class DataObject *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)
+      25.968   2.0       25.968   2.0   460652 RegistryEntry::object(void) (registryentry.obj)
+      17.097   1.3     1198.823  93.4   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)
+
+use dynamic_cast:DataSvc
+=========================
+
+        Func          Func+Child           Hit
+        Time   %         Time      %      Count  Function
+---------------------------------------------------------
+     308.805  25.1     1088.253  88.5   360652 DataSvc::retrieveEntry(class RegistryEntry *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class RegistryEntry * &) (datasvc.obj)
+     291.192  23.7      291.192  23.7   521552 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::assign(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int,unsigned int) (msvcp60.dll)
+     225.280  18.3      332.835  27.1   360715 RegistryEntry::i_findLeaf(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &) (registryentry.obj)
+     135.936  11.1      135.936  11.1   721373 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::find(char const *,unsigned int,unsigned int) (msvcp60.dll)
+      60.875   5.0       60.875   5.0   813924 RegistryEntry::name(void) (registryentry.obj)
+      45.750   3.7       45.750   3.7   521855 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::_Tidy(bool) (msvcp60.dll)
+      39.605   3.2     1191.330  96.9        1 DataSvc_Test1::large(bool,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool) (datasvc.test.obj)
+      29.507   2.4       29.507   2.4   460652 RegistryEntry::object(void) (registryentry.obj)
+      28.568   2.3     1124.453  91.5   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class DataObject *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)
+      21.824   1.8     1146.277  93.3   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)
+
+use dynamic_cast: NONE ==> BEST RESULT
+=======================================
+
+        Func          Func+Child           Hit
+        Time   %         Time      %      Count  Function
+---------------------------------------------------------
+     287.863  24.8      287.863  24.8   521552 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::assign(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int,unsigned int) (msvcp60.dll)
+     276.047  23.7     1035.484  89.0   360652 DataSvc::retrieveEntry(class RegistryEntry *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class RegistryEntry * &) (datasvc.obj)
+     212.392  18.3      314.899  27.1   360715 RegistryEntry::i_findLeaf(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &) (registryentry.obj)
+     137.589  11.8      137.589  11.8   721373 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::find(char const *,unsigned int,unsigned int) (msvcp60.dll)
+      59.416   5.1       59.416   5.1   813924 RegistryEntry::name(void) (registryentry.obj)
+      44.225   3.8     1141.686  98.2        1 DataSvc_Test1::large(bool,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool) (datasvc.test.obj)
+      38.830   3.3       38.830   3.3   521855 std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >::_Tidy(bool) (msvcp60.dll)
+      32.881   2.8       32.881   2.8   460652 RegistryEntry::object(void) (registryentry.obj)
+      27.439   2.4     1070.966  92.1   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class DataObject *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)
+      20.795   1.8     1091.761  93.9   100000 [thunk]:DataSvc::retrieveObject`vtordisp{4294967292,0}' (class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class DataObject * &) (datasvc.obj)

@@ -1,0 +1,12 @@
+package DataSvcTest
+version v0r1
+
+branches src cmt
+use GaudiPolicy v*
+use GaudiSvc    v*
+
+apply_pattern install_more_includes more=DataSvcTests
+
+private
+application DataSvc ../src/*.cpp
+macro_append cppflags " -I../src "

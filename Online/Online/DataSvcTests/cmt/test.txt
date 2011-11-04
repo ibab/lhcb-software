@@ -1,0 +1,1 @@
+dir /sw/lib/lhcb/GAUDI/GAUDI_v22r2/GaudiKernel/src/Lib/

@@ -1,0 +1,49 @@
+======================================
+(3 Obj. x 3+1 Levels) <> 100000 Loops over 39 entries took 1271 milli seconds=1.271e-005 seconds each
+(4 Obj. x 4+1 Levels) <> 100000 Loops over 340 entries took 1683 milli seconds=1.683e-005 seconds each
+(5 Obj. x 5+1 Levels) <> 100000 Loops over 3905 entries took 2253 milli seconds=2.253e-005 seconds each
+(6 Obj. x 6+1 Levels) <> 100000 Loops over 55986 entries took 3004 milli seconds=3.004e-005 seconds each
+(5 Obj. x 4+1 Levels) <> 100000 Loops over 780 entries took 1863 milli seconds=1.863e-005 seconds each
+(10 Obj. x 4+1 Levels) <> 100000 Loops over 11110 entries took 2434 milli seconds=2.434e-005 seconds each
+(20 Obj. x 4+1 Levels) <> 100000 Loops over 168420 entries took 3565 milli seconds=3.565e-005 seconds each
+(3 Obj. x 3+1 Levels) <> 100000 Loops over 39 entries took 1262 milli seconds=1.262e-005 seconds each
+(3 Obj. x 6+1 Levels) <> 100000 Loops over 1092 entries took 2304 milli seconds=2.304e-005 seconds each
+(3 Obj. x 12+1 Levels) <> 100000 Loops over 797160 entries took 5238 milli seconds=5.238e-005 seconds each
+(10 Obj. x 1+1 Levels) <> 100000 Loops over 10 entries took 831 milli seconds=8.31e-006 seconds each
+(20 Obj. x 1+1 Levels) <> 100000 Loops over 20 entries took 1071 milli seconds=1.071e-005 seconds each
+(40 Obj. x 1+1 Levels) <> 100000 Loops over 40 entries took 1442 milli seconds=1.442e-005 seconds each
+(80 Obj. x 1+1 Levels) <> 100000 Loops over 80 entries took 2063 milli seconds=2.063e-005 seconds each
+(160 Obj. x 1+1 Levels) <> 100000 Loops over 160 entries took 3485 milli seconds=3.485e-005 seconds each
+
+======================================
+
+ (3 Obj. x 3+1 Levels) <a>
+ Filled 39 entries: 0 msec (0 musec/Ent) 100000 Loops over 670.965 msec (6.70965 musec/Ent)
+ (4 Obj. x 4+1 Levels) <a>
+ Filled 340 entries: 0 msec (0 musec/Ent) 100000 Loops over 951.368 msec (9.51368 musec/Ent)
+ (5 Obj. x 5+1 Levels) <a>
+ Filled 3905 entries: 80.115 msec (20.516 musec/Ent) 100000 Loops over 1351.94 msec (13.5194 musec/Ent)
+ (6 Obj. x 6+1 Levels) <a>
+ Filled 55986 entries: 1351.94 musec (24.1479 musec/Ent) 100000 Loops over 1942.79 msec (19.4279 musec/Ent)
+ (5 Obj. x 4+1 Levels) <a>
+ Filled 780 entries: 10.014 msec (12.8385 musec/Ent) 100000 Loops over 1011.46 msec (10.1145 musec/Ent)
+ (10 Obj. x 4+1 Levels) <a>
+ Filled 11110 entries: 240.345 msec (21.6332 musec/Ent) 100000 Loops over 1412.03 msec (14.1203 musec/Ent)
+ (20 Obj. x 4+1 Levels) <a>
+ Filled 168420 entries: 3825.5 msec (22.714 musec/Ent) 100000 Loops over 1962.82 msec (19.6282 musec/Ent)
+ (3 Obj. x 3+1 Levels) <a>
+ Filled 39 entries: 0 msec (0 musec/Ent) 100000 Loops over 670.965 msec (6.70965 musec/Ent)
+ (3 Obj. x 6+1 Levels) <a>
+ Filled 1092 entries: 30.043 msec (27.5119 musec/Ent) 100000 Loops over 1361.96 msec (13.6196 musec/Ent)
+ (3 Obj. x 9+1 Levels) <a>
+ Filled 29523 entries: 921.324 msec (31.207 musec/Ent) 100000 Loops over 2353.38 msec (23.5338 musec/Ent)
+ (10 Obj. x 1+1 Levels) <a>
+ Filled 10 entries: -0.001 msec (-0.1 musec/Ent) 100000 Loops over 390.56 msec (3.9056 musec/Ent)
+ (20 Obj. x 1+1 Levels) <a>
+ Filled 20 entries: 0 msec (0 musec/Ent) 100000 Loops over 440.634 msec (4.40634 musec/Ent)
+ (40 Obj. x 1+1 Levels) <a>
+ Filled 40 entries: 0 msec (0 musec/Ent) 100000 Loops over 570.821 msec (5.70821 musec/Ent)
+ (80 Obj. x 1+1 Levels) <a>
+ Filled 80 entries: -0.001 msec (-0.0125 musec/Ent) 100000 Loops over 881.266 msec (8.81266 musec/Ent)
+ (160 Obj. x 1+1 Levels) <a>
+ Filled 160 entries: 10.014 msec (62.5875 musec/Ent) 100000 Loops over 1361.96 msec (13.6196 musec/Ent)
