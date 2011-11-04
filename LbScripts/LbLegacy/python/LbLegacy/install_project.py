@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111019'
+script_version = '111104'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r5p1"
@@ -232,7 +232,11 @@ def getCachedProjectConf(name):
     exclude_list += [x.upper() for x in LbConfiguration.Package.package_names]
     exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
     if name.upper() not in exclude_list :
-        p = LbConfiguration.Project.getProject(name, svn_fallback=True, raise_exception=False)
+        p = None
+        try :
+            p = LbConfiguration.Project.getProject(name, svn_fallback=True, raise_exception=False)
+        except :
+            p = LbConfiguration.Project.getProject(name)
         if p :
             project_conf_cache.append(p)
     else :
@@ -260,7 +264,11 @@ def getCachedPackageConf(name):
     exclude_list += [x.lower() for x in LbConfiguration.Project.project_names]
     exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
     if name.lower() not in exclude_list :
-        p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
+        p = None
+        try :
+            p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
+        except :
+            p = LbConfiguration.Package.getPackage(name)
         if p :
             package_conf_cache.append(p)
     else :
