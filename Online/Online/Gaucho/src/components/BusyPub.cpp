@@ -72,7 +72,7 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
   bsy = bsy_d->d_data;
   bogo = bogo_d->d_data;
   m_fLoad = bsy/bogo;
-  printf("Farm Load: %f\n",m_fLoad);
+//  printf("Farm Load: %f\n",m_fLoad);
   if (m_FarmLoad == 0)
   {
     m_FarmLoad = new DimService((char*)(m_PartitionName+"/FarmCPULoad").c_str(),m_fLoad);
