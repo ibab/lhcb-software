@@ -4,9 +4,11 @@ version v0r1
 branches src cmt
 use GaudiPolicy v*
 use GaudiSvc    v*
+use ROOT        v* LCG_Interfaces
 
 apply_pattern install_more_includes more=DataSvcTests
 
 private
-application DataSvc ../src/*.cpp
-macro_append cppflags " -I../src "
+library DataSvcTest ../src/*.cpp
+macro_append DataSvcTest_pp_cppflags " -I../src "
+apply_pattern linker_library library=DataSvcTest

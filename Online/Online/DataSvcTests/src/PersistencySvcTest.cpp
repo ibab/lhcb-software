@@ -19,55 +19,59 @@
 
 // C/C++ include files
 #include <iostream>
+#include <stdexcept>
 
 // Class include file
 #include "DataSvcTests/PersistencySvcTest.h"
 #include "Factories.h"
 
 using namespace Tests;
+using namespace std;
 
 //======================================================================
 // Constructor
 //======================================================================
-PersistencySvcTest::PersistencySvcTest(const std::string& n, bool dbg) 
+PersistencySvcTest::PersistencySvcTest(const string& n, bool dbg) 
 : DataSvcTest(n, dbg)   
 {
-  std::string nam;
+  string nam;
   IInterface* pIF;
   m_pICV = 0;
   m_pISvcCnv = 0;
 
-  StatusCode status = m_svcLoc->getService("TmpConversionSvc", m_pISvcCnv, true);
+  StatusCode status = m_svcLoc->getService("Tests::TmpConversionSvc", m_pISvcCnv, true);
   if ( !status.isSuccess() )   {
-    std::cout << "Service: has NO TmpConversionSvc. -- Giving up" << std::endl;    
     m_nerr++;
-    return;
+    cout << "Service: has NO Tests::TmpConversionSvc. -- Giving up" << endl;    
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   // ask for interfaces
   // IID_IInterface
   status = m_pISvcCnv->queryInterface(IInterface::interfaceID(), (void**)&pIF);
   if ( status.isSuccess() )   {
-    if ( m_debug ) std::cout << "Service:" << nam << " has IID_IInterface." << std::endl;    
+    if ( m_debug ) cout << "Service:" << nam << " has IID_IInterface." << endl;    
   }
   else    {
-    std::cout << "Service:" << nam << " has NO IInterface." << std::endl;
     m_nerr++;
+    cout << "Service:" << nam << " has NO IInterface." << endl;
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   // IID_IConversionSvc
   status = pIF->queryInterface(IConversionSvc::interfaceID(), (void**)&m_pICV);
   if ( status.isSuccess() )   {
-    if ( m_debug ) std::cout << "Service:" << nam << " has IID_IConversionSvc." << std::endl;
+    if ( m_debug ) cout << "Service:" << nam << " has IID_IConversionSvc." << endl;
   }
   else    {
-    std::cout << "Service:" << nam << " has NO IID_IConversionSvc." << std::endl;
     m_nerr++;
+    cout << "Service:" << nam << " has NO IID_IConversionSvc." << endl;
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   m_pICV->setDataProvider ( m_pIDP );
   pIF->release();
   if ( m_debug )    {
-    std::cout << "+===============================================================+" << std::endl;
-    std::cout << "|          PersistencySvcTest initialized                       |" << std::endl;
-    std::cout << "+===============================================================+" << std::endl;
+    cout << "+===============================================================+" << endl;
+    cout << "|          PersistencySvcTest initialized                       |" << endl;
+    cout << "+===============================================================+" << endl;
   }
 }
 
@@ -84,10 +88,10 @@ void PersistencySvcTest::shutdown()   {
   DataSvcTest::finalize();
   unsigned long count = m_pICV->release();
   if ( 0 != count )   {
-    //std::cout << "ERROR: Memory leak in releasing interface!!!" << std::endl;
+    //cout << "ERROR: Memory leak in releasing interface!!!" << endl;
   }
   if ( m_debug )    {
-    std::cout << "Release:" << count << std::flush << std::endl;    // release ConversionsSvc
+    cout << "Release:" << count << flush << endl;    // release ConversionsSvc
   }
   DataSvcTest::shutdown();
 }
@@ -107,8 +111,8 @@ StatusCode PersistencySvcTest::addConverter(const ICnvFactory& fac)   {
   IConverter* cnv = fac.create(0);
   StatusCode status = m_pICV->addConverter( cnv );
   if ( check(status, StatusCode::SUCCESS) )      {
-    std::cout << " m_pICV->addConverter( <ConcreteConverter> ) >>";
-    PrintCode(std::cout, status, 0);
+    cout << " m_pICV->addConverter( <ConcreteConverter> ) >>";
+    PrintCode(cout, status, 0);
     if ( !status.isSuccess() ) m_nerr++;
   }
   return status;
@@ -120,13 +124,13 @@ StatusCode PersistencySvcTest::addConverter(const ICnvFactory& fac)   {
 StatusCode PersistencySvcTest::testDataLoader(IConversionSvc* loader)    {
   StatusCode status = m_pIDM->setDataLoader( loader );
   if ( check(status, StatusCode::SUCCESS) )      {
-    std::cout << " m_pIDM->setDataLoader( loader )" << std::flush;
-    PrintCode(std::cout, status, 0);
+    cout << " m_pIDM->setDataLoader( loader )" << flush;
+    PrintCode(cout, status, 0);
   }
   status = loader->setDataProvider( m_pIDP );
   if ( check(status, StatusCode::SUCCESS) )      {
-    std::cout << " loader->setStore( m_pIDP ) >>";
-    PrintCode(std::cout, status, 0);
+    cout << " loader->setStore( m_pIDP ) >>";
+    PrintCode(cout, status, 0);
   }
   return status;
 }

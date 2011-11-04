@@ -24,13 +24,13 @@ namespace Tests {
   extern const CLID& CLID_EvtHeader;
 
   /** Definition of Class EvtHeader: Basic Event Header information                              
-      <P> Class:      EvtHeader                                    
-      <P> BaseClasses:public DataObject
-      <P> Purpose:
-      Example Basic Event Header information.                       
-      Here: Run, Event number and a date                            
-      @author M.Frank 
-  */
+   *      <P> Class:      EvtHeader                                    
+   *      <P> BaseClasses:public DataObject
+   *      <P> Purpose:
+   *      Example Basic Event Header information.                       
+   *      Here: Run, Event number and a date                            
+   *      @author M.Frank 
+   */
   class EvtHeader : public DataObject {
   protected:
     /// Event number

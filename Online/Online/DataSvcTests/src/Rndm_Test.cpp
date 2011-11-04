@@ -26,7 +26,7 @@ void Rndm_Test1::run() {
   RndmNumberTest::test(5000);
 }
 
-int rndmsvc_entry(int argc, char** /* argv */)    {
+extern "C" int gaudi_rndmsvc_test(int argc, char** /* argv */)    {
   bool dbg = argc > 1;
   { 
     Rndm_Test1 tst(dbg);

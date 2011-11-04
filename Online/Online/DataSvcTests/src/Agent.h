@@ -25,11 +25,11 @@
 namespace Tests {
 
   /** @name The Agent class.
- 
-  Example data store agent to traverse data store trees.
- 
-  @author Markus Frank
-  */
+   * 
+   *  Example data store agent to traverse data store trees.
+   * 
+   *  @author Markus Frank
+   */
   class Agent : virtual public IDataStoreAgent  {
     bool m_debug;
   public:

@@ -36,14 +36,18 @@
 #include <ctime>
 #include <iostream>
 
+namespace Tests {  void init_root();  }
+
 using namespace Tests;
+using namespace std;
 
 //======================================================================
 // Constructor
 //======================================================================
-UnitTest::UnitTest(const std::string& nam, bool dbg)
+UnitTest::UnitTest(const string& nam, bool dbg)
 : m_nerr(0), m_debug(dbg), m_name(nam)  {
   // Test generic Persistency service
+  init_root();
   m_msgSvc = 0;
   m_appMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
   SmartIF<ISvcLocator>   svcLoc (m_appMgr );
@@ -53,9 +57,13 @@ UnitTest::UnitTest(const std::string& nam, bool dbg)
   propMgr->setProperty("HistogramPersistency","NONE");
   propMgr->setProperty("JobOptionsType",      "NONE");
   propMgr->setProperty("OutputLevel",         "4");
+  propMgr->setProperty("AppName",             "");
   m_appMgr->configure();
   m_appMgr->initialize();
   m_svcLoc = svcLoc;
+  cout << "+===============================================================+" << endl;
+  cout << "|               " << name() << " TEST starting." << endl;
+  cout << "+===============================================================+" << endl;
 }
 
 //======================================================================
@@ -80,15 +88,15 @@ void UnitTest::shutdown()   {
   m_appMgr->terminate();
   m_appMgr->release();
   if ( m_nerr == 0 )    {
-    std::cout << m_name << ">>>>>>>>>>>>>>>>>>>> SUCCESS ... SUCCESS  <<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+    cout << m_name << ">>>>>>>>>>>>>>>>>>>> SUCCESS ... SUCCESS  <<<<<<<<<<<<<<<<<<<<<<<<" << endl;
   }
   else    {
-    std::cout << m_name << ">>>>>>>>>>>>>>>>>>>> ERROR ....... ERROR  <<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+    cout << m_name << ">>>>>>>>>>>>>>>>>>>> ERROR ....... ERROR  <<<<<<<<<<<<<<<<<<<<<<<<" << endl;
   }
   if ( m_debug )   {
-    std::cout << "+===============================================================+" << std::endl;
-    std::cout << "|               " << name() << " terminated" << std::endl;
-    std::cout << "+===============================================================+" << std::endl;
+    cout << "+===============================================================+" << endl;
+    cout << "|               " << name() << " terminated" << endl;
+    cout << "+===============================================================+" << endl;
   }
 }
 
@@ -101,7 +109,7 @@ void UnitTest::run()   {
 //======================================================================
 // Access to services
 //======================================================================
-StatusCode UnitTest::getService(const std::string& what, 
+StatusCode UnitTest::getService(const string& what, 
                                 const InterfaceID& iid, 
                                 void** ptr)    
 {
@@ -111,7 +119,7 @@ StatusCode UnitTest::getService(const std::string& what,
   IProperty*  pPrp = 0;
   StatusCode status = m_svcLoc->getService(what, pIS, true);
   if ( !status.isSuccess() )   {
-    std::cout << "Service: has NO " << what << " service. -- Giving up" << std::endl;    
+    cout << "Service: has NO " << what << " service. -- Giving up" << endl;    
     m_nerr++;
     return StatusCode::FAILURE;
   }
@@ -119,19 +127,19 @@ StatusCode UnitTest::getService(const std::string& what,
   status = pIS->queryInterface(IInterface::interfaceID(), (void**)&pIF);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << pIS->name() << " has NO IID_IInterface. " << std::endl;
+    cout << "Service:" << pIS->name() << " has NO IID_IInterface. " << endl;
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << pIS->name() << " has IID_IInterface." << std::endl;    
+    cout << "Service:" << pIS->name() << " has IID_IInterface." << endl;    
   }
   // IID_IProperty
   status = pIS->queryInterface(IProperty::interfaceID(), (void**)&pPrp);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << pIS->name() << " has NO IID_IProperty. " << std::endl;    
+    cout << "Service:" << pIS->name() << " has NO IID_IProperty. " << endl;    
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << pIS->name() << " has IID_IProperty." << std::endl;
+    cout << "Service:" << pIS->name() << " has IID_IProperty." << endl;
   }
   // IID_IRndmGenSvc
   status = pIS->queryInterface(iid, ptr);
@@ -144,11 +152,11 @@ StatusCode UnitTest::getService(const std::string& what,
 bool UnitTest::check(StatusCode& status, long expected)   {
   if ( expected != long(status.getCode()) )     {
     m_nerr++;
-    std::cout << " FAILURE: ";
+    cout << " FAILURE: ";
     return true;
   }
   else if ( m_debug )   {
-    std::cout << " CORRECT: ";
+    cout << " CORRECT: ";
   }
   return m_debug;
 }
@@ -161,14 +169,14 @@ IMessageSvc* UnitTest::msgSvc() const    {
   return m_msgSvc;
 }
 
-std::string UnitTest::objectName(DataObject* pObject)    {
+string UnitTest::objectName(DataObject* pObject)    {
   if ( 0 != pObject )   {
     return pObject->name();
   }
   return " <<No Object>> ";
 }
 
-std::string UnitTest::fullpath(DataObject* pObject)   {
+string UnitTest::fullpath(DataObject* pObject)   {
   if ( 0 != pObject )   {
     IRegistry* pReg = pObject->registry();
     if ( 0 != pReg )    {

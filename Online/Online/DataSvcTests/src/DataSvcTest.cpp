@@ -19,11 +19,12 @@
 // C/C++ include files
 #include <ctime>
 #include <iostream>
+#include <stdexcept>
+
 // Framework include files
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
@@ -39,40 +40,22 @@
 #include "DataSvcTests/DataSvcTest.h"
 #include "Agent.h"
 
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/DataIncident.h"
 
 #include "Hit.h"
 
+using namespace std;
 using namespace Tests;
 
-static IDataProviderSvc* s_pDataSvc = 0;
-
-// External declarations
-extern const ISvcFactory& DataServiceFactory;
-
-class IncidentAlgorithm : public Algorithm  {
-public:
-  IncidentAlgorithm(const std::string& name, ISvcLocator *svcloc) 
-    : Algorithm(name, svcloc) {
-  }
-  virtual ~IncidentAlgorithm() {
-  }
-  virtual StatusCode execute()  {
-    MsgStream log(msgSvc(), name());
-    log << MSG::ALWAYS << "Data-On-Demand trigger running for:"
-        << "/Event/2/21/211/2115/21x15/21xx15/21xxx15" << endmsg;
-    StatusCode sc = s_pDataSvc->registerObject("/Event/2/21/211/2115/21x15/21xx15/21xxx15",new Hit());
-    return sc;
-  }
-};
-
-DECLARE_ALGORITHM_FACTORY(IncidentAlgorithm)
+namespace Tests {
+  IDataProviderSvc* s_pDataSvc = 0;
+  IDataProviderSvc* dataSvc() {  return s_pDataSvc; }
+}
 
 //======================================================================
 // Constructor
 //======================================================================
-DataSvcTest::DataSvcTest(const std::string& nam, bool dbg)
+DataSvcTest::DataSvcTest(const string& nam, bool dbg)
 : UnitTest(nam, dbg)
 {
   // Test generic Persistency service
@@ -85,58 +68,60 @@ DataSvcTest::DataSvcTest(const std::string& nam, bool dbg)
   // Create object instance
   StatusCode status = m_svcLoc->getService("DataSvc", m_pIS, true);
   if ( !status.isSuccess() )   {
-    std::cout << "Service: has NO DataSvc. -- Giving up" << std::endl;    
     m_nerr++;
-    throw std::runtime_error("Fatal exception. cannot continue to run.");
+    cout << "Service: has NO DataSvc. -- Giving up" << endl;    
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   // IID_IInterface
   status = m_pIS->queryInterface(IInterface::interfaceID(), (void**)&pIF);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << m_pIS->name() << " has NO IID_IInterface. " << std::endl;
+    cout << "Service:" << m_pIS->name() << " has NO IID_IInterface. " << endl;
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << m_pIS->name() << " has IID_IInterface." << std::endl;    
+    cout << "Service:" << m_pIS->name() << " has IID_IInterface." << endl;    
   }
 
   // IID_IDataManager
   status = m_pIS->queryInterface(IDataManagerSvc::interfaceID(), (void**)&m_pIDM);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << m_pIS->name() << " has NO IID_IDataManagerSvc. " << std::endl;
+    cout << "Service:" << m_pIS->name() << " has NO IID_IDataManagerSvc. " << endl;
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << m_pIS->name() << " has IID_IDataManagerSvc." << std::endl;    
+    cout << "Service:" << m_pIS->name() << " has IID_IDataManagerSvc." << endl;    
   }
 
   // IID_IDataProviderSvc
   status = m_pIS->queryInterface(IDataProviderSvc::interfaceID(), (void**)&m_pIDP);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << m_pIS->name() << " has NO IID_IDataProviderSvc. " << std::endl;    
+    cout << "Service:" << m_pIS->name() << " has NO IID_IDataProviderSvc. " << endl;    
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << m_pIS->name() << " has IID_IDataProviderSvc." << std::endl;
+    cout << "Service:" << m_pIS->name() << " has IID_IDataProviderSvc." << endl;
   }
   // IID_IProperty
   status = m_pIS->queryInterface(IProperty::interfaceID(), (void**)&m_pPrp);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service:" << m_pIS->name() << " has NO IID_IProperty. " << std::endl;    
+    cout << "Service:" << m_pIS->name() << " has NO IID_IProperty. " << endl;    
+    throw runtime_error("Fatal exception. cannot continue to run.");
   }
   else if ( m_debug )   {
-    std::cout << "Service:" << m_pIS->name() << " has IID_IProperty." << std::endl;
+    cout << "Service:" << m_pIS->name() << " has IID_IProperty." << endl;
   }
   s_pDataSvc = m_pIDP;
   IProperty* pSvc = 0;
   status = m_svcLoc->service("DataOnDemandSvc", pSvc, true);
   if ( status.isSuccess() )    {
     SmartIF<IProperty> iprp(pSvc);
-    std::vector<std::string> handlers;
-    handlers.push_back("DATA='/Event/2/21/211/2115/21x15/21xx15/21xxx15' NAME='HitHandler' TYPE='IncidentAlgorithm'");
     iprp->setProperty("DataSvc","DataSvc");
-    iprp->setProperty("Trap",   "TestDataFault");
-    iprp->setProperty(StringArrayProperty("Algorithms",handlers));
+    iprp->setProperty("IncidentName",   "TestDataFault");
+    iprp->setProperty("AlgMap","['/Event/2/21/211/2115/21x15/21xx15/21xxx15' : 'Tests::IncidentAlgorithm']");
     SmartIF<IService> isvc(pSvc);
     if ( isvc.isValid() )  {
       status = isvc->reinitialize();
@@ -146,10 +131,10 @@ DataSvcTest::DataSvcTest(const std::string& nam, bool dbg)
   status = m_svcLoc->service("IncidentSvc", m_pIncidentSvc, true);
   if ( !status.isSuccess() )    {
     m_nerr++;
-    std::cout << "Service: IncidentSvc not found. " << std::endl;    
+    cout << "Service: IncidentSvc not found. " << endl;    
   }
   else if ( m_debug )   {
-    std::cout << "Service: IncidentSvc found." << std::endl;
+    cout << "Service: IncidentSvc found." << endl;
   }
   if ( status.isSuccess() )    {
     IncidentAlgorithm* listener = new IncidentAlgorithm("IncidentListener", m_svcLoc);
@@ -159,9 +144,9 @@ DataSvcTest::DataSvcTest(const std::string& nam, bool dbg)
   }
 #endif
   if ( m_debug )    {
-    std::cout << "+===============================================================+" << std::endl;
-    std::cout << "|             DataSvcTest initialized                           |" << std::endl;
-    std::cout << "+===============================================================+" << std::endl;
+    cout << "+===============================================================+" << endl;
+    cout << "|             DataSvcTest initialized                           |" << endl;
+    cout << "+===============================================================+" << endl;
   }
   pIF->release();
 }
@@ -182,7 +167,7 @@ void DataSvcTest::shutdown()   {
   count = m_pIDM->release();
   count = m_pPrp->release();
   if ( 0 != count )   {
-    //std::cout << "Memory leak in releasing interfaces!" << std::endl;
+    //cout << "Memory leak in releasing interfaces!" << endl;
   }
   UnitTest::shutdown();
 }
@@ -191,8 +176,8 @@ void DataSvcTest::shutdown()   {
 //======================================================================
 // Interprete and print return codes
 //======================================================================
-std::ostream& DataSvcTest::PrintCode(std::ostream& s, const StatusCode& status, DataObject* pObject)   {
-  s << std::endl << "      => Result:";
+ostream& DataSvcTest::PrintCode(ostream& s, const StatusCode& status, DataObject* pObject)   {
+  s << endl << "      => Result:";
   switch( status.getCode() )    {
   /// The path for this objects is already in use
   case IDataProviderSvc::DOUBL_OBJ_PATH:
@@ -236,7 +221,7 @@ std::ostream& DataSvcTest::PrintCode(std::ostream& s, const StatusCode& status, 
     s << "???????         ";
     break;
   }
-  s << "  -> Object:" << objectName(pObject) << " ObjPath:" << fullpath(pObject) << std::endl;
+  s << "  -> Object:" << objectName(pObject) << " ObjPath:" << fullpath(pObject) << endl;
   return s;
 }
 //======================================================================
@@ -244,24 +229,24 @@ std::ostream& DataSvcTest::PrintCode(std::ostream& s, const StatusCode& status, 
 //======================================================================
 StatusCode DataSvcTest::testObjDirectory(DataObject* pObject)    {
   if ( 0 != pObject )   {
-    typedef std::vector<IRegistry*> Leafs;
+    typedef vector<IRegistry*> Leafs;
     Leafs leafs;
     StatusCode status=m_pIDM->objectLeaves(pObject, leafs);
     if ( m_debug )    {
-      std::cout << "Object:" << objectName(pObject) << std::endl;
+      cout << "Object:" << objectName(pObject) << endl;
     }
     for ( Leafs::iterator dit = leafs.begin(); dit != leafs.end(); dit++ )    {
       IRegistry* dd = *dit;
-      const std::string& nam = dd->name();
+      const string& nam = dd->name();
       if ( m_debug )    {
-        std::cout << "       -> Directory entry ";
-        std::cout << (0==dd->object() ? "(UNLOADED)  " : "(LOADED)    ");
-        std::cout << nam << std::endl;
+        cout << "       -> Directory entry ";
+        cout << (0==dd->object() ? "(UNLOADED)  " : "(LOADED)    ");
+        cout << nam << endl;
       }
     }
     return status;
   }
-  std::cout << "Object is NIL!" << std::endl;
+  cout << "Object is NIL!" << endl;
   return StatusCode::FAILURE;
 }
 
@@ -270,17 +255,17 @@ StatusCode DataSvcTest::testObjDirectory(DataObject* pObject)    {
 //======================================================================
 StatusCode DataSvcTest::testRegisterObject(long expected, 
                                            DataObject* pNode, 
-                                           const std::string& name, 
+                                           const string& name, 
                                            DataObject* pObject)    {
   StatusCode status = m_pIDP->registerObject(pNode, name, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " registerObject (by node/name:" << fullpath(pNode) << ", " << name << ") >>";
+      cout << " registerObject (by node/name:" << fullpath(pNode) << ", " << name << ") >>";
     }
     else  {
-      std::cout << " registerObject (by node/name: ..., " << name << ") >>";
+      cout << " registerObject (by node/name: ..., " << name << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -295,12 +280,12 @@ StatusCode DataSvcTest::testRegisterObject(long expected,
   StatusCode status = m_pIDP->registerObject(pNode, id, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " registerObject (by node/id:" << fullpath(pNode) << ", " << id << ") >>";
+      cout << " registerObject (by node/id:" << fullpath(pNode) << ", " << id << ") >>";
     }
     else  {
-      std::cout << " registerObject (by node/id: ..., " << id << ") >>";
+      cout << " registerObject (by node/id: ..., " << id << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -309,15 +294,15 @@ StatusCode DataSvcTest::testRegisterObject(long expected,
 // Test RegisterObject
 //======================================================================
 StatusCode DataSvcTest::testRegisterObject(long expected, 
-                                           const std::string& name, 
+                                           const string& name, 
                                            DataObject* pObject)    {
   StatusCode status = m_pIDP->registerObject(name, pObject);
   if ( check(status, expected) )      {
-    std::cout << " registerObject (by path:" << name << ") >>";
+    cout << " registerObject (by path:" << name << ") >>";
     if ( 0 != pObject )   {
-      std::cout << " ( regPath=" << fullpath(pObject) << ")>>";
+      cout << " ( regPath=" << fullpath(pObject) << ")>>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -326,17 +311,17 @@ StatusCode DataSvcTest::testRegisterObject(long expected,
 // Test RegisterObject
 //======================================================================
 StatusCode DataSvcTest::testRegisterObject(long expected, 
-                                           const std::string& parPath, 
-                                           const std::string& objPath, 
+                                           const string& parPath, 
+                                           const string& objPath, 
                                            DataObject* pObject)    {
   StatusCode status = m_pIDP->registerObject(parPath, objPath, pObject);
   if ( check(status, expected) )      {
-    std::cout << " registerObject (by parPath, objPath:" 
+    cout << " registerObject (by parPath, objPath:" 
               << parPath << ", " << objPath << ") >>";
     if ( 0 != pObject )   {
-      std::cout << " ( regPath=" << fullpath(pObject) << ")>>";
+      cout << " ( regPath=" << fullpath(pObject) << ")>>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -344,12 +329,12 @@ StatusCode DataSvcTest::testRegisterObject(long expected,
 //======================================================================
 // Test findObject
 //======================================================================
-StatusCode DataSvcTest::testFindObject(long expected, const std::string& name)    {
+StatusCode DataSvcTest::testFindObject(long expected, const string& name)    {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->findObject(name, pObject);
   if ( check(status, expected) )      {
-    std::cout << " findObject (by path:" << name << ") >>";
-    PrintCode(std::cout, status, pObject);
+    cout << " findObject (by path:" << name << ") >>";
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -357,17 +342,17 @@ StatusCode DataSvcTest::testFindObject(long expected, const std::string& name)  
 //======================================================================
 // Test findObject
 //======================================================================
-StatusCode DataSvcTest::testFindObject(long expected, DataObject* pNode, const std::string& name)    {
+StatusCode DataSvcTest::testFindObject(long expected, DataObject* pNode, const string& name)    {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->findObject(pNode, name, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " findObject (by node/name:" << fullpath(pNode) << ", " << name << ") >>";
+      cout << " findObject (by node/name:" << fullpath(pNode) << ", " << name << ") >>";
     }
     else  {
-      std::cout << " findObject (by node/name: ..., " << name << ") >>";
+      cout << " findObject (by node/name: ..., " << name << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -376,13 +361,13 @@ StatusCode DataSvcTest::testFindObject(long expected, DataObject* pNode, const s
 // Test FindObj by parent path, object path
 //======================================================================
 StatusCode DataSvcTest::testFindObject(   long expected, 
-                                          const std::string& parPath,
-                                          const std::string& objPath)   {
+                                          const string& parPath,
+                                          const string& objPath)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->findObject(parPath, objPath, pObject);
   if ( check(status, expected) )      {
-    std::cout << " findObject (by parPath/objPath:" << parPath << ", " << objPath << ") >>";
-    PrintCode(std::cout, status, pObject);
+    cout << " findObject (by parPath/objPath:" << parPath << ", " << objPath << ") >>";
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -391,13 +376,13 @@ StatusCode DataSvcTest::testFindObject(   long expected,
 // Test FindObj by parent path, object id
 //======================================================================
 StatusCode DataSvcTest::testFindObject(   long expected, 
-                                          const std::string& parPath,
+                                          const string& parPath,
                                           long objID)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->findObject(parPath, objID, pObject);
   if ( check(status, expected) )      {
-    std::cout << " findObject (by parPath/id:" << parPath << ", " << objID << ") >>";
-    PrintCode(std::cout, status, pObject);
+    cout << " findObject (by parPath/id:" << parPath << ", " << objID << ") >>";
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -410,12 +395,12 @@ StatusCode DataSvcTest::testFindObject(long expected, DataObject* pNode, int id)
   StatusCode status = m_pIDP->findObject(pNode, id, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " findObject (by node/id:" << fullpath(pNode) << ", " << id << ") >>";
+      cout << " findObject (by node/id:" << fullpath(pNode) << ", " << id << ") >>";
     }
     else  {
-      std::cout << " findObject (by node/id: ..., " << id << ") >>";
+      cout << " findObject (by node/id: ..., " << id << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -423,7 +408,7 @@ StatusCode DataSvcTest::testFindObject(long expected, DataObject* pNode, int id)
 //======================================================================
 // Test unregisterObject
 //======================================================================
-StatusCode DataSvcTest::testUnregisterObject(long expected, const std::string& name)    {
+StatusCode DataSvcTest::testUnregisterObject(long expected, const string& name)    {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->retrieveObject(name, pObject);
   status = m_pIDP->unregisterObject(name);
@@ -431,8 +416,8 @@ StatusCode DataSvcTest::testUnregisterObject(long expected, const std::string& n
     delete pObject;
   }
   if ( check(status, expected) )      {
-    std::cout << " unregisterObject (by string:" << name << ") ";
-    PrintCode(std::cout, status, 0);
+    cout << " unregisterObject (by string:" << name << ") ";
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -441,19 +426,19 @@ StatusCode DataSvcTest::testUnregisterObject(long expected, const std::string& n
 // Test unregisterObject
 //======================================================================
 StatusCode DataSvcTest::testUnregisterObject(long expected, DataObject* pObj)    {
-  std::string full = fullpath(pObj);
+  string full = fullpath(pObj);
   StatusCode status = m_pIDP->unregisterObject(pObj);
   if ( status.isSuccess() )   {
     delete pObj;
   }
   if ( check(status, expected) )      {
     if ( 0 != pObj && 0 != pObj->registry() )    {
-      std::cout << " unregisterObject (by object:" << full << ") >>";
+      cout << " unregisterObject (by object:" << full << ") >>";
     }
     else  {
-      std::cout << " unregisterObject (by object:" << full << ") >>";
+      cout << " unregisterObject (by object:" << full << ") >>";
     }
-    PrintCode(std::cout, status, 0);
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -461,12 +446,12 @@ StatusCode DataSvcTest::testUnregisterObject(long expected, DataObject* pObj)   
 //======================================================================
 // Test retrieveObject by name
 //======================================================================
-StatusCode DataSvcTest::testRetrieveObject(long expected, const std::string& name)   {
+StatusCode DataSvcTest::testRetrieveObject(long expected, const string& name)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->retrieveObject(name, pObject);
   if ( check(status, expected) )      {
-    std::cout << " retrieveObject (by path  :" << name << ") >>";
-    PrintCode(std::cout, status, pObject);
+    cout << " retrieveObject (by path  :" << name << ") >>";
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -474,17 +459,17 @@ StatusCode DataSvcTest::testRetrieveObject(long expected, const std::string& nam
 //======================================================================
 // Test retrieveObject by name/object
 //======================================================================
-StatusCode DataSvcTest::testRetrieveObject(long expected, DataObject* pNode, const std::string& name)   {
+StatusCode DataSvcTest::testRetrieveObject(long expected, DataObject* pNode, const string& name)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->retrieveObject(pNode, name, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " retrieveObject (by node/name:" << pNode->name() << ", " << name << ") >>";
+      cout << " retrieveObject (by node/name:" << pNode->name() << ", " << name << ") >>";
     }
     else  {
-      std::cout << " retrieveObject (by node/name  :..., " << name << ") >>";
+      cout << " retrieveObject (by node/name  :..., " << name << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -497,18 +482,18 @@ StatusCode DataSvcTest::testRetrieveObject(long expected, DataObject* pNode, int
   StatusCode status = m_pIDP->retrieveObject(pNode, id, pObject);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " retrieveObject (by node/id:" << pNode->name() << ", " << id << ") >>";
+      cout << " retrieveObject (by node/id:" << pNode->name() << ", " << id << ") >>";
     }
     else  {
-      std::cout << " retrieveObject (by node/id:..., " << id << ") >>";
+      cout << " retrieveObject (by node/id:..., " << id << ") >>";
     }
-    PrintCode(std::cout, status, pObject);
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
 
 // Test 
-StatusCode DataSvcTest::testLinkObject(long expected, const std::string& from, const std::string& to)   {
+StatusCode DataSvcTest::testLinkObject(long expected, const string& from, const string& to)   {
   DataObject* pObject = 0, *pO = 0;
   StatusCode status = m_pIDP->retrieveObject(from, pObject);
   if ( status.isSuccess() )   {
@@ -517,47 +502,47 @@ StatusCode DataSvcTest::testLinkObject(long expected, const std::string& from, c
     }
   }
   if ( check(status, expected) )      {
-    std::cout << " testLinkObject (from, to:" << from << ", " << to << ") >>";
+    cout << " testLinkObject (from, to:" << from << ", " << to << ") >>";
     m_pIDP->retrieveObject(to, pO);
     if ( pObject )
-      std::cout << " " << fullpath(pObject);
+      cout << " " << fullpath(pObject);
     else
-      std::cout << " INVALID SOURCE ";
+      cout << " INVALID SOURCE ";
     if ( pO )
-      std::cout << " " << fullpath(pO) << std::endl;
+      cout << " " << fullpath(pO) << endl;
     else
-      std::cout << " INVALID TARGET " << std::endl;
-    PrintCode(std::cout, status, pObject);
+      cout << " INVALID TARGET " << endl;
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
 // Test 
-StatusCode DataSvcTest::testLinkObject(long expected, DataObject* from, const std::string& to)   {
+StatusCode DataSvcTest::testLinkObject(long expected, DataObject* from, const string& to)   {
   DataObject* pObject = 0, *pO = 0;
   StatusCode status = m_pIDP->linkObject(to, from);
   if ( check(status, expected) )      {
-    std::cout << " testLinkObject (from ( by Node), to:" << fullpath(from) << ", " << to << ") >>";
+    cout << " testLinkObject (from ( by Node), to:" << fullpath(from) << ", " << to << ") >>";
     m_pIDP->retrieveObject(to, pO);
     if ( pObject )
-      std::cout << " " << fullpath(pObject);
+      cout << " " << fullpath(pObject);
     else
-      std::cout << " INVALID SOURCE ";
+      cout << " INVALID SOURCE ";
     if ( pO )
-      std::cout << " " << fullpath(pO) << std::endl;
+      cout << " " << fullpath(pO) << endl;
     else
-      std::cout << " INVALID TARGET " << std::endl;
-    PrintCode(std::cout, status, pObject);
+      cout << " INVALID TARGET " << endl;
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
 
 // Test 
-StatusCode DataSvcTest::testUnlinkObject(long expected, const std::string& to)   {
+StatusCode DataSvcTest::testUnlinkObject(long expected, const string& to)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->unlinkObject(to);
   if ( check(status, expected) )      {
-    std::cout << " testUnlinkObject (name:" << to << ") >>";
-    PrintCode(std::cout, status, pObject);
+    cout << " testUnlinkObject (name:" << to << ") >>";
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -566,7 +551,7 @@ StatusCode DataSvcTest::testUnlinkObject(long expected, const std::string& to)  
 // Test TraverseTree
 //======================================================================
 StatusCode DataSvcTest::testTraverseTree(long expected, 
-                                         const std::string& dir, 
+                                         const string& dir, 
                                          bool dbg)
 {
   Agent agnt(dbg);
@@ -580,12 +565,12 @@ StatusCode DataSvcTest::testTraverseTree(long expected,
   }
   if ( check(status, expected) )      {
     if ( dir == "" )    {
-      std::cout << " traverseTree (pAgent) >>";
+      cout << " traverseTree (pAgent) >>";
     }
     else    {
-      std::cout << " traverseTree (" << dir << ", pAgent) >>";
+      cout << " traverseTree (" << dir << ", pAgent) >>";
     }
-    PrintCode(std::cout, status, 0);
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -602,12 +587,12 @@ StatusCode DataSvcTest::testTraverseTree(long expected,
   StatusCode status = m_pIDM->traverseSubTree(pNode, pAgent);
   if ( check(status, expected) )      {
     if ( pNode != 0 && pNode->registry() != 0 )   { // lazy evaluation....
-      std::cout << " traverseTree (" << pNode->name() << ", pAgent) >>";
+      cout << " traverseTree (" << pNode->name() << ", pAgent) >>";
     }
     else  {
-      std::cout << " traverseTree (..., pAgent) >>";
+      cout << " traverseTree (..., pAgent) >>";
     }
-    PrintCode(std::cout, status, 0);
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -615,7 +600,7 @@ StatusCode DataSvcTest::testTraverseTree(long expected,
 //======================================================================
 // Test ClearTree
 //======================================================================
-StatusCode DataSvcTest::testClearTree(long expected, const std::string& dir)    {
+StatusCode DataSvcTest::testClearTree(long expected, const string& dir)    {
   StatusCode status = StatusCode::FAILURE;
   if ( dir == "" )    {
     status = m_pIDM->clearStore();
@@ -625,12 +610,12 @@ StatusCode DataSvcTest::testClearTree(long expected, const std::string& dir)    
   }
   if ( check(status, expected) )      {
     if ( dir == "" )    {
-      std::cout << " clearStore () >>" << std::endl;
+      cout << " clearStore () >>" << endl;
     }
     else    {
-      std::cout << " clearSubTree (" << dir << ") >>" << std::endl;
+      cout << " clearSubTree (" << dir << ") >>" << endl;
     }
-    PrintCode(std::cout, status, 0);
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -639,12 +624,12 @@ StatusCode DataSvcTest::testClearTree(long expected, const std::string& dir)    
 // Test ClearTree
 //======================================================================
 StatusCode DataSvcTest::testClearTree(long expected, DataObject* pNode)    {
-  std::string path = "<Unknown>";
+  string path = "<Unknown>";
   if ( 0 != pNode ) path = pNode->name();
   StatusCode status = m_pIDM->clearSubTree(pNode);
   if ( check(status, expected) )      {
-    std::cout << " clearSubTree (" << path << ") >>" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << " clearSubTree (" << path << ") >>" << endl;
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -652,11 +637,11 @@ StatusCode DataSvcTest::testClearTree(long expected, DataObject* pNode)    {
 //======================================================================
 // Set Rot object
 //======================================================================
-StatusCode DataSvcTest::testSetRoot(long expected, const std::string& root, DataObject* pObject)    {
+StatusCode DataSvcTest::testSetRoot(long expected, const string& root, DataObject* pObject)    {
   StatusCode status = m_pIDM->setRoot(root, pObject);
   if ( check(status, expected) )      {
-    std::cout << "setRoot(" << root << ", pObject)" << std::endl;
-    PrintCode(std::cout, status, pObject);
+    cout << "setRoot(" << root << ", pObject)" << endl;
+    PrintCode(cout, status, pObject);
   }
   return status;
 }
@@ -664,11 +649,11 @@ StatusCode DataSvcTest::testSetRoot(long expected, const std::string& root, Data
 //======================================================================
 // Set Rot object by opaque address
 //======================================================================
-StatusCode DataSvcTest::testSetRoot(long expected, const std::string& root, IOpaqueAddress* pAddr)    {
+StatusCode DataSvcTest::testSetRoot(long expected, const string& root, IOpaqueAddress* pAddr)    {
   StatusCode status = m_pIDM->setRoot(root, pAddr);
   if ( check(status, expected) )      {
-    std::cout << "setRoot(" << root << ", pAddr)" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << "setRoot(" << root << ", pAddr)" << endl;
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -676,12 +661,12 @@ StatusCode DataSvcTest::testSetRoot(long expected, const std::string& root, IOpa
 //======================================================================
 // Add fake address to tree
 //======================================================================
-StatusCode DataSvcTest::registerAddress(long expected, const std::string& path, unsigned char typ, const CLID& clid)   {
+StatusCode DataSvcTest::registerAddress(long expected, const string& path, unsigned char typ, const CLID& clid)   {
   GenericAddress* pAddr = new GenericAddress(typ, clid);
   StatusCode status = m_pIDM->registerAddress(path, pAddr);
   if ( check(status, expected) )      {
-    std::cout << "registerAddress(" << path << ")" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << "registerAddress(" << path << ")" << endl;
+    PrintCode(cout, status, 0);
     //pAddr->release();
   }
   return status;
@@ -690,7 +675,7 @@ StatusCode DataSvcTest::registerAddress(long expected, const std::string& path, 
 //======================================================================
 // Add fake address to tree
 //======================================================================
-StatusCode DataSvcTest::registerAddress(long expected, const std::string& path, const std::string& sub_path, unsigned char typ, const CLID& clid)   {
+StatusCode DataSvcTest::registerAddress(long expected, const string& path, const string& sub_path, unsigned char typ, const CLID& clid)   {
   DataObject* pObject = 0;
   GenericAddress* pAddr = new GenericAddress(typ, clid);
   StatusCode status = m_pIDP->findObject(path, pObject);
@@ -698,8 +683,8 @@ StatusCode DataSvcTest::registerAddress(long expected, const std::string& path, 
     status = m_pIDM->registerAddress(pObject, sub_path, pAddr);
   }
   if ( check(status, expected) )      {
-    std::cout << "registerAddress(" << path << ", " << sub_path << ")" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << "registerAddress(" << path << ", " << sub_path << ")" << endl;
+    PrintCode(cout, status, 0);
     //pAddr->release();
   }
   return status;
@@ -708,11 +693,11 @@ StatusCode DataSvcTest::registerAddress(long expected, const std::string& path, 
 //======================================================================
 // registerAddress fake address from tree
 //======================================================================
-StatusCode DataSvcTest::unregisterAddress(long expected, const std::string& path)   {
+StatusCode DataSvcTest::unregisterAddress(long expected, const string& path)   {
   StatusCode status = m_pIDM->unregisterAddress(path);
   if ( check(status, expected) )      {
-    std::cout << "registerAddress(" << path << ")" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << "registerAddress(" << path << ")" << endl;
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -720,15 +705,15 @@ StatusCode DataSvcTest::unregisterAddress(long expected, const std::string& path
 //======================================================================
 // registerAddress fake address from tree
 //======================================================================
-StatusCode DataSvcTest::unregisterAddress(long expected, const std::string& path, const std::string& sub_path)   {
+StatusCode DataSvcTest::unregisterAddress(long expected, const string& path, const string& sub_path)   {
   DataObject* pObject = 0;
   StatusCode status = m_pIDP->findObject(path,pObject);
   if ( status.isSuccess() )   {
     status = m_pIDM->unregisterAddress(pObject, sub_path);
   }
   if ( check(status, expected) )      {
-    std::cout << "unregisterAddress(" << path << ", " << sub_path << ")" << std::endl;
-    PrintCode(std::cout, status, 0);
+    cout << "unregisterAddress(" << path << ", " << sub_path << ")" << endl;
+    PrintCode(cout, status, 0);
   }
   return status;
 }
@@ -736,7 +721,7 @@ StatusCode DataSvcTest::unregisterAddress(long expected, const std::string& path
 //======================================================================
 // Test Timing: object find
 //======================================================================
-StatusCode DataSvcTest::testFindTiming(const std::string& path, int num_loop)   {
+StatusCode DataSvcTest::testFindTiming(const string& path, int num_loop)   {
   longlong end, start = currentTime();
   DataObject *pObject;
   StatusCode status;
@@ -744,23 +729,23 @@ StatusCode DataSvcTest::testFindTiming(const std::string& path, int num_loop)   
   for ( i = 0; i < num_loop; i++ )    {
     status = m_pIDP->findObject(path,pObject);
     if ( !status.isSuccess() )    {
-      std::cout << "Error!!!!!" << std::endl;
+      cout << "Error!!!!!" << endl;
       m_nerr++;
       return StatusCode::FAILURE;
     }
   }
   end = currentTime();
   if ( m_debug )    {
-    std::cout << i << " Loops of m_pIDP->findObject(\"" << path << "\",pObject) took "
+    cout << i << " Loops of m_pIDP->findObject(\"" << path << "\",pObject) took "
               << int((end-start)/1000) << " msec=" 
-              << float(end-start)/float(i) << " muSec each" << std::endl;
+              << float(end-start)/float(i) << " muSec each" << endl;
   }
   return StatusCode::SUCCESS;
 }
 //======================================================================
 // Test Timing: object find
 //======================================================================
-StatusCode DataSvcTest::testFindTiming(DataObject* pNode, const std::string& path, int num_loop)   {
+StatusCode DataSvcTest::testFindTiming(DataObject* pNode, const string& path, int num_loop)   {
   longlong end, start = currentTime();
   DataObject *pObject;
   StatusCode status;
@@ -768,20 +753,20 @@ StatusCode DataSvcTest::testFindTiming(DataObject* pNode, const std::string& pat
   for ( i = 0; i < num_loop; i++ )    {
     status = m_pIDP->findObject(pNode,path,pObject);
     if ( !status.isSuccess() )    {
-      std::cout << "Error!!!!!" << std::endl;
+      cout << "Error!!!!!" << endl;
       m_nerr++;
       return StatusCode::FAILURE;
     }
   }
   end = currentTime();
   if ( m_debug )    {
-    std::cout << i << " Loops of m_pIDP->findObject(\""
+    cout << i << " Loops of m_pIDP->findObject(\""
               << pNode->registry()->name()
               << "\", \""
               << path
               << "\", pObject) took "
               << int((end-start)/1000) << " msec=" 
-              << float(end-start)/float(i) << " muSec each" << std::endl;
+              << float(end-start)/float(i) << " muSec each" << endl;
   }
   return StatusCode::SUCCESS;
 }

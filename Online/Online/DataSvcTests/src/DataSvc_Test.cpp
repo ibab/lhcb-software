@@ -31,11 +31,11 @@ extern const Tests::ICnvFactory& TmpHitConverterFactory;
 namespace Tests {
 
   /** Definition of a small class to test the Gaudi data service.
-
-  @author M.Frank
-  @date   11/2/99
-    
-  */
+   *
+   *  @author M.Frank
+   *  @date   11/2/99
+   *
+   */
   class DataSvc_Test1   : public DataSvcTest   {
   public:
     std::vector<std::string> m_entries;
@@ -61,14 +61,15 @@ namespace Tests {
 }
 
 using namespace Tests;
+using namespace std;
 #include <ctime>
 
 void DataSvc_Test1::makeTree(bool use_rnd, 
                              int maxObj, 
                              int mxLvl, 
-                             const std::string prefix, 
+                             const string prefix, 
                              int level, 
-                             const std::string& path)   {
+                             const string& path)   {
   float rnd = (use_rnd) ? float(rand()) : float(RAND_MAX);
   float mx = RAND_MAX;
   rnd /= mx;
@@ -77,7 +78,7 @@ void DataSvc_Test1::makeTree(bool use_rnd,
   char txt[32];
   for ( int i = 0; i < numObj; i++ )    {
     Hit *hit = new Hit();
-    std::string thePath = path;
+    string thePath = path;
     sprintf(txt,"%d", i);
     thePath += "/";
     thePath += prefix;
@@ -97,14 +98,14 @@ void DataSvc_Test1::makeTree(bool use_rnd,
 void DataSvc_Test1::large( bool use_rnd, 
                            int maxObj, 
                            int mxLvl, 
-                           const std::string prefix, 
-                           const std::string& rootName, 
+                           const string prefix, 
+                           const string& rootName, 
                            bool useRoot)    {
   // Try to add something to the store
   int i;
   DataObject* pObject = 0;
   MsgStream log(msgSvc(), "Test1::"+rootName);
-  std::string theRoot = (useRoot) ? rootName+"/" : "";
+  string theRoot = (useRoot) ? rootName+"/" : "";
   StatusCode status = testSetRoot(StatusCode::SUCCESS, rootName, new Hit());
   log << MSG::DEBUG << "Filling tree...." << endreq;
 
@@ -138,20 +139,21 @@ void DataSvc_Test1::large( bool use_rnd,
     log << MSG::ERROR << "Detected Memory leak in DataSvc." << endreq;
   }
   shutdown();
-  log << MSG::DEBUG << "... Test Finished " << typeid(*this).name() << " Root=<" << rootName << ">, <" << theRoot << ">" << endreq;
+  log << MSG::DEBUG << "... Test Finished " << System::typeinfoName(typeid(*this)) 
+      << " Root=<" << rootName << ">, <" << theRoot << ">" << endreq;
 };
 
 
 //======================================================================
 // run the standard test
 //======================================================================
-void DataSvc_Test1::run(const std::string& rootName, bool useRoot)    {
+void DataSvc_Test1::run(const string& rootName, bool useRoot)    {
   // Try to add something to the store
-  std::string theRoot = (useRoot) ? rootName+"/" : "";
+  string theRoot = (useRoot) ? rootName+"/" : "";
   Hit *hit, *hit1, *hit2, *hit3, *hit4, *hit5, *hit11, *hit21, *hit211;
   StatusCode status = testSetRoot(StatusCode::SUCCESS, rootName, hit=new Hit());
   MsgStream log(msgSvc(), "Test1::"+rootName);
-  std::string rootEx = theRoot.substr(0,theRoot.length()-1);
+  string rootEx = theRoot.substr(0,theRoot.length()-1);
   log << MSG::DEBUG << "... Test DataProviderSvc Interface Root=<" << rootName << ">, <" << theRoot << ">" << endreq;
   status = testRegisterObject(IDataProviderSvc::INVALID_OBJ_PATH, rootName, hit);
   status = testRegisterObject(StatusCode::SUCCESS, theRoot+"1",    hit1   = new Hit());
@@ -283,7 +285,8 @@ void DataSvc_Test1::run(const std::string& rootName, bool useRoot)    {
   if ( Hit::refCount() != 0 )  {
     log << MSG::ERROR << "Detected Memory leak in DataSvc." << endreq;
   }
-  log << MSG::ALWAYS << "... Test Finished " << typeid(*this).name() << " Root=<" << rootName << ">, <" << theRoot << ">" << endreq;
+  log << MSG::ALWAYS << "... Test Finished " << System::typeinfoName(typeid(*this))
+      << " Root=<" << rootName << ">, <" << theRoot << ">" << endreq;
   shutdown();
 }
 
@@ -301,21 +304,21 @@ public:
   /// Standard destructor
   virtual ~PersistencySvc_Test1()    {}
   /// action methid
-  virtual void run(const std::string& rootName, bool useRoot);
+  virtual void run(const string& rootName, bool useRoot);
 };
 
 
 // Test generic Persistency service
-void PersistencySvc_Test1::run(const std::string& rootName, bool useRoot)    {
+void PersistencySvc_Test1::run(const string& rootName, bool useRoot)    {
   MsgStream log(msgSvc(), "Test1::"+rootName);
   StatusCode status = StatusCode::SUCCESS;
-  std::string theRoot = (useRoot) ? rootName+"/" : "";
+  string theRoot = (useRoot) ? rootName+"/" : "";
   status = testDataLoader(m_pICV);
   status = testSetRoot(StatusCode::SUCCESS, rootName, new Hit());
   status = testSetRoot(StatusCode::SUCCESS, rootName, 
                        new GenericAddress(TEST_StorageType, CLID_Hit, "","",0,0));
 
-  std::cout << "... Test Persistency Interface Root=<" << rootName << ">, <" << theRoot << ">" << std::endl;
+  cout << "... Test Persistency Interface Root=<" << rootName << ">, <" << theRoot << ">" << endl;
   status = addConverter(TmpHitConverterFactory);
   status = testRegisterObject(StatusCode::SUCCESS, theRoot+"1",       new Hit());
   status = testRegisterObject(StatusCode::SUCCESS, theRoot+"1/11",    new Hit());
@@ -366,7 +369,7 @@ void PersistencySvc_Test1::run(const std::string& rootName, bool useRoot)    {
   testRetrieveObject(IDataProviderSvc::INVALID_OBJ_PATH, theRoot+"2/2x");
   status = testClearTree   (StatusCode::SUCCESS, "");
   if ( Hit::refCount() != 0 )  {
-    std::cout << "Detected Memory leak in DataSvc." << std::endl;
+    cout << "Detected Memory leak in DataSvc." << endl;
   }
   shutdown();
   log << MSG::ALWAYS << "... Test Finished " << System::typeinfoName(typeid(*this))
@@ -375,20 +378,21 @@ void PersistencySvc_Test1::run(const std::string& rootName, bool useRoot)    {
       << endreq;
 }
 
-int datasvc_entry(int argc, char** /* argv */ )    {
+static int datasvc_test(int argc, char** /* argv */ )    {
   bool dbg = argc > 1;
 //  makeTree( true, 1000, 1, "Object_Number_asfdkjghfjkldhgjklfhgkfgdjkfghdkhfjklgjkleyregfrhlfjgh__", 0, (useRoot) ? rootName : "");
 //  makeTree( true, 15, 6, "Object_Number_", 0, (useRoot) ? rootName : "");
 //  makeTree( true, 15, 6, "", 0, (useRoot) ? rootName : "");
 //  makeTree( false, 1000, 1, "", 0, (useRoot) ? rootName : "");
 //  makeTree( false, 5, 5, "Object_Number_Object_Number_Object_Number_Object_Number_", 0, (useRoot) ? rootName : "");
-  std::string prefix = "JustForFunSearch";
+  string prefix = "JustForFunSearch";
   prefix = "a";
-  /*
+
   { DataSvc_Test1 tst(dbg);     // 1
     srand(123);
     tst.large(false, 3, 3, prefix, "/Event", true);
   }
+
   { DataSvc_Test1 tst(dbg);     // 2
     srand(123);
     tst.large(false, 4, 4, prefix, "/Event", true);
@@ -449,7 +453,7 @@ int datasvc_entry(int argc, char** /* argv */ )    {
     srand(123);
     tst.large(false, 320, 1, prefix, "/Event", true);
   }
-  */
+  /*  */
   /* */
   { 
     DataSvc_Test1 tst(dbg);
@@ -471,19 +475,22 @@ int datasvc_entry(int argc, char** /* argv */ )    {
   return 0x0;
 }
 
-extern int rndmsvc_entry(int argc, char* argv[]);
+//static int datasvc_test(int argc, char** /* argv */ )    {
 
-int main(int argc, char* argv[])    {
+//extern "C" int rndmsvc_entry(int argc, char* argv[]);
+//extern "C" int gaudi_datasvc_test(int argc, char** /* argv */ )    {
+
+extern "C" int gaudi_datasvc_test(int argc, char* argv[])    {
   try   {
-    long res = datasvc_entry(argc, argv);
+    long res = datasvc_test(argc, argv);
     //long res = rndmsvc_entry(argc, argv);
     return res;
   }
-  catch(const std::exception& e)    {
-    std::cout << "Exception caught in main program:" << e.what() << std::endl;
+  catch(const exception& e)    {
+    cout << "Exception caught in main program:" << e.what() << endl;
   }
   catch(...)    {
-    std::cout << "Exception caught in main program." << std::endl;
+    cout << "Exception caught in main program." << endl;
   }
   return 0;
 }

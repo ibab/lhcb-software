@@ -24,12 +24,12 @@
 namespace Tests {
 
   /** @name The data selector class.
- 
-  Data selectors are used to traverse the transient data store
-  in order to perform collections of objects.
- 
-  @author Markus Frank
-  */
+   * 
+   *  Data selectors are used to traverse the transient data store
+   *  in order to perform collections of objects.
+   * 
+   *  @author Markus Frank
+   */
   class DataSelector : virtual public IDataStoreAgent, virtual public IDataSelector    {
   protected:
     /// Data member: do printout while seraching the store.
