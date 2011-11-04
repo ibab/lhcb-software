@@ -1012,7 +1012,8 @@ class IOExtension(object):
     _defaultPersistency=_rootTypePersistency=IOHelper._defaultPersistency
     #_rootTypePersistency=IOExtension._defaultPersistency
 
-    _knownExtensions={ 'DIGI' : '',
+    _knownExtensions={ 'XDIGI' : '',
+                       'DIGI' : '',
                        'SIM'  : '',
                        'DST'  : '',
                        'XDST'  : '',

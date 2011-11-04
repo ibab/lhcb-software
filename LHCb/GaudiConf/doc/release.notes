@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-11-04 - Patrick Robbe
+ - IOHelper.py: add "xdigi" file extension to list of known extensions
+
 ! 2011-10-18 - J. Helder Lopes
  - Set the AncestorFor property of UnpackMuonTracks in DstConf.py to the same 
    path as InputName, to allow the ancestor track association.
