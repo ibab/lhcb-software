@@ -100,8 +100,12 @@ Gaudi::Time OdinTimeDecoder::getTime ( ) const {
         debug() << ", new run=" << m_currentRun << endmsg;
       incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
     }
-
-    last_time = odin->eventTime();
+    try {
+      last_time = odin->eventTime();
+    } catch(TimeException &e) {
+      Warning("Problem with ODIN GPS Time '" + e.message() + "', ignored",
+              StatusCode::SUCCESS).ignore();
+    }
   }
 
   return last_time;

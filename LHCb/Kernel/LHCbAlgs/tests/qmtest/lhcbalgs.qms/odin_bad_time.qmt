@@ -1,0 +1,19 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import LHCbAlgsTests__ODINBadTimeTest as BTT
+
+EventDataSvc(ForceLeaves = True)
+
+ApplicationMgr(EvtMax = 2,
+               TopAlg = [BTT("ODINBadTime")],
+               EvtSel = "NONE")
+
+#MessageSvc(OutputLevel = DEBUG)
+</text></argument>
+<argument name="validator"><text>
+countErrorLines()
+</text></argument>
+</extension>
