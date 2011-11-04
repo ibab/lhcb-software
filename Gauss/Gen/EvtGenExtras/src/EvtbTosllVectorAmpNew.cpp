@@ -147,6 +147,10 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
       iddaught == EvtPDL::getId(std::string("rho0")))||
      (idparent == EvtPDL::getId(std::string("anti-B0"))&&
       iddaught == EvtPDL::getId(std::string("rho0")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("omega")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("omega")))||
      (idparent == EvtPDL::getId(std::string("B_s0"))&&
       iddaught == EvtPDL::getId(std::string("anti-K*0")))||
      (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&

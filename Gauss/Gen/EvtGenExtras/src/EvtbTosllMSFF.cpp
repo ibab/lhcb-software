@@ -9,7 +9,7 @@
 //      Copyright (C) 2000      Caltech, UCSB
 //
 // Module:      EvtbTosllMSFF.cpp
-// Description: Form factors for B^0_{d,s} -> V ell^+ ell^- transitions according 
+// Description: Form factors for B -> (P, V) ell^+ ell^- transitions according 
 //              to the paper: D.Melikhov, B.Stech, PRD62, 014006 (2000).
 //
 // Modification history:
@@ -19,6 +19,7 @@
 //  N.Nikitin (nnikit@mail.cern.ch)  April 26, 2008   add \bar Bs -> phi transition ff
 //  N.Nikitin (nnikit@mail.cern.ch)  April 26, 2008   add \bar Bs -> K*  transition ff
 //  N.Nikitin (nnikit@mail.cern.ch)  April 27, 2008   add \bar B -> \bar rho transition ff
+//  N.Nikitin (nnikit@mail.cern.ch)  Nvmbr 04, 2011   add \bar B -> omega transition ff
 //
 //------------------------------------------------------------------------
 
@@ -106,7 +107,7 @@ void EvtbTosllMSFF::getScalarFF(EvtId parent, EvtId daught,
      (parent == EvtPDL::getId(std::string("B0"))&&
       daught == EvtPDL::getId(std::string("pi0")))||
      (parent == EvtPDL::getId(std::string("anti-B0"))&&
-      daught == EvtPDL::getId(std::string("anti-pi0")))){
+      daught == EvtPDL::getId(std::string("pi0")))){
      double ff0[]   ={0.29, 0.29, 0.28};
      double sigma1[]={0.48, 0.76, 0.48};
      double sigma2[]={0.00, 0.28, 0.00};
@@ -315,6 +316,35 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
 //     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
 //     << "\n barB -> bar rho transition form factors"
+//     << std::endl;     
+  }
+
+
+  // \bar B -> \omega transition form factors (exactly as for \bar B -> \rho^0 ff!)
+  if((parent == EvtPDL::getId(std::string("B0"))&&
+      daught == EvtPDL::getId(std::string("omega")))||
+     (parent == EvtPDL::getId(std::string("anti-B0"))&&
+      daught == EvtPDL::getId(std::string("omega")))){
+     double ff0[]   ={0.31, 0.30, 0.26, 0.24, 0.27, 0.27, 0.19};
+     double sigma1[]={0.59, 0.54, 0.73, 1.40, 0.60, 0.74, 1.42};
+     double sigma2[]={0.00, 0.00, 0.10, 0.50, 0.00, 0.19, 0.51};
+     int    eq_num[]={   9,    9,   10,   10,    9,   10,   10};
+     double M_P2=5.27*5.27; // GeV^2 for B   - meson
+     double M_V2=5.32*5.32; // GeV^2 for B^* - meson
+  
+     v =equation9_10(ff0[0], M_P2, t, sigma1[0], sigma2[0], eq_num[0]);
+     a0=equation9_10(ff0[1], M_P2, t, sigma1[1], sigma2[1], eq_num[1]);
+     a1=equation9_10(ff0[2], M_V2, t, sigma1[2], sigma2[2], eq_num[2]);
+     a2=equation9_10(ff0[3], M_V2, t, sigma1[3], sigma2[3], eq_num[3]);
+    
+     t1=equation9_10(ff0[4], M_P2, t, sigma1[4], sigma2[4], eq_num[4]);
+     t2=equation9_10(ff0[5], M_V2, t, sigma1[5], sigma2[5], eq_num[5]);
+     t3=equation9_10(ff0[6], M_V2, t, sigma1[6], sigma2[6], eq_num[6]);
+
+     models_counter=models_counter+1;
+
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barB -> omega transition form factors"
 //     << std::endl;     
   }
 

@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2011-10-04 - Nikolai Nikitn
+ - Added a new decay Bd->Omega Mu Mu
+ - Minor bug fix in the pseudoscalar matrix elementx
+
 ! 2011-10-25 - Nikolai Nikitin
  - Added a model for simulation of the rare semileptonic decays. The model is
    based on the BSTOLLMS decay model, but includes a possibility to simulate
