@@ -1,27 +1,27 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 #include "$INFOOPTIONS"
-#include "/group/online/dataflow/options/LHCb/LHCb_Tell1Boards.opts"
 ApplicationMgr.ExtSvc               += {
-					"MEPSvc/MEPrxCountPub"
-					};
+					"BusyPub"
+                                       };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
 
 //MessageSvc.fifoPath                = "$LOGFIFO";
 //MessageSvc.LoggerOnly              = true;  // Set to false for stdout
 HistogramPersistencySvc.Warnings   = false;
 
 
-MEPrxCountPub.MyName              = "<part>_X_MEPrx";
-MEPrxCountPub.PartitionName       = @OnlineEnv.PartitionName;
-MEPrxCountPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
-MEPrxCountPub.ServicePattern      = "MON_<part>_hlt01_MEPrx_00/Counter/";
-//MEPrxCountPub.AdderClass          = "Counter";
-MEPrxCountPub.InDNS               = "mona08";
-MEPrxCountPub.Tell1List=@OnlineEnv.Tell1Boards;
+
+BusyPub.MyName              = "<part>_X_BusyPub";
+BusyPub.PartitionName       = @OnlineEnv.PartitionName;
+BusyPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+BusyPub.ServicePattern      = "MON_<part>_hlt01_Busy_00/Counter/";
+BusyPub.AdderClass          = "Counter";
+BusyPub.InDNS               = "mona08";
+BusyPub.TrendingOn          = true;
 
