@@ -38,15 +38,18 @@
 // Class include file
 #include "DataSvcTests/DataSvcTest.h"
 #include "Agent.h"
-// External declarations
-extern const ISvcFactory& DataServiceFactory;
 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/DataIncident.h"
 
 #include "Hit.h"
 
+using namespace Tests;
+
 static IDataProviderSvc* s_pDataSvc = 0;
+
+// External declarations
+extern const ISvcFactory& DataServiceFactory;
 
 class IncidentAlgorithm : public Algorithm  {
 public:

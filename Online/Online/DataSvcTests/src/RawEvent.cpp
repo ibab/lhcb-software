@@ -12,4 +12,4 @@
 //====================================================================
 #define DATASVC_RAWEVENT_CPP 1
 #include "RawEvent.h"
-const CLID& CLID_RawEvent       = 3;
+const CLID& Tests::CLID_RawEvent = 3;

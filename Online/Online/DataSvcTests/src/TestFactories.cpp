@@ -15,13 +15,17 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ConversionSvc.h"
 
-class TmpConversionSvc : public ConversionSvc   {
-public:
-  TmpConversionSvc(const std::string& nam, ISvcLocator* svcLoc)
-  : ConversionSvc(nam, svcLoc, TEST_StorageType)   {
-  }
-  virtual ~TmpConversionSvc() {}
-};
+namespace Tests {
+  class TmpConversionSvc : public ConversionSvc   {
+  public:
+    TmpConversionSvc(const std::string& nam, ISvcLocator* svcLoc)
+      : ConversionSvc(nam, svcLoc, TEST_StorageType)   {
+    }
+    virtual ~TmpConversionSvc() {}
+  };
+}
+
+using namespace Tests;
 
 // Factory for instantiation of service objects
 DECLARE_SERVICE_FACTORY(TmpConversionSvc)

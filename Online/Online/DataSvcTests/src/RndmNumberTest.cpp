@@ -9,6 +9,7 @@
 // Example related include files
 #include "DataSvcTests/RndmNumberTest.h"
 
+using namespace Tests;
 
 RndmNumberTest::RndmNumberTest(const std::string& nam, bool dbg) 
 : UnitTest(nam, dbg)

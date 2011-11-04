@@ -26,36 +26,42 @@
 #include "Factories.h"
 #include "Hit.h"
 
-extern const ICnvFactory& TmpHitConverterFactory;
+extern const Tests::ICnvFactory& TmpHitConverterFactory;
 
-/** Definition of a small class to test the Gaudi data service.
+namespace Tests {
+
+  /** Definition of a small class to test the Gaudi data service.
 
   @author M.Frank
   @date   11/2/99
     
-*/
-class DataSvc_Test1   : public DataSvcTest   {
-public:
-  std::vector<std::string> m_entries;
-  /// Standard constructor
-  DataSvc_Test1(bool dbg) : DataSvcTest("DataSvc_Test1", dbg) {}
-  /// Standard destructor
-  virtual ~DataSvc_Test1()    {}
-  /// action methid
-  virtual void run(const std::string& rootName, bool useRoot);
-  virtual void large(bool use_rnd, 
-                     int maxObj, 
-                     int mxLvl, 
-                     const std::string prefix, 
-                     const std::string& rootName, 
-                     bool useRoot);
-  void makeTree( bool use_rnd,
-                 int maxObj, 
-                 int mxLvl, 
-                 const std::string prefix, 
-                 int level, 
-                 const std::string& path);
-};
+  */
+  class DataSvc_Test1   : public DataSvcTest   {
+  public:
+    std::vector<std::string> m_entries;
+    /// Standard constructor
+    DataSvc_Test1(bool dbg) : DataSvcTest("DataSvc_Test1", dbg) {}
+    /// Standard destructor
+    virtual ~DataSvc_Test1()    {}
+    /// action methid
+    virtual void run(const std::string& rootName, bool useRoot);
+    virtual void large(bool use_rnd, 
+		       int maxObj, 
+		       int mxLvl, 
+		       const std::string prefix, 
+		       const std::string& rootName, 
+		       bool useRoot);
+    void makeTree( bool use_rnd,
+		   int maxObj, 
+		   int mxLvl, 
+		   const std::string prefix, 
+		   int level, 
+		   const std::string& path);
+  };
+}
+
+using namespace Tests;
+#include <ctime>
 
 void DataSvc_Test1::makeTree(bool use_rnd, 
                              int maxObj, 
@@ -84,7 +90,7 @@ void DataSvc_Test1::makeTree(bool use_rnd,
     }
   }
 }
-#include <ctime>
+
 //======================================================================
 // run the standard test
 //======================================================================

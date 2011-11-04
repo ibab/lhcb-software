@@ -1,21 +1,25 @@
 #include "GaudiKernel/SmartIF.h"
 #include "DataSvcTests/RndmNumberTest.h"
 
-/** Definition of a small class to test the random number generator service.
-
+namespace Tests {
+  /** Definition of a small class to test the random number generator service.
+      
   @author M.Frank
   @date   11/2/99
-    
-*/
-class Rndm_Test1   : public RndmNumberTest   {
-public:
-  /// Standard constructor
-  Rndm_Test1(bool dbg) : RndmNumberTest("Rndm_Test1", dbg) {}
-  /// Standard destructor
-  virtual ~Rndm_Test1()    {}
-  /// action methid
-  virtual void run();
-};
+  
+  */
+  class Rndm_Test1   : public RndmNumberTest   {
+  public:
+    /// Standard constructor
+    Rndm_Test1(bool dbg) : RndmNumberTest("Rndm_Test1", dbg) {}
+    /// Standard destructor
+    virtual ~Rndm_Test1()    {}
+    /// action methid
+    virtual void run();
+  };
+}
+
+using namespace Tests;
 
 
 void Rndm_Test1::run() {

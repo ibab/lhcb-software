@@ -24,6 +24,8 @@
 #include "DataSvcTests/PersistencySvcTest.h"
 #include "Factories.h"
 
+using namespace Tests;
+
 //======================================================================
 // Constructor
 //======================================================================
