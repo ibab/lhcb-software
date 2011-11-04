@@ -3,11 +3,11 @@
 
 namespace Tests {
   /** Definition of a small class to test the random number generator service.
-      
-  @author M.Frank
-  @date   11/2/99
-  
-  */
+   *      
+   *  @author M.Frank
+   *  @date   11/2/99
+   *
+   */
   class Rndm_Test1   : public RndmNumberTest   {
   public:
     /// Standard constructor
@@ -26,6 +26,7 @@ void Rndm_Test1::run() {
   RndmNumberTest::test(5000);
 }
 
+
 extern "C" int gaudi_rndmsvc_test(int argc, char** /* argv */)    {
   bool dbg = argc > 1;
   { 
@@ -34,3 +35,4 @@ extern "C" int gaudi_rndmsvc_test(int argc, char** /* argv */)    {
   }
   return 0x0;
 }
+

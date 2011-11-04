@@ -475,15 +475,9 @@ static int datasvc_test(int argc, char** /* argv */ )    {
   return 0x0;
 }
 
-//static int datasvc_test(int argc, char** /* argv */ )    {
-
-//extern "C" int rndmsvc_entry(int argc, char* argv[]);
-//extern "C" int gaudi_datasvc_test(int argc, char** /* argv */ )    {
-
 extern "C" int gaudi_datasvc_test(int argc, char* argv[])    {
   try   {
     long res = datasvc_test(argc, argv);
-    //long res = rndmsvc_entry(argc, argv);
     return res;
   }
   catch(const exception& e)    {

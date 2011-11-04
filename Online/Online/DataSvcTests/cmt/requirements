@@ -12,3 +12,8 @@ private
 library DataSvcTest ../src/*.cpp
 macro_append DataSvcTest_pp_cppflags " -I../src "
 apply_pattern linker_library library=DataSvcTest
+
+application DataSvc_Test ../main/datasvc.cpp
+macro_append DataSvc_Test_dependencies  " DataSvcTest "
+application RndmSvc_Test ../main/rndm.cpp
+macro_append RndmSvc_Test_dependencies  " DataSvcTest "
