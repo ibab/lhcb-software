@@ -8,10 +8,10 @@
 # 	initial release
 # v0.2	2011-09-30 Manuel Schiller <manuel.schiller@nikhef.nl>
 # 	fixed problem with multiple subdirectories in build
+# v0.3	2011-11-03 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	modularise so that we have a chance to become more compiler
+# 	independent in the future
 #
-# todo
-# - tested my examples, wait for feedback from other people
-# - check parallel build safety
 #######################################################################
 
 #######################################################################
@@ -73,8 +73,16 @@
 #######################################################################
 # use ROOT config to get reasonable defaults for current environment
 ROOTCONFIG ?= root-config
+
+# other tools used in the build process
+AWK ?= $(shell which awk)
+SED ?= $(shell which sed)
+
 # get compiler version(s) used to compile ROOT
+CC ?= $(shell $(ROOTCONFIG) --cc)
 CXX ?= $(shell $(ROOTCONFIG) --cxx)
+LD ?= $(shell $(ROOTCONFIG) --ld)
+CPP ?= $(CC) -E
 ifneq ($(strip $(shell $(ROOTCONFIG) --help|tr ' ' '\n'|grep -- '--f77')),)
 ifneq ($(FC),/usr/bin/f77)
 # if FC points to /usr/bin/f77 (which is usually f2c in disguise), we
@@ -84,21 +92,30 @@ else
 FC ?= $(shell $(ROOTCONFIG) --f77)
 endif
 endif
-CC ?= $(shell $(ROOTCONFIG) --cc)
-CPP ?= $(CC) -E
-LD ?= $(shell $(ROOTCONFIG) --ld)
-AWK ?= $(shell which awk)
-SED ?= $(shell which sed)
-TUNEFLAG ?= $(shell $(CXX) --version | $(AWK) '// { for (i = 1; \
+
+# in case this did not work, we fall back to cc, c++, ld, cpp, f77
+CC ?= cc
+CXX ?= c++
+LD ?= ld
+CPP ?= cpp
+FC ?= f77
+
+# build default skeletal set of compiler flags
+CFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
+	  $(STDDEBUGFLAGS) $(CSTD)
+CXXFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
+	    $(STDDEBUGFLAGS) $(CXXSTD) $(shell $(ROOTCONFIG) --auxcflags)
+CPPFLAGS += -I$(shell $(ROOTCONFIG) --incdir)
+FFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
+	  $(STDDEBUGFLAGS) $(FSTD)
+
+# tune for native processor, but generate generic code (works different in
+# different versions of gcc/g++)
+TUNEFLAG ?= $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
 	    i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
-	    if ($$i < "4.") print "-mtune=opteron"; else print \
-	    "-mtune=native"; }; }')
-CFLAGS ?= -pipe -O2 $(TUNEFLAG) -g -Wall -Wextra -pedantic -fmessage-length=78
-CXXFLAGS ?= -pipe -O2 -g -Wall -Wextra $(TUNEFLAG) \
-	    $(shell $(ROOTCONFIG) --auxcflags) \
-	    -DBOOST_DISABLE_ASSERTS -fmessage-length=78
-CPPFLAGS ?= -I$(shell $(ROOTCONFIG) --incdir)
-FFLAGS ?= -pipe -O2 $(TUNEFLAG) -Wall -Wextra -pedantic -g -std=legacy
+	    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
+	    "-mtune=native"; }; } END { print tunefl; }')
+
 # assemble ROOT libraries
 ROOTLIBDIR ?= $(shell $(ROOTCONFIG) --libdir)
 # default set of ROOT libraries
@@ -107,13 +124,36 @@ ROOTLIBS ?= $(shell $(ROOTCONFIG) --libs)
 LIBGENVECTOR ?= $(shell test -e $(ROOTLIBDIR)/libGenVector.so && echo \
 		-lGenVector || echo -lMathCore)
 
-LDFLAGS ?= -rdynamic
+LDFLAGS += -rdynamic
 # flags to link and produce shared libs
 SHFLAGS ?= -shared
+# flags needed to produce dependency files
+CPPDEPFLAGS ?= -MM
+# produce nicer warning messages
+WARNFLAGS ?= -Wall -Wextra -fmessage-length=78
+# produce position independent code
+PICFLAGS ?= -fPIC
+# standard optimization level, no debugging code
+STDOPTFLAGS ?= -Os # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+# standard debugging flags: write symbol information
+STDDEBUGFLAGS ?= -g
+# use pipes instead of temp files
+PIPEFLAG ?= -pipe
+# set language standard(s) - should encourage users to write clean code
+CSTD ?= -std=c9x -pedantic
+CXXSTD ?= -std=gnu++98
+FSTD ?= -std=legacy -pedantic
 
 # export these to make subprocesses
 export ROOTCONFIG CC CXX FC LD CFLAGS CXXFLAGS FFLAGS LDFLAGS ROOTLIBS \
-    ROOTLIBDIR LIBGENVECTOR SHFLAGS AWK SED CPP LDLIBS LOADLIBES
+    ROOTLIBDIR LIBGENVECTOR SHFLAGS AWK SED CPP LDLIBS LOADLIBES CPPDEPFLAGS \
+    WARNFLAGS PICFLAGS STDOPTFLAGS STDDEBUGFLAGS PIPEFLAG CSTD CXXSTD FSTD
+
+#######################################################################
+# detect non-standard compilers
+#######################################################################
+# the idea is that you can override values here which do not work
+# if you use some special compiler (and not gcc/g++ and friends)
 
 #######################################################################
 # collect source files in current directory
@@ -129,11 +169,11 @@ alldicts = $(wildcard *Dict.cc) $(wildcard *Dict.C) $(wildcard *Dict.cpp) \
 # Fortran sources (not all variations)
 f77src = $(wildcard *.[fF])
 # dependency files (.d) for make
-alldeps = $(patsubst %.c,%.d,$(csrc)) $(patsubst %.cc,%.d,$(wildcard *.cc)) \
-	  $(patsubst %.C,%.d,$(wildcard *.C)) \
-	  $(patsubst %.cpp,%.d,$(wildcard *.cpp)) \
-	  $(patsubst %.cxx,%.d,$(wildcard *.cxx)) \
-	  $(patsubst %.c++,%.d,$(wildcard *.c++))
+alldeps = $(patsubst %.c,%.d,$(csrc)) $(patsubst %.cc,%.dd,$(wildcard *.cc)) \
+	  $(patsubst %.C,%.dd,$(wildcard *.C)) \
+	  $(patsubst %.cpp,%.dd,$(wildcard *.cpp)) \
+	  $(patsubst %.cxx,%.dd,$(wildcard *.cxx)) \
+	  $(patsubst %.c++,%.dd,$(wildcard *.c++))
 # source files without dictionaries
 allsrc = $(filter-out $(alldicts), $(csrc) $(ccsrc) $(f77src))
 
@@ -180,7 +220,8 @@ endif
 distclean: subdirs-distclean local-distclean local-clean
 
 local-distclean:
-	rm -f *.d $(TARGETS)
+	rm -f *.d *.dd $(TARGETS)
+	test -d html -a -f Doxyfile && rm -fr html
 
 doxy: $(allsrc) Doxyfile
 	doxygen Doxyfile
@@ -216,52 +257,59 @@ endif
 # this section should contain (generalized) rules for most build tasks,
 # we rely on GNU make to do something sensible in most cases
 #######################################################################
+
 # automatic prerequisites (inter-source file dependencies)
+%.d: CPP = $(CC) -E
+%.dd: CPP = $(CXX) -E
 %.d: %.c
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
-%.d: %.C
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+%.dd: %.C
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
-%.d: %.cc
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+%.dd: %.cc
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
-%.d: %.cpp
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+%.dd: %.cpp
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
-%.d: %.cxx
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+%.dd: %.cxx
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
-%.d: %.c++
-	$(CPP) -MM $(CPPFLAGS) $< > $@.$$$$; \
+%.dd: %.c++
+	$(CPP) $(CPPDEPFLAGS) $(CPPFLAGS) $< > $@.$$$$; \
 		$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 		rm -f $@.$$$$
 
 # building position independent code for shared libraries
-%.os: CXXFLAGS += -fPIC
+%.os: CXXFLAGS += $(PICFLAGS)
+%.os: CFLAGS += $(PICFLAGS)
+%.os: FFLAGS += $(PICFLAGS)
+
 # rules to build object files for shared libraries (we need them because
 # we changed the default ending .o to .os)
 %.os: %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.C
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.cxx
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.c++
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 %.os: %.f
 	$(FC) $(FFLAGS) -c $< -o $@
 %.os: %.F
 	$(FC) $(CPPFLAGS) $(FFLAGS) -c $< -o $@
+
 # these are less standard and may be missing
 %.o: %.cxx
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
@@ -320,4 +368,4 @@ ROOTCINT_PP = $(AWK) '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) \
 #######################################################################
 include $(alldeps)
 
-# vim: tw=78:sw=4:ft=Makefile
+# vim: tw=78:sw=4:ft=make

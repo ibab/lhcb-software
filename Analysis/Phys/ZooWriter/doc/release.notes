@@ -4,6 +4,18 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 ! 2011-11-05 - Manuel Tobias Schiller
+ - added Doxyfile to Zoo/ to make "make doxy" work
+ - adapt Rules.mk to remove doxygen's html directory during "make distclean"
+   if there is a Doxyfile in the directory
+ - fix a compiler warning in one of the examples
+ - modularise Rules.mk a little in order to help people who might wish to use
+   a different compiler in the future, but no user-visible or functional
+   changes
+ - in examples/Makefile, illustrate how one can link one's executables against
+   the static or shared version of libZooROOT, and (very briefly) explain the
+   difference between the two options
+
+! 2011-11-05 - Manuel Tobias Schiller
  - added class ZooStringToUIDTable which associates strings with a 32 bit
    number which is unique within each ZooStringToUIDTable; this will serve as
    a building block for a ZooStringValueBlock class which maps strings to

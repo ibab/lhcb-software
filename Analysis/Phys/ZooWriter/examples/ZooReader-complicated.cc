@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	chain->GetEntry(i);
 
 	//loop over all MC particles to find out how many there are
-	for (int m=0; m < pev->NMCP(); m++){
+	for (unsigned m = 0; m < pev->NMCP(); ++m) {
 	    const ZooMCP *mcp = pev->MCP(m);
 	    if(mcp->pid() == 310) nMCKs++;
 	    if(mcp->pid() == 3122) nMCLambdas++;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 
 	//loop over all entries in our myKs branch, i.e. all candidates which
 	//come from the corresponding selection in the current event
-	for(int m = 0 ;m < myKs->size(); ++m){
+	for (unsigned m = 0 ;m < myKs->size(); ++m) {
 	    //get Ks candidate
 	    const ZooP *candidate = (*myKs)[m];
 
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
 	}
 
 	//Do the same for the lambdas
-	for(int m = 0; m < myLambda->size(); ++m){
+	for (unsigned m = 0; m < myLambda->size(); ++m){
 	    
 	    const ZooP *candidate=(*myLambda)[m];
 
