@@ -44,6 +44,9 @@
 #pragma link C++ class ZooKeyValueBlock::rw_proxy+;
 #pragma link C++ function operator<<(std::ostream&, const ZooKeyValueBlock&);
 
+#pragma link C++ class ZooStringToUIDTable+;
+#pragma link C++ function operator<<(std::ostream&, const ZooStringToUIDTable&);
+
 #pragma link C++ class ZooLHCbID+;
 #pragma link C++ class ZooLHCbIDBlock+;
 #pragma link C++ function operator<<(std::ostream&, const ZooLHCbID&);
@@ -74,7 +77,6 @@
 #pragma link C++ class ZooTrackInfo+;
 #pragma link C++ class ZooTreefitInfo+;
 #pragma link C++ class ZooParticleInfo+;
-
 
 #endif
 

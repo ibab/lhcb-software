@@ -3,6 +3,12 @@
 ! Responsible : Georg Krocker <krocker@physi.uni-heidelberg.de>
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
+! 2011-11-05 - Manuel Tobias Schiller
+ - added class ZooStringToUIDTable which associates strings with a 32 bit
+   number which is unique within each ZooStringToUIDTable; this will serve as
+   a building block for a ZooStringValueBlock class which maps strings to
+   values
+
 ! 2011-11-02 - Paul Seyfert
  - another method of MC truth writing.
    in contrast to the automatic association with the bkg category:
