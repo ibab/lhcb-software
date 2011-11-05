@@ -20,5 +20,5 @@ $(TARGETS): CC = $(CXX)
 #
 # to link your code against the statically compiled libZooROOT, uncomment
 #$(TARGETS): LDLIBS += $(ROOTLIBS) -lMinuit $(LIBGENVECTOR) Zoo/libZooROOT.a
-# to link your code against the statically compiled libZooROOT, uncomment
+# to link your code against the shared libZooROOT, uncomment
 $(TARGETS): LDLIBS += $(ROOTLIBS) -lMinuit $(LIBGENVECTOR) -LZoo -lZooROOT
