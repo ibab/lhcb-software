@@ -261,9 +261,9 @@ def getCachedPackageConf(name):
     p = None
     exclude_list  = [x.name() for x in package_conf_cache]
     exclude_list += [x.name() for x in project_conf_cache]
-    exclude_list += [x.lower() for x in LbConfiguration.Project.project_names]
+    exclude_list += [x.upper() for x in LbConfiguration.Project.project_names]
     exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
-    if name.lower() not in exclude_list :
+    if name.upper() not in exclude_list :
         p = None
         try :
             p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
@@ -371,7 +371,7 @@ def callUpdateCommand(project, version):
     log = logging.getLogger()
     if not _post_install_env :
         _post_install_env = dict(os.environ)
-        from LbConfiguration.LbLogin import getLbLoginEnv
+        import LbConfiguration.LbLogin
         llsargs = []
         if debug_flag :
             llsargs.append("--debug")
@@ -382,7 +382,7 @@ def callUpdateCommand(project, version):
         llsargs.append("--scripts-version=%s" % lbscripts_version)
         llsargs.append("--cmtconfig=%s" % cmtconfig)
         log.debug("Running LbLogin %s" % " ".join(llsargs))
-        tmp_env = getLbLoginEnv(llsargs)
+        tmp_env = LbConfiguration.LbLogin.getLbLoginEnv(llsargs)
         for var in tmp_env.keys() :
             _post_install_env[var] = tmp_env[var]
     projcmds = _update_commands.get((project,version), None)
