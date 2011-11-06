@@ -221,7 +221,7 @@ distclean: subdirs-distclean local-distclean local-clean
 
 local-distclean:
 	rm -f *.d *.dd $(TARGETS)
-	test -d html -a -f Doxyfile && rm -fr html
+	test -d html -a -f Doxyfile && rm -fr html || true
 
 doxy: $(allsrc) Doxyfile
 	doxygen Doxyfile

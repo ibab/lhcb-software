@@ -104,7 +104,7 @@ bool ZooKeyValueBlock::modify(unsigned key, float val)
 void ZooKeyValueBlock::dump(FILE* f) const
 {
     for (const_iterator it = begin(); end() != it; ++it) {
-	std::pair<unsigned, float> kv = *it;
+	const_iterator::value_type kv = *it;
 	std::fprintf(f, "%u\t%f\n", kv.first, kv.second);
     }
 }
@@ -114,7 +114,7 @@ void ZooKeyValueBlock::dump(std::ostream& ostr) const
     char* buf = new char[32];
     std::size_t sz = 32;
     for (const_iterator it = begin(); end() != it; ++it) {
-	std::pair<unsigned, float> kv = *it;
+	const_iterator::value_type kv = *it;
 	size_t wr = sz;
 	do {
 	    wr = std::snprintf(buf, sz, "%u\t%f\n", kv.first, kv.second);

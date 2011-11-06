@@ -44,6 +44,8 @@ class ZooKeyValueBlock: public TObject
 
 	/// check if the property "key" exists
 	bool exists(unsigned key) const;
+	/// check if the property "key" exists
+	bool find(unsigned key) const { return exists(key); }
 	/// get the value of the property "key"
 	float value(unsigned key) const;
 	/// erase a key-value pair (return old value of key, if any)
@@ -57,6 +59,8 @@ class ZooKeyValueBlock: public TObject
 
 	/// return size of key-value map
 	unsigned size() const { return m_idx.size(); }
+	/// return true if the key-value map is empty
+	bool empty() const { return m_idx.empty(); }
 	/// return capacity of key-value map
 	unsigned capacity() const
 	{ return std::min(m_idx.capacity(), m_val.capacity()); }
@@ -65,6 +69,8 @@ class ZooKeyValueBlock: public TObject
 	{ newsz = std::min(newsz, size()); m_idx.reserve(newsz); m_val.reserve(newsz); }
 	/// clear the key-value map
 	void clear() { m_idx.clear(); m_val.clear(); }
+	/// clear the key-value map
+	virtual void Clear() { TObject::Clear(); clear(); }
 
 	/// get value of the property "key"
 	float operator[](unsigned key) const { return value(key); }
@@ -104,6 +110,8 @@ class ZooKeyValueBlock::const_iterator {
 	    m_parent(parent), m_idx(idx) { }
 	friend class ZooKeyValueBlock;
     public:
+	/// type returned when deferencing
+	typedef std::pair<const UInt_t, const float> value_type;
 	/// copy constructor
 	const_iterator(const const_iterator& other) :
 	    m_parent(other.m_parent), m_idx(other.m_idx) { }
@@ -130,32 +138,29 @@ class ZooKeyValueBlock::const_iterator {
 	/// comparison of iterators
 	bool operator!=(const const_iterator& other) const
 	{ return ! (*this == other); }
-	/// comparison of iterators
+	/// prefix increment
 	const const_iterator& operator++() { ++m_idx; return *this; }
-	/// comparison of iterators
+	/// prefix decrement
 	const const_iterator& operator--() { --m_idx; return *this; }
-	/// comparison of iterators
+	/// in-place add
 	const const_iterator& operator+=(int c) { m_idx += c; return *this; }
-	/// comparison of iterators
+	/// in-place subtract
 	const const_iterator& operator-=(int c) { m_idx -= c; return *this; }
-	/// comparison of iterators
+	/// postfix increment
 	const_iterator operator++(int)
 	{ const_iterator tmp(*this); ++*this; return tmp; }
-	/// comparison of iterators
+	/// postfix decrement
 	const_iterator operator--(int)
 	{ const_iterator tmp(*this); --*this; return tmp; }
-	/// comparison of iterators
+	/// addition
 	const_iterator operator+(int c)
 	{ const_iterator tmp(*this); *this += c; return tmp; }
-	/// comparison of iterators
+	/// subtraction
 	const_iterator operator-(int c)
 	{ const_iterator tmp(*this); *this -= c; return tmp; }
 	/// deference (returns map-style pair of (key, value))
-	std::pair<unsigned, float> operator*() const
-	{
-	    return std::make_pair(m_parent->m_idx[m_idx],
-		    m_parent->m_val[m_idx]);
-	}
+	value_type operator*() const
+	{ return value_type(m_parent->m_idx[m_idx], m_parent->m_val[m_idx]); }
 };
 
 class ZooKeyValueBlock::r_proxy {
@@ -211,6 +216,6 @@ inline ZooKeyValueBlock::r_proxy ZooKeyValueBlock::get_r_proxy(unsigned key) con
 /// output to cout and the like
 std::ostream& operator<<(std::ostream& os, const ZooKeyValueBlock& zkv);
 
-#endif /* __ZOO_H */
+#endif /* __ZOOKEYVALUEBLOCK_H */
 
-
+// vim: sw=4:tw=78:ft=cpp

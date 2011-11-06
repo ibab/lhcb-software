@@ -45,7 +45,14 @@
 #pragma link C++ function operator<<(std::ostream&, const ZooKeyValueBlock&);
 
 #pragma link C++ class ZooStringToUIDTable+;
+#pragma link C++ class ZooStringToUIDTable::const_iterator+;
 #pragma link C++ function operator<<(std::ostream&, const ZooStringToUIDTable&);
+
+#pragma link C++ class ZooStringValueBlock+;
+#pragma link C++ class ZooStringValueBlock::const_iterator+;
+#pragma link C++ class ZooStringValueBlock::r_proxy+;
+#pragma link C++ class ZooStringValueBlock::rw_proxy+;
+#pragma link C++ function operator<<(std::ostream&, const ZooStringValueBlock&);
 
 #pragma link C++ class ZooLHCbID+;
 #pragma link C++ class ZooLHCbIDBlock+;

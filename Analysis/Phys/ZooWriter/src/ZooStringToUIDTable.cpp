@@ -18,12 +18,12 @@
 
 const std::string ZooStringToUIDTable::s_empty("");
 
-unsigned ZooStringToUIDTable::hash(const std::string& str)
+UInt_t ZooStringToUIDTable::hash(const std::string& str)
 {
-    unsigned hash = s_FNV1a32Offset;
+    UInt_t hash = s_FNV1a32Offset;
     for (std::string::const_iterator it = str.begin();
 	    str.end() != it; ++it) {
-	hash ^= static_cast<unsigned>(*it);
+	hash ^= static_cast<UInt_t>(*it);
 	hash *= s_FNV1a32Multiplier;
     }
     unsigned length = str.size();
@@ -40,15 +40,15 @@ unsigned ZooStringToUIDTable::hash(const std::string& str)
     return hash;
 }
 
-bool ZooStringToUIDTable::find(unsigned uid) const
+bool ZooStringToUIDTable::find(UInt_t uid) const
 {
     return std::binary_search(m_uids.begin(), m_uids.end(), uid);
 }
 
-unsigned ZooStringToUIDTable::insert(const std::string& str, unsigned hash)
+UInt_t ZooStringToUIDTable::insert(const std::string& str, UInt_t hash)
 {
     if (!hash) ++hash;
-    std::vector<unsigned>::iterator it =
+    std::vector<UInt_t>::iterator it =
 	std::lower_bound(m_uids.begin(), m_uids.end(), hash);
     std::vector<std::string>::iterator jt =
 	m_strs.begin() + unsigned(it - m_uids.begin());
@@ -57,7 +57,7 @@ unsigned ZooStringToUIDTable::insert(const std::string& str, unsigned hash)
 	bool exactmatch = false;
 	while (m_uids.end() != it && !(exactmatch = (*jt == str))) {
 	    m_hashcoll = true;
-	    const unsigned lastuid = *it;
+	    const UInt_t lastuid = *it;
 	    ++it;
 	    ++jt;
 	    if (m_uids.end() == it ||
@@ -84,9 +84,9 @@ unsigned ZooStringToUIDTable::insert(const std::string& str, unsigned hash)
     return hash;
 }
 
-const std::string& ZooStringToUIDTable::operator[](unsigned uid) const
+const std::string& ZooStringToUIDTable::operator[](UInt_t uid) const
 {
-    std::vector<unsigned>::const_iterator it =
+    std::vector<UInt_t>::const_iterator it =
 	std::lower_bound(m_uids.begin(), m_uids.end(), uid);
     // if we found the UID, return the corresponding string
     if (it != m_uids.end() && *it == uid)
@@ -95,10 +95,10 @@ const std::string& ZooStringToUIDTable::operator[](unsigned uid) const
     return s_empty;
 }
 
-unsigned ZooStringToUIDTable::operator[](const std::string& str) const
+UInt_t ZooStringToUIDTable::operator[](const std::string& str) const
 {
-    const unsigned uidguess = hash(str);
-    std::vector<unsigned>::const_iterator it =
+    const UInt_t uidguess = hash(str);
+    std::vector<UInt_t>::const_iterator it =
 	std::lower_bound(m_uids.begin(), m_uids.end(), uidguess);
     // if we found the UID, return the corresponding string
     if (it != m_uids.end()) {
@@ -106,7 +106,7 @@ unsigned ZooStringToUIDTable::operator[](const std::string& str) const
 	    m_strs.begin() + (it - m_uids.begin());
 	if (*it == uidguess) {
 	    do {
-		const unsigned lastuid = *it;
+		const UInt_t lastuid = *it;
 		// check if we found it
 		if (str == *jt) return lastuid;
 		++it;
@@ -134,11 +134,11 @@ void ZooStringToUIDTable::dump(std::ostream& ostr) const
 {
     char* buf = new char[32];
     std::size_t sz = 32;
-    for (unsigned idx = 0; idx < size(); ++idx) {
+    for (const_iterator it = begin(); end() != it; ++it) {
         size_t wr = sz;
         do {
             wr = std::snprintf(buf, sz, "uid %10u %s\n",
-		    m_uids[idx], m_strs[idx].c_str());
+		    (*it).first, (*it).second.c_str());
             if (wr >= sz) {
 		// reallocate buf if not large enough
                 delete[] buf;
@@ -153,8 +153,8 @@ void ZooStringToUIDTable::dump(std::ostream& ostr) const
 
 void ZooStringToUIDTable::dump(FILE* f) const
 {
-    for (unsigned idx = 0; idx < size(); ++idx) {
-	fprintf(f, "uid %10u %s\n", m_uids[idx], m_strs[idx].c_str());
+    for (const_iterator it = begin(); end() != it; ++it) {
+	fprintf(f, "uid %10u %s\n", (*it).first, (*it).second.c_str());
     }
 }
 

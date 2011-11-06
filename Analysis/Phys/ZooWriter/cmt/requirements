@@ -30,7 +30,8 @@ library      Zoo  *.cpp
 library      ZooROOT Zoo.cpp ZooPacked.cpp ZooPackedState.cpp \
                ZooPackedVertex.cpp ZooPackedParticle.cpp ZooPackedStates.cpp \
                ZooOccupancy.cpp ZooLHCbID.cpp ZooTriggerDecisions.cpp \
-               ZooKeyValueBlock.cpp ZooObjectManager.cpp ZooDict.cpp
+               ZooKeyValueBlock.cpp ZooStringToUIDTable.cpp \
+               ZooStringValueBlock.cpp ZooObjectManager.cpp ZooDict.cpp
 
 # libZoo is a component library (for use in Gaudi)
 apply_pattern component_library library=Zoo
@@ -39,17 +40,21 @@ private
 # define how to make ZooDict.cpp
 # NOTE: rootcint is buggy when dealing with partial template specialization,
 #       so patch its output with awk to yield valid C++ code
-action ZooDict.cpp "cd ../src; rootcint -f ZooDict.cpp -c -p Zoo.h ZooPacked.h ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h ZooPackedStates.h ZooObjectManager.h ZooOccupancy.cpp ZooLHCbID.h ZooTriggerDecisions.h ZooKeyValueBlock.h ZooLinkDef.h; mv ZooDict.cpp ZooDict.cpp.tmp; awk '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) $$0 = "'"'"template <> "'"'" $$0; } // { print; }' < ZooDict.cpp.tmp > ZooDict.cpp; rm ZooDict.cpp.tmp"
+action ZooDict.cpp "cd ../src; rootcint -f ZooDict.cpp -c -p Zoo.h ZooPacked.h ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h ZooPackedStates.h ZooObjectManager.h ZooOccupancy.cpp ZooLHCbID.h ZooTriggerDecisions.h ZooKeyValueBlock.h ZooStringToUIDTable.h ZooStringValueBlock.h ZooLinkDef.h; mv ZooDict.cpp ZooDict.cpp.tmp; awk '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) $$0 = "'"'"template <> "'"'" $$0; } // { print; }' < ZooDict.cpp.tmp > ZooDict.cpp; rm ZooDict.cpp.tmp"
 # building libZoo requires building libZooROOT, and both require the ROOT
 # dictionaries
 macro Zoo_dependencies ZooROOT ZooDict.cpp
 macro ZooROOT_dependencies ZooDict.cpp
 # define what goes in ZooDict.cpp
 macro ZooDict.cpp_dependencies Zoo.cpp Zoo.h ZooPacked.cpp ZooPacked.h \
-  ZooPackedState.cpp ZooPackedVertex.cpp ZooPackedParticle.cpp \
-  ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h \
-  ZooPackedStates.cpp ZooPackedStates.h ZooObjectManager.h \
-  ZooObjectManager.cpp ZooLHCbID.h ZooLHCbID.cpp ZooKeyValueBlock.h ZooLinkDef.h
+          ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h \
+          ZooPackedState.cpp ZooPackedVertex.cpp ZooPackedParticle.cpp \
+          ZooPackedStates.cpp ZooPackedStates.h ZooObjectManager.h \
+          ZooObjectManager.cpp ZooOccupancy.h ZooOccupancy.cpp \
+          ZooLHCbID.h ZooLHCbID.cpp ZooKeyValueBlock.h \
+          ZooKeyValueBlock.cpp ZooStringToUIDTable.h ZooStringToUIDTable.cpp \
+          ZooTriggerDecisions.h ZooTriggerDecisions.cpp \
+          ZooStringValueBlock.h ZooStringValueBlock.cpp ZooLinkDef.h
 
 # Pass DaVinci Version to preprocessor. This may cause trouble in case the user hast a crap path because we are extracting the version from the DaVinci_v*r*p* string from $DAVINCIROOT
 macro_append Zoo_cppflags "-DDV_VER=$(shell echo $(DAVINCIROOT)| awk 'BEGIN{RS="'"'"/"'"'"} /DaVinci_v*r*/ {if (index($$0, "'"'"p"'"'")) {ver=substr($$0,0, index($$0,"'"'"p"'"'")-1)}else{ver=$$0}}; END{print ver}'| sed "'"'"s/[^0-9]//g"'"'" )"
