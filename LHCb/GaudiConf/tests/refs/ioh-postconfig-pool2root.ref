@@ -47,12 +47,12 @@
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 Before, i.e. POOL
-[<PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2abc1acfeb50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2abc1acfed50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2abc1acfec50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2abc1acfee50>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2abc1a49ad70>]
+[<PoolDbCnvSvc/PoolRootEvtCnvSvc at 0x2b657d094c50>, <PoolDbCnvSvc/PoolRootTreeEvtCnvSvc at 0x2b657d094e50>, <PoolDbCnvSvc/PoolRootKeyEvtCnvSvc at 0x2b657d094d50>, 'LHCb::RawDataCnvSvc', <PoolDbCnvSvc/FileRecordCnvSvc at 0x2b657d67d050>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager', <PoolDbCacheSvc/PoolDbCacheSvc at 0x2b657c830c80>]
 DATAFILE='testRootOP.dst' TYP='POOL_ROOTTREE' OPT='REC'
 DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' TYP='POOL_ROOT' OPT='READ'"]
 After, i.e. ROOT
-[<Gaudi::RootCnvSvc/RootCnvSvc at 0x6f64ff0>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x6f62750>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']
+[<Gaudi::RootCnvSvc/RootCnvSvc at 0x1190f520>, 'LHCb::RawDataCnvSvc', <Gaudi::RootCnvSvc/FileRecordCnvSvc at 0x1190cc80>, 'Gaudi::MultiFileCatalog/FileCatalog', 'Gaudi::IODataManager/IODataManager']
 DATAFILE='testRootOP.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='testRootOP.dst' SVC='FileRecordCnvSvc' OPT='REC'
 ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
@@ -72,7 +72,7 @@ PersistencySvc/FileRecordPersistencySvc
 ==========================
 Debugging Persistency Services
 Gaudi::RootCnvSvc/RootCnvSvc
-{'EnableIncident': True}
+{'EnableIncident': True, 'CacheBranches': [], 'VetoBranches': ['*']}
 LHCb::RawDataCnvSvc
 Gaudi::RootCnvSvc/FileRecordCnvSvc
 {'ShareFiles': 'YES'}
@@ -92,7 +92,7 @@ EventSelector/EventSelector
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Thu Sep 15 09:48:50 2011
+                                          running on lxbuild163.cern.ch on Sun Nov  6 15:50:45 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -109,12 +109,10 @@ EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 ApplicationMgr       INFO Application Manager Stopped successfully
 OutputStream         INFO Events output: 1
 FSROutputStream      INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset testRootOP.dst by its file ID:12884927-6FDF-E011-AD65-003048C9CD62
 FSROutputStream      INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 FileRecordCnvSvc     INFO Disconnected data IO:12884927-6FDF-E011-AD65-003048C9CD62 [testRootOP.dst]
 RootCnvSvc           INFO Disconnected data IO:9032500F-3924-DE11-89FD-0030487C5E0E [root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Boole/v18r0/30000000-100ev-20090407-MC09.digi?svcClass=default]
-XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
