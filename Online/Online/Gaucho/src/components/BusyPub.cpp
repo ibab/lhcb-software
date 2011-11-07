@@ -35,23 +35,27 @@ StatusCode BusyPub::start()
 StatusCode BusyPub::initialize()
 {
   PubSvc::initialize();
-
+  StatusCode sc;
+  IService *svc;
   if (m_enableTrending)
   {
+    m_sl->getService( "ToolSvc" , svc ) ;
+    m_isvc = (IToolSvc*)svc;
     if (m_trender == 0)
     {
-      const IInterface *a3( m_isvc ) ;
-      const std::string & nam( "SimpleTrendWriter" ) ;
-      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-      m_trender = dynamic_cast< ISimpleTrendWriter* >( intf ) ;
-    }
-    if (m_trender != 0)
-    {
-      m_trender->initialize();
-//      m_trender->setAverageTime(20);
-      std::string nnam /*= std::string*/("FarmCPULoad");
-      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
-      m_trender->setMaxTimeNoWrite(600);
+//      const IInterface *a3( m_isvc ) ;
+//      const std::string & nam( "SimpleTrendWriter" ) ;
+//      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
+//      m_trender = dynamic_cast< ISimpleTrendWriter* >( intf ) ;
+      sc = m_isvc->retrieveTool("SimpleTrendWriter","BusyPubWriter",m_trender,this);
+      if (sc.isSuccess() && m_trender != 0)
+      {
+        m_trender->initialize();
+  //      m_trender->setAverageTime(20);
+        std::string nnam /*= std::string*/("FarmCPULoad");
+        m_trender->setPartitionAndName(this->m_PartitionName,nnam);
+        m_trender->setMaxTimeNoWrite(600);
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -89,7 +93,7 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
 
 BusyPub::BusyPub(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 {
-  sl->getService( "ToolSvc" , m_isvc ) ;
+  m_sl = sl;
   declareProperty("TrendingOn",  m_enableTrending);
   m_FarmLoad = 0;
 }

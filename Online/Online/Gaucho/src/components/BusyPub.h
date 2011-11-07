@@ -2,6 +2,7 @@
 #define ONLINE_GAUCHO_BUSYPUB_H
 
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "Gaucho/MonAdder.h"
 #include "PubSvc.h"
 
@@ -24,6 +25,8 @@ public:
   DimService *m_FarmLoad;
   float m_fLoad;
   ISimpleTrendWriter* m_trender;
-  IService *m_isvc ;
+  IToolSvc *m_isvc ;
+  ISvcLocator* m_sl;
+
 };
 #endif // ONLINE_GAUCHO_BUSYPUB_H

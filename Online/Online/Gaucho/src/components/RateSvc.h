@@ -2,6 +2,7 @@
 #define ONLINE_GAUCHO_RATESVC_H
 
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "PubSvc.h"
 #include "Gaucho/COutService.h"
@@ -55,9 +56,10 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
   ISimpleTrendWriter* m_trender;
-  IService *m_isvc ;
+  IToolSvc *m_isvc;
   bool m_enableTrending;
   COUTServiceMap m_outmap;
+  ISvcLocator* m_sl;
 private:
   MyErrh *m_errh;
 

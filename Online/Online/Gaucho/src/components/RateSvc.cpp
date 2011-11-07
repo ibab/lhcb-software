@@ -231,9 +231,9 @@ RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
 
   declareProperty("TrendingOn",   m_enableTrending= false);
   // load trending tool
-  sl->getService( "ToolSvc" , m_isvc ) ;
 //  printf("%x\n",isvc);
   declareProperty("ServicePrefix",          m_prefix       = "");
+  m_sl = sl;
   m_outmap.clear();
   m_trender = 0;//dynamic_cast< ISimpleTrendWriter * >( intf ) ;
   m_oldProf = 0;
@@ -296,23 +296,42 @@ StatusCode RateSvc::initialize()
   PubSvc::initialize();
   StringReplace(m_prefix,"<part>",m_PartitionName);
   std::string syst = "HLT";
+  StatusCode sc;
+  IService *svc;
   if (m_enableTrending)
   {
+    m_sl->getService( "ToolSvc" , svc ) ;
+    m_isvc = (IToolSvc*)svc;
     if (m_trender == 0)
     {
-      const IInterface *a3( m_isvc ) ;
-      const std::string & nam( "SimpleTrendWriter" ) ;
-      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-      m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
-    }
-    if (m_trender != 0)
-    {
-      m_trender->initialize();
-      m_trender->setAverageTime(20);
-      m_trender->setPartitionAndName(this->m_PartitionName,syst);
-      m_trender->setMaxTimeNoWrite(600);
+      sc = m_isvc->retrieveTool("SimpleTrendWriter","RateSvcWriter",m_trender,this);
+      if (sc.isSuccess() && m_trender != 0)
+      {
+        m_trender->initialize();
+        m_trender->setAverageTime(20);
+        m_trender->setPartitionAndName(this->m_PartitionName,syst);
+        m_trender->setMaxTimeNoWrite(600);
+      }
     }
   }
+//  if (m_enableTrending)
+//  {
+//    m_sl->getService( "ToolSvc" , m_isvc ) ;
+//    if (m_trender == 0)
+//    {
+//      const IInterface *a3( m_isvc ) ;
+//      const std::string & nam( "SimpleTrendWriter" ) ;
+//      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
+//      m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
+//    }
+//    if (m_trender != 0)
+//    {
+//      m_trender->initialize();
+//      m_trender->setAverageTime(20);
+//      m_trender->setPartitionAndName(this->m_PartitionName,syst);
+//      m_trender->setMaxTimeNoWrite(600);
+//    }
+//  }
   return StatusCode::SUCCESS;
 }
 StatusCode RateSvc::finalize()
