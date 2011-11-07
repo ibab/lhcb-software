@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2011-11-07 - Veerle Heijne
+ - Add CombineDV.cpp which merges all stripped candidates of an event into one candidate
+
 !========================= DisplVertices v7r7 2011-09-07 =========================
 ! 2011-08-17 - Victor Coco
  - Modify registerCondition in the material Veto tool
