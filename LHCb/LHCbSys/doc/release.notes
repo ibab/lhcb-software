@@ -5,6 +5,138 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v33r1>2011-11-08 LHCbSys v33r1</A></H1><PRE>
+This version uses Gaudi v22r4 and LCG_61
+Production version for 2011 analysis.
+
+- Packages added:    Event/SwimmingEvent v1r0: Event Model classes for persistency of the swimming result
+- Packages modified: DetDescSvc v3r4, Magnet v7r4, RichDet v16r7, VeloDet v13r16,
+    DigiEvent v2r20, RecreatePIDTools v1r4, TrackEvent v5r13, GaudiConf v15r3,
+    LHCbAlgs v2r44, LHCbKernel v13r6, LHCbMath v3r27p1, PartProp v1r11,
+    MuonDAQ v4r12, MuonInterfaces v1r2p2, RootCnv v1r10, OTDAQ v7r11,
+    LoKiCore v11r4, LoKiMC v10r3, LoKiNumbers v10r2, RichKernel v7r46,
+    RichRecBase v4r9, PatKernel v2r4p1, TsaKernel v3r6p1, CondDBUI v3r12,
+    FileStager v1r4, TrackKernel v1r8
+
+- In Det/DetDescSvc v3r4
+  . Fixed bug #87392: Event time not set correctly on first event
+
+- In Det/Magnet v7r4
+  . Update MagneticFieldSvc to cache the field polarity (Down or Up) and return
+    this, instead of calculating it each time ::isDown() is called.
+
+- In Det/RichDet v16r7
+  . Preliminary changes for future MaPMT support
+    + add new DeRichPD and DeRichPDPanel classes that the HPD specific DeRichHPD
+      and DeRichHPDPanel classes now inherit from. Provide the generic methods
+      needed by any PD type (HPD or MaPMT). Used in the recosntruction, so it
+      becomes neutral to the PD technology.
+
+- In Det/VeloDet v13r16
+  . Added TEll1 event info to DeVeloSensor to propagate decoding problems to
+    downstream algorithms
+
+- In Event/DigiEvent v2r20
+  . Remove unused variable in STCluster class overlap method
+
+- In Event/RecreatePIDTools v1r4
+  . Add MuonPIDStatus to ProtoParticle additional info even if IsMuonLoose = 0,
+    to make it consistent with associated MuonPID object.
+
+- In Event/TrackEvent v5r13
+  . Renamed and documented the additional info associated to Muon tracks in
+    Track.xml
+
+- In GaudiConf v15r1,v15r2,v15r3
+  . In IOHelper.py:
+    o In SetupServices(), disable by default the ROOT tree caches. Can be
+      overridden by setting the RootCnv options externally as postConfigAction
+      and update ioh-postconfig-pool2root.ref.new test reference accordingly
+    o Add "xdigi" file extension to list of known extensions
+  . Fix IOExtension problem with svcClass.
+  . In DstConf.py:
+    o  Set the AncestorFor property of UnpackMuonTracks to the same path as
+       InputName, to allow the ancestor track association.
+    o  Add "NextNext" to default DstConf().SpilloverPaths
+
+- In Kernel/LHCbAlgs v2r43,v2r44
+  . Add new algorithms for copy/link data in TES: 
+    Gaudi::DataCopy, Gaudi::DataLink. See release notes for usage details
+  . OdinTimeDecoder:
+    o Added a check to prevent failures in case of bad ODIN time.
+    o Fixed a problem exposed by the fix to bug #87392: do not try to get
+      RawEvent if the Event Store is not ready.
+  . Added test exposing bug #87392: Event time not set correctly on first event
+  . Adapted TestTimeDecoderOdin to the new behavior of EventClockSvc.
+    (fix to bug #87392)
+
+- In Kernel/LHCbKernel v13r6
+  . Rename NHPDPanelsPerRICH as NPDPanelsPerRICH and NTotalHPDPanels as
+    NTotalPDPanels in RichSide.h, to be PD 'neutral'
+
+- In Kernel/PartProp v1r11
+  . Fixed a bug in the test partprop.usesvc1: GaudiPython script used as an
+    option file.
+  . Added the test-time dependency on DDDB.
+
+- In Muon/MuonDAQ v4r12
+  . Add protection for duplicated hits (due to data corruption).
+
+- In Online/RootCnv v1r9,v1r10
+  . Fix bug #88049: RootCnv has problems reading POOL XDST
+  . Fix bug for programming the branch cache properly
+
+- In OT/OTDAQ v7r11
+  . IOTRawBankDecoder extended with method isTotalNumberOfHitsLessThen(nmax)
+    with trivial default implementation. The nontrivial implementation
+    added to OTRawBankDecoder.
+
+- In Phys/LoKiCore v11r4
+  . add new functionality to streamers:
+    o selection the first few elements
+    o reverse the ordering of streamer
+    o sort and partial sort of the stream
+  . Fix a bug in the copy constructor of Scalers::RateLimitV. On copy, an
+    additional random offset was added to the initial offset. The offset is now
+    set to a new number from the same domain.
+
+- In Phys/LoKiMC v10r3
+  . MCVFUN: adaptor for MC-vertex
+
+- In Phys/LoKiNumbers v10r2
+  . Update for stream sorting functors
+
+- In Rich/RichKernel v7r46, Rich/RichRecBase v4r9
+  . Small changes to start to make things PD neutral (HPD/MaPMT).
+
+- In Tf/TsaKernel v3r6p1
+  . Fix typo in TsaKernel/SeedTrack.h, coverity bug 22106
+
+- Tools/CondDBUI v3r12
+  . ONLINE snapshot replacement in 'CondDB_UpdateOnlineSnapshots.py' is made
+    atomic.
+
+- In Tools/FileStager v1r3,v1r4
+  . Add a timeout of a minute to waiting for the garbage collector to complete
+    its cleanup.
+  . Improve the regex used to find the xrootd host.
+  . Improve garbage collector.
+  . Add finding of garbage.exe in C++ to cover running from pickled options (like
+    on the grid) in case the package is not released.
+  . Reorder PFN parsing to correctly pickup xrootd at Cern and RAL.
+  . Allow a PFN which is only a filename, no directories.
+  . Add xrdcp support for root:// PFNs.
+  . Fix a bug in disconnect logic.
+
+- In Tr/TrackKernel v1r8
+  . Modified 'constrainMass' in TrackStateVertex to consider the natural width of
+    the mother in the fit.
+
+- In Event/TrackEvent v5r13, Kernel/LHCbKernel v13r6, Kernel/LHCbMath v3r27p1,
+     Muon/MuonInterfaces v1r2p2, OT/OTDAQ v7r11, Tf/PatKernel v2r4p1,
+     Tf/TsaKernel v3r6p1
+  . Fix or mask icc warnings and remarks
+
 </PRE><H1><A NAME=v33r0>2011-09-16 LHCbSys v33r0</A></H1><PRE>
 This version uses Gaudi v22r4 and LCG_61
 Production version for 2011 reprocessing and MC11.
