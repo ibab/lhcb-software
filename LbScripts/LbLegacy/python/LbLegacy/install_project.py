@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111104'
+script_version = '111106'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r5p1"
@@ -225,18 +225,23 @@ def getCachedProjectConf(name):
     """
     import LbConfiguration.Project #@UnusedImport
     import LbConfiguration.Package
+    import LbConfiguration.External
     global project_conf_cache
     p = None
     exclude_list  = [x.name() for x in project_conf_cache]
     exclude_list += [x.name() for x in package_conf_cache]
     exclude_list += [x.upper() for x in LbConfiguration.Package.package_names]
     exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
+    exclude_list += [x.upper() for x in LbConfiguration.External.external_projects + lcg_tar]
     if name.upper() not in exclude_list :
         p = None
         try :
             p = LbConfiguration.Project.getProject(name, svn_fallback=True, raise_exception=False)
         except :
-            p = LbConfiguration.Project.getProject(name)
+            try :
+                p = LbConfiguration.Project.getProject(name)
+            except :
+                pass
         if p :
             project_conf_cache.append(p)
     else :
@@ -257,18 +262,23 @@ def getCachedPackageConf(name):
     """
     import LbConfiguration.Package
     import LbConfiguration.Project
+    import LbConfiguration.External
     global package_conf_cache
     p = None
     exclude_list  = [x.name() for x in package_conf_cache]
     exclude_list += [x.name() for x in project_conf_cache]
     exclude_list += [x.upper() for x in LbConfiguration.Project.project_names]
     exclude_list += [x.upper() for x in LbConfiguration.Package.project_names]
+    exclude_list += [x.upper() for x in LbConfiguration.External.external_projects + lcg_tar]
     if name.upper() not in exclude_list :
         p = None
         try :
             p = LbConfiguration.Package.getPackage(name, svn_fallback=True, raise_exception=False)
         except :
-            p = LbConfiguration.Package.getPackage(name)
+            try :
+                p = LbConfiguration.Package.getPackage(name)
+            except :
+                pass
         if p :
             package_conf_cache.append(p)
     else :
@@ -2237,7 +2247,6 @@ def addSoft(srcdir, dstdir, overwrite=False):
     else :
         log.debug("Add %s to %s" % (dstdir, srcdir))
     safeMakeDirs(dstdir)
-    log.info("%s has been created" % dstdir)
     for root, dirs, files in os.walk(srcdir, topdown=True) :
         dirstoremove = []
         for d in dirs :

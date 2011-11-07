@@ -1,3 +1,8 @@
+2011-11-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added protection to the getCached function to avoid looking for
+	external projects.
+
 2011-11-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed typo in getCachedPackage.
