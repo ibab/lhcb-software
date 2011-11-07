@@ -83,6 +83,7 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
     m_trender->startEvent();
     double fload = m_fLoad;
     m_trender->addEntry("FarmCPULoad", fload);
+    m_trender->saveEvent();
   }
 }
 
