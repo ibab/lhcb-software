@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RecreatePIDTools
-version           v1r3
+version           v1r4
 
 branches          cmt doc src
 include_path      none
