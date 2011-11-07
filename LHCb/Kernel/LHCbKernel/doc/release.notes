@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r6 2011-11-07 =========================
 ! 2011-10-11 - Marco Cattaneo
  - Fix trivial ICC remarks
 
