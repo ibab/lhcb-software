@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r27p1 2011-11-07 =========================
 ! 2011-10-07 - Marco Cattaneo
  - Mask a couple of ICC warnings and remarks from Boost, resulting from
    inclusion of Digit.h
