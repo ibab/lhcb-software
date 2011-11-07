@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v2r20 2011-11-07 =========================
 ! 2011-10-10 M Needham
  - Remove unused variable in STCluster class overlap method
 
