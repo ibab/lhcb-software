@@ -3,13 +3,8 @@ version           v29r1
 
 branches doc cmt
 
-#=======================================================
-use  DaVinci                 	v29r1   Phys
-use  DaVinciTests               v2r9
-
-#Other packages temporarily included
-use  GaudiConf                  v15r2
-use  LumiAlgs                   v7r1    Rec
+use  DaVinci             v29r1   Phys
+use  DaVinciTests        v2r9
 
 # Declare this as a container package
 apply_pattern container_package
