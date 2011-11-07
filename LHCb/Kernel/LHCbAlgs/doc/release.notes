@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r44 2011-11-07 =========================
 ! 2011-11-04 - Marco Clemencic
  - Added a check in OdinTimeDecoder to prevent failures in case of bad ODIN
    time.
