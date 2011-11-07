@@ -25,8 +25,5 @@ public:
   DimService *m_FarmLoad;
   float m_fLoad;
   ISimpleTrendWriter* m_trender;
-  IToolSvc *m_isvc ;
-  ISvcLocator* m_sl;
-
 };
 #endif // ONLINE_GAUCHO_BUSYPUB_H

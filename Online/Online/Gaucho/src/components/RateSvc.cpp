@@ -226,14 +226,11 @@ void RateSvc::makecounters(MonMap* mmap)
 
 
 
-RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
+RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) 
+: PubSvc(name,sl)
 {
-
   declareProperty("TrendingOn",   m_enableTrending= false);
-  // load trending tool
-//  printf("%x\n",isvc);
   declareProperty("ServicePrefix",          m_prefix       = "");
-  m_sl = sl;
   m_outmap.clear();
   m_trender = 0;//dynamic_cast< ISimpleTrendWriter * >( intf ) ;
   m_oldProf = 0;
@@ -275,63 +272,28 @@ StatusCode RateSvc::start()
   m_NamePrefix = m_PartitionName+"_";
   return StatusCode::SUCCESS;
 }
-//void RateSvc::handle(const Incident& inc)
-//{
-//  if (inc.type() == "APP_RUNNING")
-//  {
-//    m_AdderSys->start();
-//  }
-//  else if (inc.type() == "APP_STOPPED")
-//  {
-//    m_AdderSys->stop();
-//  }
-//}
+
 StatusCode RateSvc::initialize()
 {
-
-
-
-//  ToolSvc()->retrieveTool ( “SimpleTrendWriter”, m_trender, 0, true   );
-//  m_trender=tool<ISimpleTrendWriter>("SimpleTrendWriter");
-  PubSvc::initialize();
+  StatusCode sc = PubSvc::initialize();
   StringReplace(m_prefix,"<part>",m_PartitionName);
-  std::string syst = "HLT";
-  StatusCode sc;
-  IService *svc;
-  if (m_enableTrending)
+  if (sc.isSuccess() && m_enableTrending && m_trender == 0)
   {
-    m_sl->getService( "ToolSvc" , svc ) ;
-    m_isvc = (IToolSvc*)svc;
-    if (m_trender == 0)
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->retrieveTool("SimpleTrendWriter","RateSvcWriter",m_trender,this);
+    if (sc.isSuccess() && m_trender != 0)
     {
-      sc = m_isvc->retrieveTool("SimpleTrendWriter","RateSvcWriter",m_trender,this);
-      if (sc.isSuccess() && m_trender != 0)
-      {
-        m_trender->initialize();
-        m_trender->setAverageTime(20);
-        m_trender->setPartitionAndName(this->m_PartitionName,syst);
-        m_trender->setMaxTimeNoWrite(600);
-      }
+      std::string syst = "HLT";
+      m_trender->setAverageTime(20);
+      m_trender->setPartitionAndName(this->m_PartitionName,syst);
+      m_trender->setMaxTimeNoWrite(600);
     }
   }
-//  if (m_enableTrending)
-//  {
-//    m_sl->getService( "ToolSvc" , m_isvc ) ;
-//    if (m_trender == 0)
-//    {
-//      const IInterface *a3( m_isvc ) ;
-//      const std::string & nam( "SimpleTrendWriter" ) ;
-//      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-//      m_trender = dynamic_cast< ISimpleTrendWriter * >( intf ) ;
-//    }
-//    if (m_trender != 0)
-//    {
-//      m_trender->initialize();
-//      m_trender->setAverageTime(20);
-//      m_trender->setPartitionAndName(this->m_PartitionName,syst);
-//      m_trender->setMaxTimeNoWrite(600);
-//    }
-//  }
   return StatusCode::SUCCESS;
 }
 StatusCode RateSvc::finalize()

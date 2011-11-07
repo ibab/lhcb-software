@@ -56,10 +56,8 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
   ISimpleTrendWriter* m_trender;
-  IToolSvc *m_isvc;
   bool m_enableTrending;
   COUTServiceMap m_outmap;
-  ISvcLocator* m_sl;
 private:
   MyErrh *m_errh;
 

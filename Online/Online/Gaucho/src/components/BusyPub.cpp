@@ -1,4 +1,5 @@
 #include "BusyPub.h"
+#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
@@ -34,31 +35,24 @@ StatusCode BusyPub::start()
 
 StatusCode BusyPub::initialize()
 {
-  PubSvc::initialize();
-  StatusCode sc;
-  IService *svc;
-  if (m_enableTrending)
+  StatusCode sc = PubSvc::initialize();
+  if (sc.isSuccess() && m_enableTrending && m_trender == 0)
   {
-    m_sl->getService( "ToolSvc" , svc ) ;
-    m_isvc = (IToolSvc*)svc;
-    if (m_trender == 0)
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->retrieveTool("SimpleTrendWriter","BusyPubWriter",m_trender,this);
+    if (sc.isSuccess() && m_trender != 0)
     {
-//      const IInterface *a3( m_isvc ) ;
-//      const std::string & nam( "SimpleTrendWriter" ) ;
-//      IAlgTool *intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( nam , nam , nam , a3 ) ;
-//      m_trender = dynamic_cast< ISimpleTrendWriter* >( intf ) ;
-      sc = m_isvc->retrieveTool("SimpleTrendWriter","BusyPubWriter",m_trender,this);
-      if (sc.isSuccess() && m_trender != 0)
-      {
-        m_trender->initialize();
-  //      m_trender->setAverageTime(20);
-        std::string nnam /*= std::string*/("FarmCPULoad");
-        m_trender->setPartitionAndName(this->m_PartitionName,nnam);
-        m_trender->setMaxTimeNoWrite(600);
-      }
+      std::string nnam("FarmCPULoad");
+      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
+      m_trender->setMaxTimeNoWrite(600);
     }
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 void BusyPub::analyze(void *, int ,MonMap* mmap)
@@ -91,9 +85,9 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
   }
 }
 
-BusyPub::BusyPub(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
+BusyPub::BusyPub(const std::string& name, ISvcLocator* sl) 
+ : PubSvc(name,sl)
 {
-  m_sl = sl;
   declareProperty("TrendingOn",  m_enableTrending);
   m_FarmLoad = 0;
 }
