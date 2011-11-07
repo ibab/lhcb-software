@@ -59,7 +59,8 @@ namespace LoKi
       , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
-    { 
+      ,m_setReferencePointToPV ( true )
+    {
       // 
       declareProperty 
         ( "JetMaker"  , 
@@ -69,12 +70,16 @@ namespace LoKi
         ( "Associate2Vertex"  , 
           m_associate2Vertex , 
           "Jet reconstruction per vertex") ;  
+      declareProperty 
+        ( "SetReferencePointToPV"  , 
+          m_setReferencePointToPV , 
+          "set the Ref Point of the Jet to the associate PV if Associate2Vertex is true") ;  
       //
     }
     /// destructor
     virtual ~JetMaker( ){}
     // ========================================================================    
-  public:
+  public: 
     // ========================================================================    
     /** standard execution of the algorithm 
      *  @see LoKi::Algo 
@@ -97,8 +102,10 @@ namespace LoKi
     std::string      m_makerName ; // jet maker name  
     /// maker
     const IJetMaker* m_maker     ; // jet maker to be used 
-    /// associate two vertex?
+    /// associate to vertex
     bool m_associate2Vertex      ; // make jet per vertex
+    /// set the Ref Point of the Jet to the associated vertex
+    bool m_setReferencePointToPV ;
     
     // ========================================================================    
   };
@@ -159,6 +166,8 @@ StatusCode LoKi::JetMaker::analyse   ()
       while ( !jets.empty() ) 
       {
         LHCb::Particle* jet = jets.back() ;
+	if ( m_setReferencePointToPV )
+	  jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
         this->relate ( jet , *i_pv );
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;

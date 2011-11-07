@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-11-07 - Cedric Potterat
+ - Setting the option to set the referencePoint of the Jet to the associated vertex (if true) in  LoKiJetMakerAlg
+
 ! 2011-10-27 - Victor Coco
  - Rethinking of the jet to vertex association. Modification in LoKiJetMakerAlg
 
