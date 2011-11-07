@@ -3,9 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v15r3 2011-11-07 =========================
 ! 2011-11-04 - Marco Cattaneo
  - In IOHelper().SetupServices() disable by default the ROOT tree caches. Can
-   be overridden by setting the RootCnv options externally 
+   be overridden by setting the RootCnv options externally as postConfigAction 
  - Update ioh-postconfig-pool2root.ref.new test reference accordingly
 
 ! 2011-11-04 - Patrick Robbe
