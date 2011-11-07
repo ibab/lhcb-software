@@ -46,10 +46,10 @@ namespace {
     template <typename T> T get(istream& is);
     template <typename T> T get(const unsigned char* buf);
 
-    template <typename I, typename J> I _get(istream& is) {
+    template <typename I, typename J> I _get2(istream& is) {
          I x( get<J>(is) ); x |= I( get<J>(is) )<<(8*sizeof(J)); return x;
     }
-    template <typename I, typename J> I _get(const unsigned char* buf) { 
+    template <typename I, typename J> I _get2(const unsigned char* buf) { 
         I x( get<J>(buf) ) ; x |= I(get<J>(buf+sizeof(J)))<<8*sizeof(J) ; return x;
     }
     template <> uint8_t get<uint8_t>(istream& is) {
@@ -59,12 +59,12 @@ namespace {
     }
     template <>  uint8_t get< uint8_t>(const unsigned char* buf) { return uint8_t( buf[0] ); }
 
-    template <> uint16_t get<uint16_t>(istream& is) { return _get<uint16_t, uint8_t>(is); }
-    template <> uint32_t get<uint32_t>(istream& is) { return _get<uint32_t,uint16_t>(is); }
-    template <> uint64_t get<uint64_t>(istream& is) { return _get<uint64_t,uint32_t>(is); }
+    template <> uint16_t get<uint16_t>(istream& is) { return _get2<uint16_t, uint8_t>(is); }
+    template <> uint32_t get<uint32_t>(istream& is) { return _get2<uint32_t,uint16_t>(is); }
+    template <> uint64_t get<uint64_t>(istream& is) { return _get2<uint64_t,uint32_t>(is); }
         
-    template <> uint16_t get<uint16_t>(const unsigned char* buf) { return _get<uint16_t,uint8_t>(buf); }
-    template <> uint32_t get<uint32_t>(const unsigned char* buf) { return _get<uint32_t,uint16_t>(buf); }
+    template <> uint16_t get<uint16_t>(const unsigned char* buf) { return _get2<uint16_t,uint8_t>(buf); }
+    template <> uint32_t get<uint32_t>(const unsigned char* buf) { return _get2<uint32_t,uint16_t>(buf); }
 }
 
 
@@ -73,43 +73,36 @@ namespace ConfigZipFileAccessSvc_details {
 
     class ZipFile  : boost::noncopyable {
     public:
-      ZipFile(istream* is, const string& name) 
-        : m_name(name)
-        , m_file(is)
-      {
-            index();
-      }
 
-      ZipFile(const string& name) 
+      ZipFile(const string& name, ios::openmode mode = ios::in) 
         : m_name( name )
-        , m_file( new fstream( name.c_str(), ios::in | ios::binary ) )
+        , m_file( new fstream( name.c_str(), mode | ios::in | ios::binary ) )
       {
           index();
       } 
-      ~ZipFile() {
-           delete m_file;
-      }
+      ~ZipFile() { }
 
       bool good() const { return m_file->good(); }
       vector<string> files() const { return files(DefaultFilenameSelector()); }
+      bool append(const string& /*name*/, std::stringstream& /*is*/) { return false; } //TODO: implement writing...
 
       template <typename SELECTOR> vector<string> files(const SELECTOR& selector) const {
           vector<string> f;
-          for (map<string,ZipInfo>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
+          for (map<Gaudi::StringKey,ZipInfo>::const_iterator i = m_index.begin(); i!= m_index.end();++i) {
             if( selector(i->first) ) f.push_back(i->first);
           }
           return f;
       }
 
       istream* open(const string& fname) {
-            map<string,ZipInfo>::const_iterator i = m_index.find(fname);
+            map<Gaudi::StringKey,ZipInfo>::const_iterator i = m_index.find(fname);
             if ( i == m_index.end() ) return 0;
             m_file->seekg( i->second.file_offset,ios::beg);
             if (get<uint32_t>(*m_file)!=0x04034B50)  return 0;
             m_file->seekg(22, ios::cur);
             uint32_t offset = i->second.file_offset+30+get<uint16_t>(*m_file)+get<uint16_t>(*m_file);
             m_file->seekg( 0, ios::beg );
-            io::filtering_istream *s = new io::filtering_istream();
+            std::auto_ptr<io::filtering_istream> s(new io::filtering_istream());
             switch( i->second.compress ) {
                 case 0: 
                     break;
@@ -125,12 +118,11 @@ namespace ConfigZipFileAccessSvc_details {
 #endif
                 default:
                     cerr << " unknown compression algorithm " << i->second.compress << endl;
-                    delete s;
                     return 0;
             }
             s->push(io::slice(*m_file,offset,i->second.data_size));
             //TODO: we should keep track of outstanding open streams, by using ios_base::register_callback...
-            return s;
+            return s.release();
       }
 
     private:
@@ -226,8 +218,8 @@ namespace ConfigZipFileAccessSvc_details {
           }
       }
       string  m_name; 
-      istream *m_file;
-      map<string,ZipInfo> m_index;
+      std::auto_ptr<istream> m_file;
+      map<Gaudi::StringKey,ZipInfo> m_index;
     };
 }
 
@@ -246,6 +238,7 @@ DECLARE_SERVICE_FACTORY(ConfigZipFileAccessSvc)
   string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def += "/config.zip";
   declareProperty("File", m_name = def);
+  declareProperty("Mode", m_mode = "ReadOnly");
 }
 
 //=============================================================================
@@ -278,9 +271,17 @@ StatusCode ConfigZipFileAccessSvc::initialize() {
 }
 
 ConfigZipFileAccessSvc_details::ZipFile* ConfigZipFileAccessSvc::file() const {
-  if (m_zipfile.get()==0) { 
-      info() << " opening " << m_name << endmsg;
-      m_zipfile.reset( new ZipFile(m_name) );
+  if (m_zipfile.get()==0) {
+      if (m_mode!="ReadOnly") { // &&m_mode!="ReadWrite"&&m_mode!="Truncate") {
+        error() << "invalid mode: " << m_mode << endmsg;
+        return 0;
+      }
+      ios::openmode mode =  (m_mode == "ReadWrite") ? ( ios::in | ios::out | ios::ate   )
+        :                   (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
+        :                                               ios::in ;
+
+      info() << " opening " << m_name << " in mode " << m_mode << endmsg;
+      m_zipfile.reset( new ZipFile(m_name,mode) );
       if (!m_zipfile->good()) {
         error() << " Failed to open " << m_name << endmsg;
         return 0;
@@ -335,8 +336,20 @@ ConfigZipFileAccessSvc::read(const string& path) const {
 
 template <typename T>
 bool
-ConfigZipFileAccessSvc::write(const string& path,const T& object) const {
-  return false;
+ConfigZipFileAccessSvc::write(const string& path ,const T& object) const {
+  boost::optional<T> current = read<T>(path);
+  if (current) {
+    if (object==current) return true;
+    error() << " object @ " << path << "  already exists, but contents are different..." << endmsg;
+    return false;
+  }
+  if (m_mode=="ReadOnly") {
+    error() <<"attempted write, but tarfile has been opened ReadOnly" << endmsg;
+    return false;
+  }
+  std::stringstream s; s << object;
+  error() << " Writing not implemented at this time " << endmsg;
+  return file()!=0 && file()->append( path, s );
 }
 
 boost::optional<PropertyConfig>
@@ -389,21 +402,53 @@ ConfigZipFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_t
 }
 
 PropertyConfig::digest_type
-ConfigZipFileAccessSvc::writePropertyConfig(const PropertyConfig& ) {
-  error() << " Writing not implemented at this time " << endmsg;
-  return PropertyConfig::digest_type::createInvalid();
+ConfigZipFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
+  PropertyConfig::digest_type digest = config.digest();
+  return this->write(propertyConfigPath(digest), config) ? digest
+    : PropertyConfig::digest_type::createInvalid();
 }
 
 ConfigTreeNode::digest_type
-ConfigZipFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& ) {
-  error() << " Writing not implemented at this time " << endmsg;
-  return ConfigTreeNode::digest_type::createInvalid();
+ConfigZipFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
+  ConfigTreeNode::digest_type digest = config.digest();
+  return this->write(configTreeNodePath(digest), config) ? digest
+    : ConfigTreeNode::digest_type::createInvalid();
 }
 
 ConfigTreeNodeAlias::alias_type
-ConfigZipFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& ) {
-    error() << " Writing not implemented at this time " << endmsg;
+ConfigZipFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
+  // verify that we're pointing at something existing
+  if ( !readConfigTreeNode(alias.ref()) ) {
+    error() << " Alias points at non-existing entry " << alias.ref() << "... refusing to create." << endmsg;
     return ConfigTreeNodeAlias::alias_type();
+  }
+  // now write alias...
+  fs::path fnam = configTreeNodeAliasPath(alias.alias());
+  boost::optional<string> x = read<string>(fnam.string());
+  if (!x) {
+    //TODO: this is where we actually write...
+    std::stringstream s; s << alias.ref();
+    if (file()==0) { 
+        error() << " container file not found during attempted write of " << fnam.string() << endmsg;
+        return ConfigTreeNodeAlias::alias_type();
+    }
+    if ( file()->append(fnam.string(),s)) { 
+        info() << " created " << fnam.string() << endmsg;
+        return alias.alias();
+    } else  {
+        error() << " Writing not implemented at this time " << endmsg;
+        error() << " failed to write " << fnam.string() << endmsg;
+        return ConfigTreeNodeAlias::alias_type();
+    }
+  } else {
+    //@TODO: decide policy: in which cases do we allow overwrites of existing labels?
+    // (eg. TCK aliases: no!, tags: maybe... , toplevel: impossible by construction )
+    // that policy should be common to all implementations, so move to a mix-in class,
+    // or into ConfigTreeNodeAlias itself
+    if ( ConfigTreeNodeAlias::digest_type::createFromStringRep(*x)==alias.ref() ) return alias.alias();
+    error() << " Alias already exists, but contents differ... refusing to change" << endmsg;
+    return ConfigTreeNodeAlias::alias_type();
+  }
 }
 
 MsgStream& ConfigZipFileAccessSvc::msg(MSG::Level level) const {

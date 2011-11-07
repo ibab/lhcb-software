@@ -58,6 +58,7 @@ private:
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_name;   ///< filename of zip file from which to read configurations
+  std::string                          m_mode;   ///< which flags to specify when opening the zip file
   mutable std::auto_ptr<ConfigZipFileAccessSvc_details::ZipFile>               m_zipfile;
 
   template <typename T> boost::optional<T> read(const std::string& path) const;

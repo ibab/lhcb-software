@@ -354,9 +354,7 @@ namespace ConfigTarFileAccessSvc_details {
     m_file.write(buffer,size);
     static const size_t blockingFactor = 20;
     static char zeros[blockingFactor*512]={0};
-    if (size%512) {
-      m_file.write(zeros,512-size%512);
-    }
+    if (size%512) m_file.write(zeros,512-size%512);
     // update the logical EOF
     streamoff leof = m_file.tellp();
     // write end-of-file marker : 2 zero blocks, padded up to the blocking factor
@@ -370,9 +368,6 @@ namespace ConfigTarFileAccessSvc_details {
       cerr << "oops: read-back eof not what was predicted: " << m_leof << " vs. " << leof << endl;
       return false;
     }
-
-
-
     return true;
   }
 

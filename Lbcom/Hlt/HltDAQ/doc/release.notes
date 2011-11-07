@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-11-07 - Gerhard Raven
+ - add some scaffolding needed for writing directly to zip files. Actual 
+   writing is not yet implemented
+
+!========================= HltDAQ v2r11p1 2011-08-29 =========================
 ! 2011-10-12 - Marco Cattaneo
  - Mask icc warnings and fix icc remark
 
