@@ -13,29 +13,18 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r4 2011-11-07 =========================
 ! 2011-10-30 - Vanya Belyaev
-
  - add new functionality to streamers:
-
      - selection the first few elements 
-
        " ... >> FirstN ( 5 ) >> ... " 
-      
      - reverse the ordering of streamer
-
        " ... >> reverse  >> ... "  
-    
      - sort and partial sort of the stream 
-  
      " ... >> sort ( PT      ) >> ... " 
-
      " ... >> sort ( PT , 10 ) >> ... " 
-
      " ... >> sort ( PT , -1 , False ) >> ... " 
-
      " ... >> sort ( PT , 10 , False ) >> ... " 
-
-   
 
 ! 2011-08-05 - Roel Aaij
  - Fix a bug in the copy constructor of Scalers::RateLimitV. On copy, an
