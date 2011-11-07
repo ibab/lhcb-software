@@ -2,8 +2,8 @@
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
-package            LoKiNumbers
-version            v10r1
+package           LoKiNumbers
+version           v10r2
 
 # ================ structure ==================================================
 branches           cmt doc dict python 
