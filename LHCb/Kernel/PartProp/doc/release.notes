@@ -4,6 +4,7 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!========================= PartProp v1r11 2011-11-07 =========================
 ! 2011-10-28 - Marco Clemencic
  - Fixed a bug in the test partprop.usesvc1: GaudiPython script used as an
    option file.
