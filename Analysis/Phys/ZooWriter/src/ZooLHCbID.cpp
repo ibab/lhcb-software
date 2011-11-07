@@ -3,6 +3,139 @@
 
 #include "ZooLHCbID.h"
 
+ZooOTChannelID::ZooOTChannelID(unsigned station, unsigned layer, unsigned quarter,
+	unsigned module, unsigned straw, unsigned tdc)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooOTChannelID) == sizeof(ZooLHCbID));
+    m_id.otid.set<_OTChannelID::tdc>(tdc);
+    m_id.otid.set<_OTChannelID::straw>(straw);
+    m_id.otid.set<_OTChannelID::module>(module);
+    m_id.otid.set<_OTChannelID::quarter>(quarter);
+    m_id.otid.set<_OTChannelID::layer>(layer);
+    m_id.otid.set<_OTChannelID::station>(station);
+    m_id.otid.set<_OTChannelID::channeltype>(OT);
+}
+
+ZooOTChannelID::ZooOTChannelID(const ZooLHCbID& other) :
+    ZooLHCbID(other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooOTChannelID) == sizeof(ZooLHCbID));
+    if (OT != channeltype())
+	throw bad_cast("Constructor argument is no ZooOTChannelID");
+}
+
+ZooOTChannelID& ZooOTChannelID::operator=(const ZooLHCbID& other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooOTChannelID) == sizeof(ZooLHCbID));
+    if (OT != other.channeltype())
+	throw bad_cast("Assignment must have ZooOTChannelID on right hand side");
+    m_id.lhcbid = unsigned(other);
+    return *this;
+}
+
+ZooSTChannelID::ZooSTChannelID(unsigned type, unsigned station, unsigned layer,
+	unsigned region, unsigned sector, unsigned strip)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooSTChannelID) == sizeof(ZooLHCbID));
+    m_id.stid.set<_STChannelID::channeltype>(type?IT:TT);
+    m_id.stid.set<_STChannelID::type>(type);
+    m_id.stid.set<_STChannelID::station>(station);
+    m_id.stid.set<_STChannelID::layer>(layer);
+    m_id.stid.set<_STChannelID::region>(region);
+    m_id.stid.set<_STChannelID::sector>(sector);
+    m_id.stid.set<_STChannelID::strip>(strip);
+}
+
+ZooSTChannelID::ZooSTChannelID(const ZooLHCbID other) :
+    ZooLHCbID(other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooSTChannelID) == sizeof(ZooLHCbID));
+    if (TT != channeltype() && IT != channeltype())
+	throw bad_cast("Constructor argument is no ZooSTChannelID");
+}
+
+ZooSTChannelID& ZooSTChannelID::operator=(const ZooLHCbID other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooSTChannelID) == sizeof(ZooLHCbID));
+    if (TT != channeltype() && IT != channeltype())
+	throw bad_cast("Assignment must have ZooSTChannelID on right hand side");
+    m_id.lhcbid = unsigned(other);
+    return *this;
+}
+
+bool ZooSTChannelID::isTop() const
+{
+    if (isIT()) return 4 == region();
+    // is TT
+    if (1 == (region() & 1)) {
+	// region 1 or 3
+	return (sector() & 3) > 2;
+    }
+    // region 2
+    if (1 == station()) return ((sector() - 1) % 6) > 2;
+    // region 2 in TTB
+    if (sector() < 12 || sector() > 22)
+	return std::min(sector(), sector() - 22) > 2;
+    // middle of region 2 in TTB
+    return ((sector() - 5) % 6) > 2;
+}
+
+bool ZooSTChannelID::isASide() const
+{
+    if (isIT()) return 1 == region();
+    // is TT
+    if (1 == (region() & 1)) {
+	// region 1 or 3
+	return 3 == region();
+    }
+    if (1 == station())
+	return sector() > 9;
+    if (sector() > 10 && sector() < 14) return true;
+    return sector() > 16;
+}
+
+ZooVeloChannelID::ZooVeloChannelID(unsigned sensor, unsigned strip)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooVeloChannelID) == sizeof(ZooLHCbID));
+    m_id.veloid.set<_VeloChannelID::channeltype>(Velo);
+    m_id.veloid.set<_VeloChannelID::sensor>(sensor);
+    m_id.veloid.set<_VeloChannelID::strip>(strip);
+    if (sensor & 0x80) {
+	m_id.veloid.set<_VeloChannelID::type>(PileUpType);
+    } else if (sensor & 0x40) {
+	m_id.veloid.set<_VeloChannelID::type>(PhiType);
+    } else {
+	m_id.veloid.set<_VeloChannelID::type>(RType);
+    }
+}
+
+ZooVeloChannelID::ZooVeloChannelID(const ZooLHCbID other) :
+    ZooLHCbID(other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooVeloChannelID) == sizeof(ZooLHCbID));
+    if (Velo != channeltype())
+	throw bad_cast("Constructor argument is no ZooVeloChannelID");
+}
+
+ZooVeloChannelID& ZooVeloChannelID::operator=(const ZooLHCbID other)
+{
+    BOOST_STATIC_ASSERT(sizeof(ZooVeloChannelID) == sizeof(ZooLHCbID));
+    if (Velo != other.channeltype())
+	throw bad_cast("Assignment must have ZooVeloChannelID on right hand side");
+    m_id.lhcbid = unsigned(other);
+    return *this;
+	}
+
+ZooLHCbIDBlock::operator std::vector<ZooLHCbID>() const
+{
+    std::vector<ZooLHCbID> ids;
+    ids.reserve(m_ids.size());
+    UInt_t last = 0;
+    for (unsigned i = 0; i < m_ids.size(); ++i)
+	ids.push_back(ZooLHCbID(last += m_ids[i]));
+    return ids;
+}
+
 ClassImp(ZooLHCbIDBlock);
 
 std::ostream& operator<<(std::ostream& os, const ZooLHCbID& id)

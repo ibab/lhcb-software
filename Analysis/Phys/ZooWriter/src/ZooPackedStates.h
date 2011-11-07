@@ -39,16 +39,7 @@ public:
     }
 
     /// get state closest to given z
-    const ZooPackedState& closestState(double z) const
-    {
-	unsigned k = 0;
-	double dist = std::numeric_limits<double>::infinity();
-	for (unsigned j = 0; j < size(); ++j) {
-	    const double d = std::abs(operator[](j).z() - z);
-	    if (d < dist) k = j, dist = d;
-	}
-	return operator[](k);
-    }
+    const ZooPackedState& closestState(double z) const;
 
     ClassDef(ZooPackedStates, 1);
 };

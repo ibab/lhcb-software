@@ -4,6 +4,14 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-07 - Manuel Tobias Schiller
+ - fight code bloat by demoting some methods in ZooOccupancy, ZooLHCbID and
+   ZooPackedStates from inline to ordinary methods; since these methods
+   typically are rather complex, performance will not be affected, and
+   functionality remains unchanged
+ - fix another bug in cmt/requirements (ZooDict generated from
+   ZooOccupancy.cpp instead of ZooOccupancy.h)
+
 ! 2011-11-06 - Manuel Tobias Schiller
  - added ZooStringValueBlock class which is does for string keys what
    ZooKeyValueBlock does for intger keys

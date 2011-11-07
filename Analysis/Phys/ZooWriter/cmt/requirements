@@ -40,7 +40,7 @@ private
 # define how to make ZooDict.cpp
 # NOTE: rootcint is buggy when dealing with partial template specialization,
 #       so patch its output with awk to yield valid C++ code
-action ZooDict.cpp "cd ../src; rootcint -f ZooDict.cpp -c -p Zoo.h ZooPacked.h ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h ZooPackedStates.h ZooObjectManager.h ZooOccupancy.cpp ZooLHCbID.h ZooTriggerDecisions.h ZooKeyValueBlock.h ZooStringToUIDTable.h ZooStringValueBlock.h ZooLinkDef.h; mv ZooDict.cpp ZooDict.cpp.tmp; awk '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) $$0 = "'"'"template <> "'"'" $$0; } // { print; }' < ZooDict.cpp.tmp > ZooDict.cpp; rm ZooDict.cpp.tmp"
+action ZooDict.cpp "cd ../src; rootcint -f ZooDict.cpp -c -p Zoo.h ZooPacked.h ZooPackedState.h ZooPackedVertex.h ZooPackedParticle.h ZooPackedStates.h ZooObjectManager.h ZooOccupancy.h ZooLHCbID.h ZooTriggerDecisions.h ZooKeyValueBlock.h ZooStringToUIDTable.h ZooStringValueBlock.h ZooLinkDef.h; mv ZooDict.cpp ZooDict.cpp.tmp; awk '/.*<.*>::fgIsA = 0/ { if (!($$0 ~ /^template *<>/)) $$0 = "'"'"template <> "'"'" $$0; } // { print; }' < ZooDict.cpp.tmp > ZooDict.cpp; rm ZooDict.cpp.tmp"
 # building libZoo requires building libZooROOT, and both require the ROOT
 # dictionaries
 macro Zoo_dependencies ZooROOT ZooDict.cpp
