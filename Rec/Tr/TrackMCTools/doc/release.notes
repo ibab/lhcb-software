@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackMCTools v3r1 2011-11-08 =========================
 ! 2011-10-03 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
  - Fix icc remarks and warnings
