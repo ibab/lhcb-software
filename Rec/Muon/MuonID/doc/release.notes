@@ -3,15 +3,15 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-!========================= MuonID v9r1 2011-08-31 =========================
-
+!========================= MuonID v9r2 2011-11-08 =========================
 ! 2011-10-18 - J. Helder Lopes
  - Add additional info to Muon tracks using enums instead of hardcoded numbers.
  - Move the level of many log messages from DEBUG to VERBOSE.
 
+!========================= MuonID v9r1 2011-08-31 =========================
 ! 2011-08-29 - Roel Aaij
  - Only look for RecHeader when the MSG level is DEBUG and never warn about
-   it's absence.
+   its absence.
 
 ! 2011-08-26 J. Helder Lopes
  - Implemented IsMuonTight, which is IsMuon requiring hits with x,y crossing.
