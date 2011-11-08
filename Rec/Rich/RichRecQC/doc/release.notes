@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r55 2011-11-08 =========================
 ! 2011-10-31 - Chris Jones
  - Fix silly type conversion typo in the DAQ decoding errors monitor
 
