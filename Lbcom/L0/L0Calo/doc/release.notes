@@ -3,6 +3,12 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2011-11-08 - Julien Cogan
+ - L0CaloCandidatesFromRaw : configure the raw event location using the 
+ new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when 
+ accessing this location ; Write bank read status only if the raw event is
+ in the default location.
+
 !========================= L0Calo v11r5 2011-09-15 =========================
 ! 2011-09-14 - Patrick Robbe
  - Protect against new ECAL parasitic FEB

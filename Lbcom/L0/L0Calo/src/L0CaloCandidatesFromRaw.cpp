@@ -29,7 +29,6 @@ L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : L0FromRawBase ( name , pSvcLocator ) 
 { 
-  declareProperty("InputRawEventLocation",m_rawEvent=LHCb::RawEventLocation::Default);
   
 } ;
 
@@ -82,9 +81,14 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::OK ) ;
   readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::OK ) ;
   
-  if ( exist< LHCb::RawEvent >( m_rawEvent ) ) {
+  // Scan the list of input location and select the first existing one.
+  std::string rawEventLocation;
+  if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
+    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+  
+  if ( exist< LHCb::RawEvent >( rawEventLocation , IgnoreRootInTES ) ) {
 
-    rawEvt = get<LHCb::RawEvent>(  m_rawEvent  ) ;
+    rawEvt = get<LHCb::RawEvent>(  rawEventLocation  , IgnoreRootInTES ) ;
     const std::vector<LHCb::RawBank*>& banks = 
       rawEvt -> banks( LHCb::RawBank::L0Calo );
     
@@ -144,7 +148,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
                                         readoutStatus ) ;  
 
 
-  if ( writeOnTES() ) {
+  if ( writeOnTES() && m_statusOnTES ) {
     // Now put the status on TES also
     LHCb::RawBankReadoutStatuss * statuss = 
       getOrCreate< LHCb::RawBankReadoutStatuss , LHCb::RawBankReadoutStatuss > 
