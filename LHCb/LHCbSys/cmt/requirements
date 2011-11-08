@@ -86,7 +86,7 @@ use HepMCBack             v1r1    Gen     # Gloria Corti, Patrick Robbe
 
 # Kernel packages
 use HistoStrings          v1r2    Kernel  # Vanya Belyaev 
-use HltInterfaces         v4r3    Kernel  # Patrick Koppenburg
+use HltInterfaces         v4r4    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r44   Kernel  # Marco Cattaneo
 use LHCbKernel            v13r6   Kernel  # Marco Cattaneo

@@ -12,11 +12,11 @@ Production version for 2011 analysis.
 - Packages added:    Event/SwimmingEvent v1r0: Event Model classes for persistency of the swimming result
 - Packages modified: DetDescSvc v3r4, Magnet v7r4, RichDet v16r7, VeloDet v13r16,
     DigiEvent v2r20, RecreatePIDTools v1r4, TrackEvent v5r13, GaudiConf v15r3,
-    LHCbAlgs v2r44, LHCbKernel v13r6, LHCbMath v3r27p1, PartProp v1r11,
-    MuonDAQ v4r12, MuonInterfaces v1r2p2, RootCnv v1r10, OTDAQ v7r11,
-    LoKiCore v11r4, LoKiMC v10r3, LoKiNumbers v10r2, RichKernel v7r46,
-    RichRecBase v4r9, PatKernel v2r4p1, TsaKernel v3r6p1, CondDBUI v3r12,
-    FileStager v1r4, TrackKernel v1r8
+    HltInterfaces v4r4, LHCbAlgs v2r44, LHCbKernel v13r6, LHCbMath v3r27p1,
+    PartProp v1r11, MuonDAQ v4r12, MuonInterfaces v1r2p2, RootCnv v1r10,
+    OTDAQ v7r11, LoKiCore v11r4, LoKiMC v10r3, LoKiNumbers v10r2,
+    RichKernel v7r46, RichRecBase v4r9, PatKernel v2r4p1, TsaKernel v3r6p1,
+    CondDBUI v3r12, FileStager v1r4, TrackKernel v1r8
 
 - In Det/DetDescSvc v3r4
   . Fixed bug #87392: Event time not set correctly on first event
@@ -59,6 +59,9 @@ Production version for 2011 analysis.
        InputName, to allow the ancestor track association.
     o  Add "NextNext" to default DstConf().SpilloverPaths
 
+- In Kernel/HltInterfaces v4r4
+  . Add IConfigTreeEditor interface, moved from HltBase package
+ 
 - In Kernel/LHCbAlgs v2r43,v2r44
   . Add new algorithms for copy/link data in TES: 
     Gaudi::DataCopy, Gaudi::DataLink. See release notes for usage details
