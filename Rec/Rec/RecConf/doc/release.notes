@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r4 2011-11-08 =========================
 ! 2011-10-10 - Chris Jones
  - Change the number of the sequencer used for the inclusive timing monitor
    from "BrunelSequencer" to "PhysicsSeq" to avoid problems with the monitor
