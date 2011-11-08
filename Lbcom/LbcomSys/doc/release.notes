@@ -6,6 +6,54 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v11r1>2011-11-09 LbcomSys v11r1</A></H1><PRE>
+This version uses Gaudi v22r4 and LHCb v33r1
+
+- Production release for 2011 data analysis
+
+- Packages updated: DAQMonitors v1r4, HltDAQ v2r13, L0Muon v9r7, RichDAQ v3r34,
+    RichTools v2r38, STMonitors v3r7, STTools v4r9, VeloDAQ v6r5,
+    VeloSimulation v3r11
+
+- In DAQ/DAQMonitors v1r4
+  . RawBankReadoutStatusMonitor : fix "//" in histo path
+    (no longer presenter-compatible)
+
+- In Hlt/HltDAQ v2r13
+  . Add some scaffolding needed for writing directly to zip files. Actual
+    writing is not yet implemented
+  . Mask icc warnings and fix icc remark
+
+- In L0/L0Muon v9r7
+  . L0MuonCandidatesFromRaw, make the raw event steerable in location
+
+- In Rich/RichDAQ v3r34,
+  . Minor improvements to a few decoding error messages
+
+- In Rich/RichTools v2r38
+  . Update the RadiatorTool to load the required radiator detector elements
+    on demand, instead of during initialize().
+  . Various changes to make things PD (HPD/MaPMT) neutral.
+
+- In ST/STMonitors v3r7
+  . Fix linker error in debug mode.  Requires new STDAQDefinitions from STKernel.
+  . Added new histograms to STNoiseMonitor.
+
+- In ST/STTools v4r9
+  . Bug fix in outlier removal in STOnlineNoiseCalculationTool.
+
+- In Velo/VeloDAQ v6r5
+  . Changed ZS decoder so it maintains event specific information in
+    DeVeloSensor::Tell1EventInfo (requested by HLT). No change in behaviour as
+    no client code for the new feature exists yet.
+  . Merged source coode for less-than predicate of internal and standard VELO
+    cluster pointers.
+  . Added new algorithm to encode raw banks from VELO clusters
+
+- In Velo/VeloSimulation v3r11
+  . Suppress the creation of noise only channels which are later killed to
+    prevent FPE exceptions
+
 </PRE><H1><A NAME=v11r0>2011-09-08 LbcomSys v11r0</A></H1><PRE>
 This version uses Gaudi v22r4 and LHCb v33r0
 

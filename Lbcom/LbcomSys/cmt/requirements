@@ -1,5 +1,5 @@
 package LbcomSys
-version           v11r0
+version           v11r1
 
 branches doc cmt tests
 
@@ -15,15 +15,15 @@ use CaloAssociators   v6r10p1 Calo      # Olivier Deschamps
 use CaloTools         v6r3    Calo      # Olivier Deschamps
 
 # DAQ
-use DAQMonitors       v1r3    DAQ       # Olivier Deschamps
+use DAQMonitors       v1r4     DAQ       # Olivier Deschamps
 
 # HLT
-use HltDAQ            v2r12    Hlt       # Tomasz Skwarnicki
+use HltDAQ            v2r13    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
 use L0Calo            v11r5    L0        # Patrick Robbe
 use L0DU              v10r16   L0        # Olivier Deschamps   
-use L0Muon            v9r6     L0        # Julien Cogan
+use L0Muon            v9r7     L0        # Julien Cogan
 use L0MuonMonitor     v2r2     L0        # Julien Cogan
 use PuVeto            v7r7p1   L0        # Serena Oggero
 
@@ -36,10 +36,10 @@ use OTMonitor         v3r3    OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r3    Rich      # Chris Jones
-use RichDAQ           v3r33   Rich      # Chris Jones
+use RichDAQ           v3r34   Rich      # Chris Jones
 use RichMCMonitors    v1r8    Rich      # Chris Jones
 use RichMCTools       v3r16   Rich      # Chris Jones
-use RichTools         v2r37   Rich      # Chris Jones
+use RichTools         v2r38   Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r8    Si        # Matt Needham
@@ -49,14 +49,14 @@ use STAlgorithms      v4r4    ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v3r3    ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r27   ST        # Jeroen van Tilburg, Matt Needham
-use STMonitors        v3r6    ST        # Mark Tobin
-use STTools           v4r8    ST        # Jeroen van Tilburg, Matt Needham
+use STMonitors        v3r7    ST        # Mark Tobin
+use STTools           v4r9    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v5r5    Velo      # Tomasz Szumlak
 use VeloAssociators   v2r4    Velo      # Tomasz Szumlak
-use VeloDAQ           v6r4    Velo      # Kurt Rinnert
-use VeloSimulation    v3r10   Velo      # Tomasz Szumlak
+use VeloDAQ           v6r5    Velo      # Kurt Rinnert
+use VeloSimulation    v3r11   Velo      # Tomasz Szumlak
 use VeloTools         v4r1    Velo      # Tomasz Szumlak
 
 # VeloPix
