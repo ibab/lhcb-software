@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r39 2011-11-08 =========================
 ! 2011-10-19 - Marco Cattaneo
  - Fix coverity defects 23869, 23870, 23871 (UNINIT_CTOR)
  - Remove some unnecessary includes
