@@ -75,9 +75,6 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   m_mode = 0;
   m_compression = false;
   
-  declareProperty("InputRawEventLocation", m_rawInputEvent=LHCb::RawEventLocation::Default);
-  
-  
 }
 //=============================================================================
 // Destructor
@@ -96,14 +93,15 @@ L0MuonOutputs::~L0MuonOutputs() {
 
 //=============================================================================
  
-StatusCode L0MuonOutputs::decodeRawBanks(){
+StatusCode L0MuonOutputs::decodeRawBanks(std::string rawInputEvent , bool statusOnTES){
+ 
+  if (!exist<LHCb::RawEvent>( rawInputEvent , IgnoreRootInTES)) 
+    return Error("RawEvent not found at "+rawInputEvent,StatusCode::FAILURE,50);
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( rawInputEvent , IgnoreRootInTES);
 
   bool error_bank[6];
   for (int srcId=0; srcId<6; ++srcId) error_bank[srcId]=false;
   
-  LHCb::RawBankReadoutStatuss * L0MuonBanksStatus = 
-    getOrCreate<LHCb::RawBankReadoutStatuss,LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
-
   m_ctrlCandFlag     = false ;
   m_ctrlCandFlagBCSU = false ;
   m_procCandFlag     = false ;
@@ -116,8 +114,10 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
 
   int rawBankSize = 0;
 
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( m_rawInputEvent );
-
+  LHCb::RawBankReadoutStatus ctrlCandStatus = LHCb::RawBankReadoutStatus(LHCb::RawBank::L0Muon );
+  LHCb::RawBankReadoutStatus procCandStatus = LHCb::RawBankReadoutStatus(LHCb::RawBank::L0MuonProcCand );
+  LHCb::RawBankReadoutStatus procDataStatus = LHCb::RawBankReadoutStatus(LHCb::RawBank::L0MuonProcData );
+  
   // ======================
   //
   // L0Muon Error Banks
@@ -136,31 +136,26 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
   //
   // ======================
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
-  if ( NULL != L0MuonBanksStatus->object(LHCb::RawBank::L0Muon) ) {
-    return Warning("RawBankReadoutStatus already exists for LHCb::RawBank::L0Muon - skip decoding !"
-                   ,StatusCode::FAILURE,50);
-  }
-  LHCb::RawBankReadoutStatus * ctrlCandStatus = new LHCb::RawBankReadoutStatus(LHCb::RawBank::L0Muon );
 
   if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: "<<banks.size()<<" L0Muon banks found"<<endreq;
 
   if (banks.size()==0) {
-    ctrlCandStatus->addStatus(0,LHCb::RawBankReadoutStatus::Missing);
+    ctrlCandStatus.addStatus(0,LHCb::RawBankReadoutStatus::Missing);
   } else {
     for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
       int srcID = (*itBnk)->sourceID();
       if (error_bank[srcID]) {
-        ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+        ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
       }
       if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
         // report an error and return without decoding
-        ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+        ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
         Error("L0MuonCtrlCand :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
         continue;
       }
       int size = (*itBnk)->size()/4;
       if (size==0) {
-        ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
+        ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
         continue;
       }
       int decoding_status=0;
@@ -202,11 +197,11 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         if (abs(decoding_status)>0) m_ctrlCandFlag=true;
         if (abs(decoding_status)>1) m_ctrlCandFlagBCSU=true;
         if (decoding_status>0) {
-          ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
+          ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
         } else if (decoding_status==0) {
-          ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Incomplete);
+          ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Incomplete);
         } else {
-          ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          ctrlCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
         }
       } // End V2 and greater
       if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0Muon bank (version "<< bankVersion <<" ) found"
@@ -215,7 +210,6 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
                                              <<", decoding status= "<<decoding_status<<endreq;
     }
   }
-  L0MuonBanksStatus->insert(ctrlCandStatus);
 
   // ======================
   //
@@ -224,29 +218,24 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
   // ======================
   if (m_mode>0) {
     const std::vector<LHCb::RawBank*>& proccandbanks = rawEvt->banks( LHCb::RawBank::L0MuonProcCand );
-    if ( NULL != L0MuonBanksStatus->object(LHCb::RawBank::L0MuonProcCand) ) {
-      return Warning("RawBankReadoutStatus already exists for LHCb::RawBank::L0MuonProcCand - skip decoding !"
-                     ,StatusCode::FAILURE,50);
-    }
-    LHCb::RawBankReadoutStatus * procCandStatus = new LHCb::RawBankReadoutStatus(LHCb::RawBank::L0MuonProcCand );
     if (proccandbanks.size()==0) {
-      procCandStatus->addStatus(0,LHCb::RawBankReadoutStatus::Missing);
+      procCandStatus.addStatus(0,LHCb::RawBankReadoutStatus::Missing);
     } else {
       m_procCandFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = proccandbanks.begin(); proccandbanks.end() != itBnk; ++itBnk ) {
         int srcID = (*itBnk)->sourceID();
         if (error_bank[srcID]) {
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
         }
         if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
           // report an error and return without decoding
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
           Error("L0MuonProcCand :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
           continue;
         }
         int size = (*itBnk)->size()/4;
         if (size==0) {
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
           continue;
         }
         int decoding_status=0;
@@ -266,11 +255,11 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         //m_l0EventNumber=procCand->ref_l0EventNumber();
         //m_l0_B_Id=procCand->ref_l0_B_Id();
         if (decoding_status>0) {
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
         } else if (decoding_status==0) {
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Incomplete);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Incomplete);
         } else {
-          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          procCandStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
         }
         if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0MuonProcCand bank (version "<< bankVersion <<" ) found"
                                                <<", sourceID is "<< srcID <<", size is "<< size
@@ -278,7 +267,6 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
                                                <<", decoding status= "<<decoding_status<<endreq;
       }    
     }
-    L0MuonBanksStatus->insert(procCandStatus);
   }
   
   // ======================
@@ -288,30 +276,25 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
   // ======================
   if (m_mode>0) {
     const std::vector<LHCb::RawBank*>& procdatabanks = rawEvt->banks( LHCb::RawBank::L0MuonProcData );
-    if ( NULL != L0MuonBanksStatus->object(LHCb::RawBank::L0MuonProcData) ) {
-      return Warning("RawBankReadoutStatus already exists for LHCb::RawBank::L0MuonProcData - skip decoding !"
-                     ,StatusCode::FAILURE,50);
-    }
-    LHCb::RawBankReadoutStatus * procDataStatus = new LHCb::RawBankReadoutStatus(LHCb::RawBank::L0MuonProcData );
     if (procdatabanks.size()==0) {
       if( msgLevel(MSG::DEBUG) ) debug()<<"decodeRawBanks: no banks in "<<LHCb::RawBank::L0MuonProcData<<endreq;
-      procDataStatus->addStatus(0,LHCb::RawBankReadoutStatus::Missing);
+      procDataStatus.addStatus(0,LHCb::RawBankReadoutStatus::Missing);
     } else {
       m_procDataFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = procdatabanks.begin(); procdatabanks.end() != itBnk; ++itBnk ) {
         int srcID = (*itBnk)->sourceID();
         if (error_bank[srcID]) {
-          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+          procDataStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
         }
         if( LHCb::RawBank::MagicPattern != (*itBnk)->magic() ) {
           // report an error and return without decoding
-          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          procDataStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
           Error("L0MuonProcData :  Magic pattern is wrong",StatusCode::FAILURE,50).ignore();
           continue;
         }
         int size = (*itBnk)->size()/4;
         if (size==0) {
-          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
+          procDataStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
           continue;
         }
         int decoding_status=0;
@@ -325,9 +308,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         }
         decoding_status=m_procData[procSourceID(srcID)]->decodeBank(data,bankVersion);
         if (decoding_status>0) {
-          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
+          procDataStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::OK);
         } else {
-          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
+          procDataStatus.addStatus(srcID,LHCb::RawBankReadoutStatus::Corrupted);
         }
         if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0MuonProcData bank (version "<< bankVersion <<" ) found"
                                                <<", sourceID is "<< srcID <<", size is "<< size
@@ -335,8 +318,58 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
                                                <<", decoding status= "<<decoding_status<< endreq;
       }    
     }
-    L0MuonBanksStatus->insert(procDataStatus);
   }
+
+
+  if ( statusOnTES ) {
+    LHCb::RawBankReadoutStatuss * L0MuonBanksStatuss = 
+      getOrCreate<LHCb::RawBankReadoutStatuss,LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
+
+    LHCb::RawBankReadoutStatus * status = L0MuonBanksStatuss-> object( ctrlCandStatus.key() ) ;
+    if ( 0 == status ) {
+      status = new LHCb::RawBankReadoutStatus( ctrlCandStatus ) ;
+      L0MuonBanksStatuss-> insert( status ) ;
+    } else {
+      if ( status -> status() != ctrlCandStatus.status() ) {
+        std::map< int , long >::iterator it ;
+        for ( it = ctrlCandStatus.statusMap().begin() ; 
+              it != ctrlCandStatus.statusMap().end() ; ++it ) {
+          status -> addStatus( (*it).first , (*it).second ) ;
+        }
+      }
+    }
+    
+    if (m_mode > 0) {
+      status = L0MuonBanksStatuss-> object( procCandStatus.key() ) ;
+      if ( 0 == status ) {
+        status = new LHCb::RawBankReadoutStatus( procCandStatus ) ;
+        L0MuonBanksStatuss-> insert( status ) ;
+      } else {
+        if ( status -> status() != procCandStatus.status() ) {
+          std::map< int , long >::iterator it ;
+          for ( it = procCandStatus.statusMap().begin() ; 
+                it != procCandStatus.statusMap().end() ; ++it ) {
+            status -> addStatus( (*it).first , (*it).second ) ;
+          }
+        }
+      }
+
+      status = L0MuonBanksStatuss-> object( procDataStatus.key() ) ;
+      if ( 0 == status ) {
+        status = new LHCb::RawBankReadoutStatus( procDataStatus ) ;
+        L0MuonBanksStatuss-> insert( status ) ;
+      } else {
+        if ( status -> status() != procDataStatus.status() ) {
+          std::map< int , long >::iterator it ;
+          for ( it = procDataStatus.statusMap().begin() ; 
+                it != procDataStatus.statusMap().end() ; ++it ) {
+            status -> addStatus( (*it).first , (*it).second ) ;
+          }
+        }
+      }
+    }
+  }
+  
 
   ++m_rawBankNorm;
   m_rawBankSizeTot += rawBankSize;

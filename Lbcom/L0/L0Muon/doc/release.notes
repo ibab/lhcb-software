@@ -3,6 +3,12 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-11-08 - Julien Cogan
+ - L0MuonCandidatesFromRaw : configure the raw event location using the
+ new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when
+ accessing this location. Write bank read status only if the raw event is in 
+ the default location.
+
 !========================= L0Muon v9r7 2011-11-08 =========================
 ! 2011-09-28 - Julien Cogan
  - L0MuonCandidatesFromRaw, make the raw event steerable in location 

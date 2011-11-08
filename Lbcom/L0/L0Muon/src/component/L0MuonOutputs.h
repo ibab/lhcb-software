@@ -35,7 +35,7 @@ public:
   virtual ~L0MuonOutputs( ); ///< Destructor
 
   /// Decode the L0Muon banks and fill the registers of the converters
-  StatusCode decodeRawBanks();
+  StatusCode decodeRawBanks(std::string rawInputEvent , bool statusOnTES=true);
   /// From the registers of the converters, fill the L0Muon banks
   StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates
@@ -82,9 +82,6 @@ private:
   int  m_version;      /// L0Muon version to be emulated
   bool m_compression;  /// Apply compression on raw banks
   int  m_mode;         /// Raw banks output mode 
-  
-  std::string m_rawInputEvent; ///Raw event input location
-  
   
   enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
   enum Sides {A=0,C,NSides};

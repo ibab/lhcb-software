@@ -42,10 +42,8 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   m_errorEvent = 0;
   m_enableTAE = false;
   m_procVersion = 0;
-  
-  declareProperty("InputRawEventLocation", m_rawInputEvent=LHCb::RawEventLocation::Default);
-}
 
+}
 
 StatusCode L0MuonCandidatesFromRaw::initialize()
 {
@@ -71,10 +69,6 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs"  , "OutputTool" , this );
   m_outputTool->setDecodingMode();
-  sc = m_outputTool->setProperty( "InputRawEventLocation", m_rawInputEvent );
-  if ( sc.isFailure() ) {
-    Error("Can not set InputRawEventLocation property of the L0MuonOutputs tool",sc);
-  }
   
   m_totEvent = 0;
   m_totBx = 0;
@@ -127,11 +121,17 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   StatusCode sc;
 
+  // Scan the list of input location and select the first existing one.
+  std::string rawEventLocation;
+  if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
+    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+
+  // TAE mode
   int tae_size = 0;
   if (m_enableTAE) {
-    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,false)) {
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES)) {
       // TAE size from odin
-      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,false);
+      LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES);
       tae_size = int(odin->timeAlignmentEventWindow());
     } else {
       Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
@@ -142,22 +142,21 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   int ntae = 0;
   std::string originalRootInTes = rootInTES();
   for (int itae = -1*tae_size; itae<=tae_size; ++itae){
-    std::string rootInTes = m_tae_items[itae];
+    std::string taeInTes = m_tae_items[itae];
 
-    sc = setProperty("RootInTES",originalRootInTes + rootInTes);
-    if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
-
-    if (!exist<LHCb::RawEvent>( m_rawInputEvent )) {
-      Warning("RawEvent not found; RootInTES is "+rootInTes,StatusCode::SUCCESS,50).ignore();
+    if (setProperty("RootInTES",originalRootInTes+taeInTes).isFailure() ) {
+      Error( "Unable to set RootInTES property of L0MuonAlg", StatusCode::SUCCESS,50 ).ignore();
       continue;
     }
-    
-    sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
-    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
+
+    if (m_outputTool->setProperty( "RootInTES", taeInTes ).isFailure() ) {
+      Error( "Unable to set RootInTES property of L0MuonOutputs tool", StatusCode::SUCCESS,50 ).ignore();
+      continue;
+    }
 
     // Decode Raw banks
     m_outputTool->setMode(m_mode);
-    sc = m_outputTool->decodeRawBanks();
+    sc = m_outputTool->decodeRawBanks( taeInTes+rawEventLocation , m_statusOnTES);
     if ( sc.isFailure() ) { 
       Warning("Error from decodeRawBanks - skip this time slice"
                      ,StatusCode::SUCCESS,50);
