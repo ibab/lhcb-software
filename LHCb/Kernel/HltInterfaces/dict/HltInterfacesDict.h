@@ -9,6 +9,7 @@
 #include "Kernel/PropertyConfig.h"
 #include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/IConfigAccessSvc.h"
+#include "Kernel/IConfigTreeEditor.h"
 
 namespace {
 
