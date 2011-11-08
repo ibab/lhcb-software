@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2011-11-08 - Chris Jones
+ - Add RawEventLocation::Trigger to RawEvent.h
+
 !========================= DAQEvent v9r5 2011-04-04 =========================
 ! 2011-02-23 - Olivier Deschamps
  - add new status in RawBankReadoutStatus ('DuplicateEntry')
