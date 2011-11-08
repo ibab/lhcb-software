@@ -4,6 +4,19 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2011-11-08 - Julien Cogan
+ - L0FromRawBase : add
+   - RawEventLocations : list of possible raw event locations, common property 
+   for L0 decoders. 
+   - selectRawEventLocation : method to scan these raw event locations and to 
+   select the first valid one.
+   - m_statusOnTES : common flag to L0 decoders to unable/disable the writing 
+   of the bank readout status on the TES. This flag is set in the 
+   selectRawEventLocation method according to the selected lraw event location. 
+   Bank read out statuses are written only if the default raw event location 
+   is used (i.e. the one used in the raw data).
+  - New dependency : Event/DAQEvent
+   
 !============================ L0Base v1r3 2010-01-20 =========================
 ! 2010-01-20 Olivier Deschamps
  - L0AlgBase.cpp : inheriting from GaudiHistoAlg instead of GaudiAlg

@@ -22,6 +22,11 @@ public:
 
 protected:
 
+  /**
+     Scan the list of possible location and select the first existing one.
+   */
+  StatusCode selectRawEventLocation(std::string &location);
+
 /** If algorithm should write the processor data on TES
  */
   bool writeProcData() const { return m_writeProcData ; } ;
@@ -41,10 +46,13 @@ protected:
   std::string dataLocation( const std::string & standardLocation ) const {
     return ( rootInTES() + standardLocation + l0context() ) ; } ;
 
+  std::vector<std::string> m_rawEventLocations; ///< List of possible raw event locations
   bool m_writeProcData;    ///< Flag to activate the writing of the processor data
   bool m_writeOnTES;       ///< Flag to activate the writing of the Candidates/Report on the TES
   std::string m_l0context; ///< Suffix appended to the default location in TES
 
+  bool m_statusOnTES;      ///< Flag to activate the writing of the decoding status on the TES
+  
 private:
 
 };
