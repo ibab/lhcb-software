@@ -3,28 +3,19 @@
 # Maintainer : G. Passaleva/G.Graziani  (INFN Firenze)
 # =============================================================================
 
-package MuonTrackRec
-version           v3r5
-
+package           MuonTrackRec
+version           v3r6
 
 # ================ structure =========================================
-
 branches src cmt doc options
 
-
 # ================ used packages =========================================
-#
 use MuonInterfaces v*     Muon
 use MuonDAQ        v*     Muon
 #
 use MuonDet        v*     Det
 use GaudiAlg       v*
 
-
 library MuonTrackRec  *  ../src/component/*.cpp
-
-
-
 apply_pattern component_library library=MuonTrackRec
-
 #===============================================================

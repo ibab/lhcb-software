@@ -8,6 +8,7 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackRec v3r6 2011-11-08 =========================
 ! 2011-10-11 - Marco Cattaneo
  - Fix icc warning and remarks
  - Replace obsolete DeclareFactoryEntries.h by ToolFactory.h
