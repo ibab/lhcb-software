@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r5 2011-11-08 =========================
 ! 2011-10-05 - Kurt Rinnert
  - Changed ZS decoder so it maintains event specific information in
    DeVeloSensor::Tell1EventInfo (requested by HLT). No change in behaviour as
