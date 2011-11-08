@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r12 2011-11-08 =========================
 ! 2011-10-17 - Victor Coco
  - FitNode.h: protect against NULL pointer in computeClassicalSmoothedState
               (coverity defect 19662)
