@@ -1,10 +1,9 @@
-# $Id: requirements,v 1.50 2010-05-21 14:18:33 rlambert Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v5r9
+version           v5r10
 
 # =============== structure ===================================================
 branches          cmt doc src python
