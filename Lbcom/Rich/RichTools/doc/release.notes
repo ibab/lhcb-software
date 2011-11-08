@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r38 2011-11-08 =========================
 ! 2011-10-25 - Chris Jones
  - Update the RadiatorTool to load the required radiator detector elements
    on demand, instead of during initialize().
