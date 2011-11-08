@@ -65,6 +65,13 @@ StatusCode L0DUFromRawAlg::execute() {
 
 
   // decode the bank
+  std::string rawEventLocation;
+  if ( selectRawEventLocation(rawEventLocation).isFailure() )
+    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+  if ( m_fromRaw->_setProperty("RawLocation",rawEventLocation ).isFailure() )
+    return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
+  if ( m_fromRaw->_setProperty("StatusOnTES",Gaudi::Utils::toString(m_statusOnTES)).isFailure() )
+    return Error("Unable to set StatusOnTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
 
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
 
@@ -74,14 +81,14 @@ StatusCode L0DUFromRawAlg::execute() {
     // put the report and processor data on TES
     LHCb::L0DUReport* report = new LHCb::L0DUReport( rep );
     std::string loc = dataLocation( m_L0DUReportLocation);
-    put (report , loc , false);
+    put (report , loc , IgnoreRootInTES);
   }
 
   // Clone Processor Data and put it on TES 
   // WARNING : PROCESSOR DATA ARE NOT CONTEXT DEPENDANT
   if( m_writeProcData){
     LHCb::L0ProcessorDatas* datas = new LHCb::L0ProcessorDatas();
-    put (datas  , m_procDataLocation , false);
+    put (datas  , m_procDataLocation , IgnoreRootInTES);
     for(LHCb::L0ProcessorDatas::iterator it = m_fromRaw->L0ProcessorDatas()->begin();
         it != m_fromRaw->L0ProcessorDatas()->end(); it++){
       LHCb::L0ProcessorData* data = new  LHCb::L0ProcessorData( **it );

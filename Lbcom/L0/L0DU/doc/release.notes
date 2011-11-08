@@ -3,6 +3,13 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-11-08 - Julien Cogan
+ - L0DUFromRaw : configure the raw event location using the
+ new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when
+ accessing this location ; Write bank read status only if the raw event is 
+ in the default location.
+ - L0Conf : propagate the RawEventLocations propery to all L0 decoders
+
 !========================= L0DU v10r16 2011-07-27 =========================
 ! 2011-06-17 - Patrick Robbe
  - Configuration.py: set new electron/photon L0 Calo algorithm depending

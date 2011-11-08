@@ -52,6 +52,7 @@ public:
   LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
   const std::map<std::string, std::pair<unsigned int,double> >& datas(){return m_dataMap;}
   
+  virtual StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
   
 protected:
 

@@ -124,21 +124,17 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
   std::string loc = "";
-  if( exist<LHCb::RawEvent>( m_rawLocation ) ) // get rawEvent from user-defined location
+  if( exist<LHCb::RawEvent>( m_rawLocation , IgnoreRootInTES) ) // get rawEvent from user-defined location
     loc = m_rawLocation;
-  else if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Copied ) ) // if not, try in pReC
-    loc = LHCb::RawEventLocation::Copied;
-  else if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default) ) // if not, try in Rec
-    loc = LHCb::RawEventLocation::Default;
 
   // if not : complain
   if( "" == loc){
-    Warning("rawEvent not found in  '" + rootInTES() + m_rawLocation +"' nor in standard locations",StatusCode::SUCCESS).ignore();
+    Warning("rawEvent not found in  '" + m_rawLocation +"'",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      
   
-  rawEvt= get<LHCb::RawEvent>( loc );
+  rawEvt= get<LHCb::RawEvent>( loc , IgnoreRootInTES);
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
 

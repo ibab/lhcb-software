@@ -19,7 +19,8 @@ class L0Conf(LHCbConfigurableUser) :
 
     __slots__ = {
         # Properties
-         "ReplaceL0BanksWithEmulated" : False
+         "RawEventLocations" : []
+        ,"ReplaceL0BanksWithEmulated" : False
         ,"ReplayL0DU"     : False 
         ,"SimulateL0"     : False
         ,"EmulateL0"      : False
@@ -379,6 +380,13 @@ class L0Conf(LHCbConfigurableUser) :
             emulateL0Muon().L0Context = l0context
             emulateL0DU().L0Context   = l0context
 
+        # Raw event input location dor the deconding
+        if self.isPropertySet("RawEventLocations"):
+            raw_locations = self.getProp("RawEventLocations")
+            decodeL0Calo().RawEventLocations = raw_locations
+            decodeL0Muon().RawEventLocations = raw_locations
+            decodeL0DU().RawEventLocations   = raw_locations
+                
         # Set electron emulation depending on data type
         if self.isPropertySet("DataType"):
             datatype = self.getProp("DataType")
