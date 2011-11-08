@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r7 2011-11-08 =========================
 ! 2010-09-08 Mark Tobin
  - Fix linker error in debug mode.  Requires new STDAQDefinitions from STKernel.
 
