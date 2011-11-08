@@ -3,6 +3,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STTools v4r9 2011-11-08 =========================
 ! 2011-09-07 - Mark Tobin
  - Bug fix in outlier removal in STOnlineNoiseCalculationTool.
 
