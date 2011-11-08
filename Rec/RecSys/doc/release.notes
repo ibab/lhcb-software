@@ -5,6 +5,92 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v12r1>2011-11-09 RecSys v12r1</A></H1><PRE>
+This version uses Gaudi v22r4 and LHCb v33r1
+
+- Production release for 2011 data analysis
+
+- Packages updated: CaloPIDs v5r10, MuonID v9r2, MuonTrackRec v3r6,
+    GlobalReco v6r39, LumiAlgs v7r1, RecConf v2r4, RichHPDImageAnalysis v1r10,
+    RichRecMonitors v2r32, RichRecQC v2r55, RichRecTools v4r19, 
+    PatAlgorithms v4r15, TfTools v1r15p1, TsaAlgorithms v3r25,
+    TrackExtrapolators v2r32, TrackFitEvent v5r12, TrackMCTools v3r1,
+    TrackMonitors v1r35, TrackProjectors v2r29p2, TrackTools v4r9
+
+- In Calo/CaloPIDs v5r10
+  . CaloPhotonMatch : fix Hcal matching setup
+
+- In Muon/MuonID v9r2
+  . Add additional info to Muon tracks using enums instead of hardcoded numbers
+  . Move the level of many log messages from DEBUG to VERBOSE.
+
+- In Rec/GlobalReco v6r39
+  . Remove some unnecessary includes
+  . Update ChargedProtoParticleMoni to define a ProtoParticle as having Muon info
+    when LHCb::ProtoParticle::InAccMuon is present in the ProtoParticle
+
+- In Rec/LumiAlgs v7r1
+  . Bug fixes in GetIntegratedLuminosity.cpp:
+    o Integrated luminosity was not computed if msgLevel > INFO
+    o Base class finalize was never called
+
+- In Rec/RecConf v2r4
+  . Change the number of the sequencer used for the inclusive timing monitor
+    from "BrunelSequencer" to "PhysicsSeq" to avoid problems with the monitor
+    timing a still running sequence.
+
+- In Rich/RichHPDImageAnalysis v1r10
+  . Fix incorrect usage of std::unique to remove duplicates
+  . Improve the sorting operator of Pixels.
+  . Various script improvements.
+
+- In Rich/RichRecMonitors v2r32
+  . Adapt to changes made to make the recosntruction PD neutral
+
+- In Rich/RichRecQC v2r55
+  . Fix silly type conversion typo in the DAQ decoding errors monitor
+  . Change the title of the DAQ decoding errors by board histogram
+  . Fix a bug in the fill of the 2D decoding errors histogram
+  . Avoid multiple ODIN TES requests per event in DataDecodingErrorMoni
+
+- In Rich/RichRecTools v4r19
+  . Various small changes to make things PD neutral
+
+- In Tf/PatAlgorithms v4r15
+  . Fix insane TES usage in PatSeedFit: instead of getting the container of
+    STLiteClusters for every track, we cache the pointer for the duration of
+    the event (no changes in performance, though)
+  . Properly initialise a few pointers in the constructor of PatSeedFit
+
+- In Tr/TrackFitEvent v5r12
+  . FitNode.h: protect against NULL pointer in computeClassicalSmoothedState
+               remove obsolete member variable, fixes coverity defects
+
+- In Tr/TrackMCTools v3r1
+  . Migrate to LHCb::ParticlePropertySvc
+  . Remove obsolete file TrackMCTools_dll.cpp
+  . Bug fix in TrackGhostClassificationBase::fromPhi : was returning True if
+    ancestor of first particle was Phi, without checking second particle
+
+- In Tr/TrackTools v4r9
+  . In TrackNNGhostID, fix typo in ITClusterLocation, effect of which is that
+    IT hit multiplicity was never added to the hit multiplicity used to get the
+    ghost probability
+
+- In Rec/GlobalReco v6r39, Tr/TrackMonitors v1r35
+  . Fix coverity UNINIT_CTOR defects
+
+- In Muon/MuonTrackRec v3r6, Rec/LumiAlgs v7r1, Tf/TfTools v1r15p1,
+     Tf/TsaAlgorithms v3r25, Tr/TrackExtrapolators v2r32, Tr/TrackMCTools v3r1,
+     Tr/TrackMonitors v1r35, Tr/TrackProjectors v2r29p2
+  . Fix or mask icc warning and remarks
+
+- In Muon/MuonTrackRec v3r6
+  . Replace obsolete DeclareFactoryEntries.h by ToolFactory.h
+
+- In Muon/MuonTrackRec v3r6, Tr/TrackMonitors v1r35
+  . Replace obsolete endreq by endmsg
+
 </PRE><H1><A NAME=v12r0>2011-09-06 RecSys v12r0</A></H1><PRE>
 This version uses Gaudi v22r4 and LHCb v33r0
 
