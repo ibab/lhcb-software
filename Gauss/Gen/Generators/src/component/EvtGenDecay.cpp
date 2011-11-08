@@ -45,7 +45,6 @@
 
 //EvtGen holding tool
 #include "IEvtGenTool.h"
-//#include "EvtGenTool.h"
 
 // Calls to FORTRAN routines
 #ifdef WIN32
@@ -178,8 +177,6 @@ StatusCode EvtGenDecay::initialize( ) {
                            m_randomEngine, isrEngine, models.get()) ;
       m_evtgentool->setEvtGen( m_gen ) ;
   }
-  //m_gen = new EvtGen ( m_decayFile.c_str() , evtPdlFile.string().c_str() ,
-  //                    m_randomEngine, isrEngine, models.get()) ;
   
   // Remove temporary file if not asked to keep it
   if ( ! m_keepTempEvtFile ) boost::filesystem::remove( evtPdlFile ) ;
@@ -251,7 +248,6 @@ StatusCode EvtGenDecay::initialize( ) {
 //=============================================================================
 StatusCode EvtGenDecay::finalize() {
   delete m_randomEngine ;
-  delete m_gen ;
   
   debug() << "EvtGenDecay finalized" << endmsg ;
 
@@ -261,8 +257,7 @@ StatusCode EvtGenDecay::finalize() {
 #else
     photos_end__() ;
 #endif
-  } 
-
+  }
  
   release( m_evtgentool ) ;
 

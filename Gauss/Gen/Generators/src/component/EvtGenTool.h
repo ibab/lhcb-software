@@ -59,7 +59,7 @@ public:
   EvtGen* getEvtGen( ) { return m_gen ; }
   
   /// Get the pointer to the EvtGen instance
-  void setEvtGen( EvtGen * evtgenptr ) {  m_gen  = evtgenptr ; m_init = true ; }
+  void setEvtGen( EvtGen * evtgenptr ) {  m_gen = evtgenptr ; m_init = true ; }
 
   /// return the initalised state of EvtGen
   bool isInit() { return m_init ; }

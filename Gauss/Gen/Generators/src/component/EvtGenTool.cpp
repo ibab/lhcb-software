@@ -42,7 +42,7 @@ EvtGenTool::EvtGenTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-EvtGenTool::~EvtGenTool( ) { }
+EvtGenTool::~EvtGenTool( ) { ; }
 //=============================================================================
 // Initialize method
 //=============================================================================
@@ -62,7 +62,12 @@ StatusCode EvtGenTool::initialize( ) {
 // Finalize method
 //=============================================================================
 StatusCode EvtGenTool::finalize() {
-  delete m_gen ;
+  if ( 0 != m_gen ) { 
+    delete m_gen ;
+    m_gen = 0 ;
+  }
+
+  m_init = false ;
 
   if ( ! msgLevel( MSG::DEBUG ) ) {
       debug() << "EvtGenTool finalized" << endmsg ;

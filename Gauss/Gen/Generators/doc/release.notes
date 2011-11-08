@@ -5,7 +5,10 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-! 2011-10-28
+! 2011-11-08 - Patrick Robbe
+ - cleanup of Generator code
+
+! 2011-10-28 - Alex Shires
  - Added IEvtGenTool to allow sharing of a sibgle EvtGen instance 
    between DecayTools
    A EvtGenTool.{h,cpp}
