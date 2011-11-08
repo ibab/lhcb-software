@@ -4,6 +4,7 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecMonitors v2r32 2011-11-08 =========================
 ! 2011-10-05 - Chris Jones
  - Adapt to changes made to make the recosntruction PD neutral
 
