@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r15 2011-11-08 =========================
 ! 2011-09-21 - Manuel Tobias Schiller
  - fix insane TES usage in PatSeedFit reported by Markus Frank today on the
    lhcb-reconstruction mailing list: instead of getting the container of
