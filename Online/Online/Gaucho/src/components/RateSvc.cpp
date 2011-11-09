@@ -226,7 +226,7 @@ void RateSvc::makecounters(MonMap* mmap)
 
 
 
-RateSvc::RateSvc(const std::string& name, ISvcLocator* sl) 
+RateSvc::RateSvc(const std::string& name, ISvcLocator* sl)
 : PubSvc(name,sl)
 {
   declareProperty("TrendingOn",   m_enableTrending= false);
@@ -289,8 +289,8 @@ StatusCode RateSvc::initialize()
     if (sc.isSuccess() && m_trender != 0)
     {
       std::string syst = "HLT";
-      m_trender->setAverageTime(20);
       m_trender->setPartitionAndName(this->m_PartitionName,syst);
+      m_trender->setAverageTime(20);
       m_trender->setMaxTimeNoWrite(600);
     }
   }
