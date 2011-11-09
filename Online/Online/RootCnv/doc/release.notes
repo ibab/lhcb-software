@@ -4,6 +4,9 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Markus Frank
+ - Remove RootOutputStream component. It's not used.
+
 !========================= RootCnv v1r10 2011-11-07 ========================
 ! 2011-10-31 - Markus Frank
  - Fix bug #88049: RootCnv has problems reading POOL XDST
