@@ -3,7 +3,7 @@
 
 from LbConfiguration.Repository import getRepositories
 from LbConfiguration.Platform import binary_list, getBinaryOpt
-from LbConfiguration.External import external_projects
+from LbConfiguration.External import external_projects, distribution_url
 
 from LbUtils.VCS import splitlines
 from LbUtils.afs.volume import MAX_NAME_LENGTH, BadVolumeName
@@ -339,7 +339,17 @@ def dumpXMLConf():
     return doc.toprettyxml(encoding="UTF-8")
 # ------------------------------------------------------------------------------------
 
-def _getSVNProject(projectname):
+def _extractPrjFromProperty(projectname, property_content):
+    pj = None
+    for l in splitlines(property_content) :
+        project = l.strip()
+        if projectname.upper() == project.upper() :
+            pj = ProjectConf(project)
+            break
+
+    return pj
+
+def _getSVNProject(projectname, dist_url=distribution_url, force_svn=False):
     """
     extract project informations directly from SVN top properties. This
     function is used as a fallback if this very file doesn't contain any
@@ -347,20 +357,27 @@ def _getSVNProject(projectname):
     @param projectname: name of the project to get the configuration
     @type projectname: string
     """
+    pj = None
     log = logging.getLogger()
     if projectname.upper() not in [ x.upper() for x in external_projects] :
-        reps = getRepositories(protocol="anonymous")
-        for name in reps:
-            url = str(reps[name])
-            log.debug("Looking for package '%s' in '%s' (%s)", projectname, name, url)
-            rep = reps[name]
-            if hasattr(rep, "getProperty") :
-                for l in splitlines(rep.getProperty("projects")) :
-                    project = l.strip()
-                    if projectname.upper() == project.upper() :
-                        pj = ProjectConf(project)
-                        return pj
-    return None
+        try :
+            from urllib import urlopen
+            property_content = urlopen("/".join([dist_url, "conf", "projects"])).read()
+            pj = _extractPrjFromProperty(projectname, property_content)
+        except:
+            pass
+        if not pj and force_svn :
+            reps = getRepositories(protocol="anonymous")
+            for name in reps:
+                url = str(reps[name])
+                log.debug("Looking for package '%s' in '%s' (%s)", projectname, name, url)
+                rep = reps[name]
+                if hasattr(rep, "getProperty") :
+                    property_content = rep.getProperty("projects")
+                    if property_content :
+                        pj = _extractPrjFromProperty(projectname, property_content)
+                        break
+    return pj
 
 
 def getProject(projectname, svn_fallback=False, raise_exception=True):

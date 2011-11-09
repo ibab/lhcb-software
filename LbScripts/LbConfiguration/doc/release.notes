@@ -1,5 +1,8 @@
 2011-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/External.py: added the global distribution URL
+	* python/LbConfiguration/Package.py: use the distribution URL in order to get SVN informations
+	* python/LbConfiguration/Project.py: idem
 	* python/LbConfiguration/Platform.py: added support for gcc46 for slc5 and slc6.
 
 2011-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

@@ -2,7 +2,7 @@
 #@PydevCodeAnalysisIgnore
 
 from LbConfiguration.Repository import getRepositories
-from LbConfiguration.External import external_projects
+from LbConfiguration.External import external_projects, distribution_url
 from LbUtils.VCS import splitlines
 
 
@@ -129,34 +129,58 @@ for _pak in package_names:
     package_list.append(PackageConf(_pak))
 del _pak#IGNORE:W0631
 
-def _getSVNPackage(packagename):
+def _extractPkgFromProperty(packagename, property_content):
+    """
+    extract the package conf instance from the file-like property
+    @param packagename: name of the package
+    @param property_content: checkout of the packages property
+    """
+    pj = None
+    for l in splitlines(property_content) :
+        hat = None
+        package, project = l.split()[:2]
+        if "/" in package :
+            hat, package = package.split("/")
+        if packagename.lower() == package.lower() and project.upper() in [x.upper() for x in project_names] :
+            pj = PackageConf(package)
+            pj.setProject(project)
+            if hat :
+                pj.setHat(hat)
+            break
+    return pj
+
+
+def _getSVNPackage(packagename, dist_url=distribution_url, force_svn=False):
     """
     extract package informations directly from SVN top properties. This
     function is used as a fallback if this very file doesn't contain any
-    informations about that packagename
+    informations about that packagename.
+    Because some machine do not have SVN installed, it relies on the
+    cache that a cron job is dumping
     @param packagename: name of the package for the conf retrieving.
     @type packagename: string
     """
     log = logging.getLogger()
+    pj = None
     if packagename.upper() not in [ x.upper() for x in external_projects] :
-        reps = getRepositories(protocol="anonymous")
-
-        for name in reps:
-            url = str(reps[name])
-            log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
-            rep = reps[name]
-            if hasattr(rep, "getProperty") :
-                for l in splitlines(rep.getProperty("packages")) :
-                    hat = None
-                    package, project = l.split()[:2]
-                    if "/" in package :
-                        hat, package = package.split("/")
-                    if packagename.lower() == package.lower() and project.upper() in [x.upper() for x in project_names] :
-                        pj = PackageConf(package)
-                        pj.setHat(hat)
-                        pj.setProject(project)
-                        return pj
-    return None
+        try :
+            from urllib import urlopen
+            property_content = urlopen("/".join([dist_url, "conf", "packages"])).read()
+            pj = _extractPkgFromProperty(packagename, property_content)
+        except :
+            pass
+        if not pj and force_svn :
+            reps = getRepositories(protocol="anonymous")
+            for name in reps:
+                url = str(reps[name])
+                log.debug("Looking for package '%s' in '%s' (%s)", packagename, name, url)
+                rep = reps[name]
+                if hasattr(rep, "getProperty") :
+                    property_content = rep.getProperty("packages")
+                    if property_content :
+                        pj = _extractPkgFromProperty(packagename, property_content)
+                        break
+    return pj
 
 
 def getPackage(packagename, svn_fallback=False, raise_exception=True):

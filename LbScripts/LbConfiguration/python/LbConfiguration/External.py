@@ -3,6 +3,8 @@
 import sys
 
 
+distribution_url   = "http://cern.ch/lhcbproject/dist"
+
 Python_version     = "2.5"
 CMT_version        = "v1r20p20090520"
 tbroadcast_version = "v2.0.5"
