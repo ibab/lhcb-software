@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-11-09 - Patrick Robbe
+ - another attempt to correct QMTests
+
 ! 2011-10-19 - Patrick Robbe
  - tests: update references and options
 

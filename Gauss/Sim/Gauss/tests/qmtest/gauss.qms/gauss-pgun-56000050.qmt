@@ -9,6 +9,10 @@
     LineSkipper([&quot;INFO Using TAG&quot;, &quot;TimingAuditor.T&quot;, &quot;ToolSvc.SequencerTime&quot;, &quot;Gauss-&quot;]) + \
     LineSkipper([&quot;INFO Connected to database&quot;]) + \
     LineSkipper([&quot;INFO Disconnect from database after being idle&quot;]) + \
+    LineSkipper([&quot;HistogramDataSvc           INFO Added stream file:&quot;]) + \
+    LineSkipper([&quot;SimulationSvc              INFO Loading simulation attributes file &quot;]) + \
+    LineSkipper([&quot;MagneticFieldSvc           INFO Opened magnetic field file : &quot;]) + \
+    LineSkipper([&quot;RFileCnv                   INFO opening Root file &quot;]) + \
     LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
 validateWithReference(preproc = preprocessor)
 </text></argument><argument name="resources"><set/></argument><argument name="stdin"><text/></argument></extension>

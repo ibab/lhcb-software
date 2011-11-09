@@ -15,6 +15,9 @@
     LineSkipper([&quot;INFO Loading simulation attributes file&quot;, &quot;UserDecayFile&quot;]) + \
     LineSkipper([&quot;INFO Opened magnetic field file&quot;,&quot;EvtGen:In readDecayFile&quot;]) + \
     LineSkipper([&quot;Generation.FixedLumi&quot;,&quot;Simulation                 INFO Member list&quot;]) + \
+    LineSkipper([&quot;PDFset&quot;]) + \
+    LineSkipper([&quot;RFileCnv&quot;]) + \
+    LineSkipper([&quot;HistogramDataSvc           INFO Added stream file:&quot;]) + \
     LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
 strippedOutput = []
 skipping = False
