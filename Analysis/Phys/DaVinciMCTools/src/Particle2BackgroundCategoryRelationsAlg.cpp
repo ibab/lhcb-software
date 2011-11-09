@@ -83,15 +83,17 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute()
 //=============================================================================
 StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(const std::string& location) const 
 {
-  // CRJ : Allow for the possibility there is no data at a given TES location
-  //     : Possible when running on uDSTs
-  if ( !exist<LHCb::Particle::Range>(location) ) return StatusCode::SUCCESS;
-  
+
   //Check that we have an input location
   if (location == "") 
   {
     return Error ( "No particle location provided" ) ;
   }
+
+  // CRJ : Allow for the possibility there is no data at a given TES location
+  //     : Possible when running on uDSTs
+  if ( !exist<LHCb::Particle::Range>(location) ) return StatusCode::SUCCESS;
+
   //Get the input particles
   const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
   //Check that this returns something 
