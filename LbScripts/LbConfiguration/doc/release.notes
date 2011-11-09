@@ -1,3 +1,7 @@
+2011-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Platform.py: added support for gcc46 for slc5 and slc6.
+
 2011-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Package.py: added WG/RDConfig WG/CharmConfig to the list of supported
