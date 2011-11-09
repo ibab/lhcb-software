@@ -11,18 +11,16 @@
 // Module: EvtbTosllVectorAmpNewExt.cpp
 //
 // Description: Preparation of the decay amplitude for the process:
-//              B_{d,s}(p1,M1) -> V(p2,M2) ell^+(k1,m) ell^-(k2,m). 
-//              New version.
+//              B_{d,s}(p1,M1) -> V(p2,M2) ell^+(k1,m) ell^-(k2,m) 
+//              for the SM extensions.
 //
-//              1. The code of this module is based on the EvtbTosllVectorAmp.cpp
+//              1. The code of this module is based on the EvtbTosllVectorAmpNew.cpp
 //                 module code. 
 //
 // Modification history:
 //
-// N.Nikitin (nnikit@mail.cern.ch)   April 18,2008    Module created
-// N.Nikitin                         June  04,2008    Add CKM matrix elements
-// N.Nikitin                         Jan   03,2009    Vector meson polarisation modification
-// N.Nikitin                         Feb   21 2011    CalcMaxProb(...) optimisation
+// N.Nikitin (nnikit@mail.cern.ch)   June 18,2011    Module created
+// N.Nikitin                         Nov  09,2011    Module retested
 //
 //------------------------------------------------------------------------
 //
@@ -154,6 +152,10 @@ void EvtbTosllVectorAmpNewExt::CalcAmp( EvtParticle *parent,
       iddaught == EvtPDL::getId(std::string("rho0")))||
      (idparent == EvtPDL::getId(std::string("anti-B0"))&&
       iddaught == EvtPDL::getId(std::string("rho0")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("omega")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("omega")))||
      (idparent == EvtPDL::getId(std::string("B_s0"))&&
       iddaught == EvtPDL::getId(std::string("anti-K*0")))||
      (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&
@@ -241,17 +243,17 @@ void EvtbTosllVectorAmpNewExt::CalcAmp( EvtParticle *parent,
 //      << "\n Re(c10a)  = " << real(c10a)  << " Im(c10a)  = " << imag(c10a)
 //      << std::endl;
 
-  mytest = fopen("output.txt","a");
-
-  if(mytest != NULL){									
-     fprintf(mytest,"%lf\n",q2);	
-     fclose(mytest);						
-  } 
-  else{
-     report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
-     << std::endl;
-     return;					
-  }
+//  mytest = fopen("output.txt","a");
+//
+//  if(mytest != NULL){									
+//     fprintf(mytest,"%lf\n",q2);	
+//     fclose(mytest);						
+//  } 
+//  else{
+//     report(ERROR,"EvtGen") << "\n Error in writing to file.\n"
+//     << std::endl;
+//     return;					
+//  }
 
 
 
