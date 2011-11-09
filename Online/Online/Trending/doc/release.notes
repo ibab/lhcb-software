@@ -4,6 +4,15 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+!============================== 2011-11-09 v2r1 ==============================
+! 2011-11-09 - Beat Jost
+changes to SimpleTrendWriter.cpp
+moved the retrieval of the TrendingTool from initialize to setPartitionAndName, creating a new instance of the TrendingTool
+for each file name, so that several trend writers can be used in the same program.
+
+This implies that any other call to the SimpleTrendWriter must be made AFTER setPartitionAndName, especially to
+setAverageTime and setMaxTimeNoWrite, otherwise an segmentation fault will result
+
 ! 2011-09-16 - Olivier Callot
  - New function setMaxTimeNoWrite( unsigned int seconds) to define a maximum time
    without writing to file. Default is zero, i.e. nomaximum time.
@@ -20,7 +29,7 @@
  - New functions in the interface to write average values
   * setAverageTime( unsigned int delta ) : set the interval time in second for average
   * addValue( std::string tag, float value ) : Store this value for this tag in average mode
-  Note that the standard write ( std::vector<float>, unsigned int time ) works also in average 
+  Note that the standard write ( std::vector<float>, unsigned int time ) works also in average
   mode, i.e. all tags are averaged. This is to be used if you ha ve new values for all your tags.
 
 ! 2011-07-28 - Olivier Callot
@@ -33,7 +42,7 @@
 
 ! 2011-07-22 - Olivier Callot
  - Rewrite seriously the tool: Use the small object TrendWriter in the tool
- - Change somewhatthe interface: 
+ - Change somewhatthe interface:
       The time becomes an unsigned int.
       The version number as argument to the openWrite is removed. Version is automatic.
       Version number changed.
@@ -65,14 +74,14 @@
 
 ! 2011-03-24 - Olivier Callot
  - New tool SimpleTrendWriter with interface ISimpleTrendWriter for simple
-   writing, targetted for adders. 
+   writing, targetted for adders.
 
 ! 2011-03-24 - Olivier Callot
  - New header file TrendWriter.h to be able to write from plain C++ code, without
    the use of a Gaudi Tool. Not nice for maintenance...
  - Rested the buffer pointers on file close, so that re-opening the file will re-
    read it.
- - If a threshold is negativem, it indicates a fraction of the previous value: 
+ - If a threshold is negativem, it indicates a fraction of the previous value:
    A threshold of -0.01 indicate that we should store if the value has changed by
    more than 1% compared to the previous stored value.
 
