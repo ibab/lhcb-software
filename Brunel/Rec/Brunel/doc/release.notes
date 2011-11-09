@@ -10,6 +10,7 @@ Purpose: LHCb reconstruction program
   . Complete the migration to LHCb::ParticlePropertySvc (TrackMCTools) 
   . Minor improvements to Rich decoding error messages (RichDAQ)
   . Fixes to MuonPID status in ProtoParticle (Savannah task 23459)
+  . Update default DDDB and LHCBCOND tag for 2011 data to head-20111102 (DDDB)
 
 - Changes to example options
   . Add COLLISION11_25.py, example options for processing 2011 25ns fill
