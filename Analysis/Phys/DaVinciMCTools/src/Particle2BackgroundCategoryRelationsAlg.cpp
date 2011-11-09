@@ -42,7 +42,8 @@ Particle2BackgroundCategoryRelationsAlg::~Particle2BackgroundCategoryRelationsAl
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode Particle2BackgroundCategoryRelationsAlg::initialize() {
+StatusCode Particle2BackgroundCategoryRelationsAlg::initialize() 
+{
 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
 
@@ -59,7 +60,8 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
+StatusCode Particle2BackgroundCategoryRelationsAlg::execute() 
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -81,9 +83,13 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
 //=============================================================================
 StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(const std::string& location) const 
 {
+  // CRJ : Allow for the possibility there is no data at a given TES location
+  //     : Possible when running on uDSTs
+  if ( !exist<LHCb::Particle::Range>(location) ) return StatusCode::SUCCESS;
   
   //Check that we have an input location
-  if (location == "") {
+  if (location == "") 
+  {
     return Error ( "No particle location provided" ) ;
   }
   //Get the input particles

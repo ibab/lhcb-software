@@ -4,8 +4,12 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-11-09 - Chris Jones
+ - Update src/Particle2BackgroundCategoryRelationsAlg to allow for the 
+   possibility that a Particle TES location my now have any data in a given
+   event. Possible when running on uDSTS.
 
-!========================= DaVinciMCTools v10r0 2011-09-07 =========================
+!========================= DaVinciMCTools v10r0 2011-09-07 ===================
 ! 2011-08-24 - Alex Grecu
  - replaced HepMC::FourVector.mag() by HepMC::FourVector.rho() for compatibility
    with HepMC 2.06 library
