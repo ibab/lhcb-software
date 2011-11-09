@@ -2,14 +2,14 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$GAUSSOPTS/Gauss-MC09.py</text>
-    <text>$DECFILESROOT/options/30000000.opts</text>
-    <text>$LBPYTHIAROOT/options/Pythia.opts</text> 
+    <text>$GAUSSOPTS/Gauss-DEV.py</text>
+    <text>$DECFILESROOT/options/30000000.py</text>
+    <text>$LBPYTHIAROOT/options/Pythia.py</text> 
     <text>$GAUSSSYSROOT/tests/options/testGaussSys-defaults.py</text>
   </set></argument>
   <argument name="timeout"><integer>1800</integer></argument>
-  <argument name="reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-MC09.ref</text></argument>
-  <argument name="error_reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-MC09-err.ref</text></argument>
+  <argument name="reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-DEV.ref</text></argument>
+  <argument name="error_reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-DEV-err.ref</text></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
 preprocessor = normalizeExamples + \
