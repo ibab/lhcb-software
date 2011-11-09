@@ -67,11 +67,11 @@ OTCosmic::OTCosmic( const std::string& type ,
                     const std::string& name , 
                     const IInterface * parent )
   : GaudiTool( type , name, parent ) ,
-    m_muplus( 0 ) , m_muminus( 0 ) ,
     m_events( 0 ) ,
     m_generated( 0 ) , 
     m_rejectedbyenergycut( 0 ) , 
-    m_rejectedbyscintacceptance( 0 ) 
+    m_rejectedbyscintacceptance( 0 ) ,
+    m_muplus( 0 ) , m_muminus( 0 )
 //--------------------------------------------------------------------------  
 {
   declareInterface< IParticleGunTool >( this ) ;

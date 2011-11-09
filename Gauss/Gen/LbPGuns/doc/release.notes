@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2011-11-09 - Patrick Robbe
+ - OTCosmic.cpp: fix compilation warning
+
 ! 2011-10-20 - Patrick Robbe
  - ParticleGun.cpp
  - OTCosmic.cpp
