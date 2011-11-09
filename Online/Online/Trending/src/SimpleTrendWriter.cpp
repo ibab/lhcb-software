@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "SimpleTrendWriter.h"
@@ -34,7 +34,7 @@ SimpleTrendWriter::SimpleTrendWriter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-SimpleTrendWriter::~SimpleTrendWriter() {} 
+SimpleTrendWriter::~SimpleTrendWriter() {}
 
 //=========================================================================
 //  Initialize: Retieve the tool
@@ -42,8 +42,6 @@ SimpleTrendWriter::~SimpleTrendWriter() {}
 StatusCode SimpleTrendWriter::initialize( ) {
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
-  m_trend = tool<ITrendingTool>( "TrendingTool" );
-  if ( 0 == m_trend ) return StatusCode::FAILURE;
   return StatusCode::SUCCESS;
 }
 
@@ -51,22 +49,26 @@ StatusCode SimpleTrendWriter::initialize( ) {
 //  Set partition and name. Open file and load latest tags
 //=========================================================================
 void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string& name ) {
-  if ( m_fileIsOpen ) close();
   m_fileName = partition + "_" + name;
+  if (0 == m_trend)
+  m_trend = tool<ITrendingTool>(m_fileName );
+  if ( 0 == m_trend ) return ;
+
+  if ( m_fileIsOpen ) close();
   bool status = m_trend->openRead( m_fileName );
   if ( status ) {
     m_trend->tags( m_tags );  // get the tags;
     m_values.resize( m_tags.size(), 0. );
     m_tagChanged = false;
 
-    //== get the most recent values. 
+    //== get the most recent values.
 
     unsigned int start = m_trend->firstTimeThisTag();
     if ( m_trend->select( start ) ) {
       while( m_trend->nextEvent( start, m_values ) ) { }
     }
     m_trend->closeFile();
-  }  
+  }
 }
 //=========================================================================
 //  Start to collect data for a new event
@@ -88,7 +90,7 @@ void SimpleTrendWriter::addEntry( std::string tag, double value ) {
   error() << "Add new tag ='" << tag << "' value " << value << endmsg;
   m_tags.push_back( tag );
   m_values.push_back( float(value) );
-  m_tagChanged = true;    
+  m_tagChanged = true;
 }
 
 //=========================================================================
@@ -112,15 +114,15 @@ void SimpleTrendWriter::saveEvent ( ) {
     info() << "Closing and reopening file as tags have changed." << endmsg;
     if ( m_fileIsOpen ) close();
   }
-  
+
   if ( !m_fileIsOpen ) {
     m_fileIsOpen = m_trend->openWrite( m_fileName, m_tags );
     if ( !m_fileIsOpen ) {
-      error() << "Can't open file " << m_fileName << " for writing" 
+      error() << "Can't open file " << m_fileName << " for writing"
               << " Tag size " << m_tags.size() << endmsg;
       return;
     }
-  } 
+  }
   m_trend->write( m_values );
 }
 
