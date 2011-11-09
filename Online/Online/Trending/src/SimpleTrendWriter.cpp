@@ -51,7 +51,12 @@ StatusCode SimpleTrendWriter::initialize( ) {
 void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string& name ) {
   m_fileName = partition + "_" + name;
   if (0 == m_trend)
-  m_trend = tool<ITrendingTool>(m_fileName );
+  {
+    SmartIF<IToolSvc> tools;
+    serviceLocator()->service("ToolSvc", tools.pRef());
+//    m_trend = tool<ITrendingTool>(m_fileName );
+    tools->retrieveTool("TrendingTool","m_fileName",m_trend,this);
+  }
   if ( 0 == m_trend ) return ;
 
   if ( m_fileIsOpen ) close();
