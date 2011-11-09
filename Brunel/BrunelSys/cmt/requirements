@@ -22,5 +22,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use GaudiConf v15r1
-use TrackTools v4r9 Tr
