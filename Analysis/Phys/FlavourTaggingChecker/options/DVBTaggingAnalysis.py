@@ -42,6 +42,7 @@ tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+tag.BTaggingTool.UseReFitPV = False
 #tag.BTaggingTool.ForceSignalID = "Bs" #"Bs", "Bu", "Bd"
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN, good for mc
 tag.BTaggingTool.OutputLevel = 4
@@ -63,9 +64,6 @@ tagcheck.OutputLevel = 3
 
 tagana = BTaggingAnalysis("BTaggingAnalysis")
 tagana.InputLocations = [ location, 
-                          #"Phys/TaggingElectrons", 
-                          #"Phys/TaggingMuons",
-                          #"Phys/TaggingPions"
                           "Phys/TaggingParticles"
                           ]
 
@@ -73,6 +71,7 @@ tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
+tagana.PVReFit = False
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
 tagana.OutputLevel = 4
@@ -86,22 +85,12 @@ tagana.MCMatchObjP2MCRelator.OutputLevel = 5
 tagana.addTool( BackgroundCategory )
 tagana.BackgroundCategory.OutputLevel = 5
 
-#################################################################
-# Triger information
-from Configurables import L0Conf
-L0Conf().TCK = "0xDC09"
-
-DaVinci().ReplaceL0BanksWithEmulated = True    # Redo L0
-
-from Configurables import HltConf
-DaVinci().Hlt = False
-
 ########################################################################
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 500                        # Number of events
-DaVinci().SkipEvents = 0                           # Events to skip
+DaVinci().EvtMax     = 250                        # Number of events
+#DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "analysis.root"     # Ntuple
 
@@ -119,11 +108,14 @@ DaVinci().MoniSequence = [ cheatsel,
                            ]  # The algorithms
 
 ########################################################################
-#DAVINCI/DAVINCI_HEAD/DaVinciSys/tests/options/DVTestTagging.py
-# example data files
 
-#bsjpsiphi
-EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-#bdjpsi kshort
-#EventSelector().Input  = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007353/0000/00007353_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+EventSelector().Input = [
+    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008916/0000/00008916_00000083_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    #jpsik+
+    #"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/LHCb/Collision11/DIMUON.DST/00010193/0000/00010193_00000479_1.dimuon.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    #bsjpsiphi
+    #"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    #bdjpsikshort
+    #"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007353/0000/00007353_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    ]

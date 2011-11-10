@@ -6,11 +6,13 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-11-10 - Marc Grabalosa
+ - BTaggingAnalysis, same default PV selection criterium as in DecayTreeTuple
+ - Increase to v6r7p1
 
 !========================== FlavourTaggingChecker v6r7 2011-09-07 ==========
 ! 2011-09-07 - Rob Lambert
  - EOL native for SVN
-
 
 ! 2011-08-24 - Alex Grecu
  - replace redundant HepMC::FourVector.mag() method by .rho() for HepMC 2.06

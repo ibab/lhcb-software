@@ -64,12 +64,11 @@ private:
                    const RecVertex::ConstVector);
   const RecVertex::ConstVector 
   choosePrimary(const Particle* AXB,
-		//const RecVertex::Container* verts,
                 const RecVertex::Range& verts,
-                const RecVertex*& RecVert,
-                RecVertex& RefitRecVert) ;
+                RecVertex& RecVert);
   const ProtoParticle::ConstVector tagevent (Tuple& tuple, 
-					     const Particle* AXBS);
+                                             //const Particle* AXBS, const RecVertex* PV ); //to select ourselves PV
+                                             const Particle* AXBS );
   StatusCode FillTrigger (Tuple& tuple, const Particle* AXBS) ;
   Particle::ConstVector FillSelectedB (Tuple& tuple, const Particle* AXBS);
   StatusCode FillMCInfoOfB(Tuple& tuple, const MCParticles* mcpart);
@@ -86,7 +85,8 @@ private:
     m_BHypoCriterium, 
     m_ChoosePV, 
     m_taggerLocation ;
-
+  bool m_ReFitPVs;
+  
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
   IForcedBDecayTool*         m_forcedBtool;

@@ -7,14 +7,14 @@
 package           FlavourTaggingChecker
 version           v6r7
 
-# Structure, i.e. directories to process.
+# Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src options
 
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGCHECKEROPTS ${FLAVOURTAGGINGCHECKERROOT}/options
-# Used packages.
+# Used packages. 
 #============================================================================
 use DaVinciKernel   v*  Phys
 use MCInterfaces    v*  Kernel
@@ -27,7 +27,7 @@ use MCEvent         v*  Event
 use RecEvent        v*  Event
 use HltEvent        v*  Event
 use GaudiKernel     v*
-
+use LoKiPhys        v*  Phys
 # Component library building rule
 #============================================================================
 library          FlavourTaggingChecker    ../src/*.cpp -import=AIDA

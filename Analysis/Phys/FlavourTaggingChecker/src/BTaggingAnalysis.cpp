@@ -6,8 +6,6 @@
 //
 // Authors: Marco Musy, Marc Grabalosa
 // 
-// To train SVertexOneSeedTool, we need to get only the seed form 
-// SVertexOneSeedTool.cpp. Please uncomment line in Flavourtagging/src
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -36,21 +34,23 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
 {
   declareProperty( "EnableMC",  m_EnableMC = true ); //deasactivate to run with real data
 
-  declareProperty( "BHypoCriterium",     m_BHypoCriterium   = "MinChi2");
-  declareProperty( "RequireTrigger",     m_requireTrigger   = true );
-  declareProperty( "RequireTisTos",      m_requireTisTos    = true );
-  declareProperty( "SaveHlt1Lines",      m_saveHlt1Lines    = false );
-  declareProperty( "SaveHlt2Lines",      m_saveHlt2Lines    = false );
+  declareProperty( "BHypoCriterium",          m_BHypoCriterium   = "MinChi2");
+  declareProperty( "ChoosePVCriterium",       m_ChoosePV         = "bestPV" );
+  declareProperty( "PVReFit",                 m_ReFitPVs         = true );
 
-  declareProperty( "ChoosePVCriterium",  m_ChoosePV         = "PVbyIPs" );
-  declareProperty( "TagOutputLocation",  m_TagLocation = FlavourTagLocation::Default );
-  
-  declareProperty( "SecondaryVertexToolName",
-                   m_SecondaryVertexToolName = "SVertexOneSeedTool");
+  //trigger
+  declareProperty( "RequireTrigger",          m_requireTrigger   = true );
+  declareProperty( "RequireTisTos",           m_requireTisTos    = true );
+  declareProperty( "SaveHlt1Lines",           m_saveHlt1Lines    = false );
+  declareProperty( "SaveHlt2Lines",           m_saveHlt2Lines    = false );
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
-  declareProperty( "distphi_cut",  m_distphi_cut = 0.005 );
-  declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
+  declareProperty( "TagOutputLocation",       m_TagLocation = FlavourTagLocation::Default );
+  declareProperty( "SecondaryVertexToolName", m_SecondaryVertexToolName = "SVertexOneSeedTool");
+
+  //preselection cuts
+  declareProperty( "IPPU_cut",                m_IPPU_cut    = 3.0 );
+  declareProperty( "distphi_cut",             m_distphi_cut = 0.005 );
+  declareProperty( "thetaMin_cut",            m_thetaMin    = 0.012 );
 }
 
 BTaggingAnalysis::~BTaggingAnalysis() {}; 
@@ -113,11 +113,11 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve TaggingUtilsChecker tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  //   m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
-  //   if(! m_pvReFitter) {
-  //     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
-  //     return StatusCode::FAILURE;
-  //   }
+  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+  if(! m_pvReFitter) {
+    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+    return StatusCode::FAILURE;
+  }
   m_svtool = tool<ISecondaryVertexTool> (m_SecondaryVertexToolName, this);
   if(! m_svtool) {
     warning()<< "*** No Vertex Charge tag will be used! " 
@@ -136,7 +136,7 @@ StatusCode BTaggingAnalysis::initialize() {
 // Main execution
 //=============================================================================
 StatusCode BTaggingAnalysis::execute() {
-
+  
   setFilterPassed( false );
    
   //new ntuple
@@ -145,18 +145,20 @@ StatusCode BTaggingAnalysis::execute() {
   //----------------------------------------------------------------------
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
 
-  debug()<<">>>>>  Processing Run "<<evt->runNumber()
+  debug()<<">>>>>  Processing Run "<<evt->runNumber() 
          <<"   Event "<<evt->evtNumber()<<"  <<<<<" <<endreq;
+  tuple -> column ("run", evt->runNumber());
+  tuple -> column ("event", (long)evt->evtNumber());
 
+  //----------------------------------------------------------------------
+  //MCinfo
   MCParticles* mcpart = 0;
   if (m_EnableMC) {
     GenHeader* gene = get<GenHeader> (GenHeaderLocation::Default);
 
-    // Retrieve MCParticles
+    // Retrieve MCParticles and MCVertex
     mcpart = get<MCParticles> (MCParticleLocation::Default);
     debug() << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
-    
-    // Retrieve MCVertex
     MCVertices* mcvert = get<MCVertices> (MCVertexLocation::Default);
     debug() << "Nr of MCVertices retrieved="<< mcvert->size()<< endreq;
     
@@ -171,13 +173,9 @@ StatusCode BTaggingAnalysis::execute() {
         debug() << "Collision process type: " << kType << endreq;
       }
     }
-
     tuple -> column ("evType",gene->evType());
     tuple -> column ("kType", kType);
   }
-  
-  tuple -> column ("run", evt->runNumber());
-  tuple -> column ("event", (long)evt->evtNumber());
   
   //----------------------------------------------------------
   //PhysDeskTop
@@ -187,6 +185,7 @@ StatusCode BTaggingAnalysis::execute() {
          <<"  Nr of rec. Particles: "<< parts.size() <<endreq;
 
   //----------------------------------------------
+  //Choose Signal B
   const Particle* AXBS = chooseBHypothesis(parts);
   if(!AXBS) {
     debug() <<"Unselected. Skip." <<endreq;
@@ -195,63 +194,29 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("minBChi2", AXBS->endVertex()->chi2PerDoF());
   tuple -> column ("Bmass", AXBS->measuredMass()/GeV);
   tuple -> column ("Bid", AXBS->particleID().pid());
-  //----------------------------------------------
 
-  //---------------------------------------
-  StatusCode sc = FillTrigger(tuple, AXBS);
-  if(!sc) err()<<"FillTrigger returns failure."<<endreq;
-  //---------------------------------------
-
-  //---------------------------------------------------------
-  Particle::ConstVector axdaugh = FillSelectedB(tuple, AXBS);
-  debug() <<"End fill selected" <<endreq;
-  //---------------------------------------------------------
-
-  //-----------------------------------------------------
-  if (m_EnableMC) {
-    m_BS = m_forcedBtool->forcedB();
-    sc = FillMCInfoOfB(tuple, mcpart);
-    if(!sc)err()<<"FillMCInfoOfB returns failure."<<endreq;
-  }
-  //-----------------------------------------------------
-
-  //Official tag of the event ------------------------------------------
-  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS );
-
-  if (m_EnableMC) {
-    //Background category ------------------------------------------------
-    int bcat = -1;
-    if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
-      bcat = (int) m_bkgCategory->category(AXBS);
-      debug() << "Result of BackgroundCategory is: " << bcat << endreq;
-    }
-    tuple -> column ("bkgCat", bcat);
-  }
   //--------------------------------------------------------------------
   //build primary and pileup vertices
-  const RecVertex* RecVert=0;
-  RecVertex RefitRecVert(0);
-  const RecVertex::ConstVector PileUpVtx = choosePrimary(AXBS, verts, 
-                                                         RecVert, RefitRecVert);
+  RecVertex PV(0);
+  const RecVertex::ConstVector PileUpVtx = choosePrimary(AXBS, verts, PV);
+  const RecVertex* RecVert=   (const RecVertex*)  &PV;
   if( !RecVert ) {
     err() <<"No Reconstructed Vertex!! Skip." <<endreq;
     return StatusCode::SUCCESS;
-  }    
-
+  }
   double ipPVBS, iperrPVBS;
   ipPVBS=iperrPVBS=0;
   m_util->calcIP(AXBS, RecVert, ipPVBS, iperrPVBS);
   tuple -> column ("Bip", ipPVBS);
   tuple -> column ("Biperr", iperrPVBS);
-
   tuple -> column ("krec", verts.size() );
   tuple -> column ("RVx",  RecVert->position().x()/mm);
   tuple -> column ("RVy",  RecVert->position().y()/mm);
   tuple -> column ("RVz",  RecVert->position().z()/mm);
-
+  debug()<<" **** RecVertex z: "<<RecVert->position().z()/mm <<", IPPVBS: " <<ipPVBS<< ", PU size: "<<verts.size()<<endreq;
   //lifetime fitter
   double ct=0., ctErr=0., ctChi2=0.;
-  sc = m_pLifetimeFitter->fit(*RecVert, *AXBS, ct, ctErr, ctChi2);
+  StatusCode sc = m_pLifetimeFitter->fit(*RecVert, *AXBS, ct, ctErr, ctChi2);
   if(sc){
     tuple -> column ("tau", ct/picosecond);
     tuple -> column ("tauErr", ctErr/picosecond);
@@ -260,28 +225,57 @@ StatusCode BTaggingAnalysis::execute() {
     tuple -> column ("tau", 0. );
     tuple -> column ("tauErr", 1.);
     tuple -> column ("ctChi2", 0.);
+  }
 
+  //--------------------------------------------------------------------
+  //Official tag of the event ------------------------------------------
+  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS );
+  //  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS , RecVert); //to select ourselves PV
+
+  //---------------------------------------
+  //trigger
+  sc = FillTrigger(tuple, AXBS);
+  if(!sc) err()<<"FillTrigger returns failure."<<endreq;
+
+  //fill info signal B
+  Particle::ConstVector axdaugh = FillSelectedB(tuple, AXBS);
+  debug() <<"End FillSelectedB selected" <<endreq;
+
+  //fill MCinfo signal/opposite B
+  if (m_EnableMC) {
+    m_BS = m_forcedBtool->forcedB();
+    sc = FillMCInfoOfB(tuple, mcpart);
+    if(!sc)err()<<"FillMCInfoOfB returns failure."<<endreq;
+    //Background category
+    int bcat = -1;
+    if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
+      bcat = (int) m_bkgCategory->category(AXBS);
+      debug() << "Result of BackgroundCategory is: " << bcat << endreq;
+    }
+    tuple -> column ("bkgCat", bcat);
   }
 
   //------------------------------------------------------------------------------
+  //fill particle tagging candidates
   const Particle::ConstVector vtags = chooseCandidates(parts, axdaugh, PileUpVtx);
   debug() << "-------- my Tagging Candidates: " << vtags.size() <<endreq;
-  //------------------------------------------------------------------------------
-
 
   //------------------------------------------------------------------------------
+  //fill seed info for vtxch
   std::vector<Vertex> svertices(0);
   const Particle *SVpart1, *SVpart2; 
   FillSeedInfo(tuple, RecVert, vtags, svertices, SVpart1, SVpart2);
   debug() << "  Loop on seeds done " <<endreq;
+
+
   //------------------------------------------------------------------------------
+  //Fill Tagger info -------------------------------------------------------------
+  //------------------------------------------------------------------------------
+  debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
-
-  ///------------------------------------------------------- Fill Tagger info
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0),
-    piperr(0), pipPU(0);
-  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), 
-    pEOverP(0), pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0);
+  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), pEOverP(0);
+  std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), 
     pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
@@ -293,11 +287,9 @@ StatusCode BTaggingAnalysis::execute() {
     pxerrpos2(0), pyerrpos2(0), pzerrpos2(0), pippubs2(0), pippuchi2bs2(0); 
   std::vector<float> pnippu3(0), pnippuerr3(0), pxpos3(0), pypos3(0), pzpos3(0), 
     pxerrpos3(0), pyerrpos3(0), pzerrpos3(0), pippubs3(0), pippuchi2bs3(0); 
-  std::vector<int> pntracks(0), pntracks2(0), pntracks3(0);
+  std::vector<float> pntracks(0), pntracks2(0), pntracks3(0);
   std::vector<float> ptrackxfirst(0), ptrackyfirst(0), ptrackzfirst(0), ptrackp(0);
 
-
-  debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
   Particle::ConstVector::const_iterator ip;
   for( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
 
@@ -312,24 +304,18 @@ StatusCode BTaggingAnalysis::execute() {
     double deta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi= fabs(axp->momentum().phi() - AXBS->momentum().phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = ((AXBS->momentum() + axp->momentum()).M()
-                  - AXBS->momentum().M()) /GeV;
+    double dQ  = ((AXBS->momentum() + axp->momentum()).M() - AXBS->momentum().M()) /GeV;
     double lcs = track->chi2PerDoF();
     double cloneDist = track->info(LHCb::Track::CloneDist, -1.) ;
-
     double trackxfirst = track->position().x();
     double trackyfirst = track->position().y();
     double trackzfirst = track->position().z();
     double trackp = track->p();
-    
     long trtyp = track->type();
-    //studies of long (forward and matched tracks) TrackMatching->PatMatch 
-    //if (track->checkHistory(Track::TrackMatching) == true) trtyp=7; 
-
+    //track studies (forward and matched tracks) TrackMatching->PatMatch 
+    //if (track->checkHistory(Track::TrackMatching) == true) trtyp=7; //old code had that
     double distphi;
     m_util->isinTree( axp, axdaugh, distphi );
-
-    ptsal.push_back(track->likelihood());
 
     //calculate signed IP wrt RecVert
     double IP, IPerr, IPsign;
@@ -344,7 +330,6 @@ StatusCode BTaggingAnalysis::execute() {
     double ipval, iperr;
     m_util->calcIP( axp, PileUpVtx, ipval, iperr );
     if(iperr) IPPU=ipval/iperr;
-
     //cal IP wrt different PU
     //debug()<<"--> min ippu "<<ipval<<endreq;
     double nippu, nippuerr, ipmean, xpos, ypos, zpos, xerrpos, yerrpos, zerrpos;
@@ -366,13 +351,14 @@ StatusCode BTaggingAnalysis::execute() {
     //calculate min IP wrt SV
     double ipSV=0, iperrSV=0, docaSV=0, docaErrSV=0;
     if(!svertices.empty()) {
+      debug()<<" secondary vertices information ============= "<<endreq;    
       Vertex mySV = svertices.at(0);
       verbose()<< " vertex size: "<<svertices.size()<<endreq;    
       verbose()<< " svpart1 "<<SVpart1->pt()/GeV<<endreq;
       if( proto != SVpart1->proto() && proto != SVpart2->proto()){ 
         m_util->calcIP( axp, &mySV, ipSV, iperrSV );
-	ipSV=fabs(ipSV);
-	verbose()<<" ipSV: "<<ipSV<<endreq;
+        ipSV=fabs(ipSV);
+        verbose()<<" ipSV: "<<ipSV<<endreq;
         verbose()<<" svpart for doca! svpart1 pt: "<<SVpart1->pt()/GeV<<endreq;
         m_util->calcDOCAmin( axp, SVpart1, SVpart2, docaSV, docaErrSV);
         debug()<<" doca: "<<docaSV<<endreq;
@@ -380,31 +366,47 @@ StatusCode BTaggingAnalysis::execute() {
     }
 
     //Fill NTP info -------------------------------------------------------   
-    ptrtyp.push_back(trtyp);
-    pID   .push_back(ID);
-    pP    .push_back(P);
-    pPt   .push_back(Pt);
-    pphi  .push_back(axp->momentum().phi());
-    pch   .push_back((int) axp->charge());
-    pip   .push_back(IP);
-    pipsign.push_back(IPsign);
-    piperr .push_back(IPerr);
-    pipPU  .push_back(IPPU);
-    pipmean    .push_back(ipmean);
-    pnippu     .push_back(nippu);
-    pnippuerr  .push_back(nippuerr);
-    pntracks   .push_back(ntracks);
-    pippubs    .push_back(ippubs);
-    pippuchi2bs.push_back(ippuchi2bs);
-    pxpos      .push_back(xpos);
-    pypos      .push_back(ypos);
-    pzpos      .push_back(zpos);
-    pxerrpos   .push_back(xerrpos);
-    pyerrpos   .push_back(yerrpos);
-    pzerrpos   .push_back(zerrpos);
+    ptsal       .push_back(track->likelihood());
+    ptrtyp      .push_back(trtyp);
+    pID         .push_back(ID);
+    pP          .push_back(P);
+    pPt         .push_back(Pt);
+    pphi        .push_back(axp->momentum().phi());
+    pch         .push_back((int) axp->charge());
+    pip         .push_back(IP);
+    pipsign     .push_back(IPsign);
+    piperr      .push_back(IPerr);
+    pipPU       .push_back(IPPU);
+    plcs        .push_back(lcs);
+    pcloneDist  .push_back(cloneDist);
+    ptrackxfirst.push_back(trackxfirst);
+    ptrackyfirst.push_back(trackyfirst);
+    ptrackzfirst.push_back(trackzfirst);
+    ptrackp     .push_back(trackp);
+    pdistPhi    .push_back(distphi);
+    pIPSV       .push_back(ipSV);
+    pIPSVerr    .push_back(iperrSV);
+    pDOCA       .push_back(docaSV);
+    pDOCAerr    .push_back(docaErrSV);
+    pdeta       .push_back(deta);
+    pdphi       .push_back(dphi);
+    pdQ         .push_back(dQ);
+    //different PU studies
+    pipmean     .push_back(ipmean);
+    pnippu      .push_back(nippu);
+    pnippuerr   .push_back(nippuerr);
+    pntracks    .push_back((double)ntracks);
+    pippubs     .push_back(ippubs);
+    pippuchi2bs .push_back(ippuchi2bs);
+    pxpos       .push_back(xpos);
+    pypos       .push_back(ypos);
+    pzpos       .push_back(zpos);
+    pxerrpos    .push_back(xerrpos);
+    pyerrpos    .push_back(yerrpos);
+    pzerrpos    .push_back(zerrpos);
     pnippu2     .push_back(nippu2);
     pnippuerr2  .push_back(nippuerr2);
-    pntracks2   .push_back(ntracks2);
+    pntracks2   .push_back((double)ntracks2);
     pippubs2    .push_back(ippubs2);
     pippuchi2bs2.push_back(ippuchi2bs2);
     pxpos2      .push_back(xpos2);
@@ -415,7 +417,7 @@ StatusCode BTaggingAnalysis::execute() {
     pzerrpos2   .push_back(zerrpos2);
     pnippu3     .push_back(nippu3);
     pnippuerr3  .push_back(nippuerr3);
-    pntracks3   .push_back(ntracks3);
+    pntracks3   .push_back((double)ntracks3);
     pippubs3    .push_back(ippubs3);
     pippuchi2bs3.push_back(ippuchi2bs3);
     pxpos3      .push_back(xpos3);
@@ -424,21 +426,8 @@ StatusCode BTaggingAnalysis::execute() {
     pxerrpos3   .push_back(xerrpos3);
     pyerrpos3   .push_back(yerrpos3);
     pzerrpos3   .push_back(zerrpos3);
-    plcs     .push_back(lcs);
-    pcloneDist.push_back(cloneDist);
-    ptrackxfirst.push_back(trackxfirst);
-    ptrackyfirst.push_back(trackyfirst);
-    ptrackzfirst.push_back(trackzfirst);
-    ptrackp.push_back(trackp);
-    pdistPhi .push_back(distphi);
-    pIPSV    .push_back(ipSV);
-    pIPSVerr .push_back(iperrSV);
-    pDOCA    .push_back(docaSV);
-    pDOCAerr .push_back(docaErrSV);
-    pdeta.push_back(deta);
-    pdphi.push_back(dphi);
-    pdQ.push_back(dQ);
 
+    //PID information
     // electrons
     pPIDe.push_back( proto->info( ProtoParticle::CombDLLe, -1000.0 ) );
     double eOverP  = -999.9;
@@ -488,20 +477,21 @@ StatusCode BTaggingAnalysis::execute() {
         }
       }
     }
-    
     pvFlag.push_back(vFlag);
     
     //-------------------------------------------------------
+    //debug
     if (msgLevel(MSG::DEBUG)) {
-      debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
-      debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
-      debug() << " IPsig="<<(IPerr!=0 ? fabs(IP/IPerr) : -999)
-              << " IPPU="<<IPPU <<endreq;
-      if(vFlag) debug() << "Found to be in SVTX "<<endreq;
+      debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt  
+              << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ 
+              << " IPsig="<<(IPerr!=0 ? fabs(IP/IPerr) : -999)
+              << " IPPU="<<IPPU;
+      if(vFlag) debug() << "Found to be in SVTX ------------";
+      debug() <<endreq;
     }
 
+    //store MC info of tagging candidate
     if (m_EnableMC) {
-      //store MC info 
       float MCP= 0.0, MCPt= 0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
       long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0;
       
@@ -539,19 +529,18 @@ StatusCode BTaggingAnalysis::execute() {
 	
       }//if( mcp )
 
-      pMCID .push_back(MCID);
-      pMCP  .push_back(MCP);
-      pMCPt .push_back(MCPt);
-      pMCphi.push_back(MCphi);
-      pMCx  .push_back(MCx);
-      pMCy  .push_back(MCy);
-      pMCz  .push_back(MCz);
+      pMCID  .push_back(MCID);
+      pMCP   .push_back(MCP);
+      pMCPt  .push_back(MCPt);
+      pMCphi .push_back(MCphi);
+      pMCx   .push_back(MCx);
+      pMCy   .push_back(MCy);
+      pMCz   .push_back(MCz);
       pmothID.push_back(mothID);
-      pancID.push_back(ancID);
-      pxFlag.push_back(xFlag);
-      pbFlag.push_back(bFlag);
+      pancID .push_back(ancID);
+      pxFlag .push_back(xFlag);
+      pbFlag .push_back(bFlag);
     
-      //---------------
     }
   }
 
@@ -654,14 +643,12 @@ StatusCode BTaggingAnalysis::execute() {
 //=============================================================================
 //=============================================================================
 
-
-
 //=============================================================================
 const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::Range& parts) {
 
   const Particle* AXBS=0;
 
-  if( m_BHypoCriterium == "MaximumPt" ){
+  if( m_BHypoCriterium == "MaximumPt" ){//need by Cheated Selection
     double maxptB=0;
     Particle::Range::const_iterator ip;
     for ( ip = parts.begin(); ip != parts.end(); ip++){
@@ -689,32 +676,32 @@ const Particle* BTaggingAnalysis::chooseBHypothesis(const Particle::Range& parts
 //=============================================================================
 const RecVertex::ConstVector 
 BTaggingAnalysis::choosePrimary(const Particle* AXB,
-                                //const RecVertex::Container* verts,
                                 const RecVertex::Range& verts,
-                                const RecVertex*& RecVert,
-                                RecVertex& RefitRecVert) {
-
-  RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
-
-  if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
-    //const VertexBase* myPV = bestPV(AXB);  //RecVert = (const RecVertex*) myPV;
-    RecVert = (const RecVertex*) bestPV(AXB);
-  } else {
+                                RecVertex& RecVert) {
+  const RecVertex* PV(0);
   
+  RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
+  debug()<<" choosePrimary Vertex with ";
+  if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
+    debug()<<"bestPV criteria";
+    PV = (const RecVertex*) bestPV(AXB);
+  } else {
     double kdmin = 1000000;
-    //RecVertex::Container::const_iterator iv;
     RecVertex::Range::const_iterator iv;
     for(iv=verts.begin(); iv!=verts.end(); iv++){
       double var, ip, iperr;
-      if(m_ChoosePV == "CheatPV") {
+      if(m_ChoosePV == "CheatPV") {//mc vertex
+        debug()<<"CheatPV criteria";
         if (m_EnableMC) {
           var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
           debug()<<" distance from true PV="<<var<<endreq;
         } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
       } else if(m_ChoosePV=="PVbyIP") { //cheated sel needs this
+        debug()<<"PVbyIP criteria";
         m_util->calcIP(AXB, *iv, ip, iperr);
         var=fabs(ip); 	
       } else if(m_ChoosePV=="PVbyIPs") { 
+        debug()<<"PVbyIPs criteria";
         m_util->calcIP(AXB, *iv, ip, iperr);
         if(!iperr){
           err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
@@ -727,24 +714,35 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
       }
       if( var < kdmin ) {
         kdmin = var;
-        RecVert = (*iv);
-	
-        //       RecVertex newPV(**iv);
-        //       Particle newPart(*AXB);
-        //       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
-        //       if(!sc) { 
-        //         err()<<"ReFitter fails!"<<endreq; 
-        //         continue; 
-        //       } else RefitRecVert = newPV;
-        debug()<<"RefitRecVert z="<<RefitRecVert.position().z()<<endreq;
+        PV = (*iv);
       }    
-    }
+    }    
   }//else bestPV
+  debug()<<endreq;
   
-  //build a vector of pileup vertices --------------------------
+  //-------------------------------------------------------
+  // Refit PV without the B tracks
+  if(m_ReFitPVs){  
+    debug()<<"Now explicitly do the PV refit !!!!! "<<endreq;
+    
+    RecVertex newPV(*PV);
+    Particle newPart(*AXB);
+    StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);     
+    if(!sc) { 
+      err()<<"ReFitter fails!"<<endreq; 
+    } else {
+      RecVert = newPV;
+    }    
+    debug()<<"RecVert before: z="<<PV->position().z()<<" after Refit : z="<<newPV.position().z()<<endreq;  
+  } else {
+    RecVert = *PV;    
+  }  
+  
+  //-------------------------------------------------------
+  //build a vector of pileup vertices 
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++){
-    if( (*jv) == RecVert ) continue;
+    if( (*jv) == PV ) continue;
     PileUpVtx.push_back(*jv);
   }
   
@@ -779,9 +777,8 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //eliminate from vtags all parts coming from a pileup vtx
-    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection
-    
+    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //preselection (eliminate from vtags all parts coming from a pileup vtx)
+
     bool dup=false;
     double partp= (*ip)->p();
     Particle::Range::const_iterator ik;
@@ -798,8 +795,8 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
     }
     if(dup) continue; 
 
-    ///////////////////////////////////////
-    vtags.push_back(*ip);               // Fill container of candidates
+    /////////////////////////////////////
+    vtags.push_back(*ip);              // Fill container of candidates
     /////////////////////////////////////
 
     if (msgLevel(MSG::DEBUG)) 
@@ -817,7 +814,8 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
 
 //=============================================================================
 const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple, 
-                                                             const Particle* AXBS) {
+                                                             const Particle* AXBS ) {
+                                                             //const Particle* AXBS, const RecVertex* PV ) { //to select ourselves the PV
   ProtoParticle::ConstVector partsInSV(0);
 
   bool foundb = false;
@@ -838,7 +836,8 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
         if((*ti)->taggedB() == AXBS) {
           theTag = (*ti);
           foundb = true;
-          debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
+          //          debug()<<"Will use candidate with pT="<<AXBS->pt()<<" and PV = ("
+          //                 <<PV->position().x()<<","<<PV->position().y()<<","<<PV->position().z()<<") "<<endreq;
         }
       }
       if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
@@ -850,6 +849,7 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
     info()<<"Will tag the B hypo now."<<endreq;
     theTag = new FlavourTag;
     StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
+    //StatusCode sc = flavourTagging()->tag( *theTag, AXBS, PV ); //to select ourselves the PV
     if (!sc) {
       err() <<"Tagging Tool returned error."<< endreq;
       delete theTag;
@@ -872,7 +872,7 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
   tuple -> column ("OmegaOS", theTag->omegaOS());
   tuple -> column ("TagCatOS",theTag->categoryOS());
 
-  debug()<<"looking at taggers"<<endreq;
+  debug()<<"looking at taggers --------------- "<<endreq;
   std::vector<float> tagtype, tagdecision, tagomega;
   std::vector<Tagger> taggers = theTag->taggers();
   debug()<<"tagger size: "<<taggers.size()<<endreq;
@@ -1101,12 +1101,10 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
   return axdaugh;
 }
 
-
 //=============================================================================
 StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple, 
                                            const LHCb::MCParticles* mcpart) {
 
-  ////////////////////////////////////////////////////
   //check what is the B forced to decay
   debug() << "Looking for MC"<< endreq;
   if ( !m_BS ) warning() << "Missing Signal B meson in MC!"<< endreq;
@@ -1161,10 +1159,8 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
       }
     }
   }
-  ////////////////////////////////////////////////////
   if ( !BO ) warning() << "Missing Opposite B meson in MC!"<< endreq;
  
-  ////////////////////////////////////////////////////
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
   //if(BO)debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug->printTree(BO);
 
@@ -1205,8 +1201,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
                                     const Particle *&SVpart1, 
                                     const Particle *&SVpart2 ) { 
 			   
-  /// Inclusive Secondary Vertex -------------
-  //look for a secondary Vtx due to opposite B
+  //look for a secondary Vtx due to opposite B (inclusive sec vertex)
   std::vector<float> pSecVtx_x(0), pSecVtx_y(0), pSecVtx_z(0), pSecVtx_chi2(0),
     pSecVtx_pt1(0), pSecVtx_pt2(0), pSecVtx_zerr(0);
 
@@ -1215,7 +1210,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   SVpart2=0; 
   
   std::vector<Vertex>::const_iterator isv;
-  if(m_svtool) svertices = m_svtool -> buildVertex( *RecVert, vtags );
+  if(m_svtool) svertices = m_svtool -> buildVertex( *RecVert, vtags ); // SVertexOneSeedTool from FT
 
   debug() << "  Look seed vertex position " <<endreq;
   debug() << "  vertices: " <<svertices.size()<<endreq;
