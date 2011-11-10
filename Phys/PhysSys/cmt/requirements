@@ -43,7 +43,7 @@ use TisTosTobbing		v7r4	 Phys	 # Tomasz Skwarnicki
 use NeuroBayesTools             v1r1p1   Phys    # Ulrich Kerzel
 
 #===================================================================
-use Swimming                    v2r2     Phys    # 
+use Swimming                    v2r2     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 # Temporary MC stuff.
