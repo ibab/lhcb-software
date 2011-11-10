@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r13 2011-11-10 =========================
+
 ! 2011-11-04 - Chris Jones
  - Import MicroDST.py from Bender, to provide a temporary workaroubnd to set
    up the various event locations needed when running on uDSTs
