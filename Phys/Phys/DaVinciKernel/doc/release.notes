@@ -4,6 +4,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v10r3 2011-11-10 ====================
+
 ! 2011-09-19 - Chris Jones
  - Various minor improvements and tidy updates to DVAlgorithm, found during 
    the hunt for the 2011 reprocessing stripping seg. fault bug.
