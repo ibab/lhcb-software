@@ -1,0 +1,15 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
+    <text>$APPCONFIGOPTS/Boole/DataType-2011.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; from Configurables import LHCbApp, L0Conf; LHCbApp().DDDBtag="head-20110914"; LHCbApp().CondDBtag="sim-20110723-vc-md100"; L0Conf().TCK = '0x0037'; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst'"]</text>
+    </set></argument>
+  <argument name="reference"><text>../refs/boole-mc11a-xdst.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
