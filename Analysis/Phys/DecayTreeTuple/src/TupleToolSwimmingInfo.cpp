@@ -7,8 +7,6 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-#include <SwimmingUtils/Utils.h>
-
 // local
 #include "TupleToolSwimmingInfo.h"
 
