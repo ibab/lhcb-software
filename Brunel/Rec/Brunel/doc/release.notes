@@ -17,6 +17,7 @@ Purpose: LHCb reconstruction program
 
 - Changes to tests
   . Add brunel2011-25ns.qmt, to test COLLISION11_25.py
+  . Add brunel-mc11a-xdst.qmt, to test reprocessing from xdst
 
 </PRE><H1><A NAME=v41r0>2011-09-21 Brunel v41r1</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
