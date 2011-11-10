@@ -117,19 +117,6 @@ StatusCode VeloMuonBuilder::execute() {
 //=============================================================================
 // Method kept for compatibility
 //=============================================================================
-Tracks VeloMuonBuilder::buildVeloMuon(Tracks* veloTracks, Tracks* muonTracks) {
-  Tracks trackvector;
-  Tracks* trackspointer = buildVeloMuon(*veloTracks,*muonTracks);
-  Tracks::iterator trIt;
-  for (trIt = trackspointer->begin(); trIt!=trackspointer->end(); ++trIt) {
-    trackvector.add(*trIt);
-  }
-  return trackvector;
-}
-
-//=============================================================================
-// Method kept for compatibility
-//=============================================================================
 Tracks* VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks) {
   Tracks* trackvector = new Tracks();
   StatusCode sc;

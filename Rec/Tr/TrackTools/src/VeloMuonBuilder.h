@@ -49,7 +49,6 @@ public:
   virtual StatusCode finalize();
   StatusCode buildVeloMuon(LHCb::Tracks& veloTracks, LHCb::Tracks& muonTracks, LHCb::Tracks* trackvector);
   LHCb::Tracks* buildVeloMuon(LHCb::Tracks& veloTracks, LHCb::Tracks& muonTracks);
-  LHCb::Tracks buildVeloMuon(LHCb::Tracks* veloTracks, LHCb::Tracks* muonTracks);
 
 private:
   //  Gaudi::XYZPoint VeloMuonBuilder::autoextra(LHCb::Track* muontrack);
