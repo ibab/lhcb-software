@@ -44,6 +44,7 @@ tag.BackgroundCategory.OutputLevel = 4
 
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
+tag.BTaggingTool.UseReFitPV = True
 #tag.BTaggingTool.ForceSignalID = "Bs" #"Bs", "Bd", "Bu", will Force Signal ID
 #tag.BTaggingTool.CombineTaggersName = "CombineTaggersNN" #combine taggers with NN
 tag.BTaggingTool.OutputLevel  = 4
@@ -84,12 +85,11 @@ DaVinci().MoniSequence = [  cheatsel,
                          ]  # The algorithms
 
 ########################################################################
-#/releases/DAVINCI/DAVINCI_v24r7/DaVinciSys/tests/options/DVTestTagging.py
-#
-# example data file (Bs2DsPi)
-#
-#EventSelector().Input = [ "DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/2010/DST/00005967/0000/00005967_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'" ]
 #bsjpsiphi
 EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
+#EventSelector().Input = [
+    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008916/0000/00008916_00000083_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    ]
+        
 

@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2011-11-10 - Marc Grabalosa
+ - src/BTaggingTool
+  . Same PV criterium as in DecayTrreeTuple
+  . ReFitPV implemented
+ - Increase to v12r5p1
+
 !========================== FlavourTagging v12r5 2011-07-29 ================
 ! 2011-07-08 - Marc Grabalosa
  - src/Tagger* Changed cuts to new optimization/calibration
