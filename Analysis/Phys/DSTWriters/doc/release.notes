@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r1 2011-11-10 =========================
+
 ! 2011-10-11 - Roel Aaij
  - Add microdst elements to configure cloning of swimming results.
 
