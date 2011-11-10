@@ -109,7 +109,8 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
       Error("Can't get an origin vertex");
       return StatusCode::FAILURE;
     }
-    for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; iv != originVtx.end() ; iv++){
+    for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; 
+         iv != originVtx.end() ; iv++){
       DecayTreeFitter::Fitter fitter(*P, *(*iv));
       if (!fit(fitter, P, *iv, prefix, tMap)) return StatusCode::FAILURE ;
     }
@@ -239,13 +240,24 @@ StatusCode TupleToolDecayTreeFitter::fillDaughters( const DecayTreeFitter::Fitte
   
   if (msgLevel(MSG::VERBOSE)) verbose() << "FillDaghters " << prefix << endmsg ;
   LHCb::Particle::ConstVector daughters = m_particleDescendants->descendants(P);
-  if (msgLevel(MSG::DEBUG)) debug() << "for id " << P->particleID().pid() << " daughter size is " << daughters.size() << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "for id " << P->particleID().pid() 
+                                    << " daughter size is " << daughters.size() << endmsg;
   if ( daughters.size()==0 ) return test;
+  std::set<std::string> usedNames;
+  unsigned int add = 65;
   for (LHCb::Particle::ConstVector::iterator it = daughters.begin();it<daughters.end(); it++) {
     const LHCb::Particle* particle = *it;
     if ( particle->isBasicParticle()) continue ;
     unsigned int pid = abs(particle->particleID().pid());
     std::string name = prefix+"_"+getName(pid) ;
+    while (usedNames.find(name)!=usedNames.end()) { // fix to bug 88702
+      char asciiChar = static_cast<char>(add);
+      name = name+asciiChar; // as in more
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Found already name " << name << " trying next " << endmsg ;
+      Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
+      add++;
+    }
+    usedNames.insert(name);
     test &= fillMomentum(fitter,particle,name,tMap );
     test &= fillLT(fitter,particle,name,tMap);
   }
@@ -266,6 +278,7 @@ StatusCode TupleToolDecayTreeFitter::insert(std::string leaf, double val, TupleM
   } else {
     l->second.push_back(val); /// append a to vector
   }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "insert " << leaf << " " << val  << " size " << l->second.size() << endmsg ;  
   return StatusCode::SUCCESS ;
 }
 
@@ -337,6 +350,8 @@ std::vector<const VertexBase*> TupleToolDecayTreeFitter::originVertex( const Par
 std::string TupleToolDecayTreeFitter::getName(int id) const {
   const LHCb::ParticleProperty* prop = m_ppSvc->find( LHCb::ParticleID(id) );
   if (!prop) Exception("Unknown PID");
+  if (msgLevel(MSG::VERBOSE)) verbose() << "ID " << id << " gets name " 
+                                        << Decays::escape(prop->name()) << endmsg ;
   return Decays::escape(prop->name());
 }
 //=============================================================================

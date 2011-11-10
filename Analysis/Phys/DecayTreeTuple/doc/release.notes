@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-10 - Patrick Koppenburg
+ - TupleToolDecayTreeFitter : Fix bug 88702
+
 ! 2011-11-10 - Roel Aaij
  - Remove spurious include from TupleToolSwimmingInfo.
 
