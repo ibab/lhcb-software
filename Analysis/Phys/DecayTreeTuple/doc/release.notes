@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!=================== DecayTreeTuple v3r18 2011-11-10 =========================
+
 ! 2011-11-10 - Patrick Koppenburg
  - TupleToolDecayTreeFitter : Fix bug 88702
 
