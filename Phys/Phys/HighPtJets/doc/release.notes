@@ -3,11 +3,13 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
-!========================= HighPtJets v1r4 2011-07-28 =========================
+!========================= HighPtJets v1r5 2011-11-10 =========================
 
 ! 2011-10-17 - Marcin Kucharczyk
  - Add the cut on refined sum Et and adapt the package wrt the needs of Hlt2
    HighPtJets line
+
+!========================= HighPtJets v1r4 2011-07-28 =========================
 
 ! 2011-07-27 - Marcin Kucharczyk
  - Remove HighPtJetSelection.cpp and HighPtJetSelection.h in order to move 
