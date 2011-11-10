@@ -50,12 +50,16 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc )
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
 
-  if( std::getenv("FIELDMAPROOT") != NULL ) {
-    m_mapFilePath  = getenv("FIELDMAPROOT");
+  const char * fmroot = std::getenv("FIELDMAPROOT");
+  if ( fmroot )
+  {
+    m_mapFilePath  = fmroot;
     m_mapFilePath += "/cdf/";
   }
   else
+  {
     m_mapFilePath  = "";
+  }
 
   declareProperty( "NominalCurrent", m_nominalCurrent = 5850,
                    "Nominal magnet current in Amps" );
@@ -161,55 +165,59 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
   MsgStream log(msgSvc(), name());
 
   // Polarity and current
-  if( m_UseSetCurrent ) {
+  if ( m_UseSetCurrent )
+  {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::Set,
                                     &MagneticFieldSvc::i_updateConditions, m_currentPtr );
   }
-  else {
+  else 
+  {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
                                     &MagneticFieldSvc::i_updateConditions, m_currentPtr );
   }
 
   // FieldMap file name(s). If not over-ridden by options, get from CondDB
 
-  if( m_mapFileNames.size() != 0 ) {
+  if ( !m_mapFileNames.empty() ) 
+  {
     log << MSG::WARNING
         << "Requested condDB but using manually set field map file name(s) = "
         << m_mapFileNames << endmsg;
 
     m_mapFromOptions = true;
-    StatusCode sc = m_mapFileNames.size() == 1 ?
-      m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
-      m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
-    if( !sc.isSuccess() ) return sc ;
+    const StatusCode sc = 
+      ( m_mapFileNames.size() == 1 ?
+        m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+        m_magFieldGridReader.readFiles   ( m_mapFileNames,         m_magFieldGrid ) ) ;
+    if ( sc.isFailure() ) return sc;
   }
-  else {
+  else
+  {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesUp,
                                     &MagneticFieldSvc::i_updateConditions, m_mapFilesUpPtr );
-
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesDown,
                                     &MagneticFieldSvc::i_updateConditions, m_mapFilesDownPtr );
   }
 
 
   // Scaling factor. If not over-ridden by options, get it from Options
-  if(m_forcedScaleFactor < 9998. ) {
+  if(m_forcedScaleFactor < 9998. ) 
+  {
     log << MSG::WARNING
         << "Requested condDB but using manually set signed scale factor = "
         << m_forcedScaleFactor  << endmsg;
     m_magFieldGrid.setScaleFactor( m_forcedScaleFactor ) ;
   }
-  else {
+  else
+  {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleUp,
                                     &MagneticFieldSvc::i_updateConditions, m_scaleUpPtr );
-
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleDown,
                                     &MagneticFieldSvc::i_updateConditions, m_scaleDownPtr );
   }
 
   // Initialize the service using the current conditions values
   return m_updMgrSvc->update(this);
-
 }
 
 //=============================================================================
@@ -220,7 +228,8 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
   MsgStream log(msgSvc(), name());
   log << MSG::WARNING << "Not using CondDB, entirely steered by options" << endmsg;
 
-  if( m_mapFileNames.size() == 0 ) {
+  if ( m_mapFileNames.empty() )
+  {
     log << MSG::ERROR << "Field Map filename(s) not set" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -229,18 +238,20 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 
   double scaleFactor = m_forcedScaleFactor;;
 
-  if( m_forcedScaleFactor > 9998. ) {
+  if( m_forcedScaleFactor > 9998. )
+  {
     scaleFactor = 1.;
     if( UNLIKELY(log.level() <= MSG::DEBUG) )
       log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
   }
-
+  
   m_magFieldGrid.setScaleFactor( scaleFactor ) ;
 
   // update the field
-  const StatusCode sc = m_mapFileNames.size() == 1 ?
-    m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
-    m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
+  const StatusCode sc = 
+    ( m_mapFileNames.size() == 1 ?
+      m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+      m_magFieldGridReader.readFiles   ( m_mapFileNames,         m_magFieldGrid ) );
 
   return sc ;
 }
@@ -251,11 +262,14 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
                                              void** ppvInterface      )
 {
-  if ( IMagneticFieldSvc::interfaceID().versionMatch(riid) ) {
+  if ( IMagneticFieldSvc::interfaceID().versionMatch(riid) )
+  {
     *ppvInterface = (IMagneticFieldSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
-  } else if ( ILHCbMagnetSvc::interfaceID().versionMatch(riid) ) {
+  } 
+  else if ( ILHCbMagnetSvc::interfaceID().versionMatch(riid) ) 
+  {
     *ppvInterface = (ILHCbMagnetSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
@@ -276,38 +290,30 @@ StatusCode MagneticFieldSvc::i_updateConditions()
         << "inconsistent settings, forced to use Down AND Uo map = " << endmsg;
 
   double polarity = 0;
-
-  if( m_forcedToUseDownMap)
-    polarity = -1.0;
-  if (m_forcedToUseUpMap)
-    polarity = +1.0;
-
-  if (!m_forcedToUseDownMap && !m_forcedToUseUpMap)
+  if ( m_forcedToUseDownMap ) { polarity = -1.0; }
+  if ( m_forcedToUseUpMap   ) { polarity = +1.0; }
+  if ( !m_forcedToUseDownMap && !m_forcedToUseUpMap )
+  {
     polarity = m_currentPtr->param<int>("Polarity");
+  }
 
   // Update the scale factor
-  if(m_forcedScaleFactor > 9998. )
+  if ( m_forcedScaleFactor > 9998. )
   {
-
     const double current = m_currentPtr->param<double>("Current");
 
-    std::vector<double> coeffs;
-    if( polarity > 0 )
-    {
-      coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
-    }
-    else
-    {
-      coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
-    }
+    const std::vector<double> coeffs = 
+      ( polarity > 0  ?
+        m_scaleUpPtr   -> param<std::vector<double> >("Coeffs") :
+        m_scaleDownPtr -> param<std::vector<double> >("Coeffs") );
 
     const double scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
     m_magFieldGrid.setScaleFactor( scaleFactor ) ;
   }
 
   // Update the field map file
-  StatusCode sc ;
-  if( !m_mapFromOptions)
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( !m_mapFromOptions )
   {
 
     // Convention used: positive polarity is "Up" (+y), negative is "Down" (-y)
@@ -335,8 +341,8 @@ StatusCode MagneticFieldSvc::i_updateConditions()
       // update the field
       sc = ( m_mapFileNames.size() == 1 ?
              m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
-             m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ) ;
-      if( UNLIKELY(log.level() <= MSG::DEBUG) )
+             m_magFieldGridReader.readFiles   ( m_mapFileNames,         m_magFieldGrid ) ) ;
+      if ( UNLIKELY(log.level() <= MSG::DEBUG) )
         log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
     }
   }
@@ -345,9 +351,9 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   cacheFieldPolarity();
 
   log << MSG::INFO
-      << "Map scaled by factor " << m_magFieldGrid.scaleFactor()
+      << "Map scaled by factor "            << m_magFieldGrid.scaleFactor()
       << " with polarity internally used: " << polarity
-      <<" signed relative current: " << signedRelativeCurrent()
+      << " signed relative current: "       << signedRelativeCurrent()
       << endmsg;
 
   return sc ;
@@ -371,6 +377,5 @@ bool MagneticFieldSvc::isDown() const
 
 void MagneticFieldSvc::cacheFieldPolarity()
 {
-  const Gaudi::XYZVector bf = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)) ;
-  m_isDown = bf.y() < 0 ;
+  m_isDown = m_magFieldGrid.fieldVectorClosestPoint(Gaudi::XYZPoint(0,0,5200)).y() < 0 ;
 }

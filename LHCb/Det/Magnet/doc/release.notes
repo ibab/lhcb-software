@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2011-11-10 - Chris Jones
+ - Various tidy ups to the last commit to the MagneticFieldSvc
+
 !========================= Magnet v7r4 2011-11-07 =========================
 ! 2011-10-29 - Chris Jones
  - Update MagneticFieldSvc to cache the field polarity (Down or Up) and return

@@ -33,43 +33,44 @@ class IMagFieldTool;
  */
 
 class MagneticFieldSvc : public Service,
-                         virtual public ILHCbMagnetSvc {
+                         virtual public ILHCbMagnetSvc 
+{
 
 protected:
-  
+
   /// Standard Constructor.
   /// @param  name   String with service name
   /// @param  svc    Pointer to service locator interface
   MagneticFieldSvc( const std::string& name, ISvcLocator* svc );
-  
+
   /// Virtual destructor.
   virtual ~MagneticFieldSvc();
 
 public:
 
-  /// Initialise the service (Inherited Service overrides) 
+  /// Initialise the service (Inherited Service overrides)
   virtual StatusCode initialize();
 
-  /// Finalise the service (Inherited Service overrides) 
+  /// Finalise the service (Inherited Service overrides)
   virtual StatusCode finalize();
-  
+
   /** Query the available interfaces.
    * @param riid Requested interface ID
    * @param ppvInterface Pointer to requested interface
    * @return StatusCode indicating SUCCESS or FAILURE.
    */
-  virtual StatusCode queryInterface( const InterfaceID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid,
                                      void** ppvInterface      );
-  
+
   /** Implementation of IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @param[out] fvec Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
    */
-  virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                  Gaudi::XYZVector& fvec ) const 
+  virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz,
+                                  Gaudi::XYZVector& fvec ) const
   {
-    fvec = m_magFieldGrid.fieldVector(xyz) ; 
+    fvec = m_magFieldGrid.fieldVector(xyz) ;
     return StatusCode::SUCCESS ;
   }
 
@@ -82,12 +83,12 @@ public:
   /// Returns the field grid
   virtual const LHCb::MagneticFieldGrid* fieldGrid() const
   {
-    return &m_magFieldGrid ; 
+    return &m_magFieldGrid ;
   }
 
   bool useRealMap() const; ///< True is using real map
 
-  double signedRelativeCurrent() const 
+  double signedRelativeCurrent() const
   {
     const int sign = ( isDown() ? -1 : +1 );
     return std::abs(m_magFieldGrid.scaleFactor())*sign;
@@ -95,7 +96,7 @@ public:
 
   // True if the down polarity map is loaded
   virtual bool isDown() const;
- 
+
 private:
 
   /// Allow SvcFactory to instantiate the service.
@@ -112,20 +113,20 @@ private:
   bool m_UseSetCurrent;      ///< Use Set or Measured current. Default false
   double m_nominalCurrent;   ///< Nominal magnet current to normalise rescaling
   std::string m_mapFilePath; ///< Directory where field map files are located
- 
+
   // Special properties to use constant field (and no condDB!)
   bool                m_useConstField;    ///< Job option to use constant field
   std::vector<double> m_constFieldVector; ///< Option for constant field value
 
   // Properties to over-ride values in CondDB
-  std::vector<std::string> m_mapFileNames; 
+  std::vector<std::string> m_mapFileNames;
   bool                     m_forcedToUseDownMap;
   bool                     m_forcedToUseUpMap;
   double                   m_forcedScaleFactor;
   bool                     m_mapFromOptions;
 
   // Private data
-  
+
   Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
   Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition
   Condition* m_scaleUpPtr;      ///< Pointer to ScaleUp condition
