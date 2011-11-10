@@ -5,7 +5,7 @@
 #
 #============================================================================
 package           VertexFit
-version           v6r7p2
+version           v6r7p3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,7 +14,7 @@ branches          cmt doc src
 # Used packages. 
 #============================================================================
 
-use     TrackInterfaces v*     Tr
+use  TrackInterfaces    v*  Tr
 use  GaudiAlg           v*
 use  DaVinciInterfaces  v*  Phys
 use  DaVinciKernel      v*  Phys
