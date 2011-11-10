@@ -3,6 +3,50 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v13r0>2011-11-10 Phys v13r1 </A></H1><PRE>
+- Based on LHCb v33r1, REC v12r1
+
+Additions to support Swimming, plus various other bug fixes and improvements.
+
+- Packages updated: DaVinciKernel v10r3, DaVinciTools v22r10,
+                    HighPtJets v1r5, LoKiJets v6r1, PhysConf v1r13,
+                    TisTosTobbing v7r4, VertexFit v6r7p3
+
+- New packages: Swimming v2r2
+
+- In DaVinciKernel v10r3
+ . Various minor improvements and tidy updates to DVAlgorithm, found during 
+   the hunt for the 2011 reprocessing stripping seg. fault bug.
+
+- In DaVinciTools v22r10
+ . Add new algorithm, FilterStream, that is a small variation of
+   FilterDesktop but acts on the whole stream
+ . Fix memory print out from DaVinciInit when memory decreases
+
+- In HighPtJets v1r5
+ . Add the cut on refined sum Et and adapt the package wrt the needs of Hlt2
+   HighPtJets line
+
+- In LoKiJets v6r1
+ . Setting the option to set the referencePoint of the Jet to the associated 
+   vertex (if true) in  LoKiJetMakerAlg
+ . Rethinking of the jet to vertex association. Modification in LoKiJetMakerAlg
+
+- In PhysConf v1r13
+ . Import MicroDST.py from Bender, to provide a temporary workaroubnd to set
+   up the various event locations needed when running on uDSTs
+ . Don't force the OutputLevel for DataOnDemand to 1 or dump the entire mappings
+
+- In Swimming v2r2
+ . Various changes (see package release notes). 
+   First version for use in production.
+
+- In TisTosTobbing v7r4
+ . fix use of std::unique to remove duplicates
+
+- In VertexFit v6r7p3
+ . migrate to new ParticlePropertySvc (fixed from last commit)
+
 </PRE><H1><A NAME=v13r0>2011-09-07 Phys v13r0 </A></H1><PRE>
 - Based on LHCb v33r0. Stripping17 version, hopefully.
 
