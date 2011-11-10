@@ -7,8 +7,11 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!================== LoKiJets v6r1 2011-11-10 ===============================
+
 ! 2011-11-07 - Cedric Potterat
- - Setting the option to set the referencePoint of the Jet to the associated vertex (if true) in  LoKiJetMakerAlg
+ - Setting the option to set the referencePoint of the Jet to the associated 
+   vertex (if true) in  LoKiJetMakerAlg
 
 ! 2011-10-27 - Victor Coco
  - Rethinking of the jet to vertex association. Modification in LoKiJetMakerAlg
@@ -20,11 +23,13 @@ and correction in the cmt/requirements of LoKiJets
 ! 2011-04-19 - Cédric Potterat
  - new LoKiJetMakerWR2VtxAlg.cpp
   . new algorith to run the JetMaker algorithms on a RecVertx container
- - new version of src/LoKiSeedConeJetMaker.{cpp,h}, src/LoKiSeedFinder.{cpp,h}, src/LoKiVVSeedFinder.{cpp,h}, LoKiFastJetMaker.{cpp,h},  LoKiFastJetWithAreaMaker.cpp :
+ - new version of src/LoKiSeedConeJetMaker.{cpp,h}, src/LoKiSeedFinder.{cpp,h},
+   src/LoKiVVSeedFinder.{cpp,h}, LoKiFastJetMaker.{cpp,h},  LoKiFastJetWithAreaMaker.cpp :
   . update for the new IJetMaker.h fonction (with vertex)
   . new algorithm for the SeedFinders
   . add the possiblility to assign a PV to a FastJet (via option)
- - move LoKiMCPartBHadronSeed.{cpp,h}, PartonicJets2HepMCJets.cpp, HepMCJets2Jets.cpp, HepMCJets2HepMCJets.cpp, PartonicJets2HepMCJets.cpp to JetAccessoriesMC
+ - move LoKiMCPartBHadronSeed.{cpp,h}, PartonicJets2HepMCJets.cpp, HepMCJets2Jets.cpp, 
+   HepMCJets2HepMCJets.cpp, PartonicJets2HepMCJets.cpp to JetAccessoriesMC
  - src/LoKiJetParticleMaker
   . increase the reserver of the output vector from 20 to 100
  - cmt/requirements
