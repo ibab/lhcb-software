@@ -3,8 +3,68 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-! 2011-10-13 - Chris Jones
+</PRE><H1><A NAME=v7r0>2011-11-10 Analysis v7r1 </A></H1><PRE>
+
+based on Phys v13r1. Updated for Swimming support.
+
+Updated Packages : MicroDSTAlgorithm v5r5, MicroDSTinterfaces v1r7
+                   MicroDSTTools v2r2, AnalysisPython v2r6, DstwriterTests v2r4,
+                   DSTWriters v4r1, DaVinciMCTools v10r1, JetAccessories v1r2,
+                   JetAccessoriesMC v1r3, LoKiPhysMC v9r4, DecayTreeTuple v3r18
+
+New Packages :-
  - Add Phys/TrackSmearing moved from Erasmus
+
+In MicroDSTAlgorithm v5r5
+ . Add algorithms to copy SwimmingReport and Particle2TPRelations
+
+In MicroDSTinterfaces v1r7
+ . Add ICloneSwimmingReport
+
+In MicroDSTTools v2r2
+ . Add SwimmingReportCloner
+
+In AnalysisPython v2r6 
+ . Various improvements. See package release.notes.
+
+In DstwriterTests v2r4
+ . Fix check_dst_contents.py to work with IOHelper
+
+In DSTWriters v4r1
+ . Add microdst elements to configure cloning of swimming results
+
+In DaVinciMCTools v10r1
+ . Update src/Particle2BackgroundCategoryRelationsAlg to allow for the 
+   possibility that a Particle TES location my now have any data in a given
+   event. Possible when running on uDSTS.
+
+In JetAccessories v1r2
+ . Add the vertex association for the banned particles in ParticleFlow4Jets
+   and JetMaker_Config.py for to ease the jet configuration
+ . Fix add protection against non existant conatainer candidate banning 
+   Add vertex association in ParticleFlow4Jets.cpp
+ . Add candidate banning for composite particles in ParticleFlow4Jets
+ . Update ParticleFlow4Jets algoerithm (HCAL, candidate banning, possible usage of V0s)
+
+In JetAccessoriesMC v1r3
+ . minor modification to StdHepMCParticles.py config to use the new 
+   ForceNoAcceptanceCut option
+ . Added the criterion "Is MC particle in HepMC jet?"
+   This is now default for "MCtrue" and not available for "Measured".
+   This can be changed easily if needed.
+
+In LoKiPhysMC v9r4
+ . Add the possiblility to chose the pythia process(es) in HepMCParticleMaker
+ . Extended Victor's option to get the full stable particle
+   set with no geometrical/kinematical cuts..
+ . HepMCParticleMaker.cpp : add ForceNoCut option to get the full stable particle
+   set with no geometrical/kinematical cuts. Add parton mode and selector.
+
+In DecayTreeTuple v3r18
+ . Added support for Swimming
+ . various other improvements and bug fixes. See package release.notes.
+
+
 
 </PRE><H1><A NAME=v7r0>2011-09-07 Analysis v7r0 </A></H1><PRE>
 
