@@ -185,44 +185,44 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Kaons__(self, conf):
         """
-        Filter kaons from StdLooseKaons
+        Filter kaons from StdAllLooseKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdLooseKaons/Particles')
+        _kaons = AutomaticData(Location = 'Phys/StdAllLooseKaons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdLooseKaons",
+        _sel = Selection("Selection_"+self.name+"_StdAllLooseKaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
         return _sel
 
     def __NoPIDKaons__(self, conf):
         """
-        Filter kaons from StdNoPIDsKaons
+        Filter kaons from StdAllNoPIDsKaons
         """  
-        _kaons = AutomaticData(Location = 'Phys/StdNoPIDsKaons/Particles')
+        _kaons = AutomaticData(Location = 'Phys/StdAllNoPIDsKaons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdNoPIDsKaons",
+        _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsKaons",
                          RequiredSelections = [ _kaons ] ,
                          Algorithm = _filter)
         return _sel
 
     def __Protons__(self, conf):
         """
-        Filter protons from StdLooseProtons
+        Filter protons from StdAllLooseProtons
         """  
-        _protons = AutomaticData(Location = 'Phys/StdLooseProtons/Particles')
+        _protons = AutomaticData(Location = 'Phys/StdAllLooseProtons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdLooseProtons",
+        _sel = Selection("Selection_"+self.name+"_StdAllLooseProtons",
                          RequiredSelections = [ _protons ] ,
                          Algorithm = _filter)
         return _sel
 
     def __NoPIDProtons__(self, conf):
         """
-        Filter protons from StdLooseProtons
+        Filter protons from StdAllLooseProtons
         """  
-        _protons = AutomaticData(Location = 'Phys/StdNoPIDsProtons/Particles')
+        _protons = AutomaticData(Location = 'Phys/StdAllNoPIDsProtons/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdNoPIDsProtons",
+        _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsProtons",
                          RequiredSelections = [ _protons ] ,
                          Algorithm = _filter)
         return _sel
@@ -231,22 +231,22 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Pions__(self, conf):
         """
-        Filter pions from StdLoosePions
+        Filter pions from StdAllLoosePions
         """  
-        _pions = AutomaticData(Location = 'Phys/StdLoosePions/Particles')
+        _pions = AutomaticData(Location = 'Phys/StdAllLoosePions/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdLoosePions",
+        _sel = Selection("Selection_"+self.name+"_StdAllLoosePions",
                          RequiredSelections = [ _pions ] ,
                          Algorithm = _filter)
         return _sel
 
     def __NoPIDPions__(self, conf):
         """
-        Filter pions from StdNoPIDsPions
+        Filter pions from StdAllNoPIDsPions
         """  
-        _pions = AutomaticData(Location = 'Phys/StdNoPIDsPions/Particles')
+        _pions = AutomaticData(Location = 'Phys/StdAllNoPIDsPions/Particles')
         _filter = FilterDesktop(Code = self.__TrackCuts__(conf))
-        _sel = Selection("Selection_"+self.name+"_StdNoPIDsPions",
+        _sel = Selection("Selection_"+self.name+"_StdAllNoPIDsPions",
                          RequiredSelections = [ _pions ] ,
                          Algorithm = _filter)
         return _sel

@@ -326,15 +326,15 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         Kaon filter for Bu -> K mu mu (from StdLooseKaons)
         '''
 
-        from StandardParticles import StdLooseKaons
-        from StandardParticles import StdNoPIDsKaons
+        from StandardParticles import StdAllLooseKaons
+        from StandardParticles import StdAllNoPIDsKaons
 
         MyStdKaons = None
         
         if(UseNoPIDsHadrons == True):
-            MyStdKaons = StdNoPIDsKaons
+            MyStdKaons = StdAllNoPIDsKaons
         else:
-            MyStdKaons = StdLooseKaons
+            MyStdKaons = StdAllLooseKaons
   
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         FilterKaon = FilterDesktop()
@@ -354,9 +354,9 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         Make K* using StdNoPID common particles
         '''
 
-        from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdLooseKaons, StdLoosePions
+        from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, StdAllLooseKaons, StdAllLoosePions
 
-        _requires =  [StdNoPIDsKaons, StdNoPIDsPions] if UseNoPIDsParticles else [StdLooseKaons, StdLoosePions] 
+        _requires =  [StdAllNoPIDsKaons, StdAllNoPIDsPions] if UseNoPIDsParticles else [StdAllLooseKaons, StdAllLoosePions] 
         
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         CombineKstar = CombineParticles()
