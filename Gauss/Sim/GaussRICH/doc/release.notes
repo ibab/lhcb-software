@@ -3,7 +3,10 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+!2011-11-11 - Sajan Easo
+- Changed from using DeRichHPD to DeRichPD in RichHpdProperties for acquiring the QE, 
+  in order to be  compatible with recent changes in RichDet
+!
 !========================= GaussRICH v11r6 2011-10-17 ========================
 !2011-10-14 - Sajan Easo
 - Modified the RichAnalysis.opts to avoid some debug printout at initialization.
