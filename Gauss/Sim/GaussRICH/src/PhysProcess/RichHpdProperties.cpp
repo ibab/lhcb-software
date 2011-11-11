@@ -13,6 +13,8 @@
 
 #include "RichDet/DeRichSystem.h"
 #include "RichDet/DeRichHPD.h"
+#include "RichDet/DeRichPD.h"
+
 
 // create with a large number of hpds and then adjust
 // the size to the correct number of hpds in the constructer
@@ -369,7 +371,8 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc,
 
     TabulatedProperty::Table table;
 
-    SmartDataPtr<DeRichHPD> iDeHpd( detSvc, location );
+    //    SmartDataPtr<DeRichHPD> iDeHpd( detSvc, location );
+    SmartDataPtr<DeRichPD> iDeHpd( detSvc, location );
     if(  ( !iDeHpd ) || (m_UseNominalHpdQE)  ) {
       RichHpdPropLogQE << MSG::WARNING << "No HPD in Conditions DB at "<<location
 		       <<"Using Old QE default table for this HPD!"<<endreq;
@@ -381,7 +384,7 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc,
           table = tabQE->table();
       }  
     } else {
-          table = iDeHpd->hpdQuantumEff()->tabProperty()->table();
+          table = iDeHpd->pdQuantumEff()->tabProperty()->table();
     }
     
     TabulatedProperty::Table::const_iterator it;
@@ -414,7 +417,7 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc,
 
     //debug stuff
 //       for( double ene=1.75; ene<7.0;  ene+=0.2 ) {
-//         const Rich::TabulatedProperty1D* qe_table = iDeHpd->hpdQuantumEff();
+//         const Rich::TabulatedProperty1D* qe_table = iDeHpd->pdQuantumEff();
 //         double qe = qe_table->value(ene/1000000.0);
 //         RichHpdPropLogQE <<MSG::INFO<<"energy="<<ene<<" wavel="<<1243.125/ene
 //                          <<" ---> " << qe <<endreq;
@@ -671,7 +674,8 @@ void  RichHpdProperties::FillHpdDemagTablesAtInit ( IDataProviderSvc* detSvc,
 
 	m_RichHpdDeMagList[irichdet][ih]= new RichHpdDeMag(detSvc, ih, irichdet);
 
-	SmartDataPtr<DeRichHPD> iDeHpd( detSvc, location );
+  SmartDataPtr<DeRichHPD> iDeHpd( detSvc, location );
+
 	if(iDeHpd) {
 
 	  const Rich1DTabFunc* r_demag   = iDeHpd->demagnification_RtoR();
