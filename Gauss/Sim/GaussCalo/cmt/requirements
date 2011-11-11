@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussCalo
-version           v9r3
+version           v9r4
 
 #============================================================================
 # Structure, i.e. directories to process. 

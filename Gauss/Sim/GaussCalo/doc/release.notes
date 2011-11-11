@@ -3,11 +3,12 @@
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
 !                    Patrick Robbe, Olivier Deschamps
-! Responsible	     : Patrick Robbe, Vanya Belyaev, Olivier Deschamps
+! Responsible	     : Patrick Robbe, Olivier Deschamps
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+!========================= GaussCalo v9r3 2011-11-11 ==========================
 ! 2011-10-20 - Patrick Robbe
  - CaloSensDet.cpp
  - GetCaloHitsAlg.cpp:
