@@ -18,21 +18,21 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Particle2BackgroundCategoryRelationsAlg );
-
-using namespace LHCb;
+DECLARE_ALGORITHM_FACTORY( Particle2BackgroundCategoryRelationsAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Particle2BackgroundCategoryRelationsAlg::Particle2BackgroundCategoryRelationsAlg( const std::string& name,
-                                                                                  ISvcLocator* pSvcLocator)
+Particle2BackgroundCategoryRelationsAlg::
+Particle2BackgroundCategoryRelationsAlg( const std::string& name,
+                                         ISvcLocator* pSvcLocator )
   : 
-  GaudiAlgorithm ( name , pSvcLocator ),
-  m_particleLocations(),
-  m_bkg(0)  
+  GaudiAlgorithm      ( name , pSvcLocator ),
+  m_particleLocations (                    ),
+  m_bkg               ( NULL               )  
 {
-  declareProperty("InputLocations", m_particleLocations);
+  declareProperty( "Inputs", m_particleLocations );
+  declareProperty( "FullTree", m_fullTree = false );
 }
 //=============================================================================
 // Destructor
@@ -44,17 +44,15 @@ Particle2BackgroundCategoryRelationsAlg::~Particle2BackgroundCategoryRelationsAl
 //=============================================================================
 StatusCode Particle2BackgroundCategoryRelationsAlg::initialize() 
 {
+  const StatusCode sc = GaudiAlgorithm::initialize();
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( sc.isFailure() ) return sc; 
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
 
-  return (0!=m_bkg) ? StatusCode::SUCCESS : StatusCode::FAILURE;
-
+  return sc;
 }
 
 //=============================================================================
@@ -62,30 +60,34 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::initialize()
 //=============================================================================
 StatusCode Particle2BackgroundCategoryRelationsAlg::execute() 
 {
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   //Check that we have an input location
-  if (m_particleLocations.empty()) {
+  if ( m_particleLocations.empty())
+  {
     return Error ( "No particle location provided" ) ;
   }
 
-  std::vector<std::string>::const_iterator _begin = m_particleLocations.begin();
-
-  StatusCode sc = StatusCode::SUCCESS;
-  for (std::vector<std::string>::const_iterator iLoc = _begin; iLoc != m_particleLocations.end(); ++iLoc) {
-    sc = backCategoriseParticles(*iLoc);
-    if (sc.isFailure()) return Error("Problem BackgroundCategorizing "+ *iLoc);
+  for ( std::vector<std::string>::const_iterator iLoc = m_particleLocations.begin(); 
+        iLoc != m_particleLocations.end(); ++iLoc )
+  {
+    const StatusCode sc = backCategoriseParticles(*iLoc);
+    if ( sc.isFailure() ) 
+      return Error("Problem BackgroundCategorizing "+ *iLoc,sc);
   }
   
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
-StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(const std::string& location) const 
+
+StatusCode 
+Particle2BackgroundCategoryRelationsAlg::
+backCategoriseParticles(const std::string& location) const 
 {
 
   //Check that we have an input location
-  if (location == "") 
+  if ( location.empty() ) 
   {
     return Error ( "No particle location provided" ) ;
   }
@@ -97,36 +99,49 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::backCategoriseParticles(cons
   //Get the input particles
   const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
   //Check that this returns something 
-  if (myParticles.empty()) {
+  if (myParticles.empty()) 
+  {
     return Error ( "No particles at the location provided" );
   }
 
-  //Make the relations table
+  // Make the relations table
   LHCb::Relation1D<LHCb::Particle, int>* catRelations =
-    new LHCb::Relation1D<LHCb::Particle, int>( myParticles.size() );
+    new LHCb::Relation1D<LHCb::Particle,int>( myParticles.size() );
 
-  for(LHCb::Particle::Range::const_iterator iP = myParticles.begin(); 
-      iP != myParticles.end(); ++iP ){
-    int thisCat = static_cast<int>(m_bkg->category(*iP));
-    catRelations->i_relate(*iP,thisCat);
-  }
-
+  // save
   std::string outputLocation = location;
   DaVinci::StringUtils::removeEnding(outputLocation, "/Particles");
+  outputLocation += "/P2BCRelations";
+  put( catRelations, outputLocation );
 
-  put(catRelations, outputLocation+"/P2BCRelations");
+  StatusCode sc = StatusCode::SUCCESS;
+  for ( LHCb::Particle::Range::const_iterator iP = myParticles.begin(); 
+        iP != myParticles.end(); ++iP )
+  {
+    sc = sc && backCategoriseParticle( *iP, catRelations );
+  }
 
-  return StatusCode::SUCCESS;
-  
+  return sc;  
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Particle2BackgroundCategoryRelationsAlg::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+StatusCode 
+Particle2BackgroundCategoryRelationsAlg::
+backCategoriseParticle( const LHCb::Particle * particle,
+                        LHCb::Relation1D<LHCb::Particle, int>* catRelations ) const
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  const int thisCat = static_cast<int>(m_bkg->category(particle));
+  catRelations->i_relate( particle, thisCat );
+  if ( m_fullTree )
+  {
+    const SmartRefVector<LHCb::Particle> & daus = particle->daughters();
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iD = daus.begin();
+          iD != daus.end(); ++iD )
+    {
+      sc = sc && backCategoriseParticle( *iD, catRelations );
+      if ( sc.isFailure() ) break;
+    }
+  }
+  return sc;
 }
-//=============================================================================
+

@@ -4,6 +4,11 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-11-11 - Chris Jones
+ - Update Particle2BackgroundCategoryRelationsAlg with an option to allow
+   the BC relations for all Particles in the decay tree to be sotred, not
+    just the head Particle.
+
 !========================= DaVinciMCTools v10r1 2011-11-10 ===================
 
 ! 2011-11-09 - Chris Jones
