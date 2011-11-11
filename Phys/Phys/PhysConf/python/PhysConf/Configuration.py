@@ -180,8 +180,7 @@ class PhysConf(LHCbConfigurableUser) :
                 "beam_line = VX_BEAMSPOTRHO ( 1 * mm ) < 0.5 * mm " ,
                 ]
                 )
-            dataOnDemand.AlgMap[ filtered ] = fltr.getFullName() 
-            #dataOnDemand.Dump = True
+            dataOnDemand.AlgMap[ filtered ] = fltr.getFullName()
             
 #
 # LoKi
