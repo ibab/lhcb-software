@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v41r0 2011-10-18 ============================
+! 2011-11-11 - Gloria Corti
+ - Use DecFiles version for MC11, v25r*
+ - Remove options for MC09 and 2009 that are no longer supported.
+   . Gauss-MC09.py
+   . Gauss-2009.py
+ - Put default for Em physics as to be used in MC11 (i.e. Opt1NoCuts).
+
 ! 2011-11-09 - Patrick Robbe
  - another attempt to correct QMTests
 
