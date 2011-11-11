@@ -1,5 +1,5 @@
 #include "$ROOTCNVROOT/options/Setup.opts"
-ApplicationMgr.OutStream  += { "Gaudi::RootOutputStream/RootDst","Gaudi::RootOutputStream/RootMini"};
+ApplicationMgr.OutStream  += { "OutputStream/RootDst","OutputStream/RootMini"};
 ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
 EventSelector.PrintFreq    = 1;
 ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
