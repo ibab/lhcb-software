@@ -1,13 +1,13 @@
 Warning in <TClass::TClass>: no dictionary for class DataObject is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
 Warning in <TClass::TClass>: no dictionary for class ObjectContainerBase is available
 Warning in <TClass::TClass>: no dictionary for class KeyedObject<int> is available
 Warning in <TClass::TClass>: no dictionary for class ContainedObject is available
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Event> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
 Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> > is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyTrack is available
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyVertex> is available
@@ -37,10 +37,10 @@ Tree:FileRecords 0
 +++ Added 14 Sections entries with 509 bytes in total.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1e995510
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1e998af0
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1eb70850
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1eb75520
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a625c90
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a625eb0
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a7fda10
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a8026e0
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
@@ -67,10 +67,10 @@ Tree:FileRecords 0
 +++ Added 14 Sections entries with 520 bytes in total.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1ec46460
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1ec23900
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1ec23ef0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1ec7cb80
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a905790
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a90e520
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a8f4610
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a909d80
   KEY: TTree	Event;3	Root data for Gaudi
   KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
@@ -94,14 +94,14 @@ Tree:FileRecords 0
 +++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_R.'][0]                                  Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_SumCount.'][0]                           Start:       2 ...        3 [1 entries]
-+++ Added new GUID FID=740318F8-7737-11E0-9797-0815800ABEEF to merge file.
++++ Added new GUID FID=16C4D272-0C91-11E1-9797-998D8A89BEEF to merge file.
 +++ Added 14 Sections entries with 526 bytes in total.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1ec822b0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1ec80e00
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1ec95450
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1ec7cb80
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a90d3c0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a90beb0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a9203b0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a8c19c0
   KEY: TTree	Event;4	Root data for Gaudi
   KEY: TTree	FileRecords;4	Root data for Gaudi
   KEY: TTree	Refs;7	Root Section data

@@ -4,28 +4,18 @@ ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
 EventSelector.PrintFreq    = 1;
 ApplicationMgr.EvtSel      = "NONE"; // do not use any event input
 RootDst.ItemList           = { 
-   "/Event",
-   "/Event/Collision_0",
-   "/Event/Collision_0/MyVertices",
-   "/Event/Collision_1",
-   "/Event/Collision_2",
-   "/Event/Header",
-   "/Event/MyTracks"
+   "/Event#999"
 };
 RootDst.OptItemList = { 
-   "/Event/Prev",
-   "/Event/Prev/Header",
-   "/Event/PrevPrev",
-   "/Event/PrevPrev/Header",
-   "/Event/Next",
-   "/Event/Next/Header",
-   "/Event/NextNext",
-   "/Event/NextNext/Header"
+   "/Event/Prev#999",
+   "/Event/PrevPrev#999",
+   "/Event/Next#999",
+   "/Event/NextNext#999"
 };
 RootMini.ItemList           = { 
-   "/Event",
-   "/Event/Header",
-   "/Event/MyTracks"
+   "/Event#1",
+   "/Event/Header#1",
+   "/Event/MyTracks#1"
 };
 
 ApplicationMgr.EvtMax      = 500;
@@ -37,7 +27,7 @@ ReadAlg.OutputLevel        = 2;
 ApplicationMgr.ExtSvc                += { "Gaudi::RootCnvSvc/FileRecordCnvSvc" };
 FileRecordPersistencySvc.CnvServices += { "FileRecordCnvSvc" };
 FileRecordCnvSvc.ShareFiles           = "YES";
-FileRecordCnvSvc.OutputLevel          = 1;
+FileRecordCnvSvc.OutputLevel          = 3;
 
 FileRecordDataSvc.ForceLeaves         = true;
 FileRecordDataSvc.EnableFaultHandler  = true;

@@ -20,10 +20,10 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ Added 5 Sections entries with 167 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1d9ab260
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1d9ab480
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1db8e9c0
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1dc5a670
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x91aacd0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x91aaef0
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x938fe40
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x94601e0
   KEY: TTree	##Descriptors;2	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
@@ -41,10 +41,10 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ Added 5 Sections entries with 168 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1dc845f0
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1d9ac3e0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1dc90f20
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1dc5ea10
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x9432740
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x91abe50
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x94820e0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x92ea1d0
   KEY: TTree	##Descriptors;3	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
@@ -59,14 +59,14 @@ Tree:<local>_Dir1_Dir2_Dir3_Collection 1
 +++ section ['Containers'][0]                                       Start:       2 ...        3 [1 entries]
 +++ section ['Databases'][0]                                        Start:       4 ...        6 [2 entries]
 +++ section ['Links'][0]                                            Start:       2 ...        3 [1 entries]
-+++ Added new GUID FID=19AE019C-2DE5-11E0-9797-37048A89BEEF to merge file.
++++ Added new GUID FID=00EC4D30-0C92-11E1-9797-998D8A89BEEF to merge file.
 +++ Added 5 Sections entries with 168 bytes in total.
 TFile**		ROOTIO.merge.1.tags
  TFile*		ROOTIO.merge.1.tags
-  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x1d9a91b0
-  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x1dc53970
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1dc5e9b0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1dc845f0
+  OBJ: TTree	##Descriptors	Root data for Gaudi : 0 at: 0x91ae370
+  OBJ: TTree	<local>_Dir1_Dir2_Dir3_Collection	Root data for Gaudi : 0 at: 0x94689d0
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x94820c0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x92ea1d0
   KEY: TTree	##Descriptors;4	Root data for Gaudi
   KEY: TTree	<local>_Dir1_Dir2_Dir3_Collection;4	Root data for Gaudi
   KEY: TTree	Refs;7	Root Section data

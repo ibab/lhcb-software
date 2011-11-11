@@ -1,4 +1,9 @@
 Warning in <TClass::TClass>: no dictionary for class DataObject is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
+Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
+Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Collision is available
 Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyVertex,Containers::KeyedObjectManager<Containers::hashmap> > is available
 Warning in <TClass::TClass>: no dictionary for class ObjectContainerBase is available
@@ -6,13 +11,8 @@ Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyVertex i
 Warning in <TClass::TClass>: no dictionary for class KeyedObject<int> is available
 Warning in <TClass::TClass>: no dictionary for class ContainedObject is available
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Event> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyTrack> is available
 Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::MyTrack> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
 Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> > is available
 Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyTrack is available
 Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyVertex> is available
@@ -50,10 +50,10 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 891 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ab3510
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x19ab6af0
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19ca1700
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19d9a740
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a600c90
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a600eb0
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a7eb880
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a8e4870
   KEY: TTree	Event;2	Root data for Gaudi
   KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
@@ -88,10 +88,10 @@ Tree:FileRecords 0
 +++ Added 22 Sections entries with 918 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19de0f90
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19e09710
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x19e05860
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ca4f50
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a92b120
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a953800
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a94f650
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a954510
   KEY: TTree	Event;3	Root data for Gaudi
   KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
@@ -123,14 +123,14 @@ Tree:FileRecords 0
 +++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_R.'][0]                                  Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_SumCount.'][0]                           Start:       2 ...        3 [1 entries]
-+++ Added new GUID FID=73ACB670-7737-11E0-9797-0815800ABEEF to merge file.
++++ Added new GUID FID=15DEDFBA-0C91-11E1-9797-998D8A89BEEF to merge file.
 +++ Added 22 Sections entries with 932 bytes in total.
 TFile**		ROOTIO.merge.dst
  TFile*		ROOTIO.merge.dst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x19e2e350
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x19e1c5f0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x19d62470
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x19ca4f50
+  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a89cfe0
+  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a964d80
+  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a9644d0
+  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a926b20
   KEY: TTree	Event;4	Root data for Gaudi
   KEY: TTree	FileRecords;4	Root data for Gaudi
   KEY: TTree	Refs;7	Root Section data

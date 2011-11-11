@@ -1,52 +1,56 @@
-JobOptionsSvc        INFO # =======> /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r4/GaudiExamples/options/POOLIOWrite.opts)
-JobOptionsSvc        INFO # (6,1): ApplicationMgr.OutStream += ["OutputStream/RootDst"]
-JobOptionsSvc        INFO # (7,1): ApplicationMgr.OutStream += ["OutputStream/RootMini"]
-JobOptionsSvc        INFO # (8,1): ApplicationMgr.TopAlg = ["WriteAlg", "ReadAlg"]
-JobOptionsSvc        INFO # (11,1): MessageSvc.OutputLevel = 1
-JobOptionsSvc        INFO # (12,1): IncidentSvc.OutputLevel = 2
-JobOptionsSvc        INFO # (17,1): ApplicationMgr.EvtMax = 1000
-JobOptionsSvc        INFO # (18,1): ApplicationMgr.EvtSel = "NONE"
-JobOptionsSvc        INFO # (19,1): ApplicationMgr.HistogramPersistency = "NONE"
-JobOptionsSvc        INFO # =======> /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts)
-JobOptionsSvc        INFO # (5,1): ApplicationMgr.ExtSvc += ["Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager", "PoolDbCacheSvc/PoolDbCacheSvc", "PoolDbCnvSvc/PoolRootEvtCnvSvc", "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc", "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"]
-JobOptionsSvc        INFO # (12,1): EventPersistencySvc.CnvServices += ["PoolRootEvtCnvSvc"]
-JobOptionsSvc        INFO # (13,1): EventPersistencySvc.CnvServices += ["PoolRootTreeEvtCnvSvc"]
-JobOptionsSvc        INFO # (14,1): EventPersistencySvc.CnvServices += ["PoolRootKeyEvtCnvSvc"]
-JobOptionsSvc        INFO # (15,1): PoolRootEvtCnvSvc.DbType = "POOL_ROOT"
-JobOptionsSvc        INFO # (16,1): PoolRootKeyEvtCnvSvc.DbType = "POOL_ROOTKEY"
-JobOptionsSvc        INFO # (17,1): PoolRootTreeEvtCnvSvc.DbType = "POOL_ROOTTREE"
-JobOptionsSvc        INFO # (18,1): PoolDbCacheSvc.Dlls = ["lcg_RootStorageSvc", "GaudiKernelDict"]
-JobOptionsSvc        INFO # (19,1): PoolDbCacheSvc.OutputLevel = 4
-JobOptionsSvc        INFO # (21,1): PoolDbCacheSvc.DomainOpts = ["Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong"]
-JobOptionsSvc        INFO # (24,1): ApplicationMgr.ExtSvc += ["PoolDbCnvSvc/FileRecordCnvSvc"]
-JobOptionsSvc        INFO # (25,1): FileRecordPersistencySvc.CnvServices += ["FileRecordCnvSvc"]
-JobOptionsSvc        INFO # (26,1): FileRecordCnvSvc.DbType = "POOL_ROOTTREE"
-JobOptionsSvc        INFO # (27,1): FileRecordCnvSvc.ShareFiles = "YES"
-JobOptionsSvc        INFO # (29,1): FileRecordDataSvc.ForceLeaves = 1
-JobOptionsSvc        INFO # (30,1): FileRecordDataSvc.EnableFaultHandler = 1
-JobOptionsSvc        INFO # (31,1): FileRecordDataSvc.RootCLID = 1
-JobOptionsSvc        INFO # (32,1): PoolRootEvtCnvSvc.EnableIncident = 1
-JobOptionsSvc        INFO # (33,1): PoolRootKeyEvtCnvSvc.EnableIncident = 1
-JobOptionsSvc        INFO # (34,1): PoolRootTreeEvtCnvSvc.EnableIncident = 1
-JobOptionsSvc        INFO # =======> /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r4/GaudiExamples/options/POOLIOWrite.opts)
-JobOptionsSvc        INFO # (29,1): RootDst.ItemList = ["/Event#1", "/Event/Collision_0#999", "/Event/Collision_2#1", "/Event/MyTracks#1"]
-JobOptionsSvc     WARNING # (34,1): Reassignment of option 'RootDst.ItemList' . Previously defined at /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r4/GaudiExamples/options/POOLIOWrite.opts: (29, 1).
-JobOptionsSvc        INFO # (34,1): RootDst.ItemList = ["/Event#999"]
-JobOptionsSvc        INFO # (35,1): RootDst.Output = "DATAFILE='PFN:POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'"
-JobOptionsSvc        INFO # (36,1): RootMini.ItemList = ["/Event#1"]
-JobOptionsSvc        INFO # (37,1): RootMini.Output = "DATAFILE='PFN:POOLIO.mdst' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-JobOptionsSvc        INFO # (39,1): FileCatalog.Catalogs = ["xmlcatalog_file:POOLIO.xml"]
-JobOptionsSvc        INFO # (41,1): ApplicationMgr.OutStream += ["RecordStream/FileRecords"]
-JobOptionsSvc        INFO # (42,1): FileRecords.ItemList = ["/FileRecords#999"]
-JobOptionsSvc        INFO # (43,1): FileRecords.Output = @RootDst.Output
-JobOptionsSvc        INFO # (44,1): FileRecords.EvtDataSvc = "FileRecordDataSvc"
-JobOptionsSvc        INFO # (45,1): FileRecords.EvtConversionSvc = "FileRecordPersistencySvc"
-JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r4/GaudiExamples/options/POOLIOWrite.opts
+JobOptionsSvc        INFO
+//GP:================================================================================
+//GP: include "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r2/GaudiExamples/options/POOLIOWrite.opts" (0,0)
+ApplicationMgr.OutStream +=  [ "OutputStream/RootDst" ] ;               //GP: (1,1)
+ApplicationMgr.OutStream +=  [ "OutputStream/RootMini" ] ;              //GP: (1,1)
+ApplicationMgr.TopAlg =  [ "WriteAlg" , "ReadAlg" ] ;                   //GP: (1,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (1,1)
+IncidentSvc.OutputLevel = 2;                                            //GP: (1,1)
+ApplicationMgr.EvtMax = 1000;                                           //GP: (1,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (1,1)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
+//GP: include "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r2/GaudiPoolDb/options/GaudiPoolDbRoot.opts" (27,10)
+ApplicationMgr.ExtSvc +=  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" , "PoolDbCacheSvc/PoolDbCacheSvc" , "PoolDbCnvSvc/PoolRootEvtCnvSvc" , "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc" , "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc" ] ;//GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootEvtCnvSvc" ] ;           //GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootTreeEvtCnvSvc" ] ;       //GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "PoolRootKeyEvtCnvSvc" ] ;        //GP: (1,1)
+PoolRootEvtCnvSvc.DbType = "POOL_ROOT";                                 //GP: (1,1)
+PoolRootKeyEvtCnvSvc.DbType = "POOL_ROOTKEY";                           //GP: (1,1)
+PoolRootTreeEvtCnvSvc.DbType = "POOL_ROOTTREE";                         //GP: (1,1)
+PoolDbCacheSvc.Dlls =  [ "lcg_RootStorageSvc" , "GaudiKernelDict" ] ;   //GP: (1,1)
+PoolDbCacheSvc.OutputLevel = 4;                                         //GP: (1,1)
+PoolDbCacheSvc.DomainOpts =  [ "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" ] ;//GP: (1,1)
+ApplicationMgr.ExtSvc +=  [ "PoolDbCnvSvc/FileRecordCnvSvc" ] ;         //GP: (1,1)
+FileRecordPersistencySvc.CnvServices +=  [ "FileRecordCnvSvc" ] ;       //GP: (1,1)
+FileRecordCnvSvc.DbType = "POOL_ROOTTREE";                              //GP: (1,1)
+FileRecordCnvSvc.ShareFiles = "YES";                                    //GP: (1,1)
+FileRecordDataSvc.ForceLeaves = 1;                                      //GP: (1,1)
+FileRecordDataSvc.EnableFaultHandler = 1;                               //GP: (1,1)
+FileRecordDataSvc.RootCLID = 1;                                         //GP: (1,1)
+PoolRootEvtCnvSvc.EnableIncident = 1;                                   //GP: (1,1)
+PoolRootKeyEvtCnvSvc.EnableIncident = 1;                                //GP: (1,1)
+PoolRootTreeEvtCnvSvc.EnableIncident = 1;                               //GP: (1,1)
+//GP: end  "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r2/GaudiPoolDb/options/GaudiPoolDbRoot.opts" (36,1)
+RootDst.ItemList =  [ "/Event#1" , "/Event/Collision_0#999" , "/Event/Collision_2#1" , "/Event/MyTracks#1" ] ;//GP: (27,10)
+RootDst.ItemList =  [ "/Event#999" ] ;                                  //GP: (27,10)
+RootDst.Output = "DATAFILE='PFN:POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";//GP: (27,10)
+RootMini.ItemList =  [ "/Event#1" ] ;                                   //GP: (27,10)
+RootMini.Output = "DATAFILE='PFN:POOLIO.mdst' TYP='POOL_ROOTTREE' OPT='RECREATE'";//GP: (27,10)
+FileCatalog.Catalogs =  [ "xmlcatalog_file:POOLIO.xml" ] ;              //GP: (27,10)
+ApplicationMgr.OutStream +=  [ "RecordStream/FileRecords" ] ;           //GP: (27,10)
+FileRecords.ItemList =  [ "/FileRecords#999" ] ;                        //GP: (27,10)
+FileRecords.Output = @RootDst.Output;                                   //GP: (27,10)
+FileRecords.EvtDataSvc = "FileRecordDataSvc";                           //GP: (27,10)
+FileRecords.EvtConversionSvc = "FileRecordPersistencySvc";              //GP: (27,10)
+//GP: end  "/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r2/GaudiExamples/options/POOLIOWrite.opts" (50,1)
+//GP:================================================================================
+
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v22r2/GaudiExamples/options/POOLIOWrite.opts
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus408.cern.ch on Mon Sep 12 15:05:08 2011
+                                          running on lxplus244.cern.ch on Fri Nov 11 19:15:41 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 ServiceManager      DEBUG Initializing service FileCatalog
@@ -98,7 +102,7 @@ EventLoopMgr        DEBUG Creating Top Algorithm WriteAlg with name WriteAlg
 EventLoopMgr        DEBUG Creating Top Algorithm ReadAlg with name ReadAlg
 FileRecordDataSvc   DEBUG Service base class initialized successfully
 FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-FileRecordPersi...  DEBUG  'CnvServices':[ 'FileRecordCnvSvc' ]
+FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 FileRecordPersi...  DEBUG Service base class initialized successfully
 FileRecordDataSvc VERBOSE ServiceLocatorHelper::service: found service PersistencySvc/FileRecordPersistencySvc
 IncidentSvc         DEBUG Adding [FILE_OPEN_READ] listener 'FileRecordDataSvc' with priority 0
@@ -107,7 +111,7 @@ WriteAlg          VERBOSE ServiceLocatorHelper::service: found service FileRecor
 ReadAlg           VERBOSE ServiceLocatorHelper::service: found service FileRecordDataSvc
 EventDataSvc        DEBUG Service base class initialized successfully
 EventDataSvc      VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-EventPersistenc...  DEBUG  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...  DEBUG Service base class initialized successfully
 EventPersistenc...VERBOSE ServiceLocatorHelper::service: found service PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
@@ -125,7 +129,7 @@ EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
 HistogramDataSvc    DEBUG Service base class initialized successfully
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
-HistogramPersis...  DEBUG  'CnvServices':[ 'RootHistSvc' ]
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...  DEBUG Service base class initialized successfully
 HistogramPersis...WARNING Histograms saving not required.
 HistogramDataSvc  VERBOSE ServiceLocatorHelper::service: found service HistogramPersistencySvc
@@ -155,7 +159,7 @@ RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngin
 WriteAlg          VERBOSE ServiceLocatorHelper::service: found service RndmGenSvc
 WriteAlg          VERBOSE ServiceLocatorHelper::service: found service EventDataSvc
 ReadAlg           VERBOSE ServiceLocatorHelper::service: found service EventDataSvc
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1315832710.837776 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1321035343.698534 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:1 Track:      10.802     9.50498     8.43243 Org:  31 0.0948131 0.0882022 0.0890405
 ReadAlg             DEBUG    Decays:  16
 ReadAlg             DEBUG      0.0955367 0.0974241 0.0982723 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -203,9 +207,9 @@ ReadAlg             DEBUG       0.114853 0.0927442 0.0921961 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.105636 0.0965541   0.09253 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.118701 0.0819518  0.107732 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.106563 0.0702038  0.101916 Collisions:  0 (-1)  1 (-1)  2 (-1)
-FileCatalog         DEBUG No writable file catalog found which contains FID:7E3CA4D8-3FDD-E011-9532-003048F0E7D4
-IODataManager        INFO Referring to dataset POOLIO.dst by its file ID:7E3CA4D8-3FDD-E011-9532-003048F0E7D4
-RootDBase.open    SUCCESS POOLIO.dst File version:53000
+FileCatalog         DEBUG No writable file catalog found which contains FID:94547A2B-910C-E111-A23B-001E4F3E5C1F
+IODataManager        INFO Referring to dataset POOLIO.dst by its file ID:94547A2B-910C-E111-A23B-001E4F3E5C1F
+RootDBase.open    SUCCESS POOLIO.dst File version:52800
 PoolDbBaseCnv       DEBUG Created object shape for class:DataObject
 PoolDbBaseCnv       DEBUG {ID=00000001-0000-0000-0000-000000000000}{CL=DataObject}{NCOL=3}{CNT=0}{COL={{NAME=DataObject}{CLASS=DataObject}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
 PoolDbBaseCnv       DEBUG Dictionary for class with GUID:0000006E-0000-0000-0000-000000000000 missing.
@@ -218,10 +222,10 @@ PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<Gaudi::E
 PoolDbBaseCnv       DEBUG {ID=00060164-0000-0000-0000-000000000000}{CL=KeyedContainer<Gaudi::Examples::MyVertex,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<Gaudi::Examples::MyVertex,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<Gaudi::Examples::MyVertex,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
 PoolDbBaseCnv       DEBUG Created object shape for class:KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> >
 PoolDbBaseCnv       DEBUG {ID=00060163-0000-0000-0000-000000000000}{CL=KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> >}{NCOL=3}{CNT=0}{COL={{NAME=KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> >}{CLASS=KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> >}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Links}{CLASS=LinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}{COL={{NAME=Refs}{CLASS=PoolDbLinkManager}{TYP=21}{OPT=0}{OFF=0}{SIZ=0}{CNT=1}}}
-FileCatalog         DEBUG No writable file catalog found which contains FID:8E82E4D8-3FDD-E011-9532-003048F0E7D4
-IODataManager        INFO Referring to dataset POOLIO.mdst by its file ID:8E82E4D8-3FDD-E011-9532-003048F0E7D4
-RootDBase.open    SUCCESS POOLIO.mdst File version:53000
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1315832711.269462 0 (-1) 1 (-1) 2 (-1)
+FileCatalog         DEBUG No writable file catalog found which contains FID:4238B62B-910C-E111-A23B-001E4F3E5C1F
+IODataManager        INFO Referring to dataset POOLIO.mdst by its file ID:4238B62B-910C-E111-A23B-001E4F3E5C1F
+RootDBase.open    SUCCESS POOLIO.mdst File version:52800
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1321035344.10296 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:2 Track:     10.1578     9.51566     9.19358 Org:  12   0.10708  0.109034  0.096556
 ReadAlg             DEBUG    Decays:  54
 ReadAlg             DEBUG       0.097666 0.0945251 0.0900927 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -385,7 +389,7 @@ ReadAlg             DEBUG       0.100675 0.0887908 0.0964475 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.10432  0.111781  0.104624 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0918394 0.0974881  0.108724 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0815648 0.0984427  0.109819 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1315832711.283657 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1321035344.119221 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:3 Track:     10.4989     10.4342     9.78193 Org:  16 0.0883089 0.0980969 0.0989754
 ReadAlg             DEBUG    Decays:   4
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -501,7 +505,7 @@ ReadAlg             DEBUG       0.106024  0.095753  0.112037 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.115886  0.089338 0.0764793 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.103776 0.0928696  0.091886 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1315832711.292949 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1321035344.130456 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:4 Track:     8.95659     9.22111     10.7468 Org:  35    0.1082 0.0979698 0.0960275
 ReadAlg             DEBUG    Decays:   3
 ReadAlg             DEBUG       0.110419  0.089749 0.0925822 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -662,7 +666,7 @@ ReadAlg             DEBUG       0.100286 0.0804912 0.0973343 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.104589  0.112811 0.0884065 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0922139  0.102432  0.120081 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0937731 0.0932409  0.108906 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1315832711.304313 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1321035344.142758 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:5 Track:     11.1213     8.18301     7.64467 Org:  39 0.0963519   0.10652 0.0938699
 ReadAlg             DEBUG    Decays:  38
 ReadAlg             DEBUG      0.0990801 0.0982084  0.113384 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -724,7 +728,7 @@ ReadAlg             DEBUG       0.109127  0.104738 0.0983583 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.108677 0.0962482 0.0913227 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0848865 0.0908803  0.105893 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0970337  0.112413  0.110682 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1315832711.311592 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1321035344.150496 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:6 Track:     10.7592     9.68162     11.3563 Org:  18 0.0941401  0.107751  0.104851
 ReadAlg             DEBUG    Decays:  13
 ReadAlg             DEBUG       0.105539 0.0980193  0.108179 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -782,7 +786,7 @@ ReadAlg             DEBUG      0.0944417 0.0948405  0.117754 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101398  0.106449 0.0964367 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0963533 0.0964479 0.0917974 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0859672 0.0977685 0.0958356 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1315832711.317379 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1321035344.156588 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:7 Track:     9.57394     9.64294      9.8672 Org:  41  0.104371  0.107245  0.100854
 ReadAlg             DEBUG    Decays:  30
 ReadAlg             DEBUG       0.093229 0.0949693  0.103098 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -927,7 +931,7 @@ ReadAlg             DEBUG      0.0982539  0.092417 0.0971565 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.11164 0.0984174  0.107819 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG        0.10548 0.0675091 0.0905533 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.100201  0.103858  0.124267 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1315832711.326913 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1321035344.166948 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:8 Track:      10.978     9.54438     10.9297 Org:   0  0.109247 0.0814294 0.0902878
 ReadAlg             DEBUG    Decays:   5
 ReadAlg             DEBUG       0.121196  0.106986  0.101088 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -963,7 +967,7 @@ ReadAlg             DEBUG       0.109247 0.0814294 0.0902878 Collisions:  0 (-1)
 ReadAlg             DEBUG      0.0982567 0.0796269   0.10203 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.121357  0.106839  0.093799 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.104233  0.113049 0.0996277 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1315832711.330853 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1321035344.170692 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:9 Track:     10.6032     10.0631     9.13475 Org:  74 0.0837793  0.115122  0.107758
 ReadAlg             DEBUG    Decays:  18
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -1089,12 +1093,12 @@ ReadAlg             DEBUG      0.0980792  0.107177  0.107921 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101559  0.107907 0.0933493 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0891228 0.0988304 0.0977403 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1315832711.3411 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1315832711.865896 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1315832712.510434 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1315832713.200492 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1315832713.791872 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1315832714.423817 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1321035344.18368 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1321035344.790126 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1321035345.489161 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1321035346.212389 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1321035346.910535 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1321035347.66131 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:500 Track:     9.79151     8.83918     10.2866 Org:  41 0.0956371 0.0804239  0.106273
 ReadAlg             DEBUG    Decays:  44
 ReadAlg             DEBUG       0.094814 0.0955636 0.0770906 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -1245,11 +1249,11 @@ ReadAlg             DEBUG      0.0971057  0.111309 0.0902023 Collisions:  0 (-1)
 ReadAlg             DEBUG      0.0967937 0.0871675  0.100885 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.105897   0.10313  0.106499 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0827878   0.10088  0.099259 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1315832715.024284 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1315832715.63814 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1315832716.234629 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1315832716.88341 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1315832717.528377 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:600 RUN:999 TIME:1321035348.375499 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:700 RUN:999 TIME:1321035349.105166 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:800 RUN:999 TIME:1321035349.814826 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:900 RUN:999 TIME:1321035350.592416 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:1000 RUN:999 TIME:1321035351.286341 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:1000 Track:     10.7646     8.89134     10.2737 Org:  27   0.10403 0.0979908 0.0944402
 ReadAlg             DEBUG    Decays:  30
 ReadAlg             DEBUG      0.0980182 0.0904302  0.126932 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -1364,14 +1368,14 @@ IncidentSvc         DEBUG Removing [SAVE_FILE_RECORD] listener 'FileRecordDataSv
 IncidentSvc         DEBUG Removing [FILE_OPEN_READ] listener 'FileRecordDataSvc'
 ServiceManager      DEBUG Finalizing service FileRecordPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.00533072(+-0.0728112)/0/1[ms] Total:0.031995[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.0103294(+-0.101105)/0/1[ms] Total:0.061997[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 FileRecordCnvSvc    DEBUG POOL conversion service finalized FileRecordCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootTreeEvtCnvSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:7E3CA4D8-3FDD-E011-9532-003048F0E7D4[POOLIO.dst]
-PoolRootTreeEvt...   INFO Disconnected data IO:8E82E4D8-3FDD-E011-9532-003048F0E7D4[POOLIO.mdst]
+PoolRootTreeEvt...   INFO Disconnected data IO:4238B62B-910C-E111-A23B-001E4F3E5C1F[POOLIO.mdst]
+PoolRootTreeEvt...   INFO Disconnected data IO:94547A2B-910C-E111-A23B-001E4F3E5C1F[POOLIO.dst]
 PoolRootTreeEvt...  DEBUG POOL conversion service finalized PoolRootTreeEvtCnvSvc successfully
 ServiceManager      DEBUG Finalizing service PoolRootKeyEvtCnvSvc
 PoolRootKeyEvtC...  DEBUG POOL conversion service finalized PoolRootKeyEvtCnvSvc successfully

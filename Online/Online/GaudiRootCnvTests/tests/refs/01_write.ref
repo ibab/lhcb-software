@@ -1,80 +1,84 @@
-JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/Setup.opts)
-JobOptionsSvc        INFO # (1,1): ApplicationMgr.ExtSvc = ["Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
-JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts)
-JobOptionsSvc        INFO # (1,1): ApplicationMgr.HistogramPersistency = "NONE"
-JobOptionsSvc        INFO # (2,1): ApplicationMgr.ExtSvc += ["Gaudi::RootCnvSvc/RootCnvSvc"]
-JobOptionsSvc        INFO # (3,1): EventPersistencySvc.CnvServices += ["RootCnvSvc"]
-JobOptionsSvc        INFO # (4,1): MessageSvc.OutputLevel = 3
-JobOptionsSvc        INFO # (5,1): ApplicationMgr.AuditAlgorithms = 1
-JobOptionsSvc        INFO # (6,1): ApplicationMgr.ExtSvc += ["AuditorSvc"]
-JobOptionsSvc        INFO # (7,1): ApplicationMgr.EvtMax = -1
-JobOptionsSvc        INFO # (8,1): AuditorSvc.Auditors += ["ChronoAuditor"]
-JobOptionsSvc        INFO # (9,1): FileCatalog.Catalogs = ["xmlcatalog_file:ROOTIO.xml"]
-JobOptionsSvc        INFO # (10,1): EventSelector.PrintFreq = 500
-JobOptionsSvc        INFO # (11,1): EventDataSvc.RootCLID = 1
-JobOptionsSvc        INFO # (12,1): ReadAlg.OutputLevel = 4
-JobOptionsSvc        INFO # (13,1): RootCnvSvc.CacheSize = 50000000
-JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/WR.opts)
-JobOptionsSvc        INFO # (2,1): ApplicationMgr.OutStream += ["Gaudi::RootOutputStream/RootDst", "Gaudi::RootOutputStream/RootMini"]
-JobOptionsSvc        INFO # (3,1): ApplicationMgr.TopAlg = ["WriteAlg", "ReadAlg"]
-JobOptionsSvc     WARNING # (4,1): Reassignment of option 'EventSelector.PrintFreq' . Previously defined at /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts: (10, 1).
-JobOptionsSvc        INFO # (4,1): EventSelector.PrintFreq = 1
-JobOptionsSvc        INFO # (5,1): ApplicationMgr.EvtSel = "NONE"
-JobOptionsSvc        INFO # (6,1): RootDst.ItemList = ["/Event", "/Event/Collision_0", "/Event/Collision_0/MyVertices", "/Event/Collision_1", "/Event/Collision_2", "/Event/Header", "/Event/MyTracks"]
-JobOptionsSvc        INFO # (15,1): RootDst.OptItemList = ["/Event/Prev", "/Event/Prev/Header", "/Event/PrevPrev", "/Event/PrevPrev/Header", "/Event/Next", "/Event/Next/Header", "/Event/NextNext", "/Event/NextNext/Header"]
-JobOptionsSvc        INFO # (25,1): RootMini.ItemList = ["/Event", "/Event/Header", "/Event/MyTracks"]
-JobOptionsSvc     WARNING # (31,1): Reassignment of option 'ApplicationMgr.EvtMax' . Previously defined at /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts: (7, 1).
-JobOptionsSvc        INFO # (31,1): ApplicationMgr.EvtMax = 500
-JobOptionsSvc        INFO # (32,1): RootCnvSvc.OutputLevel = 3
-JobOptionsSvc     WARNING # (33,1): Reassignment of option 'MessageSvc.OutputLevel' . Previously defined at /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts: (4, 1).
-JobOptionsSvc        INFO # (33,1): MessageSvc.OutputLevel = 3
-JobOptionsSvc     WARNING # (34,1): Reassignment of option 'ReadAlg.OutputLevel' . Previously defined at /afs/cern.ch/user/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/RootCnv/options/SetupIO.opts: (12, 1).
-JobOptionsSvc        INFO # (34,1): ReadAlg.OutputLevel = 2
-JobOptionsSvc        INFO # (37,1): ApplicationMgr.ExtSvc += ["Gaudi::RootCnvSvc/FileRecordCnvSvc"]
-JobOptionsSvc        INFO # (38,1): FileRecordPersistencySvc.CnvServices += ["FileRecordCnvSvc"]
-JobOptionsSvc        INFO # (39,1): FileRecordCnvSvc.ShareFiles = "YES"
-JobOptionsSvc        INFO # (40,1): FileRecordCnvSvc.OutputLevel = 1
-JobOptionsSvc        INFO # (42,1): FileRecordDataSvc.ForceLeaves = 1
-JobOptionsSvc        INFO # (43,1): FileRecordDataSvc.EnableFaultHandler = 1
-JobOptionsSvc        INFO # (44,1): FileRecordDataSvc.RootCLID = 1
-JobOptionsSvc        INFO # (46,1): ApplicationMgr.OutStream += ["RecordStream/DstRecords"]
-JobOptionsSvc        INFO # (47,1): DstRecords.ItemList = ["/FileRecords#999"]
-JobOptionsSvc        INFO # (48,1): DstRecords.EvtDataSvc = "FileRecordDataSvc"
-JobOptionsSvc        INFO # (49,1): DstRecords.EvtConversionSvc = "FileRecordPersistencySvc"
-JobOptionsSvc        INFO # (51,1): ApplicationMgr.OutStream += ["RecordStream/MiniRecords"]
-JobOptionsSvc        INFO # (52,1): MiniRecords.ItemList = ["/FileRecords#999"]
-JobOptionsSvc        INFO # (53,1): MiniRecords.EvtDataSvc = "FileRecordDataSvc"
-JobOptionsSvc        INFO # (54,1): MiniRecords.EvtConversionSvc = "FileRecordPersistencySvc"
-JobOptionsSvc        INFO # =======> /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/WR.1.opts)
-JobOptionsSvc        INFO # (2,1): RootDst.Output = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='RootCnvSvc' OPT='RECREATE'"
-JobOptionsSvc        INFO # (3,1): RootMini.Output = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='RootCnvSvc' OPT='RECREATE'"
-JobOptionsSvc        INFO # (4,1): DstRecords.Output = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='FileRecordCnvSvc' OPT='RECREATE'"
-JobOptionsSvc        INFO # (5,1): MiniRecords.Output = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='FileRecordCnvSvc' OPT='RECREATE'"
-JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/ONLINE/ONLINE_HEAD/Online/GaudiRootCnvTests/options/WR.1.opts
+JobOptionsSvc        INFO
+//GP:================================================================================
+//GP: include "/afs/cern.ch/user/f/frankb/scratch0/Online_v4r57/Online/GaudiRootCnvTests/options/WR.1.opts" (0,0)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/GaudiRootCnvTests/options/WR.opts" (1,10)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/RootCnv/options/Setup.opts" (1,10)
+ApplicationMgr.ExtSvc =  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" ] ;//GP: (1,1)
+//GP: include "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/RootCnv/options/SetupIO.opts" (3,10)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (1,1)
+ApplicationMgr.ExtSvc +=  [ "Gaudi::RootCnvSvc/RootCnvSvc" ] ;          //GP: (1,1)
+EventPersistencySvc.CnvServices +=  [ "RootCnvSvc" ] ;                  //GP: (1,1)
+MessageSvc.OutputLevel = 3;                                             //GP: (1,1)
+ApplicationMgr.AuditAlgorithms = 1;                                     //GP: (1,1)
+ApplicationMgr.ExtSvc +=  [ "AuditorSvc" ] ;                            //GP: (1,1)
+ApplicationMgr.EvtMax = -1;                                             //GP: (1,1)
+AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;                           //GP: (1,1)
+FileCatalog.Catalogs =  [ "xmlcatalog_file:ROOTIO.xml" ] ;              //GP: (1,1)
+EventSelector.PrintFreq = 500;                                          //GP: (1,1)
+EventDataSvc.RootCLID = 1;                                              //GP: (1,1)
+ReadAlg.OutputLevel = 4;                                                //GP: (1,1)
+RootCnvSvc.CacheSize = 50000000;                                        //GP: (1,1)
+ApplicationMgr.SvcOptMapping +=  [ "Gaudi::MultiFileCatalog/FileCatalog" , "Gaudi::IODataManager/IODataManager" ] ;//GP: (1,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/RootCnv/options/SetupIO.opts" (15,1)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/RootCnv/options/Setup.opts" (4,1)
+ApplicationMgr.OutStream +=  [ "OutputStream/RootDst" , "OutputStream/RootMini" ] ;//GP: (1,10)
+ApplicationMgr.TopAlg =  [ "WriteAlg" , "ReadAlg" ] ;                   //GP: (1,10)
+EventSelector.PrintFreq = 1;                                            //GP: (1,10)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (1,10)
+RootDst.ItemList =  [ "/Event#999" ] ;                                  //GP: (1,10)
+RootDst.OptItemList =  [ "/Event/Prev#999" , "/Event/PrevPrev#999" , "/Event/Next#999" , "/Event/NextNext#999" ] ;//GP: (1,10)
+RootMini.ItemList =  [ "/Event#1" , "/Event/Header#1" , "/Event/MyTracks#1" ] ;//GP: (1,10)
+ApplicationMgr.EvtMax = 500;                                            //GP: (1,10)
+RootCnvSvc.OutputLevel = 3;                                             //GP: (1,10)
+MessageSvc.OutputLevel = 3;                                             //GP: (1,10)
+ReadAlg.OutputLevel = 2;                                                //GP: (1,10)
+ApplicationMgr.ExtSvc +=  [ "Gaudi::RootCnvSvc/FileRecordCnvSvc" ] ;    //GP: (1,10)
+FileRecordPersistencySvc.CnvServices +=  [ "FileRecordCnvSvc" ] ;       //GP: (1,10)
+FileRecordCnvSvc.ShareFiles = "YES";                                    //GP: (1,10)
+FileRecordCnvSvc.OutputLevel = 3;                                       //GP: (1,10)
+FileRecordDataSvc.ForceLeaves = 1;                                      //GP: (1,10)
+FileRecordDataSvc.EnableFaultHandler = 1;                               //GP: (1,10)
+FileRecordDataSvc.RootCLID = 1;                                         //GP: (1,10)
+ApplicationMgr.OutStream +=  [ "RecordStream/DstRecords" ] ;            //GP: (1,10)
+DstRecords.ItemList =  [ "/FileRecords#999" ] ;                         //GP: (1,10)
+DstRecords.EvtDataSvc = "FileRecordDataSvc";                            //GP: (1,10)
+DstRecords.EvtConversionSvc = "FileRecordPersistencySvc";               //GP: (1,10)
+ApplicationMgr.OutStream +=  [ "RecordStream/MiniRecords" ] ;           //GP: (1,10)
+MiniRecords.ItemList =  [ "/FileRecords#999" ] ;                        //GP: (1,10)
+MiniRecords.EvtDataSvc = "FileRecordDataSvc";                           //GP: (1,10)
+MiniRecords.EvtConversionSvc = "FileRecordPersistencySvc";              //GP: (1,10)
+//GP: end  "/afs/cern.ch/user/f/frankb/cmtuser/Online_v4r57/Online/GaudiRootCnvTests/options/WR.opts" (45,1)
+RootDst.Output = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='RootCnvSvc' OPT='RECREATE'";//GP: (1,10)
+RootMini.Output = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='RootCnvSvc' OPT='RECREATE'";//GP: (1,10)
+DstRecords.Output = "DATAFILE='PFN:ROOTIO.1.dst'  SVC='FileRecordCnvSvc' OPT='RECREATE'";//GP: (1,10)
+MiniRecords.Output = "DATAFILE='PFN:ROOTIO.1.mdst' SVC='FileRecordCnvSvc' OPT='RECREATE'";//GP: (1,10)
+//GP: end  "/afs/cern.ch/user/f/frankb/scratch0/Online_v4r57/Online/GaudiRootCnvTests/options/WR.1.opts" (6,1)
+//GP:================================================================================
+
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/user/f/frankb/scratch0/Online_v4r57/Online/GaudiRootCnvTests/options/WR.1.opts
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxplus408.cern.ch on Wed Sep 14 13:11:41 2011
+                                          running on lxplus244.cern.ch on Fri Nov 11 19:14:42 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
-FileRecordCnvSvc    DEBUG Service base class initialized successfully
-FileRecordCnvSvc  VERBOSE ServiceLocatorHelper::service: found service IODataManager
-FileRecordCnvSvc  VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
+FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
+EventPersistenc...   INFO  'CnvServices':[ 'RootCnvSvc' ]
 RootDst              INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOTIO.1.dst'  SVC='RootCnvSvc' OPT='RECREATE'
 RootMini             INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOTIO.1.mdst' SVC='RootCnvSvc' OPT='RECREATE'
-FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 DstRecords           INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOTIO.1.dst'  SVC='FileRecordCnvSvc' OPT='RECREATE'
 MiniRecords          INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOTIO.1.mdst' SVC='FileRecordCnvSvc' OPT='RECREATE'
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1315998703.160148 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:1 RUN:999 TIME:1321035283.976788 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:1 Track:      10.802     9.50498     8.43243 Org:  31 0.0948131 0.0882022 0.0890405
 ReadAlg             DEBUG    Decays:  16
 ReadAlg             DEBUG      0.0955367 0.0974241 0.0982723 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -122,9 +126,9 @@ ReadAlg             DEBUG       0.114853 0.0927442 0.0921961 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.105636 0.0965541   0.09253 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.118701 0.0819518  0.107732 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.106563 0.0702038  0.101916 Collisions:  0 (-1)  1 (-1)  2 (-1)
-IODataManager        INFO Referring to dataset ROOTIO.1.dst by its file ID:FE0ACA53-C2DE-E011-8DFE-003048F0E7D4
-IODataManager        INFO Referring to dataset ROOTIO.1.mdst by its file ID:AE4FF853-C2DE-E011-8DFE-003048F0E7D4
-ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1315998703.556369 0 (-1) 1 (-1) 2 (-1)
+IODataManager        INFO Referring to dataset ROOTIO.1.dst by its file ID:8C7DE107-910C-E111-9FE3-001E4F3E5C1F
+IODataManager        INFO Referring to dataset ROOTIO.1.mdst by its file ID:3CA40508-910C-E111-9FE3-001E4F3E5C1F
+ReadAlg              INFO ========= EVENT:2 RUN:999 TIME:1321035284.266839 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:2 Track:     10.1578     9.51566     9.19358 Org:  12   0.10708  0.109034  0.096556
 ReadAlg             DEBUG    Decays:  54
 ReadAlg             DEBUG       0.097666 0.0945251 0.0900927 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -288,7 +292,7 @@ ReadAlg             DEBUG       0.100675 0.0887908 0.0964475 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.10432  0.111781  0.104624 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0918394 0.0974881  0.108724 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0815648 0.0984427  0.109819 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1315998703.574313 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:3 RUN:999 TIME:1321035284.288576 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:3 Track:     10.4989     10.4342     9.78193 Org:  16 0.0883089 0.0980969 0.0989754
 ReadAlg             DEBUG    Decays:   4
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -404,7 +408,7 @@ ReadAlg             DEBUG       0.106024  0.095753  0.112037 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.115886  0.089338 0.0764793 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0803759 0.0962499 0.0993645 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.103776 0.0928696  0.091886 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1315998703.586288 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:4 RUN:999 TIME:1321035284.302928 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:4 Track:     8.95659     9.22111     10.7468 Org:  35    0.1082 0.0979698 0.0960275
 ReadAlg             DEBUG    Decays:   3
 ReadAlg             DEBUG       0.110419  0.089749 0.0925822 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -565,7 +569,7 @@ ReadAlg             DEBUG       0.100286 0.0804912 0.0973343 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.104589  0.112811 0.0884065 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0922139  0.102432  0.120081 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0937731 0.0932409  0.108906 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1315998703.601433 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:5 RUN:999 TIME:1321035284.321639 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:5 Track:     11.1213     8.18301     7.64467 Org:  39 0.0963519   0.10652 0.0938699
 ReadAlg             DEBUG    Decays:  38
 ReadAlg             DEBUG      0.0990801 0.0982084  0.113384 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -627,7 +631,7 @@ ReadAlg             DEBUG       0.109127  0.104738 0.0983583 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.108677 0.0962482 0.0913227 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0848865 0.0908803  0.105893 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0970337  0.112413  0.110682 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1315998703.608884 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:6 RUN:999 TIME:1321035284.330448 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:6 Track:     10.7592     9.68162     11.3563 Org:  18 0.0941401  0.107751  0.104851
 ReadAlg             DEBUG    Decays:  13
 ReadAlg             DEBUG       0.105539 0.0980193  0.108179 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -685,7 +689,7 @@ ReadAlg             DEBUG      0.0944417 0.0948405  0.117754 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101398  0.106449 0.0964367 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0963533 0.0964479 0.0917974 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0859672 0.0977685 0.0958356 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1315998703.616731 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:7 RUN:999 TIME:1321035284.33952 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:7 Track:     9.57394     9.64294      9.8672 Org:  41  0.104371  0.107245  0.100854
 ReadAlg             DEBUG    Decays:  30
 ReadAlg             DEBUG       0.093229 0.0949693  0.103098 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -830,7 +834,7 @@ ReadAlg             DEBUG      0.0982539  0.092417 0.0971565 Collisions:  0 (-1)
 ReadAlg             DEBUG        0.11164 0.0984174  0.107819 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG        0.10548 0.0675091 0.0905533 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.100201  0.103858  0.124267 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1315998703.626907 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:8 RUN:999 TIME:1321035284.352498 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:8 Track:      10.978     9.54438     10.9297 Org:   0  0.109247 0.0814294 0.0902878
 ReadAlg             DEBUG    Decays:   5
 ReadAlg             DEBUG       0.121196  0.106986  0.101088 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -866,7 +870,7 @@ ReadAlg             DEBUG       0.109247 0.0814294 0.0902878 Collisions:  0 (-1)
 ReadAlg             DEBUG      0.0982567 0.0796269   0.10203 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.121357  0.106839  0.093799 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.104233  0.113049 0.0996277 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1315998703.631492 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:9 RUN:999 TIME:1321035284.357516 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:9 Track:     10.6032     10.0631     9.13475 Org:  74 0.0837793  0.115122  0.107758
 ReadAlg             DEBUG    Decays:  18
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -992,12 +996,12 @@ ReadAlg             DEBUG      0.0980792  0.107177  0.107921 Collisions:  0 (-1)
 ReadAlg             DEBUG       0.101559  0.107907 0.0933493 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG       0.108493  0.110989   0.10767 Collisions:  0 (-1)  1 (-1)  2 (-1)
 ReadAlg             DEBUG      0.0891228 0.0988304 0.0977403 Collisions:  0 (-1)  1 (-1)  2 (-1)
-ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1315998703.643976 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1315998704.348964 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1315998705.262688 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1315998706.150954 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1315998707.024893 0 (-1) 1 (-1) 2 (-1)
-ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1315998707.928371 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:10 RUN:999 TIME:1321035284.372613 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:100 RUN:999 TIME:1321035285.160351 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:200 RUN:999 TIME:1321035286.122968 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:300 RUN:999 TIME:1321035287.125633 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:400 RUN:999 TIME:1321035288.05946 0 (-1) 1 (-1) 2 (-1)
+ReadAlg              INFO ========= EVENT:500 RUN:999 TIME:1321035289.093523 0 (-1) 1 (-1) 2 (-1)
 ReadAlg             DEBUG Evt:500 Track:     9.79151     8.83918     10.2866 Org:  41 0.0956371 0.0804239  0.106273
 ReadAlg             DEBUG    Decays:  44
 ReadAlg             DEBUG       0.094814 0.0955636 0.0770906 Collisions:  0 (-1)  1 (-1)  2 (-1)
@@ -1152,57 +1156,48 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 RootDst              INFO Events output: 500
 RootMini             INFO Events output: 500
 DstRecords           INFO Set up File Summary Record
-FileRecordCnvSvc    DEBUG Trying to 'Autoload' dictionary for class Gaudi::Examples::Counter
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords 62 0
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords/EvtCount 14 0
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords/SumCount 14 0
-FileRecordCnvSvc    DEBUG Set section entries of /FileRecords to 1 entries.
 DstRecords           INFO Events output: 1
 MiniRecords          INFO Set up File Summary Record
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords 62 0
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords/EvtCount 14 0
-FileRecordCnvSvc    DEBUG Writing object:/FileRecords/SumCount 14 0
-FileRecordCnvSvc    DEBUG Set section entries of /FileRecords to 1 entries.
 MiniRecords          INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-RootMini:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
-RootDst:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
-DstRecords:Stop      INFO Time User   : Tot=    0 [us]                                             #=  1
+DstRecords:Start     INFO Time User   : Tot=    0 [us]                                             #=  1
 MiniRecords:Stop     INFO Time User   : Tot=    0 [us]                                             #=  1
 WriteAlg:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
 RootMini:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
+RootDst:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
+RootDst:Start        INFO Time User   : Tot=    0 [us]                                             #=  1
+ReadAlg:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
 ReadAlg:Start        INFO Time User   : Tot=    0 [us]                                             #=  1
 MiniRecords:Start    INFO Time User   : Tot=    0 [us]                                             #=  1
-DstRecords:Start     INFO Time User   : Tot=    0 [us]                                             #=  1
-RootDst:Start        INFO Time User   : Tot=    0 [us]                                             #=  1
+DstRecords:Stop      INFO Time User   : Tot=    0 [us]                                             #=  1
 WriteAlg:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
+RootMini:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
 ReadAlg:Finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
+ReadAlg:Initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
 RootMini:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
 WriteAlg:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
-ReadAlg:Initialize   INFO Time User   : Tot=    0 [us]                                             #=  1
-MiniRecords:Ini...   INFO Time User   : Tot=    0 [us]                                             #=  1
+RootDst:Finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
 DstRecords:Init...   INFO Time User   : Tot=    0 [us]                                             #=  1
-RootDst:Finalize     INFO Time User   : Tot=    1 [ms]                                             #=  1
+MiniRecords:Ini...   INFO Time User   : Tot=0.999 [ms]                                             #=  1
 RootMini:Initia...   INFO Time User   : Tot=    1 [ms]                                             #=  1
-MiniRecords:Exe...   INFO Time User   : Tot=    0 [us] Ave/Min/Max=    0(+-    0)/    0/    0 [us] #=500
-DstRecords:Execute   INFO Time User   : Tot=0.999 [ms] Ave/Min/Max=    2(+- 44.6)/    0/  999 [us] #=500
+MiniRecords:Exe...   INFO Time User   : Tot=    1 [ms] Ave/Min/Max=    2(+- 44.7)/    0/1e+03 [us] #=500
 RootDst:Initialize   INFO Time User   : Tot=    2 [ms]                                             #=  1
-WriteAlg:Initia...   INFO Time User   : Tot=    4 [ms]                                             #=  1
-MiniRecords:Fin...   INFO Time User   : Tot=    9 [ms]                                             #=  1
-DstRecords:Fina...   INFO Time User   : Tot=    9 [ms]                                             #=  1
-ReadAlg:Execute      INFO Time User   : Tot=   31 [ms] Ave/Min/Max=   62(+-  293)/    0/3e+03 [us] #=500
-WriteAlg:Execute     INFO Time User   : Tot=  274 [ms] Ave/Min/Max=0.548(+- 0.54)/    0/    5 [ms] #=500
-RootMini:Execute     INFO Time User   : Tot= 1.28  [s] Ave/Min/Max= 2.56(+- 3.68)/    0/   41 [ms] #=500
-RootDst:Execute      INFO Time User   : Tot= 2.92  [s] Ave/Min/Max= 5.85(+-   10)/    1/  198 [ms] #=500
-ChronoStatSvc        INFO Time User   : Tot= 4.72  [s]                                             #=  1
+DstRecords:Execute   INFO Time User   : Tot=    2 [ms] Ave/Min/Max=    4(+- 63.1)/    0/1e+03 [us] #=500
+WriteAlg:Initia...   INFO Time User   : Tot=    5 [ms]                                             #=  1
+MiniRecords:Fin...   INFO Time User   : Tot=   11 [ms]                                             #=  1
+DstRecords:Fina...   INFO Time User   : Tot=   20 [ms]                                             #=  1
+ReadAlg:Execute      INFO Time User   : Tot=   68 [ms] Ave/Min/Max=  136(+-  752)/    0/1e+04 [us] #=500
+WriteAlg:Execute     INFO Time User   : Tot= 0.57  [s] Ave/Min/Max= 1.14(+-0.899)/    0/    6 [ms] #=500
+RootMini:Execute     INFO Time User   : Tot= 2.55  [s] Ave/Min/Max=  5.1(+- 8.85)/    0/  115 [ms] #=500
+RootDst:Execute      INFO Time User   : Tot= 5.57  [s] Ave/Min/Max= 11.1(+- 19.2)/    0/  333 [ms] #=500
+ChronoStatSvc        INFO Time User   : Tot= 9.16  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
-RootCnvSvc           INFO Disconnected data IO:AE4FF853-C2DE-E011-8DFE-003048F0E7D4 [ROOTIO.1.mdst]
-RootCnvSvc           INFO Disconnected data IO:FE0ACA53-C2DE-E011-8DFE-003048F0E7D4 [ROOTIO.1.dst]
+RootCnvSvc           INFO Disconnected data IO:3CA40508-910C-E111-9FE3-001E4F3E5C1F [ROOTIO.1.mdst]
+RootCnvSvc           INFO Disconnected data IO:8C7DE107-910C-E111-9FE3-001E4F3E5C1F [ROOTIO.1.dst]
 XMLCatalog           INFO File 'ROOTIO.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
