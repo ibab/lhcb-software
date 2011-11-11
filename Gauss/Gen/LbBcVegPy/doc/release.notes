@@ -3,6 +3,7 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!========================= LbBcVegPy v4r2 2011-11-11 =========================
 ! 2011-10-20 - Patrick Robbe
  . src/Lib/Funtrans.cpp
  . src/Lib/Intinif.cpp
