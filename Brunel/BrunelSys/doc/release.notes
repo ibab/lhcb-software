@@ -3,6 +3,69 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
+This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r1, Lbcom v11r1,
+ Rec v12r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version to pick up LHCb v33r1 software stack.
+ 
+- New functionality
+  . Make Rich reconstruction agnostic to photodetector type (for upgrade)
+    (RichRecTools v4r19, RichTools v2r38, RichDet v16r7, LHCbKernel v13r6,
+     RichKernel v7r46, RichRecBase v4r9)
+
+- New tuning
+  . Update default DDDB and LHCBCOND tag for 2011 data to head-20111102
+    (DDDB v1r48)
+  . Complete the migration to LHCb::ParticlePropertySvc (TrackMCTools v3r1)
+  . Avoid locating the same TES object from the same algorithm multiple times
+    per event (RichRecQC v2r55, PatAlgorithms v4r15)
+  . Improve the sorting operator of Pixels (RichHPDImageAnalysis v1r10)
+  . Update MagneticFieldSvc to cache the field polarity (Down or Up) and return
+    this, instead of calculating it each time ::isDown() is called (Magnet v7r4)
+  . Disable by default the ROOT tree caches in the event persistency
+    (GaudiConf v15r3)
+
+- Bug fixes
+  . Fixes to MuonPID status in ProtoParticle (Savannah task 23459)
+    (MuonID v9r2, GlobalReco v6r39, RecreatePIDTools v1r4, TrackEvent v5r13)
+  . Fix type conversion typo in the DAQ decoding errors monitor (RichRecQC v2r55)
+  . Fix a bug in the fill of the 2D decoding errors histogram (RichRecQC v2r55)
+  . Fix incorrect usage of std::unique to remove duplicates
+    (RichHPDImageAnalysis v1r10)
+  . Fix various UNINIT_CTOR defects
+    (PatAlgorithms v4r15, GlobalReco v6r39, TrackMonitors v1r35, )
+  . Bug fix in TrackGhostClassificationBase::fromPhi : was returning True if
+    ancestor of first particle was Phi, without checking second particle
+    (TrackMCTools v3r1)
+  . In TrackNNGhostID, fix typo in ITClusterLocation, effect of which is that
+    IT hit multiplicity was never added to the hit multiplicity used to get the
+    ghost probability (TrackTools v4r9)
+  . Fixed bug #87392: Event time not set correctly on first event
+    (DetDescSvc v3r4)
+  . Add protection for duplicated hits (due to data corruption). (MuonDAQ v4r12)
+  . Fix bug #88049: RootCnv has problems reading POOL XDST (RootCnv v1r9)
+  . Fix typo in TsaKernel/SeedTrack.h, coverity bug 22106 (TsaKernel v3r6p1)
+  . Fix Root bug #87880: xrootd was returning wrong buffer length on rare
+    occasions (Root 5.30.04) 
+
+- Monitoring changes
+  . Print Magnetic Field polarity also when ProductionMode is True
+  . NeuroBayes output at initialisation now suppressed (NeuroBayes 10.12)
+  . Minor improvements to Rich decoding error messages (RichDAQ v3r34)
+  . Change the title of the DAQ decoding errors by board histogram
+    (RichRecQC v2r55)
+  . Change the number of the sequencer used for the inclusive timing monitor
+    from "BrunelSequencer" to "PhysicsSeq" to avoid problems with the monitor
+    timing a still running sequence (RecConf v2r4)
+
+- Changes to example options
+  . Add COLLISION11_25.py, example options for processing 2011 25ns fill
+
+- Changes to tests
+  . Add brunel2011-25ns.qmt, to test COLLISION11_25.py
+  . Add brunel-mc11a-xdst.qmt, to test reprocessing from xdst
+
 </PRE><H1><A NAME=v41r1>2011-09-21 Brunel v41r1</A></H1><PRE>
 This version uses projects LCG 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0,
  Rec v12r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
