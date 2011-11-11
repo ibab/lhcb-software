@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v6r2 2011-11-11 ==========================
 ! 2011-10-20 - Patrick Robbe
  - HijingProduction.cpp: fix coverity warnings
 
