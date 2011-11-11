@@ -35,17 +35,15 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   : TupleToolBase ( type, name , parent )
   , m_p2mcAssoc(0)
   , m_p2mcAssocType("DaVinciSmartAssociator")
-  , m_toolList(0)
+  , m_toolList(1,"MCTupleToolKinematic")
   , m_mcTools(0)
 
 {
   declareInterface<IParticleTupleTool>(this);
 
   // The names of MCTupleTools to use on the associated mcp
-  declareProperty( "ToolList",
-                   m_toolList = std::vector<std::string>(1,
-                                                         "MCTupleToolKinematic") );
-  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType);
+  declareProperty( "ToolList", m_toolList  );
+  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType );
 
 }
 
@@ -93,7 +91,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   bool test = true;
   const LHCb::MCParticle* mcp(0);
 
-  if( P )
+  if ( P )
   {
     //assignedPid = P->particleID().pid();
     if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolMCTruth::getting related MCP to " << P << endmsg ;
@@ -110,7 +108,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   // fill the tuple:
   test &= tuple->column( prefix+"_TRUEID", mcPid );
 
-  //fill all requested MCTools
+  // fill all requested MCTools
   for(std::vector< IMCParticleTupleTool* >::const_iterator it=m_mcTools.begin(); it!=m_mcTools.end(); it++)
     test &=(*it)->fill(NULL,mcp,prefix,tuple);
 

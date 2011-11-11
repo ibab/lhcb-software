@@ -98,7 +98,7 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
     //hopefully unique double constructed from multiplying all Velo hit IDs
     double veloUTID=1.;
     //std::vector< unsigned int > veloIDs;
-    const std::vector< LHCb::LHCbID > lhcbIDs = track->lhcbIDs();
+    const std::vector< LHCb::LHCbID > & lhcbIDs = track->lhcbIDs();
     std::vector< LHCb::LHCbID >::const_iterator itID = lhcbIDs.begin();
     for ( ; itID != lhcbIDs.end(); itID++ ) 
     {

@@ -34,7 +34,7 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 						      const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_backCatType("BackgroundCategory")
-  , m_bkg(0)
+  , m_bkg(NULL)
 {
 
   declareInterface<IParticleTupleTool>(this);
@@ -45,11 +45,12 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 
 //=============================================================================
 
-StatusCode TupleToolMCBackgroundInfo::initialize() {
+StatusCode TupleToolMCBackgroundInfo::initialize() 
+{
 
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
   
-  m_bkg = tool<IBackgroundCategory>( m_backCatType, this );
+  m_bkg = tool<IBackgroundCategory>( m_backCatType, "BackgroundCategory", this );
 
   return m_bkg != 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
@@ -64,20 +65,21 @@ StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
 {
   
   const std::string prefix=fullName(head);
-  
-  
+    
   Assert( P && m_bkg , "This should not happen :(" );
 
   if( !P->isBasicParticle() )
   {
 
-    int category = (int)(m_bkg->category( P ));
+    const int category = (int)(m_bkg->category( P ));
 
     if (msgLevel(MSG::DEBUG)) debug() << "BackgroundCategory decision for "
                                       << prefix <<": " << category << endreq;
 
-    if( tuple->column( prefix+"_BKGCAT", category ) ) 
+    if ( tuple->column( prefix+"_BKGCAT", category ) ) 
       return StatusCode::SUCCESS;
   }
+
   return StatusCode::SUCCESS;
+
 }

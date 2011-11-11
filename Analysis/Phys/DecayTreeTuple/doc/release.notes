@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Chris Jones
+ - Update TupleToolMCBackgroundInfo to always load the Background category
+   tool using the same runtime name.
+
 !=================== DecayTreeTuple v3r18 2011-11-10 =========================
 
 ! 2011-11-10 - Patrick Koppenburg
