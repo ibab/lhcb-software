@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v2r1 2011-11-11 ==========================
 ! 2011-11-09 - Patrick Robbe
  - OTCosmic.cpp: fix compilation warning
 
