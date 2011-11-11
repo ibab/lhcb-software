@@ -4,6 +4,154 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v41r0">2011-11-11 - GaussSys v41r0</A></H1><PRE>
+<H2><A NAME="Note">Release for MC11a</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v33r0 (and Gaudi v22r4)</b>
+   AppConfig v3r*,
+   <b>DecFiles v25r*</b>, 
+   ParamFiles v8r5, 
+   SQLDDDB v6r*, FieldMap v5r*,
+   pythia 6.425.2, photos 215.4, lhapdf 5.8.5 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v94r2p2 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   XmlVis v1r13,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   pythia8 153< (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+!========================= Gauss v41r0 2011-10-18 ============================
+! 2011-11-11 - Gloria Corti
+ - Use DecFiles version for MC11, v25r*
+ - Remove options for MC09 and 2009 that are no longer supported.
+   . Gauss-MC09.py
+   . Gauss-2009.py
+ - Put default for Em physics as to be used in MC11 (i.e. Opt1NoCuts).
+
+! 2011-11-09 - Patrick Robbe
+ - another attempt to correct QMTests
+
+! 2011-10-19 - Patrick Robbe
+ - tests: update references and options
+
+!========================== GenCuts v1r3 2011-11-11 ==========================
+! 2011-11-11 - Vanya Belyaev
+ - minor fix in GenericGenCutTool
+
+! 2011-10-20 - Patrick Robbe
+ - Fix coverity warnings
+
+!=========================== Mint v1r2 2011-11-11 ============================
+
+!======================= EvtGenExtras v3r1 2011-11-11 ========================
+! 2011-10-04 - Nikolai Nikitn
+ - Added a new decay Bd->Omega Mu Mu
+ - Minor bug fix in the pseudoscalar matrix elementx
+
+! 2011-10-25 - Nikolai Nikitin
+ - Added a model for simulation of the rare semileptonic decays. The model is
+   based on the BSTOLLMS decay model, but includes a possibility to simulate
+   different New Physics scenarios by varying of the Wilson Coefficients.
+
+! 2011-10-24 - Nikolai Nikitin
+ - Added new QED-based model for the B(d,s) -> 4 leptons decays (BQTOLLLL)
+
+!======================= Generators v11r3 2011-11-11 =========================
+! 2011-11-08 - Patrick Robbe
+ - cleanup of Generator code
+
+! 2011-10-28 - Alex Shires
+ - Added IEvtGenTool to allow sharing of a sibgle EvtGen instance
+   between DecayTools
+   A EvtGenTool.{h,cpp}
+   A IEvtGenTool.h
+   M EvtGenDecay.{h,cpp}
+
+! 2011-10-20 - Patrick Robbe
+ - EvtGenDecay.cpp
+ - Generation.cpp
+ - LHAPDFCommonBlocks.cpp:
+   Fix coverity warnings
+
+!========================= LbPythia v10r1 2011-11-11 =========================
+! 2011-10-20 - Patrick Robbe
+ - JetProduction.cpp
+ - Pyssmt.cpp
+ - PythiaProduction.cpp
+ - Pyint2.cpp
+ - Pysubs.cpp
+ - Pydat1.cpp
+ - Pydatr.cpp
+ - Pydat2.cpp
+ - Pydat3.cpp
+ - Pypars.cpp
+   fix coverity warnings
+
+!========================= LbPythia8 v2r3 2011-11-11 =========================
+! 2011-10-20 - Patrick Robbe
+ - Pythia8Production: fix coverity warnings
+
+!========================= LbBcVegPy v4r2 2011-11-11 =========================
+! 2011-10-20 - Patrick Robbe
+ . src/Lib/Funtrans.cpp
+ . src/Lib/Intinif.cpp
+ . src/Lib/Genefull.cpp
+ . src/Lib/Outpdf.cpp
+ . src/Lib/Colflow.cpp
+ . src/Lib/Intinip.cpp
+ . src/Lib/Octmatrix.cpp
+ . src/Lib/Counter.cpp
+ . src/Lib/Confine.cpp
+ . src/Lib/Grade.cpp
+ . src/Lib/Coloct.cpp
+ . src/Lib/Upcom.cpp
+ . src/Lib/Mixevnt.cpp
+ . src/Lib/Vegasinf.cpp
+ . src/Lib/Wavezero.cpp
+ . src/Lib/Usertran.cpp
+ . src/Lib/Qqbar.cpp
+ . src/Lib/Rconst.cpp
+ . src/Lib/Subopen.cpp
+ . src/Lib/Totcross.cpp
+ . src/Lib/Loggrade.cpp
+ . src/Lib/Hepeup.cpp
+ . src/Lib/Vegcross.cpp:
+   Fix coverity warnings
+
+!========================= LbHijing v6r2 2011-11-11 ==========================
+! 2011-10-20 - Patrick Robbe
+ - HijingProduction.cpp: fix coverity warnings
+
+!============================ LbMIB v5r1 2011-11-11 ==========================
+! 2011-10-20 - Patrick Robbe
+ - TimeCorrSource.cpp: fix coverity warnings
+
+!========================== LbPGuns v2r1 2011-11-11 ==========================
+! 2011-11-09 - Patrick Robbe
+ - OTCosmic.cpp: fix compilation warning
+
+! 2011-10-20 - Patrick Robbe
+ - ParticleGun.cpp
+ - OTCosmic.cpp
+ - BeamShape.cpp
+ - RichPatternGun.cpp:
+   fix coverity warnings
+
+!========================= GaussKine v4r1 2011-11-11 =========================
+! 2011-10-20 - Patrick Robbe
+ - SimulationToMCTruth
+ - GenerationToSimulation
+   fix coverity warnings
+
+!========================= GaussCalo v9r3 2011-11-11 ==========================
+! 2011-10-20 - Patrick Robbe
+ - CaloSensDet.cpp
+ - GetCaloHitsAlg.cpp:
+   fix coverity warnings
+
+!=============================================================================
 </PRE><H1><A NAME="v40r5">2011-10-18 - GaussSys v40r5</A></H1><PRE>
 <H2><A NAME="Note">Release for DEVELOPMENT in 2011. Based on new G4 9.4.patch02
    </A></H2>
