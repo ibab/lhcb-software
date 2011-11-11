@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Chris Jones
+ - Update the Background Category element to save the categories for all
+   Particles in the decay tree, not just the head Particles.
+
 !========================= DSTWriters v4r1 2011-11-10 =========================
 
 ! 2011-10-11 - Roel Aaij

@@ -47,7 +47,6 @@ class CloneRecSummary(MicroDSTElement) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
-
 class CloneODIN(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyODIN
@@ -263,7 +262,6 @@ class CloneHltDecReports(MicroDSTElement) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
-
 class CloneRawBanks(MicroDSTElement) :
     """
     Configurables to copy selected raw banks
@@ -286,18 +284,18 @@ class CloneRawBanks(MicroDSTElement) :
         rawBankCopy.OutputRawEventLocation = self.branch + "/DAQ/RawEvent"
         return [rawBankCopy]
 
-
 class CloneBackCat(MicroDSTElement) :
     """
     Generator for list of Particle2BackgroundCategoryRelationsAlg and CopyParticle2BackgroundCategory.
     Used for 
     """
     def __call__(self, sel) :
-        from Configurables import Particle2BackgroundCategoryRelationsAlg
-        from Configurables import CopyParticle2BackgroundCategory
+        from Configurables import ( Particle2BackgroundCategoryRelationsAlg,
+                                    CopyParticle2BackgroundCategory )
         backCatAlg = Particle2BackgroundCategoryRelationsAlg(self.personaliseName(sel,'BackCatAlg'))
-        backCatAlg.Inputs=self.dataLocations(sel,"Particles")
-        cloner =  CopyParticle2BackgroundCategory(self.personaliseName(sel, 'CopyP2BackCat'))
+        backCatAlg.Inputs = self.dataLocations(sel,"Particles")
+        backCatAlg.FullTree = True
+        cloner = CopyParticle2BackgroundCategory(self.personaliseName(sel,'CopyP2BackCat'))
         cloner.InputLocations = self.dataLocations(sel,"P2BCRelations")
         self.setOutputPrefix(cloner)
         return [backCatAlg, cloner]
