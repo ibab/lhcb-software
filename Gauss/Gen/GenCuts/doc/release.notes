@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Vanya Belyaev
+
+ - minor fix in GenericGenCutTool 
+
 ! 2011-10-20 - Patrick Robbe
  - Fix coverity warnings
 

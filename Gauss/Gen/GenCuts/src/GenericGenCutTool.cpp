@@ -41,6 +41,9 @@
 #include "LoKi/IGenDecay.h"
 #include "LoKi/IGenHybridFactory.h"
 #include "LoKi/Trees.h"
+#include "LoKi/PrintHepMCDecay.h"
+#include "LoKi/GenDecayChain.h"
+#include "LoKi/GenOscillated.h"
 // =============================================================================
 // ROOT
 // =============================================================================
@@ -315,6 +318,7 @@ LoKi::GenCutTool::GenCutTool
     -> declareUpdateHandler 
     ( &LoKi::GenCutTool::updateCuts  , this ) ;
   //
+  m_preambulo.push_back("from GaudiKernel.SystemOfUnits import MeV,GeV,mm,cm") ;
   declareProperty 
     ( "Preambulo" , 
       m_preambulo , 
@@ -563,7 +567,7 @@ bool LoKi::GenCutTool::accept ( const HepMC::GenParticle* particle ) const
   bool result = true ;
   if ( particles.empty() ) 
   { 
-    Warning ("No particles are selected ").ignore() ;
+    Warning ( "No particles are selected" , 10 , StatusCode::SUCCESS ) . ignore() ;
     result = false ;
   }
   //
