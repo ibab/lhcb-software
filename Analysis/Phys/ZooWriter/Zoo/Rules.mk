@@ -206,7 +206,7 @@ CXXFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
 FFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
 	  $(STDDEBUGFLAGS) $(FSTD)
 
-LDFLAGS += -rdynamic
+LDFLAGS += -rdynamic -Wl,-O3
 # flags to link and produce shared libs
 SHFLAGS ?= -shared
 # flags needed to produce dependency files
@@ -394,6 +394,10 @@ $(1): $(2)
 	@ $$(ECHOMSG) "$$($(3))"
 	$$($(4))
 endef
+# prototype of pattern rule without action
+define PATTERNRULE_NOACT_TEMPLATE
+$(1): $(2)
+endef
 # these will be used in a few foreach loops to synthesize the required
 # rules
 OBJSUFFIXES    := o os
@@ -479,6 +483,9 @@ DOROOTCINT = $(shell $(ROOTCONFIG) --bindir)/rootcint -f $@.tmp -c -p \
 ROOTCINTMSG = "\\x1b[31m[ROOTCINT]\\x1b[m\\t$@"
 $(foreach extension,$(EXTENSIONS_CXX),$(eval $(call \
     PATTERNRULE_TEMPLATE,%Dict.$(extension) %Dict.h,,ROOTCINTMSG,DOROOTCINT)))
+# no debugging info for dictionaries (no user code in there)
+$(foreach extension,$(OBJSUFFIXES),$(eval $(call \
+    PATTERNRULE_NOACT_TEMPLATE,%Dict.$(extension),STDDEBUGFLAGS=)))
 
 #######################################################################
 # include dependency information (automatic prerequisites)
