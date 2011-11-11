@@ -44,7 +44,7 @@ elif Swimming().getProp('OutputType') == 'MDST':
     writerName = 'MicroDSTMainSeq'
 elif Swimming().getProp('OutputType') == 'DST':
     writerName = 'FullDSTMainSeq'
-def SwimmingEventLoop(main, gaudi, nEvents):
+def SwimmingEventLoop(gaudi, nEvents):
     import GaudiPython
     StatusCode = GaudiPython.gbl.StatusCode
     from Swimming.decorators import (LHCb,

@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Roel Aaij
+ - Make custom event-loop function conform to the intended interface.
+
 !====================== Phys/Swimming v2r2 2011-11-03 =======================
 ! 2011-11-03 - V. Gligorov
  - Fix small bug in configurable to enable "Inputs" property to do something
