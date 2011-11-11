@@ -6,6 +6,8 @@ include Rules.mk
 
 # override tools and flags as needed
 $(TARGETS): CC = $(CXX)
+$(TARGETS): LDLIBS += $(ROOTLIBS) -lMinuit $(LIBGENVECTOR)
+
 # you can either link your executables against a statically compiled
 # libZooROOT or use the libZooROOT shared library. the former has the
 # advantage that all Zoo code is contained within the executable itself,
@@ -19,6 +21,6 @@ $(TARGETS): CC = $(CXX)
 # before you can run your executable
 #
 # to link your code against the statically compiled libZooROOT, uncomment
-#$(TARGETS): LDLIBS += $(ROOTLIBS) -lMinuit $(LIBGENVECTOR) Zoo/libZooROOT.a
+#$(TARGETS): Zoo/libZooROOT.a
 # to link your code against the shared libZooROOT, uncomment
-$(TARGETS): LDLIBS += $(ROOTLIBS) -lMinuit $(LIBGENVECTOR) -LZoo -lZooROOT
+$(TARGETS): LDLIBS += -LZoo -lZooROOT

@@ -1,3 +1,9 @@
+/** @file ZooPacked.h
+ *
+ * @author Manuel Schiller <schiller@physi.uni-heidelberg.de>
+ * @date 2009-05-11
+ */
+
 #ifndef ZOOPACKED_H
 #define ZOOPACKED_H
 
@@ -36,55 +42,17 @@ namespace ZooPackedUnits {
 	static const bool invert[n];
     private:
 	/// helper to do the packing
-	static packed doPack(unpacked u)
-	{
-	    // encode NaNs specially
-	    if (std::isnan(u))
-		return std::numeric_limits<packed>::min();
-	    // proper rounding (round to even: what you would expect,
-	    // except for 0.5, where we round either up or down depending on
-	    // the LSB of the rounded integer; this is correct on average:
-	    // 0.5 is a tie, and we choose both of the possible outcomes
-	    // exactly half of the time (assuming that the LSB of the rounded
-	    // integer is random which it should be))
-	    unpacked fu = std::floor(u);
-	    if (u - fu > 0.5) u += unpacked(1);
-	    else if (u - fu == 0.5 && packed(fu) & 1) u += unpacked(1);
-	    // saturate
-	    if (unpacked(std::numeric_limits<packed>::max()) < u)
-		return std::numeric_limits<packed>::max();
-	    if (-unpacked(std::numeric_limits<packed>::max()) > u)
-		return -std::numeric_limits<packed>::max();
-	    return packed(std::floor(u));
-	}
+	static packed doPack(unpacked u);
 
 	/// helper to do the unpacking
-	static unpacked doUnpack(packed p)
-	{
-	    // map the NaN code to a quiet NaN
-	    if (std::numeric_limits<packed>::min() == p)
-		return std::numeric_limits<unpacked>::quiet_NaN();
-	    return unpacked(p);
-	}
+	static unpacked doUnpack(packed p);
 
     public:
 	/// pack a quantity according to some unit U
-	static packed pack(unpacked u, unsigned idx = 0)
-	{
-	    if (invert[idx])
-		return doPack(unpacked(1) / (unit[idx] * u));
-	    else
-		return doPack(u / unit[idx]);
-	}
+	static packed pack(unpacked u, unsigned idx = 0);
 
 	/// unpack a quantity according to some unit U
-	static unpacked unpack(packed p, unsigned idx = 0)
-	{
-	    if (invert[idx])
-		return unpacked(1) / (unit[idx] * doUnpack(p));
-	    else
-		return doUnpack(p) * unit[idx];
-	}
+	static unpacked unpack(packed p, unsigned idx = 0);
     };
 
     /// unit of length
@@ -126,18 +94,7 @@ class ZooPackedStorage : public TObject
 
     public:
 	/// default constructor
-	ZooPackedStorage()
-	{
-	    // only allow positive dimensions
-	    BOOST_STATIC_ASSERT(nDim > 0);
-	    // dimension must match the dimensionality of the unit description
-	    BOOST_STATIC_ASSERT(unsigned(nDim) == unsigned(UnitsT::n));
-	    // we only allow for signed packed types
-	    BOOST_STATIC_ASSERT(PackedT(-1) < PackedT(0));
-	    Class()->IgnoreTObjectStreamer();
-	    // uninitialised packed storage is set to all NaNs
-	    std::fill(m_arr, m_arr + nDim, std::numeric_limits<PackedT>::min());
-	}
+	ZooPackedStorage();
 
 	virtual ~ZooPackedStorage();
 
@@ -161,19 +118,10 @@ class ZooPackedStorage : public TObject
 #endif
 
 	/// fast and convenient read-only access to unpacked data
-	const UnpackedT operator[](unsigned idx) const
-	{
-	    assert(idx < nDim);
-	    return U::unpack(m_arr[idx], idx);
-	}
+	const UnpackedT operator[](unsigned idx) const;
 
 	/// set specified element
-	const ZooPackedStorage& set(unsigned idx, UnpackedT val)
-	{
-	    assert(idx < nDim);
-	    m_arr[idx] = U::pack(val, idx);
-	    return *this;
-	}
+	const ZooPackedStorage& set(unsigned idx, UnpackedT val);
 
     private:
 #ifndef __CINT__ // the following give trouble with CINT
@@ -209,13 +157,7 @@ class ZooPackedStorage : public TObject
 	 * for serialization, so omitting it in inperpreted code is harmless,
 	 * just make sure you compile you macros/code
 	 */
-	operator const Vector() const
-	{
-	    Vector v;
-	    for (unsigned i = 0; i < nDim; ++i)
-		v[i] = operator[](i);
-	    return v;
-	}
+	operator const Vector() const;
 
 	/// convert to some sort of a GenVector (if it can be instantiated)
 	/** ROOT::Math::XYZPoint and ROOT::Math::LorentzVector come to mind...
@@ -277,10 +219,7 @@ class ZooPackedStorageWithError : public TObject
 
     public:
 	/// default constructor
-	ZooPackedStorageWithError()
-	{
-	    Class()->IgnoreTObjectStreamer();
-	}
+	ZooPackedStorageWithError();
 
 	virtual ~ZooPackedStorageWithError();
 
@@ -380,28 +319,7 @@ public:
 	 * for serialization, so omitting it in inperpreted code is harmless,
 	 * just make sure you compile you macros/code
 	 */
-	operator const Matrix() const
-	{
-	    Matrix retVal;
-	    for (unsigned i = 0; i < nDim; ++i) {
-		if (BaseVector::UnitsT::invert[i]) {
-		    // if we need to invert the vector, we need to transform
-		    // the error as well
-		    const UnpackedT inv = m_vect[i];
-		    const UnpackedT err = (UnpackedT(1) / m_errs[i]) * (inv * inv);
-		    retVal(i, i) = err * err;
-		} else {
-		    const UnpackedT err = m_errs[i];
-		    retVal(i, i) = err * err;
-		}
-	    }
-	    for (unsigned i = 0; i < nDim; ++i) {
-		for (unsigned j = 0; j < i; ++j)
-		    retVal(i, j) = retVal(j, i) =  m_correl[(i*(i-1))/2 + j] *
-			std::sqrt(retVal(i, i)) * std::sqrt(retVal(j, j));
-	    }
-	    return retVal;
-	}
+	operator const Matrix() const;
 
 	/// convert to some sort of a GenVector (if it can be instantiated)
 	/** ROOT::Math::XYZPoint and ROOT::Math::LorentzVector come to mind...

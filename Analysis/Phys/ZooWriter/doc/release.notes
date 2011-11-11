@@ -4,6 +4,19 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-11 - Manuel Tobias Schiller
+ - work on standalone Zoo build system: now about 20% faster build times,
+   parallel make seems to work (e.g.' make -j4'); in addition to faster build
+   times, make the messages printed by make somewhat nicer (read less
+   cluttered and more colorful), the old behaviour can be restored with
+   'make COLORMAKE=NO', 'make COLORMAKE=NO clean' etc.
+   apart from the different screen printout produced by make, there should not
+   be anything new for users of the build system, and old Makefiles should
+   continue to work as before
+ - fight code bloat in ZooPacked.{cpp,h} with the same method as in my last
+   commit (no functional changes to the code, just moving procedures from
+   header to implementation)
+
 ! 2011-11-07 - Manuel Tobias Schiller
  - fight code bloat by demoting some methods in ZooOccupancy, ZooLHCbID and
    ZooPackedStates from inline to ordinary methods; since these methods
