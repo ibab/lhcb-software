@@ -6,8 +6,8 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v11r1>2011-11-09 LbcomSys v11r1</A></H1><PRE>
-This version uses Gaudi v22r4 and LHCb v33r1
+</PRE><H1><A NAME=v11r1>2011-11-11 LbcomSys v11r1</A></H1><PRE>
+This version uses Gaudi v22r5 and LHCb v33r1
 
 - Production release for 2011 data analysis
 
