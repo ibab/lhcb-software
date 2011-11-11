@@ -76,7 +76,6 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     if ( "TupleToolDecayTreeFitter" == m_extraName )  m_extraName = ""; // user has not chanegd instance name
     info() << "All fields will be prepended with ``" << m_extraName << "''" <<endmsg;
   }
-  
   return StatusCode::SUCCESS;
 }
 
@@ -109,9 +108,13 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
       Error("Can't get an origin vertex");
       return StatusCode::FAILURE;
     }
+    if (msgLevel(MSG::DEBUG)) debug() << "PVs: " << originVtx.size() << endmsg;
     for (std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ; 
          iv != originVtx.end() ; iv++){
+      if (msgLevel(MSG::DEBUG)) debug() << "Creating DecayTreeFitter on " 
+                                        << P << " " << *iv << endmsg;
       DecayTreeFitter::Fitter fitter(*P, *(*iv));
+      if (msgLevel(MSG::DEBUG)) debug() << "Created DecayTreeFitter" << endmsg;
       if (!fit(fitter, P, *iv, prefix, tMap)) return StatusCode::FAILURE ;
     }
   } else {
@@ -131,6 +134,7 @@ StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter& fitter,
                                          const LHCb::VertexBase* pv,
                                          const std::string& prefix, 
                                          TupleMap& tMap) const{  
+  if (msgLevel(MSG::VERBOSE)) verbose() << "fit " << P << " " << pv << " " << prefix << endmsg ;  
   bool test = true ;
   //add mass contraints
   if (!m_massConstraintsPids.empty()){
@@ -138,7 +142,9 @@ StatusCode TupleToolDecayTreeFitter::fit(DecayTreeFitter::Fitter& fitter,
          iterC != m_massConstraintsPids.end(); ++iterC) fitter.setMassConstraint(*iterC);
   }
   // fit
+  if (msgLevel(MSG::VERBOSE)) verbose() << "calling Fit" << endmsg ;  
   fitter.fit();
+  if (msgLevel(MSG::VERBOSE)) verbose() << "called Fit" << endmsg ;  
   // fill the fit result
   fillDecay(fitter,prefix,tMap );
   fillMomentum(fitter,P,prefix,tMap );
