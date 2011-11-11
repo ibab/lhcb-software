@@ -5,8 +5,8 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v33r1>2011-11-08 LHCbSys v33r1</A></H1><PRE>
-This version uses Gaudi v22r4 and LCG_61
+</PRE><H1><A NAME=v33r1>2011-11-11 LHCbSys v33r1</A></H1><PRE>
+This version uses Gaudi v22r5 and LCG_61b
 Production version for 2011 analysis.
 
 - Packages added:    Event/SwimmingEvent v1r0: Event Model classes for persistency of the swimming result
