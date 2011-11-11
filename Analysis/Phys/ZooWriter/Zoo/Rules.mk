@@ -319,7 +319,7 @@ clean:: subdirs-clean local-clean
 
 distclean:: subdirs-distclean local-distclean
 
-local-all:: subdirs-all local-dep $(TARGETS)
+local-all:: local-dep $(TARGETS)
 
 local-dep:: .deps/dummy.txt $(alldeps)
 $(alldeps): .deps/dummy.txt
