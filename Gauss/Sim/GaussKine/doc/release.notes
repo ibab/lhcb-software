@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v4r1 2011-11-11 ========================= 
 ! 2011-10-20 - Patrick Robbe
  - SimulationToMCTruth
  - GenerationToSimulation
