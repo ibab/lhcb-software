@@ -1,6 +1,6 @@
 <PRE>
 Package             : PhysSys
-Package Coordinator : Juan Palacios
+Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
 </PRE><H1><A NAME=v13r0>2011-11-10 Phys v13r1 </A></H1><PRE>
@@ -10,7 +10,7 @@ Additions to support Swimming, plus various other bug fixes and improvements.
 
 - Packages updated: DaVinciKernel v10r3, DaVinciTools v22r10,
                     HighPtJets v1r5, LoKiJets v6r1, PhysConf v1r13,
-                    TisTosTobbing v7r4, VertexFit v6r7p3
+                    TisTosTobbing v7r4, VertexFit v6r7p3, Swimming v2r3
 
 - New packages: Swimming v2r2
 
@@ -46,6 +46,10 @@ Additions to support Swimming, plus various other bug fixes and improvements.
 
 - In VertexFit v6r7p3
  . migrate to new ParticlePropertySvc (fixed from last commit)
+
+- In Swimming v2r3
+ . Make custom event-loop function conform to the intended interface.
+ . Use containedObjects() to access candidates by index.
 
 </PRE><H1><A NAME=v13r0>2011-09-07 Phys v13r0 </A></H1><PRE>
 - Based on LHCb v33r0. Stripping17 version, hopefully.
