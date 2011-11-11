@@ -111,6 +111,7 @@ protected:
 
   /// Switch to activate using Particle2LHCbIDsMap 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively; 
   unsigned int m_useParticle2LHCbIDs;  
+  StringProperty m_Particle2LHCbIDsLocation;  
   
   bool m_newEvent;
 

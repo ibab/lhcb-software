@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-11-11 - Tomasz Skwarnicki
+ - introduce Particle2LHCbIDsLocation property in TriggerSelectionTisTos
+
 !========================= TisTosTobbing v7r4 2011-06-16 =========================
 ! 2011-10-15 - Chris Jones
  - fix use of std::unique to remove duplicates

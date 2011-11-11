@@ -49,6 +49,8 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
  
   // values: 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively;
   declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 0 );
+
+  declareProperty("Particle2LHCbIDsMapLocation",m_Particle2LHCbIDsLocation = ""  );
  
   m_cached_SelectionNames.reserve(500);
   m_cached_tisTosTob.reserve(500);
@@ -158,8 +160,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
   } else {
     DaVinci::Map::Particle2LHCbIDs* p2lhcbids(0);          
     // global map at RootInTES location
-    if( exist< DaVinci::Map::Particle2LHCbIDs >("Particle2LHCbIDMap") ){
-      p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >("Particle2LHCbIDMap");
+    if( exist< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap") ){
+      p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap");
     } else {
       const DataObject* container = particle.parent();
       if( container ){
