@@ -14,6 +14,19 @@
 // ============================================================================
 /** @file
  *  Implementation file for LoKi HepMC-tree-functors 
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr. O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
  *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
  *  @date   2008-06-10
  */
@@ -223,21 +236,27 @@ bool Decays::Trees::GenExclusive::operator()
   if ( !good                          ) { return false ; }        // RETURN 
   // match children? 
   if ( 0 == nChildren()               ) { return true  ; }        // RETURN
+  //
   // perform the real matching:
+  //
   // (1) get the proper decay sections:
   Decays::GenSections sections ;
   makeSections ( good , alg () , sections ) ;
+  //
   // (2) loop over all sections
   for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
+    //
     // (3) try to match the section 
     // skip the combinations  which does not match at all 
     if ( nChildren() != isect->size() ) { continue ; }
+    //
     // (4) sort the section 
     std::stable_sort ( isect->begin() , isect->end() ) ;
     do // btw - it is my first "do ... while ( .. )" loop..        // ATTENTION 
     {
+      //
       // (5) match all fields:
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) ) 
       { return true ; }                                               // RETURN 
@@ -369,20 +388,50 @@ const HepMC::GenParticle*
 Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const 
 {
     if ( 0 == p          ) { return 0 ; }                      // RETURN 
-    // check mother 
-    LHCb::ParticleID pid ( p->pdg_id() ) ;
-    if ( !mother ( pid ) ) { return 0 ; }                      // RETURN 
     //
-    switch ( oscillation  () ) 
+    // check mother 
+    LHCb::ParticleID pid ( p->pdg_id() ) ;    
+    //
+    // chargeL 
+    const int q3 = pid.threeCharge() ;
+    //
+    const HepMC::GenParticle* osc1 = 0 ;
+    if ( 0 == q3 ) { osc1 = LoKi::GenParticles::oscillated1 ( p ) ; }
+    const HepMC::GenParticle* osc2 = 0 ;
+    if ( 0 == q3 ) { osc2 = LoKi::GenParticles::oscillated2 ( p ) ; }
+    //
+    // spaghetti 
+    // explicitly requiested oscillation 
+    if      ( Decays::Trees::   Oscillated == oscillation () ) 
     {
-    case Decays::Trees::Oscillated    : 
-      return 0 == pid.threeCharge() ?    LoKi::GenParticles::oscillated2 ( p )       : 0 ;  
-    case Decays::Trees::NotOscillated :
-      return 0 == pid.threeCharge() && ( LoKi::GenParticles::oscillated1 ( p ) ||
-                                         LoKi::GenParticles::oscillated2 ( p ) ) ? 0 : p ;
-    default :
-      return p ;
+      if ( !mother ( pid ) ) { return 0 ; }                      // RETURN 
+      return osc2 ;
     }
+    // explicitly requiested non-oscillation 
+    else if ( Decays::Trees::NotOscillated == oscillation () ) 
+    {
+      //
+      if ( 0 != osc1 || 0 != osc1 ) { return 0 ; }
+      if ( !mother ( pid )        ) { return 0 ; }               // RETURN 
+      //
+      return p ;  
+    }
+    //  oscillation is irrelevant here 
+    else if ( 0 != osc2 ) 
+    {
+      if  ( !mother ( pid ) && !mother ( LHCb::ParticleID ( osc2-> pdg_id() ) ) ) { return 0 ; }
+      return osc2 ; 
+    }
+    else if ( 0 != osc1 ) 
+    {
+      if  ( !mother ( pid ) && !mother ( LHCb::ParticleID ( osc1-> pdg_id() ) ) ) { return 0 ; }
+      return    p ; 
+    }
+    //
+    // the regular case:
+    if ( !mother ( pid )        ) { return 0 ; }               // RETURN 
+    //
+    return p ;
 }
 // ============================================================================
 // GENINCLUSIVE 
