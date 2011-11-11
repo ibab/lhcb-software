@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r1</A></H1><PRE>
+</PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r1, Lbcom v11r1,
  Rec v12r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
