@@ -202,6 +202,11 @@ def SwimmingEventLoop(gaudi, nEvents):
 
         # Select the candidate to swim
         mycand = selector(mycands)
+        if not mycand:
+            print "Somehow there is no candidate!!! This should never happen."
+            print "Skipping this event."
+            continue
+            
         if DEBUGMODE :
             print "Got the offline candidate OK"
             print "About to store its information"

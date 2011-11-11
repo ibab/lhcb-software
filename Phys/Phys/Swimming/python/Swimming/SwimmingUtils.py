@@ -29,7 +29,7 @@ class RandomSelector(object):
         n = candidates.size()
         for i in xrange(n):
             if r <= (float(i) / float(n)): break
-        return candidates[i]
+        return candidates.containedObjects()[i]
 
     def random(self, odin):
         x = self._initialRandom;
@@ -43,7 +43,7 @@ class FirstSelector(object):
         pass
 
     def __call__(self, candidates):
-        return candidates[0]
+        return candidates.containedObjects()[0]
     
 _selectors = {'random' : RandomSelector,
               'first'  : FirstSelector,
