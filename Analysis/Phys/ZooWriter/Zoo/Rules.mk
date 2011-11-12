@@ -277,8 +277,9 @@ export MAKEFLAGS COLORMAKE
 # C sources
 csrc += $(wildcard *.c)
 # ROOT dictionaries
-alldicts += $(wildcard *Dict.cc) $(wildcard *Dict.C) $(wildcard *Dict.cpp) \
-	   $(wildcard *Dict.cxx) $(wildcard *Dict.c++)
+alldicts += $(sort $(wildcard *Dict.cc) $(wildcard *Dict.C) \
+	    $(wildcard *Dict.cpp) $(wildcard *Dict.cxx) \
+	    $(wildcard *Dict.c++))
 # C++ sources (not all variations in use)
 ccsrc += $(sort $(wildcard *.cc) $(wildcard *.C) $(wildcard *.cpp) \
 	$(wildcard *.cxx) $(wildcard *.c++) $(alldicts))
@@ -345,7 +346,7 @@ endif
 local-distclean:: .deps local-clean do-local-distclean .deps
 do-local-distclean::
 	@ $(ECHOMSG) "\x1b[32m[DISTCLEAN]\x1b[m"
-	$(RM) -f $(TARGETS)
+	$(RM) -f $(TARGETS) $(alldicts) $(alldicts:%=%.h)
 	$(RM) -f .deps/*.d .deps/*.dd .deps/*.d.[0-9]* .deps/*.dd.[0-9]* .deps/dummy.txt
 	@ $(ECHOMSG) "\x1b[32m[RMDIR]\x1b[m\t\t"`pwd`/.deps;
 	$(RM) -fr .deps
@@ -482,7 +483,7 @@ DOROOTCINT = $(shell $(ROOTCONFIG) --bindir)/rootcint -f $@.tmp -c -p \
 	 $(ROOTCINT_PP) < $@.tmp > $@ ; $(RM) -f $@.tmp
 ROOTCINTMSG = "\\x1b[31m[ROOTCINT]\\x1b[m\\t$@"
 $(foreach extension,$(EXTENSIONS_CXX),$(eval $(call \
-    PATTERNRULE_TEMPLATE,%Dict.$(extension) %Dict.h,,ROOTCINTMSG,DOROOTCINT)))
+    PATTERNRULE_TEMPLATE,%Dict.$(extension) %Dict.$(extension).h,,ROOTCINTMSG,DOROOTCINT)))
 # no debugging info for dictionaries (no user code in there)
 $(foreach extension,$(OBJSUFFIXES),$(eval $(call \
     PATTERNRULE_NOACT_TEMPLATE,%Dict.$(extension),STDDEBUGFLAGS=)))

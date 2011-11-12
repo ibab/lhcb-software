@@ -5,6 +5,6 @@ alldicts += ZooDict.cpp
 include Rules.mk
 
 # what belongs in which file
-ZooDict.cpp:   $(allsrc:%.cpp=%.h) ZooLinkDef.h
+ZooDict.cpp:   $(filter-out %Dict.h,$(allsrc:%.cpp=%.h)) ZooLinkDef.h
 libZooROOT.a:  libZooROOT.a($(alldicts:%.cpp=%.o) $(allsrc:%.cpp=%.o))
 libZooROOT.so: $(alldicts:%.cpp=%.os) $(allsrc:%.cpp=%.os)

@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-13 - Manuel Tobias Schiller
+ - fix some build rule insanity for ROOT dictionaries (no functional changes,
+   but make distclean should give nicer results now)
+
 ! 2011-11-11 - Manuel Tobias Schiller
  - work on standalone Zoo build system: now about 20% faster build times,
    parallel make seems to work (e.g.' make -j4'); in addition to faster build
