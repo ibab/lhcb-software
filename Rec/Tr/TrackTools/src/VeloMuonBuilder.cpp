@@ -123,8 +123,10 @@ Tracks* VeloMuonBuilder::buildVeloMuon(Tracks& veloTracks, Tracks& muonTracks) {
   sc = buildVeloMuon(veloTracks, muonTracks, trackvector);
   if (sc.isSuccess())
     return trackvector;
-  else
+  else {
+    delete trackvector;
     return NULL;
+  }
 }
 
 //=============================================================================
