@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2011-11-12 - Wouter Hulsbergen
+ - Fix for merged pi0
+
 !======================= DecayTreeFitter v1r11p1 2011-02-20 ==================
 
 ! 2011-02-19 - Chris Jones
