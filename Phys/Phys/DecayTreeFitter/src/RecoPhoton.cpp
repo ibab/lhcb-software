@@ -70,10 +70,20 @@ namespace DecayTreeFitter
   RecoPhoton::updCache()
   {
     const LHCb::CaloHypo* hypo = particle().proto()->calo()[0] ;
+    // this works for photons
     const LHCb::CaloPosition* pos = hypo->position() ;
-    m_m = pos->parameters() ;
-    m_V = pos->covariance() ;
-    m_z = pos->z() ;
+    // and this seems to work for merged pi0 ...
+    if(!pos && hypo->clusters().size()>0)
+      pos = &(hypo->clusters()[0]->position()) ;
+    ErrCode rc ;
+    if(pos) {
+      m_m = pos->parameters() ;
+      m_V = pos->covariance() ;
+      m_z = pos->z() ;
+    } else {
+      std::cout << "DecayTreeFitter::RecoPhoton: cannot find position info for cluster" << std::endl ;
+      rc = ErrCode::badsetup ;
+    }
     return ErrCode() ;
   }
 
@@ -92,8 +102,9 @@ namespace DecayTreeFitter
     double px = fitparams.par()(momindex+1) ;
     double py = fitparams.par()(momindex+2) ;
     double pz = fitparams.par()(momindex+3) ;
-    
-    double energy = std::sqrt(px*px+py*py+pz*pz) ;
+    double m  = pdtMass() ; // could be non-zero for mergedpi0
+
+    double energy = std::sqrt(px*px+py*py+pz*pz+m*m) ;
     double dedpx  = px/energy ;
     double dedpy  = py/energy ;
     double dedpz  = pz/energy ;
