@@ -5,6 +5,8 @@
 
 ! 2011-11-13 - Tomasz Skwarnicki
  - when getting Hlt and HltLikeL0 reports try first without and then with RootInTES
+   change default value of UseParticle2LHCbIDsMap to 1 (look for map and if not found try reco objects)
+   try all possible paths for the map
 
 ! 2011-11-11 - Tomasz Skwarnicki
  - introduce Particle2LHCbIDsLocation property in TriggerSelectionTisTos
