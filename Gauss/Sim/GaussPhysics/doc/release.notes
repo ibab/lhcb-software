@@ -1,11 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package          : Sim/GaussPhysics
-! Responsible	   : Witold Pokorski
+! Responsible	     : Gloria Corti, Patrick Robbe 
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-
-
+!====================== GaussPhysics v7r3 2011-11-13 =========================
 ! 2011-11-02 - Yasmine Amhis
   -  Add new classes for XibMinus, XibPlus, OmegabMinus, OmegabPlus 
  
