@@ -86,10 +86,16 @@ StatusCode L0SelReportsMaker::execute() {
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "==> Execute" << endmsg;
 
   //  L0 Decision Unit Report
-  if( !exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
-    return Warning( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );
+  L0DUReport* pL0DUReport = 0;
+  //  L0 Decision Unit Report
+  //       try without RootInTES first
+  if( exist<L0DUReport>( m_inputL0DUReportLocation.value(), false ) ){ 
+    pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value(), false );
+  //       now try at RootInTES location
+  } else if( exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
+    pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value());
   }
-  const L0DUReport* pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation );
+  if( !pL0DUReport ){return Error( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );}
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " L0 global decision= " << pL0DUReport->decision() << endmsg;
 
   // create output container and put it on TES
@@ -104,7 +110,21 @@ StatusCode L0SelReportsMaker::execute() {
 
 
   // BCSU is the full list of candidates; while Default is 6 best; try BCSU first
-  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::BCSU ) )
+  L0MuonCandidates* pL0MuonCandidates = 0;
+  if( exist<L0MuonCandidates>( L0MuonCandidateLocation::BCSU, false ) ){
+    pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::BCSU, false );
+  } else if( exist<L0MuonCandidates>( L0MuonCandidateLocation::BCSU ) ){
+    pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::BCSU );
+  } else if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default, false ) )  {    
+    Warning(" No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " using truncated list from "
+	    +  L0MuonCandidateLocation::Default, StatusCode::SUCCESS, 5 );        
+    pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::Default, false );
+  } else if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) )  {    
+    Warning(" No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " using truncated list from "
+	    +  L0MuonCandidateLocation::Default, StatusCode::SUCCESS, 5 );        
+    pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::Default );
+  }
+  if( pL0MuonCandidates )
   {    
     HltObjectSummary selSumOut;    
     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
@@ -114,7 +134,6 @@ StatusCode L0SelReportsMaker::execute() {
     static boost::hash<std::string> hasher;
     selSumOut.addToInfo("0#SelectionID", float( hasher(selName) )  ); // fake: cannot make them persistent
 
-    L0MuonCandidates* pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::BCSU );
     for(L0MuonCandidates::const_iterator ic=pL0MuonCandidates->begin();ic!=pL0MuonCandidates->end();++ic){      
       const HltObjectSummary* hos = store<LHCb::L0MuonCandidate>(*ic);
       if( !hos ){
@@ -130,43 +149,19 @@ StatusCode L0SelReportsMaker::execute() {
               +" to its container ",StatusCode::SUCCESS, 10 );        
     }        
 
-
-  } else if( exist<L0MuonCandidates>( L0MuonCandidateLocation::Default ) )  {    
-
-    Warning(" No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " using truncated list from "
-            +  L0MuonCandidateLocation::Default, StatusCode::SUCCESS, 5 );        
-
-    HltObjectSummary selSumOut;    
-    selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
-    const std::string selName="L0MuonCandidates";
-     
-    // integer selection id 
-    static boost::hash<std::string> hasher;
-    selSumOut.addToInfo("0#SelectionID", float( hasher(selName) )  ); // fake: cannot make them persistent
-
-    L0MuonCandidates* pL0MuonCandidates = get<L0MuonCandidates>( L0MuonCandidateLocation::Default );
-    for(L0MuonCandidates::const_iterator ic=pL0MuonCandidates->begin();ic!=pL0MuonCandidates->end();++ic){      
-      const HltObjectSummary* hos = store<LHCb::L0MuonCandidate>(*ic);
-      if( !hos ){
-        Error( " Could not store HltObjectSummary of L0MuonCandidate" , StatusCode::SUCCESS, 10 ); 
-      } else {        
-        selSumOut.addToSubstructure(hos);
-      }
-    }
-
-    // insert selection into the container
-    if( outputSummary->insert(selName,selSumOut) == StatusCode::FAILURE ){
-      Warning(" Failed to add Hlt selection name "+selName
-              +" to its container ",StatusCode::SUCCESS, 10 );        
-    }
-
   } else {
     Warning( " No L0MuonCandidates at " + L0MuonCandidateLocation::BCSU + " nor at " + L0MuonCandidateLocation::Default
              , StatusCode::SUCCESS, 10 ); 
   }
       
   // translate all L0CaloCandidates into Object Summaries
-  if( exist<L0CaloCandidates>( L0CaloCandidateLocation::Full ) )
+  L0CaloCandidates* pL0CaloCandidates = 0;
+  if( exist<L0CaloCandidates>( L0CaloCandidateLocation::Full, false ) ){
+    pL0CaloCandidates=get<L0CaloCandidates>( L0CaloCandidateLocation::Full, false );
+  } else if( exist<L0CaloCandidates>( L0CaloCandidateLocation::Full ) ){
+    pL0CaloCandidates=get<L0CaloCandidates>( L0CaloCandidateLocation::Full );
+  }
+  if( pL0CaloCandidates )
   {    
     HltObjectSummary selSumOut;    
     selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
@@ -176,7 +171,6 @@ StatusCode L0SelReportsMaker::execute() {
     static boost::hash<std::string> hasher;
     selSumOut.addToInfo("0#SelectionID", float( hasher(selName) )  ); // fake: cannot make them persistent
 
-    L0CaloCandidates* pL0CaloCandidates = get<L0CaloCandidates>( L0CaloCandidateLocation::Full );
     for(L0CaloCandidates::const_iterator ic=pL0CaloCandidates->begin();ic!=pL0CaloCandidates->end();++ic){      
       const HltObjectSummary* hos = store<LHCb::L0CaloCandidate>(*ic);
       if( !hos ){
@@ -198,7 +192,6 @@ StatusCode L0SelReportsMaker::execute() {
   }
       
   if ( pL0DUReport->decision() ){
-
 
   // loop over l0 channels; translate conditions into candidates ( create substructure for muon1 && muon2 etc. )   
   //       individual L0 trigger lines

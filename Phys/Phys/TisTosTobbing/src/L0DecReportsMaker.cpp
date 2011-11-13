@@ -75,11 +75,17 @@ StatusCode L0DecReportsMaker::execute() {
   HltDecReports* outputSummary = new HltDecReports();
   put( outputSummary, m_outputHltDecReportsLocation );
 
+  const L0DUReport* pL0DUReport = 0;
   //  L0 Decision Unit Report
-  if( !exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
-    return Error( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );
+  //       try without RootInTES first
+  if( exist<L0DUReport>( m_inputL0DUReportLocation.value(), false ) ){ 
+    pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value(), false );
+    //     now try at RootInTES location
+  } else if( exist<L0DUReport>( m_inputL0DUReportLocation ) ){ 
+    pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value());
   }
-  const L0DUReport* pL0DUReport = get<L0DUReport>( m_inputL0DUReportLocation.value() );
+  if( !pL0DUReport ){return Error( " No L0DUReport at " + m_inputL0DUReportLocation.value(), StatusCode::SUCCESS, 10 );}
+
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " L0 global decision= " << pL0DUReport->decision() << endmsg;
 
 

@@ -48,7 +48,8 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                   m_HltSelReportsLocation = LHCb::HltSelReportsLocation::Default);
  
   // values: 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively;
-  declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 0 );
+  // this was deafult until 11/13/11:  declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 0 );
+  declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 1 );
 
   declareProperty("Particle2LHCbIDsMapLocation",m_Particle2LHCbIDsLocation = ""  );
  
@@ -106,7 +107,9 @@ void TriggerSelectionTisTos::handle(const Incident& )
 void TriggerSelectionTisTos::getHltSummary()
 {
   if( !m_hltDecReports ){
-    if( exist<HltDecReports>(m_HltDecReportsLocation) ){    
+    if( exist<HltDecReports>(m_HltDecReportsLocation, false) ){    
+      m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation, false);
+    } else if( exist<HltDecReports>(m_HltDecReportsLocation) ){    
       m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation);
     } else {
       Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
@@ -114,7 +117,9 @@ void TriggerSelectionTisTos::getHltSummary()
     }    
   }  
   if( !m_hltSelReports ){
-    if( exist<HltSelReports>(m_HltSelReportsLocation) ){    
+    if( exist<HltSelReports>(m_HltSelReportsLocation, false) ){    
+      m_hltSelReports = get<HltSelReports>(m_HltSelReportsLocation, false);
+    } else if( exist<HltSelReports>(m_HltSelReportsLocation) ){    
       m_hltSelReports = get<HltSelReports>(m_HltSelReportsLocation);
     } else {
       Error( " No HltSelReports at "+m_HltSelReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
@@ -181,6 +186,20 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
                 p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathg,false);
               } 
             }
+	    if( ! p2lhcbids ){
+	      // loop backgrounds in path and try at every level
+	      std::string pathgo =path;
+	      ipos = pathgo.find_last_of("/");
+	      while(  ipos != std::string::npos ){
+		pathgo = pathgo.substr(0,ipos);
+		std::string pathtry= pathgo + "/Particle2LHCbIDMap";
+		if( exist< DaVinci::Map::Particle2LHCbIDs >(pathtry,false) ){
+		  p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathtry,false);
+		  break;
+		} 
+		ipos = pathgo.find_last_of("/");
+	      }
+	    }
           }
         }
       }
