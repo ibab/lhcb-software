@@ -5,8 +5,8 @@
  * @date 2011-09-29
  */
 
-#ifndef __ZOOKEYVALUEBLOCK_H
-#define __ZOOKEYVALUEBLOCK_H
+#ifndef ZOOKEYVALUEBLOCK_H
+#define ZOOKEYVALUEBLOCK_H
 
 #include <vector>
 #include <limits>
@@ -216,6 +216,6 @@ inline ZooKeyValueBlock::r_proxy ZooKeyValueBlock::get_r_proxy(unsigned key) con
 /// output to cout and the like
 std::ostream& operator<<(std::ostream& os, const ZooKeyValueBlock& zkv);
 
-#endif /* __ZOOKEYVALUEBLOCK_H */
+#endif /* ZOOKEYVALUEBLOCK_H */
 
 // vim: sw=4:tw=78:ft=cpp

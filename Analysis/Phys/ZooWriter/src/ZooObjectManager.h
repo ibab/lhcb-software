@@ -14,6 +14,7 @@
 #define BOOST_STATIC_ASSERT(x)
 #endif
 
+#include <TMap.h>
 #include <TObject.h>
 #include <TObjArray.h>
 #include <TClonesArray.h>
@@ -60,6 +61,7 @@ namespace ZooObjectID
 	ZOOMCGENEVENT_INFO,
 	TREEFIT_INFO,
         ZOOPARTICLE_INFO,
+  ZOOLOKIBLOCK_INFO,
 	// ADD YOUR NEW INFO BLOCK IDS HERE!!!!
 	maxid // this must always be last
     };
@@ -95,6 +97,7 @@ ZooObjectIDMapping(ZooLHCbIDBlock, ZOOLHCBIDBLOCK_INFO);
 ZooObjectIDMapping(ZooMCGenEventInfo, ZOOMCGENEVENT_INFO);
 ZooObjectIDMapping(ZooTreefitInfo, TREEFIT_INFO);
 ZooObjectIDMapping(ZooParticleInfo, ZOOPARTICLE_INFO);
+ZooObjectIDMapping(ZooLoKiBlock, ZOOLOKIBLOCK_INFO);
 // ADD YOUR NEW ZOOOBJECTIDMAPPINGS HERE
 #undef ZooObjectIDMapping
 
@@ -179,7 +182,7 @@ class ZooObjectManager
 		VoidPointerAlloc> VoidPointerMap;
     public:
 	/// constructor - NOTE: the manager must live longer than the tree
-	ZooObjectManager(TTree& tree);
+	ZooObjectManager(TTree& tree, TTree& perjobtree);
 	/// destructor
 	virtual ~ZooObjectManager();
 
@@ -252,11 +255,42 @@ class ZooObjectManager
 	    return *reinterpret_cast<I**>(&map[lhcbobj]);
 	}
 
+	/** @brief associate a string with a per job objects
+	 *
+	 * @param str	string under which to register object
+	 * @param obj	object to register (ZooObjectManager takes ownership)
+	 * @returns	old mapping if it exists (0 otherwise)
+	 */
+	TObject* zooPerJobObject(const std::string& str, TObject* obj);
+	
+	/** @brief associate a string with a per job objects
+	 *
+	 * @param str	string under which to register object
+	 * @param obj	object to register (ZooObjectManager takes ownership)
+	 * @returns	old mapping if it exists (0 otherwise)
+	 */
+	template<class T>
+	TObject* zooPerJobObject(const std::string& str, const T& obj)
+	{ return zooPerJobObject(str, reinterpret_cast<TObject*>(new T(obj))); }
+
+	/** @brief lookup per-job object associated with a string
+	 *
+	 * @param str	string under which to register object
+	 * @returns	old mapping if it exists (0 otherwise)
+	 */
+	TObject* zooPerJobObject(const std::string& str) const;
+
+	/// return number of elements in per job object map
+	unsigned long perJobObjMapSize() const
+	{ return m_perJobMap->GetSize(); }
+
     private:
 	/// array for arrays of zoo objects (one per type)
 	TObjArray *m_objects;
 	/// mapping to LHCb software objects
 	VoidPointerMap m_mapping[ZooObjectID::maxid];
+	/// mapping of per-job-Objects
+	TMap* m_perJobMap;
 };
 #else
 /// forward declaration

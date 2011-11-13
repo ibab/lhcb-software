@@ -5,8 +5,8 @@
  */
 
 
-#ifndef _ZOOSTRINGVALUEBLOCK_H
-#define _ZOOSTRINGVALUEBLOCK_H
+#ifndef ZOOSTRINGVALUEBLOCK_H
+#define ZOOSTRINGVALUEBLOCK_H
 
 #include <string>
 #include <vector>
@@ -41,7 +41,7 @@
  * try to insert, erase or modify a value for a string or UID which does not
  * exist in the ZooStringToUIDTable associated with this class.
  */
-class ZooStringValueBlock : private ZooKeyValueBlock
+class ZooStringValueBlock : protected ZooKeyValueBlock
 {
     private:
 	TRef m_uidtbl; ///< table providing string to UID mapping
@@ -408,6 +408,6 @@ inline ZooStringValueBlock::const_iterator ZooStringValueBlock::erase(
 	    this, ZooKeyValueBlock::erase(it.m_it));
 }
 
-#endif // _ZOOSTRINGVALUEBLOCK_H
+#endif // ZOOSTRINGVALUEBLOCK_H
 
 // vim: sw=4:tw=78:ft=cpp

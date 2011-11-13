@@ -116,6 +116,7 @@ class ZooWriter : public DVAlgorithm {
 		std::vector<KnownSelection>  m_sel;
 		TFile* m_f;
 		boost::shared_ptr<TTree> m_T;
+		boost::shared_ptr<TTree> m_TperJob;
 		boost::shared_ptr<ZooEv> m_pev;
 		boost::shared_ptr<ZooObjectManager> m_objectManager;
 		boost::shared_ptr<boost::object_pool<LHCb::Track> > m_trackPool;
@@ -130,6 +131,7 @@ class ZooWriter : public DVAlgorithm {
 		int m_objectCount;
 		bool m_dirty;
 		unsigned long m_evts;
+		unsigned long m_perJobMapSz;
 
 	    public:
 		/// constructor
@@ -203,6 +205,8 @@ class ZooWriter : public DVAlgorithm {
 	bool			 m_writeTrackInfo;
 	std::vector<short>       m_extraInfoList;
 	std::vector<unsigned>         m_particleinfoList;
+  std::vector<std::pair<UInt_t ,LoKi::PhysTypes::Fun> >  m_lokifuns;
+  StringArrayProperty      m_lokinames;
 	bool                     m_writeHitPattern;
 	bool                     m_writeExpectedHitPattern;
 	bool                     m_writeCollectedHitPattern;
@@ -274,6 +278,8 @@ class ZooWriter : public DVAlgorithm {
 
 	void writeMC();
 	ZooMCP *GetSaved(const LHCb::MCParticle* p);
+
+  void addLoKi(ZooP*, const LHCb::Particle*);
 
 	void writeEvent();
 	void writeTrigger    ( ZooP* zp, const LHCb::Particle* p);

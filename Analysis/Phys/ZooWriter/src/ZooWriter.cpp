@@ -55,22 +55,50 @@
 
 #include "Event/MuonPID.h"
 
+
+#include "LoKi/PhysTypes.h"
+#include "LoKi/IHybridFactory.h"
+
 //#include "DecayTreeFitter/VtxFitParams.h"
 
 using namespace Gaudi::Units;
 
 #include "ZooWriter.h"
 #include "Zoo.h"
+#include "ZooStringToUIDTable.h"
 
 DECLARE_ALGORITHM_FACTORY(ZooWriter);
 
 using namespace Gaudi::Units;
 using namespace std;
 
+namespace {
+    std::string _preambulo (const std::vector<std::string>& lines)
+    {
+	std::string::size_type sz = 0;
+	for (std::vector<std::string>::const_iterator iline =
+		lines.begin() ; lines.end() != iline ; ++iline) {
+	    sz += iline->size() + 1;
+	}
+	std::string result ;
+	result.reserve(sz); // preallocate enough space
+	for (std::vector<std::string>::const_iterator iline =
+		lines.begin() ; lines.end() != iline ; ++iline) {
+	    if ( lines.begin() != iline ) { result += '\n'; }
+	    result += (*iline);
+	}
+	return result;
+    }
+    inline std::string preambulo()
+    { std::vector<std::string> m_p; return _preambulo ( m_p ); }
+}
+
+
 ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	const std::string& treename,
 	const std::vector<std::string>& sel_collections,
-	const std::vector<std::string>& sel_names, ZooWriter* const base)
+	const std::vector<std::string>& sel_names, ZooWriter* const base) :
+    m_perJobMapSz(0)
 {
     using namespace boost::lambda;
     // open ROOT file
@@ -88,6 +116,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	static std::vector<std::string> o_treefit_names = base->m_treefit_names;
 	static std::vector<std::string> o_linkToList = base->m_linkToList;
 	static std::vector<std::string> o_linkFromList = base->m_linkFromList;
+  static std::vector<std::string> o_lokinames = base->m_lokinames;
 
 	opttree->Branch( "InputCollections",     &o_sel_collections);
 	opttree->Branch( "DecayName" ,           &o_sel_names);
@@ -138,6 +167,8 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	opttree->Branch( "MCAcceptanceNeutral",  &base->m_mcAcceptanceNeutral);
 	opttree->Branch( "MCAcceptanceMinCtau",  &base->m_mcAcceptanceMinCtau);
 
+  opttree->Branch( "LoKiFunctors",         &o_lokinames);
+
 	opttree->Fill();
 	opttree->Write();
     }
@@ -150,7 +181,16 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	m_T->SetDirectory(m_f);
     }
     {
-	boost::shared_ptr<ZooObjectManager> objman(new ZooObjectManager(*m_T));
+	boost::shared_ptr<TTree> tperjob(
+		new TTree((treename+"_Shrubbery").c_str(),
+		    "Zoo per job object tree"),
+		_1 ->* &TTree::Delete);
+	m_TperJob.swap(tperjob);
+	m_TperJob->SetDirectory(m_f);
+	m_T->AddFriend(&(*m_TperJob));
+    }
+    {
+	boost::shared_ptr<ZooObjectManager> objman(new ZooObjectManager(*m_T, *m_TperJob));
 	m_objectManager.swap(objman);
     }
     {
@@ -179,10 +219,14 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     // force flushing of buffers every 2^24 bytes (i.e. every 16 MB)
     m_T->SetAutoSave(1 << 24);
     
+    // set up per job object tree
+    m_TperJob->SetBasketSize("*", 1 << 16);
+    m_TperJob->SetAutoSave(1 << 24);
+
     boost::shared_ptr<boost::object_pool<LHCb::Track> > trackpool(
 	    new boost::object_pool<LHCb::Track>());
     m_trackPool = trackpool;
-    m_objectCount = 0;
+    m_objectCount = TProcessID::GetObjectCount();
     m_dirty = false;
     m_evts = 0;
 }
@@ -191,11 +235,13 @@ ZooWriter::ZooWriterContext::~ZooWriterContext()
 {
     if (m_dirty) endEvent();
     m_f->cd();
+    if (m_TperJob) m_TperJob->Write("",TObject::kOverwrite);
     if (m_T) m_T->Write("",TObject::kOverwrite);
     // if the tuple became too big, ROOT will open a new file for us and
     // close the old one (thus invalidating the pointer we have); therefore
     // we just ask the tree for the file it is currently writing to
     m_f = m_T->GetCurrentFile();
+    m_TperJob.reset();
     m_T.reset();
     delete m_f; m_f = 0;
     m_pev.reset();
@@ -221,6 +267,19 @@ void ZooWriter::ZooWriterContext::beginEvent()
     if (m_dirty)
 	throw ZooWriterContextException("At most one incomplete event permitted!");
     m_f->cd();
+    if (0 == m_evts) {
+	// fill per job tree at the beginning of first event in job
+	//
+	// save size so we have a chance to tell if people screw with the
+	// per-job object map afterwards
+	m_perJobMapSz = objman()->perJobObjMapSize();
+	m_TperJob->Fill();
+	m_TperJob->OptimizeBaskets();
+    } else {
+	if (m_perJobMapSz != objman()->perJobObjMapSize())
+	    throw ZooWriterContextException(
+		    "Not allowed to change per Job objects after first event!");
+    }
     m_objectCount = TProcessID::GetObjectCount();
     m_dirty = true;
 }
@@ -321,6 +380,7 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
     declareProperty( "MCAcceptanceNeutral",  m_mcAcceptanceNeutral = false);
     declareProperty( "MCAcceptanceMinCtau",  m_mcAcceptanceMinCtau = 50. * Gaudi::Units::cm);
     declareProperty( "ParticleInfoList",     m_particleinfoList);
+    declareProperty( "LoKiFunctors",         m_lokinames);
 }
 
 StatusCode ZooWriter::initialize  ()
@@ -418,6 +478,22 @@ StatusCode ZooWriter::initialize  ()
 		m_sel_collections.value(), m_sel_names.value(), this));
     m_ctx.swap(ctx);
 
+    LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC",this);
+
+    ZooStringToUIDTable* lokitable = dynamic_cast<ZooStringToUIDTable*>(
+	    objman()->zooPerJobObject<ZooStringToUIDTable>(
+		std::string("ZooLoKiBlockUIDTable"),
+		ZooStringToUIDTable(m_lokinames.value())));
+    BOOST_FOREACH(const std::string& funname, m_lokinames.value()) {
+      LoKi::PhysTypes::Fun thisloki( LoKi::BasicFunctors<const LHCb::Particle*>::Constant ( -1.e+10 ) );
+      factory->get(funname,thisloki, preambulo());
+      UInt_t hash = lokitable->hash(funname);
+      m_lokifuns.push_back(std::make_pair(hash,thisloki));
+    }
+    //ZooStringToUIDTable* lokitable = new ZooStringToUIDTable(m_lokinames.value());
+    release(factory);
+
+
     return StatusCode::SUCCESS;
 }
 
@@ -434,6 +510,28 @@ StatusCode ZooWriter::finalize()
 }
 
 ZooWriter::~ZooWriter () { }
+
+void ZooWriter::addLoKi(ZooP* p,const LHCb::Particle* part) {
+
+    ZooStringToUIDTable* table = dynamic_cast<ZooStringToUIDTable*>(objman()->zooPerJobObject(std::string("ZooLoKiBlockUIDTable")));
+
+    ZooLoKiBlock::KeyValueVector eivector;
+    eivector.reserve(m_lokifuns.size());
+    for (unsigned i = 0 ; i < m_lokifuns.size() ; ++i) {
+      float val = m_lokifuns[i].second(part);
+      eivector.push_back(std::make_pair(m_lokifuns[i].first,Float_t(val)));
+    }
+
+    ZooLoKiBlock*& loki = objman()->getOrCreateMappingFor<ZooLoKiBlock>(part);
+    if (loki)
+      p->AssignInfo<ZooLoKiBlock>(loki);
+    else {
+      loki = p->AddInfo<ZooLoKiBlock>(*objman(),
+            ZooLoKiBlock(*table,eivector));
+    }
+
+
+}
 
 StatusCode ZooWriter::execute()
 {
@@ -468,7 +566,9 @@ StatusCode ZooWriter::execute()
 	LHCb::Particle::Range parts = get<LHCb::Particle::Range>( s.collection );
 	BOOST_FOREACH(const LHCb::Particle* const part, parts) {
       m_parts[selectionid]++;
-	    s.pref->push_back(GetSaved(part));
+      ZooP* zp = GetSaved(part);
+	    s.pref->push_back(zp);
+      addLoKi(zp,part);
 	}
     }
     

@@ -6,8 +6,8 @@
  * PI Heidelberg 2008, 2009, 2010
  */
 
-#ifndef __ZOO_H
-#define __ZOO_H
+#ifndef ZOO_H
+#define ZOO_H
 
 #include <vector>
 #include <bitset>
@@ -45,6 +45,7 @@
 #include "ZooOccupancy.h"
 #include "ZooLHCbID.h"
 #include "ZooKeyValueBlock.h"
+#include "ZooLoKiBlock.h"
 
 typedef ROOT::Math::PxPyPzEVector     zooLorentzVector; 
 typedef ROOT::Math::XYZPoint          XYZPoint;
@@ -1463,6 +1464,6 @@ class ZooParticleInfo: public ZooKeyValueBlock
   ClassDef(ZooParticleInfo, 3);
 };
 
-#endif /* __ZOO_H */
+#endif /* ZOO_H */
 
-
+// vim: tw=78:sw=4:ft=cpp

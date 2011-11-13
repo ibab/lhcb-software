@@ -5,6 +5,16 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-11-13 - Manuel Tobias Schiller
+ - merge in changes from
+
+   svn+ssh://svn.cern.ch/reps/lhcb/Analysis/branches/Phys/ZooWriter/mschiller_20111113_loki-hackathon
+
+   which is the branch used to finalise the ZooLoKiBlock infoblock code
+
+   no major changes to other code, coding done by Paul Seyfert and me with
+   the moral support provided by Georg K. and Sascha S.
+
+! 2011-11-13 - Manuel Tobias Schiller
  - fix some build rule insanity for ROOT dictionaries (no functional changes,
    but make distclean should give nicer results now)
 

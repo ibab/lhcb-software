@@ -84,6 +84,11 @@
 #pragma link C++ class ZooTrackInfo+;
 #pragma link C++ class ZooTreefitInfo+;
 #pragma link C++ class ZooParticleInfo+;
+#pragma link C++ class ZooLoKiBlock+;
+#pragma link C++ class ZooLoKiBlock::const_iterator+;
+#pragma link C++ class ZooLoKiBlock::r_proxy+;
+#pragma link C++ class ZooLoKiBlock::rw_proxy+;
+#pragma link C++ function operator<<(std::ostream&, const ZooLoKiBlock&);
 
 #endif
 

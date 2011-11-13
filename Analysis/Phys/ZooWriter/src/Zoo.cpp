@@ -8,6 +8,7 @@
 
 #include "Zoo.h"
 #include <iostream>
+#include <string.h>
 
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
