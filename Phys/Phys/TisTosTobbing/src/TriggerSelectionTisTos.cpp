@@ -1,6 +1,6 @@
 // $Id: TriggerSelectionTisTos.cpp,v 1.22 2010-07-21 21:22:17 tskwarni Exp $
 //#define LOCDEBUG
-// Include files 
+// Include files
 #include <algorithm>
 #include <sstream>
 #include "boost/algorithm/string/replace.hpp"
@@ -43,37 +43,37 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
   declareInterface<ITriggerSelectionTisTos>(this);
 
   declareProperty("HltDecReportsLocation",
-                  m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default); 
+                  m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
   declareProperty("HltSelReportsLocation",
                   m_HltSelReportsLocation = LHCb::HltSelReportsLocation::Default);
- 
+
   // values: 0=no; 1=yes but try normal particle analysis if not found; 2=yes exclusively;
   // this was deafult until 11/13/11:  declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 0 );
   declareProperty("UseParticle2LHCbIDsMap", m_useParticle2LHCbIDs = 1 );
 
   declareProperty("Particle2LHCbIDsMapLocation",m_Particle2LHCbIDsLocation = ""  );
- 
+
   m_cached_SelectionNames.reserve(500);
   m_cached_tisTosTob.reserve(500);
- 
+
 }
 
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TriggerSelectionTisTos::~TriggerSelectionTisTos() {} 
+TriggerSelectionTisTos::~TriggerSelectionTisTos() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode TriggerSelectionTisTos::initialize() {
-  StatusCode sc = ParticleTisTos::initialize(); // must be executed first
+  const StatusCode sc = ParticleTisTos::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  IIncidentSvc*                incidentSvc(0);     
+  IIncidentSvc*                incidentSvc(0);
   if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
   // add listener to be triggered by first BeginEvent
   bool rethrow = false; bool oneShot = false; long priority = 0;
@@ -82,24 +82,24 @@ StatusCode TriggerSelectionTisTos::initialize() {
 
 
   m_newEvent =true;
-  
+
   setOfflineInput();
-  
-  
-  return StatusCode::SUCCESS;
+
+
+  return sc;
 
 }
 
 
-void TriggerSelectionTisTos::handle(const Incident& ) 
+void TriggerSelectionTisTos::handle(const Incident& )
 {
   m_hltDecReports=0;
   m_hltSelReports=0;
 
   setOfflineInput( );
 
-  m_newEvent=true;  
-  
+  m_newEvent=true;
+
 }
 
 
@@ -107,24 +107,24 @@ void TriggerSelectionTisTos::handle(const Incident& )
 void TriggerSelectionTisTos::getHltSummary()
 {
   if( !m_hltDecReports ){
-    if( exist<HltDecReports>(m_HltDecReportsLocation, false) ){    
+    if( exist<HltDecReports>(m_HltDecReportsLocation, false) ){
       m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation, false);
-    } else if( exist<HltDecReports>(m_HltDecReportsLocation) ){    
+    } else if( exist<HltDecReports>(m_HltDecReportsLocation) ){
       m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation);
     } else {
       Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
       m_hltDecReports =0;
-    }    
-  }  
+    }
+  }
   if( !m_hltSelReports ){
-    if( exist<HltSelReports>(m_HltSelReportsLocation, false) ){    
+    if( exist<HltSelReports>(m_HltSelReportsLocation, false) ){
       m_hltSelReports = get<HltSelReports>(m_HltSelReportsLocation, false);
-    } else if( exist<HltSelReports>(m_HltSelReportsLocation) ){    
+    } else if( exist<HltSelReports>(m_HltSelReportsLocation) ){
       m_hltSelReports = get<HltSelReports>(m_HltSelReportsLocation);
     } else {
       Error( " No HltSelReports at "+m_HltSelReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
       m_hltSelReports =0;
-    }    
+    }
   }
 }
 
@@ -137,7 +137,7 @@ void TriggerSelectionTisTos::setOfflineInput( )
 {
   setSignal();  clearCache();
 }
-   
+
 
 //    hit list input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist )
@@ -161,9 +161,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle )
 {
   if( !m_useParticle2LHCbIDs ){
-    if( addToSignal( particle ) )clearCache();    
+    if( addToSignal( particle ) )clearCache();
   } else {
-    DaVinci::Map::Particle2LHCbIDs* p2lhcbids(0);          
+    DaVinci::Map::Particle2LHCbIDs* p2lhcbids(0);
     // global map at RootInTES location
     if( exist< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap") ){
       p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap");
@@ -173,53 +173,53 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
         IRegistry* registry =  container->registry();
         if( registry ){
           std::string path = registry->identifier();
-          // local map at particle location 
+          // local map at particle location
           boost::replace_last(path,"/Particles","/Particle2LHCbIDMap");
           if( exist< DaVinci::Map::Particle2LHCbIDs >(path,false) ){
             p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path,false);
           } else {
             // global map at stream location (find first "/" past "/Event/")
-            std::size_t ipos = path.find("/",7);            
-            if( ipos != std::string::npos ){              
+            std::size_t ipos = path.find("/",7);
+            if( ipos != std::string::npos ){
               std::string pathg = path.substr(0,ipos)+"/Particle2LHCbIDMap";
               if( exist< DaVinci::Map::Particle2LHCbIDs >(pathg,false) ){
                 p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathg,false);
-              } 
+              }
             }
-	    if( ! p2lhcbids ){
-	      // loop backgrounds in path and try at every level
-	      std::string pathgo =path;
-	      ipos = pathgo.find_last_of("/");
-	      while(  ipos != std::string::npos ){
-		pathgo = pathgo.substr(0,ipos);
-		std::string pathtry= pathgo + "/Particle2LHCbIDMap";
-		if( exist< DaVinci::Map::Particle2LHCbIDs >(pathtry,false) ){
-		  p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathtry,false);
-		  break;
-		} 
-		ipos = pathgo.find_last_of("/");
-	      }
-	    }
+            if( ! p2lhcbids ){
+              // loop backgrounds in path and try at every level
+              std::string pathgo =path;
+              ipos = pathgo.find_last_of("/");
+              while(  ipos != std::string::npos ){
+                pathgo = pathgo.substr(0,ipos);
+                std::string pathtry= pathgo + "/Particle2LHCbIDMap";
+                if( exist< DaVinci::Map::Particle2LHCbIDs >(pathtry,false) ){
+                  p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathtry,false);
+                  break;
+                }
+                ipos = pathgo.find_last_of("/");
+              }
+            }
           }
         }
       }
     }
     if( p2lhcbids ){
       //      p2lhcbids->update(0); // temporary hack. Framework should do this automatically but isn't.
-      std::vector<LHCb::LHCbID> hits = (*p2lhcbids)[&particle];
-      if( hits.size() ){        
-        if ( msgLevel(MSG::VERBOSE) ) 
+      const std::vector<LHCb::LHCbID> & hits = (*p2lhcbids)[&particle];
+      if( hits.size() ){
+        if ( msgLevel(MSG::VERBOSE) )
           verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
         addToOfflineInput( hits );
         return;
-      }      
+      }
     }
-    std::vector<const LHCb::Particle*> daughters = particle.daughtersVector(); 
+    const std::vector<const LHCb::Particle*> & daughters = particle.daughtersVector();
     if( daughters.size() >0 ){
       for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
         if(*p){
           const LHCb::Particle & part = *(*p);
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
             verbose() << " addToOfflineSignal Particle via daughter " << endmsg;
           addToOfflineInput( part );
         }
@@ -228,7 +228,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
       if( addToSignal( particle ) )clearCache();
     } else if( m_useParticle2LHCbIDs == 2 ){
       Error(" No /Particle2LHCbIDMap available for Particle with no daughters nor for mother",
-              StatusCode::FAILURE, 10).setChecked();
+            StatusCode::FAILURE, 10).setChecked();
       clearCache();
     }
   }
@@ -247,17 +247,17 @@ unsigned int TriggerSelectionTisTos::tisTosSelection( const std::string & select
 
   getHltSummary();
 
-  bool decision(false);  
+  bool decision(false);
   // get decision from HltDecReports if can find it
-  bool decFound(false);  
+  bool decFound(false);
   if( m_hltDecReports ){
     const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
     if( rep ){
       decision = rep->decision();
       decFound = true;
-    }    
+    }
   }
-  if( decision )result |= kDecision;  
+  if( decision )result |= kDecision;
 
   if( !m_hltSelReports ){ storeInCache(selectionName,result); return result;}
   const LHCb::HltObjectSummary* sel =   m_hltSelReports->selReport( selectionName );
@@ -270,7 +270,7 @@ unsigned int TriggerSelectionTisTos::tisTosSelection( const std::string & select
 
   // classify the decision
   result = tisTos( *sel );
-  if( decision )result |= kDecision;  
+  if( decision )result |= kDecision;
   storeInCache(selectionName,result);
   return result;
 }
@@ -278,24 +278,24 @@ unsigned int TriggerSelectionTisTos::tisTosSelection( const std::string & select
 // analysisReport for Selection (define Offline Input before calling)
 std::string TriggerSelectionTisTos::analysisReportSelection( const std::string & selectionName ){
   std::ostringstream report;
-  report << offset() << " Selection " + selectionName + " ";  
+  report << offset() << " Selection " + selectionName + " ";
 
   unsigned int result=0;
 
   getHltSummary();
 
-  bool decision(false);  
+  bool decision(false);
   // get decision from HltDecReports if can find it
-  bool decFound(false);  
+  bool decFound(false);
   if( m_hltDecReports ){
     const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
     if( rep ){
       decision = rep->decision();
       decFound = true;
-      report << " HltDecReport decision=" << decision;      
-    }    
+      report << " HltDecReport decision=" << decision;
+    }
   }
-  if( decision )result |= kDecision;  
+  if( decision )result |= kDecision;
 
   if( !m_hltSelReports ){ report << "HltSelReports missing " << std::endl; return report.str();}
   const LHCb::HltObjectSummary* sel =   m_hltSelReports->selReport( selectionName );
@@ -308,14 +308,14 @@ std::string TriggerSelectionTisTos::analysisReportSelection( const std::string &
 
   // classify the decision
   result = tisTos( *sel );
-  if( decision )result |= kDecision;  
+  if( decision )result |= kDecision;
   report << std::endl;
   ++m_reportDepth;
-  report << analysisReport( *sel );  
+  report << analysisReport( *sel );
   --m_reportDepth;
   TisTosTob res( result );
-  report << offset() 
-         << " Selection " + selectionName + " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() 
+  report << offset()
+         << " Selection " + selectionName + " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps()
          << " decision= " << res.decision() << std::endl;
   return report.str();
 }
@@ -349,7 +349,7 @@ bool TriggerSelectionTisTos::tusSelection(const std::string & selectionName ){
 
 
 // ------------ auxiliary output:  list of LHCbIDs corresponding to present offline input
-std::vector<LHCb::LHCbID> TriggerSelectionTisTos::offlineLHCbIDs() 
+std::vector<LHCb::LHCbID> TriggerSelectionTisTos::offlineLHCbIDs()
 {
   return signal();
 }
@@ -357,31 +357,32 @@ std::vector<LHCb::LHCbID> TriggerSelectionTisTos::offlineLHCbIDs()
 // ------------  additional functionality:  lists of object summaries for tracks/vertices/particles from trigger selections
 //               satisfying TIS, TOS requirements
 
-std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTos::hltSelectionObjectSummaries( const std::string & selectionName,
-                                                                                                unsigned int tisRequirement,
-                                                                                                unsigned int tosRequirement,
-                                                                                                unsigned int tpsRequirement )
+std::vector<const LHCb::HltObjectSummary*>
+TriggerSelectionTisTos::hltSelectionObjectSummaries( const std::string & selectionName,
+                                                     unsigned int tisRequirement,
+                                                     unsigned int tosRequirement,
+                                                     unsigned int tpsRequirement )
 {
   std::vector<const LHCb::HltObjectSummary*> matchedObjectSummaries;
 
   getHltSummary();
   if( !m_hltSelReports )return matchedObjectSummaries;
   const LHCb::HltObjectSummary* sel =   m_hltSelReports->selReport( selectionName );
-  if( !sel )return matchedObjectSummaries;  
+  if( !sel )return matchedObjectSummaries;
 
   const SmartRefVector< LHCb::HltObjectSummary > & sub = sel->substructure();
   for( SmartRefVector< LHCb::HltObjectSummary >::const_iterator ihos=sub.begin();ihos!=sub.end();++ihos){
-    const LHCb::HltObjectSummary* hos = ihos->target();    
+    const LHCb::HltObjectSummary* hos = ihos->target();
     unsigned int result = tisTos( *hos );
     bool tis,tos,tps;
     tis = result & kTIS;
     tos = result & kTOS;
-    tps = result & kTPS;    
-    if(    ((tisRequirement>=kAnything)||(tis==tisRequirement)) 
-        && ((tosRequirement>=kAnything)||(tos==tosRequirement)) 
-        && ((tpsRequirement>=kAnything)||(tps==tpsRequirement))){
+    tps = result & kTPS;
+    if(    ((tisRequirement>=kAnything)||(tis==tisRequirement))
+           && ((tosRequirement>=kAnything)||(tos==tosRequirement))
+           && ((tpsRequirement>=kAnything)||(tps==tpsRequirement))){
       matchedObjectSummaries.push_back( hos );
-    }    
+    }
   }
   return matchedObjectSummaries;
 }
