@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-11-13 - Roel Aaij
+ - Fix the regex used to find the xrootd host (port definition is optional).
+
 !========================= FileStager v1r4 2011-11-07 =========================
 ! 2011-10-27 - Roel Aaij
  - Add a timeout of a minute to waiting for the garbage collector to complete its
