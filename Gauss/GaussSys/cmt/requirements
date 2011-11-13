@@ -58,7 +58,7 @@ use GaussTools          v16r0     Sim
 use GaussRICH		v11r6     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r4	  Sim
-use GaussPhysics	v7r2	  Sim
+use GaussPhysics	v7r3	  Sim
 use GaussUMC            v1r1      Sim
 use GaussCherenkov      v1r1p1    Sim
 
