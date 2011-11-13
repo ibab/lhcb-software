@@ -88,9 +88,6 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
   declareProperty("RawEventLocation", m_inputRawEventLocation); 
 
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
 }
 
 StatusCode
@@ -105,6 +102,12 @@ ANNDispatchSvc::initialize(  )
   }
 
   verbose() << "==> Initialize" << endmsg;
+
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   if (!service("EventDataSvc", m_evtSvc).isSuccess()) { 
     fatal() << "ANNDispatchSvc failed to get the EventDataSvc." << endmsg;
@@ -165,6 +168,7 @@ void ANNDispatchSvc::faultHandler() const {
     
   //Decode the raw event to get the TCK from the raw Hlt DecReports
   unsigned int tck = 0;
+
   SmartDataPtr<LHCb::RawEvent> rawEvent(m_evtSvc, m_inputRawEventLocation); 
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
   for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {

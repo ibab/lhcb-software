@@ -48,7 +48,7 @@ HltRawDataMonitor::HltRawDataMonitor( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
-  declareProperty("InputRawEventLocation", m_inputRawEventLocation = LHCb::RawEventLocation::Default);
+  declareProperty("InputRawEventLocation", m_inputRawEventLocation ="");
   // <0 never 0=at finalize >0 event frequency
   declareProperty("DiagnosticsFrequency",  m_diagnosticsFrequency = 0);
 
@@ -75,6 +75,12 @@ StatusCode HltRawDataMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+
   m_hltANNSvc                = svc<IANNSvc>("ANNDispatchSvc");
 
   m_bankSize                 = book(100, "Size of HltSelReports Raw Bank (kB)", 0., 5., 500); 
@@ -95,9 +101,24 @@ StatusCode HltRawDataMonitor::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get inputs
-  if ( !exist<LHCb::RawEvent>(m_inputRawEventLocation) ) {
-    return Error(" No RawEvent at "+ m_inputRawEventLocation.value(), StatusCode::SUCCESS, 10 );
+ LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
+    }
   }
+ if( ! rawEvent ){
+    return Warning(" No RawEvent found at any location.");
+  }  
+
 
   ++m_event; // event counter
   StatusCode sc;

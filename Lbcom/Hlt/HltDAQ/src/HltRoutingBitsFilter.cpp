@@ -48,9 +48,6 @@ HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
   declareProperty("RequireMask", m_r = boost::assign::list_of(0xFFFF)(0xFFFF)(0xFFFF));
   declareProperty("RawEventLocation", m_inputRawEventLocation);
 
-  m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
 }
 //=============================================================================
@@ -70,6 +67,11 @@ StatusCode HltRoutingBitsFilter::initialize() {
   if (m_r.size()!=3) {
     return Error("Property RequireMask should contain exactly 3 unsigned integers");
   }
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -82,11 +84,23 @@ StatusCode HltRoutingBitsFilter::execute() {
   
   LHCb::RawEvent* rawEvent = 0;
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
     if (exist<LHCb::RawEvent>(*iLoc)) {
       rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
     }
-  }     
+  }
+  if( ! rawEvent ){
+    setFilterPassed(true);
+    return Error("No RawEvent found at any location",
+                 StatusCode::SUCCESS,0);
+  }  
 
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
   if (banks.size()!=1) {

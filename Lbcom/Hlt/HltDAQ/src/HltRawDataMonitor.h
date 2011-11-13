@@ -36,7 +36,10 @@ public:
   
 protected:
 
-  StringProperty                                                  m_inputRawEventLocation;
+  /// location of input
+  std::string m_inputRawEventLocation;
+  std::vector<std::string> m_rawEventLocations;
+
   // <0 never 0=at finalize >0 event frequency
   IntegerProperty                                                 m_diagnosticsFrequency;
 

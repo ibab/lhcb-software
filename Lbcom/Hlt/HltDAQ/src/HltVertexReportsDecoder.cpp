@@ -35,15 +35,15 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsDecoder )
 //=============================================================================
 HltVertexReportsDecoder::HltVertexReportsDecoder( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator ),
+  m_inputRawEventLocation(""),
+  m_hltANNSvc(0)
 {
 
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
   declareProperty("InputRawEventLocation",
-    m_inputRawEventLocation= LHCb::RawEventLocation::Default);
-
-  m_hltANNSvc = 0;
+                  m_inputRawEventLocation);  
 
 }
 //=============================================================================
@@ -58,6 +58,13 @@ StatusCode HltVertexReportsDecoder::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
   return sc;
 }
@@ -70,10 +77,25 @@ StatusCode HltVertexReportsDecoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get inputs
-  if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    return Error(" No RawEvent at "+m_inputRawEventLocation.value());
+  LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
+    }
+  }
+
+  if( ! rawEvent ){
+    return Error(" No RawEvent found at any location. No HltVertexReports created.");
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
+
 
   // create output container for vertex selections keyed with string and put it on TES
   HltVertexReports* outputSummary = new HltVertexReports();

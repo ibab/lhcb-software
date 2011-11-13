@@ -40,7 +40,8 @@ private:
   StringProperty m_outputHltVertexReportsLocation;
 
   /// location of input
-  StringProperty m_inputRawEventLocation;
+  std::string m_inputRawEventLocation;
+  std::vector<std::string> m_rawEventLocations;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  

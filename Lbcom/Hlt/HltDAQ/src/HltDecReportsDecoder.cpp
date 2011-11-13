@@ -91,14 +91,13 @@ StatusCode HltDecReportsDecoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-
-  m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -111,9 +110,16 @@ StatusCode HltDecReportsDecoder::execute() {
 
   LHCb::RawEvent* rawEvent = 0;
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
     if (exist<LHCb::RawEvent>(*iLoc)) {
       rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
     }
   }
 
@@ -121,6 +127,9 @@ StatusCode HltDecReportsDecoder::execute() {
   HltDecReports* outputSummary = new HltDecReports();
   put( outputSummary, m_outputHltDecReportsLocation );
 
+  if( ! rawEvent ){
+    return Error(" No RawEvent found at any location. Empty HltDecReports created. ");
+  }  
 
    // ----------------------------------------------------------
   // get the bank from RawEvent

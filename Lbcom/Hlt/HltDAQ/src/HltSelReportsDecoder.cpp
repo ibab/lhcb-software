@@ -44,17 +44,23 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsDecoder )
 //=============================================================================
 HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator ),
+    m_inputRawEventLocation(""),
+    m_hltANNSvc(0)
 {
 
   declareProperty("OutputHltSelReportsLocation",
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
-  declareProperty("InputRawEventLocation",
-    m_inputRawEventLocation= LHCb::RawEventLocation::Default);
-  declareProperty("HltDecReportsLocation",
-    m_HltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
-    m_hltANNSvc = 0;
+  declareProperty("InputRawEventLocation",
+                  m_inputRawEventLocation);  
+
+  // declareProperty("InputRawEventLocation",
+  //  m_inputRawEventLocation= LHCb::RawEventLocation::Default);
+
+  //      this is no longer used, left not break old configuration options
+  declareProperty("HltDecReportsLocation",
+		  m_HltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
 }
 //=============================================================================
@@ -71,6 +77,12 @@ StatusCode HltSelReportsDecoder::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   return StatusCode::SUCCESS;
@@ -85,10 +97,24 @@ StatusCode HltSelReportsDecoder::execute() {
 
 
   // get inputs
-  if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    return Error(" No RawEvent at "+ m_inputRawEventLocation.value());
+  LHCb::RawEvent* rawEvent = 0;
+  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
+    if (exist<LHCb::RawEvent>(*iLoc)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
+    }
+  }
+
+  if( ! rawEvent ){
+    return Error(" No RawEvent found at any location. No HltSelReports created.");
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
 
   // create output container and put it on TES
   HltSelReports* outputSummary = new HltSelReports();

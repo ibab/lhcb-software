@@ -40,7 +40,8 @@ private:
   StringProperty m_outputHltSelReportsLocation;
 
   /// location of input
-  StringProperty m_inputRawEventLocation;
+  std::string m_inputRawEventLocation;
+  std::vector<std::string> m_rawEventLocations;
 
   /// location of HltDecReports (will not be used unless ANNSvc not working) 
   StringProperty m_HltDecReportsLocation;

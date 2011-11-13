@@ -31,9 +31,6 @@ DECLARE_ALGORITHM_FACTORY( HltLumiWriter )
   declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
   declareProperty("RawEventLocation",m_inputRawEventLocation );
 
-  m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 }
 
 //=============================================================================
@@ -54,6 +51,12 @@ StatusCode HltLumiWriter::initialize() {
   m_totDataSize = 0;
   m_bank.reserve(20);
   m_bankType  = LHCb::RawBank::HltLumiSummary;
+
+  m_rawEventLocations.clear();
+  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
 
   return StatusCode::SUCCESS;
 }
@@ -82,11 +85,22 @@ StatusCode HltLumiWriter::execute() {
 
   LHCb::RawEvent* rawEvent = 0;
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() && rawEvent==0 ; ++iLoc ) {
+  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+    //    try RootInTES independent path first
+    if (exist<LHCb::RawEvent>(*iLoc, false)) {
+      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
+      break;
+    }
+    //   now try RootInTES dependent path
     if (exist<LHCb::RawEvent>(*iLoc)) {
       rawEvent = get<LHCb::RawEvent>(*iLoc);
+      break;
     }
   }
+ if( ! rawEvent ){
+    return Error(" No RawEvent found at any location.");
+  }  
+
 
   // set source, type, version
   rawEvent->addBank( 0, m_bankType, 0, m_bank );
