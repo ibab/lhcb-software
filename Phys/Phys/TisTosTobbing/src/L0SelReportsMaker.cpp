@@ -29,8 +29,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0SelReportsMaker );
-
+DECLARE_ALGORITHM_FACTORY( L0SelReportsMaker )
 
 //=============================================================================
 // Standard constructor, initializes variables

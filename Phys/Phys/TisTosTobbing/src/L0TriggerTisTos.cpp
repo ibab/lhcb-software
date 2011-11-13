@@ -18,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0TriggerTisTos );
-
+DECLARE_TOOL_FACTORY( L0TriggerTisTos )
 
 //=============================================================================
 // Standard constructor, initializes variables

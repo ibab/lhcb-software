@@ -207,7 +207,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
     if( p2lhcbids ){
       //      p2lhcbids->update(0); // temporary hack. Framework should do this automatically but isn't.
       const std::vector<LHCb::LHCbID> & hits = (*p2lhcbids)[&particle];
-      if( hits.size() ){
+      if ( !hits.empty() ){
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
         addToOfflineInput( hits );
@@ -215,7 +215,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
       }
     }
     const std::vector<const LHCb::Particle*> & daughters = particle.daughtersVector();
-    if( daughters.size() >0 ){
+    if ( !daughters.empty() ){
       for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
         if(*p){
           const LHCb::Particle & part = *(*p);
