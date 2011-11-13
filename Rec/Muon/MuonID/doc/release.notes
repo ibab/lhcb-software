@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2011-11-13 - J. Helder Lopes
+ - MuonPID objects are now saved only if track is InAcceptance, unless AllMuonTracks = True.
+
 !========================= MuonID v9r2 2011-11-08 =========================
 ! 2011-10-18 - J. Helder Lopes
  - Add additional info to Muon tracks using enums instead of hardcoded numbers.

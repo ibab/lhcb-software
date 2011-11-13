@@ -150,11 +150,11 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty("MuonIDLocation",
                   m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
 
-  // Destination of MuonPID
+  // Destination of MuonTracks
   declareProperty("MuonTrackLocation",
                   m_MuonTracksPath = LHCb::TrackLocation::Muon);
 
-  // Destination of MuonPID (all tracks)
+  // Destination of MuonTracks (all tracks)
   declareProperty("MuonTrackLocationAll",
                   m_MuonTracksPathAll = LHCb::TrackLocation::Muon+"/AllMuonTracks");
 
@@ -814,6 +814,10 @@ StatusCode MuonIDAlg::initialize() {
   m_tanhCumulHistoNonMuon.push_back(&m_tanhCumulHistoNonMuonR4);
 
 
+  counter("nGoodTracksForMuonID");
+  counter("nMuonPIDs");
+  counter("nInAcceptance");
+  counter("nMomentumPresel");
   counter("nIsMuonLoose");
   counter("nIsMuon");
   counter("nIsMuonTight");
@@ -1055,6 +1059,8 @@ StatusCode MuonIDAlg::execute() {
        ((*iTrack)->checkType(LHCb::Track::Long) ||
         ((*iTrack)->checkType(LHCb::Track::Ttrack) && m_useTtrack) ||
         (*iTrack)->checkType(LHCb::Track::Downstream))){
+ 
+     counter("nGoodTracksForMuonID")++;
 
       m_mutrack=LHCb::Track();
       
@@ -1096,6 +1102,15 @@ StatusCode MuonIDAlg::execute() {
         Warning(" doID failed for track ",StatusCode::SUCCESS,0).ignore();
         if (msgLevel(MSG::DEBUG) ) debug()<< " doID failed for track " << *iTrack << endmsg;
       }
+
+      // Save MuonPIDs only if track is in acceptance, unless DoAllMuonTracks is true
+      if(!m_DoAllMuonTracks && (!pMuid->InAcceptance())){
+        if (msgLevel(MSG::DEBUG) ) debug()<< " Track with key " << (*iTrack)->key() << " not in acceptance. Not saving MuonPID"  << endmsg;
+        delete pMuid;
+        continue;
+      }
+ 
+      counter("nMuonPIDs")++;
 
       pMuids->insert( pMuid, (*iTrack)->key() );
       if (msgLevel(MSG::DEBUG) ) debug()<< " added MuonPID object with key " << pMuid->key()  << endmsg;
@@ -1305,7 +1320,9 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
       debug() << " pMuid->PreSelMomentum()=" << pMuid->PreSelMomentum() << endmsg;
       debug() << " pMuid->InAcceptance()=" << pMuid->InAcceptance() << endmsg;
     }
-    
+
+    if(pMuid->InAcceptance())  counter("nInAcceptance")++;
+    if(pMuid->PreSelMomentum())  counter("nMomentumPresel")++;
 
     if(sc.isFailure()){
       if (msgLevel(MSG::DEBUG) ) debug() << " Track failed preselection " << endmsg;
@@ -1342,6 +1359,9 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
       if (msgLevel(MSG::DEBUG) ) debug()<<" preSelection failed to MuonPID object" << pMuid << endmsg;
       return sc;
     }
+
+    if(pMuid->InAcceptance())  counter("nInAcceptance")++;
+    if(pMuid->PreSelMomentum())  counter("nMomentumPresel")++;
 
     // OK: track failed preselection say so and return
     if(!passed){
