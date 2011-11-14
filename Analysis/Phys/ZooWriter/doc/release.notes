@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-11-14 - Manuel Tobias Schiller
+ - add Darwin/Mac OS X support to Rules.mk
+
+! 2011-11-14 - Manuel Tobias Schiller
  - fix non-working references to per-job objects as used for the ZooLoKiBlocks
    (the issue is that you have to take a TRef of an object before you write
    that object to a file, otherwise it's too late - taking a TRef of an object

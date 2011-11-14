@@ -102,6 +102,7 @@ TEST ?= test
 TRUE ?= true
 FALSE ?= false
 TOUCH ?= touch
+UNAME ?= uname
 
 # get compiler version(s) used to compile ROOT
 CC ?= $(shell $(ROOTCONFIG) --cc)
@@ -186,6 +187,7 @@ TEST := $(TEST)
 TRUE := $(TRUE)
 FALSE := $(FALSE)
 TOUCH := $(TOUCH)
+UNAME := $(UNAME)
 TUNEFLAG := $(TUNEFLAG)
 ROOTLIBDIR := $(ROOTLIBDIR)
 ROOTLIBS := $(ROOTLIBS)
@@ -206,7 +208,9 @@ CXXFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
 FFLAGS ?= $(PIPEFLAG) $(STDOPTFLAGS) $(TUNEFLAG) $(WARNFLAGS) \
 	  $(STDDEBUGFLAGS) $(FSTD)
 
-LDFLAGS += -rdynamic -Wl,-O3
+ifndef LDFLAGS
+LDFLAGS += -rdynamic
+endif
 # flags to link and produce shared libs
 SHFLAGS ?= -shared
 # flags needed to produce dependency files
@@ -227,6 +231,32 @@ CXXSTD ?= -std=gnu++98
 FSTD ?= -std=legacy -pedantic
 
 #######################################################################
+# OS/compiler specific flags
+#
+# the idea is that you can override values here which do not work
+# if you use some special OS/compiler (and not Linux/gcc/g++)
+#######################################################################
+# guess OS
+UNAME_SYS := $(shell $(UNAME) -s)
+# on Linux, we know how to optimize at link time, and we have a nice
+# and well-behaved /bin/echo
+ifeq ($(UNAME_SYS),Linux)
+TMPLINKOPT := -Wl,-O3
+ECHO := /bin/echo
+ECHOMSG := $(ECHO) -e
+ifeq ($(filter $(TMPLINKOPT),$(LDFLAGS)),)
+LDFLAGS += $(TMPLINKOPT)
+endif
+endif
+# echo on Darwin/MacOS X works a bit differently
+ifeq ($(UNAME_SYS),Darwin)
+ECHO := echo
+ifeq ($(COLORMAKE),YES)
+ECHOMSG := $(ECHO)
+endif
+endif
+
+#######################################################################
 # colorful make messages
 #
 # set COLORMAKE to anything but "YES" to get the default make behaviour
@@ -235,18 +265,11 @@ COLORMAKE ?= YES
 ifeq ($(COLORMAKE),YES)
 # we use our own rules, and want make a little less chatty
 MAKEFLAGS += -rs
-ECHOMSG := $(ECHO) -e
 else
 MAKEFLAGS += -r
+# no COLORMAKE - do not echo anything
 ECHOMSG := $(TRUE)
 endif
-
-#######################################################################
-# compiler specific flags
-#
-# the idea is that you can override values here which do not work
-# if you use some special compiler (and not gcc/g++ and friends)
-#######################################################################
 
 #######################################################################
 # export these variables to make subprocesses
@@ -264,9 +287,9 @@ export CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
 # ROOT libs, compiler flags etc
 export ROOTCONFIG ROOTLIBS ROOTLIBDIR ROOTINCLUDES ROOTCFLAGS LIBGENVECTOR
 # *nix like tools for text processing, copying/moving files etc.
-export AWK SED CPP CP MV MKDIR RMDIR TEST ECHO TRUE FALSE TOUCH
+export AWK SED CPP CP MV MKDIR RMDIR TEST ECHO TRUE FALSE TOUCH UNAME
 # communicate make(1) related options to subprocesses
-export MAKEFLAGS COLORMAKE
+export MAKEFLAGS COLORMAKE UNAME_SYS
 
 #######################################################################
 # collect source files in current directory
