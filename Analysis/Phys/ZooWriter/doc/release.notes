@@ -4,6 +4,16 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-14 - Manuel Tobias Schiller
+ - fix non-working references to per-job objects as used for the ZooLoKiBlocks
+   (the issue is that you have to take a TRef of an object before you write
+   that object to a file, otherwise it's too late - taking a TRef of an object
+   triggers the assignment of an object number, so if you write first, the
+   persistified object in the file will have an object number by which later
+   TRefs could refer to it)
+ - write a bunch of small routines for ZooEv which give access to per job
+   objects via their string keys
+
 ! 2011-11-13 - Manuel Tobias Schiller
  - merge in changes from
 

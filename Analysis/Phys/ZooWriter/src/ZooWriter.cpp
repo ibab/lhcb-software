@@ -21,6 +21,8 @@
 #include <boost/assign/list_of.hpp>
 
 #include <TProcessID.h>
+#include <TMap.h>
+#include <TObjString.h>
 
 #include "Event/ODIN.h"
 #include "Kernel/ITriggerTisTos.h" 
@@ -116,12 +118,12 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	static std::vector<std::string> o_treefit_names = base->m_treefit_names;
 	static std::vector<std::string> o_linkToList = base->m_linkToList;
 	static std::vector<std::string> o_linkFromList = base->m_linkFromList;
-  static std::vector<std::string> o_lokinames = base->m_lokinames;
+	static std::vector<std::string> o_lokinames = base->m_lokinames;
 
 	opttree->Branch( "InputCollections",     &o_sel_collections);
 	opttree->Branch( "DecayName" ,           &o_sel_names);
 	opttree->Branch( "WriteMC",              &base->m_writeMC);
-  opttree->Branch( "WriteMCtrees",         &base->m_writeMCtrees);
+	opttree->Branch( "WriteMCtrees",         &base->m_writeMCtrees);
 	opttree->Branch( "MCList",               &base->m_MCList);
 	opttree->Branch( "WriteDLL",             &base->m_writeDLL);
 	opttree->Branch( "IntelligentPV",        &base->m_intelligentPV);
@@ -167,10 +169,11 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	opttree->Branch( "MCAcceptanceNeutral",  &base->m_mcAcceptanceNeutral);
 	opttree->Branch( "MCAcceptanceMinCtau",  &base->m_mcAcceptanceMinCtau);
 
-  opttree->Branch( "LoKiFunctors",         &o_lokinames);
+	opttree->Branch( "LoKiFunctors",         &o_lokinames);
 
 	opttree->Fill();
 	opttree->Write();
+	opttree->Delete();
     }
     
     {
@@ -187,10 +190,12 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 		_1 ->* &TTree::Delete);
 	m_TperJob.swap(tperjob);
 	m_TperJob->SetDirectory(m_f);
-	m_T->AddFriend(&(*m_TperJob));
     }
+    // register the per job object tree as friend of the per event one
+    m_T->AddFriend(&*m_TperJob);
     {
-	boost::shared_ptr<ZooObjectManager> objman(new ZooObjectManager(*m_T, *m_TperJob));
+	boost::shared_ptr<ZooObjectManager> objman(
+		new ZooObjectManager(*m_T, *m_TperJob, m_evts));
 	m_objectManager.swap(objman);
     }
     {
@@ -214,18 +219,21 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	    i != m_sel.end(); ++i) {
 	m_T->Branch(i->name.c_str(),i->pref->Class()->GetName(),(void**)&(i->pref), 1 << 16, 99);
     }
+    // finish setting up the event tree
+    m_T->BranchRef();
     // set the basket size for all branches to 64 kbytes
     m_T->SetBasketSize("*", 1 << 16);
     // force flushing of buffers every 2^24 bytes (i.e. every 16 MB)
     m_T->SetAutoSave(1 << 24);
-    
-    // set up per job object tree
+    // branch ref for per-job tree as well
+    m_TperJob->BranchRef();
     m_TperJob->SetBasketSize("*", 1 << 16);
     m_TperJob->SetAutoSave(1 << 24);
-
+    // a pool for Track objects
     boost::shared_ptr<boost::object_pool<LHCb::Track> > trackpool(
 	    new boost::object_pool<LHCb::Track>());
     m_trackPool = trackpool;
+    // get ROOT object count
     m_objectCount = TProcessID::GetObjectCount();
     m_dirty = false;
     m_evts = 0;
@@ -266,13 +274,33 @@ void ZooWriter::ZooWriterContext::beginEvent()
     };
     if (m_dirty)
 	throw ZooWriterContextException("At most one incomplete event permitted!");
-    m_f->cd();
     if (0 == m_evts) {
 	// fill per job tree at the beginning of first event in job
-	//
+	m_f->cd();
+	// persistify mapping string - per job objects
+	TMap* map = new TMap;
+	map->SetOwnerKeyValue(kTRUE, kTRUE);
+	// the map is also a per-job object
+	objman()->zooPerJobObject("ZooPerJobObjects",
+		reinterpret_cast<TObject*>(map));
+	// set pointer to per job objects in ZooEv
+	m_pev->setPerJobObjects(map);
+	// fill map with references to per job variables
+	for (std::map<std::string, TObject*>::const_iterator
+		it = objman()->perJobObjMap().begin();
+		objman()->perJobObjMap().end() != it; ++it) {
+	    map->Add(new TObjString(it->first.c_str()), new TRef(it->second));
+	}
 	// save size so we have a chance to tell if people screw with the
 	// per-job object map afterwards
 	m_perJobMapSz = objman()->perJobObjMapSize();
+	// write out a branch for each registered per job object
+	for (std::map<std::string, TObject*>::const_iterator
+		it = objman()->perJobObjMap().begin();
+		objman()->perJobObjMap().end() != it; ++it) {
+	    m_TperJob->Branch(it->first.c_str(), it->second, 1 << 16, 99);
+	}
+	// fill the per-job object tree
 	m_TperJob->Fill();
 	m_TperJob->OptimizeBaskets();
     } else {
@@ -311,6 +339,8 @@ void ZooWriter::ZooWriterContext::endEvent()
     // optimize buffer sizes after first 250 events
     ++m_evts;
     if (250 == m_evts) m_T->OptimizeBaskets();
+    // make sure we stil are looking at the most recent per-job objects
+    m_TperJob->GetEntry(0); 
 }
 
 ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
@@ -478,21 +508,28 @@ StatusCode ZooWriter::initialize  ()
 		m_sel_collections.value(), m_sel_names.value(), this));
     m_ctx.swap(ctx);
 
-    LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory> ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC",this);
+    LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory>(
+	    "LoKi::Hybrid::Tool/HybridFactory:PUBLIC", this);
 
-    ZooStringToUIDTable* lokitable = dynamic_cast<ZooStringToUIDTable*>(
-	    objman()->zooPerJobObject<ZooStringToUIDTable>(
-		std::string("ZooLoKiBlockUIDTable"),
-		ZooStringToUIDTable(m_lokinames.value())));
+    objman()->zooPerJobObject<ZooStringToUIDTable>(
+	    std::string("ZooLoKiBlockUIDTable"),
+	    ZooStringToUIDTable(m_lokinames.value()));
+    ZooStringToUIDTable* lokitable =
+	static_cast<ZooStringToUIDTable*>(
+		objman()->zooPerJobObject(std::string("ZooLoKiBlockUIDTable")));
     BOOST_FOREACH(const std::string& funname, m_lokinames.value()) {
-      LoKi::PhysTypes::Fun thisloki( LoKi::BasicFunctors<const LHCb::Particle*>::Constant ( -1.e+10 ) );
-      factory->get(funname,thisloki, preambulo());
+      LoKi::PhysTypes::Fun functor(
+	      LoKi::BasicFunctors<const LHCb::Particle*>::Constant(
+		  std::numeric_limits<double>::quiet_NaN()));
+      if (factory->get(funname, functor, preambulo()).isFailure()) {
+	  warning() << "Unable to create LoKi functor '" << funname <<
+	      "', ignoring this one..." << std::endl;
+	  continue;
+      }
       UInt_t hash = lokitable->hash(funname);
-      m_lokifuns.push_back(std::make_pair(hash,thisloki));
+      m_lokifuns.push_back(std::make_pair(hash, functor));
     }
-    //ZooStringToUIDTable* lokitable = new ZooStringToUIDTable(m_lokinames.value());
     release(factory);
-
 
     return StatusCode::SUCCESS;
 }
@@ -511,26 +548,27 @@ StatusCode ZooWriter::finalize()
 
 ZooWriter::~ZooWriter () { }
 
-void ZooWriter::addLoKi(ZooP* p,const LHCb::Particle* part) {
+void ZooWriter::addLoKi(ZooP* p,const LHCb::Particle* part)
+{
+    if (m_lokifuns.empty()) return;
 
-    ZooStringToUIDTable* table = dynamic_cast<ZooStringToUIDTable*>(objman()->zooPerJobObject(std::string("ZooLoKiBlockUIDTable")));
-
+    ZooStringToUIDTable* table = static_cast<ZooStringToUIDTable*>(
+	    objman()->zooPerJobObject(std::string("ZooLoKiBlockUIDTable")));
     ZooLoKiBlock::KeyValueVector eivector;
     eivector.reserve(m_lokifuns.size());
     for (unsigned i = 0 ; i < m_lokifuns.size() ; ++i) {
-      float val = m_lokifuns[i].second(part);
-      eivector.push_back(std::make_pair(m_lokifuns[i].first,Float_t(val)));
+	const float val = m_lokifuns[i].second(part);
+	if (std::isnan(val)) continue;
+	eivector.push_back(std::make_pair(m_lokifuns[i].first, Float_t(val)));
     }
 
     ZooLoKiBlock*& loki = objman()->getOrCreateMappingFor<ZooLoKiBlock>(part);
-    if (loki)
-      p->AssignInfo<ZooLoKiBlock>(loki);
-    else {
-      loki = p->AddInfo<ZooLoKiBlock>(*objman(),
-            ZooLoKiBlock(*table,eivector));
+    if (loki) {
+	loki->insert(eivector.begin(), eivector.end());
+    } else {
+	loki = p->AddInfo<ZooLoKiBlock>(*objman(),
+		ZooLoKiBlock(*table, eivector));
     }
-
-
 }
 
 StatusCode ZooWriter::execute()

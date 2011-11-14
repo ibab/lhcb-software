@@ -13,6 +13,9 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 
+#include <TObjString.h>
+#include <TMap.h>
+
 const ZooHitPattern& ZooHitPattern::operator |= (const ZooHitPattern& other)
 {
     m_veloAR |= other.m_veloAR;
@@ -110,6 +113,17 @@ ZooHitPattern ZooHitPattern::complement() const
     p.m_tt = ~m_tt;
     p.m_muon = ~m_muon;
     return p;
+}
+
+TObject* ZooEv::perJobObject(const std::string& key) const
+{
+    // get map
+    TMap* map = reinterpret_cast<TMap*>(m_perJobObjects.GetObject());
+    if (!map) return 0;
+    TObjString okey(key.c_str());
+    TRef* objref = reinterpret_cast<TRef*>(map->GetValue(&okey));
+    if (!objref) return 0;
+    return objref->GetObject();
 }
 
 ZooP::~ZooP() { }

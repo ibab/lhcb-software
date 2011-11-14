@@ -20,28 +20,26 @@ template<unsigned i> class Initializer
 template<> class Initializer<0u>
 { public: template<typename T> Initializer(const T&) { } };
 
-ZooObjectManager::ZooObjectManager(TTree& tree, TTree& perjobtree) :
+ZooObjectManager::ZooObjectManager(TTree& tree, TTree& perjobtree,
+	const unsigned long& nevts) :
     m_objects(new TObjArray(ZooObjectID::maxid)),
-    m_perJobMap(new TMap())
+    m_nevts(nevts)
 {
-    // make sure auto-loading references on demand works
-    tree.BranchRef();
     m_objects->SetOwner(kTRUE);
-    m_perJobMap->SetOwner(kTRUE);
     // add TClonesArrays for each type of Zoo object
     Initializer<ZooObjectID::maxid> dummy(*m_objects);
-    // register Zoo objects with tree
-    tree.Branch(m_objects, 1 << 16, 99, "ZooObjBank");
 
-    // same for per-object tree
-    perjobtree.BranchRef();
-    perjobtree.Branch(m_perJobMap, 1 << 16, 99, "ZooPerJobObjects");
+    tree.Branch(m_objects, 1 << 16, 99, "ZooObjBank");
 }
 
 ZooObjectManager::~ZooObjectManager()
 {
+    for (std::map<std::string, TObject*>::const_iterator
+	    it = m_perJobMap.begin(); m_perJobMap.end() != it; ++it) {
+	it->second->Delete();
+    }
+    m_perJobMap.clear();
     Clear();
-    m_perJobMap->Clear();
     delete m_objects;
 }
 
@@ -57,27 +55,18 @@ void ZooObjectManager::Clear()
 
 TObject* ZooObjectManager::zooPerJobObject(const std::string& str, TObject* obj)
 {
-    TObjString *tstr = new TObjString(str.c_str());
-    TPair* oldobjpair = reinterpret_cast<TPair*>(
-	    m_perJobMap->FindObject(reinterpret_cast<TObject*>(tstr)));
-    TObject* oldobj = 0;
-    if (oldobjpair) {
-	// ok, object exists...
-	oldobj = oldobjpair->Value();
-	// return cloned value (if non-zero), since m_perJobMap owns objects 
-	if (oldobj) oldobj = oldobj->Clone();
-	m_perJobMap->Remove(reinterpret_cast<TObject*>(tstr));
-    }
-    m_perJobMap->Add(reinterpret_cast<TObject*>(tstr), obj);
-    return oldobj;
+    // disallow changes after the first event has started
+    if (m_nevts) return 0;
+    // do our work
+    TObject*& tmpobj = m_perJobMap[str];
+    std::swap(tmpobj, obj);
+    return obj;
 }
 
 TObject* ZooObjectManager::zooPerJobObject(const std::string& str) const
 {
-    TObjString tstr(str.c_str());
-    TPair* oldobjpair = reinterpret_cast<TPair*>(
-	    m_perJobMap->FindObject(reinterpret_cast<TObject*>(&tstr)));
-    return oldobjpair ? oldobjpair->Value() : reinterpret_cast<TObject*>(0);
+    if (m_perJobMap.end() == m_perJobMap.find(str)) return 0;
+    return m_perJobMap.find(str)->second;
 }
 
 ZooObjClonesArray::~ZooObjClonesArray() { }

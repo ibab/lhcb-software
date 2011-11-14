@@ -296,8 +296,7 @@ class ZooStringValueBlock::ZooStringValueBlockException :
     public:
 	/// constructor
 	ZooStringValueBlockException(const char* what) throw() :
-	    m_what(what)
-    { }
+	    m_what(what) { }
 	/// destructor
 	virtual ~ZooStringValueBlockException() throw() { }
 	/// return a C style string describing what went wrong

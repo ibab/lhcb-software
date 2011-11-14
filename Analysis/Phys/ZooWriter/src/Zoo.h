@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <utility>
+#include <string>
 
 #include <TObject.h>
 #include <TObjArray.h>		// per default, does not own its contents
@@ -49,6 +50,7 @@
 
 typedef ROOT::Math::PxPyPzEVector     zooLorentzVector; 
 typedef ROOT::Math::XYZPoint          XYZPoint;
+class TMap;
 
 /** @class ZooStable
  *    \brief Stable (tracked) particles information
@@ -1126,6 +1128,8 @@ class ZooEv : public TObject
 
 	Short_t m_polarity;
 
+	TRef m_perJobObjects;
+
 	friend class ZooWriter;
 
  public:
@@ -1233,7 +1237,13 @@ class ZooEv : public TObject
 
 	int polarity() const { return m_polarity; }
 
-	ClassDef(ZooEv,9)
+	/// access per-job objects by their key
+	TObject* perJobObject(const std::string& key) const;
+	/// set map of per-job objects 
+	void setPerJobObjects(TMap* perJobObjMap)
+	{ m_perJobObjects = reinterpret_cast<TObject*>(perJobObjMap); }
+
+	ClassDef(ZooEv,10)
 };
 
 
