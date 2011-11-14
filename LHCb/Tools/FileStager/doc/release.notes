@@ -6,6 +6,7 @@
 
 ! 2011-11-13 - Roel Aaij
  - Fix the regex used to find the xrootd host (port definition is optional).
+ - Allow dashes in filenames when matching a descriptor.
 
 !========================= FileStager v1r4 2011-11-07 =========================
 ! 2011-10-27 - Roel Aaij

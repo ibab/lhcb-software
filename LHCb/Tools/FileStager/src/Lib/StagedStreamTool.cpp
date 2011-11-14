@@ -47,7 +47,7 @@ StagedStreamTool::StagedStreamTool( const std::string& type,
    m_catalog = 0;
 
    m_regex.assign( "(?:DATA(?:FILE)?)='((?:((?:PFN)|(?:LFN)):)"
-                   "((?:\\w+:)*/{0,2}[a-zA-Z0-9_/:?&\\.=]+))'" );
+                   "((?:\\w+:)*/{0,2}[a-zA-Z0-9_/:?&\\.=\\-]+))'" );
    declareProperty( "CatalogSvc", m_catalogSvc = "Gaudi::MultiFileCatalog/FileCatalog" );
 }
 
