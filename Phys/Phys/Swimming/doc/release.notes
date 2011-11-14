@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-11-14 - Roel Aaij
+ - Fix another wrong usage of operator[] to access by index.
+
 !====================== Phys/Swimming v2r3 2011-11-03 =======================
 
 ! 2011-11-11 - Roel Aaij

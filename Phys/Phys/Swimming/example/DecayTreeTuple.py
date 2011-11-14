@@ -102,4 +102,4 @@ if mDST:
     ## IOHelper().inputFiles(['/castor/cern.ch/user/r/raaij/test/Swimming.SwimmingMicroDST.mdst'])
     IOHelper().inputFiles(['Swimming.SwimmingMDST.mdst'])
 else:
-    IOHelper().inputFiles(['/castor/cern.ch/user/r/raaij/test/SwimTrigDST.dst'])
+    IOHelper().inputFiles(['/project/bfys/raaij/cmtuser/Moore_v12r8/scripts/SwimTrigDST.dst'])
