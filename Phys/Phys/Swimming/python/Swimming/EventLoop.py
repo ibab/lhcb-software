@@ -176,6 +176,8 @@ def SwimmingEventLoop(gaudi, nEvents):
                 break
 
         odin = TES['/Event/DAQ/ODIN']
+        if DEBUGMODE :
+            print "Processing %d %d" % (odin.runNumber(), odin.eventNumber())
         if not swimStripping and \
                odin.triggerConfigurationKey() != int(Swimming().getProp('TCK'), 16):
             print "WARNING, TCK 0x%08x does not match configured TCK %s, skipping event." \
@@ -229,7 +231,7 @@ def SwimmingEventLoop(gaudi, nEvents):
             # fill the corresponding event variables for it 
             # Note that this function call also executes the stripping algorithm
             # having moved the primary vertices around first
-            runSwimmingStep(myGlobs,swimLoop)
+            runSwimmingStep(myGlobs, mycand, swimLoop)
 
             # Now get the trigger decision for this swimming step
             HltDec = evaluateTisTos(myGlobs,mycand)

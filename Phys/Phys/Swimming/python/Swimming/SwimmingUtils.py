@@ -96,15 +96,15 @@ def getcandpropertimeinfo(myGlobs,mycand):
 #
 #
 #Move the PV, for swimming the stripping
-def movePVs(myGlobs,mycand,swimLoop) :
+def movePVs(myGlobs, mycand, swimLoop) :
     if myGlobs.DEBUGMODE :
         print "Old PV positions are"
         for PV in myGlobs.TES[myGlobs.offlinePVs] :
             print PV
     for PV in myGlobs.TES[myGlobs.offlinePVs]:
-        PV.position().SetX(PV.position().X() + swimLoop*mycand.slopes().Unit().X())
-        PV.position().SetY(PV.position().Y() + swimLoop*mycand.slopes().Unit().Y())
-        PV.position().SetZ(PV.position().Z() + swimLoop*mycand.slopes().Unit().Z())    
+        PV.position().SetX(PV.position().X() + swimLoop * mycand.slopes().Unit().X())
+        PV.position().SetY(PV.position().Y() + swimLoop * mycand.slopes().Unit().Y())
+        PV.position().SetZ(PV.position().Z() + swimLoop * mycand.slopes().Unit().Z())    
     if myGlobs.DEBUGMODE :
         print "New PV positions are"
         for PV in myGlobs.TES[myGlobs.offlinePVs] :
@@ -114,17 +114,17 @@ def movePVs(myGlobs,mycand,swimLoop) :
 #
 #                
 #
-def runSwimmingStep(myGlobs,swimLoop) :
+def runSwimmingStep(myGlobs, mycand, swimLoop):
     myGlobs.TES["/Event/Rec/ProtoP/Charged"]
     myGlobs.TES["/Event/Rec/ProtoP/Neutrals"]
     myGlobs.TES[myGlobs.offlinePVs]
-    if myGlobs.swimStripping :
+    if myGlobs.swimStripping:
         myGlobs.incidentSvc.fireIncident(myGlobs.GaudiPython.gbl.Incident("VavaIncident","EndEvent"))
         myGlobs.gaudi.executeEvent()
         myGlobs.gaudi.algorithm("killStrippingSeq").execute()
-        if myGlobs.DEBUGMODE :
+        if myGlobs.DEBUGMODE:
             "About to move the PVs for the stripping"
-        movePVs(myGlobs,myGlobs.TES[myGlobs.offCands+'/Particles'][0],swimLoop)
+        movePVs(myGlobs, mycand, swimLoop)
         myGlobs.gaudi.algorithm("StrippingGlobal").execute()
     else :
         myGlobs.incidentSvc.fireIncident(myGlobs.GaudiPython.gbl.Incident("VavaIncident","EndEvent"))
