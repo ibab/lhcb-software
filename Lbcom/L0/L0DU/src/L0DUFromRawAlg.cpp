@@ -72,7 +72,9 @@ StatusCode L0DUFromRawAlg::execute() {
     return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
   if ( m_fromRaw->_setProperty("StatusOnTES",Gaudi::Utils::toString(m_statusOnTES)).isFailure() )
     return Error("Unable to set StatusOnTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
-
+  if ( m_fromRaw->_setProperty("UseRootInTES",Gaudi::Utils::toString(m_useRootInTES)).isFailure() )
+    return Error("Unable to set UseRootInTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
+  
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
 
   // L0DUReport on TES

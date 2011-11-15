@@ -111,6 +111,8 @@ private:
   std::vector<unsigned int> m_dump;
   int m_dumping;
   int m_count;
+  bool m_useRootInTES;
+  
 };
 #endif // L0DUFROMRAWTOOL_H
 

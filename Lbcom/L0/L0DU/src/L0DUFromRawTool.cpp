@@ -48,6 +48,8 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "Emulate"                 , m_emu  = true);    // EXPERT USAGE
   declareProperty( "StatusOnTES"             , m_stat = true);    // EXPERT USAGE
   declareProperty( "DumpBank"                , m_dumping = -1);   // EXPERT USAGE
+  declareProperty( "UseRootInTES"            , m_useRootInTES = true);
+  
 }
 //=============================================================================
 // Destructor
@@ -64,9 +66,24 @@ StatusCode L0DUFromRawTool::initialize(){
 
 
    //
-   m_slot = ( rootInTES() == "" ) ? "T0" : rootInTES();
-
-
+   //m_slot = ( rootInTES() == "" ) ? "T0" : rootInTES();
+   if ( (rootInTES() == "Prev7/") ||\
+        (rootInTES() == "Prev6/") ||\
+        (rootInTES() == "Prev5/") ||\
+        (rootInTES() == "Prev4/") ||\
+        (rootInTES() == "Prev3/") ||\
+        (rootInTES() == "Prev2/") ||\
+        (rootInTES() == "Prev1/") ||\
+        (rootInTES() == "Next1/") ||\
+        (rootInTES() == "Next2/") ||\
+        (rootInTES() == "Next3/") ||\
+        (rootInTES() == "Next4/") ||\
+        (rootInTES() == "Next5/") ||\
+        (rootInTES() == "Next6/") ||\
+        (rootInTES() == "Next7/") )
+     m_slot =rootInTES();
+   else 
+     m_slot ="T0";
 
    if(!m_encode)m_emu = false;
   // get the configuration provider tool
@@ -124,17 +141,18 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
   std::string loc = "";
-  if( exist<LHCb::RawEvent>( m_rawLocation , IgnoreRootInTES) ) // get rawEvent from user-defined location
+  if( exist<LHCb::RawEvent>( m_rawLocation , m_useRootInTES) ) // get rawEvent from user-defined location
     loc = m_rawLocation;
 
   // if not : complain
   if( "" == loc){
-    Warning("rawEvent not found in  '" + m_rawLocation +"'",StatusCode::SUCCESS).ignore();
+    Warning("rawEvent not found in  '" + m_rawLocation +"' (use RootInTES ? "+Gaudi::Utils::toString(m_useRootInTES)+")",
+            StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      
   
-  rawEvt= get<LHCb::RawEvent>( loc , IgnoreRootInTES);
+  rawEvt= get<LHCb::RawEvent>( loc , m_useRootInTES);
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
 

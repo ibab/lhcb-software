@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-11-14 - Julien Cogan
+ - L0DUFromRaw : add possibility to use rootIInTES using recently added 
+ flag in L0FromRawBase (m_useRootInTES)
+
 ! 2011-11-08 - Julien Cogan
  - L0DUFromRaw : configure the raw event location using the
  new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when
