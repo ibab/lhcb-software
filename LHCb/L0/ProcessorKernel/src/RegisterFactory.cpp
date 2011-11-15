@@ -8,6 +8,7 @@ static int s_sel=0;
 L0Muon::RegisterFactory::RegisterFactory() {
 
   m_found =0;
+  m_filledFromXML = false;
 
 }
 
@@ -233,6 +234,8 @@ void L0Muon::RegisterFactory::fromXML(DOMNode* pNode){
   XMLString::release(&REGISTER     );
   XMLString::release(&TILEREGISTER );
   XMLString::release(&REGISTERALIAS);
+  
+  m_filledFromXML = true;
 
 } 
 

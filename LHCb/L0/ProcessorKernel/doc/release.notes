@@ -4,6 +4,10 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2011-11-15 - Julien Cogan
+ - Add flag to indicate whether a registerfactory has already been build from
+ xml or not. Needed to allow several instances of the L0Muon decoding.
+
 !========================= ProcessorKernel v6r1 2010-11-27 =========================
 ! 2010-11-15 - Julien Cogan
  - Fix windows error (misuse of pow)

@@ -93,6 +93,8 @@ namespace L0Muon {
                       boost::dynamic_bitset<> *tilestag, 
                       boost::dynamic_bitset<> *stripstag);
 
+    /// Flag indicating is the factory has already been filled from the xml file
+    bool filledFromXML() { return m_filledFromXML ; }
 
   private:
 
@@ -106,6 +108,7 @@ namespace L0Muon {
 
     std::map<std::string,Register*> m_registers;    // registers repository    
     bool m_found;
+    bool m_filledFromXML;
   };
 
 };  // namespace L0Muon
