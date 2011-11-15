@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-15 - Chris Jones
+ - Tidy up the TisTos tool a bit
+
 ! 2011-11-11 - Patrick Koppenburg
  - TupleToolDecayTreeFitter : more verbose printout
 
