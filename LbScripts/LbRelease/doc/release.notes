@@ -1,3 +1,10 @@
+2011-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease/python/LbRelease/rcs.py: improved support for branches (in Subversion)
+	* LbRelease/scripts/svnpath: minor changes to adapt to latest rcs module
+	* LbRelease/scripts/tag_package: added support for tagging from branches,
+	tagging of projects and implicit versions (from requirements)
+
 2011-10-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease/python/LbRelease/SvnChecker/StdCheckers.py: extended version format, allow 'gX'

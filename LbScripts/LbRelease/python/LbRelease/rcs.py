@@ -194,7 +194,7 @@ class RevisionControlSystem(object):
         """
         pass
 
-    def tag(self, module, version, isProject = False):
+    def tag(self, module, version, isProject = False, from_branch = None):
         """
         Create a tag for the given module.
         Retursn the error code of the underlying command.
@@ -396,7 +396,7 @@ class CVS(RevisionControlSystem):
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
 
-    def tag(self, module, version, isProject = False):
+    def tag(self, module, version, isProject = False, from_branch = None):
         """
         Create a tag for the given module.
         """
@@ -787,6 +787,18 @@ class SubversionCmd(RevisionControlSystem):
                 versions = [ v[:-1] for v in versions ] # remove trailing "/" and convert to list
                 return versions
 
+    def isTag(self, module, version, isProject):
+        """
+        Returns true if the specified version exists and refers to a tag.
+        """
+        return self._exists(self.url(module, version, isProject, branch=False))
+
+    def isBranch(self, module, version, isProject):
+        """
+        Returns true if the specified version exists and refers to a branch.
+        """
+        return self._exists(self.url(module, version, isProject, branch=True))
+
     def hasVersion(self, module, version, isProject = False):
         """
         Check if the specified 'version' is available for the package.
@@ -802,7 +814,7 @@ class SubversionCmd(RevisionControlSystem):
             return True
         return super(SubversionCmd, self).hasVersion(module, version, isProject)
 
-    def _computePaths(self, module, version, isProject = False, vers_dir = False, global_tag = False):
+    def _computePaths(self, module, version, isProject = False, vers_dir = False, global_tag = False, branch = False):
         """
         Return the URL to the requested version of the module and the (relative)
         path that should be used for the check out.
@@ -834,10 +846,10 @@ class SubversionCmd(RevisionControlSystem):
                 if not isProject:
                     src.append(module)
             else:
-                src = [root, "tags", module, versiondir]
-                if self.useBranches and not self._exists("/".join(src)):
-                    # fall back on branches if we are using them
-                    src = [root, "branches", module, versiondir]
+                sub = "tags"
+                if branch:
+                    sub = "branches"
+                src = [root, sub, module, versiondir]
             if isProject and not global_tag: # for projects we check-out only the cmt directory
                 src.append("cmt")
             src = "/".join([self.repository] + src)
@@ -894,11 +906,11 @@ class SubversionCmd(RevisionControlSystem):
         return prj_paths
 
 
-    def url(self, module, version = "trunk", isProject = False):
+    def url(self, module, version = "trunk", isProject = False, branch = False):
         """
         Return the full URL to the module in the repository.
         """
-        return self._computePaths(module, version, isProject)[0]
+        return self._computePaths(module, version, isProject, branch=branch)[0]
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
                  project = False, eclipse = False, global_tag = False):
@@ -921,6 +933,7 @@ class SubversionCmd(RevisionControlSystem):
         # (this implies a check on the existence of the module)
         if not self.hasVersion(module, version, project):
             raise RCSUnknownVersionError(module, version)
+        branch = self.isBranch(module, version, project)
 
         if dest: # prepare destination directory
             if not os.path.isdir(dest):
@@ -932,7 +945,7 @@ class SubversionCmd(RevisionControlSystem):
         # workspace (i.e. exists(<dest>/../.metadata) or if we are asked explicitly
         eclipse = eclipse or exists(join(dirname(abspath(dest)), ".metadata"))
 
-        src, dst = self._computePaths(module, version, project, vers_dir, global_tag)
+        src, dst = self._computePaths(module, version, project, vers_dir, global_tag, branch=branch)
 
         # Check if we can do an advanced (eclipse-friendly checkout)
         # - first prepare the top level directory if needed
@@ -940,7 +953,7 @@ class SubversionCmd(RevisionControlSystem):
             if eclipse and not exists(join(dest, ".svn")):
                 # there is no svn directory, make a checkout of the project
                 # containing the package
-                psrc, _ = self._computePaths(self.modules[module], "trunk", isProject = True)
+                psrc, _ = self._computePaths(self.modules[module], "trunk", isProject=True)
                 psrc = psrc.rsplit("/", 1)[0] # _computePaths return the path to cmt for projects
                 _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
                 # top level directory ready
@@ -983,7 +996,7 @@ class SubversionCmd(RevisionControlSystem):
             # create version.cmt file
             self._create_vers_cmt(join(dest, module), version)
 
-    def tag(self, module, version, isProject = False):
+    def tag(self, module, version, isProject=False, from_branch=None):
         """
         Create a tag for the given module.
         """
@@ -991,10 +1004,11 @@ class SubversionCmd(RevisionControlSystem):
             raise RCSError("tag not implemented for Subversion repositories with "
                            "version < 2.0 (current version %s)" % self.repositoryVersion)
         self._assertModule(module, isProject)
-        trunkUrl = self.url(module, "trunk", isProject)
+        branch = from_branch or "trunk"
+        srcUrl = self.url(module, branch, isProject, from_branch)
         versionUrl = self.url(module, version, isProject)
         msg = "Tagging %s %s as %s" % ({True: "project",
-                                        False: "package"}[isProject],
+                                        False: "package"}[bool(isProject)],
                                        module, version)
         if isProject: # check if the
             versdir = versionUrl.rsplit("/", 1)[0] # strip the trailing '/cmt'
@@ -1002,7 +1016,7 @@ class SubversionCmd(RevisionControlSystem):
                 _svn("mkdir", "--parents", "-m", msg, versdir)
                 # ignore errors
         _, _, retcode = _svn("copy", "-m", msg,
-                             trunkUrl, versionUrl, stdout = None, stderr = None)
+                             srcUrl, versionUrl, stdout = None, stderr = None)
         return retcode
 
     def _updatePath(self, pth, root_dir):
@@ -1094,7 +1108,12 @@ class SubversionCmd(RevisionControlSystem):
         file of the module for the requested version (in the repository).
         """
         self._assertModule(module, isProject = False)
-        url = self.url(module, version, isProject = False)
+        if version is None:
+            version = "trunk"
+            branch = False
+        else:
+            branch = self.isBranch(module, version, isProject=False)
+        url = self.url(module, version, isProject=False, branch=branch)
         url += "/cmt/requirements"
         out, _, _ = _svn("cat", url, stderr = None)
         return out

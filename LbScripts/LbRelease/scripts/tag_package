@@ -7,7 +7,7 @@ from LbConfiguration.Repository import getRepositories
 
 class TagPackage(Script):
     def __init__(self):
-        Script.__init__(self, usage = "%prog [options] package/project version",
+        Script.__init__(self, usage = "%prog [options] (package [version]|project version)",
                               description = "script to easily tag a package or a project "
                                             "in the LHCb Subversion or CVS repositories")
         self._repos = None
@@ -33,6 +33,8 @@ class TagPackage(Script):
                                help = "tag a project instead of a package")
         #self.parser.add_option("--dry-run", action = "store_true",
         #                       help = "show the command that would be run, but not call it")
+        self.parser.add_option("-B", "--from-branch", action = "store",
+                               help = "branch to be used as a starting point for the tag")
         self.parser.set_defaults(exclude = [],
                                  user_svn = [],
                                  user_cvs = [],
@@ -64,14 +66,22 @@ class TagPackage(Script):
         """
         Main function of the script.
         """
-        if len(self.args) != 2:
+        try:
+            # the module name is always mandatory
+            self.module = self.args[0]
+            # the version is mandatory only for projects
+            if self.options.project or (len(self.args) > 1):
+                self.version, = self.args[1:] # in this way we ensure no extra arguments
+        except:
+            # an exception in the code above means that the argument count is wrong
             self.parser.error("Wrong number of arguments. Use -h for more information.")
-        self.module, self.version = self.args
+
         if self.options.project:
             self.modtype = "project"
 
-        # Check the format of the version/tag
-        if not self.isValidVersion():
+
+        # Check the format of the version/tag (if it was specified)
+        if self.version and not self.isValidVersion():
             if not self.options.force:
                 self.log.error("Tag '%s' is not standard. You may want to use --force.", self.version)
                 return 1
@@ -84,27 +94,46 @@ class TagPackage(Script):
             self.log.error("Cannot find the %s '%s', check the name.", self.modtype, self.module)
             return 1
 
-        declared_version = repos.getDeclaredVersion(self.module)
-        if declared_version is None:
-            if self.options.project:
-                self.log.warning("The requirements file of the package '%s' does not contain the version", self.module)
-                
-        elif declared_version != self.version:
-            if not self.options.force:
-                self.log.error("The requirements file of the package '%s' declares version '%s' "
-                               "(requested '%s'). You may want to use --force.", self.module, declared_version, self.version)
-                return 1
-            else:
-                self.log.warning("Ignoring the version declared in the requirements file (%s)", declared_version)
+        # Enable the support of branches, if needed
+        repos.useBranches = self.options.from_branch
+
+        if not self.options.project: # Check the version in the requirements only for packages
+            declared_version = repos.getDeclaredVersion(self.module, self.options.from_branch)
+            if declared_version is None:
+                msg = ("The requirements file of the package '%s' does not contain the version", self.module)
+                if self.version:
+                    apply(self.log.warning, msg)
+                else:
+                    apply(self.log.error, msg)
+                    return 1
+
+            elif self.version:
+                if declared_version != self.version:
+                    if not self.options.force:
+                        self.log.error("The requirements file of the package '%s' declares version '%s' "
+                                       "(requested '%s'). You may want to use --force.", self.module, declared_version, self.version)
+                        return 1
+                    else:
+                        self.log.warning("Ignoring the version declared in the requirements file (%s)", declared_version)
+            else: # version not specified and we found one in the requirements
+                self.version = declared_version
+                if not self.isValidVersion():
+                    if not self.options.force:
+                        self.log.error("Tag '%s' (in requirements) is not standard. You may want to use --force.", self.version)
+                        return 1
+                    else:
+                        self.log.warning("Ignoring malformed tag '%s' (from requirements)", self.version)
+                print "Using tag '%s' from requirements" % self.version
 
         # Check if the tag is already present
-        if repos.hasVersion(self.module, self.version):
-            self.log.error("The package '%s' has got already the tag '%s'. Remove it first.", self.module, self.version)
+        if repos.hasVersion(self.module, self.version, self.options.project):
+            self.log.error("The %s '%s' has got already the tag '%s'. Remove it first.",
+                           self.modtype, self.module, self.version)
             return 1
 
-        retcode = repos.tag(self.module, self.version)
+        retcode = repos.tag(self.module, self.version, self.options.project, self.options.from_branch)
         if retcode:
-            self.log.error("Tagging of the package failed (return code %d)", retcode)
+            self.log.error("Tagging of the %s failed (return code %d)", self.modtype, retcode)
         return retcode
 
 

@@ -70,7 +70,8 @@ class SubversionPath(Script):
         paths = []
         for tag in self.tags:
             if repos.hasVersion(module, tag, project):
-                p = repos.url(module, tag, project)
+                branch = repos.isBranch(module, tag, project)
+                p = repos.url(module, tag, project, branch)
                 if project and p.endswith("/cmt"): # special case for projects
                     p = p[:-4]
                 paths.append(p)
