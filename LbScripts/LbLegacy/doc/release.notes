@@ -1,3 +1,7 @@
+2011-11-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed name of the Update or PostInstall script.
+
 2011-11-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added protection to the getCached function to avoid looking for

@@ -429,7 +429,7 @@ def registerProjectCommand(pack_ver, flavor="PostInstall"):
             pkg = getCachedPackageConf(p_name)
             if pkg :
                 cmtcontainer = os.path.join(pack_ver[3], "cmt")
-                postscr = os.path.join(cmtcontainer, "PostInstall.py")
+                postscr = os.path.join(cmtcontainer, postscr_name)
         if postscr and os.path.exists(postscr) :
             if flavor == "PostInstall" :
                 registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
