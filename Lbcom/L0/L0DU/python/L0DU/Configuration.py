@@ -20,6 +20,7 @@ class L0Conf(LHCbConfigurableUser) :
     __slots__ = {
         # Properties
          "RawEventLocations" : []
+        ,"RootInTESOnDemand" : [""]
         ,"ReplaceL0BanksWithEmulated" : False
         ,"ReplayL0DU"     : False 
         ,"SimulateL0"     : False
@@ -51,7 +52,9 @@ class L0Conf(LHCbConfigurableUser) :
 
     _propertyDocDct = {
         # Properties
-         "ReplaceL0BanksWithEmulated" : """ If True, run the emulators and replace the existing L0 banks."""
+         "RawEventLocations" : """List of raw event input locations."""
+        ,"RootInTESOnDemand" : """List of RootInTES for L0 algorithms decoding called via the on demand service""" 
+        ,"ReplaceL0BanksWithEmulated" : """ If True, run the emulators and replace the existing L0 banks."""
         ,"ReplayL0DU"     : """ If True, run the L0DU emulation starting from the L0DU banks."""
         ,"SimulateL0"     : """ If True, run the L0 simulation and write L0Banks."""
         ,"EmulateL0"      : """ If True, run the L0 emulators and write on TES at a non default location."""
@@ -78,6 +81,7 @@ class L0Conf(LHCbConfigurableUser) :
         ,"ETCOutput"      : """ Name of ETC output file."""
         ,"DataType"       : """ Data type, used to set up default TCK """
          }
+
 
     def checkOptions(self):
         """
@@ -331,13 +335,18 @@ class L0Conf(LHCbConfigurableUser) :
 
             writeTagSeq.Members+= [ tagCreator , MyWriter ]
             
-    def _setSpecificOptions(self):
-        """Specific options to tune the L0 components."""
+    def _setSpecificDecodingOptions(self,rootintes=''):
+        """Specific options to tune the L0 decoding components."""
+
+        # RootInTES
+        decodeL0Calo(rootintes).RootInTES = rootintes
+        decodeL0Muon(rootintes).RootInTES = rootintes
+        decodeL0DU(rootintes).RootInTES   = rootintes
 
         # Fast decoding of L0DU
         if self.getProp("FastL0DUDecoding"):
             log.info("Using Fast decoding for L0DU")
-            l0du   = decodeL0DU()
+            l0du   = decodeL0DU(rootintes)
             from Configurables import  L0DUFromRawTool
             l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
             l0du.L0DUFromRawTool.FillDataMap         = False
@@ -349,13 +358,31 @@ class L0Conf(LHCbConfigurableUser) :
         # Full decoding of L0Muon    
         if self.getProp("FullL0MuonDecoding"):
             log.info("Activate L0MuonProcCand and L0MuonProcData decoding")
-            l0muon = decodeL0Muon()
+            l0muon = decodeL0Muon(rootintes)
             l0muon.DAQMode = 1
+
+        # Set l0context for the decoding
+        if self.isPropertySet("L0DecodingContext"):
+            l0context = self.getProp("L0DecodingContext")
+            log.info( "The results of the L0 decoding will be written at location+%s"%(l0context) )
+            decodeL0Calo(rootintes).L0Context = l0context
+            decodeL0Muon(rootintes).L0Context = l0context
+            decodeL0DU(rootintes).L0Context   = l0context
+        
+        # Raw event input location dor the deconding
+        if self.isPropertySet("RawEventLocations"):
+            raw_locations = self.getProp("RawEventLocations")
+            decodeL0Calo(rootintes).RawEventLocations = raw_locations
+            decodeL0Muon(rootintes).RawEventLocations = raw_locations
+            decodeL0DU(rootintes).RawEventLocations   = raw_locations
+
+    def _setSpecificEmulationOptions(self):
+        """Specific options to tune the L0 emulator components."""
 
         # CondDB usage by L0Muon emulator
         if self.isPropertySet("IgnoreL0MuonCondDB"):
             log.info("L0Muon emulator will use the event TCK to get the FOI values : %s"%(self.getProp("IgnoreL0MuonCondDB")))
-            l0muon = emulateL0Muon()
+            l0muon = emulateL0Muon(rootintes)
             l0muon.IgnoreCondDB = self.getProp("IgnoreL0MuonCondDB")
         
         # TCK used by the L0Muon emulator    
@@ -364,49 +391,37 @@ class L0Conf(LHCbConfigurableUser) :
             l0muon = emulateL0Muon()
             l0muon.UseTCKFromData = self.getProp("L0MuonUseTCKFromData")
             
-        # Set l0context for the decoding
-        if self.isPropertySet("L0DecodingContext"):
-            l0context = self.getProp("L0DecodingContext")
-            log.info( "The results of the L0 decoding will be written at location+%s"%(l0context) )
-            decodeL0Calo().L0Context = l0context
-            decodeL0Muon().L0Context = l0context
-            decodeL0DU().L0Context   = l0context
-        
         # Set l0context for the emulation
         if self.isPropertySet("L0EmulatorContext"):
             l0context = self.getProp("L0EmulatorContext")
             log.info( "The results of the L0 emulation will be written at location+%s"%(l0context) )
-            emulateL0Calo().L0Context = l0context
-            emulateL0Muon().L0Context = l0context
-            emulateL0DU().L0Context   = l0context
+            emulateL0Calo(rootintes).L0Context = l0context
+            emulateL0Muon(rootintes).L0Context = l0context
+            emulateL0DU(rootintes).L0Context   = l0context
 
-        # Raw event input location dor the deconding
-        if self.isPropertySet("RawEventLocations"):
-            raw_locations = self.getProp("RawEventLocations")
-            decodeL0Calo().RawEventLocations = raw_locations
-            decodeL0Muon().RawEventLocations = raw_locations
-            decodeL0DU().RawEventLocations   = raw_locations
-                
         # Set electron emulation depending on data type
         if self.isPropertySet("DataType"):
             datatype = self.getProp("DataType")
             if datatype == "2010" or datatype == "2009":
-                emulateL0Calo().UseNewElectron = False
+                emulateL0Calo(rootintes).UseNewElectron = False
             else:
-                emulateL0Calo().UseNewElectron = True
+                emulateL0Calo(rootintes).UseNewElectron = True
 
-    def _dataOnDemand(self):
+    def _dataOnDemand(self,rootintes):
         """Configure the DataOnDemand service for L0."""
         if self.getProp("EnableL0DecodingOnDemand"):
             from Configurables import DataOnDemandSvc
             log.info("L0 on demand activated")
-            DataOnDemandSvc().AlgMap["Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
+            print '*'*30
+            print 'L0Conf._dataOnDemand',rootintes
+            print '*'*30
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
             if self.getProp("FullL0MuonDecoding"):
-                DataOnDemandSvc().AlgMap["Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
-                DataOnDemandSvc().AlgMap["Trig/L0/MuonBCSU"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName
-            DataOnDemandSvc().AlgMap["Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
-            DataOnDemandSvc().AlgMap["Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName
-            DataOnDemandSvc().AlgMap["Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName
+                DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
+                DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonBCSU"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName+rootintes
             if not self.isPropertySet("L0Sequencer"):
                 importOptions("$L0TCK/L0DUConfig.opts")
 
@@ -421,8 +436,13 @@ class L0Conf(LHCbConfigurableUser) :
         self._defineL0MoniSequence()
         self._defineL0FilterSequence()
         self._defineETC()
-        self._setSpecificOptions()
-        self._dataOnDemand()
+        self._setSpecificEmulationOptions()
+        for _rootintes in self.getProp("RootInTESOnDemand"):
+            if len(_rootintes)>0 :
+                _rootintes += '/'
+                _rootintes = _rootintes.replace('//','/')
+            self._setSpecificDecodingOptions(_rootintes)
+            self._dataOnDemand(_rootintes)
 
 class L0ConfError(Exception):
     """ Raised when conflicting options have been selected in L0Conf."""
