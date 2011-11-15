@@ -93,11 +93,11 @@ L0MuonOutputs::~L0MuonOutputs() {
 
 //=============================================================================
  
-StatusCode L0MuonOutputs::decodeRawBanks(std::string rawInputEvent , bool statusOnTES){
- 
-  if (!exist<LHCb::RawEvent>( rawInputEvent , IgnoreRootInTES)) 
+StatusCode L0MuonOutputs::decodeRawBanks(std::string rawInputEvent , bool useRootInTES , bool statusOnTES){
+
+  if (!exist<LHCb::RawEvent>( rawInputEvent , useRootInTES)) 
     return Error("RawEvent not found at "+rawInputEvent,StatusCode::FAILURE,50);
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( rawInputEvent , IgnoreRootInTES);
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( rawInputEvent , useRootInTES);
 
   bool error_bank[6];
   for (int srcId=0; srcId<6; ++srcId) error_bank[srcId]=false;

@@ -3,6 +3,12 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2011-11-14 - Julien Cogan
+ - L0MuonCandidatesFromRaw : add possibility to use rootIInTES using recently 
+ added flag in L0FromRawBase (m_useRootInTES)
+ - L0MuonCandidatesFromRaw : add possibility to instanciante several instance
+ of the L0Muon decoding without rebuilding the RegisterFactory
+
 ! 2011-11-08 - Julien Cogan
  - L0MuonCandidatesFromRaw : configure the raw event location using the
  new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when

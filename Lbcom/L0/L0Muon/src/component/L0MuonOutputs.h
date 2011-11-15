@@ -35,7 +35,7 @@ public:
   virtual ~L0MuonOutputs( ); ///< Destructor
 
   /// Decode the L0Muon banks and fill the registers of the converters
-  StatusCode decodeRawBanks(std::string rawInputEvent , bool statusOnTES=true);
+  StatusCode decodeRawBanks(std::string rawInputEvent , bool useRootInTES , bool statusOnTES=true);
   /// From the registers of the converters, fill the L0Muon banks
   StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates

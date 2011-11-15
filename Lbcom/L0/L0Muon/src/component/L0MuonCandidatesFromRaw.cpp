@@ -55,13 +55,17 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   //   svc->chronoStart("L0MuonCandidatesFromRaw Initialize");
   
   L0Muon::RegisterFactory::selectInstance(1);
-
-  // Instanciate the MuonTrigger registers
-  std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
-  info() <<  "XML config file = " << xmlFileName << endmsg;
-  L0Muon::L0MuonKernelFromXML(xmlFileName,false);
-  if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
-
+  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
+  if ( ! rfactory->filledFromXML() ) {
+    // Instanciate the MuonTrigger registers
+    std::string xmlFileName = L0MuonUtils::SubstituteEnvVarInPath(m_configfile);
+    info() <<  "XML config file = " << xmlFileName << endmsg;
+    L0Muon::L0MuonKernelFromXML(xmlFileName,false);
+    if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
+  } else {
+    info() << "MuonTrigger already build from xml"<< endmsg;
+  }
+  
   //   svc->chronoStop("L0MuonCandidatesFromRaw Initialize");
   //   svc->chronoDelta("L0MuonCandidatesFromRaw Initialize",IChronoStatSvc::KERNEL);
   //   svc->chronoPrint("L0MuonCandidatesFromRaw Initialize");
@@ -140,29 +144,17 @@ StatusCode L0MuonCandidatesFromRaw::execute()
   }
 
   int ntae = 0;
-  std::string originalRootInTes = rootInTES();
   for (int itae = -1*tae_size; itae<=tae_size; ++itae){
     std::string taeInTes = m_tae_items[itae];
 
-    if (setProperty("RootInTES",originalRootInTes+taeInTes).isFailure() ) {
-      Error( "Unable to set RootInTES property of L0MuonAlg", StatusCode::SUCCESS,50 ).ignore();
-      continue;
-    }
-
-    if (m_outputTool->setProperty( "RootInTES", taeInTes ).isFailure() ) {
-      Error( "Unable to set RootInTES property of L0MuonOutputs tool", StatusCode::SUCCESS,50 ).ignore();
-      continue;
-    }
-
     // Decode Raw banks
     m_outputTool->setMode(m_mode);
-    sc = m_outputTool->decodeRawBanks( taeInTes+rawEventLocation , m_statusOnTES);
+    sc = m_outputTool->decodeRawBanks( taeInTes+rawEventLocation , m_useRootInTES , m_statusOnTES);
     if ( sc.isFailure() ) { 
       Warning("Error from decodeRawBanks - skip this time slice"
                      ,StatusCode::SUCCESS,50);
       sc = m_outputTool->releaseRegisters();
       if ( sc.isFailure() ) {
-        sc = setProperty("RootInTES",originalRootInTes );
         return Warning("Fail to release registers - skip the rest of event"
                        ,StatusCode::SUCCESS,50);
       }
@@ -183,7 +175,6 @@ StatusCode L0MuonCandidatesFromRaw::execute()
                        ,StatusCode::SUCCESS,50);
         sc = m_outputTool->releaseRegisters();
         if ( sc.isFailure() ) {
-          sc = setProperty("RootInTES",originalRootInTes );
           return Warning("Fail to release registers - skip the rest of event"
                          ,StatusCode::SUCCESS,50);
         }
@@ -200,7 +191,6 @@ StatusCode L0MuonCandidatesFromRaw::execute()
                        ,StatusCode::SUCCESS,50);
         sc = m_outputTool->releaseRegisters();
         if ( sc.isFailure() ) {
-          sc = setProperty("RootInTES",originalRootInTes );
           return Warning("Fail to release registers - skip the rest of event"
                          ,StatusCode::SUCCESS,50);
         }
@@ -211,7 +201,6 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Release registers used by the converters
     sc = m_outputTool->releaseRegisters();
     if ( sc.isFailure() ) {
-      sc = setProperty("RootInTES",originalRootInTes );
       return Warning("Fail to release registers - skip the rest of event"
                      ,StatusCode::SUCCESS,50);
     }
@@ -222,7 +211,6 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
     ++ntae;
   } // End of loop over time slots
-  sc = setProperty("RootInTES",originalRootInTes );
   if (ntae==0) return Error("No valid time slice found",StatusCode::SUCCESS,50);
   
   //   svc->chronoStop("L0MuonCandidatesFromRaw Execute");
