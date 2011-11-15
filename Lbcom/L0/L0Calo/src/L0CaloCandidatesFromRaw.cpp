@@ -86,9 +86,9 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
     return Error("No valid raw event location found",StatusCode::SUCCESS,50);
   
-  if ( exist< LHCb::RawEvent >( rawEventLocation , IgnoreRootInTES ) ) {
+  if ( exist< LHCb::RawEvent >( rawEventLocation , m_useRootInTES ) ) {
 
-    rawEvt = get<LHCb::RawEvent>(  rawEventLocation  , IgnoreRootInTES ) ;
+    rawEvt = get<LHCb::RawEvent>(  rawEventLocation  , m_useRootInTES ) ;
     const std::vector<LHCb::RawBank*>& banks = 
       rawEvt -> banks( LHCb::RawBank::L0Calo );
     
