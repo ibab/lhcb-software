@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r5 2011-11-15 =========================
 ! 2011-11-13 - Roel Aaij
  - Fix the regex used to find the xrootd host (port definition is optional).
  - Allow dashes in filenames when matching a descriptor.
