@@ -7,7 +7,6 @@ __all__ = ('configureHltReportDecoding',
 
 from Configurables import DataOnDemandSvc, ApplicationMgr
 
-
 def fixTrunk(trunk) :
     """
     Make sure trunk ends with '/'.
@@ -23,6 +22,9 @@ def fixTrunk(trunk) :
     trunk += '/'
     return trunk.replace('//', '/')
 
+def trunkName(trunk) :
+    return trunk.replace('/','')
+
 def configureHltReportDecoding(trunk) :
     """
     Create HltDecReports and HltSelReports from DAQ/RawEvent banks.
@@ -33,8 +35,10 @@ def configureHltReportDecoding(trunk) :
                                HltSelReportsDecoder,
                                ANNDispatchSvc)
     locationRoot = fixTrunk(trunk)
+
+    name = trunkName(trunk)
  
-    rawEventLoc = locationRoot + "DAQ/RawEvent"
+    rawEventLoc  = locationRoot + "DAQ/RawEvent"
     decReportLoc = locationRoot + "Hlt/DecReports"
     selReportLoc = locationRoot + "Hlt/SelReports"
  
@@ -42,9 +46,11 @@ def configureHltReportDecoding(trunk) :
     ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc(),
                                   ANNDispatchSvc() ]
  
-    decReportsDecoder = HltDecReportsDecoder( InputRawEventLocation = rawEventLoc,
+    decReportsDecoder = HltDecReportsDecoder( name = "HltDecReportsDecoder"+name,
+                                              InputRawEventLocation = rawEventLoc,
                                               OutputHltDecReportsLocation = decReportLoc)
-    selReportsDecoder = HltSelReportsDecoder( InputRawEventLocation = rawEventLoc,
+    selReportsDecoder = HltSelReportsDecoder( name = "HltSelReportsDecoder"+name,
+                                              InputRawEventLocation = rawEventLoc,
                                               OutputHltSelReportsLocation = selReportLoc,
                                               HltDecReportsLocation = decReportLoc
                                               )
@@ -60,9 +66,12 @@ def configureL0ReportDecoding(trunk) :
     from Configurables import L0DecReportsMaker, L0SelReportsMaker
 
     locationRoot = fixTrunk(trunk)
-    
-    DataOnDemandSvc().AlgMap[locationRoot+"HltLikeL0/DecReports"] = L0DecReportsMaker(RootInTES = locationRoot)
-    DataOnDemandSvc().AlgMap[locationRoot+"HltLikeL0/SelReports"] = L0SelReportsMaker(RootInTES = locationRoot)
+    name = trunkName(trunk)
+        
+    DataOnDemandSvc().AlgMap[locationRoot+"HltLikeL0/DecReports"] = L0DecReportsMaker(name = "L0DecReportsMaker"+name,
+                                                                                      RootInTES = locationRoot)
+    DataOnDemandSvc().AlgMap[locationRoot+"HltLikeL0/SelReports"] = L0SelReportsMaker(name = "L0SelReportsMaker"+name,
+                                                                                      RootInTES = locationRoot)
 
 def configureL0FromRawBank(trunk) :
     """
@@ -78,13 +87,14 @@ def configureL0FromRawBank(trunk) :
                                 L0DUFromRawAlg )
 
     locationRoot = fixTrunk(trunk)
-    
-    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/MuonBCSU"] = L0MuonCandidatesFromRaw("L0MuonFromRaw",
+    name = trunkName(trunk)
+       
+    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/MuonBCSU"] = L0MuonCandidatesFromRaw(name="L0MuonFromRaw"+name,
                                                                                         RootInTES = locationRoot)
-    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/FullCalo"] = L0CaloCandidatesFromRaw("L0CaloFromRaw", 
+    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/FullCalo"] = L0CaloCandidatesFromRaw(name="L0CaloFromRaw"+name, 
                                                                                         RootInTES = locationRoot)
 
-    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/L0DUReport"] = L0DUFromRawAlg("L0DUFromRaw", 
+    DataOnDemandSvc().AlgMap[locationRoot+"Trig/L0/L0DUReport"] = L0DUFromRawAlg(name="L0DUFromRaw"+name, 
                                                                                  RootInTES = locationRoot)
     
 def configureL0AndHltDecoding(trunk) :
