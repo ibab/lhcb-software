@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2011-11-15 - Chris Jones
+ - Tidy up CopyParticles2LHCbIDs
+
 !========================= MicroDSTAlgorithm v5r5 2011-11-10 ==================
 ! 2011-10-11 - Roel Aaij
  - Add algorithms to copy SwimmingReport and Particle2TPRelations

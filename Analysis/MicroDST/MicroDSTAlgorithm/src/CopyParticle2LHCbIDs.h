@@ -8,8 +8,10 @@
 
 class ITriggerTisTos;
 
-namespace DaVinci {
-  namespace Map {
+namespace DaVinci 
+{
+  namespace Map 
+  {
     class Particle2LHCbIDs;
   }
 }
@@ -27,8 +29,12 @@ namespace DaVinci {
  *  @author Juan Palacios
  *  @date   2010-08-18
  */
-class CopyParticle2LHCbIDs : public MicroDSTAlgorithm {
+
+class CopyParticle2LHCbIDs : public MicroDSTAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   CopyParticle2LHCbIDs( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -36,7 +42,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 
@@ -54,6 +59,6 @@ private:
 
   DaVinci::Map::Particle2LHCbIDs* m_p2LHCbID;
   
-
 };
+
 #endif // COPYPARTICLE2LHCBIDS_H

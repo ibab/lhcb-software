@@ -1,11 +1,11 @@
 // $Id: CopyParticle2LHCbIDs.cpp,v 1.2 2010-08-20 09:47:07 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include <GaudiKernel/ObjectVector.h>
-// LHCb 
-#include "Kernel/ITriggerTisTos.h" 
+// LHCb
+#include "Kernel/ITriggerTisTos.h"
 #include "Kernel/LHCbID.h"
 #include "Event/Particle.h"
 // DaVinci
@@ -21,8 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyParticle2LHCbIDs );
-
+DECLARE_ALGORITHM_FACTORY( CopyParticle2LHCbIDs )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,26 +29,26 @@ DECLARE_ALGORITHM_FACTORY( CopyParticle2LHCbIDs );
 CopyParticle2LHCbIDs::CopyParticle2LHCbIDs( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : MicroDSTAlgorithm ( name , pSvcLocator ),
-    m_outputLocation(""),
-    m_fullTree(false),
-    m_iTisTos(0),
-    m_p2LHCbID(0)
+    m_outputLocation  ( ""                 ),
+    m_fullTree        ( false              ),
+    m_iTisTos         ( NULL               ),
+    m_p2LHCbID        ( NULL               )
 {
-
   declareProperty("FullDecayTree", m_fullTree);
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-CopyParticle2LHCbIDs::~CopyParticle2LHCbIDs() {} 
+CopyParticle2LHCbIDs::~CopyParticle2LHCbIDs() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode CopyParticle2LHCbIDs::initialize() {
-  StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode CopyParticle2LHCbIDs::initialize() 
+{
+  const StatusCode sc = MicroDSTAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc; 
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -57,137 +56,96 @@ StatusCode CopyParticle2LHCbIDs::initialize() {
 
   m_outputLocation = this->outputTESLocation( "Particle2LHCbIDMap" );
 
-  return m_iTisTos ? StatusCode::SUCCESS : StatusCode::FAILURE;
-
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CopyParticle2LHCbIDs::execute() {
-
+StatusCode CopyParticle2LHCbIDs::execute() 
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-
-  typedef std::vector<std::string>::const_iterator stringIter;
-  stringIter iLoc = this->inputTESLocations().begin();
-  stringIter locEnd = this->inputTESLocations().end();
 
   m_p2LHCbID = new DaVinci::Map::Particle2LHCbIDs;
 
   put(m_p2LHCbID, m_outputLocation);
-      
-  for ( ; iLoc != locEnd; ++iLoc) {
-    
+
+  typedef std::vector<std::string>::const_iterator stringIter;
+
+  for ( stringIter iLoc = this->inputTESLocations().begin();
+        iLoc != this->inputTESLocations().end(); ++iLoc ) 
+  {
     const std::string inputLocation = niceLocationName(*iLoc);
-
     executeLocation(inputLocation);
-
   }
 
-
-  // test that we find the stuff.
-
-  if ( msgLevel(MSG::DEBUG) ) {
-    
-    DaVinci::Map::Particle2LHCbIDs* test = get<DaVinci::Map::Particle2LHCbIDs>(m_outputLocation);
-    if (test) {
-      debug() << "Test passed, found P2LHCbID map with " 
-              << test->size() <<" entries!" << endmsg;
-      if (!test->empty()) {
-        for (DaVinci::Map::Particle2LHCbIDs::const_iterator iMap = test->begin();
-             iMap!=test->end();
-             ++iMap) {
-          debug() << "Found " << (*iMap).second.size() << " LHCbIDs" << endmsg;
-        }
-      }
-    
-    }
-
-    else {
-      error() << "Test failed, found no P2LHCbID map" << endmsg;
-    }
-
-  }
-    
   return StatusCode::SUCCESS;
-
 }
+
 //=============================================================================
-void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation) 
+
+void CopyParticle2LHCbIDs::executeLocation(const std::string& particleLocation)
 {
 
-  verbose() << "Going to clone LHCbIDs from Particles in " << particleLocation
-            << " into " << m_outputLocation << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Going to clone LHCbIDs from Particles in " << particleLocation
+              << " into " << m_outputLocation << endmsg;
 
-  if (!exist<LHCb::Particle::Range>(particleLocation) ) {
-    Warning("No LHCb::Particle::Range found at " + 
-            particleLocation,
-            StatusCode::SUCCESS, 
-            0).ignore();
+  if ( !exist<LHCb::Particle::Range>(particleLocation) ) 
+  {
+    Warning( "No LHCb::Particle::Range found at " + particleLocation,
+             StatusCode::SUCCESS,
+             0 ).ignore();
     return;
   }
 
-  const LHCb::Particle::Range particles = 
+  const LHCb::Particle::Range particles =
     get<LHCb::Particle::Range>(particleLocation);
-  
-  if (particles.empty()) {
-    Warning("No LHCb::Particles in LHCb::Particle::Range " +
-            particleLocation,
-            StatusCode::SUCCESS, 
-            0).ignore();
+
+  if ( particles.empty() ) 
+  {
+    Warning( "No LHCb::Particles in LHCb::Particle::Range " + particleLocation,
+             StatusCode::SUCCESS,
+             0 ).ignore();
     return;
   }
   
-  LHCb::Particle::Range::const_iterator iPart = particles.begin();
-  LHCb::Particle::Range::const_iterator iPartEnd = particles.end();
-
-  for ( ; iPart != iPartEnd; ++iPart) {
+  for ( LHCb::Particle::Range::const_iterator iPart = particles.begin();
+        iPart != particles.end(); ++iPart) 
+  {
     storeLHCbIDs(*iPart);
   }
-
-
   
 }
+
 //=============================================================================
+
 void CopyParticle2LHCbIDs::storeLHCbIDs(const LHCb::Particle* part)
 {
 
   const LHCb::Particle* clone = getStoredClone<LHCb::Particle>(part);
 
-  if (0==clone) return;
+  if ( !clone ) return;
 
-  if (m_p2LHCbID->find(clone) != m_p2LHCbID->end()) return;  
-  
-  m_iTisTos->setOfflineInput(); 
+  if ( m_p2LHCbID->find(clone) != m_p2LHCbID->end() ) return;
+
+  m_iTisTos->setOfflineInput();
   m_iTisTos->addToOfflineInput(*part);
-  std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
-
-  if (signalHits.empty()) return;
+  const std::vector<LHCb::LHCbID> signalHits = m_iTisTos->offlineLHCbIDs();
+  if ( signalHits.empty() ) return;
 
   m_p2LHCbID->insert(clone, signalHits);
 
-  if (m_fullTree) {
-
-    const SmartRefVector<LHCb::Particle>& daughters = part->daughters();
-    if (daughters.empty()) return;
-    SmartRefVector<LHCb::Particle>::const_iterator iDau = daughters.begin();
-    SmartRefVector<LHCb::Particle>::const_iterator iDauEnd = daughters.end();
-    for (; iDau != iDauEnd; ++iDau) {
+  if ( m_fullTree )
+  {
+    const SmartRefVector<LHCb::Particle> & daughters = part->daughters();
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iDau = daughters.begin();
+          iDau != daughters.end(); ++iDau )
+    {
       storeLHCbIDs(*iDau);
     }
-    
   }
-  
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CopyParticle2LHCbIDs::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
