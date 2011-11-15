@@ -251,9 +251,7 @@ endif
 # echo on Darwin/MacOS X works a bit differently
 ifeq ($(UNAME_SYS),Darwin)
 ECHO := echo
-ifeq ($(COLORMAKE),YES)
 ECHOMSG := $(ECHO)
-endif
 endif
 
 #######################################################################
