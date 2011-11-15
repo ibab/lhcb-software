@@ -4,6 +4,12 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2011-11-14 - Julien Cogan
+ - L0FromRawBase : add possibility to use rootIInTES to search for raw event 
+   location. The raw events are first search in the list of given locations 
+   ignoring the RootInTES. If no valid location is found, RootInTES is used
+   and a flag is raised for further use in the specialized decoding algorithms.      
+
 ! 2011-11-08 - Julien Cogan
  - L0FromRawBase : add
    - RawEventLocations : list of possible raw event locations, common property 

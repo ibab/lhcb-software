@@ -52,6 +52,7 @@ protected:
   std::string m_l0context; ///< Suffix appended to the default location in TES
 
   bool m_statusOnTES;      ///< Flag to activate the writing of the decoding status on the TES
+  bool m_useRootInTES;     ///< Flag to use RootInTES in the raw bank location 
   
 private:
 
