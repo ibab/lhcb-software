@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 __author__ = "Illya Shapoval <illya.shapoval@cern.ch>"
-__version__ = "$Id: TSDBAdmin_Commit.py,v 1.0 2010-11-29 00:00:00 ishapova Exp $"
 
 import sys, os
 from CondDBUI.Admin.TagStatusDB import *
@@ -45,24 +44,29 @@ def main():
     ###########################################################################
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] partition tag",
-                          version = __version__,
                           description =
-"""This script commits new tag to TSDB.""")
+"""This script commits a new tag status record to TSDB.""")
 
-    parser.add_option("--db", type = "string",
-                      help = "TSDB connection string in the form: 'sqlite:path'."
+    parser.add_option("-c", "--db", type = "string",
+                      help = "TagStatus database path. Default: $LHCBDOC/dbase/tsdb/db/TAGSTATUS.db"
+                      )
+    parser.add_option("-p", "--protocol", type = "string",
+                      help = "A protocol to connect to TagStatus database with. "
+                      "Known are: 'sqlite', 'postgres' and 'mysql'. Default: 'sqlite'."
                       )
     parser.add_option("--rel-notes", type = "string",
                       help = "XML file containing the release notes"
                       )
     parser.add_option("--hash-alg", type = "string",
-                  help = "Hash algorithm type to look in 'release_notes.xml' for."
-                  " tag (md5, sha1, etc). Default: sha1."
-                  )
+                      help = "Hash algorithm type to look in 'release_notes.xml' for "
+                      "(md5, sha1, etc). Default: sha1."
+                      )
 
-    parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"],
-                                                 "doc", "release_notes.xml"))
-    parser.set_default("hash_alg", "sha1")
+    parser.set_default('db', os.path.join(os.environ['LHCBDOC'], 'dbase', 'tsdb', 'db', 'TAGSTATUS.db'))
+    parser.set_default('protocol', 'sqlite')
+    parser.set_default('rel_notes', os.path.join(os.environ['SQLITEDBPATH'], '..',
+                                                 'doc', 'release_notes.xml'))
+    parser.set_default('hash_alg', 'sha1')
 
     # parse command line
     options, args = parser.parse_args()
@@ -86,10 +90,6 @@ def main():
     if len(args) != 2:
         parser.error("Not enough arguments. Try with --help.")
 
-    db_ConnStr = options.db
-    if db_ConnStr == None:
-        parser.error("Please specify TSDB location. Try with --help. ")
-
     HashAlg = options.hash_alg
 
     partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
@@ -97,14 +97,25 @@ def main():
     if partition not in partitions:
         parser.error("'%s' is not a valid partition name. Allowed: %s"
                      %(partition, partitions))
-    log.info("Global tag: '%s/%s'" %(partition,tag))
+
+    if options.protocol not in ['sqlite', 'postgres', 'mysql']:
+        parser.error("Unknown database protocol '%s'." %options.protocol)
+
+    dbConnStr = options.db
+    if not os.path.isfile(dbConnStr):
+        log.error("The path '%s' doesn't exist. Exiting." %dbConnStr)
+        return 1
+    dbConnStr = options.protocol + ':' + dbConnStr
+
+    log.info("Commit to TagStatus database at: '%s'" %dbConnStr)
+    log.info("Global tag: '%s/%s'" %(partition, tag))
     ###########################################################################
     # Add tag
     ###########################################################################
     # Get hash sum value for the tag from the Release Notes
     from CondDBUI.Admin import ReleaseNotes
     rn = ReleaseNotes(options.rel_notes)
-    GlobTagElem = rn.getGlobalTagElement(partition,tag)
+    GlobTagElem = rn.getGlobalTagElement(partition, tag)
     hash = None
     partitionElem = [p for p in GlobTagElem.findall(str(_xel('partition')))
                      if p.find(str(_xel('name'))).text == partition][0]
@@ -114,17 +125,18 @@ def main():
     if not hash:
         raise Exception, ("Requested hash algorithm value is not found in the"
     " SQLDDDB Release Notes.")
-    log.info("With its '%s' hash sum value: '%s'" %(HashAlg,hash))
+    log.info("With its '%s' hash sum value: '%s'" %(HashAlg, hash))
 
     # Open TSDB.db and commit new tag there
     from storm.tracer import debug
-    debug(True, stream=sys.stdout)
+    debug(True, stream = sys.stdout)
 
-    db = TagStatusDB(db_ConnStr)
+    db = TagStatusDB(dbConnStr)
 
     #Initialize Storm Tag instance
     from datetime import datetime
-    storm_tag = Tag(unicode(tag),unicode(partition),datetime.now(),unicode(hash),unicode(HashAlg))
+    storm_tag = Tag(unicode(tag), unicode(partition), datetime.now(),
+                    unicode(hash), unicode(HashAlg))
     #Add New row into the in-memory-db representation
     db.addRow(storm_tag)
     for site in db.sites:
