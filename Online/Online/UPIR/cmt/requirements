@@ -1,5 +1,5 @@
 package UPI
-version v1r3
+version v1r4
 branches cmt
 #
 use UPI v* Online -no_auto_imports
@@ -12,10 +12,6 @@ apply_pattern library_path
 apply_pattern linker_library library=UPIR
 
 private
-
-macro_append  cppflags     " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
-
-macro_append  cppflags     "" \
-	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
+macro_append cppflags   $(ONLINE_CPPFLAGS)
 
 
