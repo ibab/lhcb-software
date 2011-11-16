@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-11-16 - Patrick Robbe
+ - tests: update references for new physics list
+
 !========================= Gauss v41r0 2011-11-15 ============================
 ! 2011-11-15 - Gloria Corti
  - Put example for MC11a configuration
