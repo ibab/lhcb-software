@@ -154,7 +154,6 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
   int ret;
   unsigned int i;
   int numHosts = 0;
-  int bRead = 0;
 
   BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
   ret = recvBif.nbRecvTimeout();
@@ -164,8 +163,6 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 
   for(i=0;i<fmsg.num_nodes;i++) {
     NodeState *nState = new NodeState();
-    bRead = 0;
-
     BIF recvBif(m_sockFd, &nState->state, sizeof(struct nodestate));
     ret = recvBif.nbRecvTimeout();
 
@@ -224,7 +221,6 @@ void FailoverMonitor::listenForUpdates(void)
 {
   int ret;
   struct failover_msg fmsg;
-  int bRead = 0;
 
   while(!m_stopUrgently) {
     /*
@@ -234,7 +230,6 @@ void FailoverMonitor::listenForUpdates(void)
     BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
     ret = recvBif.nbRecv();
     if(ret == BIF::DISCONNECTED) {
-      bRead = 0;
       if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
         break;
       else
@@ -250,7 +245,6 @@ void FailoverMonitor::listenForUpdates(void)
            << fmsg.num_nodes << " node(s) in state " << (fmsg.msg_type == 1 ? "joined":"left")
            << endmsg;
     for(unsigned int i=0;i<fmsg.num_nodes;i++) {
-      bRead = 0;
       BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));
       ret = recvBif.nbRecvTimeout();
       if(ret == BIF::DISCONNECTED || ret == BIF::TIMEDOUT) {
@@ -264,9 +258,6 @@ void FailoverMonitor::listenForUpdates(void)
              << endmsg;
       update(&fmsg, &nstate);
     }
-
-    bRead = 0;
-
     if(die)
       break;
   }
