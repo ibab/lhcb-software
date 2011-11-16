@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-11-16 - Julien Cogan
+ - L0Conf : fix bug introduced in latest release affecting the emulators 
+
 ! 2011-11-15 - Julien Cogan
  - L0Conf : Add new property to allow the DataOnDemand service to handle
  several RootInTES for the candidates/report location.

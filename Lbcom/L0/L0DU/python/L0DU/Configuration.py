@@ -382,7 +382,7 @@ class L0Conf(LHCbConfigurableUser) :
         # CondDB usage by L0Muon emulator
         if self.isPropertySet("IgnoreL0MuonCondDB"):
             log.info("L0Muon emulator will use the event TCK to get the FOI values : %s"%(self.getProp("IgnoreL0MuonCondDB")))
-            l0muon = emulateL0Muon(rootintes)
+            l0muon = emulateL0Muon()
             l0muon.IgnoreCondDB = self.getProp("IgnoreL0MuonCondDB")
         
         # TCK used by the L0Muon emulator    
@@ -395,17 +395,17 @@ class L0Conf(LHCbConfigurableUser) :
         if self.isPropertySet("L0EmulatorContext"):
             l0context = self.getProp("L0EmulatorContext")
             log.info( "The results of the L0 emulation will be written at location+%s"%(l0context) )
-            emulateL0Calo(rootintes).L0Context = l0context
-            emulateL0Muon(rootintes).L0Context = l0context
-            emulateL0DU(rootintes).L0Context   = l0context
+            emulateL0Calo().L0Context = l0context
+            emulateL0Muon().L0Context = l0context
+            emulateL0DU().L0Context   = l0context
 
         # Set electron emulation depending on data type
         if self.isPropertySet("DataType"):
             datatype = self.getProp("DataType")
             if datatype == "2010" or datatype == "2009":
-                emulateL0Calo(rootintes).UseNewElectron = False
+                emulateL0Calo().UseNewElectron = False
             else:
-                emulateL0Calo(rootintes).UseNewElectron = True
+                emulateL0Calo().UseNewElectron = True
 
     def _dataOnDemand(self,rootintes):
         """Configure the DataOnDemand service for L0."""
