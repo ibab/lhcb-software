@@ -1,5 +1,6 @@
 // $Id: RODimFsmService.cpp,v 1.2 2010-10-18 06:25:08 ocallot Exp $
 // Include files
+#include <cstdio>
 
 // local
 #include "RODimFsmService.h"
