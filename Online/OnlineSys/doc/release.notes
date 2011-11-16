@@ -5,6 +5,22 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 </PRE>
+
+<H1><A NAME=v4r55>???????? OnlineSys v4r58</A></H1>
+<PRE>
+   Based in Gaudi v22r5, 
+   Updated packages are:
+     GaudiOnline         v2r56    Online
+     GaudiUPI            v1r14    Online
+     OnlineBase          v1r12    Online
+     OnlineKernel        v2r9     Online
+     ROMon               v1r33    Online
+     ROLogger            v0r24    Online
+     UPI                 v1r21    Online
+     UPIR                v1r4     Online
+     Writer              v1r38    Online
+</PRE>
+
 <H1><A NAME=v4r55>2011-09-01 OnlineSys v4r57</A></H1>
 <PRE>
    Based in Gaudi v22r2, 

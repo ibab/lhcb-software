@@ -17,7 +17,7 @@ use GaudiObjDesc      v11r12
 #use confDBpython        v1r7     Online
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
-use Camera              v1r22    Online
+#use Camera              v1r22    Online
 use Checkpointing       v0r7     Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r1     Online
@@ -26,20 +26,20 @@ use DIM                 v19r25   Online
 use FarmMonitor         v2r8     Online
 use Gaucho              v7r18    Online
 use GaudiCheckpointing  v0r8     Online
-use GaudiOnline         v2r55    Online
+use GaudiOnline         v2r56    Online
 use GaudiRootCnvTests   v1r2     Online
 use GaudiSerialize      v0r10    Online
-use GaudiUPI            v1r13    Online
+use GaudiUPI            v1r14    Online
 #use Hugin              v1r6     Online
 #Obsolete: use HPDMonitor        v1r6     Online
 use HistDBPython        v1r6     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r1     Online
-use OnlineBase          v1r11    Online
+use OnlineBase          v1r12    Online
 #Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB        v8r1     Online
-use OnlineKernel        v2r8     Online
+use OnlineKernel        v2r9     Online
 use OnlineTools         v1r4     Online
 use OnlineTasks         v1r41    Online
 
@@ -47,16 +47,16 @@ use Presenter           v3r1     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r11    Online
 use RootCnv             v1r7     Online
-use ROMon               v1r32    Online
-use ROLogger            v0r23    Online
+use ROMon               v1r33    Online
+use ROLogger            v0r24    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
 use Trending            v2r0     Online
-use UPI                 v1r20    Online
-use UPIR                v1r3     Online
+use UPI                 v1r21    Online
+use UPIR                v1r4     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer              v1r37    Online
+use Writer              v1r38    Online
 
 # Declare this as a container package
 apply_pattern container_package
