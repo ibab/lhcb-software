@@ -1,5 +1,5 @@
 package OnlineKernel
-version v2r8
+version v2r9
 
 branches  cmt doc src
 use GaudiPolicy v*
@@ -49,12 +49,8 @@ apply_pattern QMTest
 apply_pattern QMTestSummarize
 
 private
-macro_append  use_includes ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
-macro_append  cppflags     " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
-
-macro_append  cppflags     "" \
-	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
-
+macro_append use_includes     ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
+macro_append cppflags         $(ONLINE_CPPFLAGS)
 macro_append test_use_linkopts           "" target-icc " -Wl,--no-as-needed "
 macro_append gentest_use_linkopts        "" target-icc " -Wl,--no-as-needed "
 macro_append mbm_remove_use_linkopts     "" target-icc " -Wl,--no-as-needed "
