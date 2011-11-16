@@ -806,7 +806,7 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 #endif
 
     const LHCb::RecVertex* bestpv = 0;
-    if (m_intelligentPV || m_secondIpSig)
+    if (!p->daughters().empty() && (m_intelligentPV || m_secondIpSig)) 
     {
 	//this method intelligently selects the best PV AFTER PV refit
 	//best PV is currently the PV with the smallest ip sig, provided the lifetime fit works

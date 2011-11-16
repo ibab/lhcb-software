@@ -4,6 +4,11 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+!============================ Zoo v13r0 2011-11-16 ===========================
+
+! 2011-11-16 - Georg Alexander Krocker
+ - add fix for stable particle IP in decay tree fit
+
 ! 2011-11-14 - Manuel Tobias Schiller
  - add Darwin/Mac OS X support to Rules.mk
 
