@@ -51,7 +51,7 @@ namespace ROMon  {
     /// Default destructor
     ~SysInfo();
     /// Initiate new reading cycle
-    void       newReading()   {  m_idx  = ++m_idx;                                }
+    void       newReading()   {  ++m_idx;                                         }
     /// Buffer to current CPU information
     CPUset*    cpuNow()       {  return (CPUset*) m_cpuInfo[m_idx%m_nBuffs];      }
     /// Buffer to previous CPU information
