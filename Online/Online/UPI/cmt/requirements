@@ -1,5 +1,5 @@
 package UPI
-version v1r20
+version v1r21
 branches cmt UPI src
 #
 use OnlineKernel v* Online
@@ -25,13 +25,7 @@ apply_pattern install_python_modules
 
 private
 use Python v* LCG_Interfaces -no_auto_imports
-private
-
-macro_append  cppflags     " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
-
-macro_append  cppflags     "" \
-	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
-
+macro_append  cppflags     $(ONLINE_CPPFLAGS)
 
 
 
