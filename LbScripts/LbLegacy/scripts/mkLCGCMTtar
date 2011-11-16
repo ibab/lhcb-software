@@ -293,7 +293,7 @@ def get_native_versions(native_version, binary):
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :
             content = packages_versions[pak]
-            if content[2].startwith("x86_64") :
+            if content[2].startswith("x86_64") :
                 print "Replacing binary for %s" % pak
                 newbin = content[2].replace("x86_64", "i686")
                 newpath = content[3].replace("x86_64", "i686")
