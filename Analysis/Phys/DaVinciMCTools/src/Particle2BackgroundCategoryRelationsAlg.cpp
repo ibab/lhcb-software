@@ -96,7 +96,7 @@ backCategoriseParticles(const std::string& location) const
   // Possible when running on uDSTs
   if ( !exist<LHCb::Particle::Range>(location) )
   {
-    return Warning( "No data at '" + location + "'", StatusCode::SUCCESS );
+    return Warning( "No data at '" + location + "'", StatusCode::SUCCESS, 3 );
   }
 
   // Get the input particles
@@ -105,12 +105,11 @@ backCategoriseParticles(const std::string& location) const
   if ( myParticles.empty() )
   {
     // Return success as this can happen and should not abort processing
-    return Warning ( "Empty Particle range from '" + location + "'", StatusCode::SUCCESS );
+    return Warning ( "Empty Particle range from '" + location + "'", StatusCode::SUCCESS, 3 );
   }
 
   // Make the relations table
-  LHCb::Relation1D<LHCb::Particle, int>* catRelations =
-    new LHCb::Relation1D<LHCb::Particle,int>( myParticles.size() );
+  CatRelations * catRelations = new CatRelations( myParticles.size() );
 
   // save
   std::string outputLocation = location;
@@ -128,11 +127,13 @@ backCategoriseParticles(const std::string& location) const
   return sc;
 }
 
+//=============================================================================
+
 StatusCode
 Particle2BackgroundCategoryRelationsAlg::
 backCategoriseParticle( const LHCb::Particle * particle,
-                        LHCb::Relation1D<LHCb::Particle, int>* catRelations,
-                        const unsigned int recurCount ) const
+                        CatRelations *         catRelations,
+                        const unsigned int     recurCount ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -169,3 +170,4 @@ backCategoriseParticle( const LHCb::Particle * particle,
   return sc;
 }
 
+//=============================================================================

@@ -34,13 +34,18 @@ public:
 
 private:
 
+  /// relations type
+  typedef LHCb::Relation1D<LHCb::Particle,int> CatRelations;
+
+private:
+
   /// Save the background category information for all particles at the given location
   StatusCode backCategoriseParticles(const std::string& location) const; 
 
   /// Save the background category information for the given particle
   StatusCode backCategoriseParticle( const LHCb::Particle * particle,
-                                     LHCb::Relation1D<LHCb::Particle, int>* catRelations, 
-                                     const unsigned int recurCount = 0 ) const;
+                                     CatRelations *         catRelations, 
+                                     const unsigned int     recurCount = 0 ) const;
    
 private:
 
