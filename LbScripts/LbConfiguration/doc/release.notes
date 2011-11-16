@@ -1,3 +1,8 @@
+2011-11-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin: fixed the logging level after the call to LbLogin and SetupProject. LbLogin for
+	sure was modifying the global level.
+
 2011-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/External.py: added the global distribution URL

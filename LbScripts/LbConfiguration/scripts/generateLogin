@@ -348,6 +348,8 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if "SP_PROMPT" in os.environ.keys() :
         del os.environ["SP_PROMPT"]
     location = None
+    log = logging.getLogger()
+    log_level = log.getEffectiveLevel()
     if targetlocation :
         location = os.path.join(targetlocation, "scripts")
     cachefilename = getLoginCacheName(shell=shell, location=location)
@@ -370,6 +372,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     env = getLbLoginEnv(llsargs)
     for var in env.keys() :
         os.environ[var] = env[var]
+    log.setLevel(log_level)
 
     setupprojargs = []
     setupprojargs.append("--silent")
@@ -385,6 +388,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     genProjectSetup(cachefilename, "LbScripts", version, cmtconfig="slc4_ia32_gcc34",
                     shell=shell, setup_project_extra_args=setupprojargs,
                     strip_path=True)
+    log.setLevel(log_level)
 
     if os.path.exists(cachefilename) :
         fixNative(cachefilename)
