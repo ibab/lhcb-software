@@ -1,6 +1,7 @@
 #include "ROLoggerDefs.h"
 #include "CPP/Interactor.h"
 #include "CPP/Event.h"
+#include <cstdio>
 
 using namespace std;
 
