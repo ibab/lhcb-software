@@ -124,7 +124,7 @@ namespace {
   int EntryMap::consoleCall(void* param)  {
     EntryMap* m = (EntryMap*)param;
     char ch;
-    bool xterm = ::getenv("TERM") != 0;
+    bool run=true, xterm = ::getenv("TERM") != 0;
 #ifdef _WIN32
     int status = _pipe(s_fdPipe,1024,O_BINARY);
     HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); 
@@ -141,7 +141,7 @@ namespace {
     }
 #endif
 
-    while(1)  {
+    while(run)  {
       if ( xterm )  {
         ::read(fileno(stdin),&ch,1);
         write(s_fdPipe[1],&ch,1);
@@ -176,6 +176,7 @@ namespace {
         }
       }
     }
+    return 1;
   }
   int EntryMap::handle()  {
     std::vector<__NetworkChannel__> channels;

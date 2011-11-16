@@ -78,17 +78,17 @@ Sensor::~Sensor() {
 }
 //------------------------------------------------------------------------------
 int Sensor::run()  {
-  int status, substatus;
+  int status, substatus, ok=1;
   unsigned int facility;
   void* param;
-  while (1)  {
+  while (1==ok)  {
     status = ::wtc_wait( &facility, &param, &substatus );  
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
       ::lib_rtl_output(LIB_RTL_INFO," exiting wt_wait status = %d param %p substat %d, fac %d \n",
 		       status, param, substatus, facility);
     }
   } 
-  //return 1;
+  return 1;
 }
 //------------------------------------------------------------------------------
 static int s_runSensor(void* arg)  {

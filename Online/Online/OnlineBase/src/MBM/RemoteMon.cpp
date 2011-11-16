@@ -93,14 +93,15 @@ void MBM::XMLMonitorServer::getOptions(int argc, char** argv)    {
 }
 
 int MBM::XMLMonitorServer::monitor() {
-  while(1)    {
+  bool run=true;
+  while(run)    {
     void* par;
     unsigned int fac;
     int sub_status, status;
     status = wtc_wait( &fac, &par, &sub_status );
     lib_rtl_output(LIB_RTL_ALWAYS,"Wait (%d,%d) -> %s\n", status, sub_status, lib_rtl_error_message(sub_status));
   }
-  // Unreachable: return 1;
+  return 1;
 }
 
 void MBM::XMLMonitorServer::handle() {

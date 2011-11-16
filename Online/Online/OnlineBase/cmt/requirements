@@ -1,5 +1,5 @@
 package OnlineBase
-version v1r11
+version v1r12
 
 branches  cmt doc src
 use GaudiPolicy v*
@@ -31,7 +31,10 @@ setup_script  $(ONLINEBASEROOT)/scripts/onlinepatches
 
 private
 macro_append  use_includes ' $(ppcmd)"$(ONLINEBASEROOT)/OnlineBase" '
-macro_append  cppflags     " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro ONLINE_CPPFLAGS      " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro_append ONLINE_CPPFLAGS     "" \
+	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend "
 
-macro_append  cppflags     "" \
-	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
+macro_append  cppflags     $(ONLINE_CPPFLAGS)
+
+

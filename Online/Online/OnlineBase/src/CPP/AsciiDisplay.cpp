@@ -3,6 +3,7 @@
 /*                  ASCII GRAPHICS DISPLAY                               */
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
+#include <cstdio>
 #include <cstdlib>
 #include "CPP/AsciiDisplay.h"
 
