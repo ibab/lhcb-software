@@ -12,6 +12,7 @@
 #include "GaudiOnline/MEPRxSys.h"
 #include <cstring>  	 
 #include <cstdlib> 	 
+#include <cstdio>
 #include <cerrno> 	 
 #include <ctime>
 #include <sstream>
