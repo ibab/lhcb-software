@@ -8,6 +8,7 @@
  - Do not return StatusCode::FAILURE (and thus abort processing) just because
    an empty Particle range is found by Particle2BackgroundCategoryRelationsAlg.
    This can happen. Instead print a warning and continue.
+ - Protect against (impossible?) infinite loops when recursive the decay tree.
 
 ! 2011-11-11 - Chris Jones
  - Update Particle2BackgroundCategoryRelationsAlg with an option to allow

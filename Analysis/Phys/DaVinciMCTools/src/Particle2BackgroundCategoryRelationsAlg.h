@@ -1,7 +1,6 @@
 #ifndef PARTICLE2BACKGROUNDCATEGORYRELATIONSALG_H 
 #define PARTICLE2BACKGROUNDCATEGORYRELATIONSALG_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -39,8 +38,9 @@ private:
   StatusCode backCategoriseParticles(const std::string& location) const; 
 
   /// Save the background category information for the given particle
-  StatusCode backCategoriseParticle(const LHCb::Particle * particle,
-                                    LHCb::Relation1D<LHCb::Particle, int>* catRelations) const;
+  StatusCode backCategoriseParticle( const LHCb::Particle * particle,
+                                     LHCb::Relation1D<LHCb::Particle, int>* catRelations, 
+                                     const unsigned int recurCount = 0 ) const;
    
 private:
 
