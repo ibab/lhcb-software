@@ -398,7 +398,8 @@ def make_tar(pname, pversion, binary=''):
         print ' error making %s - STOP ' % (tarfile)
     else:
         htmlfile = HTMLDIR + '/' + packver + tar_bin + '.html'
-        if os.path.exists(htmlfile): os.remove(htmlfile)
+        if os.path.exists(htmlfile):
+            os.remove(htmlfile)
         html = open(htmlfile, 'w')
         html.write('<H3>Project ' + pname + ' version ' + pversion + title + '</H3>\n')
         html.write('<A NAME=' + packver + tar_bin + ' HREF=' + TARSRC + '/' + packver + tar_bin + '.tar.gz>' + packver + tar_bin + '</A>\n')
@@ -407,6 +408,14 @@ def make_tar(pname, pversion, binary=''):
         html.close()
         # remove temporary file
         os.remove(dephtml)
+
+        htmlmd5file = HTMLDIR + '/' + packver + tar_bin + '.md5'
+        if os.path.exists(htmlmd5file) :
+            os.remove(htmlmd5file)
+        md5sum = calculateMD5(htmlfile)
+        mdf = open(htmlmd5file, "w")
+        mdf.write("%s  %s" % (md5sum, os.path.basename(htmlfile)))
+        mdf.close()
 
 #
 # ==== if tar file is OK :create the md5 of the project tar file ======================

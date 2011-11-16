@@ -318,7 +318,9 @@ def callPostInstallCommand(project, version):
     # has to be done only once per session
     global _post_install_env
     log = logging.getLogger()
+
     if not _post_install_env :
+        log_level = log.getEffectiveLevel()
         _post_install_env = dict(os.environ)
         from LbConfiguration.LbLogin import getLbLoginEnv
         llsargs = []
@@ -334,6 +336,7 @@ def callPostInstallCommand(project, version):
         tmp_env = getLbLoginEnv(llsargs)
         for var in tmp_env.keys() :
             _post_install_env[var] = tmp_env[var]
+        log.setLevel(log_level)
     projcmds = _postinstall_commands.get((project,version), None)
     if projcmds :
         for c in projcmds :
@@ -380,6 +383,7 @@ def callUpdateCommand(project, version):
 
     log = logging.getLogger()
     if not _post_install_env :
+        log_level = log.getEffectiveLevel()
         _post_install_env = dict(os.environ)
         import LbConfiguration.LbLogin
         llsargs = []
@@ -395,6 +399,7 @@ def callUpdateCommand(project, version):
         tmp_env = LbConfiguration.LbLogin.getLbLoginEnv(llsargs)
         for var in tmp_env.keys() :
             _post_install_env[var] = tmp_env[var]
+        log.setLevel(log_level)
     projcmds = _update_commands.get((project,version), None)
     if projcmds :
         for c in projcmds :
@@ -1918,6 +1923,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     lbloginscript = os.path.join(lbscriptspydir, "LbConfiguration", "LbLogin.py")
     log.debug("Using LbLogin from %s" % lbloginscript)
     if os.path.exists(lbloginscript) :
+        log_level = log.getEffectiveLevel()
         from LbConfiguration.LbLogin import getLbLoginEnv
         llsargs = []
         if debug_flag :
@@ -1930,6 +1936,7 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
         env = getLbLoginEnv(llsargs)
         for var in env.keys() :
             os.environ[var] = env[var]
+        log.setLevel(log_level)
     else :
         log.error("%s doesn't exist" % lbloginscript)
 

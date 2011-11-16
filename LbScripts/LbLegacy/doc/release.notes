@@ -1,3 +1,8 @@
+2011-11-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the logging level that is changed internally by LbLogin.
+	restored it to its nominal value.
+
 2011-11-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed name of the Update or PostInstall script.
