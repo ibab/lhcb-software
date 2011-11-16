@@ -1,5 +1,6 @@
 // $ID:
 #include <cstdio>
+#include <cstdlib>
 #include <signal.h>
 #include "rtl_internal.h"
 #include <iostream>
