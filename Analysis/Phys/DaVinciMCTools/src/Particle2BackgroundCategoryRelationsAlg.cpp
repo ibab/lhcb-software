@@ -92,16 +92,20 @@ backCategoriseParticles(const std::string& location) const
     return Error ( "No particle location provided" ) ;
   }
 
-  // CRJ : Allow for the possibility there is no data at a given TES location
-  //     : Possible when running on uDSTs
-  if ( !exist<LHCb::Particle::Range>(location) ) return StatusCode::SUCCESS;
-
-  //Get the input particles
-  const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
-  //Check that this returns something 
-  if (myParticles.empty()) 
+  // Allow for the possibility there is no data at a given TES location
+  // Possible when running on uDSTs
+  if ( !exist<LHCb::Particle::Range>(location) ) 
   {
-    return Error ( "No particles at the location provided" );
+    return Warning( "No data at '" + location + "'", StatusCode::SUCCESS );
+  }
+
+  // Get the input particles
+  const LHCb::Particle::Range myParticles = get<LHCb::Particle::Range>(location);
+  // Check that this returns something 
+  if ( myParticles.empty() ) 
+  {
+    // Return success as this can happen and should not abort processing
+    return Warning ( "Empty Particle range from '" + location + "'", StatusCode::SUCCESS );
   }
 
   // Make the relations table
