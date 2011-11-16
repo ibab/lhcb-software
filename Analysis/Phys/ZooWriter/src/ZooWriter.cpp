@@ -100,7 +100,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
 	const std::string& treename,
 	const std::vector<std::string>& sel_collections,
 	const std::vector<std::string>& sel_names, ZooWriter* const base) :
-    m_perJobMapSz(0)
+    m_perJobMapSz(0), m_evts_begun(0), m_evts_ended(0)
 {
     using namespace boost::lambda;
     // open ROOT file
@@ -195,7 +195,7 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     m_T->AddFriend(&*m_TperJob);
     {
 	boost::shared_ptr<ZooObjectManager> objman(
-		new ZooObjectManager(*m_T, *m_TperJob, m_evts));
+		new ZooObjectManager(*m_T, *m_TperJob, m_evts_begun));
 	m_objectManager.swap(objman);
     }
     {
@@ -235,13 +235,11 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     m_trackPool = trackpool;
     // get ROOT object count
     m_objectCount = TProcessID::GetObjectCount();
-    m_dirty = false;
-    m_evts = 0;
 }
 
 ZooWriter::ZooWriterContext::~ZooWriterContext()
 {
-    if (m_dirty) endEvent();
+    if (m_evts_begun > m_evts_ended) endEvent();
     m_f->cd();
     if (m_TperJob) m_TperJob->Write("",TObject::kOverwrite);
     if (m_T) m_T->Write("",TObject::kOverwrite);
@@ -263,18 +261,9 @@ ZooWriter::ZooWriterContext::~ZooWriterContext()
 
 void ZooWriter::ZooWriterContext::beginEvent()
 {
-    class ZooWriterContextException : public std::exception
-    {
-	private:
-	    const char* m_what;
-	public:
-	    ZooWriterContextException(const char* what) throw() : m_what(what) { }
-	    virtual ~ZooWriterContextException() throw() { }
-	    virtual const char* what() const throw() { return m_what; }
-    };
-    if (m_dirty)
+    if (m_evts_begun != m_evts_ended)
 	throw ZooWriterContextException("At most one incomplete event permitted!");
-    if (0 == m_evts) {
+    if (0 == m_evts_begun) {
 	// fill per job tree at the beginning of first event in job
 	m_f->cd();
 	// persistify mapping string - per job objects
@@ -308,12 +297,14 @@ void ZooWriter::ZooWriterContext::beginEvent()
 	    throw ZooWriterContextException(
 		    "Not allowed to change per Job objects after first event!");
     }
+    ++m_evts_begun;
     m_objectCount = TProcessID::GetObjectCount();
-    m_dirty = true;
 }
 
 void ZooWriter::ZooWriterContext::endEvent()
 {
+    if (m_evts_begun != m_evts_ended + 1)
+	throw ZooWriterContextException("At most one incomplete event permitted!");
     m_f->cd();
     // commit the event to the tree
     m_T->Fill();
@@ -335,10 +326,9 @@ void ZooWriter::ZooWriterContext::endEvent()
 	m_trackPool.swap(trackpool);
     }
     TProcessID::SetObjectCount(m_objectCount);
-    m_dirty = false;
     // optimize buffer sizes after first 250 events
-    ++m_evts;
-    if (250 == m_evts) m_T->OptimizeBaskets();
+    ++m_evts_ended;
+    if (250 == m_evts_ended) m_T->OptimizeBaskets();
     // make sure we stil are looking at the most recent per-job objects
     m_TperJob->GetEntry(0); 
 }

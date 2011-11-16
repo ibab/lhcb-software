@@ -112,6 +112,20 @@ class ZooWriter : public DVAlgorithm {
 			std::string name;
 			std::string collection;
 		} KnownSelection;
+		/** @brief exception to throw in case ZooWriterContext is
+		 * misused and gets out of sync.
+		 */
+		class ZooWriterContextException : public std::exception
+	        {
+		    private:
+			const char* m_what;
+		    public:
+			ZooWriterContextException(const char* what) throw() :
+			    m_what(what) { }
+			virtual ~ZooWriterContextException() throw() { }
+			virtual const char* what() const throw()
+			{ return m_what; }
+	        };
 	    private:
 		std::vector<KnownSelection>  m_sel;
 		TFile* m_f;
@@ -129,9 +143,9 @@ class ZooWriter : public DVAlgorithm {
 			std::less<const LHCb::Track*>, FittedTrackMapAllocator> FittedTrackMap;
 		FittedTrackMap m_fittedTracks;
 		int m_objectCount;
-		bool m_dirty;
-		unsigned long m_evts;
 		unsigned long m_perJobMapSz;
+		unsigned long m_evts_begun;
+		unsigned long m_evts_ended;
 
 	    public:
 		/// constructor
