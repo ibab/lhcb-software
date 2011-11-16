@@ -8,7 +8,6 @@ static DialogDisplayFactory* fac = 0;
 
 DisplayFactory::DisplayFactory (const std::string& type) {
   if ( AbstractDisplayFactory::instance() == 0 ) {
-    static AbstractDisplayFactory* fac = 0;
     if ( type.substr(0,2) == "UP" ) {
       UpiFactory::instance();
       fac = new DialogDisplayFactory();

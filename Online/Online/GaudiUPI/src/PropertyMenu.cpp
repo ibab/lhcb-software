@@ -11,6 +11,7 @@
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include <cstring>
+#include <cstdio>
 
 using namespace std;
 static const char* s_normalize[][2] =  {
