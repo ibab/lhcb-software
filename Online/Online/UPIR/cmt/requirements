@@ -7,11 +7,8 @@ use OnlineKernel v* Online
 #
 include_path none
 library  UPIR $(UPIROOT)/src/*.cpp
-macro lib_UPIR_cppflags  ' -DREMOTE $(ppcmd)"$(UPIROOT)" '
+macro lib_UPIR_cppflags  ' -DREMOTE $(ppcmd)"$(UPIROOT)"  $(ONLINE_CPPFLAGS) '
 apply_pattern library_path
 apply_pattern linker_library library=UPIR
-
-private
-macro_append cppflags   $(ONLINE_CPPFLAGS)
 
 
