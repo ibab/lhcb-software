@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 __author__ = "Illya Shapoval <illya.shapoval@cern.ch>"
-__version__ = "$Id: CondDBAdmin_DQ_Commit.py,v 1.0 2010-07-20 00:00:00 ishapova Exp $"
 
 import os, sys, stat
 
@@ -99,7 +98,6 @@ def _get_options():
     # Configure the parser
     from optparse import OptionParser
     parser = OptionParser(usage = "%prog [options] FLAG FLAG_VALUE local_tag",
-                          version = __version__,
                           description =
 """This script adds/removes DQ flags to/from the CondDB, tagging the result and
 updating the release notes. The user has to provide a FLAG name to insert/remove
@@ -505,7 +503,7 @@ def update_dom_rel_notes(options, local_tag, flag, flag_value):
     descr = options.message.splitlines()
     descr[0] = "%s -> '%s'. "%(flag,flag_value) + descr[0] # not +=
     rel_notes.addNote(contributor = options.contributor,
-                      partitions = {'DQFLAGS':(local_tag, ['/Conditions/DQ/Flags'])},
+                      partitions = {'DQFLAGS':(local_tag, {'modified':['/Conditions/DQ/Flags'],'added':[]})},
                       description = descr,
                       datatypes = ["All"])
     return rel_notes

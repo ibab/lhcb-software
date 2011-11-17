@@ -155,10 +155,10 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
 
     def addNote(self, contributor, partitions, description, datatypes, date = None, patch = None, forceNewLT = False):
         """
-        And a basic entry to the release notes.
+        Add a basic entry to the release notes.
 
         contributor: person providing the changes
-        partitions: dictionary in the format {"PARTITION":("tag",["file1","file2"])}
+        partitions: dictionary in the format {"PARTITION":("tag",{'modified':["file1","file2"],'added':["file3","file4"]})}
         description: list of comments, ["comment1","comment2"]
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
         patch: numeric id of the patch (on savannah)
@@ -183,10 +183,17 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
             part_el = ET.SubElement(note,_xel("partition"))
             ET.SubElement(part_el,_xel("name")).text = part
             ET.SubElement(part_el,_xel("tag")).text = tag
-            files = list(files)
-            files.sort()
-            for f in files:
+            modified_files = list(files['modified'])
+            modified_files.sort()
+            added_files = list(files['added'])
+            added_files.sort()
+            for f in modified_files:
                 ET.SubElement(part_el,_xel("file")).text = f
+            for f in added_files:
+                felem = ET.SubElement(part_el,_xel("file"))
+                felem.text = f
+                felem.set('status','new')
+
             if len(datatypes) != 0:
                 for type in datatypes:
                     ET.SubElement(part_el,_xel("type")).text = type
