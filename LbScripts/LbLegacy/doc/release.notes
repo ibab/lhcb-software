@@ -1,5 +1,7 @@
 2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed the checking of the Update.py script. Now it is done
+	incrementally in all the components of MYSITEROOT.
 	* LbLegacy/python/LbLegacy/install_project.py: use of the __import__ internal function in order
 	to import modules by their names.
 

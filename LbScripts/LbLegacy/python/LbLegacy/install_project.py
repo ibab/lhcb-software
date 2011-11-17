@@ -419,6 +419,21 @@ def isUpdateRegistered(project, version):
         registered = True
     return registered
 
+def getCommandFile(postscr, flavor="PostInstall"):
+    """
+    get the file to be executed in either PostInstall or Update action.
+    returns None if no valid file has been found.
+    """
+    cmd_file = None
+    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
+    lhcb_rooted_dir = postscr.replace(this_lhcb_dir,"").lstrip(os.sep)
+    if flavor == "Update" : # look at the first valid entry in the chain
+        cmd_file = _multiPathGetFirst(lhcb_dir, lhcb_rooted_dir, None)
+    elif os.path.exists(postscr) :
+        cmd_file = postscr
+
+    return cmd_file
+
 def registerProjectCommand(pack_ver, flavor="PostInstall"):
     postscr_name = "%s.py" % flavor
     try :
@@ -436,11 +451,13 @@ def registerProjectCommand(pack_ver, flavor="PostInstall"):
             if pkg :
                 cmtcontainer = os.path.join(pack_ver[3], "cmt")
                 postscr = os.path.join(cmtcontainer, postscr_name)
-        if postscr and os.path.exists(postscr) :
-            if flavor == "PostInstall" :
-                registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
-            if flavor == "Update" :
-                registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+        if postscr :
+            postscr = getCommandFile(postscr, flavor)
+            if postscr :
+                if flavor == "PostInstall" :
+                    registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+                if flavor == "Update" :
+                    registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
     except ImportError:
         pass
 
@@ -957,14 +974,22 @@ def getMD5FileName(filename):
     it strips all the file extensions.
     @param filename: initial file name
     """
-    while True :
-        froot = os.path.splitext(filename)[0]
-        if froot == filename :
-            break
-        else :
-            filename = froot
 
-    name = ".".join([filename, "md5"])
+    if filename.endswith(".tar.gz") :
+        fc = filename.split(".")
+        name = ".".join(fc[:-2]) + ".md5"
+    elif filename.endswith(".html") :
+        fc = filename.split(".")
+        name = ".".join(fc[:-1]) + ".md5"
+    else :
+        while True :
+            froot = os.path.splitext(filename)[0]
+            if froot == filename :
+                break
+            else :
+                filename = froot
+        name = ".".join([filename, "md5"])
+
     return name
 
 # --------------------------------------------------------------------------------------
@@ -1467,6 +1492,8 @@ def getProjectTar(tar_list, already_present_list=None):
     this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
     this_targz_dir = targz_dir.split(os.pathsep)[0]
 
+    soft_type = "LHCb"
+
 
     for fname in tar_list.keys():
         log.info('-' * line_size)
@@ -1482,12 +1509,15 @@ def getProjectTar(tar_list, already_present_list=None):
                 if fname.find('LCGCMT') != -1 or fname.find('LCGGrid') != -1 or fname.find('LCGGanga') != -1:
                     checkWriteAccess(os.path.join(this_lcg_dir, '..'))
                     os.chdir(os.path.join(this_lcg_dir, '..'))
+                    soft_type = "LCG"
                 elif fname.find('GENSER') != -1:
                     checkWriteAccess(this_lcg_dir)
                     os.chdir(this_lcg_dir)
+                    soft_type = "LCG"
                 else:
                     checkWriteAccess(this_contrib_dir)
                     os.chdir(this_contrib_dir)
+                    soft_type = "Contrib"
                 getFile(url_dist + 'source/', fname)
             elif tar_list[fname] == "system":
                 log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % fname)
@@ -1495,6 +1525,7 @@ def getProjectTar(tar_list, already_present_list=None):
             else:
                 checkWriteAccess(this_lhcb_dir)
                 os.chdir(this_lhcb_dir)
+                soft_type = "LHCb"
                 getFile(url_dist + tar_list[fname] + '/', fname)
 
 
@@ -1518,7 +1549,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 os.chdir(pack_ver[3])
                 safeMakeDirs(pack_ver[2])
 
-            if os.path.realpath(os.getcwd()) == os.path.realpath(this_lhcb_dir) :
+            if soft_type == "LHCb" :
                 # if binary is requested and InstallArea does not exist : set it
                 if pack_ver[2] :
                     os.chdir(os.path.join(this_lhcb_dir, pack_ver[0], pack_ver[0] + '_' + pack_ver[1]))
@@ -1551,7 +1582,7 @@ def getProjectTar(tar_list, already_present_list=None):
             if already_present_list != None:
                 already_present_list.append(tar_list[fname])
 
-        if not isUpdated(pname, pversion) :
+        if not isUpdated(pname, pversion) and soft_type == "LHCb":
             registerProjectCommand(pack_ver, "Update")
 
         if isUpdateRegistered(pname, pversion) and not isUpdated(pname, pversion) :
@@ -1964,6 +1995,16 @@ def _multiPathJoin(path, subdir):
     for d in path.split(os.pathsep) :
         pathlist.append(os.path.join(d, subdir))
     return os.pathsep.join(pathlist)
+
+def _multiPathGetFirst(path, subdir, default=None):
+    """ Quick way to find a file or dir in a series of paths """
+    result = default
+    for d in path.split(os.pathsep) :
+        sd = os.path.join(d, subdir)
+        if os.path.exists(sd) :
+            result = sd
+            break
+    return result
 
 def _cleanPath(path_value, normalize=False):
     """fully clean up a path: remove empty entries and
