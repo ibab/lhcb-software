@@ -376,6 +376,7 @@ StatusCode ParticleFlow4Jets::execute() {
       if (n_pp == NULL) continue;
       const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
       const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
+      if(hypoClusters[0]==NULL) continue;
 
       // If the cluster have already been tagged, skip.
       if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5)continue;
@@ -427,6 +428,8 @@ StatusCode ParticleFlow4Jets::execute() {
         const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
         const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
         // Store the cell ID
+	if(hypoClusters[0]==NULL) continue;
+
         caloCells.push_back(hypoClusters[0].target()->seed().all());
         
         // If the cluster have already been tagged, skip.
@@ -476,6 +479,8 @@ StatusCode ParticleFlow4Jets::execute() {
       const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
       const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
       // Use Ttrack banning?
+      if(hypoClusters[0]==NULL) continue;
+
       bool isTbanned = false;
       if ( m_banFromTTrack && BannedECALClusters.count(hypoClusters[0].target()->seed().all())<0.5){
         std::pair< double , int > tmpPair;
@@ -656,13 +661,10 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
     MapProbNNPID  probNNpid ;
   
     probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNpi   ,-0.5) ] =  "pi+" ;
-
-    if ( !m_usePIDInfo ){ 
-      probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNp    ,-0.5) ] =  "p+"  ;
-      probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNk    ,-0.5) ] =  "K+"  ;
-      probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNe    ,-0.5) ] =  "e+"  ;
-      probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNmu   ,-0.5) ] =  "mu+" ;
-    }
+    probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNp    ,-0.5) ] =  "p+"  ;
+    probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNk    ,-0.5) ] =  "K+"  ;
+    probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNe    ,-0.5) ] =  "e+"  ;
+    probNNpid[ pp->info( LHCb::ProtoParticle::ProbNNmu   ,-0.5) ] =  "mu+" ;
   
     // the map is by construction sorted by key value (lower first)
     MapProbNNPID::iterator iNN = probNNpid.end();
@@ -680,7 +682,7 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
       if (m_protoMap[(*iNN).second].first->isSatisfied( pp ))pid_found = true ;  
     }
     if( pid_found ){
-      m_protoMap[(*iNN).second].second ;
+      pprop = m_protoMap[(*iNN).second].second ;
       verbose()<<"PID applied: "<<(*iNN).second <<endreq;
     }
   }

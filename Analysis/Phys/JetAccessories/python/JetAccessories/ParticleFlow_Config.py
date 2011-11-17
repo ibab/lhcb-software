@@ -65,7 +65,7 @@ class ParticleFlowConf:
          ## Default parameter: the closer from what we used before + HCAL
          self.paramDef = {'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False , 'PtMinDown': 0. ,
                           'Chi2MaxDown': 10. , 'Chi2MaxUp': 10. , 'PtMinUp': 0. , 'UseTTHits':False ,'MaxChi2NoTT': 5.,
-                          'UseHCAL': True ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,
+                          'UseHCAL': True ,'UsePIDInfo': False ,'MaxMatchECALTr': 4.,'MinHCALE': 1800.,
                           'MaxMatchHCALLowEValue': 5000.,'MaxMatchHCALHighEValue': 10000.,
                           'MaxMatchHCALTrSmallE': 25.,'MaxMatchHCALTrMediumE':16. ,'MaxMatchHCALTrLargeE':16. ,'MaxMatchHCALTr_T': 16.,
                           'MinPhotonID4PhotonTtrack': -2. , 'MinPhotonID4Photon': -1. ,'MaxMatchECALTr_T': 16. ,
@@ -155,6 +155,8 @@ class ParticleFlowConf:
                 alg.UseTTHits = self.UseTTHits 
                 alg.MaxMatchECALTr = self.MaxMatchECALTr 
                 alg.MaxMatchECALTr_T = self.MaxMatchECALTr_T
+                ##  is PID is requested
+                alg.UsePIDInfo = self.UsePIDInfo
                 
             if t=='Pi0s':               
                 pLocations.append('Phys/StdLooseResolvedPi0/Particles')
@@ -168,7 +170,7 @@ class ParticleFlowConf:
                 pLocations.append('Phys/StdLooseLambdaDD/Particles')
                 pLocations.append('Phys/StdLooseLambdaLL/Particles')
         alg.ParticleLocations = pLocations
-        #alg.OutputLevel = 0
+       # alg.OutputLevel = 0
         self.algorithms.append(alg)
                 
 
