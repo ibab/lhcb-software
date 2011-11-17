@@ -35,6 +35,6 @@ macro ONLINE_CPPFLAGS      " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-lon
 macro_append ONLINE_CPPFLAGS     "" \
 	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend "
 
-macro_append  cppflags     $(ONLINE_CPPFLAGS)
+macro_append  cppflags    " $(ONLINE_CPPFLAGS) "
 
 
