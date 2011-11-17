@@ -14,6 +14,10 @@
     LineSkipper([&quot;INFO Disconnect from database after being idle&quot;]) + \
     LineSkipper([&quot;INFO Loading simulation attributes file&quot;, &quot;UserDecayFile&quot;]) + \
     LineSkipper([&quot;INFO Opened magnetic field file&quot;,&quot;EvtGen:In readDecayFile&quot;]) + \
+    LineSkipper([&quot;MainEventGaussSkipGea...SUCCESS Exceptions/Errors/Warnings/Infos Statistics&quot;]) + \
+    LineSkipper([&quot;MainEventGaussSkipGea...SUCCESS  #WARNINGS&quot;]) + \
+    LineSkipper([&quot;GaussGen.GaussGenMemory SUCCESS Exceptions/Errors/Warnings/Infos Statistics&quot;]) + \
+    LineSkipper([&quot;GaussGen.GaussGenMemory SUCCESS  #WARNINGS&quot;]) + \
     LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
 strippedOutput = []
 skipping = False
