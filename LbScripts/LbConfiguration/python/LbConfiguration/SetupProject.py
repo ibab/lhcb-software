@@ -57,12 +57,12 @@ log = logging.getLogger(os.path.basename(__file__))
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
 # LHCb standard projects
-from LbConfiguration.Project import project_names
+import LbConfiguration.Project
 # LHCb projects without container
 import LbConfiguration.Package
 # LCGCMT is not an LHCb project but we know about it
 nocontainer_project_names = LbConfiguration.Package.project_names + ["LCGCMT"]
-project_names += nocontainer_project_names # Add the projects without container to the full list
+project_names = LbConfiguration.Project.project_names + nocontainer_project_names # Add the projects without container to the full list
 
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and

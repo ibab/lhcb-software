@@ -1,3 +1,8 @@
+2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbConfiguration/python/LbConfiguration/SetupProject.py: fixed the usage of LbConfiguration.Project.project_list.
+	The SetupProject module doesn't modify it anymore.
+
 2011-11-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin: fixed the logging level after the call to LbLogin and SetupProject. LbLogin for
