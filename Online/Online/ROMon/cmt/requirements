@@ -16,7 +16,7 @@ apply_pattern install_more_includes more=ROMon
 # ==================== component libraries ==================================
 library ROMon *.cpp ../rpc/*.cpp -import=DIM -import=XercesC
 library XMLRPC ../rpc/*.cpp
-macro_append  ROMon_dependencies       " XMLRPC "
+macro_append  ROMon_dependencies " XMLRPC "
 apply_pattern linker_library   library=XMLRPC
 apply_pattern linker_library   library=ROMon
 apply_pattern install_python_modules
