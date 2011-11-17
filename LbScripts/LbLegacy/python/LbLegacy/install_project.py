@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111106'
+script_version = '111117'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r5p1"
@@ -39,6 +39,7 @@ lcg_tar      = [ "LCGCMT", "LCGGrid", "LCGGanga" ]
 
 LbLegacy = None
 LbConfiguration = None
+LbRelease = None
 
 
 # base directories
@@ -322,7 +323,7 @@ def callPostInstallCommand(project, version):
     if not _post_install_env :
         log_level = log.getEffectiveLevel()
         _post_install_env = dict(os.environ)
-        from LbConfiguration.LbLogin import getLbLoginEnv
+        import LbConfiguration.LbLogin
         llsargs = []
         if debug_flag :
             llsargs.append("--debug")
@@ -333,7 +334,7 @@ def callPostInstallCommand(project, version):
         llsargs.append("--scripts-version=%s" % lbscripts_version)
         llsargs.append("--cmtconfig=%s" % cmtconfig)
         log.debug("Running LbLogin %s" % " ".join(llsargs))
-        tmp_env = getLbLoginEnv(llsargs)
+        tmp_env = LbConfiguration.LbLogin.getLbLoginEnv(llsargs)
         for var in tmp_env.keys() :
             _post_install_env[var] = tmp_env[var]
         log.setLevel(log_level)
@@ -1603,6 +1604,7 @@ def getMySelf():
 def getBootScripts():
     global LbLegacy
     global LbConfiguration
+    global LbRelease
     log = logging.getLogger()
     here = os.getcwd()
     if not check_only :
@@ -1650,10 +1652,9 @@ def getBootScripts():
 
     log.debug("sys.path is %s" % os.pathsep.join(sys.path))
 
-    import LbLegacy as lbl
-    LbLegacy = lbl
-    import LbConfiguration as lbconf
-    LbConfiguration = lbconf
+    LbLegacy        = __import__("LbLegacy")
+    LbConfiguration = __import__("LbConfiguration")
+    LbRelease       = __import__("LbRelease")
 
 def cleanBootScripts():
     log = logging.getLogger()

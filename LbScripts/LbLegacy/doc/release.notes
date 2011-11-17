@@ -1,3 +1,8 @@
+2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbLegacy/python/LbLegacy/install_project.py: use of the __import__ internal function in order
+	to import modules by their names.
+
 2011-11-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed the logging level that is changed internally by LbLogin.
