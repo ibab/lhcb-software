@@ -10,7 +10,7 @@ library  UPI *.cpp
 
 apply_pattern ld_library_path
 apply_pattern linker_library   library=UPI
-macro lib_UPI_cppflags  " -DSCREEN "
+macro lib_UPI_cppflags  " -DSCREEN  $(ONLINE_CPPFLAGS) "
 
 apply_pattern reflex_dictionary dictionary=UPI \
                                 headerfiles=$(UPIROOT)/dict/dictionary.h \
@@ -25,7 +25,3 @@ apply_pattern install_python_modules
 
 private
 use Python v* LCG_Interfaces -no_auto_imports
-macro_append  cppflags     $(ONLINE_CPPFLAGS)
-
-
-
