@@ -4,7 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
-!========================= RichMCTools v3r16 2011-04-27 =========================
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID
+
+!====================== RichMCTools v3r16 2011-04-27 =========================
 ! 2011-04-14 - Chris Jones
  - Remove some DC06 specific hacks
 

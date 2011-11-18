@@ -40,7 +40,6 @@ MCTruthTool::MCTruthTool( const std::string& type,
     m_mcTrackLinks         ( NULL  ),
     m_mcPhotonLinks        ( NULL  )
 {
-
   // interface
   declareInterface<IMCTruthTool>(this);
 
@@ -51,7 +50,6 @@ MCTruthTool::MCTruthTool( const std::string& type,
                    m_mcRichDigitSumsLocation = LHCb::MCRichDigitSummaryLocation::Default );
   declareProperty( "MCRichHitsLocation",
                    m_mcRichHitsLocation = LHCb::MCRichHitLocation::Default );
-
 }
 
 MCTruthTool::~MCTruthTool() { cleanUpLinkers(); }
@@ -599,7 +597,7 @@ MCTruthTool::smartIDToMCRichHitsMap() const
         }
         m_smartIDsToHits[pixelID].push_back( *iHit );
         // Add another entry for the HPD
-        const LHCb::RichSmartID hpdID = pixelID.hpdID();
+        const LHCb::RichSmartID hpdID = pixelID.pdID();
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Adding MCRichHit to list for HPD ID " << hpdID << endmsg;
