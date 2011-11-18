@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Olivier Callot
+ - New algorithm VertexChecker to measure the performance of vertexing
+ - New type of tracks monitored in TrackEffChecker: Tracks with IP between 1 and 2 mm
+
 !========================= TrackCheckers v4r11p1 2011-02-28 =========================
 ! 2011-02-16 - Victor Coco
  - Initialize LinkInfo in TrackCheckerBase reconstructedInRefContainer function
