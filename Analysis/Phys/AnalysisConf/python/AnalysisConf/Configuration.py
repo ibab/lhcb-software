@@ -104,8 +104,8 @@ class AnalysisConf(LHCbConfigurableUser) :
             True                            ) ## on-demand
         
         from Configurables import DataOnDemandSvc
-        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Charged' ] = 'ChargedPP2MC' 
-        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Upstream' ] =   'ChargedPP2MC' 
+        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Charged' ]  = 'ChargedPP2MC' 
+        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Upstream' ] = 'ChargedPP2MC' 
 
         self.unpackMC()
 #
