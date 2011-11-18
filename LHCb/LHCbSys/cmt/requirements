@@ -80,9 +80,7 @@ use GaudiConfUtils        v1r0
 use GaudiObjDesc          v11r12
 
 #use GaudiPatches          v1r2
-
-
-use HepMCBack             v1r1    Gen     # Gloria Corti, Patrick Robbe
+#use HepMCBack             v1r1    Gen     # Obsolete, was for DC06
 
 # Kernel packages
 use HistoStrings          v1r2    Kernel  # Vanya Belyaev 
