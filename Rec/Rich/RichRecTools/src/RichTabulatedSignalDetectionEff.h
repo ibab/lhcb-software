@@ -86,15 +86,6 @@ namespace Rich
 
     private: // methods
 
-      /** Returns the appropriate Rich HPD panel detector element name for 
-       *  the given RICH and panel.
-       *  @param[in] rich  The RICH detector type
-       *  @param[in] panel The RICH panel
-       *  @return The RICH panel name in the XML description
-       */
-      const std::string & pdPanelName( const Rich::DetectorType rich,
-                                       const Rich::Side         panel ) const;
-
       /** Get the correct DeRichPD object for the given RichSmartID
        *  @param[in] hpdID The RichSmartID for the PD
        *  @return Pointer to the associated DeRichPD object

@@ -4,7 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-!========================= RichRecTools v4r19 2011-11-08 =========================
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in method names to make things PD neutral
+ - Use DeRich detectors to get the PD panels, to correctly get PMT/HPD types.
+
+!====================== RichRecTools v4r19 2011-11-08 =========================
 ! 2011-10-05 - Chris Jones
  - Various small changes to make things PD neutral
 

@@ -72,7 +72,7 @@ NominalTabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * 
   const Rich::DetectorType det = segment->trackSegment().rich();
 
   // Note - Only using nominal HPD from Rich1 until Rich2 also has this defined
-  return ( (*(m_riches[Rich::Rich1]->nominalHPDQuantumEff()))[energy*Gaudi::Units::eV]/100
+  return ( (*(m_riches[Rich::Rich1]->nominalPDQuantumEff()))[energy*Gaudi::Units::eV]/100
            * m_qEffPedLoss *
            (*(m_riches[det]->nominalSecMirrorRefl()))[energy*Gaudi::Units::eV] *
            (*(m_riches[det]->nominalSphMirrorRefl()))[energy*Gaudi::Units::eV]

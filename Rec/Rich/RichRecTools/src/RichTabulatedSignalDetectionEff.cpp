@@ -61,10 +61,10 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
   // PD panels
-  m_pdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich1,Rich::top));
-  m_pdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich1,Rich::bottom));
-  m_pdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich2,Rich::left));
-  m_pdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichPDPanel>(pdPanelName(Rich::Rich2,Rich::right));
+  m_pdPanels[Rich::Rich1][Rich::top]    = m_riches[Rich::Rich1]->pdPanel(Rich::top);
+  m_pdPanels[Rich::Rich1][Rich::bottom] = m_riches[Rich::Rich1]->pdPanel(Rich::bottom);
+  m_pdPanels[Rich::Rich2][Rich::left]   = m_riches[Rich::Rich2]->pdPanel(Rich::left);
+  m_pdPanels[Rich::Rich2][Rich::right]  = m_riches[Rich::Rich2]->pdPanel(Rich::right);
 
   // the ray-tracing mode
   LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
@@ -271,14 +271,4 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 
   // return overall efficiency
   return m_qEffPedLoss * pdQEEff * primMirrRefl * secMirrRefl;
-}
-
-//================================================================================
-// The PD panel location
-//================================================================================
-const std::string &
-TabulatedSignalDetectionEff::pdPanelName( const Rich::DetectorType rich,
-                                          const Rich::Side         panel ) const
-{
-  return (m_riches[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
 }
