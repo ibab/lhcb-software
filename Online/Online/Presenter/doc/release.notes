@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Olivier Callot
+ - Fix warnings from gcc 4.6 compiler
+
 ! 2011-10-17 - Olivier Callot
  - Protect against files without run number in history by time mode.
 

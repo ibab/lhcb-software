@@ -103,7 +103,6 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
 
   if ( problems.empty() ) return false ;
 
-  int id ;
   Clear() ;
 
   std::ostringstream theStr ;

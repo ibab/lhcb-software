@@ -838,7 +838,7 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
           yLow = 0.95 * yLow;
           yHig = 0.95 * yHig;
         }
-        (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+        (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, NULL );
         (*itH).setDisplayOptions();
         col += 1;
         if ( nCol == col ) {
@@ -857,7 +857,7 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
         yLow = 0.95 * yLow;
         yHig = 0.95 * yHig;
       }
-      (*itH).displayHisto->draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      (*itH).displayHisto->draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, NULL );
       (*itH).displayHisto->setDisplayOptions();
       col += 1;
       if ( nCol == col ) {
@@ -876,7 +876,7 @@ void PresenterPage::simpleDisplay (  TCanvas* editorCanvas ) {
         yLow = 0.95 * yLow;
         yHig = 0.95 * yHig;
       }
-      (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, false );
+      (*itH).draw( editorCanvas, xLow, yLow, xHig, yHig, NULL, false, NULL );
       (*itH).setDisplayOptions();
       col += 1;
       if ( nCol == col ) {
