@@ -1,5 +1,9 @@
 2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r6
+
+2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: fixed the work dir for the Update script.
 
 2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

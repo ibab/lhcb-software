@@ -1,3 +1,66 @@
+2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+        * cmt/requirements: release of version v6r6
+
+	LbConfiguration:
+	* LbConfiguration/python/LbConfiguration/SetupProject.py: fixed
+	the usage of LbConfiguration.Project.project_list.  The
+	SetupProject module doesn't modify it anymore.
+	* scripts/generateLogin: fixed the logging level after the call to
+	LbLogin and SetupProject. LbLogin for sure was modifying the
+	global level.
+	* python/LbConfiguration/External.py: added the global distribution URL
+	* python/LbConfiguration/Package.py: use the distribution URL in order to get SVN informations
+	* python/LbConfiguration/Project.py: idem
+	* python/LbConfiguration/Platform.py: added support for gcc46 for slc5 and slc6.
+	* python/LbConfiguration/Package.py: added WG/RDConfig WG/CharmConfig to the list of supported
+	"data" packages.
+	* scripts/generateLogin: set CMTEXTRATAGS to NO_PYTHON_LIBPATH for the cache generation.
+	* python/LbConfiguration/LbLogin.py:
+	- factored out the CMTEXTRATAGS tweaking in a separate method.
+	- added the NO_PYTHON_LIBPATH tag to the default CMTEXTRATAGS list passed to SetupProject.
+	  This will prevent the setup of the LD_LIBRARY_PATH for python. This is not needed since python
+	  is linked statically to libpython.so. And this causes bad interferences with the system
+	  python (/usr/bin/python26 which is not linked statically).
+	- fixed usage of the "debug" argument that was not working after the introduction of the "-w" option.
+	* python/LbConfiguration/Project.py:
+	- added short cuts for volume names per project.
+	- added AFSReleaseVolumeName function to get the name per version.
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: fixed the checking of the Update.py script. Now it is done
+	incrementally in all the components of MYSITEROOT.
+	* python/LbLegacy/install_project.py: fixed the logging level that is changed internally by LbLogin.
+	restored it to its nominal value.
+	* python/LbLegacy/install_project.py: added protection to the getCached function to avoid looking for
+	external projects.
+	* python/LbLegacy/install_project.py: added try/except protection for getProject and getPackage to
+	allow the use of a former LbConfiguration version with a different argument list.
+	* python/LbLegacy/vol_for_releases.py: use the AFSReleaseVolumeName method to
+	get the name of the volume.
+	* scripts/mkMCGentar: removed the stripping of the "p" patch version for the GENSER
+	tarball.
+
+	LbRelease:
+	* LbRelease/python/LbRelease/rcs.py: improved support for branches
+	(in Subversion) (Marco Cl.)
+	* LbRelease/scripts/svnpath: minor changes to adapt to latest rcs
+	module (Marco Cl.)
+	* LbRelease/scripts/tag_package: added support for tagging from branches,
+	tagging of projects and implicit versions (from requirements)
+	(Marco Cl.)
+	* LbRelease/python/LbRelease/SvnChecker/StdCheckers.py: extended
+	version format, allow 'gX' (Marco Cl.)
+
+	LbUtils:
+	* python/LbUtils/afs/volume.py:
+	- added the isFull method to the volume class.
+	- added remainingSpace method.
+	- added relative option to remainingSpace and usedSpace methods.
+	* python/LbUtils/afs/volume.py: factor out the maximal length for a volume name (22) into
+	the MAX_NAME_LENGTH variable.
+
+
 2011-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
         * cmt/requirements: release of version v6r5p1

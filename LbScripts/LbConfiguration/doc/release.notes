@@ -1,3 +1,7 @@
+2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r6
+
 2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbConfiguration/python/LbConfiguration/SetupProject.py: fixed the usage of LbConfiguration.Project.project_list.
