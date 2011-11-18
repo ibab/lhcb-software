@@ -183,15 +183,6 @@ namespace Rich
       return m_deBeam[rich];
     }
 
-    /** Returns the appropriate Rich HPD panel detector element name for
-     *  the given RICH and panel.
-     *  @param[in] rich  The RICH detector type
-     *  @param[in] panel The RICH panel
-     *  @return The RICH panel name in the XML description
-     */
-    const std::string & pdPanelName( const Rich::DetectorType rich,
-                                     const Rich::Side         panel ) const;
-
   private: // data
 
     /// Snell's Law refraction tool

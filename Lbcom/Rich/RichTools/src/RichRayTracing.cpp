@@ -77,8 +77,7 @@ StatusCode Rich::RayTracing::initialize()
   {
     for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
-      m_photoDetPanels[rich][panel] =
-        getDet<DeRichPDPanel>( pdPanelName((Rich::DetectorType)rich,(Rich::Side)panel) );
+      m_photoDetPanels[rich][panel] = m_rich[rich]->pdPanel((Rich::Side)panel);
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Stored photodetector panel " << m_photoDetPanels[rich][panel]->name() << endmsg;
     }
@@ -130,16 +129,6 @@ StatusCode Rich::RayTracing::initialize()
   }
 
   return sc;
-}
-
-//================================================================================
-// The HPD panel location
-//================================================================================
-const std::string &
-Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
-                               const Rich::Side         panel ) const
-{
-  return (m_rich[rich]->paramVect<std::string>("HPDPanelDetElemLocations"))[panel];
 }
 
 //=============================================================================

@@ -31,7 +31,8 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
       m_minZaero      ( 0     ),
       m_radiators     ( Rich::NRadiatorTypes,
                         (const DeRichRadiator *)(NULL) ),
-      m_hltMode       ( false )
+      m_hltMode       ( false ),
+      m_aerogelOK     ( true  )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
@@ -53,9 +54,25 @@ StatusCode SnellsLawRefraction::initialize()
   // get tools
   acquireTool( "RichRefractiveIndex", m_refIndex );
 
+  // Try and load the aerogel, to test if it is available
+  try
+  {
+    const DeRichRadiator * aerogel = deRad(Rich::Aerogel);
+    m_aerogelOK = aerogel != NULL;
+  }
+  catch ( const GaudiException & )
+  {
+    Warning( "No Aerogel. No Snell's law refraction corrections",
+             StatusCode::SUCCESS ).ignore();
+    m_aerogelOK = false;
+  }
+
   // UMS
-  updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel,
-                                  &SnellsLawRefraction::aeroUpdate );
+  if ( m_aerogelOK )
+  {
+    updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel,
+                                    &SnellsLawRefraction::aeroUpdate );
+  }
 
   // return
   return sc;
@@ -67,9 +84,9 @@ StatusCode SnellsLawRefraction::finalize()
   return ToolBase::finalize();
 }
 
-StatusCode SnellsLawRefraction::aeroUpdate() 
+StatusCode SnellsLawRefraction::aeroUpdate()
 {
-  m_planeInfoMade = false; 
+  m_planeInfoMade = false;
   return StatusCode::SUCCESS;
 }
 
@@ -115,34 +132,39 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
                                         const LHCb::RichTrackSegment& trSeg ) const
 {
-  // check track segment is for aerogel ...
-  if ( trSeg.radiator() != Rich::Aerogel )
+  if ( m_aerogelOK )
   {
-    Exception( "Track segment is not for aerogel !!"  );
+
+    // check track segment is for aerogel ...
+    if ( trSeg.radiator() != Rich::Aerogel )
+    {
+      Exception( "Track segment is not for aerogel !!"  );
+    }
+
+    if ( startPoint.z() < m_minZaero )
+    {
+
+      // photon energy
+      const double photonEnergy = trSeg.avPhotonEnergy();
+      if ( photonEnergy > 0 )
+      {
+
+        // get the aerogel ref index for the track segment intersections
+        const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
+                                                            photonEnergy );
+
+        // do the correction
+        _aerogelToGas( startPoint, dir, photonEnergy, refAero );
+
+      }
+      else
+      {
+        Warning( "aerogelToGas:: photonEnergy = 0" ).ignore();
+      }
+
+    } // start point OK
+
   }
-
-  if ( startPoint.z() < m_minZaero )
-  {
-
-    // photon energy
-    const double photonEnergy = trSeg.avPhotonEnergy();
-    if ( photonEnergy > 0 )
-    {
-
-      // get the aerogel ref index for the track segment intersections
-      const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
-                                                          photonEnergy );
-
-      // do the correction
-      _aerogelToGas( startPoint, dir, photonEnergy, refAero );
-
-    }
-    else
-    {
-      Warning( "aerogelToGas:: photonEnergy = 0" ).ignore();
-    }
-
-  } // start point OK
 
 }
 
@@ -150,7 +172,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
-  if ( startPoint.z() < m_minZaero )
+  if ( m_aerogelOK && startPoint.z() < m_minZaero )
   {
     if ( photonEnergy > 0 )
     {
@@ -165,7 +187,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
 
     }
     else
-    { 
+    {
       Warning( "aerogelToGas:: photonEnergy = 0" ).ignore();
     }
   }
@@ -201,28 +223,33 @@ void SnellsLawRefraction::_aerogelToGas( Gaudi::XYZPoint & startPoint,
 void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const LHCb::RichTrackSegment& trSeg ) const
 {
-  // check track segment is for aerogel ...
-  if ( trSeg.radiator() != Rich::Aerogel )
-  {
-    Exception( "Track segment is not for aerogel !!" );
-  }
-
-  // photon energy
-  const double photonEnergy = trSeg.avPhotonEnergy();
-  if ( photonEnergy > 0 )
+  if ( m_aerogelOK )
   {
 
-    // get the aerogel ref index for the track segment intersections
-    const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
-                                                        photonEnergy );
+    // check track segment is for aerogel ...
+    if ( trSeg.radiator() != Rich::Aerogel )
+    {
+      Exception( "Track segment is not for aerogel !!" );
+    }
 
-    // do the correction
-    _gasToAerogel( dir, photonEnergy, refAero );
+    // photon energy
+    const double photonEnergy = trSeg.avPhotonEnergy();
+    if ( photonEnergy > 0 )
+    {
 
-  }
-  else 
-  {
-    Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); 
+      // get the aerogel ref index for the track segment intersections
+      const double refAero = m_refIndex->refractiveIndex( trSeg.radIntersections(),
+                                                          photonEnergy );
+
+      // do the correction
+      _gasToAerogel( dir, photonEnergy, refAero );
+
+    }
+    else
+    {
+      Warning( "gasToAerogel:: photonEnergy = 0" ).ignore();
+    }
+
   }
 
 }
@@ -230,23 +257,26 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
 void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
-
-  if ( photonEnergy > 0 )
+  if ( m_aerogelOK )
   {
 
-    // get the average refractive indices for aerogel
-    Warning( "Approximate Aerogel refractive index used. Will be wrong..." ).ignore();
-    const double refAero = deRad(Rich::Aerogel)->refractiveIndex( photonEnergy,m_hltMode );
+    if ( photonEnergy > 0 )
+    {
 
-    // do the correction
-    _gasToAerogel( dir, photonEnergy, refAero );
+      // get the average refractive indices for aerogel
+      Warning( "Approximate Aerogel refractive index used. Will be wrong..." ).ignore();
+      const double refAero = deRad(Rich::Aerogel)->refractiveIndex( photonEnergy,m_hltMode );
+
+      // do the correction
+      _gasToAerogel( dir, photonEnergy, refAero );
+
+    }
+    else
+    {
+      Warning( "gasToAerogel:: photonEnergy = 0" ).ignore();
+    }
 
   }
-  else
-  { 
-    Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); 
-  }
-
 }
 
 void SnellsLawRefraction::_gasToAerogel( Gaudi::XYZVector & dir,

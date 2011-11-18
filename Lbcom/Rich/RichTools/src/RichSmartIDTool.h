@@ -25,6 +25,7 @@
 #include "RichKernel/RichPixelCluster.h"
 
 // RichDet
+#include "RichDet/DeRich.h"
 #include "RichDet/DeRichPDPanel.h"
 #include "RichDet/DeRichSystem.h"
 
@@ -71,18 +72,6 @@ namespace Rich
     virtual StatusCode globalPosition ( const Rich::HPDPixelCluster& cluster,
                                         Gaudi::XYZPoint& detectPoint ) const;
 
-    // CRJ : Comment out as HPD specific and only used in one monitor so not critical
-    // Converts a RichSmartID channel identification into a position in
-    // global LHCb coordinates, on the pixel anode chip.
-    //virtual StatusCode anodeGlobalPosition ( const LHCb::RichSmartID smartid,
-    //                                         Gaudi::XYZPoint& detectPoint ) const;
-
-    // CRJ : Comment out as HPD specific and only used in one monitor so not critical
-    // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates,
-    // on the pixel anode chip.
-    //virtual StatusCode anodeGlobalPosition ( const Rich::HPDPixelCluster& cluster,
-    //                                         Gaudi::XYZPoint& detectPoint ) const;
-
     // Converts an PD RichSmartID identification into a position in global LHCb coordinates.
     virtual StatusCode pdPosition ( const LHCb::RichSmartID pdid,
                                     Gaudi::XYZPoint& pdPoint ) const;
@@ -101,16 +90,6 @@ namespace Rich
 
     // Converts a position in global coordinates to the local coordinate system.
     virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const;
-
-  private:
-
-    /** Returns the appropriate detector element name for the given RICH and panel
-     *  @param[in] rich  The RICH detector type
-     *  @param[in] panel The RICH panel
-     *  @return The RICH panel name in the XML description
-     */
-    const std::string & pdPanelName( const Rich::DetectorType rich,
-                                     const Rich::Side         panel ) const;
 
   private:
 

@@ -73,7 +73,7 @@ RandomPixelBackgroundTool::createBackgrounds( HPDBackgrounds & backgrounds,
   const Rich::DAQ::ShortType nPixsPerHPD = Rich::DAQ::NumPixelColumns * nPixRows;
 
   // Get the list of all active HPDs
-  const LHCb::RichSmartID::Vector & hpds = m_richSys->activeHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector & hpds = m_richSys->activePDRichSmartIDs();
 
   // make the binominal random number generator
   Rndm::Numbers poisrand ( m_randSvc, Rndm::Binomial(nPixsPerHPD,m_pixBackgroundProb) );

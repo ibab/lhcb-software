@@ -116,7 +116,7 @@ void HPDHotPixelFinder::findHotPixels()
            << 100.0*m_hotOcc
            << "% hot in " << m_nEventsForAverage << " events";
       // make result object
-      IGenericHPDAnalysisTool::Results & results = m_results[iHPDC->first.hpdID()];
+      IGenericHPDAnalysisTool::Results & results = m_results[iHPDC->first.pdID()];
       results.push_back( IGenericHPDAnalysisTool::Result() );
       IGenericHPDAnalysisTool::Result  & result = results.back();
       result.id      = iHPDC->first;

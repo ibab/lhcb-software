@@ -67,7 +67,7 @@ Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
 {
   const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ? Rich::Rich2 : Rich::Rich1 );
   return refractiveIndex( rad,
-                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop) /
+                          m_riches[rich]->nominalPDQuantumEff()->meanX(energyBot,energyTop) /
                           Gaudi::Units::eV );
 }
 

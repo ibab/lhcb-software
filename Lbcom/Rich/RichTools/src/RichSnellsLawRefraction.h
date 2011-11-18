@@ -149,6 +149,9 @@ namespace Rich
     /// Flag to say if we are in HLT mode or not
     bool m_hltMode;
 
+    /// Flag to say in Aerogel is available or not
+    bool m_aerogelOK;
+
   };
 
 }
