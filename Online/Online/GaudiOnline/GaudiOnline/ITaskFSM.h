@@ -71,7 +71,8 @@ namespace LHCb  {
       ST_READY     = 'r',
       ST_RUNNING   = 'R',
       ST_STOPPED   = 'S',
-      ST_ERROR     = 'E'
+      ST_ERROR     = 'E',
+      TR_ERROR     = ERROR
     };
     enum SubState  {
       SUCCESS_ACTION = 'S',

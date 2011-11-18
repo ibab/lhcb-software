@@ -11,7 +11,7 @@
 using namespace LHCb;
 
 void FileIdInfo::reset() {
-  ip0 = ip1 = l1 = l1 = l2 = 0;
+  ip0 = ip1 = l0 = l1 = l2 = 0;
   pdata[0] = 0;
 }
 

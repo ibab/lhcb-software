@@ -216,6 +216,7 @@ std::string DimTaskFSM::stateName(int state) {
   }
 }
 
+/// Declare process state to DIM service
 StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   std::string old_state = m_stateName;
   m_prevStateName = m_stateName;
@@ -231,10 +232,11 @@ StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   return StatusCode::SUCCESS;
 }
 
+/// Declare process state to DIM service
 StatusCode DimTaskFSM::declareState(State new_state)  {
   m_monitor.state = char(new_state);
   switch(new_state)   {
-    case ERROR:
+    case TR_ERROR:
     case ST_ERROR:
       return _declareState(ST_NAME_ERROR);
     case ST_NOT_READY:
