@@ -1331,10 +1331,8 @@ char *DimCommand::getFormat()
 
 int DimCommand::getTimestamp()
 {
-	int ret;
-
 	if(secs == 0)
-		ret = dis_get_timestamp(itsId, &secs, &millisecs);
+		dis_get_timestamp(itsId, &secs, &millisecs);
 	return(secs);
 }
 
