@@ -7,6 +7,9 @@ Pythia8ListOfCommands = [
     "skip" ,
     "PDG id code for the second incoming particle",
     "Mode commands for Pythia8" ,
+    "Main:showAllSettings = on" ,
+    "SoftQCD:all = on",
+    "HardQCD:all = off",
     "PDF:useLHAPDF = on" ,
     "PDF:LHAPDFset = cteq6ll.LHpdf" ,
     "PDF:LHAPDFmember = 0" ,
@@ -34,8 +37,42 @@ Pythia8ListOfCommands = [
     "StringFlav:mesonBL1S0J1 = 0.0405" ,
     "StringFlav:mesonBL1S1J0 = 0.0135" ,
     "StringFlav:mesonBL1S1J1 = 0.0405" ,
-    "StringFlav:mesonBL1S1J2 = 0.0675"
+    "StringFlav:mesonBL1S1J2 = 0.0675" ,
+#    "PDF:useLHAPDF = off" ,
+#    "PDF:pSet = 8" ,
+#    "HardQCD:nQuarkNew = 5",
+#    "HardQCD:gg2ccbar = off",
+#    "HardQCD:qqbar2ccbar = off",
+#    "HardQCD:gg2bbbar = off",
+#    "HardQCD:qqbar2bbbar = off" ,
+#    "HardQCD:3parton = off" ,
+#    "Charmonium:all = on",
+#    "Bottomonium:all = on",
+#    "PhaseSpace:mHatMin = 3.0" ,
+#    "PhaseSpace:pTHatMin = 10.0" ,
+#    "MultipleInteractions:pTmin = 1.9" ,
+#    "SigmaProcess:renormScale2 = 3" ,
+#    "StringFlav:mesonCvector = 3.0" ,
+#    "StringFlav:mesonBvector = 3.0" ,
+#    "StringFlav:mesonUDL1S0J1 = 0.0" ,
+#    "StringFlav:mesonUDL1S0J1 = 0.018" ,
+#    "StringFlav:mesonUDL1S1J1 = 0.054" ,
+#    "StringFlav:mesonUDL1S1J2 = 0.131" ,
+#    "StringFlav:mesonSL1S0J1 = 0.0" ,
+#    "StringFlav:mesonSL1S0J1 = 0.018" ,
+#    "StringFlav:mesonSL1S1J1 = 0.054" ,
+#    "StringFlav:mesonSL1S1J2 = 0.131" ,
+#    "StringFlav:mesonCL1S0J1 = 0.0" ,
+#    "StringFlav:mesonCL1S0J1 = 0.018" ,
+#    "StringFlav:mesonCL1S1J1 = 0.054" ,
+#    "StringFlav:mesonCL1S1J2 = 0.131" ,
+#    "StringFlav:mesonBL1S0J1 = 0.0" ,
+#    "StringFlav:mesonBL1S0J1 = 0.018" ,
+#    "StringFlav:mesonBL1S1J1 = 0.054" ,
+#    "StringFlav:mesonBL1S1J2 = 0.131"
     ]
+
+Pythia8TurnOffFragmentation = [ "HadronLevel:all = off" ]
 
 gen = Generation()
 gen.addTool( MinimumBias , name = "MinimumBias" )
@@ -47,6 +84,7 @@ gen.addTool( Inclusive , name = "Inclusive" )
 gen.Inclusive.ProductionTool = "Pythia8Production"
 gen.Inclusive.addTool( Pythia8Production , name = "Pythia8Production" )
 gen.Inclusive.Pythia8Production.Commands += Pythia8ListOfCommands 
+gen.Inclusive.Pythia8Production.ValidateHEPEVT = True
 
 gen.addTool( SignalPlain , name = "SignalPlain" )
 gen.SignalPlain.ProductionTool = "Pythia8Production"
@@ -57,6 +95,7 @@ gen.addTool( SignalRepeatedHadronization , name = "SignalRepeatedHadronization" 
 gen.SignalRepeatedHadronization.ProductionTool = "Pythia8Production"
 gen.SignalRepeatedHadronization.addTool( Pythia8Production , name = "Pythia8Production" )
 gen.SignalRepeatedHadronization.Pythia8Production.Commands += Pythia8ListOfCommands 
+gen.SignalRepeatedHadronization.Pythia8Production.Commands += Pythia8TurnOffFragmentation
 
 gen.addTool( Special , name = "Special" )
 gen.Special.ProductionTool = "Pythia8Production"

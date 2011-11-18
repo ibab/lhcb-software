@@ -85,7 +85,11 @@ protected:
   StatusCode toHepMC ( HepMC::GenEvent*     theEvent    , 
                        LHCb::GenCollision * theCollision ) ;
   
-private:    
+private:
+
+  /// retrieve the processCode
+  int processCode( ) ;
+    
   CommandVector m_defaultSettings ;
   CommandVector m_commandVector ; ///< Commands to setup pythia
 
@@ -103,5 +107,14 @@ private:
 	int m_nEvents ;
 
 	GaudiRandomForPythia8 * m_randomEngine ; ///< Random Generator for Pythia8
+
+   // ==========================================================================
+   bool m_validate_HEPEVT ; // force the valiadation of IO_HEPEVT 
+  // ==========================================================================
+   std::string   m_inconsistencies ; // the file to dump the HEPEVT incinsistencies 
+  // ==========================================================================
+   std::ostream* m_HEPEVT_errors ;
+   // ==========================================================================
+
 } ;
 #endif // LBPYTHIA8_PYTHIA8PRODUCTION_H

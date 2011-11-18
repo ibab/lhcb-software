@@ -21,6 +21,7 @@
 
 // HepMC
 #include "HepMC/GenEvent.h"
+#include "HepMC/HEPEVT_Wrapper.h"
 
 // LbPythia8
 #include "LbPythia8/GaudiRandomForPythia8.h" 
@@ -43,18 +44,25 @@ DECLARE_TOOL_FACTORY( Pythia8Production );
 Pythia8Production::Pythia8Production( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent ) , m_defaultSettings() , 
+  : GaudiTool ( type, name , parent ) , 
+    m_defaultSettings() , 
     m_id1( 0 ) , 
     m_id2( 0 ) , 
     m_engCM( 0. ) ,
     m_beamTool( 0 ) ,
     m_pythia( 0 ) ,
     m_nEvents( 0 ) ,
-    m_randomEngine( 0 ) {
+    m_randomEngine( 0 ) ,
+    m_validate_HEPEVT ( false ) ,// force the valiadation of I_Pythia8 
+    m_inconsistencies ( "HEPEVT_inconsistencies.out" ) ,
+    m_HEPEVT_errors ( 0 ) {
+  
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
-  
+  declareProperty( "ValidateHEPEVT"  , m_validate_HEPEVT ); //The flag to force the validation (mother&daughter) of HEPEVT
+  declareProperty( "Inconsistencies" , m_inconsistencies ); //The file to dump HEPEVT inconsinstencies
+
   // Set the default settings for Pythia8 here:
   m_defaultSettings.clear() ;
   m_defaultSettings.push_back( "Beam Settings"); 
@@ -74,7 +82,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("Top:all = off" );
   m_defaultSettings.push_back("Process commands for Pythia8" );
   //Then, setting the different processes    
-  m_defaultSettings.push_back("HardQCD:qq2qq = on");
+  /*m_defaultSettings.push_back("HardQCD:qq2qq = on");
   m_defaultSettings.push_back("HardQCD:qqbar2ccbar = on");
   m_defaultSettings.push_back("HardQCD:qqbar2bbbar = on");
   m_defaultSettings.push_back("HardQCD:qqbar2qqbarNew = on");
@@ -93,7 +101,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("Charmonium:gg2QQbar[3P2(1)]g = on");
   m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(8)]g = on");
   m_defaultSettings.push_back("Charmonium:gg2QQbar[1S0(8)]g = on");
-  m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(1)]g = on");
+  m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(1)]g = on");*/
   m_defaultSettings.push_back("SigmaProcess:alphaSorder = 2");
   m_defaultSettings.push_back("MultipleInteractions:Kfactor = 3.0");
   m_defaultSettings.push_back("MultipleInteractions:bProfile = 1");
@@ -367,21 +375,25 @@ void Pythia8Production::printPythiaParameter( ) {
 //=============================================================================
 // Turn on fragmentation in Pythia8
 //=============================================================================
-void Pythia8Production::turnOnFragmentation( ){
-  m_pythia -> readString("Pythia:hadronLevel = on");
+void Pythia8Production::turnOnFragmentation( )
+{
+  //this facility is not needed anymore within pythia8
 }
 
 //=============================================================================
 // Turn off fragmentation in Pythia8
 //=============================================================================
-void Pythia8Production::turnOffFragmentation( ){
-  m_pythia -> readString("Pythia:hadronLevel = off");
+void Pythia8Production::turnOffFragmentation( ) 
+{
+  //this facility is not needed anymore within pythia8
 }
 
 //=============================================================================
 // Save parton event
 //=============================================================================
-void Pythia8Production::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
+void Pythia8Production::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) 
+{
+  m_event = m_pythia->event;
 }
 
 //=============================================================================
@@ -389,16 +401,17 @@ void Pythia8Production::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
 //=============================================================================
 void Pythia8Production::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ )
 {
+  m_pythia->event = m_event;
 }
 
 //=============================================================================
 // Hadronize Pythia8 event
 //=============================================================================
-StatusCode Pythia8Production::hadronize( HepMC::GenEvent * /*theEvent*/ , 
+StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent , 
                                          LHCb::GenCollision * 
-                                         /*theCollision*/ ) {
-  m_pythia->readString("HadronLevel:Hadronize = on");
-  return StatusCode::SUCCESS ;  
+                                         theCollision ) {
+  if (!m_pythia->forceHadronLevel()) return StatusCode::FAILURE ;
+  return toHepMC ( theEvent , theCollision ) ;
 }
 
 //=============================================================================
@@ -406,6 +419,16 @@ StatusCode Pythia8Production::hadronize( HepMC::GenEvent * /*theEvent*/ ,
 //=============================================================================
 void Pythia8Production::printRunningConditions( ) { 
   m_pythia->settings.listChanged();
+}
+
+//=============================================================================
+// Retrieve the process code information
+//=============================================================================
+int Pythia8Production::processCode( ) { 
+  if (m_pythia->info.hasSub())
+    return m_pythia -> info.codeSub();
+  else
+    return m_pythia -> info.code();
 }
 
 //=============================================================================
@@ -492,6 +515,8 @@ bool Pythia8Production::isSpecialParticle( const ParticleProperty * thePP )
   case 5403:
   case 5501:
   case 5503:
+  case 1000022:
+  case 1000024:
     return true ;
     break ;
   default:
@@ -520,27 +545,61 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
 
+  // Force the verification of the HEPEVT  record 
+  if ( m_validate_HEPEVT ) 
+  { 
+    conversion.set_trust_both_mothers_and_daughters ( true ) ;
+    conversion.set_trust_mothers_before_daughters   ( true ) ;
+    conversion.set_print_inconsistency_errors       ( false );
+    if ( msgLevel( MSG::DEBUG ) ) 
+      conversion.set_print_inconsistency_errors       ( true );
+    
+    if ( !m_inconsistencies.empty() && 0 == m_HEPEVT_errors )
+    { m_HEPEVT_errors = new std::ofstream ( m_inconsistencies.c_str() ) ; }
+    
+    if ( 0 != m_HEPEVT_errors ) 
+    {
+      if ( !HepMC::HEPEVT_Wrapper::check_hepevt_consistency ( *m_HEPEVT_errors ) )
+      { Warning ( "Inconsistencies in HEPEVT structure are found" ) ; }   
+    }
+    else 
+    {
+      MsgStream& log = warning() ;
+      if ( !HepMC::HEPEVT_Wrapper::check_hepevt_consistency ( log.stream() ) )
+      {
+        log << endreq ;
+        Warning ( "Inconsistencies in HEPEVT structure are found" ) ; 
+      } 
+    }
+  }
+
   if (!(conversion.fill_next_event( *m_pythia , theEvent ))) 
     return Error( "Cannot convert Pythia8 event to HepMC" ) ;
   
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
-    //    if ((*p) -> status() > 0) { (*p) -> set_status(1);
-    //    } else {
-    //      if ((*p) -> status() < -69) (*p) -> set_status(2);
-    //      else (*p) -> set_status(3);
-    //    }
-
+  
     int status = (*p) -> status() ;
 
-    switch ( status ) {
-    case 1: (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen ) ; break ;
-    case 2: (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen ) ; break ;
-    default:
-      (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle ) ; break ;
-      break ;
+ if (status>3 && status<20)
+	(*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
+    else if (status>19 && status<80)
+        (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+    else if (status==91 || status==92 || (status>99 && status<110)) {
+        if ((*p) -> end_vertex()!=0)
+           (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+        else
+           (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
     }
+    else if (status==93 || status==94)
+	(*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
+    else if (status==99)
+	(*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
+    else if (status!=LHCb::HepMCEvent::DecayedByProdGen
+	  && status!=LHCb::HepMCEvent::StableInProdGen
+          && status!=LHCb::HepMCEvent::DocumentationParticle)
+        warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
 
     (*p) -> set_momentum( HepMC::FourVector( 
                            (*p) -> momentum().px() * Gaudi::Units::GeV ,
@@ -562,10 +621,10 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
     (*v) -> set_position( newPos ) ;
   }
 
+  theEvent -> set_signal_process_id( processCode() ) ;
+
   hardProcessInfo( theCollision ) ;
   
-  theEvent -> set_signal_process_id( m_pythia -> info.codeSub() ) ;
-
   return sc;
 }
 // ============================================================================
