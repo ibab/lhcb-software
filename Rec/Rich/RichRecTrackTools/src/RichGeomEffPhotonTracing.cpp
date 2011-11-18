@@ -140,12 +140,12 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
         if ( m_traceMode.traceWasOK(result) )
         {
           // Check HPD status
-          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID().hpdID()) ) continue;
+          if ( m_hpdCheck && !m_richSys->pdIsActive(photon.smartID().pdID()) ) continue;
 
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << " -> photon was traced to detector at " 
-                      << photon.smartID().hpdID() << " "
+                      << photon.smartID().pdID() << " "
                       << photon.detectionPoint()
                       << endmsg;
           }
@@ -155,7 +155,7 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
-                                             photon.smartID().hpdID(),
+                                             photon.smartID().pdID(),
                                              (LHCb::RichRecSegment::FloatType)(m_pdInc) );
 
           // flag regions where we expect hits for this segment

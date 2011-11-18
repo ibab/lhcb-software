@@ -96,7 +96,7 @@ GeomEffCKMassRing::geomEfficiency ( LHCb::RichRecSegment * segment,
           {
 
             // The HPD ID
-            const LHCb::RichSmartID hpdID = (*iP).smartID().hpdID();
+            const LHCb::RichSmartID hpdID = (*iP).smartID().pdID();
 
             if ( msgLevel(MSG::VERBOSE) )
             {
