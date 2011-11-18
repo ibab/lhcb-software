@@ -1,3 +1,7 @@
+2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the work dir for the Update script.
+
 2011-11-17  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed the checking of the Update.py script. Now it is done

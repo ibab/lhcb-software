@@ -455,9 +455,9 @@ def registerProjectCommand(pack_ver, flavor="PostInstall"):
             postscr = getCommandFile(postscr, flavor)
             if postscr :
                 if flavor == "PostInstall" :
-                    registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+                    registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
                 if flavor == "Update" :
-                    registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, cmtcontainer)
+                    registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
     except ImportError:
         pass
 
