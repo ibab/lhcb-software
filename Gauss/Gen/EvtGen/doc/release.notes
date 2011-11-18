@@ -4,6 +4,20 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - John Back
+ - Reinstated the Pythia6 code, now called EvtPythia6, that is needed for the 
+   EvtGenDecay.cpp class within Gen/Generators. Also reinstated the old fortran 
+   routines Pythia.F and EvtPythiaPart.F.
+   EvtGenDecay.cpp needs to use EvtPythia6::pythiaInit(), or needs to be 
+   changed to be fully Pythia8 compliant...
+   EvtGen uses Pythia8 for its own PYTHIA decay model.
+   Added the PYTHIA8DATA environment variable to cmt/requirements
+   for specifying the location of the Pythia8 xml data files.
+   At the moment, the external LCG Photos++ libraries are broken; somehow 
+   they are split up into separate C++ and Fortran parts, which gives memory 
+   corruption; a default installation should only have the one library
+   libPhotosCxxInterface.so (tested OK with a standalone version).
+
 ! 2011-10-05 - John Back
  - Update various classes to include recent fixes and changes made to the
    v12r2b branch (see below). Also update the versions of the external 

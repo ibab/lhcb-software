@@ -64,6 +64,8 @@ public:
   int getNModes(int aliasInt);
   int getNModes(EvtId id);
 
+  const std::vector<EvtParticleDecayList> & decaytable() {return _decaytable;};
+
 protected:  
 
   EvtDecayTable();
