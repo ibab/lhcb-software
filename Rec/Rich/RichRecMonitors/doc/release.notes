@@ -4,9 +4,12 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
-!========================= RichRecMonitors v2r32 2011-11-08 =========================
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID
+
+!====================== RichRecMonitors v2r32 2011-11-08 =====================
 ! 2011-10-05 - Chris Jones
- - Adapt to changes made to make the recosntruction PD neutral
+ - Adapt to changes made to make the reconstruction PD neutral
 
 !====================== RichRecMonitors v2r31 2011-02-28 =====================
 ! 2011-02-12 - Chris Jones

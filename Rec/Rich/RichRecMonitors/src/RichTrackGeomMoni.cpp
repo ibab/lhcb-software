@@ -347,10 +347,10 @@ StatusCode TrackGeomMoni::execute()
               zMinFlatGlo[rich],zMaxFlatGlo[rich],yMinFlatGlo[rich],yMaxFlatGlo[rich] );
 
       // find out pd positions
-      m_xHits[photon.smartID().hpdID()] += photPoint.x();
-      m_yHits[photon.smartID().hpdID()] += photPoint.y();
-      m_zHits[photon.smartID().hpdID()] += photPoint.z();
-      m_hitCount[photon.smartID().hpdID()] += 1;
+      m_xHits[photon.smartID().pdID()] += photPoint.x();
+      m_yHits[photon.smartID().pdID()] += photPoint.y();
+      m_zHits[photon.smartID().pdID()] += photPoint.z();
+      m_hitCount[photon.smartID().pdID()] += 1;
 
     }
 
