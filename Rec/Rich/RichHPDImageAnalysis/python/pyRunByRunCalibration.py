@@ -271,7 +271,7 @@ def dateString():
 
 def getRunFillData(rootfiles):
 
-    print "Getting Run and Fill time information"
+    print "Getting run and fill information ..."
 
     # get file MD5 sum
     md = fileMD5(rootfiles)
@@ -347,6 +347,11 @@ def getRunFillData(rootfiles):
                 start = res['Value']['RunStart']
                 stop  = res['Value']['RunEnd']
 
+                # Run duration in secs
+                unixStart = getUNIXTime(start)
+                unixStop  = getUNIXTime(stop)
+                duration  = (unixStop-unixStart) / (1e9)
+
                 # fill number
                 fill  = int(res['Value']['FillNumber'])
 
@@ -406,6 +411,7 @@ def getRunFillData(rootfiles):
                 # Fill data for this run
                 runfilldata["RunData"][run] = { "Start" : start,
                                                 "Stop"  : stop,
+                                                "Duration" : duration,
                                                 "Fill"  : fill,
                                                 "FieldPolarity" : polarity,
                                                 "PhysEvents" : nEventsPhys,
@@ -435,7 +441,7 @@ def getRunFillData(rootfiles):
                 if fillData["Start"] > start : fillData["Start"] = start
                 if fillData["Stop"]  < stop  : fillData["Stop"]  = stop
                 fillData["Files"] += [filename]
-                print "  -> Run", run, "Fill", fill, polarity, tck, "is from", start, "to", stop
+                print "  -> Run", run, "Fill", fill, polarity, "is from", start, "to", stop
                 unixEndTime = getUNIXTime( stop )
                 if unixEndTime > tmpTime :
                     tmpTime = unixEndTime
@@ -465,15 +471,9 @@ def getRunFillData(rootfiles):
 
 def getRunDBRunInfo(run):
 
+    # Read from the Run DB via the web and convert to python
     import urllib, json
-
-    # Read from the Run DB via the web
-    data = urllib.urlopen("http://lbrundb.cern.ch/api/run/"+str(run)).read()
-
-    # convert to a python dictionary
-    res = json.loads(data)
-
-    return res
+    return json.loads( urllib.urlopen("http://lbrundb.cern.ch/api/run/"+str(run)).read() )
 
 def getFieldPolarity(res):
 
@@ -538,14 +538,14 @@ def runToFill(run):
     if res['OK'] :
         fill = res['Value']['FillNumber']
     else:
-        print "ERROR Getting Fill for run", run
+        print "ERROR Getting fill for run", run
         import DIRAC
         DIRAC.exit(1)
     return fill
 
 def runAll(files='2011-RootFiles.txt'):
     hpdImageShiftsFollow(files)
-    hpdImageShiftsAverage(files)
+    #hpdImageShiftsAverage(files)
     hpdOccupancies(files)
 
 def hpdOccupancies(files='2011-RootFiles.txt'):
@@ -1327,7 +1327,7 @@ def createHPDOccTextFile(type,hpdOccForText,basename,runFillData):
     print "Opening text file", textFileName
     textFile = open(textFileName,'w')
 
-    line = "Run Fill Polarity MooreVersion TCK PhysEvents AvLumi AvMu BetaStar AvL0PhysRate AvHLTPhysRate AvPhysDeadtime MagnetCurrent StartDate StartTime "
+    line = "Run Fill Polarity MooreVersion TCK PhysEvents AvLumi AvMu BetaStar AvL0PhysRate AvHLTPhysRate AvPhysDeadtime MagnetCurrent StartDate StartTime StopDate StopTime Duration "
     hpds = [ ]
     for hpd in hpdOccForText.keys() :
         line += "HPD" + str(hpd) + " "
@@ -1354,6 +1354,8 @@ def createHPDOccTextFile(type,hpdOccForText,basename,runFillData):
         line += str( '%g' % runFillData[type+"Data"][fl]["AvPhysDeadtime"] ) + " "
         line += str( '%g' % runFillData[type+"Data"][fl]["MagnetCurrent"] ) + " "
         line += str(runFillData[type+"Data"][fl]["Start"]) + " "
+        line += str(runFillData[type+"Data"][fl]["Stop"]) + " "
+        line += str(runFillData[type+"Data"][fl]["Duration"]) + " "
         for hpd in hpds :
             data = 0
             if hpd in hpdOccForText.keys() :
