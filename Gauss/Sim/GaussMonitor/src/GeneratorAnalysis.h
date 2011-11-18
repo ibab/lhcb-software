@@ -180,9 +180,9 @@ private:
 
   bool m_neutralHistos ; //< Flag for producing Neutral Histograms
   enum bHadronType{BdMeson=1,BuMeson,BsMeson,BcMeson,BbMeson,TbMeson,BBaryon};
-  enum spinState{S0L0J1,S1L1J1,S1L0J3,S0L1J3,S1L1J3,S1L1J5};
+  enum spinState{S0L0J0,S1L1J0,S1L0J1,S0L1J1,S1L1J1,S1L1J2};
 
-  int m_nS0L0J1, m_nS1L1J1, m_nS1L0J3, m_nS0L1J3, m_nS1L1J3, m_nS1L1J5;
+  int m_nS0L0J0, m_nS1L1J0, m_nS1L0J1, m_nS0L1J1, m_nS1L1J1, m_nS1L1J2;
   int m_stateB,m_stateBStar,m_stateBStarStar;
   int m_nMesonType;
 
