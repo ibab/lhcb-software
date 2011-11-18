@@ -391,9 +391,9 @@ namespace Rich
 
     inline bool PixelCreatorBase::hpdIsOK( const LHCb::RichSmartID id ) const
     {
-      return ( id.isValid() &&                               // Valid HPD ID
-               useDetector(id.rich()) &&                     // This RICH is in use
-               ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
+      return ( id.isValid() &&                              // Valid HPD ID
+               useDetector(id.rich()) &&                    // This RICH is in use
+               ( !m_hpdCheck || m_richSys->pdIsActive(id) ) // If required, check HPD is alive
                );
     }
 
