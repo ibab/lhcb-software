@@ -255,6 +255,11 @@ namespace Rich
       void decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                                   Rich::DAQ::L1Map & decodedData ) const;
 
+      /// Decode a RawBank into RichSmartID identifiers
+      /// FlatList version
+      void decodeToSmartIDs_FlatList( const LHCb::RawBank & bank,
+                                      Rich::DAQ::L1Map & decodedData ) const;
+
       /// Print the given data word as Hex and as bits, to the given precision
       template < class TYPE >
       void rawDump( MsgStream & os,
@@ -267,6 +272,9 @@ namespace Rich
       /// Suppress hot pixels
       void suppressHotPixels( const LHCb::RichSmartID& hpdID,
                               LHCb::RichSmartID::Vector & newids ) const;
+
+      /// Fills a 'flat list' format
+      void fillFlatList( const LHCb::RichSmartID::Vector & smartIDs ) const;
 
     private: // data
 

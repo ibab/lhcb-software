@@ -4,8 +4,6 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData_V4.icpp,v 1.4 2007-09-04 16:55:31 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -116,8 +114,8 @@ namespace Rich
           // HPD info
           const Rich::DetectorType rich = hpdID.rich();
           const Rich::Side         side = hpdID.panel();
-          const ShortType          col  = hpdID.hpdCol();
-          const ShortType      numInCol = hpdID.hpdNumInCol();
+          const ShortType          col  = hpdID.pdCol();
+          const ShortType      numInCol = hpdID.pdNumInCol();
 
           // Loop over data fields (backwards, so data is put into vector in 'correct' order)
           for ( int iData = nDataWords-1; iData >= 0; --iData )

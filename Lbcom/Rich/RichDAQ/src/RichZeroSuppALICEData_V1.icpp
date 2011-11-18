@@ -85,7 +85,7 @@ namespace Rich
               if ( this->isBitOn(bits0,iB) )
               {
                 ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
                                                   zsData.rowFromAddress(address0,addressOffset0),
                                                   zsData.colFromAddressAndBit(address0,iB),
                                                   zsData.subPixelFromAddress(address0) ) );
@@ -116,7 +116,7 @@ namespace Rich
                 if ( this->isBitOn(bits1,iB) )
                 {
                   ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                    hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                                    hpdID.pdNumInCol(), hpdID.pdCol(),
                                                     zsData.rowFromAddress(address1,addressOffset1),
                                                     zsData.colFromAddressAndBit(address1,iB),
                                                     zsData.subPixelFromAddress(address1) ) );

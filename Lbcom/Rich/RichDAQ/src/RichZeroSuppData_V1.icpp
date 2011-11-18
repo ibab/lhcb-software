@@ -4,8 +4,6 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData_V1.icpp,v 1.4 2007-03-26 11:21:41 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -75,21 +73,21 @@ namespace Rich
 
           // Make first smartid from triplet
           ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                            hpdID.pdNumInCol(), hpdID.pdCol(),
                                             triplet.row0(), triplet.col0() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;
 
           // Make second smartid from triplet
           ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                            hpdID.pdNumInCol(), hpdID.pdCol(),
                                             triplet.row1(), triplet.col1() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;
 
           // Make third smartid from triplet
           ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                            hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                            hpdID.pdNumInCol(), hpdID.pdCol(),
                                             triplet.row2(), triplet.col2() ) );
           ++nDigitsMade;
           if ( nDigitsMade == digitCount ) break;

@@ -20,12 +20,12 @@ using namespace Rich::DAQ;
 DECLARE_TOOL_FACTORY( RawBufferToSmartIDsTool )
 
 // Standard constructor
-RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
-                                                  const std::string& name,
-                                                  const IInterface* parent )
-  : ToolBase       ( type, name, parent ),
-    m_richSys      ( NULL ),
-    m_rawFormatT   ( NULL )
+  RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
+                                                    const std::string& name,
+                                                    const IInterface* parent )
+    : ToolBase       ( type, name, parent ),
+      m_richSys      ( NULL ),
+      m_rawFormatT   ( NULL )
 {
   // Defined interface
   declareInterface<IRawBufferToSmartIDsTool>(this);
@@ -202,37 +202,51 @@ RawBufferToSmartIDsTool::nTotalHits( const RawEventLocations& taeLocs,
   return countTotalHits( allRichSmartIDs(taeLocs), rich );
 }
 
-unsigned int RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data,
-                                                      const Rich::DetectorType rich ) const
+unsigned int
+RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data,
+                                         const Rich::DetectorType rich ) const
 {
   // tally of the number of hits
   unsigned int nHits(0);
+
 
   // Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
         iL1 != data.end(); ++iL1 )
   {
-    // Is the RICH detector to be included in the count ?
-    if ( Rich::InvalidDetector               == rich || 
-         m_richSys->richDetector(iL1->first) == rich )
+    // For MaPMTs this could for the moment throw an exception ... To Be Fixed
+    // catch it to prevent processing termination
+    try
     {
-      // loop over ingresses for this L1 board
-      for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-            iIn != (*iL1).second.end(); ++iIn )
+
+      // Is the RICH detector to be included in the count ?
+      if ( Rich::InvalidDetector               == rich ||
+           m_richSys->richDetector(iL1->first) == rich )
       {
-        // Loop over HPDs in this ingress
-        for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-              iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+        // loop over ingresses for this L1 board
+        for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+              iIn != (*iL1).second.end(); ++iIn )
         {
-          // skip inhibited HPDs ?
-          if ( (*iHPD).second.header().inhibit() ) { continue; }
-          // Is the smart ID valid ?
-          if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
-          // all OK so count hits
-          nHits += (*iHPD).second.smartIDs().size();
+          // Loop over HPDs in this ingress
+          for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+                iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+          {
+            // skip inhibited HPDs ?
+            if ( (*iHPD).second.header().inhibit() ) { continue; }
+            // Is the smart ID valid ?
+            if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+            // all OK so count hits
+            nHits += (*iHPD).second.smartIDs().size();
+          }
         }
       }
+
     }
+    catch ( const GaudiException & excpt )
+    {
+      Warning( excpt.message() ).ignore();
+    }
+
   }
 
   // return the final count

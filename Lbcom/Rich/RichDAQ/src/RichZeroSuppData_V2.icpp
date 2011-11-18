@@ -4,8 +4,6 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData_V2.icpp,v 1.6 2007-03-26 11:21:41 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -104,7 +102,7 @@ namespace Rich
               if ( this->isBitOn(bits,iB) )
               {
                 ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
                                                   RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
                                                   RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
                 ++nDigitsMade;
@@ -122,7 +120,7 @@ namespace Rich
               if ( this->isBitOn(bits,iB) )
               {
                 ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
-                                                  hpdID.hpdNumInCol(), hpdID.hpdCol(),
+                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
                                                   RichZSPacked_V1::RichZSPacked::rowFromAddress(address),
                                                   RichZSPacked_V1::RichZSPacked::colFromAddressAndBit(address,iB) ) );
                 ++nDigitsMade;

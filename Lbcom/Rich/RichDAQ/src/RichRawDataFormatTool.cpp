@@ -22,11 +22,11 @@ using namespace Rich::DAQ;
 DECLARE_TOOL_FACTORY( RawDataFormatTool )
 
 // private namespace
-namespace
-{
-  /// Default 'fake' HPD RichSmartID
-  static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
-}
+  namespace
+  {
+    /// Default 'fake' HPD RichSmartID
+    static const LHCb::RichSmartID s_fakeHPDID( Rich::Rich1,Rich::top,0,0 );
+  }
 
 // Standard constructor
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
@@ -88,7 +88,7 @@ StatusCode RawDataFormatTool::initialize()
     info() << "Will suppress HPDs with more than " << m_maxHPDOc << " digits" << endmsg;
 
   // messages if optional features are enabled
-  if ( m_extendedFormat ) 
+  if ( m_extendedFormat )
     info() << "Will encode RawEvent using extended HPD format" << endmsg;
   if ( m_decodeUseOdin )
     info() << "ODIN integrity checks are enabled" << endmsg;
@@ -118,7 +118,7 @@ StatusCode RawDataFormatTool::initialize()
           iC != m_hotChannels.end(); ++iC )
     {
       const LHCb::RichSmartID channel(*iC);
-      m_hotPixels[channel.hpdID()].insert(channel);
+      m_hotPixels[channel.pdID()].insert(channel);
       info() << " " << channel << " (" << channel.key() << ")" << endmsg;
     }
   }
@@ -268,7 +268,7 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
   }
 
   // Level 0 ID
-  const Level0ID l0ID = m_richSys->level0ID( smartIDs.front().hpdID() );
+  const Level0ID l0ID = m_richSys->level0ID( smartIDs.front().pdID() );
 
   if      ( LHCb5 == version )
   {
@@ -371,7 +371,7 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
   if ( msgLevel(MSG::VERBOSE) )
   {
     // Print out SmartIDs to encode
-    verbose() << endmsg << "   Creating encoding HPD " << smartIDs.front().hpdID()
+    verbose() << endmsg << "   Creating encoding HPD " << smartIDs.front().pdID()
               << " bank from " << smartIDs.size() << " RichSmartIDs :-" << endmsg;
     for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID )
@@ -544,6 +544,12 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 {
   m_hasBeenCalled = true;
 
+  // Special case for 'FlatList' format
+  if ( FlatList == version )
+  {
+    return fillFlatList( smartIDs );
+  }
+
   // new rich data map
   L1Map L1Data = dummyMap();
 
@@ -565,7 +571,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     hpdInfo.smartIDs().push_back( *iDigit );
 
     // Set the HPD information
-    hpdInfo.setHpdID( (*iDigit).hpdID() );
+    hpdInfo.setHpdID( (*iDigit).pdID() );
 
   }
 
@@ -684,6 +690,23 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
 }
 
+void RawDataFormatTool::fillFlatList( const LHCb::RichSmartID::Vector & smartIDs ) const
+{
+  // Make a new data bank
+  RAWBank dataBank;
+
+  // Loop over digits and fill into raw bank as a simple int
+  for ( LHCb::RichSmartID::Vector::const_iterator iDigit = smartIDs.begin();
+        iDigit != smartIDs.end(); ++iDigit )
+  {
+    dataBank.push_back( (*iDigit).key() );
+  }
+
+  // Save in the RawEvent
+  // Hard code to use L1 board 1 - To be Fixed.
+  rawEvent()->addBank( 1, LHCb::RawBank::Rich, FlatList, dataBank );
+}
+
 void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
                                           L1Map & decodedData ) const
 {
@@ -710,8 +733,13 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
     // Get L1 ID
     const Level1HardwareID L1ID ( bank.sourceID() );
 
+    // Get bank version
+    const BankVersion version = bankVersion( bank );
+
     // Is the RICH this L1 ID is for active ?
-    const Rich::DetectorType rich = m_richSys->richDetector(L1ID);
+    // To Be Fixed. Doesn't work for MaPMTs, so pretend to be Rich1 for 'FlatList'
+    const Rich::DetectorType rich = ( FlatList != version ? 
+                                      m_richSys->richDetector(L1ID) : Rich::Rich1 );
     if ( rich == Rich::InvalidDetector )
     {
       std::ostringstream mess;
@@ -725,9 +753,6 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
       if      ( msgLevel(MSG::VERBOSE) ) { dumpRawBank( bank, verbose() ); }
       else if ( m_dumpBanks            ) { dumpRawBank( bank, info()    ); }
 
-      // Get bank version
-      const BankVersion version = bankVersion( bank );
-
       // Flag tool as having been used this event
       m_hasBeenCalled = true;
 
@@ -735,7 +760,6 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
       ++m_l1IdsDecoded[ L1ID ];
 
       // Now, delegate the work to a version of the decoding appropriate to the version
-
       if ( version == LHCb5 ) // latest version
       {
         decodeToSmartIDs_2007(bank,decodedData);
@@ -750,6 +774,10 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
       {
         decodeToSmartIDs_DC0406(bank,decodedData);
       }
+      else if ( FlatList == version )
+      {
+        decodeToSmartIDs_FlatList(bank,decodedData);
+      }
       else // Some problem ...
       {
         std::ostringstream mess;
@@ -760,6 +788,64 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
     } // active RICH
 
   } // magic OK
+
+}
+
+void
+RawDataFormatTool::decodeToSmartIDs_FlatList( const LHCb::RawBank & bank,
+                                              Rich::DAQ::L1Map & decodedData ) const
+{
+  // Get L1 ID
+  const Level1HardwareID L1ID ( bank.sourceID() );
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "FlatList Decoding L1 bank " << L1ID << endmsg;
+
+  // Data bank size in 32 bit words
+  const int bankSize = bank.size() / 4;
+
+  // If we have some words to process, start the decoding
+  if ( bankSize > 0 )
+  {
+
+    // Get Ingress map to decode into for this L1 board
+    IngressMap & ingressMap = decodedData[L1ID];
+
+    // This data version does not have ingress info, so just put all data into ingress 0
+    const L1IngressID ingressNum(0);
+
+    // Get data for this ingress
+    IngressInfo & ingressInfo = ingressMap[ingressNum];
+    
+    // Loop over bank, Fill data into RichSmartIDs
+    long lineC(0);
+    unsigned int input(0);
+    std::map<LHCb::RichSmartID,Level1Input> pdMap;
+    while ( lineC < bankSize )
+    {
+      // Read the smartID direct from the banks
+      const LHCb::RichSmartID id( bank.data()[lineC++] );
+
+      // Get the L1 input from the DB 
+      // Doesn't work due to DB problems with MaPMTs. To Be Fixed.
+      //const Level1Input l1Input = m_richSys->level1InputNum(id);
+
+      // Make up an input number for this PD
+      if ( pdMap.find(id) == pdMap.end() ) { pdMap[id] = Level1Input(input++); }
+      const Level1Input l1Input = pdMap[id];
+
+      // Create a fake entry in the decoded map
+      std::pair<HPDMap::iterator,bool> p
+        = ingressInfo.hpdData().insert( HPDMap::value_type(l1Input,HPDInfo()) );
+      HPDInfo & hpdInfo = p.first->second;
+
+      // Set the PD ID
+      hpdInfo.setHpdID( id.pdID() );
+
+      // add the hit to the list
+      hpdInfo.smartIDs().push_back( id );
+    }
+
+  }
 
 }
 
@@ -901,7 +987,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             catch ( const GaudiException & expt )
             {
               std::ostringstream errMsg;
-              errMsg << "'" << expt.message() << "' | L1HardID=" << L1ID 
+              errMsg << "'" << expt.message() << "' | L1HardID=" << L1ID
                      << " Ingress=" << ingressWord.ingressID() << " Input=" << *iHPD;
               Error( errMsg.str() ).ignore();
             }

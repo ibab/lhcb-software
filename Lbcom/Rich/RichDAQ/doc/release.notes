@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID
+ - Add support for a 'FlatList' data format
+
 !========================= RichDAQ v3r34 2011-11-08 =========================
 ! 2011-10-05 - Chris Jones
  - Minor improvements to a few decoding error messages
