@@ -186,8 +186,9 @@ double CaloDataProvider::digit (LHCb::CaloCellID id,double def){
 //-------------------------------------------------------
 int CaloDataProvider::adc (LHCb::CaloCellID id, int def){
   if( m_getRaw )getBanks();
-  bool ok=true;
-  if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
+  // decode the bank if not already done
+  if( 0 >  m_adcs.index(id) )decodeCell( id );
+  // 2nd attempt to access the adc
   if( 0 >  m_adcs.index(id) )return def;// 0-suppressed data or non-valid CellID
   return m_adcs[id].adc();
 }
