@@ -77,7 +77,7 @@ namespace LoKi
         /// locate the service if needed:
         if ( !m_svc ) 
         {
-          const LoKi::Services::Services& svcs = LoKi::Services::instance() ;
+          const LoKi::Services& svcs = LoKi::Services::instance() ;
           IDataProviderSvc* evtSvc = svcs.evtSvc() ;
           Assert ( 0 != evtSvc , "Could not extract EventDataService!" ) ;
           m_svc = evtSvc ;

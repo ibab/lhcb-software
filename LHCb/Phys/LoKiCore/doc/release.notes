@@ -13,6 +13,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-11-18 - Vanya Belyaev
+
+ - LoKi/Sources.h
+
+    fix a compilation error for gcc46 
+
 !========================= LoKiCore v11r4 2011-11-07 =========================
 ! 2011-10-30 - Vanya Belyaev
  - add new functionality to streamers:
