@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Paul Seyfert
+ - added method ZooP::LoKiBlock() {return Info<ZooLoKiBlock>();}
+
 ! 2011-11-16 - Manuel Tobias Schiller
  - small patch to ZooWriter to better protect against ZooWriterContext misuse
    which also helps to promote best practice usage of the new per-job objects
