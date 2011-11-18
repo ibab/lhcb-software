@@ -388,14 +388,13 @@ class Boole(LHCbConfigurableUser):
         if self.getProp("DataType") == "Upgrade" :
             # 3=75ns (default) 2=50ns 
             mcOTTimeCreator.numberOfBX = 2
-        seq.Members += [ OTFillRawBuffer("OTFillRawBuffer%s"%tae) ]
-        
+        seq.Members += [ OTFillRawBuffer("OTFillRawBuffer%s"%tae) ]   
 
     def configureDigiRich(self, seq, tae ):
         if tae == "":
             from RichDigiSys.Configuration import RichDigiSysConf
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
-            RichDigiSysConf().applyConf(GaudiSequencer("DigiRichSeq"))
+            RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
         else:
             raise RuntimeError("TAE not implemented for RICH")
             
