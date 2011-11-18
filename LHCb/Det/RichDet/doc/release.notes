@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-11-17 - Chris Jones
+ - Add PMT classes from Sajan
+
 !========================= RichDet v16r7 2011-11-07 =========================
 ! 2011-10-05 - Chris Jones
  - Preliminary changes for future MaPMT support

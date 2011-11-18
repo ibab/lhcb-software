@@ -1,4 +1,3 @@
-
 /** @file DeRich.h
  *
  *  Header file for detector description class : DeRich
@@ -28,8 +27,10 @@
 #include "RichDet/DeRichBase.h"
 #include "RichDet/RichMirrorSegPosition.h"
 #include "RichDet/DeRichLocations.h"
+#include "RichDet/RichDetConfigType.h"
 
-class DeRichHPDPanel;
+class DeRichHPDPanel; // kept for backward compatibility
+class DeRichPDPanel;
 
 /** @class DeRich DeRich.h
  *
@@ -94,7 +95,6 @@ public:
    */
   virtual Rich::Side side( const Gaudi::XYZPoint& point ) const = 0;
 
-
   /**
    * Returns the nominal spherical mirror radius for this Rich
    *
@@ -103,6 +103,12 @@ public:
   inline double sphMirrorRadius() const
   {
     return m_sphMirrorRadius;
+  }
+
+  /// Returns the Photon Detector config type
+  inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
+  {
+    return m_RichPhotoDetConfig;
   }
 
   /**
@@ -129,14 +135,14 @@ public:
 
   /**
    * Returns a pointer to the tabulated property that holds the nominal quantum
-   * efficiency of an HPD.
+   * efficiency of an Photodetector
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const RichTabulatedProperty1D* nominalHPDQuantumEff() const
+  inline const RichTabulatedProperty1D * nominalPDQuantumEff() const
   {
-    if (!m_nominalHPDQuantumEff) { loadNominalHPDQuantumEff(); }
-    return m_nominalHPDQuantumEff;
+    if ( !m_nominalPDQuantumEff ) { loadNominalQuantumEff(); }
+    return m_nominalPDQuantumEff;
   }
 
   /**
@@ -179,20 +185,21 @@ public:
   virtual StatusCode alignSphMirrors() = 0;
   virtual StatusCode alignSecMirrors() = 0;
 
-  /// sensitive volume identifier
+  /// sensitive volume identifier for hpd version. to be phased out
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
 protected:
 
-  StatusCode alignMirrors( std::vector<const ILVolume*> mirrorContainer,
+  /// (Mis)align the mirrors
+  StatusCode alignMirrors( const std::vector<const ILVolume*>& mirrorContainers,
                            const std::string& mirrorID,
-                           SmartRef<Condition> cond,
+                           const SmartRef<Condition>& mirrorAlignCond,
                            const std::string& Rvector ) const;
 
 public:
 
-  /// Access HPD Panels on demand
-  DeRichHPDPanel * hpdPanel( const Rich::Side panel ) const;
+  /// Access PD Panels on demand
+  DeRichPDPanel * pdPanel( const Rich::Side panel ) const;
 
 private:
 
@@ -200,12 +207,21 @@ private:
   virtual const std::string panelName( const Rich::Side panel ) const;
 
   /// Load on demand the nominal HPD Q.E.
-  void loadNominalHPDQuantumEff() const;
+  const Rich::TabulatedProperty1D * loadNominalHPDQuantumEff() const;
+
+  /// Load on demand the nominal PMT Q.E.
+  const Rich::TabulatedProperty1D * loadNominalPMTQuantumEff() const;
+
+  /// Load on demand the nominal PD Q.E.
+  void loadNominalQuantumEff() const;
 
 protected:
 
   /// The nominal radius of the spherical mirror
-  double m_sphMirrorRadius; 
+  double m_sphMirrorRadius;
+
+  // RICH PhotoDetector Configuration
+  Rich::RichPhDetConfigType m_RichPhotoDetConfig;
 
   /// refractive index of the quartz gas window
   const Rich::TabulatedProperty1D* m_gasWinRefIndex;
@@ -221,8 +237,8 @@ protected:
 
 private: // data
 
-  /// Pointers to the HPD panels of this Rich detector
-  mutable std::vector<DeRichHPDPanel*> m_HPDPanels;
+  /// Pointers to the PD panels of this Rich detector
+  mutable std::vector<DeRichPDPanel*> m_PDPanels;
 
   /// flag to test if the xml supports mirror position info
   bool m_positionInfo;
@@ -232,8 +248,8 @@ private: // data
   int m_secMirrorSegRows;  ///< number of secondary mirror rows
   int m_secMirrorSegCols;  ///< number of secondary mirror columns
 
-  /// HPD quantum efficiency
-  mutable const Rich::TabulatedProperty1D* m_nominalHPDQuantumEff;
+  /// PD quantum efficiency
+  mutable const Rich::TabulatedProperty1D * m_nominalPDQuantumEff;
 
 };
 

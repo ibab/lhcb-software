@@ -22,6 +22,9 @@
 #include "RichKernel/RichDAQDefinitions.h"
 #include "RichKernel/RichMap.h"
 
+// local
+#include "RichDet/RichDetConfigType.h"
+
 // External declarations
 extern const CLID CLID_DERichSystem;
 
@@ -29,7 +32,7 @@ extern const CLID CLID_DERichSystem;
  *
  * Class for generic info about the Rich system. In particular
  * to provide conversions and mappings between the various
- * RICH numbering schemes and to provide data on which HPDs, Level0 and Level1
+ * RICH numbering schemes and to provide data on which PDs, Level0 and Level1
  * boards are currently active.
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
@@ -66,170 +69,170 @@ public:
 
 public:
 
-  /** Convert an HPD RichSmartID into the corresponding HPD hardware number
-   *  @param smartID The RichSmartID for the HPD
-   *  @return The corresponding HPD hardware ID
+  /** Convert an PD RichSmartID into the corresponding PD hardware number
+   *  @param smartID The RichSmartID for the PD
+   *  @return The corresponding PD hardware ID
    */
   const Rich::DAQ::HPDHardwareID hardwareID( const LHCb::RichSmartID smartID ) const;
 
-  /** Convert a RICH HPD hardware number into the corresponding HPD RichSmartID
-   *  @param hID The hardware ID for the HPD
-   *  @return The corresponding HPD RichSmartID
+  /** Convert a RICH PD hardware number into the corresponding PD RichSmartID
+   *  @param hID The hardware ID for the PD
+   *  @return The corresponding PD RichSmartID
    */
   const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDHardwareID hID ) const;
 
-  /** Convert a RICH Level0 hardware number into the corresponding HPD RichSmartID
-   *  @param l0ID The HPD level0 for the HPD
-   *  @return The corresponding HPD RichSmartID
+  /** Convert a RICH Level0 hardware number into the corresponding PD RichSmartID
+   *  @param l0ID The PD level0 for the PD
+   *  @return The corresponding PD RichSmartID
    */
   const LHCb::RichSmartID richSmartID( const Rich::DAQ::Level0ID l0ID ) const;
 
-  /** Convert a RICH Copy Number into the corresponding HPD RichSmartID
-   *  @param copyNumber The HPD Copy Number
-   *  @return The corresponding HPD RichSmartID
+  /** Convert a RICH Copy Number into the corresponding PD RichSmartID
+   *  @param copyNumber The PD Copy Number
+   *  @return The corresponding PD RichSmartID
    */
   const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const;
 
-  /** Convert a RICH smartID to the corresponding HPD Copy Number
-   *  @param smartID The HPD RichSmartID
-   *  @return The corresponding HPD Copy Number
+  /** Convert a RICH smartID to the corresponding PD Copy Number
+   *  @param smartID The PD RichSmartID
+   *  @return The corresponding PD Copy Number
    */
   const Rich::DAQ::HPDCopyNumber copyNumber( const LHCb::RichSmartID smartID ) const;
 
-  /// Returns a list of all active HPDs identified by their RichSmartID
-  const LHCb::RichSmartID::Vector & activeHPDRichSmartIDs() const;
+  /// Returns a list of all active PDs identified by their RichSmartID
+  const LHCb::RichSmartID::Vector & activePDRichSmartIDs() const;
 
-  /// Returns a list of all inactive HPDs identified by their RichSmartID
-  const LHCb::RichSmartID::Vector & inactiveHPDRichSmartIDs() const;
+  /// Returns a list of all inactive PDs identified by their RichSmartID
+  const LHCb::RichSmartID::Vector & inactivePDRichSmartIDs() const;
 
-  /// Returns a list of all (active and inactive) HPDs identified by their RichSmartID
-  const LHCb::RichSmartID::Vector & allHPDRichSmartIDs() const;
+  /// Returns a list of all (active and inactive) PDs identified by their RichSmartID
+  const LHCb::RichSmartID::Vector & allPDRichSmartIDs() const;
 
-  /// Returns a list of all active HPDs identified by their hardware IDs
-  const Rich::DAQ::HPDHardwareIDs & activeHPDHardwareIDs() const;
+  /// Returns a list of all active PDs identified by their hardware IDs
+  const Rich::DAQ::HPDHardwareIDs & activePDHardwareIDs() const;
 
-  /// Returns a list of all inactive HPDs identified by their hardware IDs
-  const Rich::DAQ::HPDHardwareIDs & inactiveHPDHardwareIDs() const;
+  /// Returns a list of all inactive PDs identified by their hardware IDs
+  const Rich::DAQ::HPDHardwareIDs & inactivePDHardwareIDs() const;
 
-  /// Returns a list of all (active and inactive) HPDs identified by their hardware IDs
-  const Rich::DAQ::HPDHardwareIDs & allHPDHardwareIDs() const;
+  /// Returns a list of all (active and inactive) PDs identified by their hardware IDs
+  const Rich::DAQ::HPDHardwareIDs & allPDHardwareIDs() const;
 
-  /** Ask whether a given HPD is currently active or dead
-   *  @param id The RichSmartID for the HPD
-   *  @return boolean indicating if the given HPD is active or not
-   *  @attention For speed, this method does NOT check if the given HPD id is a valid one
-   *             or not. Invalid HPD ids will return true
+  /** Ask whether a given PD is currently active or dead
+   *  @param id The RichSmartID for the PD
+   *  @return boolean indicating if the given PD is active or not
+   *  @attention For speed, this method does NOT check if the given PD id is a valid one
+   *             or not. Invalid PD ids will return true
    */
-  bool hpdIsActive( const LHCb::RichSmartID id ) const;
+  bool pdIsActive( const LHCb::RichSmartID id ) const;
 
-  /** Ask whether a given HPD is currently active or dead
-   *  @param id The hardware id for the HPD
-   *  @return boolean indicating if the given HPD is active or not
-   *  @attention For speed, this method does NOT check if the given HPD id is a valid one
-   *             or not. Invalid HPD ids will return true
+  /** Ask whether a given PD is currently active or dead
+   *  @param id The hardware id for the PD
+   *  @return boolean indicating if the given PD is active or not
+   *  @attention For speed, this method does NOT check if the given PD id is a valid one
+   *             or not. Invalid PD ids will return true
    */
-  bool hpdIsActive( const Rich::DAQ::HPDHardwareID id ) const;
+  bool pdIsActive( const Rich::DAQ::HPDHardwareID id ) const;
 
-  /** Obtain the Level0 ID number for a given HPD RichSmartID
-   *  @param smartID The RichSmartID for the HPD
-   *  @return The corresponding HPD Level0 ID
+  /** Obtain the Level0 ID number for a given PD RichSmartID
+   *  @param smartID The RichSmartID for the PD
+   *  @return The corresponding PD Level0 ID
    */
   const Rich::DAQ::Level0ID level0ID( const LHCb::RichSmartID smartID ) const;
 
-  /** Obtain the Level0 ID number for a given HPD hardware ID
-   *  @param hardID The hardware ID for the HPD
-   *  @return The corresponding HPD Level0 ID
+  /** Obtain the Level0 ID number for a given PD hardware ID
+   *  @param hardID The hardware ID for the PD
+   *  @return The corresponding PD Level0 ID
    */
   const Rich::DAQ::Level0ID level0ID( const Rich::DAQ::HPDHardwareID hardID ) const;
 
-  /** Obtain the Level1 hardware ID number for a given HPD Level0 ID
+  /** Obtain the Level1 hardware ID number for a given PD Level0 ID
    *  @param l0ID The Level0 ID
    *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const;
 
-  /** Obtain the Level1 hardware ID number for a given HPD RichSmartID
-   *  @param smartID The RichSmartID for the HPD
+  /** Obtain the Level1 hardware ID number for a given PD RichSmartID
+   *  @param smartID The RichSmartID for the PD
    *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const LHCb::RichSmartID smartID ) const;
 
-  /** Obtain the Level1 hardware ID number for a given HPD hardware ID
-   *  @param hardID The hardware ID for the HPD
+  /** Obtain the Level1 hardware ID number for a given PD hardware ID
+   *  @param hardID The hardware ID for the PD
    *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const;
 
   /** Obtain the Level1 hardware ID number for a Level1 logical ID
    *  @param rich The RICH detector
-   *  @param logID The logical ID for the HPD
+   *  @param logID The logical ID for the PD
    *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DetectorType rich,
                                                       const Rich::DAQ::Level1LogicalID logID ) const;
 
-  /** Obtain the Level1 logical ID number for a given HPD RichSmartID
-   *  @param smartID The RichSmartID for the HPD
+  /** Obtain the Level1 logical ID number for a given PD RichSmartID
+   *  @param smartID The RichSmartID for the PD
    *  @return The corresponding Level1 logical ID
    */
   const Rich::DAQ::Level1LogicalID level1LogicalID( const LHCb::RichSmartID smartID ) const;
 
   /** Obtain the Level1 logical ID number for a Level1 hardware ID
-   *  @param hardID The hardware ID for the HPD
-   *  @return The corresponding HPD Level1 logical ID
+   *  @param hardID The hardware ID for the PD
+   *  @return The corresponding PD Level1 logical ID
    */
   const Rich::DAQ::Level1LogicalID level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const;
 
   /** Obtain the Level1 logical ID number for a Level1 hardware ID
-   *  @param hardID The hardware ID for the HPD
-   *  @return The corresponding HPD Level1 logical ID
+   *  @param hardID The hardware ID for the PD
+   *  @return The corresponding PD Level1 logical ID
    */
   const Rich::DAQ::Level1CopyNumber copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const;
 
-  /** Obtain the Level1 input number for a given HPD RichSmartID
-   *  @param smartID The RichSmartID for the HPD
+  /** Obtain the Level1 input number for a given PD RichSmartID
+   *  @param smartID The RichSmartID for the PD
    *  @return The corrresponding Level1 input number
    */
   const Rich::DAQ::Level1Input level1InputNum( const LHCb::RichSmartID smartID ) const;
 
-  /** Obtain the Level1 input number for a given HPD hardware ID
-   *  @param hardID The hardware ID for the HPD
+  /** Obtain the Level1 input number for a given PD hardware ID
+   *  @param hardID The hardware ID for the PD
    *  @return The corrresponding Level1 input number
    */
   const Rich::DAQ::Level1Input level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const;
 
-  /** Access the HPD hardware ID for the given L1 hardwareID and input number
+  /** Access the PD hardware ID for the given L1 hardwareID and input number
    *  @param L1HardID L1 board hardware ID
    *  @param L1Input  L1 input number
-   *  @return HPD hardware ID
+   *  @return PD hardware ID
    */
   const Rich::DAQ::HPDHardwareID
-  hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
-                 const Rich::DAQ::Level1Input L1Input ) const;
+  pdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
+                const Rich::DAQ::Level1Input L1Input ) const;
 
-  /** Obtain a list of RichSmartID HPD identifiers for a given level1 hardwareID
+  /** Obtain a list of RichSmartID PD identifiers for a given level1 hardwareID
    *  @param l1ID The level1 ID number
-   *  @return Vector of all HPD RichSmartIDs for that Level1 board
-   */
-  const LHCb::RichSmartID::Vector & l1HPDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
+   *  @return Vector of all PD RichSmartIDs for that Level1 board
+   */  
+  const LHCb::RichSmartID::Vector & l1PDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /** Obtain a list of HPD hardware identifiers for a given level1 hardware ID
+  /** Obtain a list of PD hardware identifiers for a given level1 hardware ID
    *  @param l1ID The level1 ID number
-   *  @return Vector of all HPD hardware IDs for that Level1 board
+   *  @return Vector of all PD hardware IDs for that Level1 board
    */
-  const Rich::DAQ::HPDHardwareIDs & l1HPDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
+  const Rich::DAQ::HPDHardwareIDs & l1PDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /** Reconst Rich::DAQ::HPDHardwareIDturn which RICH detector a given Level1 hardware ID is for
+  /** Reconst Rich::DAQ::PDHardwareIDturn which RICH detector a given Level1 hardware ID is for
    *  @param l1ID The Level 1 hardware ID
    *  @return The RICH detector
    */
   Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /// Direct access to the mapping between Level1 IDs and HPD RichSmartIDs
-  const Rich::DAQ::L1ToSmartIDs & l1HPDSmartIDs() const;
+  /// Direct access to the mapping between Level1 IDs and PD RichSmartIDs
+  const Rich::DAQ::L1ToSmartIDs & l1PDSmartIDs() const;
 
-  /// Direct access to the mapping between Level1 IDs and HPD RichSmartIDs
-  const Rich::DAQ::L1ToHardIDs & l1HPDHardIDs() const;
+  /// Direct access to the mapping between Level1 IDs and PD RichSmartIDs
+  const Rich::DAQ::L1ToHardIDs & l1PDHardIDs() const;
 
   /// Returns a list of all valid Level1 board hardware IDs
   const Rich::DAQ::Level1HardwareIDs & level1HardwareIDs() const;
@@ -237,16 +240,24 @@ public:
 public:
 
   /**
-   * Retrieves the location of the HPD in the detector store, so it can be
-   * loaded using the getDet<DeRichHPD> method.
-   * @return The location of the HPD in the detector store
+   * Retrieves the location of the PD/PMT in the detector store, so it can be
+   * loaded using the getDet<DeRichPD> method.
+   * @return The location of the PD in the detector store
    */
-  std::string getDeHPDLocation(const LHCb::RichSmartID smartID) const;
+  std::string getDePDLocation( const LHCb::RichSmartID smartID ) const;
+
+public:
+
+  /// The photon detector type
+  inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
+  {
+    return m_richPhotoDetectorConfiguration; 
+  }    
 
 private: // methods
 
-  /// Update methods for HPD mappings
-  StatusCode buildHPDMappings();
+  /// Update methods for PD mappings
+  StatusCode buildPDMappings();
 
   /// Fill the maps for the given RICH detector
   StatusCode fillMaps( const Rich::DetectorType rich );
@@ -260,6 +271,9 @@ private: // methods
 
 private: // data
 
+  // RICH PhotoDetector Configuration
+  Rich::RichPhDetConfigType m_richPhotoDetectorConfiguration;
+  
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDHardwareID > SoftToHard;
   SoftToHard m_soft2hard; ///< Software ID to hardware ID map
@@ -272,64 +286,64 @@ private: // data
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level0ID, LHCb::RichSmartID > L0HardToSoft;
   L0HardToSoft m_l0hard2soft; ///< Level0 Hardware ID to software ID map
 
-  /// List of all active HPD RichSmartIDs
-  LHCb::RichSmartID::Vector m_activeHPDSmartIDs;
+  /// List of all active PD RichSmartIDs
+  LHCb::RichSmartID::Vector m_activePDSmartIDs;
 
-  /// List of all inactive HPD RichSmartIDs
-  LHCb::RichSmartID::Vector m_inactiveHPDSmartIDs;
+  /// List of all inactive PD RichSmartIDs
+  LHCb::RichSmartID::Vector m_inactivePDSmartIDs;
 
-  /// List of all HPD RichSmartIDs
-  LHCb::RichSmartID::Vector m_allHPDSmartIDs;
+  /// List of all PD RichSmartIDs
+  LHCb::RichSmartID::Vector m_allPDSmartIDs;
 
-  /// List of all active HPD hardware IDs
-  Rich::DAQ::HPDHardwareIDs m_activeHPDHardIDs;
+  /// List of all active PD hardware IDs
+  Rich::DAQ::HPDHardwareIDs m_activePDHardIDs;
 
-  /// List of all inactive HPD hardware IDs
-  Rich::DAQ::HPDHardwareIDs m_inactiveHPDHardIDs;
+  /// List of all inactive PD hardware IDs
+  Rich::DAQ::HPDHardwareIDs m_inactivePDHardIDs;
 
-  /// List of all inactive HPD hardware IDs
-  Rich::DAQ::HPDHardwareIDs m_allHPDHardIDs;
+  /// List of all inactive PD hardware IDs
+  Rich::DAQ::HPDHardwareIDs m_allPDHardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level0ID > SmartIDToL0;
-  SmartIDToL0 m_smartid2L0; ///< HPD RichSmartID to L0 ID map
+  SmartIDToL0 m_smartid2L0; ///< PD RichSmartID to L0 ID map
 
-  /// Typedef for mapping from HPD Hardware ID to Level0 ID
+  /// Typedef for mapping from PD Hardware ID to Level0 ID
   typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level0ID > HardIDToL0;
-  HardIDToL0 m_hardid2L0; ///< HPD Hardware ID to L0 ID map
+  HardIDToL0 m_hardid2L0; ///< PD Hardware ID to L0 ID map
 
   /// Typedef for mapping from Level0 to Level1 ID
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level0ID, Rich::DAQ::Level1HardwareID > L0ToL1;
-  L0ToL1 m_l0ToL1; ///< HPD Level0 to L1 ID map
+  L0ToL1 m_l0ToL1; ///< PD Level0 to L1 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 ID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level1HardwareID > SmartIDToL1;
-  SmartIDToL1 m_smartid2L1; ///< HPD RichSmartID to L1 ID map
+  SmartIDToL1 m_smartid2L1; ///< PD RichSmartID to L1 ID map
 
-  /// Typedef for mapping from HPD Hardware ID to Level1 ID
+  /// Typedef for mapping from PD Hardware ID to Level1 ID
   typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level1HardwareID > HardIDToL1;
-  HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
+  HardIDToL1 m_hardid2L1; ///< PD Hardware ID to L1 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 input number
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level1Input > SmartIDToL1In;
-  SmartIDToL1In m_smartid2L1In; ///< HPD RichSmartID to L1 input number map
+  SmartIDToL1In m_smartid2L1In; ///< PD RichSmartID to L1 input number map
 
-  /// Typedef for mapping from HPD Hardware ID to Level1 input number
+  /// Typedef for mapping from PD Hardware ID to Level1 input number
   typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level1Input > HardIDToL1In;
-  HardIDToL1In m_hardid2L1In; ///< HPD Hardware ID to L1 input number map
+  HardIDToL1In m_hardid2L1In; ///< PD Hardware ID to L1 input number map
 
   /// Typedef for mapping between L1 boards and RICH detector
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1HardwareID, Rich::DetectorType > L1ToRICH;
   L1ToRICH m_l1ToRich; ///< L1 to RICH map
 
   Rich::DAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
-  Rich::DAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
+  Rich::DAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to PD hardware IDs map
 
   /// L1 hardware ID + Input number pair
   typedef std::pair< const Rich::DAQ::Level1HardwareID, const Rich::DAQ::Level1Input > L1HardIDAndInput;
-  /// Typedef for mapping L1 HardwareID + L1 input number to HPD Hardware ID
-  typedef Rich::Map< L1HardIDAndInput, Rich::DAQ::HPDHardwareID > L1HardIDAndInputToHPDHardID;
-  L1HardIDAndInputToHPDHardID m_L1HardIDAndInputToHPDHardID;
+  /// Typedef for mapping L1 HardwareID + L1 input number to PD Hardware ID
+  typedef Rich::Map< L1HardIDAndInput, Rich::DAQ::HPDHardwareID > L1HardIDAndInputToPDHardID;
+  L1HardIDAndInputToPDHardID m_L1HardIDAndInputToPDHardID;
 
   /// List of all valid Level1 IDs
   Rich::DAQ::Level1HardwareIDs m_l1IDs;
@@ -366,91 +380,91 @@ private: // data
 };
 
 //=========================================================================
-// activeHPDRichSmartIDs
+// activePDRichSmartIDs
 //=========================================================================
-inline const LHCb::RichSmartID::Vector& DeRichSystem::activeHPDRichSmartIDs() const
+inline const LHCb::RichSmartID::Vector& DeRichSystem::activePDRichSmartIDs() const
 {
-  return m_activeHPDSmartIDs;
+  return m_activePDSmartIDs;
 }
 
 //=========================================================================
-// inactiveHPDRichSmartIDs
+// inactivePDRichSmartIDs
 //=========================================================================
-inline const LHCb::RichSmartID::Vector& DeRichSystem::inactiveHPDRichSmartIDs() const
+inline const LHCb::RichSmartID::Vector& DeRichSystem::inactivePDRichSmartIDs() const
 {
-  return m_inactiveHPDSmartIDs;
+  return m_inactivePDSmartIDs;
 }
 
 //=========================================================================
-// allHPDRichSmartIDs
+// allPDRichSmartIDs
 //=========================================================================
-inline const LHCb::RichSmartID::Vector& DeRichSystem::allHPDRichSmartIDs() const
+inline const LHCb::RichSmartID::Vector& DeRichSystem::allPDRichSmartIDs() const
 {
-  return m_allHPDSmartIDs;
+  return m_allPDSmartIDs;
 }
 
 //=========================================================================
-// activeHPDHardwareIDs
+// activePDHardwareIDs
 //=========================================================================
-inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::activeHPDHardwareIDs() const
+inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::activePDHardwareIDs() const
 {
-  return m_activeHPDHardIDs;
+  return m_activePDHardIDs;
 }
 
 //=========================================================================
-// activeHPDHardwareIDs
+// activePDHardwareIDs
 //=========================================================================
-inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::inactiveHPDHardwareIDs() const
+inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::inactivePDHardwareIDs() const
 {
-  return m_inactiveHPDHardIDs;
+  return m_inactivePDHardIDs;
 }
 
 //=========================================================================
-// allHPDHardwareIDs
+// allPDHardwareIDs
 //=========================================================================
-inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allHPDHardwareIDs() const
+inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allPDHardwareIDs() const
 {
-  return m_allHPDHardIDs; 
+  return m_allPDHardIDs; 
 }
 
 //=========================================================================
-// hpdIsActive
+// pdIsActive
 //=========================================================================
-inline bool DeRichSystem::hpdIsActive( const LHCb::RichSmartID id ) const
-{
-  // is this id in the inactive list
-  return ( m_inactiveHPDSmartIDs.empty() ||
-           std::find( m_inactiveHPDSmartIDs.begin(),
-                      m_inactiveHPDSmartIDs.end(),
-                      id.hpdID() ) == m_inactiveHPDSmartIDs.end() );
-}
-
-//=========================================================================
-// hpdIsActive
-//=========================================================================
-inline bool DeRichSystem::hpdIsActive( const Rich::DAQ::HPDHardwareID id ) const
+inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID id ) const
 {
   // is this id in the inactive list
-  return ( m_inactiveHPDHardIDs.empty() ||
-           std::find( m_inactiveHPDHardIDs.begin(),
-                      m_inactiveHPDHardIDs.end(),
-                      id ) == m_inactiveHPDHardIDs.end() );
+  return ( m_inactivePDSmartIDs.empty() ||
+           std::find( m_inactivePDSmartIDs.begin(),
+                      m_inactivePDSmartIDs.end(),
+                      id.pdID() ) == m_inactivePDSmartIDs.end() );
 }
 
 //=========================================================================
-// l1HPDSmartIDs
-// Access mapping between Level 1 IDs and HPD RichSmartIDs
+// pdIsActive
 //=========================================================================
-inline const Rich::DAQ::L1ToSmartIDs& DeRichSystem::l1HPDSmartIDs() const
+inline bool DeRichSystem::pdIsActive( const Rich::DAQ::HPDHardwareID id ) const
+{
+  // is this id in the inactive list
+  return ( m_inactivePDHardIDs.empty() ||
+           std::find( m_inactivePDHardIDs.begin(),
+                      m_inactivePDHardIDs.end(),
+                      id ) == m_inactivePDHardIDs.end() );
+}
+
+//=========================================================================
+// l1PDSmartIDs
+// Access mapping between Level 1 IDs and PD RichSmartIDs
+//=========================================================================
+inline const Rich::DAQ::L1ToSmartIDs& DeRichSystem::l1PDSmartIDs() const
 {
   return m_l12smartids;
 }
 
 //=========================================================================
-// l1HPDHardIDs
-// Access mapping between Level 1 IDs and HPD RichSmartIDs
+// l1PDHardIDs
+// Access mapping between Level 1 IDs and PD RichSmartIDs
 //=========================================================================
-inline const Rich::DAQ::L1ToHardIDs& DeRichSystem::l1HPDHardIDs() const
+inline const Rich::DAQ::L1ToHardIDs& DeRichSystem::l1PDHardIDs() const
 {
   return m_l12hardids;
 }

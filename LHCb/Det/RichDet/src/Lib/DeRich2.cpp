@@ -1,4 +1,3 @@
-
 /** @file DeRich2.cpp
  *
  *  Implementation file for detector description class : DeRich2
@@ -48,6 +47,7 @@ StatusCode DeRich2::initialize()
     debug() << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
+  
 
   const std::vector<double>& nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvatureLeft  =
@@ -298,14 +298,39 @@ Rich::Side DeRich2::side( const Gaudi::XYZPoint& point ) const
 //=========================================================================
 const std::string DeRich2::panelName( const Rich::Side panel ) const
 {
+
   std::string pname = ( Rich::left == panel ?
                         DeRichLocations::Rich1Panel0 :
                         DeRichLocations::Rich1Panel1 );
-  if ( exists("HPDPanelDetElemLocations") )
-  {
-    const std::vector<std::string>& panelLoc 
-      = paramVect<std::string>("HPDPanelDetElemLocations");
-    pname = panelLoc[panel];
+  // info()<<"DeRich2 Panel: Rich Config panelname config"<<pname
+  //      <<"  "<<RichPhotoDetConfig()<<endmsg;
+
+  if(  RichPhotoDetConfig() == Rich::HPDConfig ) {
+
+      if ( exists("Rich2HPDPanelDetElemLocations") )
+       {
+        const std::vector<std::string>& panelLoc 
+          = paramVect<std::string>("Rich2HPDPanelDetElemLocations");
+        pname = panelLoc[panel];
+       }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
+        const std::vector<std::string>& panelLoc 
+          = paramVect<std::string>("HPDPanelDetElemLocations");
+        pname = panelLoc[panel];        
+      }
+      
+      
+  }else if ( RichPhotoDetConfig() == Rich::PMTConfig ) {
+    
+      if ( exists("Rich2PMTPanelDetElemLocations") )
+       {
+        const std::vector<std::string>& panelLoc 
+          = paramVect<std::string>("Rich2PMTPanelDetElemLocations");
+        pname = panelLoc[panel];
+       }    
   }
+
   return pname;
 }
+
+
+

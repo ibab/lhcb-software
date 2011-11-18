@@ -6,8 +6,10 @@
   <class name="DeRichBeamPipe"            />
   <class name="DeRichPD"                  />
   <class name="DeRichHPD"                 />
+  <class name="DeRichPMT"                 />
   <class name="DeRichPDPanel"             />
   <class name="DeRichHPDPanel"            />
+  <class name="DeRichPMTPanel"            />
   <class name="DeRichRadiator"            />
   <class name="DeRichRadiator::Vector"    />
   <class name="DeRichSingleSolidRadiator" />
@@ -19,6 +21,8 @@
   <class name="Rich::TabulatedFunction1D" />
   <class name="Rich::TabulatedProperty1D" />
   <class name="Rich::MirrorSegPosition"   />
+  <enum  name="Rich::RichPhDetConfigType" />
   <variable pattern="DeRichLocations::*"  />
   <function pattern="DeRichLocations::location*" />
+  <function pattern="Rich::text(Rich::RichPhDetConfigType)" />
 </lcgdict>

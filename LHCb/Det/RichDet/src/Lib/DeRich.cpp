@@ -1,4 +1,3 @@
-
 /** @file DeRich.cpp
  *
  *  Implementation file for detector description class : DeRich
@@ -18,6 +17,8 @@
 // local
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichPMTPanel.h"
+#include "RichDet/DeRichPDPanel.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DeRich
@@ -28,23 +29,24 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRich::DeRich(const std::string & name)
+DeRich::DeRich( const std::string & name )
   : DeRichBase              ( name  ),
     m_sphMirrorRadius       ( 0     ),
+    m_RichPhotoDetConfig    ( Rich::HPDConfig ),
     m_gasWinRefIndex        ( NULL  ),
     m_gasWinAbsLength       ( NULL  ),
     m_nominalSphMirrorRefl  ( NULL  ),
     m_nominalSecMirrorRefl  ( NULL  ),
-    m_HPDPanels             ( Rich::NRiches ),
+    m_PDPanels              ( Rich::NRiches ),
     m_positionInfo          ( false ),
     m_sphMirrorSegRows      ( 0     ),
     m_sphMirrorSegCols      ( 0     ),
     m_secMirrorSegRows      ( 0     ),
     m_secMirrorSegCols      ( 0     ),
-    m_nominalHPDQuantumEff  ( NULL  )
+    m_nominalPDQuantumEff   ( NULL  )
 {
-  m_HPDPanels[Rich::Rich1] = NULL;
-  m_HPDPanels[Rich::Rich2] = NULL;
+  m_PDPanels[Rich::Rich1]  = NULL;
+  m_PDPanels[Rich::Rich2]  = NULL;
 }
 
 //=============================================================================
@@ -54,7 +56,7 @@ DeRich::~DeRich()
 {
   if ( m_gasWinRefIndex       ) delete m_gasWinRefIndex;
   if ( m_gasWinAbsLength      ) delete m_gasWinAbsLength;
-  if ( m_nominalHPDQuantumEff ) delete m_nominalHPDQuantumEff;
+  if ( m_nominalPDQuantumEff  ) delete m_nominalPDQuantumEff;
   if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
   if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
 }
@@ -66,14 +68,14 @@ StatusCode DeRich::initialize ( )
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initialize " << name() << endmsg;
-
+  
   if ( exists( "SphMirrorSegRows" ) )
   {
     m_sphMirrorSegRows  = param<int>( "SphMirrorSegRows" );
     m_sphMirrorSegCols  = param<int>( "SphMirrorSegColumns" );
     m_positionInfo      = true;
   }
-
+  
   if ( exists( "SecMirrorSegRows" ) )
   {
     m_secMirrorSegRows = param<int>( "SecMirrorSegRows" );
@@ -85,15 +87,43 @@ StatusCode DeRich::initialize ( )
     m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
   }
 
+  if ( exists ( "RichPhotoDetectorConfig" ) )
+  {
+    m_RichPhotoDetConfig 
+      = (Rich::RichPhDetConfigType) param<int>( "RichPhotoDetectorConfig" );
+  }
+  else
+  {
+    // assume HPDs
+    m_RichPhotoDetConfig = Rich::HPDConfig;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
-void DeRich::loadNominalHPDQuantumEff() const
+
+void DeRich::loadNominalQuantumEff() const
 {
   // Delete current, if present, just to be safe
-  delete m_nominalHPDQuantumEff;
-  m_nominalHPDQuantumEff = NULL;
+  delete m_nominalPDQuantumEff;
+  m_nominalPDQuantumEff = NULL;
+
+  if      ( m_RichPhotoDetConfig == Rich::HPDConfig ) 
+  {
+    m_nominalPDQuantumEff = loadNominalHPDQuantumEff();
+  }
+  else if ( m_RichPhotoDetConfig == Rich::PMTConfig ) 
+  {
+    m_nominalPDQuantumEff = loadNominalPMTQuantumEff();
+  }
+}
+
+//=========================================================================
+
+const Rich::TabulatedProperty1D * DeRich::loadNominalHPDQuantumEff() const
+{
+  const Rich::TabulatedProperty1D * nominalHPDQuantumEff = NULL;
 
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
@@ -124,17 +154,65 @@ void DeRich::loadNominalHPDQuantumEff() const
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
-    m_nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
-    if ( !m_nominalHPDQuantumEff->valid() )
+    nominalHPDQuantumEff = new Rich::TabulatedProperty1D( tabQE );
+    if ( !nominalHPDQuantumEff->valid() )
     {
       throw GaudiException( "Invalid HPD QE RichTabulatedProperty1D for " + tabQE->name(),
                             "DeRich", StatusCode::FAILURE );
     }
   }
 
+  return nominalHPDQuantumEff;
 }
 
 //=========================================================================
+
+const Rich::TabulatedProperty1D * DeRich::loadNominalPMTQuantumEff() const
+{
+  const Rich::TabulatedProperty1D * nominalPMTQuantumEff = NULL;
+
+  // find the PMT quantum efficiency
+  std::string PMT_QETabPropLoc;
+  if ( exists( "RichPmtQETableName" ) )
+  {
+    PMT_QETabPropLoc = param<std::string>( "RichPmtQETableName" );
+  }
+  else
+  {
+    if ( exists( "RichNominalPmtQuantumEffTableName" ) )
+    {
+      PMT_QETabPropLoc = param<std::string>( "RichNominalPmtQuantumEffTableName" );
+    }
+    else
+    {
+      throw GaudiException( "Cannot find PMT QE location RichNominalPmtQuantumEffTableName",
+                            "DeRich", StatusCode::FAILURE );
+    }
+  }
+
+  SmartDataPtr<TabulatedProperty> tabQE ( dataSvc(), PMT_QETabPropLoc );
+  if ( !tabQE )
+  {
+    throw GaudiException( "No information on PMT Quantum Efficiency",
+                          "DeRich", StatusCode::FAILURE );
+  }
+  else
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Loaded PMT QE from: " << PMT_QETabPropLoc << endmsg;
+    nominalPMTQuantumEff = new Rich::TabulatedProperty1D( tabQE );
+    if ( !nominalPMTQuantumEff->valid() )
+    {
+      throw GaudiException( "Invalid PMT QE RichTabulatedProperty1D for " + tabQE->name(),
+                            "DeRich", StatusCode::FAILURE );
+    }
+  }
+
+  return nominalPMTQuantumEff;
+}
+
+//=========================================================================
+
 RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 {
 
@@ -155,8 +233,7 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 }
 
 //=========================================================================
-//
-//=========================================================================
+
 RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 {
 
@@ -177,31 +254,32 @@ RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
   return mirrorPos;
 
 }
+
 //=========================================================================
-//  misalignSphMirrors
-//=========================================================================
-StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
-                                  const std::string& mirrorID,
-                                  SmartRef<Condition> mirrorAlignCond,
-                                  const std::string& Rvector ) const {
+
+StatusCode 
+DeRich::alignMirrors ( const std::vector<const ILVolume*>& mirrorContainers,
+                       const std::string& mirrorID,
+                       const SmartRef<Condition>& mirrorAlignCond,
+                       const std::string& Rvector ) const 
+{
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Misaligning " << mirrorID << " in " << myName() << endmsg;
 
   std::map<int, IPVolume*> mirrors;
-  const IPVolume* cpvMirror;
 
-  std::vector<const ILVolume*>::const_iterator contIter;
-  for (contIter = mirrorContainers.begin(); contIter != mirrorContainers.end();
-       ++contIter) {
-    for (unsigned int i=0; i<(*contIter)->noPVolumes(); ++i)
+  for ( std::vector<const ILVolume*>::const_iterator contIter = mirrorContainers.begin(); 
+        contIter != mirrorContainers.end(); ++contIter )
+  {
+    for ( unsigned int i=0; i<(*contIter)->noPVolumes(); ++i )
     {
-      cpvMirror = (*contIter)->pvolume(i);
+      const IPVolume* cpvMirror = (*contIter)->pvolume(i);
       IPVolume* pvMirror = const_cast<IPVolume*>(cpvMirror);
 
       // find mirrors that match mirrorID
-      std::string mirrorName = pvMirror->name();
-      if (mirrorName.find(mirrorID) != std::string::npos )
+      const std::string mirrorName = pvMirror->name();
+      if ( mirrorName.find(mirrorID) != std::string::npos )
       {
         const std::string::size_type mpos = mirrorName.find(':');
         if ( std::string::npos == mpos )
@@ -209,7 +287,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
           fatal() << "A mirror without a number!" << endmsg;
           return StatusCode::FAILURE;
         }
-        int mirrorNumber = atoi( mirrorName.substr(mpos+1).c_str() );
+        const int mirrorNumber = atoi( mirrorName.substr(mpos+1).c_str() );
         mirrors[mirrorNumber] = pvMirror;
       }
     }
@@ -217,8 +295,8 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Found " << mirrors.size() << " mirrors" << endmsg;
 
-  std::vector<double> rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
-  std::vector<double> rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
+  const std::vector<double>& rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
+  const std::vector<double>& rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
 
   // make sure the numbers match
   if ( rotX.size() != rotY.size() )
@@ -234,7 +312,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     return StatusCode::FAILURE;
   }
 
-  std::vector<double> Rs = paramVect<double>(Rvector);
+  const std::vector<double> & Rs = paramVect<double>(Rvector);
   if ( rotX.size() != Rs.size() )
   {
     fatal() << "Number of Rs does not match mirrors in:"
@@ -242,7 +320,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     return StatusCode::FAILURE;
   }
 
-  for (unsigned int mNum=0; mNum<rotX.size(); ++mNum)
+  for ( unsigned int mNum=0; mNum<rotX.size(); ++mNum )
   {
     // create transformation matrix to rotate the mirrors around their centre
     Gaudi::TranslationXYZ pivot( -Rs[mNum], 0.0, 0.0 );
@@ -251,14 +329,14 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
     Gaudi::Rotation3D rot =  Gaudi::RotationZ(rotX[mNum]) * Gaudi::RotationY(rotY[mNum]);
     Gaudi::Transform3D matrixInv = transl.Inverse() * (Gaudi::Transform3D(rot) * transl);
     Gaudi::Transform3D matrix( matrixInv.Inverse() );
-
+    // Apply the mis alignment
     mirrors[mNum]->applyMisAlignment( matrix );
   }
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
-  return StatusCode::SUCCESS;
 
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -266,7 +344,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 //=========================================================================
 int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
-  return ( hpdPanel(side(globalPoint))->sensitiveVolumeID( globalPoint ) );
+  return ( pdPanel(side(globalPoint))->sensitiveVolumeID( globalPoint ) );
 }
 
 //=========================================================================
@@ -279,23 +357,38 @@ const std::string DeRich::panelName( const Rich::Side /* panel */ ) const
 }
 
 //=========================================================================
-// Access HPD Panels on demand
+// Access PD Panels on demand
 //=========================================================================
-DeRichHPDPanel * DeRich::hpdPanel( const Rich::Side panel ) const
+DeRichPDPanel * DeRich::pdPanel( const Rich::Side panel ) const
 {
-  if ( !m_HPDPanels[panel] )
+  if ( !m_PDPanels[panel] )
   {
     const std::string pName = panelName(panel);
-    SmartDataPtr<DeRichHPDPanel> dePanel( dataSvc(), pName );
-    if ( !dePanel )
+
+    DeRichPDPanel* phdePanel = NULL;
+
+    if      ( RichPhotoDetConfig() == Rich::HPDConfig ) 
+    {
+      SmartDataPtr<DeRichHPDPanel> aHpdPanel( dataSvc(), pName );
+      phdePanel = aHpdPanel;
+    }
+    else if ( RichPhotoDetConfig() == Rich::PMTConfig )
+    {
+      SmartDataPtr<DeRichPMTPanel> aPmtPanel( dataSvc(), pName );
+      phdePanel = aPmtPanel;
+    }
+
+    if ( !phdePanel )
     {
       std::ostringstream mess;
-      mess << "Failed to load DeRichHPDPanel at " << pName;
-      throw GaudiException( mess.str(), "DeRich::hpdPanel", StatusCode::FAILURE );
+      mess << "Failed to load DeRichPDPanel at " << pName;
+      throw GaudiException( mess.str(), "DeRich::PhDetPanel", StatusCode::FAILURE );
     }
-    m_HPDPanels[panel] = dePanel;
+
+    m_PDPanels[panel] = phdePanel;
   }
-  return m_HPDPanels[panel];
+
+  return m_PDPanels[panel];
 }
 
 //=============================================================================

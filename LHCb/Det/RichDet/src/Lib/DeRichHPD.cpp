@@ -262,7 +262,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
     {
       // use common QE for all HPDs
       SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
-      m_pdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
+      m_pdQuantumEffFunc = deRich1->nominalPDQuantumEff();
       m_ownHPDQEFunc = false;
     }
     else

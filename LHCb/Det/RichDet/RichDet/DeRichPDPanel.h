@@ -131,7 +131,7 @@ public:
   {
     return m_PDPanelToGlobalTransform;
   }
-
+  
 public: // virtual methods. Derived classes must implement these
 
   /// Returns the detector element for the given PD number
