@@ -4,7 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
-!========================= RichHPDImageAnalysis v1r10 2011-11-08 =========================
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID
+
+!=================== RichHPDImageAnalysis v1r10 2011-11-08 ===================
 ! 2011-10-03 - Chris Jones
  - Fix incorrect usage of std::unique to remove duplicates
 
