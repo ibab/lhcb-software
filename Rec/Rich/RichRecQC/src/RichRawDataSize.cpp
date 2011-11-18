@@ -63,7 +63,7 @@ StatusCode RawDataSize::initialize()
 StatusCode RawDataSize::prebookHistograms()
 {
   const unsigned int nL1sMax = m_RichSys->level1HardwareIDs().size();
-  const unsigned int nHPDs   = m_RichSys->allHPDRichSmartIDs().size();
+  const unsigned int nHPDs   = m_RichSys->allPDRichSmartIDs().size();
 
   // Size per L1 board
   richProfile1D( HID("L1s/SizeVL1CopyNumber"),
@@ -88,7 +88,7 @@ void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
   // clear the map
   hpdMap.clear();
   // get list of all active HPDs
-  const LHCb::RichSmartID::Vector & hpds = m_RichSys->activeHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector & hpds = m_RichSys->activePDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
   for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
         iHPD != hpds.end(); ++iHPD )

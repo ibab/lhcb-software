@@ -114,7 +114,7 @@ StatusCode DataDBCheck::execute()
           const Level1HardwareID new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
           compare( "Level1HardwareID-DB-DB", hpdID, l0ID, new_l1HardID, l1HardID );
           // HPD hardware ID
-          const HPDHardwareID new_hpdHardID = m_RichSys->hpdHardwareID(l1HardID,l1Input);
+          const HPDHardwareID new_hpdHardID = m_RichSys->pdHardwareID(l1HardID,l1Input);
           compare( "HPDHardwareID-DB-DB", hpdID, l0ID, new_hpdHardID, db_hpdHardID );
           const L1InputWithinIngress l1InputWithinIngress = l1Input.l1InputWithinIngress();
           // L1 input

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in method names, to make things PD neutral.
+
 ! 2011-11-10 - Antonis Papanestis
  - Introduce RichHPDFlashMoni
 
