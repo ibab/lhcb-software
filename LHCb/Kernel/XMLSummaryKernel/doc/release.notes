@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Marco Cattaneo
+ - Update POOL test to use a post DC06 file and remove need to load HepMCBack
+
 !========================= XMLSummaryKernel v1r2 2011-08-30 =========================
 ! 2011-08-10 - Rob Lambert
  - removed .project and .pydevproject files

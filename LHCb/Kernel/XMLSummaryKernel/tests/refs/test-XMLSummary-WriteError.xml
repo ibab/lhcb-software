@@ -7,7 +7,7 @@
 		<stat unit="KB" useOf="MemoryMaximum">516972.0</stat>
 	</usage>
 	<input>
-		<file GUID="" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">0</file>
+		<file GUID="" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst" status="part">0</file>
 		<file GUID="" name="PFN:/SomeFileYouCannotWriteTo.root" status="fail">0</file>
 	</input>
 	<output>
