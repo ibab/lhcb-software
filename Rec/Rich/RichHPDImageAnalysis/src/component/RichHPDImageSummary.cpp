@@ -16,6 +16,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
+
   Summary::Summary( const std::string& name,
                     ISvcLocator* pSvcLocator )
     : HistoAlgBase ( name , pSvcLocator ) ,
@@ -25,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
   declareProperty( "MinHPDOccupancy", m_minOccupancy = 1000 );
   declareProperty( "HPDFitType" ,     m_params.type );
   declareProperty( "CompareToCondDB" , m_compareCondDB = true );
-  declareProperty( "MaxAllowedMovement" , m_maxMovement = 0.3 );
+  declareProperty( "MaxAllowedMovement", m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms", m_keep2Dhistos = false );
   declareProperty( "FinalHPDFit",      m_finalFit = false );
 }
@@ -33,6 +34,7 @@ DECLARE_ALGORITHM_FACTORY( Summary )
 //=============================================================================
 // Destructor
 //=============================================================================
+
 Summary::~Summary() { }
 
 //=============================================================================
@@ -48,7 +50,7 @@ StatusCode Summary::initialize()
 
   acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, 0, true );
 
-  const LHCb::RichSmartID::Vector & allHPDs = m_RichSys->allHPDRichSmartIDs();
+  const LHCb::RichSmartID::Vector & allHPDs = m_RichSys->allPDRichSmartIDs();
 
   for ( LHCb::RichSmartID::Vector::const_iterator iHPD = allHPDs.begin();
         iHPD != allHPDs.end(); ++iHPD )
@@ -70,7 +72,7 @@ StatusCode Summary::initialize()
     }
   }
 
-  info() << m_params << endmsg;
+  debug() << m_params << endmsg;
 
   return sc;
 }
@@ -203,7 +205,7 @@ double Summary::distanceToCondDBValue( const Rich::DAQ::HPDCopyNumber copyNumber
   const LHCb::RichSmartID smartID = m_RichSys->richSmartID( copyNumber );
 
   std::ostringstream sensorpath;
-  sensorpath << m_RichSys->getDeHPDLocation(smartID)
+  sensorpath << m_RichSys->getDePDLocation(smartID)
              << "/SiSensor:" << copyNumber.data();
 
   DetectorElement * dd = getDet<DetectorElement>( sensorpath.str() );
