@@ -32,6 +32,9 @@ namespace AIDA
 class TH1D ;                                                            // ROOT 
 class TH2D ;                                                            // ROOT 
 class TH3D ;                                                            // ROOT 
+class TH1F ;                                                            // ROOT 
+class TH2F ;                                                            // ROOT 
+class TH3F ;                                                            // ROOT 
 class TProfile   ;                                                      // ROOT 
 class TProfile2D ;                                                      // ROOT 
 // ============================================================================
@@ -125,6 +128,36 @@ namespace Gaudi
       GAUDI_API std::ostream& toXml 
       ( const AIDA::IProfile1D& histo  , 
         std::ostream&           stream ) ;
+      // =======================================================================
+      /** stream the ROOT histogram into output stream as XML
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertToXML 
+       *  @param histo  (INPUT)  the histogram to be streamed 
+       *  @param stream (OUTPUT) the stream 
+       */  
+      GAUDI_API std::ostream& toXml 
+      ( const TH1F&   histo         , 
+        std::ostream& stream        ) ;
+      // ======================================================================
+      /** stream the ROOT histogram into output stream as XML
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertToXML 
+       *  @param histo  (INPUT)  the histogram to be streamed 
+       *  @param stream (OUTPUT) the stream 
+       */  
+      GAUDI_API std::ostream& toXml 
+      ( const TH2F&   histo         , 
+        std::ostream& stream        ) ;
+      // ======================================================================
+      /** stream the ROOT histogram into output stream as XML
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertToXML 
+       *  @param histo  (INPUT)  the histogram to be streamed 
+       *  @param stream (OUTPUT) the stream 
+       */  
+      GAUDI_API std::ostream& toXml 
+      ( const TH3F&   histo         , 
+        std::ostream& stream        ) ;
       // ======================================================================
       /** stream the AIDA histogram into the output stream as XML
        *  @param histo  (INPUT)  the histogram to be streamed 
@@ -193,6 +226,42 @@ namespace Gaudi
        */
       GAUDI_API StatusCode fromXml 
       ( TProfile2D& result , const std::string& input ) ;
+      // ======================================================================
+      /** parse the histogram from standard ROOT XML 
+       *  
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertFromXML 
+       *
+       *  @param result (OUTPUT)  the parsed histogram 
+       *  @param input  (INPUT)   the input XML string 
+       *  @return status code 
+       */
+      GAUDI_API StatusCode fromXml 
+      ( TH1F& result , const std::string& input ) ;
+      // ======================================================================
+      /** parse the histogram from standard ROOT XML 
+       *  
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertFromXML 
+       *
+       *  @param result (OUTPUT)  the parsed histogram 
+       *  @param input  (INPUT)   the input XML string 
+       *  @return status code 
+       */
+      GAUDI_API StatusCode fromXml 
+      ( TH2F& result , const std::string& input ) ;
+      // ======================================================================
+      /** parse the histogram from standard ROOT XML 
+       *  
+       *  @see TBufferXML 
+       *  @see TBufferXML::ConvertFromXML 
+       *
+       *  @param result (OUTPUT)  the parsed histogram 
+       *  @param input  (INPUT)   the input XML string 
+       *  @return status code 
+       */
+      GAUDI_API StatusCode fromXml 
+      ( TH3F& result , const std::string& input ) ;
       // ======================================================================
       /** parse the histogram from standard ROOT XML 
        *  

@@ -23,6 +23,8 @@ namespace AIDA
 // =============================================================================
 class TH1D ;                                                             // ROOT 
 class TH2D ;                                                             // ROOT 
+class TH1F ;                                                             // ROOT 
+class TH2F ;                                                             // ROOT 
 // =============================================================================
 namespace Gaudi 
 {
@@ -45,6 +47,22 @@ namespace Gaudi
      */
     GAUDI_API StatusCode parse 
     ( TH2D& result , const std::string& input ) ;
+    // =========================================================================
+    /** parse ROOT histogram from text representation
+     *  @param result (OUTPUT) the histogram
+     *  @param input  (INPUT)  the input to be parsed 
+     *  @return status code 
+     */
+    GAUDI_API StatusCode parse 
+    ( TH1F& result , const std::string& input ) ;
+    // =========================================================================
+    /** parse ROOT histogram from text representation
+     *  @param result (OUTPUT) the histogram
+     *  @param input  (INPUT)  the input to be parsed 
+     *  @return status code 
+     */
+    GAUDI_API StatusCode parse 
+    ( TH2F& result , const std::string& input ) ;
     // =========================================================================
     /** parse AIDA histogram from text representation
      *  @param result (OUTPUT) the histogram

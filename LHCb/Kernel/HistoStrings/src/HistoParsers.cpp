@@ -21,6 +21,8 @@
 // ============================================================================
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TH1F.h"
+#include "TH2F.h"
 #include "TH3D.h"
 #include "TAxis.h"
 // ============================================================================
@@ -41,7 +43,6 @@
 // ============================================================================
 #include "H1.h"
 // ============================================================================
-
 namespace Gaudi
 {
   // ==========================================================================
@@ -230,11 +231,13 @@ namespace
     return h2.ok() ? StatusCode::SUCCESS : StatusCode::FAILURE ;
   }
   // ==========================================================================
-  typedef std::auto_ptr<TH1D>   H1P ;
-  // ==========================================================================
-  H1P _parse_1D ( const std::string& input , std::string& name )
+  template <class HISTO1>
+  std::auto_ptr<HISTO1>
+  _parse_1D ( const std::string& input , std::string& name )
   {
     //
+    typedef std::auto_ptr<HISTO1>   H1P ;
+    // ==========================================================================
     // 1) parse the custom format
     //
     H1        h1 ;
@@ -245,16 +248,16 @@ namespace
     //
     H1P histo
       ( h1.m_edges.edges.empty() ?          // FIXED binning?
-        new TH1D ( "" , //h1.m_name.c_str   ()         ,           // NAME
-                   h1.m_title.c_str() ,           // TITLE
-                   h1.m_edges.nbins   ,           // #bins
-                   h1.m_edges.low     ,           // low edge
-                   h1.m_edges.high    ) :         // high  edge
-        new TH1D ( "" , // h1.m_name .c_str ()          ,     // NAME
-                   h1.m_title .c_str()  ,            // TITLE
-                   h1.m_edges.edges.size() -1  ,     // #bins
-                   &h1.m_edges.edges.front()   ) ) ; // vector of edges
-
+        new HISTO1 ( "" , //h1.m_name.c_str   ()         ,           // NAME
+                     h1.m_title.c_str() ,           // TITLE
+                     h1.m_edges.nbins   ,           // #bins
+                     h1.m_edges.low     ,           // low edge
+                     h1.m_edges.high    ) :         // high  edge
+        new HISTO1 ( "" , // h1.m_name .c_str ()          ,     // NAME
+                     h1.m_title .c_str()  ,            // TITLE
+                     h1.m_edges.edges.size() -1  ,     // #bins
+                     &h1.m_edges.edges.front()   ) ) ; // vector of edges
+    
     // fill the histogram
     for ( unsigned int ibin = 0 ; ibin < h1.m_bins.size() ; ++ibin )
     {
@@ -267,11 +270,11 @@ namespace
     return histo ;
   }
   // ==========================================================================
-  typedef std::auto_ptr<TH2D>   H2P ;
-  // ==========================================================================
-  H2P _parse_2D ( const std::string& input , std::string& name )
+  template <class HISTO2>
+  std::auto_ptr<HISTO2> _parse_2D ( const std::string& input , std::string& name )
   {
     //
+    typedef std::auto_ptr<HISTO2>   H2P ;
     // 1) parse the custom format
     //
     H2        h2 ;
@@ -283,41 +286,41 @@ namespace
     H2P histo
       ( h2.m_xedges.edges.empty() &&
         h2.m_yedges.edges.empty()     ?            // FIXED binning?
-        new TH2D ( "" , //h1.m_name.c_str   ()         ,           // NAME
-                   h2.m_title.c_str() ,            // TITLE
-                   h2.m_xedges.nbins   ,           // #bins
-                   h2.m_xedges.low     ,           // low edge
-                   h2.m_xedges.high    ,           // high edge
-                   h2.m_yedges.nbins   ,           // #bins
-                   h2.m_yedges.low     ,           // low edge
-                   h2.m_yedges.high    ) :
+        new HISTO2 ( "" , //h1.m_name.c_str   ()         ,           // NAME
+                     h2.m_title.c_str() ,            // TITLE
+                     h2.m_xedges.nbins   ,           // #bins
+                     h2.m_xedges.low     ,           // low edge
+                     h2.m_xedges.high    ,           // high edge
+                     h2.m_yedges.nbins   ,           // #bins
+                     h2.m_yedges.low     ,           // low edge
+                     h2.m_yedges.high    ) :
         h2.m_xedges.edges.empty() && !h2.m_xedges.edges.empty() ?
-        new TH2D ( "" , //h1.m_name.c_str   ()         ,           // NAME
-                   h2.m_title.c_str() ,            // TITLE
-                   h2.m_xedges.nbins   ,           // #bins
-                   h2.m_xedges.low     ,           // low edge
-                   h2.m_xedges.high    ,           // high edge
-                   h2.m_yedges.nBins() ,           // #bins
-                   &h2.m_yedges.edges.front() ) : // vector of edges
+        new HISTO2 ( "" , //h1.m_name.c_str   ()         ,           // NAME
+                     h2.m_title.c_str() ,            // TITLE
+                     h2.m_xedges.nbins   ,           // #bins
+                     h2.m_xedges.low     ,           // low edge
+                     h2.m_xedges.high    ,           // high edge
+                     h2.m_yedges.nBins() ,           // #bins
+                     &h2.m_yedges.edges.front() ) : // vector of edges
         !h2.m_xedges.edges.empty() && h2.m_xedges.edges.empty() ?
-        new TH2D ( "" , //h1.m_name.c_str   ()         ,           // NAME
-                   h2.m_title.c_str() ,            // TITLE
-                   h2.m_xedges.nBins() ,           // #bins
-                   &h2.m_xedges.edges.front() ,    // vector of edges
-                   h2.m_yedges.nbins   ,           // #bins
-                   h2.m_yedges.low     ,           // low edge
-                   h2.m_yedges.high    )        :         // high edge
-        new TH2D ( "" , //h1.m_name.c_str   ()         ,           // NAME
-                   h2.m_title.c_str() ,            // TITLE
-                   h2.m_xedges.nBins() ,           // #bins
-                   &h2.m_xedges.edges.front() ,    // vector of edges
-                   h2.m_yedges.nBins() ,           // #bins
-                   &h2.m_yedges.edges.front() ) ) ; // vector of edges
-
+        new HISTO2 ( "" , //h1.m_name.c_str   ()         ,           // NAME
+                     h2.m_title.c_str() ,            // TITLE
+                     h2.m_xedges.nBins() ,           // #bins
+                     &h2.m_xedges.edges.front() ,    // vector of edges
+                     h2.m_yedges.nbins   ,           // #bins
+                     h2.m_yedges.low     ,           // low edge
+                     h2.m_yedges.high    )        :         // high edge
+        new HISTO2 ( "" , //h1.m_name.c_str   ()         ,           // NAME
+                     h2.m_title.c_str() ,            // TITLE
+                     h2.m_xedges.nBins() ,           // #bins
+                     &h2.m_xedges.edges.front() ,    // vector of edges
+                     h2.m_yedges.nBins() ,           // #bins
+                     &h2.m_yedges.edges.front() ) ) ; // vector of edges
+    
     int ibin = 0 ;
     const int xBins = h2.m_xedges.nBins() ;
     const int yBins = h2.m_yedges.nBins() ;
-
+    
     for ( int jBin = yBins + 1 ; jBin >= 0 ; --jBin )
     {
       for ( int iBin = 0 ; iBin <= xBins + 1  ; ++iBin )
@@ -346,7 +349,36 @@ StatusCode Gaudi::Parsers::parse
 {
   // 1) check the parsing
   std::string name ;
-  H1P h1 = _parse_1D ( input , name ) ;
+  //
+  std::auto_ptr<TH1D> h1 = _parse_1D<TH1D> ( input , name ) ;
+  if ( 0 != h1.get() )
+  {
+    result.Reset() ;
+    h1->Copy ( result )  ;                            // ASSIGN
+    result.SetName ( name.c_str () ) ;
+    return StatusCode::SUCCESS ;                           // RETURN
+  }
+  //
+  // XML-like text?
+  if ( std::string::npos != input.find('<') )
+  { return Gaudi::Utils::Histos::fromXml ( result , input ) ; }
+  //
+  return StatusCode::FAILURE ;
+}
+// ============================================================================
+/*  parse ROOT histogram from text representation
+ *  @param result (OUTPUT) the histogram
+ *  @param input  (INPUT)  the input to be parsed
+ *  @return status code
+ */
+// ============================================================================
+StatusCode Gaudi::Parsers::parse
+( TH1F& result , const std::string& input )
+{
+  // 1) check the parsing
+  std::string name ;
+  //
+  std::auto_ptr<TH1F> h1 = _parse_1D<TH1F> ( input , name ) ;
   if ( 0 != h1.get() )
   {
     result.Reset() ;
@@ -373,7 +405,34 @@ StatusCode Gaudi::Parsers::parse
 {
   // 1) check the parsing
   std::string name ;
-  H2P h2 = _parse_2D ( input , name ) ;
+  std::auto_ptr<TH2D> h2 = _parse_2D<TH2D> ( input , name ) ;
+  if ( 0 != h2.get() )
+  {
+    result.Reset() ;
+    h2->Copy ( result )  ;                            // ASSIGN
+    result.SetName ( name.c_str () ) ;
+    return StatusCode::SUCCESS ;                           // RETURN
+  }
+  //
+  // XML-like text?
+  if ( std::string::npos != input.find('<') )
+  { return Gaudi::Utils::Histos::fromXml ( result , input ) ; }
+  //
+  return StatusCode::FAILURE ;
+}
+// ============================================================================
+/*  parse ROOT histogram from text representation
+ *  @param result (OUTPUT) the histogram
+ *  @param input  (INPUT)  the input to be parsed
+ *  @return status code
+ */
+// ============================================================================
+StatusCode Gaudi::Parsers::parse
+( TH2F& result , const std::string& input )
+{
+  // 1) check the parsing
+  std::string name ;
+  std::auto_ptr<TH2F> h2 = _parse_2D<TH2F> ( input , name ) ;
   if ( 0 != h2.get() )
   {
     result.Reset() ;
@@ -402,7 +461,7 @@ StatusCode Gaudi::Parsers::parse
 
   // 1) check the parsing
   std::string name ;
-  H1P h1 = _parse_1D  ( input , name ) ;
+  std::auto_ptr<TH1D> h1 = _parse_1D<TH1D>  ( input , name ) ;
   if ( 0 != h1.get() )
   {
     result = h1.release() ;
@@ -430,7 +489,7 @@ StatusCode Gaudi::Parsers::parse
 
   // 1) check the parsing
   std::string name ;
-  H2P h2 = _parse_2D  ( input , name ) ;
+  std::auto_ptr<TH2D> h2 = _parse_2D<TH2D>  ( input , name ) ;
   if ( 0 != h2.get() )
   {
     result = h2.release() ;

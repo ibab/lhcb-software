@@ -31,6 +31,8 @@ namespace AIDA
 // ============================================================================
 class TH1D ;                                                            // ROOT 
 class TH2D ;                                                            // ROOT 
+class TH1F ;                                                            // ROOT 
+class TH2F ;                                                            // ROOT 
 // ============================================================================
 namespace Gaudi 
 {
@@ -61,6 +63,32 @@ namespace Gaudi
      */  
     GAUDI_API std::ostream& toStream 
     ( const TH2D&   histo         , 
+      std::ostream& stream        , 
+      const bool    asXML = false ) ;
+    // =========================================================================
+    /** stream the ROOT histogram into output stream 
+     *  @param histo  (INPUT)  the histogram to be streamed 
+     *  @param stream (OUTPUT) the stream 
+     *  @param asXML  (INPUT)  use XML-format 
+     *  @return the updated stream
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */  
+    GAUDI_API std::ostream& toStream 
+    ( const TH1F&   histo         , 
+      std::ostream& stream        , 
+      const bool    asXML = false ) ;
+    // =========================================================================
+    /** stream the ROOT histogram into output stream 
+     *  @param histo  (INPUT)  the histogram to be streamed 
+     *  @param stream (OUTPUT) the stream 
+     *  @param asXML  (INPUT)  use XML-format 
+     *  @return the updated stream
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */  
+    GAUDI_API std::ostream& toStream 
+    ( const TH2F&   histo         , 
       std::ostream& stream        , 
       const bool    asXML = false ) ;
     // ========================================================================
@@ -110,6 +138,28 @@ namespace Gaudi
      */
     GAUDI_API std::string toString 
     ( const TH2D&               histo         , 
+      const bool                asXML = false ) ;
+    // ========================================================================
+    /** convert the histogram into the string 
+     *  @param histo  (INPUT)  the histogram to be streamed 
+     *  @param asXML  (INPUT)  use XML-format 
+     *  @return the string representation of the histogram 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */
+    GAUDI_API std::string toString 
+    ( const TH1F&               histo         , 
+      const bool                asXML = false ) ;
+    // ========================================================================
+    /** convert the histogram into the string 
+     *  @param histo  (INPUT)  the histogram to be streamed 
+     *  @param asXML  (INPUT)  use XML-format 
+     *  @return the string representation of the histogram 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */
+    GAUDI_API std::string toString 
+    ( const TH2F&               histo         , 
       const bool                asXML = false ) ;
     // ========================================================================
     /** convert the histogram into the string 

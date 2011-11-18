@@ -12,6 +12,9 @@
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TH3D.h"
+#include "TH1F.h"
+#include "TH2F.h"
+#include "TH3F.h"
 #include "TProfile.h"
 #include "TProfile2D.h"
 #include "TBufferXML.h"
@@ -102,6 +105,57 @@ std::ostream& Gaudi::Utils::Histos::toXml
 // ============================================================================
 std::ostream& Gaudi::Utils::Histos::toXml 
 ( const TH3D&   histo         , 
+  std::ostream& stream        ) 
+{
+  //
+  const TObject* obj = &histo ;
+  //
+  TString s = TBufferXML::ConvertToXML ( const_cast<TObject*> ( obj ) ) ;
+  // 
+  return stream << s ;
+}
+// ============================================================================
+/*  stream the ROOT histogram into output stream as XML
+ *  @param histo  (INPUT)  the histogram to be streamed 
+ *  @param stream (OUTPUT) the stream 
+ */  
+// ============================================================================
+std::ostream& Gaudi::Utils::Histos::toXml 
+( const TH1F&   histo         , 
+  std::ostream& stream        ) 
+{
+  //
+  const TObject* obj = &histo ;
+  //
+  TString s = TBufferXML::ConvertToXML ( const_cast<TObject*> ( obj ) ) ;
+  // 
+  return stream << s ;
+}
+// ============================================================================
+/*  stream the ROOT histogram into output stream as XML
+ *  @param histo  (INPUT)  the histogram to be streamed 
+ *  @param stream (OUTPUT) the stream 
+ */  
+// ============================================================================
+std::ostream& Gaudi::Utils::Histos::toXml 
+( const TH2F&   histo         , 
+  std::ostream& stream        ) 
+{
+  //
+  const TObject* obj = &histo ;
+  //
+  TString s = TBufferXML::ConvertToXML ( const_cast<TObject*> ( obj ) ) ;
+  // 
+  return stream << s ;
+}
+// ============================================================================
+/*  stream the ROOT histogram into output stream as XML
+ *  @param histo  (INPUT)  the histogram to be streamed 
+ *  @param stream (OUTPUT) the stream 
+ */  
+// ============================================================================
+std::ostream& Gaudi::Utils::Histos::toXml 
+( const TH3F&   histo         , 
   std::ostream& stream        ) 
 {
   //
@@ -294,6 +348,72 @@ StatusCode Gaudi::Utils::Histos::fromXml
   //
   _Xml<TH3D> _xml ;
   std::auto_ptr<TH3D> histo = _xml ( input ) ;
+  if ( 0 == histo.get() ) { return StatusCode::FAILURE ; }        // RETURN 
+  //
+  result.Reset() ;
+  histo->Copy ( result ) ;
+  //
+  return StatusCode::SUCCESS ;  
+}
+// ============================================================================
+/*  parse the histogram from standard ROOT XML 
+ *  @param result (OUTPUT)  the parsed histogram 
+ *  @param input  (INPUT)   the input XML string 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Gaudi::Utils::Histos::fromXml 
+( TH1F& result , const std::string& input )
+{
+  //
+  result.Reset() ;                                 // RESET old histogram 
+  //
+  _Xml<TH1F> _xml ;
+  std::auto_ptr<TH1F> histo =  _xml ( input ) ;
+  if ( 0 == histo.get() ) { return StatusCode::FAILURE ; }        // RETURN 
+  //
+  result.Reset() ;
+  histo->Copy ( result ) ;
+  //
+  return StatusCode::SUCCESS ;  
+}
+// ============================================================================
+/*  parse the histogram from standard ROOT XML 
+ *  @param result (OUTPUT)  the parsed histogram 
+ *  @param input  (INPUT)   the input XML string 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Gaudi::Utils::Histos::fromXml 
+( TH2F& result , const std::string& input )
+{
+  //
+  result.Reset() ;                                 // RESET old histogram 
+  //
+  _Xml<TH2F> _xml ;
+  std::auto_ptr<TH2F> histo = _xml ( input ) ;
+  if ( 0 == histo.get() ) { return StatusCode::FAILURE ; }        // RETURN 
+  //
+  result.Reset() ;
+  histo->Copy ( result ) ;
+  //
+  return StatusCode::SUCCESS ;  
+}
+// ============================================================================
+/*  parse the histogram from standard ROOT XML 
+ *  @param result (OUTPUT)  the parsed histogram 
+ *  @param input  (INPUT)   the input XML string 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode Gaudi::Utils::Histos::fromXml 
+( TH3F& result , const std::string& input )
+{
+  //
+  result.Reset() ;                                 // RESET old histogram 
+  //
+  _Xml<TH3F> _xml ;
+  std::auto_ptr<TH3F> histo = _xml ( input ) ;
   if ( 0 == histo.get() ) { return StatusCode::FAILURE ; }        // RETURN 
   //
   result.Reset() ;
