@@ -266,7 +266,6 @@ void FailoverMonitor::listenForUpdates(void)
 void FailoverMonitor::update(struct failover_msg *fmsg, struct nodestate *nstate)
 {
   std::list<NodeState*>::iterator ni;
-  int found = 0;
   for(ni=m_nodeStates.begin();ni!=m_nodeStates.end();ni++) {
     NodeState *ns = *ni;
     if((ns->state.n_ipaddr == nstate->n_ipaddr) && fmsg->msg_type == NODE_JOINED) {
@@ -278,7 +277,6 @@ void FailoverMonitor::update(struct failover_msg *fmsg, struct nodestate *nstate
     } else if((ns->state.n_id == nstate->n_id) && fmsg->msg_type == NODE_LEFT) {
 
       /*Remove this node from here.*/
-      found = 1;
       m_nodeStates.erase(ni);
       restoreIterator();
       delete ns;
