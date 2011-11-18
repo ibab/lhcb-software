@@ -44,7 +44,7 @@ struct isRootB : std::unary_function< const HepMC::GenParticle * , bool > {
     for ( parent = thePV -> particles_in_const_begin() ;
           parent != thePV -> particles_in_const_end() ; ++parent ) {
       LHCb::ParticleID parentID( (*parent) -> pdg_id() ) ;
-      if ( parentID.hasBottom() ) return false ;
+      if ( parentID.hasBottom() && (thePid.abspid()==5 || parentID.abspid()!=5)) return false ;
     }
 
     // If no parent is a B, then it is a root B
@@ -78,7 +78,7 @@ struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
     for ( parent = thePV -> particles_in_const_begin() ;
           parent != thePV -> particles_in_const_end() ; ++parent ) {
       LHCb::ParticleID parentID( (*parent) -> pdg_id() ) ;
-      if ( parentID.hasCharm() ) return false ;
+      if ( parentID.hasCharm()  && (parentID.abspid()!=4 || thePid.abspid()==4)) return false ;
     }
 
     // If no parent is a D, then it is a root D
@@ -221,7 +221,7 @@ void GenCounters::updateExcitedStatesCounters
   std::vector< HepMC::GenParticle * > rootB ;
   HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
                   std::back_inserter( rootB ) , isRootB() ) ;
-  
+
   std::vector< HepMC::GenParticle * >::const_iterator iter ;
 
   for ( iter = rootB.begin() ; iter != rootB.end() ; ++iter ) {
@@ -230,7 +230,6 @@ void GenCounters::updateExcitedStatesCounters
                                       (*iter) -> end_vertex() ) ) 
         continue ;
     }
-
     LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
 
     if ( thePid.isMeson() ) {
