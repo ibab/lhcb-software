@@ -25,10 +25,8 @@ void MonInfo::infoHandler()
 {
   void *valin;
   int siz;
-  void* valend;
   siz = getSize();
   valin = getData();
-  valend = AddPtr(valin,siz);
   //printf("Received answer of size %d\n",siz);
   if (siz == 4 && *(int *)valin == -1)
   {

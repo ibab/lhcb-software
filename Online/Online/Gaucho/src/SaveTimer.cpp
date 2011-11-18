@@ -143,8 +143,6 @@ void SaveTimer::SavetoFile(void *buff)
         r = (TH1*)(h.de_serialize(buff));
         m_Adder->UnLock();
         char hnam[4096];
-        int ntok;
-        ntok = 0;
         hname = Strsplit(r->GetName(),"/");
         strcpy(hnam,r->GetName());
         gDirectory->Cd("/");

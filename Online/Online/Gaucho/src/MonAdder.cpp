@@ -327,9 +327,9 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
 }
 void MonAdder::RemovedService(DimInfo *, std::string &, std::string &ServiceName)
 {
-  int status;
+//  int status;
 //  printf("Removed Service %s My pattern %s\n",ServiceName.c_str(),this->m_servicePattern.c_str());
-  status = boost::regex_search(ServiceName,m_serviceexp);
+//  status = boost::regex_search(ServiceName,m_serviceexp);
   INServiceMap::iterator i;
   i = m_inputServicemap.find(ServiceName);
   if (i != m_inputServicemap.end())

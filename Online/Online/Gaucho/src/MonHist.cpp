@@ -612,7 +612,7 @@ void MonHist::clear()
 int MonHist::serialize(void* &ptr)
 {
   int siz;
-  int status;
+//  int status;
   if (m_type == H_RATE)
   {
     this->makeCounters();
@@ -685,6 +685,7 @@ int MonHist::serialize(void* &ptr)
   char *ztits=0;
   double *ntries=0;
   double *errp=0;
+  int status;
 //  double *sumbin;
   switch(m_type)
   {

@@ -32,19 +32,13 @@ void ObjRPC::rpcHandler()
 {
 //  char toksep[] = " ";
   RPCCommType Comm;
-  char *what;
-  int clid;
   void *p;
   int siz;
   RPCComm *comm;
   RPCReply *reply;
   Comm  = RPCCIllegal;
-  what  = 0;
-  int len;
   int status;
-  clid  = DimServer::getClientId();
   p = getData();
-  len = getSize();
   comm  = (RPCComm*)p;
   void * ptr;
   Comm = comm->c;

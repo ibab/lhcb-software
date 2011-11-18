@@ -55,18 +55,18 @@ public:
 
 void RateSvc::analyze(void *, int ,MonMap* mmap)
 {
-  unsigned long long tim = GetTime();
-  unsigned long long delta;
-  if (m_prevupdate == 0)
-  {
-    m_prevupdate = tim;
-    return;
-  }
-  else
-  {
-    delta = tim - m_prevupdate;
-  }
-  m_prevupdate = tim;
+//  unsigned long long tim = GetTime();
+//  unsigned long long delta;
+//  if (m_prevupdate == 0)
+//  {
+//    m_prevupdate = tim;
+//    return;
+//  }
+//  else
+//  {
+//    delta = tim - m_prevupdate;
+//  }
+//  m_prevupdate = tim;
   makerate(mmap);
 }
 

@@ -4,7 +4,7 @@
  *  Created on: Oct 10, 2011
  *      Author: Beat Jost
  */
-
+#include "stdio.h"
 #include "Gaucho/SegvHandler.h"
 int main(int , char **)
 {
@@ -14,5 +14,6 @@ int main(int , char **)
 
   int i;
   i =*p;
+  printf("%d\n",i);
   return 0;
 }
