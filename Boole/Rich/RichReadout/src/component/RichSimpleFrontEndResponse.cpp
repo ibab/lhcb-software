@@ -70,11 +70,11 @@ StatusCode SimpleFrontEndResponse::finalize()
 
 StatusCode SimpleFrontEndResponse::execute()
 {
-  debug() << "Execute" << endreq;
-
   SummedDeposits = get<LHCb::MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
-  debug() << "Successfully located " << SummedDeposits->size()
-          << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Successfully located " << SummedDeposits->size()
+            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
 
   // Run the Simple treatment
   Simple();
@@ -119,7 +119,7 @@ StatusCode SimpleFrontEndResponse::Simple()
       // Store history info
       newDigit->setHistory( (*iSumDep)->history() );
 
-      int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
+      const int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
       if ( !newDigit->hits().empty() && value >= m_AdcCut )
       {
         mcRichDigits->insert( newDigit, (*iSumDep)->key() );
@@ -133,8 +133,9 @@ StatusCode SimpleFrontEndResponse::Simple()
 
   }
 
-  debug() << "Created " << mcRichDigits->size() << " MCRichDigits at "
-          << m_mcRichDigitsLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Created " << mcRichDigits->size() << " MCRichDigits at "
+            << m_mcRichDigitsLocation << endreq;
 
   return StatusCode::SUCCESS;
 }

@@ -1,8 +1,8 @@
 
 //-----------------------------------------------------------------------------
-/** @file MCRichDigitsToRawBufferAlg.cpp
+/** @file MCRichHitsToRawBufferAlg.cpp
  *
- *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
+ *  Implementation file for RICH DAQ algorithm : MCRichHitsToRawBufferAlg
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -10,7 +10,7 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "MCRichDigitsToRawBufferAlg.h"
+#include "MCRichHitsToRawBufferAlg.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,27 +21,26 @@ using namespace Rich::MC::Digi;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCRichDigitsToRawBufferAlg )
+DECLARE_ALGORITHM_FACTORY( MCRichHitsToRawBufferAlg )
 
 // Standard constructor
-MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
+MCRichHitsToRawBufferAlg::MCRichHitsToRawBufferAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : Rich::AlgBase ( name, pSvcLocator ),
     m_rawFormatT  ( NULL )
 {
-
-  declareProperty( "MCRichDigitsLocation",
-                   m_digitsLoc = LHCb::MCRichDigitLocation::Default );
+  declareProperty( "MCRichHitsLocation",
+                   m_hitsLoc = LHCb::MCRichHitLocation::Default );
   declareProperty( "DataVersion", m_version = Rich::DAQ::LHCb2 );
-
 }
 
 // Destructor
-MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {}
+MCRichHitsToRawBufferAlg::~MCRichHitsToRawBufferAlg() { }
 
 // Initialisation.
-StatusCode MCRichDigitsToRawBufferAlg::initialize()
+StatusCode MCRichHitsToRawBufferAlg::initialize()
 {
+
   // intialise base lcass
   const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -55,19 +54,20 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
 }
 
 // Main execution
-StatusCode MCRichDigitsToRawBufferAlg::execute()
+StatusCode MCRichHitsToRawBufferAlg::execute()
 {
-  // Retrieve MCRichDigits
-  const LHCb::MCRichDigits * digits = get<LHCb::MCRichDigits>( m_digitsLoc );
+
+  // Retrieve MCRichHits
+  const LHCb::MCRichHits * hits = get<LHCb::MCRichHits>( m_hitsLoc );
 
   // new vector of smart IDs
   LHCb::RichSmartID::Vector smartIDs;
 
-  // Loop over digits and fill smartIDs into vector
-  for ( LHCb::MCRichDigits::const_iterator iDigit = digits->begin();
-        iDigit != digits->end(); ++iDigit )
+  // Loop over hits and fill smartIDs into vector
+  for ( LHCb::MCRichHits::const_iterator iHit = hits->begin();
+        iHit != hits->end(); ++iHit )
   {
-    smartIDs.push_back( (*iDigit)->key() );
+    smartIDs.push_back( (*iHit)->sensDetID() );
   }
 
   // Fill raw buffer

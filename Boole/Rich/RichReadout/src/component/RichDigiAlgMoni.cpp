@@ -124,11 +124,11 @@ StatusCode AlgMoni::execute()
     ++digMult[rich];
 
     // increment PD multiplicity count
-    ++pdMult[id.hpdID()];
+    ++pdMult[id.pdID()];
     if ( (*iMcDigit)->history().hpdQuartzCK() )
     {
       ++hpdCKMult[rich];
-      hasHPDQuartzCKBkg[id.hpdID()] = true;
+      hasHPDQuartzCKBkg[id.pdID()] = true;
     }
 
     // Position plots
@@ -273,7 +273,7 @@ StatusCode AlgMoni::execute()
       if ( (*iDep)->history().hpdQuartzCK() )
       {
       // key for this hit HPD and MCParticle pair
-      const PartKey key( (*iDep)->smartID().hpdID(), (*iDep)->parentHit()->mcParticle() );
+      const PartKey key( (*iDep)->smartID().pdID(), (*iDep)->parentHit()->mcParticle() );
         // add pointer to deposit to vector for this key
         pmap1[key].push_back( *iDep );
         if ( msgLevel(MSG::VERBOSE) )
@@ -289,7 +289,7 @@ StatusCode AlgMoni::execute()
       if ( (*iDep)->history().gasQuartzCK() ) 
       { 
         // key for this hit HPD and MCParticle pair
-        const PartKey key( (*iDep)->smartID().hpdID(), (*iDep)->parentHit()->mcParticle() );
+        const PartKey key( (*iDep)->smartID().pdID(), (*iDep)->parentHit()->mcParticle() );
         pmap2[key].push_back(*iDep); 
       }
 
@@ -297,7 +297,7 @@ StatusCode AlgMoni::execute()
       if ( (*iDep)->history().hpdReflection() ) 
       {
         // key for this hit HPD 
-        const PartKey key( (*iDep)->smartID().hpdID(), NULL );
+        const PartKey key( (*iDep)->smartID().pdID(), NULL );
         pmap3[key].push_back(*iDep);
       }
 
