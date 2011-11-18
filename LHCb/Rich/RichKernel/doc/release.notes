@@ -4,7 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!========================= RichKernel v7r46 2011-11-07 =========================
+! 2011-11-18 - Chris Jones
+ - Add the 'FlatList' data format to RichDAQDefinitions.h
+ - Adapt to removal of obsolete methods from RichSmartID
+
+!==================== RichKernel v7r46 2011-11-07 ======================
 ! 2011-10-05 - Chris Jones
  - Small changes to start to make things PD neutral (HPD/MaPMT).
 

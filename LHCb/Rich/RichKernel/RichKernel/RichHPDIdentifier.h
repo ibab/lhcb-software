@@ -45,7 +45,7 @@ namespace Rich
       explicit HPDIdentifier( const LHCb::RichSmartID id )
         : m_data ( id.isValid() ? 
                    (int)(100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
-                         100*id.hpdCol() + id.hpdNumInCol()) : -1 )
+                         100*id.pdCol() + id.pdNumInCol()) : -1 )
       { }
 
     public:

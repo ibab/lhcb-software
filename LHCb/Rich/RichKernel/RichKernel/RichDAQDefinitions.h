@@ -635,7 +635,9 @@ namespace Rich
         /// Version compatible with first L1 firmware, as used in 2006 September testbeam
         LHCb4  = 128,
         /// Version compatible with the second (final?) version of the L1 firmware
-        LHCb5  = 129
+        LHCb5  = 129,
+        /// Basic 'flat list' format.
+        FlatList = 3
       };
 
     //---------------------------------------------------------------------------------

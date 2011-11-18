@@ -86,7 +86,7 @@ namespace Rich
     inline LHCb::RichSmartID panel() const { return primaryID().panelID(); }
 
     /// The RICH HPD for this cluster
-    inline LHCb::RichSmartID hpd() const { return primaryID().hpdID(); }
+    inline LHCb::RichSmartID hpd() const { return primaryID().pdID(); }
 
     /// Number of channels in this cluster
     inline unsigned int size() const { return smartIDs().size(); }

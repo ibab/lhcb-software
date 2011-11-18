@@ -17,8 +17,8 @@ MsgStream&
 Rich::SmartIDGlobalOrdering::fillStream( MsgStream& os ) const
 {
   return os << "["
-            << " hpdX=" << globalHpdX()
-            << " hpdY=" << globalHpdY()
+            << " pdX="  << globalPdX()
+            << " pdY="  << globalPdY()
             << " pixX=" << globalPixelX()
             << " pixY=" << globalPixelY()
             << " ]";

@@ -46,7 +46,7 @@ HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smart
     }
 
     // assume all hits are from the same HPD (only sensible case)
-    m_hpdID = smartIDs.front().hpdID();
+    m_hpdID = smartIDs.front().pdID();
 
     // set the hit pixels as "on"
     for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
