@@ -4,11 +4,14 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
-!========================= RichIFBAnalysis v1r1p2 2011-02-28 =========================
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID
+
+!=================== RichIFBAnalysis v1r1p2 2011-02-28 =======================
 ! 2011-02-10 - Chris Jones
  - Fix a few icc warnings
 
-!=================== Rich/RichIFBAnalysis v1r1p1 2010-02-15 ===================
+!=================== RichIFBAnalysis v1r1p1 2010-02-15 =======================
 ! 2010-02-13 - Chris Jones
  - Fix compilation problems introduced with last commit
 

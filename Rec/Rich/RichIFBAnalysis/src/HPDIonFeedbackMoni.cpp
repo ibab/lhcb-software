@@ -179,9 +179,9 @@ StatusCode HPDIonFeedbackMoni::execute()
         const Rich::Side PanNum          = smartIDHPD.panel (); //Retrieve The RICH panel.
         const Rich::DetectorType RichNum = smartIDHPD.rich (); //  Retrieve The RICH Detector.
 
-        const unsigned int HPDCol = smartIDHPD.hpdCol();
-        const unsigned int HPDRow = smartIDHPD.hpdNumInCol();
-        const bool aliceMode     = (*iAllSmartIDs).second.header().aliceMode();
+        const unsigned int HPDCol = smartIDHPD.pdCol();
+        const unsigned int HPDRow = smartIDHPD.pdNumInCol();
+        const bool aliceMode      = (*iAllSmartIDs).second.header().aliceMode();
 
 
 
