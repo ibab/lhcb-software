@@ -110,7 +110,7 @@ StatusCode DigitQC::execute()
     else
     {
       // Count signal hits
-      ++(nHPDSignal[rich])[mcDig->key().hpdID()];
+      ++(nHPDSignal[rich])[mcDig->key().pdID()];
       ++(m_spillDigitsSignal[rich])[location];
       ++(spills[rich])[location];
     }
@@ -243,8 +243,8 @@ StatusCode DigitQC::finalize()
       {
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID.data() );
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID.data() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdNumInCol() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdCol() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdNumInCol() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
       }
       debug() << "    HPD " << (*iHPD).first << " hardID "
               << boost::format("%3i") % hID.data()

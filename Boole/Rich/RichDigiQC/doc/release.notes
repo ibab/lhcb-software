@@ -4,10 +4,13 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Chris Jones
+ - Adapt to changes in RichSmartID class
+
 ! 2011-10-05 - Chris Jones
  - Adapt to small changes made in SmartID tool, to make it PD neutral
 
-!========================= RichDigiQC v3r12 2011-04-11 =========================
+!======================== RichDigiQC v3r12 2011-04-11 ========================
 ! 2011-02-11 - Chris Jones
  - Fix various icc warnings/remarks
 
