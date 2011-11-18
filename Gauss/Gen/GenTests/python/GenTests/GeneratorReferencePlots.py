@@ -36,6 +36,25 @@ class GeneratorLogFile:
     self.TotalZInvertedEvents = None
     self.TotalEventsAfterCut = None
     self.TotalTime = None
+    self.CPUSpeed = None
+
+  def pythiaSerie(self):
+    pythiaSerie = 0
+    if (self.PythiaVersion != None):
+      pythiaSerie = int(self.PythiaVersion[0])
+    return pythiaSerie
+
+  def isPythia8(self):
+    if (self.pythiaSerie()==8):
+      return True
+    else:
+      return False
+
+  def isPythia6(self):
+    if (self.pythiaSerie()==6):
+      return True
+    else:
+      return False
     
   def computeQuantities(self):
     f = open(self.fileName)
@@ -46,11 +65,16 @@ class GeneratorLogFile:
         self.GaussVersion = grepPattern( 'Welcome to Gauss version (\S+)' , line )
       if ( self.PythiaVersion == None ):
         self.PythiaVersion = grepPattern( 'This is PYTHIA version (\S+)' , line )
-      if ( self.TotalCrossSection == None ):
-        self.TotalCrossSection = grepPattern( 'All included subprocesses *I *\d+ *\d+ I *(\S+)' , line )
-        if (self.TotalCrossSection != None):
-          if ('D' in self.TotalCrossSection):
-            self.TotalCrossSection = self.TotalCrossSection.replace('D', 'E')
+        if ( self.PythiaVersion != None ):
+          print self.PythiaVersion, ' ', self.PythiaVersion[0]
+      if ( self.TotalCrossSection == None):
+        if (self.isPythia8()):
+           self.TotalCrossSection = grepPattern( '\| sum *\| *\d+ *\d+ *\d+ \| *(\S+)' , line )
+        else :
+          self.TotalCrossSection = grepPattern( 'All included subprocesses *I *\d+ *\d+ I *(\S+)' , line )
+          if (self.TotalCrossSection != None):
+            if ('D' in self.TotalCrossSection):
+              self.TotalCrossSection = self.TotalCrossSection.replace('D', 'E')
       if ( self.TotalInteractions == None ):
         self.TotalInteractions = grepPattern( 'Number of generated interactions : (\d+)' , line )
       if ( self.TotalIntWithB == None ):
@@ -69,10 +93,11 @@ class GeneratorLogFile:
         self.TotalZInvertedEvents = grepPattern( 'Number of z-inverted events : (\d+)' , line )
       if ( self.TotalEventsAfterCut == None ):
         self.TotalEventsAfterCut = grepPattern( 'Number of events for generator level cut, before : \d+, after : (\d+)' , line )
+      if (self.CPUSpeed == None ):
+        self.CPUSpeed = grepPattern( 'TimingAuditor.TIMER *INFO This machine has a speed about *(\S+)' , line )
       if ( self.TotalTime == None ):
-        self.TotalTime = grepPattern( 'SequencerTime... *INFO *Generation *\| *(\S+)' , line )
-        if ( self.TotalTime == None ):
-          self.TotalTime = 0.
+        self.TotalTime = grepPattern( 'TimingAuditor.TIMER *INFO EVENT LOOP *\| *\d+\.\d+ *\| *(\S+)', line )
+
     f.close()
     
   def eventType(self):
@@ -106,9 +131,9 @@ class GeneratorLogFile:
   def generatorLevelCutEfficiency(self):
     if ( self.TotalEventsAfterCut == None or self.TotalZInvertedEvents == None or self.TotalSignalProcessEvents == None ):
       return 0
-    return float( ( int(self.TotalEventsAfterCut) - int(self.TotalZInvertedEvents) ) / float( self.TotalSignalProcessEvents) )
+    return float( ( int(self.TotalEventsAfterCut) + int(self.TotalZInvertedEvents) ) / float( self.TotalSignalProcessEvents) )
   def timePerEvent( self ):
-    return float(self.TotalTime)
+    return float(float(self.TotalTime) * float(self.CPUSpeed) )
      
 #################################################################################  
 class GeneratorHisto:
@@ -446,7 +471,7 @@ def main():
     print "Reference signal process cross-section = " , ReferenceLog.signalProcessCrossSection()
     print "Reference signal process from B cross-section = " , ReferenceLog.signalProcessFromBCrossSection()
     print "Reference generator level cut efficiency = " , ReferenceLog.generatorLevelCutEfficiency()
-    print "Reference processing time per event = " , ReferenceLog.timePerEvent()
+    print "Reference processing time per event [ms] = " , ReferenceLog.timePerEvent()
     print "Event type = " , TheLog.eventType() 
     print "Gauss version = " , TheLog.gaussVersion()
     print "Total event = " , TheLog.totalAcceptedEvents()
@@ -458,7 +483,7 @@ def main():
     print "signal process cross-section = " , TheLog.signalProcessCrossSection()
     print "signal process from B cross-section = " , TheLog.signalProcessFromBCrossSection()
     print "generator level cut efficiency = " , TheLog.generatorLevelCutEfficiency()
-    print "processing time per event = " , TheLog.timePerEvent()
+    print "processing time per event [ms] = " , TheLog.timePerEvent()
   
   webPage.setVersions( TheLog.gaussVersion() , ReferenceLog.gaussVersion() , TheLog.pythiaVersion() , ReferenceLog.pythiaVersion() )   
   webPage.setEventType( TheLog.eventType() )
@@ -468,7 +493,7 @@ def main():
   webPage.addQuantity("Prompt charm cross-section" , ReferenceLog.promptCharmCrossSection() , TheLog.promptCharmCrossSection() )
   webPage.addQuantity("Signal process cross-section" , ReferenceLog.signalProcessCrossSection() , TheLog.signalProcessCrossSection() )                
   webPage.addQuantity("Generator level cut efficiency" , ReferenceLog.generatorLevelCutEfficiency() , TheLog.generatorLevelCutEfficiency() )                
-  webPage.addQuantity("Processing time per event" , ReferenceLog.timePerEvent() , TheLog.timePerEvent() )                
+  webPage.addQuantity("Processing time per event [ms]" , ReferenceLog.timePerEvent() , TheLog.timePerEvent() )                
 
   
   ##### Ref Histos    
@@ -485,12 +510,12 @@ def main():
   PtREF = gDirectory.Get( 'GenMonitorAlg/45' )
   ProcessREF = gDirectory.Get( 'GenMonitorAlg/5' )
   MultInLHCbREF = gDirectory.Get( 'GenMonitorAlg/4' ) 
-  
-  
+
+
   #####  Histos    
   if options.verbose:
     print "Compare with histogram file: " + options.HistoName
-  aFile = TFile( options.HistoName ) 
+  aFile = TFile( options.HistoName )
 
   Int = gDirectory.Get( 'GenMonitorAlg/10' )
   PrimaryVtxX = gDirectory.Get( 'GenMonitorAlg/11' ) 
@@ -501,7 +526,7 @@ def main():
   Pt = gDirectory.Get( 'GenMonitorAlg/45' )
   Process = gDirectory.Get( 'GenMonitorAlg/5' )
   MultInLHCb = gDirectory.Get( 'GenMonitorAlg/4' ) 
-  
+
   c1 = TCanvas( 'c1' , 'Gauss' , 200 , 10 , 800 , 800 ) 
   
   gStyle.SetOptStat(2210)
