@@ -21,7 +21,8 @@ static const InterfaceID IID_ILHCbMagnetSvc ( "ILHCbMagnetSvc", 1, 0 );
  *  @author Marco Cattaneo
  *  @date   2008-07-18
  */
-class ILHCbMagnetSvc : virtual public IMagneticFieldSvc {
+class ILHCbMagnetSvc : virtual public IMagneticFieldSvc 
+{
 
 public:
 
@@ -48,10 +49,6 @@ public:
 
   /// Get direct access to the field grid
   virtual const LHCb::MagneticFieldGrid* fieldGrid() const = 0 ;
-
-protected:
-
-private:
 
 };
 #endif // KERNEL_ILHCBMAGNETSVC_H

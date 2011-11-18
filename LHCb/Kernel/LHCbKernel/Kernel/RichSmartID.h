@@ -709,16 +709,6 @@ namespace LHCb
     /// Print the ID as a series of bits (0/1)
     std::ostream& dumpBits( std::ostream& s ) const;
 
-  public: // Backwards compatibility. To Be Removed.
-
-    inline void setHPD( const int col, const int nInCol ) { setPD(col,nInCol); }
-
-    inline LHCb::RichSmartID hpdID()  const { return pdID(); }
-    inline unsigned int hpdNumInCol() const { return pdNumInCol(); }
-    inline unsigned int hpdCol()      const { return pdCol(); }
-    inline bool hpdIsSet()            const { return pdIsSet(); }
-    inline bool hpdDataAreValid()     const { return pdDataAreValid(); }
-
   };
 
   /// ostream operator
