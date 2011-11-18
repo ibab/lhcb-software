@@ -164,10 +164,16 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # Custom DB slices for both job types (calibration and verification)
     dbFiles = [ ]
 
-    # Corrections RICH
+    # RICH Mirror alignment
     dbFiles += ["2011MirrorAlign-27102011"]
-    dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-21102011"]
-    dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-21102011"]
+
+    # RePro II
+    #dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-21102011"]
+    #dbFiles += ["2011-PhaseTwoRePro-RootFiles-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-21102011"]
+
+    # RePro III
+    dbFiles += ["2011-ReproIII-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-01112011"]
+    dbFiles += ["2011-ReproIII-RunAligned-Sobel-Smoothed1.5hours-HPDAlign-01112011"]
 
     # Tracking
     #dbFiles += ["TrackingDB-v5.6series","Velo2011"] 
@@ -269,7 +275,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
                     # Dirac backend
                     j.backend = Dirac()
-                    # j.backend = Dirac( settings = {'CPUTime':50000} )
+
+                    # Max CPU time
+                    #j.backend.settings['CPUTime'] = 50000
                     
                     # Force jobs to go to CERN only
                     #j.backend.settings['Destination'] = 'LCG.CERN.ch'
@@ -334,9 +342,12 @@ def refractiveIndexCalib(jobs,rad='Rich1Gas'):
     #minMaxRun = [ 0, 99999999 ]
     minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
     #minMaxRun = [ 101372, 99999999 ] # Second phase of 2011 RePro
+    #minMaxRun = [ 103936, 99999999 ] # Third phase of 2011 RePro
 
     # Bad runs to always skip
     badRuns = [ 89537 ]
+    # RICH1 desync runs
+    
 
     # Loop over jobs
     nFailedFits = 0

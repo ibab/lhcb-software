@@ -24,7 +24,8 @@ LHCbApp().CondDBtag = "head-20110914"
 # http://www.onlineconversion.com/unix_time.htm
 from Configurables import EventClockSvc
 #EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
-EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
+#EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
+EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
 
 # No output files
 Brunel().OutputType = "None"
