@@ -50,7 +50,7 @@ class DigiConf(LHCbConfigurableUser):
     __used_configurables__ = [ SimConf ]
 
     KnownDigiTypes = ['Minimal','Default','Extended']
-    KnownSpillPaths= [ "Prev", "PrevPrev", "Next" ]
+    KnownSpillPaths= [ "Prev", "PrevPrev", "Next", "NextNext" ]
 
     def _doWrite( self ):
         """

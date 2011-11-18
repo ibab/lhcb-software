@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-11-18 - Gloria Corti
+ - Add "NextNext" to default DigiConf().SpilloverPaths
+
 !========================= GaudiConf v15r3 2011-11-07 =========================
 ! 2011-11-04 - Marco Cattaneo
  - In IOHelper().SetupServices() disable by default the ROOT tree caches. Can
