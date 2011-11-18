@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/FastPV
+! Responsible : Olivier Callot
+! Purpose     : Reconstruct the PV in a fast way
+!-----------------------------------------------------------------------------
+
+! 2011-11-18 - Olivier Callot
+ - New package, with one algorithm, FastPVFinder.
+   It searches the PV from the Velo tracks, in a fast and efficient way
+   It requires a proper knowledge of teh beam position, obtained from the 
+   Velo position. 
