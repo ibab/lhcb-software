@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2011-11-18 - Chris Jones
+ - Fixes for gcc 4.6. I hope ...
+
 ! 2011-08-18 - Chris Jones
  - Add the ability to the camera client to reload old messages when started.
  - fix the clear button to really clear everything

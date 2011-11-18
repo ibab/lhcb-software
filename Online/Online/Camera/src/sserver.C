@@ -1,12 +1,12 @@
- #ifdef _WIN32
- #include <stdio.h>
- int main(){
-   printf("I will not work at all under windows\nNot one bit...\n");
- }
- #endif
- 
- 
- #ifndef _WIN32
+#ifdef _WIN32
+#include <stdio.h>
+int main(){
+  printf("I will not work at all under windows\nNot one bit...\n");
+}
+#endif
+
+
+#ifndef _WIN32
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -333,13 +333,15 @@ public:
 
 
 extern "C" {
-  void * incomingthread(void * vgns){
+  void * incomingthread(void * vgns)
+  {
     BUSYTHREAD++;
     worker * wrk = (worker *)vgns;
     NONblockingIO * bio = new NONblockingIO(wrk->csock);
     getnsave *gns = new getnsave( bio,wrk->unique,mapc );
     gns->setoutstack(&OutStack);
-    while (1){
+    while (true)
+    {
 
       //  delete gns;
       //gns = new getnsave( bio );
@@ -383,6 +385,7 @@ extern "C" {
       //   std::cout << "End of Connection "<< wrk->unique<<std::endl;
 
     }
+    return NULL; // CRJ - No idea what to return here, but needed for gcc 4.6
   }
 }
 
@@ -464,9 +467,9 @@ class WarnOut: public server{
 public:
 
   WarnOut(int p):server (p){
-    
+
     dirnum = 0;
-    
+
     std::string fname = "";
 
     if (mapc.get("datadir")!="")
@@ -518,7 +521,7 @@ int WarnOut::TimeOut()
 {
   OutStack.all_out();
   //  std::cout << OutStack.MessageCnt<<std::endl;
- 
+
   return 0;
 }
 
@@ -541,7 +544,7 @@ void * OutThread(void *){
 
 int main(int argc, char ** argv){
   std::string configfile = "etc/camserv.conf";
-  
+
   for (int i = 0; i<argc;i++){
     if (strncmp(argv[i],"-C",2) == 0){
       if (i+1 < argc){
@@ -571,24 +574,24 @@ int main(int argc, char ** argv){
     ip = mapc.getint("inport");
 
   OutStack.ldir = "data";
-  
+
   OutStack.wdir = "data";
- 
+
   std::string ws = mapc.get("webserver");
-  if (ws =="") ws = "localhost"; 
+  if (ws =="") ws = "localhost";
   ws += (string) ":";
-  
-  
+
+
   std::string wp = mapc.get("webport");
-  if (wp =="") wp = "8888"; 
+  if (wp =="") wp = "8888";
   wp += (string) "/";
-  
+
   ws += wp;
-  
+
   std::string wd = mapc.get("webdir");
   wd += (string) "/";
   ws+=wd;
-   
+
   if (mapc.get("datadir") != "")
     OutStack.ldir  = mapc.get("datadir");
 
@@ -605,7 +608,7 @@ int main(int argc, char ** argv){
   if (mapc.getint("maxtime") != 0)
     OutStack.MaxTime  = mapc.getint("maxtime");
 
-  
+
 
   WarnIn S(ip);
   S.settimeout(1,00000);

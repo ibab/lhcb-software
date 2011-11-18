@@ -276,6 +276,7 @@ extern "C" {
       gns->reset();
       
     }
+    return NULL; // CRJ - No idea what to return here, but needed for gcc 4.6
   }
 }
 
