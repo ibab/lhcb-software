@@ -140,7 +140,8 @@ def run(rootFile="/usera/jonesc/NFS/RootFiles/AerogelSubTileCalib/AeroCalib-2011
     newXML = xmlHeader()
 
     # primary tile IDs to use the full sub tile calibration for
-    fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
+    fullCalibTiles = [ 2, 4, 10, 12 ]
+    #fullCalibTiles = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 
     # Loop over the tiles
     tiles = aerogel.radiators()

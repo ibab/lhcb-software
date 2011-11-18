@@ -33,8 +33,9 @@ def genXML(root,cond):
 
 def addToDB(startTime,stopTime,rootToFiles,condPath,db):
     #start = 0
-    start = getUNIXTime(startTime) 
-    stop  = getUNIXTime(stopTime)
+    start = getUNIXTime(startTime)
+    stop = cool.ValidityKeyMax
+    #stop  = getUNIXTime(stopTime)
     print " -> Condition", condPath, "updated"
     db.storeXMLString( condPath, genXML(rootToFiles,condPath), start, stop )
 
@@ -66,9 +67,9 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-#upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
-#dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
-#dbFileName = "2011MirrorAlign"
+upAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagUp"
+dnAlign    = "/usera/jonesc/NFS/DetDB/2011Mirrors/MagDown"
+dbFileName = "2011MirrorAlign"
 
 # Move HPD Occupancies
 #upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
@@ -91,9 +92,9 @@ def fileMD5(file):
 #dbFileName = "OldHPDOccs"
 
 # Aerogel calibration
-upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-dbFileName = "AerogelCalib"
+#upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+#dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
+#dbFileName = "AerogelCalib"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -125,14 +126,18 @@ field = { }
 #stop = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
 
 # 2011                     Year  Month  Day   Hour  Min  Sec
-field[ datetime.datetime(  2011,   3,    1,    1,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,   3,   26,   18,   20,   0  ) ] = upAlign
-field[ datetime.datetime(  2011,   3,   27,   21,   15,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,   4,   15,    2,   40,   0  ) ] = upAlign
-field[ datetime.datetime(  2011,   4,   26,   23,   20,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2011,   7,   27,    0,   30,   0  ) ] = dnAlign
-field[ datetime.datetime(  2011,   8,   17,   11,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,   3,    1,    1,    0,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,   3,   26,   18,   20,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,   3,   27,   21,   15,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,   4,   15,    2,   40,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,   4,   26,   23,   20,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,   6,   11,    2,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2011,   7,   27,    0,   30,   0  ) ] = dnAlign
+#field[ datetime.datetime(  2011,   8,   17,   11,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2011,   9,   16,   17,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2011,   9,   28,    3,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2011,  10,    7,    4,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2011,  10,   22,    5,    0,   0  ) ] = upAlign
 
 # End of 2011
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
