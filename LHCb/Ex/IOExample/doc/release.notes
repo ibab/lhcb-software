@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-11-18 - Marco Cattaneo
+ - No longer load HepMCBack in the tests, was only needed for DC06!
+ - Change input file of pooldst tests to an MC09 compatible file
+
 !========================= IOExample v4r2 2011-09-15 =========================
 ! 2011-09-15 - Marco Cattaneo
  - Update tests to follow fixes in RootCnv

@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLdst.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLdst.py'
+# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/LHCb_v33r1/Ex/IOExample/tests/options/ReadPOOLdst.py'
+# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/LHCb_v33r1/Ex/IOExample/tests/options/ReadPOOLdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = 'MC09'  (default: '2011')
@@ -17,8 +17,11 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Persistency         = None
+# |-WriteFSR            = True
 # |-PackSequencer       = None
-# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
+# |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = True  (default: False)
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
@@ -30,8 +33,11 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Persistency         = None
+# |-WriteFSR            = True
 # |-PackSequencer       = None
-# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
+# |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = True  (default: False)
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
@@ -40,11 +46,9 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Wed May 25 07:56:43 2011
+                                          running on lxbuild163.cern.ch on Fri Nov 18 15:35:13 2011
 ====================================================================================================================================
-ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -128,18 +132,17 @@ DumpTracks          DEBUG Property ['Name': Value] =  'Enable':True
 DumpTracks          DEBUG Property ['Name': Value] =  'OutputLevel':2
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOL.dst' TYP='POOL_ROOT' OPT='READ'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
-RootDBase.open    SUCCESS POOL.dst File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=6E8155A1-9286-E011-9F6A-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000064-00000000]
+RootDBase.open    SUCCESS POOL.dst File version:53004
+PoolRootEvtCnvSvc    INFO Records token:[DB=E69449E6-E711-E111-AA61-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000063-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader          INFO Run 182001, Event 1
-StoreExplorerAlg     INFO ========= /Event[0x1113ec20@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x43bc4f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -179,7 +182,6 @@ StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202] 
 StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
@@ -190,211 +192,265 @@ StoreExplorerAlg     INFO   +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
 StoreExplorerAlg     INFO   | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
 StoreExplorerAlg     INFO   | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x50]
+StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x52]
 StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x2]
 StoreExplorerAlg     INFO   | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /RichOfflineSummaryTracks [Address: CLID=0x630a3 Type=0x202]  KeyedContainer<LHCb::RichSummary [0x2c]
+StoreExplorerAlg     INFO   | | +--> /V0 [Address: CLID=0x62738 Type=0x202]  KeyedContainer<LHCb::TwoProngVer [0x1]
 StoreExplorerAlg     INFO   | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x9]
-StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x12]
+StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
+StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
 StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1f]
-StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xa]
+StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x8]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x50]
-StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x3a]
+StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x52]
+StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x22]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
-DumpTracks           INFO There are 80 tracks in Rec/Track/Best
+DumpTracks           INFO There are 82 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
  key     : 0
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 27
+ # ids    : 51
  # meas   : 0
- chi2PerDoF : 0.640914
- nDoF       : 22
- extraInfo : [ DC06Likelihood=-3.30964  DC06nExpectedVelo=23  DC06nExpectedTT=4  FitVeloChi2=13.2415  FitVeloNDoF=18 ]
- p  : 16838.2
- pt : 845.69
- 2 states at z = -69.8359 990  :-
+ chi2PerDoF : 1.26133
+ nDoF       : 44
+ extraInfo : [ DC06Likelihood=-5.45882  PatQuality=0.623809  Cand1stQPat=0.623809  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=24  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=32.9078  FitVeloNDoF=19  FitTChi2=15.7186  FitTNDoF=18  FitMatchChi2=6.4031  DC06GhostProbability=0.0218616 ]
+ p  : 44965.7
+ pt : 2227.28
+ 3 states at z = -67.1266 990 9450  :-
  *** State ***
- z        : -69.8359
+ z        : -67.1266
  location : ClosestToBeam
- p               : 16838.2
- pt              : 845.69
- (x,y,tx,ty,q/p) : -0.0238129, 0.0120479, 0.024113, 0.0441299, -5.93888e-05
- covariance      : [  0.000890548-0.000105419-5.31743e-06 4.63036e-07 8.49531e-09
-  -0.000105419 0.000850405 4.53463e-07-5.11795e-06-2.56706e-09
-  -5.31743e-06 4.53463e-07 3.43181e-08-2.11553e-09-5.86076e-11
-   4.63036e-07-5.11795e-06-2.11553e-09 3.31744e-08 1.17552e-11
-   8.49531e-09-2.56706e-09-5.86076e-11 1.17552e-11  1.0751e-10 ]
+ p               : 44965.7
+ pt              : 2227.28
+ (x,y,tx,ty,q/p) : 0.233711, 0.590844, -0.0463534, 0.017632, 2.22392e-05
+ covariance      : [  0.000171544 5.04831e-06-8.44927e-07 -8.5539e-09-2.92415e-11
+   5.04831e-06 0.000199687-5.27021e-09-9.08964e-07-1.26375e-12
+  -8.44927e-07-5.27021e-09 4.98306e-09 1.48116e-11 9.82793e-14
+   -8.5539e-09-9.08964e-07 1.48116e-11  5.1338e-09  1.2603e-15
+  -2.92415e-11-1.26375e-12 9.82793e-14  1.2603e-15 6.74346e-15 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 16827.5
- pt              : 846.322
- (x,y,tx,ty,q/p) : 25.4315, 46.8682, 0.0239373, 0.0443048, -5.94266e-05
- covariance      : [  0.000514964 7.68165e-05  9.4003e-07 5.31648e-07-5.81412e-08
-   7.68165e-05  0.00101978 6.08107e-07 3.99259e-06-6.71607e-08
-    9.4003e-07 6.08107e-07 8.99958e-09  3.8452e-09-5.71102e-10
-   5.31648e-07 3.99259e-06  3.8452e-09 2.71194e-08-4.26785e-10
-  -5.81412e-08-6.71607e-08-5.71102e-10-4.26785e-10  1.0751e-10 ]
+ p               : 44954.7
+ pt              : 2218.9
+ (x,y,tx,ty,q/p) : -48.7154, 19.2149, -0.0461972, 0.0175512, 2.22446e-05
+ covariance      : [  0.000196564 -4.3128e-07 5.43573e-08  2.1031e-09 2.52216e-10
+   -4.3128e-07 0.000389794 1.44794e-09 1.05063e-06 1.36283e-12
+   5.43573e-08 1.44794e-09 1.09678e-09 5.00606e-12 6.39282e-13
+    2.1031e-09 1.05063e-06 5.00606e-12  6.3959e-09 1.10912e-14
+   2.52216e-10 1.36283e-12 6.39282e-13 1.10912e-14 6.74346e-15 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 44937.3
+ pt              : 1140.74
+ (x,y,tx,ty,q/p) : -323.976, 167.269, -0.0184183, 0.017481, 2.22532e-05
+ covariance      : [   0.00401402 -0.00095019 3.00263e-06-1.26981e-07 1.49679e-09
+   -0.00095019    0.409002 2.47815e-07  5.4661e-05 6.84312e-11
+   3.00263e-06 2.47815e-07 5.31684e-09 1.28772e-11 1.55296e-12
+  -1.26981e-07  5.4661e-05 1.28772e-11 1.38074e-08-2.14121e-15
+   1.49679e-09 6.84312e-11 1.55296e-12-2.14121e-15 6.74347e-15 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 1
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 22
+ # ids    : 52
  # meas   : 0
- chi2PerDoF : 0.831923
- nDoF       : 15
- extraInfo : [ DC06Likelihood=-3.39077  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=9.46555  FitVeloNDoF=13 ]
- p  : 1408.64
- pt : 175.11
- 2 states at z = -67.7196 990  :-
+ chi2PerDoF : 0.859328
+ nDoF       : 46
+ extraInfo : [ DC06Likelihood=-9.18718  PatQuality=3.71728  Cand1stQPat=3.71728  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=24  DC06nExpectedTT=4  DC06nExpectedIT=4  DC06nExpectedOT=24  FitVeloChi2=18.2991  FitVeloNDoF=16  FitTChi2=17.9991  FitTNDoF=23  FitMatchChi2=2.2077  DC06GhostProbability=0.250739 ]
+ p  : 3359.8
+ pt : 171.949
+ 3 states at z = -69.4228 990 9450  :-
  *** State ***
- z        : -67.7196
+ z        : -69.4228
  location : ClosestToBeam
- p               : 1408.64
- pt              : 175.11
- (x,y,tx,ty,q/p) : -0.0286503, 0.0463377, 0.110259, 0.0594881, -0.000709905
- covariance      : [   0.00239969 -4.9593e-05-4.02649e-05 1.98019e-07 2.92317e-08
-   -4.9593e-05  0.00234779 2.15062e-07-3.96708e-05-1.08692e-08
-  -4.02649e-05 2.15062e-07 7.32417e-07 1.08557e-09-4.63535e-10
-   1.98019e-07-3.96708e-05 1.08557e-09 7.24462e-07 1.30868e-10
-   2.92317e-08-1.08692e-08-4.63535e-10 1.30868e-10 1.80724e-09 ]
+ p               : 3359.8
+ pt              : 171.949
+ (x,y,tx,ty,q/p) : 0.23553, 0.0384069, -0.0508794, 0.00611578, 0.000297637
+ covariance      : [    0.0122638   0.0013907-8.55215e-05-5.51188e-06 6.65839e-11
+     0.0013907   0.0223526-5.71343e-06-0.000125951 9.84977e-12
+  -8.55215e-05-5.71343e-06 6.22398e-07 2.26273e-08-6.02557e-13
+  -5.51188e-06-0.000125951 2.26273e-08 7.86201e-07-4.04663e-14
+   6.65839e-11 9.84977e-12-6.02557e-13-4.04663e-14 1.31832e-12 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1408.98
- pt              : 170.083
- (x,y,tx,ty,q/p) : 114.876, 62.6679, 0.106423, 0.0588329, -0.000709735
- covariance      : [     0.048212   0.0163405 2.84452e-05 4.69863e-05 -1.8105e-07
-     0.0163405    0.126172 3.85106e-05 0.000247608-7.52914e-06
-   2.84452e-05 3.85106e-05  1.8839e-07 1.14013e-07-3.54777e-09
-   4.69863e-05 0.000247608 1.14013e-07 8.06345e-07-2.22117e-08
-   -1.8105e-07-7.52914e-06-3.54777e-09-2.22117e-08 1.80724e-09 ]
+ p               : 3349.15
+ pt              : 164.374
+ (x,y,tx,ty,q/p) : -52.2429, 6.79518, -0.0487175, 0.00641767, 0.000298583
+ covariance      : [     0.005839-0.000521881 2.17563e-05-3.43237e-06  1.3118e-08
+  -0.000521881  0.00817187-3.28377e-06 3.75489e-05-4.51754e-09
+   2.17563e-05-3.28377e-06  1.7613e-07-2.36398e-08 8.77287e-11
+  -3.43237e-06 3.75489e-05-2.36398e-08 2.89991e-07-3.22501e-11
+    1.3118e-08-4.51754e-09 8.77287e-11-3.22501e-11 1.31832e-12 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3326.2
+ pt              : 1078.52
+ (x,y,tx,ty,q/p) : 1138.34, 62.0066, 0.34272, 0.00577172, 0.000300643
+ covariance      : [    0.0107979 -0.00813093 3.88309e-05-5.70874e-06 2.32697e-09
+   -0.00813093    0.946816-3.24469e-05 0.000672103 5.74961e-09
+   3.88309e-05-3.24469e-05 3.29644e-07-2.16922e-08 1.47724e-11
+  -5.70874e-06 0.000672103-2.16922e-08 8.42917e-07 7.86001e-12
+   2.32697e-09 5.74961e-09 1.47724e-11 7.86001e-12 1.31832e-12 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 2
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 21
+ # ids    : 44
  # meas   : 0
- chi2PerDoF : 2.81205
- nDoF       : 15
- extraInfo : [ DC06Likelihood=-10.7575  DC06nExpectedVelo=17  DC06nExpectedTT=4  FitVeloChi2=36.3623  FitVeloNDoF=11 ]
- p  : 6421.88
- pt : 854.871
- 2 states at z = -68.1998 990  :-
+ chi2PerDoF : 2.57073
+ nDoF       : 37
+ extraInfo : [ DC06Likelihood=-20.4369  PatQuality=3.22569  Cand1stQPat=3.22569  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=22  DC06nExpectedTT=3  DC06nExpectedOT=22  FitVeloChi2=10.6029  FitVeloNDoF=17  FitTChi2=45.9222  FitTNDoF=12  FitMatchChi2=34.2674  DC06GhostProbability=0.780926 ]
+ p  : 10103
+ pt : 436.1
+ 3 states at z = -69.9827 990 9450  :-
  *** State ***
- z        : -68.1998
+ z        : -69.9827
  location : ClosestToBeam
- p               : 6421.88
- pt              : 854.871
- (x,y,tx,ty,q/p) : -0.0562276, 0.0611503, 0.0995345, 0.0901838, -0.000155718
- covariance      : [  0.000763818 -5.5822e-05-8.98499e-06 3.65365e-07 7.60969e-09
-   -5.5822e-05 0.000680878 3.84576e-07-8.36864e-06-3.83868e-10
-  -8.98499e-06 3.84576e-07 1.24348e-07-2.23474e-09-1.22333e-10
-   3.65365e-07-8.36864e-06-2.23474e-09 1.20164e-07 7.18513e-12
-   7.60969e-09-3.83868e-10-1.22333e-10 7.18513e-12 4.04391e-10 ]
+ p               : 10103
+ pt              : 436.1
+ (x,y,tx,ty,q/p) : 0.102097, 0.0736727, -0.0240663, 0.0358825, -9.89809e-05
+ covariance      : [    0.0025682  2.9974e-05-1.27942e-05-1.19622e-07 1.35063e-11
+    2.9974e-05  0.00235629-1.35084e-07-1.20386e-05 2.57573e-12
+  -1.27942e-05-1.35084e-07 6.65275e-08 5.82495e-10 -7.1157e-14
+  -1.19622e-07-1.20386e-05 5.82495e-10 6.37714e-08-1.16618e-14
+   1.35063e-11 2.57573e-12 -7.1157e-14-1.16618e-14 6.18794e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 6413.42
- pt              : 856.833
- (x,y,tx,ty,q/p) : 105.697, 95.5301, 0.0995933, 0.0908542, -0.000155923
- covariance      : [    0.0209037-0.000190516 1.02292e-05 8.78376e-07 5.71072e-07
-  -0.000190516   0.0307771 1.19286e-06 2.74325e-05-2.29427e-07
-   1.02292e-05 1.19286e-06 6.24097e-08 2.56744e-09 3.76527e-10
-   8.78376e-07 2.74325e-05 2.56744e-09  9.3214e-08-4.78356e-10
-   5.71072e-07-2.29427e-07 3.76527e-10-4.78356e-10 4.04391e-10 ]
+ p               : 10087.7
+ pt              : 441.178
+ (x,y,tx,ty,q/p) : -25.4263, 38.1996, -0.0242601, 0.0364387, -9.91302e-05
+ covariance      : [   0.00102374  2.4056e-05 1.06166e-06 2.01017e-07 5.41146e-10
+    2.4056e-05  0.00185591 1.75987e-07 7.46833e-06 2.90594e-10
+   1.06166e-06 1.75987e-07 1.63313e-08 1.40331e-09 3.27336e-12
+   2.01017e-07 7.46833e-06 1.40331e-09 6.74928e-08 2.30221e-12
+   5.41146e-10 2.90594e-10 3.27336e-12 2.30221e-12 6.18794e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 10073.7
+ pt              : 1534.74
+ (x,y,tx,ty,q/p) : -745.979, 352.271, -0.149648, 0.0369825, -9.92684e-05
+ covariance      : [   0.00687243 -0.00156574 9.59819e-06-3.86591e-07  2.3226e-09
+   -0.00156574    0.996049-2.04868e-05  0.00015295 2.02666e-09
+   9.59819e-06-2.04868e-05 4.28935e-08-2.57919e-09 8.64689e-13
+  -3.86591e-07  0.00015295-2.57919e-09 1.05741e-07 1.02786e-13
+    2.3226e-09 2.02666e-09 8.64689e-13 1.02786e-13 6.18794e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 3
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 22
+ # ids    : 47
  # meas   : 0
- chi2PerDoF : 1.26304
- nDoF       : 16
- extraInfo : [ DC06Likelihood=-8.11972  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=11.9012  FitVeloNDoF=12 ]
- p  : 1884.05
- pt : 223.792
- 2 states at z = -67.7356 990  :-
+ chi2PerDoF : 1.18263
+ nDoF       : 41
+ extraInfo : [ DC06Likelihood=-3.96549  PatQuality=0.809395  Cand1stQPat=0.809395  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=21  DC06nExpectedTT=4  DC06nExpectedOT=22  FitVeloChi2=26.0021  FitVeloNDoF=16  FitTChi2=18.0768  FitTNDoF=16  FitMatchChi2=2.36729  DC06GhostProbability=0.0207812 ]
+ p  : 29940
+ pt : 1600.85
+ 3 states at z = -63.2129 990 9450  :-
  *** State ***
- z        : -67.7356
+ z        : -63.2129
  location : ClosestToBeam
- p               : 1884.05
- pt              : 223.792
- (x,y,tx,ty,q/p) : 0.10663, 0.130316, -0.0911429, 0.077486, -0.00053077
- covariance      : [   0.00508857-4.84176e-05-5.78819e-05  8.0226e-07 3.47414e-08
-  -4.84176e-05  0.00461353 5.40099e-07 -5.4176e-05 -6.7102e-10
-  -5.78819e-05 5.40099e-07 6.96483e-07-7.22182e-09-5.83168e-10
-    8.0226e-07 -5.4176e-05-7.22182e-09  6.6918e-07 1.09565e-11
-   3.47414e-08 -6.7102e-10-5.83168e-10 1.09565e-11 2.57874e-09 ]
+ p               : 29940
+ pt              : 1600.85
+ (x,y,tx,ty,q/p) : 0.203046, 0.527438, -0.0497881, 0.0197039, -3.34002e-05
+ covariance      : [  0.000308036 1.04597e-05-1.66603e-06-2.93342e-08-1.66667e-11
+   1.04597e-05 0.000357199-2.34358e-08-1.80671e-06-1.00226e-11
+  -1.66603e-06-2.34358e-08 1.04317e-08 1.05843e-10  3.8278e-14
+  -2.93342e-08-1.80671e-06 1.05843e-10 1.08925e-08 1.68304e-14
+  -1.66667e-11-1.00226e-11  3.8278e-14 1.68304e-14 1.48231e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1879.03
- pt              : 233.536
- (x,y,tx,ty,q/p) : -97.6507, 83.7603, -0.095767, 0.0807342, -0.000532191
- covariance      : [     0.116021  -0.0112805 6.81405e-05-6.16132e-07 2.52479e-06
-    -0.0112805    0.151718 3.79209e-06 0.000133035-9.49705e-07
-   6.81405e-05 3.79209e-06 3.92966e-07 1.26453e-09  1.2836e-09
-  -6.16132e-07 0.000133035 1.26453e-09 5.07371e-07-1.34477e-09
-   2.52479e-06-9.49705e-07  1.2836e-09-1.34477e-09 2.57874e-09 ]
+ p               : 29933.9
+ pt              : 1606.27
+ (x,y,tx,ty,q/p) : -52.316, 21.2636, -0.0500007, 0.0196902, -3.3407e-05
+ covariance      : [  0.000283881 2.35521e-05 2.64101e-07 6.96789e-08 3.35761e-10
+   2.35521e-05  0.00055797 4.91338e-08 1.17691e-06 1.67902e-10
+   2.64101e-07 4.91338e-08 1.51771e-09 1.65444e-10 8.45047e-13
+   6.96789e-08 1.17691e-06 1.65444e-10 4.58774e-09 5.59083e-13
+   3.35761e-10 1.67902e-10 8.45047e-13 5.59083e-13 1.48231e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 29918.5
+ pt              : 2801.39
+ (x,y,tx,ty,q/p) : -649.154, 188.857, -0.0919344, 0.0198214, -3.34241e-05
+ covariance      : [   0.00562924  -0.0014988 4.71719e-06 -2.6787e-07 3.86668e-09
+    -0.0014988    0.398818 7.27364e-08 5.87797e-05 2.19803e-09
+   4.71719e-06 7.27364e-08 8.78188e-09-7.39058e-11 4.17666e-12
+   -2.6787e-07 5.87797e-05-7.39058e-11 1.75377e-08  1.2219e-13
+   3.86668e-09 2.19803e-09 4.17666e-12  1.2219e-13 1.48232e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 4
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 16
+ # ids    : 50
  # meas   : 0
- chi2PerDoF : 0.680838
- nDoF       : 11
- extraInfo : [ DC06Likelihood=-2.44255  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=3.97554  FitVeloNDoF=7 ]
- p  : 2491.61
- pt : 512.362
- 2 states at z = -67.2273 990  :-
+ chi2PerDoF : 1.24245
+ nDoF       : 44
+ extraInfo : [ DC06Likelihood=-6.44853  PatQuality=0.459105  Cand1stQPat=0.459105  Cand2ndQPat=8.09475  NCandCommonHits=1  DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedIT=3  DC06nExpectedOT=21  FitVeloChi2=33.6416  FitVeloNDoF=17  FitTChi2=14.208  FitTNDoF=18  FitMatchChi2=4.15738  DC06GhostProbability=0.0601646 ]
+ p  : 40189.4
+ pt : 1732.6
+ 3 states at z = -74.4828 990 9450  :-
  *** State ***
- z        : -67.2273
+ z        : -74.4828
  location : ClosestToBeam
- p               : 2491.61
- pt              : 512.362
- (x,y,tx,ty,q/p) : 0.0435493, 0.0156365, 0.0681134, -0.19878, -0.000401347
- covariance      : [   0.00462324-2.90712e-05-8.12343e-05 1.02441e-06 3.43715e-08
-  -2.90712e-05  0.00463519 9.33493e-07-8.29577e-05-1.93652e-09
-  -8.12343e-05 9.33493e-07 1.55012e-06-2.08522e-08-7.66783e-10
-   1.02441e-06-8.29577e-05-2.08522e-08 1.59622e-06 4.02243e-11
-   3.43715e-08-1.93652e-09-7.66783e-10 4.02243e-11 4.09036e-09 ]
+ p               : 40189.4
+ pt              : 1732.6
+ (x,y,tx,ty,q/p) : 0.21315, 0.673353, -0.0408372, 0.0139403, -2.48822e-05
+ covariance      : [  0.000228262 1.59315e-05-8.36848e-07-2.73103e-08-2.87605e-11
+   1.59315e-05 0.000233698-3.15298e-08-8.33094e-07-3.65926e-12
+  -8.36848e-07-3.15298e-08 3.43748e-09 6.29388e-11   8.107e-14
+  -2.73103e-08-8.33094e-07 6.29388e-11 3.42807e-09 5.51544e-15
+  -2.87605e-11-3.65926e-12   8.107e-14 5.51544e-15 6.99725e-15 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 2482.26
- pt              : 502.982
- (x,y,tx,ty,q/p) : 71.5938, -208.557, 0.0664825, -0.195953, -0.000402859
- covariance      : [     0.160877 -0.00430299 3.85857e-05-2.39736e-06 1.93804e-06
-   -0.00430299    0.246957 -1.1671e-06 0.000127833-1.76318e-06
-   3.85857e-05 -1.1671e-06 3.45527e-07-4.83266e-09-5.40157e-10
-  -2.39736e-06 0.000127833-4.83266e-09 4.52092e-07-1.63494e-09
-   1.93804e-06-1.76318e-06-5.40157e-10-1.63494e-09 4.09036e-09 ]
+ p               : 40175.4
+ pt              : 1733.15
+ (x,y,tx,ty,q/p) : -43.2968, 15.4797, -0.0409173, 0.0137942, -2.48909e-05
+ covariance      : [  0.000212887 8.87128e-07 1.84406e-08 2.93064e-08 2.22002e-10
+   8.87128e-07  0.00031494 2.69156e-08 7.31822e-07-3.58661e-12
+   1.84406e-08 2.69156e-08 1.36059e-09 1.52742e-10  6.9693e-13
+   2.93064e-08 7.31822e-07 1.52742e-10   6.128e-09-6.34369e-14
+   2.22002e-10-3.58661e-12  6.9693e-13-6.34369e-14 6.99725e-15 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 40159.2
+ pt              : 2939.8
+ (x,y,tx,ty,q/p) : -518.432, 132.034, -0.0720974, 0.0137689, -2.49009e-05
+ covariance      : [   0.00483762 -0.00355011 3.51203e-06-5.26499e-07  1.9029e-09
+   -0.00355011    0.256771-5.04457e-06 3.85873e-05-2.55861e-09
+   3.51203e-06-5.04457e-06  5.0339e-09-6.59462e-10 1.04816e-12
+  -5.26499e-07 3.85873e-05-6.59462e-10 1.27653e-08-3.68938e-13
+    1.9029e-09-2.55861e-09 1.04816e-12-3.68938e-13 6.99728e-15 ]
 
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader          INFO Run 182001, Event 2
-StoreExplorerAlg     INFO ========= /Event[0x11d44670@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x4fe76c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -436,7 +492,6 @@ StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202] 
 StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
@@ -451,207 +506,261 @@ StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  K
 StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x3]
 StoreExplorerAlg     INFO   | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /RichOfflineSummaryTracks [Address: CLID=0x630a3 Type=0x202]  KeyedContainer<LHCb::RichSummary [0x2d]
+StoreExplorerAlg     INFO   | | +--> /V0 [Address: CLID=0x62738 Type=0x202]  KeyedContainer<LHCb::TwoProngVer [0]
 StoreExplorerAlg     INFO   | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xa]
-StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x14]
-StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1c]
-StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x11]
+StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x4]
+StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1f]
+StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xb]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x66]
-StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x3a]
+StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x25]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 102 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
  key     : 0
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 17
+ # ids    : 43
  # meas   : 0
- chi2PerDoF : 7.30927
- nDoF       : 10
- extraInfo : [ DC06Likelihood=-31.0271  DC06nExpectedVelo=14  DC06nExpectedTT=4  FitVeloChi2=5.22944  FitVeloNDoF=8 ]
- p  : 5998.68
- pt : 385.508
- 2 states at z = 42.2075 990  :-
+ chi2PerDoF : 1.09144
+ nDoF       : 38
+ extraInfo : [ DC06Likelihood=-3.95626  PatQuality=2.07439  Cand1stQPat=2.07439  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=21.6769  FitVeloNDoF=11  FitTChi2=7.57164  FitTNDoF=18  FitMatchChi2=9.80324  DC06GhostProbability=0.119081 ]
+ p  : 12343.1
+ pt : 569.893
+ 3 states at z = 42.6658 990 9450  :-
  *** State ***
- z        : 42.2075
+ z        : 42.6658
  location : ClosestToBeam
- p               : 5998.68
- pt              : 385.508
- (x,y,tx,ty,q/p) : -0.109574, 0.0661693, -0.0345488, -0.0543466, -0.000166703
- covariance      : [   0.00383115-0.000120021-2.98965e-05 5.09255e-07 2.79327e-08
-  -0.000120021  0.00381724 4.84048e-07-2.98323e-05-3.76694e-09
-  -2.98965e-05 4.84048e-07 2.43527e-07 -2.1849e-09-2.05447e-10
-   5.09255e-07-2.98323e-05 -2.1849e-09 2.43035e-07 1.66653e-11
-   2.79327e-08-3.76694e-09-2.05447e-10 1.66653e-11 2.60867e-10 ]
+ p               : 12343.1
+ pt              : 569.893
+ (x,y,tx,ty,q/p) : -0.125317, 0.0696719, -0.0266723, -0.0377478, -8.10169e-05
+ covariance      : [   0.00187637-1.44488e-05-1.16738e-05 3.27637e-08 2.11482e-11
+  -1.44488e-05  0.00179734 3.85898e-08-1.14013e-05 6.99309e-12
+  -1.16738e-05 3.85898e-08 7.69785e-08-5.32065e-11-1.37531e-13
+   3.27637e-08-1.14013e-05-5.32065e-11 7.59865e-08-3.87655e-14
+   2.11482e-11 6.99309e-12-1.37531e-13-3.87655e-14 6.56049e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 5993.89
- pt              : 397.509
- (x,y,tx,ty,q/p) : -33.8972, -51.4504, -0.0382507, -0.0543556, -0.000166837
- covariance      : [   0.00222147 0.000363145 3.86958e-06 6.55753e-07-9.93538e-08
-   0.000363145  0.00953018-9.27667e-08 3.30117e-05  1.0199e-08
-   3.86958e-06-9.27667e-08 2.13177e-08 -1.4977e-10-5.29607e-10
-   6.55753e-07 3.30117e-05 -1.4977e-10 1.40127e-07 1.81799e-11
-  -9.93538e-08  1.0199e-08-5.29607e-10 1.81799e-11 2.60867e-10 ]
+ p               : 12328.6
+ pt              : 576.647
+ (x,y,tx,ty,q/p) : -25.5065, -35.7846, -0.0270332, -0.0382323, -8.1112e-05
+ covariance      : [   0.00078606 6.85702e-05 7.70046e-07 4.56844e-07 9.65734e-10
+   6.85702e-05  0.00112453 3.55544e-07 3.68005e-06 9.34619e-10
+   7.70046e-07 3.55544e-07 1.22039e-08 3.01118e-09 5.83106e-12
+   4.56844e-07 3.68005e-06 3.01118e-09 3.61745e-08  7.7022e-12
+   9.65734e-10 9.34619e-10 5.83106e-12  7.7022e-12 6.56048e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 12310.1
+ pt              : 1652.1
+ (x,y,tx,ty,q/p) : -679.619, -359.773, -0.129971, -0.0380696, -8.12339e-05
+ covariance      : [   0.00653036 -0.00177142 1.00791e-05-4.99705e-07 8.35096e-10
+   -0.00177142    0.553539-4.51764e-06 0.000139988 7.25815e-09
+   1.00791e-05-4.51764e-06 3.98135e-08-8.71627e-10-9.19062e-13
+  -4.99705e-07 0.000139988-8.71627e-10 1.34733e-07-2.04549e-12
+   8.35096e-10 7.25815e-09-9.19062e-13-2.04549e-12  6.5605e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 1
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 16
+ # ids    : 39
  # meas   : 0
- chi2PerDoF : 0.766032
- nDoF       : 10
- extraInfo : [ DC06Likelihood=-2.49349  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=4.73083  FitVeloNDoF=6 ]
- p  : 2083.35
- pt : 390.325
- 2 states at z = 42.3487 990  :-
+ chi2PerDoF : 1.08833
+ nDoF       : 34
+ extraInfo : [ DC06Likelihood=-3.56874  PatQuality=7.08374  Cand1stQPat=7.08374  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=3  DC06nExpectedOT=21  FitVeloChi2=7.1997  FitVeloNDoF=9  FitTChi2=22.8914  FitTNDoF=17  FitMatchChi2=4.08834  DC06GhostProbability=0.164502 ]
+ p  : 6571.04
+ pt : 1077.67
+ 3 states at z = 42.7696 990 9450  :-
  *** State ***
- z        : 42.3487
+ z        : 42.7696
  location : ClosestToBeam
- p               : 2083.35
- pt              : 390.325
- (x,y,tx,ty,q/p) : -0.150666, -0.0520938, -0.0632887, 0.179925, -0.000479996
- covariance      : [   0.00316035 0.000202786-4.97072e-05-1.50821e-06 1.09428e-07
-   0.000202786   0.0027893-1.65483e-06-4.68196e-05 4.62192e-09
-  -4.97072e-05-1.65483e-06 8.63596e-07 9.45392e-09 -2.0086e-09
-  -1.50821e-06-4.68196e-05 9.45392e-09 8.49546e-07 3.47642e-12
-   1.09428e-07 4.62192e-09 -2.0086e-09 3.47642e-12 6.89269e-09 ]
+ p               : 6571.04
+ pt              : 1077.67
+ (x,y,tx,ty,q/p) : -0.117949, 0.0921169, -0.110348, -0.124354, -0.000152183
+ covariance      : [  0.000372626-0.000142656-4.44946e-06 1.04272e-06-1.57246e-12
+  -0.000142656 0.000332145 1.06011e-06-4.15489e-06 2.47156e-11
+  -4.44946e-06 1.06011e-06 6.79176e-08-8.04242e-09-1.60392e-13
+   1.04272e-06-4.15489e-06-8.04242e-09 6.57984e-08-2.47519e-13
+  -1.57246e-12 2.47156e-11-1.60392e-13-2.47519e-13 1.43073e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 2074.83
- pt              : 387.863
- (x,y,tx,ty,q/p) : -60.064, 170.317, -0.0632125, 0.179486, -0.000481967
- covariance      : [     0.203997  -0.0107807 9.57879e-05-2.81753e-06 8.66484e-06
-    -0.0107807    0.291717 2.70173e-06 0.000232288-2.00347e-06
-   9.57879e-05 2.70173e-06 9.17418e-07-6.69137e-09 2.67758e-09
-  -2.81753e-06 0.000232288-6.69137e-09 1.23041e-06-2.61142e-09
-   8.66484e-06-2.00347e-06 2.67758e-09-2.61142e-09 6.89269e-09 ]
+ p               : 6564.43
+ pt              : 1077.27
+ (x,y,tx,ty,q/p) : -104.904, -117.593, -0.111045, -0.123878, -0.000152336
+ covariance      : [    0.0163466 0.000842146 9.89862e-06 2.97498e-06 6.01336e-09
+   0.000842146   0.0214215  2.4613e-06 2.15859e-05 4.12846e-09
+   9.89862e-06  2.4613e-06 6.21762e-08 5.63542e-09 1.06592e-11
+   2.97498e-06 2.15859e-05 5.63542e-09 8.93251e-08 9.98085e-12
+   6.01336e-09 4.12846e-09 1.06592e-11 9.98085e-12 1.43073e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 6544.12
+ pt              : 2115.44
+ (x,y,tx,ty,q/p) : -1905.98, -1181.78, -0.318403, -0.123732, -0.000152809
+ covariance      : [    0.0156057   0.0072529 4.78445e-05  2.6821e-06 2.11041e-11
+     0.0072529    0.767845 -6.2692e-06  0.00029417-1.21707e-08
+   4.78445e-05 -6.2692e-06 2.60396e-07 3.18244e-10-7.69717e-12
+    2.6821e-06  0.00029417 3.18244e-10 5.22866e-07-9.19813e-12
+   2.11041e-11-1.21707e-08-7.69717e-12-9.19813e-12 1.43074e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 2
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 13
+ # ids    : 40
  # meas   : 0
- chi2PerDoF : 0.272109
- nDoF       : 7
- extraInfo : [ DC06Likelihood=-0.957213  DC06nExpectedVelo=10  DC06nExpectedTT=3  FitVeloChi2=1.11343  FitVeloNDoF=4 ]
- p  : 922.531
- pt : 201.905
- 2 states at z = 42.6189 990  :-
+ chi2PerDoF : 0.569939
+ nDoF       : 34
+ extraInfo : [ DC06Likelihood=-4.71178  PatQuality=2.36824  Cand1stQPat=2.36824  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=4.87361  FitVeloNDoF=9  FitTChi2=6.64712  FitTNDoF=16  FitMatchChi2=3.43888  DC06GhostProbability=0.0585943 ]
+ p  : 8526.69
+ pt : 1398.56
+ 3 states at z = 42.7663 990 9450  :-
  *** State ***
- z        : 42.6189
+ z        : 42.7663
  location : ClosestToBeam
- p               : 922.531
- pt              : 201.905
- (x,y,tx,ty,q/p) : 0.0102014, -0.000771515, 0.0262588, 0.222755, 0.00108397
- covariance      : [    0.0103705-0.000238304-0.000234931 3.27519e-06 2.01921e-07
-  -0.000238304   0.0113979 2.67398e-06-0.000257275-2.94814e-09
-  -0.000234931 2.67398e-06 5.77686e-06-3.26183e-08-6.38636e-09
-   3.27519e-06-0.000257275-3.26183e-08 6.25704e-06 2.79389e-11
-   2.01921e-07-2.94814e-09-6.38636e-09 2.79389e-11 4.15029e-08 ]
+ p               : 8526.69
+ pt              : 1398.56
+ (x,y,tx,ty,q/p) : -0.0933323, 0.0449795, -0.0831316, -0.144, -0.000117279
+ covariance      : [  0.000332025-0.000104812-3.41818e-06 7.18083e-07-1.55128e-11
+  -0.000104812 0.000202599 7.33426e-07-2.52406e-06 1.74172e-11
+  -3.41818e-06 7.33426e-07 4.64831e-08 -5.3186e-09 2.26868e-14
+   7.18083e-07-2.52406e-06 -5.3186e-09 3.99436e-08 -2.0825e-13
+  -1.55128e-11 1.74172e-11 2.26868e-14 -2.0825e-13 8.82793e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 909.748
- pt              : 196.58
- (x,y,tx,ty,q/p) : 24.7387, 208.747, 0.028498, 0.219468, 0.00109921
- covariance      : [      1.30882   0.0308796  0.00036649 -3.0307e-05  6.6419e-06
-     0.0308796      2.2457-2.46198e-05  0.00101431-1.31585e-05
-    0.00036649-2.46198e-05 2.78038e-06-6.76045e-09-6.84066e-09
-   -3.0307e-05  0.00101431-6.76045e-09 3.55898e-06-2.02746e-08
-    6.6419e-06-1.31585e-05-6.84066e-09-2.02746e-08 4.15029e-08 ]
+ p               : 8520.95
+ pt              : 1396.88
+ (x,y,tx,ty,q/p) : -79.0758, -136.248, -0.0837008, -0.143565, -0.000117358
+ covariance      : [    0.0100414  0.00044881 5.01268e-06 1.95626e-06 2.91727e-09
+    0.00044881   0.0132767 1.60362e-06 1.30412e-05 3.45136e-09
+   5.01268e-06 1.60362e-06 3.42511e-08 3.48849e-09 4.71236e-12
+   1.95626e-06 1.30412e-05 3.48849e-09 5.18866e-08 8.08446e-12
+   2.91727e-09 3.45136e-09 4.71236e-12 8.08446e-12 8.82793e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 8501.25
+ pt              : 2287.88
+ (x,y,tx,ty,q/p) : -1441.55, -1356.81, -0.240361, -0.142509, -0.00011763
+ covariance      : [      0.01126 -0.00243617 2.11489e-05-3.47061e-07-2.37566e-10
+   -0.00243617    0.798302-6.74488e-06 0.000270437-7.01386e-09
+   2.11489e-05-6.74488e-06 9.85662e-08 6.40772e-11 -4.6597e-12
+  -3.47061e-07 0.000270437 6.40772e-11 3.16325e-07-7.08572e-12
+  -2.37566e-10-7.01386e-09 -4.6597e-12-7.08572e-12 8.82794e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 3
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 14
+ # ids    : 41
  # meas   : 0
- chi2PerDoF : 0.743572
- nDoF       : 8
- extraInfo : [ DC06Likelihood=-5.24007  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.60059  FitVeloNDoF=4 ]
- p  : 1582.42
- pt : 72.7032
- 2 states at z = 146.768 990  :-
+ chi2PerDoF : 1.48063
+ nDoF       : 35
+ extraInfo : [ DC06Likelihood=-7.26735  PatQuality=2.61694  Cand1stQPat=2.61694  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=3  DC06nExpectedOT=24  FitVeloChi2=7.62815  FitVeloNDoF=9  FitTChi2=10.4077  FitTNDoF=18  FitMatchChi2=27.2097  DC06GhostProbability=0.128792 ]
+ p  : 6585.89
+ pt : 1161.09
+ 3 states at z = 43.1313 990 9450  :-
  *** State ***
- z        : 146.768
+ z        : 43.1313
  location : ClosestToBeam
- p               : 1582.42
- pt              : 72.7032
- (x,y,tx,ty,q/p) : -0.0883718, 0.0322623, -0.0329848, 0.0320522, -0.000631942
- covariance      : [     0.172597-6.91867e-05-0.000675353 6.99958e-07 1.27179e-06
-  -6.91867e-05    0.171591 6.52283e-07-0.000671874-1.14751e-08
-  -0.000675353 6.52283e-07 2.70215e-06-3.27894e-09-6.17118e-09
-   6.99958e-07-0.000671874-3.27894e-09 2.68864e-06 4.35895e-11
-   1.27179e-06-1.14751e-08-6.17118e-09 4.35895e-11  3.8082e-09 ]
+ p               : 6585.89
+ pt              : 1161.09
+ (x,y,tx,ty,q/p) : -0.0357047, -0.00974401, 0.0716365, -0.164155, 0.00015184
+ covariance      : [  0.000502006 6.00441e-05-8.16401e-06-7.37604e-07 1.22418e-11
+   6.00441e-05  0.00033892-8.31535e-07-6.11896e-06 1.21373e-11
+  -8.16401e-06-8.31535e-07 1.46558e-07 1.25372e-08 -5.6315e-13
+  -7.37604e-07-6.11896e-06 1.25372e-08 1.16623e-07-3.55315e-13
+   1.22418e-11 1.21373e-11 -5.6315e-13-3.55315e-13 1.37893e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1574.09
- pt              : 73.8928
- (x,y,tx,ty,q/p) : -28.9306, 26.8758, -0.0368542, 0.0291601, -0.000635289
- covariance      : [     0.020308 -0.00583293 2.22351e-05  7.9298e-07 3.88953e-07
-   -0.00583293    0.025182 4.36329e-06 4.73259e-05-4.46384e-07
-   2.22351e-05 4.36329e-06 4.78987e-07-1.24532e-09-9.15121e-09
-    7.9298e-07 4.73259e-05-1.24532e-09 6.84767e-07-1.27425e-09
-   3.88953e-07-4.46384e-07-9.15121e-09-1.27425e-09  3.8082e-09 ]
+ p               : 6577.05
+ pt              : 1150.94
+ (x,y,tx,ty,q/p) : 67.9589, -154.853, 0.0719608, -0.162516, 0.000152044
+ covariance      : [    0.0179289 0.000790233 6.72189e-06 1.26135e-06 4.72937e-09
+   0.000790233   0.0253905 1.93314e-07 2.88437e-05 3.61451e-09
+   6.72189e-06 1.93314e-07  6.8766e-08 7.63783e-10 7.86095e-12
+   1.26135e-06 2.88437e-05 7.63783e-10 1.25007e-07 9.23583e-12
+   4.72937e-09 3.61451e-09 7.86095e-12 9.23583e-12 1.37893e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 6557.95
+ pt              : 1993.44
+ (x,y,tx,ty,q/p) : 1538.12, -1521.25, 0.277536, -0.157419, 0.000152487
+ covariance      : [    0.0107548  0.00481633 2.82513e-05 4.07678e-07 1.37965e-10
+    0.00481633    0.751382  -1.309e-06 0.000265559 1.49037e-08
+   2.82513e-05  -1.309e-06 1.59056e-07 -4.5809e-09-6.89111e-12
+   4.07678e-07 0.000265559 -4.5809e-09 4.02593e-07 6.11182e-12
+   1.37965e-10 1.49037e-08-6.89111e-12 6.11182e-12 1.37894e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 4
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 11
+ # ids    : 41
  # meas   : 0
- chi2PerDoF : 2.90648
- nDoF       : 5
- extraInfo : [ DC06Likelihood=-7.70697  DC06nExpectedVelo=8  DC06nExpectedTT=4  FitVeloChi2=3.53853  FitVeloNDoF=2 ]
- p  : 1307.62
- pt : 47.1622
- 2 states at z = 108.911 990  :-
+ chi2PerDoF : 0.923735
+ nDoF       : 34
+ extraInfo : [ DC06Likelihood=-3.69958  PatQuality=0.77809  Cand1stQPat=0.77809  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=5  DC06nExpectedOT=23  FitVeloChi2=3.28368  FitVeloNDoF=9  FitTChi2=17.7321  FitTNDoF=15  FitMatchChi2=7.45173  DC06GhostProbability=0.0491257 ]
+ p  : 43346.5
+ pt : 2871.48
+ 3 states at z = 40.4846 990 9450  :-
  *** State ***
- z        : 108.911
+ z        : 40.4846
  location : ClosestToBeam
- p               : 1307.62
- pt              : 47.1622
- (x,y,tx,ty,q/p) : 3.26006, 0.010436, -0.00166211, 0.0360523, 0.000764746
- covariance      : [     0.979173  0.00408398 -0.00293212-7.80412e-06 3.76123e-06
-    0.00408398    0.999027-7.58902e-06 -0.00297046 8.00179e-08
-   -0.00293212-7.58902e-06 1.03582e-05 1.41754e-08-1.32805e-08
-  -7.80412e-06 -0.00297046 1.41754e-08 1.04301e-05-1.65357e-10
-   3.76123e-06 8.00179e-08-1.32805e-08-1.65357e-10 6.24483e-09 ]
+ p               : 43346.5
+ pt              : 2871.48
+ (x,y,tx,ty,q/p) : 0.942465, 0.227017, 0.0155376, -0.0645468, -2.30699e-05
+ covariance      : [  0.000234817 2.16668e-05-1.25702e-06-6.05449e-08-7.87594e-11
+   2.16668e-05  0.00021342-5.09337e-08-1.22814e-06-2.39138e-11
+  -1.25702e-06-5.09337e-08 8.54687e-09 1.62673e-10 3.40431e-13
+  -6.05449e-08-1.22814e-06 1.62673e-10 8.45783e-09 8.90967e-14
+  -7.87594e-11-2.39138e-11 3.40431e-13 8.90967e-14 9.58509e-15 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1297.75
- pt              : 41.9344
- (x,y,tx,ty,q/p) : 3.6116, 31.4112, 0.00487509, 0.0319605, 0.000770567
- covariance      : [    0.0395913 0.000127676 5.39292e-05 2.76574e-06 8.81639e-07
-   0.000127676   0.0947858 9.55692e-07 0.000169373 1.58276e-06
-   5.39292e-05 9.55692e-07 7.04838e-07 6.09123e-09-3.64208e-09
-   2.76574e-06 0.000169373 6.09123e-09 1.20022e-06 9.03835e-09
-   8.81639e-07 1.58276e-06-3.64208e-09 9.03835e-09 6.24483e-09 ]
+ p               : 43337.9
+ pt              : 2869.15
+ (x,y,tx,ty,q/p) : 15.6154, -61.0565, 0.0153207, -0.0645566, -2.30745e-05
+ covariance      : [  0.000386909 2.11923e-05 3.53473e-07 5.31305e-08 4.16926e-10
+   2.11923e-05 0.000731392 4.27503e-08 1.26511e-06 1.33059e-10
+   3.53473e-07 4.27503e-08  1.4406e-09   1.048e-10 7.44964e-13
+   5.31305e-08 1.26511e-06   1.048e-10 3.77289e-09 3.39934e-13
+   4.16926e-10 1.33059e-10 7.44964e-13 3.39934e-13 9.58509e-15 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 43315.4
+ pt              : 2853.25
+ (x,y,tx,ty,q/p) : 24.081, -607.396, -0.01377, -0.0645628, -2.30865e-05
+ covariance      : [   0.00640864  0.00435406 5.76877e-06 5.83203e-07 2.68746e-09
+    0.00435406    0.390169 1.82408e-06 5.80343e-05 2.66721e-09
+   5.76877e-06 1.82408e-06 1.01465e-08 2.56594e-10 2.41472e-12
+   5.83203e-07 5.80343e-05 2.56594e-10 1.97447e-08 2.58795e-13
+   2.68746e-09 2.66721e-09 2.41472e-12 2.58795e-13 9.58512e-15 ]
 
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader          INFO Run 182001, Event 3
-StoreExplorerAlg     INFO ========= /Event[0x11602c30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x4e28ec0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -693,7 +802,6 @@ StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202] 
 StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
@@ -708,207 +816,261 @@ StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  K
 StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x2]
 StoreExplorerAlg     INFO   | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /RichOfflineSummaryTracks [Address: CLID=0x630a3 Type=0x202]  KeyedContainer<LHCb::RichSummary [0x21]
+StoreExplorerAlg     INFO   | | +--> /V0 [Address: CLID=0x62738 Type=0x202]  KeyedContainer<LHCb::TwoProngVer [0]
 StoreExplorerAlg     INFO   | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x5]
-StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xa]
+StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0]
+StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0]
 StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x13]
-StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xb]
+StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x8]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x43]
-StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x22]
+StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x13]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 67 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
  key     : 0
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 18
+ # ids    : 45
  # meas   : 0
- chi2PerDoF : 1.16028
- nDoF       : 12
- extraInfo : [ DC06Likelihood=-4.67793  DC06nExpectedVelo=14  DC06nExpectedTT=4  FitVeloChi2=8.80703  FitVeloNDoF=8 ]
- p  : 3216.79
- pt : 441.786
- 2 states at z = 6.85568 990  :-
+ chi2PerDoF : 0.862961
+ nDoF       : 39
+ extraInfo : [ DC06Likelihood=-5.08167  PatQuality=5.81873  Cand1stQPat=5.81873  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedOT=26  FitVeloChi2=7.11164  FitVeloNDoF=11  FitTChi2=13.255  FitTNDoF=19  FitMatchChi2=11.1454  DC06GhostProbability=0.244553 ]
+ p  : 2989.72
+ pt : 412.328
+ 3 states at z = 5.07899 990 9450  :-
  *** State ***
- z        : 6.85568
+ z        : 5.07899
  location : ClosestToBeam
- p               : 3216.79
- pt              : 441.786
- (x,y,tx,ty,q/p) : 0.0603072, 0.162467, 0.130706, -0.0462603, 0.000310869
- covariance      : [   0.00180359 0.000107492-1.97124e-05-5.70519e-07 2.29011e-08
-   0.000107492  0.00177328-6.44888e-07-1.91827e-05-1.67345e-10
-  -1.97124e-05-6.44888e-07 2.39279e-07 2.81535e-09-3.38993e-10
-  -5.70519e-07-1.91827e-05 2.81535e-09 2.33146e-07 1.07415e-11
-   2.29011e-08-1.67345e-10-3.38993e-10 1.07415e-11 9.31065e-10 ]
+ p               : 2989.72
+ pt              : 412.328
+ (x,y,tx,ty,q/p) : -0.023604, 0.0171715, 0.0582028, 0.126498, 0.000334479
+ covariance      : [    0.0009941-0.000113291-1.75932e-05 1.29109e-06 8.95233e-12
+  -0.000113291 0.000793126  1.2818e-06-1.54332e-05-2.19857e-12
+  -1.75932e-05  1.2818e-06 3.38958e-07-1.43911e-08 -1.7656e-13
+   1.29109e-06-1.54332e-05-1.43911e-08 3.13868e-07 3.27923e-14
+   8.95233e-12-2.19857e-12 -1.7656e-13 3.27923e-14 6.07121e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 3212.05
- pt              : 445.42
- (x,y,tx,ty,q/p) : 129.289, -45.2317, 0.132453, -0.0454198, 0.000311328
- covariance      : [    0.0468984 -0.00325233 2.77189e-05-2.52241e-07 1.02876e-06
-   -0.00325233   0.0547577 8.93983e-07 5.40923e-05 -2.4813e-07
-   2.77189e-05 8.93983e-07 1.56377e-07 3.50483e-10 6.57809e-10
-  -2.52241e-07 5.40923e-05 3.50483e-10 2.03089e-07-3.52783e-10
-   1.02876e-06 -2.4813e-07 6.57809e-10-3.52783e-10 9.31065e-10 ]
+ p               : 2983.63
+ pt              : 413.407
+ (x,y,tx,ty,q/p) : 57.7493, 124.87, 0.0595382, 0.126607, 0.000335162
+ covariance      : [     0.056551  0.00147148 4.42911e-05 5.24355e-06 4.88124e-09
+    0.00147148   0.0669922 4.51486e-06 7.39738e-05 6.82981e-09
+   4.42911e-05 4.51486e-06 2.37551e-07 1.11244e-08 9.00255e-12
+   5.24355e-06 7.39738e-05 1.11244e-08 3.05709e-07 1.86443e-11
+   4.88124e-09 6.82981e-09 9.00255e-12 1.86443e-11  6.0712e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 2967.14
+ pt              : 1452.56
+ (x,y,tx,ty,q/p) : 2569.08, 1182.63, 0.550503, 0.11021, 0.000337025
+ covariance      : [    0.0136105  -0.0129233 6.10544e-05-3.91678e-06 3.68019e-10
+    -0.0129233     1.15572-6.47943e-05 0.000692329-4.33899e-08
+   6.10544e-05-6.47943e-05 5.77589e-07-3.25499e-10 1.40212e-12
+  -3.91678e-06 0.000692329-3.25499e-10  1.3408e-06-2.48665e-11
+   3.68019e-10-4.33899e-08 1.40212e-12-2.48665e-11 6.07125e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 1
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 16
+ # ids    : 38
  # meas   : 0
- chi2PerDoF : 1.46491
- nDoF       : 11
- extraInfo : [ DC06Likelihood=-4.07916  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=11.9362  FitVeloNDoF=7 ]
- p  : 9502.57
- pt : 327.79
- 2 states at z = 10.6089 990  :-
+ chi2PerDoF : 1.10383
+ nDoF       : 32
+ extraInfo : [ DC06Likelihood=-3.59903  PatQuality=1.05206  Cand1stQPat=1.05206  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=15  DC06nExpectedTT=4  DC06nExpectedOT=18  FitVeloChi2=8.18902  FitVeloNDoF=10  FitTChi2=17.7047  FitTNDoF=13  FitMatchChi2=2.06242  DC06GhostProbability=0.0566967 ]
+ p  : 16162.6
+ pt : 1036.71
+ 3 states at z = 5.85987 990 9450  :-
  *** State ***
- z        : 10.6089
+ z        : 5.85987
  location : ClosestToBeam
- p               : 9502.57
- pt              : 327.79
- (x,y,tx,ty,q/p) : 0.00943402, -0.000468111, 0.0102783, -0.0329495, 0.000105235
- covariance      : [   0.00839599-8.38647e-05-3.59503e-05 1.18622e-07 3.09808e-08
-  -8.38647e-05  0.00800264 6.39911e-08-3.47968e-05 -2.6832e-09
-  -3.59503e-05 6.39911e-08 1.62902e-07 2.71104e-10-1.76748e-10
-   1.18622e-07-3.47968e-05 2.71104e-10 1.59122e-07 8.72272e-12
-   3.09808e-08 -2.6832e-09-1.76748e-10 8.72272e-12 1.82915e-10 ]
+ p               : 16162.6
+ pt              : 1036.71
+ (x,y,tx,ty,q/p) : -0.0851012, 0.144897, 0.0522471, 0.0374371, 6.18713e-05
+ covariance      : [  0.000522274-2.57954e-05-3.60036e-06 1.04417e-07-7.82614e-12
+  -2.57954e-05 0.000584652 8.90207e-08-3.83996e-06-6.27713e-12
+  -3.60036e-06 8.90207e-08  2.8417e-08-5.46286e-10 8.93171e-16
+   1.04417e-07-3.83996e-06-5.46286e-10 2.94536e-08-2.70967e-15
+  -7.82614e-12-6.27713e-12 8.93171e-16-2.70967e-15 3.27201e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 9487.48
- pt              : 334.175
- (x,y,tx,ty,q/p) : 10.2985, -32.3458, 0.0108347, -0.0335379, 0.000105402
- covariance      : [    0.0010106 0.000102339 1.11247e-06 9.60222e-07-7.10003e-08
-   0.000102339  0.00158466 1.06255e-06 6.33752e-06-1.12528e-07
-   1.11247e-06 1.06255e-06 1.88763e-08 9.30356e-09-1.10516e-09
-   9.60222e-07 6.33752e-06 9.30356e-09 6.12208e-08-9.88257e-10
-  -7.10003e-08-1.12528e-07-1.10516e-09-9.88257e-10 1.82915e-10 ]
+ p               : 16156.2
+ pt              : 1042.51
+ (x,y,tx,ty,q/p) : 51.5473, 36.9794, 0.0527777, 0.0373582, 6.18957e-05
+ covariance      : [  0.000859245 8.47447e-05 1.15937e-06 3.33248e-07  9.9729e-10
+   8.47447e-05  0.00147956  2.8763e-07 3.29466e-06 9.31782e-10
+   1.15937e-06  2.8763e-07 6.20429e-09 1.02415e-09 3.00114e-12
+   3.33248e-07 3.29466e-06 1.02415e-09 1.38352e-08 3.35653e-12
+    9.9729e-10 9.31782e-10 3.00114e-12 3.35653e-12 3.27201e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 16141.1
+ pt              : 2179.61
+ (x,y,tx,ty,q/p) : 823.271, 353.738, 0.131062, 0.0373593, 6.19537e-05
+ covariance      : [   0.00792755 -0.00770375 8.57684e-06-1.52172e-06 3.79366e-09
+   -0.00770375    0.560071-4.77772e-06 9.54807e-05 7.83191e-09
+   8.57684e-06-4.77772e-06 2.28902e-08 -1.1271e-09 3.67158e-12
+  -1.52172e-06 9.54807e-05 -1.1271e-09 4.90642e-08-4.52765e-13
+   3.79366e-09 7.83191e-09 3.67158e-12-4.52765e-13 3.27203e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 2
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 14
+ # ids    : 44
  # meas   : 0
- chi2PerDoF : 0.586745
- nDoF       : 9
- extraInfo : [ DC06Likelihood=-1.2578  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=2.9621  FitVeloNDoF=5 ]
- p  : 35708.5
- pt : 817.611
- 2 states at z = 10.576 990  :-
+ chi2PerDoF : 0.69515
+ nDoF       : 38
+ extraInfo : [ DC06Likelihood=-2.69163  PatQuality=0.88969  Cand1stQPat=0.88969  Cand2ndQPat=3.79509  NCandCommonHits=1  DC06nExpectedVelo=16  DC06nExpectedTT=5  DC06nExpectedOT=23  FitVeloChi2=11.578  FitVeloNDoF=11  FitTChi2=10.7308  FitTNDoF=17  FitMatchChi2=1.70748  DC06GhostProbability=0.0785242 ]
+ p  : 23184
+ pt : 976.314
+ 3 states at z = 4.38099 990 9450  :-
  *** State ***
- z        : 10.576
+ z        : 4.38099
  location : ClosestToBeam
- p               : 35708.5
- pt              : 817.611
- (x,y,tx,ty,q/p) : 0.035959, 0.115735, 0.0213416, -0.008311, -2.80045e-05
- covariance      : [   0.00100412 6.98178e-05-2.41078e-06-1.38628e-07 5.67093e-08
-   6.98178e-05  0.00150816-1.56894e-07-3.19876e-06 1.64602e-08
-  -2.41078e-06-1.56894e-07 6.61947e-09 3.20712e-10-1.36789e-10
-  -1.38628e-07-3.19876e-06 3.20712e-10 7.84897e-09-3.04687e-11
-   5.67093e-08 1.64602e-08-1.36789e-10-3.04687e-11   3.858e-11 ]
+ p               : 23184
+ pt              : 976.314
+ (x,y,tx,ty,q/p) : -0.0800674, 0.0340879, 0.0209506, 0.0365732, -4.31332e-05
+ covariance      : [   0.00110011-3.23312e-05-5.10927e-06 9.12819e-08 5.92871e-12
+  -3.23312e-05  0.00114922 8.60539e-08-5.29369e-06 3.57088e-12
+  -5.10927e-06 8.60539e-08 2.47574e-08-2.65102e-10 -5.5077e-14
+   9.12819e-08-5.29369e-06-2.65102e-10 2.54357e-08-2.48998e-14
+   5.92871e-12 3.57088e-12 -5.5077e-14-2.48998e-14 1.86615e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 35703.8
- pt              : 811.264
- (x,y,tx,ty,q/p) : 20.8783, -8.01849, 0.0211714, -0.00826628, -2.80082e-05
- covariance      : [  0.000255969 7.62903e-05 5.12184e-07 2.11477e-07-4.79638e-08
-   7.62903e-05 0.000703497 1.73768e-07  2.1318e-06-2.19886e-08
-   5.12184e-07 1.73768e-07 3.61449e-09 7.46938e-10-2.83026e-10
-   2.11477e-07  2.1318e-06 7.46938e-10 1.08988e-08-9.04561e-11
-  -4.79638e-08-2.19886e-08-2.83026e-10-9.04561e-11   3.858e-11 ]
+ p               : 23170.1
+ pt              : 978.554
+ (x,y,tx,ty,q/p) : 20.4728, 36.1426, 0.0207319, 0.036838, -4.3159e-05
+ covariance      : [  0.000350971 2.42585e-05 1.33043e-07 1.32975e-07 3.10679e-10
+   2.42585e-05 0.000502136 8.94116e-08 1.15121e-06 3.26218e-10
+   1.33043e-07 8.94116e-08 3.55282e-09 7.43884e-10 1.56314e-12
+   1.32975e-07 1.15121e-06 7.43884e-10 1.15633e-08 2.57101e-12
+   3.10679e-10 3.26218e-10 1.56314e-12 2.57101e-12 1.86615e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 23149.5
+ pt              : 1148.09
+ (x,y,tx,ty,q/p) : -29.1809, 347.856, -0.0333454, 0.0367935, -4.31974e-05
+ covariance      : [   0.00696472  0.00544686 9.22467e-06 7.10779e-07 2.68583e-09
+    0.00544686    0.463997 3.91094e-06 7.98255e-05 1.07873e-08
+   9.22467e-06 3.91094e-06 2.82115e-08 4.66109e-10 1.77053e-12
+   7.10779e-07 7.98255e-05 4.66109e-10 4.97042e-08 8.75536e-13
+   2.68583e-09 1.07873e-08 1.77053e-12 8.75536e-13 1.86618e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 3
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 12
+ # ids    : 45
  # meas   : 0
- chi2PerDoF : 0.778512
- nDoF       : 6
- extraInfo : [ DC06Likelihood=-4.74975  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.31399  FitVeloNDoF=2 ]
- p  : 777.525
- pt : 29.9643
- 2 states at z = 55.5385 990  :-
+ chi2PerDoF : 0.957045
+ nDoF       : 40
+ extraInfo : [ DC06Likelihood=-8.16208  PatQuality=3.76555  Cand1stQPat=3.76555  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=5  DC06nExpectedOT=24  FitVeloChi2=5.26569  FitVeloNDoF=9  FitTChi2=20.5726  FitTNDoF=21  FitMatchChi2=8.47304  DC06GhostProbability=0.385421 ]
+ p  : 3423.92
+ pt : 250.829
+ 3 states at z = 4.60783 990 9450  :-
  *** State ***
- z        : 55.5385
+ z        : 4.60783
  location : ClosestToBeam
- p               : 777.525
- pt              : 29.9643
- (x,y,tx,ty,q/p) : -0.713346, 0.253881, 0.0234361, 0.030629, -0.00128613
- covariance      : [      2.13452-0.000575975 -0.00851465-1.58538e-06  5.7558e-06
-  -0.000575975     2.13152-1.76886e-06 -0.00850543-3.51248e-08
-   -0.00851465-1.76886e-06 3.69989e-05 1.78588e-08-2.28268e-08
-  -1.58538e-06 -0.00850543 1.78588e-08 3.69682e-05 6.78654e-11
-    5.7558e-06-3.51248e-08-2.28268e-08 6.78654e-11 1.32156e-08 ]
+ p               : 3423.92
+ pt              : 250.829
+ (x,y,tx,ty,q/p) : -0.0269531, 0.0113727, 0.0277919, 0.0679946, -0.000292063
+ covariance      : [   0.00609751-0.000237552-5.63424e-05 1.77969e-06 1.58787e-11
+  -0.000237552  0.00531958 1.77861e-06-5.11236e-05 4.43426e-12
+  -5.63424e-05 1.77861e-06  5.4888e-07-1.28873e-08-2.04864e-13
+   1.77969e-06-5.11236e-05-1.28873e-08 5.13465e-07-3.13014e-14
+   1.58787e-11 4.43426e-12-2.04864e-13-3.13014e-14 6.19023e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 768.304
- pt              : 26.2925
- (x,y,tx,ty,q/p) : 18.7034, 29.1075, 0.0149094, 0.0308252, -0.00130157
- covariance      : [     0.152953  -0.0497461 0.000146997-4.45588e-05 3.36775e-06
-    -0.0497461    0.130257-1.10993e-05 0.000254061-2.90249e-06
-   0.000146997-1.10993e-05 2.10136e-06-3.59697e-08-1.10323e-08
-  -4.45588e-05 0.000254061-3.59697e-08 2.85059e-06-1.43336e-08
-   3.36775e-06-2.90249e-06-1.10323e-08-1.43336e-08 1.32156e-08 ]
+ p               : 3416.67
+ pt              : 247.81
+ (x,y,tx,ty,q/p) : 27.1773, 66.9131, 0.0271882, 0.0674478, -0.000292683
+ covariance      : [    0.0224005 0.000899218 3.80642e-05 3.15844e-06 4.69958e-09
+   0.000899218    0.027217 2.80995e-06 5.28146e-05 1.24152e-08
+   3.80642e-05 2.80995e-06 1.85511e-07 9.58449e-09 1.37562e-11
+   3.15844e-06 5.28146e-05 9.58449e-09 2.34294e-07 4.19717e-11
+   4.69958e-09 1.24152e-08 1.37562e-11 4.19717e-11 6.19022e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3396.03
+ pt              : 1171.15
+ (x,y,tx,ty,q/p) : -1340.02, 637.987, -0.361837, 0.0636773, -0.000294461
+ covariance      : [    0.0137947 -0.00968401 5.94392e-05 -8.9931e-06 1.50387e-10
+   -0.00968401    0.968252-5.32951e-05 0.000794211 4.59461e-09
+   5.94392e-05-5.32951e-05 4.75208e-07-4.82613e-08 2.95598e-13
+   -8.9931e-06 0.000794211-4.82613e-08 1.62939e-06-6.91279e-12
+   1.50387e-10 4.59461e-09 2.95598e-13-6.91279e-12 6.19023e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 4
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 13
+ # ids    : 36
  # meas   : 0
- chi2PerDoF : 1.35663
- nDoF       : 7
- extraInfo : [ DC06Likelihood=-6.14791  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.77445  FitVeloNDoF=4 ]
- p  : 5624.28
- pt : 1263.94
- 2 states at z = 105.635 990  :-
+ chi2PerDoF : 1.05084
+ nDoF       : 29
+ extraInfo : [ DC06Likelihood=-5.42179  PatQuality=0.664967  Cand1stQPat=0.664967  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=14  DC06nExpectedTT=4  DC06nExpectedIT=13  DC06nExpectedOT=5  FitVeloChi2=12.1797  FitVeloNDoF=9  FitTChi2=9.08535  FitTNDoF=12  FitMatchChi2=7.89549  DC06GhostProbability=0.0424972 ]
+ p  : 29032.5
+ pt : 1075.71
+ 3 states at z = 8.53931 990 9450  :-
  *** State ***
- z        : 105.635
+ z        : 8.53931
  location : ClosestToBeam
- p               : 5624.28
- pt              : 1263.94
- (x,y,tx,ty,q/p) : 0.364331, -2.01738, 0.226947, 0.0410503, -0.000177801
- covariance      : [  0.000396159 4.82028e-05-5.41572e-06-4.47374e-07  1.9311e-08
-   4.82028e-05  0.00041433-4.45544e-07-5.18015e-06 4.50029e-09
-  -5.41572e-06-4.45544e-07   9.234e-08 4.69764e-09 -3.2789e-10
-  -4.47374e-07-5.18015e-06 4.69764e-09 8.29915e-08-4.36799e-11
-    1.9311e-08 4.50029e-09 -3.2789e-10-4.36799e-11 7.54349e-10 ]
+ p               : 29032.5
+ pt              : 1075.71
+ (x,y,tx,ty,q/p) : 0.0563335, 0.0832128, 0.0307419, -0.0207286, -3.44442e-05
+ covariance      : [  0.000316891 8.99623e-06-1.13981e-06-7.95123e-09-2.75016e-11
+   8.99623e-06 0.000350862-6.14248e-09-1.20209e-06  2.3336e-13
+  -1.13981e-06-6.14248e-09 4.62665e-09-8.89037e-12 6.01038e-14
+  -7.95123e-09-1.20209e-06-8.89037e-12 4.74423e-09-7.63058e-15
+  -2.75016e-11  2.3336e-13 6.01038e-14-7.63058e-15 9.94719e-15 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 5618.44
- pt              : 1256.97
- (x,y,tx,ty,q/p) : 200.772, 33.896, 0.226057, 0.0398406, -0.000177985
- covariance      : [     0.030468  0.00100527 1.39858e-05 3.42089e-07-6.95502e-08
-    0.00100527   0.0362943 4.48212e-07 4.14462e-05-1.76298e-07
-   1.39858e-05 4.48212e-07 9.55154e-08 2.00434e-09-1.30762e-09
-   3.42089e-07 4.14462e-05 2.00434e-09 1.58429e-07-4.82825e-10
-  -6.95502e-08-1.76298e-07-1.30762e-09-4.82825e-10 7.54349e-10 ]
+ p               : 29023.6
+ pt              : 1071.62
+ (x,y,tx,ty,q/p) : 30.1541, -20.2679, 0.0305012, -0.0208517, -3.44547e-05
+ covariance      : [  0.000320515-1.27105e-05-1.21223e-08 1.42902e-08 2.48525e-10
+  -1.27105e-05 0.000372339 2.29989e-08 6.01627e-07-3.53852e-12
+  -1.21223e-08 2.29989e-08 2.63618e-09 1.22811e-10 1.04784e-12
+   1.42902e-08 6.01627e-07 1.22811e-10 7.93803e-09 2.55252e-14
+   2.48525e-10-3.53852e-12 1.04784e-12 2.55252e-14 9.94719e-15 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 29008.2
+ pt              : 705.348
+ (x,y,tx,ty,q/p) : 109.336, -197.058, -0.0124604, -0.0208885, -3.4473e-05
+ covariance      : [  0.000764266  0.00048261 2.13713e-06 1.61636e-07-3.23993e-11
+    0.00048261   0.0410831-6.36593e-07 1.29445e-05-1.32218e-10
+   2.13713e-06-6.36593e-07 8.44977e-09 5.94325e-11-2.27943e-13
+   1.61636e-07 1.29445e-05 5.94325e-11 1.74814e-08 1.09308e-13
+  -3.23993e-11-1.32218e-10-2.27943e-13 1.09308e-13 9.94719e-15 ]
 
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader          INFO Run 182001, Event 4
-StoreExplorerAlg     INFO ========= /Event[0x111da050@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x56d6870@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -948,7 +1110,6 @@ StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202] 
 StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
@@ -959,211 +1120,265 @@ StoreExplorerAlg     INFO   +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
 StoreExplorerAlg     INFO   | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
 StoreExplorerAlg     INFO   | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x42]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x2]
+StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x43]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x3]
 StoreExplorerAlg     INFO   | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
-StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /RichOfflineSummaryTracks [Address: CLID=0x630a3 Type=0x202]  KeyedContainer<LHCb::RichSummary [0x17]
+StoreExplorerAlg     INFO   | | +--> /V0 [Address: CLID=0x62738 Type=0x202]  KeyedContainer<LHCb::TwoProngVer [0]
 StoreExplorerAlg     INFO   | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
-StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x4]
-StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1c]
-StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0xd]
+StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0]
+StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1e]
+StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x8]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x42]
-StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x22]
+StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x43]
+StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x1e]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
-DumpTracks           INFO There are 66 tracks in Rec/Track/Best
+DumpTracks           INFO There are 67 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
  key     : 0
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 25
+ # ids    : 47
  # meas   : 0
- chi2PerDoF : 0.572613
- nDoF       : 20
- extraInfo : [ DC06Likelihood=-11.6612  DC06nExpectedVelo=22  DC06nExpectedTT=6  FitVeloChi2=7.87189  FitVeloNDoF=17 ]
- p  : 3098.23
- pt : 166.417
- 2 states at z = -14.6686 990  :-
+ chi2PerDoF : 1.11754
+ nDoF       : 40
+ extraInfo : [ DC06Likelihood=-8.97898  PatQuality=2.20043  Cand1stQPat=2.20043  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=23  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=10.3744  FitVeloNDoF=15  FitTChi2=27.5351  FitTNDoF=16  FitMatchChi2=5.53711  DC06GhostProbability=0.060843 ]
+ p  : 11281.8
+ pt : 745.338
+ 3 states at z = -15.6311 990 9450  :-
  *** State ***
- z        : -14.6686
+ z        : -15.6311
  location : ClosestToBeam
- p               : 3098.23
- pt              : 166.417
- (x,y,tx,ty,q/p) : 0.00070829, -0.0613763, -0.0530964, -0.00861826, -0.000322765
- covariance      : [   0.00451265 0.000253378-2.88699e-05  -1.223e-06 6.50592e-08
-   0.000253378   0.0048574-1.29592e-06-3.05696e-05 2.18125e-09
-  -2.88699e-05-1.29592e-06 1.88234e-07 6.11636e-09-6.94604e-10
-    -1.223e-06-3.05696e-05 6.11636e-09 1.96841e-07-1.16858e-11
-   6.50592e-08 2.18125e-09-6.94604e-10-1.16858e-11 1.60769e-09 ]
+ p               : 11281.8
+ pt              : 745.338
+ (x,y,tx,ty,q/p) : -0.683498, 0.00689674, 0.00218847, -0.066174, -8.86384e-05
+ covariance      : [   0.00415244-5.64291e-05-2.42916e-05 2.93018e-07 3.97604e-11
+  -5.64291e-05  0.00214191 2.45421e-07-1.51767e-05 4.73619e-13
+  -2.42916e-05 2.45421e-07 1.59038e-07-1.27311e-09-2.52789e-13
+   2.93018e-07-1.51767e-05-1.27311e-09   1.171e-07 1.62212e-16
+   3.97604e-11 4.73619e-13-2.52789e-13 1.62212e-16 6.84697e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 3091.07
- pt              : 175.82
- (x,y,tx,ty,q/p) : -54.3826, -8.46277, -0.056181, -0.00946096, -0.000323512
- covariance      : [   0.00906522 0.000364729 4.40698e-05 3.01053e-06 -1.0488e-07
-   0.000364729     0.01156 3.02042e-06 6.01458e-05-1.89068e-07
-   4.40698e-05 3.02042e-06 3.26853e-07 2.09118e-08-1.48798e-09
-   3.01053e-06 6.01458e-05 2.09118e-08 4.33505e-07-1.24998e-09
-   -1.0488e-07-1.89068e-07-1.48798e-09-1.24998e-09 1.60769e-09 ]
+ p               : 11262.5
+ pt              : 735.117
+ (x,y,tx,ty,q/p) : 1.40164, -66.1571, 0.0017563, -0.0653871, -8.87901e-05
+ covariance      : [   0.00508902 0.000468367 4.50089e-06 1.28956e-06 2.90242e-09
+   0.000468367  0.00463157 7.31503e-07 9.73826e-06 2.18399e-09
+   4.50089e-06 7.31503e-07 1.98445e-08 2.20311e-09 5.05567e-12
+   1.28956e-06 9.73826e-06 2.20311e-09 3.41538e-08 6.49437e-12
+   2.90242e-09 2.18399e-09 5.05567e-12 6.49437e-12 6.84697e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 11244.1
+ pt              : 1426.81
+ (x,y,tx,ty,q/p) : -447.778, -615.216, -0.110567, -0.0643485, -8.89356e-05
+ covariance      : [   0.00821411 -0.00249048 1.49395e-05-7.31146e-07 1.08334e-09
+   -0.00249048    0.550233-7.02008e-06 0.000151295 3.79105e-09
+   1.49395e-05-7.02008e-06 6.38657e-08-1.50052e-09  -1.497e-12
+  -7.31146e-07 0.000151295-1.50052e-09 1.66582e-07-2.35176e-12
+   1.08334e-09 3.79105e-09  -1.497e-12-2.35176e-12 6.84697e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 1
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 18
+ # ids    : 36
  # meas   : 0
- chi2PerDoF : 0.718868
- nDoF       : 13
- extraInfo : [ DC06Likelihood=-2.32056  DC06nExpectedVelo=13  DC06nExpectedTT=5  FitVeloChi2=4.18864  FitVeloNDoF=8 ]
- p  : 3063.61
- pt : 480.15
- 2 states at z = -14.8021 990  :-
+ chi2PerDoF : 4.49315
+ nDoF       : 29
+ extraInfo : [ DC06Likelihood=-61.5231  PatQuality=7.03404  Cand1stQPat=7.03404  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=18  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=4.45158  FitVeloNDoF=13  FitTChi2=52.3752  FitTNDoF=11  FitMatchChi2=73.4745  DC06GhostProbability=0.973353 ]
+ p  : 4122.4
+ pt : 181.605
+ 3 states at z = -13.7171 990 9450  :-
  *** State ***
- z        : -14.8021
+ z        : -13.7171
  location : ClosestToBeam
- p               : 3063.61
- pt              : 480.15
- (x,y,tx,ty,q/p) : 0.0161476, 0.0183601, 0.126737, -0.0954973, 0.000326412
- covariance      : [   0.00157576 0.000171903-1.92527e-05-1.12893e-06 4.27342e-08
-   0.000171903  0.00181532-1.07761e-06-2.08079e-05-1.60807e-10
-  -1.92527e-05-1.07761e-06 2.66355e-07 7.00324e-09-6.86752e-10
-  -1.12893e-06-2.08079e-05 7.00324e-09 2.75868e-07 8.40665e-12
-   4.27342e-08-1.60807e-10-6.86752e-10 8.40665e-12 2.12412e-09 ]
+ p               : 4122.4
+ pt              : 181.605
+ (x,y,tx,ty,q/p) : -0.00926113, -0.0936398, -0.0394767, -0.019648, -0.000242577
+ covariance      : [   0.00693417 1.61035e-05-3.39234e-05 1.92021e-08 1.02954e-10
+   1.61035e-05  0.00762406-2.79816e-08-3.65918e-05-5.09178e-13
+  -3.39234e-05-2.79816e-08 1.69507e-07-2.77897e-10-7.53973e-13
+   1.92021e-08-3.65918e-05-2.77897e-10 1.79971e-07 1.57158e-15
+   1.02954e-10-5.09178e-13-7.53973e-13 1.57158e-15 1.15732e-12 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 3052.55
- pt              : 481.639
- (x,y,tx,ty,q/p) : 128.205, -95.3515, 0.1291, -0.0941495, 0.000327595
- covariance      : [     0.123934 -0.00123991 5.47605e-05 1.39878e-06 4.37521e-06
-   -0.00123991    0.160233 1.51035e-06 0.000129929-7.87051e-07
-   5.47605e-05 1.51035e-06 4.54632e-07 5.25545e-10 3.30836e-09
-   1.39878e-06 0.000129929 5.25545e-10 5.92538e-07-1.04028e-09
-   4.37521e-06-7.87051e-07 3.30836e-09-1.04028e-09 2.12412e-09 ]
+ p               : 4109.75
+ pt              : 176.992
+ (x,y,tx,ty,q/p) : -39.5728, -20.2322, -0.0360214, -0.0236773, -0.000243324
+ covariance      : [    0.0093159 3.43248e-05 5.36584e-05 3.78556e-07-3.33497e-08
+   3.43248e-05  0.00861344 3.87232e-07 4.78792e-05-4.87958e-10
+   5.36584e-05 3.87232e-07 5.05803e-07 3.38889e-09-3.17205e-10
+   3.78556e-07 4.78792e-05 3.38889e-09 4.49935e-07-4.16776e-12
+  -3.33497e-08-4.87958e-10-3.17205e-10-4.16776e-12 1.15731e-12 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 4087.4
+ pt              : 1372.78
+ (x,y,tx,ty,q/p) : -1656.16, -220.375, -0.356058, -0.0190798, -0.000244654
+ covariance      : [    0.0193941  -0.0119117 6.19924e-05-6.68426e-06-1.07721e-09
+    -0.0119117     1.61631 -6.0511e-05  0.00104278-6.68419e-09
+   6.19924e-05 -6.0511e-05 3.91737e-07-3.01175e-08  1.1469e-11
+  -6.68426e-06  0.00104278-3.01175e-08  1.6419e-06 1.97987e-11
+  -1.07721e-09-6.68419e-09  1.1469e-11 1.97987e-11 1.15732e-12 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 2
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 14
+ # ids    : 36
  # meas   : 0
- chi2PerDoF : 1.85349
- nDoF       : 7
- extraInfo : [ DC06Likelihood=-6.01955  DC06nExpectedVelo=11  DC06nExpectedTT=4  FitVeloChi2=4.10522  FitVeloNDoF=5 ]
- p  : 729.418
- pt : 113.828
- 2 states at z = -18.9247 990  :-
+ chi2PerDoF : 8.71257
+ nDoF       : 29
+ extraInfo : [ DC06Likelihood=-180.468  PatQuality=6.73874  Cand1stQPat=6.73874  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=17  DC06nExpectedTT=4  DC06nExpectedOT=26  FitVeloChi2=5.63977  FitVeloNDoF=9  FitTChi2=156.789  FitTNDoF=15  FitMatchChi2=90.2359  DC06GhostProbability=0.958992 ]
+ p  : 2289.85
+ pt : 142.404
+ 3 states at z = -13.416 990 9450  :-
  *** State ***
- z        : -18.9247
+ z        : -13.416
  location : ClosestToBeam
- p               : 729.418
- pt              : 113.828
- (x,y,tx,ty,q/p) : 4.34412, 1.46332, 0.0505294, -0.149691, -0.00137096
- covariance      : [    0.0507219 -0.00150712-0.000695228 1.34288e-05 8.52282e-07
-   -0.00150712   0.0540551 1.36753e-05-0.000725201-2.83869e-08
-  -0.000695228 1.36753e-05 1.23455e-05-1.54264e-07-1.24414e-08
-   1.34288e-05-0.000725201-1.54264e-07 1.27006e-05 2.51633e-10
-   8.52282e-07-2.83869e-08-1.24414e-08 2.51633e-10 4.06061e-08 ]
+ p               : 2289.85
+ pt              : 142.404
+ (x,y,tx,ty,q/p) : 0.269275, 0.167276, -0.0179307, 0.0596744, -0.000436711
+ covariance      : [     0.142081   0.0322185-0.000618825-0.000124324  1.2923e-10
+     0.0322185   0.0270213-0.000126843-0.000166294  1.8367e-11
+  -0.000618825-0.000126843 2.93593e-06 5.01584e-07-9.57739e-13
+  -0.000124324-0.000166294 5.01584e-07 1.11416e-06 -8.1439e-14
+    1.2923e-10  1.8367e-11-9.57739e-13 -8.1439e-14 1.52785e-12 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 723.006
- pt              : 115.25
- (x,y,tx,ty,q/p) : 55.2986, -149.933, 0.0482354, -0.154096, -0.00138311
- covariance      : [      1.32019    0.099665 0.000386796 0.000105557 4.39135e-05
-      0.099665     2.85945-3.92768e-05  0.00478881 3.91065e-06
-   0.000386796-3.92768e-05 4.38677e-06-8.88133e-08-4.54652e-09
-   0.000105557  0.00478881-8.88133e-08 1.63156e-05 1.09806e-08
-   4.39135e-05 3.91065e-06-4.54652e-09 1.09806e-08 4.06061e-08 ]
+ p               : 2280.7
+ pt              : 142.202
+ (x,y,tx,ty,q/p) : -20.3681, 59.5084, -0.0251282, 0.0571952, -0.000438462
+ covariance      : [    0.0396944 0.000242561 0.000145492 4.19653e-07-2.19173e-08
+   0.000242561   0.0402342 4.17998e-07 0.000148368 -5.1614e-09
+   0.000145492 4.17998e-07 6.88478e-07 7.72634e-10-1.09341e-10
+   4.19653e-07 0.000148368 7.72634e-10 7.02043e-07-2.31493e-11
+  -2.19173e-08 -5.1614e-09-1.09341e-10-2.31493e-11 1.52785e-12 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 2267.47
+ pt              : 1264.38
+ (x,y,tx,ty,q/p) : -2832.93, 502.246, -0.670379, 0.0428233, -0.00044102
+ covariance      : [     0.020819  0.00608066 0.000102734-3.36112e-06  5.8961e-10
+    0.00608066     1.69503-9.59035e-05  0.00111612 8.28036e-09
+   0.000102734-9.59035e-05 1.03132e-06-1.13936e-07 6.34144e-12
+  -3.36112e-06  0.00111612-1.13936e-07 2.22856e-06 1.01819e-10
+    5.8961e-10 8.28036e-09 6.34144e-12 1.01819e-10 1.52785e-12 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 3
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 14
+ # ids    : 39
  # meas   : 0
- chi2PerDoF : 0.281353
- nDoF       : 7
- extraInfo : [ DC06Likelihood=-5.69138  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=1.63915  FitVeloNDoF=4 ]
- p  : 936.571
- pt : 24.3503
- 2 states at z = -20.0535 990  :-
+ chi2PerDoF : 1.35681
+ nDoF       : 33
+ extraInfo : [ DC06Likelihood=-6.41505  PatQuality=12.4231  Cand1stQPat=12.4231  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedOT=21  FitVeloChi2=6.92479  FitVeloNDoF=11  FitTChi2=20.9236  FitTNDoF=13  FitMatchChi2=11.3078  DC06GhostProbability=0.678658 ]
+ p  : 3571.52
+ pt : 353.508
+ 3 states at z = -13.9975 990 9450  :-
  *** State ***
- z        : -20.0535
+ z        : -13.9975
  location : ClosestToBeam
- p               : 936.571
- pt              : 24.3503
- (x,y,tx,ty,q/p) : -0.258643, 0.052631, 0.0103309, -0.0238684, -0.00106772
- covariance      : [      1.55169  0.00703562 -0.00436688-1.28338e-05 8.81834e-06
-    0.00703562     1.52267-1.40142e-05 -0.00430295 1.70729e-08
-   -0.00436688-1.40142e-05 1.28748e-05 2.49066e-08-3.51554e-08
-  -1.28338e-05 -0.00430295 2.49066e-08 1.27241e-05 -3.3723e-11
-   8.81834e-06 1.70729e-08-3.51554e-08 -3.3723e-11 2.47995e-08 ]
+ p               : 3571.52
+ pt              : 353.508
+ (x,y,tx,ty,q/p) : 0.0542838, -0.0623551, -0.0734157, -0.0671124, 0.000279993
+ covariance      : [   0.00156375-0.000109387-1.85483e-05 8.03241e-07 9.04336e-12
+  -0.000109387  0.00170039  7.3138e-07-1.95189e-05 4.34831e-12
+  -1.85483e-05  7.3138e-07 2.38566e-07-5.42674e-09-1.40097e-13
+   8.03241e-07-1.95189e-05-5.42674e-09 2.45441e-07 -4.1959e-14
+   9.04336e-12 4.34831e-12-1.40097e-13 -4.1959e-14 4.84091e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 895.949
- pt              : 23.5469
- (x,y,tx,ty,q/p) : 8.64289, -24.2293, 0.00164665, -0.026239, -0.00111613
- covariance      : [     0.284161  -0.0368552 0.000452659 1.75802e-05 1.61593e-05
-    -0.0368552    0.323357 1.90845e-05 0.000579455-2.59858e-06
-   0.000452659 1.90845e-05 2.56972e-05 2.22075e-07-1.17557e-08
-   1.75802e-05 0.000579455 2.22075e-07 2.73367e-05 7.57588e-09
-   1.61593e-05-2.59858e-06-1.17557e-08 7.57588e-09 2.47995e-08 ]
+ p               : 3564.24
+ pt              : 341.56
+ (x,y,tx,ty,q/p) : -72.7871, -66.6689, -0.0708348, -0.0651988, 0.000280565
+ covariance      : [    0.0372628  0.00101731 2.96289e-05 1.72665e-06 1.25529e-09
+    0.00101731   0.0481464 1.29363e-06 5.33189e-05 3.21713e-09
+   2.96289e-05 1.29363e-06 1.76756e-07 3.77993e-09 2.17473e-12
+   1.72665e-06 5.33189e-05 3.77993e-09 2.32666e-07 7.23807e-12
+   1.25529e-09 3.21713e-09 2.17473e-12 7.23807e-12  4.8409e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3545.19
+ pt              : 1012.14
+ (x,y,tx,ty,q/p) : 812.888, -598.78, 0.292346, -0.0572251, 0.000282073
+ covariance      : [    0.0159761  -0.0304742 5.33996e-05-1.83982e-05 3.80236e-10
+    -0.0304742     1.18147-6.57098e-05 0.000757994-2.78246e-09
+   5.33996e-05-6.57098e-05 3.71314e-07-4.51952e-08 2.44741e-12
+  -1.83982e-05 0.000757994-4.51952e-08 1.26672e-06-6.62251e-12
+   3.80236e-10-2.78246e-09 2.44741e-12-6.62251e-12 4.84091e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 4
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 12
+ # ids    : 36
  # meas   : 0
- chi2PerDoF : 2.09375
- nDoF       : 6
- extraInfo : [ DC06Likelihood=-3.90353  DC06nExpectedVelo=8  DC06nExpectedTT=4  FitVeloChi2=3.12275  FitVeloNDoF=2 ]
- p  : 2930.27
- pt : 60.9219
- 2 states at z = 97.1947 990  :-
+ chi2PerDoF : 1.60798
+ nDoF       : 29
+ extraInfo : [ DC06Likelihood=-7.89654  PatQuality=3.99231  Cand1stQPat=3.99231  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=10  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=16.0841  FitVeloNDoF=5  FitTChi2=21.7873  FitTNDoF=15  FitMatchChi2=7.1484  DC06GhostProbability=0.332705 ]
+ p  : 10636
+ pt : 2303.1
+ 3 states at z = -12.7974 990 9450  :-
  *** State ***
- z        : 97.1947
+ z        : -12.7974
  location : ClosestToBeam
- p               : 2930.27
- pt              : 60.9219
- (x,y,tx,ty,q/p) : 0.182401, 0.075586, -0.00327732, 0.0205352, -0.000341266
- covariance      : [     0.247942   0.0019099-0.000617004-3.27182e-06 6.60633e-07
-     0.0019099    0.234419-3.32771e-06-0.000591219 3.50447e-08
-  -0.000617004-3.32771e-06 1.63219e-06 5.65286e-09-2.36462e-09
-  -3.27182e-06-0.000591219 5.65286e-09 1.58194e-06-7.02164e-11
-   6.60633e-07 3.50447e-08-2.36462e-09-7.02164e-11 1.14954e-09 ]
+ p               : 10636
+ pt              : 2303.1
+ (x,y,tx,ty,q/p) : -0.311336, -0.102986, -0.0715405, 0.209945, -9.40199e-05
+ covariance      : [  0.000441816 0.000107557-4.84172e-06-8.76866e-07 -3.4801e-10
+   0.000107557 0.000207702-8.85508e-07-2.90797e-06-1.40374e-10
+  -4.84172e-06-8.85508e-07 6.77054e-08 7.48596e-09 3.27825e-12
+  -8.76866e-07-2.90797e-06 7.48596e-09 5.04814e-08 1.28355e-12
+   -3.4801e-10-1.40374e-10 3.27825e-12 1.28355e-12 7.64596e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 2923.06
- pt              : 59.2534
- (x,y,tx,ty,q/p) : -3.05962, 18.2662, -0.00387745, 0.019901, -0.000342107
- covariance      : [   0.00577074-0.000887903 2.11376e-05-2.39085e-06-8.03536e-07
-  -0.000887903   0.0104083-1.91075e-06 3.74031e-05 1.32488e-07
-   2.11376e-05-1.91075e-06 8.42642e-08-4.95978e-09-1.95809e-09
-  -2.39085e-06 3.74031e-05-4.95978e-09 1.42579e-07 3.85242e-10
-  -8.03536e-07 1.32488e-07-1.95809e-09 3.85242e-10 1.14954e-09 ]
+ p               : 10628.1
+ pt              : 2303.64
+ (x,y,tx,ty,q/p) : -72.4307, 210.354, -0.0725062, 0.209855, -9.40903e-05
+ covariance      : [     0.012375  0.00201681 3.28323e-06 2.11906e-06 6.37572e-09
+    0.00201681   0.0213256 7.38594e-07 1.98144e-05 4.63436e-09
+   3.28323e-06 7.38594e-07  2.3002e-08 1.44343e-09  5.9303e-12
+   2.11906e-06 1.98144e-05 1.44343e-09 4.87635e-08 6.62493e-12
+   6.37572e-09 4.63436e-09  5.9303e-12 6.62493e-12 7.64596e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 10608
+ pt              : 2950.25
+ (x,y,tx,ty,q/p) : -1231.03, 1993.53, -0.200793, 0.208603, -9.42686e-05
+ covariance      : [   0.00919694  -0.0148453 1.18056e-05-4.29046e-06 6.18282e-10
+    -0.0148453    0.967743-1.22679e-05 0.000257249 1.80203e-08
+   1.18056e-05-1.22679e-05 4.34422e-08 -5.3249e-09-3.50266e-13
+  -4.29046e-06 0.000257249 -5.3249e-09 1.94121e-07-4.15495e-13
+   6.18282e-10 1.80203e-08-3.50266e-13-4.15495e-13 7.64604e-14 ]
 
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader          INFO Run 182001, Event 5
-StoreExplorerAlg     INFO ========= /Event[0x127aea50@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x4972be0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -1199,7 +1414,6 @@ StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202] 
 StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
@@ -1210,206 +1424,260 @@ StoreExplorerAlg     INFO   +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
 StoreExplorerAlg     INFO   | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
 StoreExplorerAlg     INFO   | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x109]
-StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x1]
+StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x10c]
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x6271a Type=0x202]  KeyedContainer<LHCb::Track,Conta [0x3]
 StoreExplorerAlg     INFO   | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO   | | +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x2]
-StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /RichOfflineSummaryTracks [Address: CLID=0x630a3 Type=0x202]  KeyedContainer<LHCb::RichSummary [0x5d]
+StoreExplorerAlg     INFO   | | +--> /V0 [Address: CLID=0x62738 Type=0x202]  KeyedContainer<LHCb::TwoProngVer [0]
 StoreExplorerAlg     INFO   | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x13]
-StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x26]
-StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x43]
-StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2c]
+StoreExplorerAlg     INFO   | | +--> /MergedPi0s [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x1]
+StoreExplorerAlg     INFO   | | +--> /SplitPhotons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x2]
+StoreExplorerAlg     INFO   | | +--> /Photons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x44]
+StoreExplorerAlg     INFO   | | +--> /Electrons [Address: CLID=0x607d4 Type=0x202]  KeyedContainer<LHCb::CaloHypo,Co [0x28]
 StoreExplorerAlg     INFO     +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x109]
-StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x7c]
+StoreExplorerAlg     INFO     | +--> /Charged [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x10c]
+StoreExplorerAlg     INFO       +--> /Neutrals [Address: CLID=0x60323 Type=0x202]  KeyedContainer<LHCb::ProtoPartic [0x47]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
-DumpTracks           INFO There are 265 tracks in Rec/Track/Best
+DumpTracks           INFO There are 268 tracks in Rec/Track/Best
 DumpTracks          DEBUG *** Track ***
  key     : 0
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 26
+ # ids    : 49
  # meas   : 0
- chi2PerDoF : 0.740099
- nDoF       : 20
- extraInfo : [ DC06Likelihood=-1.98037  DC06nExpectedVelo=22  DC06nExpectedTT=4  FitVeloChi2=13.131  FitVeloNDoF=16 ]
- p  : 3418.77
- pt : 167.689
- 2 states at z = -41.8089 990  :-
+ chi2PerDoF : 5.62
+ nDoF       : 42
+ extraInfo : [ DC06Likelihood=-155.378  PatQuality=2.67959  Cand1stQPat=2.67959  Cand2ndQPat=0  NCandCommonHits=5  DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=25.2089  FitVeloNDoF=17  FitTChi2=44.8158  FitTNDoF=18  FitMatchChi2=165.208  DC06GhostProbability=0.974158 ]
+ p  : 8118.37
+ pt : 425.692
+ 3 states at z = -35.3004 990 9450  :-
  *** State ***
- z        : -41.8089
+ z        : -35.3004
  location : ClosestToBeam
- p               : 3418.77
- pt              : 167.689
- (x,y,tx,ty,q/p) : 0.0108528, -0.0496472, -0.0447778, -0.0201645, -0.000292503
- covariance      : [    0.0119758 0.000104389-8.23318e-05-4.37684e-07 5.52218e-08
-   0.000104389    0.012622-4.96912e-07-8.50962e-05 1.04136e-09
-  -8.23318e-05-4.96912e-07 5.89956e-07 2.02009e-09-5.03972e-10
-  -4.37684e-07-8.50962e-05 2.02009e-09 6.01706e-07-5.78914e-12
-   5.52218e-08 1.04136e-09-5.03972e-10-5.78914e-12 1.04618e-09 ]
+ p               : 8118.37
+ pt              : 425.692
+ (x,y,tx,ty,q/p) : 0.00414807, 0.0409633, 0.0436968, 0.0291148, 0.000123177
+ covariance      : [   0.00117607-0.000119286-6.62564e-06 5.74082e-07 1.86226e-11
+  -0.000119286  0.00112262 5.83839e-07-6.43983e-06-6.86757e-12
+  -6.62564e-06 5.83839e-07 3.87457e-08-2.92671e-09-1.21188e-13
+   5.74082e-07-6.43983e-06-2.92671e-09  3.8301e-08 3.82689e-14
+   1.86226e-11-6.86757e-12-1.21188e-13 3.82689e-14 1.29356e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 3407.04
- pt              : 166.026
- (x,y,tx,ty,q/p) : -46.5115, -20.9541, -0.0447449, -0.0194472, -0.00029351
- covariance      : [    0.0064028 0.000741931 1.30333e-05 2.67259e-07 9.05576e-08
-   0.000741931  0.00664482 8.96387e-08 2.61824e-05-8.57192e-08
-   1.30333e-05 8.96387e-08 1.31102e-07  4.4783e-09-1.35091e-09
-   2.67259e-07 2.61824e-05  4.4783e-09 2.13946e-07-9.62829e-10
-   9.05576e-08-8.57192e-08-1.35091e-09-9.62829e-10 1.04618e-09 ]
+ p               : 8110.68
+ pt              : 439.842
+ (x,y,tx,ty,q/p) : 45.1476, 30.1699, 0.0456378, 0.0294409, 0.000123294
+ covariance      : [   0.00141036 1.30508e-06  2.8441e-06 1.52773e-09 2.30569e-09
+   1.30508e-06    0.002767 2.34693e-08 1.12003e-05-5.47645e-10
+    2.8441e-06 2.34693e-08 2.43853e-08  1.3434e-10 1.21512e-11
+   1.52773e-09 1.12003e-05  1.3434e-10 7.72582e-08-3.46367e-12
+   2.30569e-09-5.47645e-10 1.21512e-11-3.46367e-12 1.29356e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 8095.49
+ pt              : 1618.94
+ (x,y,tx,ty,q/p) : 1059.26, 286.655, 0.201831, 0.0303746, 0.000123526
+ covariance      : [   0.00701711 -0.00241522 1.21584e-05-6.90278e-07 1.29446e-09
+   -0.00241522    0.663271-4.35312e-06 0.000165923-4.21921e-09
+   1.21584e-05-4.35312e-06 6.32594e-08-1.22593e-09-3.93649e-12
+  -6.90278e-07 0.000165923-1.22593e-09 1.81321e-07-3.22098e-13
+   1.29446e-09-4.21921e-09-3.93649e-12-3.22098e-13 1.29356e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 1
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 17
+ # ids    : 50
  # meas   : 0
- chi2PerDoF : 5.91196
- nDoF       : 10
- extraInfo : [ DC06Likelihood=-30.6204  DC06nExpectedVelo=17  DC06nExpectedTT=4  FitVeloChi2=18.526  FitVeloNDoF=6 ]
- p  : 1372.74
- pt : 90.8333
- 2 states at z = -32.9874 990  :-
+ chi2PerDoF : 1.23826
+ nDoF       : 43
+ extraInfo : [ DC06Likelihood=-6.15194  PatQuality=2.48304  Cand1stQPat=2.48304  Cand2ndQPat=6.78334  NCandCommonHits=5  DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=19.4107  FitVeloNDoF=16  FitTChi2=18.4034  FitTNDoF=18  FitMatchChi2=8.84826  DC06GhostProbability=0.911365 ]
+ p  : 8047.36
+ pt : 422.201
+ 3 states at z = -35.2511 990 9450  :-
  *** State ***
- z        : -32.9874
+ z        : -35.2511
  location : ClosestToBeam
- p               : 1372.74
- pt              : 90.8333
- (x,y,tx,ty,q/p) : -0.0566949, -1.27855, 0.0662133, -0.00366333, 0.00072847
- covariance      : [     0.015558   0.0166957-0.000111868-6.98887e-05 1.05698e-07
-     0.0166957   0.0844737-7.83539e-05-0.000402334 6.89101e-08
-  -0.000111868-7.83539e-05 8.53519e-07  3.3576e-07-1.22329e-09
-  -6.98887e-05-0.000402334  3.3576e-07 2.12813e-06-3.00277e-10
-   1.05698e-07 6.89101e-08-1.22329e-09-3.00277e-10 3.35268e-09 ]
+ p               : 8047.36
+ pt              : 422.201
+ (x,y,tx,ty,q/p) : -0.0826481, 0.152583, 0.0424852, 0.0309053, 0.000124264
+ covariance      : [   0.00121018-0.000123753-6.74476e-06 5.53265e-07 7.77079e-12
+  -0.000123753   0.0011175 5.85861e-07-6.40078e-06 2.94364e-12
+  -6.74476e-06 5.85861e-07 3.92838e-08-2.87487e-09-5.59671e-14
+   5.53265e-07-6.40078e-06-2.87487e-09 3.81663e-08-1.62984e-14
+   7.77079e-12 2.94364e-12-5.59671e-14-1.62984e-14 9.58724e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1369.92
- pt              : 98.9744
- (x,y,tx,ty,q/p) : 69.551, -5.94064, 0.0719068, -0.00875111, 0.000729967
- covariance      : [     0.111592  -0.0162252 0.000108631-1.19247e-05 2.03011e-06
-    -0.0162252   0.0528841-1.85929e-06 0.000137815-5.52439e-07
-   0.000108631-1.85929e-06 4.98259e-07-3.80065e-09 2.18659e-09
-  -1.19247e-05 0.000137815-3.80065e-09 6.21938e-07-1.17741e-09
-   2.03011e-06-5.52439e-07 2.18659e-09-1.17741e-09 3.35268e-09 ]
+ p               : 8039.75
+ pt              : 421.614
+ (x,y,tx,ty,q/p) : 43.665, 31.7991, 0.0424768, 0.030877, 0.000124382
+ covariance      : [   0.00135435 9.27725e-05 2.53506e-06 5.87527e-07 8.65255e-10
+   9.27725e-05  0.00228233 5.01009e-07 8.11445e-06 1.67666e-09
+   2.53506e-06 5.01009e-07 2.28217e-08 3.15345e-09 4.63495e-12
+   5.87527e-07 8.11445e-06 3.15345e-09 5.77614e-08  1.0621e-11
+   8.65255e-10 1.67666e-09 4.63495e-12  1.0621e-11 9.58724e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 8024.77
+ pt              : 1604.09
+ (x,y,tx,ty,q/p) : 1059.32, 290.251, 0.201783, 0.0300586, 0.000124614
+ covariance      : [   0.00701593 -0.00248264 1.22661e-05  -7.313e-07 8.60597e-10
+   -0.00248264    0.643076-1.12288e-05 0.000165757 6.43269e-09
+   1.22661e-05-1.12288e-05 6.32152e-08-1.72244e-09-2.35672e-12
+    -7.313e-07 0.000165757-1.72244e-09 1.79382e-07-3.11175e-12
+   8.60597e-10 6.43269e-09-2.35672e-12-3.11175e-12 9.58725e-14 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 2
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 19
+ # ids    : 46
  # meas   : 0
- chi2PerDoF : 1.37111
- nDoF       : 12
- extraInfo : [ DC06Likelihood=-9.07298  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=15.4413  FitVeloNDoF=9 ]
- p  : 2717.38
- pt : 334.177
- 2 states at z = -37.6614 990  :-
+ chi2PerDoF : 0.724749
+ nDoF       : 41
+ extraInfo : [ DC06Likelihood=-4.78828  PatQuality=4.49754  Cand1stQPat=4.49754  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedOT=21  FitVeloChi2=10.2818  FitVeloNDoF=17  FitTChi2=10.9209  FitTNDoF=15  FitMatchChi2=2.03771  DC06GhostProbability=0.3534 ]
+ p  : 4664.78
+ pt : 246.531
+ 3 states at z = -36.7857 990 9450  :-
  *** State ***
- z        : -37.6614
+ z        : -36.7857
  location : ClosestToBeam
- p               : 2717.38
- pt              : 334.177
- (x,y,tx,ty,q/p) : -0.0302114, -0.0625602, 0.112974, -0.0509185, -0.000368001
- covariance      : [   0.00119518  7.1147e-05-1.41538e-05-4.94378e-07 1.37542e-08
-    7.1147e-05  0.00103536-5.80586e-07-1.27315e-05-3.02422e-10
-  -1.41538e-05-5.80586e-07 1.80257e-07 4.49379e-09-2.42842e-10
-  -4.94378e-07-1.27315e-05 4.49379e-09  1.6866e-07 7.73381e-12
-   1.37542e-08-3.02422e-10-2.42842e-10 7.73381e-12 1.01312e-09 ]
+ p               : 4664.78
+ pt              : 246.531
+ (x,y,tx,ty,q/p) : -0.0153239, -0.0384377, 0.0422962, -0.0318106, 0.000214372
+ covariance      : [   0.00269857 0.000168495-1.66853e-05-8.98666e-07 1.15374e-11
+   0.000168495  0.00306694-8.89873e-07-1.84367e-05 4.39971e-13
+  -1.66853e-05-8.89873e-07  1.0568e-07 4.82408e-09-1.13509e-13
+  -8.98666e-07-1.84367e-05 4.82408e-09  1.1405e-07  -8.078e-16
+   1.15374e-11 4.39971e-13-1.13509e-13  -8.078e-16 2.65679e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 2714.23
- pt              : 327.615
- (x,y,tx,ty,q/p) : 114.766, -52.6778, 0.110142, -0.0515096, -0.000368428
- covariance      : [    0.0375234  0.00576256 2.12088e-05 2.69019e-06  7.5468e-08
-    0.00576256   0.0612425 4.88655e-07 4.50932e-05-5.18349e-07
-   2.12088e-05 4.88655e-07  1.1301e-07 3.36582e-09-7.35901e-10
-   2.69019e-06 4.50932e-05 3.36582e-09  1.5223e-07-1.25878e-09
-    7.5468e-08-5.18349e-07-7.35901e-10-1.25878e-09 1.01312e-09 ]
+ p               : 4657.59
+ pt              : 254.802
+ (x,y,tx,ty,q/p) : 43.7158, -32.8868, 0.0438795, -0.0328089, 0.000214703
+ covariance      : [    0.0031104 0.000114202 7.50551e-06 6.91765e-07 1.02855e-09
+   0.000114202  0.00422587 6.31527e-07 1.50749e-05 2.02426e-09
+   7.50551e-06 6.31527e-07 6.32259e-08 4.19111e-09  5.7498e-12
+   6.91765e-07 1.50749e-05 4.19111e-09 1.11533e-07 1.31936e-11
+   1.02855e-09 2.02426e-09  5.7498e-12 1.31936e-11 2.65679e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 4642.18
+ pt              : 1445.33
+ (x,y,tx,ty,q/p) : 1573.81, -318.966, 0.325986, -0.0327961, 0.000215416
+ covariance      : [    0.0106065  0.00558456  2.8514e-05 1.49773e-06 1.53546e-10
+    0.00558456     0.94082-1.77105e-05 0.000377715 9.08087e-09
+    2.8514e-05-1.77105e-05 1.99779e-07-5.92911e-09-4.14357e-12
+   1.49773e-06 0.000377715-5.92911e-09 5.37873e-07 2.02402e-13
+   1.53546e-10 9.08087e-09-4.14357e-12 2.02402e-13  2.6568e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 3
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 22
+ # ids    : 53
  # meas   : 0
- chi2PerDoF : 0.608055
- nDoF       : 15
- extraInfo : [ DC06Likelihood=-1.5501  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=3.34895  FitVeloNDoF=12 ]
- p  : 1750.33
- pt : 131.425
- 2 states at z = -32.8632 990  :-
+ chi2PerDoF : 0.909361
+ nDoF       : 47
+ extraInfo : [ DC06Likelihood=-3.83831  PatQuality=4.37693  Cand1stQPat=4.37693  Cand2ndQPat=0  NCandCommonHits=2  DC06nExpectedVelo=20  DC06nExpectedTT=4  DC06nExpectedIT=4  DC06nExpectedOT=24  FitVeloChi2=11.5572  FitVeloNDoF=15  FitTChi2=13.4516  FitTNDoF=23  FitMatchChi2=13.5123  DC06GhostProbability=0.843008 ]
+ p  : 3467.3
+ pt : 172.563
+ 3 states at z = -36.2736 990 9450  :-
  *** State ***
- z        : -32.8632
+ z        : -36.2736
  location : ClosestToBeam
- p               : 1750.33
- pt              : 131.425
- (x,y,tx,ty,q/p) : -0.0977731, 0.0526001, -0.0379503, -0.0650361, -0.000571322
- covariance      : [    0.0182462-0.000123628-0.000182078 6.85435e-07 6.56833e-07
-  -0.000123628   0.0188484 2.26207e-07-0.000186286 3.40529e-09
-  -0.000182078 2.26207e-07 1.87085e-06-2.94394e-10-1.01151e-08
-   6.85435e-07-0.000186286-2.94394e-10 1.89807e-06-3.43277e-11
-   6.56833e-07 3.40529e-09-1.01151e-08-3.43277e-11 3.62064e-08 ]
+ p               : 3467.3
+ pt              : 172.563
+ (x,y,tx,ty,q/p) : -0.0364184, -0.0268479, 0.0481474, -0.0128416, -0.000288409
+ covariance      : [   0.00815115 0.000474655-4.44519e-05 -2.0259e-06  2.2405e-11
+   0.000474655   0.0081874-2.09048e-06-4.47396e-05 5.33826e-14
+  -4.44519e-05-2.09048e-06 2.48945e-07 8.91934e-09-2.06104e-13
+   -2.0259e-06-4.47396e-05 8.91934e-09 2.51149e-07 7.47054e-16
+    2.2405e-11 5.33826e-14-2.06104e-13 7.47054e-16 4.37851e-13 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 1693.6
- pt              : 149.755
- (x,y,tx,ty,q/p) : -40.0251, -70.4046, -0.0427108, -0.0778219, -0.000590458
- covariance      : [      1.17661    0.122156  0.00183469 0.000132777 6.31201e-05
-      0.122156     1.53974 0.000102155  0.00278656 5.72226e-06
-    0.00183469 0.000102155  9.0439e-06 3.30391e-07 1.45337e-07
-   0.000132777  0.00278656 3.30391e-07 1.19918e-05 5.82211e-09
-   6.31201e-05 5.72226e-06 1.45337e-07 5.82211e-09 3.62064e-08 ]
+ p               : 3456.12
+ pt              : 172.033
+ (x,y,tx,ty,q/p) : 49.1317, -13.4298, 0.0475305, -0.0149896, -0.000289342
+ covariance      : [   0.00499024 0.000154529 1.26059e-05 9.00068e-07 1.06144e-09
+   0.000154529  0.00633507 8.12036e-07 2.31041e-05 1.34347e-09
+   1.26059e-05 8.12036e-07  1.2192e-07 6.19489e-09 6.66959e-12
+   9.00068e-07 2.31041e-05 6.19489e-09  1.9755e-07 9.87996e-12
+   1.06144e-09 1.34347e-09 6.66959e-12 9.87996e-12  4.3785e-13 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 3438.21
+ pt              : 1069.42
+ (x,y,tx,ty,q/p) : -1080.68, -132.216, -0.327, -0.0134072, -0.000290849
+ covariance      : [    0.0105611   -0.005828 3.64519e-05-4.53971e-06 5.32491e-10
+     -0.005828    0.957756-2.87472e-05 0.000758554-5.48294e-09
+   3.64519e-05-2.87472e-05 3.02953e-07-2.06126e-08 4.93255e-12
+  -4.53971e-06 0.000758554-2.06126e-08 9.89504e-07 1.49165e-12
+   5.32491e-10-5.48294e-09 4.93255e-12 1.49165e-12 4.37851e-13 ]
 
 
 DumpTracks          DEBUG *** Track ***
  key     : 4
- type    : Upstream
- history : PatVeloTT
+ type    : Long
+ history : PatForward
  fitstatus: Fitted
- # ids    : 22
+ # ids    : 42
  # meas   : 0
- chi2PerDoF : 1.17248
- nDoF       : 17
- extraInfo : [ DC06Likelihood=-2.90906  DC06nExpectedVelo=16  DC06nExpectedTT=6  FitVeloChi2=6.73445  FitVeloNDoF=11 ]
- p  : 44577.2
- pt : 1604.59
- 2 states at z = -39.2633 990  :-
+ chi2PerDoF : 1.27542
+ nDoF       : 36
+ extraInfo : [ DC06Likelihood=-4.90135  PatQuality=2.07345  Cand1stQPat=2.07345  Cand2ndQPat=0  NCandCommonHits=1  DC06nExpectedVelo=20  DC06nExpectedTT=4  DC06nExpectedOT=20  FitVeloChi2=21.1229  FitVeloNDoF=15  FitTChi2=11.3998  FitTNDoF=12  FitMatchChi2=6.27886  DC06GhostProbability=0.127757 ]
+ p  : 20671.4
+ pt : 912.092
+ 3 states at z = -38.7243 990 9450  :-
  *** State ***
- z        : -39.2633
+ z        : -38.7243
  location : ClosestToBeam
- p               : 44577.2
- pt              : 1604.59
- (x,y,tx,ty,q/p) : -0.0665187, -0.0404426, 0.0183157, -0.0310147, 2.2433e-05
- covariance      : [   0.00054773 1.28908e-05-2.04717e-06-1.25638e-08 1.40349e-08
-   1.28908e-05 0.000491973-1.93348e-08-1.92933e-06 1.27686e-09
-  -2.04717e-06-1.93348e-08 8.79093e-09 3.19162e-11-4.88287e-11
-  -1.25638e-08-1.92933e-06 3.19162e-11 8.50475e-09-1.12901e-12
-   1.40349e-08 1.27686e-09-4.88287e-11-1.12901e-12 3.01088e-11 ]
+ p               : 20671.4
+ pt              : 912.092
+ (x,y,tx,ty,q/p) : -0.0410443, -0.05376, -0.0332222, 0.0291025, 4.8376e-05
+ covariance      : [  0.000566773 2.39777e-05-2.46159e-06-6.81199e-08 2.68015e-12
+   2.39777e-05 0.000617757-6.28762e-08-2.61856e-06-7.84409e-13
+  -2.46159e-06-6.28762e-08 1.14156e-08 2.31019e-10-4.29824e-14
+  -6.81199e-08-2.61856e-06 2.31019e-10 1.19244e-08-1.01112e-14
+   2.68015e-12-7.84409e-13-4.29824e-14-1.01112e-14 2.56725e-14 ]
  *** State ***
  z        : 990
  location : BegRich1
- p               : 44565.1
- pt              : 1615.6
- (x,y,tx,ty,q/p) : 18.8571, -31.9825, 0.0185869, -0.0311529, 2.24391e-05
- covariance      : [  0.000195815  7.0735e-06 3.71248e-08 6.10676e-08 -8.8032e-09
-    7.0735e-06 0.000283065 8.42831e-08 8.72199e-07-1.13531e-08
-   3.71248e-08 8.42831e-08 2.74165e-09 7.87481e-10-2.26206e-10
-   6.10676e-08 8.72199e-07 7.87481e-10 9.53886e-09-1.06273e-10
-   -8.8032e-09-1.13531e-08-2.26206e-10-1.06273e-10 3.01088e-11 ]
+ p               : 20656.5
+ pt              : 904.263
+ (x,y,tx,ty,q/p) : -34.1436, 29.8485, -0.0332104, 0.028585, 4.84109e-05
+ covariance      : [  0.000428546 3.23493e-06 3.28422e-07  6.7796e-08 6.05398e-10
+   3.23493e-06 0.000652214 4.19836e-08 2.00602e-06  2.5704e-10
+   3.28422e-07 4.19836e-08  5.3084e-09 2.80702e-10 3.27909e-12
+    6.7796e-08 2.00602e-06 2.80702e-10 1.83629e-08  1.9705e-12
+   6.05398e-10  2.5704e-10 3.27909e-12  1.9705e-12 2.56725e-14 ]
+ *** State ***
+ z        : 9450
+ location : BegRich2
+ p               : 20636.6
+ pt              : 804.223
+ (x,y,tx,ty,q/p) : -66.4542, 271.344, 0.0266083, 0.0285135, 4.84576e-05
+ covariance      : [   0.00660896 -0.00939603 7.74224e-06-1.58148e-06 1.50284e-09
+   -0.00939603    0.632642-1.37747e-05 0.000109671 2.76331e-09
+   7.74224e-06-1.37747e-05   2.144e-08-1.98898e-09 5.85566e-13
+  -1.58148e-06 0.000109671-1.98898e-09 6.32981e-08-4.81909e-13
+   1.50284e-09 2.76331e-09 5.85566e-13-4.81909e-13 2.56725e-14 ]
 
 
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -1417,8 +1685,8 @@ DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 PrintHeader          INFO Filtered 5 events
 TESFingerPrint      DEBUG ==> Finalize
-TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/ODIN: 5, /Event/DAQ/RawEvent: 5, /Event/Gen: 5, /Event/Gen/Collisions: 5, /Event/Gen/Header: 5, /Event/Gen/HepMCEvents: 5, /Event/Link: 5, /Event/Link/MC: 5, /Event/Link/Raw: 5, /Event/Link/Raw/Ecal: 5, /Event/Link/Raw/Ecal/Digits: 5, /Event/Link/Raw/IT: 5, /Event/Link/Raw/IT/Clusters: 5, /Event/Link/Raw/Muon: 5, /Event/Link/Raw/Muon/Digits: 5, /Event/Link/Raw/OT: 5, /Event/Link/Raw/OT/Times: 5, /Event/Link/Raw/TT: 5, /Event/Link/Raw/TT/Clusters: 5, /Event/Link/Raw/Velo: 5, /Event/Link/Raw/Velo/Clusters: 5, /Event/Link/Rec: 5, /Event/Link/Rec/Track: 5, /Event/Link/Rec/Track/Best: 5, /Event/Link/Trig: 5, /Event/Link/Trig/L0: 5, /Event/Link/Trig/L0/FullCalo: 5, /Event/MC: 5, /Event/MC/DigiHeader: 5, /Event/MC/Header: 5, /Event/MC/Muon: 5, /Event/MC/Muon/DigitsInfo: 5, /Event/MC/Rich: 5, /Event/MC/Rich/DigitSummaries: 5, /Event/MC/TrackInfo: 5, /Event/Next: 3, /Event/Next/MC: 3, /Event/Next/MC/Header: 3, /Event/Prev: 5, /Event/Prev/MC: 5, /Event/Prev/MC/Header: 2, /Event/PrevPrev: 3, /Event/PrevPrev/MC: 3, /Event/PrevPrev/MC/Header: 3, /Event/Rec: 5, /Event/Rec/Calo: 5, /Event/Rec/Calo/Electrons: 5, /Event/Rec/Calo/MergedPi0s: 5, /Event/Rec/Calo/Photons: 5, /Event/Rec/Calo/SplitPhotons: 5, /Event/Rec/Header: 5, /Event/Rec/ProtoP: 5, /Event/Rec/ProtoP/Charged: 5, /Event/Rec/ProtoP/Neutrals: 5, /Event/Rec/Rich: 5, /Event/Rec/Rich/RichOfflineSummaryTracks: 5, /Event/Rec/Status: 5, /Event/Rec/Track: 5, /Event/Rec/Track/Best: 5, /Event/Rec/Track/Muon: 5, /Event/Rec/Vertex: 5, /Event/Rec/Vertex/Primary: 5, /Event/pSim: 5, /Event/pSim/MCParticles: 5, /Event/pSim/MCVertices: 5}
-TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Gen/Collisions: {1: 3, 2: 2}, /Event/Gen/HepMCEvents: {1: 3, 2: 2}, /Event/MC/Rich/DigitSummaries: {1240: 1, 1463: 1, 1756: 1, 3900: 1, 4313: 1}, /Event/Rec/Calo/Electrons: {10: 1, 11: 1, 13: 1, 17: 1, 44: 1}, /Event/Rec/Calo/MergedPi0s: {2: 1, 5: 1, 9: 1, 10: 1, 19: 1}, /Event/Rec/Calo/Photons: {19: 1, 28: 2, 31: 1, 67: 1}, /Event/Rec/Calo/SplitPhotons: {4: 1, 10: 1, 18: 1, 20: 1, 38: 1}, /Event/Rec/ProtoP/Charged: {66: 1, 67: 1, 80: 1, 102: 1, 265: 1}, /Event/Rec/ProtoP/Neutrals: {34: 2, 58: 2, 124: 1}, /Event/Rec/Rich/RichOfflineSummaryTracks: {23: 1, 33: 1, 44: 1, 45: 1, 93: 1}, /Event/Rec/Track/Best: {66: 1, 67: 1, 80: 1, 102: 1, 265: 1}, /Event/Rec/Track/Muon: {1: 1, 2: 3, 3: 1}, /Event/Rec/Vertex/Primary: {1: 4, 2: 1}}
+TESFingerPrint    VERBOSE ==> TES DataObject statistics: {/Event: 5, /Event/DAQ: 5, /Event/DAQ/ODIN: 5, /Event/DAQ/RawEvent: 5, /Event/Gen: 5, /Event/Gen/Collisions: 5, /Event/Gen/Header: 5, /Event/Gen/HepMCEvents: 5, /Event/Link: 5, /Event/Link/Raw: 5, /Event/Link/Raw/Ecal: 5, /Event/Link/Raw/Ecal/Digits: 5, /Event/Link/Raw/IT: 5, /Event/Link/Raw/IT/Clusters: 5, /Event/Link/Raw/Muon: 5, /Event/Link/Raw/Muon/Digits: 5, /Event/Link/Raw/OT: 5, /Event/Link/Raw/OT/Times: 5, /Event/Link/Raw/TT: 5, /Event/Link/Raw/TT/Clusters: 5, /Event/Link/Raw/Velo: 5, /Event/Link/Raw/Velo/Clusters: 5, /Event/Link/Rec: 5, /Event/Link/Rec/Track: 5, /Event/Link/Rec/Track/Best: 5, /Event/Link/Trig: 5, /Event/Link/Trig/L0: 5, /Event/Link/Trig/L0/FullCalo: 5, /Event/MC: 5, /Event/MC/DigiHeader: 5, /Event/MC/Header: 5, /Event/MC/Muon: 5, /Event/MC/Muon/DigitsInfo: 5, /Event/MC/Rich: 5, /Event/MC/Rich/DigitSummaries: 5, /Event/MC/TrackInfo: 5, /Event/Next: 3, /Event/Next/MC: 3, /Event/Next/MC/Header: 3, /Event/Prev: 5, /Event/Prev/MC: 5, /Event/Prev/MC/Header: 2, /Event/PrevPrev: 3, /Event/PrevPrev/MC: 3, /Event/PrevPrev/MC/Header: 3, /Event/Rec: 5, /Event/Rec/Calo: 5, /Event/Rec/Calo/Electrons: 5, /Event/Rec/Calo/MergedPi0s: 5, /Event/Rec/Calo/Photons: 5, /Event/Rec/Calo/SplitPhotons: 5, /Event/Rec/Header: 5, /Event/Rec/ProtoP: 5, /Event/Rec/ProtoP/Charged: 5, /Event/Rec/ProtoP/Neutrals: 5, /Event/Rec/Status: 5, /Event/Rec/Track: 5, /Event/Rec/Track/Best: 5, /Event/Rec/Track/Muon: 5, /Event/Rec/Vertex: 5, /Event/Rec/Vertex/Primary: 5, /Event/Rec/Vertex/V0: 5, /Event/pSim: 5, /Event/pSim/MCParticles: 5, /Event/pSim/MCVertices: 5}
+TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Gen/Collisions: {1: 3, 2: 2}, /Event/Gen/HepMCEvents: {1: 3, 2: 2}, /Event/MC/Rich/DigitSummaries: {1240: 1, 1463: 1, 1756: 1, 3900: 1, 4313: 1}, /Event/Rec/Calo/Electrons: {8: 3, 11: 1, 40: 1}, /Event/Rec/Calo/MergedPi0s: {0: 2, 1: 2, 2: 1}, /Event/Rec/Calo/Photons: {19: 1, 30: 1, 31: 2, 68: 1}, /Event/Rec/Calo/SplitPhotons: {0: 2, 2: 2, 4: 1}, /Event/Rec/ProtoP/Charged: {67: 2, 82: 1, 102: 1, 268: 1}, /Event/Rec/ProtoP/Neutrals: {19: 1, 30: 1, 34: 1, 37: 1, 71: 1}, /Event/Rec/Track/Best: {67: 2, 82: 1, 102: 1, 268: 1}, /Event/Rec/Track/Muon: {2: 2, 3: 3}, /Event/Rec/Vertex/Primary: {1: 4, 2: 1}, /Event/Rec/Vertex/V0: {0: 4, 1: 1}}
 TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
 TESFingerPrint      DEBUG Tools to release :
 TESFingerPrint      DEBUG Services to release :
@@ -1429,6 +1697,6 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:6E8155A1-9286-E011-9F6A-003048C9CD62[POOL.dst]
+PoolRootEvtCnvSvc    INFO Disconnected data IO:E69449E6-E711-E111-AA61-003048C9CD62[POOL.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

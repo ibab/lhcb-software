@@ -56,8 +56,8 @@ class IOTest(LHCbConfigurableUser):
         if self.getProp( "DataContent" ).upper() == "SIM":
             ApplicationMgr().TopAlg += [ "DumpHepMC" ]
 
-        if self.getProp( "DataType" ).upper() == "MC09":
-            ApplicationMgr().Dlls += [ "HepMCBack" ]
+#        if self.getProp( "DataType" ).upper() == "MC09":
+#            ApplicationMgr().Dlls += [ "HepMCBack" ]
 
 
     def __apply_configuration__(self):
