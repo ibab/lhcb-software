@@ -305,6 +305,7 @@ class Brunel(LHCbConfigurableUser):
             physicsSeq.Members += [ l0TrgSeq ]
             L0Conf().L0Sequencer = l0TrgSeq
             L0Conf().FilterL0FromRaw = True
+            L0Conf().RawEventLocations = ["DAQ/RawEvent"]
             self.setOtherProps( L0Conf(), ["DataType"] )
 
         importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
