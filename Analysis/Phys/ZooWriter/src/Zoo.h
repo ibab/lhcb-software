@@ -1395,6 +1395,7 @@ class ZooP : public TObject
   const ZooGhostCategory  *GhostCat()     const { return Info<ZooGhostCategory>(); }
   const ZooTreefitInfo    *Treefit()      const { return Info<ZooTreefitInfo>(); }
   const ZooParticleInfo   *ParticleInfo() const { return Info<ZooParticleInfo>(); }
+  const ZooLoKiBlock      *LoKiBlock()    const { return Info<ZooLoKiBlock>(); }
 
   float  measuredMass()       const { return Dc()->measuredMass(); };
   float  measuredMassErr()    const { return Dc()->measuredMassErr(); };
