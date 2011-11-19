@@ -6,7 +6,8 @@ __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf, DigiConf, SimConf
+from Configurables import ( LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf,
+                            DigiConf, SimConf, RichDigiSysConf )
 
 class Boole(LHCbConfigurableUser):
 
@@ -89,7 +90,7 @@ class Boole(LHCbConfigurableUser):
     KnownHistOptions = ["","None","Default","Expert"]
     KnownSpillPaths  = [ "Prev", "PrevPrev", "Next", "NextNext" ]
     
-    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf ]
+    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf, RichDigiSysConf ]
 
     def defineDB(self):
         if self.getProp("DataType") == "DC06" :
@@ -392,7 +393,6 @@ class Boole(LHCbConfigurableUser):
 
     def configureDigiRich(self, seq, tae ):
         if tae == "":
-            from RichDigiSys.Configuration import RichDigiSysConf
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
             RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
         else:
