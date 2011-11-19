@@ -469,7 +469,7 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
   // Get the rotation matrix to the unit sphere
   Gaudi::Rotation3D toUnitSphere;
   m_stereoProj->toUnitSphere(segment, toUnitSphere);
-  Gaudi::XYZVector rot_q_lab = toUnitSphere * q_lab;
+  //Gaudi::XYZVector rot_q_lab = toUnitSphere * q_lab;
   Gaudi::XYZVector rot_v_x   = toUnitSphere * v_x;
   Gaudi::XYZVector rot_v_y   = toUnitSphere * v_y;
 
