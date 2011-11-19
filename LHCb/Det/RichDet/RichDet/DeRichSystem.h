@@ -251,7 +251,7 @@ public:
   /// The photon detector type
   inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
   {
-    return m_richPhotoDetectorConfiguration; 
+    return m_photDetConf; 
   }    
 
 private: // methods
@@ -272,7 +272,7 @@ private: // methods
 private: // data
 
   // RICH PhotoDetector Configuration
-  Rich::RichPhDetConfigType m_richPhotoDetectorConfiguration;
+  Rich::RichPhDetConfigType m_photDetConf;
   
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDHardwareID > SoftToHard;

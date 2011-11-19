@@ -35,11 +35,11 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichSystem::DeRichSystem( const std::string & name )
-  : DeRichBase     ( name          ),
-    m_richPhotoDetectorConfiguration(Rich::HPDConfig), // assume HPD by default
-    m_deRich       ( Rich::NRiches ),
-    m_condDBLocs   ( Rich::NRiches ),
-    m_firstL1CopyN ( 0             )
+  : DeRichBase     ( name            ),
+    m_photDetConf  ( Rich::HPDConfig ), // assume HPD by default
+    m_deRich       ( Rich::NRiches   ),
+    m_condDBLocs   ( Rich::NRiches   ),
+    m_firstL1CopyN ( 0               )
 {
   m_deRich[Rich::Rich1] = NULL;
   m_deRich[Rich::Rich2] = NULL;
@@ -179,33 +179,29 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   std::string str_PhotoDetConfigValue      = "DetectorConfiguration";
   if ( hasCondition ( str_PhotoDetConfig ) )
   {
-    SmartRef<Condition> deRC = condition( str_PhotoDetConfig );
-    if ( deRC != NULL )
+    const SmartRef<Condition> deRC = condition( str_PhotoDetConfig );
+    m_photDetConf =
+      (Rich::RichPhDetConfigType) deRC->param<int>(str_PhotoDetConfigValue) ;
+    if ( m_photDetConf == Rich::PMTConfig )
     {
-      m_richPhotoDetectorConfiguration =
-        (Rich::RichPhDetConfigType) deRC->param<int>(str_PhotoDetConfigValue) ;
-
-      if ( m_richPhotoDetectorConfiguration == Rich::PMTConfig )
-      {
-        m_condDBLocs[Rich::Rich1] = "Rich1PMTDetectorNumbers";
-        m_condDBLocs[Rich::Rich2] = "Rich2PMTDetectorNumbers";
-        str_NumberOfPDs           = "NumberOfPMTs";
-        str_PDSmartIDs            = "PMTSmartIDs";
-        str_PDHardwareIDs         = "PMTHardwareIDs";
-        str_PDLevel0IDs           = "PMTLevel0IDs";
-        str_PDLevel1HardwareIDs   = "PMTLevel1HardwareIDs";
-        str_PDLevel1InputNums     = "PMTLevel1InputNums";
-        str_PDCopyNumbers         = "PMTCopyNumbers";
-        str_InactivePDListInSmartIDs = "InactivePMTListInSmartIDs";
-        str_InactivePDs           = "InactivePMTs";
-        str_PDLevel1IDs           = "PMTLevel1IDs";
-        str_Level1LogicalToHardwareIDMap = "Level1LogicalToHardwareIDMap-PMT";
-      }
+      m_condDBLocs[Rich::Rich1] = "Rich1PMTDetectorNumbers";
+      m_condDBLocs[Rich::Rich2] = "Rich2PMTDetectorNumbers";
+      str_NumberOfPDs           = "NumberOfPMTs";
+      str_PDSmartIDs            = "PMTSmartIDs";
+      str_PDHardwareIDs         = "PMTHardwareIDs";
+      str_PDLevel0IDs           = "PMTLevel0IDs";
+      str_PDLevel1HardwareIDs   = "PMTLevel1HardwareIDs";
+      str_PDLevel1InputNums     = "PMTLevel1InputNums";
+      str_PDCopyNumbers         = "PMTCopyNumbers";
+      str_InactivePDListInSmartIDs = "InactivePMTListInSmartIDs";
+      str_InactivePDs           = "InactivePMTs";
+      str_PDLevel1IDs           = "PMTLevel1IDs";
+      str_Level1LogicalToHardwareIDMap = "Level1LogicalToHardwareIDMap-PMT";
     }
   }
 
   // load conditions
-  SmartRef<Condition> numbers = condition(m_condDBLocs[rich]);
+  const SmartRef<Condition> numbers = condition(m_condDBLocs[rich]);
 
   // local typedefs for vector from Conditions
   typedef std::vector<int> CondData;
