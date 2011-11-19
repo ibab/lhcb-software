@@ -58,10 +58,10 @@ public:
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
 
-
   std::vector<int> getPmtRowColFromPmtNum(int aPmtNum);
-  StatusCode  smartID(const Gaudi::XYZPoint& globalPoint,
-                      LHCb::RichSmartID& id )const;
+
+  StatusCode smartID(const Gaudi::XYZPoint& globalPoint,
+                     LHCb::RichSmartID& id )const;
 
   int PmtModuleNumInPanelFromModuleNum(int aMnum) const;
   int PmtModuleNumInPanelFromModuleNumAlone(int aMnum) const;
@@ -102,15 +102,15 @@ private:
   StatusCode getPanelGeometryInfo();
   int getPmtModuleNumFromRowCol(int MRow, int MCol ) const;
   std::vector<int> findPMTArraySetup(const Gaudi::XYZPoint& inPanel) const;
-  StatusCode setRichPmtSmartID(std::vector<int> aPmtHitChannel,LHCb::RichSmartID& ID ) const;
-
+  StatusCode setRichPmtSmartID(const std::vector<int>& aPmtHitChannel,
+                               LHCb::RichSmartID& ID ) const;
 
   DetectorElement* getDeRich1() const;
   int getNumModulesInThisPanel() ;
   int getPmtNumFromRowCol(int PRow, int PCol) const;
   bool isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode ) const;
-  bool isInPmt(const Gaudi::XYZPoint aPointInPmt ) const;
-  bool isInPmtPanel(const Gaudi::XYZPoint aPointInPanel ) const;
+  bool isInPmt(const Gaudi::XYZPoint& aPointInPmt ) const;
+  bool isInPmtPanel(const Gaudi::XYZPoint& aPointInPanel ) const;
   StatusCode getPanelInterSection ( const Gaudi::XYZPoint& pGlobal,
                                     const Gaudi::XYZVector& vGlobal ,
                                     Gaudi::XYZPoint& panelIntersection,
