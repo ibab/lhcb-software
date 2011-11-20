@@ -20,11 +20,12 @@
 
 /** @class DeRichPMTPanel DeRichPMTPanel.h RichDet/DeRichPMTPanel.h
  *
- *
+ *  Detector element for PMT panels
+ *  
  *  @author Sajan Easo
  *  @date   2011-10-10
  */
-class DeRichPMTPanel:public DeRichPDPanel 
+class DeRichPMTPanel : public DeRichPDPanel 
 {
 
 public:
@@ -52,23 +53,15 @@ public:
    * terminate
    */
   virtual StatusCode initialize();
-  /// Returns the detector element for the given PD number
+
+  // Returns the detector element for the given PD number
   virtual const DeRichPD* dePD( const unsigned int PDNumber ) const;
 
-  /// Returns the PD number for the given RichSmartID
-  unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
+  // Converts a Gaudi::XYZPoint in global coordinates to a RichSmartID.
+  virtual StatusCode smartID( const Gaudi::XYZPoint& globalPoint,
+                              LHCb::RichSmartID& id ) const;
 
-  std::vector<int> getPmtRowColFromPmtNum(int aPmtNum);
-
-  StatusCode smartID(const Gaudi::XYZPoint& globalPoint,
-                     LHCb::RichSmartID& id )const;
-
-  int PmtModuleNumInPanelFromModuleNum(int aMnum) const;
-  int PmtModuleNumInPanelFromModuleNumAlone(int aMnum) const;
-  std::vector<int> PmtModuleRowColFromModuleNumInPanel(int aMnum);
-
-  /// Returns the intersection point with the detector plane given a vector and a point.
-
+  // Returns the intersection point with the detector plane given a vector and a point.
   virtual LHCb::RichTraceMode::RayTraceResult
   detPlanePoint( const Gaudi::XYZPoint& pGlobal,
                  const Gaudi::XYZVector& vGlobal,
@@ -76,8 +69,7 @@ public:
                  LHCb::RichSmartID& smartID,
                  const LHCb::RichTraceMode mode ) const;
 
-
-
+  // Returns the intersection point with an HPD window given a vector and a point.
   virtual LHCb::RichTraceMode::RayTraceResult
   PDWindowPoint( const Gaudi::XYZVector& vGlobal,
                  const Gaudi::XYZPoint& pGlobal,
@@ -87,15 +79,23 @@ public:
 
   // Adds to the given vector all the available readout channels in this HPD panel
   virtual StatusCode readoutChannelList( LHCb::RichSmartID::Vector& readoutChannels ) const;
-  int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
-
-  //Set the rich panel and side
-
-  StatusCode setRichPanelAndSide ( );
-
+  /// Get tge sensitivevolumeID
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
 private:
+
+  /// Returns the PD number for the given RichSmartID
+  unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
+
+  std::vector<int> getPmtRowColFromPmtNum( const int aPmtNum );
+
+  int PmtModuleNumInPanelFromModuleNum(const int aMnum) const;
+  int PmtModuleNumInPanelFromModuleNumAlone(const int aMnum) const;
+  std::vector<int> PmtModuleRowColFromModuleNumInPanel(const int aMnum);
+
+  // Set the rich panel and side
+  StatusCode setRichPanelAndSide ( );
 
   /// Update cached information on geometry changes
   StatusCode geometryUpdate();
@@ -116,9 +116,7 @@ private:
                                     Gaudi::XYZPoint& panelIntersection,
                                     Gaudi::XYZPoint& panelIntersectionGlobal ) const;
 
-
 private:
-
 
   std::vector<IDetectorElement*> m_DePMTModules; ///< Container for the PMT Modules
                                                  ///as Det Elements

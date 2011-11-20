@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 
 #include <sstream>
 
@@ -30,21 +30,35 @@ const CLID CLID_DeRichPMT = 12025;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichPMT::DeRichPMT( const std::string & name ): 
-  DeRichPD               ( name  )
- {
+DeRichPMT::DeRichPMT( const std::string & name )
+  : DeRichPD ( name )
+{ 
+}
 
- }
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichPMT::~DeRichPMT() {} 
+DeRichPMT::~DeRichPMT() 
+{
+  cleanUpInterps();
+}
 
 //=============================================================================
+
+void DeRichPMT::cleanUpInterps()
+{
+  delete m_pdQuantumEffFunc; m_pdQuantumEffFunc = NULL;
+}
+
+//=============================================================================
+
 const CLID& DeRichPMT::classID()
 {
   return CLID_DeRichPMT;
 }
+
+//=============================================================================
+
 StatusCode DeRichPMT::initialize ( )
 {
   StatusCode  sc = StatusCode::SUCCESS;
@@ -54,9 +68,9 @@ StatusCode DeRichPMT::initialize ( )
   const std::string::size_type pos = name().find("MAPMT:");
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichPMT_NO_NAME" );
   if ( msgLevel(MSG::DEBUG,msg) )
-      msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
+    msg << MSG::DEBUG << "Initialize " << myName() << endmsg;
 
- // extract PMT overall copy number from detector element name
+  // extract PMT overall copy number from detector element name
   const std::string::size_type pos2 = name().find(":");
   if ( std::string::npos == pos2 )
   {
@@ -64,7 +78,7 @@ StatusCode DeRichPMT::initialize ( )
     return StatusCode::FAILURE;
   }
   m_number = atoi( name().substr(pos2+1).c_str() );
-  
+
 
   m_dePmtAnode = ( !childIDetectorElements().empty() ?
                    childIDetectorElements().front() : NULL );
@@ -75,7 +89,7 @@ StatusCode DeRichPMT::initialize ( )
   }
 
   sc = sc &&  getPMTParameters();
-  
+
   updMgrSvc()->registerCondition( this, geometry(),
                                   &DeRichPMT::updateGeometry );
   updMgrSvc()->registerCondition( this, m_dePmtAnode->geometry(),
@@ -90,14 +104,15 @@ StatusCode DeRichPMT::initialize ( )
 
   if ( sc.isFailure() ) { fatal() << "UMS updates failed" << endmsg; }
 
-
   return sc;
-  
 }
-StatusCode DeRichPMT::getPMTParameters() {
-  StatusCode  sc = StatusCode::SUCCESS;
 
-  
+//=============================================================================
+
+StatusCode DeRichPMT::getPMTParameters()
+{
+  StatusCode sc = StatusCode::SUCCESS;
+
   SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
   if ( !deRich1 )
   {
@@ -115,85 +130,94 @@ StatusCode DeRichPMT::getPMTParameters() {
   m_PmtEffectivePixelYSize =  m_PmtAnodeYSize  + m_PmtPixelGap;
   m_PmtAnodeHalfThickness = m_PmtAnodeZSize/2.0;
   m_PmtNumPixCol =deRich1->param<int> ("RichPmtNumPixelCol");
-  
+
   m_PmtNumPixRow = deRich1->param<int> ("RichPmtNumPixelRow");
   m_PmtQwZSize = deRich1->param<double>  ("RichPmtQuartzZSize"  );
   m_QwToAnodeZDist= deRich1->param<double> ( "RichPmtQWToSiMaxDist" );
+
   return sc;
-  
 }
 
+//=============================================================================
 
 StatusCode DeRichPMT::initPMTQuantumEff()
 {
-
+  delete m_pdQuantumEffFunc;
   SmartDataPtr<TabulatedProperty> pmtQuantumEffTabProp( dataSvc(), m_PmtQELocation );
   m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( pmtQuantumEffTabProp );
-
-return  StatusCode::SUCCESS; 
+  return  StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
 StatusCode DeRichPMT::updateGeometry()
 {
-StatusCode  sc = StatusCode::SUCCESS;
+  StatusCode  sc = StatusCode::SUCCESS;
 
+  // To Be Done
 
-  return sc;   
+  return sc;
 }
+
+//=============================================================================
 
 StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
                                        const double fracPixelRow,
                                        Gaudi::XYZPoint& detectPoint,
                                        const bool photoCathodeSide ) const
-{ 
-StatusCode  sc = StatusCode::SUCCESS;
+{
+  StatusCode  sc = StatusCode::SUCCESS;
 
-Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
-double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
-double zQwExt = zPh + m_PmtQwZSize;
- 
-Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh);
-Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
-// detectPoint  =  geometry()->toGlobalMatrix() * aPhCathHit ; // not used since the
-// output is expected to be in the PMT coord system.
-// for now assume negligible refraction effect at the QW.
- 
- detectPoint = photoCathodeSide ? aPhCathHit : aQWExtHit;
- 
+  const Gaudi::XYZPoint aLocalHit = getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
+  const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
+  const double zQwExt = zPh + m_PmtQwZSize;
 
-return sc;
-  
+  const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh    );
+  const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
+  // detectPoint  =  geometry()->toGlobalMatrix() * aPhCathHit ; // not used since the
+  // output is expected to be in the PMT coord system.
+  // for now assume negligible refraction effect at the QW.
 
+  detectPoint = photoCathodeSide ? aPhCathHit : aQWExtHit;
+
+  return sc;
 }
+
+//=============================================================================
 
 StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
                                       Gaudi::XYZPoint& detectPoint,
                                       bool photoCathodeSide ) const
 {
-StatusCode   sc = StatusCode::SUCCESS;
+  StatusCode   sc = StatusCode::SUCCESS;
 
- double aPixCol = (double) ( smartID.pixelCol())* 1.0;
- double aPixRow  = (double) ( smartID.pixelRow())* 1.0;
- Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromPixelNum( aPixCol,aPixRow );
- double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
- double zQwExt = zPh + m_PmtQwZSize;
- Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh);
- Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
-// for now assume negligible refraction effect at the QW.
+  const double aPixCol = (double) ( smartID.pixelCol())* 1.0;
+  const double aPixRow  = (double) ( smartID.pixelRow())* 1.0;
+  const Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromPixelNum( aPixCol,aPixRow );
+  const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
+  const double zQwExt = zPh + m_PmtQwZSize;
+  const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh);
+  const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
+  // for now assume negligible refraction effect at the QW.
 
- detectPoint  =  
-  photoCathodeSide ? ( (geometry()->toGlobalMatrix()) * aPhCathHit) : ( (geometry()->toGlobalMatrix()) * aQWExtHit); 
+  detectPoint = ( photoCathodeSide ? 
+                  geometry()->toGlobalMatrix() * aPhCathHit  :
+                  geometry()->toGlobalMatrix() * aQWExtHit   );
 
-  return sc;  
+  return sc;
 }
 
+//=============================================================================
 
-Gaudi::XYZPoint DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol, const double fracPixelRow ) const
+Gaudi::XYZPoint
+DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
+                                         const double fracPixelRow ) const
 {
-     
- const double xh = ( fracPixelCol - (m_PmtNumPixCol - 1 ) *0.5 ) * m_PmtEffectivePixelXSize;
- const double yh = ( fracPixelRow - (m_PmtNumPixRow - 1 ) *0.5 ) * m_PmtEffectivePixelYSize;
- const double zh = m_PmtAnodeHalfThickness;
+  const double xh = ( fracPixelCol - (m_PmtNumPixCol-1) * 0.5 ) * m_PmtEffectivePixelXSize;
+  const double yh = ( fracPixelRow - (m_PmtNumPixRow-1) * 0.5 ) * m_PmtEffectivePixelYSize;
+  const double zh = m_PmtAnodeHalfThickness;
 
- return Gaudi::XYZPoint( xh,yh,zh);
- 
+  return Gaudi::XYZPoint( xh,yh,zh );
 }
+
+//=============================================================================

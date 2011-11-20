@@ -79,8 +79,11 @@ private:
   StatusCode getPMTParameters();
   StatusCode initPMTQuantumEff();
   StatusCode updateGeometry();
-  Gaudi::XYZPoint getAnodeHitCoordFromPixelNum( const double fracPixelCol, 
+  Gaudi::XYZPoint getAnodeHitCoordFromPixelNum( const double fracPixelCol,
                                                 const double fracPixelRow ) const;
+
+  /// Clean up interpolators
+  void cleanUpInterps();
 
 private:
 
@@ -94,8 +97,8 @@ private:
 
   double m_PmtAnodeLocationInPmt;
   double m_PmtPixelGap;
-  double  m_PmtEffectivePixelXSize;
-  double  m_PmtEffectivePixelYSize;
+  double m_PmtEffectivePixelXSize;
+  double m_PmtEffectivePixelYSize;
   double m_PmtAnodeHalfThickness;
   double m_PmtNumPixCol;
   double m_PmtNumPixRow;

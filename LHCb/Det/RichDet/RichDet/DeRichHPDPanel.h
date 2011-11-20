@@ -97,7 +97,7 @@ public:
                  LHCb::RichSmartID& smartID,
                  const LHCb::RichTraceMode mode ) const;
 
-  /// Returns the intersection point with the detector plane given a vector and a point.
+  // Returns the intersection point with the detector plane given a vector and a point.
   virtual LHCb::RichTraceMode::RayTraceResult
   detPlanePoint( const Gaudi::XYZPoint& pGlobal,
                  const Gaudi::XYZVector& vGlobal,
