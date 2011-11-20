@@ -3,6 +3,10 @@
 #ifndef LOKI_PHYSCNV_H 
 #define LOKI_PHYSCNV_H 1
 // ============================================================================
+// GaudiKernl
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
@@ -23,12 +27,21 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::Cnv PhysCnv.h LoKi/PhysCnv.h
    *  
    *
@@ -56,6 +69,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
+    GAUDI_API 
     LHCb::Particle::Vector 
     convert 
     ( const LHCb::Particle::ConstVector& vct ) ;
@@ -66,11 +80,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
-    inline  
+    GAUDI_API
     LHCb::Particle::Vector 
     convert 
-    ( SmartRefVector<LHCb::Particle>& vct ) 
-    { return LHCb::Particle::Vector( vct.begin() , vct.end() ) ; }
+    ( SmartRefVector<LHCb::Particle>& vct ) ;
     // ========================================================================    
     /** Trivial conversion function 
      *  @param vct vector of const particles 
@@ -78,6 +91,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
+    GAUDI_API 
     LHCb::Particle::Vector 
     convert 
     ( const SmartRefVector<LHCb::Particle>& vct ) ;
@@ -100,6 +114,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
+    GAUDI_API
     LHCb::Vertex::Vector 
     convert 
     ( const LHCb::Vertex::ConstVector& vct ) ;
@@ -108,6 +123,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
+    GAUDI_API 
     LHCb::Particle::Vector 
     convert 
     ( const LoKi::Types::Range& vct ) ;
@@ -116,22 +132,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
-    inline 
+    GAUDI_API
     LHCb::Vertex::Vector 
     convert 
-    ( SmartRefVector<LHCb::Vertex>& vct )
-    { return LHCb::Vertex::Vector( vct.begin() , vct.end() ) ; }
+    ( SmartRefVector<LHCb::Vertex>& vct ) ;
     // ========================================================================    
     /** Trivial conversion function 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
+    GAUDI_API 
     LHCb::Vertex::Vector 
     convert 
     ( const SmartRefVector<LHCb::Vertex>& vct ) ;
     // ========================================================================
-  } // end of namespace LoKi::Cnv 
-} //end of namespace LoKi
+  } //                                               end of namespace LoKi::Cnv 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
