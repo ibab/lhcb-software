@@ -3,6 +3,13 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-11-20 - Vanya Belyaev
+
+ - add three related components for pi0-veto
+    - trivial filter
+    - trivial photon tagger 
+    - di-photon tagger 
+
 !========================= DaVinciTools v22r10 2011-11-10 =========================
 ! 2011-10-30 - Vanya Belyaev
  - add new algorithm, FilterStream, that is a small variation of
