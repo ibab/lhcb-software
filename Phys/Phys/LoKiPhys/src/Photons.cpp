@@ -269,6 +269,7 @@ namespace
     if ( 0      == gamma1 || 
          0      == gamma2 || 
          gamma1 == gamma2 ) { return false ; }                           // RETURN 
+    //
     // check for mass 
     if ( 0 < deltamass ) 
     {
@@ -472,6 +473,11 @@ bool LoKi::Photons::pi0Veto
 {
   //
   if ( 0 == gamma1 || 0 == gamma2 || gamma1 == gamma2 ) { return false ; }
+  //
+  const LHCb::ProtoParticle* pr1 = protoP ( gamma1 ) ;
+  const LHCb::ProtoParticle* pr2 = protoP ( gamma2 ) ;
+  if  ( 0 != pr1 && pr1 == pr2  )                       { return false ; }
+  //
   if ( photons.empty() )                                { return true  ; }
   //
   for ( LHCb::Particle::Range::iterator iph = photons.begin() ; 
@@ -479,9 +485,13 @@ bool LoKi::Photons::pi0Veto
   {
     const LHCb::Particle* gamma = *iph ;
     //
-    if ( 0       == gamma ) { continue ; }   // CONTINUE 
-    if ( gamma1  == gamma ) { continue ; }   // CONTINUE 
-    if ( gamma2  == gamma ) { continue ; }   // CONTINUE 
+    if ( 0       == gamma     ) { continue ; }   // CONTINUE 
+    if ( gamma1  == gamma     ) { continue ; }   // CONTINUE 
+    if ( gamma2  == gamma     ) { continue ; }   // CONTINUE 
+    //
+    const LHCb::ProtoParticle* pr = protoP ( gamma ) ;
+    if ( 0 != pr && pr1 == pr ) { continue ; }   // CONITNUE 
+    if ( 0 != pr && pr2 == pr ) { continue ; }   // CONITNUE
     //
     if ( _pi0 ( gamma1    , 
                 gamma     ,

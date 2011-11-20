@@ -1,4 +1,4 @@
-// $Id: BeamLineFunctions.cpp 124219 2011-06-03 11:44:26Z ibelyaev $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -40,9 +40,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date   2011-03-10
  *
- *                    $Revision: 124219 $
- *  Last Modification $Date: 2011-06-03 13:44:26 +0200 (Fri, 03 Jun 2011) $ 
- *                 by $Author: ibelyaev $ 
+ *                    $Revision$
+ *  Last Modification $Date$ 
+ *                 by $Author$ 
  */
 // ============================================================================
 namespace
