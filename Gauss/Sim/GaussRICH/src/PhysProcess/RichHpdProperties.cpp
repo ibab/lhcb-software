@@ -355,12 +355,12 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc,
   /// Returns a list of all active HPDs identified by their RichSmartID
   //const LHCb::RichSmartID::Vector hpdlist = richsys->activeHPDRichSmartIDs(); 
   // this is chaged to allHPDSmartIds to take care of disabled HPDs as well. SE Feb10-2011
-  const LHCb::RichSmartID::Vector& hpdlist = richsys->allHPDRichSmartIDs();   
+  const LHCb::RichSmartID::Vector& hpdlist = richsys->allPDRichSmartIDs();   
   //RichHpdPropLogQE << MSG::INFO <<"QE hpdlist.size()="<<hpdlist.size()<<endreq;
 
   LHCb::RichSmartID::Vector::const_iterator i;
   for( i=hpdlist.begin(); i!=hpdlist.end(); ++i ) {
-    std::string location = richsys->getDeHPDLocation(*i);
+    std::string location = richsys->getDePDLocation(*i);
     int irichdet = (*i).rich();
     int nHpdInRich1 = m_RichHpdQEList[0].size();
     int ih = richsys->copyNumber(*i).data() - nHpdInRich1*irichdet;//runs 0->195 and 0->287
@@ -660,10 +660,10 @@ void  RichHpdProperties::FillHpdDemagTablesAtInit ( IDataProviderSvc* detSvc,
     }
 
     /// Returns a list of all active HPDs identified by their RichSmartID
-    const LHCb::RichSmartID::Vector& hpdlist = richsys->activeHPDRichSmartIDs();
+    const LHCb::RichSmartID::Vector& hpdlist = richsys->activePDRichSmartIDs();
     for(LHCb::RichSmartID::Vector::const_iterator i=hpdlist.begin(); i!=hpdlist.end(); ++i)
       {
-	std::string location = richsys->getDeHPDLocation(*i);
+	std::string location = richsys->getDePDLocation(*i);
 	int irichdet = (*i).rich();
 	int nHpdInRich = m_RichHpdDeMagList[0].size();
 	int ih       = richsys->copyNumber(*i).data() - nHpdInRich*irichdet;//runs 0->195 and 0->288
