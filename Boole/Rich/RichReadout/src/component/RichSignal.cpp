@@ -24,7 +24,7 @@ Signal::Signal( const std::string& name,
                 ISvcLocator* pSvcLocator )
   : Rich::AlgBase      ( name, pSvcLocator ),
     m_mcDeposits       ( 0 ),
-    m_testSmartIDs     ( false ),
+    m_testSmartIDs     ( true ),
     m_smartIDTool      ( 0 ),
     m_truth            ( 0 ),
     m_timeShift ( Rich::NRiches )
@@ -137,14 +137,29 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
     // Get RichSmartID from MCRichHit (stripping sub-pixel info for the moment)
     const LHCb::RichSmartID id = (*iHit)->sensDetID().pixelID();
 
+    // Run some checks
     if ( m_testSmartIDs )
     {
       LHCb::RichSmartID tempID;
       const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
-      if      (!ok)
+      if      ( !ok )
       { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ).ignore(); }
-      else if (id != tempID.pixelID())
+      else if ( id != tempID.pixelID() )
       { Warning( "RichSmartID mis-match" ).ignore(); }
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        Gaudi::XYZPoint detectP;
+        const StatusCode sc = m_smartIDTool->globalPosition( id, detectP );
+        if ( sc.isFailure() )
+        {
+          Warning( "Problem translated RichSmartID into global position" ).ignore();
+        }
+        else
+        {
+          debug() << "MCRichHit pos : " << (*iHit)->entry() << endmsg;
+          debug() << " -> Digit pos : " << detectP << endmsg;
+        }
+      }
     }
 
     // Create a new deposit
