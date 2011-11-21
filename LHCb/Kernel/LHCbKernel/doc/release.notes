@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-11-21 - Chris Jones
+ - Update sizes of bit fields for MaPMTs
+
 ! 2011-11-18 - Chris Jones
  - Remove obsolete methods from RichSmartID
 

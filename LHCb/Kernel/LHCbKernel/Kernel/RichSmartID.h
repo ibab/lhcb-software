@@ -183,8 +183,8 @@ namespace LHCb
       // Number of bits for each data field in the word
       static const BitPackType BitsPixelCol          = 3; ///< Number of bits for MaPMT pixel column
       static const BitPackType BitsPixelRow          = 3; ///< Number of bits for MaPMT pixel row
-      static const BitPackType BitsPDNumInCol        = 6; ///< Number of bits for MaPMT 'number in column'
-      static const BitPackType BitsPDCol             = 6; ///< Number of bits for MaPMT column
+      static const BitPackType BitsPDNumInCol        = 4; ///< Number of bits for MaPMT 'number in column'
+      static const BitPackType BitsPDCol             = 9; ///< Number of bits for MaPMT column
       static const BitPackType BitsPanel             = 1; ///< Number of bits for MaPMT panel
       static const BitPackType BitsRich              = 1; ///< Number of bits for RICH detector
       static const BitPackType BitsPixelSubRowIsSet  = 1;
