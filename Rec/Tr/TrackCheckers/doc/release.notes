@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2011-11-21 - Olivier Callot
+ - Fix VertexChecker for end of list processing
+ - Test on maximum radious of the reconstructed PV.
+
 ! 2011-11-18 - Olivier Callot
  - New algorithm VertexChecker to measure the performance of vertexing
  - New type of tracks monitored in TrackEffChecker: Tracks with IP between 1 and 2 mm

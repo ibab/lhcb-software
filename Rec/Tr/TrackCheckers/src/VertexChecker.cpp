@@ -27,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY( VertexChecker )
 {
   declareProperty( "InputLocation",    m_inputLocation  = LHCb::RecVertexLocation::Primary );
   declareProperty( "DeltaZForMatch",   m_deltaZForMatch = 1.000 * Gaudi::Units::mm );
+  declareProperty( "MaxRadius",        m_maxRadius      = 3.000 * Gaudi::Units::mm );
   declareProperty( "MinIPForTrack",    m_minIPForTrack  = 0.150 * Gaudi::Units::mm );
   declareProperty( "MaxIPForTrack",    m_maxIPForTrack  = 3.000 * Gaudi::Units::mm );
   declareProperty( "NbBin",            m_nbBin          = 10 );
@@ -82,7 +83,9 @@ StatusCode VertexChecker::execute() {
 
   for ( LHCb::MCVertices::iterator itV = mcVertices->begin(); mcVertices->end() != itV; ++itV ) {
     if ( (*itV)->isPrimary() ) {
-      if ( (*itV)->products().size() > 2 ) mcPvs.push_back( *itV );
+      if ( (*itV)->products().size() < 3 ) continue;
+      if ( (*itV)->position().rho() > m_maxRadius ) continue;
+      mcPvs.push_back( *itV );
     }
   }
   std::sort( mcPvs.begin(), mcPvs.end(), LowerByZ() );
@@ -90,39 +93,52 @@ StatusCode VertexChecker::execute() {
   std::vector<LHCb::MCVertex*>::iterator itMc = mcPvs.begin();
   LHCb::RecVertices::iterator itPv = myVertices->begin();
 
-  while ( itMc != mcPvs.end() && itPv != myVertices->end() ) {
-    double dx = (*itMc)->position().x() - (*itPv)->position().x();
-    double dy = (*itMc)->position().y() - (*itPv)->position().y();
-    double dz = (*itMc)->position().z() - (*itPv)->position().z();
-    if ( fabs( dz ) < m_deltaZForMatch ) {
-      if ( debug )  info() << format ( " === Matched   dx%7.3f dy%7.3f  z%7.3f  dz%7.3f",
-                                       dx, dy, (*itMc)->position().z(), dz ) << endmsg;
-      int n = mcBin( *itMc );
-      m_mcVertices[n]++;
-      m_mcFound[n]++;
-      int m = recBin( *itPv );
-      m_recVertices[m]++;
-      ++itMc;
-      ++itPv;
-      m_s0  += 1.;
-      m_sx  += dx;
-      m_sx2 += dx * dx;
-      m_sy  += dy;
-      m_sy2 += dy * dy;
-      m_sz  += dz;
-      m_sz2 += dz * dz;
+  while ( itMc != mcPvs.end() || itPv != myVertices->end() ) {
+    if ( itMc != mcPvs.end() && itPv != myVertices->end() ) {
+      double dx = (*itMc)->position().x() - (*itPv)->position().x();
+      double dy = (*itMc)->position().y() - (*itPv)->position().y();
+      double dz = (*itMc)->position().z() - (*itPv)->position().z();
+      if ( fabs( dz ) < m_deltaZForMatch ) {
+        if ( debug )  info() << format ( " === Matched   dx%7.3f dy%7.3f  z%7.3f  dz%7.3f",
+                                         dx, dy, (*itMc)->position().z(), dz ) << endmsg;
+        int n = mcBin( *itMc );
+        m_mcVertices[n]++;
+        m_mcFound[n]++;
+        int m = recBin( *itPv );
+        m_recVertices[m]++;
+        ++itMc;
+        ++itPv;
+        m_s0  += 1.;
+        m_sx  += dx;
+        m_sx2 += dx * dx;
+        m_sy  += dy;
+        m_sy2 += dy * dy;
+        m_sz  += dz;
+        m_sz2 += dz * dz;
 
-    } else if ( dz > 0 ) {
-      if ( debug ) info() << format( " +++ fake reco  x%7.3f  y%7.3f  z%7.3f   n %3d",
-                                     (*itPv)->position().x(),
-                                     (*itPv)->position().y(),
-                                     (*itPv)->position().z(),
-                                     (*itPv)->tracks().size() ) << endmsg;
-      int m = recBin( *itPv );
-      m_recVertices[m]++;
-      m_recFake[m]++;
-      ++itPv;
-    } else {
+      } else if ( dz > 0 ) {
+        if ( (*itPv)->position().rho() < m_maxRadius ) {
+          if ( debug ) info() << format( " +++ fake reco  x%7.3f  y%7.3f  z%7.3f   n %3d",
+                                         (*itPv)->position().x(),
+                                         (*itPv)->position().y(),
+                                         (*itPv)->position().z(),
+                                         (*itPv)->tracks().size() ) << endmsg;
+          int m = recBin( *itPv );
+          m_recVertices[m]++;
+          m_recFake[m]++;
+        }
+        ++itPv;
+      } else {
+        if ( debug ) info() << format( " --- miss reco  x%7.3f  y%7.3f  z%7.3f   n %3d",
+                                       (*itMc)->position().x(),
+                                       (*itMc)->position().y(),
+                                       (*itMc)->position().z(),
+                                       (*itMc)->products().size() ) << endmsg;
+        int n = mcBin( *itMc );
+        m_mcVertices[n]++;
+        ++itMc;
+      }
+    } else if (  itMc != mcPvs.end() ) {
       if ( debug ) info() << format( " --- miss reco  x%7.3f  y%7.3f  z%7.3f   n %3d",
                                      (*itMc)->position().x(),
                                      (*itMc)->position().y(),
@@ -131,6 +147,24 @@ StatusCode VertexChecker::execute() {
       int n = mcBin( *itMc );
       m_mcVertices[n]++;
       ++itMc;
+    } else if ( itPv != myVertices->end() ) {
+      if ( (*itPv)->position().rho() < m_maxRadius ) {
+        if ( debug ) info() << format( " +++ fake reco  x%7.3f  y%7.3f  z%7.3f   n %3d",
+                                       (*itPv)->position().x(),
+                                       (*itPv)->position().y(),
+                                       (*itPv)->position().z(),
+                                       (*itPv)->tracks().size() ) << endmsg;
+        int m = recBin( *itPv );
+        m_recVertices[m]++;
+        m_recFake[m]++;
+      } else {
+        info() << format( " ??? vertex at large rho   x%7.3f  y%7.3f  z%7.3f   n %3d",
+                          (*itPv)->position().x(),
+                          (*itPv)->position().y(),
+                          (*itPv)->position().z(),
+                          (*itPv)->tracks().size() ) << endmsg;
+      }
+      ++itPv;
     }
   }
 
@@ -151,7 +185,7 @@ StatusCode VertexChecker::execute() {
       }
     }
     lowestIP = sqrt( lowestIP );
-    if ( lowestIP > m_minIPForTrack && 
+    if ( lowestIP > m_minIPForTrack &&
          lowestIP < m_maxIPForTrack    ) {
       if ( debug ) info() << format( "Large IP %6.3f zTr %7.3f zBest %7.3f",
                                      lowestIP, point.z(), best->position().z() ) << endmsg;

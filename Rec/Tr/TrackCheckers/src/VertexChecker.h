@@ -51,6 +51,7 @@ private:
   double m_deltaZForMatch;
   double m_minIPForTrack;
   double m_maxIPForTrack;
+  double m_maxRadius;
   int    m_nbBin;
   int    m_binSizeMC;
   int    m_binSizeRec;
