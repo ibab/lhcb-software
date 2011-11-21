@@ -1,11 +1,12 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.51 2010-01-12 19:09:49 marcocle Exp $
-! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
+
+! 2011-11-21 - Marco Cattaneo
+ - Remove obsolete HepMCBack dependency
 
 !========================= DetDescChecks v5r6 2011-04-26 =========================
 ! 2011-04-15 - Marco Cattaneo
