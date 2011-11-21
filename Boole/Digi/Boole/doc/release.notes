@@ -3,8 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2011-11-18 - Chris Jones
- - Adapt to changes in Rich Digitisation configurable
+ - Changes to configurable:
+   . Adapt to changes in Rich Digitisation configurable
+
+ - Changes to tests
+   . Add specific reference for boole-2011-latestdb, for post MC11 db changes
 
 </PRE><H1><A NAME=v23r1>2011-10-21 Boole v23r1</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
