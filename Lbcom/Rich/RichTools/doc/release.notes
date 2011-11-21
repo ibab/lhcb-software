@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-11-21 - Chris Jones
+ - Update SnellsLawRefraction with a better check to see if aerogel is present
+   or not. Avoids a fatal message being printed when missing.
+
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID
  - Various improvements to support running with MaPMTs instead of HPDs

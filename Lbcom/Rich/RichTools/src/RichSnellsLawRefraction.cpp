@@ -38,6 +38,8 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction )
   declareInterface<ISnellsLawRefraction>(this);
 }
 
+//=============================================================================
+
 SnellsLawRefraction::~SnellsLawRefraction() {}
 
 //=============================================================================
@@ -54,23 +56,20 @@ StatusCode SnellsLawRefraction::initialize()
   // get tools
   acquireTool( "RichRefractiveIndex", m_refIndex );
 
-  // Try and load the aerogel, to test if it is available
-  try
-  {
-    const DeRichRadiator * aerogel = deRad(Rich::Aerogel);
-    m_aerogelOK = aerogel != NULL;
-  }
-  catch ( const GaudiException & )
+  // See if Aerogel is available or not
+  m_aerogelOK = 
+    existDet<DeRichRadiator>( DeRichLocations::location(Rich::Aerogel) );
+  if ( !m_aerogelOK )
   {
     Warning( "No Aerogel. No Snell's law refraction corrections",
              StatusCode::SUCCESS ).ignore();
-    m_aerogelOK = false;
   }
 
   // UMS
   if ( m_aerogelOK )
   {
-    updMgrSvc()->registerCondition( this, DeRichLocations::Aerogel,
+    updMgrSvc()->registerCondition( this, 
+                                    DeRichLocations::location(Rich::Aerogel),
                                     &SnellsLawRefraction::aeroUpdate );
   }
 
@@ -78,17 +77,23 @@ StatusCode SnellsLawRefraction::initialize()
   return sc;
 }
 
+//=============================================================================
+
 StatusCode SnellsLawRefraction::finalize()
 {
   updMgrSvc()->unregister(this);
   return ToolBase::finalize();
 }
 
+//=============================================================================
+
 StatusCode SnellsLawRefraction::aeroUpdate()
 {
   m_planeInfoMade = false;
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
 
 void SnellsLawRefraction::buildAeroPlaneInfo() const
 {
@@ -127,6 +132,8 @@ void SnellsLawRefraction::buildAeroPlaneInfo() const
   // set the flag to say this information has been calculated
   m_planeInfoMade = true;
 }
+
+//=============================================================================
 
 void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
@@ -168,6 +175,8 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
 
 }
 
+//=============================================================================
+
 void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
                                         Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
@@ -192,6 +201,8 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
     }
   }
 }
+
+//=============================================================================
 
 void SnellsLawRefraction::_aerogelToGas( Gaudi::XYZPoint & startPoint,
                                          Gaudi::XYZVector & dir,
@@ -219,6 +230,8 @@ void SnellsLawRefraction::_aerogelToGas( Gaudi::XYZPoint & startPoint,
   if ( cosT1<0 ) { dir = dir*Rratio - aeroNormVect()*(cosT2+(Rratio*cosT1)); }
   else           { dir = dir*Rratio + aeroNormVect()*(cosT2-(Rratio*cosT1)); }
 }
+
+//=============================================================================
 
 void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const LHCb::RichTrackSegment& trSeg ) const
@@ -254,6 +267,8 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
 
 }
 
+//=============================================================================
+
 void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
                                         const double photonEnergy ) const
 {
@@ -279,6 +294,8 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
   }
 }
 
+//=============================================================================
+
 void SnellsLawRefraction::_gasToAerogel( Gaudi::XYZVector & dir,
                                          const double photonEnergy,
                                          const double refAero ) const
@@ -300,3 +317,5 @@ void SnellsLawRefraction::_gasToAerogel( Gaudi::XYZVector & dir,
   newDir.SetY( R*newDir.X() );
   dir = newDir;
 }
+
+//=============================================================================
