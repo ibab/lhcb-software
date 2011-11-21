@@ -413,7 +413,13 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
     if ( 5 == pdgId ) { 
       if ( 0 != (*iter) -> production_vertex() ) {
         if ( 1 != (*iter) -> production_vertex() -> particles_in_size() ) {
-          ++bQuark ;
+           bool containB = false;
+           for (HepMC::GenVertex::particles_in_const_iterator par = (*iter) -> production_vertex() -> particles_in_const_begin();
+                par != (*iter) -> production_vertex() -> particles_in_const_end() ; par++) {
+             if (5==abs((*par)->pdg_id()))
+               containB = true;
+           }
+           if (!containB) ++bQuark ;
         } else {
           const HepMC::GenParticle * par = 
             *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
@@ -425,7 +431,27 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
         }
       }
     }
-    else if ( 4 == pdgId ) ++cQuark ;
+    else if( 4 == pdgId ) {
+      if ( 0 != (*iter) -> production_vertex() ) {
+        if ( 1 != (*iter) -> production_vertex() -> particles_in_size() ) {
+          bool containC = false;
+          for (HepMC::GenVertex::particles_in_const_iterator par = (*iter) -> production_vertex() -> particles_in_const_begin();
+               par != (*iter) -> production_vertex() -> particles_in_const_end() ; par++) {
+            if (4==abs((*par)->pdg_id()))
+              containC = true;
+          }
+          if (!containC) ++cQuark ;
+        } else {
+          const HepMC::GenParticle * par =
+            *( (*iter) -> production_vertex() -> particles_in_const_begin() ) ;
+          if ( ( par -> status() ==
+                 LHCb::HepMCEvent::DocumentationParticle ) ||
+               ( par -> pdg_id() != (*iter) -> pdg_id() ) ) {
+            ++cQuark ;
+          }
+        }
+      }
+    }
     else {
       if ( thePid.hasBottom() ) {
         // Count B from initial proton as a quark
@@ -434,9 +460,13 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
             const HepMC::GenParticle * par = 
               *( (*iter)-> production_vertex()-> particles_in_const_begin() ) ;
             if ( 0 != par -> production_vertex() ) {
-              if ( 0 == par -> production_vertex() -> particles_in_size() )
+              if ( 0 == par -> production_vertex() -> particles_in_size() ) {
                 ++bQuark ;
-            } else ++bQuark ;
+              }
+            } 
+            else {
+              ++bQuark ;
+            }
           }
         }
         ++bHadron ;
@@ -456,6 +486,7 @@ void Generation::updateInteractionCounters( interactionCounter & theCounter ,
       }
     }
   }
+
   if ( bQuark >= 1 ) { 
     ++theCounter[ Oneb ] ;
     if ( bQuark >= 3 ) ++theCounter[ Threeb ] ;
