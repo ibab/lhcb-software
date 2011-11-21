@@ -121,10 +121,10 @@ private:
   std::vector<IDetectorElement*> m_DePMTModules; ///< Container for the PMT Modules
                                                  ///as Det Elements
 
-  std::vector<std::vector<DeRichPMT*> >m_DePMTs; ///< Container for the PMTs
+  std::vector<std::vector<DeRichPMT*> > m_DePMTs; ///< Container for the PMTs
   ///as Det Elements
 
-  std::vector<std::vector<IDetectorElement*> >m_DePMTAnodes;
+  std::vector<std::vector<IDetectorElement*> > m_DePMTAnodes;
   ///< Container for the PMTAnodes
   ///as Det Elements
 

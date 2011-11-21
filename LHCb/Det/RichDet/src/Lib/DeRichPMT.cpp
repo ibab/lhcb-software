@@ -196,8 +196,8 @@ StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
   const Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromPixelNum( aPixCol,aPixRow );
   const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
   const double zQwExt = zPh + m_PmtQwZSize;
-  const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zPh);
-  const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint (  aLocalHit.x(), aLocalHit.y(), zQwExt );
+  const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint ( aLocalHit.x(), aLocalHit.y(), zPh    );
+  const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint ( aLocalHit.x(), aLocalHit.y(), zQwExt );
   // for now assume negligible refraction effect at the QW.
 
   detectPoint = ( photoCathodeSide ? 

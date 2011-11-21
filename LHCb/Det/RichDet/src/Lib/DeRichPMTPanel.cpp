@@ -884,17 +884,17 @@ bool DeRichPMTPanel::isInPmtPanel(const Gaudi::XYZPoint& aPointInPanel ) const
 
 bool DeRichPMTPanel::isInPmt(const Gaudi::XYZPoint& aPointInPmt ) const
 {
-  double xp=  aPointInPmt.x();
-  double yp=  aPointInPmt.y();
-  double aPmtH = m_PmtMasterLateralSize/2.0;
+  const double xp = aPointInPmt.x();
+  const double yp = aPointInPmt.y();
+  const double aPmtH = m_PmtMasterLateralSize/2.0;
   return ( (fabs(xp) <  aPmtH ) && (fabs (yp) < aPmtH ) );
 }
 
 bool DeRichPMTPanel::isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode ) const
 {
-  double xp=  aPointInPmtAnode.x();
-  double yp=  aPointInPmtAnode.y();
-  return ( (fabs(xp) <  fabs(  m_PmtAnodeXEdge ) ) && (fabs (yp) < fabs( m_PmtAnodeYEdge ) ) );
+  const double xp = aPointInPmtAnode.x();
+  const double yp = aPointInPmtAnode.y();
+  return ( ( fabs(xp) < fabs( m_PmtAnodeXEdge ) ) && ( fabs(yp) < fabs( m_PmtAnodeYEdge ) ) );
 }
 
 unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
@@ -909,24 +909,31 @@ const DeRichPD* DeRichPMTPanel::dePD( const unsigned int PmtCopyNumber ) const
   const DeRichPD * dePmt = NULL;
   //  info()<<" derichpmtpanel pmtcopynum "<<PmtCopyNumber<<endmsg;
 
-  if( ((int) PmtCopyNumber) < ( m_Rich1TotNumPmts+ m_Rich2TotNumPmts  ) )
+  if ( ((int) PmtCopyNumber) < ( m_Rich1TotNumPmts + m_Rich2TotNumPmts  ) )
   {
-    int  Mnum = (int) (PmtCopyNumber/m_NumPmtInRichModule);
-    int MNumInCurPanel= PmtModuleNumInPanelFromModuleNumAlone(Mnum);
-
-    int   Pnum =  PmtCopyNumber - ( Mnum * m_NumPmtInRichModule);
+    const unsigned int Mnum = (int) (PmtCopyNumber/m_NumPmtInRichModule);
+    const unsigned int MNumInCurPanel = PmtModuleNumInPanelFromModuleNumAlone(Mnum);
+    const unsigned int Pnum =  PmtCopyNumber - ( Mnum * m_NumPmtInRichModule);
 
     //  info()<<"derichpmtpanel mnum pnum "<<Mnum <<"  "
     //      <<Pnum<< "  "<<MNumInCurPanel<<"  "<<rich()<<"  "<<side()<<endmsg;
 
-    dePmt = m_DePMTs [ MNumInCurPanel ] [Pnum];
+    if ( MNumInCurPanel >= m_DePMTs.size() ||
+         Pnum >= m_DePMTs[MNumInCurPanel].size() )
+    {
+      std::ostringstream mess;
+      mess << "Inappropriate PMT numbers " << MNumInCurPanel << " " << Pnum;
+      throw GaudiException( mess.str(), "*DeRichPMTPanel*",StatusCode::FAILURE);
+    }
+
+    dePmt = m_DePMTs [ MNumInCurPanel ] [ Pnum ];
 
   }
   else
   {
     std::ostringstream mess;
     mess << "Inappropriate PmtNumber : " << PmtCopyNumber;
-    throw GaudiException( mess.str(), "  *DeRichPMTPanel*", StatusCode::FAILURE );
+    throw GaudiException( mess.str(),"*DeRichPMTPanel*",StatusCode::FAILURE);
   }
 
   return dePmt;
