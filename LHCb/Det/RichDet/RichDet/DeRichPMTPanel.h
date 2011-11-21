@@ -31,7 +31,7 @@ class DeRichPMTPanel : public DeRichPDPanel
 public:
 
   /// Standard constructor
-  DeRichPMTPanel(const std::string & name = ""  );
+  DeRichPMTPanel( const std::string & name = ""  );
 
   virtual ~DeRichPMTPanel( ); ///< Destructor
 

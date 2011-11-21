@@ -34,7 +34,7 @@ const CLID CLID_DeRichPMTPanel = 12020;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichPMTPanel::DeRichPMTPanel(const std::string & name  ) :
+DeRichPMTPanel::DeRichPMTPanel( const std::string & name  ) :
   DeRichPDPanel ( name ),
   m_DePMTModules(1),
   m_DePMTs(1,std::vector<DeRichPMT*>(2)),
@@ -211,13 +211,10 @@ StatusCode DeRichPMTPanel::initialize()
 DetectorElement * DeRichPMTPanel::getDeRich1() const
 {
   SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-
   if ( !deRich1 )
   {
-    MsgStream msg ( msgSvc(), "DeRichPMTPanel" );
-    msg << MSG::ERROR << "Could not load DeRich1 for DeRichPMTPanel" << endmsg;
+    error() << "Could not load DeRich1 for DeRichPMTPanel" << endmsg;
   }
-
   return deRich1;
 }
 
@@ -255,17 +252,15 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
 {
   StatusCode sc =  StatusCode::SUCCESS;
 
-  MsgStream msg ( msgSvc(), "DeRichPMTPanel" );
-
   DetectorElement* c_deRich1 = getDeRich1();
   if( !c_deRich1 )return StatusCode::FAILURE;
 
   sc = sc && getPanelGeometryInfo();
   sc = sc && setRichPanelAndSide();
 
-  if (rich()== Rich::InvalidDetector ||side() == Rich::InvalidSide )
+  if ( rich()== Rich::InvalidDetector ||side() == Rich::InvalidSide )
   {
-    msg << MSG::ERROR << "Error initializing PMT panel " << name() << "  "<<rich()<< side() <<endmsg;
+    error() << "Error initializing PMT panel " << name() << "  "<<rich()<< side() <<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -358,7 +353,7 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
   // m_detPlaneZ = geometry()->toLocal(aPon.z()); // it seems the local Z coord is to be saved,  looking at the hpd version  ?
   //  if so, uncomment this line and comment out the previous line.
 
-  ROOT::Math::Translation3D localTranslation = ROOT::Math::Translation3D(aPon.x(),sign*aOffset,aPon.z());
+  const ROOT::Math::Translation3D localTranslation = ROOT::Math::Translation3D(aPon.x(),sign*aOffset,aPon.z());
   m_globalToPDPanelTransform = localTranslation * geometry()->toLocalMatrix();
   m_PDPanelToGlobalTransform = m_globalToPDPanelTransform.Inverse();
 
@@ -372,8 +367,8 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
 StatusCode DeRichPMTPanel::smartID( const Gaudi::XYZPoint& globalPoint,
                                     LHCb::RichSmartID& id ) const
 {
-  std::vector<int> aHitChannelVec = findPMTArraySetup(globalPoint);
-  return  setRichPmtSmartID(aHitChannelVec, id ) ;
+  const std::vector<int> aHitChannelVec = findPMTArraySetup(globalPoint);
+  return setRichPmtSmartID( aHitChannelVec, id ) ;
 }
 
 StatusCode DeRichPMTPanel::setRichPmtSmartID(const std::vector<int>& aPmtHitChannel,
@@ -490,7 +485,7 @@ int DeRichPMTPanel::getPmtModuleNumFromRowCol( int MRow, int MCol ) const
   if ( MRow< 0 ) MRow = 0;
   if ( MCol< 0 ) MCol = 0;
 
-  if(rich() == Rich::Rich1 )
+  if ( rich() == Rich::Rich1 )
   {
     if(MRow >= m_RichPmtNumModulesInRowCol[1]) MRow = m_RichPmtNumModulesInRowCol[1]-1;
     if(MCol >=  m_RichPmtNumModulesInRowCol[0]) MCol = m_RichPmtNumModulesInRowCol[0]-1;
@@ -529,57 +524,55 @@ int DeRichPMTPanel::getPmtModuleNumFromRowCol( int MRow, int MCol ) const
 
 int DeRichPMTPanel::PmtModuleNumInPanelFromModuleNum(const int aMnum) const
 {
-  int aM=-1;
-  if(rich() == Rich::Rich1 ){
-
-    if(side() == Rich::top) {
+  int aM = -1;
+  if ( rich() == Rich::Rich1 )
+  {
+    if(side() == Rich::top) 
+    {
       aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[0];
-
-    }else if (side() == Rich::bottom) {
+    }
+    else if (side() == Rich::bottom) 
+    {
       aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[1];
-
     }
-
-  }else if (rich() == Rich::Rich2 ) {
-
-    if(side() == Rich::left) {
-      aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[2];
-
-    }else if (side() == Rich::right ) {
-      aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[3];
-
-    }
-
   }
-
+  else if ( rich() == Rich::Rich2 ) 
+  {
+    if ( side() == Rich::left) 
+    {
+      aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[2];
+    }
+    else if (side() == Rich::right )
+    {
+      aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[3];
+    }
+  }
   return aM;
 }
 
-int DeRichPMTPanel::PmtModuleNumInPanelFromModuleNumAlone(const int aMnum  ) const {
-  int aM=-1;
-
-  if( aMnum  >= m_RichPmtModuleCopyNumBeginPanel[0] &&
-      aMnum  <= m_RichPmtModuleCopyNumEndPanel[0] ) {
-
+int DeRichPMTPanel::PmtModuleNumInPanelFromModuleNumAlone(const int aMnum  ) const 
+{
+  int aM = -1;
+  if ( aMnum  >= m_RichPmtModuleCopyNumBeginPanel[0] &&
+       aMnum  <= m_RichPmtModuleCopyNumEndPanel[0] ) 
+  {
     aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[0];
-
-  }else if (  aMnum  >= m_RichPmtModuleCopyNumBeginPanel[1] &&
-              aMnum  <= m_RichPmtModuleCopyNumEndPanel[1] ) {
-
-    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[1];
-
-  }else if (aMnum  >= m_RichPmtModuleCopyNumBeginPanel[2] &&
-            aMnum  <= m_RichPmtModuleCopyNumEndPanel[2] ) {
-
-    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[2];
-
-  }else if (aMnum  >= m_RichPmtModuleCopyNumBeginPanel[3] &&
-            aMnum  <= m_RichPmtModuleCopyNumEndPanel[3] ) {
-
-    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[3];
-
   }
-
+  else if ( aMnum  >= m_RichPmtModuleCopyNumBeginPanel[1] &&
+            aMnum  <= m_RichPmtModuleCopyNumEndPanel[1] ) 
+  {
+    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[1];
+  }
+  else if ( aMnum  >= m_RichPmtModuleCopyNumBeginPanel[2] &&
+            aMnum  <= m_RichPmtModuleCopyNumEndPanel[2] ) 
+  {
+    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[2];
+  }
+  else if ( aMnum  >= m_RichPmtModuleCopyNumBeginPanel[3] &&
+            aMnum  <= m_RichPmtModuleCopyNumEndPanel[3] ) 
+  {
+    aM = aMnum - m_RichPmtModuleCopyNumBeginPanel[3];
+  }
   return aM;
 }
 
@@ -607,9 +600,6 @@ std::vector<int> DeRichPMTPanel::PmtModuleRowColFromModuleNumInPanel(const int a
 
 std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGlobalPoint) const
 {
-
-  MsgStream msg ( msgSvc(), "DeRichPMTPanel" );
-
   std::vector<int> aCh (4,0);
 
   const Gaudi::XYZPoint inPanel( geometry()->toLocal(aGlobalPoint) );
@@ -709,19 +699,18 @@ std::vector<int> DeRichPMTPanel::findPMTArraySetup(const Gaudi::XYZPoint& aGloba
 
 
     }
-    else {
-      msg << MSG::ERROR << "DeRichPmtPanel : Inadmissible PMT number. Rich side Module Col Row pmt col row  "
-          <<rich()<<"   "<< side() << "   "<< aModuleCol <<"  "
-          <<aModuleRow<<"  "<<aPmtCol<<"   "<<aPmtRow<< endmsg;
+    else 
+    {
+      error() << "DeRichPmtPanel : Inadmissible PMT number. Rich side Module Col Row pmt col row  "
+              <<rich()<<"   "<< side() << "   "<< aModuleCol <<"  "
+              <<aModuleRow<<"  "<<aPmtCol<<"   "<<aPmtRow<< endmsg;
     }
 
   }
   else
   {
-
-    msg << MSG::ERROR << "DeRichPmtPanel : Inadmissible PMT Module number. Rich side Module Col Row   "<<
-      rich()<<"   "<< side() << "   "<< aModuleCol <<"  "<<aModuleRow<<endmsg;
-
+    error() << "DeRichPmtPanel : Inadmissible PMT Module number. Rich side Module Col Row   "
+            << rich() <<"   "<< side() << "   "<< aModuleCol <<"  "<<aModuleRow<<endmsg;
   }
 
   // info()<<" DeRichPanel FindPMTArray aCh "<<aCh<<endmsg;
@@ -766,8 +755,6 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
                                LHCb::RichSmartID& smartID,
                                const LHCb::RichTraceMode mode ) const
 {
-
-  MsgStream msg ( msgSvc(), "DeRichPMTPanel" );
   Gaudi::XYZPoint panelIntersection = Gaudi::XYZPoint(0.0,0.0,0.0);  // define a dummy point and fill correctly later.
   StatusCode sc = getPanelInterSection(pGlobal,vGlobal, panelIntersection,windowPointGlobal);
   if(sc == StatusCode::FAILURE) {
@@ -807,11 +794,10 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     }else {
       res = LHCb::RichTraceMode::InHPDPanel;
     }
-
   }
 
-
-  msg << MSG::DEBUG<< "mode used " <<mode<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "mode used " <<mode<<endmsg;
 
   return res;
 }
@@ -907,7 +893,7 @@ unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
 const DeRichPD* DeRichPMTPanel::dePD( const unsigned int PmtCopyNumber ) const
 {
   const DeRichPD * dePmt = NULL;
- 
+
   if ( ((int) PmtCopyNumber) < ( m_Rich1TotNumPmts + m_Rich2TotNumPmts  ) )
   {
     const unsigned int Mnum = (int) (PmtCopyNumber/m_NumPmtInRichModule);
@@ -942,8 +928,8 @@ DeRichPMTPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  int CurPanelNum=0 ;
-  if(rich() == Rich::Rich1 )
+  int CurPanelNum = 0 ;
+  if ( rich() == Rich::Rich1 )
   {
     if( side() == Rich::top )
     {
@@ -978,7 +964,7 @@ DeRichPMTPanel::readoutChannelList ( LHCb::RichSmartID::Vector& readoutChannels 
       {
         for (int iPy=0; iPy <m_PmtPixelsInCol; ++iPy )
         {
-          const LHCb::RichSmartID id(rich(), side(), iP, iM, iPy, iPx,LHCb::RichSmartID::MaPMTID );
+          const LHCb::RichSmartID id(rich(), side(), iP, iM, iPy, iPx, LHCb::RichSmartID::MaPMTID );
           readoutChannels.push_back (id );
         }
       }
@@ -1001,7 +987,6 @@ int DeRichPMTPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 StatusCode DeRichPMTPanel::setRichPanelAndSide ( )
 {
   StatusCode sc =  StatusCode::SUCCESS;
-  //  MsgStream msg ( msgSvc(), "DeRichPDPanel" );
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
   const Gaudi::XYZPoint centreGlobal(geometry()->toGlobal(zero));
