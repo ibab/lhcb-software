@@ -5,6 +5,11 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-11-21 - Frederic Dupertuis
+ - Add multi-candidates swimming functionality (SelectMethod = "all") and
+	 modified EventLoop and Configuration accordingly.
+ - Remove explicit relations of daughter's tracks to TPs in EventLoop.
+
 !====================== Phys/Swimming v2r3 2011-11-03 =======================
 
 ! 2011-11-14 - Roel Aaij

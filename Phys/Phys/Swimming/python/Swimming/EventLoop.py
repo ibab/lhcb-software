@@ -151,7 +151,9 @@ def SwimmingEventLoop(gaudi, nEvents):
     # in HLT1 (5 hits)
     #
     # Get the candidate selector.
-    selector = getSelector(Swimming().getProp('SelectMethod'))(myGlobs)
+
+    if Swimming().getProp('SelectMethod') != 'all':
+        selector = getSelector(Swimming().getProp('SelectMethod'))(myGlobs)
 
     # Initialize at -1 so the eventNumber can be incremented at the top of the loop.
     eventNumber = -1
@@ -165,10 +167,6 @@ def SwimmingEventLoop(gaudi, nEvents):
             break
         elif (eventNumber % 100) == 0: 
             print "Processing event", eventNumber
-
-        # Containers to store the turningpoints
-        roughTurningPoints = []
-        finalTurningPointsForWriting = []
 
         gaudi.run(1)
         if not TES["/Event/Rec/Header"] :
@@ -202,153 +200,160 @@ def SwimmingEventLoop(gaudi, nEvents):
             print "Passed the safety checks OK"
             print "Candidates in event =", mycands.size()
 
+        mycandstmp = mycands
         # Select the candidate to swim
-        mycand = selector(mycands)
-        if not mycand:
-            print "Somehow there is no candidate!!! This should never happen."
-            print "Skipping this event."
-            continue
-            
-        if DEBUGMODE :
-            print "Got the offline candidate OK"
-            print "About to store its information"
-            print mycand
-
-        # If we are swimming the trigger and have a non-trivial selection method,
-        # put the selected candidate in a separate location.
-        if not swimStripping and Swimming().getProp('SelectMethod') != 'none':
-            swimmingParticles = createObject(SharedParticles)
-            swimmingParticles.insert(mycand)
-            TES.registerObject(swimCands + '/Particles', swimmingParticles)
-            
-        HltDecLast  = None
-        HltDec      = None
-        swimLoop    = int(-1.*maxSwimDistance + -1.*extraSwimDistance)
-        while (swimLoop <= (maxSwimDistance + extraSwimDistance)) :
-            if DEBUGMODE:
-                print "Running over event", startingEvent+eventNumber,"swimming step",swimLoop             
-            # We got this far now get the candidate and, for the "zero" step only
-            # fill the corresponding event variables for it 
-            # Note that this function call also executes the stripping algorithm
-            # having moved the primary vertices around first
-            runSwimmingStep(myGlobs, mycand, swimLoop)
-
-            # Now get the trigger decision for this swimming step
-            HltDec = evaluateTisTos(myGlobs,mycand)
-            if DEBUGMODE :
-                print "Retrieved HLT decision",HltDec,"OK for this event" 
-
-            # If this is the very first swimming step, set HltDecLast to the global
-            # HltDec at this point, otherwise get it from the previous step.
-            if swimLoop == int(-1.*maxSwimDistance + -1.*extraSwimDistance):
-                HltDecLast = HltDec
-            elif roughTurningPoints != []:
-                HltDecLast = roughTurningPoints[-1][3]
-
-            # The first and last point are a special case for the bookkeeping
-            # as we want to record the limits of our swimming and the trigger
-            # decisions at these limits 
-            if (abs(swimLoop) == int(1.*maxSwimDistance + 1.*extraSwimDistance)) or \
-               (HltDec != HltDecLast): 
-                # Get the lifetime and IP of the B/D with respect to its favourite PV
-                bParams = getBinfo(myGlobs,mycand)
-                roughTurningPoints.append([swimLoop,bParams[0],bParams[1],HltDec,HltDecLast])
+        if Swimming().getProp('SelectMethod') != 'all':
+            mycandstmp = [selector(mycands)]
         
-            # Now the granularity varies with the position 
-            # We swim more finely close to the actual decay point
-            if ((swimLoop >= -int(maxSwimDistance)) and (swimLoop < int(maxSwimDistance))) :
-                swimLoop += int(initialGranularity)
-            else :
-                swimLoop += int(extraGranularity) 
-        # Now the refinement step
-        # We have to refine every turning point, but the first and last
-        # ones which we save don't count as they are just there to
-        # demarcate the limits of our search, so we don't use them
-        if roughTurningPoints == [] :
-            continue
-        if DEBUGMODE :
-            print "****************************"
-            print "The rough turning points are"
-            pprint(roughTurningPoints)
-            print "****************************"
-        for thisturn in roughTurningPoints:
-            # Write the first and last as is, no refinement
-            if (thisturn == roughTurningPoints[0]) or (thisturn == roughTurningPoints[-1]) :
-                finalTurningPointsForWriting.append(thisturn)
+        for mycand in mycandstmp:
+            
+            # Containers to store the turningpoints
+            roughTurningPoints = []
+            finalTurningPointsForWriting = []
+
+            if not mycand:
+                print "Somehow there is no candidate!!! This should never happen."
+                print "Skipping this event."
+                continue
+
+            if DEBUGMODE :
+                print "Got the offline candidate OK"
+                print "About to store its information"
+                print mycand
+
+            # If we are swimming the trigger and have a non-trivial selection method,
+            # put the selected candidate in a separate location.
+            if not swimStripping and Swimming().getProp('SelectMethod') != 'none':
+                swimmingParticles = createObject(SharedParticles)
+                swimmingParticles.insert(mycand)
+                TES.unregisterObject(swimCands + '/Particles')
+                TES.registerObject(swimCands + '/Particles', swimmingParticles)
+
+            HltDecLast  = None
+            HltDec      = None
+            swimLoop    = int(-1.*maxSwimDistance + -1.*extraSwimDistance)
+            while (swimLoop <= (maxSwimDistance + extraSwimDistance)) :
+                if DEBUGMODE:
+                    print "Running over event", startingEvent+eventNumber,"swimming step",swimLoop             
+                # We got this far now get the candidate and, for the "zero" step only
+                # fill the corresponding event variables for it 
+                # Note that this function call also executes the stripping algorithm
+                # having moved the primary vertices around first
+                runSwimmingStep(myGlobs, mycand, swimLoop)
+
+                # Now get the trigger decision for this swimming step
+                HltDec = evaluateTisTos(myGlobs,mycand)
+                if DEBUGMODE :
+                    print "Retrieved HLT decision",HltDec,"OK for this event" 
+
+                # If this is the very first swimming step, set HltDecLast to the global
+                # HltDec at this point, otherwise get it from the previous step.
+                if swimLoop == int(-1.*maxSwimDistance + -1.*extraSwimDistance):
+                    HltDecLast = HltDec
+                elif roughTurningPoints != []:
+                    HltDecLast = roughTurningPoints[-1][3]
+
+                # The first and last point are a special case for the bookkeeping
+                # as we want to record the limits of our swimming and the trigger
+                # decisions at these limits 
+                if (abs(swimLoop) == int(1.*maxSwimDistance + 1.*extraSwimDistance)) or \
+                   (HltDec != HltDecLast): 
+                    # Get the lifetime and IP of the B/D with respect to its favourite PV
+                    bParams = getBinfo(myGlobs,mycand)
+                    roughTurningPoints.append([swimLoop,bParams[0],bParams[1],HltDec,HltDecLast])
+
+                # Now the granularity varies with the position 
+                # We swim more finely close to the actual decay point
+                if ((swimLoop >= -int(maxSwimDistance)) and (swimLoop < int(maxSwimDistance))) :
+                    swimLoop += int(initialGranularity)
+                else :
+                    swimLoop += int(extraGranularity) 
+            # Now the refinement step
+            # We have to refine every turning point, but the first and last
+            # ones which we save don't count as they are just there to
+            # demarcate the limits of our search, so we don't use them
+            if roughTurningPoints == [] :
                 continue
             if DEBUGMODE :
                 print "****************************"
-                print "About to refine TP"
-                pprint(thisturn)
+                print "The rough turning points are"
+                pprint(roughTurningPoints)
                 print "****************************"
-            if ((thisturn[0] > -int(maxSwimDistance)) and (thisturn[0] <= int(maxSwimDistance))) :
-                finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,initialGranularity,numberOfRefinements)
-            else : 
-                finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,extraGranularity,numberOfRefinements)
-        if DEBUGMODE :
-            print "****************************"
-            print "The final turning points for writing are:" 
-            pprint(finalTurningPointsForWriting)
-            print "****************************" 
+            for thisturn in roughTurningPoints:
+                # Write the first and last as is, no refinement
+                if (thisturn == roughTurningPoints[0]) or (thisturn == roughTurningPoints[-1]) :
+                    finalTurningPointsForWriting.append(thisturn)
+                    continue
+                if DEBUGMODE :
+                    print "****************************"
+                    print "About to refine TP"
+                    pprint(thisturn)
+                    print "****************************"
+                if ((thisturn[0] > -int(maxSwimDistance)) and (thisturn[0] <= int(maxSwimDistance))) :
+                    finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,initialGranularity,numberOfRefinements)
+                else : 
+                    finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,extraGranularity,numberOfRefinements)
+            if DEBUGMODE :
+                print "****************************"
+                print "The final turning points for writing are:" 
+                pprint(finalTurningPointsForWriting)
+                print "****************************" 
 
-        # Which stage are we swimming?
-        stage = None
-        if swimStripping:
-            stage = 'Stripping'
-        else:
-            stage = 'Trigger'
+            # Which stage are we swimming?
+            stage = None
+            if swimStripping:
+                stage = 'Stripping'
+            else:
+                stage = 'Trigger'
 
-        # Get or Create the KeyedContainer for the SwimmingReports
-        reportLocation = Swimming().getProp('SwimmingPrefix') + '/Reports'
-        reports = TES[reportLocation]
-        if not reports:
-            reports = createObject(SwimmingReports)
-            # Put the container in the TES
-            sc = TES.registerObject(reportLocation, reports)
-            if not sc.isSuccess():
-                print "Failed to register SwimmingReports in TES"
-                break
-        # Get or create the SwimmingReport
-        report = reports(mycand.key())
-        if not report:
-            report = createObject(LHCb.SwimmingReport, mycand)
-            # Put the SwimmingReport in the container.
-            reports.insert(report)
-        elif report.hasStage(stage):
-            print "WARNING, stage %s already present, this is unsupported and will fail!"
-            return StatusCode(False)
-        
-        # Create the TurningPoint objects and put them in the report
-        for turn in finalTurningPointsForWriting:
-            d = std_map_sb()
-            for decision, value in turn[3][1].iteritems():
-                d[decision] = value
-            m = std_map_sinfo()
-            for decision, info in turn[3][2].iteritems():
-                i = std_map_ulb()
-                for k, v in info.iteritems():
-                    i[k] = v
-                m[decision] = i
-            tp = LHCb.TurningPoint(turn[0], turn[1], turn[2], turn[3][0], d, m)
-            report.addTurningPoint(stage, tp)
+            # Get or Create the KeyedContainer for the SwimmingReports
+            reportLocation = Swimming().getProp('SwimmingPrefix') + '/Reports'
+            reports = TES[reportLocation]
+            if not reports:
+                reports = createObject(SwimmingReports)
+                # Put the container in the TES
+                sc = TES.registerObject(reportLocation, reports)
+                if not sc.isSuccess():
+                    print "Failed to register SwimmingReports in TES"
+                    break
+            # Get or create the SwimmingReport
+            report = reports(mycand.key())
+            if not report:
+                report = createObject(LHCb.SwimmingReport, mycand)
+                # Put the SwimmingReport in the container.
+                reports.insert(report)
+            elif report.hasStage(stage):
+                print "WARNING, stage %s already present, this is unsupported and will fail!"
+                return StatusCode(False)
 
-        # Create the relations table
-        relations = TES[offCands + '/P2TPRelations']
-        if not relations:
-            relations = createObject(P2TPRelation)
-            # Put the relations table in the TES
-            sc = TES.registerObject(offCands + '/P2TPRelations', relations)
-            if not sc.isSuccess():
-                print "Failed to register SwimmingReports in TES"
-                break
+            # Create the TurningPoint objects and put them in the report
+            for turn in finalTurningPointsForWriting:
+                d = std_map_sb()
+                for decision, value in turn[3][1].iteritems():
+                    d[decision] = value
+                m = std_map_sinfo()
+                for decision, info in turn[3][2].iteritems():
+                    i = std_map_ulb()
+                    for k, v in info.iteritems():
+                        i[k] = v
+                    m[decision] = i
+                tp = LHCb.TurningPoint(turn[0], turn[1], turn[2], turn[3][0], d, m)
+                report.addTurningPoint(stage, tp)
 
-        from Swimming.SwimmingTisTos import appendToFSP
-        particles = [mycand]
-        appendToFSP(mycand, particles)
-        for particle in particles:
-            rel = relations.relations(particle)
+            # Create the relations table
+            relations = TES[offCands + '/P2TPRelations']
+            if not relations:
+                relations = createObject(P2TPRelation)
+                # Put the relations table in the TES
+                sc = TES.registerObject(offCands + '/P2TPRelations', relations)
+                if not sc.isSuccess():
+                    print "Failed to register SwimmingReports in TES"
+                    break
+
+            from Swimming.SwimmingTisTos import appendToFSP
+            rel = relations.relations(mycand)
             if rel.empty():
-                relations.relate(particle, report)
+                relations.relate(mycand, report)
             elif rel(0).to().key() != report.key():
                 print "There is a relation, but it points to another swimming report, this is very bad!!"
                 return StatusCode(False)
