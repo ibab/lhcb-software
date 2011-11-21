@@ -147,22 +147,29 @@ StatusCode DeRichPMTPanel::initialize()
               int curPmtNum = det_it_pm - dePMTModule->childIDetectorElements().begin();
               DePmtsInCurModule[curPmtNum] =dePMT;
 
-              if( ! dePMT->childIDetectorElements().empty() ) {
+              if( ! dePMT->childIDetectorElements().empty() ) 
+              {
 
                 for(IDetectorElement::IDEContainer::const_iterator det_it_pm_an = dePMT->childIDetectorElements().begin();
-                    det_it_pm_an !=  dePMT->childIDetectorElements().end(); ++det_it_pm_an ){
+                    det_it_pm_an !=  dePMT->childIDetectorElements().end(); ++det_it_pm_an )
+                {
 
-                  if ( std::string::npos != (*det_it_pm_an)->name().find("MAPMTAnode:") ) {
+                  if ( std::string::npos != (*det_it_pm_an)->name().find("MAPMTAnode:") ) 
+                  {
 
                     SmartDataPtr<IDetectorElement> dePmtAnode( dataSvc(), (*det_it_pm_an)->name() );
 
-                    if(dePmtAnode) {
+                    if (dePmtAnode) 
+                    {
 
                       //  IDetectorElement* dePmtAnode = (IDetectorElement*) (*det_it_pm_an);
                       // register UMS dependency
                       updMgrSvc()->registerCondition( this,dePmtAnode->geometry(),&DeRichPMTPanel::geometryUpdate );
                       DePmtAnodesInCurModule[curPmtNum] = dePmtAnode;
-                    }else {
+                    
+                    }
+                    else 
+                    {
 
                       msg << MSG::FATAL << "Non DeRichPMT Anode detector element "
                           << (*det_it_pm_an)->name() << endmsg;
@@ -176,7 +183,8 @@ StatusCode DeRichPMTPanel::initialize()
                 // which is the anode.
               }// end test on pt child det elem
 
-            } else
+            } 
+            else
             {      // end test existence of pmt
               msg << MSG::FATAL << "No DeRichPMT  detector element "
                   << (*det_it_pm)->name() << endmsg;
@@ -190,7 +198,9 @@ StatusCode DeRichPMTPanel::initialize()
         m_DePMTs.push_back( DePmtsInCurModule);
         m_DePMTAnodes.push_back(DePmtAnodesInCurModule);
 
-      }else{
+      }
+      else
+      {
         msg << MSG::FATAL << "Problem getting PMT Det elem from " << (*det_it)->name()
             << endmsg;
         return StatusCode::FAILURE;
