@@ -972,7 +972,7 @@ class LbLoginScript(SourceScript):
 
 
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
-            self.setExtraTags()
+#            self.setExtraTags()
 
 
             if opts.compat_prepend is None :

@@ -359,7 +359,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     if not os.path.exists(pardir) :
         os.makedirs(pardir)
 
-    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
+#    os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
 
     os.environ["CMTCONFIG"] = "x86_64-slc5-gcc43-opt"
     llsargs = []

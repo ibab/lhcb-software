@@ -1,3 +1,11 @@
+2011-11-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: removed the usage of NO_PYTHON_LIBPATH in the
+	extratags. This was intended to removed the python entry from the LD_LIBRARY_PATH because
+	the python that we ship is statically linked. Unfortunately not all the binary libraries
+	have been statically linked with lipython2.6.so.
+	* scripts/generateLogin: idem
+
 2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r6
