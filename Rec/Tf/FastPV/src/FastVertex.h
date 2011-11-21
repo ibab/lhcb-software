@@ -31,13 +31,6 @@ public:
   unsigned int nTracks() { return m_tracks.size(); }
   unsigned int nBack()   { return m_nBack; }
 
-  void setTracksUsed( bool flag ) {
-    std::vector<TrackForPV*>::iterator itT;
-    for ( itT = m_tracks.begin(); m_tracks.end() != itT; ++itT ) {
-      (*itT)->setUsed( flag );
-    }
-  }
-
   Gaudi::SymMatrix3x3 cov ( );
   
 protected:

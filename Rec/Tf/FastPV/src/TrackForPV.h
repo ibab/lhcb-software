@@ -37,9 +37,6 @@ public:
     return m_wx * dx * dx + m_wy * dy * dy;
   }
 
-  void setUsed( bool kk ) { m_used = kk; }
-  bool used()             { return m_used; }
-
   struct LowerByZ  {
     bool operator() ( const TrackForPV* lhs, const TrackForPV* rhs) const { return lhs->zAtBeam() < rhs->zAtBeam(); }
   };
@@ -51,7 +48,6 @@ private:
   LHCb::Track* m_track;
   Gaudi::XYZPoint  m_point;
   Gaudi::XYZVector m_dir;
-  bool   m_used;
   double m_wx;
   double m_wy;
   double m_weight;

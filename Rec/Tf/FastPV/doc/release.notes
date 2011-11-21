@@ -4,6 +4,10 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2011-11-21 - Olivier Callot
+ - Change the tuning after fixing the checker. No longer cleanup of 
+   tracks on two vertices. Larger tolerances.
+
 ! 2011-11-18 - Olivier Callot
  - New package, with one algorithm, FastPVFinder.
    It searches the PV from the Velo tracks, in a fast and efficient way

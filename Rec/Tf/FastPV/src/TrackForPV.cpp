@@ -21,7 +21,6 @@ TrackForPV::TrackForPV( LHCb::Track* track, double xBeam, double yBeam ) {
   m_dir   = track->slopes();
   m_wx = ( 1. + m_dir.x() * m_dir.x() ) / m_track->firstState().errX2();
   m_wy = ( 1. + m_dir.y() * m_dir.y() ) / m_track->firstState().errY2();
-  m_used = false;
 
   double x0 = m_point.x() - m_point.z() * m_dir.x() - xBeam;
   double y0 = m_point.y() - m_point.z() * m_dir.y() - yBeam;
