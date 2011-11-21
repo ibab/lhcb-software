@@ -122,11 +122,9 @@ private:
                                                  ///as Det Elements
 
   std::vector<std::vector<DeRichPMT*> > m_DePMTs; ///< Container for the PMTs
-  ///as Det Elements
 
+  /// Container for the PMTAnodes as Det Elements
   std::vector<std::vector<IDetectorElement*> > m_DePMTAnodes;
-  ///< Container for the PMTAnodes
-  ///as Det Elements
 
   std::vector<double> m_PmtModulePlaneHalfSizeR1;
   std::vector<double> m_PmtModulePlaneHalfSizeR2;

@@ -907,16 +907,12 @@ unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
 const DeRichPD* DeRichPMTPanel::dePD( const unsigned int PmtCopyNumber ) const
 {
   const DeRichPD * dePmt = NULL;
-  //  info()<<" derichpmtpanel pmtcopynum "<<PmtCopyNumber<<endmsg;
-
+ 
   if ( ((int) PmtCopyNumber) < ( m_Rich1TotNumPmts + m_Rich2TotNumPmts  ) )
   {
     const unsigned int Mnum = (int) (PmtCopyNumber/m_NumPmtInRichModule);
     const unsigned int MNumInCurPanel = PmtModuleNumInPanelFromModuleNumAlone(Mnum);
     const unsigned int Pnum =  PmtCopyNumber - ( Mnum * m_NumPmtInRichModule);
-
-    //  info()<<"derichpmtpanel mnum pnum "<<Mnum <<"  "
-    //      <<Pnum<< "  "<<MNumInCurPanel<<"  "<<rich()<<"  "<<side()<<endmsg;
 
     if ( MNumInCurPanel >= m_DePMTs.size() ||
          Pnum >= m_DePMTs[MNumInCurPanel].size() )
