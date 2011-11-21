@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-21 - Andrew Powell
+ - TupleToolMuonPid: Added LHCb::ProtoParticle::InAccMuon to tuple 
+
 ! 2011-11-15 - Chris Jones
  - Tidy up the TisTos tool a bit
 
