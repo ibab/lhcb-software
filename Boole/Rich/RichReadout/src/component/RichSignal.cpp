@@ -143,9 +143,13 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
       LHCb::RichSmartID tempID;
       const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
       if      ( !ok )
-      { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ).ignore(); }
+      { 
+        Warning( "Failed to compute RichSmartID from MCRichHit entry point" ).ignore(); 
+      }
       else if ( id != tempID.pixelID() )
-      { Warning( "RichSmartID mis-match" ).ignore(); }
+      { 
+        Warning( "RichSmartID mis-match" ).ignore(); 
+      }
       if ( msgLevel(MSG::DEBUG) )
       {
         Gaudi::XYZPoint detectP;
@@ -156,7 +160,8 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
         }
         else
         {
-          debug() << "MCRichHit pos : " << (*iHit)->entry() << endmsg;
+          debug() << id << endmsg;
+          debug() << " -> Hit   pos : " << (*iHit)->entry() << endmsg;
           debug() << " -> Digit pos : " << detectP << endmsg;
         }
       }
