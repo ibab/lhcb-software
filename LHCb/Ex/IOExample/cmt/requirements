@@ -14,7 +14,6 @@ private
   use GaudiConf           v*              -no_auto_imports
   use EventPacker         v* Event        -no_auto_imports
   use LHCbAlgs            v* Kernel       -no_auto_imports
-  use HepMCBack           v* Gen          -no_auto_imports
   use RootCnv             v* Online       -no_auto_imports
   macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
   use $(CASTOR_use)
