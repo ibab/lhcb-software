@@ -37,11 +37,11 @@ private:
   double m_maxDeltaZ;
   double m_maxChi2ToAdd;
   double m_maxChi2Fit;
-  double m_offsetInZ;
   
   double m_xBeam;
   double m_yBeam;
 
   bool m_debug;
+
 };
 #endif // FASTPVFINDER_H

@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-11-22 - Olivier Callot
+ - Fix properly the backward request!
+ - New algorithm FastPVMonitor to monitor the vertices.
+
+! 2011-11-22 - Olivier Callot
  - Request backward tracks only if the numbe rof tracks is between 
    MinTrackInPV and twice that.
 

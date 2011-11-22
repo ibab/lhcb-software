@@ -36,7 +36,6 @@ FastPVFinder::FastPVFinder( const std::string& name,
   declareProperty( "MinTracksInPV",  m_minTracksInPV  = 7   );
   declareProperty( "MaxChi2ToAdd",   m_maxChi2ToAdd   = 60.  );
   declareProperty( "MaxChi2Fit",     m_maxChi2Fit     = 35.  );
-  declareProperty( "OffsetInZ",      m_offsetInZ      = 0.000 * Gaudi::Units::mm );
 }
 //=============================================================================
 // Destructor
@@ -82,8 +81,6 @@ StatusCode FastPVFinder::updateBeamSpot ( ) {
   m_xBeam = ( xRC + xLA ) / 2;
   m_yBeam = Y ;
 
-  //m_xBeam += 0.050;
-
   info() << "*** Update beam spot, x " << m_xBeam << " y " << m_yBeam << endmsg;
 
   return StatusCode::SUCCESS;
@@ -99,7 +96,7 @@ StatusCode FastPVFinder::execute() {
 
   LHCb::Tracks* tracks = get<LHCb::Tracks>( m_inputLocation );
 
-  //== Select tracks with a cut on their r at beam
+  //== Select tracks with a cut on their R at beam
 
   std::vector<TrackForPV> pvTracks;
   for ( LHCb::Tracks::iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
@@ -108,7 +105,7 @@ StatusCode FastPVFinder::execute() {
       pvTracks.push_back( temp );
     }
   }
-  //== Create a vector of pointe rto them, for faster sorting
+  //== Create a vector of pointer to them, for faster sorting
   std::vector<TrackForPV*> myTracks;
   for ( std::vector<TrackForPV>::iterator itTr = pvTracks.begin(); pvTracks.end() != itTr; ++itTr ) {
     myTracks.push_back( &(*itTr) );
@@ -191,10 +188,8 @@ StatusCode FastPVFinder::execute() {
     }
   }
 
-  //== Store the vertices in the appropriate contained
+  //== Store the vertices in the appropriate container
   for ( itV = myVertices.begin(); myVertices.end() != itV; ++itV ) {
-    if ( (*itV).nTracks() < m_minTracksInPV ) continue;
-    if ( 0 == (*itV).nBack() ) continue;
     LHCb::RecVertex* tmp = new LHCb::RecVertex;
     tmp->setTechnique( LHCb::RecVertex::Primary );
     tmp->setPosition( (*itV).vertex() );
@@ -208,7 +203,6 @@ StatusCode FastPVFinder::execute() {
     tmp->setCovMatrix( (*itV).cov() );
     out->insert( tmp );
   }
-  
   return StatusCode::SUCCESS;
 }
 
