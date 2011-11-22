@@ -1,4 +1,3 @@
-// $Id: MuonClusterTool.cpp,v 1.4 2010-03-23 07:37:34 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonClusterTool );
+DECLARE_TOOL_FACTORY( MuonClusterTool )
 
 
 //=============================================================================
@@ -50,16 +49,16 @@ StatusCode MuonClusterTool::initialize() {
 
 StatusCode MuonClusterTool::doCluster(const std::string Input,const std::string Output){
   if(!exist<LHCb::MuonCoords>(Input)){
-	error()<<" no coords at the locaion "<<Input<<endreq;
+	error()<<" no coords at the locaion "<<Input<<endmsg;
      return StatusCode::FAILURE;
   }
   if(exist<LHCb::MuonClusters>(Output)){
 	error()<<"  cluster at the locaion "<<Output<<
-                " already exist"<<endreq;
+                " already exist"<<endmsg;
      return StatusCode::FAILURE;
   }
   MuonCoords* coords=get<LHCb::MuonCoords>(Input);
-debug()<<" arrivato qui "<<coords->size()<< endreq;
+debug()<<" arrivato qui "<<coords->size()<< endmsg;
   StatusCode sc;
   
   sc=initClusterVector(coords);
@@ -75,7 +74,7 @@ debug()<<" arrivato qui "<<coords->size()<< endreq;
      ("Raw/Muon/TAECluster");
 
 
-   if(muoncl)debug()<<" nel tool trovato cluster "<<muoncl->size()<<endreq;
+   if(muoncl)debug()<<" nel tool trovato cluster "<<muoncl->size()<<endmsg;
  
 
 
@@ -87,7 +86,7 @@ debug()<<" arrivato qui "<<coords->size()<< endreq;
 StatusCode  MuonClusterTool::initClusterVector(LHCb::MuonCoords* coords)
 {
   LHCb::MuonCoords::iterator i;
-  debug()<<" list of input coords "<<endreq;
+  debug()<<" list of input coords "<<endmsg;
   
   for(i=coords->begin();i!=coords->end();i++){
     double xp,dx,yp,dy,zp,dz;
@@ -95,7 +94,7 @@ StatusCode  MuonClusterTool::initClusterVector(LHCb::MuonCoords* coords)
     StatusCode sc =  m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
     MuonCluster*  clust=new MuonCluster((*i),(float) xp,(float) dx,(float) yp,(float) dy,(float) zp,(float) dz);
     std::pair<MuonCluster*,int> pippo(clust,0);
-    debug()<<tile<<endreq;
+    debug()<<tile<<endmsg;
     
     m_inputclust[tile.station()].push_back(pippo);
     
@@ -106,7 +105,7 @@ StatusCode  MuonClusterTool::initClusterVector(LHCb::MuonCoords* coords)
     m_inputclust[2].size()+
     m_inputclust[3].size()+
     m_inputclust[4].size()
-        <<endreq;
+        <<endmsg;
   return StatusCode::SUCCESS;
   
 }
@@ -130,11 +129,10 @@ StatusCode MuonClusterTool::mergeStation(int station)
   std::vector<std::pair<MuonCluster *,int> >::iterator itcluOne;
   std::vector<std::pair<MuonCluster *,int> >::iterator itcluTwo;
   
-  bool  doIteration=false;
   int howMany=0;
-  debug()<<" starting merge in station "<<endreq;
+  debug()<<" starting merge in station "<<endmsg;
   do{
-    verbose()<<" start a new turn "<<endreq;
+    verbose()<<" start a new turn "<<endmsg;
     
     for(itcluOne=m_inputclust[station].begin();itcluOne!=m_inputclust[station].end();
         itcluOne++){
@@ -147,7 +145,7 @@ StatusCode MuonClusterTool::mergeStation(int station)
         bool near1=false;
 
         near1=detectCluster(itcluOne->first,itcluTwo->first);
-        verbose()<<"near "<<near1<<endreq;
+        verbose()<<"near "<<near1<<endmsg;
         if(near1){
           (itcluOne->first)->mergeCluster(itcluTwo->first);
           itcluOne->second=1;        
@@ -158,7 +156,6 @@ StatusCode MuonClusterTool::mergeStation(int station)
     }  
     
     howMany=0;
-    doIteration=false;
     int count=0;
     
     for(itcluOne=m_inputclust[station].begin();itcluOne!=m_inputclust[station].end();
@@ -175,17 +172,17 @@ StatusCode MuonClusterTool::mergeStation(int station)
         //check if cluster overlap completely with another one
         bool partOf=false;
         partOf=isIncluded(station,itcluOne->first);
-        verbose()<<" a new cluster is merged  "<<endreq;
+        verbose()<<" a new cluster is merged  "<<endmsg;
         const SmartRefVector<LHCb::MuonCoord> mycoord =(itcluOne->first)->coords();
         SmartRefVector<LHCb::MuonCoord>::const_iterator myit;
         for(myit=mycoord.begin();myit!=mycoord.end();myit++){
           MuonTileID mytile((*myit)->key());
           
-          verbose()<<" in merge "<<mytile<<endreq;
+          verbose()<<" in merge "<<mytile<<endmsg;
           
         }
         
-        verbose()<<" partOf "<< partOf<<endreq;
+        verbose()<<" partOf "<< partOf<<endmsg;
         
     
 
@@ -195,8 +192,7 @@ StatusCode MuonClusterTool::mergeStation(int station)
         }else{
           
         
-          verbose()<<"modified cluster "<<count-1<<endreq;
-          doIteration=true;
+          verbose()<<"modified cluster "<<count-1<<endmsg;
           howMany++;
           itcluOne->second=0;      
         }    
@@ -268,7 +264,7 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
         MuonTileID mytile((*myit)->key());
         totcoord++;
         
-        debug()<<mytile<<endreq;
+        debug()<<mytile<<endmsg;
            double dx,dy,dz;
            double x,y,z;                   
            m_muonDetector->Tile2XYZ(mytile,x,dx,y,dy,z,dz);
@@ -304,20 +300,20 @@ StatusCode MuonClusterTool::SaveOutput(std::string output)
       copycluster->setZmin(zmin);
       copycluster->setZmax(zmax);
       clusters->insert(copycluster);
-      verbose()<<" a new cluster "<<*itcluOne<<" "<<copycluster<<endreq;
-      debug()<<(*itcluOne)->coords()<<" "<<copycluster->coords()<<endreq;
+      verbose()<<" a new cluster "<<*itcluOne<<" "<<copycluster<<endmsg;
+      debug()<<(*itcluOne)->coords()<<" "<<copycluster->coords()<<endmsg;
       
     }
     
   }
-  debug()<<"cluster size "<<clusters->size()<<" "<<totcoord<<endreq;
+  debug()<<"cluster size "<<clusters->size()<<" "<<totcoord<<endmsg;
   put(clusters,output);
   
   LHCb::MuonClusters* muoncl=get<LHCb::MuonClusters>
      ("Raw/Muon/TAECluster");
 
 
-   if(muoncl)debug()<<" nel tool trovato cluster "<<muoncl->size()<<endreq;
+   if(muoncl)debug()<<" nel tool trovato cluster "<<muoncl->size()<<endmsg;
   
   return StatusCode::SUCCESS;
   
@@ -329,19 +325,19 @@ bool MuonClusterTool::detectCluster(LHCb::MuonCluster* one,
   bool near1=false;
   const SmartRefVector<LHCb::MuonCoord> coordsOne=one->coords();
   const SmartRefVector<LHCb::MuonCoord> coordsTwo=two->coords();
-  verbose()<<coordsOne.size()<<" "<<coordsTwo.size()<<endreq;
+  verbose()<<coordsOne.size()<<" "<<coordsTwo.size()<<endmsg;
   SmartRefVector<MuonCoord>::const_iterator iOne;
   SmartRefVector<MuonCoord>::const_iterator iTwo;
   for(iTwo=coordsTwo.begin();iTwo!=coordsTwo.end();iTwo++){
     bool same=one->checkPad(*iTwo);
-    verbose()<<" same pad ? "<<same<<endreq;
+    verbose()<<" same pad ? "<<same<<endmsg;
     if(!same){
       MuonTileID tileTwo((*iTwo)->key());
       for(iOne=coordsOne.begin();iOne!=coordsOne.end();iOne++){
         MuonTileID tileOne((*iOne)->key());
         //same quarter
-       verbose()<<" tile one "<<tileTwo<<endreq;
-        verbose()<<" tile Two "<<tileOne<<endreq;
+       verbose()<<" tile one "<<tileTwo<<endmsg;
+        verbose()<<" tile Two "<<tileOne<<endmsg;
         if(tileOne.quarter()==tileTwo.quarter()){
           //same region
           if(tileOne.region()==tileTwo.region()){
@@ -465,7 +461,7 @@ bool MuonClusterTool::isIncluded(int station,LHCb::MuonCluster* cluster)
   std::vector<std::pair<LHCb::MuonCluster *,int> >::const_iterator it;  
   const SmartRefVector<LHCb::MuonCoord> mycoord =(cluster)->coords();
   for(it= m_inputclust[station].begin();it!= m_inputclust[station].end();it++){
-    verbose()<<    it->first<<" "<<cluster<<endreq;
+    verbose()<<    it->first<<" "<<cluster<<endmsg;
     
     if(it->first==cluster)continue;
     MuonCluster* other=it->first;
@@ -475,11 +471,11 @@ bool MuonClusterTool::isIncluded(int station,LHCb::MuonCluster* cluster)
     for(myit=mycoord.begin();myit!=mycoord.end();myit++){
       MuonTileID mytile((*myit)->key());
       bool same=false;
-      verbose()<<" looking for "<<mytile<<endreq;
+      verbose()<<" looking for "<<mytile<<endmsg;
       
       for(otherit=othercoord.begin();otherit!=othercoord.end();otherit++){
         MuonTileID othertile((*otherit)->key());
-        verbose()<<" check "<<othertile<<endreq;
+        verbose()<<" check "<<othertile<<endmsg;
         
         if(othertile==mytile){
           same=true;

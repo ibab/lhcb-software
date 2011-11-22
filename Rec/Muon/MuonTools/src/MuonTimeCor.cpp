@@ -1,4 +1,3 @@
-// $Id: MuonTimeCor.cpp,v 1.3 2010-02-12 10:10:48 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MuonTimeCor );
+DECLARE_TOOL_FACTORY( MuonTimeCor )
 
 
 //=============================================================================
@@ -48,7 +47,7 @@ StatusCode MuonTimeCor::initialize()
 {
 
   if(m_correctionFiles.size()!=m_correctionSign.size()){
-    error()<<" size of correction signs and file names do not match exit"<<endreq;
+    error()<<" size of correction signs and file names do not match exit"<<endmsg;
     return StatusCode::FAILURE;
     
   }
@@ -64,7 +63,7 @@ StatusCode MuonTimeCor::initialize()
   
   
   if(!m_muonHWTool) info()<<"error retrieving the muon HW fast tool "
-                          <<endreq;
+                          <<endmsg;
 
 
   m_correction[0][0].resize(24*8*12);
@@ -135,7 +134,7 @@ StatusCode MuonTimeCor::initialize()
     //char testina[9]="";
     corList.open(iFile->c_str());
     if(!corList) {
-      error() << "Cannot open input file"<<endreq;
+      error() << "Cannot open input file"<<endmsg;
       
       return StatusCode::FAILURE;;
     }    
@@ -146,7 +145,7 @@ StatusCode MuonTimeCor::initialize()
         
         sscanf(inbuf,"%7c  %*4c %d  %*s %*4c %d %*s  %*4c %d %*s %*4c %d %*s %*4c %d",ode,&sn1,&sc1,&sn2,&sc2,&cor);
  
-        verbose()<<" test "<<ode<<" "<<sn1<<" "<<sc1<<" "<<sn2<<" "<<sc2<<" "<<cor<<endreq;
+        verbose()<<" test "<<ode<<" "<<sn1<<" "<<sc1<<" "<<sn2<<" "<<sc2<<" "<<cor<<endmsg;
         
         
         std::string pippo=ode;
@@ -281,38 +280,38 @@ StatusCode MuonTimeCor::writeOutCorrection()
   
   ofstream outfile(m_correctionFileOut.c_str()); 
   if(!outfile) {
-    error() << "Cannot open output file"<<endreq;
+    error() << "Cannot open output file"<<endmsg;
     
     return StatusCode::FAILURE;;
   }  
 
   for (int station=0;station<5;station++){
-    verbose()<<"station "<<station<<endreq;
+    verbose()<<"station "<<station<<endmsg;
     
     for (int region=0;region<4;region++){
-      verbose()<<"region "<<region<<endreq;
+      verbose()<<"region "<<region<<endmsg;
       
       for(int qua=0;qua<4;qua++){
-        verbose()<<"quarter "<<qua<<endreq;
+        verbose()<<"quarter "<<qua<<endmsg;
         
 //        int index=station*4+region;
         for (int chX=0;chX<m_muonHWTool->getChamberGridX(region)*2;chX++){
-          verbose()<<" chX "<<chX<<endreq;
+          verbose()<<" chX "<<chX<<endmsg;
           
           for (int chY=0;chY<m_muonHWTool->getChamberGridY(region)*2;chY++){
-            verbose()<<"chY "<<chY<<endreq;
+            verbose()<<"chY "<<chY<<endmsg;
 
             if(chX<m_muonHWTool->getChamberGridX(region)&&chY<
                m_muonHWTool->getChamberGridY(region))continue;
             for(int lay=0;lay<m_muonHWTool->getRealLayoutNumber(station,region);lay++){
-              verbose()<<" layout "<<lay<<endreq;
+              verbose()<<" layout "<<lay<<endmsg;
 
               //      for (int d=0;d<daisy[index][lay];d++){
               for (int d=0;d<m_muonHWTool->getI2CNumber(station,region,lay);d++){
-                verbose()<<" I2C "<<d<<endreq;
+                verbose()<<" I2C "<<d<<endmsg;
 
                 for(int cc=0;cc<m_muonHWTool->getFEBInI2CNumber(station,region,lay,d);cc++){
-                  verbose()<<"FEB "<<cc<<endreq;
+                  verbose()<<"FEB "<<cc<<endmsg;
 
                    std::vector<MuonTileID>::iterator iTile;
                    
@@ -321,11 +320,11 @@ StatusCode MuonTimeCor::writeOutCorrection()
                      MuonTileID Intile=*iTile;
                      MuonTileID Outtile=m_muonHWTool->transformTile(qua,chX,chY,Intile);
                      
-                     verbose()<<Intile<<" "<<Outtile<<endreq;
+                     verbose()<<Intile<<" "<<Outtile<<endmsg;
                      int mycor=-99;
                      
                      getOutCorrection(Outtile,mycor);
-                     verbose()<<" the time is "<<mycor<<endreq;
+                     verbose()<<" the time is "<<mycor<<endmsg;
                      //now get the HW names and numbers
                      
                      int MyODE;
@@ -334,7 +333,7 @@ StatusCode MuonTimeCor::writeOutCorrection()
         
                      m_muonHWTool-> GetHWName(Outtile,MyODE,MySynchOne,MySynchTwo); 
                      if(MySynchOne<0&&MySynchTwo<0){
-                       info()<<"failed "<<Outtile<<endreq;
+                       info()<<"failed "<<Outtile<<endmsg;
                        
                        return StatusCode::FAILURE;
                        
@@ -390,38 +389,38 @@ StatusCode MuonTimeCor::writeCorrection()
   
   ofstream outfile(m_correctionFileOut.c_str()); 
   if(!outfile) {
-    error() << "Cannot open output file"<<endreq;
+    error() << "Cannot open output file"<<endmsg;
     
     return StatusCode::FAILURE;;
   }  
 
   for (int station=0;station<5;station++){
-    verbose()<<"station "<<station<<endreq;
+    verbose()<<"station "<<station<<endmsg;
     
     for (int region=0;region<4;region++){
-      verbose()<<"region "<<region<<endreq;
+      verbose()<<"region "<<region<<endmsg;
       
       for(int qua=0;qua<4;qua++){
-        verbose()<<"quarter "<<qua<<endreq;
+        verbose()<<"quarter "<<qua<<endmsg;
         
 //        int index=station*4+region;
         for (int chX=0;chX<m_muonHWTool->getChamberGridX(region)*2;chX++){
-          verbose()<<" chX "<<chX<<endreq;
+          verbose()<<" chX "<<chX<<endmsg;
           
           for (int chY=0;chY<m_muonHWTool->getChamberGridY(region)*2;chY++){
-            verbose()<<"chY "<<chY<<endreq;
+            verbose()<<"chY "<<chY<<endmsg;
 
             if(chX<m_muonHWTool->getChamberGridX(region)&&chY<
                m_muonHWTool->getChamberGridY(region))continue;
             for(int lay=0;lay<m_muonHWTool->getRealLayoutNumber(station,region);lay++){
-              verbose()<<" layout "<<lay<<endreq;
+              verbose()<<" layout "<<lay<<endmsg;
 
               //      for (int d=0;d<daisy[index][lay];d++){
               for (int d=0;d<m_muonHWTool->getI2CNumber(station,region,lay);d++){
-                verbose()<<" I2C "<<d<<endreq;
+                verbose()<<" I2C "<<d<<endmsg;
 
                 for(int cc=0;cc<m_muonHWTool->getFEBInI2CNumber(station,region,lay,d);cc++){
-                  verbose()<<"FEB "<<cc<<endreq;
+                  verbose()<<"FEB "<<cc<<endmsg;
 
                    std::vector<MuonTileID>::iterator iTile;
                    
@@ -430,11 +429,11 @@ StatusCode MuonTimeCor::writeCorrection()
                      MuonTileID Intile=*iTile;
                      MuonTileID Outtile=m_muonHWTool->transformTile(qua,chX,chY,Intile);
                      
-                     verbose()<<Intile<<" "<<Outtile<<endreq;
+                     verbose()<<Intile<<" "<<Outtile<<endmsg;
                      int mycor=-99;
                      
                      getCorrection(Outtile,mycor);
-                     verbose()<<" the time is "<<mycor<<endreq;
+                     verbose()<<" the time is "<<mycor<<endmsg;
                      //now get the HW names and numbers
                      
                      int MyODE;
@@ -444,7 +443,7 @@ StatusCode MuonTimeCor::writeCorrection()
                      m_muonHWTool-> GetHWName(Outtile,MyODE,MySynchOne,MySynchTwo); 
 
                      if(MySynchOne<0&&MySynchTwo<0){
-                       info()<<"failed "<<Outtile<<endreq;
+                       info()<<"failed "<<Outtile<<endmsg;
                        
                        return StatusCode::FAILURE;
                        

@@ -1,6 +1,4 @@
-// $Id: MuonFastHWTool.cpp,v 1.2 2010-03-15 11:37:36 asatta Exp $
 // Include files 
-#include "boost/assign/list_of.hpp"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -16,7 +14,7 @@ using namespace LHCb;
 // 2003-04-16 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MuonFastHWTool );
+DECLARE_TOOL_FACTORY( MuonFastHWTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +38,7 @@ StatusCode MuonFastHWTool::initialize() {
   
   StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return sc;
-  debug()<<" initialization "<<endreq;
+  debug()<<" initialization "<<endmsg;
  
 
   m_muonDetector=getDet<DeMuonDetector>
@@ -336,7 +334,7 @@ void MuonFastHWTool::initFEB()
   m_chamberY[3]=8;
  
  
-  //info()<<"      qui "<<endreq;
+  //info()<<"      qui "<<endmsg;
   int station=-1;
   int region=-1;
 
@@ -355,13 +353,13 @@ void MuonFastHWTool::initFEB()
       x1 = m_muonDetector->getLayoutX(0,station,region);
       y1 = m_muonDetector->getLayoutY(0,station,region);
       verbose()<<" station  reg lay "<<station<<" "<<region
-            <<" "<<x1<<" "<<y1<<endreq;
+            <<" "<<x1<<" "<<y1<<endmsg;
       
       if( NLogicalMap ==2){ 
         x2 = m_muonDetector->getLayoutX(1,station,region);
         y2 = m_muonDetector->getLayoutY(1,station,region);
         verbose()<<" station  reg lay "<<station<<" "<<region
-                 <<" "<<x2<<" "<<y2<<endreq;
+                 <<" "<<x2<<" "<<y2<<endmsg;
       }
       
       if(region==1){
@@ -384,7 +382,7 @@ void MuonFastHWTool::initFEB()
         MuonLayout layoutTwo(x2,y2);
         m_padInChLayout.push_back(layoutOne);
         m_padInChLayout.push_back(layoutTwo);
-        verbose()<<"case 1 Layout "<<layoutOne<<endreq;
+        verbose()<<"case 1 Layout "<<layoutOne<<endmsg;
 
       }
        else if(m_realLayout[station*4+region]==1&&NLogicalMap ==2){
@@ -394,13 +392,13 @@ void MuonFastHWTool::initFEB()
         MuonLayout layoutTwo(x2,y1);
         m_padInChLayout.push_back(layoutOne);
         m_padInChLayout.push_back(layoutTwo);
-        verbose()<<"case 2 Layout "<<layoutOne<<endreq;
+        verbose()<<"case 2 Layout "<<layoutOne<<endmsg;
       }else{
         MuonLayout layoutOne(x1,y1);
         MuonLayout layoutTwo(x2,y2);
         m_padInChLayout.push_back(layoutOne);
         m_padInChLayout.push_back(layoutTwo);
-        verbose()<<"case 3 Layout "<<layoutOne<<" "<<layoutTwo<<endreq;
+        verbose()<<"case 3 Layout "<<layoutOne<<" "<<layoutTwo<<endmsg;
 
       }
         
@@ -428,7 +426,7 @@ void MuonFastHWTool::initFEB()
   
   
   
-  //info()<<" step 1"<<endreq;
+  //info()<<" step 1"<<endmsg;
   
    //how many daisy chain  per chambers per layout
 
@@ -533,7 +531,7 @@ void MuonFastHWTool::initFEB()
   m_cardiac[18][0][0]=6;
   //M5R4
   m_cardiac[19][0][0]=3;
-  //info()<<" step 2"<<endreq;
+  //info()<<" step 2"<<endmsg;
   //fill list of pad in each I2C / FEb  per chamber type
   int index=-1;
   int lay=-1;
@@ -556,7 +554,7 @@ void MuonFastHWTool::initFEB()
   tileInC.setQuarter(qua);
   tileInC.setLayout(m_padInChLayout[index*2+lay]);
   offsetX=m_padInChLayout[index*2+lay].xGrid();
-  //info()<<" M1R1 "<<offsetX<<endreq;
+  //info()<<" M1R1 "<<offsetX<<endmsg;
   
   d=0;  c=0;
   setI2CFeb(8,12,6,8,offsetX,index,lay,d,c,tileInC);  
@@ -636,7 +634,7 @@ void MuonFastHWTool::initFEB()
   setI2CFeb(12,16,6,8,offsetX,index,lay,d,c,tileInC);  
  
 
-  //info()<<" step 3"<<endreq;
+  //info()<<" step 3"<<endmsg;
 
  //M1R2
 
@@ -803,7 +801,7 @@ void MuonFastHWTool::initFEB()
   d=0;  c=2;
   setI2CFeb(8,12,0,1,offsetX,index,lay,d,c,tileInC);
  
-  // info()<<" finita M1 1"<<endreq;
+  // info()<<" finita M1 1"<<endmsg;
 
     //fill one by one the list of tiles for cardiac
   //M2R1
@@ -1543,7 +1541,7 @@ void MuonFastHWTool::fillTileParameter(MuonTileID tile,int lay,int i2c,int feb)
   int index=tile.station()*4+tile.region();
     
   int padindex=getPadChIndex(tile);
-  // info()<<" file tile "<<tile<<" "<<index<<" "<<padindex<<" " <<lay<<endreq;
+  // info()<<" file tile "<<tile<<" "<<index<<" "<<padindex<<" " <<lay<<endmsg;
   
   m_I2C[index][lay][padindex]=i2c;
   m_FEB[index][lay][padindex]=feb;
@@ -1565,7 +1563,7 @@ StatusCode MuonFastHWTool::GetI2C(LHCb::MuonTileID tile,int& I2C){
   
   I2C=m_I2C[index][lay][result];
  return StatusCode::SUCCESS;  
-};  
+}
 
 StatusCode MuonFastHWTool::GetFEBInCh(LHCb::MuonTileID tile,int& FEB){
   int result;
@@ -1582,7 +1580,7 @@ StatusCode MuonFastHWTool::GetFEBInCh(LHCb::MuonTileID tile,int& FEB){
   FEB=m_FEB[index][lay][result];
  return StatusCode::SUCCESS;  
   
-};  
+}
 
 StatusCode MuonFastHWTool::GetFEBInI2C(LHCb::MuonTileID tile,int& FEB){
   int result;
@@ -1599,13 +1597,7 @@ StatusCode MuonFastHWTool::GetFEBInI2C(LHCb::MuonTileID tile,int& FEB){
   FEB=m_FEB[index][lay][result];
  return StatusCode::SUCCESS;  
   
-};  
-
-
-
-
-
-
+}
 
 StatusCode  MuonFastHWTool::getGlobalIndex(MuonTileID tile,int &result,int& index,int& lay)
 {

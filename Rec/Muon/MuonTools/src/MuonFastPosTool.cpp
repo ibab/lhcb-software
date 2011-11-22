@@ -1,4 +1,3 @@
-// $Id: MuonFastPosTool.cpp,v 1.1 2009-04-29 14:15:55 asatta Exp $
 // Include files 
 #include "boost/assign/list_of.hpp"
 
@@ -14,7 +13,7 @@
 // 2003-04-16 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( MuonFastPosTool );
+DECLARE_TOOL_FACTORY( MuonFastPosTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,9 +35,9 @@ MuonFastPosTool::MuonFastPosTool( const std::string& type,
 StatusCode MuonFastPosTool::initialize() {
   
   StatusCode sc = GaudiTool::initialize() ;
-  if (!sc) return sc;
+  if (sc.isFailure()) return sc;
 
-  info() << "Initialising the muon get info tool" << endreq;
+  info() << "Initialising the muon get info tool" << endmsg;
 
   m_muonDetector=getDet<DeMuonDetector>
 	("/dd/Structure/LHCb/DownstreamRegion/Muon");
@@ -74,8 +73,8 @@ StatusCode MuonFastPosTool::initialize() {
             tile.setX(x);
             
             double xp,dx,yp,dy,zp,dz;
-            StatusCode sc =  m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
-            if (!sc) return sc;
+            sc =  m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
+            if (sc.isFailure() ) return sc;
             (m_pos[station])[index++]=Gaudi::XYZPoint(xp,yp,zp);
             m_padSizeX[station*4+region]=(float) dx;
             m_padSizeY[station*4+region]=(float) dy;
@@ -86,8 +85,8 @@ StatusCode MuonFastPosTool::initialize() {
           for (unsigned x=0;x<2*m_padGridX[station];x++){
             tile.setX(x);
             double xp,dx,yp,dy,zp,dz;
-            StatusCode sc = m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
-            if (!sc) return sc;
+            sc = m_muonDetector->Tile2XYZ(tile,xp,dx,yp,dy,zp,dz);
+            if (sc.isFailure()) return sc;
             (m_pos[station])[index++]=Gaudi::XYZPoint(xp,yp,zp);
           }          
         }        
