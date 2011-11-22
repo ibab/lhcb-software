@@ -20,9 +20,7 @@
 // 2005-06-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-//using namespace Tf;
-
-DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCHit );
+DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCHit )
 
 
 //=============================================================================
@@ -40,7 +38,7 @@ PatLHCbIDUp2MCHit::PatLHCbIDUp2MCHit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatLHCbIDUp2MCHit::~PatLHCbIDUp2MCHit() {}; 
+PatLHCbIDUp2MCHit::~PatLHCbIDUp2MCHit() {}
 
 //=============================================================================
 // Initialization
@@ -78,7 +76,7 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
     always()<<"# clusters: "<<clusters->size()<<endmsg;
     if (clusters->size() == 0){
        error() << "Unable to retrieve VeloPixClusters, check the container name"
-            << endreq;
+            << endmsg;
        return StatusCode::FAILURE;
     }
     if (clusters){
@@ -91,12 +89,11 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
         bool noAssHit = false;
         ILHCbIDsToMCHits::LinkMap testMap;
         StatusCode sc = linkTool()->link(LHCb::LHCbID( (*iClus)->channelID()),testMap);
-        ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin();
         for ( ILHCbIDsToMCHits::LinkMap::iterator it = testMap.begin(); testMap.end() != it ; ++it ){
           hit = it->first;
           if (hit == NULL ){
             noAssHit = true;
-            always()<<"No associated MCHit"<<endreq;
+            always()<<"No associated MCHit"<<endmsg;
             continue;
           }
           addToList( hit );
@@ -111,7 +108,7 @@ StatusCode PatLHCbIDUp2MCHit::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -27,7 +27,7 @@
 // 2011-03-16 ReWrite by Wenbin Qian to do a realistic cheated tracking
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CheatedVeloPixPat );
+DECLARE_ALGORITHM_FACTORY( CheatedVeloPixPat )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -47,7 +47,7 @@ CheatedVeloPixPat::CheatedVeloPixPat( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CheatedVeloPixPat::~CheatedVeloPixPat() {};
+CheatedVeloPixPat::~CheatedVeloPixPat() {}
 
 //=============================================================================
 // Initialization
@@ -64,7 +64,7 @@ StatusCode CheatedVeloPixPat::initialize() {
   m_veloPixFitter = tool<ITrackFitter>(m_veloPixFitterName, this ) ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -199,7 +199,8 @@ StatusCode CheatedVeloPixPat::execute() {
       }
     }
     // Be aware that the hit from same sensors are counted only once, but are all added to the list of ID
-    if (countHits>m_minIDs && refittracks.size()>0){   //here, we make some requirement on the tracks to simulate the case for real one
+    //here, we make some requirement on the tracks to simulate the case for real one
+    if (countHits>m_minIDs && refittracks.size()>0){
       for(VeloPixTracks::iterator ivtr = refittracks.begin(); ivtr != refittracks.end(); ivtr++ ){
         int sensor = 200;
         VeloPixHits hits = (*ivtr).hits();
@@ -288,7 +289,7 @@ StatusCode CheatedVeloPixPat::execute() {
   }
     
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -297,7 +298,7 @@ StatusCode CheatedVeloPixPat::execute() {
 StatusCode CheatedVeloPixPat::finalize() {
   debug() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize();  // must be called after all other actions
-};
+}
 
 
 //=============================================================================

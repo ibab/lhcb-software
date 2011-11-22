@@ -5,6 +5,9 @@
 !               classes
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix trivial gcc46 warning and icc remarks
+
 !========================= RecoUpgradeMC v1r3 2011-04-27 =========================
 ! 2011-04-15 Wenbin Qian
 - add initial and delete created class

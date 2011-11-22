@@ -1,4 +1,3 @@
-// $Id: PatCounterUpgrade.cpp,v 1.5 2008-07-11 08:28:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -14,7 +13,7 @@
 // Modified by Wenbin Qian for VeloPix Efficiency
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PatCounterUpgrade );
+DECLARE_TOOL_FACTORY( PatCounterUpgrade )
 
 
 //=============================================================================
@@ -38,7 +37,7 @@ PatCounterUpgrade::PatCounterUpgrade( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatCounterUpgrade::~PatCounterUpgrade() {};
+PatCounterUpgrade::~PatCounterUpgrade() {}
 
 //=========================================================================
 //  Finalize, delete the linker tool

@@ -44,7 +44,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloPixV0s );
+DECLARE_ALGORITHM_FACTORY( VeloPixV0s )
 
 
 //=============================================================================

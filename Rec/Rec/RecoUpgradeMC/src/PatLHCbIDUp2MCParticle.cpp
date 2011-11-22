@@ -22,7 +22,7 @@
 
 using namespace Tf;
 
-DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCParticle );
+DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCParticle )
 
 
 //=============================================================================
@@ -45,7 +45,7 @@ PatLHCbIDUp2MCParticle::PatLHCbIDUp2MCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatLHCbIDUp2MCParticle::~PatLHCbIDUp2MCParticle() {}; 
+PatLHCbIDUp2MCParticle::~PatLHCbIDUp2MCParticle() {}
 
 //=============================================================================
 // Initialization
@@ -59,7 +59,7 @@ StatusCode PatLHCbIDUp2MCParticle::initialize() {
   if (m_linkOT) m_othitcreator.retrieve().ignore();
  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -274,7 +274,7 @@ StatusCode PatLHCbIDUp2MCParticle::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

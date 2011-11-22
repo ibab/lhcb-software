@@ -1,4 +1,3 @@
-// $Id: PatCheckerUpgrade.cpp,v 1.4 2008-06-30 12:37:20 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( PatCheckerUpgrade );
+DECLARE_ALGORITHM_FACTORY( PatCheckerUpgrade )
 
 
 //=============================================================================
@@ -48,7 +47,7 @@ PatCheckerUpgrade::PatCheckerUpgrade( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatCheckerUpgrade::~PatCheckerUpgrade() {};
+PatCheckerUpgrade::~PatCheckerUpgrade() {}
 
 //=============================================================================
 // Initialization
@@ -188,7 +187,7 @@ StatusCode PatCheckerUpgrade::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -414,7 +413,7 @@ StatusCode PatCheckerUpgrade::execute() {
 
   if ( m_measureTime ) m_timer->stop( m_partTime );
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

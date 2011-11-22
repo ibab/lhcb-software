@@ -35,7 +35,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackAssociatorUpgrade );
+DECLARE_ALGORITHM_FACTORY( TrackAssociatorUpgrade )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -63,7 +63,7 @@ TrackAssociatorUpgrade::TrackAssociatorUpgrade( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackAssociatorUpgrade::~TrackAssociatorUpgrade() {};
+TrackAssociatorUpgrade::~TrackAssociatorUpgrade() {}
 
 //=============================================================================
 // Initialisation. Check parameters
