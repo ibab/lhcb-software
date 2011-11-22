@@ -1,4 +1,3 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.21 2010-04-22 07:39:10 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -36,7 +35,7 @@
 // 2001-05-16 : J. van Tilburg Jeroen.van.Tilburg@cern.ch
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( TrackMatchVeloSeed );
+DECLARE_ALGORITHM_FACTORY( TrackMatchVeloSeed )
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -109,7 +108,7 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackMatchVeloSeed::~TrackMatchVeloSeed() {}; 
+TrackMatchVeloSeed::~TrackMatchVeloSeed() {}
 
 //=============================================================================
 // Initialization
@@ -151,7 +150,7 @@ StatusCode TrackMatchVeloSeed::initialize()
 
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -228,7 +227,7 @@ StatusCode TrackMatchVeloSeed::execute()
   if ( m_doTiming) m_timerTool->stop( m_matchTime );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

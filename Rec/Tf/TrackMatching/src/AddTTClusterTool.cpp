@@ -1,4 +1,3 @@
-// $Id: AddTTClusterTool.cpp,v 1.5 2010-02-08 17:55:53 decianm Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -41,7 +40,7 @@
 // 2006-05-15 : J. van Tilburg Jeroen.van.Tilburg@cern.ch
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( AddTTClusterTool );
+DECLARE_TOOL_FACTORY( AddTTClusterTool )
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -76,7 +75,7 @@ AddTTClusterTool::AddTTClusterTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-AddTTClusterTool::~AddTTClusterTool() {}; 
+AddTTClusterTool::~AddTTClusterTool() {}
 
 //=============================================================================
 // Initialization
@@ -107,7 +106,7 @@ StatusCode AddTTClusterTool::initialize()
   m_poca = tool<ITrajPoca>( "TrajPoca" );
 
   return StatusCode::SUCCESS;
-};
+}
 
 void AddTTClusterTool::handle ( const Incident& incident )
 {
@@ -115,14 +114,6 @@ void AddTTClusterTool::handle ( const Incident& incident )
     m_ttClustersLoaded = false; 
   }
 }
-// //=============================================================================
-// // Method not implemented
-// //=============================================================================
-// StatusCode returnTTClusters( LHCb::State& state, std::vector<PatTTHit*>& ttHits, double& finalChi2, double p){
-
-//   ; // Method not implemented, only here because of interface
-  
-// }
 
 //=============================================================================
 // Load all the TT cluster of the event (executed automatically)
@@ -309,7 +300,7 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
   if ( m_addLHCbIDs ) {
     LHCbID lhcbID;
     std::vector<STCluster*>::const_iterator iClus = ttClusters.begin();
-    std::vector<TrackVector>::const_iterator iRef = refVectors.begin();
+    //    std::vector<TrackVector>::const_iterator iRef = refVectors.begin();
     while ( iClus != ttClusters.end() ) {
       const STCluster* aCluster = *iClus;
       lhcbID = LHCbID( aCluster -> channelID() );
