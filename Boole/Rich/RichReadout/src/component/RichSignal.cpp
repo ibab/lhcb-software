@@ -22,11 +22,10 @@ DECLARE_ALGORITHM_FACTORY( Signal )
 // Standard constructor, initializes variables
 Signal::Signal( const std::string& name,
                 ISvcLocator* pSvcLocator )
-  : Rich::AlgBase      ( name, pSvcLocator ),
-    m_mcDeposits       ( 0 ),
-    m_testSmartIDs     ( true ),
-    m_smartIDTool      ( 0 ),
-    m_truth            ( 0 ),
+  : Rich::AlgBase   ( name, pSvcLocator ),
+    m_mcDeposits    ( NULL ),
+    m_smartIDTool   ( NULL ),
+    m_truth         ( NULL ),
     m_timeShift ( Rich::NRiches )
 {
 
@@ -51,7 +50,7 @@ Signal::Signal( const std::string& name,
 
   declareProperty( "UseSpillover",     m_doSpillover = true );
   declareProperty( "UseLHCBackground", m_doLHCBkg = true );
-  declareProperty( "CheckSmartIDs", m_testSmartIDs );
+  declareProperty( "CheckSmartIDs", m_testSmartIDs = false );
 
 }
 
@@ -71,8 +70,8 @@ StatusCode Signal::initialize()
   }
 
   // tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
-  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, NULL, true );
+  acquireTool( "RichMCTruthTool", m_truth, NULL, true       );
 
   return sc;
 }
@@ -138,7 +137,7 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
     const LHCb::RichSmartID id = (*iHit)->sensDetID().pixelID();
 
     // Run some checks
-    if ( m_testSmartIDs )
+    if ( UNLIKELY(m_testSmartIDs) )
     {
       LHCb::RichSmartID tempID;
       const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
@@ -148,9 +147,14 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
       }
       else if ( id != tempID.pixelID() )
       { 
-        Warning( "RichSmartID mis-match" ).ignore(); 
+        Warning( "RichSmartID mis-match. Enable DEBUG for more details." ).ignore(); 
+        if ( msgLevel(MSG::DEBUG) ) 
+        {
+          debug() << "Original " << id << endmsg;
+          debug() << "New      " << tempID.pixelID() << endmsg;
+        }
       }
-      if ( msgLevel(MSG::DEBUG) )
+      if ( msgLevel(MSG::VERBOSE) )
       {
         Gaudi::XYZPoint detectP;
         const StatusCode sc = m_smartIDTool->globalPosition( id, detectP );
@@ -160,9 +164,9 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
         }
         else
         {
-          debug() << id << endmsg;
-          debug() << " -> Hit   pos : " << (*iHit)->entry() << endmsg;
-          debug() << " -> Digit pos : " << detectP << endmsg;
+          verbose() << id << endmsg;
+          verbose() << " -> Hit   pos : " << (*iHit)->entry() << endmsg;
+          verbose() << " -> Digit pos : " << detectP << endmsg;
         }
       }
     }
