@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix a gcc46 warning and some icc remarks 
+
 ! 2011-10-27 - Olivier Callot
  - Loop on phi pair combination, not only the best one. Improve efficiency
    for tracks at large IP. Increases the ghost rate by 0.5%

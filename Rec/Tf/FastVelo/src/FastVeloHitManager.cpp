@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FastVeloHitManager );
+DECLARE_TOOL_FACTORY( FastVeloHitManager )
 
 
 //=============================================================================
@@ -52,8 +51,7 @@ StatusCode FastVeloHitManager::initialize() {
   // first update
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
-    error() << "Failed to update station structure." << endreq;
-    return sc;
+    return Error( "Failed to update station structure." );
   }
 
   // invalidate measurements at the beginning of each event

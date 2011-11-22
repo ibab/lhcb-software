@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FastVeloTracking );
+DECLARE_ALGORITHM_FACTORY( FastVeloTracking )
 
 
 //=============================================================================
@@ -863,14 +862,13 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   double signOfSolution = 1.;
   if ( input.zone() < 1 || input.zone() > 4 ) signOfSolution = -1.;
 
-
   int firstSensor = m_hitManager->lastPhiSensor();
-  int lastSensor  = m_hitManager->firstPhiSensor();
+  //  int lastSensor  = m_hitManager->firstPhiSensor(); // not used 
   int step = -2;
   if ( input.zone() < 4 )  firstSensor -= 1;  // other side
-  if ( !forward ) {
+  if( !forward ) {
     firstSensor = m_hitManager->firstPhiSensor();
-    lastSensor  = m_hitManager->lastPhiSensor();
+    //    lastSensor  = m_hitManager->lastPhiSensor();
     step = +2;
     if ( input.zone() > 3 )  firstSensor += 1;  // other side
   }
@@ -1115,10 +1113,10 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
 
           //== Update Z of the R sensors
           for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-            FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
-            double x = x0 + tx * sensor->z();
-            double y = y0 + ty * sensor->z();
-            (*itH)->setZ( sensor->z( x, y ) );
+            FastVeloSensor* _sensor = m_hitManager->sensor( (*itH)->sensor() );
+            double x = x0 + tx * _sensor->z();
+            double y = y0 + ty * _sensor->z();
+            (*itH)->setZ( _sensor->z( x, y ) );
           }
           FastVeloTrack temp;
           temp.setPhiClusters( input, x0, tx, y0, ty, *itH1, best2, best3 );
@@ -1153,8 +1151,8 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
               }
               double addChi2 = m_maxChi2ToAdd;
               if ( fabs( goodPhiHits[s].front()->z() - lastZ ) > 140. ) addChi2 = 4 * addChi2;
-              bool ok = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
-              if ( !ok ) {
+              bool ok1 = temp.addBestPhiCluster( goodPhiHits[s], addChi2 );
+              if ( !ok1 ) {
                 nbMissed++;
               } else {
                 if ( inOverlap ) temp.addBestClusterOtherSensor( goodPhiHits[s], m_maxChi2ToAdd );
@@ -1182,9 +1180,9 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           //== Check that the R hits are within the correct zone
           int nbOutOfZone = 0;
           for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-            FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
-            double x = temp.xAtHit( *itH ) - sensor->xCentre();
-            double y = temp.yAtHit( *itH ) - sensor->yCentre();
+            FastVeloSensor* _sensor = m_hitManager->sensor( (*itH)->sensor() );
+            double x = temp.xAtHit( *itH ) - _sensor->xCentre();
+            double y = temp.yAtHit( *itH ) - _sensor->yCentre();
             if ( isVertical && fabs(x) > fabs(y) + 0.1 ) ++nbOutOfZone;
             if (!isVertical && fabs(x) < fabs(y) - 0.1 ) ++nbOutOfZone;
           }
@@ -1192,9 +1190,9 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
             if ( m_debug ) {
               info() << "The azimuth is incompatible with the R zone" << endmsg;
               for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-                FastVeloSensor* sensor = m_hitManager->sensor( (*itH)->sensor() );
-                double x = temp.xAtHit( *itH ) - sensor->xCentre();
-                double y = temp.yAtHit( *itH ) - sensor->yCentre();
+                FastVeloSensor* _sensor = m_hitManager->sensor( (*itH)->sensor() );
+                double x = temp.xAtHit( *itH ) - _sensor->xCentre();
+                double y = temp.yAtHit( *itH ) - _sensor->yCentre();
                 info() << format( "x%8.3f y%8.3f ", x, y );
                 printCoord( *itH, "Out" );
               }

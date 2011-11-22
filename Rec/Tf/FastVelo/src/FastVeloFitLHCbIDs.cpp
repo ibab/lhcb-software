@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FastVeloFitLHCbIDs );
+DECLARE_TOOL_FACTORY( FastVeloFitLHCbIDs )
 
 
 //=============================================================================
