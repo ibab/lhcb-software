@@ -126,7 +126,7 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
   // get fsr and get lumi and mu for this piece
   double munorm = 0;
   std::string thisCounter("NC");
-  int thisCoef(0);
+  //  int thisCoef(0);
   LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
   for ( int key = 0; key < int(coeff.size()) && key < LHCb::LumiCounters::LastGlobal; key++ ) {
     if ( coeff[key] != 0 ) {
@@ -137,7 +137,7 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
           mT.deltaLumi += value.second * coeff[key] * f;
           if ( mukey == key ) {
             thisCounter = counterName;
-            thisCoef = coeff[key];
+            //            thisCoef = coeff[key];
             munorm = value.first;
             mT.norm = munorm;
             if ( munorm > 0 ) {
