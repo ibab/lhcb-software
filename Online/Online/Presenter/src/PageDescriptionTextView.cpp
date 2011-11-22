@@ -118,7 +118,6 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
   for ( std::vector< std::vector< std::string > >::iterator
           it = problems.begin() ; it != problems.end() ; ++it ) {
     std::vector< std::string > vec = (*it) ;
-    id = atoi( vec[ 3 ].c_str() ) ;
 
     std::string cellColor ;
     if ( vec[ 1 ] == "Ok")
