@@ -1,4 +1,3 @@
-// $Id: TrackPrepareVelo.cpp,v 1.13 2010-03-26 20:23:27 dhcroft Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -18,7 +17,7 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 using namespace Gaudi;
 
-DECLARE_ALGORITHM_FACTORY( TrackPrepareVelo );
+DECLARE_ALGORITHM_FACTORY( TrackPrepareVelo )
 
 TrackPrepareVelo::TrackPrepareVelo(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -69,7 +68,7 @@ StatusCode TrackPrepareVelo::execute(){
   put(outCont,m_outputLocation);
 
   return StatusCode::SUCCESS;
-};
+}
 
 bool TrackPrepareVelo::used(const Track* aTrack, const Tracks* bestCont) const
 {

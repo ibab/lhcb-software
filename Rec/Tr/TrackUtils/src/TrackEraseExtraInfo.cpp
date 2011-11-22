@@ -16,7 +16,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackEraseExtraInfo );
+DECLARE_ALGORITHM_FACTORY( TrackEraseExtraInfo )
 
 TrackEraseExtraInfo::TrackEraseExtraInfo(const std::string& name,
 					 ISvcLocator* pSvcLocator):
@@ -59,5 +59,5 @@ StatusCode TrackEraseExtraInfo::execute(){
   }
    
   return StatusCode::SUCCESS;
-};
+}
 

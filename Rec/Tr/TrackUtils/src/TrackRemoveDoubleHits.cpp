@@ -307,7 +307,7 @@ StatusCode TrackRemoveDoubleHits::finalize ( ) {
   }
 
   return GaudiAlgorithm::finalize ( );
-};
+}
 //===========================================================================
 
 
@@ -332,7 +332,7 @@ bool TrackRemoveDoubleHits::isHighThreshold ( const LHCb::LHCbID& theLHCbID ) {
   }
   
   return false;
-};
+}
 //===========================================================================
 
 
@@ -357,5 +357,5 @@ double TrackRemoveDoubleHits::charge ( const LHCb::LHCbID& theLHCbID ) {
   }
   
   return 0.0;
-};
+}
 //===========================================================================

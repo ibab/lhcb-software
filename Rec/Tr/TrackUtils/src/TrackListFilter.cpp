@@ -1,6 +1,3 @@
-// $Id: TrackListFilter.cpp,v 1.2 2010-01-05 11:13:39 wouter Exp $
-
-
 /** @class TrackListFilter TrackListFilter.h
  *
  *  Algorithm to filter events in which a track list is not empty
@@ -31,7 +28,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackListFilter );
+DECLARE_ALGORITHM_FACTORY( TrackListFilter )
 
 
 TrackListFilter::TrackListFilter(const std::string& name,

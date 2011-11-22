@@ -124,7 +124,7 @@ StatusCode TrackToDST::execute(){
   } // iterT
    
   return StatusCode::SUCCESS;
-};
+}
 
 
 void TrackToDST::cleanStates(Track* aTrack, const SLocations& loc) const{

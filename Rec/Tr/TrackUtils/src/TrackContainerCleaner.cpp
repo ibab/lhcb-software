@@ -1,4 +1,3 @@
-// $Id: TrackContainerCleaner.cpp,v 1.3 2006-11-06 18:36:14 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -15,7 +14,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackContainerCleaner );
+DECLARE_ALGORITHM_FACTORY( TrackContainerCleaner )
 
 TrackContainerCleaner::TrackContainerCleaner(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -65,4 +64,4 @@ StatusCode TrackContainerCleaner::execute(){
   } // iterVec
 
   return StatusCode::SUCCESS;
-};
+}

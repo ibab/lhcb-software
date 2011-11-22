@@ -1,5 +1,3 @@
-// $Id: TrackListPrinter.cpp,v 1.1 2007/09/13 08:35:07 wouter Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -8,7 +6,7 @@
 
 #include "TrackListPrinter.h"
 
-DECLARE_ALGORITHM_FACTORY( TrackListPrinter );
+DECLARE_ALGORITHM_FACTORY( TrackListPrinter )
 
 TrackListPrinter::TrackListPrinter(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -31,5 +29,5 @@ StatusCode TrackListPrinter::execute()
     info() << **iterT << endmsg ;
   
   return StatusCode::SUCCESS;
-};
+}
 

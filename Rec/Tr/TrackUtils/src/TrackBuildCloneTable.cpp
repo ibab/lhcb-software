@@ -2,7 +2,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackBuildCloneTable );
+DECLARE_ALGORITHM_FACTORY( TrackBuildCloneTable )
 
 TrackBuildCloneTable::TrackBuildCloneTable(const std::string& name,
                                            ISvcLocator* pSvcLocator):

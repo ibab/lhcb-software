@@ -1,4 +1,3 @@
-// $Id: TrackV0Finder.cpp,v 1.15 2010-02-02 08:35:14 wouter Exp $
 // Include files 
 
 
@@ -111,7 +110,7 @@ private:
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackV0Finder );
+DECLARE_ALGORITHM_FACTORY( TrackV0Finder )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -348,7 +347,6 @@ StatusCode TrackV0Finder::execute()
 		// this correctly even if we are between nodes. (The
 		// extrapolators are guaranteed to be wrong half the
 		// time!)
-		StatusCode sc ;
 		if( (*ipos)->nodes().empty() ) 
 		  sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
 		else {

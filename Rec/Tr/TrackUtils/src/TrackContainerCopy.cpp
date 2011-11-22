@@ -1,5 +1,3 @@
-// $Id: TrackContainerCopy.cpp,v 1.6 2010-01-05 11:43:41 wouter Exp $
-
 #ifdef _WIN32
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
@@ -17,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
+DECLARE_ALGORITHM_FACTORY( TrackContainerCopy )
 
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -80,5 +78,5 @@ StatusCode TrackContainerCopy::execute(){
   //   counter("# tracks added") += naccepted ;
   
   return StatusCode::SUCCESS;
-};
+}
 

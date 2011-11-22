@@ -1,5 +1,3 @@
-// $Id: TrackCompetition.cpp,v 1.1 2008-11-29 10:26:54 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -16,7 +14,7 @@ using namespace LHCb;
 using namespace boost::lambda;
 
 
-DECLARE_ALGORITHM_FACTORY( TrackCompetition );
+DECLARE_ALGORITHM_FACTORY( TrackCompetition )
 
 TrackCompetition::TrackCompetition(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -70,5 +68,4 @@ StatusCode TrackCompetition::execute(){
 
 
   return StatusCode::SUCCESS;
-};
-
+}

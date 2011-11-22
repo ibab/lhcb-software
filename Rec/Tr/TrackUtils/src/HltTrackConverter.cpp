@@ -13,7 +13,6 @@
 #include "HltTrackConverter.h"
 
 #include "Event/Track.h"
-//#include "Kernel/LHCbID.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltTrackConverter
@@ -163,7 +162,7 @@ LHCb::Track::Types HltTrackConverter::SetTrackType(const LHCb::Track& t) const
   bool hasVelo = false;
   bool hasVeloPhi = false;
   bool hasTT =  false;
-  bool hasMuon = false;
+  //  bool hasMuon = false;
 
   for(std::vector<LHCb::LHCbID>::const_iterator it = lhcbIDs.begin();it!=lhcbIDs.end();++it)
     switch(it->detectorType())
@@ -183,7 +182,7 @@ LHCb::Track::Types HltTrackConverter::SetTrackType(const LHCb::Track& t) const
 	hasOT = true;
 	continue;
       case LHCb::LHCbID::Muon:
-	hasMuon = true;
+        //	hasMuon = true;
 	continue;
 	
       }

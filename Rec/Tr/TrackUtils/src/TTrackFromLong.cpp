@@ -1,4 +1,3 @@
-// $Id: TTrackFromLong.cpp,v 1.5 2006-11-24 08:39:03 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -15,7 +14,7 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
-DECLARE_ALGORITHM_FACTORY( TTrackFromLong );
+DECLARE_ALGORITHM_FACTORY( TTrackFromLong )
 
 TTrackFromLong::TTrackFromLong(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -48,7 +47,7 @@ StatusCode TTrackFromLong::execute(){
   put(newCont,m_outputLocation);
 
   return StatusCode::SUCCESS;
-};
+}
 
 Track* TTrackFromLong::convert(const Track* aTrack) const{
   

@@ -1,6 +1,3 @@
-// $Id: TrackListMerger.cpp,v 1.1 2010-01-05 11:11:16 wouter Exp $
-
-
 /** @class TrackListMerger TrackListMerger.h
  *
  *  Merge different track lists.
@@ -33,7 +30,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackListMerger );
+DECLARE_ALGORITHM_FACTORY( TrackListMerger )
 
 TrackListMerger::TrackListMerger(const std::string& name,
                        ISvcLocator* pSvcLocator):

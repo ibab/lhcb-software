@@ -1,4 +1,3 @@
-// $Id: TrackPrepareForFit.cpp,v 1.1 2007-01-16 08:09:18 mneedham Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -18,7 +17,7 @@ using namespace LHCb;
 using namespace Gaudi::Units;
 using namespace Gaudi;
 
-DECLARE_ALGORITHM_FACTORY( TrackPrepareForFit );
+DECLARE_ALGORITHM_FACTORY( TrackPrepareForFit )
 
 TrackPrepareForFit::TrackPrepareForFit(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -50,7 +49,7 @@ StatusCode TrackPrepareForFit::execute(){
   } // iterT
    
   return StatusCode::SUCCESS;
-};
+}
 
 void TrackPrepareForFit::prepare(Track* aTrack, const int charge) const{
 

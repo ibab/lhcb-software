@@ -1,5 +1,3 @@
-// $Id: TrackAddLikelihood.cpp,v 1.3 2007-11-05 16:00:42 cattanem Exp $
-
 
 // BOOST
 #include <boost/assign/list_of.hpp> // for 'map_list_of()
@@ -17,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackAddLikelihood );
+DECLARE_ALGORITHM_FACTORY( TrackAddLikelihood )
 
 TrackAddLikelihood::TrackAddLikelihood(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -73,5 +71,5 @@ StatusCode TrackAddLikelihood::execute(){
   } // iterT
    
   return StatusCode::SUCCESS;
-};
+}
 

@@ -1,6 +1,3 @@
-// $Id: VertexListRefiner.cpp,v 1.1 2010/04/15 09:30:50 wouter Exp $
-
-
 /** @class VertexListRefiner VertexListRefiner.h
  *
  *  Make a subselection of a track list
@@ -10,7 +7,6 @@
  */
 
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/SharedObjectsContainer.h"
 #include <string>
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
@@ -45,7 +41,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( VertexListRefiner );
+DECLARE_ALGORITHM_FACTORY( VertexListRefiner )
 
 VertexListRefiner::VertexListRefiner(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -133,5 +129,5 @@ StatusCode VertexListRefiner::execute()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 

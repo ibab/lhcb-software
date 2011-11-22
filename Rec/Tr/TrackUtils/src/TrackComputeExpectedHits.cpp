@@ -15,7 +15,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackComputeExpectedHits );
+DECLARE_ALGORITHM_FACTORY( TrackComputeExpectedHits )
 
 TrackComputeExpectedHits::TrackComputeExpectedHits(const std::string& name,
 						   ISvcLocator* pSvcLocator):
@@ -69,5 +69,4 @@ StatusCode TrackComputeExpectedHits::execute(){
   } // iterT
    
   return StatusCode::SUCCESS;
-};
-
+}

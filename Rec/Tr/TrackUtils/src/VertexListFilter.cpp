@@ -1,6 +1,3 @@
-// $Id: VertexListFilter.cpp,v 1.1 2010-04-15 09:30:50 wouter Exp $
-
-
 /** @class VertexListFilter VertexListFilter.h
  *
  *  Algorithm to filter events in which a track list is not empty
@@ -31,7 +28,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( VertexListFilter );
+DECLARE_ALGORITHM_FACTORY( VertexListFilter )
 
 
 VertexListFilter::VertexListFilter(const std::string& name,

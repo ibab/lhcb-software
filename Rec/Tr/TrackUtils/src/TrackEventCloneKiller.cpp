@@ -68,7 +68,7 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackEventCloneKiller::~TrackEventCloneKiller() {}; 
+TrackEventCloneKiller::~TrackEventCloneKiller() {}
 
 //=============================================================================
 // Initialization
@@ -95,20 +95,27 @@ StatusCode TrackEventCloneKiller::initialize()
   // -----------------------------------
   info() << endmsg
          << "============ TrackEventCloneKiller Settings ===========" << endmsg
-         << "TracksInContainers                    : " << getProperty( "TracksInContainers" ).toString()                    << endmsg
-         << "TrackOutContainer                     : " << m_tracksOutContainer                                              << endmsg
-         << "IgnoredTrackTypes                     : " << getProperty( "IgnoredTrackTypes" ).toString()                     << endmsg
-         << "CloneFinderTool                       : " << m_cloneFinder.type()                                              << endmsg
-         << "StoreCloneTracks                      : " << getProperty( "StoreCloneTracks" ).toString()                      << endmsg
-         << "SkipSameContainerTracks               : " << getProperty( "SkipSameContainerTracks" ).toString()               << endmsg
-         << "CompareInSameContainerForwardUpstream : " << getProperty( "CompareInSameContainerForwardUpstream" ).toString() << endmsg
+         << "TracksInContainers                    : "
+         << getProperty( "TracksInContainers" ).toString()                    << endmsg
+         << "TrackOutContainer                     : "
+         << m_tracksOutContainer                                              << endmsg
+         << "IgnoredTrackTypes                     : "
+         << getProperty( "IgnoredTrackTypes" ).toString()                     << endmsg
+         << "CloneFinderTool                       : "
+         << m_cloneFinder.type()                                              << endmsg
+         << "StoreCloneTracks                      : "
+         << getProperty( "StoreCloneTracks" ).toString()                      << endmsg
+         << "SkipSameContainerTracks               : "
+         << getProperty( "SkipSameContainerTracks" ).toString()               << endmsg
+         << "CompareInSameContainerForwardUpstream : "
+         << getProperty( "CompareInSameContainerForwardUpstream" ).toString() << endmsg
          << "=======================================================" << endmsg
          << endmsg;
   
 
   return sc ;
 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -201,7 +208,8 @@ StatusCode TrackEventCloneKiller::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
+
 //=============================================================================
 // Retrieve the input tracks from all the user-specified containers
 // Note: are only taken into account Valid and Fitted tracks!
@@ -242,7 +250,8 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
   }
   if ( m_debugLevel ) debug() << "-> total # of tracks retrieved = "
                               << allTracks.size() << endmsg;
-};
+}
+
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -251,4 +260,4 @@ StatusCode TrackEventCloneKiller::finalize()
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
   m_cloneFinder.release().ignore() ;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}

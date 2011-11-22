@@ -60,7 +60,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackHitAdder );
+DECLARE_ALGORITHM_FACTORY( TrackHitAdder )
 
 TrackHitAdder::TrackHitAdder( const std::string& name,
 				ISvcLocator* pSvcLocator)
