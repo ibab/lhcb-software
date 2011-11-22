@@ -38,8 +38,10 @@
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::T*>"   />
   
-  <function pattern = "LoKi::Dicts::TrInfo::info*" />
-    
+  <function pattern = "LoKi::Dicts::TrInfo::info*"     />
+  <class pattern    = "LoKi::ExtraInfo::CheckInfo<*LHCb::Track*>"  />
+  <class pattern    = "LoKi::ExtraInfo::GetInfo<*LHCb::Track*>"    />
+
   <class name = "LoKi::ITrackFunctorFactory"     />
   <class name = "LoKi::ITrackFunctorAntiFactory" />
   <class name = "LoKi::Hybrid::TrackEngine"      />

@@ -231,6 +231,9 @@ namespace
   struct _Instantiations 
   {
     // ========================================================================
+    // Monitoring & Extra Info    
+    LoKi::ExtraInfo::GetInfo<const LHCb::Track*>     m_53 ;
+    LoKi::ExtraInfo::CheckInfo<const LHCb::Track*>   m_54 ;
     // the basic functions 
     LoKi::Dicts::Funcs     <const LHCb::Track*>               m_f1   ;
     LoKi::Dicts::VFuncs    <const LHCb::Track*>               m_v1   ;
