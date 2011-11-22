@@ -47,12 +47,12 @@ TrackInterpolator::TrackInterpolator( const std::string& type,
   declareInterface<ITrackInterpolator>(this);
 
   declareProperty( "Extrapolator", m_extrapolator );
-};
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackInterpolator::~TrackInterpolator() {};
+TrackInterpolator::~TrackInterpolator() {}
 
 //=============================================================================
 // Initialization
@@ -66,7 +66,7 @@ StatusCode TrackInterpolator::initialize() {
   sc = m_extrapolator.retrieve() ;
   
   return sc;
-};
+}
 
 //=============================================================================
 // Finalize
@@ -218,4 +218,4 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   	    << state << endmsg ;
 
   return StatusCode::SUCCESS;
-};
+}

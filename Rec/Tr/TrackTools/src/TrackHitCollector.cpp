@@ -51,7 +51,7 @@ class CollectionFailure : public std::exception
 // 2010-01-12 : Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackHitCollector );
+DECLARE_TOOL_FACTORY( TrackHitCollector )
 
 
 //=============================================================================

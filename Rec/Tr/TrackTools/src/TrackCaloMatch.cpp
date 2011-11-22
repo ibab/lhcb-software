@@ -10,7 +10,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( TrackCaloMatch );
+DECLARE_TOOL_FACTORY( TrackCaloMatch )
   
 TrackCaloMatch::TrackCaloMatch(const std::string& type,
                      const std::string& name,
@@ -50,7 +50,7 @@ StatusCode TrackCaloMatch::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
  
   return StatusCode::SUCCESS; 
-};
+}
 
 double TrackCaloMatch::energy(const Track& aTrack) const{
 

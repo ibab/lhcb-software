@@ -105,7 +105,7 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
   }
   
   return sc ;
-} ;
+}
 
 StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
 {
@@ -234,16 +234,16 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
     // we'll only try something more complicated if there are enough TT hits
     if( ttlayers.size() >= 3 ) {
       
-      double xtt(0) ;
+      //      double xtt(0) ;
       typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> LineHit ;
       std::vector<LineHit> tthits ;
       BOOST_FOREACH( const LHCb::LHCbID& id, ttids ) {
-	LHCb::STChannelID ttid = id.stID() ;
-	const DeSTSector* sector = m_ttdetector->findSector(ttid) ;
-	double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend ;
-	sector->trajectory( ttid.strip(), 0, dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend) ;
-	tthits.push_back( LineHit( LineHit::Point(xAtYEq0,0,zAtYEq0),LineHit::Vector(dxdy,1,dzdy) ) ) ;
-	if( !sector->isStereo() ) xtt = xAtYEq0 ;
+        LHCb::STChannelID ttid = id.stID() ;
+        const DeSTSector* sector = m_ttdetector->findSector(ttid) ;
+        double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend ;
+        sector->trajectory( ttid.strip(), 0, dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin,  yend) ;
+        tthits.push_back( LineHit( LineHit::Point(xAtYEq0,0,zAtYEq0),LineHit::Vector(dxdy,1,dzdy) ) ) ;
+        //	if( !sector->isStereo() ) xtt = xAtYEq0 ;
       }
       
       Gaudi::Vector4 ttstatevec = statevec.parameters().Sub<Gaudi::Vector4>(0) ;

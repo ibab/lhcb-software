@@ -53,7 +53,7 @@ TrackCloneFinder::TrackCloneFinder( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackCloneFinder::~TrackCloneFinder() {};
+TrackCloneFinder::~TrackCloneFinder() {}
 
 //=============================================================================
 // Initialization

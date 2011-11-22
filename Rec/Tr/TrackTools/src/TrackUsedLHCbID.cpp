@@ -16,7 +16,7 @@
 
 using namespace boost::assign; // bring 'map_list_of()' into scope
 
-DECLARE_TOOL_FACTORY( TrackUsedLHCbID );
+DECLARE_TOOL_FACTORY( TrackUsedLHCbID )
   
 TrackUsedLHCbID::TrackUsedLHCbID(const std::string& type,
                                    const std::string& name,
@@ -58,7 +58,7 @@ StatusCode TrackUsedLHCbID::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
  
   return StatusCode::SUCCESS; 
-};
+}
 
 bool TrackUsedLHCbID::used(const LHCb::LHCbID id) const{
 

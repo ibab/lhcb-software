@@ -1,5 +1,3 @@
-// $Id: STClusterCollector.cpp,v 1.3 2010-01-21 13:51:18 jluisier Exp $
- 
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h" 
@@ -32,7 +30,7 @@
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 
-DECLARE_TOOL_FACTORY( STClusterCollector );
+DECLARE_TOOL_FACTORY( STClusterCollector )
 
 // trivial helpers to make code clearer...
 namespace

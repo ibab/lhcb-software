@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file ITTrackConfirmation.cpp
  *
@@ -33,7 +32,7 @@
 using namespace LHCb;
 using namespace boost::lambda;
 
-DECLARE_TOOL_FACTORY( ITTrackConfirmation );
+DECLARE_TOOL_FACTORY( ITTrackConfirmation )
 
 //-----------------------------------------------------------------------------
 

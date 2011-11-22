@@ -50,12 +50,12 @@ TrajectoryProvider::TrajectoryProvider( const std::string& type,
                    m_magsvcname = "MagneticFieldSvc" );
 
   //m_dets.clear();
-};
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TrajectoryProvider::~TrajectoryProvider() {};
+TrajectoryProvider::~TrajectoryProvider() {}
 
 //=============================================================================
 // Initialization
@@ -82,7 +82,7 @@ StatusCode TrajectoryProvider::initialize() {
   m_magsvc = svc<IMagneticFieldSvc>( m_magsvcname, true );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Return a "Measurement Trajectory" from a Measurement
@@ -90,7 +90,7 @@ StatusCode TrajectoryProvider::initialize() {
 const Trajectory* TrajectoryProvider::trajectory( const Measurement& meas )
 {
   return &meas.trajectory();
-};
+}
 
 //=============================================================================
 // Return a "Measurement trajectory" from an LHCbID and an offset
@@ -119,7 +119,7 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const LHCbID& id,
             << " -> do not know how to create a Trajectory!" << endmsg;
 		return std::auto_ptr<Trajectory>( NULL );
   }
-};
+}
 
 //=============================================================================
 // Return a "State trajectory" from a State
@@ -130,7 +130,7 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const State& state )
   m_magsvc -> fieldVector( state.position(), bField );
   
   return std::auto_ptr<Trajectory>(new StateTraj( state, bField ));
-};
+}
 
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
@@ -143,6 +143,6 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const Gaudi::TrackVect
                            bField );
   
   return std::auto_ptr<Trajectory>(new StateTraj( stateVector, z, bField ));
-};
+}
 
 //=============================================================================

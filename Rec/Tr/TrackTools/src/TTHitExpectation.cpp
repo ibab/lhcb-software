@@ -1,5 +1,3 @@
-// $Id: TTHitExpectation.cpp,v 1.11 2010-04-07 21:51:06 wouter Exp $
-
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -22,7 +20,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TTHitExpectation );
+DECLARE_TOOL_FACTORY( TTHitExpectation )
 //=============================================================================
 // 
 //=============================================================================
@@ -40,7 +38,7 @@ TTHitExpectation::TTHitExpectation(const std::string& type,
   declareProperty( "allStrips", m_allStrips = false);
 
   declareInterface<IHitExpectation>(this);
-};
+}
 
 //=============================================================================
 // 

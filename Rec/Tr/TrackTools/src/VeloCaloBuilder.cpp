@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( VeloCaloBuilder );
+DECLARE_ALGORITHM_FACTORY( VeloCaloBuilder )
 
 //=============================================================================
 // Standard constructor, initializes variables

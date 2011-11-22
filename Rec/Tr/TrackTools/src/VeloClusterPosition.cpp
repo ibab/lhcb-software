@@ -70,8 +70,8 @@ VeloClusterPosition::VeloClusterPosition(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloClusterPosition::~VeloClusterPosition(){
-};
+VeloClusterPosition::~VeloClusterPosition(){}
+
 //=============================================================================
 StatusCode VeloClusterPosition::initialize()
 {
@@ -83,7 +83,7 @@ StatusCode VeloClusterPosition::initialize()
   m_veloDet=getDet<DeVelo>( DeVeloLocation::Default );
 
   IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
-  SmartDataPtr<Condition> cond(detSvc(), (m_condPath+"/VeloErrorParam"));
+  Condition* cond=getDet<Condition>(m_condPath+"/VeloErrorParam");
   
   if(NULL!=cond)
   {
@@ -555,7 +555,7 @@ StatusCode VeloClusterPosition::i_cacheConditions()
     
     m_p0Values=cond->param<std::vector<double> >("ConstParams");
     m_p1Values=cond->param<std::vector<double> >("DirectionParams");
-    std::vector<double>::iterator it=m_p1Values.begin();
+    //    std::vector<double>::iterator it=m_p1Values.begin();
     m_errAnglePara=cond->param<std::vector<double> >("AngleErrorParams");
     m_defaultResolution=cond->param<std::vector<double> >("AverageVeloError");
 

@@ -16,7 +16,7 @@
  *  based on example made by Wouter Hulsbergen
  */
 
-DECLARE_TOOL_FACTORY( HltV0Upgrade );
+DECLARE_TOOL_FACTORY( HltV0Upgrade )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +35,7 @@ HltV0Upgrade::HltV0Upgrade( const std::string& type,
 //=============================================================================
 // Destructor
 //============================================================================
-HltV0Upgrade::~HltV0Upgrade() {}; 
+HltV0Upgrade::~HltV0Upgrade() {}
 
 //=============================================================================
 // Initialization
@@ -94,10 +94,10 @@ StatusCode HltV0Upgrade::process( LHCb::TwoProngVertex& vertex ) const
     
     // calls pocatool. last argument is required precision.
     Gaudi::XYZVector deltaX; 
-    StatusCode sc = m_pocatool->minimize( trajA,muA,trajB,muB,deltaX,0.001*Gaudi::Units::mm );
+    StatusCode sc1 = m_pocatool->minimize( trajA,muA,trajB,muB,deltaX,0.001*Gaudi::Units::mm );
     
     // if successful, update the vertex
-    if( sc.isSuccess() ) {
+    if( sc1.isSuccess() ) {
       LHCb::StateVector stateA = trajA.stateVector(muA) ;
       LHCb::StateVector stateB = trajB.stateVector(muB) ;
      

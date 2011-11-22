@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file VeloTrackSelector.cpp
  *
@@ -14,15 +13,10 @@
 //-----------------------------------------------------------------------------
 
 #include "GaudiKernel/ToolFactory.h"
-//#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiAlg/GaudiTool.h"
 
 // STL
 #include <string>
-
-// boost
-//#include "boost/numeric/conversion/bounds.hpp"
-//#include "boost/limits.hpp"
 
 #include "TrackSelector.h"
 
@@ -53,7 +47,7 @@ private:
   size_t m_minHitsCSide ;
 };
 
-DECLARE_TOOL_FACTORY( VeloTrackSelector );
+DECLARE_TOOL_FACTORY( VeloTrackSelector )
 
 //-----------------------------------------------------------------------------
 

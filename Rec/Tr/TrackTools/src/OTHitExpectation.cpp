@@ -1,5 +1,3 @@
-// $Id: OTHitExpectation.cpp,v 1.4 2009-07-20 11:16:57 mneedham Exp $
-
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -34,14 +32,14 @@ using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
-namespace {
+//namespace {
+//
+//  bool sameChan(const LHCbID& chan1, const LHCbID& chan2 ){
+//      return (chan1.otID().geometry() == chan2.otID().geometry());
+//  }
+//}
 
-  bool sameChan(const LHCbID& chan1, const LHCbID& chan2 ){
-      return (chan1.otID().geometry() == chan2.otID().geometry());
-  }
-}
-
-DECLARE_TOOL_FACTORY( OTHitExpectation );
+DECLARE_TOOL_FACTORY( OTHitExpectation )
 
 //=============================================================================
 // 
@@ -54,7 +52,7 @@ OTHitExpectation::OTHitExpectation(const std::string& type,
   // constructer
   declareProperty("likPar", m_likPar = boost::assign::list_of(0.261)(5.1)(11.87));
 
-};
+}
 
 //=============================================================================
 // 

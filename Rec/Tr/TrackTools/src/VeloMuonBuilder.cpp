@@ -17,7 +17,8 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( VeloMuonBuilder );
+DECLARE_ALGORITHM_FACTORY( VeloMuonBuilder )
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

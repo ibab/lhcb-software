@@ -1,4 +1,3 @@
- // $Id: TrackVertexer.cpp,v 1.6 2009-07-09 09:47:52 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackVertexer );
+DECLARE_TOOL_FACTORY( TrackVertexer )
 
 //=============================================================================
 // Standard constructor, initializes variables

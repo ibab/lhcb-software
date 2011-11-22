@@ -31,7 +31,7 @@ LongTrackReferenceCreator::LongTrackReferenceCreator(const std::string& type,
 { 
   // constructer
   declareInterface<ITrackManipulator>(this);
-};
+}
 
 //=============================================================================
 // 
@@ -55,7 +55,7 @@ StatusCode LongTrackReferenceCreator::initialize()
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
   
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================

@@ -25,7 +25,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( StateDetailedBetheBlochEnergyCorrectionTool );
+DECLARE_TOOL_FACTORY( StateDetailedBetheBlochEnergyCorrectionTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

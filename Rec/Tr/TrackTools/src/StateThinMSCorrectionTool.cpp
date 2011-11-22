@@ -1,4 +1,3 @@
-// $Id: StateThinMSCorrectionTool.cpp,v 1.6 2008-03-31 07:13:28 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -25,7 +24,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( StateThinMSCorrectionTool );
+DECLARE_TOOL_FACTORY( StateThinMSCorrectionTool )
 
 
 //=============================================================================

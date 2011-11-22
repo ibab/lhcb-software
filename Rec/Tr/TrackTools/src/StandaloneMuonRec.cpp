@@ -47,7 +47,7 @@ StandaloneMuonRec::StandaloneMuonRec( const std::string& name,
 // Destructor
 //=============================================================================
 StandaloneMuonRec::~StandaloneMuonRec() {
-}; 
+}
 
 //=============================================================================
 // Initialization
@@ -240,7 +240,7 @@ StatusCode StandaloneMuonRec::initialize() {
   }  
   m_maxMuonFound=10; 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -344,7 +344,7 @@ StatusCode StandaloneMuonRec::execute() {
     debug()<<" stored candidates "<<m_countMuonCandidates<<endmsg; 
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -367,7 +367,7 @@ StatusCode StandaloneMuonRec::finalize() {
           << double(m_countMuCandidates)/double(m_countEvents) << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
-};
+}
 
 
 //=============================================================================
@@ -434,7 +434,7 @@ StatusCode StandaloneMuonRec::decodeBuffer() {
   }
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 
@@ -471,7 +471,6 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
 
   
   unsigned int which_third=0;  
-  unsigned int which_layout=0;
   std::vector<LHCb::MuonTileID>::const_iterator itTile;
   for( itTile = padTiles.begin() ; itTile != padTiles.end() ; 
        ++itTile ){
@@ -490,11 +489,9 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
     
     // insert the pad in the correct container
     if((itTile->layout()).xGrid()== layoutX[0]){
-      which_layout=0;  
       twelfthX[quadrant*3+which_third-1].
         push_back(std::pair<LHCb::MuonTileID,bool>((*itTile),false));      
     }else{
-      which_layout=1;     
       twelfthY[quadrant*3+which_third-1].
         push_back(std::pair<LHCb::MuonTileID,bool>((*itTile),false)); 
       
@@ -610,7 +607,7 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
     twelfthY[index].clear();
     }
   return StatusCode::SUCCESS;  
-};
+}
 
 
 
@@ -643,7 +640,7 @@ LHCb::MuonTileID StandaloneMuonRec::intercept(const LHCb::MuonTileID& stripX,
   resultID.setLayout(MuonLayout(otherGridX,thisGridY));
 
   return resultID;
-};
+}
 
 
 
@@ -736,7 +733,7 @@ StatusCode StandaloneMuonRec::muonSearch()
   //info()<<"fine "<<m_muonTracks.size()<<endmsg;
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 
@@ -747,8 +744,7 @@ StatusCode StandaloneMuonRec::detectClone()
  bool sameM2;
  bool sameM3;
  bool sameM4;
- bool sameM5;
- 
+  
  for(itMuonTrackFirst=m_muonTracks.begin();
      itMuonTrackFirst<m_muonTracks.end();itMuonTrackFirst++){
    for(itMuonTrackSecond=itMuonTrackFirst+1;
@@ -756,8 +752,7 @@ StatusCode StandaloneMuonRec::detectClone()
      sameM2=false;
      sameM3=false;
      sameM4=false;
-     sameM5=false;
-     if(itMuonTrackFirst->point(1).tile()==
+      if(itMuonTrackFirst->point(1).tile()==
         itMuonTrackSecond->point(1).tile())sameM2=true;
      if(itMuonTrackFirst->point(2).tile()==
         itMuonTrackSecond->point(2).tile())sameM3=true;
@@ -781,7 +776,7 @@ StatusCode StandaloneMuonRec::detectClone()
  }
  return StatusCode::SUCCESS;
  
-};
+}
 
 
 StatusCode StandaloneMuonRec::strongCloneKiller()
@@ -821,7 +816,7 @@ StatusCode StandaloneMuonRec::strongCloneKiller()
  }
  return StatusCode::SUCCESS;
  
-};
+}
 
 
 
@@ -841,7 +836,7 @@ StatusCode StandaloneMuonRec::printOut()
   }  
   return StatusCode::SUCCESS;
   
-};
+}
 
 
 StatusCode StandaloneMuonRec::getPads(int station)
@@ -953,7 +948,7 @@ StatusCode StandaloneMuonRec::initializeLogChanDecoding()
   return StatusCode::SUCCESS;
   
   
-};
+}
 
 
 

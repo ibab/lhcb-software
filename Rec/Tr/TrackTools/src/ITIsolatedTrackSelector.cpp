@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file ITIsolatedTrackSelector.cpp
  *
@@ -34,7 +33,7 @@ using namespace LHCb;
 using namespace Gaudi;
 using namespace std;
 
-DECLARE_TOOL_FACTORY( ITIsolatedTrackSelector );
+DECLARE_TOOL_FACTORY( ITIsolatedTrackSelector )
 
 //-----------------------------------------------------------------------------
 

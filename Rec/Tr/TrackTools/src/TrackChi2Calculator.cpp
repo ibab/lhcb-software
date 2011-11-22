@@ -20,7 +20,7 @@ using namespace Gaudi;
 // 2003-09-18 : Jeroen van Tilburg
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackChi2Calculator );
+DECLARE_TOOL_FACTORY( TrackChi2Calculator )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,12 +36,12 @@ TrackChi2Calculator::TrackChi2Calculator( const std::string& type,
   declareProperty( "ScaleVector",   m_scaleVector           );
   declareProperty( "MatchInMagnet", m_matchInMagnet = false );
   declareProperty( "AddMomentum",   m_addMomentum   = false );
-};
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackChi2Calculator::~TrackChi2Calculator() {};
+TrackChi2Calculator::~TrackChi2Calculator() {}
 
 //=============================================================================
 // Initialization
@@ -52,7 +52,7 @@ StatusCode TrackChi2Calculator::initialize() {
   if (sc.isFailure()) return sc;  // error already reported by base class
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //
@@ -104,7 +104,7 @@ StatusCode TrackChi2Calculator::calculateChi2( const Gaudi::TrackVector& trackVe
   chi2 = ROOT::Math::Similarity<double,5>( vec1-vec2, trackCinv );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //
@@ -141,7 +141,7 @@ StatusCode TrackChi2Calculator::calculateChi2( Gaudi::Vector4& trackVector1,
                                            trackCov12 );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //
@@ -177,7 +177,7 @@ StatusCode TrackChi2Calculator::invertMatrix( Gaudi::TrackSymMatrix& invC ) cons
   TrackUnitsConverters::convertToG4( invC );
 
   return ( OK ) ? StatusCode::SUCCESS : StatusCode::FAILURE;
-};
+}
 
 //=============================================================================
 //
@@ -213,6 +213,6 @@ StatusCode TrackChi2Calculator::invertMatrix( Gaudi::SymMatrix4x4& invC ) const
   TrackUnitsConverters::convertToG4( invC );
   
   return ( OK ) ? StatusCode::SUCCESS : StatusCode::FAILURE;  
-};
+}
 
 //=============================================================================

@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file ITTrackSelector.cpp
  *
@@ -14,15 +13,10 @@
 //-----------------------------------------------------------------------------
 
 #include "GaudiKernel/ToolFactory.h"
-//#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiAlg/GaudiTool.h"
 
 // STL
 #include <string>
-
-// boost
-//#include "boost/numeric/conversion/bounds.hpp"
-//#include "boost/limits.hpp"
 
 #include "TrackSelector.h"
 
@@ -60,7 +54,7 @@ private:
   bool   m_requireITOverlap ;
 };
 
-DECLARE_TOOL_FACTORY( ITTrackSelector );
+DECLARE_TOOL_FACTORY( ITTrackSelector )
 
 //-----------------------------------------------------------------------------
 
@@ -89,7 +83,6 @@ bool ITTrackSelector::accept ( const LHCb::Track& aTrack ) const
 	 it = aTrack.lhcbIDs().begin() ;
        it != aTrack.lhcbIDs().end(); ++it ) 
     if( it->isIT() ) {
-      LHCb::STChannelID stid = it->stID() ;
       ++(numIT[it->stID().detRegion()-1]) ;
     } else if( it->isOT() ) {
       LHCb::OTChannelID otid = it->otID() ;

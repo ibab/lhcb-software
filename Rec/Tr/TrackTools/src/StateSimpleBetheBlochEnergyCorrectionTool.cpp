@@ -1,4 +1,3 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.9 2009-01-22 09:35:42 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -25,7 +24,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( StateSimpleBetheBlochEnergyCorrectionTool );
+DECLARE_TOOL_FACTORY( StateSimpleBetheBlochEnergyCorrectionTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

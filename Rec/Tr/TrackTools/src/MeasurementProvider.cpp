@@ -62,7 +62,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MeasurementProvider::~MeasurementProvider() {};
+MeasurementProvider::~MeasurementProvider() {}
 
 //=============================================================================
 // Initialization

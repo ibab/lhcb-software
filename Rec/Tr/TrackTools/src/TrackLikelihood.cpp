@@ -1,5 +1,3 @@
-// $Id: TrackLikelihood.cpp,v 1.10 2009-10-08 14:47:37 wouter Exp $
-
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -35,7 +33,7 @@ using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( TrackLikelihood );
+DECLARE_TOOL_FACTORY( TrackLikelihood )
 
 //=============================================================================
 // 
@@ -71,7 +69,7 @@ TrackLikelihood::TrackLikelihood(const std::string& type,
 
   declareInterface<ITrackManipulator>(this);
 
-};
+}
 
 //=============================================================================
 // 

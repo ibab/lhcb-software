@@ -48,12 +48,12 @@ TrackPtKick::TrackPtKick( const std::string& type,
  declareProperty( "ParabolicCorrection", 
                   m_ParabolicCorrection =   boost::assign::list_of(1.04)(0.14));
  declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
-};
+}
 
 //=============================================================================
 // Destructor
 //============================================================================
-TrackPtKick::~TrackPtKick() {}; 
+TrackPtKick::~TrackPtKick() {}
 
 //=============================================================================
 // Initialization
@@ -75,10 +75,11 @@ StatusCode TrackPtKick::initialize()
   }
 
   return StatusCode::SUCCESS;
-};
+}
+
+//=============================================================================
 // Estimate the momentum P of a State
 //=============================================================================
-//
 StatusCode TrackPtKick::calculate( const LHCb::State* /* veloState */,
                                    const LHCb::State* tState, 
 				   double& qOverP, double& sigmaQOverP, bool tCubicFit ) const
@@ -186,6 +187,6 @@ StatusCode TrackPtKick::determineFieldPolarity()
  }
 
  return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================

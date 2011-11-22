@@ -248,7 +248,7 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloR>::nominalZ( const LH
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloR> VeloRMeasurementProvider ;
-DECLARE_TOOL_FACTORY( VeloRMeasurementProvider );
+DECLARE_TOOL_FACTORY( VeloRMeasurementProvider )
 
 template<>
 double MeasurementProviderT<MeasurementProviderTypes::VeloLiteR>::nominalZ( const LHCb::LHCbID& id ) const
@@ -257,7 +257,7 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloLiteR>::nominalZ( cons
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloLiteR> VeloLiteRMeasurementProvider ;
-DECLARE_TOOL_FACTORY( VeloLiteRMeasurementProvider );
+DECLARE_TOOL_FACTORY( VeloLiteRMeasurementProvider )
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -299,7 +299,7 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloPhi>::nominalZ( const 
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloPhi> VeloPhiMeasurementProvider ;
-DECLARE_TOOL_FACTORY( VeloPhiMeasurementProvider );
+DECLARE_TOOL_FACTORY( VeloPhiMeasurementProvider )
 
 template<>
 double MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi>::nominalZ( const LHCb::LHCbID& id ) const
@@ -308,7 +308,7 @@ double MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi>::nominalZ( co
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::VeloLitePhi> VeloLitePhiMeasurementProvider ;
-DECLARE_TOOL_FACTORY( VeloLitePhiMeasurementProvider );
+DECLARE_TOOL_FACTORY( VeloLitePhiMeasurementProvider )
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -343,7 +343,7 @@ double MeasurementProviderT<MeasurementProviderTypes::TT>::nominalZ( const LHCb:
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::TT> TTMeasurementProvider ;
-DECLARE_TOOL_FACTORY( TTMeasurementProvider );
+DECLARE_TOOL_FACTORY( TTMeasurementProvider )
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -421,7 +421,7 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::TTLite>::measu
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::TTLite> TTLiteMeasurementProvider ;
-DECLARE_TOOL_FACTORY( TTLiteMeasurementProvider );
+DECLARE_TOOL_FACTORY( TTLiteMeasurementProvider )
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -450,7 +450,7 @@ double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb:
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::IT> ITMeasurementProvider ;
-DECLARE_TOOL_FACTORY( ITMeasurementProvider );
+DECLARE_TOOL_FACTORY( ITMeasurementProvider )
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -532,6 +532,6 @@ LHCb::Measurement* MeasurementProviderT<MeasurementProviderTypes::ITLite>::measu
 
 
 typedef MeasurementProviderT<MeasurementProviderTypes::ITLite> ITLiteMeasurementProvider ;
-DECLARE_TOOL_FACTORY( ITLiteMeasurementProvider );
+DECLARE_TOOL_FACTORY( ITLiteMeasurementProvider )
 
 

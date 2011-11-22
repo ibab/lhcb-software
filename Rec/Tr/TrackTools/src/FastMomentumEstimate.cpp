@@ -18,7 +18,7 @@
 // 2007-10-30 : S. Hansmann-Menzemer
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( FastMomentumEstimate );
+DECLARE_TOOL_FACTORY( FastMomentumEstimate )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,12 +41,12 @@ FastMomentumEstimate::FastMomentumEstimate( const std::string& type,
 		   = boost::assign::list_of(0.0));
   declareProperty( "TResolution", m_tResolution = 0.025);
   declareProperty( "VeloPlusTResolution", m_veloPlusTResolution = 0.015);
-};
+}
 
 //=============================================================================
 // Destructor
 //============================================================================
-FastMomentumEstimate::~FastMomentumEstimate() {}; 
+FastMomentumEstimate::~FastMomentumEstimate() {}
 
 //=============================================================================
 // Initialization
@@ -80,7 +80,7 @@ StatusCode FastMomentumEstimate::initialize()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& qOverP, 

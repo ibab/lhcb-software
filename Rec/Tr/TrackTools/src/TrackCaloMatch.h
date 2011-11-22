@@ -1,4 +1,3 @@
-// $Id: TrackCaloMatch.h,v 1.3 2008-10-24 13:45:07 mneedham Exp $
 #ifndef _TrackCaloMatch_H
 #define _TrackCaloMatch_H
 
@@ -21,7 +20,7 @@
 
 namespace LHCb{
   class Track;
-};
+}
  
 class TrackCaloMatch: public GaudiTool, 
                       virtual public ITrackCaloMatch,

@@ -168,7 +168,7 @@ StatusCode MuonTTTrack::execute() {
     track->setNDoF(1);
     
     if(m_addTTHits){
-      StatusCode sc = m_trackFitter->fit(*track, LHCb::ParticleID(track->charge()*13) );
+      sc = m_trackFitter->fit(*track, LHCb::ParticleID(track->charge()*13) );
       if(!sc && msgLevel(MSG::DEBUG) ) debug() << "Fit failed" << endmsg;
     }else{
       track->clearStates();

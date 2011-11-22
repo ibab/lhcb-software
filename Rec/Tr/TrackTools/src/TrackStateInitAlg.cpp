@@ -10,7 +10,7 @@
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
 
-DECLARE_ALGORITHM_FACTORY( TrackStateInitAlg ) ;
+DECLARE_ALGORITHM_FACTORY( TrackStateInitAlg )
 
 TrackStateInitAlg::TrackStateInitAlg( const std::string& name,
 				      ISvcLocator* pSvcLocator)

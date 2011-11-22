@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix gcc46 warnings and icc remarks
+
 ! 2011-11-10 - Paul Seyfert
  - Fix memoryleak in unused method of VeloMuonBuilder
 

@@ -1,5 +1,3 @@
-// $Id: ITHitExpectation.cpp,v 1.6 2009-07-20 11:16:57 mneedham Exp $
-
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -38,7 +36,7 @@ using namespace boost::lambda;
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_TOOL_FACTORY( ITHitExpectation );
+DECLARE_TOOL_FACTORY( ITHitExpectation )
 
 
 //=============================================================================
@@ -54,7 +52,7 @@ ITHitExpectation::ITHitExpectation(const std::string& type,
   declareProperty( "SelectorType", m_selectorType = "STSelectChannelIDByElement" );
   declareProperty( "SelectorName", m_selectorName = "ALL" );
   declareProperty( "allStrips", m_allStrips = false);
-};
+}
 
 //=============================================================================
 // 
