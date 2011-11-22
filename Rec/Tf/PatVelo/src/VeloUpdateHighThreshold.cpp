@@ -1,4 +1,3 @@
-// $Id: VeloUpdateHighThreshold.cpp,v 1.1 2009-08-26 11:44:21 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloUpdateHighThreshold );
+DECLARE_ALGORITHM_FACTORY( VeloUpdateHighThreshold )
 
 
 //=============================================================================

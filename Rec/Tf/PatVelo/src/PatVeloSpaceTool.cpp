@@ -1,4 +1,3 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.22 2010/02/18 14:12:06 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -22,7 +21,7 @@
 
 namespace Tf {
   // Declaration of the Tool Factory
-  DECLARE_TOOL_FACTORY( PatVeloSpaceTool );
+  DECLARE_TOOL_FACTORY( PatVeloSpaceTool )
 
   //=============================================================================
   // Standard constructor, initializes variables

@@ -1,4 +1,3 @@
-// $Id: NewVeloSpaceTool.cpp,v 1.6 2009-08-26 11:44:21 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( NewVeloSpaceTool );
+DECLARE_TOOL_FACTORY( NewVeloSpaceTool )
 
 
 //=============================================================================

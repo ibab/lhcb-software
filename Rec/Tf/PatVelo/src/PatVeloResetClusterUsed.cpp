@@ -1,4 +1,3 @@
-// $Id: PatVeloResetClusterUsed.cpp,v 1.1 2008-08-26 17:52:20 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloResetClusterUsed );
+  DECLARE_ALGORITHM_FACTORY( PatVeloResetClusterUsed )
 }
 //=============================================================================
 // Standard constructor, initializes variables
@@ -34,7 +33,7 @@ Tf::PatVeloResetClusterUsed::PatVeloResetClusterUsed( const std::string& name,
 // Destructor
 //=============================================================================
 
-Tf::PatVeloResetClusterUsed::~PatVeloResetClusterUsed() {}; 
+Tf::PatVeloResetClusterUsed::~PatVeloResetClusterUsed() {}
 
 //=============================================================================
 // Initialization
@@ -51,7 +50,7 @@ StatusCode Tf::PatVeloResetClusterUsed::initialize() {
   m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -65,7 +64,7 @@ StatusCode Tf::PatVeloResetClusterUsed::execute() {
   if(m_resetPhi) m_phiHitManager->resetUsedFlagOfHits();
  
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode Tf::PatVeloResetClusterUsed::finalize() {
   if( m_isDebug ) debug() << "==> Finalize" << endmsg;

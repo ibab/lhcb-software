@@ -1,4 +1,3 @@
-// $Id: PatVeloGeneric.cpp,v 1.6 2008-10-09 11:57:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloGeneric );
+  DECLARE_ALGORITHM_FACTORY( PatVeloGeneric )
 
   //=============================================================================
   // Standard constructor, initializes variables
@@ -67,7 +66,7 @@ namespace Tf {
   // Destructor
   //=============================================================================
 
-  PatVeloGeneric::~PatVeloGeneric() {}; 
+  PatVeloGeneric::~PatVeloGeneric() {}
 
   //=============================================================================
   // Initialization
@@ -114,7 +113,7 @@ namespace Tf {
     m_pOff *= m_pOff;
 
     return StatusCode::SUCCESS;
-  };
+  }
 
   //=============================================================================
   // Main execution
@@ -146,7 +145,7 @@ namespace Tf {
 
     for (unsigned int half=0; half < 2; ++half) {
 
-      PatVeloRHitManager::StationIterator        rStationsBegin        = m_rHitManager->stationsHalfBegin(half);
+      //      PatVeloRHitManager::StationIterator        rStationsBegin        = m_rHitManager->stationsHalfBegin(half);
       PatVeloRHitManager::StationIterator        rStationsEnd          = m_rHitManager->stationsHalfEnd(half);
       PatVeloRHitManager::StationReverseIterator rStationsReverseBegin = m_rHitManager->stationsHalfReverseBegin(half);
       PatVeloRHitManager::StationReverseIterator rStationsReverseEnd   = m_rHitManager->stationsHalfReverseEnd(half);
@@ -567,7 +566,7 @@ namespace Tf {
   debug() << "Number of stored tracks: " << m_outputTracks->size() << endreq;  
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

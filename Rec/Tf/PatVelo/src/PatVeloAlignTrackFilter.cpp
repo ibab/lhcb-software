@@ -17,7 +17,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloAlignTrackFilter );
+  DECLARE_ALGORITHM_FACTORY( PatVeloAlignTrackFilter )
 
   //=============================================================================
   // Standard constructor, initializes variables
@@ -52,7 +52,7 @@ namespace Tf {
   // Destructor
   //=============================================================================
 
-  PatVeloAlignTrackFilter::~PatVeloAlignTrackFilter() {}; 
+  PatVeloAlignTrackFilter::~PatVeloAlignTrackFilter() {}
 
   //=============================================================================
   // Initialization
@@ -79,7 +79,7 @@ namespace Tf {
       m_nBinsR = 72;
     }
     return StatusCode::SUCCESS;
-  };
+  }
 
   //=============================================================================
   // Main execution
@@ -295,7 +295,7 @@ namespace Tf {
   } // if total number of hits in range
 
   return StatusCode::SUCCESS;
-};
+}
 
 int PatVeloAlignTrackFilter::hitsInCell( int rhit, int phit ) {
   if ( m_verboseLevel ) verbose() << "==> hitsInCell" << endmsg;

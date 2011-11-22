@@ -1,4 +1,3 @@
-// $Id: PatVeloFitLHCbIDs.cpp,v 1.4 2009-07-29 16:25:59 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -24,7 +23,7 @@
 
 // Declaration of the Tool Factory
 namespace Tf{
-  DECLARE_TOOL_FACTORY( PatVeloFitLHCbIDs );
+  DECLARE_TOOL_FACTORY( PatVeloFitLHCbIDs )
 }
 
 //=============================================================================

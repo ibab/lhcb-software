@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix trivial gcc46 warnings and icc remarks
+
 !========================== PatVelo v3r25p1 2010-11-10 ========================
 ! 2010-11-09 - David Hutchcroft
  - Fixed problem with PatVeloRTracking not updating local cached variables properly

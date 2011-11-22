@@ -1,4 +1,3 @@
-// $Id: PatVeloLiteClusterPromoter.cpp,v 1.2 2009-03-05 14:27:57 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
 
 namespace Tf {
   // Declaration of the Tool Factory
-  DECLARE_TOOL_FACTORY( PatVeloLiteClusterPromoter );
+  DECLARE_TOOL_FACTORY( PatVeloLiteClusterPromoter )
 }
 
   //==========================================================================

@@ -1,5 +1,3 @@
-// $Id: PatVeloRHitManager.cpp,v 1.7 2010-01-20 17:16:41 krinnert Exp $
-
 #include "GaudiKernel/ToolFactory.h"
 
 #include "PatVeloRHitManager.h"
@@ -13,7 +11,7 @@ namespace Tf {
   //-----------------------------------------------------------------------------
 
 
-  DECLARE_TOOL_FACTORY( PatVeloRHitManager );
+  DECLARE_TOOL_FACTORY( PatVeloRHitManager )
 
 
   //=============================================================================

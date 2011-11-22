@@ -1,4 +1,3 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.12 2010-02-18 14:12:07 dhcroft Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloSpaceTracking );
+  DECLARE_ALGORITHM_FACTORY( PatVeloSpaceTracking )
 
   //=============================================================================
   // Standard constructor, initializes variables
@@ -39,7 +38,7 @@ namespace Tf {
   //=============================================================================
   // Destructor
   //=============================================================================
-  PatVeloSpaceTracking::~PatVeloSpaceTracking() {};
+  PatVeloSpaceTracking::~PatVeloSpaceTracking() {}
 
   //=============================================================================
   // Initialization
@@ -67,7 +66,7 @@ namespace Tf {
     }
 
     return StatusCode::SUCCESS;
-  };
+  }
 
   //=============================================================================
   // Main execution

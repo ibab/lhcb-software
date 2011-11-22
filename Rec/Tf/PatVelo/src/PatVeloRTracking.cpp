@@ -1,4 +1,3 @@
-// $Id: PatVeloRTracking.cpp,v 1.13 2010-04-22 17:30:31 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -22,7 +21,7 @@ namespace Tf {
   // 2005-05-31 : Olivier Callot
   //-----------------------------------------------------------------------------
 
-  DECLARE_ALGORITHM_FACTORY( PatVeloRTracking );
+  DECLARE_ALGORITHM_FACTORY( PatVeloRTracking )
 
   //=============================================================================
   // Standard constructor, initializes variables
@@ -59,7 +58,7 @@ namespace Tf {
   //=============================================================================
   // Destructor
   //=============================================================================
-  PatVeloRTracking::~PatVeloRTracking() {};
+  PatVeloRTracking::~PatVeloRTracking() {}
 
 
   //=============================================================================
@@ -102,7 +101,7 @@ namespace Tf {
     }
 
     return StatusCode::SUCCESS;
-  };
+  }
 
   //=============================================================================
   // Main execution
@@ -340,7 +339,7 @@ namespace Tf {
     
 
     return StatusCode::SUCCESS;
-  };
+  }
 
   //=============================================================================
   //  Finalize
@@ -641,7 +640,7 @@ namespace Tf {
     //== Extrapolate until too many consecutive hits missed,
     // or outside sensor
     int nMiss = 0;
-    double lastZ = (*station)->z();
+    // double lastZ = (*station)->z();
     bool notFirst = false;
     while ( m_maxMissed >= nMiss ) {
       // if not doing opposite side must update sectPt first, then for both every time
@@ -695,7 +694,7 @@ namespace Tf {
       //== Select the best hit when extrapolating
       PatVeloRHit* bestc = (*station)->closestHitHalfBox( zone, rPred, tol );
       if ( 0 != bestc ) {
-        lastZ = z;
+        // lastZ = z;
         // add hit to track or to temporary storage
         nMiss = 0;
         if(!extraCoord){ // i.e. adding directly to the track

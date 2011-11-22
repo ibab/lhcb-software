@@ -1,11 +1,10 @@
-// $Id: PatVeloTraversingTracking.cpp,v 1.5 2009-10-09 18:54:00 siborghi Exp $
 // Include files
 #include "PatVeloTraversingTracking.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloTraversingTracking );
+  DECLARE_ALGORITHM_FACTORY( PatVeloTraversingTracking )
 }
 
 //=============================================================================

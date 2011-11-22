@@ -1,4 +1,3 @@
-// $Id: PatGenericFitter.cpp,v 1.2 2008-02-13 16:10:19 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -54,9 +53,9 @@ namespace Tf {
     std::vector<PatVeloRHit*>::iterator   cR0 = m_rCoord.begin();  
     std::vector<PatVeloPhiHit*>::iterator cP0 = m_pCoord.begin();
     double R = (*cR0)->coordHalfBox();
-    double dto = m_innerDTO;      
+    //    double dto = m_innerDTO;      
     unsigned int zone = (*cP0)->zone();
-    if ( 1 == zone ) dto = m_outerDTO;
+    //    if ( 1 == zone ) dto = m_outerDTO;
     
     double phi = m_angleUtils.add((*cP0)->coordHalfBox(),(*cP0)->sensor()->halfboxPhiOffset(zone,R));
     

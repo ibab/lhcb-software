@@ -1,4 +1,3 @@
-// $Id: NewVeloRTracking.cpp,v 1.1 2009-09-09 13:38:23 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( NewVeloRTracking );
+DECLARE_ALGORITHM_FACTORY( NewVeloRTracking )
 
 
 //=============================================================================
@@ -193,7 +192,7 @@ StatusCode NewVeloRTracking::execute() {
 
         } // zone loop
       } // station loop
-      StationReverseIterator stationReverseIter = m_hitManager->stationsHalfReverseBegin(half);
+      //      StationReverseIterator stationReverseIter = m_hitManager->stationsHalfReverseBegin(half);
     } // velo half loop
   }
 
@@ -545,7 +544,7 @@ int NewVeloRTracking::extendTrack(Tf::PatRZTrack &newTrack,
   //== Extrapolate until too many consecutive hits missed,
   // or outside sensor
   int nMiss = 0;
-  double lastZ = (*station)->z();
+  //  double lastZ = (*station)->z();
   bool notFirst = false;
   while ( m_maxMissed >= nMiss ) {
 
@@ -584,7 +583,7 @@ int NewVeloRTracking::extendTrack(Tf::PatRZTrack &newTrack,
     //== Select the best hit when extrapolating
     Tf::PatVeloRHit* bestc = (*station)->closestHitHalfBox( zone, rPred, tol );
     if ( 0 != bestc ) {
-      lastZ = z;
+      // lastZ = z;
       // add hit to track or to temporary storage
       nMiss = 0;
       if(!extraCoord){ // i.e. adding directly to the track

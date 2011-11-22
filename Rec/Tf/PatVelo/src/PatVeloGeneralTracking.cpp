@@ -1,4 +1,3 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.25 2010-04-07 20:51:37 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 namespace Tf {
-  DECLARE_ALGORITHM_FACTORY( PatVeloGeneralTracking );
+  DECLARE_ALGORITHM_FACTORY( PatVeloGeneralTracking )
 }
 //=============================================================================
 // Standard constructor, initializes variables
@@ -68,7 +67,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
 // Destructor
 //=============================================================================
 
-Tf::PatVeloGeneralTracking::~PatVeloGeneralTracking() {}; 
+Tf::PatVeloGeneralTracking::~PatVeloGeneralTracking() {}
 
 //=============================================================================
 // Initialization
@@ -112,7 +111,7 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -152,7 +151,7 @@ StatusCode Tf::PatVeloGeneralTracking::execute() {
   if ( m_doTiming ) m_timerTool->stop( m_veloGeneralTime );
   
   return StatusCode::SUCCESS;
-};
+}
 
 
 void Tf::PatVeloGeneralTracking::

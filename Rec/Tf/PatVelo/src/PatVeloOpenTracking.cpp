@@ -1,4 +1,3 @@
-// $Id: PatVeloOpenTracking.cpp,v 1.6 2008-12-04 09:05:56 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatVeloOpenTracking );
+DECLARE_ALGORITHM_FACTORY( PatVeloOpenTracking )
 
 
 //=============================================================================
