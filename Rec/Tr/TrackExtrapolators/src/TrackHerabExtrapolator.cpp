@@ -196,7 +196,7 @@ void TrackHerabExtrapolator::rk5order(
 
   double qp,hC,h;
   double k[24],x0[4],x[4],k1[24];
-  double tx,ty,tx2,ty2,txty,tx2ty2,tx2ty2qp,tx2ty21,I_tx2ty2,I_tx2ty21;
+  double tx,ty,tx2,ty2,txty,tx2ty2,tx2ty2qp,tx2ty21,I_tx2ty21;
   double Ax[6],Ay[6],Ax_tx[6],Ay_tx[6],Ax_ty[6],Ay_ty[6];
 
   int step_j,step4;
@@ -238,7 +238,8 @@ void TrackHerabExtrapolator::rk5order(
 
     tx = x[2]; ty = x[3]; tx2 = tx * tx; ty2 = ty * ty; txty = tx * ty;
     tx2ty21= 1.0 + tx2 + ty2; I_tx2ty21 = 1.0 / tx2ty21 * qp;
-    tx2ty2 = sqrt(tx2ty21 ) ; I_tx2ty2 = qp * hC / tx2ty2 ;
+    tx2ty2 = sqrt(tx2ty21 ) ; 
+    // double I_tx2ty2 = qp * hC / tx2ty2 ; // unused?
     tx2ty2 *= hC; tx2ty2qp = tx2ty2 * qp;
 
     Ax[step] = ( txty*m_B.x() + ty*m_B.z() - ( 1.0 + tx2 )*m_B.y() ) * tx2ty2;
