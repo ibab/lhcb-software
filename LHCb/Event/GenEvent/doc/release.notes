@@ -3,6 +3,12 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r2 2011-11-22 =========================
+! 2011-11-22 - Gloria Corti
+ - Fix bugs in methods to calculate emittance and smearing on beam angles 
+   in BeamParameters class.
+   Add units in default values of attributes.
+
 !========================= GenEvent v6r1 2011-09-07 =========================
 ! 2011-09-06 - Marco Cattaneo for Patrick Robbe
  - Add a dictionary for std::map<std::string,HepMC::WeightContainer::size_type>,

@@ -19,7 +19,7 @@
         desc="Beam energy"
         name="energy"
         type="double"
-        init="3.5"
+        init="3.5*Gaudi::Units::TeV"
        />
        <attribute
         desc="RMS of the bunch length"
@@ -44,43 +44,43 @@
        desc  = "Total cross-section"
        name  = "totalXSec"
        type  = "double"
-       init  = "97.2*Gaudi::Units::millibarn"
+       init  = "91.1*Gaudi::Units::millibarn"
       />
       <attribute
        desc  = "Horizontal crossing angle"
        name  = "horizontalCrossingAngle"
        type  = "double"
-       init  = "130.0"
+       init  = "0.130*Gaudi::Units::mrad"
       />
       <attribute
        desc  = "Vertical crossing angle"
        name  = "verticalCrossingAngle"
        type  = "double"
-       init  = "130.0"
+       init  = "0.130*Gaudi::Units::mrad"
       />
       <attribute
        desc  = "Horizontal beamline angle"
        name  = "horizontalBeamlineAngle"
        type  = "double"
-       init  = "130.0"
+       init  = "0.0"
       />
       <attribute
        desc  = "Vertical beamline angle"
        name  = "verticalBeamlineAngle"
        type  = "double"
-       init  = "130.0"
+       init  = "0.0"
       />
       <attribute
        desc  = "Beta star"
        name  = "betaStar"
        type  = "double"
-       init  = "3.0"
+       init  = "3.0*Gaudi::Units::m"
       />
       <attribute
        desc  = "Bunch spacing"
        name  = "bunchSpacing"
        type  = "double"
-       init  = "50."
+       init  = "50.*Gaudi::Units::ns"
       />
       <attribute
        desc  = "Luminous region mean position"
@@ -111,7 +111,7 @@
 	type="double"
 	>
 	<code>
-	  double beta = sqrt( energy() * energy() - 938.272013 * Gaudi::Units::GeV * 938.272013 * Gaudi::Units::GeV ) / energy() ; 
+	  double beta = sqrt( energy() * energy() - 938.272013 * Gaudi::Units::MeV * 938.272013 * Gaudi::Units::MeV ) / energy() ; 
 	  double gamma = 1./sqrt(1. - beta * beta ) ; 
 	  return epsilonN()/gamma/beta ;
 	</code>
@@ -153,7 +153,7 @@
         type="double"
         >
         <code>
-          if ( 0.0 != betaStar() ) return ( epsilonN() / betaStar() ) ;
+          if ( 0.0 != betaStar() ) return ( emittance() / betaStar() ) ;
           else return 0.0 ;
         </code>
       </method>
