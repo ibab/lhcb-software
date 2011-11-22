@@ -82,6 +82,11 @@ StatusCode FastPVMonitor::execute() {
     m_sx2 += xv * xv;
     m_sy2 += yv * yv;
     m_sz2 += zv * zv;
+    info() << format( "x%7.3f y%7.3f z%7.2f nTr%5d  errx%7.3f errY %7.3f errZ %7.3f",
+                      xv, yv, zv, (*itPv)->tracks().size(),
+                      sqrt((*itPv)->covMatrix()(0,0)),
+                      sqrt((*itPv)->covMatrix()(1,1)),
+                      sqrt((*itPv)->covMatrix()(2,2)) ) << endmsg;
   }
   // Number of tracks with IP between min and max values
   for ( LHCb::Tracks::iterator itT = tracks->begin(); tracks->end() != itT ; ++itT ) {

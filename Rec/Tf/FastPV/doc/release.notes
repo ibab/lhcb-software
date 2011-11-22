@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2011-11-22 - Olivier Callot
+ - Try a vertex with unused tracks if no vertex found (low mult. events)
+
+! 2011-11-22 - Olivier Callot
  - Fix properly the backward request!
  - New algorithm FastPVMonitor to monitor the vertices.
 

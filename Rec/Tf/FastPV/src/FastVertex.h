@@ -32,6 +32,22 @@ public:
   unsigned int nBack()   { return m_nBack; }
 
   Gaudi::SymMatrix3x3 cov ( );
+
+  void setTracksUsed( bool flag ) {
+    for ( std::vector<TrackForPV*>::iterator itT = m_tracks.begin();
+          m_tracks.end() != itT; ++itT ) {
+      (*itT)->setUsed( flag );
+    }
+  }
+  
+  int nbUsed( ) {
+    int nUsed = 0;
+    for ( std::vector<TrackForPV*>::iterator itT = m_tracks.begin();
+          m_tracks.end() != itT; ++itT ) {
+      if ( (*itT)->used( ) ) nUsed++;
+    }
+    return nUsed;
+  }
   
 protected:
   void solve();

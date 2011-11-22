@@ -41,6 +41,9 @@ public:
     bool operator() ( const TrackForPV* lhs, const TrackForPV* rhs) const { return lhs->zAtBeam() < rhs->zAtBeam(); }
   };
 
+
+  bool used() { return m_used; }
+  void setUsed( bool flag ) { m_used = flag; }
   
 protected:
 
@@ -53,5 +56,6 @@ private:
   double m_weight;
   double m_zAtBeam;
   double m_rAtBeam;
+  bool   m_used;
 };
 #endif // TRACKFORPV_H

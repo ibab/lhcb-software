@@ -165,9 +165,32 @@ StatusCode FastPVFinder::execute() {
                           << " nBack " << temp.nBack() << endmsg;
     
     if ( temp.nTracks() < m_minTracksInPV ) continue;
-    if ( temp.nTracks() < 2*m_minTracksInPV && temp.nBack() == 0 ) continue;
+    if ( temp.nTracks() < 10 && temp.nBack() == 0 ) continue;
+    if ( temp.nbUsed() > 0.9 * temp.tracks().size() ) continue;  // avoid duplicates
     myVertices.push_back( temp );
+    temp.setTracksUsed( true );
   }
+
+  //== If no PV found, try with all (unused) tracks, iteratively.
+  bool found = myVertices.size() == 0;
+  while ( found ) {
+    std::vector<TrackForPV*> unusedTracks;
+    for ( itT1 = myTracks.begin(); myTracks.end() != itT1; ++itT1 ) {
+      if ( !(*itT1)->used() ) unusedTracks.push_back( *itT1 );
+    }
+    found = false;
+    if ( m_debug ) info() << "Try unused tracks, size = " << unusedTracks.size() << endmsg;
+    if ( m_minTracksInPV > unusedTracks.size() ) continue;
+    FastVertex temp( unusedTracks.begin(), unusedTracks.end() -1 );
+    temp.removeWorsts( m_maxChi2Fit );
+    if ( temp.nTracks() >= m_minTracksInPV && 
+         ( temp.nTracks() > 10 || temp.nBack() != 0 ) ) {
+      myVertices.push_back( temp );
+      temp.setTracksUsed( true );
+      found = true;
+    }
+  }
+
   if ( m_debug ) info() << "Number of seed vertices " << myVertices.size() << endmsg;
 
   std::vector<FastVertex>::iterator itV, itV2;
