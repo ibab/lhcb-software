@@ -1,4 +1,3 @@
-// $Id: PatVeloTTTool.cpp,v 1.12 2010-01-19 13:06:37 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -17,7 +16,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatVeloTTTool );
+DECLARE_TOOL_FACTORY( PatVeloTTTool )
 
 
 //=============================================================================
@@ -329,8 +328,7 @@ void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate)
 
     double xOnTrack = candidate.xAtZ( (*itClus)->z() );
     double yAt0 = candidate.yAtZ(0);
-
-    double dyDz = candidate.slopeY();
+    dyDz = candidate.slopeY();
     updateTTHitForTrack((*itClus),yAt0, dyDz);
     double dx = (*itClus)->x() - xOnTrack;
 
@@ -529,19 +527,19 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
     qp=-qpxz2p*(sinInX-sinOutX)/bdl*3.3356/Gaudi::Units::GeV;
   }
 
-  double bdlmom=0.;
-  if(fabs(sinInX-sinOutX)>1.e-8) {
-    double pxz2p=sqrt(1.+ySlopeVelo*ySlopeVelo);
-    double pxz=-bdl/(3.3356*(sinInX-sinOutX));
-    bdlmom = pxz * pxz2p * Gaudi::Units::GeV;
-  }
-
-  double bdlmom2=0.;
-  if(fabs(qp)>1.e-8) bdlmom2 = 1/qp;
+  // Next block commented MC 2011-11-22, these variables are not used anywhere
+  //  double bdlmom=0.;
+  //  if(fabs(sinInX-sinOutX)>1.e-8) {
+  //    double pxz2p=sqrt(1.+ySlopeVelo*ySlopeVelo);
+  //    double pxz=-bdl/(3.3356*(sinInX-sinOutX));
+  //    bdlmom = pxz * pxz2p * Gaudi::Units::GeV;
+  //  }
 
   if(m_debug) {
     double mom_orig =0.;
     if(vtttr.qOverP() != 0.0 ) mom_orig = 1./vtttr.qOverP();
+    double bdlmom2=0.;
+    if(fabs(qp)>1.e-8) bdlmom2 = 1/qp;
     debug() << " Original / Refit momenta  :" << mom_orig << " " << bdlmom2 << endmsg;
   }
 

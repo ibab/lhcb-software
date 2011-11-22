@@ -1,5 +1,3 @@
-// $Id: PatTTMagnetTool.cpp,v 1.7 2010-01-09 12:46:27 witekma Exp $
-
 // Include files
 
 // from Gaudi
@@ -29,7 +27,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatTTMagnetTool );
+DECLARE_TOOL_FACTORY( PatTTMagnetTool )
 
 // Standard Constructor
 PatTTMagnetTool::PatTTMagnetTool( const std::string& type,
@@ -258,8 +256,8 @@ void PatTTMagnetTool::prepareDeflectionTables() {
   while(!iover) {
     m_lutDxLay->getVariableVector(m_lutVar);
     int idLay       = int(m_lutVar[0]+0.000001);
-    double dydzBeg  = m_lutVar[1];
-    double dxdzBeg  = 0;
+    dydzBeg  = m_lutVar[1];
+    dxdzBeg  = 0;
     double zLay = m_zLayers[idLay];
     
     xBeg = 0.;

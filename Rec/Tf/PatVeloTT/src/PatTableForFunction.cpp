@@ -1,4 +1,3 @@
-// $Id: PatTableForFunction.cpp,v 1.3 2009-10-30 13:19:13 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -15,7 +14,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatTableForFunction );
+DECLARE_TOOL_FACTORY( PatTableForFunction )
 
 
 //=============================================================================

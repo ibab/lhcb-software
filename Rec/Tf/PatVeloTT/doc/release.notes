@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix gcc46 warning (unused variable in PatVeloTTTool)
+ - Fix some trivial icc remarks
+
 !========================== PatVeloTT v3r15 2010-06-21 ======================
 ! 2010-09-21 - Victor Coco
  - Add VeloPix case to the IDs count in PatVeloTT.cpp

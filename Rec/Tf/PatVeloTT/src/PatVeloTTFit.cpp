@@ -1,6 +1,4 @@
-// $Id: PatVeloTTFit.cpp,v 1.4 2009-10-19 13:22:25 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IRegistry.h"
 #include "STDet/DeSTDetector.h"
 
 #include <boost/foreach.hpp>
@@ -14,7 +12,7 @@
 // 2009-01-28 : Pavel Krokovny <krokovny@physi.uni-heidelberg.de>
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PatVeloTTFit );
+DECLARE_TOOL_FACTORY( PatVeloTTFit )
 
 
 //=============================================================================

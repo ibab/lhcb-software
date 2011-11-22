@@ -1,4 +1,3 @@
-// $Id: PatVeloTT.cpp,v 1.7 2009-03-11 18:09:59 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@
 
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatVeloTT );
+DECLARE_ALGORITHM_FACTORY( PatVeloTT )
   
 
 //=============================================================================
