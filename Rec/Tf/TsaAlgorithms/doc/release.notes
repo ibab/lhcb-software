@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix gcc46 variable set but not used warnings 
+
 !========================= TsaAlgorithms v3r25 2011-11-08 =========================
 ! 2011-10-10 - Marco Cattaneo
  - Mask remaining icc warnings, fix a few remarks

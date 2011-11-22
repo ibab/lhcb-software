@@ -150,7 +150,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
         const double xb = seed->x(m_zBox[pos],TsaConstants::z0);
         if ( xb < m_xMin[pos] || xb > m_xMax[pos] ) continue;
 
-        int hint = -1;
+        //        int hint = -1;
         for ( int layer = 0; layer < 4; ++layer ) {     //  Loop over layers in box
 
           //  Loop over clusters in that layer
@@ -186,7 +186,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
               if ( fabs( x - xs ) < m_dCut ) {
                 ++nHitAdded;
                 //hint = clus->channelID().sector();
-                hint = (*itIter)->stChannelID().sector();
+                //hint = (*itIter)->stChannelID().sector();
                 SeedHit* aHit = new SeedHit(*itIter);
                 hits->insert(aHit);
                 

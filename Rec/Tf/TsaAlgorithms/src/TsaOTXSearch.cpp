@@ -154,7 +154,7 @@ StatusCode OTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
           int nhSel = 0;
           SeedHit* hSel = 0;
           int sSel[3] = {0, 0, 0};
-          SeedHit* iSel[100];
+          //          SeedHit* iSel[100];
           for ( std::vector<SeedHit*>::iterator it3 = select[1].begin(); select[1].end() != it3; ++it3 ) {
             SeedHit* hit3 = (*it3);
             if ( hit3->use1() && hit3->use2() ) continue;
@@ -206,13 +206,13 @@ StatusCode OTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
               sSel[2] = sMax[2];
               hSel = hit3;
 
-              int nh = 0;
-              for ( int stn = 0; stn < 3; ++stn ) {
-                for ( int i = 0; i < nhMax[stn]; ++i ) {
-                  iSel[nh] = ih[stn][i];
-                  ++nh;
-                } // i
-              } //stn
+              //              int nh = 0;
+              //              for ( int stn = 0; stn < 3; ++stn ) {
+              //                for ( int i = 0; i < nhMax[stn]; ++i ) {
+              //                  iSel[nh] = ih[stn][i];
+              //                  ++nh;
+              //                } // i
+              //              } //stn
             } // if
           } // select
           if ( nhSel < 1 ) continue;
