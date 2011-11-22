@@ -1,7 +1,6 @@
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
-//#include "GaudiAlg/GaudiHisto.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 // from Event model
@@ -17,7 +16,6 @@
 
 // local
 #include "VeloExpertClusterMonitor.h"
-//#include "CommonFunctions.h"
 
 #include "boost/format.hpp"
 #include <fstream>
@@ -396,8 +394,6 @@ StatusCode Velo::VeloExpertClusterMonitor::plotCluster(LHCb::VeloCluster* cluste
       for(int i = 0;i<m_i_max;i++){
         double max_theta_range = (step*(i+1));
         double min_theta_range = (step*(i));
-        std::string theta_rangeName;
-        std::string theta_corr_rangeName;
         if(theta<max_theta_range && theta>min_theta_range){
           boost::format fmtEvt ( "/non_corr/theta/adc_theta_max_%03d" ) ;
           fmtEvt % max_theta_range ;
@@ -444,8 +440,6 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     debug() << "\t ->plotRPhiRang function" << endmsg;
   int clsens = idtemp.sensor();
   int clstr = idtemp.strip();
-  int rsensnum = 0;
-  int phisensnum = 0;
   double corr_adc(0);
   corr_adc =  adc*cos(theta);
   double corr_clsize(0);
@@ -454,7 +448,6 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "\t\t ->rtype sensor" << endmsg;
     const DeVeloRType *rsens = m_veloDet->rSensor(clsens);
-    rsensnum = clsens;
     boost::format fmtEvt ( "adc_cluster_sen_%03d" ) ;
     fmtEvt % clsens ;
     const std::string senName = fmtEvt.str() ;
@@ -494,9 +487,8 @@ StatusCode Velo::VeloExpertClusterMonitor::plotRPhiRange( LHCb::VeloCluster* clu
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "\t ->Phi Type sensor" << endmsg;
     const DeVeloPhiType *psens = m_veloDet->phiSensor(clsens);
-    phisensnum = clsens;
 
-       double phi_step = Gaudi::Units::pi/m_i_max;
+    double phi_step = Gaudi::Units::pi/m_i_max;
     for(int i = 1;i<(m_i_max+1);i++){
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << "\t\t ->for loop of Phi" << endmsg;

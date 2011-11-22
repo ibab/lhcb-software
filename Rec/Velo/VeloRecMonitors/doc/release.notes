@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Marco Cattaneo
+ - Fix trivial gcc warnings and icc remarks
+
 !========================= VeloRecMonitors v2r15 2011-09-06 =========================
 ! 2011-09-01 - Michael Alexander
  - Updated track selection in VeloIPResolutionMonitor to be consistent with 

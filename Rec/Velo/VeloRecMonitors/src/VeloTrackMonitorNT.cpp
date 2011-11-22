@@ -1,10 +1,5 @@
 // Include files 
 
-
-// from Gaudi
-#include "GaudiAlg/GaudiTupleAlg.h"
-#include "TrackInterfaces/ITrackSelector.h"
-
 // from Event
 #include "Event/ODIN.h"
 #include "Event/Track.h"
@@ -19,15 +14,12 @@
 //from TrackInterfaces
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrackSelector.h"
 
-// Det
-
-// gsl
-//#include "gsl/gsl_math.h"
-
+// from Gaudi
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/ToStream.h"
 
                                                                                 
 // Boost
@@ -533,37 +525,38 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
   if( msgLevel(MSG::DEBUG) ) debug()<<"Pseudoefficiency per sensor " <<endmsg;
   //Pseudoefficiency for each sensor
   //--------------------------------
-  double pseudoEfficiency_sens=0;
-  double sensnumber;
   double N_expTot=0,N_recTot=0;
     
   for(unsigned int i=(sensnmin); i<=sensnmax; i++){
     if( msgLevel(MSG::DEBUG) ) debug()<<"N_recTot " << N_recTot <<endmsg;
 
-    N_expTot+=N_exp[i+64];
-    N_recTot+=N_rec[i+64];
+    unsigned int i64 = i+64;
+    N_expTot+=N_exp[i64];
+    N_recTot+=N_rec[i64];
     N_expTot+=N_exp[i];
     N_recTot+=N_rec[i];
     
     if( msgLevel(MSG::DEBUG) ) debug()<<i<<" N_rec "<<N_rec[i]<<" N_exp "<<N_exp[i]<<endmsg;
     if(N_exp[i]>=1){
-      pseudoEfficiency_sens = N_rec[i] / N_exp[i];
-      sensnumber=(double) i;
-      if( msgLevel(MSG::DEBUG) ) debug()<<i<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;    
+      if( msgLevel(MSG::DEBUG)) {
+        double pseudoEfficiency_sens = N_rec[i] / N_exp[i];
+        debug()<<i<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
+      }
       if(N_rec[i] < N_exp[i]){
         const DeVeloSensor* sensor_h = m_veloDet->sensor(i); 
         Gaudi::XYZPoint trackInterceptGlobal_h= extrapolateToZ(&track, sensor_h->z());
-        Gaudi::XYZPoint trackInterceptHalf_h = sensor_h->globalToVeloHalfBox ( trackInterceptGlobal_h );
+        //        Gaudi::XYZPoint trackInterceptHalf_h = sensor_h->globalToVeloHalfBox ( trackInterceptGlobal_h );
         Gaudi::XYZPoint trackInterceptLocal_h(0,0,0) ;      
         trackInterceptLocal_h    = sensor_h -> globalToLocal( trackInterceptGlobal_h );
         //double rcoor_h = trackInterceptLocal_h.Rho();
         //double phicoor_h  = trackInterceptHalf_h.Phi();  
       } 
     }
-    if( msgLevel(MSG::DEBUG) ) debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
-    pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
-    sensnumber=(double) i+64.;
-    if( msgLevel(MSG::DEBUG) ) debug()<<i+64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
+    if( msgLevel(MSG::DEBUG) ) {
+      debug()<<i64<<" N_rec "<<N_rec[i64]<<" N_exp "<<N_exp[i64]<<endmsg;
+      double pseudoEfficiency_sens = N_rec[i64] / N_exp[i64];
+      debug()<<i64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
+    }
   }//loop on sensors
 
 
@@ -621,7 +614,6 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks)
 
   int lefttracknum=0,righttracknum=0,troverlapnum=0;
   int tottrcl=0, tottrrcl=0;
-  LHCb::Tracks::const_iterator itTrg;
   for(LHCb::Tracks::const_iterator itTrg=tracks->begin();itTrg!=tracks->end();itTrg++){
     LHCb::Track* track = (*itTrg);
     const std::vector< LHCb::LHCbID >& ids = track->lhcbIDs();

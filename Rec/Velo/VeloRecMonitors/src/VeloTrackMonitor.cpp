@@ -1,4 +1,3 @@
-// $Id: VeloTrackMonitor.cpp,v 1.32 2010-05-13 12:59:07 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +40,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitor );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables

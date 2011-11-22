@@ -10,10 +10,8 @@
 #include <string>
 #include <vector>
 #include <iterator>
-#include "boost/lexical_cast.hpp"
 
 // from Gaudi
-//#include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/AlgFactory.h"
 
@@ -23,19 +21,12 @@
 #include "Event/RecVertex.h"
 #include "Event/ODIN.h"
 #include "Event/L0DUReport.h"
-#include "TrackKernel/TrackStateVertex.h"
-#include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-//#include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-
-// AIDA
-//#include "AIDA/IHistogram1D.h"
-//#include "AIDA/IProfile1D.h"
 
 namespace Al {
   class Equations;
@@ -116,7 +107,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PVResolution );
+DECLARE_ALGORITHM_FACTORY( PVResolution )
 IPVOfflineTool* m_pvtool;
 
 struct TrackTypePredicate
