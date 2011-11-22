@@ -1,4 +1,3 @@
-// $Id: CLTool.cpp,v 1.7 2010-04-12 09:57:48 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CLTool );
+DECLARE_TOOL_FACTORY( CLTool )
 
 
 //=============================================================================

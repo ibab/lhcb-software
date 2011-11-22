@@ -1,4 +1,3 @@
-// $Id: Chi2MuIDTool.h,v 1.2 2009-07-07 22:02:41 polye Exp $
 #ifndef CHI2MUIDTOOL_H 
 #define CHI2MUIDTOOL_H 1
 
@@ -19,7 +18,6 @@
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
-//#include "MuonID/MuonMeasurementProvider.h"
 #include "SmartMuonMeasProvider.h"
 
 
@@ -46,7 +44,6 @@ public:
   StatusCode isGoodSeed(const LHCb::Track& seed);
   
   StatusCode muonCandidate(const LHCb::Track& seed, LHCb::Track& muTrack,
-                           bool isMuonCandidate,
                            const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>());
 
   virtual StatusCode muonQuality(LHCb::Track& muTrack, double& Quality);
@@ -60,7 +57,6 @@ public:
   
   
   StatusCode muonID(const LHCb::Track& seed,LHCb::Track& muTrack, 
-                    bool isMuonCandidate,
                     double& Quality, double& CLQuality, 
                     double& Arrival, double& CLArrival, double& DLL,
                     const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>());

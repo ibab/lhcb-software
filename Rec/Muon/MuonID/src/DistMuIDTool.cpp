@@ -1,4 +1,3 @@
-// $Id: DistMuIDTool.cpp,v 1.3 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DistMuIDTool );
+DECLARE_TOOL_FACTORY( DistMuIDTool )
 
 
 //=============================================================================

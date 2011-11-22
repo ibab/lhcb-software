@@ -1,4 +1,3 @@
-// $Id: IsMuonCandidateC.cpp,v 1.5 2009-10-02 18:23:50 jcidvida Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( IsMuonCandidateC );
+DECLARE_TOOL_FACTORY( IsMuonCandidateC )
 
 
 //=============================================================================

@@ -1,4 +1,3 @@
-// $Id: GetArrival.cpp,v 1.4 2009-07-25 00:43:53 polye Exp $
 // Include files 
 
 // from Gaudi
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GetArrival );
+DECLARE_TOOL_FACTORY( GetArrival )
 
 
 //=============================================================================
@@ -289,7 +288,6 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
   {
     sc.setCode(410);
     return Error("NO LHCbIDs ON TRACK. IMPOSSIBLE TO CALCULATE QUALITY",sc);
-    parr=0.;
   }
   
   std::vector<int> type_st;
@@ -300,11 +298,12 @@ StatusCode GetArrival::getArrivalFromTrack(const LHCb::Track& mutrack,double& pa
     return Error("COULD NOT RETRIEVE STS FROM LHCbIDs",sc);
   }
 
-
-
-  if (msgLevel(MSG::DEBUG) ) debug()<<"sts="<<type_st<<endmsg;
   parr= probTypeSt(mutrack.p(),type_st);
-  if (msgLevel(MSG::DEBUG) ) debug()<<"prob="<<endmsg;
+  if (msgLevel(MSG::DEBUG) ) {
+    debug()<<"sts= "<<type_st<<endmsg;
+    debug()<<"prob= "<<parr<<endmsg;
+  }
+  
   return sc;
 }
 

@@ -1,4 +1,3 @@
-// $Id: Chi2MuIDTool.cpp,v 1.9 2009-11-10 14:05:54 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Chi2MuIDTool );
+DECLARE_TOOL_FACTORY( Chi2MuIDTool )
 
 
 //=============================================================================
@@ -133,7 +132,6 @@ StatusCode Chi2MuIDTool::isGoodSeed(const LHCb::Track& seed)
 
 StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed, 
                                        LHCb::Track& muTrack,
-                                       bool isMuonCandidate,
                                        const std::vector<LHCb::LHCbID> ids_init)
 {
   StatusCode sc = StatusCode::SUCCESS;
@@ -215,13 +213,11 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
   if (sc.isFailure())
   {
     if (msgLevel(MSG::DEBUG) ) debug()<< "No new track built"<<endmsg;
-    if (sc.getCode()==203) isMuonCandidate=false;
-    else if (m_applyIsMuon)  
+    if (sc.getCode()!=203 && m_applyIsMuon)  
       Warning( "No available info about IsMuon",StatusCode::SUCCESS).ignore();
     if (del_muonprov) delete m_muonProvider;
     return sc;
   }
-  else isMuonCandidate=true;
 
   // if chi2cut required, perform fit with muonquality
   if (m_chi2cut>0.){
@@ -236,15 +232,12 @@ StatusCode Chi2MuIDTool::muonCandidate(const LHCb::Track& seed,
     {
       if (msgLevel(MSG::DEBUG) ) debug()<< "muonCandidate: fit failed"<<endmsg;
       if (del_muonprov) delete m_muonProvider;
-      isMuonCandidate=false;
       sc.setCode(203);
       return sc;
     }
     else{
       if (msgLevel(MSG::DEBUG) ) debug()<< "muonCandidate: myquality="<<myquality<<endmsg;
-      if (myquality<m_chi2cut) isMuonCandidate=true;
-      else{
-        isMuonCandidate=false;
+      if (myquality>=m_chi2cut) {
         sc.setCode(203);
         return sc;
       }
@@ -369,7 +362,6 @@ StatusCode Chi2MuIDTool::muonDLL(LHCb::Track& muTrack, const double& Quality, do
 }
 
 StatusCode Chi2MuIDTool::muonID(const LHCb::Track& seed,LHCb::Track& muTrack, 
-                                bool isMuonCandidate,
                                 double& Quality, double& CLQuality, 
                                 double& Arrival, double& CLArrival, 
                                 double& DLL,
@@ -383,7 +375,7 @@ StatusCode Chi2MuIDTool::muonID(const LHCb::Track& seed,LHCb::Track& muTrack,
     return sc;
   }
   
-  sc=muonCandidate(seed,muTrack,isMuonCandidate,ids_init);
+  sc=muonCandidate(seed,muTrack,ids_init);
   if (sc.isFailure()) {
     if (msgLevel(MSG::DEBUG) ) debug()<<"Chi2MuIDTool: Fail muon candidate, sc="<<sc.getCode()<<endmsg;
     return sc;
@@ -572,21 +564,21 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
     { 
       int ist=ids[0].muonID().station();
       if (msgLevel(MSG::DEBUG) ) {
-	debug()<<"ids0 station="<<ist<<endmsg;
+        debug()<<"ids0 station="<<ist<<endmsg;
         debug()<<"ids0 channelID="<<ids[0].channelID()<<endmsg;
       }
       // if mom below m_2hits, check if hit is in stations 4 or 5
       if ((mom<m_2hits) && (ist==3 || ist==4) && m_arrivalCuts) 
       {
-        continue;
         if (msgLevel(MSG::DEBUG) ) debug()<<"skiped spurius hit in station"<<ist<<endmsg;
+        continue;
       }
       
       // if mom below m_2hits, check if hit is in station 5
       if ((mom<m_3hits) && (ist==4) && m_arrivalCuts)
       {
-        continue;
         if (msgLevel(MSG::DEBUG) ) debug()<<"skiped spurius hit in station"<<ist<<endmsg;
+        continue;
       }
       muTrack.addToLhcbIDs(ids[0]);
       j += 1;

@@ -1,5 +1,3 @@
-
-// $Id: ImuIDTool.h,v 1.1 2009-07-01 18:27:11 polye Exp $
 #ifndef MUONID_IMUIDTOOL_H 
 #define MUONID_IMUIDTOOL_H 1
 
@@ -37,7 +35,6 @@ public:
   virtual StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion) = 0;
 
   virtual StatusCode muonCandidate(const LHCb::Track& seed, LHCb::Track& muTrack,
-                                   bool isMuonCandidate,
                                    const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>()) = 0;
 
   virtual StatusCode muonQuality(LHCb::Track& muTrack, double& Quality) = 0;
@@ -48,7 +45,6 @@ public:
                              const double& Arrival, double& CLArrival, double& DLL)=0;
   
   virtual StatusCode muonID(const LHCb::Track& seed,LHCb::Track& muTrack,
-                            bool isMuonCandidate,
                             double& Quality, double& CLQuality, 
                             double& Arrival, double& CLArrival, double& DLL,
                             const std::vector<LHCb::LHCbID> ids_init = std::vector<LHCb::LHCbID>())=0;

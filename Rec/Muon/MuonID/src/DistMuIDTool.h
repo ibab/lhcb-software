@@ -1,11 +1,9 @@
-// $Id: DistMuIDTool.h,v 1.1 2009-07-01 18:27:11 polye Exp $
 #ifndef DISTMUIDTOOL_H 
 #define DISTMUIDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "ImuIDTool.h"            // Interface
 #include "Chi2MuIDTool.h"
 
 

@@ -117,7 +117,7 @@
 //=====================
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MuonIDAlg );
+DECLARE_ALGORITHM_FACTORY( MuonIDAlg )
 
 double land2(Double_t *x, Double_t *par);
 
@@ -1335,8 +1335,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
 
     
     // Is it a muon candidate?
-    bool isMuonCandidate=false;
-    sc = DistMuIDTool()->muonCandidate(*mother,m_mutrack,isMuonCandidate);
+    sc = DistMuIDTool()->muonCandidate(*mother,m_mutrack);
     if (!(sc.isSuccess()||sc.getCode()==203))
     {
       Warning("Error when finding muon hits",sc).ignore();
@@ -2503,7 +2502,6 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
     Warning("ProbNonMu: normalization out of control ",StatusCode::FAILURE).ignore();
     return -1;
   }
-  return -1;
 }
 
 StatusCode MuonIDAlg::calcLandauNorm(){
@@ -2858,22 +2856,19 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
     if (m_FindQuality) {
       // get chi2 value
       LHCb::Track mtrack_partial;
-      bool isMuonCandidate=false;
       if (msgLevel(MSG::DEBUG) ) debug()<<"myMuIDTool="<<myMuIDTool()<<endmsg;
       if (!ids_init.empty()) {
-        StatusCode sc = myMuIDTool()-> muonCandidate(*mother, mtrack_partial,
-                                                       isMuonCandidate,ids_init);
+        StatusCode sc = myMuIDTool()-> muonCandidate(*mother, mtrack_partial, ids_init);
         if (!sc.isFailure()) {
           std::vector<LHCb::LHCbID>::const_iterator id;
           for(id = mtrack_partial.lhcbIDs().begin() ;
               id !=  mtrack_partial.lhcbIDs().end() ; id++){
-            if (msgLevel(MSG::DEBUG) ) debug()<< "id is muon? "<<id->isMuon()<<endmsg;
-            if (id->isMuon()) {
-              if (msgLevel(MSG::DEBUG) ) debug()<< "id station  "
-                                                << id->muonID().station()<<endmsg;
+            if (msgLevel(MSG::DEBUG) ) {
+              debug()<< "id is muon? "<<id->isMuon()<<endmsg;
+              if (id->isMuon())
+                debug()<< "id station  " << id->muonID().station()<<endmsg;
+              debug()<< "id channelID="<< id->channelID()<<endmsg;
             }
-          
-            if (msgLevel(MSG::DEBUG) ) debug()<< "id channelID="<< id->channelID()<<endmsg;
           }
           
           StatusCode sc2 = myMuIDTool()->muonQuality(mtrack_partial,Quality);
