@@ -4,6 +4,10 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2011-11-22 - Olivier Callot
+ - Request backward tracks only if the numbe rof tracks is between 
+   MinTrackInPV and twice that.
+
 ! 2011-11-21 - Olivier Callot
  - Change the tuning after fixing the checker. No longer cleanup of 
    tracks on two vertices. Larger tolerances.

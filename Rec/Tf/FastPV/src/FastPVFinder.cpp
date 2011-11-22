@@ -149,7 +149,7 @@ StatusCode FastPVFinder::execute() {
     }
     itT1 = itT2;
 
-    //== Add tracks after, and define teh next starting point...
+    //== Add tracks after, and define the next starting point...
     bool isLast = true;
     while ( ++itT2 < myTracks.end() ) {
       double chi2 = (*itT2)->chi2( temp.vertex() );
@@ -164,8 +164,11 @@ StatusCode FastPVFinder::execute() {
 
     //== Final fit, and checks
     temp.removeWorsts( m_maxChi2Fit );
+    if ( m_debug ) info() << "tentative vertex at z " << temp.vertex().z() << " n track " <<  temp.nTracks()
+                          << " nBack " << temp.nBack() << endmsg;
+    
     if ( temp.nTracks() < m_minTracksInPV ) continue;
-    if ( temp.nBack() == 0 ) continue;
+    if ( temp.nTracks() < 2*m_minTracksInPV && temp.nBack() == 0 ) continue;
     myVertices.push_back( temp );
   }
   if ( m_debug ) info() << "Number of seed vertices " << myVertices.size() << endmsg;
