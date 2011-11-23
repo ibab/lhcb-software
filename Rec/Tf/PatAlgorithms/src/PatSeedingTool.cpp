@@ -1004,7 +1004,7 @@ void PatSeedingTool::collectITOT(
       track.setValid(false);
       bool centralYIT = false;
       bool fromInsideBeampipe = false;
-      bool hasOT = false;
+      //      bool hasOT = false;
       bool fitOK = false;
       m_printing = msgLevel( MSG::DEBUG );
 
@@ -1074,7 +1074,7 @@ void PatSeedingTool::collectITOT(
 	  }
 	}
 	if ( dirty ) {
-	  hasOT = true;
+    //	  hasOT = true;
 	  const double maxchi2hit = (PatSeedTrack::IT == track.trackRegion()) ?
 	    m_maxChi2HitIT : m_maxChi2HitOT;
 	  const unsigned minPlanes = (track.nPlanes() <= 8) ?
@@ -1569,7 +1569,6 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
     regionZ0(0,lay0,reg0);
 
   bool matchIn0 = false;
-  bool matchIn2 = false;
 
   // if we have a state, we don't need hits from the whole region
   HitRange rangeX0 = (0 == state) ? hits(0, lay0, reg0) :
@@ -1621,7 +1620,6 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       double z2 = hit2->hit()->zAtYEq0();
 
       m_printing = matchIn0;
-      matchIn2 = false;
 
       if (hit2->hasNext() && rangeX2.end() != (itH2 + 1) && !(*(itH2 + 1))->isUsed()) {
         hit2 = *(++itH2);

@@ -2,7 +2,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "TfKernel/HitExtension.h"
@@ -90,7 +89,7 @@ FastForwardTool::FastForwardTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-FastForwardTool::~FastForwardTool() {};
+FastForwardTool::~FastForwardTool() {}
 
 //=========================================================================
 //  Initialization, get the tools

@@ -54,7 +54,7 @@ FastFwdTool::FastFwdTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-FastFwdTool::~FastFwdTool() {};
+FastFwdTool::~FastFwdTool() {}
 
 //=========================================================================
 //  Initialisation, check parameters
