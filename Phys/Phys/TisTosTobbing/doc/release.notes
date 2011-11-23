@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-11-23 - Chris Jones
+ - Fix gcc 4.6 warning
+
 ! 2011-11-13 - Tomasz Skwarnicki
  - when getting Hlt and HltLikeL0 reports try first without and then with RootInTES
    change default value of UseParticle2LHCbIDsMap to 1 (look for map and if not found try reco objects)

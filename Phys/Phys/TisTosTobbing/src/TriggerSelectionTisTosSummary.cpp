@@ -26,8 +26,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TriggerSelectionTisTosSummary );
-
+DECLARE_TOOL_FACTORY( TriggerSelectionTisTosSummary )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -302,12 +301,10 @@ std::string TriggerSelectionTisTosSummary::analysisReportSelection( const std::s
 
   bool decision(false);  
   // get decision from HltDecReports if can find it
-  bool decFound(false);  
   if( m_hltDecReports ){
     const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
     if( rep ){
       decision = rep->decision();
-      decFound = true;
       report << " HltDecReport decision=" << decision;      
     }    
   }

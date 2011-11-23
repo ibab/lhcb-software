@@ -228,7 +228,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
       if( addToSignal( particle ) )clearCache();
     } else if( m_useParticle2LHCbIDs == 2 ){
       Error(" No /Particle2LHCbIDMap available for Particle with no daughters nor for mother",
-            StatusCode::FAILURE, 10).setChecked();
+            StatusCode::FAILURE, 9999999 ).setChecked();
       clearCache();
     }
   }
