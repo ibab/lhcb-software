@@ -398,17 +398,17 @@ StatusCode GeneratorAnalysis::finalize() {
          
          << "* B Meson production state:                                    *" 
          << std::endl
-         << "* Number of B   : " << m_stateB
+         << "* Number of B   (L=0, J=0)     : " << m_stateB
          << " [fraction : " << fraction( m_stateB , totalBMesonStates )
          << " +/- " << err_fraction( m_stateB , totalBMesonStates ) <<" ]" 
          << std::endl
     
-         << "* Number of B*  : " << m_stateBStar 
+         << "* Number of B*  (L=0, J=1)     : " << m_stateBStar 
          << " [fraction : "  << fraction( m_stateBStar , totalBMesonStates)
          << " +/- " << err_fraction( m_stateBStar , totalBMesonStates ) <<" ]" 
          << std::endl
     
-         << "* Number of B** : " << m_stateBStarStar
+         << "* Number of B** (L=1, J=0,1,2) : " << m_stateBStarStar
          << " [fraction : " << fraction ( m_stateBStarStar , totalBMesonStates )
          << " +/- " << err_fraction( m_stateBStarStar , totalBMesonStates ) 
          <<" ]" << std::endl
@@ -842,7 +842,7 @@ void GeneratorAnalysis::bHadronInfo( LHCb::ParticleID m_mPID,
                                  LHCb::ParticleID m_dPID )
 {
     if ( m_dPID.abspid() == 5 ) return ;
-    if ( ! m_mPID.hasBottom() ) {
+    if ( ! ( m_mPID.hasBottom() && m_mPID.abspid()!=5) ) {
     if(m_dPID.hasBottom()){
       m_nBParticles++;
       //Set default B Hadron Type
@@ -920,16 +920,20 @@ void GeneratorAnalysis::bHadronInfo( LHCb::ParticleID m_mPID,
         }
       }
 
-      if(1 == m_dPID.jSpin()){
+      //mind that B** is L=1 state, B* is L=0 and J=1, and B is L=0, J=0
+      if(S0L0J0==spin){
         m_stateB++;
-      }else if(3 == m_dPID.jSpin()){
+      }else if(S1L0J1==spin) {
         m_stateBStar++;   
       }else{
         m_stateBStarStar++;
       }
 
-      if( produceHistos() && ( 0 <= spin && spin <= 3 ) ) {
-        m_bMesonStates->fill((double)spin);
+      if( produceHistos() ) {
+        int state = 2; //L=1 state
+        if (S0L0J0==spin) state = 0;
+        else if (S1L0J1==spin) state = 1;
+        m_bMesonStates->fill((double)state);
       }
       if( produceHistos() ) m_bMesonStatesCode->fill((double)spin);
     }
