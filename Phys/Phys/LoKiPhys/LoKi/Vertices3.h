@@ -29,7 +29,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@cern.ch
@@ -310,6 +310,56 @@ namespace LoKi
       // ======================================================================
     }; //                       end of class LoKi::Vertices::RecVertex2TrackMin
     // ========================================================================
+    /** @class RecVertexMomentum 
+     *  Evaluate the momenum of reco vertex from tracks 
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Cuts::RV_P
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-07
+     */
+    class GAUDI_API RecVertexMomentum
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+    {
+    public:
+      // ======================================================================
+      /// constructor
+      RecVertexMomentum() ;
+      /// MANDATORY: virtual destructor
+      virtual ~RecVertexMomentum () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RecVertexMomentum* clone() const ;
+      /// MANDATORY: the only one essential mehtod 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class RecVertexPt
+     *  Evaluate the transverse momentum of reco vertex from tracks 
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Cuts::RV_PT
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-12-07
+     */
+    class GAUDI_API RecVertexPt
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+    {
+    public:
+      // ======================================================================
+      /// constructor
+      RecVertexPt() ;
+      /// MANDATORY: virtual destructor
+      virtual ~RecVertexPt () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  RecVertexPt* clone() const ;
+      /// MANDATORY: the only one essential mehtod 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class RecVertexMass 
      *  Evaluate the mass of RecVertex using the certain mass-hypotheses 
      *  @see LHCb::RecVertex
@@ -527,6 +577,40 @@ namespace LoKi
      *  @date   2010-12-07
      */
     typedef LoKi::Vertices::RecVertexMass                             RV_MASS ;
+    // ========================================================================
+    /** @var RV_P
+     *  Simple evaluator of "momentum" for RecVertex 
+     *
+     *  @code 
+     *
+     *  const LHCb::VertexBase*  v  = ... ;
+     *
+     *  const double p = RV_P( v )  ;
+     *
+     *  @endcode  
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Vertices::RevVertexMomentum
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date   2010-12-07
+     */
+    const LoKi::Vertices::RecVertexMomentum                              RV_P ;
+    // ========================================================================
+    /** @var RV_PT
+     *  Simple evaluator of pt for RecVertex 
+     *
+     *  @code 
+     *
+     *  const LHCb::VertexBase*  v  = ... ;
+     *
+     *  const double pt = RV_PT ( v )  ;
+     *
+     *  @endcode  
+     *  @see LHCb::RecVertex
+     *  @see LoKi::Vertices::RecVertexPt
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date   2010-12-07
+     */
+    const LoKi::Vertices::RecVertexPt                                   RV_PT ;
     // ========================================================================
   } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================

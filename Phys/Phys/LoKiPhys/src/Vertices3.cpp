@@ -31,7 +31,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@cern.ch
@@ -503,8 +503,8 @@ LoKi::Vertices::RecVertex2TrackNum::operator()
     ( tracks.begin ()     , 
       tracks.end   ()     , 
       m_cut               ) ;
-}
-// ============================================================================
+
+}// ============================================================================
 // OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Vertices::RecVertex2TrackNum::fillStream
@@ -515,6 +515,158 @@ std::ostream& LoKi::Vertices::RecVertex2TrackNum::fillStream
   return s << ")" ;
 }  
 // ============================================================================
+
+
+// ============================================================================
+// constructor
+// ============================================================================
+LoKi::Vertices::RecVertexMomentum::RecVertexMomentum()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+LoKi::Vertices::RecVertexMomentum::~RecVertexMomentum(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Vertices::RecVertexMomentum*
+LoKi::Vertices::RecVertexMomentum::clone() const 
+{ return new LoKi::Vertices::RecVertexMomentum(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential mehtod 
+// ============================================================================
+LoKi::Vertices::RecVertexMomentum::result_type 
+LoKi::Vertices::RecVertexMomentum::operator() 
+  ( LoKi::Vertices::RecVertexMomentum::argument v ) const
+{
+  //
+  if ( 0 == v ) 
+  {
+    Error ("LHCb::VertexBase* points to NULL, return 'InvalidMomentum'");
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  //
+  const LHCb::VertexBase* vb = v ;
+  const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  //
+  if ( 0 == rv ) 
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return 'InvalidMomentum'");
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  //
+  typedef SmartRefVector<LHCb::Track> TRACKS ;
+  const TRACKS& tracks = rv->tracks() ;
+  //
+  if ( tracks.empty() )
+  {
+    Warning ("Empty vertex, return 0") ;
+    return 0 ;
+  }
+  //
+  Gaudi::XYZVector mom ;
+  //
+  for ( TRACKS::const_iterator iTrack = tracks.begin() ; 
+        tracks.end() != iTrack ; ++iTrack ) 
+  {
+    const LHCb::Track* track = *iTrack ;
+    if ( 0 == track ) 
+    {
+      Warning ( "LHCb::Track* points to zero, skip it" ) ;
+      continue ; 
+    }
+    mom += track->momentum() ;
+  }
+  //
+  //
+  return mom.R() ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Vertices::RecVertexMomentum::fillStream
+( std::ostream& s ) const
+{ return s << "RV_P " ; }  
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor
+// ============================================================================
+LoKi::Vertices::RecVertexPt::RecVertexPt()
+  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+LoKi::Vertices::RecVertexPt::~RecVertexPt(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Vertices::RecVertexPt*
+LoKi::Vertices::RecVertexPt::clone() const 
+{ return new LoKi::Vertices::RecVertexPt ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential mehtod 
+// ============================================================================
+LoKi::Vertices::RecVertexPt::result_type 
+LoKi::Vertices::RecVertexPt::operator() 
+  ( LoKi::Vertices::RecVertexPt::argument v ) const
+{
+  //
+  if ( 0 == v ) 
+  {
+    Error ("LHCb::VertexBase* points to NULL, return 'InvalidMomentum'");
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  //
+  const LHCb::VertexBase* vb = v ;
+  const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
+  //
+  if ( 0 == rv ) 
+  {
+    Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return 'InvalidMomentum'");
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  //
+  typedef SmartRefVector<LHCb::Track> TRACKS ;
+  const TRACKS& tracks = rv->tracks() ;
+  //
+  if ( tracks.empty() )
+  {
+    Warning ( "Empty vertex, return 0" ) ;
+    return 0 ;
+  }
+  //
+  Gaudi::XYZVector mom ;
+  //
+  for ( TRACKS::const_iterator iTrack = tracks.begin() ; 
+        tracks.end() != iTrack ; ++iTrack ) 
+  {
+    const LHCb::Track* track = *iTrack ;
+    if ( 0 == track ) 
+    {
+      Warning ( "LHCb::Track* points to zero, skip it" ) ;
+      continue ; 
+    }
+    mom += track->momentum() ;
+  }
+  //
+  return mom.Rho () ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Vertices::RecVertexPt::fillStream
+( std::ostream& s ) const
+{ return s << "RV_PT " ; }  
+// ============================================================================
+
+  
+
+
 
   
 // ============================================================================

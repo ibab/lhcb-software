@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2011-11-23 - Vanya Belyaev
+ - add RV_P and RV_PT 
+
+
 ! 2011-11-20 - Vanya Belyaev
 
  - small imporvements for pi0-veto 

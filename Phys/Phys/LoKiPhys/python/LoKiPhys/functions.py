@@ -644,6 +644,11 @@ RV_TrFUN   = LoKi.Vertices.RecVertex2TrackFun
 RV_TrNUM   = LoKi.Vertices.RecVertex2TrackNum
 ## @see LoKi::Cuts::RV_MASS
 RV_MASS    = LoKi.Vertices.RecVertexMass 
+## @see LoKi::Cuts::RV_P
+RV_P       = LoKi.Vertices.RecVertexMomentum ()
+## @see LoKi::Cuts::RV_PT
+RV_PT      = LoKi.Vertices.RecVertexPt       ()
+
 
 
 # =============================================================================
