@@ -1,4 +1,3 @@
-// $Id: Calo2Track.h,v 1.6 2010-03-08 02:01:18 odescham Exp $
 #ifndef CALO2TRACK_H 
 #define CALO2TRACK_H 1
 
@@ -11,7 +10,7 @@ namespace LHCb{
   class CaloHypo;
   class CaloCluster;
   class Track;
-};
+}
 
 /** @class Calo2Track Calo2Track.h Event/Calo2Track.h
  *  
@@ -86,7 +85,7 @@ namespace LHCb {
     const std::string HltPhotonID         = "Hlt/Calo/PhotonID" ;
     const std::string HltMergedID         = "Hlt/Calo/MergedID" ;
     const std::string HltPhotonFromMergedID      = "Hlt/Calo/PhotonFromMergedID" ;
-  };
+  }
   namespace Calo2Track {
     typedef IRelationWeighted< LHCb::CaloCluster , LHCb::Track , float >             IClusTrTable;
     typedef IRelationWeighted< LHCb::Track , LHCb::CaloCluster , float >             ITrClusTable;
@@ -101,7 +100,7 @@ namespace LHCb {
 
     typedef IRelation< LHCb::Track , float >                                         ITrEvalTable;
     typedef IRelation< LHCb::Track , bool  >                                         ITrAccTable;
-  };   
-};
+  }   
+}
 
 #endif // CALO2TRACK_H 
