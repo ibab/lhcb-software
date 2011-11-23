@@ -153,8 +153,10 @@ def getConfig(architecture, platformtype, compiler, debug=False):
 # officially supported binaries
 binary_opt_list = ["slc4_ia32_gcc34", "slc4_amd64_gcc34",
                    "x86_64-slc5-gcc43-opt", "i686-slc5-gcc43-opt",
+                   "x86_64-slc5-gcc46-opt", "i686-slc5-gcc46-opt",
                    "win32_vc71", "i686-winxp-vc9-opt",
-                   "x86_64-slc5-icc11-opt", "i686-slc5-icc11-opt" ]
+                   "x86_64-slc5-icc11-opt", "i686-slc5-icc11-opt",
+                   "x86_64-slc6-gcc46-opt", "i686-slc6-gcc46-opt" ]
 # future possible supported binaries
 extra_binary_opt_list = ["slc3_ia32_gcc323",
                          "x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
