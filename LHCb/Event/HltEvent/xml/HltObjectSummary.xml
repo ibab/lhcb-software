@@ -397,7 +397,7 @@
              for( HltObjectSummary::Info::const_iterator i=nInfo.begin();i!=nInfo.end();++i){
                 const std::string &amp; nInfoKey = i-&gt;first;
                 if( nInfoKey.substr(0,3) == "10#" ){
-	            std::string pvSelectionName = nInfoKey.substr(3);
+	            // std::string pvSelectionName = nInfoKey.substr(3); // not used
                     // now unpack the key	     	     
                     int j = iKey / 4;
                     int inj = iKey -j*4;
