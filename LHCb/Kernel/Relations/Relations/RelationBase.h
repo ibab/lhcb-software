@@ -1,4 +1,3 @@
-// $Id: RelationBase.h,v 1.14 2009-09-14 14:02:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -12,7 +11,6 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StatusCode.h"
 // ============================================================================
 // Relation
@@ -93,7 +91,6 @@ namespace Relations
     /// make the relation between 2 objects
     inline  StatusCode i_relate ( From_ object1 , To_ object2 ) 
     {
-      static const Less _less_ = Less() ;
       // look for existing relations 
       const Entry entry ( object1 , object2 ) ;
       return i_add ( entry ) ;

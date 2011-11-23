@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.71 2010-03-17 17:19:47 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
+
+! 2011-11-23 - Marco Cattaneo
+ - Fix a gcc46 warning
 
 !========================= Relations v6r0p1 2011-04-04 =========================
 ! 2011-02-22 - Marco Cattaneo
