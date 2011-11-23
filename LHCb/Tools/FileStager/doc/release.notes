@@ -4,6 +4,9 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix trivial gcc warnings and icc remarks
+
 !========================= FileStager v1r5 2011-11-15 =========================
 ! 2011-11-13 - Roel Aaij
  - Fix the regex used to find the xrootd host (port definition is optional).

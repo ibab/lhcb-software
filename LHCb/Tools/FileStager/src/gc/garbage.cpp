@@ -72,7 +72,7 @@ int main( int argc, char* argv[] )
 
    try {
       tmpdir = vm[ "tmpdir" ].as< string >();
-   } catch ( const boost::bad_any_cast& e ) {
+   } catch ( const boost::bad_any_cast& /* e */ ) {
       cout << "dir is not a correct string" << endl;
       cout << "usage: garbage.exe pid dir" << endl;
       return -2;
@@ -84,7 +84,7 @@ int main( int argc, char* argv[] )
 
    try {
       pID = vm[ "pid" ].as< pid_t >();
-   } catch ( const boost::bad_any_cast& e ) {
+   } catch ( const boost::bad_any_cast& /* e */ ) {
       cout << "pid is not an integer" << endl;
       cout << "usage: garbage.exe pid dir" << endl;
       return -2;

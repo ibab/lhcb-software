@@ -375,14 +375,14 @@ StagedIODataManager::connectDataIO(int typ, IoType rw, CSTR dataset, CSTR techno
             std::string local;
             if ( files.size() == 0 )
             {
-               StatusCode sc = m_stager->getLocal( dsn, local );
-               if ( sc.isSuccess() ) {
+               StatusCode sc1 = m_stager->getLocal( dsn, local );
+               if ( sc1.isSuccess() ) {
                   staged = true;
                } else if ( m_useGFAL && dsn.length() == 36 && dsn[8]=='-' && dsn[13]=='-' ) {
                   std::string gfal_name = "gfal:guid:" + dsn;
                   m_fidMap[dsn] = m_fidMap[dataset] = m_fidMap[gfal_name] = dsn;
-                  sc = connectDataIO(PFN, rw, gfal_name, technology, keep_open, connection);
-                  if ( sc.isSuccess() ) return sc;
+                  sc1 = connectDataIO(PFN, rw, gfal_name, technology, keep_open, connection);
+                  if ( sc1.isSuccess() ) return sc1;
                }
                if ( !staged ) {
                   if ( m_quarantine ) s_badFiles.insert(dsn);
@@ -477,10 +477,10 @@ StagedIODataManager::connectDataIO(int typ, IoType rw, CSTR dataset, CSTR techno
 
             // Let's see what the stager gives us.
             std::string local;
-            bool staged = false;
+            //            bool staged = false; // set but not used
             StatusCode sc = m_stager->getLocal( dsn, local );
             if ( sc.isSuccess() ) {
-               staged = true;
+              //               staged = true; // set but not used
                // This is rather hackish... If we staged it, it's a pfn so fid must be
                // local. If we're called from the catalogue, fid is already correct.
                // IMPROVE: make this a regex

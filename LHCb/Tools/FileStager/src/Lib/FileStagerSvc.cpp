@@ -66,7 +66,7 @@ namespace {
    using std::getline;
 }
 
-DECLARE_SERVICE_FACTORY( FileStagerSvc );
+DECLARE_SERVICE_FACTORY( FileStagerSvc )
 
 //=============================================================================
 FileStagerSvc::FileStagerSvc( const string& name, ISvcLocator* svcLoc )
@@ -473,16 +473,16 @@ void FileStagerSvc::stage()
             stageFile->openCondition().notify_one();
 
             // Move to next file
-            const_position_iterator pos = m_files.project< listTag >( m_stageIt );
-            const_position_iterator end = m_files.get< listTag >().end();
-            ++pos;
-            if ( pos == end ) {
+            const_position_iterator _pos = m_files.project< listTag >( m_stageIt );
+            const_position_iterator  end = m_files.get< listTag >().end();
+            ++_pos;
+            if ( _pos == end ) {
                break;
             } else {
-               m_stageIt = m_files.project< originalTag >( pos );
+               m_stageIt = m_files.project< originalTag >( _pos );
             }
          }
-      } catch ( const thread_interrupted& interrupt ) {
+      } catch ( const thread_interrupted& /* interrupt */ ) {
          break;
       }
    }
