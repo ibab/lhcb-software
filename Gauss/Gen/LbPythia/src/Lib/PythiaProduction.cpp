@@ -807,6 +807,24 @@ void PythiaProduction::printPythiaParameter( ) {
           << Pythia::pypars().parp( 89 )  << endmsg ;
   debug() << "** PARP(90) ( power of energy resc. term )        : " 
           << Pythia::pypars().parp( 90 )  << endmsg ;
+  debug() << "** PARJ(1) : "
+          << Pythia::pydat1().parj( 1 )  << endmsg ;
+   debug() << "** PARJ(2) : "
+          << Pythia::pydat1().parj( 2 )  << endmsg ;
+ debug() << "** PARJ(3) : "
+          << Pythia::pydat1().parj( 3 )  << endmsg ;
+ debug() << "** PARJ(4) : "
+        << Pythia::pydat1().parj( 4 )  << endmsg ;
+ debug() << "** PARJ(5) : "
+          << Pythia::pydat1().parj( 5 )  << endmsg ;
+ debug() << "** PARJ(6) : "
+          << Pythia::pydat1().parj( 6 )  << endmsg ;
+ debug() << "** PARJ(7) : "
+          << Pythia::pydat1().parj( 7 )  << endmsg ;
+ debug() << "** PARJ(11) : "
+          << Pythia::pydat1().parj( 11 )  << endmsg ;
+ debug() << "** PARJ(12) : "
+          << Pythia::pydat1().parj( 12 )  << endmsg ;
   debug() << "** PARJ(13) ( prob. that heavy meson has spin 1 ) : "
           << Pythia::pydat1().parj( 13 )  << endmsg ;
   debug() << "** PARJ(14) ( prob. for spin=0 meson to be produced" << endmsg ; 
