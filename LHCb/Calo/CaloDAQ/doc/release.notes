@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Olivier Deschamps
+  - CaloL0DataProvider.cpp : fix compilation warning.
+
 ! 2011-11-18 - Olivier Deschamps
   - CaloDataProvider.cpp : fix compilation warning.
 

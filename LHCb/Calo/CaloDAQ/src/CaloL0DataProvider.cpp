@@ -133,8 +133,7 @@ const CaloVector<LHCb::L0CaloAdc>& CaloL0DataProvider::l0Adcs(std::vector<int> s
 //-------------------------------------------------------
 int CaloL0DataProvider::l0Adc (LHCb::CaloCellID id,int def){
   if( m_getRaw )getBanks();
-  bool ok=true;
-  if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
+  if( 0 >  m_adcs.index(id) )decodeCell( id );
   if( 0 >  m_adcs.index(id) )return def; // 0-suppressed data or non-valid CellID
   return m_adcs[id].adc();
 }
