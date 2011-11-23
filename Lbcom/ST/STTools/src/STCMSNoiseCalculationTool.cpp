@@ -204,18 +204,11 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
 
   m_evtNumber++;
   
-  bool initRaw = false;
   if( m_evtNumber <= m_skipEvents ) {
 
     //return StatusCode::SUCCESS;
     m_skipCMS = true;  
     
-    // we need the rms map to flag outliers at pedestal removal
-    // so we need to generate the raw noise (rmsMap) if it does
-    // not exist yet.
-    if ( m_evtNumber == m_skipEvents ) {
-      initRaw = true;
-    }
   } else {
     m_skipCMS = false;
   }
