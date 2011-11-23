@@ -605,10 +605,12 @@ class DaVinci(LHCbConfigurableUser) :
         # _lumi handles event count, lumi integration and merging independently
         self.sequence().Members += self._lumi()
             
-        if inputType != 'MDST' :
-            self._decReports()
-        else :
-            L0Conf()
+        #if inputType != 'MDST' :
+        #    self._decReports()
+        #else :
+        #    L0Conf()
+        # 11/23/11 always decode to standard locations    
+        self._decReports()
 
         if self.getProp("UseTrigRawEvent"):
             from PhysConf.SteerRawLocations import setTriggerRawEventLocation
