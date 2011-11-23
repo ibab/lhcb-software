@@ -125,9 +125,11 @@ StatusCode DeRichPMT::getPMTParameters()
   m_PmtAnodeYSize = deRich1->param<double> ("RichPmtAnodeYSize" );
   m_PmtAnodeZSize = deRich1->param<double> ("RichPmtAnodeZSize" );
   m_PmtAnodeLocationInPmt = deRich1->param<double> ("RichPmtSiliconDetectorLocalZlocation" );
+  m_PmtPixelXSize = deRich1->param<double>( "RichPmtPixelXSize");
+  m_PmtPixelYSize = deRich1->param<double>( "RichPmtPixelYSize");
   m_PmtPixelGap = deRich1->param<double> ( "RichPmtPixelGap" );
-  m_PmtEffectivePixelXSize =  m_PmtAnodeXSize  + m_PmtPixelGap;
-  m_PmtEffectivePixelYSize =  m_PmtAnodeYSize  + m_PmtPixelGap;
+  m_PmtEffectivePixelXSize =  m_PmtPixelXSize  + m_PmtPixelGap;
+  m_PmtEffectivePixelYSize =  m_PmtPixelYSize  + m_PmtPixelGap;
   m_PmtAnodeHalfThickness = m_PmtAnodeZSize/2.0;
   m_PmtNumPixCol =deRich1->param<int> ("RichPmtNumPixelCol");
 
@@ -213,11 +215,27 @@ Gaudi::XYZPoint
 DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
                                          const double fracPixelRow ) const
 {
+  //  info()<<" DePmt anode pixel col row  corrd "<< fracPixelCol << "   "<<fracPixelRow<< endmsg;
+  // info()<<" DePmt anode NumPixelCol row "<< m_PmtNumPixCol <<"   "<<m_PmtNumPixRow<<endmsg;
+  // info()<<" DePmt anode effpixelsize X Y  "<<m_PmtEffectivePixelXSize  <<"   "<<m_PmtEffectivePixelYSize<<endmsg;
+  
   const double xh = ( fracPixelCol - (m_PmtNumPixCol-1) * 0.5 ) * m_PmtEffectivePixelXSize;
   const double yh = ( fracPixelRow - (m_PmtNumPixRow-1) * 0.5 ) * m_PmtEffectivePixelYSize;
   const double zh = m_PmtAnodeHalfThickness;
 
   return Gaudi::XYZPoint( xh,yh,zh );
 }
+
+Gaudi::XYZPoint DeRichPMT::detPointOnAnode ( const LHCb::RichSmartID smartID ) const 
+{
+  const double aPixCol = (double) (smartID.pixelCol());
+  const double aPixRow = (double) (smartID.pixelRow());
+  Gaudi::XYZPoint aLocalAnodeCoord = getAnodeHitCoordFromPixelNum(aPixCol,aPixRow);
+  // std::cout<<" DeRichPmt local point col row coord "<<aPixCol<<"  :"<<aPixRow<<"   "<<aLocalAnodeCoord <<std::endl;
+  
+  return ( m_dePmtAnode->geometry()->toGlobal(aLocalAnodeCoord));
+  
+}
+
 
 //=============================================================================
