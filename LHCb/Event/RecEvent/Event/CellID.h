@@ -1,4 +1,3 @@
-// $Id: CellID.h,v 1.2 2006-05-29 15:26:09 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CLUSTERCELLID_H 
 #define EVENT_CLUSTERCELLID_H 1
@@ -62,7 +61,7 @@ namespace CaloDataFunctor
   private: 
     CellID<const LHCb::CaloCluster*> m_cell ;
   };
-}; // end of namespace CaloDataFunctor 
-}; // end of namespace LHCb
+} // end of namespace CaloDataFunctor 
+} // end of namespace LHCb
 // ============================================================================
 #endif // EVENT_CLUSTERCELLID_H

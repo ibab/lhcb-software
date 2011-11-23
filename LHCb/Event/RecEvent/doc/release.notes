@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix trivial icc remark
+
 !========================= RecEvent v2r39 2011-08-30 =========================
 ! 2011-08-25 - J. Helder Lopes
  - Added IsMuonTight field to StatusBits in MuonPID.
