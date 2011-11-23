@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Chris Jones
+ - Fix gcc 4.6 warnings
+
 !!========================= DisplVerticesMC v1r4 2011-06-17 =========================
  2011-04-12 - Neal Gauvin
  - Added new features for SaveTuple. 

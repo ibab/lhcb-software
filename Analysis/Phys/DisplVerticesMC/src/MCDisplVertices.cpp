@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-//#include "GaudiKernel/AlgFactory.h" 
+//#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 //Use ODIN
@@ -45,33 +45,33 @@ using namespace std ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCDisplVertices );
+DECLARE_ALGORITHM_FACTORY( MCDisplVertices )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 MCDisplVertices::MCDisplVertices( const std::string& name,
-                              ISvcLocator* pSvcLocator)
+                                  ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_pLinker()
-    , m_vFit(0)
-    , m_tisTos(0)
-    , pi(3.1415926)
-    , m_maxunpure(0.1)
-    , m_minmixed(0.7)
-    , m_maxmixed(0.95)
-    , PV(0)
-    , MCPV(0)
-    , m_PreyID(0)
-    , m_MotherPreyID(0)
-    , m_IsPreyFromMother(false){
+  , m_pLinker()
+  , m_vFit(0)
+  , m_tisTos(0)
+  , pi(3.1415926)
+  , m_maxunpure(0.1)
+  , m_minmixed(0.7)
+  , m_maxmixed(0.95)
+  , PV(0)
+  , MCPV(0)
+  , m_PreyID(0)
+  , m_MotherPreyID(0)
+  , m_IsPreyFromMother(false){
   declareProperty("MC", m_MC = false );//if work in a MC gen sample
   declareProperty("HepMC", m_HepMC = "" );//if work in a HepMC gen sample
   declareProperty("SaveOnTES", m_SaveonTES = true );
   declareProperty("SaveTuple", m_SaveTuple = false );//save prey infos in Tuple
   declareProperty("SaveTrigInfos", m_SaveTrigInfos = false );
-  declareProperty("RemVtxFromAir", m_RemVtxFromAir = false );  
+  declareProperty("RemVtxFromAir", m_RemVtxFromAir = false );
   declareProperty("Prey", m_Prey = "~chi_10" );
   declareProperty("MotherPrey", m_MotherPrey = "H_10" );
   //>6.286GeV=Bc+ Mass
@@ -101,8 +101,8 @@ MCDisplVertices::MCDisplVertices( const std::string& name,
   declareProperty("MinZ", m_MinZ = -10.*m );
   declareProperty("MaxZ", m_MaxZ = 100*m );
   declareProperty("PVnbtrks", m_PVnbtrks = 5 ); //corr. to 'tight' PV reco
-  declareProperty("BeamLineLocation", 
-		  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
+  declareProperty("BeamLineLocation",
+                  m_BLLoc = "HLT/Hlt2LineDisplVertices/BeamLine");
   declareProperty("Backtoback", m_Backtoback = -1 );
 }
 
@@ -116,7 +116,7 @@ MCDisplVertices::~MCDisplVertices() {}
 //=============================================================================
 StatusCode MCDisplVertices::initialize() {
   //=== The following two lines should be commented for DC04 algorithms ! ===
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if( msgLevel( MSG::DEBUG ) )
@@ -125,9 +125,9 @@ StatusCode MCDisplVertices::initialize() {
 
   if( m_SaveTrigInfos ){
     m_tisTos = tool<ITriggerTisTos>("TriggerTisTos",this);
-    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");    
+    m_l0BankDecoder = tool<IL0DUFromRawTool>("L0DUFromRawTool");
   }
-  
+
 
   //Initialize Vertex Fitter
   //NOTE : BlindVertex fitter is temp. not available in v19r11 !
@@ -140,13 +140,13 @@ StatusCode MCDisplVertices::initialize() {
 
   //Retrieve MC linker tools
   m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Links,
-				    std::vector<std::string>(1,"") );
+                                    std::vector<std::string>(1,"") );
   //m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Links,
   //"Phys/StdNoPIDsPions" );
-  //m_pLinker = new Object2FromMC<>(this,Particle2MCMethod::Links, 
+  //m_pLinker = new Object2FromMC<>(this,Particle2MCMethod::Links,
   //"Phys/StdNoPIDsPions" );
   //Methods are WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max
-  
+
   //To recreate track measurements
   m_measProvider = tool<IMeasurementProvider>
     ( "MeasurementProvider","MeasProvider", this );
@@ -160,7 +160,7 @@ StatusCode MCDisplVertices::initialize() {
     // Get Transport Service
     m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
   }
-  
+
 
   //Get the track extrapolator
   //m_extra = tool<ITrackExtrapolator>("TrackMasterExtrapolator");
@@ -189,8 +189,8 @@ StatusCode MCDisplVertices::initialize() {
   //Sanity checks
   if( m_RemFromRFFoil && m_RemVtxFromDet == 4 ){
     info()<<"RemFromRFFoil = "<< m_RemFromRFFoil <<" and RemVtxFromDet = "
-	  << m_RemVtxFromDet <<" are incompatible. RemFromRFFoil set to false"
-	  << endmsg;
+          << m_RemVtxFromDet <<" are incompatible. RemFromRFFoil set to false"
+          << endmsg;
     m_RemFromRFFoil = false;
   }
   if( m_PurityMin < 1.1 ) m_MC = true;
@@ -203,16 +203,16 @@ StatusCode MCDisplVertices::initialize() {
 
   if( context() == "Info" ){
     info()<<"--------------------------------------------------------"<<endmsg;
-    info() << "MCDisplVertices will select " << m_Prey 
+    info() << "MCDisplVertices will select " << m_Prey
            << " candidates (ID=" << m_PreyID.pid() <<") ";
-    if(m_MC){ 
-      info() << "with theoretical mass of " << Prey->mass()/GeV 
+    if(m_MC){
+      info() << "with theoretical mass of " << Prey->mass()/GeV
              <<" GeV"; }
     info() << ". Selection Cuts are : " << endmsg;
     info() << "Min nb of desired candidates : "<< m_NbCands<< endmsg;
-    info() << m_Prey <<" minimum mass " 
+    info() << m_Prey <<" minimum mass "
            << m_PreyMinMass/Gaudi::Units::GeV <<" GeV" << endmsg;
-    info() << m_Prey <<" maximum mass " 
+    info() << m_Prey <<" maximum mass "
            << m_PreyMaxMass/Gaudi::Units::GeV <<" GeV" << endmsg;
     info() << "Minimum number of tracks at the reconstructed vertex of "
            << m_nTracks <<" tracks."<< endmsg ;
@@ -231,10 +231,10 @@ StatusCode MCDisplVertices::initialize() {
     if( m_RemVtxFromDet == 1 )
       info()<<"Not in detector material"<< endmsg;
     if( m_RemVtxFromDet == 2 )
-      info()<<"Not closer than " << m_DetDist 
+      info()<<"Not closer than " << m_DetDist
             <<"mm from detector material along momentum"<< endmsg;
     if( m_RemVtxFromDet == 3 || m_RemVtxFromDet == 4 )
-      info()<<"Not closer than " << m_DetDist 
+      info()<<"Not closer than " << m_DetDist
             <<"*PosCovMatric from detector material"<< endmsg;
     if( m_RemVtxFromDet == 4 )
       info()<<"("<< m_DetDist+3 <<" when in RF-Foil region)"<< endmsg;
@@ -244,26 +244,26 @@ StatusCode MCDisplVertices::initialize() {
       info()<< "Min nb of tracks on the upPV candidate : "
             << m_PVnbtrks << endmsg;
     } else if( m_RCut == "FromBeamLine" ){
-      info() << "computed with respect to the beam line given at " 
+      info() << "computed with respect to the beam line given at "
              << m_BLLoc << endmsg;
     } else if( m_RCut == "FromPreyInfo" ){
       info() << "taken from p->info(52)." << endmsg;
     } else {
-      info() << "computed with respect to (0,0,z) in the global LHCb frame" 
+      info() << "computed with respect to (0,0,z) in the global LHCb frame"
              << endmsg;
-      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!" 
+      info()<< "THIS OPTION SHOULD NOT BE USED ON REAL DATA !!"
             << endmsg;
     }
     info() <<"Min R    : " << m_RMin/mm <<" mm"<< endmsg ;
     info() <<"Max R    : " << m_RMax/mm <<" mm"<< endmsg ;
     if( m_Backtoback > 0 ){
-      info() << "MCDisplVertices will also try to reconstruct "<< m_MotherPrey 
-	     <<" from two "<< m_Prey <<" decaying back to back with |dphi| "
-	     << m_Backtoback <<" angle wrst the upstream PVs"<< endmsg;
+      info() << "MCDisplVertices will also try to reconstruct "<< m_MotherPrey
+             <<" from two "<< m_Prey <<" decaying back to back with |dphi| "
+             << m_Backtoback <<" angle wrst the upstream PVs"<< endmsg;
     }
     info()<<"--------------------------------------------------------"<<endmsg;
   }
-  
+
 
   //Initialize the beam line
   m_BeamLine = new Particle();
@@ -272,13 +272,13 @@ StatusCode MCDisplVertices::initialize() {
   if( m_RCut=="" ){
     m_BeamLine->setReferencePoint( Gaudi::XYZPoint( 0., 0., 0. ) );
     m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
-  } 
+  }
 
   if( m_RemFromRFFoil || m_RemVtxFromDet == 4 || m_SaveTuple ){
     //get the Velo geometry
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
     const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
-    const IDetectorElement* righthalv = 
+    const IDetectorElement* righthalv =
       getDet<IDetectorElement>( velo + "Right" );
     const IGeometryInfo* halflgeominfo = lefthalv->geometry();
     const IGeometryInfo* halfrgeominfo = righthalv->geometry();
@@ -287,7 +287,7 @@ StatusCode MCDisplVertices::initialize() {
     Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
     if( msgLevel( MSG::DEBUG ) )
       debug() <<"Velo global right half center "
-	      << rightcenter <<", left half center "<< lefthalv << endmsg;
+              << rightcenter <<", left half center "<< leftcenter << endmsg;
     //matrix to transform to local velo frame
     m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
     //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
@@ -310,7 +310,7 @@ StatusCode MCDisplVertices::execute(){
 
   //Clear stuff
   PVs.clear();
-  
+
   //------------------Some Studies------------------
   //StudyPV(); return StatusCode::SUCCESS;  //PV Properties
   //Study Activity : propriety of vtx wr to the position
@@ -320,32 +320,32 @@ StatusCode MCDisplVertices::execute(){
   //StudyDiffGenMC();return StatusCode::SUCCESS;
   //StudyEoverNbTrk();return StatusCode::SUCCESS;
 
-  //---------------------------------------------  
+  //---------------------------------------------
   if( m_SaveTrigInfos && !m_SaveTuple ){
     Tuple tuple = nTuple("Trigger");
-    if( fillHeader( tuple ).isFailure() || 
+    if( fillHeader( tuple ).isFailure() ||
         SaveTrigInfinTuple( tuple ).isFailure() )
       Warning("Not being able to save trigger infos in tuple !");
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
 
-  //------------------Retrieve HepMC Infos------------------  
-  if( m_HepMC !="" ) { 
+  //------------------Retrieve HepMC Infos------------------
+  if( m_HepMC !="" ) {
     StatusCode sc = GetHepMCInfos();
     if( sc.isFailure() ) {
-      fatal() << "Could not retrieve Hep Monte-Carlo infos." << endmsg; 
-      return StatusCode::FAILURE;  
+      fatal() << "Could not retrieve Hep Monte-Carlo infos." << endmsg;
+      return StatusCode::FAILURE;
     }
     //return StatusCode::SUCCESS;
   }
 
-  //------------------Retrieve MC Infos------------------  
+  //------------------Retrieve MC Infos------------------
   m_IsPreyFromMother = false;
-  if( m_MC && false ) { 
+  if( m_MC && false ) {
     StatusCode sc = GetMCInfos();
     if( sc.isFailure() ) {
-      fatal() << "Could not retrieve Monte-Carlo infos." << endmsg; 
-      return StatusCode::FAILURE;  
+      fatal() << "Could not retrieve Monte-Carlo infos." << endmsg;
+      return StatusCode::FAILURE;
     }
     //return StatusCode::SUCCESS;
   }
@@ -355,7 +355,7 @@ StatusCode MCDisplVertices::execute(){
     //------------------Set the beam line------------------
     if( m_RCut=="FromBeamLine" || (m_SaveTuple&&m_RCut=="FromPreyInfo") ){
       if( exist<Particle::Range>( m_BLLoc ) ){
-        const Particle::Range BL = get<Particle::Range>( m_BLLoc );      
+        const Particle::Range BL = get<Particle::Range>( m_BLLoc );
         const Particle* tmp = *(BL.begin());
         m_BeamLine->setReferencePoint( tmp->referencePoint() );
         m_BeamLine->setMomentum( tmp->momentum() );
@@ -368,7 +368,7 @@ StatusCode MCDisplVertices::execute(){
       }
     } else if( m_RCut=="FromUpstreamPV" ){
       //------------------Get the upstream Primary Vertex-----
-      GetUpstreamPV();      
+      GetUpstreamPV();
       if(PV == NULL) return StatusCode::SUCCESS;
       m_BeamLine->setReferencePoint( PV->position() );
       m_BeamLine->setMomentum( Gaudi::LorentzVector( 0., 0., 1., 0. ) );
@@ -377,7 +377,7 @@ StatusCode MCDisplVertices::execute(){
       //StudyDgtsIP( PV ); //Study the IP to PV of the daughters
       //Study resolution of the reconstructed PV
       //if(false) Resolution();
-    }    
+    }
   }
 
   //------------------The Code---------------------------
@@ -398,13 +398,13 @@ StatusCode MCDisplVertices::execute(){
   Particle::ConstVector Cands;
   m_purities.clear();
   Particle::ConstVector::const_iterator iend = preys.end();
-  for( Particle::ConstVector::const_iterator is = preys.begin(); 
+  for( Particle::ConstVector::const_iterator is = preys.begin();
        is < iend; ++is ){
     const Particle * p = (*is);
 
     //Get rid of non-reconstructed particles, i.e. with no daughters.
-    if( p->isBasicParticle() ){ 
-      debug()<<"Basic particle !" << endmsg; 
+    if( p->isBasicParticle() ){
+      debug()<<"Basic particle !" << endmsg;
       continue;
     }
 
@@ -424,8 +424,8 @@ StatusCode MCDisplVertices::execute(){
 
     //Let's go for Prey hunting
     if( msgLevel( MSG::DEBUG ) ){
-      debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV 
-             <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof " 
+      debug()<< m_Prey <<" candidate with mass "<< mass/Gaudi::Units::GeV
+             <<" GeV, nb of tracks " << nbtrks << ", Chi2/ndof "
              << chi <<", R "<< rho <<", pos of end vtx "<< pos <<", sigmaX "
              << sqrt(err(0,0))<<", sigmaY "<< sqrt(err(1,1)) <<", sigmaZ "
              << sqrt(err(2,2)) <<", sigmaR "<< errr <<", rec charge "<< recq;
@@ -434,7 +434,7 @@ StatusCode MCDisplVertices::execute(){
       } else { debug()<< endmsg; }
     }
 
-    //Has the (MC) vertex been generated by collisin of flying particles 
+    //Has the (MC) vertex been generated by collisin of flying particles
     // with air of beam pipe ?
     if( m_RemVtxFromAir && IsFromAir(p) ) continue;
 
@@ -446,19 +446,19 @@ StatusCode MCDisplVertices::execute(){
     //Is the particle decay vertex in the RF-foil ?
     if( m_RemFromRFFoil && IsInRFFoil( pos ) ){
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg; 
-      continue; 
+        debug()<<"Decay vertex in the RF-foil, particle disguarded"<< endmsg;
+      continue;
     }
 
-    if( mass < m_PreyMinMass || mass > m_PreyMaxMass || 
-        nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax || 
-        sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT || 
-        pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY || 
+    if( mass < m_PreyMinMass || mass > m_PreyMaxMass ||
+        nbtrks < m_nTracks || rho <  m_RMin || rho > m_RMax ||
+        sumpt < m_SumPt || chi > m_MaxChi2OvNDoF || muon < m_MuonpT ||
+        pos.x() < m_MinX || pos.x() > m_MaxX || pos.y() < m_MinY ||
         pos.y() > m_MaxY || pos.z() < m_MinZ || pos.z() > m_MaxZ ||
-        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){ 
+        errr > m_SigmaR || sqrt(err(2,2)) > m_SigmaZ ){
       if( msgLevel( MSG::DEBUG ) )
-        debug()<<"Particle do not pass the cuts"<< endmsg; 
-      continue; 
+        debug()<<"Particle do not pass the cuts"<< endmsg;
+      continue;
     }
     if( m_MC && !GetMCPrey( p ) ) continue;
 
@@ -477,13 +477,13 @@ StatusCode MCDisplVertices::execute(){
       if( IsAPointInDet( p, 3, 2 ) ) indet += 10;
       if( IsAPointInDet( p, 4, 2 ) ) indet += 100;
       if( p->info(51,-1000.)>-900 ) indet += 1000;
-      indets.push_back( indet ); 
+      indets.push_back( indet );
       if( !m_MC ) m_purities.push_back( 0. );
       if(true){
-	double mlong = 0.; int nbtlong = 0;
-	GetMassFromLongTracks( p, mlong, nbtlong );
-	nboftracksl.push_back( nbtlong );
-	massls.push_back( mlong );
+        double mlong = 0.; int nbtlong = 0;
+        GetMassFromLongTracks( p, mlong, nbtlong );
+        nboftracksl.push_back( nbtlong );
+        massls.push_back( mlong );
       }
     }
 
@@ -499,13 +499,13 @@ StatusCode MCDisplVertices::execute(){
       debug() << "Insufficent number of candidates !"<< endmsg;
     return StatusCode::SUCCESS;
   }
-  setFilterPassed(true); 
+  setFilterPassed(true);
   counter("Nb of candidates") += Cands.size();
 
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Nb of " << m_Prey <<" candidates "<< Cands.size() << endmsg;
 
-  
+
   //Save nTuples
   if( m_SaveTuple ){
     Tuple tuple = nTuple("DisplVertices");
@@ -522,22 +522,22 @@ StatusCode MCDisplVertices::execute(){
     tuple->farray( "PreyerrX", errx.begin(), errx.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyerrY", erry.begin(), erry.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyerrZ", errz.begin(), errz.end(), "NbPrey", NbPreyMax );
-    tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(), 
-		   "NbPrey", NbPreyMax );
+    tuple->farray( "PreySumPt", sumpts.begin(), sumpts.end(),
+                   "NbPrey", NbPreyMax );
     tuple->farray( "PreyQ", recqs.begin(), recqs.end(), "NbPrey", NbPreyMax );
     tuple->farray( "InDet", indets.begin(),indets.end(), "NbPrey", NbPreyMax );
     tuple->farray( "Muon", muons.begin(), muons.end(), "NbPrey", NbPreyMax );
     tuple->farray( "PreyNbofTracks", nboftracks.begin(), nboftracks.end(),
-		   "NbPrey", NbPreyMax );
+                   "NbPrey", NbPreyMax );
     tuple->farray( "PreyChindof", chindof.begin(), chindof.end(),
-		   "NbPrey", NbPreyMax );
+                   "NbPrey", NbPreyMax );
     tuple->farray( "PreyPurity", m_purities.begin(), m_purities.end(),
                    "NbPrey", NbPreyMax );
     if( massls.size() != 0 ){
-      tuple->farray( "PreyMLongs", massls.begin(), massls.end(), 
-		     "NbPrey", NbPreyMax );
-      tuple->farray( "PreyNbofLongTracks", nboftracksl.begin(), 
-		     nboftracksl.end(), "NbPrey", NbPreyMax );
+      tuple->farray( "PreyMLongs", massls.begin(), massls.end(),
+                     "NbPrey", NbPreyMax );
+      tuple->farray( "PreyNbofLongTracks", nboftracksl.begin(),
+                     nboftracksl.end(), "NbPrey", NbPreyMax );
     }
     if( !m_SaveTrigInfos ) tuple->column( "FromMother", m_IsPreyFromMother );
     tuple->column( "BLX", m_BeamLine->referencePoint().x() );
@@ -546,7 +546,7 @@ StatusCode MCDisplVertices::execute(){
     if( !SavePVs( tuple )  ) return StatusCode::FAILURE;
     tuple->column( "NbVelo", GetNbVeloTracks() );
     //if( !SaveGEC( tuple, Cands ) ) return StatusCode::FAILURE;
-    if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) ) 
+    if( m_SaveTrigInfos && !SaveTrigInfinTuple( tuple ) )
       return StatusCode::FAILURE;
     if( !(tuple->write()) ) return StatusCode::FAILURE;
   }
@@ -557,13 +557,13 @@ StatusCode MCDisplVertices::execute(){
   //if( m_SaveonTES ) desktop()->saveTrees( m_outputParticles ) ;
 
 
-  //--------------Mother Reconstruction------------------  
+  //--------------Mother Reconstruction------------------
   if( m_Backtoback > 0 && Cands.size() >= 2 ){
     if( BackToBack( Cands ).isFailure() )
       Warning("Reconstruction process for mother"+ m_MotherPrey +" failed !");
   }
 
-  //---------------------------------------------  
+  //---------------------------------------------
   //StudyParticleGun(Cands);
 
 
@@ -580,32 +580,32 @@ StatusCode MCDisplVertices::finalize() {
 
   if( m_RCut !="FromBeamLine" ) delete m_BeamLine;
 
-  if( context() == "HLT" ) return DVAlgorithm::finalize(); 
+  if( context() == "HLT" ) return DVAlgorithm::finalize();
 
 
   info()<<"-------------------------------------------------------"<< endreq;
   info()<<"              DisplVertices Statistics                 "<< endreq;
   info()<<"-------------------------------------------------------"<< endreq;
-  info()<<"Number of reconstructed "<< m_Prey <<"               : " 
+  info()<<"Number of reconstructed "<< m_Prey <<"               : "
         << counter("Nb of candidates").flag() << endreq;
-  info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : " 
+  info()<<"Number of reconstructed "<<  m_MotherPrey <<"                 : "
         << counter("Nb of mothers").flag() << endreq;
   if( m_MC ){
-    info()<<"Percentage of reconstructed "<< m_Prey <<"           : " 
+    info()<<"Percentage of reconstructed "<< m_Prey <<"           : "
           << 100.*counter("RecbleMCPrey").flagMean() << endreq;
-    info()<<"Nb of ass. MC tracks of "<< m_Prey <<"               : " 
+    info()<<"Nb of ass. MC tracks of "<< m_Prey <<"               : "
           << counter("NbassfromaPrey").flagMean() <<" +- "
           << counter("NbassfromaPrey").flagMeanErr() << endreq;
     info()<<"Average purity of reconstructed "<< m_Prey <<"       : "
-          << counter("purity").flagMean() <<" +- " 
+          << counter("purity").flagMean() <<" +- "
           << counter("purity").flagMeanErr() <<endreq;
-    info()<<"Pure "<< m_Prey <<"    (purity > "<< m_maxmixed 
+    info()<<"Pure "<< m_Prey <<"    (purity > "<< m_maxmixed
           << ")               :" << 100.*counter("p1").flagMean() <<"%"<< endmsg;
     info()<<"Mixed "<< m_Prey <<"   ( "<< m_minmixed <<" < purity < "
-          << m_maxmixed << ")        :" << 100.*counter("p2").flagMean() 
+          << m_maxmixed << ")        :" << 100.*counter("p2").flagMean()
           <<"%"<< endmsg;
     info()<<"Unpure "<< m_Prey <<"  (purity < "
-          << m_maxunpure << ")                :" 
+          << m_maxunpure << ")                :"
           << 100.*counter("p3").flagMean() <<"%"<< endmsg;
   }
   info()<<"-------------------------------------------------------"<< endreq;
@@ -632,8 +632,8 @@ void MCDisplVertices::StudyPreyIP( const LHCb::Particle * p, const RecVertex * P
   //Study sum of pT of daughter tracks !
   double pt = 0.;
   SmartRefVector<LHCb::Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<LHCb::Particle>::const_iterator i = 
-	 p->daughters().begin(); i!= iend; ++i ){
+  for( SmartRefVector<LHCb::Particle>::const_iterator i =
+         p->daughters().begin(); i!= iend; ++i ){
     pt += (*i)->pt();
   }
   plot( pt/1000., "PreypTTot", 0., 100. );
@@ -647,14 +647,14 @@ void MCDisplVertices::StudyActivity(){
 
   Tuple tuple = nTuple("Activity");
 
-   vector<int> nbtrk;
-   vector<double> r,m;
-   vector<double> dist, disttoPV; //<--- mais quel PV ???
-   vector<Gaudi::XYZPoint> pos; //  <--- essaye de mettre des pointeurs !
-   vector<Gaudi::LorentzVector> mom;
+  vector<int> nbtrk;
+  vector<double> r,m;
+  vector<double> dist, disttoPV; //<--- mais quel PV ???
+  vector<Gaudi::XYZPoint> pos; //  <--- essaye de mettre des pointeurs !
+  vector<Gaudi::LorentzVector> mom;
 
   // select Monte Carlo Vertices:
-  const MCVertex::Container* mcvertices = get<MCVertex::Container> 
+  const MCVertex::Container* mcvertices = get<MCVertex::Container>
     ( MCVertexLocation::Default ) ;
   int size = mcvertices->size();
   debug()<<"There are "<< size << " MC vertices." << endmsg;
@@ -663,8 +663,8 @@ void MCDisplVertices::StudyActivity(){
   Gaudi::LorentzVector mass;
   //Loop on vertices
   MCVertex::Container::const_iterator ivend = mcvertices->end();
-  for ( MCVertex::Container::const_iterator i = mcvertices->begin(); 
-	ivend != i ; ++i ){
+  for ( MCVertex::Container::const_iterator i = mcvertices->begin();
+        ivend != i ; ++i ){
     nb = 0;
     mass.SetCoordinates( 0., 0., 0., 0. );
     GetMCStable( *i, nb, mass );    //look for stable daughters
@@ -672,13 +672,13 @@ void MCDisplVertices::StudyActivity(){
     //Check if Vertex already in the list.
     size = pos.size();
     for( int j = 0; j != size; ++j ){
-      
+
       if( VertDistance( pos.at(j), (*i)->position() ) < m_DocaMax ){
         //Vertices are considered the same
         nbtrk.at(j) += nb;
         mom.at(j) += mass;
         goto exit;
-      } 
+      }
     } // end of check list
     if( nb == 0 ) continue;
     pos.push_back( (*i)->position() );
@@ -686,15 +686,15 @@ void MCDisplVertices::StudyActivity(){
     mom.push_back( mass );
     r.push_back( pos.back().Rho() );
     dist.push_back( pos.back().z() );
-    disttoPV.push_back( VertDistance( (*i)->primaryVertex()->position(), 
-				      (*i)->position() ) );
+    disttoPV.push_back( VertDistance( (*i)->primaryVertex()->position(),
+                                      (*i)->position() ) );
   exit:;
 
   }// end of vertex
 
   //Save vertex masses
   vector<Gaudi::LorentzVector>::iterator iend = mom.end();
-  for( vector<Gaudi::LorentzVector>::iterator i = mom.begin(); 
+  for( vector<Gaudi::LorentzVector>::iterator i = mom.begin();
        i != iend; ++i ){
     m.push_back( (*i).mass() );
   }
@@ -703,9 +703,9 @@ void MCDisplVertices::StudyActivity(){
   if( msgLevel(MSG::DEBUG) ){
     size = pos.size();
     for( int j = 0; j != size; ++j ){
-      debug()<<"Vertex pos "<< pos.at(j) << ", nb of trks "<< nbtrk.at(j) 
-	     <<", r "<< r.at(j) << ", mass "<< m.at(j) <<", distance to PV "
-	     << disttoPV.at(j) << endmsg;
+      debug()<<"Vertex pos "<< pos.at(j) << ", nb of trks "<< nbtrk.at(j)
+             <<", r "<< r.at(j) << ", mass "<< m.at(j) <<", distance to PV "
+             << disttoPV.at(j) << endmsg;
 
     }
   }
@@ -728,20 +728,20 @@ void MCDisplVertices::StudyActivity(){
 void MCDisplVertices::StudyDistanceBet2Interactions(){
 
   // select Monte Carlo Vertices:
-  const MCVertex::Container* mcvertices = get<MCVertex::Container> 
+  const MCVertex::Container* mcvertices = get<MCVertex::Container>
     ( MCVertexLocation::Default ) ;
 
   //Find PV's
   vector< MCVertex * > MCPV;
   MCVertex::Container::const_iterator iend = mcvertices->end();
-  for ( MCVertex::Container::const_iterator i = mcvertices->begin(); 
-	iend != i ; ++i ){
+  for ( MCVertex::Container::const_iterator i = mcvertices->begin();
+        iend != i ; ++i ){
     if( !(*i)->isPrimary() )continue;
     MCPV.push_back( *i );
   }
   if( MCPV.size() >= 2 ){
     plot( VertDistance( MCPV.at(0)->position(), MCPV.at(1)->position() ),
-	  "MCDistBet2Int", 0., 200.);
+          "MCDistBet2Int", 0., 200.);
   }
 }
 
@@ -794,23 +794,23 @@ void MCDisplVertices::StudyDiffGenMC(){
 
   //MC container
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
-  if( !mcparts ){ 
+  if( !mcparts ){
     warning() << "Unable to find MC particles at '"
               << MCParticleLocation::Default << "'" << endreq;
     return;
   }
   //Find MC PV
   MCVertex * MCPV = NULL;
-  const MCVertex::Container* mcvertices = get<MCVertex::Container> 
+  const MCVertex::Container* mcvertices = get<MCVertex::Container>
     ( MCVertexLocation::Default ) ;
   MCVertex::Container::const_iterator imcend = mcvertices->end();
-  for ( MCVertex::Container::const_iterator imc = mcvertices->begin() ; 
+  for ( MCVertex::Container::const_iterator imc = mcvertices->begin() ;
         imcend != imc ; ++imc ){
     if (  (*imc)->isPrimary() ) {
       if( MCPV == NULL ) MCPV = (*imc);
       debug() << "MC Primary Vertex : " << (*imc)->position() << endmsg;
       break;
-    } 
+    }
   }
   //Find the interesting particles
   MCParticle::Vector::iterator iend = mcparts->end();
@@ -818,7 +818,7 @@ void MCDisplVertices::StudyDiffGenMC(){
 
     //the neutralino
     if( (*i)->particleID().abspid() == 1000022 ){
-      SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+      SmartRefVector< LHCb::MCVertex >::const_iterator vtx =
         (*i)->endVertices().begin();
       Gaudi::XYZPoint pos = (*vtx)->position();
       debug()<<"Position of neut decay "<< pos << endmsg;
@@ -829,7 +829,7 @@ void MCDisplVertices::StudyDiffGenMC(){
     }
     //the chargino
     if( (*i)->particleID().abspid() == 1000024 ){
-      SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+      SmartRefVector< LHCb::MCVertex >::const_iterator vtx =
         (*i)->endVertices().begin();
       Gaudi::XYZPoint pos = (*vtx)->position();
       debug()<<"Position of charg decay "<< pos << endmsg;
@@ -842,10 +842,10 @@ void MCDisplVertices::StudyDiffGenMC(){
 
   //Save ntuple
   const int max = 5;
-  tuple->farray( "GenKDist", genneut.begin(),genneut.end(), "NK", max ); 
-  tuple->farray( "MCKDist", mcneut.begin(),mcneut.end(), "NK", max ); 
-  tuple->farray( "GenCHDist", gench.begin(),gench.end(), "NCH", max ); 
-  tuple->farray( "MCCHDist", mcch.begin(),mcch.end(), "NCH", max ); 
+  tuple->farray( "GenKDist", genneut.begin(),genneut.end(), "NK", max );
+  tuple->farray( "MCKDist", mcneut.begin(),mcneut.end(), "NK", max );
+  tuple->farray( "GenCHDist", gench.begin(),gench.end(), "NCH", max );
+  tuple->farray( "MCCHDist", mcch.begin(),mcch.end(), "NCH", max );
   tuple->write();
 }
 
@@ -861,7 +861,7 @@ void MCDisplVertices::StudyHltEfficiency( const Gaudi::XYZPoint & pos ){
   if( !exist<RecVertices>( "Rec/Vertices/Hlt2DisplVerticesV3D" ) ) return;
   RecVertices* DV = get<RecVertices>( "Rec/Vertices/Hlt2DisplVerticesV3D" );
   int size = DV->size();
-  if( msgLevel( MSG::DEBUG ) ) debug()<<"Hlt nb of RV "<< size << endmsg; 
+  if( msgLevel( MSG::DEBUG ) ) debug()<<"Hlt nb of RV "<< size << endmsg;
   //if( size == 0 ) return;
 
   bool HltOk = false;
@@ -870,7 +870,7 @@ void MCDisplVertices::StudyHltEfficiency( const Gaudi::XYZPoint & pos ){
     double dist = VertDistance( (*i)->position(), pos );
     //debug()<<"dist  " << dist <<endmsg;
     plot( dist, "HltDVReso", 0., diff*5 );
-    if( dist < diff ){ 
+    if( dist < diff ){
       HltOk = true;
       break;
     }
@@ -885,7 +885,7 @@ void MCDisplVertices::StudyHltEfficiency( const Gaudi::XYZPoint & pos ){
 void MCDisplVertices::StudyPV(){
 
   /******************************************************
-   * Here for archiving purpose 
+   * Here for archiving purpose
    * Please prefer P2PV.py
    * Has proven not to work on RecVertices->work on Particles
    *****************************************************/
@@ -909,7 +909,7 @@ void MCDisplVertices::StudyPV(){
   if( size < 1 ) return;
 
   //Loop on all rec vertices
-  double mass = 0.; int nb = 0; 
+  double mass = 0.; int nb = 0;
   Particle::ConstVector::const_iterator iend = DV.end();
   for( Particle::ConstVector::const_iterator i = DV.begin(); i != iend; ++i ){
 
@@ -923,8 +923,8 @@ void MCDisplVertices::StudyPV(){
     //If it is too close to the MC PV, continue
     double dist = VertDistance(MCPV->position(),v->position());
     //debug()<<"DIST " << dist <<endmsg;
-    if( dist < diff ){ 
-      PrV=(*i); 
+    if( dist < diff ){
+      PrV=(*i);
       debug()<<"PV position "<< v->position() << endmsg;
       plot( nb, "PVNboftracks", 0., 80.);
       plot( v->position().z(), "PVz", -300., 300.);
@@ -934,9 +934,9 @@ void MCDisplVertices::StudyPV(){
       plot( recpt/1000. , "PVrecpt", 0., 50.);
       plot( dist , "PVReso", 0.0, 1.05 );
       bool bk = HasBackwardTracks( PrV );
-      plot( bk, "HasPVbckwd", 0, 2 );  
-      continue; 
-    } 
+      plot( bk, "HasPVbckwd", 0, 2 );
+      continue;
+    }
     if( nb > nbmax ) nbmax = nb;
     if( mass > massmax ) massmax = mass;
 
@@ -945,14 +945,14 @@ void MCDisplVertices::StudyPV(){
     vector<Gaudi::XYZPoint>::iterator jend = m_MCPos.end();
     for( vector<Gaudi::XYZPoint>::iterator j =  m_MCPos.begin(); j!=jend;++j ){
       dist = VertDistance( (*j),v->position());
-      if( dist < diff ){ 
-	quit = true; 
-	debug()<<"Prey position "<< v->position() << endmsg;
-	bool bk = HasBackwardTracks( (*i) );
-	plot( bk, "HasPreybckwd", 0, 2 );  
-	break;
+      if( dist < diff ){
+        quit = true;
+        debug()<<"Prey position "<< v->position() << endmsg;
+        bool bk = HasBackwardTracks( (*i) );
+        plot( bk, "HasPreybckwd", 0, 2 );
+        break;
       }
-    } 
+    }
     if( quit ) continue;
 
 
@@ -960,26 +960,26 @@ void MCDisplVertices::StudyPV(){
     quit = false;
     jend = m_MCSVPos.end();
     for( vector<Gaudi::XYZPoint>::iterator j =  m_MCSVPos.begin();
-	 j!=jend; ++j ){
+         j!=jend; ++j ){
       dist = VertDistance( (*j),v->position());
-      if( dist < diff ){ 
-	quit = true; 
-	debug()<<"SV position "<< v->position() << endmsg;
-	plot( nb, "SVNboftracks", 0., 50.);
-	plot( v->position().z(), "SVz", -300., 300.);
-	plot( v->position().Rho(), "SVr", 0., 1.);
-	double recpt = (*i)->pt(); //sumpt;
-	plot( mass , "SVMass", 0., 100.);
-	plot( recpt/1000. , "SVrecpt", 0., 50.);
-	plot( dist, "SVRes", 0., 1. );
-	bool bk = HasBackwardTracks( (*i) );
-	plot( bk, "HasSVbckwd", 0, 2 );  
- 	break;}
-    } 
+      if( dist < diff ){
+        quit = true;
+        debug()<<"SV position "<< v->position() << endmsg;
+        plot( nb, "SVNboftracks", 0., 50.);
+        plot( v->position().z(), "SVz", -300., 300.);
+        plot( v->position().Rho(), "SVr", 0., 1.);
+        double recpt = (*i)->pt(); //sumpt;
+        plot( mass , "SVMass", 0., 100.);
+        plot( recpt/1000. , "SVrecpt", 0., 50.);
+        plot( dist, "SVRes", 0., 1. );
+        bool bk = HasBackwardTracks( (*i) );
+        plot( bk, "HasSVbckwd", 0, 2 );
+        break;}
+    }
     if( quit ) continue;
-  } 
+  }
 
- 
+
   if( PrV != NULL ){
     bool trk = false; bool m = false;
     //Is the PV the RecVertex with the most tracks ?
@@ -988,7 +988,7 @@ void MCDisplVertices::StudyPV(){
     // Is the PV the RecVertex with the higher rec mass ?
     if( massmax < (PrV->measuredMass()/1000.) ) m = true;
     debug()<<"Has the PV the biggest mass ? "<< m <<" the gratest nb of trks ?"
-	   << trk << endmsg ;
+           << trk << endmsg ;
     plot( trk, "IsPVTrk", 0, 2);
     plot( m, "IsPVMass", 0, 2);
   }
@@ -997,15 +997,15 @@ void MCDisplVertices::StudyPV(){
 
 //============================================================================
 // Study the impact parameter of the Daughters to the PV
-//============================================================================ 
+//============================================================================
 void MCDisplVertices::StudyDgtsIP( const Particle * p ){
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); 
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin();
        i!= iend; ++i ){
     double imp, chi2;
-    distanceCalculator()->distance( static_cast<const Particle*>(*i), 
-				    PV, imp, chi2);
+    distanceCalculator()->distance( static_cast<const Particle*>(*i),
+                                    PV, imp, chi2);
     //debug() << "Impact parameter " << imp << " " << impe << endmsg;
     plot( imp, "PreyDgtIPtoPV", 0., 15.);
     plot( chi2, "PreyDgtIPchi2toPV", 0., 300.);
@@ -1014,11 +1014,11 @@ void MCDisplVertices::StudyDgtsIP( const Particle * p ){
 
 void MCDisplVertices::StudyDgtsIP( const LHCb::RecVertex * v ){
   SmartRefVector<Track>::const_iterator iend = v->tracks().end();
-  for( SmartRefVector<Track>::const_iterator i = v->tracks().begin(); 
+  for( SmartRefVector<Track>::const_iterator i = v->tracks().begin();
        i != iend; ++i ){
     //Beware : computed from first track state !
-    double imp = ImpactParam( (*i)->position(), (*i)->momentum(), 
-			      PV->position() );
+    double imp = ImpactParam( (*i)->position(), (*i)->momentum(),
+                              PV->position() );
     //debug() << "Impact parameter " << imp << endmsg;
     plot( imp, "PVDgtIPtoPV", 0., 2.);
   }
@@ -1031,8 +1031,8 @@ void MCDisplVertices::StudyDispersion( const LHCb::Particle * p ){
 
   //loop on daughters
   double dthetamax = 0;
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); 
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin();
        i!= p->daughters().end(); ++i ){
     //compute angular aperture, i.e. angle between p and its daughters
     double dtheta = fabs( (*i)->momentum().theta() - p->momentum().theta() );
@@ -1044,10 +1044,10 @@ void MCDisplVertices::StudyDispersion( const LHCb::Particle * p ){
   plot( dthetamax, "PreyDgtsThetaMax", 0., pi/4 );
 }
 
-void MCDisplVertices::StudyDispersion( const LHCb::Particle * p1, 
-				  const LHCb::Particle * p2 ){
+void MCDisplVertices::StudyDispersion( const LHCb::Particle * p1,
+                                       const LHCb::Particle * p2 ){
 
-    plot( GetDeltaR( p1, p2 ), "PreyNeutDR", 0., 10.);
+  plot( GetDeltaR( p1, p2 ), "PreyNeutDR", 0., 10.);
 
 }
 
@@ -1069,14 +1069,14 @@ void MCDisplVertices::StudyEoverNbTrk(){
   // Retrieve Primary vertices and remove tracks that contributed
   if( false ){
     const RecVertex::Range & PVCs = this->primaryVertices();
-    for( RecVertex::Range::const_iterator i = PVCs.begin(); 
-	  i != PVCs.end() ; ++i ){
+    for( RecVertex::Range::const_iterator i = PVCs.begin();
+         i != PVCs.end() ; ++i ){
       //RemoveTracks( tracks, (*i) ); see v4r7 for this function
     }
   }
 
   //Compute nb of long tracks
-  for( Track::ConstVector::const_iterator i = tracks.begin(); 
+  for( Track::ConstVector::const_iterator i = tracks.begin();
        i != tracks.end(); ++i ){
     if( (*i)->checkType( Track::Downstream) ) nbdown++ ;
     if( !(*i)->checkType( Track::Long) ) continue;
@@ -1090,9 +1090,9 @@ void MCDisplVertices::StudyEoverNbTrk(){
   GetCaloInfos( "Hcal", E, ET );
   GetCaloInfos( "Muon", E, ET );
 
-  debug()<<"Total Energy "<< E <<", Total transverse energy "<< ET 
-	 <<", Nb of long tracks "<< nblong <<", nb of high pt long tracks "
-	 << nbhighpt << endmsg; 
+  debug()<<"Total Energy "<< E <<", Total transverse energy "<< ET
+         <<", Nb of long tracks "<< nblong <<", nb of high pt long tracks "
+         << nbhighpt << endmsg;
 
   if( nblong == 0 ) nblong = 1;
   if( nbhighpt == 0 ) nbhighpt = 1;
@@ -1105,9 +1105,9 @@ void MCDisplVertices::StudyEoverNbTrk(){
   double Edownolong = E*nbdown/nblong;
   double ETdownolong = ET*nbdown/nblong;
 
-  debug()<<"Eonblong "<< Eonblong <<", ETonblong "<< ETonblong 
-	 <<", Eonbhighpt "<< Eonbhighpt <<", ETonbhighpt "<< ETonbhighpt 
-	 << endmsg;
+  debug()<<"Eonblong "<< Eonblong <<", ETonblong "<< ETonblong
+         <<", Eonbhighpt "<< Eonbhighpt <<", ETonbhighpt "<< ETonbhighpt
+         << endmsg;
 
   Tuple tuple = nTuple("EoverTrk");
   tuple->column( "NbLong", nblong );
@@ -1135,15 +1135,15 @@ void MCDisplVertices::StudyPreyComposition( const Particle * p, string s ){
   Gaudi::XYZPoint pos = p->endVertex()->position();
   if ( msgLevel( MSG::DEBUG )  ){
     debug()<<"-------------------"<< s <<"-----------------" << endmsg;
-    debug() <<"Particle Mass " << p->measuredMass() << ", Pos of end vertex " 
-	    << pos << ", R "<< pos.rho() << ", Number of associated tracks " 
-	    << p->daughtersVector().size() << endmsg;
+    debug() <<"Particle Mass " << p->measuredMass() << ", Pos of end vertex "
+            << pos << ", R "<< pos.rho() << ", Number of associated tracks "
+            << p->daughtersVector().size() << endmsg;
     debug()<<"--------------- Composition -----------" << endmsg;
   }
 
   int nbe = 0; //count number of electrons
   int nbz = 0; //nb of tracks with first z measurement after RV position
-  int nbm = 0; //nb of 2 by 2 null rec masses 
+  int nbm = 0; //nb of 2 by 2 null rec masses
   int nbpairs = 0;      //Nb of daughter pairs
   double meanangle = 0; //mean angle between pair of particles
   double maxangle = 0;  //max angle between pair of particles
@@ -1155,7 +1155,7 @@ void MCDisplVertices::StudyPreyComposition( const Particle * p, string s ){
     const Particle * d = i->target() ;
     int pid = d->particleID().pid();
     if( abs(pid) == 11 ) ++nbe;
-    
+
     //Let's find the position of the first hit
     if( d->proto()->track() == NULL ) continue;
     const Track * tk = d->proto()->track();
@@ -1163,9 +1163,9 @@ void MCDisplVertices::StudyPreyComposition( const Particle * p, string s ){
     //if(!sc) info()<<"Unable to recreate track measurements"<< endmsg;
     double z = tk->measurements().front()->z();
     debug()<<"ID "<< pid <<", z first meas. "
-	   << z << endmsg;
+           << z << endmsg;
     if( z < pos.z() ) ++nbz;
-    
+
     //let's take the tracks 2 by 2 and look if there is some null rec mass
     //if( d->pt() < 1*GeV ) continue;
     SmartRefVector< Particle >::const_iterator j = i; ++j;
@@ -1186,7 +1186,7 @@ void MCDisplVertices::StudyPreyComposition( const Particle * p, string s ){
       //debug()<<"Rec mass "<< l.M() << endmsg;
       ++j;
     }
-    
+
   }
   meanangle = double( meanangle/nbpairs );
   //if( maxangle > pi ) maxangle -= pi;
@@ -1201,7 +1201,7 @@ void MCDisplVertices::StudyPreyComposition( const Particle * p, string s ){
   plot( p->momentum().BoostToCM().z(), s+"PreyGammaZ", -1., -0.93 );
 
   debug() <<"Mean Prey Gamma "<< p->momentum().Gamma() <<", z boost "
-	  << p->momentum().BoostToCM().z() << endmsg;
+          << p->momentum().BoostToCM().z() << endmsg;
 
 
   //later : put id info in a tuple !
@@ -1219,7 +1219,7 @@ void MCDisplVertices::StudyParticleGun( Particle::ConstVector & preys ){
   vector<int> pids;
 
   Particle::ConstVector::const_iterator iend = preys.end();
-  for( Particle::ConstVector::const_iterator is = preys.begin(); 
+  for( Particle::ConstVector::const_iterator is = preys.begin();
        is < iend; ++is ){
     const Particle * p = (*is);
 
@@ -1227,7 +1227,7 @@ void MCDisplVertices::StudyParticleGun( Particle::ConstVector & preys ){
     const MCParticle * mcmother = WhichMother( p );
     //int pid = -1;
     //if( mcmother != NULL ) pid = mcmother->particleID().abspid();
-    int pid = (mcmother != NULL) ? int(mcmother->particleID().abspid()) : -1; 
+    int pid = (mcmother != NULL) ? int(mcmother->particleID().abspid()) : -1;
 
     //Save PID in tuple
     pids.push_back( pid );
@@ -1236,12 +1236,12 @@ void MCDisplVertices::StudyParticleGun( Particle::ConstVector & preys ){
 
     //print out
     if ( msgLevel( MSG::DEBUG )  ){
-            debug()<<"RecVertex from ParticleGun with mass "
-	     << p->measuredMass()/Gaudi::Units::GeV 
-	     <<" GeV, nb of tracks " 
-	     << p->endVertex()->outgoingParticles().size() << ", Chi2/ndof " 
-	     << p->endVertex()->chi2PerDoF() <<", pos of end vtx " 
-	     << p->endVertex()->position() << endmsg;
+      debug()<<"RecVertex from ParticleGun with mass "
+             << p->measuredMass()/Gaudi::Units::GeV
+             <<" GeV, nb of tracks "
+             << p->endVertex()->outgoingParticles().size() << ", Chi2/ndof "
+             << p->endVertex()->chi2PerDoF() <<", pos of end vtx "
+             << p->endVertex()->position() << endmsg;
       debug()<<"Mother ID "<< pid << endmsg;
     }
 
@@ -1272,14 +1272,14 @@ StatusCode MCDisplVertices::GetHepMCInfos()
 
   HepMCEvents::const_iterator ie=events->begin();
   const HepMCEvent* event = *ie ;  //get first MC event in a collision
-  const HepMC::GenEvent* theEvent = event->pGenEvt(); 
+  const HepMC::GenEvent* theEvent = event->pGenEvt();
 
   //Save Prey calo informations in a Tuple
   //SaveGenPartinTuple( theEvent );
 
   if(true) theEvent->print( std::cout );
 
-  HepMC::GenParticle* h = 0;
+  //HepMC::GenParticle* h = 0;
   HepMC::GenVertex* PV = 0;
   vector< HepMC::GenParticle* > neut;
   vector< HepMC::GenParticle* > charg;
@@ -1297,18 +1297,18 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     HepMC::GenEvent::particle_const_iterator pend = theEvent->particles_end();
     for( p= theEvent->particles_begin(); p!= pend;++p){
       //debug()<<"Particle " << (*p)->pdg_id() <<" "<< (*p)->status() << endmsg;
-      if( (*p)->pdg_id() == 25 && (*p)->status() == 2 ){ h = *p; }
+      // if( (*p)->pdg_id() == 25 && (*p)->status() == 2 ){ h = *p; }
       if( (*p)->pdg_id() == 1000022 && (*p)->status() == 2 ){
-	neut.push_back( (*p) );
-	//debug()<<"Found a neut !"<< endmsg;
+        neut.push_back( (*p) );
+        //debug()<<"Found a neut !"<< endmsg;
       }
       if( abs((*p)->pdg_id()) == 1000024 && (*p)->status() == 2 ){
-	charg.push_back( (*p) );
-	//debug()<<"Found a charg !"<< endmsg;
+        charg.push_back( (*p) );
+        //debug()<<"Found a charg !"<< endmsg;
       }
     }
 
-    //loop on neutralinos found 
+    //loop on neutralinos found
     vector<double> energie;
     vector<double> pt;
     vector<double> eta;
@@ -1317,39 +1317,39 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     vector<double> flight;
     vector< HepMC::GenParticle* >::const_iterator iend = neut.end();
     for( vector< HepMC::GenParticle* >::const_iterator i = neut.begin();
-	 i != iend; ++i ){
+         i != iend; ++i ){
       HepMC::GenParticle* p = *i;
       HepMC::GenVertex* VertNeut = p->end_vertex();
-      
-      //Vertk1qqq->print( std::cout ); 
-      //Vertk2qqq->print( std::cout ); 
-      debug()<<"Position of neut decay "<< Print( VertNeut->position() ) 
-	     << endmsg;
-      
+
+      //Vertk1qqq->print( std::cout );
+      //Vertk2qqq->print( std::cout );
+      debug()<<"Position of neut decay "<< Print( VertNeut->position() )
+             << endmsg;
+
       energie.push_back( p->momentum().e()/GeV );
-      pt.push_back( sqrt( pow(p->momentum().px(),2)+ 
-			  pow(p->momentum().py(),2) )/GeV );
+      pt.push_back( sqrt( pow(p->momentum().px(),2)+
+                          pow(p->momentum().py(),2) )/GeV );
       eta.push_back( p->momentum().eta() );
       kz.push_back( VertNeut->point3d().z() );
       kr.push_back( VertNeut->point3d().perp() );
       flight.push_back( VertDistance( PV,VertNeut ) );
       debug() << "Dist of flight " << flight.back() << endmsg;
-      
+
       //Find and study stable daughters  <--- work only for Kaplan
       int dgt1=0; dumV1 = HepMC::FourVector();
-      for( HepMC::GenVertex::particles_out_const_iterator po = 
-	     VertNeut->particles_out_const_begin();
-	   po !=  VertNeut->particles_out_const_end(); ++po){
+      for( HepMC::GenVertex::particles_out_const_iterator po =
+             VertNeut->particles_out_const_begin();
+           po !=  VertNeut->particles_out_const_end(); ++po){
 
-	if( (*po)->pdg_id()==22 ){ continue;}
-	if( ((*po)->pdg_id())== 92 ) { GetHepMCStable( p,dgt1, VertNeut );break; }
-	HepMC::GenVertex::particles_out_const_iterator p1;
+        if( (*po)->pdg_id()==22 ){ continue;}
+        if( ((*po)->pdg_id())== 92 ) { GetHepMCStable( p,dgt1, VertNeut );break; }
+        HepMC::GenVertex::particles_out_const_iterator p1;
 
-	for( p1 = (*po)->end_vertex()->particles_out_const_begin(); 
-	     p1 !=  (*po)->end_vertex()->particles_out_const_end(); ++p1){
-	  if( ((*p1)->pdg_id())== 92 ) {
-	    GetHepMCStable( (*p1),dgt1, VertNeut ); goto s; }
-	}
+        for( p1 = (*po)->end_vertex()->particles_out_const_begin();
+             p1 !=  (*po)->end_vertex()->particles_out_const_end(); ++p1){
+          if( ((*p1)->pdg_id())== 92 ) {
+            GetHepMCStable( (*p1),dgt1, VertNeut ); goto s; }
+        }
       }
     s:
       debug() << "Neutralino mass "<< dumV1.m() <<" Nb of daughters : "<< dgt1;
@@ -1366,8 +1366,8 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     tuple->farray("GenNeutr", kr.begin(), kr.end(),"NGenNeut", 10 );
     //debug() << " R distance " << kr.back() << endmsg;
     //if ( kr.back < 42 ) m_kok1++;   //study if decays in VELO
-    tuple->farray("GenNeutDistFlight", flight.begin(), 
-		  flight.end(),"NGenNeut", 10  );
+    tuple->farray("GenNeutDistFlight", flight.begin(),
+                  flight.end(),"NGenNeut", 10  );
 
     //loop on the found charginos
     if( m_HepMC=="AMSB" ){
@@ -1379,41 +1379,41 @@ StatusCode MCDisplVertices::GetHepMCInfos()
       flight.clear();
 
       for( vector< HepMC::GenParticle* >::const_iterator i = charg.begin();
-	   i != charg.end(); ++i ){
-	HepMC::GenParticle* p = *i;
-	HepMC::GenVertex* VertCharg = p->end_vertex();
-	debug()<<"Position of chargino decay "<< Print( VertCharg->position() )
-	       << endmsg;
-	
-	energie.push_back( p->momentum().e()/Gaudi::Units::GeV );
-	pt.push_back( sqrt( pow(p->momentum().px(),2)+ 
-			    pow(p->momentum().py(),2) )/Gaudi::Units::GeV );
-	eta.push_back( p->momentum().eta() );
-	kz.push_back( VertCharg->point3d().z() );
-	kr.push_back( VertCharg->point3d().perp() );
-	flight.push_back( VertDistance( PV,VertCharg ) );
-	debug() << "Dist of flight " << flight.back() << endmsg;
-	
-	//Find and study stable daughters <--- work only for Kaplan
-// 	int dgt1=0; dumV1 = HepMC::FourVector();
-// 	for( HepMC::GenVertex::particles_out_const_iterator po = 
-// 	       VertCharg->particles_out_const_begin();
-// 	     po !=  VertCharg->particles_out_const_end(); ++po){
-// 	  if( (*po)->pdg_id()==22 ){ continue;}
-// 	  if( ((*po)->pdg_id())== 92 ) { GetHepMCStable( p,dgt1, VertCharg );break; }
-// 	  HepMC::GenVertex::particles_out_const_iterator p1;
-// 	  for( p1 = (*po)->end_vertex()->particles_out_const_begin(); 
-// 	       p1 !=  (*po)->end_vertex()->particles_out_const_end(); ++p1){
-// 	    if( ((*p1)->pdg_id())== 92 ) {GetHepMCStable( (*p1),dgt1, VertCharg );goto t; }
-// 	  }
-// 	}
-//       t:
-// 	debug() << "Chargino mass "<< dumV1.m() <<" Nb of daughters : "<< dgt1;
-// 	if ( dgt1 > m_nTracks ) { debug() <<" Selected";}
-// 	debug() <<" "<< endmsg;
-// 	plot( dgt1, "GenChargNbofDgts", 0, 30 );
-// 	plot
-//	  ( dumV1.m()/1000., "GenChargPerfectMass", 0, 70 );
+           i != charg.end(); ++i ){
+        HepMC::GenParticle* p = *i;
+        HepMC::GenVertex* VertCharg = p->end_vertex();
+        debug()<<"Position of chargino decay "<< Print( VertCharg->position() )
+               << endmsg;
+
+        energie.push_back( p->momentum().e()/Gaudi::Units::GeV );
+        pt.push_back( sqrt( pow(p->momentum().px(),2)+
+                            pow(p->momentum().py(),2) )/Gaudi::Units::GeV );
+        eta.push_back( p->momentum().eta() );
+        kz.push_back( VertCharg->point3d().z() );
+        kr.push_back( VertCharg->point3d().perp() );
+        flight.push_back( VertDistance( PV,VertCharg ) );
+        debug() << "Dist of flight " << flight.back() << endmsg;
+
+        //Find and study stable daughters <--- work only for Kaplan
+        //  int dgt1=0; dumV1 = HepMC::FourVector();
+        //  for( HepMC::GenVertex::particles_out_const_iterator po =
+        //         VertCharg->particles_out_const_begin();
+        //       po !=  VertCharg->particles_out_const_end(); ++po){
+        //    if( (*po)->pdg_id()==22 ){ continue;}
+        //    if( ((*po)->pdg_id())== 92 ) { GetHepMCStable( p,dgt1, VertCharg );break; }
+        //    HepMC::GenVertex::particles_out_const_iterator p1;
+        //    for( p1 = (*po)->end_vertex()->particles_out_const_begin();
+        //         p1 !=  (*po)->end_vertex()->particles_out_const_end(); ++p1){
+        //      if( ((*p1)->pdg_id())== 92 ) {GetHepMCStable( (*p1),dgt1, VertCharg );goto t; }
+        //    }
+        //  }
+        //       t:
+        //  debug() << "Chargino mass "<< dumV1.m() <<" Nb of daughters : "<< dgt1;
+        //  if ( dgt1 > m_nTracks ) { debug() <<" Selected";}
+        //  debug() <<" "<< endmsg;
+        //  plot( dgt1, "GenChargNbofDgts", 0, 30 );
+        //  plot
+        //   ( dumV1.m()/1000., "GenChargPerfectMass", 0, 70 );
       }//end of loop on found charginos
       tuple->farray("GenChargE",energie.begin(), energie.end(), "NGenCharg", 10 );
       tuple->farray("GenChargPt",pt.begin(),pt.end(), "NGenCharg", 10 );
@@ -1422,7 +1422,7 @@ StatusCode MCDisplVertices::GetHepMCInfos()
       tuple->farray("GenChargr", kr.begin(), kr.end(),"NGenCharg", 10 );
       //debug() << " R distance " << kr.back() << endmsg;
       tuple->farray("GenChargDistFlight", flight.begin(), flight.end(),
-		    "NGenCharg", 10  );
+                    "NGenCharg", 10  );
     }//end of AMSB
   }// end of mSUGRA and AMSB
 
@@ -1432,25 +1432,25 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     HepMC::GenParticle* B = 0;
     HepMC::GenVertex* Bdec = 0;
     HepMC::GenVertex* Bcrea = 0;
-    for( HepMC::GenEvent::particle_const_iterator p = 
-	   theEvent->particles_begin(); 
-	 p!= theEvent->particles_end();++p){
+    for( HepMC::GenEvent::particle_const_iterator p =
+           theEvent->particles_begin();
+         p!= theEvent->particles_end();++p){
       //debug() << "Particle ID "  << (*p)->pdg_id() << endmsg;
-      if((*p)->pdg_id() >= 500 && (*p)->pdg_id() < 600 ){ 
-	//debug() << "Found a B meson !"  << (*p)->pdg_id() << endmsg;
-	B = (*p);
-	if ( B->end_vertex() != NULL ){ Bdec = B->end_vertex();}else{continue;}
-	if ( B->production_vertex() != NULL ) {Bcrea = B->production_vertex();}
-	else { continue; }
-	double dist = VertDistance( Bdec, Bcrea );
-	//debug() << "Distance of flight " << dist << endmsg;
-	if ( dist < m_DocaMax ) continue;
-	plot( dist, "GenBDistFlight", 0.0, 500.);
-	plot ( Bdec->point3d().z(), "GenBz", 0.0, 1000.);
-	plot ( Bdec->point3d().perp(), "GenBr", 0.0, 10.);
-	//Find and study stable daughter
-	GetHepMCStable( B,dgt , Bdec );
-	goto endB;
+      if((*p)->pdg_id() >= 500 && (*p)->pdg_id() < 600 ){
+        //debug() << "Found a B meson !"  << (*p)->pdg_id() << endmsg;
+        B = (*p);
+        if ( B->end_vertex() != NULL ){ Bdec = B->end_vertex();}else{continue;}
+        if ( B->production_vertex() != NULL ) {Bcrea = B->production_vertex();}
+        else { continue; }
+        double dist = VertDistance( Bdec, Bcrea );
+        //debug() << "Distance of flight " << dist << endmsg;
+        if ( dist < m_DocaMax ) continue;
+        plot( dist, "GenBDistFlight", 0.0, 500.);
+        plot ( Bdec->point3d().z(), "GenBz", 0.0, 1000.);
+        plot ( Bdec->point3d().perp(), "GenBr", 0.0, 10.);
+        //Find and study stable daughter
+        GetHepMCStable( B,dgt , Bdec );
+        goto endB;
       }
     }
   endB:
@@ -1465,24 +1465,24 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     HepMC::GenVertex* Ddec = 0;
     HepMC::GenVertex* Dcrea = 0;
     dgt=0;
-    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin(); 
-	 p!= theEvent->particles_end();++p){
+    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin();
+         p!= theEvent->particles_end();++p){
       //debug() << "Particle ID "  << (*p)->pdg_id() << endmsg;
-      if((*p)->pdg_id() >= 400 && (*p)->pdg_id() < 500 ){ 
-	//debug() << "Found a D meson !"  << (*p)->pdg_id() << endmsg;
-	D = (*p);
-	if ( D->end_vertex() != NULL ){ Ddec = D->end_vertex();}else{continue;}
-	if ( D->production_vertex() != NULL ) {Dcrea = D->production_vertex();}
-	else { continue; }
-	double dist = VertDistance( Ddec, Dcrea );
-	//debug() << "Distance of flight " << dist << endmsg;
-	if ( dist <m_DocaMax ) continue;
-	plot( dist, "GenDDistFlight", 0.0, 500.);
-	plot ( Ddec->point3d().z(), "GenDz", 0.0, 1000.);
-	plot ( Ddec->point3d().perp(), "GenDr", 0.0, 10.);
-	//Find and study stable daughter
-	GetHepMCStable( D,dgt , Ddec );
-	goto endD;
+      if((*p)->pdg_id() >= 400 && (*p)->pdg_id() < 500 ){
+        //debug() << "Found a D meson !"  << (*p)->pdg_id() << endmsg;
+        D = (*p);
+        if ( D->end_vertex() != NULL ){ Ddec = D->end_vertex();}else{continue;}
+        if ( D->production_vertex() != NULL ) {Dcrea = D->production_vertex();}
+        else { continue; }
+        double dist = VertDistance( Ddec, Dcrea );
+        //debug() << "Distance of flight " << dist << endmsg;
+        if ( dist <m_DocaMax ) continue;
+        plot( dist, "GenDDistFlight", 0.0, 500.);
+        plot ( Ddec->point3d().z(), "GenDz", 0.0, 1000.);
+        plot ( Ddec->point3d().perp(), "GenDr", 0.0, 10.);
+        //Find and study stable daughter
+        GetHepMCStable( D,dgt , Ddec );
+        goto endD;
       }
     }
   endD:
@@ -1497,24 +1497,24 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     HepMC::GenVertex* Kdec = 0;
     HepMC::GenVertex* Kcrea = 0;
     dgt=0;
-    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin(); 
-	 p!= theEvent->particles_end();++p){
+    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin();
+         p!= theEvent->particles_end();++p){
       //debug() << "Particle ID "  << (*p)->pdg_id() << endmsg;
-      if((*p)->pdg_id() >= 300 && (*p)->pdg_id() < 400 ){ 
-	//debug() << "Found a K meson !"  << (*p)->pdg_id() << endmsg;
-	K = (*p);
-	if ( K->end_vertex() != NULL ){ Kdec = K->end_vertex();}else{continue;}
-	if ( K->production_vertex() != NULL ) {Kcrea = K->production_vertex();}
-	else { continue; }
-	double dist = VertDistance( Kdec, Kcrea );
-	//debug() << "Distance of flight " << dist << endmsg;
-	if ( dist <m_DocaMax ) continue;
-	plot( dist, "GenKDistFlight", 0.0, 500.);
-	plot ( Kdec->point3d().z(), "GenKz", 0.0, 1000.);
-	plot ( Kdec->point3d().perp(), "GenKr", 0.0, 10.);
-	//Find and study stable daughter
-	GetHepMCStable( K,dgt , Kdec );
-	goto endK;
+      if((*p)->pdg_id() >= 300 && (*p)->pdg_id() < 400 ){
+        //debug() << "Found a K meson !"  << (*p)->pdg_id() << endmsg;
+        K = (*p);
+        if ( K->end_vertex() != NULL ){ Kdec = K->end_vertex();}else{continue;}
+        if ( K->production_vertex() != NULL ) {Kcrea = K->production_vertex();}
+        else { continue; }
+        double dist = VertDistance( Kdec, Kcrea );
+        //debug() << "Distance of flight " << dist << endmsg;
+        if ( dist <m_DocaMax ) continue;
+        plot( dist, "GenKDistFlight", 0.0, 500.);
+        plot ( Kdec->point3d().z(), "GenKz", 0.0, 1000.);
+        plot ( Kdec->point3d().perp(), "GenKr", 0.0, 10.);
+        //Find and study stable daughter
+        GetHepMCStable( K,dgt , Kdec );
+        goto endK;
       }
     }
   endK:
@@ -1527,16 +1527,16 @@ StatusCode MCDisplVertices::GetHepMCInfos()
     HepMC::GenParticle* K = 0;
     HepMC::GenVertex* Kdec = 0;
     HepMC::GenVertex* Kcrea = 0;
-    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin(); 
-	 p!= theEvent->particles_end();++p){
+    for( HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin();
+         p!= theEvent->particles_end();++p){
       if((*p)->pdg_id() == 36 && (*p)->status() == 2 ){
-	K = (*p);
-	if ( K->end_vertex() != NULL ){ Kdec = K->end_vertex();}else{continue;}
-	if ( K->production_vertex() != NULL ) {Kcrea = K->production_vertex();}
-	else { continue; }
-	double dist = VertDistance( Kdec, Kcrea );
-	debug() << "V-Pions position of decay "<< Print( Kdec->position() ) 
-		<< "Distance of flight " << dist << endmsg;
+        K = (*p);
+        if ( K->end_vertex() != NULL ){ Kdec = K->end_vertex();}else{continue;}
+        if ( K->production_vertex() != NULL ) {Kcrea = K->production_vertex();}
+        else { continue; }
+        double dist = VertDistance( Kdec, Kcrea );
+        debug() << "V-Pions position of decay "<< Print( Kdec->position() )
+                << "Distance of flight " << dist << endmsg;
       }
     }
   }
@@ -1546,7 +1546,7 @@ StatusCode MCDisplVertices::GetHepMCInfos()
 }
 
 //=============================================================================
-//  Find all charged stable daughters of a particle 
+//  Find all charged stable daughters of a particle
 //=============================================================================
 
 void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt, HepMC::ThreeVector* dec ) {
@@ -1558,12 +1558,12 @@ void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt, HepMC::Th
   double charge = id.threeCharge();
   //debug() << "ID " << p->pdg_id() << " Charge " << charge << endmsg;
 
-  if ( (p->end_vertex()) != NULL ){ 
+  if ( (p->end_vertex()) != NULL ){
     HepMC::GenVertex* vertex = p->end_vertex();
     //loop on the daughters
     HepMC::GenVertex::particles_out_const_iterator it;
-    for ( it = vertex->particles_out_const_begin(); 
-	  it != vertex->particles_out_const_end(); ++it ){
+    for ( it = vertex->particles_out_const_begin();
+          it != vertex->particles_out_const_end(); ++it ){
       GetHepMCStable( (*it), dgt, dec );
     }
   } else if ( (p->production_vertex()) != NULL ) {
@@ -1573,37 +1573,37 @@ void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt, HepMC::Th
     //debug() << "Distance " << dist << endmsg;
     plot( dist, "GenDgtsSepfromKhi", 0.0, 1000. );
     if ( dist < m_DocaMax ) {
-      dumV1.set( dumV1.x()+(p->momentum()).x(), dumV1.y()+(p->momentum()).y(), 
-		 dumV1.z()+(p->momentum()).z(), dumV1.e()+(p->momentum()).e());
-      double pT = sqrt( pow(p->momentum().x(),2) + pow(p->momentum().y(),2) ); 
+      dumV1.set( dumV1.x()+(p->momentum()).x(), dumV1.y()+(p->momentum()).y(),
+                 dumV1.z()+(p->momentum()).z(), dumV1.e()+(p->momentum()).e());
+      double pT = sqrt( pow(p->momentum().x(),2) + pow(p->momentum().y(),2) );
       if (m_HepMC=="Khi") plot( pT,"GenKhiDaughpT",0.0,20.*Gaudi::Units::GeV);
       if (m_HepMC=="B") plot( pT,"GenBDaughpT",0.0, 20.*Gaudi::Units::GeV);
       if (m_HepMC=="D") plot( pT,"GenDDaughpT",0.0, 20.*Gaudi::Units::GeV);
       if (m_HepMC=="K") plot( pT,"GenKDaughpT",0.0, 20.*Gaudi::Units::GeV);
       ++dgt;
       //       debug() << "Nb of daughters yet " << dgt
-      // 	      << " momentum " <<  p->momentum() 
-      // 	      << " pT " << pT << endmsg;
+      //        << " momentum " <<  p->momentum()
+      //        << " pT " << pT << endmsg;
     }
   }
  t:
   return;
 }
 
-void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt, 
-			       HepMC::GenVertex* dec ) {
+void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt,
+                                     HepMC::GenVertex* dec ) {
 
   //int stable = p->status();
   ParticleID id = ParticleID( p->pdg_id() );
   double charge = id.threeCharge();
   //debug() << "ID " << p->pdg_id() << " Charge " << charge << endmsg;
 
-  if ( (p->end_vertex()) != NULL ){ 
+  if ( (p->end_vertex()) != NULL ){
     HepMC::GenVertex* vertex = p->end_vertex();
     //loop on the daughters
     HepMC::GenVertex::particles_out_const_iterator it;
-    for ( it = vertex->particles_out_const_begin(); 
-	  it != vertex->particles_out_const_end(); ++it ){
+    for ( it = vertex->particles_out_const_begin();
+          it != vertex->particles_out_const_end(); ++it ){
       GetHepMCStable( (*it), dgt, dec );
     }
   } else if ( (p->production_vertex()) != NULL ) {
@@ -1613,17 +1613,17 @@ void MCDisplVertices::GetHepMCStable(HepMC::GenParticle* p, int & dgt,
     //debug() << "Distance " << dist << endmsg;
     plot( dist, "GenDgtsSepfromKhi", 0.0, 1000. );
     if ( dist < m_DocaMax ) {
-      dumV1.set( dumV1.x()+(p->momentum()).x(), dumV1.y()+(p->momentum()).y(), 
-		 dumV1.z()+(p->momentum()).z(), dumV1.e()+(p->momentum()).e());
-      double pT = sqrt( pow(p->momentum().x(),2) + pow(p->momentum().y(),2) ); 
+      dumV1.set( dumV1.x()+(p->momentum()).x(), dumV1.y()+(p->momentum()).y(),
+                 dumV1.z()+(p->momentum()).z(), dumV1.e()+(p->momentum()).e());
+      double pT = sqrt( pow(p->momentum().x(),2) + pow(p->momentum().y(),2) );
       if (m_HepMC=="Khi") plot( pT,"GenKhiDaughpT",0.0,20.*Gaudi::Units::GeV);
       if (m_HepMC=="B") plot( pT,"GenBDaughpT",0.0, 20.*Gaudi::Units::GeV);
       if (m_HepMC=="D") plot( pT,"GenDDaughpT",0.0, 20.*Gaudi::Units::GeV);
       if (m_HepMC=="K") plot( pT,"GenKDaughpT",0.0, 20.*Gaudi::Units::GeV);
       ++dgt;
       //       debug() << "Nb of daughters yet " << dgt
-      // 	      << " momentum " <<  p->momentum() 
-      // 	      << " pT " << pT << endmsg;
+      //        << " momentum " <<  p->momentum()
+      //        << " pT " << pT << endmsg;
     }
   }
  t:
@@ -1652,11 +1652,11 @@ StatusCode MCDisplVertices::GetMCInfos() {
 
   //Get the MC Particles
   MCParticles* mcparts = get<MCParticles>(MCParticleLocation::Default );
-  if( !mcparts ){ 
+  if( !mcparts ){
     warning() << "Unable to find MC particles at '"
-	      << MCParticleLocation::Default << "'" << endreq;
+              << MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
-  } 
+  }
   //debug() << "There are " <<  mcparts->size() << " MC particles" << endmsg;
   //Save all stable MC Part in Tuple for Calo Analysis
   //SaveMCPartinTuple( mcparts );
@@ -1673,57 +1673,57 @@ StatusCode MCDisplVertices::GetMCInfos() {
       }
       //PV is set to be the Prey parent.
       if( MCPV == NULL ) MCPV = (*i)->primaryVertex ();
-      SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+      SmartRefVector< LHCb::MCVertex >::const_iterator vtx =
         (*i)->endVertices().begin();
       Gaudi::XYZPoint pos = (*vtx)->position();
-      m_MCPos.push_back( pos ); 
+      m_MCPos.push_back( pos );
       if( msgLevel( MSG::DEBUG ) ){
         debug()<< "MC "<< m_Prey <<" mass "
-               << (*i)->virtualMass()/GeV 
+               << (*i)->virtualMass()/GeV
                <<" GeV, pos of end vtx " << pos << endmsg;
-      } 
+      }
       if(true) GetMCStable( static_cast<const MCVertex*>(*vtx), "MCPrey" );
       if(false) GetMCStable( static_cast<const MCVertex*>(*vtx) );
     }
   }
   //Find the Kshort and save infos in tuple
   if(false){
-    for( MCParticle::Vector::iterator i = mcparts->begin(); 
+    for( MCParticle::Vector::iterator i = mcparts->begin();
          i != iend; ++i ){
       if( (*i)->particleID().abspid() == 310 ){
         double eta = (*i)->momentum().eta();
         if( eta < 1.8 || eta > 4.9 ) continue;
         if( (*i)->endVertices().size() < 1 ) continue;
-        SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+        SmartRefVector< LHCb::MCVertex >::const_iterator vtx =
           (*i)->endVertices().begin();
         Gaudi::XYZPoint pos = (*vtx)->position();
-        m_MCPos.push_back( pos ); 
-        debug()<< "MC K_S mass " << (*i)->virtualMass()/GeV 
-               <<" GeV, pos of end vtx " << pos << endmsg; 
+        m_MCPos.push_back( pos );
+        debug()<< "MC K_S mass " << (*i)->virtualMass()/GeV
+               <<" GeV, pos of end vtx " << pos << endmsg;
         if(true) GetMCStable( static_cast<const MCVertex*>(*vtx) );
       }
     }
   }
-  
+
   //Study nboftracks,pt, mass and IP to PV of PV tracks
   if( msgLevel(MSG::DEBUG) )
     debug()<<"MC Primary Vertex : " << MCPV->position() << endmsg;
   if(false) GetMCStable( MCPV, "MCPV" );
-  
+
   // get all Monte Carlo vertices from TES and save SV:
-  const MCVertex::Container* mcvertices = get<MCVertex::Container> 
+  const MCVertex::Container* mcvertices = get<MCVertex::Container>
     ( MCVertexLocation::Default ) ;
   int size = 0;//= mcvertices->size();
   //debug()<<"There are "<< size << " MC vertices." << endmsg;
   // select all Monte Carlo  Primary Vertices:
-  
+
   m_MCSVPos.clear();
-  MCVertex::Container::const_iterator imcend = 	mcvertices->end();
-  for ( MCVertex::Container::const_iterator imc = mcvertices->begin() ; 
-        imcend != imc ; ++imc ) 
+  MCVertex::Container::const_iterator imcend =  mcvertices->end();
+  for ( MCVertex::Container::const_iterator imc = mcvertices->begin() ;
+        imcend != imc ; ++imc )
   {
     if (  (*imc)->isPrimary() && (*imc) != MCPV ) {
-      debug() << "MC Secondary interaction  Vertex : " 
+      debug() << "MC Secondary interaction  Vertex : "
               << (*imc)->position() << endmsg;
       m_MCSVPos.push_back( (*imc)->position() );
       ++size;
@@ -1733,17 +1733,17 @@ StatusCode MCDisplVertices::GetMCInfos() {
   }
   if( msgLevel( MSG::DEBUG ) )
     debug()<<"There are "<< size + 1<< "MC PV vertices." << endmsg;
-  
-  
+
+
   return StatusCode::SUCCESS;
 }
 //============================================================================
 // Get purity and number of associated tracks of prey
 //============================================================================
 bool MCDisplVertices::GetMCPrey( const Particle * p ){
-  
+
   //Compute "purity" of the prey. Purity is defined as the number of
-  //associated tracks from a prey over the total number of 
+  //associated tracks from a prey over the total number of
   //associated tracks.
 
   //loop on the daughters to look for MC associated particle.
@@ -1751,13 +1751,13 @@ bool MCDisplVertices::GetMCPrey( const Particle * p ){
   float nbasstot = 0.;
   float purity = 200.;
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i!= iend; ++i ){
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin(); i!= iend; ++i ){
     const MCParticle *MCpart = m_pLinker->firstMCP( (*i) );
     if(MCpart != NULL ){
-      //debug() << "Particle " << (*i)->key() << " " 
-      //<< (*i)->particleID().pid() 
-      //<< " associated to MC part " << MCpart->key() << " " 
+      //debug() << "Particle " << (*i)->key() << " "
+      //<< (*i)->particleID().pid()
+      //<< " associated to MC part " << MCpart->key() << " "
       //<< MCpart->particleID().pid() << endmsg;
       ++nbasstot;
       if( IsitFromaPrey( MCpart ) ) ++nbassfromaPrey;
@@ -1767,80 +1767,80 @@ bool MCDisplVertices::GetMCPrey( const Particle * p ){
   if( nbasstot == 0 ) ++nbasstot;
 
   //Compute purity
-  purity =  nbassfromaPrey/nbasstot; 
+  purity =  nbassfromaPrey/nbasstot;
 
   //if only interessted in the prey, uncomment foll. lines
-  //if( purity < m_minmixed) return StatusCode::SUCCESS; 
+  //if( purity < m_minmixed) return StatusCode::SUCCESS;
   counter("purity") += purity;
   counter("NbassfromaPrey") += nbassfromaPrey;
   if( purity < m_maxunpure ){ ++counter("p3"); } else { counter("p3") += 0; }
-  if( purity > m_minmixed && purity < m_maxmixed ){ ++counter("p2"); } 
+  if( purity > m_minmixed && purity < m_maxmixed ){ ++counter("p2"); }
   else { counter("p2") += 0; }
   if( purity > m_maxmixed ){ ++counter("p1"); } else { counter("p1") += 0; }
 
   m_purities.push_back( purity );
   if( msgLevel( MSG::DEBUG ) )
-    debug()<< m_Prey <<" purity " << purity 
-	   <<" Nb of associated trks "<< nbassfromaPrey <<endmsg;
+    debug()<< m_Prey <<" purity " << purity
+           <<" Nb of associated trks "<< nbassfromaPrey <<endmsg;
 
   //if( purity < m_maxunpure ) {
-    //Study the composition
-    //StudyPreyComposition( p, "Unpure" );
+  //Study the composition
+  //StudyPreyComposition( p, "Unpure" );
   //}
 
   //if( purity > m_maxmixed ){
   //plot( nbassfromaPrey, "PreyNbofTrueMCTrk", 0, 20 );
   //plot( p->measuredMass()/1000., "PreyMass", 0., 80. );
 
-    //Study the composition
-    //StudyPreyComposition( p, "Pure" );
+  //Study the composition
+  //StudyPreyComposition( p, "Pure" );
 
-    //Resolution of the prey reconstructed vertex
-    //if( p->endVertex()->position().z() > 200. ) 
-    //Resolution( p->endVertex()->position() );
+  //Resolution of the prey reconstructed vertex
+  //if( p->endVertex()->position().z() > 200. )
+  //Resolution( p->endVertex()->position() );
 
-    //Study of Hlt efficiency
-    //StudyHltEfficiency( p->endVertex()->position() );
+  //Study of Hlt efficiency
+  //StudyHltEfficiency( p->endVertex()->position() );
 
-    //Study impact param to PV and some properties
-    //StudyPreyIP( p, PV );
+  //Study impact param to PV and some properties
+  //StudyPreyIP( p, PV );
 
-    //Study daughters IP to PV :
-    //StudyDgtsIP( p );
+  //Study daughters IP to PV :
+  //StudyDgtsIP( p );
 
-    //Study dispersion of Prey tracks :
-    //StudyDispersion( p );
-  //} 
+  //Study dispersion of Prey tracks :
+  //StudyDispersion( p );
+  //}
 
   if( m_PurityMin < 1.01 && purity < m_PurityMin ){
-    return false;  
+    return false;
   } else return true;
   return true;
 }
 
 //============================================================================
-// Find all stable charged daughters in acceptance 
+// Find all stable charged daughters in acceptance
 //============================================================================
 void MCDisplVertices::GetMCStable( const MCParticle * p, unsigned int & dgt ){
 
   if( p->endVertices().size() < 1 ) return;
 
-  SmartRefVector< MCVertex >::const_iterator vtx = 
+  SmartRefVector< MCVertex >::const_iterator vtx =
     p->endVertices().begin();
 
   const Gaudi::XYZPoint pos = vtx->target()->position();
 
-  SmartRefVector<LHCb::MCParticle>::const_iterator iend = 
+  SmartRefVector<LHCb::MCParticle>::const_iterator iend =
     (*vtx)->products().end();
-  for( SmartRefVector<LHCb::MCParticle>::const_iterator i = 
-	 (*vtx)->products().begin(); i != iend; ++i ){
+  for( SmartRefVector<LHCb::MCParticle>::const_iterator i =
+         (*vtx)->products().begin(); i != iend; ++i ){
     GetMCStable( i->target(), pos, dgt );
   }
 }
 
-void MCDisplVertices::GetMCStable( const MCParticle * p, 
-				 const Gaudi::XYZPoint & pos, 
-				 unsigned int & dgt ){
+void MCDisplVertices::GetMCStable( const MCParticle * p,
+                                   const Gaudi::XYZPoint & pos,
+                                   unsigned int & dgt ){
 
   //Compare production vtx with pos
   double dist = VertDistance( pos, p->originVertex()->position() );
@@ -1856,17 +1856,17 @@ void MCDisplVertices::GetMCStable( const MCParticle * p,
 
   dist = VertDistance( p->originVertex()->position(), (*v)->position() );
 
-  if( dist < m_DocaMax ){ //part considered unstable 
+  if( dist < m_DocaMax ){ //part considered unstable
     //loop on the daughters
-    SmartRefVector<LHCb::MCParticle>::const_iterator iend = 
+    SmartRefVector<LHCb::MCParticle>::const_iterator iend =
       (*v)->products().end();
-    for( SmartRefVector<LHCb::MCParticle>::const_iterator i = 
-	   (*v)->products().begin(); i != iend; ++i ){
+    for( SmartRefVector<LHCb::MCParticle>::const_iterator i =
+           (*v)->products().begin(); i != iend; ++i ){
       GetMCStable( i->target(), pos, dgt );
     }
   }
 
-  if( dist > 1000. ) { //Particle is considered stable. 
+  if( dist > 1000. ) { //Particle is considered stable.
     //Continue if neutral or out of acceptance
     if( p->particleID().threeCharge() == 0 ) return;
     if( p->momentum().eta() < 1.8 || p->momentum().eta() > 4.9 ) return;
@@ -1877,21 +1877,21 @@ void MCDisplVertices::GetMCStable( const MCParticle * p,
   return;
 }
 
-void MCDisplVertices::GetMCStable( const LHCb::MCVertex * vtx , int & nb, 
-				 Gaudi::LorentzVector & mass ){
+void MCDisplVertices::GetMCStable( const LHCb::MCVertex * vtx , int & nb,
+                                   Gaudi::LorentzVector & mass ){
 
   info()<<"This function is not to be used"<< endmsg;
 
-  for( SmartRefVector<LHCb::MCParticle>::const_iterator p = 
-	 vtx->products().begin(); p != vtx->products().end(); ++p ){
-    if( (*p)->momentum().eta() < 1.8 || 
-	(*p)->momentum().eta() > 4.9 ) continue;    
+  for( SmartRefVector<LHCb::MCParticle>::const_iterator p =
+         vtx->products().begin(); p != vtx->products().end(); ++p ){
+    if( (*p)->momentum().eta() < 1.8 ||
+        (*p)->momentum().eta() > 4.9 ) continue;
     if( (*p)->particleID().threeCharge() == 0 ) continue;
-    SmartRefVector<LHCb::MCVertex>::const_iterator v = 
+    SmartRefVector<LHCb::MCVertex>::const_iterator v =
       (*p)->endVertices().begin();
-    double dist = VertDistance( (*p)->originVertex()->position(), 
-				(*v)->position() );
-    if( dist < 100. ) continue; 
+    double dist = VertDistance( (*p)->originVertex()->position(),
+                                (*v)->position() );
+    if( dist < 100. ) continue;
     //Particle considered stable
     mass =+ (*p)->momentum();
     ++nb;
@@ -1902,26 +1902,26 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V, string type ){
 
   MCParticle::ConstVector daughters;
   SmartRefVector<MCParticle>::const_iterator iend = V->products().end();
-  for( SmartRefVector<MCParticle>::const_iterator i = 
-	 V->products().begin(); i != iend; ++i ){
+  for( SmartRefVector<MCParticle>::const_iterator i =
+         V->products().begin(); i != iend; ++i ){
     GetMCStable( static_cast<const MCParticle*>(*i), V->position(),daughters );
   }
 
   int dgt = daughters.size();
   double mass = GetMCMass( daughters );
   bool recoble = false;
-  if( dgt >= m_nTracks && mass > m_PreyMinMass && 
-      GetR( V->position() ) > m_RMin ) recoble = true ; 
+  if( dgt >= m_nTracks && mass > m_PreyMinMass &&
+      GetR( V->position() ) > m_RMin ) recoble = true ;
 
   if( msgLevel( MSG::DEBUG ) )
     debug() << type+" mass " << mass <<" GeV, nb of dgts "
-	    << dgt <<" reconstructible ? "<< recoble << endmsg;
+            << dgt <<" reconstructible ? "<< recoble << endmsg;
 
   if(type=="MCPrey"){
-    if( recoble ){ ++counter("RecbleMCPrey"); } 
+    if( recoble ){ ++counter("RecbleMCPrey"); }
     else { counter("RecbleMCPrey") += 0; }
-    
-    
+
+
     plot( dgt, type+"NbofTracks", 0, 30);
     plot( mass, type+"Mass", 0, 70);
   }
@@ -1948,9 +1948,9 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V, string type ){
       debug() << "Impact parameter " << imp << endmsg;
       plot( imp, type+"DgtIPto0", 0., 100.);
     }
-    //       debug() << "Found a Daughter " << p->particleID().pid() 
-    // 	      <<" Prod vtx "<< p->originVertex()->position() 
-    // 	      <<" Dec vtx "<< (*v)->position() << endmsg;
+    //       debug() << "Found a Daughter " << p->particleID().pid()
+    //        <<" Prod vtx "<< p->originVertex()->position()
+    //        <<" Dec vtx "<< (*v)->position() << endmsg;
   }
   return;
 }
@@ -1961,35 +1961,35 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V ){
   MCParticle::ConstVector daughters;
   Tuple tuple = nTuple("MCPrey");
   SmartRefVector<MCParticle>::const_iterator iend = V->products().end();
-  for( SmartRefVector<MCParticle>::const_iterator i = 
-	 V->products().begin(); i != iend; ++i ){
+  for( SmartRefVector<MCParticle>::const_iterator i =
+         V->products().begin(); i != iend; ++i ){
     GetMCStable( static_cast<const MCParticle*>(*i), V->position(),daughters );
   }
 
   //*********Study if track can be reconstructed in Velo****************
-//   MCTrackInfo info = MCTrackInfo( evtSvc(), msgSvc() );
-//   //Loop on stable daughter particles
-//   int nbrecpart = 0;
-//   bool IsRec;
-//   for( MCParticle::ConstVector::const_iterator i = daughters.begin();
-//        i != daughters.end(); ++i ){
-//     IsRec = info.hasVelo( *i );
-//     if( IsRec ) nbrecpart++; // 3 r and phi
-//     unsigned int nVeloR =  info.nbVeloR( *i );
-//     unsigned int nVeloPhi =  info.nbVeloPhi( *i );
-//     plot( IsRec, "IsRcnstrctble", 0, 2);
-//     plot( nVeloR, "NbVeloHitR", 0., 15 );
-//     plot( nVeloPhi, "NbVeloHitPhi", 0., 15 );
-//   }
-//   //Is the particle reconstructible ?
-//   IsRec = false;
-//   if( nbrecpart >= m_nTracks ) IsRec = true;
-//   plot( IsRec, "IsPreyRcnstrctble", 0, 2);
-//   debug()<<" Is Particle " << V->mother()->particleID().abspid() 
-// 	 << " reconstructible in VELO ? " << IsRec << endmsg;
+  //   MCTrackInfo info = MCTrackInfo( evtSvc(), msgSvc() );
+  //   //Loop on stable daughter particles
+  //   int nbrecpart = 0;
+  //   bool IsRec;
+  //   for( MCParticle::ConstVector::const_iterator i = daughters.begin();
+  //        i != daughters.end(); ++i ){
+  //     IsRec = info.hasVelo( *i );
+  //     if( IsRec ) nbrecpart++; // 3 r and phi
+  //     unsigned int nVeloR =  info.nbVeloR( *i );
+  //     unsigned int nVeloPhi =  info.nbVeloPhi( *i );
+  //     plot( IsRec, "IsRcnstrctble", 0, 2);
+  //     plot( nVeloR, "NbVeloHitR", 0., 15 );
+  //     plot( nVeloPhi, "NbVeloHitPhi", 0., 15 );
+  //   }
+  //   //Is the particle reconstructible ?
+  //   IsRec = false;
+  //   if( nbrecpart >= m_nTracks ) IsRec = true;
+  //   plot( IsRec, "IsPreyRcnstrctble", 0, 2);
+  //   debug()<<" Is Particle " << V->mother()->particleID().abspid()
+  //   << " reconstructible in VELO ? " << IsRec << endmsg;
 
-//*********Study of data linked daughters*******
-//Loop on stable daughter particles
+  //*********Study of data linked daughters*******
+  //Loop on stable daughter particles
   MCTrackInfo info = MCTrackInfo( evtSvc(), msgSvc() );
   const Particle::ConstVector preys = this->i_particles();
 
@@ -1997,11 +1997,11 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V ){
   Particle::ConstVector::const_iterator pend = preys.end();
   for( Particle::ConstVector::const_iterator i = preys.begin();
        i!= pend; ++i ){
-    
+
     const LHCb::MCParticle *MCpart = m_pLinker->firstMCP( *i );
-    if( NULL!=MCpart && false ) debug() << "Particle " << (*i)->key() 
-					<< " associated to MC part " 
-					<< MCpart->key() << endmsg;
+    if( NULL!=MCpart && false ) debug() << "Particle " << (*i)->key()
+                                        << " associated to MC part "
+                                        << MCpart->key() << endmsg;
   }
 
   Vertex Zero = Vertex( Gaudi::XYZPoint(0., 0., 0.) );
@@ -2032,32 +2032,32 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V ){
       if( IsRec ) ++nVeloRecNonAss;
       continue;
     }
-    //debug()<<"MCParticle "<< (*i)->key() << " associated to Particle " 
+    //debug()<<"MCParticle "<< (*i)->key() << " associated to Particle "
     //   << p->key() << endmsg;
 
     //Save track with descending pt
-//     pt = (p->pt())/1000.;
-//     for( vector<double>::iterator j = Pt.begin(); j != Pt.end(); j++ ){
-//       if( pt > *j ){
-// 	Pt.insert( j, pt );
-// 	goto end;
-//       }
-//     }
-//     Pt.push_back( pt ); 
-//  end:;
+    //     pt = (p->pt())/1000.;
+    //     for( vector<double>::iterator j = Pt.begin(); j != Pt.end(); j++ ){
+    //       if( pt > *j ){
+    //  Pt.insert( j, pt );
+    //  goto end;
+    //       }
+    //     }
+    //     Pt.push_back( pt );
+    //  end:;
 
     //Save first z measurement
     if( p->proto()->track() == NULL ) continue;
     const Track * tk = p->proto()->track();
-//     StatusCode sc = m_measProvider -> load( const_cast<Track &>( *tk ) );
-//     //if(!sc) info()<<"Unable to recreate track measurements"<< endmsg;
-//     double z = tk->measurements().front()->z();
-//     ZMin.push_back( z );
-    
-//     //Save impact parameter to the zero point
-//     double imp, chi2;
-//     distanceCalculator()->distance( p, &Zero, imp, chi2);
-//     IP0.push_back( imp );
+    //     StatusCode sc = m_measProvider -> load( const_cast<Track &>( *tk ) );
+    //     //if(!sc) info()<<"Unable to recreate track measurements"<< endmsg;
+    //     double z = tk->measurements().front()->z();
+    //     ZMin.push_back( z );
+
+    //     //Save impact parameter to the zero point
+    //     double imp, chi2;
+    //     distanceCalculator()->distance( p, &Zero, imp, chi2);
+    //     IP0.push_back( imp );
 
     //Save downstream tracks ( Particle ) for further studies
     if( tk->checkType(Track::Downstream) ){
@@ -2098,152 +2098,152 @@ void  MCDisplVertices::GetMCStable( const MCVertex* V ){
   for( Particle::ConstVector::const_iterator i = Down.begin(); i != Down.end();
        ++i ){
     Particle::ConstVector::const_iterator j = i; ++j;
-    //double ip = ImpactParam( (*i)->referencePoint (), (*i)->momentum(), 
-    //		     V->position() );
+    //double ip = ImpactParam( (*i)->referencePoint (), (*i)->momentum(),
+    //       V->position() );
     //debug()<<"IP "<< ip << endmsg;
     //plot( ip, "DownIP", 0., 15. );
 
     for( ; j != Down.end(); ++j ){
       debug()<<", Trying seed tracks "<< (*i)->key() <<" "
-	     << (*j)->key() << endmsg;
+             << (*j)->key() << endmsg;
       distanceCalculator()->distance( *i, *j, doca, chi2);
       debug()<<"Doca "<< doca;
       plot( doca, "DownDoca", 0., 10. );
       //Fit tracks to see if possible to create the prey
-      Vertex vtx1; 
+      Vertex vtx1;
       vertexFitter()->fit( vtx1, *(*i), *(*j) );
       debug()<<" Chi2 "<< vtx1.chi2PerDoF() << endmsg;
-      //std::vector< const LHCb::Track * > temp; 
-      //temp.push_back((*i)->proto()->track()); 
-      //temp.push_back((*j)->proto()->track()); 
+      //std::vector< const LHCb::Track * > temp;
+      //temp.push_back((*i)->proto()->track());
+      //temp.push_back((*j)->proto()->track());
       //RecVertex * vtx2 = m_tFit->fit( temp );
       //double dist1 = VertDistance( vtx1.position(), V->position() );
       //double dist2 = VertDistance( vtx2->position(), V->position() );
-      //debug() <<", (Default) Position "<< vtx1.position() 
+      //debug() <<", (Default) Position "<< vtx1.position()
       //      <<" and Resolution "<< dist1 << endmsg;
-	//<<", (Wouter) Position "<< vtx2->position() 
-	//<<" and Resolution "<< dist2 << endmsg;
+      //<<", (Wouter) Position "<< vtx2->position()
+      //<<" and Resolution "<< dist2 << endmsg;
       //plot( dist1, "DownDistD", 0., 50. );
       //plot( dist2, "DownDistW", 0., 50. );
 
     }
   }
-  //Update downstream particles to have a state at the MC decay vtx 
-//   VecPart UpdatedDown;
-//   for( Particle::ConstVector::const_iterator i = Down.begin(); i != Down.end();
-//        ++i ){
-//     //Extrapolate the track
-//     ParticleID & PID = const_cast<ParticleID &>( (*i)->particleID() );
-//     Track * tki = const_cast<Track *>( (*i)->proto()->track() );
-//     double z = V->position().z();
-//     State & ClosestState = const_cast<State &>( tki->closestState( z ) );
-//     debug()<<"MC neut decay vertex  " << z << endmsg;
-//     debug()<<"Closest state position " << ClosestState.z() << endmsg;
-//     if( !(m_extra->propagate( ClosestState, z, PID ))){
-//       warning()<<"Propagation failed !"<<endmsg; continue;}
-//     debug()<<"Extrapolated state position " << ClosestState.z() << endmsg;
+  //Update downstream particles to have a state at the MC decay vtx
+  //   VecPart UpdatedDown;
+  //   for( Particle::ConstVector::const_iterator i = Down.begin(); i != Down.end();
+  //        ++i ){
+  //     //Extrapolate the track
+  //     ParticleID & PID = const_cast<ParticleID &>( (*i)->particleID() );
+  //     Track * tki = const_cast<Track *>( (*i)->proto()->track() );
+  //     double z = V->position().z();
+  //     State & ClosestState = const_cast<State &>( tki->closestState( z ) );
+  //     debug()<<"MC neut decay vertex  " << z << endmsg;
+  //     debug()<<"Closest state position " << ClosestState.z() << endmsg;
+  //     if( !(m_extra->propagate( ClosestState, z, PID ))){
+  //       warning()<<"Propagation failed !"<<endmsg; continue;}
+  //     debug()<<"Extrapolated state position " << ClosestState.z() << endmsg;
 
-//     //Compute impact parameters to MC neut decay vtx
-//     double ip = ImpactParam( ClosestState.position(), ClosestState.momentum(), 
-// 			     V->position() );
-//     debug()<<"IP extra "<< ip << endmsg;
-//     plot( ip, "DownIPExtra", 0., 15. );
+  //     //Compute impact parameters to MC neut decay vtx
+  //     double ip = ImpactParam( ClosestState.position(), ClosestState.momentum(),
+  //         V->position() );
+  //     debug()<<"IP extra "<< ip << endmsg;
+  //     plot( ip, "DownIPExtra", 0., 15. );
 
-//     //Refit track
-//     m_trackPreFit->fit( *tki, PID );
-//     m_trackFit->fit( *tki, PID );
-//     debug()<<"After refit track z "<< tki->firstState( ).z() << endmsg;
+  //     //Refit track
+  //     m_trackPreFit->fit( *tki, PID );
+  //     m_trackFit->fit( *tki, PID );
+  //     debug()<<"After refit track z "<< tki->firstState( ).z() << endmsg;
 
-//     //Update the particle
-//     const LHCb::State& state = tki->stateAt(State::ClosestToBeam);
-//     Particle part = **i;
-//     m_pToState->state2Particle(state, part );
+  //     //Update the particle
+  //     const LHCb::State& state = tki->stateAt(State::ClosestToBeam);
+  //     Particle part = **i;
+  //     m_pToState->state2Particle(state, part );
 
-//     const Track * dum = part.proto()->track();
-//     z = dum->firstState().z();
+  //     const Track * dum = part.proto()->track();
+  //     z = dum->firstState().z();
 
-//     debug()<<"After Particle update z "<< z << endmsg;
-//     UpdatedDown.push_back( part );
-//   }
+  //     debug()<<"After Particle update z "<< z << endmsg;
+  //     UpdatedDown.push_back( part );
+  //   }
 
-//   debug()<<"Updated track study-------------------------"<< endmsg;
-//   for( VecPart::iterator i = UpdatedDown.begin(); i != UpdatedDown.end();
-//        ++i ){
-//     VecPart::iterator j = i; j++;
-//     for( ; j != UpdatedDown.end(); j++ ){
-//       debug()<<", Trying seed tracks "<< (*i).key() <<" "
-// 	     << (*j).key() << endmsg;
-//       distanceCalculator()->distance( &(*i), &(*j), doca, chi2);
-//       debug()<<"UpDoca "<< doca;
-//       plot( doca, "UpDownDoca", 0., 10. );
-//       //Fit tracks to see if possible to create the prey
-//       Vertex vtx1; 
-//       vertexFitter()->fit( (*i), (*j), vtx1);
-//       std::vector< const LHCb::Track * > temp; 
-//       temp.push_back((*i).proto()->track()); 
-//       temp.push_back((*j).proto()->track()); 
-//       RecVertex * vtx2 = m_tFit->fit( temp );
-//       double dist1 = VertDistance( vtx1.position(), V->position() );
-//       double dist2 = VertDistance( vtx2->position(), V->position() );
-//       debug() <<", (Default) Position "<< vtx1.position() 
-// 	      <<" and Resolution "<< dist1 //<< endmsg;
-// 	      <<", (Wouter) Position "<< vtx2->position() 
-// 	      <<" and Resolution "<< dist2 << endmsg;
-//       plot( dist1, "UpDownDistD", 0., 50. );
-//       plot( dist2, "UpDownDistW", 0., 50. );
+  //   debug()<<"Updated track study-------------------------"<< endmsg;
+  //   for( VecPart::iterator i = UpdatedDown.begin(); i != UpdatedDown.end();
+  //        ++i ){
+  //     VecPart::iterator j = i; j++;
+  //     for( ; j != UpdatedDown.end(); j++ ){
+  //       debug()<<", Trying seed tracks "<< (*i).key() <<" "
+  //       << (*j).key() << endmsg;
+  //       distanceCalculator()->distance( &(*i), &(*j), doca, chi2);
+  //       debug()<<"UpDoca "<< doca;
+  //       plot( doca, "UpDownDoca", 0., 10. );
+  //       //Fit tracks to see if possible to create the prey
+  //       Vertex vtx1;
+  //       vertexFitter()->fit( (*i), (*j), vtx1);
+  //       std::vector< const LHCb::Track * > temp;
+  //       temp.push_back((*i).proto()->track());
+  //       temp.push_back((*j).proto()->track());
+  //       RecVertex * vtx2 = m_tFit->fit( temp );
+  //       double dist1 = VertDistance( vtx1.position(), V->position() );
+  //       double dist2 = VertDistance( vtx2->position(), V->position() );
+  //       debug() <<", (Default) Position "<< vtx1.position()
+  //        <<" and Resolution "<< dist1 //<< endmsg;
+  //        <<", (Wouter) Position "<< vtx2->position()
+  //        <<" and Resolution "<< dist2 << endmsg;
+  //       plot( dist1, "UpDownDistD", 0., 50. );
+  //       plot( dist2, "UpDownDistW", 0., 50. );
 
-//     }
-//   }
+  //     }
+  //   }
 
-//   debug()<<" ------------ Long tracks --------------"<< Long.size()<< endmsg;
-//   for( Particle::ConstVector::const_iterator i = Long.begin(); i != Long.end();
-//        ++i ){
-//     Particle::ConstVector::const_iterator j = i; j++;
-//     double ip = ImpactParam( (*i)->referencePoint (), (*i)->momentum(), 
-// 			     V->position() );
-//     debug()<<"IP "<< ip << endmsg;
-//     plot( ip, "LongIP", 0., 1. );
-//     for( ; j != Long.end();
-//        j++ ){
-//       geomDispCalculator()->calcCloseAppr(*(*i), *(*j), doca, docae);
-//       debug()<<"Doca "<< doca;
-//       plot( doca, "Longdoca", 0., 1. );
-//       //Fit tracks to see if possible to create the prey
-//       Vertex vtx;
-//       vertexFitter()->fit(*(*i),*(*j), vtx);
-//       double dist = VertDistance( vtx.position(), V->position() );
-//       debug() <<", Resolution "<< dist << endmsg;
-//       plot( dist, "LongDist", 0., 10. );
-//     }
-//   }
+  //   debug()<<" ------------ Long tracks --------------"<< Long.size()<< endmsg;
+  //   for( Particle::ConstVector::const_iterator i = Long.begin(); i != Long.end();
+  //        ++i ){
+  //     Particle::ConstVector::const_iterator j = i; j++;
+  //     double ip = ImpactParam( (*i)->referencePoint (), (*i)->momentum(),
+  //         V->position() );
+  //     debug()<<"IP "<< ip << endmsg;
+  //     plot( ip, "LongIP", 0., 1. );
+  //     for( ; j != Long.end();
+  //        j++ ){
+  //       geomDispCalculator()->calcCloseAppr(*(*i), *(*j), doca, docae);
+  //       debug()<<"Doca "<< doca;
+  //       plot( doca, "Longdoca", 0., 1. );
+  //       //Fit tracks to see if possible to create the prey
+  //       Vertex vtx;
+  //       vertexFitter()->fit(*(*i),*(*j), vtx);
+  //       double dist = VertDistance( vtx.position(), V->position() );
+  //       debug() <<", Resolution "<< dist << endmsg;
+  //       plot( dist, "LongDist", 0., 10. );
+  //     }
+  //   }
 
-//   int dum = 0;
-//   if( Down.size() == 0 && Long.size() == 0 ) dum = 1; 
-//   double ratio = Long.size()/(Long.size()+Down.size()+dum);
-//   debug() <<"% of long in long + Down : "<< ratio << endmsg;
-//   plot( ratio, "Ratio", 0., 1.2 );
+  //   int dum = 0;
+  //   if( Down.size() == 0 && Long.size() == 0 ) dum = 1;
+  //   double ratio = Long.size()/(Long.size()+Down.size()+dum);
+  //   debug() <<"% of long in long + Down : "<< ratio << endmsg;
+  //   plot( ratio, "Ratio", 0., 1.2 );
 
   return;
 }
 
 
-void  MCDisplVertices::GetMCStable( const MCParticle * p, 
-			       const Gaudi::XYZPoint & pos, 
-			       MCParticle::ConstVector & daughters ){
-  
+void  MCDisplVertices::GetMCStable( const MCParticle * p,
+                                    const Gaudi::XYZPoint & pos,
+                                    MCParticle::ConstVector & daughters ){
+
   //Compare production vtx with pos
   double dist = VertDistance( pos, p->originVertex()->position() );
   if( dist > m_DocaMax ) return;
-  
+
   if( p->endVertices().size() < 1 ){
     //Stable MC Particle may have no end vertex
     //Continue if neutral or out of acceptance
     if( p->particleID().threeCharge() == 0 ) return;
     if( p->momentum().eta() < 1.8 || p->momentum().eta() > 4.9 ) return;
     daughters.push_back( p );
-    //    debug() << "Found a Daughter " << p->particleID().pid() 
-    // 	      <<" Prod vtx "<< p->originVertex()->position() 
-    // 	      <<" Dec vtx "<< (*v)->position() << endmsg;
+    //    debug() << "Found a Daughter " << p->particleID().pid()
+    //        <<" Prod vtx "<< p->originVertex()->position()
+    //        <<" Dec vtx "<< (*v)->position() << endmsg;
     return;
   }
 
@@ -2251,27 +2251,27 @@ void  MCDisplVertices::GetMCStable( const MCParticle * p,
   //Only need to take the first decay vertex.
   //Compute time of flight
   dist = VertDistance( p->originVertex()->position(), (*v)->position() );
-  
-  if( dist < m_DocaMax ){ //part considered unstable 
+
+  if( dist < m_DocaMax ){ //part considered unstable
     //loop on the daughters
-    SmartRefVector<LHCb::MCParticle>::const_iterator iend = 
+    SmartRefVector<LHCb::MCParticle>::const_iterator iend =
       (*v)->products().end();
-    for( SmartRefVector<LHCb::MCParticle>::const_iterator i = 
-	   (*v)->products().begin(); i != iend; ++i ){
+    for( SmartRefVector<LHCb::MCParticle>::const_iterator i =
+           (*v)->products().begin(); i != iend; ++i ){
       GetMCStable( (*i), pos, daughters );
     }
   }
-  
-  if( dist > 1000. ) { //Particle is considered stable. 
+
+  if( dist > 1000. ) { //Particle is considered stable.
     //Continue if neutral or out of acceptance
     if( p->particleID().threeCharge() == 0 ) return;
     if( p->momentum().eta() < 1.8 || p->momentum().eta() > 4.9 ) return;
     daughters.push_back( p );
-    //    debug() << "Found a Daughter " << p->particleID().pid() 
-    // 	      <<" Prod vtx "<< p->originVertex()->position() 
-    // 	      <<" Dec vtx "<< (*v)->position() << endmsg;
+    //    debug() << "Found a Daughter " << p->particleID().pid()
+    //        <<" Prod vtx "<< p->originVertex()->position()
+    //        <<" Dec vtx "<< (*v)->position() << endmsg;
   }
-  
+
   return;
 }
 
@@ -2284,7 +2284,7 @@ void MCDisplVertices::SaveMCPartinTuple( LHCb::MCParticles * mcparts){
   vector<double> E, eta, phi, keta, kphi;
   vector<int> fromaneut;
   bool tosave = false;
-  if( !fillHeader(tuple) ) 
+  if( !fillHeader(tuple) )
     info() << "Could not write Header in MCParticles !" << endmsg;
 
   for( MCParticle::Vector::iterator p = mcparts->begin(); p != mcparts->end();
@@ -2302,17 +2302,17 @@ void MCDisplVertices::SaveMCPartinTuple( LHCb::MCParticles * mcparts){
     if( IsNeutrino( *p ) ) continue;
     double peta = (*p)->momentum().eta();
     if( peta < 1.8 || peta > 4.9 )continue;
-    
+
     if( (*p)->endVertices().size() != 1 ) continue;
-    for ( SmartRefVector<LHCb::MCVertex>::const_iterator v = 
-	    (*p)->endVertices().begin(); v != (*p)->endVertices().end(); ++v ){
+    for ( SmartRefVector<LHCb::MCVertex>::const_iterator v =
+            (*p)->endVertices().begin(); v != (*p)->endVertices().end(); ++v ){
       if( (*v)->products().size() == 0 ) tosave = true;
       if( (*v)->position().z() < 1000. ) tosave = false;
     }
     if(!tosave) continue;
     //Particle is considered stable :
     E.push_back( (*p)->momentum().e() );
-    eta.push_back( peta ); 
+    eta.push_back( peta );
     phi.push_back( (*p)->momentum().phi() );
     fromaneut.push_back( IsitFromaPrey( (*p) ) );
 
@@ -2337,27 +2337,27 @@ void MCDisplVertices::SaveGenPartinTuple( const HepMC::GenEvent* evt ){
   Tuple tuple = nTuple("MCParticles");
   vector<double> E, eta, phi, keta, kphi, qeta, qphi;
   vector<int> fromaneut;
-  if( !fillHeader(tuple) ) 
+  if( !fillHeader(tuple) )
     info() << "Could not write Header in MCParticles !" << endmsg;
 
-  for( HepMC::GenEvent::particle_const_iterator p= evt->particles_begin(); 
+  for( HepMC::GenEvent::particle_const_iterator p= evt->particles_begin();
        p!= evt->particles_end();++p){
 
     //Save infos about the Prey
     unsigned int pid = abs( (*p)->pdg_id() );
-    if( pid == m_PreyID.abspid() ){ 
+    if( pid == m_PreyID.abspid() ){
       keta.push_back( (*p)->momentum().eta() );
       kphi.push_back( (*p)->momentum().phi() );
 
       //Save daughter quarks
       HepMC::GenVertex* vtx = (*p)->end_vertex();
-      //vtx->print( std::cout ); 
+      //vtx->print( std::cout );
       HepMC::GenVertex::particles_out_const_iterator po;
-      for( po = vtx->particles_out_const_begin(); 
-	   po != vtx->particles_out_const_end(); ++po){
-	if( !IsQuark( *po ) ) continue;
-	qeta.push_back( (*po)->momentum().eta() );
-	qphi.push_back( (*po)->momentum().phi() );
+      for( po = vtx->particles_out_const_begin();
+           po != vtx->particles_out_const_end(); ++po){
+        if( !IsQuark( *po ) ) continue;
+        qeta.push_back( (*po)->momentum().eta() );
+        qphi.push_back( (*po)->momentum().phi() );
       }
 
       continue;
@@ -2368,11 +2368,11 @@ void MCDisplVertices::SaveGenPartinTuple( const HepMC::GenEvent* evt ){
     double peta = (*p)->momentum().eta();
     if( peta < 1.8 || peta > 4.9 )continue;
 
-    //Keep only stable particles    
+    //Keep only stable particles
     if( (*p)->status() != 1 ) if( (*p)->status() != 999 ) continue;
 
     E.push_back( (*p)->momentum().e() );
-    eta.push_back( peta ); 
+    eta.push_back( peta );
     phi.push_back( (*p)->momentum().phi() );
     fromaneut.push_back( IsitFromaPrey( (*p) ) );
 
@@ -2398,9 +2398,9 @@ unsigned int MCDisplVertices::GetNbVeloTracks(){
 
   unsigned int nbv = 0;
   const Track::Range Trks = get<Track::Range>( TrackLocation::Default );
-  for(Track::Range::const_iterator itr = Trks.begin(); 
-        Trks.end() != itr; ++itr) {
-      if( (*itr)->hasVelo() ) ++nbv;
+  for(Track::Range::const_iterator itr = Trks.begin();
+      Trks.end() != itr; ++itr) {
+    if( (*itr)->hasVelo() ) ++nbv;
   }
   return nbv;
 }
@@ -2409,10 +2409,10 @@ unsigned int MCDisplVertices::GetNbVeloTracks(){
 // Save in Tuple the PV candidates
 //============================================================================
 StatusCode  MCDisplVertices::SavePVs( Tuple & tuple ){
-  
+
   GetPVs();
   vector<double> x,y,z;
-  for ( vector<const RecVertex*>::const_iterator i = PVs.begin(); 
+  for ( vector<const RecVertex*>::const_iterator i = PVs.begin();
         i != PVs.end() ; ++i ){
     const RecVertex* pv = *i;
     x.push_back( pv->position().x() );
@@ -2432,8 +2432,8 @@ StatusCode  MCDisplVertices::SavePVs( Tuple & tuple ){
 //============================================================================
 // Save in Tuple some Global Event Cut
 //============================================================================
-StatusCode  MCDisplVertices::SaveGEC( Tuple & tuple,  
-				    Particle::ConstVector & RVs ){
+StatusCode  MCDisplVertices::SaveGEC( Tuple & tuple,
+                                      Particle::ConstVector & RVs ){
 
 
   //Global track cuts
@@ -2449,7 +2449,7 @@ StatusCode  MCDisplVertices::SaveGEC( Tuple & tuple,
   if( (primVertices.size() != 0) && inputTracks.size() != 0 &&
       RVs.size() != 0 ){
 
-    for(Track::Range::const_iterator itr = inputTracks.begin(); 
+    for(Track::Range::const_iterator itr = inputTracks.begin();
         inputTracks.end() != itr; itr++) {
       const Track* trk = *itr;
       const double xyfState = sqrt(trk->firstState().x()*trk->firstState().x()+
@@ -2459,36 +2459,36 @@ StatusCode  MCDisplVertices::SaveGEC( Tuple & tuple,
     }
 
 
-//     //Find the upstream PV
-//     vector<const RecVertex*> primVrtcs;
-//     for( RecVertex::Range::const_iterator 
-//            itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
-//       const RecVertex* pvtx = *itPV;
-//       primVrtcs.push_back(pvtx);
-//     }
-//     std::sort( primVrtcs.begin(), primVrtcs.end(), SortPVz );
-//     const RecVertex* realPV = *(primVrtcs.begin());
+    //     //Find the upstream PV
+    //     vector<const RecVertex*> primVrtcs;
+    //     for( RecVertex::Range::const_iterator
+    //            itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
+    //       const RecVertex* pvtx = *itPV;
+    //       primVrtcs.push_back(pvtx);
+    //     }
+    //     std::sort( primVrtcs.begin(), primVrtcs.end(), SortPVz );
+    //     const RecVertex* realPV = *(primVrtcs.begin());
 
-//     //Global RV cut
-//     for( Particle::ConstVector::const_iterator itRV = RVs.begin();
-//          RVs.end() != itRV; ++itRV) {
-//       const Gaudi::XYZPoint & pos = (*itRV)->endVertex()->position();
-//       double distVtcs = VertDistance( realPV->position(), pos );
-//       if(distVtcs > .001) 
-//         sumSVxyDist += pos.rho();
-//     }
+    //     //Global RV cut
+    //     for( Particle::ConstVector::const_iterator itRV = RVs.begin();
+    //          RVs.end() != itRV; ++itRV) {
+    //       const Gaudi::XYZPoint & pos = (*itRV)->endVertex()->position();
+    //       double distVtcs = VertDistance( realPV->position(), pos );
+    //       if(distVtcs > .001)
+    //         sumSVxyDist += pos.rho();
+    //     }
   }
-  
-  
+
+
   //Write values in tuple
   tuple->column( "sumPtTracks", sumPtTracks );
   tuple->column( "sumXYTrackfirstStates", sumXYTrackfirstStates );
   tuple->column( "sumSVxyDist", sumSVxyDist );
 
   if(msgLevel(MSG::DEBUG))
-    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/GeV 
-	   <<" GeV, sumXYTrackfirstStates "<< sumXYTrackfirstStates 
-	   <<" mm, sumSVxyDist "<< sumSVxyDist <<" mm" << endmsg;
+    debug()<<"Global event values : sumPtTracks "<< sumPtTracks/GeV
+           <<" GeV, sumXYTrackfirstStates "<< sumXYTrackfirstStates
+           <<" mm, sumSVxyDist "<< sumSVxyDist <<" mm" << endmsg;
 
   return StatusCode::SUCCESS ;
 }
@@ -2506,10 +2506,10 @@ double MCDisplVertices::WhichMCPrey( const Particle * p ){
 
   //Look for associated MCParticle
   const MCParticle *mcp = m_pLinker->firstMCP( p );
-  if( NULL==mcp ) return -500.; 
-  if( false )  debug() << "Particle " << p->key() 
-		      << " associated to MC part " 
-		      << mcp->key() << endmsg;
+  if( NULL==mcp ) return -500.;
+  if( false )  debug() << "Particle " << p->key()
+                       << " associated to MC part "
+                       << mcp->key() << endmsg;
 
   //Check if from a prey. If yes return its z decay position
   return IsitFromaPrey( mcp, mcp->originVertex() );
@@ -2518,7 +2518,7 @@ double MCDisplVertices::WhichMCPrey( const Particle * p ){
 //=============================================================================
 //  Is a MC Particle an descendant of a prey ?
 //=============================================================================
- bool MCDisplVertices::IsitFromaPrey( const MCParticle * p) {
+bool MCDisplVertices::IsitFromaPrey( const MCParticle * p) {
 
   if( p->mother() ){
     const MCParticle * mother = p->mother();
@@ -2531,16 +2531,16 @@ double MCDisplVertices::WhichMCPrey( const Particle * p ){
   return false;
 }
 
-double MCDisplVertices::IsitFromaPrey( const MCParticle * p, 
-				      const MCVertex * prod ) {
+double MCDisplVertices::IsitFromaPrey( const MCParticle * p,
+                                       const MCVertex * prod ) {
 
   if( p->mother() ){
     const MCParticle * mother = p->mother();
     if( mother->particleID().abspid() == m_PreyID.abspid() ) {
-      SmartRefVector< LHCb::MCVertex >::const_iterator vtx = 
+      SmartRefVector< LHCb::MCVertex >::const_iterator vtx =
         mother->endVertices().begin();
       if( VertDistance( prod->position(),(*vtx)->position() ) < 0.08 )
-	return (*vtx)->position().z();
+        return (*vtx)->position().z();
       return -400.;
     } else {
       return IsitFromaPrey( mother, prod );
@@ -2555,15 +2555,15 @@ bool MCDisplVertices::IsitFromaPrey( HepMC::GenParticle * p ) {
   if( p->production_vertex() ){
     HepMC::GenVertex * vtx = p->production_vertex();
     //Loop on incoming particle
-    HepMC::GenVertex::particles_in_const_iterator pin = 
+    HepMC::GenVertex::particles_in_const_iterator pin =
       vtx->particles_in_const_begin();
-    HepMC::GenVertex::particles_in_const_iterator pend = 
+    HepMC::GenVertex::particles_in_const_iterator pend =
       vtx->particles_in_const_end();
     for( ; pin !=  pend; ++pin){
       unsigned int pid = abs( (*pin)->pdg_id() );
       if( pid == m_PreyID.abspid() ){
-	return true;
-      } 
+        return true;
+      }
     }
   }
   return false;
@@ -2576,16 +2576,16 @@ const MCParticle * MCDisplVertices::WhichMother( const Particle * p ){
 
   //Loop on daughters
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i!= iend; ++i ){
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin(); i!= iend; ++i ){
     const MCParticle * MCpart = m_pLinker->firstMCP( (*i) );
     if(MCpart != NULL ){
-//       debug() << "Particle " << (*i)->key() << " "  
-//       << (*i)->particleID().pid() 
-//       << " associated to MC part " << MCpart->key() << " " 
-//       << MCpart->particleID().pid() << endmsg;
+      //       debug() << "Particle " << (*i)->key() << " "
+      //       << (*i)->particleID().pid()
+      //       << " associated to MC part " << MCpart->key() << " "
+      //       << MCpart->particleID().pid() << endmsg;
 
-      const MCParticle * mcmother = WhichMother( MCpart ); 
+      const MCParticle * mcmother = WhichMother( MCpart );
       if( mcmother != NULL ) return mcmother;
     }
   }
@@ -2646,10 +2646,10 @@ bool MCDisplVertices::IsQuark( HepMC::GenParticle * p ){
 //
 // mode = 0  : disabled
 // mode = 1  : remove reco vtx if in detector material
-// mode = 2  : remove reco vtx if rad length along momentum 
-//                           from (decay pos - range) to 
+// mode = 2  : remove reco vtx if rad length along momentum
+//                           from (decay pos - range) to
 //                           (decay pos + range)  is > threshold
-// mode = 3 : remove reco vtx if rad length along 
+// mode = 3 : remove reco vtx if rad length along
 //                             +- range * PositionCovMatrix
 // mode = 4 : 3 but range+3 if in RF foil.
 //
@@ -2658,15 +2658,15 @@ bool MCDisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
 
   IGeometryInfo* start = 0;
   ILVolume::PVolumePath path ;
-  
+
   //Get the physical volume, if any.
   StatusCode sc = m_lhcbGeo->fullGeoInfoForPoint
     ( pos, 1000, start, path ) ;
-  if ( sc.isFailure() ) { 
+  if ( sc.isFailure() ) {
     warning()<<"Impossible to get any physical volume related to point "
              << pos <<endmsg;
-    return false; 
-  } 
+    return false;
+  }
   int size = path.size();
   if( context() == "Info" ) plot( size, "NbofDetV", 0, 5 );
   if( msgLevel(MSG::DEBUG) )
@@ -2675,24 +2675,24 @@ bool MCDisplVertices::IsAPointInDet( const Gaudi::XYZPoint & pos ){
 
   const IPVolume* pvlast = 0;
   if ( !path.empty() ) { pvlast = path.back(); }
-  
+
   const ILVolume * lvlast = 0;
   if ( 0 != pvlast ) { lvlast = pvlast->lvolume(); }
-  
+
   const Material* matlast = 0 ;
   if ( 0 != lvlast ) { matlast = lvlast->material(); }
-  
-  if ( 0 != matlast )  { 
+
+  if ( 0 != matlast )  {
     if( msgLevel(MSG::DEBUG) ){
       debug()<<"Physical volume related to point "<< pos <<endmsg;
       debug()<< matlast << endl;
     }
     return true;
-  }  
+  }
   if( msgLevel(MSG::DEBUG) )
     debug()<<"There is no physical volume related to point "<< pos <<endmsg;
   return false;
-  
+
 }
 
 
@@ -2714,7 +2714,7 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
     const Gaudi::XYZPoint end = Plus( pos, nvec );
 
     //Compute the radiation length
-    if( m_lhcbGeo == 0 ){ 
+    if( m_lhcbGeo == 0 ){
       warning()<<"IGeometryInfo* m_lhcbGeo is broken"<< endmsg; return true; }
 
     IGeometryInfo* dum = 0;
@@ -2724,8 +2724,8 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
     if( context() == "Info" ) plot( radlength, "RVRadLength", 0, 0.01);
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Radiation length from "<< start <<" to "
-	     << end <<" : "<< radlength 
-	     <<" [mm]" << endmsg;
+             << end <<" : "<< radlength
+             <<" [mm]" << endmsg;
 
     if( radlength > threshold ){
       if( msgLevel(MSG::DEBUG) )
@@ -2733,7 +2733,7 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
                << endmsg;
       return true;
     }
-    
+
 
   } //end of 2 condition
   else if( mode == 3 || mode == 4 ){
@@ -2757,7 +2757,7 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
         radlength = m_transSvc->distanceInRadUnits( start, end );
         if(msgLevel(MSG::DEBUG))
           debug()<<"Radiation length from "<< start <<" to "
-                 << end <<" : "<< radlength 
+                 << end <<" : "<< radlength
                  <<" [mm]" << endmsg;
         if( radlength > threshold ){
           if(msgLevel(MSG::DEBUG))
@@ -2768,7 +2768,7 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
       }
     }
   } // end of 3 cond
-  
+
   return false;
 }
 
@@ -2776,7 +2776,7 @@ bool MCDisplVertices::IsAPointInDet( const Particle* P, int mode, double range )
 // Is the point in the RF-Foil ?
 //=============================================================================
 bool MCDisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
-  
+
   //debug()<<"Probing pos "<< pos;
   Gaudi::XYZPoint posloc;
   //move to local Velo half frame
@@ -2787,9 +2787,9 @@ bool MCDisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
     //remove cylinder
     double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
- 
+
     //then remove the boxes
-    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < -5*mm && posloc.x() > 4*mm )
       return true;
   } else { //left part
     posloc = m_toVeloLFrame * pos;
@@ -2798,9 +2798,9 @@ bool MCDisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
     //remove cylinder
     double r = posloc.rho();
     if( r > 5.5*mm && r < 12*mm ) return true;
-    
+
     //then remove the boxes
-    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm ) 
+    if( abs(posloc.y()) > 5.5*mm && posloc.x() < 5*mm && posloc.x() > -4*mm )
       return true;
   }
   return false;
@@ -2809,14 +2809,14 @@ bool MCDisplVertices::IsInRFFoil( const Gaudi::XYZPoint & pos){
 
 
 //=============================================================================
-//  Has the given Particle a related MCVertex from int with matter ? 
+//  Has the given Particle a related MCVertex from int with matter ?
 //=============================================================================
 const MCVertex * MCDisplVertices::HasIntInAncestors( const Particle * p ){
 
   //Loop in daughters to find associate MCParticle
   int it = 0;
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
+  for( SmartRefVector<Particle>::const_iterator i =
          p->daughters().begin(); i!= iend; ++i ){
     if( it > 2 ) continue;
     const MCParticle * mcp = m_pLinker->firstMCP( (*i) );
@@ -2833,12 +2833,12 @@ const MCVertex * MCDisplVertices::HasIntInAncestors( const Particle * p ){
       if( type > 99 && type < 200 ) return orvtx;
     }
   }
-  
+
   return NULL;
 }
 
 //=============================================================================
-// Has the (MC) vertex been generated by collisin of flying particles 
+// Has the (MC) vertex been generated by collisin of flying particles
 //    with air of beam pipe ?
 // ATTENTION : this function has not been assessed ! Status : unchecked
 //=============================================================================
@@ -2847,7 +2847,7 @@ bool MCDisplVertices::IsFromAir( const Particle * p ){
   //the vertex which has the tag >100 may not be the origin vertex of the first long-lived daughter...
   const MCVertex * mcv = HasIntInAncestors( p );
   if( mcv == NULL ) return false;
-    
+
   // Vtx is from interaction with matter
   if( !IsAPointInDet( mcv->position() ) ) return true;
 
@@ -2905,13 +2905,13 @@ double MCDisplVertices::HasMuons( const Particle * p ){
   double muonpt = 0;
   //loop on daughters
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i != iend; ++i ){
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin(); i != iend; ++i ){
     //check if tracks could be a muon
     if( (*i)->proto() == NULL ) continue;
     if( (*i)->proto()->muonPID() == NULL ) continue;
     if( !( (*i)->proto()->muonPID()->IsMuonLoose() ) ) continue;
-    double pt = p->pt();    
+    double pt = p->pt();
     if( pt > muonpt ) muonpt = pt;
   }
 
@@ -2922,58 +2922,58 @@ double MCDisplVertices::HasMuons( const Particle * p ){
 // Basic operations between two Gaudi::XYZPoint
 //============================================================================
 Gaudi::XYZPoint MCDisplVertices::Normed( const Gaudi::LorentzVector & P,
-                                       double range ){
+                                         double range ){
   double norm = range/Norm( P );
   return Gaudi::XYZPoint( P.x()*norm, P.y()*norm, P.z()*norm );
 }
 
 
 double MCDisplVertices::Norm( const Gaudi::LorentzVector & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
-		      pow(P.z(),2) );
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
+               pow(P.z(),2) );
 }
 
 double MCDisplVertices::Norm( const Gaudi::XYZPoint & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
-		      pow(P.z(),2) );
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
+               pow(P.z(),2) );
 }
 
 double MCDisplVertices::Norm( const Gaudi::XYZVector & P ){
-  return sqrt( pow(P.x(),2) + pow(P.y(),2) + 
-		      pow(P.z(),2) );
+  return sqrt( pow(P.x(),2) + pow(P.y(),2) +
+               pow(P.z(),2) );
 }
 
-double MCDisplVertices::Mult( const Gaudi::XYZPoint & p1, 
-			 const Gaudi::XYZPoint & p2 ){
+double MCDisplVertices::Mult( const Gaudi::XYZPoint & p1,
+                              const Gaudi::XYZPoint & p2 ){
 
   return p1.x()*p2.x() + p1.y()*p2.y() + p1.z()*p2.z();
 }
 
-double MCDisplVertices::Mult(  const Gaudi::LorentzVector & p1, 
-			  const Gaudi::LorentzVector & p2 ){
+double MCDisplVertices::Mult(  const Gaudi::LorentzVector & p1,
+                               const Gaudi::LorentzVector & p2 ){
 
   return p1.x()*p2.x() + p1.y()*p2.y() + p1.z()*p2.z();
 }
 
-Gaudi::XYZPoint MCDisplVertices::Plus( const Gaudi::XYZPoint & p1, 
-				  const Gaudi::XYZPoint & p2 ){
+Gaudi::XYZPoint MCDisplVertices::Plus( const Gaudi::XYZPoint & p1,
+                                       const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()+p2.x(), p1.y()+p2.y(), p1.z()+p2.z() );
 }
 
-Gaudi::XYZPoint MCDisplVertices::Minus( const Gaudi::XYZPoint& p1, 
-				   const Gaudi::XYZPoint & p2 ){
+Gaudi::XYZPoint MCDisplVertices::Minus( const Gaudi::XYZPoint& p1,
+                                        const Gaudi::XYZPoint & p2 ){
   return Gaudi::XYZPoint( p1.x()-p2.x(), p1.y()-p2.y(), p1.z()-p2.z() );
 }
 
 //============================================================================
 // Compute distance between two vertices
-//============================================================================ 
-double MCDisplVertices::VertDistance( const Gaudi::XYZPoint & v1, 
-				 const Gaudi::XYZPoint & v2){
+//============================================================================
+double MCDisplVertices::VertDistance( const Gaudi::XYZPoint & v1,
+                                      const Gaudi::XYZPoint & v2){
   return sqrt(pow(v1.x()-v2.x(),2)+pow(v1.y()-v2.y(),2)+pow(v1.z()-v2.z(),2));
 }
-double MCDisplVertices::VertDistance( HepMC::ThreeVector & v1, 
-				    HepMC::ThreeVector & v2 ){
+double MCDisplVertices::VertDistance( HepMC::ThreeVector & v1,
+                                      HepMC::ThreeVector & v2 ){
   double dx = v1.x() - v2.x();
   double dy = v1.y() - v2.y();
   double dz = v1.z() - v2.z();
@@ -2982,44 +2982,44 @@ double MCDisplVertices::VertDistance( HepMC::ThreeVector & v1,
 }
 
 double MCDisplVertices::VertDistance(HepMC::GenVertex* v1,HepMC::GenVertex* v2 ){
-  HepMC::ThreeVector point = 
-    HepMC::ThreeVector( v1->point3d().x() - v2->point3d().x(), 
-			v1->point3d().y() - v2->point3d().y(),
-			v1->point3d().z() - v2->point3d().z());
+  HepMC::ThreeVector point =
+    HepMC::ThreeVector( v1->point3d().x() - v2->point3d().x(),
+                        v1->point3d().y() - v2->point3d().y(),
+                        v1->point3d().z() - v2->point3d().z());
   return VertDistance( point );
 }
 
 double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1, Vertex * v2 ) {
 
-  HepMC::ThreeVector point = 
+  HepMC::ThreeVector point =
     HepMC::ThreeVector( v2->position().x(), v2->position().y(),
-			v2->position().z() );
+                        v2->position().z() );
   return VertDistance( *v1, point );
 }
 
-double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1, 
-				   HepMC::GenVertex* v2  ) {
-  HepMC::ThreeVector point = 
+double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1,
+                                     HepMC::GenVertex* v2  ) {
+  HepMC::ThreeVector point =
     HepMC::ThreeVector( v2->point3d().x(),v2->point3d().y(),v2->point3d().z());
   return VertDistance( *v1, point );
 }
 
-double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1, 
-				   const RecVertex * v2 ) const {
-  HepMC::ThreeVector point = 
+double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1,
+                                     const RecVertex * v2 ) const {
+  HepMC::ThreeVector point =
     HepMC::ThreeVector( v2->position().x(), v2->position().y(),
-			v2->position().z() );
+                        v2->position().z() );
   double dx = v1->x() - point.x();
   double dy = v1->y() - point.y();
   double dz = v1->z() - point.z();
   return sqrt(pow(dx,2)+pow(dy,2)+pow(dz,2));
 }
 
-double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1, 
-				   const RecVertex & v2 ) const {
-  HepMC::ThreeVector point = 
+double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1,
+                                     const RecVertex & v2 ) const {
+  HepMC::ThreeVector point =
     HepMC::ThreeVector( v2.position().x(), v2.position().y(),
-			v2.position().z() );
+                        v2.position().z() );
   double dx = v1->x() - point.x();
   double dy = v1->y() - point.y();
   double dz = v1->z() - point.z();
@@ -3027,14 +3027,14 @@ double MCDisplVertices::VertDistance(HepMC::ThreeVector * v1,
 }
 
 double MCDisplVertices::VertDistance(HepMC::ThreeVector & v1, RecVertex & v2 ) {
-  HepMC::ThreeVector point = 
+  HepMC::ThreeVector point =
     HepMC::ThreeVector( v2.position().x(), v2.position().y(),
-			v2.position().z() );
+                        v2.position().z() );
   return VertDistance( v1, point );
 }
 
-double MCDisplVertices::VertDistance( HepMC::ThreeVector * v1, 
-				    HepMC::ThreeVector & v2 ) {
+double MCDisplVertices::VertDistance( HepMC::ThreeVector * v1,
+                                      HepMC::ThreeVector & v2 ) {
   return VertDistance( *v1, v2 );
 }
 
@@ -3045,13 +3045,13 @@ double MCDisplVertices::VertDistance(HepMC::ThreeVector & point){
 //============================================================================
 // Angle between two tracks   :   tracks are supposed to be straight lines
 //============================================================================
-double MCDisplVertices::Angle( const Gaudi::LorentzVector & a, 
-			     const Gaudi::LorentzVector & b ){
-  return Angle( a.Vect(), b.Vect() );  
+double MCDisplVertices::Angle( const Gaudi::LorentzVector & a,
+                               const Gaudi::LorentzVector & b ){
+  return Angle( a.Vect(), b.Vect() );
 };
 
-double MCDisplVertices::Angle( const Gaudi::XYZVector & a, 
-			     const Gaudi::XYZVector & b ){
+double MCDisplVertices::Angle( const Gaudi::XYZVector & a,
+                               const Gaudi::XYZVector & b ){
   return acos( a.Dot(b) / sqrt( a.Mag2() * b.Mag2() ) );
 }
 
@@ -3061,33 +3061,33 @@ double MCDisplVertices::Angle( const Gaudi::XYZVector & a,
 double MCDisplVertices::ImpactParam( const MCParticle * p, const MCVertex * v0 ){
 
   if( v0 == NULL ){
-    return ImpactParam( p->originVertex()->position(), p->momentum(), 
-			MCVertex().position() );
+    return ImpactParam( p->originVertex()->position(), p->momentum(),
+                        MCVertex().position() );
   } else {
-    return ImpactParam( p->originVertex()->position(), p->momentum(), 
-			v0->position() );
+    return ImpactParam( p->originVertex()->position(), p->momentum(),
+                        v0->position() );
   }
 }
 
-double MCDisplVertices::ImpactParam( const Gaudi::XYZPoint & V, 
-				const Gaudi::LorentzVector & P,  
-				const Gaudi::XYZPoint & V0 ){
+double MCDisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
+                                     const Gaudi::LorentzVector & P,
+                                     const Gaudi::XYZPoint & V0 ){
   return ImpactParam( V, Gaudi::XYZVector( P.x(),P.y(),P.z() ), V0 );
 }
 
-double MCDisplVertices::ImpactParam( const Gaudi::XYZPoint & V, 
-				const Gaudi::XYZVector & P,  
-				const Gaudi::XYZPoint & V0 ){
-  
+double MCDisplVertices::ImpactParam( const Gaudi::XYZPoint & V,
+                                     const Gaudi::XYZVector & P,
+                                     const Gaudi::XYZPoint & V0 ){
+
   //A line is v + lambda*Pn, with v a point on it.
   //double norm = Norm( static_cast<const Gaudi::XYZVector>(P) );
   double norm = Norm( P );
-  const Gaudi::XYZPoint Pn = Gaudi::XYZPoint( P.x()/norm, P.y()/norm, 
-					      P.z()/norm );
+  const Gaudi::XYZPoint Pn = Gaudi::XYZPoint( P.x()/norm, P.y()/norm,
+                                              P.z()/norm );
   double lambda = -( Mult(Pn,V) - Mult(Pn,V0) );
 
   Gaudi::XYZPoint dist = Minus( Plus(lambda*Pn, V), V0);
-  //debug() <<"Impact parameter " << dist.R() << endmsg; 
+  //debug() <<"Impact parameter " << dist.R() << endmsg;
 
   return dist.R();
 
@@ -3102,11 +3102,11 @@ void MCDisplVertices::Resolution( const Gaudi::XYZPoint & pos ){
   double rho = 10000.; double z = 10000.; double diff = 10000.;
 
   //Loop on MC data
-  for( vector<Gaudi::XYZPoint>::iterator i =  m_MCPos.begin(); 
+  for( vector<Gaudi::XYZPoint>::iterator i =  m_MCPos.begin();
        i!=m_MCPos.end(); ++i ){
     Gaudi::XYZPoint tmp = Gaudi::XYZPoint( pos.X() - (*i).X(),
-					   pos.Y() - (*i).Y(),
-					   pos.Z() - (*i).Z() );
+                                           pos.Y() - (*i).Y(),
+                                           pos.Z() - (*i).Z() );
     if( sqrt(tmp.Mag2()) < diff ){
       diff = sqrt(tmp.Mag2());
       rho = tmp.Rho();
@@ -3135,15 +3135,15 @@ void MCDisplVertices::Resolution( ){
 //============================================================================
 // Compute mass and nb of tracks from Long tracks only
 //============================================================================
-void MCDisplVertices::GetMassFromLongTracks( const Particle * p, 
-					     double & mlong, int & nbtlong ){
-  
+void MCDisplVertices::GetMassFromLongTracks( const Particle * p,
+                                             double & mlong, int & nbtlong ){
+
   Gaudi::LorentzVector mom;
-  
-  //Loop on the daughters.  
+
+  //Loop on the daughters.
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i != iend; ++i ){
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin(); i != iend; ++i ){
     const Particle * d = (*i);
     if( d->proto() == NULL ) continue;
     if( d->proto()->track() == NULL ) continue;
@@ -3163,19 +3163,19 @@ double MCDisplVertices::GetRecMass( const Particle::ConstVector & RecParts ){
   Gaudi::LorentzVector mom;
 
   Particle::ConstVector::const_iterator iend = RecParts.end();
-  for( Particle::ConstVector::const_iterator i = RecParts.begin(); 
+  for( Particle::ConstVector::const_iterator i = RecParts.begin();
        i != iend; ++i ){
     mom += (*i)->momentum();
   }
   return mom.M();
 }
 
-double MCDisplVertices::GetRecMass( const Particle::ConstVector & RecParts, 
-			       double & recpt ){
+double MCDisplVertices::GetRecMass( const Particle::ConstVector & RecParts,
+                                    double & recpt ){
 
   Gaudi::LorentzVector mom;
   Particle::ConstVector::const_iterator iend = RecParts.end();
-  for( Particle::ConstVector::const_iterator i = RecParts.begin(); 
+  for( Particle::ConstVector::const_iterator i = RecParts.begin();
        i != iend; ++i ){
     mom += (*i)->momentum();
   }
@@ -3189,8 +3189,8 @@ double MCDisplVertices::GetSumPt( const Particle * p ){
 
   double sumpt = 0;
   SmartRefVector<Particle>::const_iterator iend = p->daughters().end();
-  for( SmartRefVector<Particle>::const_iterator i = 
-	 p->daughters().begin(); i != iend; ++i ){
+  for( SmartRefVector<Particle>::const_iterator i =
+         p->daughters().begin(); i != iend; ++i ){
     sumpt += i->target()->pt();
   }
   return sumpt;
@@ -3203,8 +3203,8 @@ double MCDisplVertices::GetPt( const RecVertex* RV ){
 
   Gaudi::XYZVector mom;
   SmartRefVector<Track>::const_iterator iend = RV->tracks().end();
-  for( SmartRefVector<Track>::const_iterator i = 
-	 RV->tracks().begin(); i != iend; ++i ){
+  for( SmartRefVector<Track>::const_iterator i =
+         RV->tracks().begin(); i != iend; ++i ){
     mom += i->target()->momentum();
   }
   return mom.rho();
@@ -3213,8 +3213,8 @@ double MCDisplVertices::GetPt( const RecVertex* RV ){
 //=============================================================================
 // Compute pT of a daughter particle relativ to its mother particle
 //=============================================================================
-double MCDisplVertices::GetPt( const Gaudi::LorentzVector & d, 
-			  const Gaudi::LorentzVector & m ){
+double MCDisplVertices::GetPt( const Gaudi::LorentzVector & d,
+                               const Gaudi::LorentzVector & m ){
   double norm = Norm( m );
   const Gaudi::LorentzVector mn = m/norm;
   norm = Norm( d );
@@ -3229,7 +3229,7 @@ double MCDisplVertices::GetPt( const Gaudi::LorentzVector & d,
 //=============================================================================
 void MCDisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
                               bool weight ){
-  
+
   double sumqpt = 0.;
   SmartRefVector<Particle>::const_iterator ip = v->outgoingParticles().begin();
   for( ; ip < v->outgoingParticles().end(); ++ip ){
@@ -3241,11 +3241,11 @@ void MCDisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
     sumpt += t->pt();
     sumqpt += t->pt()*t->charge();
   }
-  
+
   if( weight ){
     if( sumpt == 0. ) ++sumpt;
     sumq = sumqpt/sumpt;
-  }  
+  }
 }
 
 
@@ -3253,7 +3253,7 @@ void MCDisplVertices::GetQPt( const Vertex * v, double & sumpt, double & sumq,
 // Compute charge of a vertex, possibly weighted by the momentum
 //=============================================================================
 double MCDisplVertices::GetCharge( const Vertex * v, bool weight ){
-  
+
   double sumqpt = 0.;
   double sumq = 0.;
   double sumpt = 0.;
@@ -3279,8 +3279,8 @@ double MCDisplVertices::GetCharge( const Vertex * v, bool weight ){
 //============================================================================
 // get the delta R between two particles
 //============================================================================
-double MCDisplVertices::GetDeltaR( const Particle * p1, 
-			      const LHCb::Particle * p2 ){
+double MCDisplVertices::GetDeltaR( const Particle * p1,
+                                   const LHCb::Particle * p2 ){
 
   double Deta = fabs( p1->momentum().eta() - p2->momentum().eta() );
   double Dphi = fabs( p1->momentum().phi() - p2->momentum().phi() );
@@ -3299,9 +3299,9 @@ double MCDisplVertices::GetR( const Gaudi::XYZPoint & p){
 //=============================================================================
 // Compute azimuthal angle between the 2 candidates
 //=============================================================================
-double MCDisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1, 
-				     const Gaudi::XYZPoint & v2 ){
-  
+double MCDisplVertices::GetDeltaPhi( const Gaudi::XYZPoint & v1,
+                                     const Gaudi::XYZPoint & v2 ){
+
   double dphi = v1.Phi() - v2.Phi();
   if( dphi >= pi ) dphi -= 2*pi;
   if( dphi < -pi ) dphi += 2*pi;
@@ -3327,19 +3327,19 @@ double MCDisplVertices::GetMCMass( MCParticle::ConstVector & daughters ){
 // Get radial distance to Beam Line
 //=============================================================================
 double MCDisplVertices::GetRFromBL( const Gaudi::XYZPoint& p ){
-  
-  //intersection of the beam line with the XY plane, 
+
+  //intersection of the beam line with the XY plane,
   //find the lambda parameter of the line.
   double lambda = (p.z() - m_BeamLine->referencePoint().z()) /
     m_BeamLine->momentum().z();
 
   //find x and y of intersection point
-  double x = m_BeamLine->referencePoint().x() 
+  double x = m_BeamLine->referencePoint().x()
     + lambda * m_BeamLine->momentum().x();
-  double y = m_BeamLine->referencePoint().y() 
+  double y = m_BeamLine->referencePoint().y()
     + lambda * m_BeamLine->momentum().y();
-  
-  //return distance to the intersection point 
+
+  //return distance to the intersection point
   x -= p.x(); y -= p.y();
   return sqrt( x*x + y*y );
 }
@@ -3352,16 +3352,16 @@ void MCDisplVertices::GetPVs(){
   //The PVs container is emptied at the begining of the execution
   if( !PVs.empty() ) return;
   const RecVertex::Range & PVCs = this->primaryVertices();
-  if( PVCs.empty() ) return;  
+  if( PVCs.empty() ) return;
 
-  for ( RecVertex::Range::const_iterator i = PVCs.begin(); 
+  for ( RecVertex::Range::const_iterator i = PVCs.begin();
         i != PVCs.end() ; ++i ){
     const RecVertex* pv = *i;
     //Apply some cuts
     if(m_RCut=="FromBeamLine" || (m_RCut=="FromPreyInfo" && m_SaveTuple)){
-         double rho = GetRFromBL( pv->position() );        
-         if( context() == "Info" ) plot( rho, "PVr", 0., 1.5*mm, 50 );
-         if( rho > m_RMin ) continue;         
+      double rho = GetRFromBL( pv->position() );
+      if( context() == "Info" ) plot( rho, "PVr", 0., 1.5*mm, 50 );
+      if( rho > m_RMin ) continue;
     }
     else if( abs(pv->position().x()>1.5*mm) || abs(pv->position().y()>1.5*mm)){
       continue;}
@@ -3394,9 +3394,9 @@ void MCDisplVertices::GetUpstreamPV(){
 //=============================================================================
 // Get Particles related to a RecVertex
 //=============================================================================
-void MCDisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx, 
-				    const Particle::ConstVector & inputParts, 
-				    Particle::ConstVector & RecParts){
+void MCDisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
+                                         const Particle::ConstVector & inputParts,
+                                         Particle::ConstVector & RecParts){
 
 
   SmartRefVector< Track >::const_iterator iVtx = dVtx->tracks().begin();
@@ -3406,15 +3406,15 @@ void MCDisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
 
   Particle::ConstVector::const_iterator jend = inputParts.end();
   for ( Particle::ConstVector::const_iterator j = inputParts.begin();
-	j != jend;++j) {
-      
+        j != jend;++j) {
+
     if( (*j)->proto()->track() == NULL ) continue;
     const Track * tk = (*j)->proto()->track();
     while( ((*iVtx)->key() < tk->key()) && (*iVtx)->key() != endkey ){
       ++iVtx;
     }
-    if( (*iVtx)->key() == tk->key() ){ 
-      if( (*iVtx)->key() != endkey ) ++iVtx; 
+    if( (*iVtx)->key() == tk->key() ){
+      if( (*iVtx)->key() != endkey ) ++iVtx;
       RecParts.push_back( *j );
       continue;
     }
@@ -3426,12 +3426,12 @@ void MCDisplVertices::GetPartsFromRecVtx(const RecVertex* dVtx,
 //============================================================================
 StatusCode MCDisplVertices::SaveCaloInfos( Tuple& tuple ){
   double E = 0; double Et = 0.;
-  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) && 
+  StatusCode sc = GetCaloInfos( "Ecal", E, Et ) &&
     GetCaloInfos( "Hcal", E, Et ) &&
     //GetCaloInfos( "Prs", E, Et ) && GetCaloInfos( "Spd", E, Et ) &&
     GetCaloInfos( "Muon", E, Et );
   tuple->column( "TotEt", Et );
-  return sc;  
+  return sc;
 }
 
 StatusCode MCDisplVertices::GetCaloInfos( string CaloType, double& En, double& Et ){
@@ -3440,20 +3440,20 @@ StatusCode MCDisplVertices::GetCaloInfos( string CaloType, double& En, double& E
   if( CaloType == "Muon" ){
 
     const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
-    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
-	  imu !=  pMU->end() ; ++imu ){
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ;
+          imu !=  pMU->end() ; ++imu ){
       const MuonPID* myMu = *imu;
       const LHCb::Track* myTrk = myMu->idTrack();
       double Q = myTrk->charge();
-      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.);
       if (Q==0.) { continue; }
       if (CloneDist!=9999.) { continue; }
-      
+
       double myP = myTrk->p();
       double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
       double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
-//       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
-// 	      << " is muon=" << (*imu)->IsMuon() << endmsg;
+      //       debug() << "P (GeV) : " << myP / Gaudi::Units::GeV
+      //        << " is muon=" << (*imu)->IsMuon() << endmsg;
       EC += mE;
       EtC += mET;
 
@@ -3472,8 +3472,8 @@ StatusCode MCDisplVertices::GetCaloInfos( string CaloType, double& En, double& E
     const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
       ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
 
-    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
-	  digitsCalo->end()!=idigit ; ++idigit ){  
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin();
+          digitsCalo->end()!=idigit ; ++idigit ){
       const CaloDigit* digit = *idigit ;
       if ( 0 == digit ) { continue ; }
       // get unique calorimeter cell identifier
@@ -3492,9 +3492,9 @@ StatusCode MCDisplVertices::GetCaloInfos( string CaloType, double& En, double& E
   }
 
   if( msgLevel( MSG::DEBUG ) )
-    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC 
+    debug() << CaloType <<" : Total Energy "<< EC <<" GeV, total Et "<< EtC
             << endmsg;
-  
+
   En += EC;
   Et += EtC;
   return StatusCode::SUCCESS;
@@ -3503,27 +3503,27 @@ StatusCode MCDisplVertices::GetCaloInfos( string CaloType, double& En, double& E
 
 
 StatusCode MCDisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
-                                               double& En, double& Et ){
+                                                 double& En, double& Et ){
 
   double x=0,y=0,z=0;
   std::vector<double> X,Y,Z,E;
   if( CaloType == "Muon" ){
 
     const MuonPIDs* pMU = get<MuonPIDs>( MuonPIDLocation::Default );
-    for(  MuonPIDs::const_iterator imu = pMU->begin() ; 
-	  imu !=  pMU->end() ; ++imu ){
+    for(  MuonPIDs::const_iterator imu = pMU->begin() ;
+          imu !=  pMU->end() ; ++imu ){
       const MuonPID* myMu = *imu;
       const LHCb::Track* myTrk = myMu->idTrack();
       double Q = myTrk->charge();
-      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.); 
+      double CloneDist = myTrk->info(LHCb::Track::CloneDist,9999.);
       if (Q==0.) { continue; }
       if (CloneDist!=9999.) { continue; }
-      
+
       double myP = myTrk->p();
       double mE = sqrt((myP*myP) + 105.66*105.66)/ GeV;
       double mET = mE*sqrt(myTrk->position().Perp2()/myTrk->position().Mag2());
-      debug() << "P (GeV) : " << myP / Gaudi::Units::GeV  
-	      << " is muon=" << (*imu)->IsMuon() << endmsg;
+      debug() << "P (GeV) : " << myP / Gaudi::Units::GeV
+              << " is muon=" << (*imu)->IsMuon() << endmsg;
       En += mE;
       Et += mET;
     }
@@ -3535,8 +3535,8 @@ StatusCode MCDisplVertices::GetCaloClusterInfos( string CaloType, Tuple & tuple,
     const DeCalorimeter*  Dcalo = getDet<DeCalorimeter>
       ( "/dd/Structure/LHCb/DownstreamRegion/"+CaloType );
 
-    for ( CaloDigits::const_iterator idigit=digitsCalo->begin(); 
-	  digitsCalo->end()!=idigit ; ++idigit ){  
+    for ( CaloDigits::const_iterator idigit=digitsCalo->begin();
+          digitsCalo->end()!=idigit ; ++idigit ){
       const CaloDigit* digit = *idigit ;
       if ( 0 == digit ) { continue ; }
       // get unique calorimeter cell identifier
@@ -3583,7 +3583,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
     //Save the number of interactions
     HepMCEvents* events = get<HepMCEvents>( HepMCEventLocation::Default ) ;
     tuple->column( "NbInt", events->size() );
-    
+
     //Is the prey the daughter of a mother ?
     HepMCEvents::const_iterator ie=events->begin();
     const HepMCEvent* event = *ie ;  //get first MC event in a collision
@@ -3592,24 +3592,24 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
     bool mother = false;
     for( p= theEvent->particles_begin(); p!= theEvent->particles_end(); ++p ){
       unsigned int pid = abs((*p)->pdg_id());
-      if( pid == m_MotherPreyID.abspid() ){ 
-        mother = true; break; 
+      if( pid == m_MotherPreyID.abspid() ){
+        mother = true; break;
       }
     }
     tuple->column( "FromMother", mother );
   } else {
     tuple->column( "NbInt", -1 );
     tuple->column( "FromMother", false );
-  }      
+  }
 
   //Was a prey reconstructed ? Look in the preselection container !
   const Particle::ConstVector cands = this->i_particles();
   bool cand = false;
   if( cands.size() > 0 ) cand = true;
   tuple->column( "Reco", cand );
-  if( msgLevel(MSG::DEBUG) && cand ) 
+  if( msgLevel(MSG::DEBUG) && cand )
     debug()<<"Event has a reconstructed prey !"<< endmsg;
- 
+
   //Get L0 info and save decision in tuple
   if( !exist<L0DUReport>( L0DUReportLocation::Default )){
     err()<<"You requested the trigger, make sure you run it."<<endmsg;
@@ -3623,9 +3623,9 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   tuple->column( "L0", L0dec );
 
   //fill the HLT global : Hlt2 : 77,Hlt1 :  46
-  vector<unsigned int> m_routingBits;   
+  vector<unsigned int> m_routingBits;
   m_routingBits.push_back( 46 );
-  m_routingBits.push_back( 77 );  
+  m_routingBits.push_back( 77 );
   //   for ( unsigned int i = 32 ; i < 96 ; i++){m_routingBits.push_back(i);}
   bool Hlt1Globdec = false;
   bool Hlt2Globdec = false;
@@ -3641,7 +3641,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
       debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
       debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endmsg;
     }
-  } 
+  }
   tuple->column( "Hlt1", Hlt1Globdec );
   tuple->column( "Hlt2", Hlt2Globdec);
 
@@ -3649,15 +3649,15 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
    * Beware : it seems that HltDecReport writes only on TES algos that fired
    *****************************/
   if (!exist<HltDecReports>( HltDecReportsLocation::Default ) ){
-//     warning()<<"No HltDecReports at "
-// 	     << HltDecReportsLocation::Default << endmsg;
+    //     warning()<<"No HltDecReports at "
+    //       << HltDecReportsLocation::Default << endmsg;
     return true;
   }
   const HltDecReports* decReports = get<HltDecReports>
     ( HltDecReportsLocation::Default );
 
-  int DVdec = 0; 
-  const LHCb::HltDecReport * decrep = 
+  int DVdec = 0;
+  const LHCb::HltDecReport * decrep =
     decReports->decReport("Hlt2DisplVerticesSingleDecision");
   if( decrep != NULL && decrep->decision() ) DVdec += 1;
   decrep = decReports->decReport("Hlt2DisplVerticesDoubleDecision");
@@ -3677,7 +3677,7 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
 
   //////////////////////////////////////////////////////////////////
   //Do not use HltDecReport for Hlt1Global and Hlt2Global decisions...
-  // Offline, all the rate limited stuff, including the Lumi/MinBias, 
+  // Offline, all the rate limited stuff, including the Lumi/MinBias,
   // doesn't work properly as you don't have the "counter" to limit it,
   // so the Global always goes to 1...
   //   bool Hlt1Globdec = false;
@@ -3686,18 +3686,18 @@ StatusCode MCDisplVertices::SaveTrigInfinTuple( Tuple & tuple ){
   //   if( msgLevel(MSG::DEBUG) )
   //     debug()<<"Hlt1 Global decision         : " << Hlt1Globdec << endmsg;
   //   tuple->column( "Hlt1", Hlt1Globdec );
-  
+
   //   decrep = decReports->decReport("Hlt2Global");
   //   bool Hlt2Globdec = false;
-  //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();	      
+  //   if( decrep != NULL ) Hlt2Globdec = decrep->decision();
   //   if( msgLevel(MSG::DEBUG) )
   //     debug()<<"Hlt2 Global decision         : " << Hlt2Globdec << endreq;
   //   tuple->column( "Hlt2", Hlt2Globdec);
-  
+
   //To print entire report container :
   //vector<string> allConfiguredTrgLines = decReports->decisionNames();
   //debug() << *decReports << endmsg;
-  
+
   return SaveL0RawInfos(tuple);
 }
 
@@ -3714,7 +3714,7 @@ StatusCode MCDisplVertices::SaveL0RawInfos( Tuple& tuple ){
     m_l0BankDecoder->fillDataMap();
     bool l0BankDecoderOK = m_l0BankDecoder->decodeBank();
     if(!l0BankDecoderOK ){
-      Error("Readout error : unable to monitor the L0DU rawBank", 
+      Error("Readout error : unable to monitor the L0DU rawBank",
             StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
     } else {
       nSpd = m_l0BankDecoder->data("Spd(Mult)");
@@ -3727,38 +3727,38 @@ StatusCode MCDisplVertices::SaveL0RawInfos( Tuple& tuple ){
 
 
 //============================================================================
-//  Event number 
+//  Event number
 //============================================================================
 StatusCode MCDisplVertices::fillHeader( Tuple& tuple ){
-  const LHCb::RecHeader* header = 
-    get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
+  const LHCb::RecHeader* header =
+    get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);
   //debug() << "Filling Tuple Event " << header->evtNumber() << endmsg ;
   tuple->column("Event", (int)header->evtNumber());
   tuple->column("Run", (int)header->runNumber());
 
-  
+
   LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   if( odin ){
     //NoBeam = 0, Beam1 = 1, Beam2 = 2, BeamCrossing = 3
-    tuple->column("BXType", 
+    tuple->column("BXType",
                   static_cast<unsigned int>( odin->bunchCrossingType()  ) );
-//     //tuple->column("Event", odin->eventNumber()); //ulonglong !
-//     tuple->column("Run", odin->runNumber());
-//     tuple->column("BunchID", odin->bunchId());
-//     tuple->column("BunchCurrent", odin->bunchCurrent());
-//     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
-//     //tuple->column("EventTime", odin->eventTime() );
-//     tuple->column("OrbitNumber", odin->orbitNumber());
-  
-  if( msgLevel( MSG::DEBUG ) && false )
-    debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber() 
-            <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId() 
-            <<" BunchCurrent "<< odin->bunchCurrent() <<" GpsTime "
-            << odin->gpsTime() <<" EventTime " << odin->eventTime() 
-            <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type " 
-            << odin->bunchCrossingType() << endmsg;
-  
-  
+    //     //tuple->column("Event", odin->eventNumber()); //ulonglong !
+    //     tuple->column("Run", odin->runNumber());
+    //     tuple->column("BunchID", odin->bunchId());
+    //     tuple->column("BunchCurrent", odin->bunchCurrent());
+    //     //tuple->column("GpsTime", (double)odin->gpsTime()); //ulonglong !
+    //     //tuple->column("EventTime", odin->eventTime() );
+    //     tuple->column("OrbitNumber", odin->orbitNumber());
+
+    if( msgLevel( MSG::DEBUG ) && false )
+      debug() <<"Reading of ODIN banks : Event nb "<< odin->eventNumber()
+              <<" Run nb "<< odin->runNumber() <<" BunchID "<< odin->bunchId()
+              <<" BunchCurrent "<< odin->bunchCurrent() <<" GpsTime "
+              << odin->gpsTime() <<" EventTime " << odin->eventTime()
+              <<" OrbitNumber "<< odin->orbitNumber() <<" Bunch Crossing Type "
+              << odin->bunchCrossingType() << endmsg;
+
+
   } else {
     Warning("Can't get LHCb::ODINLocation::Default");
   }
@@ -3772,13 +3772,13 @@ StatusCode MCDisplVertices::fillHeader( Tuple& tuple ){
 //============================================================================
 StatusCode MCDisplVertices::BackToBack( Particle::ConstVector & Cands ){
 
-  setFilterPassed(false);   
+  setFilterPassed(false);
   GetPVs();
   if( PVs.empty() ) return StatusCode::SUCCESS ;
 
   //Loop on candidates
   Particle::ConstVector::const_iterator iend = Cands.end();
-  for( Particle::ConstVector::const_iterator i1 = Cands.begin(); 
+  for( Particle::ConstVector::const_iterator i1 = Cands.begin();
        i1 < iend; ++i1 ){
     const Particle * p1 = (*i1);
     Particle::ConstVector::const_iterator i2 = i1; ++i2;
@@ -3786,7 +3786,7 @@ StatusCode MCDisplVertices::BackToBack( Particle::ConstVector & Cands ){
       const Particle * p2 = (*i2);
 
       //Loop on PVs
-      for ( RecVertex::Range::const_iterator i = PVs.begin(); 
+      for ( RecVertex::Range::const_iterator i = PVs.begin();
             i != PVs.end() ; ++i ){
         const RecVertex* pv = *i;
         //check that no candidate comes before the pv.
@@ -3794,18 +3794,18 @@ StatusCode MCDisplVertices::BackToBack( Particle::ConstVector & Cands ){
         const Gaudi::XYZPoint & pos1 = p1->endVertex()->position();
         const Gaudi::XYZPoint & pos2 = p2->endVertex()->position();
         if( pos1.z() < pospv.z() || pos2.z() < pospv.z() ) break;
-        
+
         Gaudi::XYZPoint v1 = Minus( pos1, pospv);
         Gaudi::XYZPoint v2 = Minus( pos2, pospv);
         //compute azimuthal angle between the 2 candidates
         double dphi = GetDeltaPhi( v1, v2 );
         if( dphi > m_Backtoback ){
           ++counter("Nb of mothers");
-          setFilterPassed(true);  
+          setFilterPassed(true);
           return StatusCode::SUCCESS;
-        }        
+        }
       }
-    }    
+    }
   }
   return StatusCode::SUCCESS;
 }
