@@ -74,7 +74,12 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
       LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
       if ( ! tuple->column( prefix+"L0Global", report->decision() ) ) return StatusCode::FAILURE;
       if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
-    }
+    } else if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default, false) )
+    {
+      LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default, false);
+      if ( ! tuple->column( prefix+"L0Global", report->decision() ) ) return StatusCode::FAILURE;
+      if (msgLevel(MSG::DEBUG)) debug() << "L0 decision:  " << report->decision() << endreq;
+    } 
   }
   
   //fill the HLT global
@@ -84,6 +89,17 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple ) {
     { 
       const LHCb::HltDecReports* decReports = 
         get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+      //fill the HLT1 global
+      if( !tuple->column( prefix+"Hlt1Global", (decReports->decReport("Hlt1Global"))? 
+                          (decReports->decReport("Hlt1Global")->decision()):0 )) return StatusCode::FAILURE;
+      
+      //fill the HLT2 global
+      if( !tuple->column( prefix+"Hlt2Global", (decReports->decReport("Hlt2Global"))? 
+                          (decReports->decReport("Hlt2Global")->decision()):0 )) return StatusCode::FAILURE; 
+    } else if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default, false ) )
+    { 
+      const LHCb::HltDecReports* decReports = 
+        get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default, false );
       //fill the HLT1 global
       if( !tuple->column( prefix+"Hlt1Global", (decReports->decReport("Hlt1Global"))? 
                           (decReports->decReport("Hlt1Global")->decision()):0 )) return StatusCode::FAILURE;
@@ -146,9 +162,10 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
   
   std::string loca = LHCb::HltDecReportsLocation::Default;
   if( level == "L0" )loca="HltLikeL0/DecReports";
-  if( exist<LHCb::HltDecReports>( loca ) )
+  bool userootintes = exist<LHCb::HltDecReports>( loca );
+  if( exist<LHCb::HltDecReports>( loca, userootintes ) )
   { 
-    const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( loca );
+    const LHCb::HltDecReports* decReports = get<LHCb::HltDecReports>( loca, userootintes );
     
     unsigned int nsel = 0 ;
     
@@ -197,16 +214,30 @@ StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
   if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits" << endmsg ;
-  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default))
+  bool userootintes = exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default, userootintes))
   {
-    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default, userootintes);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
     if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
     if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() )){
       Warning("Failure to fill routing bits");
       return StatusCode::FAILURE ;
     }
+    if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
+  } else {
+    userootintes = exist<LHCb::RawEvent>(LHCb::RawEventLocation::Trigger);
+    if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Trigger, userootintes))
+    {
+      LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default, userootintes);
+      std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
+      if (msgLevel(MSG::DEBUG)) debug() << yes << endmsg ;
+      if (!tuple->farray(prefix+"RoutingBits", yes, prefix+"MaxRoutingBits" , m_routingBits.size() )){
+        Warning("Failure to fill routing bits");
+        return StatusCode::FAILURE ;
+      }
+      if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
+    }
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "RoutingBits OK " << endmsg ;
   return StatusCode::SUCCESS ;
 }

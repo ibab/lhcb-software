@@ -92,6 +92,17 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ){
     gtime = odin->eventTime();
     bctyp = odin->bunchCrossingType() ;
     triggerType = odin->triggerType() ;
+  } else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) ){
+    odin = get<ODIN>( LHCb::ODINLocation::Default, false );
+    run = odin->runNumber();
+    if (m_mu.find(run)!=m_mu.end()) mu = m_mu[run];
+    ev = odin->eventNumber();
+    bcid = odin->bunchId();
+    odintck = odin->triggerConfigurationKey();
+    gpstime = odin->gpsTime();
+    gtime = odin->eventTime();
+    bctyp = odin->bunchCrossingType() ;
+    triggerType = odin->triggerType() ;
   } else {
     Error("Can't get LHCb::ODINLocation::Default (" +
 	  LHCb::ODINLocation::Default + ")" );
@@ -100,6 +111,9 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ){
   if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) ) {
     LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
     l0dutck = report->tck();
+  } else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) ) {
+    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
+    l0dutck = report->tck();
   } else {
     Warning("Can't get LHCb::L0DUReportLocation::Default (" +
     LHCb::L0DUReportLocation::Default + ")");
@@ -107,6 +121,9 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ){
 
   if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) ) {
     LHCb::HltDecReports* decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
+    hlttck = decreport->configuredTCK();
+  } else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) ) {
+    LHCb::HltDecReports* decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default, false);
     hlttck = decreport->configuredTCK();
   } else {
     Warning("Can't get LHCb::HltDecReportsLocation::Default (" +

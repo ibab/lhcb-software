@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Tomasz Skwarnicki
+ - make TupleToolEventInfo, TupleToolTrigger try info location with and without RootInTES
+
 ! 2011-11-23 - Chris Jones
  - Fix various gcc 4.6 compilation warnings and errors
 
