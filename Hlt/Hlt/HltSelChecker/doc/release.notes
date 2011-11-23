@@ -4,6 +4,10 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Patrick Koppenburg
+ - ../src/HltCorrelations.cpp:129:50: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  -> Fixed
+
 !========================== HltSelChecker v12r1   2011-06-20 ===================
 ! 2011-06-15 - Patrick Koppenburg
 	- ReadHltReport : Fix bug https://savannah.cern.ch/bugs/index.php?83269

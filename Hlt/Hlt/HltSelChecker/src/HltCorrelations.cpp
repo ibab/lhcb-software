@@ -126,7 +126,8 @@ StatusCode HltCorrelations::execute() {
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
     for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
-      if (!m_algoCorr->fillResult(bitX(*i),true));
+      if (!m_algoCorr->fillResult(bitX(*i),true))
+        return StatusCode::FAILURE;
     }
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Read routing bits" << endmsg;
