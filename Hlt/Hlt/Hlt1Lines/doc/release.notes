@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - V. Gligorov
+ - Fix bug in 1Track lines which meant the track chi2 cut could only take integer
+   values
+
 ! 2011-09-02 - Roel Aaij
  - Allow configuration of Hlt1L0.*, but don't create the lines by default.
    Hlt1L0PU and Hlt1L0CALO are needed by the VanDerMeerScan_Mar11 settings.
