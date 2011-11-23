@@ -256,8 +256,8 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   Gaudi::Plane3D backEcal  = ecal()->det()->plane(CaloPlane::Back);
   Gaudi::Plane3D frontHcal = hcal()->det()->plane(CaloPlane::Front);  
   Gaudi::Plane3D frontEcal = ecal()->det()->plane(CaloPlane::Front);
-  Gaudi::Plane3D middleEcal  = ecal()->det()->plane(CaloPlane::Middle);
-  Gaudi::Plane3D middleHcal  = hcal()->det()->plane(CaloPlane::Middle);
+  //  Gaudi::Plane3D middleEcal  = ecal()->det()->plane(CaloPlane::Middle);
+  //  Gaudi::Plane3D middleHcal  = hcal()->det()->plane(CaloPlane::Middle);
   Gaudi::Plane3D backHcal  = hcal()->det()->plane(CaloPlane::Back);
 
   // Assign closest Ecal/Hcal cells to the back/front plane respectively
@@ -440,7 +440,7 @@ double CaloCosmicsTrackTool::dist2D(Gaudi::XYZPoint p1 ,Gaudi::XYZPoint p2){
 StatusCode CaloCosmicsTrackTool::buildTrack(){
 
 
-  Gaudi::XYZVector  direction = hcal()->referencePoint() - ecal()->referencePoint();
+  //  Gaudi::XYZVector  direction = hcal()->referencePoint() - ecal()->referencePoint();
 
   Gaudi::TrackVector eTrV ;
   Gaudi::TrackSymMatrix eTrM;

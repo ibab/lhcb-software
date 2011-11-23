@@ -23,7 +23,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GammaPi0SeparationTool );
+DECLARE_TOOL_FACTORY( GammaPi0SeparationTool )
 
 
 //=============================================================================
@@ -174,7 +174,7 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   int ncells = 0;
   double secondE = 0.;
   //    double E3x3 = 0.0;
-  double dist = 0.0;
+  //  double dist = 0.0; // set but not used
   
   CaloCellID seedID = cluster->seed();
   const Gaudi::XYZPoint& posSeed =  m_ecal->cellCenter( seedID );
@@ -201,7 +201,7 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
     }else{
       if(energy>secondE) {
         secondE = energy;
-        dist = sqrt((x-xs)*(x-xs)+(y-ys)*(y-ys))/cellsize;
+        // dist = sqrt((x-xs)*(x-xs)+(y-ys)*(y-ys))/cellsize; // set but not used
       }
     }
     
