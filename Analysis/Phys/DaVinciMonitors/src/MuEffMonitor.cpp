@@ -43,38 +43,42 @@ MuEffMonitor::MuEffMonitor( const std::string& name,
   m_nSigmaX.resize(5);
   m_nSigmaY.resize(5);
   // default values for nSigma cuts
-  m_nSigmaX[0] = 6;
-  m_nSigmaX[1] = 6;
-  m_nSigmaX[2] = 6;
-  m_nSigmaX[3] = 6;
-  m_nSigmaX[4] = 6;
+  m_nSigmaX[0] = 8;
+  m_nSigmaX[1] = 8;
+  m_nSigmaX[2] = 8;
+  m_nSigmaX[3] = 8;
+  m_nSigmaX[4] = 8;
   
-  m_nSigmaY[0] = 6;
-  m_nSigmaY[1] = 6;
-  m_nSigmaY[2] = 6;
-  m_nSigmaY[3] = 6;
-  m_nSigmaY[4] = 6;
+  m_nSigmaY[0] = 8;
+  m_nSigmaY[1] = 8;
+  m_nSigmaY[2] = 8;
+  m_nSigmaY[3] = 8;
+  m_nSigmaY[4] = 8;
 
-  declareProperty ( "MomentumCut"   ,m_MomentumCut = 8000. ) ; //MeV
-  declareProperty ( "MomentumCutM4" ,m_MomentumCutM4 = 10000. ) ;
-  declareProperty ( "MomentumCutM5" ,m_MomentumCutM5 = 12000. ) ;
+  declareProperty ( "MomentumCut"   ,m_MomentumCut =    5000. ) ; //MeV
+  declareProperty ( "MomentumCutM4" ,m_MomentumCutM4 =  9000. ) ;
+  declareProperty ( "MomentumCutM5" ,m_MomentumCutM5 = 10000. ) ;
   declareProperty ( "UseCalo"       ,m_useCalo = false );
   declareProperty ( "EecalMax"      ,m_EecalMax = 1000. ) ;
   declareProperty ( "EecalMin"      ,m_EecalMin = -100. ) ;
   declareProperty ( "EhcalMax"      ,m_EhcalMax = 3500. ) ;
   declareProperty ( "EhcalMin"      ,m_EhcalMin = 1000. ) ;
 
-  declareProperty ( "TrminDof"      ,m_TrminDof = 13);
-  declareProperty ( "nSigmaX"       ,m_nSigmaX );
+  declareProperty ( "TrminDof"      ,m_TrminDof = 0);
+  declareProperty ( "nSigmaX"       ,m_nSigmaX ); // matching window in sigma (very loose)
   declareProperty ( "nSigmaY"       ,m_nSigmaY );
-  declareProperty ( "nSugmaFidVol"  ,m_nSigmaFidVol = 3.);
+  declareProperty ( "nSigmaFidVol"  ,m_nSigmaFidVol = 3.);
   declareProperty ( "Chi2ProbTrMin" ,m_Chi2TrMin = 0.01) ;  // chi2 cut on tracker tracks
-  declareProperty ( "Chi2MuMin"     ,m_Chi2MuMin = 10) ; // chi2 cut global track to mu matching (loose)
-  declareProperty ( "Chi2OtherMuMin",m_Chi2OtherMuMin = 2) ; // chi2 cut global track to mu matching other stations (tight)
+  declareProperty ( "Chi2MuMin"     ,m_Chi2MuMin = 10) ; // chi2 cut global track to mu matching (very loose)
+  declareProperty ( "nSigmaXother"  ,m_nSigmaXother = 2); // matching window in sigma for other stations (tight)
+  declareProperty ( "nSigmaYother"  ,m_nSigmaYother = 2); // matching window in sigma for other stations (tight)
+  declareProperty ( "Chi2OtherMuMin",m_Chi2OtherMuMin = 999) ; // or chi2 cut global track to mu matching other stations 
+  declareProperty ( "Chi2MuGlobal"  ,m_Chi2MuGlobal = 1.5) ; // max chi2/ndf for global candidates 
   declareProperty ( "CosThetaCut"   ,m_CosThetaCut = 0.99 ) ;
-  declareProperty ( "xyDistCut"     ,m_xyDistCut = 20. ) ; // cm
+  declareProperty ( "xyDistCut"     ,m_xyDistCut = 5. ) ; // cm
   declareProperty ( "RequireCrossing", m_mustCross = true );
   declareProperty ( "RequiredStations", m_nReqStations = 4);
+  declareProperty ( "ignoreM1"      ,m_ignoreM1 = false);
   declareProperty ( "Extrapolator"  ,m_extrapolatorName = "TrackMasterExtrapolator" ) ;
   declareProperty ( "HistoLevel"    ,m_histoLevel = "Online" );
   declareProperty ( "MeasureTime"   ,m_measureTime = false);
@@ -549,10 +553,12 @@ StatusCode MuEffMonitor::fillCoordVectors(){
   LHCb::MuonCoords::const_iterator iCoord;
   double x,dx,y,dy,z,dz;
   StatusCode sc;
+  bool M1seen=false;
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
     const LHCb::MuonTileID& tile = (*iCoord)->key();
     unsigned int station = tile.station();
     unsigned int region = tile.region();
+    if(m_ignoreM1 && 0==station) continue;
     double uncross = (station == 0 || ((station>2)&&(region==0))) ? false : (*iCoord)->uncrossed();
     if(uncross && m_mustCross) continue;
     if (!uncross) { //use FastPosTool
@@ -569,13 +575,10 @@ StatusCode MuEffMonitor::fillCoordVectors(){
         continue; 
       }
     }
+    if (0==station) M1seen=true;
     m_coordPos[station*m_NRegion+region].push_back(coordExtent_(x,dx,y,dy,z,dz,*iCoord));
   }
   
-  // check that M1 hits are available
-  bool M1seen=false;
-  for (int ir=0; ir< m_NRegion ; ir++)
-    if (! m_coordPos[ir].empty()) M1seen=true;
   if(!M1seen && m_origReqStations == (m_NStation-1) ) m_nReqStations=m_origReqStations-1;
 
 
@@ -797,6 +800,7 @@ bool MuEffMonitor::DoHitsInPad(){
   
   for(int station = m_NStation-1 ; station >= 0 ; station--) {
     double Chisq_min = 99999.;
+    double bestmtcSigmax=0., bestmtcSigmay=0.;
     bool crossedHitFound = false;
     std::vector<coordExtent_>::const_iterator goodHit;
 
@@ -823,6 +827,8 @@ bool MuEffMonitor::DoHitsInPad(){
         double xdist = (x-m_Muon.trackX[station]);
         double ydist = (y-m_Muon.trackY[station]);
         
+        double mtcSigmax = fabs(xdist)/sqrt(Err2x);
+        double mtcSigmay = fabs(ydist)/sqrt(Err2y);
         double Chisq = pow(xdist,2.)/Err2x + pow(ydist,2.)/Err2y;
         
         if(fabs(xdist) < m_nSigmaX[station]*sqrt(Err2x) &&
@@ -833,6 +839,8 @@ bool MuEffMonitor::DoHitsInPad(){
                ) {
             m_Muon.hitInM[station] = true;
             Chisq_min = Chisq;
+            bestmtcSigmax = mtcSigmax;
+            bestmtcSigmay = mtcSigmay;
             goodHit = itPos;
             if(!uncross) crossedHitFound=true;
           }
@@ -844,6 +852,8 @@ bool MuEffMonitor::DoHitsInPad(){
       m_Muon.nMatchedSt++;
       m_Muon.Chisq += Chisq_min;
       m_Muon.ChisqM[station] = Chisq_min;
+      m_Muon.mtcSigmax[station] = bestmtcSigmax;
+      m_Muon.mtcSigmay[station] = bestmtcSigmay;
       m_seleids.push_back( (LHCb::LHCbID) goodHit->m_pCoord->key());
     } else {
       nUnmatched++;
@@ -876,13 +886,13 @@ void MuEffMonitor::fillHistos(){
 
   // total efficiency
   if (m_Muon.Mom > m_MomentumCutM5 &&
-      m_Muon.Chisq/(2*m_Muon.nMatchedSt) < m_Chi2OtherMuMin) { // good global candidate
+      m_Muon.Chisq/(2*m_Muon.nMatchedSt) < m_Chi2MuGlobal) { // good global candidate
     m_StationsEff_den -> fill(0.);
     if(carica > 0) m_StationsEff_denP -> fill(0.);
     else m_StationsEff_denN -> fill(0.);
     
     bool allGood=true;
-    for (int is=0; is<m_NStation; is++) 
+    for (int is=(m_ignoreM1 ? 1 : 0); is<m_NStation; is++) 
       if (!m_Muon.hitInM[is]) allGood=false;
     if(allGood) {
       m_StationsEff_num -> fill(0.);
@@ -891,8 +901,11 @@ void MuEffMonitor::fillHistos(){
     }
   }
 
+
+  bool goodGlobalCandidate=true;
+
   // efficiency of each station/region
-  for (int s=0; s<m_NStation; s++) {
+  for (int s= (m_ignoreM1 ? 1 : 0); s<m_NStation; s++) {
     int nTrigSt = m_Muon.nMatchedSt;
     double muChisq = m_Muon.Chisq;
     int muDof=m_Muon.nMatchedSt*2;
@@ -908,7 +921,13 @@ void MuEffMonitor::fillHistos(){
     if (s == 4 && m_Muon.Mom < m_MomentumCutM5) continue; // require higher range for M5
     if (m_notOnline) m_Chi2OtherHits[s][r] -> fill(muChisq/muDof);
     if(muChisq/muDof > m_Chi2OtherMuMin) continue; // track is not matched well enough with other mu stations
-
+    bool otherStationsWellMatched=true;
+    for (int js=0 ; js<m_NStation; js++) {
+      if(js == s) continue;
+      if(m_Muon.mtcSigmax[js] > m_nSigmaXother) { otherStationsWellMatched=false; break;}
+      if(m_Muon.mtcSigmay[js] > m_nSigmaYother) { otherStationsWellMatched=false; break;}
+    }
+    if (!otherStationsWellMatched) continue; // track is not matched well enough with other mu stations
     if (m_notOnline) {
       m_nTracks->fill(11.+s);
       double P = m_Muon.Mom/Gaudi::Units::GeV;

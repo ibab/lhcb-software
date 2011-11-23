@@ -20,7 +20,7 @@ moneff.MuEffExtrap.MaterialLocator = "SimplifiedMaterialLocator"
 moneff.MuEffExtrap.OutputLevel = 5
 
 moneff.RequiredStations = 4
-moneff.MomentumCut = 8000.
+moneff.MomentumCut = 5000.
 
 moneff.UseCalo  = False
 moneff.EecalMax = 1000.
@@ -30,13 +30,11 @@ moneff.EhcalMin = 500.
         
 moneff.Chi2ProbTrMin = 0.01
 moneff.Chi2MuMin = 10.
-moneff.Chi2OtherMuMin =2.
-moneff.CosThetaCut = 0.99
-moneff.xyDistCut = 20.
+moneff.nSigmaXother =2;
+moneff.nSigmaYother =2;
 
 moneff.HistoLevel = "OfflineFull"        
-moneff.OutputLevel = 3
-moneff.MeasureTime = True
+moneff.OutputLevel = 4
 
 ##############################################################################
 #

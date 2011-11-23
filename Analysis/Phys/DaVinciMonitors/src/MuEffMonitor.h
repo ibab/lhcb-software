@@ -67,13 +67,17 @@ private:
 
   int             m_TrminDof;
   double          m_nSigmaFidVol; /// fiducial volume cut (in sigma of extrap. track position) 
-  double          m_Chi2TrMin;    /// chi2 cut on tracker tracks
-  double          m_Chi2MuMin;    /// chi2 cut global track to mu matching (loose)
-  double          m_Chi2OtherMuMin;  /// chi2 cut track to mu matching other stations (tight)
+  double          m_Chi2TrMin;    /// chi2 prob cut on tracker tracks
+  double          m_Chi2MuMin;    /// chi2/ndf cut global track to mu matching 
+  double          m_Chi2OtherMuMin;  /// max chi2/ndf track to mu matching other stations
+  double          m_Chi2MuGlobal; ///  max chi2/ndf for global candidates 
+  double          m_nSigmaXother; /// X window constraint for other stations
+  double          m_nSigmaYother; /// Y window constraint for other stations
   double          m_CosThetaCut;
   double          m_xyDistCut;
   bool            m_mustCross;
   int             m_nReqStations;
+  bool            m_ignoreM1;
   bool            m_measureTime;
   std::string     m_posToolName;
 
@@ -147,7 +151,7 @@ private:
         extrap[i] = false;
         hitInM[i] = false;
         reg[i] = -1;
-        ChisqM[i]=0.;
+        ChisqM[i]=mtcSigmax[i]=mtcSigmay[i]=0.;
       }      
     }
 
@@ -168,6 +172,8 @@ private:
     int    nMatchedSt;
     double Chisq;
     double ChisqM[5];
+    double mtcSigmax[5];
+    double mtcSigmay[5];
     bool   hitInM[5];
     int    reg[5]; 
   };

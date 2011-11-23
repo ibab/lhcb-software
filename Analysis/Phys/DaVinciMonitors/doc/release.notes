@@ -4,6 +4,17 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+
+! 2011-11-23  - Giacomo Graziani
+MuEffMonitor: further optimization of selection to improve purity of muon candidates
+
+! 2011-10-26  - Giacomo Graziani
+MuEffMonitor algorithm reorganized to improve speed and add some histograms:
+ - some cleanup and compactification of the code
+ - simplified faster selection
+ - using MuonFastPosTool to get muon hit positions and speedup of muon hit loop
+ - new histograms for efficiency versus P, XY, chamber
+
 !========================= DaVinciMonitors v1r15 2011-09-07 =========================
 ! 2011-08-27 - Patricia Disimone
   - The Muon Stations efficiency monitor MuEffMonitor has been moved from Muon/MuonTrackMonitor to Phys/DaVinciMonitors. The main changes are : 
