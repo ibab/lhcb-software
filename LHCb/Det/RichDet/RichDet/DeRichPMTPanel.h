@@ -83,10 +83,16 @@ public:
   /// Get tge sensitivevolumeID
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
+  Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID smartID ) const;
+
+
 private:
 
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
+
+  const DeRichPMT* dePMT( const unsigned int PmtCopyNumber ) const;
+  
 
   std::vector<int> getPmtRowColFromPmtNum( const int aPmtNum );
 
@@ -115,6 +121,7 @@ private:
                                     const Gaudi::XYZVector& vGlobal ,
                                     Gaudi::XYZPoint& panelIntersection,
                                     Gaudi::XYZPoint& panelIntersectionGlobal ) const;
+
 
 private:
 

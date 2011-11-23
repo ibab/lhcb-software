@@ -74,6 +74,8 @@ public:
                                       Gaudi::XYZPoint& detectPoint,
                                       const bool photoCathodeSide = true ) const;
 
+  Gaudi::XYZPoint detPointOnAnode (const LHCb::RichSmartID smartID ) const;
+
 private:
 
   StatusCode getPMTParameters();
@@ -81,6 +83,7 @@ private:
   StatusCode updateGeometry();
   Gaudi::XYZPoint getAnodeHitCoordFromPixelNum( const double fracPixelCol,
                                                 const double fracPixelRow ) const;
+
 
   /// Clean up interpolators
   void cleanUpInterps();
@@ -96,6 +99,8 @@ private:
   double m_PmtAnodeZSize;
 
   double m_PmtAnodeLocationInPmt;
+  double m_PmtPixelXSize;
+  double m_PmtPixelYSize;
   double m_PmtPixelGap;
   double m_PmtEffectivePixelXSize;
   double m_PmtEffectivePixelYSize;
