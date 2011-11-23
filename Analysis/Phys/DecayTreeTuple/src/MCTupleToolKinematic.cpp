@@ -76,7 +76,6 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
 
   int mcPid = 0;
   double mcTau = -1;
-  double mcM = -1;
   double mcPT = 0;
   
   Gaudi::XYZVector endVertex, originVertex;
@@ -89,8 +88,7 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
   {
     mcPid = mcp->particleID().pid();
     trueP = mcp->momentum();
-    mcPT= mcp->pt();
-    mcM=sqrt(trueP.M2());
+    mcPT  = mcp->pt();
     if (msgLevel(MSG::VERBOSE)) verbose() << "      " << trueP << endmsg ;
     originVertex = mcp->originVertex()->position();
     if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex position " << originVertex << endmsg ;

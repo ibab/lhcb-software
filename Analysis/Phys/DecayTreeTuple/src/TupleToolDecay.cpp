@@ -92,12 +92,13 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()),
                       m_stufferList.end());
 
-  return StatusCode::StatusCode( test );
+  return StatusCode(test); 
 }
+
 //=============================================================================
 // get decay
 //=============================================================================
-std::string TupleToolDecay::decay() const {
-  if (m_isMC) return m_mcdkFinder->decay();
-  else return m_dkFinder->decay();
+std::string TupleToolDecay::decay() const 
+{
+  return ( m_isMC ? m_mcdkFinder->decay() : m_dkFinder->decay() );
 }

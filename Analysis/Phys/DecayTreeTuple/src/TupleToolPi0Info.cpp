@@ -104,7 +104,7 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
         filltuple &= tuple->column( prefix+"_MCPi0Mother_key", MCPi0Mother_key );
         
         filltuple &= tuple->column( prefix+"_MCPi0GrandMother_id", MCPi0GrandMother_id  );
-        filltuple &= tuple->column( prefix+"_MCPi0GrandMother_id", MCPi0GrandMother_id );
+        filltuple &= tuple->column( prefix+"_MCPi0GrandMother_key", MCPi0GrandMother_key );
         
         filltuple &= tuple->column( prefix+"_MCPi0GrandGrandMother_id", MCPi0GrandGrandMother_id  );
         filltuple &= tuple->column( prefix+"_MCPi0GrandGrandMother_key", MCPi0GrandGrandMother_key  );
