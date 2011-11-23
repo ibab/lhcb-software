@@ -82,31 +82,45 @@ StatusCode FastPVMonitor::execute() {
     m_sx2 += xv * xv;
     m_sy2 += yv * yv;
     m_sz2 += zv * zv;
-    info() << format( "x%7.3f y%7.3f z%7.2f nTr%5d  errx%7.3f errY %7.3f errZ %7.3f",
-                      xv, yv, zv, (*itPv)->tracks().size(),
-                      sqrt((*itPv)->covMatrix()(0,0)),
-                      sqrt((*itPv)->covMatrix()(1,1)),
-                      sqrt((*itPv)->covMatrix()(2,2)) ) << endmsg;
+    if ( msgLevel( MSG::DEBUG ) ) {
+           info() << format( "x%7.3f y%7.3f z%7.2f nTr%5d  errx%7.3f errY %7.3f errZ %7.3f",
+                             xv, yv, zv, (*itPv)->tracks().size(),
+                             sqrt((*itPv)->covMatrix()(0,0)),
+                             sqrt((*itPv)->covMatrix()(1,1)),
+                             sqrt((*itPv)->covMatrix()(2,2)) ) << endmsg;
+    }
   }
+    
   // Number of tracks with IP between min and max values
   for ( LHCb::Tracks::iterator itT = tracks->begin(); tracks->end() != itT ; ++itT ) {
     if ( (*itT)->checkFlag( LHCb::Track::Backward ) ) continue;
     Gaudi::XYZPoint point = (*itT)->position();
     Gaudi::XYZVector dir  = (*itT)->slopes();
     double lowestIP = 1.e9;
+    double lowestIPS = 1.e9;
     LHCb::RecVertex* best = NULL;
     for (  itPv = pvs->begin(); pvs->end() != itPv ; ++itPv ) {
       double dx = point.x() + ( (*itPv)->position().z() - point.z() ) * dir.x() - (*itPv)->position().x();
       double dy = point.y() + ( (*itPv)->position().z() - point.z() ) * dir.y() - (*itPv)->position().y();
       double ip2 = dx*dx + dy*dy;
-      if ( ip2 < lowestIP ) {
+      double ips = dx * dx / ( (*itT)->firstState().errX2() + 0.01 ) + 
+        dy * dy / ( (*itT)->firstState().errY2() + 0.01 );
+      if ( ips < lowestIP ) {
         lowestIP = ip2;
+        lowestIPS = ips;
         best = *itPv;
       }
     }
-    lowestIP = sqrt( lowestIP );
+    lowestIP  = sqrt( lowestIP );
+    lowestIPS = sqrt( lowestIPS );
+    //if ( lowestIPS > 5 ) {
     if ( lowestIP > m_minIPForTrack &&
          lowestIP < m_maxIPForTrack    ) {
+      if ( msgLevel( MSG::DEBUG ) ) {
+        info() << format( "Large IP Track %3d ip %7.3f ips%10.2f", (*itT)->key(),
+                          lowestIP, lowestIPS ) 
+               << endmsg;
+      }
       m_nLargeIP++;
     }
   }

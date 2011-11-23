@@ -33,6 +33,17 @@ public:
 
   Gaudi::SymMatrix3x3 cov ( );
 
+  double chi2() {
+    double chi = 0.;
+    for ( std::vector<TrackForPV*>::iterator itT = m_tracks.begin();
+          m_tracks.end() != itT; ++itT ) {
+      chi += (*itT)->chi2( m_vertex );
+    }
+    return chi;
+  }
+
+  double chi2PerDoF() { return chi2() / (2*m_tracks.size()-3); }
+
   void setTracksUsed( bool flag ) {
     for ( std::vector<TrackForPV*>::iterator itT = m_tracks.begin();
           m_tracks.end() != itT; ++itT ) {

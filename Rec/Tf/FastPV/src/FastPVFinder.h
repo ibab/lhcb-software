@@ -37,6 +37,7 @@ private:
   double m_maxDeltaZ;
   double m_maxChi2ToAdd;
   double m_maxChi2Fit;
+  double m_maxChi2PerDoF;
   
   double m_xBeam;
   double m_yBeam;

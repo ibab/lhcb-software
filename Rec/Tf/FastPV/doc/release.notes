@@ -4,6 +4,12 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Olivier Callot
+ - Iterate, first with a large number of tracks (30% of total), then as usual.
+ - Work with unused tracks in each iteration
+ - Do the final serach without grouping constraints
+ - Remove the request for backward tracks...
+
 ! 2011-11-22 - Olivier Callot
  - Try a vertex with unused tracks if no vertex found (low mult. events)
 
