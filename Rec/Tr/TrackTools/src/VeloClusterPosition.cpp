@@ -83,9 +83,10 @@ StatusCode VeloClusterPosition::initialize()
   m_veloDet=getDet<DeVelo>( DeVeloLocation::Default );
 
   IUpdateManagerSvc* mgrSvc=svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
-  Condition* cond=getDet<Condition>(m_condPath+"/VeloErrorParam");
+  // use SmartDataPtr to test existence, did not exist for 2009, mc09, mc10
+  SmartDataPtr<Condition> cond(detSvc(), (m_condPath+"/VeloErrorParam"));
   
-  if(NULL!=cond)
+  if(0!=cond)
   {
     
     mgrSvc->registerCondition(this, m_condPath,
