@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-11-23 - Chris Jones
+ - Fix various gcc 4.6 warnings
+
 !================== LoKiJets v6r1 2011-11-10 ===============================
 
 ! 2011-11-07 - Cedric Potterat
