@@ -3,7 +3,9 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-
+! 2011-11-23 - Sajan Easo
+ - Made a fix to the pmt smartid decoding to hits in DeRichPMT and added more
+   utilities to DeRichPMTPanel
 ! 2011-11-17 - Chris Jones
  - Add PMT classes from Sajan
 
