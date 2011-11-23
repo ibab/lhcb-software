@@ -1,0 +1,458 @@
+! $Id$ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiGenMC
+! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
+! Purpose     : Generator/MC- related part of LoKi project
+! -----------------------------------------------------------------------------
+! 
+!   This file is a part of LoKi project - 
+!     "C++ ToolKit  for Smart and Friendly Physics Analysis"
+! 
+!   The package has been designed with the kind help from
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+!   contributions and advices from G.Raven, J.van Tilburg, 
+!   A.Golutvin, P.Koppenburg have been used in the design.
+! 
+! -----------------------------------------------------------------------------
+
+!========================= LoKiGenMC v9r1 2011-06-17 =========================
+! 2011-06-05 - Vanya Belyaev
+ - fix icc warnings
+
+
+!========================== LoKiGenMC v9r0 2010-04-30 =========================
+
+! 2010-04-06 - Vanya Belyaev
+
+ - replace LoKi::Raneg with Gaudi::Range
+	 
+  cmt/requirements 
+
+    version inrement to v9r0 
+	
+!========================== LoKiGenMC v8r1 2009-01-12 =========================
+! 2009-01-10 - Chris Jones
+ - Add CLHEP dependency for OSX
+
+! 2008-11-27 - Vanya  BELYAEV
+
+ - add QMTest 
+ - cmt/requirmeents  
+   version increment to v8r1 
+
+!========================== LoKiGenMC v8r0 2008-11-19 =========================
+! 2008-11-19 - Marco Cattaneo
+ - Workaround for ambiguous setProperty specialisations on Windows 
+
+! 2008-11-04 - Vanya BELYAEV
+ - remove .opts-files (and the whole options directory)
+ - provide "configurables" 
+ 
+     python/LoKiGenMC/MC2Collision_Configuration.py
+     python/LoKiGenMC/HepMC2MC_Configuration.py
+
+for Data-On-Demand configuration of 
+
+     LCHb::MCVertex       --> LHCb::GenCollision and 
+     HepMC::GenParticle <---> LHCb::MCParticle   relation tables 
+
+
+! 2008-11-03 - Vanya BELYAEV
+ - resurrent & redesign MC -> GenCollision stuff 
+
+! 2008-11-02 - Vanya BELYAEV
+ - tiny fixes fo variosu compilers 
+ - remove extra methods fomr dictionaries 
+	
+ - cmt/requirements 
+    version incrmeent to v8r0 
+
+!========================== LoKiGenMC v7r1p1 2008-07-27 =======================
+! 2008-07-22 - Marco Cattaneo
+ - Trivial fix in ForcedBDecayTool.cpp to use a Gaudi::Unit:: instead of CLHEP::
+ - Increment version to v7r1p1
+
+!========================== LoKiGenMC v7r1 2008-06-02 =========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix a doxygen warning
+ - In requirements: remove obsolete macro
+
+! 2008-06-02 - Vanya Belyaev
+ - Change the handled incidents from EndEvent to BeginEvent 
+
+ - cmt/requirements 
+    version increment to v7r1 
+
+!========================== LoKiGenMC v7r0 2007-12-02 =========================
+! 2007-12-02 - Vanya BELYAEV
+ - the upgrade for th next ajor versionof LoKi v7r0 ("The powerful streamers")
+ - cmt/requirements
+   version increment to v7r0
+
+!========================== LoKiGenMC v6r1 2007-10-08 =========================
+! 2007-10-07 - Vanya BELYAEV
+ - cmt/requirements 
+    increment version to v6r1 
+    use new pattern for python modules 
+
+!========================== LoKiGenMC v6r0 2007-09-04 =========================
+! 2007-08-20 - Vanya BELYAEV
+ - increment the major version to v6r0 
+
+! 2007-07-23 - Vanya BELYAEV
+ - many tiny fixed to speedup compilation, reduce dictionaries and 
+   improve doxygen
+ - cmt/requirements 
+   version increment to v3r1
+
+!========================== LoKiGenMC v3r0 2007-06-11 =========================
+! 2007-06-10 - Vanya BELYAEV
+ - few minor fixes to please Reflex and to make a coherent interface for 
+   MC and RC world 
+
+! 2007-06-04 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiGenMC_load.cpp
+
+! 2007-06-01 - Vanya BELYAEV
+
+ - prepare for new major verson v3r0:
+
+    all dictionaries are built locally
+  
+ - New files:
+
+   dict/LoKiGenMC.xml
+   dict/LoKiGenMCDict.h
+
+   python/LoKiGenMC/__init__.py
+   python/LoKiGenMC/decorators.py
+   python/LoKiGenMC/functions.py
+   python/LoKiGenMC/tests.py
+
+ - Modified files:
+
+   LoKi/GenMCParticleCuts.h
+   LoKi/GenMCParticles.h
+   src/Components/LoKi_MC2CollisionAlg.cpp
+   
+ - cmt/requirements
+    version increment to v3r0 
+
+!========================== LoKiGenMC v2r1p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
+
+!========================= LoKiGenMC v2r1 2007-03-04 ======================
+
+! 2007-03-04 - Vanya BELYAEV
+
+ - LoKi_HepMC2MCAlg.cpp 
+    fix one obvuoys bug (typo) and making soem patch for another problmem.
+    Those 2 problems result in only PARTIAL matching of HepMC and MC 
+    information.
+    I still need to find why for some cases we have IDENTICAL 4-momenta 
+    but a constant shift in 3D information. It is really puzzling..
+    Is it due to some features of bugs in Gauss? I do not know..
+ - cmt/requirements 
+    version increment to v2r1  
+  
+!========================= LoKiGenMC v2r0 2007-01-23 ======================
+
+! 2007-01-23 - Vanya BELYAEV
+ -  LoKi/GenMCParticles.h
+    src/GenMCParticles.cpp
+      fixes for Ex/LoKiExample
+
+!========================= LoKiGenMC v2r0 2007-01-09 ======================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+
+!========================== LoKiGenMC v1r3 2006-10-11 ===================
+! 2006-10-11 - Vanya BELYAEV
+ - remove the directory Kernel/
+ - use the files from DaVinciMCKernel 
+ - cmt/requiremenets 
+     version increment to v1r3
+
+
+!========================== LoKiGenMC v1r2 2006-08-30 ===================
+
+
+! 2006-08-29 - Vanya BELYAEV
+
+     After extensive tests: 
+
+ - options/HepMC2MC.opts
+ -  options/MC2Collision.opts
+     fixes in configuratioin files 
+
+ - src/Components/LoKi_HepMC2MCAlg.cpp
+ - src/Components/LoKi_MC2CollisionAlg.cpp
+     fix the bugs in the algoruthms 
+
+ - cmt/requiremenets 
+     version increment to v1r2 
+
+
+!========================== LoKiGenMC v1r1 2006-07-07 ===================
+
+! 2006-06-23 - Vanya BELYAEV
+ - fix for new version of Kernel/Relations 
+   (no need in "serializers" anymore)
+ - cmt/requirements 
+   version increment to v1r1 
+
+!========================== LoKiGenMC v1r0 2006-05-29 ===================
+
+  2006-03-18 - Vanya BELYAEV
+  
+  New functionality:
+  According to PEM, there should be some "tool" which allows basically
+  the navigation from MC-vertex to GenCollision. 
+  Now this tool is implemented.
+  Implementation has 2 layers
+
+   I) Low-level: 
+     The relation table between *PRIMARY* MC-vertices and GenCollison
+     objects of the the type IRelation<LHCb::MCVertex,LHCb::GenCollision>
+     is created (typedef'ed to LHCb::MCVertex2Collision ).
+     The table location in TES is LHCb::MC2CollisionLocation::Default 
+     Table is created by the algorithm LoKi_MC2CollisionAlg
+     Data-On-Demand service is configured properly to invoke 
+     the algorithm "on-demand"
+     One also could use the "tool" with interface IMC2Collision
+     to access the table in TES.
+
+  II) High-level:
+
+     a) The uniform set of functions is provided to get the collision 
+     practically for all MC-classes:
+ 
+     const LHCb::GenCollision* collision 
+                    ( const TYPE*                     object , 
+                      const LHCb::MCVertex2Collision* table  ) ;
+
+     The functions are implemented for classes: 
+        - LHCb::MCVertex 
+        - LHCb::MCParticle 
+        - LHCb::MCHit 
+        - LHCb::MCRichHit
+        - LHCb::MCCaloHit
+        - LHCb::MCOTDeposit
+        - LHCb::MCSTDeposit
+
+     b) The templated functor FromCollision<TYPE>, 
+        which allows to extract the MC-objects, related
+         to the given pp-Collision, e.g. 
+            
+           // count MC-hits from the given collision:
+
+           const LHCb::MCHits* hits = get<LHCb::MCHits>( ... ) ;    
+           const size_t nHits = 
+           std::count_if ( hits->begin()                           , 
+                      hits->end()                             ,
+                      FromCollision<LHCb::MCHit>( c , table ) ) ;
+    
+           // get all MC-particles form the given collison    
+           const LHCb::MCParticles* mcps = get<LHCb::MCParticles>( ... ) ;
+           // prepare the output container
+           LHCb::Particle::ConstVector result ;
+           // put all particles from the given collisinig into the output container:
+           LoKi::Algs::copy_if ( mcps->begin() , 
+                                 mcps->end  () , 
+                                 FromCollision<LHCb::MCParticle>( c , table ) ) ;
+      
+   
+         again the functor is defined for the types, listed above
+    
+     
+  2006-03-18 - Vanya BELYAEV
+
+ - Kernel/HepMC2MC.h
+    a) minor fix for Win32 platform
+    b) adapt the table name according to Marco's proposal for relation tables
+ 
+! 2006-02-09 - Vanya BELYAEV
+
+ - opts/LoKiGenMC.opts 
+   opts/HepMC2MC.opts   
+     New configuration files to configure HepMC <--> MC links 
+  
+  The files are self-contained
+  Usage:
+
+  #include "$LOKIGENMCOPTS/LoKiGenMC.opts"
+  // or (alternatively)
+  // #include "$LOKIGENMCOPTS/HepMC2MC.opts"
+   
+  DataOn-Demand servcie is configured properly to populate the 
+  TES location ("/Event/Gen/HepMC2MC") with HepMC<--->MC relation 
+  table. 
+
+
+  *  Usage:
+  *
+  *  @code
+  *  
+  *  #include "Kernel/HepMC2MC.h"
+  *  
+  *  ...
+  *  typedef LHCb::Relations::HepMC2MC Table ;
+  *  
+  *  // get the table from TES:
+  *  const Table* table = get<Table>( LHCb::HepMC2MCLocation::Default ) ;
+  *
+  *  const HepMC::GenParticle* B = ... ;
+  * 
+  *  // get the related MC particles 
+  *  Table::Range links = table->relations( B ) ;
+  *  // loop over links:
+  *  for ( Table:Range::iterator l = links.begin() ; links.end() != l; ++l )
+  *   {
+  *     // get the related MC particle:
+  *     const LHCb::MCParticle* mc = l->to() ;
+  *   }
+  *
+  *  ...
+  *  @endcode
+  *  @see LHCb::Relations::HepMC2MC
+  *
+  *  Usage of inverse relations ( MC -> HepMC ) :
+  *
+  *  @code
+  *  
+  *  #include "Kernel/HepMC2MC.h"
+  *  
+  *  ...
+  *  typedef LHCb::Relations::HepMC2MC2D Table2D;
+  *  typedef LHCb::Relations::MC2HepMC   Table;
+  *  
+  *  // get the 2D-table from TES:
+  *  const Table2D* table2D = get<Table2D>( LHCb::HepMC2MCLocation::Default ) ;
+  * 
+  *  // get the MC -> HEpMC table: 
+  *  const Table* table = table2D->inserse() ;
+  * 
+  *
+  *  const LHCb::MCParticle* B = ... ;
+  * 
+  *  // get the related HepMC particles 
+  *  Table::Range links = table->relations( B ) ;
+  *  // loop over links:
+  *  for ( Table:Range::iterator l = links.begin() ; links.end() != l; ++l )
+  *   {
+  *     // get the related HepMC particle:
+  *     const HepMC::GenParticle* hepMC = l->to() ;
+  *   }
+  *
+  *  ...
+  *  @endcode 
+  *  @see LHCb::Relations::HepMC2MC2D
+  *  @see LHCb::Relations::MC2HepMC
+  *
+  *  There exist helpful functions which simplify drastically 
+  *  the treatment of such links:
+  *  
+  *  (A) get all MC-particles from Higgs (Generator!) decay:
+  *
+  *  @code 
+  *  
+  *  // 1) get all HepMC particles:
+  *  const LHCb::HepMCEvents* events = 
+  *      get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+  *
+  *   // 2) select all Higgses:
+  *   // prepare an output container:
+  *   typedef std::vector<const HepMC::GenParticle*> GParticles ;
+  *   GParticles higgses ;
+  *   // select "higgses"
+  *   LoKi::Extract::genParticles 
+  *      ( events , std::back_inserter( higgses ) , GID = "H_10" ) ;
+  * 
+  *   // 3) locate  relation table from TES
+  *   // get the relation table from TES 
+  *   typedef LHCb::Relations::HepMC2MC2D Table2D ;
+  *   typedef LHCb::Relations::MC2HepMC   Table   ;
+  *   const Table2D* table2D = 
+  *         get<Table>( LHCb::HepMC2MCLocation::Default ) ;
+  *   const Table*   table = table2D->inverse() ;
+  *
+  *   // 4) create the selector funtor 
+  *   MCCut cut = FROMGTREE ( higgses.begin () , higgses.end   () , table ) ; 
+  *
+  *   // 5a) select MC-particles (e.g. using LoKi::Algo):
+  *  MCRange parts = mcselect( "parts" , cut ) ;
+  *
+  *  @endcode 
+  *  @see LHCb::HepMCEvent
+  *  @see HepMC::GenParticle
+  *  @see LoKi::Cuts::FROMGTREE
+  *  @see LHCb::Relations::HepMC2MC2D
+  *  @see LHCb::Relations::HepMC2MC
+  *  @see LHCb::Relations::MC2HepMC
+  *  @see LoKi::Types::MCCut   
+  *  @see LoKi::Types::MCRange   
+  *
+  *  (B) Find all generator ancestor (HepMC) particles 
+  *   which produces the given MC-lepton
+  *
+  *   @code 
+  *
+  *   const LHCb::MCParticle* lepton = ... ; 
+  *
+  *   // get the relation table from TES 
+  *   typedef LHCb::Relations::HepMC2MC Table ;
+  *   const Table* table = 
+  *         get<Table>( LHCb::HepMC2MCLocation::Default ) ;
+  * 
+  *   // locate LHCb::HepMCEvents from TES:
+  *   const LHCb::HepMCEvents* events = 
+  *      get<LHCb::HepMCEvents>( LHCb::HepMCEventLocation::Default ) ;
+  * 
+  *   // prepare an output container:
+  *   typedef std::vector<const HepMC::GenParticle*> GParticles ;
+  *   GParticles parts ;
+  *  
+  *   // create the selector functios:
+  *   GCut cut = GMCMOTH( lepton , table ) ;
+  *
+  *   // select "origins" and save them into the output container
+  *   LoKi::Extract::genParticles 
+  *      ( events , std::back_inserter( parts ) , cut ) ;
+  *
+  *   @endcode 
+  *   @see LHCb::MCParticle
+  *   @see HepMC::GenParticle
+  *   @see LHCb::Relations::HepMC2MC
+  *   @see LoKi::GenParticles::IsAMotherForMC
+  *
+  *   For location of the table one can use also the tool
+  *   This way is possible, but coudl not be recommended:
+  *
+  *  @code 
+  *   
+  *  #include "Kernel/IHepMC2MC.h"
+  *  
+  *   ...
+  *  // locate the tool in the "initialize" method:
+  *  const IHepMC2MC* m_tool = 
+  *      tool<IHepMC2MC> ("LoKi_HepMC2MC/HepMC2MC") ;
+  * 
+  *  // use the tool in "execute" method:
+  *
+  *  //   get HepMC -> MC table 
+  *  const LHCb::Relations::HepMC2MC table1 = m_tool->hepMC2MC() ;
+  *  
+  *  //   get MC -> HepMC table  
+  *  const LHCb::Relations::MC2HepMC table2 = m_tool->mc2HepMC() ;
+  *
+  *  @encode
+  *  @see IHepMC2MC  
+
+ 
+! 2006-01-26 - Vanya BELYAEV
+ - - New import: Generator/MC dependent part of restructurized LoKi project
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+# $Id$ 
+# =============================================================================
+# Created    : 2006-01-16
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
+# =============================================================================
+package           LoKiGenMC
+version           v9r1
+
+# ================ structure ==================================================
+branches          cmt doc src dict python LoKi
+
+# ================ dependencies ===============================================
+use                LoKiGen         v* Phys 
+use                LoKiMC          v* Phys
+use                DaVinciMCKernel v* Phys
+use                Relations       v* Kernel
+private
+# CRJ : Temporary fix for OSX, which seems to require a link time dependency 
+# on CLHEP. Need to work out why this is needed but not for linux/windows.
+macro CLHEP_use "" osx105 "CLHEP v* LCG_Interfaces"
+use ${CLHEP_use}
+public
+
+# ================ own includes ===============================================
+apply_pattern install_more_includes  more=LoKi
+apply_pattern install_python_modules 
+
+# ================ constituents ===============================================
+library           LoKiGenMCLib    ../src/*.cpp 
+library           LoKiGenMC       ../src/Components/*.cpp
+
+# ================ Produce LCG dictionary =====================================
+apply_pattern     reflex_dictionary                                   \
+                  dictionary=LoKiGenMC                                \
+                  headerfiles=$(LOKIGENMCROOT)/dict/LoKiGenMCDict.h   \
+                  selectionfile=$(LOKIGENMCROOT)/dict/LoKiGenMC.xml   \  
+                  options=" -U__MINGW32__ "
+
+# ================ patterns ===================================================
+apply_pattern     linker_library    library=LoKiGenMCLib
+apply_pattern     component_library library=LoKiGenMC
+apply_pattern     QMTest 
+
+# =============================================================================
+# The END
+# =============================================================================
