@@ -41,7 +41,7 @@ namespace TrackUnitsConverters
     C(3,4) *= Gaudi::Units::GeV;
     
     C(4,4) *= Gaudi::Units::GeV*Gaudi::Units::GeV;
-  };
+  }
 
   //===========================================================================
   // Change some units for better matrix invertability
@@ -56,7 +56,7 @@ namespace TrackUnitsConverters
     C(1,1) /= Gaudi::Units::cm2; 
     C(1,2) /= Gaudi::Units::cm;
     C(1,3) /= Gaudi::Units::cm;
-  };
+  }
   
   //===========================================================================
   // Restore units after inversion. same as convertToG3 !
@@ -79,7 +79,7 @@ namespace TrackUnitsConverters
     invC(3,4) *= Gaudi::Units::GeV;
 
     invC(4,4) *= Gaudi::Units::GeV*Gaudi::Units::GeV;
-  };
+  }
   
   //===========================================================================
   // Restore units after inversion. same as convertToG3 !
@@ -94,7 +94,7 @@ namespace TrackUnitsConverters
     invC(1,1) /= Gaudi::Units::cm2; 
     invC(1,2) /= Gaudi::Units::cm;
     invC(1,3) /= Gaudi::Units::cm;
-  };
+  }
   
   //===========================================================================
 }
