@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2011-11-23 - Marco Clemencic
+ - Fixed gcc 4.6 warning: operation on ‘...’ may be undefined
+   [-Wsequence-point]
+
 !========================= DetDesc v18r27p1 2011-08-30 =======================
 ! 2011-08-03 - Marco Cattaneo
  - Remove files DetDesc/*.icpp, moving code directly into corresponding .h,

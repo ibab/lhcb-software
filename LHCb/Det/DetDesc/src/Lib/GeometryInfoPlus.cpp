@@ -641,7 +641,7 @@ const Gaudi::Transform3D& GeometryInfoPlus::ownToNominalMatrix() const
 
   m_localDeltaMatrix = (this->hasAlignmentCondition())      ?
     new Gaudi::Transform3D(myAlignmentCondition()->toNominalMatrix()) :
-    m_localDeltaMatrix = new Gaudi::Transform3D();
+    new Gaudi::Transform3D();
 
   return *m_localDeltaMatrix;
 
