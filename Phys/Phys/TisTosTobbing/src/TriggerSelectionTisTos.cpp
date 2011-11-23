@@ -161,12 +161,22 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle )
 {
   if( !m_useParticle2LHCbIDs ){
+#ifdef LOCDEBUG
+    info() << " Not using Particle2LHCbIDs map " << endmsg;
+#endif
     if( addToSignal( particle ) )clearCache();
   } else {
     DaVinci::Map::Particle2LHCbIDs* p2lhcbids(0);
     // global map at RootInTES location
+#ifdef LOCDEBUG
+    info() << " Looking for Particle2LHCbIDs map with RootInTES at: " 
+           << m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap" << endmsg;
+#endif
     if( exist< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap") ){
       p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(m_Particle2LHCbIDsLocation.value()+"Particle2LHCbIDMap");
+#ifdef LOCDEBUG
+      info() << " ... got it " << p2lhcbids << endmsg;
+#endif
     } else {
       const DataObject* container = particle.parent();
       if( container ){
@@ -175,15 +185,27 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
           std::string path = registry->identifier();
           // local map at particle location
           boost::replace_last(path,"/Particles","/Particle2LHCbIDMap");
+#ifdef LOCDEBUG
+          info() << " Looking for Particle2LHCbIDs map without RootInTES at: " << path <<  endmsg;
+#endif
           if( exist< DaVinci::Map::Particle2LHCbIDs >(path,false) ){
             p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(path,false);
+#ifdef LOCDEBUG
+            info() << " ... got it " << p2lhcbids << endmsg;
+#endif
           } else {
             // global map at stream location (find first "/" past "/Event/")
             std::size_t ipos = path.find("/",7);
             if( ipos != std::string::npos ){
               std::string pathg = path.substr(0,ipos)+"/Particle2LHCbIDMap";
+#ifdef LOCDEBUG
+          info() << " Looking for Particle2LHCbIDs map without RootInTES at: " << pathg <<  endmsg;
+#endif
               if( exist< DaVinci::Map::Particle2LHCbIDs >(pathg,false) ){
                 p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathg,false);
+#ifdef LOCDEBUG
+            info() << " ... got it " << p2lhcbids << endmsg;
+#endif
               }
             }
             if( ! p2lhcbids ){
@@ -193,8 +215,14 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
               while(  ipos != std::string::npos ){
                 pathgo = pathgo.substr(0,ipos);
                 std::string pathtry= pathgo + "/Particle2LHCbIDMap";
+#ifdef LOCDEBUG
+          info() << " Looking for Particle2LHCbIDs map without RootInTES at: " << pathtry <<  endmsg;
+#endif
                 if( exist< DaVinci::Map::Particle2LHCbIDs >(pathtry,false) ){
                   p2lhcbids = get< DaVinci::Map::Particle2LHCbIDs >(pathtry,false);
+#ifdef LOCDEBUG
+            info() << " ... got it " << p2lhcbids << endmsg;
+#endif
                   break;
                 }
                 ipos = pathgo.find_last_of("/");
@@ -207,6 +235,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
     if( p2lhcbids ){
       //      p2lhcbids->update(0); // temporary hack. Framework should do this automatically but isn't.
       const std::vector<LHCb::LHCbID> & hits = (*p2lhcbids)[&particle];
+#ifdef LOCDEBUG
+      info() << " Particle2LHCbIDs map leads to the lhcbid hit vector of size " << hits.size() << endmsg;
+#endif
       if ( !hits.empty() ){
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " addToOfflineSignal Particle via Particle2LHCbIDs map " << endmsg;
@@ -214,6 +245,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
         return;
       }
     }
+#ifdef LOCDEBUG
+      info() << " Particle2LHCbIDs map method did not succeed " << endmsg;
+#endif
     const std::vector<const LHCb::Particle*> & daughters = particle.daughtersVector();
     if ( !daughters.empty() ){
       for(std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
@@ -221,12 +255,21 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle 
           const LHCb::Particle & part = *(*p);
           if ( msgLevel(MSG::VERBOSE) )
             verbose() << " addToOfflineSignal Particle via daughter " << endmsg;
+#ifdef LOCDEBUG
+      info() << "    adding hits via daughter " << endmsg;
+#endif
           addToOfflineInput( part );
         }
       }
     } else if( m_useParticle2LHCbIDs == 1 ){
+#ifdef LOCDEBUG
+      info() << "     will try reco objects instead " << endmsg;
+#endif
       if( addToSignal( particle ) )clearCache();
     } else if( m_useParticle2LHCbIDs == 2 ){
+#ifdef LOCDEBUG
+      info() << "     failed to use the map and not allowed to use reco objects " << endmsg;
+#endif
       Error(" No /Particle2LHCbIDMap available for Particle with no daughters nor for mother",
             StatusCode::FAILURE, 10 ).setChecked();
       clearCache();

@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-11-23 - Tomasz Skwarnicki
+ - add some debugging code
+
 ! 2011-11-23 - Chris Jones
  - Fix gcc 4.6 warning
 
