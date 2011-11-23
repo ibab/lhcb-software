@@ -3,6 +3,9 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix trivial icc remark
+
 !========================= STKernel v2r6 2011-09-15 =========================
 ! 2011-09-08 Mark Tobin
  - Add enum to STDAQDefinitions to give number of strips/sector

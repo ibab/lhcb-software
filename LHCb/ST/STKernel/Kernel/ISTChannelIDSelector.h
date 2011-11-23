@@ -1,4 +1,3 @@
-// $Id: ISTChannelIDSelector.h,v 1.1 2009-02-17 10:08:17 mneedham Exp $
 // ============================================================================
 #ifndef STKERNEL_ISTCHANNELIDSELECTOR_H 
 #define STKERNEL_ISTCHANNELIDSELECTOR_H 1
@@ -10,7 +9,7 @@
 // forward declaration
 namespace LHCb{
   class  STChannelID;    
-};
+}
 static const InterfaceID IID_ISTChannelIDSelector ( "ISTChannelIDSelector" , 1 , 0 );
 
 /** @class ISTChannelID ISTChannelID.h
