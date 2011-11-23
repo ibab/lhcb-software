@@ -1,4 +1,3 @@
-// $Id: VeloCluster2MCParticleLinker.cpp,v 1.4 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloCluster2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( VeloCluster2MCParticleLinker )
 
 //=============================================================================
 // Standard constructor, initializes variables

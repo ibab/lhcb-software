@@ -66,5 +66,5 @@ namespace VeloTruthTool{
   void removeDeltaRays(const std::map<LHCb::MCHit*, double>& inputMap,
 		       std::map<LHCb::MCHit*, double>& outputMap);
   
-}; // VELOTRUTHTOOL_H
+} // VELOTRUTHTOOL_H
 #endif

@@ -1,8 +1,7 @@
-// $Id: VeloCluster2MCHitLinker.cpp,v 1.4 2006-03-23 10:58:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // event model
 #include "Event/VeloCluster.h"
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloCluster2MCHitLinker );
+DECLARE_ALGORITHM_FACTORY( VeloCluster2MCHitLinker )
 
 //=============================================================================
 // Standard constructor, initializes variables

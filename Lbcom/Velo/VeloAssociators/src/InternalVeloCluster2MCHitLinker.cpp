@@ -1,4 +1,3 @@
-// $Id: InternalVeloCluster2MCHitLinker.cpp
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@
 // 2006-02-07 : Tomasz Szumlak
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( InternalVeloCluster2MCHitLinker );
+DECLARE_ALGORITHM_FACTORY( InternalVeloCluster2MCHitLinker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +36,7 @@ InternalVeloCluster2MCHitLinker::InternalVeloCluster2MCHitLinker(
 //=============================================================================
 // Destructor
 //=============================================================================
-InternalVeloCluster2MCHitLinker::~InternalVeloCluster2MCHitLinker() {};
+InternalVeloCluster2MCHitLinker::~InternalVeloCluster2MCHitLinker() {}
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -77,5 +76,5 @@ StatusCode InternalVeloCluster2MCHitLinker::execute() {
   } // loop clusters
   //
   return (StatusCode::SUCCESS);
-};
+}
 //=============================================================================

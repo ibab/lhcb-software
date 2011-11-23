@@ -1,8 +1,7 @@
-// $Id: VeloDigit2MCParticleLinker.cpp,v 1.4 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "VeloDigit2MCParticleLinker.h"
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDigit2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( VeloDigit2MCParticleLinker )
 
 
 //=============================================================================
@@ -49,12 +48,13 @@ StatusCode VeloDigit2MCParticleLinker::execute() {
     digits=get<LHCb::VeloDigits>(m_inputDigits);
   }
   // MCParticles
-  LHCb::MCParticles* parts;
   if(!exist<LHCb::MCParticles>(m_inputParts)){
     error()<< "There is no parts container at: " << m_inputParts <<endmsg;
     return ( StatusCode::FAILURE );
   }else{
-    parts=get<LHCb::MCParticles>(m_inputParts);
+    // Load the target container, not sure if this is needed though
+    LHCb::MCParticles* parts=get<LHCb::MCParticles>(m_inputParts);
+    if(isDebug) debug()<< "size of parts: " << parts->size() <<endmsg;
   }
   // ==> create linker table VeloDigits -> MCParticles
   LinkerWithKey<LHCb::MCParticle, LHCb::VeloDigit> 

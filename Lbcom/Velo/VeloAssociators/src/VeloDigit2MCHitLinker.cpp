@@ -1,8 +1,7 @@
-// $Id: VeloDigit2MCHitLinker.cpp,v 1.3 2010-02-04 16:27:53 dhcroft Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "Event/VeloDigit.h"
 
 // local
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloDigit2MCHitLinker );
+DECLARE_ALGORITHM_FACTORY( VeloDigit2MCHitLinker )
 
 
 //=============================================================================

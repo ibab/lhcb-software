@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix trivial gcc46 warning and icc remarks
+ - Replace obsolete include DeclareFactoryEntries.h with AlgFactory.h
+
 !==================== VeloAssociators v2r4 2010-02-15 ===================
 ! 2010-02-15 - Marco Cattaneo
  - Remove obsolete file VeloAssociators_dll.cpp
