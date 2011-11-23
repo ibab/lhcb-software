@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix a gcc46 warning
+
 ! 2011-11-13 - Tomasz Skwarnicki
  - equip all decoders with list of RawEvent locations to try, try both without and with RootInTES
  - add RawEventLoocation::Trigger to the locations to try for RawEvent location in decoders

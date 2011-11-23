@@ -212,7 +212,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
 
   // ----------------------------------------- integrity checks -------------------------
   bool errors=false;
-  bool exInfOn=true;
+  //  bool exInfOn=true; // not used
   unsigned int ic;
   unsigned int nObj = objTypSubBank.numberOfObj();
 
@@ -292,7 +292,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
       mess << " HltSelRepRBExtraInfo fails integrity check with code " 
            << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
       Error( mess.str(), StatusCode::SUCCESS, 100 );
-      exInfOn=false; // the only non-fatal info corruption
+      //      exInfOn=false; // the only non-fatal info corruption. Set but not used!
     }
     if( nObj != extraInfoSubBank.numberOfObj() ){
       std::ostringstream mess;
@@ -300,7 +300,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
            << extraInfoSubBank.numberOfObj()
            << " which is different than HltSelRepRBObjTyp " << nObj ;
       Error( mess.str(), StatusCode::SUCCESS, 100 );
-      exInfOn=false;
+      //      exInfOn=false; // Set but not used!
     }
   }
 
