@@ -1,6 +1,3 @@
-// $Id: ClusterFunctors.h,v 1.11 2008-10-29 10:47:44 cattanem Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOUTILS_CLUSTERFUNCTORS_H
 #define CALOUTILS_CLUSTERFUNCTORS_H 1
@@ -110,7 +107,7 @@ namespace ClusterFunctors
                                                  e     , 
                                                  x     , 
                                                  y     ) ;
-  };
+  }
   
   /** Useful function to determine, if clusters have at least one common cell.
    *
@@ -150,7 +147,7 @@ namespace ClusterFunctors
                                                 end1   , 
                                                 begin2 , 
                                                 end2   );
-  };
+  }
   
   /** Useful function to locate the digit within the sequence
    *
@@ -169,7 +166,7 @@ namespace ClusterFunctors
                          const LHCb::CaloDigit* digit )
   {
     return CaloDataFunctor::clusterLocateDigit( begin , end , digit );
-  };
+  }
 
   /** Locate the digit with given status from sequence of digits
    *
@@ -188,7 +185,7 @@ namespace ClusterFunctors
                          const LHCb::CaloDigitStatus::Status& st )
   {
     return CaloDataFunctor::clusterLocateDigit( begin, end , st );
-  };
+  }
   
   /** The simple class/function to get the index of area in Calo  
    *  "calo-area" of cluster is defined as "calo-area" index of seed cell
@@ -248,7 +245,7 @@ namespace ClusterFunctors
   {
     ClusterArea evaluator;
     return evaluator( cluster );
-  };
+  }
 
   /** @class ClusterCalo 
    * 
@@ -312,7 +309,7 @@ namespace ClusterFunctors
   {
     ClusterCalo evaluator;
     return evaluator( cluster );
-  };
+  }
   
   /** @class  ClusterFromCalo
    * 
@@ -476,7 +473,7 @@ namespace ClusterFunctors
   {
     OnTheBoundary evaluator ;
     return evaluator( cluster );
-  };
+  }
   
   /** @class ZPosition
    *  
@@ -610,7 +607,7 @@ namespace ClusterFunctors
       }
     ///
     return StatusCode::SUCCESS;
-  };
+  }
 
   /** Helpful function to untag the sub cluster according to the 
    *  fractionc evaluated by "evaluator"
@@ -674,9 +671,9 @@ namespace ClusterFunctors
       }
     ///
     return StatusCode::SUCCESS;
-  };
+  }
   
-}; /// end of name space
+} // end of name space
 }
 
 

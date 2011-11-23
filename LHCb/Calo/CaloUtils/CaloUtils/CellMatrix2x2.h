@@ -1,20 +1,3 @@
-// $Id: CellMatrix2x2.h,v 1.5 2006-03-22 18:25:05 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.3  2004/05/27 13:40:03  cattanem
-// v4r7
-//
-// Revision 1.2  2001/11/08 20:04:22  ibelyaev
-//  update and bug fix
-//
-// Revision 1.1  2001/11/07 17:24:48  ibelyaev
-//  new utilities for determination of relative positions of cells
-// 
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX2X2_H 
 #define CALOUTILS_CELLMATRIX2X2_H 1
@@ -125,8 +108,6 @@ public:
         return 0 ;
         break;
       }
-    /// return ???
-    return 0 ;
   };
   
 protected:

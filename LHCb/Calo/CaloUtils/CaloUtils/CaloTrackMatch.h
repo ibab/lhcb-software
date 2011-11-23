@@ -1,4 +1,3 @@
-// $Id: CaloTrackMatch.h,v 1.11 2010-06-01 08:05:04 graven Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
@@ -135,7 +134,7 @@ protected:
     return 
       ROOT::Math::Similarity ( pm - m1.params() , m1.matrix() ) +
       ROOT::Math::Similarity ( pm - m2.params() , m2.matrix() ) ;
-  };
+  }
 
   /// get 2D-infomration form CaloPosition 
   inline StatusCode fill 

@@ -1,4 +1,3 @@
-// $Id: CovarianceEstimator.h,v 1.9 2008-10-29 10:47:44 cattanem Exp $ 
 // ===========================================================================
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
@@ -295,7 +294,7 @@ private:
  */
 inline MsgStream&    operator<<( MsgStream&                 stream , 
                                  const CovarianceEstimator& object ) 
-{ return object.printOut( stream );};
+{ return object.printOut( stream );}
 
 /** printout operator to standard gaudi stream 
  *  @param stream the reference to the standard stream 
@@ -304,10 +303,8 @@ inline MsgStream&    operator<<( MsgStream&                 stream ,
  */
 inline std::ostream& operator<<( std::ostream&              stream , 
                                  const CovarianceEstimator& object ) 
-{ return object.printOut( stream );};
+{ return object.printOut( stream );}
 
-// ===========================================================================
-// The End 
 // ===========================================================================
 #endif ///< CALOALGS_COVARIANCEESTIMATOR_H
 // ===========================================================================

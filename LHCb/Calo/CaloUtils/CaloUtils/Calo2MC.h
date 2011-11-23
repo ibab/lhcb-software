@@ -1,4 +1,3 @@
-// $Id: Calo2MC.h,v 1.3 2008-12-10 12:29:34 cattanem Exp $
 #ifndef CALO2MC_H 
 #define CALO2MC_H 1
 
@@ -13,7 +12,7 @@ template <class FROM,class TO> class LinkerWithKey;
 template <class FROM,class TO> class LinkedTo;
 namespace LHCb{ 
   template <class FROM,class TO,class WEIGHT> class RelationWeighted1D;
-};
+}
 
 /** @class Calo2MC Calo2MC.h Event/Calo2MC.h
  *  
@@ -34,8 +33,8 @@ namespace LHCb {
 
     //    typedef RelationWeighted1D<TrgCaloCluster,MCParticle,float> TrgClusterTable ;
     
-  };
+  }
   
-};
+}
 
 #endif // CALO2MC_H 

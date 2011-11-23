@@ -1,4 +1,3 @@
-// $Id: CaloMCTools1.h,v 1.4 2007-08-27 14:04:38 odescham Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -37,7 +36,7 @@ namespace GaudiUtils
     private:
       std::less<const LHCb::MCParticle*> m_less;
   };
-} ;
+}
 
 
 namespace CaloMCTools 
@@ -128,7 +127,7 @@ namespace CaloMCTools
       }
     ///
     return energy ;
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -166,7 +165,7 @@ namespace CaloMCTools
       }
     // 
     return energy ;
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -202,7 +201,7 @@ namespace CaloMCTools
     AllEnergyFromMCParticle<LHCb::MCCaloDigit> evaluator;
     // use evaluator 
     return evaluator( mcdigit , particle );
-  };
+  }
   // ==========================================================================
   
   // ==========================================================================
@@ -242,7 +241,7 @@ namespace CaloMCTools
         energy += evaluator( digit , particle ) ;  
       }
     return energy ;
-  };
+  }
   // ==========================================================================
   
   /** the auxilalry type to keep all MC history for calo objects 
@@ -346,7 +345,7 @@ namespace CaloMCTools
     (*mcmap())[ particle ] += hit -> activeE() ;
     
     return StatusCode::SUCCESS ;                            // RETURN    
-  };
+  }
   
   
   /** The specialization of the most efficient generic 
@@ -396,7 +395,7 @@ namespace CaloMCTools
 
 
     return StatusCode::SUCCESS ;                             // RETURN 
-  };
+  }
 
   /** The specialization of the most efficient generic 
    *  structure for extraction 
@@ -449,7 +448,7 @@ namespace CaloMCTools
     
     // use it!
     return evaluator( mcdigit );
-  };
+  }
 
   
   /** The specialization of the most efficient generic 
@@ -498,7 +497,7 @@ namespace CaloMCTools
       }
     
     return StatusCode::SUCCESS ;    
-  };
+  }
   
   /** Auxillary function to update the CaloMCTools::CaloMCMap object 
    *  It adds the energy deposition from the given particle to 
@@ -531,10 +530,8 @@ namespace CaloMCTools
     return StatusCode::SUCCESS ;
   }
   
-}; // end of namespace 
+} // end of namespace 
 
-// ============================================================================
-// The END 
 // ============================================================================
 #endif // EVENT_CALOMCTOOLS1_H
 // ============================================================================

@@ -1,4 +1,3 @@
-// $Id: CellMatrix.h,v 1.8 2007-01-15 07:52:46 cattanem Exp $
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX_H 
 #define CALOUTILS_CELLMATRIX_H 1
@@ -64,7 +63,7 @@ class CellMatrix :
    */
   template <class TYPE>
     inline TYPE maxi ( const TYPE& a , const TYPE& b ) const 
-    { return a < b ? b : a ; };
+    { return a < b ? b : a ; }
   
   /** calculate the intersection area for 2 squares on the plane
    *  @param   center1   center point of the first  square

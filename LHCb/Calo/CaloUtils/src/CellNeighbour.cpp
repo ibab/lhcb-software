@@ -1,17 +1,3 @@
-// $Id: CellNeighbour.cpp,v 1.4 2006-03-22 18:25:06 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.2  2004/10/22 09:29:08  ibelyaev
-//  bug fix in the evaluation of energy sharing fractions
-//
-// Revision 1.1  2001/11/25 15:26:21  ibelyaev
-//  update for newer CaloKernel package
-// 
 // ============================================================================
 // Include files
 #include <algorithm>
@@ -35,13 +21,13 @@
  */
 // ============================================================================
 CellNeighbour::CellNeighbour( const DeCalorimeter* Det )
-  : CellMatrix( Det ){};
+  : CellMatrix( Det ){}
 
 // ============================================================================
 /** Destructor 
  */
 // ============================================================================
-CellNeighbour::~CellNeighbour(){}; 
+CellNeighbour::~CellNeighbour(){}
 
 // ============================================================================
 /** the major method. It returns "true" if the cell 
@@ -68,5 +54,5 @@ double CellNeighbour::operator()
     std::find ( neighbours.begin () , neighbours.end () , cell ) ;
   ///
   return neighbours.end() == it ? 0.0 : 1.0 ;
-};
+}
 

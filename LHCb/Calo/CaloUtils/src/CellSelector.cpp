@@ -14,7 +14,7 @@ void CellSelector::setDet(const DeCalorimeter* det ){
   m_cell2x2.setDet( det );
   m_cellSwissCross.setDet( det );
   m_cellNeighbour.setDet( det );
-};
+}
 
 
 // destructor

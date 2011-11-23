@@ -1,20 +1,3 @@
-// $Id: CellSwissCross.cpp,v 1.5 2006-03-22 18:25:06 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.3  2004/10/22 09:29:08  ibelyaev
-//  bug fix in the evaluation of energy sharing fractions
-//
-// Revision 1.2  2001/11/22 16:02:34  ibelyaev
-//  new utilities
-//
-// Revision 1.1  2001/11/07 17:24:49  ibelyaev
-//  new utilities for determination of relative positions of cells
-// 
 // ============================================================================
 // Include files
 // CaloDet 
@@ -36,7 +19,7 @@
 /** destructor 
  */
 // ============================================================================
-CellSwissCross::~CellSwissCross() {};
+CellSwissCross::~CellSwissCross() {}
 
 // ============================================================================
 /** if cells belong to different areas
@@ -84,6 +67,6 @@ double CellSwissCross::treatDifferentAreas ( const LHCb::CaloCellID& seed ,
   if ( Area <= sizeMin )       { return 0; }  ///< RETURN 
   ///
   return Area / cellArea  ;
-};
+}
 
 

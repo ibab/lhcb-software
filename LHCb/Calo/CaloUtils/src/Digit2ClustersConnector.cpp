@@ -1,4 +1,3 @@
-// $Id: Digit2ClustersConnector.cpp,v 1.5 2007-01-15 07:53:00 cattanem Exp $ 
 // ===========================================================================
 #define CALOUTILS_DIGIT2CLUSTERSCONNECTOR_CPP 1 
 // ===========================================================================
@@ -36,7 +35,7 @@ Digit2ClustersConnector::Digit2ClustersConnector( Clusters*    clus         ,
       if( sc.isFailure() )
         { throw CaloException( "Digit2ClustersConnector! corrupted data") ; }
     };  
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -57,7 +56,7 @@ StatusCode Digit2ClustersConnector::addCluster( LHCb::CaloCluster* cluster )
   ///   
   return StatusCode::SUCCESS;
   ///
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -77,7 +76,7 @@ StatusCode Digit2ClustersConnector::applyCutOff( const unsigned int CutOff )
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 //  ===========================================================================
 
 // ============================================================================

@@ -1,29 +1,3 @@
-// $Id: Digit2ClustersConnector.h,v 1.4 2006-04-19 16:33:20 odescham Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/03/22 18:25:06  odescham
-// Migration to new Event Model
-//
-// Revision 1.2  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.1  2002/04/02 10:59:30  ibelyaev
-//  update for new event model
-//
-// Revision 1.2  2002/03/13 15:05:18  ibelyaev
-//  fix the problems with std::map on Win2K platform
-//
-// Revision 1.1  2001/11/02 14:34:59  ibelyaev
-// 2 new classes are imported from CaloAlgs package
-//
-// Revision 1.2  2001/07/12 21:54:22  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.1  2001/07/02 17:42:34  ibelyaev
-// package restructurization
-//
 // ===========================================================================
 #ifndef CALOEVENT_DIGIT2CLUSTERSCONNECTOR_H 
 #define CALOEVENT_DIGIT2CLUSTERSCONNECTOR_H 1
@@ -94,7 +68,7 @@ public:
 	  while( first != last && sc.isSuccess() ) { sc = addCluster( *first++ ); }
 	  if( sc.isSuccess() ) { sc = applyCutOff( Cut ) ; }
 	  return sc;  
-  };
+  }
   
   /// destructor
   virtual ~Digit2ClustersConnector( );

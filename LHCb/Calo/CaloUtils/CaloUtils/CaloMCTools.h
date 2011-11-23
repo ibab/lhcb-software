@@ -1,4 +1,3 @@
-// $Id: CaloMCTools.h,v 1.2 2006-06-14 14:21:55 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS_H 
 #define EVENT_CALOMCTOOLS_H 1
@@ -51,7 +50,7 @@ namespace CaloMCTools
     const LHCb::MCVertex*   vertex = second->originVertex() ;
     // start the recursion  
     return ( 0 == vertex ) ? false : isParent( first , vertex->mother() );
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -118,7 +117,7 @@ namespace CaloMCTools
   {
     if( 0 == hit || 0 == particle ) { return 0 ; }
     return isParent( particle , hit->particle() ) ? hit->activeE() : 0.0 ; 
-  };
+  }
   // ==========================================================================
 
 
@@ -153,7 +152,7 @@ namespace CaloMCTools
       { energy += evaluator( *ihit ,  particle ) ; }
     ///
     return energy ;
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -187,7 +186,7 @@ namespace CaloMCTools
     // go to MC history! 
     EnergyFromMCParticle<LHCb::MCCaloDigit> evaluator;   // the evaluator! 
     return evaluator( mcdigit , particle );
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -222,7 +221,7 @@ namespace CaloMCTools
       { energy += evaluator( entry->digit() , particle ); }
     //
     return energy;
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -260,7 +259,7 @@ namespace CaloMCTools
       { energy += evaluator1( *cluster , particle ); }
     //
     return energy;
-  };
+  }
   // ==========================================================================
   
   // ==========================================================================
@@ -288,7 +287,7 @@ namespace CaloMCTools
     EnergyFromMCParticle<TYPE> evaluator;
     // use the created evaluator! 
     return evaluator( object , particle );
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -415,7 +414,7 @@ namespace CaloMCTools
     FromMCParticle<TYPE> evaluator( particle , threshold );
     // use the evaluator 
     return evaluator( object );
-  };
+  }
   // ==========================================================================
   
   // ==========================================================================
@@ -487,7 +486,7 @@ namespace CaloMCTools
   {
     return ( 0 == hit ) ?  
       ParticlePair() : ParticlePair( hit->activeE() , hit->particle() ) ;
-  };
+  }
   // ==========================================================================
 
   // ==========================================================================
@@ -526,7 +525,7 @@ namespace CaloMCTools
       }
     ///
     return output;  
-  };
+  }
   
   // ==========================================================================
   /** The template specialisation of class LargestDeposition
@@ -560,7 +559,7 @@ namespace CaloMCTools
     // create evaluator 
     LargestDeposition<LHCb::MCCaloDigit> evaluator;
     return evaluator( mcdigit );
-  };
+  }
   // ==========================================================================
   
   // ==========================================================================
@@ -621,7 +620,7 @@ namespace CaloMCTools
       }
     ///
     return output ;
-  };
+  }
   // ==========================================================================
 
 
@@ -644,12 +643,10 @@ namespace CaloMCTools
     LargestDeposition<TYPE> evaluator;
     // use it! 
     return evaluator( object );
-  };
+  }
   
-}; // The end of namespace CaloMCTools 
+} // The end of namespace CaloMCTools 
 
-// ============================================================================
-// The End 
 // ============================================================================
 #endif // EVENT_CALOMCTOOLS_H
 // ============================================================================

@@ -1,4 +1,3 @@
-// $Id: CaloTrackAlg.cpp,v 1.10 2010-03-08 02:01:19 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,11 +36,11 @@ CaloTrackAlg::CaloTrackAlg
   stat.push_back( LHCb::Track::Fitted);
   if( LHCb::CaloAlgUtils::hltContext(context()) )stat.push_back( LHCb::Track::FitStatusUnknown);
   setProperty ( "AcceptedFitStatus" , stat).ignore();
-} ;
+}
 // ============================================================================
 /// destructor
 // ============================================================================
-CaloTrackAlg::~CaloTrackAlg() {};
+CaloTrackAlg::~CaloTrackAlg() {}
 // ============================================================================
 /// standard algorithm initialization 
 // ============================================================================
@@ -54,7 +53,7 @@ StatusCode CaloTrackAlg::initialize()
   { info () << m_use << endreq ; } ;
   //
   return StatusCode::SUCCESS ;  
-};
+}
 // ============================================================================
 /// standard algorithm finalization 
 StatusCode CaloTrackAlg::finalize  () { return GaudiAlgorithm::finalize() ; }

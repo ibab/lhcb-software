@@ -1,4 +1,3 @@
-// $Id: ClusterFunctors.cpp,v 1.6 2007-01-15 07:53:00 cattanem Exp $ 
 // ===========================================================================
 #define CALOUTILS_CLUSTERFUNCTORS_CPP 1
 // ===========================================================================
@@ -33,7 +32,7 @@ double  LHCb::ClusterFunctors::energy
   if( 0 == cl ||  cl->entries().empty() ) { return 0 ; }
   return 
 	  ClusterFunctors::energy( cl->entries().begin() , cl->entries().end() ) ;
-};
+}
 
 // ===========================================================================
 /**    useful function to determine, if clusters have 
@@ -61,7 +60,7 @@ bool LHCb::ClusterFunctors::overlapped
   ///
   return 
     ( cl1->entries().end() == p.first  ) ? false : true ;
-};
+}
 
 
 // ===========================================================================
@@ -92,7 +91,7 @@ StatusCode  LHCb::ClusterFunctors::calculateEXY
   return ClusterFunctors::calculateEXY( cl->entries().begin() , 
                                         cl->entries().end  () , 
                                         de , e , x , y       );
-};
+}
 
 // ===========================================================================
 /** throw the exception
@@ -107,7 +106,7 @@ StatusCode LHCb::ClusterFunctors::throwException
   if( true ) { throw CaloException(" ClusterFunctors::" + message ); }
   ///
   return StatusCode::FAILURE ;
-};
+}
 
 
 // ===========================================================================
