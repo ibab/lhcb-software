@@ -33,22 +33,19 @@ public:
   virtual unsigned int odeErrorWord(int T1, int BX) {return T1+BX;}
   virtual int bankVersion() {return 0;}
   virtual void dumpRawBanks() {}
-  virtual void dumpFrame(int Tell1, int ODE) { Tell1=ODE;}
+  virtual void dumpFrame(int, int) {}
   virtual bool mappingIsOld() {return false;}
   virtual int l0id() {return 0;}
   virtual int bcn() {return 0;}
   virtual int cbcn() {return 0;}
-  virtual void setMultiBunch(int bxPerSide) {bxPerSide=0;}
+  virtual void setMultiBunch(int) {}
   virtual void unsetMultiBunch() {}
   virtual bool multiBunch()  {return false;}
   virtual int mbExtraBXPerside() {return 0;}
   virtual bool centralBX() {return true;}
   virtual bool firstBX() {return true;}
   virtual bool lastBX() {return true;}
-  virtual LHCb::MuonTileID* tileFromODE(int ODEnumber,
-                                        int ODEchannel) {
-    ODEnumber=ODEchannel;
-    return NULL; }
+  virtual LHCb::MuonTileID* tileFromODE(int, int) { return NULL; }
   virtual int odeIndex(int ODEnumber) {return 0*ODEnumber;}
   virtual int channelsPerQuadrant(int station,
 				  int region) {return 0*station*region;}
@@ -64,16 +61,14 @@ public:
                            int region)  {return (float)(0.*station*region);}
   virtual float padSizeYvx(int station,			    
                            int region)  {return (float)(0.*station*region);}
-  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q,
-                                          unsigned int s,
-                                          unsigned int r,
-                                          short int io,
-                                          unsigned int ch) 
-  { q=s=r=ch;io=0; return NULL;}
-  virtual std::string& ecsChamberName(int region,
-                                      int chamberNumber) 
-  { region=chamberNumber;
-    nullstring="";
+  virtual LHCb::MuonTileID* tileFromLogCh(unsigned int,
+                                          unsigned int,
+                                          unsigned int,
+                                          short int,
+                                          unsigned int) 
+  { return NULL;}
+  virtual std::string& ecsChamberName(int, int) 
+  { nullstring="";
     return nullstring;}
   virtual bool completeEvent() {return true;}
 

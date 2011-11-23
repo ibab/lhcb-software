@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Marco Cattaneo
+ - Fix gcc46 warnings
+
 !========================= MuonTrackRec v3r6 2011-11-08 =========================
 ! 2011-10-11 - Marco Cattaneo
  - Fix icc warning and remarks
