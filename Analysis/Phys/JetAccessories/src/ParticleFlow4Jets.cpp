@@ -373,10 +373,10 @@ StatusCode ParticleFlow4Jets::execute() {
     BOOST_FOREACH(const LHCb::Particle* MPi0, *m_particleContainers["MergedPi0"][0] ){
       
       const LHCb::ProtoParticle* n_pp = MPi0->proto();
-      if (n_pp == NULL) continue;
+      if ( !n_pp ) continue;
       const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
       const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
-      if(hypoClusters[0]==NULL) continue;
+      if ( !hypoClusters[0] ) continue;
 
       // If the cluster have already been tagged, skip.
       if (BannedECALClusters.count(hypoClusters[0].target()->seed().all())>0.5)continue;
@@ -428,7 +428,7 @@ StatusCode ParticleFlow4Jets::execute() {
         const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
         const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
         // Store the cell ID
-	if(hypoClusters[0]==NULL) continue;
+        if ( !hypoClusters[0] ) continue;
 
         caloCells.push_back(hypoClusters[0].target()->seed().all());
         
@@ -479,7 +479,7 @@ StatusCode ParticleFlow4Jets::execute() {
       const SmartRefVector< LHCb::CaloHypo > &  caloHypos =	n_pp -> calo();
       const SmartRefVector< LHCb::CaloCluster > & hypoClusters = 	caloHypos[0]->clusters ();
       // Use Ttrack banning?
-      if(hypoClusters[0]==NULL) continue;
+      if ( !hypoClusters[0] ) continue;
 
       bool isTbanned = false;
       if ( m_banFromTTrack && BannedECALClusters.count(hypoClusters[0].target()->seed().all())<0.5){
@@ -543,7 +543,7 @@ StatusCode ParticleFlow4Jets::execute() {
     verbose()<<"m_clusterContainers.count('Hcal') "<<m_clusterContainers.count("Hcal")<<endreq;
     if (m_clusterContainers.count("Hcal") > 0.5 ){
       
-      BOOST_FOREACH(const  LHCb::CaloCluster* cluster, *m_clusterContainers["Hcal"]){
+      BOOST_FOREACH(const LHCb::CaloCluster* cluster, *m_clusterContainers["Hcal"]){
         
         
         if ( 0 == cluster ) { continue ; }
@@ -563,7 +563,7 @@ StatusCode ParticleFlow4Jets::execute() {
         double py =  cluen*y/sqrt(x*x + y*y + z*z);
         double pz =  cluen*z/sqrt(x*x + y*y + z*z);
         
-        Gaudi::LorentzVector pclu = Gaudi::LorentzVector(px,py,pz,cluen);
+        //Gaudi::LorentzVector pclu = Gaudi::LorentzVector(px,py,pz,cluen);
         
         LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
         hypo->addToClusters(cluster);

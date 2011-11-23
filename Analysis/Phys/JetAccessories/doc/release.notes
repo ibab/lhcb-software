@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-11-23 - Chris Jones
+ - Fix various gcc 4.6 warnings
+
 !========================= JetAccessories v1r2 2011-11-10 =========================
 
 ! 2011-10-28 - Victor Coco
