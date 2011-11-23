@@ -364,7 +364,6 @@ unsigned int SubstitutePID::correctP4 ( LHCb::Particle* p )
       pzSum += daughter->momentum().Pz();
     }    
     // Correct momentum
-    Gaudi::LorentzVector oldMom = p->momentum () ;
     Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
     newMom.SetXYZT ( pxSum , pySum , pzSum , energySum ) ;
     p->setMomentum(newMom) ;

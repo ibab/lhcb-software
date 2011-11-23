@@ -3,6 +3,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-11-23 - Chris Jones
+ - Fix a gcc 4.6 warning
+
 ! 2011-11-20 - Vanya Belyaev
 
  - add three related components for pi0-veto
