@@ -80,10 +80,15 @@ PVSeed3DTool::~PVSeed3DTool() {}
 //=============================================================================
 // getSeeds
 //=============================================================================
-void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds) {
+void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+			    const Gaudi::XYZPoint& beamspot,
+			    std::vector<Gaudi::XYZPoint>& seeds) {
 
   if(inputTracks.size() < 3 ) return; 
 
+  if(msgLevel(MSG::DEBUG))  {
+     debug() << " This is 3D PV seeding. Beam spot is ignored. BS: " << beamspot << endmsg;
+  }
 
   std::vector<seedPoint> seed_points;
   std::vector<seedTrack> seed_tracks;

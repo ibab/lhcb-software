@@ -61,7 +61,9 @@ public:
 
   virtual ~PVSeedTool( ); ///< Destructor
 
-  void getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds);  
+  void getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+		const Gaudi::XYZPoint& beamspot,
+		std::vector<Gaudi::XYZPoint>& seeds);  
 
 protected:
 
@@ -70,7 +72,7 @@ private:
   void findClusters(std::vector<vtxCluster>& vclus, std::vector<double>& zclusters);
   void errorForPVSeedFinding(double tx, double ty, double &sigzaq);
 
-  double zCloseBeam(const LHCb::Track* track);
+  double zCloseBeam(const LHCb::Track* track, const Gaudi::XYZPoint& beamspot);
   void print_clusters(std::vector<vtxCluster*>& pvclus);
 
   std::vector<pair_to_merge*> m_pvecp2m;

@@ -88,7 +88,9 @@ PVSeedTool::~PVSeedTool() {};
 //=============================================================================
 // getSeeds
 //=============================================================================
-void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds) {
+void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+			  const Gaudi::XYZPoint& beamspot,
+			  std::vector<Gaudi::XYZPoint>& seeds) {
 
   if(inputTracks.size() < 3 ) return; 
 
@@ -107,9 +109,10 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vec
       errorForPVSeedFinding(ptr->firstState().tx(), 0.0, sigsq);
     }
     else {
-      zclu = zCloseBeam(ptr); 
+      zclu = zCloseBeam(ptr,beamspot); 
       errorForPVSeedFinding(ptr->firstState().tx(), ptr->firstState().ty(),sigsq);
     }
+    if ( fabs(zclu)>2000.) continue;
     vtxCluster clu;
     clu.z = zclu;
     clu.sigsq = sigsq;
@@ -121,7 +124,7 @@ void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vec
   findClusters(vclusters,zseeds);
 
   for ( std::vector<double>::iterator iz =  zseeds.begin(); iz != zseeds.end(); iz++ ) {
-    Gaudi::XYZPoint ep(0., 0., *iz);
+    Gaudi::XYZPoint ep(beamspot.X(), beamspot.Y(), *iz);
     seeds.push_back(ep);
   }
 
@@ -323,19 +326,39 @@ void PVSeedTool::print_clusters(std::vector<vtxCluster*>& pvclus) {
 
 }
 
-double PVSeedTool::zCloseBeam(const LHCb::Track* track){
+double PVSeedTool::zCloseBeam(const LHCb::Track* track, const Gaudi::XYZPoint& beamspot){
    
 
-  Gaudi::XYZVector unitVect;
-  unitVect = track->firstState().slopes().Unit();
-  LHCb::State& stateG = track->firstState(); 
+//  Gaudi::XYZVector unitVect;
+//  unitVect = track->firstState().slopes().Unit();
+//  LHCb::State& stateG = track->firstState(); 
+//
+//  double zclose = stateG.z() - unitVect.z() * 
+//         (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /
+//         (1.0 - pow(unitVect.z(),2)); 
+//
+//  return zclose;
 
-  double zclose = stateG.z() - unitVect.z() * 
-         (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /
-         (1.0 - pow(unitVect.z(),2)); 
+  Gaudi::XYZPoint tpoint = track->position();
+  Gaudi::XYZVector tdir = track->slopes();
 
-  return zclose;
+  double wx = ( 1. + tdir.x() * tdir.x() ) / track->firstState().errX2();
+  double wy = ( 1. + tdir.y() * tdir.y() ) / track->firstState().errY2();
 
+  double x0 = tpoint.x() - tpoint.z() * tdir.x() - beamspot.X();
+  double y0 = tpoint.y() - tpoint.z() * tdir.y() - beamspot.Y();
+  double den = wx * tdir.x() * tdir.x() + wy * tdir.y() * tdir.y();
+  double zAtBeam = - ( wx * x0 * tdir.x() + wy * y0 * tdir.y() ) / den ;
+
+  double xb = tpoint.x() + tdir.x() * ( zAtBeam - tpoint.z() ) - beamspot.X();
+  double yb = tpoint.y() + tdir.y() * ( zAtBeam - tpoint.z() ) - beamspot.Y();
+  double rAtBeam = sqrt( xb*xb + yb*yb );
+
+  if (rAtBeam < 0.5) {
+    return zAtBeam;
+  } else {
+    return 10e8;
+  }
 }
 
 //=============================================================================

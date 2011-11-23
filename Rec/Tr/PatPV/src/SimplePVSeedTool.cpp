@@ -38,9 +38,15 @@ SimplePVSeedTool::~SimplePVSeedTool() {};
 //=============================================================================
 // getSeeds
 //=============================================================================
-void SimplePVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds) {
+void SimplePVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+				const Gaudi::XYZPoint& beamspot,
+				std::vector<Gaudi::XYZPoint>& seeds) {
 
   if(inputTracks.size() < 3 ) return; 
+
+  if(msgLevel(MSG::DEBUG))  {
+     debug() << " Beam spot is ignored. BS: " << beamspot << endmsg;
+  }
 
   std::vector<double> zseeds;
   Gaudi::XYZPoint ep(0., 0., 0.);

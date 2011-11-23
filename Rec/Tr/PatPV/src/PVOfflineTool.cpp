@@ -225,7 +225,8 @@ StatusCode PVOfflineTool::reconstructMultiPVWithWeightsFromTracks(std::vector<co
   
   if (m_saveSeedsAsPV) {
     std::vector<Gaudi::XYZPoint> seeds;
-    m_pvSeedTool->getSeeds(rtracks, seeds); 
+    Gaudi::XYZPoint beamspot(m_beamSpotX, m_beamSpotY, 0.0);
+    m_pvSeedTool->getSeeds(rtracks, beamspot, seeds); 
     storeDummyVertices(seeds, rtracks, outvtxvec);
     return StatusCode::SUCCESS;
   }
@@ -239,7 +240,8 @@ StatusCode PVOfflineTool::reconstructMultiPVWithWeightsFromTracks(std::vector<co
     std::vector<Gaudi::XYZPoint>::iterator is;
 
     std::vector<Gaudi::XYZPoint> seeds;
-    m_pvSeedTool->getSeeds(rtracks, seeds);  
+    Gaudi::XYZPoint beamspot(m_beamSpotX, m_beamSpotY, 0.0);
+    m_pvSeedTool->getSeeds(rtracks, beamspot, seeds);  
 
     //TIMEBOMB fixed
     if (m_pvfit==NULL) 

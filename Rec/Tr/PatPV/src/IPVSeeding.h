@@ -26,6 +26,7 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IPVSeeding; }
   virtual void getSeeds(std::vector<const LHCb::Track*>& inputTracks, 
+                        const Gaudi::XYZPoint& beamspot,
                         std::vector<Gaudi::XYZPoint>& seeds) =0;
 
  

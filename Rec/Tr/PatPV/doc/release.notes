@@ -4,6 +4,12 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2011-11-23 - Mariusz Witek
+- introduce beamspot constraint into PVSeedTool to make PatPV3D faster which gives
+  - a factor between 2 or 3 in exe time when switching from 3D PVSeed3DTool to PVSeedTool
+  - lower false PV rate and lower PV->SV mistakes
+  - same performance for other parameters like resolution and PV efficiency
+
 !========================= PatPV v3r20 2011-08-31 =========================
 ! 2011-08-29 - Mariusz Witek
 - add standard PV configuration class to PVConf: StandardPV to activate beam spot radial cut
