@@ -38,7 +38,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   , m_offlineCombiner("OfflineVertexFitter" )
   , m_onlineCombiner("LoKi::FastVertexFitter")
   , m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
-  , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_/OnlineP2PVWithIP")
+  , m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
   , m_offlineTESTrunk("Phys")
   , m_onlineTESTrunk("Hlt2")
 {
