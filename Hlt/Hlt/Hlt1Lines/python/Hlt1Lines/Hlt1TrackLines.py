@@ -31,18 +31,18 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     __slots__ = {       'AllL0_PT'          : 1800.
                     ,   'AllL0_P'           : 10000.
                     ,   'AllL0_IP'          : 0.100
-                    ,   'AllL0_IPChi2'      : 16
-                    ,   'AllL0_TrChi2'      : 3
-                    ,   'AllL0_TrNTHits'    : 16
-                    ,   'AllL0_Velo_NHits'  : 9
-                    ,   'AllL0_Velo_Qcut'   : 3
+                    ,   'AllL0_IPChi2'      : 16.
+                    ,   'AllL0_TrChi2'      : 3.
+                    ,   'AllL0_TrNTHits'    : 16.
+                    ,   'AllL0_Velo_NHits'  : 9.
+                    ,   'AllL0_Velo_Qcut'   : 3.
                     ,   'AllL0_GEC'         : 'Loose'
                     ,   'AllL0_ValidateTT'  : False
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
-                    ,   'Muon_IPChi2'       : 9
-                    ,   'Muon_TrChi2'       : 3
+                    ,   'Muon_IPChi2'       : 9.
+                    ,   'Muon_TrChi2'       : 3.
                     ,   'Muon_TrNTHits'     : 0 #OFF
                     ,   'Muon_Velo_NHits'   : 0 #OFF
                     ,   'Muon_Velo_Qcut'    : 999 #OFF
@@ -51,11 +51,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 10000.
                     ,   'Photon_IP'         : 0.100
-                    ,   'Photon_IPChi2'     : 16
-                    ,   'Photon_TrChi2'     : 3
-                    ,   'Photon_TrNTHits'   : 15
-                    ,   'Photon_Velo_NHits' : 9 
-                    ,   'Photon_Velo_Qcut'  : 4 
+                    ,   'Photon_IPChi2'     : 16.
+                    ,   'Photon_TrChi2'     : 3.
+                    ,   'Photon_TrNTHits'   : 15.
+                    ,   'Photon_Velo_NHits' : 9.
+                    ,   'Photon_Velo_Qcut'  : 4. 
                     ,   'Photon_L0Channels' : "Photon,Electron"
                     ,   'Photon_GEC'        : 'Loose'
                     ,   'Photon_ValidateTT' : False
