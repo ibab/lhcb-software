@@ -22,15 +22,9 @@
 #
 # =============================================================================
 package       BenderSys
-version       v18r2
+version       v18r3
 
 author        Vanya BELYAEV
-
-# =============================================================================
-# TEMPORARILY, to be removed ASAP:
-# =============================================================================
-use           LHCbAlgs       v2r43   Kernel
-use           AnalysisPython v2r6    Phys 
 
 
 # =========== Bender Application itself =======================================

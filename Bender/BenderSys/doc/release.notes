@@ -21,6 +21,15 @@
 ! with the smear campaign of Dr.O.Callot et al.: 
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
+</PRE>
+
+<A NAME=v18r3>2011-11-23 Bender v18r3 based on the DaVinci v29r2</A>
+
+<PRE>		
+The version is rather similar  to v18r2, but it is based on fresh DaVinci v29r2
+</PRE>
+
+
 
 </PRE>
 <A NAME=v18r2>2011-11-01 Bender v18r2 based on the DaVinci v29r1</A>
@@ -29,6 +38,8 @@
 <PRE>		
 The version is rather similar  to v18r1, but it is based on fresh DaVinci v29r1
 and thus in this way it picks up many goodies and fixes.
+
+
 
 <li> It also contains many useful fixes for dst-explorer, in particular (if available)
       it accepts the bare LFNs for input.
