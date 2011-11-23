@@ -1,4 +1,3 @@
-// $Id: STRawBankMap.h,v 1.1 2008-06-25 06:55:46 mneedham Exp $
 #ifndef _STRawBankMap_H_
 #define _STRawBankMap_H_
 
@@ -51,6 +50,6 @@ inline LHCb::RawBank::BankType stringToType(const std::string& type){
 
 
 
-};
+}
 
 #endif // _STRawBankMap_H_

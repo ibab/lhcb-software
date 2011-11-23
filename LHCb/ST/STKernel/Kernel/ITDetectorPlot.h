@@ -42,6 +42,6 @@ public:
     int m_xBinsPerSector;
 
   };
-};
+}
 
 #endif // STDETECTORPLOT_H 

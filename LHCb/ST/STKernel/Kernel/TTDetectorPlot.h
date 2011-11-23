@@ -36,6 +36,6 @@ public:
     Bins toBins(const DeTTSector* sector) const;
          
   };
-};
+}
 
 #endif // STDETECTORPLOT_H 
