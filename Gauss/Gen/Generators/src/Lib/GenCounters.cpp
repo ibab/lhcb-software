@@ -203,9 +203,9 @@ void GenCounters::setupDHadronCountersNames( DHadronCNames & DC ,
 //=============================================================================
 void GenCounters::setupExcitedCountersNames( ExcitedCNames & B , 
                                              const std::string & root ) {
-    B[ _0star ] = root ;
-    B[ _1star ] = root + "*" ;
-    B[ _2star ] = root + "**" ;
+  B[ _0star ] = root + "(L=0,J=0)";
+    B[ _1star ] = root + "* (L=0, J=1)" ;
+    B[ _2star ] = root + "** (L=1, J=0,1,2)" ;
 }
 
 //=============================================================================
@@ -257,7 +257,7 @@ void GenCounters::updateExcitedStatesCounters
       if ( 0 == thePid.lSpin() ) {
         if ( 1 == thePid.jSpin() ) ++thecExcitedC[ _0star ] ;
         else ++thecExcitedC[ _1star ] ;
-      } else ++thecExcitedC[ _2star ] ;
+        } else ++thecExcitedC[ _2star ] ;
     }
   }       
 }
