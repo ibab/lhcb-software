@@ -404,10 +404,10 @@ def callUpdateCommand(project, version):
     projcmds = _update_commands.get((project,version), None)
     if projcmds :
         for c in projcmds :
+            log.info("Executing Update for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
             rc = systemCall("%s" % c[0], workdir=c[1], env=_post_install_env)
-            log.info("Executing PostInstall for %s %s: \"%s\" in %s" % (project, version, c[0], c[1]))
             if rc != 0 :
-                log.error("PostInstall command for %s %s returned %d" % rc)
+                log.error("Update command for %s %s returned %d" % rc)
     else :
         log.debug("Project %s %s has no postinstall command" % (project, version))
     return rc
