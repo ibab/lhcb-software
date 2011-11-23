@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2011-11-23 - Patrick Robbe 
+ - GenInit.cpp: print out the beam parameter values in the initialisation
+
 !======================== GaussAlgs v4r1 2011-08-25 ===========================
 ! 2011-08-25 - Gloria Corti
  - Fix problem causing GenInit to crash for spill-over events by introducing

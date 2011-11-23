@@ -92,6 +92,22 @@ StatusCode GenInit::initialize() {
                                        m_zLuminousRegion ) ) ;
   m_beam.setLuminosity( m_luminosity ) ;
 
+  // print the values used:
+  info() << "Beam Parameters :" << endmsg ;
+  info() << "Energy = " << m_beam.energy() / Gaudi::Units::TeV << " TeV" << endmsg ;
+  info() << "Bunch length RMS = " << m_beam.sigmaS() / Gaudi::Units::mm << " mm" << endmsg ;
+  info() << "Normalized emittance = " << m_beam.epsilonN() / Gaudi::Units::mm << " mm" << endmsg ;
+  info() << "Revolution frequency = " << m_beam.revolutionFrequency() / Gaudi::Units::kilohertz << " kHz" << endmsg ;
+  info() << "Total cross-section = " << m_beam.totalXSec() / Gaudi::Units::millibarn << " mb" << endmsg ;
+  info() << "Horizontal crossing angle = " << m_beam.horizontalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+  info() << "Vertical crossing angle = " << m_beam.verticalCrossingAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+  info() << "Horizontal beam line angle = " << m_beam.horizontalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+  info() << "Vertical beam line angle = " << m_beam.verticalBeamlineAngle() / Gaudi::Units::mrad << " mrad" << endmsg ;
+  info() << "beta star = " << m_beam.betaStar() / Gaudi::Units::m << " m" << endmsg ;
+  info() << "Bunch spacing = " << m_beam.bunchSpacing() / Gaudi::Units::ns << " ns" << endmsg ;
+  info() << "Beam spot = " << m_beam.beamSpot() << endmsg ;
+  info() << "Luminosity = " << m_beam.luminosity() / ( Gaudi::Units::cm2 * Gaudi::Units::s ) << " /cm2/s" << endmsg ;
+
   if (m_createBeam) {
     info() << "Create BeamForInitialization" << endmsg;
     LHCb::BeamParameters * beamParameters = new LHCb::BeamParameters( m_beam );
