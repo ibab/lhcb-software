@@ -1,4 +1,3 @@
-// $Id: STClusterMonitor.cpp,v 1.31 2010/04/13 20:10:05 mtobin Exp $
 // Include files 
 
 #include <string>
@@ -50,7 +49,7 @@
 
 // Declaration of the Algorithm Factory
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STClusterMonitor );
+  DECLARE_ALGORITHM_FACTORY( STClusterMonitor )
 }
 
 //=============================================================================
@@ -142,11 +141,9 @@ StatusCode ST::STClusterMonitor::execute() {
 
   if(m_debug) debug() << "==> Execute" << endmsg;
 
-  unsigned int runNumber;
   if( exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ) {
     const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     plot1D(odin->bunchId(),"BCID","BCID",-0.5,2807.5,2808);
-    runNumber = odin->runNumber();
   } else return Warning("No ODIN bank found", StatusCode::SUCCESS,1);
 
   counter("Number of events") += 1; 

@@ -1,4 +1,3 @@
-// $Id: STErrorMonitor.cpp,v 1.16 2010-04-12 13:13:24 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -38,7 +37,7 @@ using namespace STBoardMapping;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STErrorMonitor );
+DECLARE_ALGORITHM_FACTORY( STErrorMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -161,7 +160,7 @@ StatusCode STErrorMonitor::execute()
     if ( !m_expertHisto ) continue;
 
     // Convert the tell1 number to a string
-    std::string strTellNum  = boost::lexical_cast<std::string>(tellNum);
+    //std::string strTellNum  = boost::lexical_cast<std::string>(tellNum);
 
     // Loop over the ErrorInfo objects (one for each FPGA-PP)
     const std::vector<STTELL1Error*> errorInfo = (*iterBank) -> errorInfo();

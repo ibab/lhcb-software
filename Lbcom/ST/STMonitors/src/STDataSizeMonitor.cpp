@@ -22,7 +22,7 @@
 #include "AIDA/IProfile1D.h"
 
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STDataSizeMonitor );
+  DECLARE_ALGORITHM_FACTORY( STDataSizeMonitor )
 }
 using namespace LHCb;
 

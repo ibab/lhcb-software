@@ -1,5 +1,3 @@
-// $Id: ST::STNoiseMonitor.cpp,v 1.16 2010-04-12 13:13:24 mtobin Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -42,7 +40,7 @@ using namespace STDAQ;
 using namespace STBoardMapping;
 
 namespace ST{
-  DECLARE_ALGORITHM_FACTORY( STNoiseMonitor);
+  DECLARE_ALGORITHM_FACTORY( STNoiseMonitor)
 }
 //--------------------------------------------------------------------
 //

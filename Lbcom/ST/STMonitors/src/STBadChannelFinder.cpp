@@ -1,4 +1,3 @@
-// $Id: STBadChannelFinder.cpp,v 1.7 2009/07/07 06:44:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +42,7 @@
 
 // Declaration of the Algorithm Factory
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STBadChannelFinder );
+  DECLARE_ALGORITHM_FACTORY( STBadChannelFinder )
 }
 
 //=============================================================================

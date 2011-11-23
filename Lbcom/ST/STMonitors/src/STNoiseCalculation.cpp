@@ -1,4 +1,3 @@
-// $Id: STNoiseCalculation.cpp,v 1.1 2009-11-25 13:07:20 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +17,7 @@
 
 // Declaration of the Algorithm Factory
 namespace ST{
-  DECLARE_ALGORITHM_FACTORY( STNoiseCalculation );
+  DECLARE_ALGORITHM_FACTORY( STNoiseCalculation )
 }
 
 //=============================================================================

@@ -1,4 +1,3 @@
-// $Id: STFullEventDump.cpp,v 1.1.1.1 2009-03-02 19:13:44 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@ using namespace std;
 
 // ----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STFullEventDump );
+DECLARE_ALGORITHM_FACTORY( STFullEventDump )
 
 //=============================================================================
 // Standard constructor, initializes variables

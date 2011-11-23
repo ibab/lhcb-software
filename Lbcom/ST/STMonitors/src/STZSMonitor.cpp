@@ -1,4 +1,3 @@
-// $Id: STZSMonitor.cpp,v 1.3 2009-05-05 11:59:04 mtobin Exp $
 // Include files 
 
 
@@ -31,7 +30,7 @@ using namespace LHCb;
 
 // ----------------------------------------------------------------------------
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( STZSMonitor );
+DECLARE_ALGORITHM_FACTORY( STZSMonitor )
 
 
 //=============================================================================

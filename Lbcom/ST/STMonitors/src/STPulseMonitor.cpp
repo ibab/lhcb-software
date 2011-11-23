@@ -1,5 +1,3 @@
-// $Id: STPulseMonitor.cpp,v 1.5 2010-04-13 15:35:01 mtobin Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -32,7 +30,7 @@ using namespace LHCbConstants;
 using namespace boost::assign;
 using namespace Gaudi::Units;
 
-DECLARE_ALGORITHM_FACTORY( STPulseMonitor);
+DECLARE_ALGORITHM_FACTORY( STPulseMonitor)
 
 //--------------------------------------------------------------------
 //

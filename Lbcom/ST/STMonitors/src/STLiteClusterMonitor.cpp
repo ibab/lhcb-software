@@ -1,5 +1,3 @@
-// $Id: STLiteClusterMonitor.cpp,v 1.2 2010-04-05 10:00:35 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -17,7 +15,7 @@
 using namespace LHCb;
 
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STLiteClusterMonitor );
+  DECLARE_ALGORITHM_FACTORY( STLiteClusterMonitor )
 }
 
 //--------------------------------------------------------------------

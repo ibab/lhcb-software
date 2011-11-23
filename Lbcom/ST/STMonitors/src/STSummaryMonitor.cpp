@@ -1,5 +1,3 @@
-// $Id: STSummaryMonitor.cpp,v 1.3 2009-09-03 10:23:14 mtobin Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -17,9 +15,8 @@
 #include "STSummaryMonitor.h"
 
 using namespace LHCb;
-//using namespace STDAQ;
 
-DECLARE_ALGORITHM_FACTORY( STSummaryMonitor);
+DECLARE_ALGORITHM_FACTORY( STSummaryMonitor)
 
 //--------------------------------------------------------------------
 //

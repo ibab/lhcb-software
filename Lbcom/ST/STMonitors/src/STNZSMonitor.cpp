@@ -1,4 +1,3 @@
-// $Id: STNZSMonitor.cpp,v 1.16 2010-04-12 13:13:24 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -35,7 +34,7 @@ using namespace AIDA;
 using namespace STDAQ;
 using namespace STBoardMapping;
 
-DECLARE_ALGORITHM_FACTORY( STNZSMonitor);
+DECLARE_ALGORITHM_FACTORY( STNZSMonitor)
 
 //--------------------------------------------------------------------
 //

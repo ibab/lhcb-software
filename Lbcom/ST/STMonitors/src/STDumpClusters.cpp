@@ -1,4 +1,3 @@
-// $Id: STDumpClusters.cpp,v 1.1 2010-03-23 09:19:35 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +25,7 @@
 
 // Declaration of the Algorithm Factory
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STDumpClusters );
+  DECLARE_ALGORITHM_FACTORY( STDumpClusters )
 }
 
 //=============================================================================

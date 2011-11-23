@@ -1,5 +1,3 @@
-// $Id: STDQSummaryAlg.cpp,v 1.10 2010-04-21 08:37:34 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -18,7 +16,7 @@
 
 #include "boost/lexical_cast.hpp"
 
-DECLARE_ALGORITHM_FACTORY( STDQSummaryAlg );
+DECLARE_ALGORITHM_FACTORY( STDQSummaryAlg )
 
 using namespace LHCb;
 
