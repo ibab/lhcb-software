@@ -164,7 +164,7 @@ StatusCode OTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
             double bx = sx - ax*dz;
             int nhMax[3] = {0, 0, 0};
             int sMax[3] = {0, 0, 0};
-            SeedHit* ih[3][100];
+            //            SeedHit* ih[3][100];
             for ( int stn = 0; stn < 3; ++stn ) {
               SeedHit* hStn = hit1;
               if ( stn == 1 ) hStn = hit3;
