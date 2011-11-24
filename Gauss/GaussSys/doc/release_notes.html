@@ -4,6 +4,52 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v41r1">2011-11-24 - GaussSys v41r1</A></H1><PRE>
+<H2><A NAME="Note">Release for MC11a, to fix bug.</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v33r0 (and Gaudi v22r4)</b>
+   AppConfig v3r*,
+   <b>DecFiles v25r*</b>, 
+   ParamFiles v8r5, 
+   SQLDDDB v6r*, FieldMap v5r*,
+   pythia 6.425.2, photos 215.4, lhapdf 5.8.5 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v94r2p2 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   XmlVis v1r13,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   pythia8 153< (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+! 2011-11-24 - Gloria Corti
+ - Use Event/GenEvent to pick up bug fixes in methods
+
+!========================= GenEvent v6r2 2011-11-22 =========================
+! 2011-11-22 - Gloria Corti
+ - Fix bugs in methods to calculate emittance and smearing on beam angles
+   in BeamParameters class.
+   Add units in default values of attributes.
+
+!========================= Gauss v41r1 2011-11-24 ============================
+! 2011-11-24 - Gloria Corti
+ - Remove obsolete properties no longer in use from Gauss() configurables.
+   This has the side effect that options for older version of Gauss in
+   AppConfig will not work with this version of Gauss.
+ - Put default values of beam properties in configurable as for 2011 data.
+
+! 2011-11-16 - Patrick Robbe
+ - tests: update references for new physics list
+
+!======================== GaussAlgs v4r2 2011-11-24 ===========================
+! 2011-11-24 - Gloria Corti
+ - GenInit.cpp: add printout of a few calculated quantities from the beam
+   parameters
+
+! 2011-11-23 - Patrick Robbe
+ - GenInit.cpp: print out the beam parameter values in the initialisation
+
+!=============================================================================
 </PRE><H1><A NAME="v41r0">2011-11-14 - GaussSys v41r0</A></H1><PRE>
 <H2><A NAME="Note">Release for MC11a</A></H2>
 <H3><A NAME="Use">This version uses:

@@ -1,5 +1,5 @@
 package GaussSys
-version v41r0
+version v41r1
 
 branches cmt doc
 
@@ -7,11 +7,12 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Take latest version of GaudiConf
+# Take latest version of GaudiConf and GenEvent
+use  GenEvent           v6r2    Event
 use  GaudiConf          v15r2
 
 # Gauss application: the application is not built on Win32
-use Gauss               v41r0   Sim
+use Gauss               v41r1   Sim
 
 # Generator packages: Basic configuration
 use GenCuts             v1r3    Gen
@@ -53,7 +54,7 @@ use ClhepTools          v2r1p1    Tools
 
 # Simulation specialized packages
 use GaussKine           v4r1      Sim
-use GaussAlgs		v4r1      Sim
+use GaussAlgs		v4r2      Sim
 use GaussTools          v16r0     Sim
 use GaussRICH		v11r6     Sim
 use GaussTracker	v6r2p1	  Sim
