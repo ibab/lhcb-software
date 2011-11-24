@@ -59,8 +59,9 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
     // PD
     if ( pdIsSet() )
     {
-      s << " PDCol"      << format("%3i",pdCol());
-      s << " PDNumInCol" << format("%3i",pdNumInCol());
+      const std::string fS = ( idType() == MaPMTID ? "%4i" : "%3i" );
+      s << " PDCol"      << format(fS.c_str(),pdCol());
+      s << " PDNumInCol" << format(fS.c_str(),pdNumInCol());
     }
 
     // Pixel

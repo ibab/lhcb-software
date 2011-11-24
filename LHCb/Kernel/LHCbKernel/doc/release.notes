@@ -8,6 +8,8 @@
  - Extend the RichSmartID class with an 'Undefined' PD type enum
  - Add LHCb::RichSmartID::HPD, LHCb::RichSmartID::MaPMT and
    LHCb::RichSmartID::IDType to the python dictionary
+ - Update the space allocated to the PD numbers by 1 when printing MaPMT
+   RichSmartIDs
 
 ! 2011-11-21 - Chris Jones
  - Update sizes of bit fields for MaPMTs
