@@ -169,17 +169,17 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   const Gaudi::XYZPoint position (xmean, ymean,cluster->position().z());
   
   double r4 = 0.;
-  double cellsize = 0.;
+  //  double cellsize = 0.; // set but not used
   area = -1;
   int ncells = 0;
   double secondE = 0.;
   //    double E3x3 = 0.0;
   //  double dist = 0.0; // set but not used
   
-  CaloCellID seedID = cluster->seed();
-  const Gaudi::XYZPoint& posSeed =  m_ecal->cellCenter( seedID );
-  double xs = posSeed.x();
-  double ys = posSeed.y();
+  //CaloCellID seedID = cluster->seed();
+  //const Gaudi::XYZPoint& posSeed =  m_ecal->cellCenter( seedID );
+  //double xs = posSeed.x();
+  //double ys = posSeed.y();
   //const CaloNeighbors& neigh = m_ecal->zsupNeighborCells(seedID);
   
   const LHCb::CaloCluster::Entries& entries = cluster->entries() ;
@@ -195,7 +195,7 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
     const double y =  pos.y() ;
     
     if ( entry->status() & LHCb::CaloDigitStatus::SeedCell ){ 
-      cellsize = m_ecal->cellSize( digit->cellID() );
+      // cellsize = m_ecal->cellSize( digit->cellID() ); // set but not used
       area = digit->cellID().area();
       Eseed = energy;
     }else{
