@@ -100,7 +100,7 @@ StatusCode ODINDecodeTool::initialize() {
   if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
       == m_rawEventLocations.end()) {
     // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
     m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
   }
 

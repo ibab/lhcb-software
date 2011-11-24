@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Chris Jones
+ - Update default RawEvent search locations in ODINDecodeTool
+  + Remove obsolete LHCb::RawEventLocation::Copied
+  + Add LHCb::RawEventLocation::Trigger as first location searched by default
+
 !========================= LHCbAlgs v2r44 2011-11-07 =========================
 ! 2011-11-04 - Marco Clemencic
  - Added a check in OdinTimeDecoder to prevent failures in case of bad ODIN
