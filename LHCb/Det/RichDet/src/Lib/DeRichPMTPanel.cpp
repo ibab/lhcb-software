@@ -308,6 +308,8 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
 
     m_detectionPlane = Gaudi::Plane3D(aDir, aPon);
 
+
+    
     // Also create a plane at the exterior surface of the pmt quartz window.
     double aZShiftR1 =  c_deRich1->param<double> ("Rich1PmtDetPlaneZInPmtPanel");
     const Gaudi::XYZPoint localpointP(0.0,0.0,aZShiftR1-m_RichPmtQuartzThickness);
@@ -318,6 +320,8 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
     const Gaudi::XYZPoint globalpointR(geometry()->toGlobal(localpointR));
     m_detectionPlane_exterior = Gaudi::Plane3D(globalpointP,globalpointQ,globalpointR);
 
+
+    
   }
   else if ( rich() == Rich::Rich2 )
   {
@@ -331,10 +335,12 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
     const Gaudi::XYZPoint localpointB(0.0,100.0,aZShiftR2);
     const Gaudi::XYZPoint localpointC(50.0,50.0,aZShiftR2);
     const Gaudi::XYZPoint globalpointA(geometry()->toGlobal(localpointA));
-    const Gaudi::XYZPoint globalpointB(geometry()->toGlobal(localpointA));
-    const Gaudi::XYZPoint globalpointC(geometry()->toGlobal(localpointA));
+    const Gaudi::XYZPoint globalpointB(geometry()->toGlobal(localpointB));
+    const Gaudi::XYZPoint globalpointC(geometry()->toGlobal(localpointC));
+    
     m_detectionPlane = Gaudi::Plane3D(globalpointA,globalpointB,globalpointC);
 
+    
     // Also create  a  second plane at the exterior surface of the PmtQuartzWindow.
     const Gaudi::XYZPoint localpointP(0.0,0.0,aZShiftR2-m_RichPmtQuartzThickness);
     const Gaudi::XYZPoint localpointQ(0.0,100.0,aZShiftR2-m_RichPmtQuartzThickness);
@@ -344,6 +350,7 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
     const Gaudi::XYZPoint globalpointR(geometry()->toGlobal(localpointR));
     m_detectionPlane_exterior = Gaudi::Plane3D(globalpointP,globalpointQ,globalpointR);
 
+    
     aPon = globalpointA;
 
     if(  side() == Rich::left )
@@ -357,6 +364,8 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
     }
   }
 
+
+  
   m_localOffset = aOffset;
 
   m_detPlaneZ = aPon.z();
@@ -368,7 +377,13 @@ StatusCode DeRichPMTPanel::geometryUpdate ( )
   m_PDPanelToGlobalTransform = m_globalToPDPanelTransform.Inverse();
 
   m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
+
+
+  
   m_localPlaneNormal = m_localPlane.Normal();
+
+
+  
   // m_localPlane2 =
 
   return sc;
@@ -820,8 +835,10 @@ StatusCode DeRichPMTPanel::getPanelInterSection ( const Gaudi::XYZPoint& pGlobal
   StatusCode sc = StatusCode::SUCCESS;
 
   const Gaudi::XYZVector vInPanel( geometry()->toLocalMatrix() * vGlobal );
+  
   // find the intersection with the detection plane
   const double scalar = vInPanel.Dot(m_localPlaneNormal);
+  
   if ( fabs(scalar) < 1e-5 )
   {
     sc =  sc &&  StatusCode::FAILURE;
@@ -831,10 +848,17 @@ StatusCode DeRichPMTPanel::getPanelInterSection ( const Gaudi::XYZPoint& pGlobal
     // transform point to the PMTPanel coordsystem.
     const Gaudi::XYZPoint pInPanel( geometry()->toLocal(pGlobal) );
 
+
+    
     // get panel intersection point
     const double distance = -m_localPlane.Distance(pInPanel) / scalar;
+
+
+    
     panelIntersection = Gaudi::XYZPoint ( pInPanel + distance*vInPanel );
     panelIntersectionGlobal =geometry()->toGlobal( panelIntersection );
+
+    
   }
 
   return sc;
@@ -895,6 +919,8 @@ bool DeRichPMTPanel::isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAn
 
 unsigned int DeRichPMTPanel::pdNumber( const LHCb::RichSmartID smartID ) const
 {
+  //  info()<<"derich pmt panel smartid "<<smartID <<endmsg;
+  
   return ( smartID.rich() == rich() && smartID.panel() == side() ?
            smartID.pdCol() * m_NumPmtInRichModule  + smartID.pdNumInCol() :
            nPDs() + 1 );
@@ -949,22 +975,31 @@ const DeRichPMT* DeRichPMTPanel::dePMT( const unsigned int PmtCopyNumber ) const
     const unsigned int Mnum = (int) (PmtCopyNumber/m_NumPmtInRichModule);
     const unsigned int MNumInCurPanel = PmtModuleNumInPanelFromModuleNumAlone(Mnum);
     const unsigned int Pnum =  PmtCopyNumber - ( Mnum * m_NumPmtInRichModule);
+    //     info()<<" current rich side "<<rich()<<"  "<<side()<<endmsg;
+    
+    //    info()<<"dePmtpanel depmt mNum "<<Mnum << endmsg;
+    //  info()<<"depmts sizes "<< (int) m_DePMTs.size() 
+    //     <<"  "<< m_DePMTs[MNumInCurPanel].size()<<endmsg;
+    
 
     if ( MNumInCurPanel >= m_DePMTs.size() ||
          Pnum >= m_DePMTs[MNumInCurPanel].size() )
     {
       std::ostringstream mess;
-      mess << "Inappropriate PMT numbers " << MNumInCurPanel << " " << Pnum;
-      throw GaudiException( mess.str(), "*DeRichPMTPanel*",StatusCode::FAILURE);
+      mess << "DeRichPMTPanel: Inappropriate PMT module and pmt numbers " << MNumInCurPanel << " " << Pnum;
+
+       throw GaudiException( mess.str(), "*DeRichPMTPanel*",StatusCode::FAILURE);
+    }else {
+      
+
+      dePmt = m_DePMTs [ MNumInCurPanel ] [ Pnum ];
     }
-
-    dePmt = m_DePMTs [ MNumInCurPanel ] [ Pnum ];
-
+    
   }
   else
   {
     std::ostringstream mess;
-    mess << "Inappropriate PmtNumber : " << PmtCopyNumber;
+    mess << "DeRichPMTPanel: Inappropriate PmtcopyNumber : " << PmtCopyNumber;
     throw GaudiException( mess.str(),"*DeRichPMTPanel*",StatusCode::FAILURE);
   }
 
