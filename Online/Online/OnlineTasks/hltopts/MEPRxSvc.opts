@@ -2,7 +2,7 @@
 // 
 // MEPRxSvc.opts
 // $Id: MEPRxSvc.opts,v 1.8 2010-11-02 15:47:18 niko Exp $
-// Sample options for the eventbuilder service MEPRxSvc
+// Sample options for the eventbuilder service MEPRxSvc as of v4r57
 // niko.neufeld@cern.ch
 #include "$HLTOPTS/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -16,23 +16,21 @@ ApplicationMgr.ExtSvc		    += { "MonitorSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "MEP" };
 //MEPManager.MapUnusedBuffers          = false;
-Runable.MEPBuffers       = 3;          // concurrently built events
-Runable.InitialMEPReqs   = 3;
-Runable.maxBadPktRatio   = 0.1;        // maximum fraction of erroneous packets during 
-                                       // sampling time before going into state ERROR - 
-                                       // this is currently disabled
-Runable.pktSamplingCount = 100;        // number of packets to sample to determine error ratio
-Runable.maxMsForGetSpace = 100;        // milliseconds to wait to get buffer memory from BM
-Runable.partitionID      = @OnlineEnv.PartitionID;
-//Runable.MEPBufSize       = 21000000; // maximum MEP, make sure that there is
-                                       // enough space declared in MEPInit.opts
-                                       // you will need MEPBuffers * MEPBufsize
-Runable.MEPBufSize       = 8000000;    // Test to see whether better CPU usage of farm can be achieved. BJ 6/10/2010
-Runable.sockBuf          = 30000000;   // this must be supported by the kernel! 
-Runable.refCount         = 2;
-Runable.RTTCCompat       = false;      // for RTTC backward compatibility
-Runable.maxEventAge      = 100000;
-Runable.MEPRecvTimeout   = 5;
+// Specific options for MEPRxSvc - options not listed here may not exist - please check the code(!) 
+Runable.MEPBuffers        = 3;           // concurrently built events
+Runable.InitialMEPReqs    = 3;           // how many MEPs to send initially 
+Runable.maxMsForGetSpace  = 100;         // milliseconds to wait to get buffer memory from BM
+Runable.partitionID       = @OnlineEnv.PartitionID;
+Runable.MEPBufSize        = 1048576;     // how much memory to allocate for an event 1 MB (large!!)
+Runable.sockBuf           = 30000000;    // this must be supported by the kernel! 
+Runable.refCount          = 2;
+Runable.maxEventAge       = 1000000;     // (us) - put at least 10000, 0 to switch off
+Runable.MEPRecvTimeout    = 10;          // seconds to wait in select call for new packet
+Runable.alwaysSendMEPReq  = true;        // always send a MEPReq for any incomplete packet
+Runable.createDAQErrorMEP = false;       // do not create a summary bank about event-building errors
+Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only for pixel testbeam)
+Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
+Runable.outputLevel      = 1;
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval = 5;
