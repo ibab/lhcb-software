@@ -34,21 +34,22 @@ const CLID CLID_DeRichPMTPanel = 12020;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichPMTPanel::DeRichPMTPanel( const std::string & name  ) :
-  DeRichPDPanel ( name ),
-  m_DePMTModules(1),
-  m_DePMTs(1,std::vector<DeRichPMT*>(2)),
-  m_DePMTAnodes(1,std::vector<IDetectorElement*>(2)),
-  m_PmtModulePlaneHalfSizeR1(0),
-  m_PmtModulePlaneHalfSizeR2(0),
-  m_RichPmtNumModulesInRowCol(4),
-  m_RichPmtModuleCopyNumBeginPanel(4),
-  m_RichPmtModuleCopyNumEndPanel(4),
-  m_RichPmtModuleActiveAreaHalfSize(2),
-  m_NumPmtInRowCol(2),
-  m_NumPmtModuleInRich(4)
+DeRichPMTPanel::DeRichPMTPanel( const std::string & name )
+  : DeRichPDPanel ( name ),
+    m_DePMTModules(1),
+    m_DePMTs(1,std::vector<DeRichPMT*>(2)),
+    m_DePMTAnodes(1,std::vector<IDetectorElement*>(2)),
+    m_PmtModulePlaneHalfSizeR1(0),
+    m_PmtModulePlaneHalfSizeR2(0),
+    m_RichPmtNumModulesInRowCol(4),
+    m_RichPmtModuleCopyNumBeginPanel(4),
+    m_RichPmtModuleCopyNumEndPanel(4),
+    m_RichPmtModuleActiveAreaHalfSize(2),
+    m_NumPmtInRowCol(2),
+    m_NumPmtModuleInRich(4)
 {
-  // the values in the first three vectors above are just dummy values.
+  // Set the PD type to PMT
+  m_pdType = LHCb::RichSmartID::MaPMTID;
 }
 
 //=============================================================================
@@ -1011,12 +1012,9 @@ const DeRichPMT* DeRichPMTPanel::dePMT( const unsigned int PmtCopyNumber ) const
 
 Gaudi::XYZPoint DeRichPMTPanel::detPointOnAnode( const LHCb::RichSmartID smartID ) const
 {
-  const unsigned int PmtCopyNumber =   pdNumber( smartID );
-  const DeRichPMT*  aPMT=  dePMT( PmtCopyNumber );
-  return   ( aPMT-> detPointOnAnode(smartID));
-  
+  const DeRichPMT * aPMT = dePMT( pdNumber( smartID ) );
+  return aPMT->detPointOnAnode(smartID);
 }
-
 
 //  return a list with all the valid readout channels (smartIDs)
 //=========================================================================

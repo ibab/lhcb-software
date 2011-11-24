@@ -32,13 +32,13 @@ const CLID CLID_DeRichPMT = 12025;  // User defined
 //=============================================================================
 DeRichPMT::DeRichPMT( const std::string & name )
   : DeRichPD ( name )
-{ 
+{
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichPMT::~DeRichPMT() 
+DeRichPMT::~DeRichPMT()
 {
   cleanUpInterps();
 }
@@ -202,7 +202,7 @@ StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
   const Gaudi::XYZPoint aQWExtHit =  Gaudi::XYZPoint ( aLocalHit.x(), aLocalHit.y(), zQwExt );
   // for now assume negligible refraction effect at the QW.
 
-  detectPoint = ( photoCathodeSide ? 
+  detectPoint = ( photoCathodeSide ?
                   geometry()->toGlobalMatrix() * aPhCathHit  :
                   geometry()->toGlobalMatrix() * aQWExtHit   );
 
@@ -218,7 +218,7 @@ DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
   //  info()<<" DePmt anode pixel col row  corrd "<< fracPixelCol << "   "<<fracPixelRow<< endmsg;
   // info()<<" DePmt anode NumPixelCol row "<< m_PmtNumPixCol <<"   "<<m_PmtNumPixRow<<endmsg;
   // info()<<" DePmt anode effpixelsize X Y  "<<m_PmtEffectivePixelXSize  <<"   "<<m_PmtEffectivePixelYSize<<endmsg;
-  
+
   const double xh = ( fracPixelCol - (m_PmtNumPixCol-1) * 0.5 ) * m_PmtEffectivePixelXSize;
   const double yh = ( fracPixelRow - (m_PmtNumPixRow-1) * 0.5 ) * m_PmtEffectivePixelYSize;
   const double zh = m_PmtAnodeHalfThickness;
@@ -226,15 +226,15 @@ DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
   return Gaudi::XYZPoint( xh,yh,zh );
 }
 
-Gaudi::XYZPoint DeRichPMT::detPointOnAnode ( const LHCb::RichSmartID smartID ) const 
+Gaudi::XYZPoint DeRichPMT::detPointOnAnode ( const LHCb::RichSmartID smartID ) const
 {
   const double aPixCol = (double) (smartID.pixelCol());
   const double aPixRow = (double) (smartID.pixelRow());
   Gaudi::XYZPoint aLocalAnodeCoord = getAnodeHitCoordFromPixelNum(aPixCol,aPixRow);
   // std::cout<<" DeRichPmt local point col row coord "<<aPixCol<<"  :"<<aPixRow<<"   "<<aLocalAnodeCoord <<std::endl;
-  
+
   return ( m_dePmtAnode->geometry()->toGlobal(aLocalAnodeCoord));
-  
+
 }
 
 

@@ -41,7 +41,11 @@ const CLID CLID_DeRichHPDPanel = 12010;  // User defined
 
 // Standard Constructor
 DeRichHPDPanel::DeRichHPDPanel(const std::string & name) :
-  DeRichPDPanel ( name ) { }
+  DeRichPDPanel ( name ) 
+{
+  // Set the PD type to HPD
+  m_pdType = LHCb::RichSmartID::HPDID;
+}
 
 // Standard Destructor
 DeRichHPDPanel::~DeRichHPDPanel() { }
