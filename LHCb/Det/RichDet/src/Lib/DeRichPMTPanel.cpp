@@ -403,6 +403,9 @@ StatusCode DeRichPMTPanel::setRichPmtSmartID(const std::vector<int>& aPmtHitChan
   id.setPD(aPmtHitChannel[0],aPmtHitChannel[1]);
   id.setPixelRow(aPmtHitChannel[3]);
   id.setPixelCol(aPmtHitChannel[2]);
+  id.setPanel(side());
+  id.setRich(rich());
+  
   return StatusCode::SUCCESS;
 }
 
