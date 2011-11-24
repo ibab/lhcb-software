@@ -73,8 +73,9 @@ namespace LHCb
      */
     enum IDType
       {
-        MaPMTID = 0, ///< Represents an MaPMT channel
-        HPDID   = 1  ///< Represents an HPD channel
+        Undefined = -1, ///< Undefined
+        MaPMTID = 0,    ///< Represents an MaPMT channel
+        HPDID   = 1     ///< Represents an HPD channel
       };
 
   public:

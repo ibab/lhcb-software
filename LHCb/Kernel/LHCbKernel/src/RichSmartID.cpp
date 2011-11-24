@@ -35,7 +35,9 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
 #endif
 
   // Type
-  s << ( idType() == HPDID ? " HPD" : " MaPMT" );
+  s << ( idType() == HPDID   ? " HPD"   : 
+         idType() == MaPMTID ? " MaPMT" : 
+         "UndefinedPD" );
 
   // Is this smart ID valid
   if ( isValid() )
