@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Patrick Koppenburg
+ - TupleToolTrackInfo : add match chi2
+
 ! 2011-11-23 - Tomasz Skwarnicki
  - make TupleToolEventInfo, TupleToolTrigger try info location with and without RootInTES
 

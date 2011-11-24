@@ -95,6 +95,7 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
   }
   if(isVerbose())
   {
+    test &= tuple->column( prefix+"_TRACK_MatchCHI2", track->info(LHCb::Track::FitMatchChi2,-1) );
     //hopefully unique double constructed from multiplying all Velo hit IDs
     double veloUTID=1.;
     //std::vector< unsigned int > veloIDs;
