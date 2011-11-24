@@ -901,8 +901,7 @@ void MuEffMonitor::fillHistos(){
     }
   }
 
-
-  bool goodGlobalCandidate=true;
+  //bool goodGlobalCandidate=true;
 
   // efficiency of each station/region
   for (int s= (m_ignoreM1 ? 1 : 0); s<m_NStation; s++) {

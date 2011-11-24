@@ -4,26 +4,30 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Chris Jones
+ - Fix compilation warning about used variable in last commit to MuEffMonitor
 
 ! 2011-11-23  - Giacomo Graziani
-MuEffMonitor: further optimization of selection to improve purity of muon candidates
+ - MuEffMonitor: further optimization of selection to improve purity of muon 
+   candidates
 
 ! 2011-10-26  - Giacomo Graziani
-MuEffMonitor algorithm reorganized to improve speed and add some histograms:
- - some cleanup and compactification of the code
- - simplified faster selection
- - using MuonFastPosTool to get muon hit positions and speedup of muon hit loop
- - new histograms for efficiency versus P, XY, chamber
+ - MuEffMonitor algorithm reorganized to improve speed and add some histograms:
+  - some cleanup and compactification of the code
+  - simplified faster selection
+  - using MuonFastPosTool to get muon hit positions and speedup of muon hit loop
+  - new histograms for efficiency versus P, XY, chamber
 
-!========================= DaVinciMonitors v1r15 2011-09-07 =========================
+!======================= DaVinciMonitors v1r15 2011-09-07 =====================
 ! 2011-08-27 - Patricia Disimone
-  - The Muon Stations efficiency monitor MuEffMonitor has been moved from Muon/MuonTrackMonitor to Phys/DaVinciMonitors. The main changes are : 
+  - The Muon Stations efficiency monitor MuEffMonitor has been moved from 
+    Muon/MuonTrackMonitor to Phys/DaVinciMonitors. The main changes are : 
    1) muon candidates TIS unbiased, 
    2) efficiency of the M1 station added, 
    3) measurement of the efficiency by charge, 
    4) only crossed hits (pads) counted as signal
 
-!========================== DaVinciMonitors v1r14p2 2011-03-25 ===============
+!======================== DaVinciMonitors v1r14p2 2011-03-25 =================
 
 ! 2011-03-25 - Chris Jones
  - Fixes for the latest DaVInci releases
