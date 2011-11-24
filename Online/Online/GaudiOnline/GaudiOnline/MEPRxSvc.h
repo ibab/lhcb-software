@@ -170,12 +170,7 @@ namespace LHCb  {
     int64_t                     m_notReqPkt;
     int64_t                     m_incEvt;
     int64_t                     m_totBadMEP;
-    int64_t                     m_totWrongPartID;
-    unsigned long               m_timer;
     int                         m_maxErrors;
-    int                         m_nErrorSamples;
-    int                         m_errorCheckInterval; // (in millis)
-    bool                        m_cryError;
     std::vector<int64_t>        m_badLenPkt;
     std::vector<int64_t>        m_misPkt;
     std::vector<int64_t>        m_badPckFktPkt;
@@ -191,6 +186,7 @@ namespace LHCb  {
     u_int64_t                   m_tLastAdded;   // time of last added fragment in us
     u_int64_t                   m_tLastComp;    // time of last completed event in us
     u_int64_t                   m_tLastRx;      // time of last received frament in us
+    u_int64_t                   m_tzero;        // time of first (since process-start) received fragment in us 
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
     /// Standard Destructor
@@ -212,7 +208,6 @@ namespace LHCb  {
     int       sourceID() const              {  return m_sourceID;     }
     int       sourceAddr(u_int32_t i)       {  return m_srcAddr[i];   }
     int64_t   addIncompleteEvent()          {  return m_incEvt++;     }
-    int64_t   totWrongPartID()              {  return m_totWrongPartID;  }   
     RXIT oldestRx();
     static bool cmpL0ID(MEPRx *r, u_int32_t id);
     void removePkt(void);
@@ -233,8 +228,6 @@ namespace LHCb  {
     void publishHists(void);
     void handle(const Incident&); 
     void checkTimeOut(void);
-    int checkPartitionID(u_int32_t addr, struct MEPHdr *);
-    void cryError(void);
     void truncatedPkt(struct RTL::IPHeader *);
 
     IMonitorSvc* getMonSvc() {return m_monSvc;}

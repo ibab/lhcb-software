@@ -27,7 +27,6 @@
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
-#include "RTL/Lock.h"   // RTL funny VMS-like wrappers for Unix sys-calls :-)
 #include "NET/IPHeader.h"
 #include "MBM/MepProducer.h"
 #include "MDF/RawEventHelpers.h"
@@ -91,6 +90,7 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
   std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
 }
 using std::string;
+using std::hex;
 
 namespace LHCb  {
   struct MEPRx  : public MEP::Producer {
@@ -138,18 +138,6 @@ namespace LHCb  {
     }
 #define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
 #define HOSTNAME(id) m_parent->m_srcName[id]
-// If any source is missing, which has already been missing last time,  no MEP request is send
-// If *all* the sources which have been missing on the last event are there now, then the MEP request for the previous event is re-armed
-// If no source has been missing we do not re-send
-    bool rearmMEPReq() {
-      bool hasShownAgain = false;
-      for (int i = 0; i < m_nSrc; ++i)
-	if (m_parent->m_noShow[i]) {
-	  if (!m_seen[i])return false;
-	  else hasShownAgain = true;
-	}
-      return hasShownAgain;
-    }
 
     void updateNoshow() {
       for (int i = 0; i < m_nSrc; ++i)
@@ -530,7 +518,13 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
       m_odinMEP = (u_int8_t *) newhdr;
       // Record the run number of this event 
       LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) +
-                                                 MEPHDRSIZ + MEPFHDRSIZ); 
+                                                 MEPHDRSIZ + MEPFHDRSIZ);
+      if (bank->magic() != RawBank::MagicPattern) {
+	m_log << MSG::ERROR << "Foul! ODIN magic pattern is " <<  hex << bank->magic() << endmsg;
+      }
+      if (bank->type() != RawBank::ODIN) {
+	m_log << MSG::ERROR << "Foul! ODIN bank type is " <<  bank->type() << endmsg;
+      } 
       LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
       m_runNumber = odin->Run; 
   }
@@ -582,12 +576,10 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("LocalTest",        m_LocalTest = false);
   declareProperty("DestTestPort",         m_DestTestPort = 45199);
   declareProperty("SrcTestPort",         m_SrcTestPort = 45198);
-  declareProperty("MEPBuffers",       m_MEPBuffers = 4);
+  declareProperty("MEPBuffers",       m_MEPBuffers = 3);
   declareProperty("ethInterface",     m_ethInterface = -1);
   declareProperty("IPNameOdin",       m_IPNameOdin = "");
-  declareProperty("maxBadPktRatio",   m_maxBadPktRatio = 0.);
-  declareProperty("pktSamplingCount", m_pktSamplingCount = 0);
-  declareProperty("maxMsForGetSpace", m_maxMsForGetSpace = 10);
+  declareProperty("maxMsForGetSpace", m_maxMsForGetSpace = 100);
   declareProperty("IPSrc",            m_IPSrc);
   declareProperty("IPProtoIn",        m_IPProtoIn = IP_PROTO_HLT);
   declareProperty("sockBuf",          m_sockBuf = 0x100000);
@@ -601,15 +593,10 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);   // s (!)  
   declareProperty("maxEventAge",      m_maxEventAge = 1000000); // us
-  declareProperty("checkPartitionID",      m_checkPartitionID = false);
-  declareProperty("dropIncompleteEvents", m_dropIncompleteEvents = false);
   declareProperty("nCrh", m_nCrh = 10);
-  declareProperty("maxErrors", m_maxErrors = 50);
-  declareProperty("nErrorSamples", m_nErrorSamples = 10);
-  declareProperty("errorCheckInterval", m_errorCheckInterval = -1); // ms
   declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
   declareProperty("createODINMEP", m_createODINMEP = false);
-  declareProperty("resetCounterOnRunChange", m_resetCounterOnRunChange = true);
+  declareProperty("resetCountersOnRunChange", m_resetCounterOnRunChange = true);
   declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
   m_expectOdin = false;
@@ -627,16 +614,6 @@ MEPRxSvc::~MEPRxSvc(){
   delete m_mepRQCommand;
 }
 
-void MEPRxSvc::cryError() {
-  MsgStream log(msgSvc(),"MEPRx");
-  log << MSG::DEBUG << "Excessive errors: Going to state DAQ_ERROR" << endmsg;
-  Incident inc("MEPRx", "DAQ_ERROR");
-  m_incidentSvc->fireIncident(inc); // note that name - this is very safely chosen
-                                    // just in case you want to fire something 
-                                    // else than an incident!
-  m_cryError = false;
-}
-
 void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr) 
 {
   MsgStream log(msgSvc(), "MEPRx");
@@ -644,23 +621,6 @@ void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr)
   log << MSG::ERROR << "received packet with truncated MEP-header from " << 
     (MEPRxSys::name_from_addr(iphdr->saddr, hname, mesg) ? mesg : hname) <<
     endmsg;
-}
-// 0 if partition ID matches 
-// 1 if it does not match
-int MEPRxSvc::checkPartitionID(u_int32_t addr, struct MEPHdr *mephdr)
-{
-  if (mephdr->m_partitionID != m_partitionID) {
-    MsgStream log(msgSvc(),"MEPRx");
-    std::string hname, mesg;
-    log << MSG::ERROR << "received MEP from " << 
-      (MEPRxSys::name_from_addr(addr, hname, mesg) ? mesg : hname) <<
-      " with wrong partitionID: 0x" << 
-      std::hex << mephdr->m_partitionID  << ". I want 0x" << 
-      m_partitionID << endmsg;
-    m_totWrongPartID++;
-    return 1;
-}
-  return 0;
 }
 
 void MEPRxSvc::removePkt()   {
@@ -674,25 +634,6 @@ void MEPRxSvc::removePkt()   {
       ERRMSG(log,"recvmsg");
     }
   }
-}
-
-static int errorCheck(void *context) {
-  MEPRxSvc *svc = (MEPRxSvc *) context;
-  static int n_high = 0;
-  static long long old_errors = 0;
-  long long new_errors;
-   
-  new_errors = svc->m_incEvt + svc->m_notReqPkt + svc->m_totBadMEP + 
-    svc->totWrongPartID();
-  if (new_errors - old_errors > svc->m_maxErrors) {
-    n_high++;
-    if (n_high > svc->m_nErrorSamples) svc->cryError();
-  } else n_high = 0;
-  old_errors = new_errors;
-  /* rearm */
-  lib_rtl_set_timer(svc->m_errorCheckInterval, errorCheck, svc, 
-		    &(svc->m_timer));
-  return 1; /* uaexxxx */
 }
     
 // age all workDsc and return the oldest
@@ -748,19 +689,18 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
 }
 
 void MEPRxSvc::freeRx() {
-  RTL::Lock lock1(m_usedDscLock);
   if (!m_usedDsc.empty()) {
     MEPRx *rx = *(--m_usedDsc.end());
     m_usedDsc.pop_back();
     int rc = rx->spaceRearm(0);  
     if (rc == MBM_NORMAL) {
-      RTL::Lock lock2(m_freeDscLock);
-      //if (rx->rearmMEPReq()) sendMEPReq(m_MEPsPerMEPReq);
       if (rx->m_wasIncomplete) {
 	rx->updateNoshow();
 	rx->m_wasIncomplete = false;
+	// send mep requests only if the incomplete event contains the odin mep or
+        // we are instructed to always re-charge
         if (!(rx->m_daqError & MissingOdin) || m_alwaysSendMEPReq) {
-          sendMEPReq(m_MEPsPerMEPReq);  // send mep requests only if the incomplete event contains the odin mep
+          sendMEPReq(m_MEPsPerMEPReq);  
         } 
       } else {
 	resetCounters(m_noShow, m_nSrc);
@@ -778,14 +718,16 @@ void MEPRxSvc::forceEvent(RXIT &dsc, ForceReason reason) {
   MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
   switch (reason) {
   case TIME_OUT: 
-    log << MSG::ERROR << "Time-out for event " << (*dsc)->m_l0ID << " started at " << (*dsc)->m_tFirstFrag <<
-      " last fragment received " << m_tLastRx << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) << " > limit" 
-	<< endmsg; 
+    log << MSG::ERROR << "Time-out for event " << (*dsc)->m_l0ID << " started at " << 
+      (*dsc)->m_tFirstFrag  - m_tzero <<
+      " last fragment received " << m_tLastRx - m_tzero << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) << 
+      " us > limit" << endmsg; 
     break;
   case NO_BUFFER:
-    log << MSG::ERROR << "Flush oldest event " << (*dsc)->m_l0ID << " started at " << (*dsc)->m_tFirstFrag <<
-      " last fragment received " <<  m_tLastRx << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) 
-	<< endmsg; 
+    log << MSG::ERROR << "Flush oldest event " << (*dsc)->m_l0ID << " started at " << 
+      (*dsc)->m_tFirstFrag - m_tzero <<
+      " last fragment received " <<  m_tLastRx - m_tzero << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) 
+	<< " us " << endmsg; 
     break;
   case END_OF_RUN:
     log << MSG::ERROR << "Flush remaining events because of end of run" << endmsg;
@@ -850,15 +792,16 @@ StatusCode MEPRxSvc::run() {
 	if ( upda ) {
 	  upda->update(0).ignore();
 	}
-	for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); w=m_workDsc.begin()) {
+	for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
           forceEvent(w, END_OF_RUN);
 	}
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
       }
       // we had a timeout - all events go up by the select timeoutvalue (which is in seconds!)
-      for(RXIT w = m_workDsc.begin(); w != m_workDsc.end(); w=m_workDsc.begin()) 
-	(*w)->m_age += 1000000 * m_MEPRecvTimeout; 
+      //for (RXIT w = m_workDsc.begin(); w != m_workDsc.end(); ++w) 
+      //	(*w)->m_age += 1000000 * m_MEPRecvTimeout;
+      m_tLastRx += 1000000 * m_MEPRecvTimeout;
       checkTimeOut();
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << 
@@ -879,6 +822,7 @@ StatusCode MEPRxSvc::run() {
     std::string errstr;
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK, &tsc, 
 				 &_tmp, errstr);
+    if (m_tzero == 0) m_tzero = _tmp;
     if (_tmp > m_tLastRx) m_tLastRx = _tmp;
     if (len < 0) {
       if (!MEPRxSys::rx_would_block()) 
@@ -902,12 +846,7 @@ StatusCode MEPRxSvc::run() {
       removePkt();
       continue;
     }
-    if (m_checkPartitionID && checkPartitionID(iphdr->saddr, mephdr)) {
-      // we do not want this either 
-      removePkt();
-      continue;
-    }
-    if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
+     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
       rxit = --m_workDsc.end();
     } else {
       rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
@@ -942,14 +881,12 @@ StatusCode MEPRxSvc::run() {
     if ((*rxit)->m_runNumber != m_runNumber) {
       m_runNumber = (*rxit)->m_runNumber;
       log << MSG::DEBUG << "run-change detected - new run# " << m_runNumber << endmsg;
-      clearCounters();
+      if (m_resetCounterOnRunChange) clearCounters();
     }
     if (rc == MEP_SENT) {
       rx = *rxit;
       m_workDsc.erase(rxit);
-      lib_rtl_lock(m_usedDscLock);
       m_usedDsc.push_back(rx);     
-      lib_rtl_unlock(m_usedDscLock);
       freeRx();
     }              
   } // for{;;}
@@ -1044,10 +981,6 @@ StatusCode MEPRxSvc::checkProperties() {
     return error("maxMsForGetSpace must be > 0");
   else if (m_MEPBuffers < 1 || m_MEPBuffers > 256)
     return error("MEPBuffers must be > 0 and < 256");
-  else if (m_pktSamplingCount < 0)
-    return error("pktSamplingCount must be >= 0");
-  else if (m_maxBadPktRatio <= 0)
-    return error("maxBadPktRatio must be > 0");
   else if (m_sockBuf < 0x10000 || m_sockBuf > 0x4000000)
     return error("sockBuf must be >= 64 kB and less than 64 MB");
   else if (m_IPProtoIn < 0 || m_IPProtoIn > 255)
@@ -1119,8 +1052,7 @@ StatusCode MEPRxSvc::allocRx() {
 }
 
 StatusCode MEPRxSvc::releaseRx() {
-  RTL::Lock l1(m_usedDscLock), l2(m_freeDscLock);
-  std::for_each(m_freeDsc.begin(), m_freeDsc.end(), MEPRx::release);
+   std::for_each(m_freeDsc.begin(), m_freeDsc.end(), MEPRx::release);
   m_freeDsc.clear();
   std::for_each(m_usedDsc.begin(), m_usedDsc.end(), MEPRx::release);
   m_usedDsc.clear();
@@ -1175,8 +1107,6 @@ void MEPRxSvc::checkTimeOut() {
 }
 
 void MEPRxSvc::publishHists() {
-  // m_monSvc->declareInfo("complTimeTSC",m_complTimeTSC,"Time to event-completion (TSC)", this);
-  // m_monSvc->declareInfo("idleTimeTSC",m_idleTimeTSC,"Time between (TSC)", this);
   m_monSvc->declareInfo("MEPcomplTime", m_complTimeSock, "dt(last - first MEP for given L0ID) us", this);
   m_monSvc->declareInfo("InterMEPTime", m_idleTimeSock, "dt(prev MEP - current MEP) us", this);
   m_monSvc->declareInfo("L0IDDiff", m_L0IDDiff, "L0ID difference between 2 consecutive events", this);
@@ -1194,7 +1124,6 @@ void MEPRxSvc::publishCounters()
   PUB64CNT(totMEPReqPkt,       "Total Sent MEP-request packets");
   PUB64CNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
   PUB64CNT(notReqPkt,          "Total unsolicited packets");
-  PUB64CNT(totWrongPartID,     "Packets with wrong partition-ID");
   PUBARRAYCNT(badLenPkt,       "MEPs with mismatched length");
   PUBARRAYCNT(misPkt,          "Missing MEPs");
   PUBARRAYCNT(badPckFktPkt,    "MEPs with wrong packing (MEP) factor");
@@ -1230,9 +1159,6 @@ void MEPRxSvc::clearCounters() {
   m_numMEPRecvTimeouts = 0;
   m_totMEPReq          = 0;
   m_totBadMEP          = 0;
-  m_totWrongPartID     = 0;
-  // m_complTimeTSC->reset();
-  // m_idleTimeTSC->reset();
   m_complTimeSock->reset();
   m_idleTimeSock->reset();
   m_L0IDDiff->reset();
@@ -1243,12 +1169,9 @@ int MEPRxSvc::setupCounters() {
 
   m_complTimeSock = m_histSvc->book("complTimeSock", 
 				   "dt(last - first MEP for given L0ID) us",
-				   20 , 0., 16000.);
+				   500 , 0., 100000.);
   m_idleTimeSock = m_histSvc->book("idleTimeSock", 
-				  "dt(prev MEP current MEP) us", 50, 0., 100000);
-  // title, description, interval, min val, max val
-  // here we want the difference between the previous l0id and the one we just received.
-  // 30000 is about nb nodes * packing factor
+				  "dt(prev MEP current MEP) us", 100, 0., 1000000);
   m_L0IDDiff = m_histSvc->book("L0IDDiff", 
                                   "L0ID difference between 2 consecutive events", 50, -30000., 30000.); 
 
@@ -1295,16 +1218,6 @@ void  MEPRxSvc::handle(const Incident& inc)    {
   }
 }
 
-int MEPRxSvc::setupTimer(void) {
-  unsigned long t;
-  if (m_errorCheckInterval <= 0) return 0;
-  if (lib_rtl_set_timer(m_errorCheckInterval, errorCheck, this, &t)) {
-    m_timer = t;
-    return 0; // in the weird world of the OnlineKernel 0 = 1 and 1 = 0 ...
-  }
-  return 1;
-}
-
 StatusCode MEPRxSvc::initialize()  {
   StatusCode sc = Service::initialize();
   if (!sc.isSuccess())
@@ -1317,10 +1230,6 @@ StatusCode MEPRxSvc::initialize()  {
     return error("Failed to open socket: IPProtoIn");
   else if ( !allocRx().isSuccess()         )
     return error("Failed to allocate RX");
-  else if (lib_rtl_create_lock(0, &m_usedDscLock) != 1)
-    return error("Failed to create lock m_usedDscLock.");
-  else if (lib_rtl_create_lock(0, &m_freeDscLock) != 1)
-    return error("Failed to create lock m_freeDscLock.");
   else if (!service("IncidentSvc", m_incidentSvc).isSuccess())
     return error("Failed to access incident service.");
   else if (!service("HistogramSvc", m_histSvc).isSuccess())
@@ -1337,8 +1246,6 @@ StatusCode MEPRxSvc::initialize()  {
   else {
     return error("Failed to access monitor service.");
   }
-  if (setupTimer()) 
-    return error("Failed to initialize timer.");
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
@@ -1347,8 +1254,6 @@ StatusCode MEPRxSvc::finalize()  {
   MsgStream log(msgSvc(),"MEPRx");
 
   log << MSG::INFO << "Entering finalize....." << endmsg;
-  if (m_errorCheckInterval > 0) 
-    lib_rtl_kill_timer(m_timer);
   releaseRx();
   if (m_incidentSvc) {
     m_incidentSvc->removeListener(this);
