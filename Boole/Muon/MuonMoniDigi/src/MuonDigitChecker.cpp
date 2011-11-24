@@ -20,7 +20,7 @@
 #include "MuonDet/DeMuonDetector.h"   
 #include "MuonDigitChecker.h"
 
-DECLARE_ALGORITHM_FACTORY( MuonDigitChecker );
+DECLARE_ALGORITHM_FACTORY( MuonDigitChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +40,7 @@ MuonDigitChecker::MuonDigitChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDigitChecker::~MuonDigitChecker() {}; 
+MuonDigitChecker::~MuonDigitChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -224,7 +224,7 @@ StatusCode MuonDigitChecker::execute() {
   LHCb::MuonDigits::const_iterator jdigit;
   int Dsta, Dreg, Dcon;
   double Dfir;
-  bool Deve, Dali;
+  bool Deve;
   double x,y,z;  double dx,dy,dz;  
   
   for(jdigit=digit->begin();jdigit<digit->end();jdigit++){
@@ -266,7 +266,7 @@ StatusCode MuonDigitChecker::execute() {
     // Electronic Noise      = 5
     Dcon = digInfo.natureOfHit();
     Deve = digInfo.doesFiringHitBelongToCurrentEvent();
-    Dali = digInfo.isAlive();
+    // bool Dali = digInfo.isAlive(); // not used
     Dfir = MCmd->firingTime();
     m_digit_firing.push_back((float)Dfir);
     m_digit_origin.push_back((float)Dcon);
@@ -378,7 +378,7 @@ StatusCode MuonDigitChecker::execute() {
   if(sc.isFailure())debug()<<" nt error "<<endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
   
 //=============================================================================
 //  Finalize
