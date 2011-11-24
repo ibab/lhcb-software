@@ -1,8 +1,8 @@
 #include "Mint/IDalitzEventList.h"
 
-#include "Mint/Chi2Binning.h"
-#include "Mint/Chi2Box.h"
-#include "Mint/Chi2BoxSet.h"
+#include "Mint/ScpBinning.h"
+#include "Mint/ScpBox.h"
+#include "Mint/ScpBoxSet.h"
 
 #include "Mint/DalitzHistoStackSet.h"
 
@@ -15,10 +15,10 @@
 using namespace MINT;
 using namespace std;
 
-int* Chi2Binning::__colourPalette=0;
-int  Chi2Binning::__Ncol=256;
+int* ScpBinning::__colourPalette=0;
+int  ScpBinning::__Ncol=256;
 
-void Chi2Binning::makeColourPaletteBlueGrey(){
+void ScpBinning::makeColourPaletteBlueGrey(){
   static const int NRGBs = 7;
   if(0 != __colourPalette) delete[] __colourPalette;
   __colourPalette = new int[__Ncol];
@@ -34,7 +34,7 @@ void Chi2Binning::makeColourPaletteBlueGrey(){
 
   for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
 }
-void Chi2Binning::makeColourPaletteBlueWhite(){
+void ScpBinning::makeColourPaletteBlueWhite(){
   static const int NRGBs = 7;
   if(0 != __colourPalette) delete[] __colourPalette;
   __colourPalette = new int[__Ncol];
@@ -48,9 +48,13 @@ void Chi2Binning::makeColourPaletteBlueWhite(){
 					    , red, green, blue
 					    , __Ncol);
 
-  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+//  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+  for(int i=-1*__Ncol/2; i < __Ncol/2; i++) __colourPalette[i]=Fi + i + __Ncol/2;
+
+  std::cout << "Fi2: " << Fi << std::endl;
+
 }
-void Chi2Binning::makeColourPaletteRGB(){
+void ScpBinning::makeColourPaletteRGB(){
   static const int NRGBs = 5;
   
   if(0 != __colourPalette) delete[] __colourPalette;
@@ -65,26 +69,31 @@ void Chi2Binning::makeColourPaletteRGB(){
 					      , red, green, blue
 					      , __Ncol);
   
-  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+//  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
+  for(int i=-1*__Ncol/2; i < __Ncol/2; i++) __colourPalette[i]=Fi + i + __Ncol/2;
+
+  std::cout << "Fi3: " << Fi << std::endl;
+
 }
-void Chi2Binning::makeColourPalette(){
+void ScpBinning::makeColourPalette(){
   makeColourPaletteBlueGrey();
   //makeColourPaletteRGB();
   //makeColourPaletteBlueWhite();
 }
 
-int* Chi2Binning::getColourPalette(){
+int* ScpBinning::getColourPalette(){
   if(0 == __colourPalette) makeColourPalette();
   return __colourPalette;
 }
 
-Chi2Binning::Chi2Binning()
+ScpBinning::ScpBinning()
   : _nData(0)
-  , _nMC(0)
+  , _nDataCC(0)
   , _totalMCWeight(0)
+  , m_norm(10)
 {
 }
-int Chi2Binning::createBinning(IDalitzEventList* events
+int ScpBinning::createBinning(IDalitzEventList* events
 			       , int minPerBin
 			       , int maxPerBin
 			       ){
@@ -94,20 +103,20 @@ int Chi2Binning::createBinning(IDalitzEventList* events
   const IDalitzEvent* evt0 = events->getREvent(0);
   if(0 == evt0) return 0;
 
-  Chi2BoxSet boxes = splitBoxes(events, maxPerBin);
+  ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
   mergeBoxes(boxes, minPerBin);
 
   return numBins();
 }
 
-int Chi2Binning::mergeBoxes(Chi2BoxSet& boxes, int minPerBin){
-  lessByChi2BoxData sorter;
+int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
+  lessByScpBoxData sorter;
   sort(boxes.begin(), boxes.end(), sorter);
   // this way, the smalles boxes come first 
   // makes sure no empty box is left over at the end.
 
-  Chi2BoxSet boxSet;
+  ScpBoxSet boxSet;
   for(unsigned int i=0; i < boxes.size(); i++){
     boxSet.add(boxes[i]);
     if(boxSet.nData() >= minPerBin){
@@ -120,19 +129,20 @@ int Chi2Binning::mergeBoxes(Chi2BoxSet& boxes, int minPerBin){
 }
 
 
-Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
+ScpBoxSet ScpBinning::splitBoxes(IDalitzEventList* events
 				   , int maxPerBin
 				   ) const{
   bool dbThis=false;
-  Chi2BoxSet dummy;
+  ScpBoxSet dummy;
   if(0 == events) return dummy;
   if(0 == events->size()) return dummy;
   const IDalitzEvent* evt0 = events->getREvent(0);
   if(0 == evt0) return dummy;
   
-  Chi2Box box(evt0->eventPattern());
+  ScpBox box(evt0->eventPattern());
 
-  Chi2BoxSet boxes(box.split(0));
+  std::cout << "Event Pattern " << evt0->eventPattern() << std::endl;
+  ScpBoxSet boxes(box.split(0));
   bool needToSplitMore=false;
   int counter=0;
   do{
@@ -142,26 +152,28 @@ Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
     events->Start();
     while(events->Next()){
       bool added = boxes.addData(events->getEvent());
+
       if(! added) failedSet++;
       if(! box.addData(events->getEvent())){
-	failedBox++;
+    	  failedBox++;
       }
     }
     if(failedSet > 0 || dbThis){
-      cout << " Chi2Binning::splitBoxes: ERROR split level " << counter 
+      cout << " ScpBinning::splitBoxes: ERROR split level " << counter
 	   << ", num boxes: " << boxes.size()
 	   << ", failedSet: " << failedSet
 	   << ", failedBox: " << failedBox << endl;
     }
 
-    Chi2BoxSet newBoxes;
+    ScpBoxSet newBoxes;
     needToSplitMore=false;
     for(unsigned int i=0; i < boxes.size(); i++){
       if( boxes[i].nData() > maxPerBin ){
-	needToSplitMore=true;
-	newBoxes.add(boxes[i].split());
-      }else{
-	newBoxes.add(boxes[i]);
+    	  needToSplitMore=true;
+    	  newBoxes.add(boxes[i].split());
+      }
+      else{
+    	  newBoxes.add(boxes[i]);
       }
     }
     boxes = newBoxes;
@@ -170,119 +182,97 @@ Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
   return boxes;
 }
 
-void Chi2Binning::resetEventCounts(){
+void ScpBinning::resetEventCounts(){
   _nData=0;
-  _nMC=0;
+  _nDataCC=0;
   _totalMCWeight=0.0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
     _boxSets[i].resetEventCounts();
   }
 }
-void Chi2Binning::fillData(IDalitzEventList* data){
+void ScpBinning::fillData(IDalitzEventList* data){
   data->Start();
   while(data->Next()){
     bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
       if(_boxSets[i].addData(data->getEvent())){
-	foundBox=true;
-	_nData++;
-	break;
+    	  foundBox=true;
+    	  _nData++;
+    	  break;
       }
     }
     if(! foundBox){
-      cout << "WARNING in Chi2Binning::fillData:"
+      cout << "WARNING in ScpBinning::fillData:"
 	   << "\n\t didn't find box for event " 
 	   << endl;
-      data->getEvent()->print();
+//      data->getEvent()->print();
       cout << "compare to first event: " << endl;
-      data->getREvent(0)->print();
-      Chi2Box box(data->getEvent()->eventPattern());
+//      data->getREvent(0)->print();
+      ScpBox box(data->getEvent()->eventPattern());
       cout << "would have fit into large? "
 	   << box.addData(data->getEvent()) << endl;
     }
   }
 }
-void Chi2Binning::fillMC(IDalitzEventList* mc
-			 , IDalitzPdf* pdf){
-  bool dbThis=false;
-  if(dbThis){
-    cout << "Chi2Binning::fillMC called with "
-	 << mc << ", " <<  pdf << endl;
-  }
-  mc->Start();
-  pdf->setEventRecord(mc);
-  int counter=0;
-  int printevery=10000;
-  while(mc->Next()){
-    counter++;
-    bool printit = (0 == counter%printevery);
-    if(printit) cout << "...fillMC filling event number " << counter;
-    IDalitzEvent* evt = mc->getEvent();
-    double weight = pdf->getVal_noPs() * evt->getWeight() / 
-      evt->getGeneratorPdfRelativeToPhaseSpace();
-    
-    if(printit) cout << ", with weight " << weight << endl;
-    int n=0;
+
+void ScpBinning::fillDataCC(IDalitzEventList* data){
+  data->Start();
+  while(data->Next()){
+    bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
-      if(_boxSets[i].addMC(evt, weight)){
-	_totalMCWeight += weight;
-	_nMC++;
-	n++;
+      if(_boxSets[i].addMC(data->getEvent(),1.0)){
+	foundBox=true;
+	_nDataCC++;
 	break;
       }
     }
-    if(dbThis){
-      cout << "event " << counter << " in " << n << " out of " << numBins()
-	   << " box sets" << endl;
-      if(0 == n) evt->print();
-      cout << "mc weight now: " << _totalMCWeight << endl;
-    }
   }
-  if(dbThis) cout << "Total MC weight: " << _totalMCWeight << endl;
-  pdf->resetEventRecord();
 }
 
-void Chi2Binning::sortByChi2(){
-  lessByChi2BoxSetChi2 sorter;
+
+void ScpBinning::sortByScp(){
+  lessByScpBoxSetScp sorter;
   stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
 }
-double Chi2Binning::setEventsAndPdf(IDalitzEventList* data
-				    , IDalitzEventList* mc
-				    , IDalitzPdf* pdf
-				    , IFastAmplitudeIntegrable* fas
+
+//void ScpBinning::sortByScp(){
+//  lessByScpBoxSetScp sorter;
+//  stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
+//}
+double ScpBinning::setEvents(IDalitzEventList* data
+				    , IDalitzEventList* dataCC
 				    ){
   bool dbThis=false;
-  if(dbThis) cout << "Chi2Binning::setEventsAndPdf" << endl;
+  if(dbThis) cout << "ScpBinning::setEventsAndPdf" << endl;
   if(0 == data) return -9999;
-  if(0 == mc) return -9999;
-  if(0 == pdf) return -9999;
+  if(0 == dataCC) return -9999;
   //(could do this: if 0 == pdf: mc generated with pdf from fit result.
   // But for now, leave it like this for safety)
 
   if(0 == numBins()) createBinning(data);
-  if(0 != fas) setFas(fas);
+//  if(0 != fas) setFas(fas);
   if(dbThis) cout << "...number of chi2 bins = " << numBins() << endl;
   resetEventCounts();
   if(dbThis) cout << "...about to fill in the data " << endl;
   fillData(data);
   if(dbThis) cout << "...done that - now the MC" << endl;
-  fillMC(mc, pdf);
+  fillDataCC(dataCC);
   if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
   setBoxesNormFactors();
   if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
-  sortByChi2();
-  if(dbThis) cout << " Chi2Binning::setEventsAndPdf done" << endl;
+  sortByScp();
+  if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
   return 0;
 }
 
-void Chi2Binning::setFas(IFastAmplitudeIntegrable* fas){
+void ScpBinning::setFas(IFastAmplitudeIntegrable* fas){
   bool dbThis=true;
 
   const_counted_ptr<IIntegrationCalculator> 
     ic = fas->makeIntegrationCalculator();
 
   if(dbThis) {
-    cout << "Chi2Binning::setFas: this is the fas:" << endl;
+    cout << "ScpBinning::setFas: this is the fas:" << endl;
     fas->print(cout);
     cout << endl;
   }
@@ -292,11 +282,11 @@ void Chi2Binning::setFas(IFastAmplitudeIntegrable* fas){
   }
 }
 
-void Chi2Binning::print(std::ostream& os) const{
+void ScpBinning::print(std::ostream& os) const{
 
   int nDataCheck=0;
   double nMCCheck=0;
-  double chi2sum=0;
+  double scpsum=0;
   double sumVarData =0;
   double sumVarMC   =0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
@@ -305,24 +295,24 @@ void Chi2Binning::print(std::ostream& os) const{
     double weight_mc = _boxSets[i].weightedMC() * normFactor();
     nMCCheck += weight_mc;
     
-    double var_mc_noNorm = _boxSets[i].rmsMC(_nMC);
+    double var_mc_noNorm = _boxSets[i].rmsMC(_nDataCC);
     double var_mc = var_mc_noNorm* normFactor()*normFactor();
     double varData_expected = weight_mc;
     sumVarData += varData_expected;
     sumVarMC   += var_mc;
-    double chi2 = chi2_ofBin(i);
-    chi2sum += chi2;
+    double scp = scp_ofBin(i);
+    scpsum += scp;
 
     os << " bin " << i;
     os << "  data " <<  _boxSets[i].nData();
     os << ", mcweight " << _boxSets[i].weightedMC() * normFactor();
     os << ", (nMC " << _boxSets[i].nMC() << ")";
-    os << ", chi2 " << chi2 << endl;
+    os << ", scp " << scp << endl;
     _boxSets[i].printBoxInfo(os);
   }
   os << "\n=========================================================="<< endl;
-  os << "chi2 / nbins = " << chi2sum << " / " << numBins() 
-     << " = " << chi2sum/numBins() << endl;
+  os << "scp / nbins = " << scpsum << " / " << numBins()
+     << " = " << scpsum/numBins() << endl;
   os << "===========================================================" << endl;
   os << " total data weight: " << nDataCheck
      << " .. _nData = " << _nData
@@ -330,7 +320,7 @@ void Chi2Binning::print(std::ostream& os) const{
      << " (un-normalised = " << _totalMCWeight << ")"
      << endl;
   if(sumVarMC > sumVarData){
-    os << "Severe WARNING in Chi2Binning::getChi2_perBin()"
+    os << "Severe WARNING in ScpBinning::getscp_perBin()"
        << "\n error on difference between data and MC dominated by MC"
        << "\n mean data variance: " << sumVarData/numBins()
        << ", ... mc: " << sumVarMC/numBins()
@@ -339,47 +329,62 @@ void Chi2Binning::print(std::ostream& os) const{
   }  
 }
 
-double Chi2Binning::normFactor() const{
-  return ((double)_nData)/_totalMCWeight;
+double ScpBinning::normFactor() const{
+//  return ((double)_nData)/_totalMCWeight;
+	return m_norm;
 }
 
-void Chi2Binning::setBoxesNormFactors(){
+void ScpBinning::setBoxesNormFactors(){
   for(unsigned int i=0; i < _boxSets.size(); i++){
     _boxSets[i].setNormFactor(normFactor());
   }
 }
 
-double Chi2Binning::chi2_ofBin(unsigned int i) const{
+
+double ScpBinning::scp_ofBin(unsigned int i) const{
   if(i > _boxSets.size()) return -9999;
-  return _boxSets[i].chi2(normFactor());
+  return _boxSets[i].scp(normFactor());
 }
-double Chi2Binning::getChi2_perBin() const{
-  if(_nMC <= 0) return -9999;
+
+double ScpBinning::getScp_perBin() const{
+  if(_nDataCC <= 0) return -9999;
   if(_nData <=0 ) return -9999;
-  if(_totalMCWeight <= 0.0) return -9999;
 
   double sum=0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
-    double chi2 = chi2_ofBin(i);
-    sum += chi2;
+    double scp = scp_ofBin(i);
+    sum += scp;
   }
 
   return sum/numBins();
 }
-double Chi2Binning::getMaxChi2() const{
-  double max=-1;
-  for(unsigned int i=0; i < _boxSets.size(); i++){
-    double chi2 = chi2_ofBin(i);
-    if(chi2 > max) max=chi2;
-  }
-  return max;
+
+double ScpBinning::getMinScp() const{
+	double min=9999;
+	  for(unsigned int i=0; i < _boxSets.size(); i++){
+	    double scp = scp_ofBin(i);
+	    if((scp) < (min)) min=scp;
+	  }
+
+	  return min;
+}
+double ScpBinning::getMaxScp() const{
+
+	double max=-1;
+	  for(unsigned int i=0; i < _boxSets.size(); i++){
+	    double scp = scp_ofBin(i);
+	    if((scp) > (max)) max=scp;
+	  }
+	  std::cout << "Max SCP " << max << std::endl;
+
+	  return max;
 }
 
-int Chi2Binning::numBins() const{
+int ScpBinning::numBins() const{
   return _boxSets.size();
 }
 /*
-void Chi2Binning::setHistoColours(){
+void ScpBinning::setHistoColours(){
   double maxChi2 = getMaxChi2();
   for(unsigned int i=0; i < _boxSets.size(); i++){
     double chi2 = chi2_ofBin(i);
@@ -389,77 +394,123 @@ void Chi2Binning::setHistoColours(){
   }
 }
 */
-void Chi2Binning::setHistoColours(){
-  double maxChi2 = getMaxChi2();
+void ScpBinning::setHistoColours(){
+  double maxScp = getMaxScp();
+  double minScp = getMinScp();
+  maxScp = 5.0;
+  minScp = -5.0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
-    double chi2 = chi2_ofBin(i);
-    int colIndex = (chi2/maxChi2)*(__Ncol-1);
+    double scp = scp_ofBin(i);
+    int colIndex = (((scp-minScp)/(maxScp-minScp))*((__Ncol)-1));
     int col = (getColourPalette())[colIndex];
     _boxSets[i].setHistoColour(col);
   }
 }
-DalitzHistoStackSet Chi2Binning::getDataHistoStack(){
+DalitzHistoStackSet ScpBinning::getDataHistoStack(){
   setHistoColours();
   DalitzHistoStackSet hstack;
 
   for(unsigned int i=0; i < _boxSets.size(); i++){
+//	  std::cout << "Adding data: " << _boxSets[i].histoData()
     hstack.add(_boxSets[i].histoData());
   }
-  double mx = getMaxChi2();
+  double mx = getMaxScp();
+  double min = getMinScp();
+  mx = 5.0;
+  min = -5.0;
+  double diff = mx - min;
+
   if(mx > 20) mx=20;
-  hstack.setColourPalette(__Ncol, __colourPalette, mx);
+
+  hstack.setColourPalette(__Ncol, __colourPalette, mx, min);
   //cout << "printing newly made data histo stack" << endl;
   //hstack.draw("experimental_chi2DataHisto");
   return hstack;
 }
-DalitzHistoStackSet Chi2Binning::getMCHistoStack(){
+DalitzHistoStackSet ScpBinning::getMCHistoStack(){
   setHistoColours();
   DalitzHistoStackSet hstack;
 
   for(unsigned int i=0; i < _boxSets.size(); i++){
     hstack.add(_boxSets[i].histoMC());
   }
-  double mx = getMaxChi2();
+  double mx = getMaxScp();
+  double min = getMinScp();
+
   if(mx > 20) mx=20;
 
-  hstack.setColourPalette(__Ncol, __colourPalette, mx);
+  hstack.setColourPalette(__Ncol, __colourPalette, mx, min);
   //  cout << "printing newly made MC histo stack" << endl;
   // hstack.draw("experimental_chi2MCHisto");
   return hstack;
 }
 
-counted_ptr<TH1D> Chi2Binning::getChi2Distribution() const{
-  int nbins=100;
-  double from=0, to=getMaxChi2();
+counted_ptr<TH1D> ScpBinning::getScpDistribution() const{
+  int nbins=40;
+//  double from=-1*getMaxScp(), to=getMaxScp();
+  double from=-5.0, to=5.0;
+
+  //  double from=-2, to=2;
+
   cout << "from " << from << " to " << to << endl;
-  counted_ptr<TH1D> h(new TH1D("chi2 distribution", "chi2 distribution"
+  counted_ptr<TH1D> h(new TH1D("Scp distribution", "Scp distribution"
 			       , nbins, from, to));
   h->SetDirectory(0);
   for(unsigned int i=0; i < _boxSets.size(); i++){
     //cout << "filling chi2 " << _boxSets[i].chi2() << endl;
-    h->Fill(_boxSets[i].chi2());
+    h->Fill(_boxSets[i].scp(m_norm));
   }
   return h;
 }
-void Chi2Binning::drawChi2Distribution(const std::string& fname)const{
+void ScpBinning::drawScpDistribution(const std::string& fname)const{
   TCanvas can;
-  can.SetLogy();
-  counted_ptr<TH1D> h(getChi2Distribution());
+//  can.SetLogy();
+  counted_ptr<TH1D> h(getScpDistribution());
   h->Draw();
   can.Print(fname.c_str());
 }
 
-bool lessByChi2BoxData::operator()(const Chi2Box& a, const Chi2Box& b) const{
+
+double ScpBinning::Chi2() const{
+	double chi2 = 0;
+	double norm = this->normFactor();
+
+	for(unsigned int i=0; i < _boxSets.size(); i++){
+		//cout << "filling chi2 " << _boxSets[i].chi2() << endl;
+		chi2 = chi2 + (_boxSets[i].scp(norm))*(_boxSets[i].scp(norm));
+	}
+	return chi2;
+}
+
+double ScpBinning::Prob() const
+{
+	double chi2 = this->Chi2();
+	double prob = TMath::Prob(chi2,(int)_boxSets.size()-1);
+	return prob;
+}
+double ScpBinning::Prob(double chi2) const
+{
+	double prob = TMath::Prob(chi2,_boxSets.size()-1);
+	return prob;
+}
+
+int ScpBinning::ndof() const
+{
+	return _boxSets.size()-1;
+}
+
+bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
+
+  return fabs(a.scp()) < fabs(b.scp());
+}
+
+bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
 
   return a.nData() < b.nData();
 }
 
-bool lessByChi2BoxSetChi2::operator()(const Chi2BoxSet& a, const Chi2BoxSet& b) const{
 
-  return a.chi2() < b.chi2();
-}
-
-std::ostream& operator<<(std::ostream& os, const Chi2Binning& c2b){
+std::ostream& operator<<(std::ostream& os, const ScpBinning& c2b){
   c2b.print(os);
   return os;
 }

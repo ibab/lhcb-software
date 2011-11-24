@@ -456,6 +456,43 @@ bool DalitzEventList::fromNtuple(TTree* ntp){
   return success;
 }
 
+bool DalitzEventList::fromNtuple(TTree* ntp, double num){
+  bool dbThis=false;
+  if(dbThis) cout << "about to read ntuple with ptr " << ntp << endl;
+  if(0==ntp) return false;
+  if(ntp->GetEntries() <=0) return false;
+  if(dbThis) cout << " number of entries: " << ntp->GetEntries() << endl;
+  //if(dbThis) cout << " number of variables " << ntp->GetNvar() << endl;
+  TRandom Rand(500);
+  bool success=true;
+  for(Long64_t i=0; i< ntp->GetEntries(); i++){
+    if(dbThis){
+      cout << "DalitzEventList::fromNtuple "
+	   << " getting " << i << " th entry" << endl;
+    }
+    double rand = Rand.Rndm();
+    if (rand < num)
+    {
+		ntp->GetEntry(i);
+		if(dbThis) cout << " got it" << endl;
+		DalitzEvent evt;
+		//    success &= evt.fromNtuple(ntp);
+		success &= evt.fromTree(ntp);
+		if(dbThis) cout << " made event" << endl;
+		if(! success){
+		  cout << "ERROR in DalitzEventList::fromNtuple"
+		   << ", call to DalitzEvent::fromNtuple returned false!"
+		   << endl;
+		  return false;
+		}
+		this->Add(evt);
+		if(dbThis) cout << " added event" << endl;
+    }
+  }
+  if(dbThis) cout << "DalitzEventList::fromNtuple worked!" << endl;
+  return success;
+}
+
 bool DalitzEventList::fromNtupleFile(const std::string& fname){
   TFile f(fname.c_str());
   f.cd();

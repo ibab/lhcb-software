@@ -111,6 +111,8 @@ class DalitzEventList
 		    , const std::string& ntpName
 		    ) const;
   bool fromNtuple(TTree* ntp);
+  bool fromNtuple(TTree* ntp, double num);
+
   bool fromNtupleFile(const std::string& fname="DalitzEvents.root");
 
 };

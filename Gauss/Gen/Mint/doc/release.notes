@@ -6,9 +6,24 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+
+! 24-11-2011 - Matt Coombes
+ - Introduction of Miranda Method within MINT
+
+! 15-11-2011 - Jonas Rademacker
+ - Add A1 D-wave decay to K3pi model 
+ 
 !=========================== Mint v1r2 2011-11-11 ============================
 
+! 04-11-2011 - Matt Coombes
+ - Minor updates to ParticlePropertiesList
+
 !=========================== Mint v1r1 2011-10-17 ============================
+
+! 25-10-2011 - Matt Coombes
+ - Updates to particle properties
+ - Introduction of Chi2 binning
+   
 
 !=========================== Mint v1r0 2011-09-10 ============================
 

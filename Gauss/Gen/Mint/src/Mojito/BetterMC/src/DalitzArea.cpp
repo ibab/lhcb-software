@@ -119,6 +119,7 @@ void DalitzArea::makeCoordinateMap() const{
     _coords[_t01] = &_t01;
     _coords[_s34] = &_s34;
     _coords[_t40] = &_t40;
+
   }
   //cout << "DalitzArea::makeCoordinateMap() made map, returning true" << endl;
   _madeCMap = true;
