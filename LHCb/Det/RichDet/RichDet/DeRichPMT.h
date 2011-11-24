@@ -74,7 +74,11 @@ public:
                                       Gaudi::XYZPoint& detectPoint,
                                       const bool photoCathodeSide = true ) const;
 
-  Gaudi::XYZPoint detPointOnAnode (const LHCb::RichSmartID smartID ) const;
+  /** Converts a RichSmartID to a point on the anode in global coordinates.
+   *  @param[in] smartID The RichSmartID for the PMT channel
+   *  @return The detection point on the anode in global coordinates
+   */
+  Gaudi::XYZPoint detPointOnAnode ( const LHCb::RichSmartID smartID ) const;
 
 private:
 

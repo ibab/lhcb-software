@@ -29,7 +29,6 @@
 #include "RichDet/DeRichLocations.h"
 #include "RichDet/RichDetConfigType.h"
 
-class DeRichHPDPanel; // kept for backward compatibility
 class DeRichPDPanel;
 
 /** @class DeRich DeRich.h

@@ -16,7 +16,7 @@ namespace Rich
    */
   enum RichPhDetConfigType
     {
-      InvalidPDConfig = -1, ///< Invalid PD configy
+      InvalidPDConfig = -1, ///< Invalid PD config
       HPDConfig       = 0,  ///< HPD photodetectors
       PMTConfig       = 1   ///< PMT photodetectors
     };

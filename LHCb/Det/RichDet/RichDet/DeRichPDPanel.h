@@ -53,6 +53,9 @@ public:
   /// Access the PD panel side
   inline Rich::Side side() const { return m_side; }
 
+  /// Access the PD type
+  inline LHCb::RichSmartID::IDType pdType() const { return m_pdType; }
+
   /// The number of PD columns in this panel
   inline unsigned int nPDColumns() const { return m_PDColumns; }
   
@@ -216,6 +219,7 @@ protected: // Parameters that must be properly configured in the derived classes
 
   Rich::DetectorType m_rich;   ///< The RICH detector type
   Rich::Side m_side;           ///< The RICH PD panel (up, down, left or right)
+  LHCb::RichSmartID::IDType m_pdType; ///< The PD technology type (HPD or MaPMT)
 
   double m_localOffset; ///< offset applied in the global to panel coordinate transformation
 

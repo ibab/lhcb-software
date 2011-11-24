@@ -21,11 +21,11 @@
 /** @class DeRichPMTPanel DeRichPMTPanel.h RichDet/DeRichPMTPanel.h
  *
  *  Detector element for PMT panels
- *  
+ *
  *  @author Sajan Easo
  *  @date   2011-10-10
  */
-class DeRichPMTPanel : public DeRichPDPanel 
+class DeRichPMTPanel : public DeRichPDPanel
 {
 
 public:
@@ -83,8 +83,11 @@ public:
   /// Get tge sensitivevolumeID
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
+  /** Converts a RichSmartID to a point on the anode in global coordinates.
+   *  @param[in] smartID The RichSmartID for the PMT channel
+   *  @return The detection point on the anode in global coordinates
+   */
   Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID smartID ) const;
-
 
 private:
 
@@ -92,7 +95,7 @@ private:
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
 
   const DeRichPMT* dePMT( const unsigned int PmtCopyNumber ) const;
-  
+
 
   std::vector<int> getPmtRowColFromPmtNum( const int aPmtNum );
 
