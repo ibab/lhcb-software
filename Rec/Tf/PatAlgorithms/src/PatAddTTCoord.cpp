@@ -265,7 +265,13 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
   double xTol = m_xTol + m_xTolSlope / p;
   double fixedWeight = 9./(xTol*xTol);
 
-  while ( 1.e10 < chi2 ) {
+  const unsigned int nHits = goodTT.size();
+  unsigned int counter = 0;
+
+  // -- Loop until chi2 has a reasonable value or no more outliers can be removed to improve it 
+  // -- (with the counter as a sanity check to avoid infinite loops).
+
+  while ( 1.e10 < chi2 && counter < nHits) {
 
     int nDoF = 0;
     std::vector<int> differentPlanes(4, 0);
@@ -350,6 +356,9 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
 
     }
 
+
+    // -- Increase the sanity check counter
+    counter++;
   }
 
 
