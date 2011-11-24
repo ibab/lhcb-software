@@ -82,6 +82,9 @@
 
   <class name="LHCb::RichSmartID"/>
   <class name="LHCb::RichSmartID::Vector"/>
+  <class name="LHCb::RichSmartID::HPD"/>
+  <class name="LHCb::RichSmartID::MaPMT"/>
+  <enum  name="LHCb::RichSmartID::IDType"/>
 
 <!-- Counters in TES --> 
 
