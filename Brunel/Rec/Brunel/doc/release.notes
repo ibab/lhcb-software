@@ -10,6 +10,7 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes in Brunel v41r3 output:
   . MuonPID objects now saved only if track is InAcceptance (MuonID)
   . Monitor tracks with large IP (TrackCheckers)
+  . Improve efficiency for large IP tracks (FastVelo)
 
 </PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r1, Lbcom v11r1,
