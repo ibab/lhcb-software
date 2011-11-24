@@ -51,12 +51,12 @@ private:
 inline MuonChamberResponse* MuonDetectorResponse::getChamberResponse(int
                             part){
        return    responseChamber[part];					
-};
+}
 
 inline MuonPhysicalChannelResponse* MuonDetectorResponse::getResponse(int part,
                                                                int readout)
 {
  	return responseVector[readout][part]; 
-};
+}
 
 #endif

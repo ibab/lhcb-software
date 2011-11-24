@@ -1,6 +1,3 @@
-
-// $Id: MuonDetectorResponse.cpp,v 1.10 2005/04/05 09:21:08 cattanem Exp 
-
 #include <vector>
 #include <cmath>
 
@@ -52,7 +49,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
   int i=0;  
   while(i<m_stationNumber){
     numsta[i]=basegeometry.getStationName(i);    
-    log<<MSG::DEBUG<<" station "<<i<<" "<<numsta[i]<<endreq;
+    log<<MSG::DEBUG<<" station "<<i<<" "<<numsta[i]<<endmsg;
     i++;    
   }
   m_partition=basegeometry.getPartitions();    
@@ -60,7 +57,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
   for(i=0;i<m_stationNumber;i++){
     for (int k=0;k<m_regionNumber;k++){
       regionName[i*4+k]=geoBase+numsta[i]+"R"+numreg[k]+"Readout";
-      log<<MSG::DEBUG<<"region name "<<regionName[i*4+k]<<endreq;
+      log<<MSG::DEBUG<<"region name "<<regionName[i*4+k]<<endmsg;
     }
   }
   
@@ -74,8 +71,8 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
     
     SmartDataPtr<MuonReadoutCond>  muReadout(detSvc,
                                              pathReadout);
-    log<<MSG::DEBUG<<" detRegionPointer "<<endreq;
-    if(muReadout)log<<MSG::VERBOSE<<" gg "<<endreq;
+    log<<MSG::DEBUG<<" detRegionPointer "<<endmsg;
+    if(muReadout)log<<MSG::VERBOSE<<" gg "<<endmsg;
     newMean=muReadout->chamberNoise(0)/100; //tranform from cm^2 to mm^2
     Rndm::Numbers*	poissonDist=new Rndm::Numbers;
     //int areadout=0;
@@ -84,16 +81,16 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
     double totalArea=areaOfChamber* numberOfGaps;
     double meanOfNoisePerChamber=newMean*totalArea*25*1.0E-9;
     log<<MSG::DEBUG<<"region name "<<regionName[indexRegion]
-       <<" noise level "<<meanOfNoisePerChamber<<endreq;			
-    StatusCode sc=poissonDist->initialize( randSvc, Rndm::Poisson(meanOfNoisePerChamber));  
-    if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini poisson dist "<<endreq;
+       <<" noise level "<<meanOfNoisePerChamber<<endmsg;			
+    sc=poissonDist->initialize( randSvc, Rndm::Poisson(meanOfNoisePerChamber));  
+    if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini poisson dist "<<endmsg;
     m_poissonDist.push_back(poissonDist);
     
     MuonChamberResponse* responseOfChamber= new 
       MuonChamberResponse(&m_flatDist,poissonDist,newMean );
     responseChamber[indexRegion]=responseOfChamber;
     log<<MSG::DEBUG<<" stat "<<station<<" "<<region<<
-      " "<<m_muonDetector->readoutInRegion(station,region)<<endreq;
+      " "<<m_muonDetector->readoutInRegion(station,region)<<endmsg;
     
     
     for(int readout=0;readout<m_muonDetector->
@@ -101,33 +98,33 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
       double min,max; 
       std::vector<double> timeJitterPDF=muReadout->
         timeJitter( min, max ,  readout);
-      log<<MSG::VERBOSE<<" time jitter "<<min<<" "<<max<<endreq;
+      log<<MSG::VERBOSE<<" time jitter "<<min<<" "<<max<<endmsg;
       
       Rndm::Numbers*	m_time=new Rndm::Numbers;
       sc=m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
-      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini time jitter "<<endreq;
+      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini time jitter "<<endmsg;
 
       m_timeJitter.push_back(m_time);
       std::vector<double>::iterator itPDF;
       for (itPDF=timeJitterPDF.begin();itPDF<timeJitterPDF.end();itPDF++){		
-     	log<<MSG::VERBOSE<<" time jitter "<<*itPDF<<endreq;
+     	log<<MSG::VERBOSE<<" time jitter "<<*itPDF<<endmsg;
       }
       Rndm::Numbers*	p_electronicNoise=new Rndm::Numbers;
       double noiseCounts=muReadout->electronicsNoise(readout)*
         m_muonDetector->getPhChannelNX( readout,station, region)*
         m_muonDetector->getPhChannelNY( readout,station, region)*25*1.0E-9;
-log<<MSG::VERBOSE<<"noisecounts "<<noiseCounts<<endreq;
+log<<MSG::VERBOSE<<"noisecounts "<<noiseCounts<<endmsg;
       sc=p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
-      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini ele noise dist "<<endreq;
+      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini ele noise dist "<<endmsg;
       m_electronicNoise.push_back(p_electronicNoise);	
 
       MuonPhysicalChannelResponse* response= new
         MuonPhysicalChannelResponse(&m_flatDist,&m_gaussDist,
                                     m_time,p_electronicNoise,min,max,
                                     muReadout, readout );
-log<<MSG::DEBUG<<"inserting "<<readout<<" "<<indexRegion<<endreq;
+log<<MSG::DEBUG<<"inserting "<<readout<<" "<<indexRegion<<endmsg;
       responseVector[readout][indexRegion]=response;
-log<<MSG::DEBUG<<"inserted "<<endreq;
+log<<MSG::DEBUG<<"inserted "<<endmsg;
     }
   }  
   

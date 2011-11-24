@@ -28,10 +28,10 @@ const MuonPhPreInput& second )const
 //                   cout<<"first to chid"<<
 //                     (first.phChID())<<" "<<
 //											pippo<<
-//                     first.phChID()->getID()<<endreq;
+//                     first.phChID()->getID()<<endmsg;
 //                   cout<<"second to chid "<<
 //                     second.phChID()<<"" <<
-//                     second.phChID()->getID()<<endreq; 
+//                     second.phChID()->getID()<<endmsg; 
 
 	    return (first.phChID()->getID())>=(second.phChID()->getID());
 //			}

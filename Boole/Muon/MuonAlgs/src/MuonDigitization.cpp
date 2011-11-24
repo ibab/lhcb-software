@@ -1,5 +1,3 @@
-//$Id: MuonDigitization.cpp,v 1.51 2009-10-08 16:13:40 asatta Exp $
-
 #include <algorithm>
 #include <vector>
 #include <cmath>
@@ -16,7 +14,7 @@
 #include "SortPhChID.h" 
 #include "ComparePC.h"
 
-DECLARE_ALGORITHM_FACTORY( MuonDigitization );
+DECLARE_ALGORITHM_FACTORY( MuonDigitization )
 
 //reserve space for static variable
 std::string MuonDigitization::spill[6] = 
@@ -85,7 +83,7 @@ StatusCode MuonDigitization::initialize()
   m_spill=6;
   m_container=4;
   unsigned int count=1;
-  for (int i=0;i<4;i++){
+  for (i=0;i<4;i++){
     count=count*2;    
   }
   m_timeBin=m_BXTime/(count);  
@@ -249,7 +247,7 @@ StatusCode MuonDigitization::finalize()
   // Release the tools
   //if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );
   //if( m_pGetInfo ) toolSvc()->releaseTool( m_pGetInfo );
-info()<<" the hit which were not found inside a gap were "<<m_hitNotInGap<<endreq;;
+info()<<" the hit which were not found inside a gap were "<<m_hitNotInGap<<endmsg;;
 
   detectorResponse.finalize();
   
@@ -379,7 +377,7 @@ MuonDigitization::createInput(
   
   //loop over the containers
   std::vector<MuonPhPreInput> keepTemporary[20] ;	
-//    info()<<" quanti eventi "<<m_numberOfEvents<<endreq;
+//    info()<<" quanti eventi "<<m_numberOfEvents<<endmsg;
   for (int ispill=0; ispill<=m_numberOfEvents;ispill++){
     long spillTime=0;     
     spillTime=spillTimeOffset[ispill]*m_BXTime;
@@ -605,8 +603,8 @@ elaborateMuonPhyChannelInputs(
           
           outputPointer->hitsTraceBack().push_back(*pointerToHitTraceBack) ;
           prevFE=lastFE;
-          StatusCode asc=PhysicalChannel.addMuonObject(i,outputPointer);
-          if(asc.isFailure())debug()<<"error in adding obj "<<endmsg;        
+          StatusCode _asc=PhysicalChannel.addMuonObject(i,outputPointer);
+          if(_asc.isFailure())debug()<<"error in adding obj "<<endmsg;        
         }			
       }						
     }

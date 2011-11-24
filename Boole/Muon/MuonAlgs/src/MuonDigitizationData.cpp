@@ -7,7 +7,6 @@
 #include "MuonPhysicalChannel.h" 
 #include "MuonPhysicalChannelOutput.h" 
 #include "MuonCardiacChannelOutput.h"
-//#include "MuonODEOutput.h"
 
 #ifdef _WIN32
 #pragma warning ( disable : 4661 ) // No suitable definition provided for explicit template instantiation request
@@ -31,7 +30,7 @@ MuonDigitizationData<T>::MuonDigitizationData(const std::string &path,
     muonDataPartition[i]=pippo;    
   }
   
-// *log << MSG::INFO<<"ciao"<<endreq;
+// *log << MSG::INFO<<"ciao"<<endmsg;
 
 endPathInTES[0]=std::string("M1/R1");
 endPathInTES[1]=std::string("M1/R2");
@@ -59,11 +58,11 @@ endPathInTES[19]=std::string("M5/R4");
 
 
 template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
- //*log << MSG::INFO<<"ciao"<<m_registered<<endreq;
+ //*log << MSG::INFO<<"ciao"<<m_registered<<endmsg;
   if(m_registered==0){
     *log << MSG::DEBUG 
          <<" the contatiners have not been registed in the TES"
-         << " => deleting objects "<<endreq;
+         << " => deleting objects "<<endmsg;
     typename KeyedContainer<T>::iterator it;
     for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){      
       for(it=(*muonDataPartition[i]).begin();
@@ -76,16 +75,16 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
   }
   else if(m_registered>0){
     *log << MSG::DEBUG 
-         <<" the contatiners have been registed in the TES " <<endreq;
+         <<" the contatiners have been registed in the TES " <<endmsg;
   }
   else if(m_registered<0){
     *log << MSG::DEBUG
          << " the contatiners have not been registed in the TES"
          << " for some error."
-         << endreq;
+         << endmsg;
     
   } ;  
-// *log << MSG::INFO<<"cavolo "<<endreq;
+// *log << MSG::INFO<<"cavolo "<<endmsg;
 
 }
 
@@ -93,20 +92,20 @@ template<class T> StatusCode MuonDigitizationData<T>::registerPartitions(){
   std::string path;
   for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
     path=s_basePathInTES+"/"+endPathInTES[i]+"/"+s_specificPath;
-//    *log << MSG::INFO <<path<<" "<<eventSvc<<endreq;
-    	 *log << MSG::DEBUG <<path<<endreq;
+//    *log << MSG::INFO <<path<<" "<<eventSvc<<endmsg;
+    	 *log << MSG::DEBUG <<path<<endmsg;
     
     StatusCode result= eventSvc->registerObject(path, muonDataPartition[i]);
     // StatusCode result=StatusCode::SUCCESS;
     if(result==StatusCode::SUCCESS){
-//      *log << MSG::INFO <<i<<" result "<<result<<endreq;
+//      *log << MSG::INFO <<i<<" result "<<result<<endmsg;
     }else{
-      *log << MSG::INFO <<i<<" non funziona "<<muonDataPartition[i]->size()<<endreq;        
+      *log << MSG::INFO <<i<<" non funziona "<<muonDataPartition[i]->size()<<endmsg;        
 	m_registered=-1;
     } 
   }
   m_registered=1;
-  *log << MSG::INFO<<"register "<<m_registered<<endreq;
+  *log << MSG::INFO<<"register "<<m_registered<<endmsg;
   return StatusCode::SUCCESS;
 }
 

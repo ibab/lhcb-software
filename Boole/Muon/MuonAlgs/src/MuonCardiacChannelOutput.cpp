@@ -28,7 +28,7 @@ void  MuonCardiacChannelOutput::addPhyChannel(MuonPhysicalChannelOutput* value)
       m_timeList.push_back(std::pair<float,MuonCardiacTraceBack>(time,pi));      
     }    
 	}
-};
+}
 
 
 
@@ -106,7 +106,6 @@ void MuonCardiacChannelOutput::fillhitsTraceBack()
   
   // std::vector<MuonHitTraceBack*> output_list;
   std::vector<MuonPhysicalChannelOutput*>::iterator it;  
-  std::vector<MuonHitTraceBack>::iterator iterOrigin;
   for(it=m_phChannel.begin();it<m_phChannel.end();it++){
     std::vector<MuonHitTraceBack>::iterator iterOrigin;
     

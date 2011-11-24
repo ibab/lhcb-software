@@ -18,6 +18,6 @@ MuonCardiacTraceBack::MuonCardiacTraceBack(MuonHitTraceBack*
 value ){
     m_trackeBack.first=value;
     m_trackeBack.second=true;
-}; 
+}
 
 

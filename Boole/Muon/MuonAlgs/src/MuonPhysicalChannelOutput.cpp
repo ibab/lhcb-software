@@ -1,4 +1,3 @@
-// $Id: MuonPhysicalChannelOutput.cpp,v 1.14 2007-03-12 10:32:53 cattanem Exp $
 #include <iostream>
 
 #include "MuonDet/DeMuonDetector.h"
@@ -134,7 +133,7 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
     }else{
     }
   }
-};
+}
 
 
 void MuonPhysicalChannelOutput::

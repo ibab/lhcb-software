@@ -157,14 +157,13 @@ void MuonPhysicalChannel::applyXTalk(int phChInX[2], int phChInY[2],
   unsigned int nx=	phChID()->getPhChIDX()	;
   unsigned int ny=	phChID()->getPhChIDY()	;
   int readoutType= phChID()->getReadout();
-  double time=0;
   int directionx,directiony;
   
   for (iter= m_Hits.begin();iter< m_Hits.end();iter++){
     if((!(*iter).getMCMuonHitOrigin().getXTalkNature())&&
          (!(*iter).getMCMuonHitOrigin().getElectronicNoiseNature())){
       // reject hit that has not produced any signal by its own	
-      time=iter->hitArrivalTime();
+      // double time=iter->hitArrivalTime(); // never used
       if(!(*iter).getMCMuonHistory().isKilledByChamberInefficiency()&&
          !(*iter).getMCMuonHistory().isHitOutGeoAccemtance()){			
         coord[0]=*((*iter).getCordinate());
