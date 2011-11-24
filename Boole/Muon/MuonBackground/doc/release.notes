@@ -5,6 +5,9 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Marco Cattaneo
+ - Fix trivial gcc46 warnings and icc remarks
+
 !========================= MuonBackground v2r11 2011-10-18 ===================
 ! 2011-10-19 - Marco Cattaneo
  - Downgrade a warning to info, fix some Coverity warnings,

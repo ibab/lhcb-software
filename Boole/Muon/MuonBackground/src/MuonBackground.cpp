@@ -34,7 +34,7 @@
 // 2003-02-18 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( MuonBackground );
+DECLARE_ALGORITHM_FACTORY( MuonBackground )
 
 std::string MuonBackground::spill[5] = 
 {"","/Prev","/PrevPrev","/Next","/NextNext"};
@@ -85,7 +85,7 @@ MuonBackground::MuonBackground( const std::string& name,
 MuonBackground::~MuonBackground() {
   //ricordarsi di distruggere tutte le distribuzioni e tutti i
   //mubgdistributions
-}; 
+}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -194,7 +194,7 @@ StatusCode MuonBackground::initialize() {
   releaseSvc(algmgr).ignore();
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -797,7 +797,6 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
   int index=station*m_gaps+multi;
   float r = 0.F;
   unsigned int chamberIndex = 0;
-  unsigned int regionIndex  = 0;  
   float xpos = 0.F;
   float ypos = 0.F;
   //float zpos = 0.F;
@@ -866,7 +865,7 @@ debug()<<"to check "<<pToCheck<<endmsg;
         pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
            getChmbPtr(station,regNumber,chNumber));
         chamberIndex=(unsigned int)pChamber->chamberNumber();
-        regionIndex=(unsigned int)pChamber->regionNumber();
+        // unsigned int regionIndex=(unsigned int)pChamber->regionNumber(); // never used
         
         //remember this is the chamber number inside a region....
         debug()<<" chamber number "<<pChamber->chamberNumber()
@@ -964,10 +963,10 @@ debug()<<"to check "<<pToCheck<<endmsg;
       }else {
         timeBest=time;
       }
-      int firstGap=gapHit[0];    
-      int lastGap=gapHit[gapHit.size()-1];    
+      int _firstGap=gapHit[0];    
+      int _lastGap=gapHit[gapHit.size()-1];    
       float averageZ=0;
-      StatusCode sc=calculateAverageGap(pChamber,firstGap,lastGap,xpos,ypos,
+      StatusCode sc=calculateAverageGap(pChamber,_firstGap,_lastGap,xpos,ypos,
                                         averageZ);
       if ( sc.isFailure() )return  sc;      
       for(int igap=0;igap<=multi;igap++){
@@ -976,10 +975,10 @@ debug()<<"to check "<<pToCheck<<endmsg;
         Gaudi::XYZPoint entryGlobal;        
         Gaudi::XYZPoint exitGlobal;        
         
-        StatusCode sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
-                                           ySlope,averageZ,entryGlobal,
-                                           exitGlobal);
-        if ( sc.isFailure() )return  sc;
+        StatusCode _sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
+                                            ySlope,averageZ,entryGlobal,
+                                            exitGlobal);
+        if ( _sc.isFailure() )return  _sc;
         double x=(entryGlobal.x()+exitGlobal.x())/2.0;
         double y=(entryGlobal.y()+exitGlobal.y())/2.0;
         double z=(entryGlobal.z()+exitGlobal.z())/2.0;
@@ -1226,7 +1225,7 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
 int MuonBackground::chamberOffset(int station,int region)
 {
   return m_chamberInRegion[station*4+region];  
-};
+}
 
 
 int MuonBackground::numberOfCollision(const LHCb::MCVertex* pointVertex)

@@ -1,4 +1,3 @@
-// $Id: ParticleInfo.cpp,v 1.7 2006-10-13 14:53:14 cattanem Exp $
 // Include files 
 
 #include <iostream> 
@@ -68,13 +67,13 @@ std::vector<int> ParticleInfo::multiplicityResults()
   std::vector<int>::iterator foundHit,deleteHit;  
   int multiplicity;
   
-  int trackFound[MAXGAPS];  
+  //  int trackFound[MAXGAPS];   // never used
   std::vector<int> startOfStorage;  
   for(station=0;station<m_stationNumber;station++){
-    trackFound[0]=0;
-    trackFound[1]=0;
-    trackFound[2]=0;
-    trackFound[3]=0;
+    // trackFound[0]=0;
+    // trackFound[1]=0;
+    // trackFound[2]=0;
+    // trackFound[3]=0;
     for(gap=0;gap<m_gapsNumber;gap++){
       //loop on all the 
       position=station*m_gapsNumber+gap;
