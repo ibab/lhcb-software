@@ -4,6 +4,11 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v4r2 2011-11-24 ===========================
+! 2011-11-24 - Gloria Corti
+ - GenInit.cpp: add printout of a few calculated quantities from the beam
+   parameters
+   
 ! 2011-11-23 - Patrick Robbe 
  - GenInit.cpp: print out the beam parameter values in the initialisation
 
