@@ -1,44 +1,43 @@
 #include "Mint/IDalitzEvent.h"
-#include "Mint/Chi2BoxSet.h"
+#include "Mint/ScpBoxSet.h"
 #include "Mint/IIntegrationCalculator.h"
-
 #include "Mint/FitAmpSum.h"
 
 using namespace std;
 using namespace MINT;
-  
-Chi2BoxSet::Chi2BoxSet()
-  : vector<Chi2Box>()
+
+ScpBoxSet::ScpBoxSet()
+  : vector<ScpBox>()
   , _integCalc(0)
   , _normFactor(1)
 {
 }
-Chi2BoxSet::Chi2BoxSet(const DalitzEventPattern& pat
+ScpBoxSet::ScpBoxSet(const DalitzEventPattern& pat
 		       , const counted_ptr<IIntegrationCalculator>& integPtr)
-  : vector<Chi2Box>()
+  : vector<ScpBox>()
   , _integCalc(integPtr)
   , _normFactor(1)
 {
-  Chi2Box b(pat);
+  ScpBox b(pat);
   add(b);
 }
-Chi2BoxSet::Chi2BoxSet(const DalitzArea& area
+ScpBoxSet::ScpBoxSet(const DalitzArea& area
 		       , const counted_ptr<IIntegrationCalculator>& integPtr)
-  : vector<Chi2Box>()
+  : vector<ScpBox>()
   , _integCalc(integPtr)
   , _normFactor(1)
 {
-  Chi2Box b(area);
+  ScpBox b(area);
   add(b);
 }
-Chi2BoxSet::Chi2BoxSet(const vector<Chi2Box>& other)
-  : vector<Chi2Box>(other)
+ScpBoxSet::ScpBoxSet(const vector<ScpBox>& other)
+  : vector<ScpBox>(other)
   , _integCalc(0)
   , _normFactor(1)
 {
 }
-Chi2BoxSet::Chi2BoxSet(const Chi2BoxSet& other)
-  : vector<Chi2Box>(other)
+ScpBoxSet::ScpBoxSet(const ScpBoxSet& other)
+  : vector<ScpBox>(other)
   , _integCalc(0)
   , _histoData(other._histoData)
   , _histoMC(other._histoMC)
@@ -50,22 +49,22 @@ Chi2BoxSet::Chi2BoxSet(const Chi2BoxSet& other)
   }
 }
 
-void Chi2BoxSet::add(const Chi2Box& box){
+void ScpBoxSet::add(const ScpBox& box){
   this->push_back(box);
 }
 
-void Chi2BoxSet::add(const Chi2BoxSet& boxSet){
+void ScpBoxSet::add(const ScpBoxSet& boxSet){
   for(unsigned int i=0; i<boxSet.size(); i++){
     this->add(boxSet[i]);
   }
 }
 
-void Chi2BoxSet::resetEventCounts(){
+void ScpBoxSet::resetEventCounts(){
   for(unsigned int i=0; i < this->size(); i++){
     (*this)[i].resetEventCounts();
   }
 }
-bool Chi2BoxSet::addData(const IDalitzEvent& evt){
+bool ScpBoxSet::addData(const IDalitzEvent& evt){
   for(unsigned int i=0; i < this->size(); i++){
     if ((*this)[i].addData(evt)){
       _histoData.addEvent(&evt);
@@ -74,7 +73,7 @@ bool Chi2BoxSet::addData(const IDalitzEvent& evt){
   }
   return false;
 }
-bool Chi2BoxSet::addData(const IDalitzEvent* evt){
+bool ScpBoxSet::addData(const IDalitzEvent* evt){
   for(unsigned int i=0; i < this->size(); i++){
     if ((*this)[i].addData(evt)){
       _histoData.addEvent(evt);
@@ -83,7 +82,7 @@ bool Chi2BoxSet::addData(const IDalitzEvent* evt){
   }
   return false;
 }
-bool Chi2BoxSet::addMC(IDalitzEvent& evt, double weight){
+bool ScpBoxSet::addMC(IDalitzEvent& evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
     if((*this)[i].addMC(evt, weight)){
       _histoMC.addEvent(&evt, weight);
@@ -93,10 +92,10 @@ bool Chi2BoxSet::addMC(IDalitzEvent& evt, double weight){
   }
   return false;
 }
-bool Chi2BoxSet::addMC(IDalitzEvent* evt, double weight){
+bool ScpBoxSet::addMC(IDalitzEvent* evt, double weight){
   bool dbThis=false;
   if(dbThis) {
-    cout << "Chi2BoxSet::addMC for pointers called with evt = " 
+    cout << "ScpBoxSet::addMC for pointers called with evt = "
 	 << evt << endl;
   }
   for(unsigned int i=0; i < this->size(); i++){
@@ -108,8 +107,8 @@ bool Chi2BoxSet::addMC(IDalitzEvent* evt, double weight){
   }
   return false;
 }
-void Chi2BoxSet::printBoxInfo(std::ostream& os) const{
-  os << "Chi2BoxSet with " << this->size() << " sub-box";
+void ScpBoxSet::printBoxInfo(std::ostream& os) const{
+  os << "ScpBoxSet with " << this->size() << " sub-box";
   if(this->size() > 1) os << "es";
   os << ": ";
   for(unsigned int i=0; i < this->size(); i++){
@@ -124,28 +123,28 @@ void Chi2BoxSet::printBoxInfo(std::ostream& os) const{
   os << "\n--------------------------------------------------------\n" << endl;
 
 }
-int Chi2BoxSet::nData() const{
+int ScpBoxSet::nData() const{
   int sum=0;
   for(unsigned int i=0; i < this->size(); i++){
     sum += (*this)[i].nData();
   }
   return sum;
 }
-int Chi2BoxSet::nMC() const{
+int ScpBoxSet::nMC() const{
   int sum=0;
   for(unsigned int i=0; i < this->size(); i++){
     sum += (*this)[i].nMC();
   }
   return sum;
 }
-double Chi2BoxSet::weightedMC() const{
+double ScpBoxSet::weightedMC() const{
   double sum=0;
   for(unsigned int i=0; i < this->size(); i++){
     sum += (*this)[i].weightedMC();
   }
   return sum;
 }
-double Chi2BoxSet::weightedMC2() const{
+double ScpBoxSet::weightedMC2() const{
   double sum=0;
   for(unsigned int i=0; i < this->size(); i++){
     sum += (*this)[i].weightedMC2();
@@ -154,19 +153,19 @@ double Chi2BoxSet::weightedMC2() const{
 }
 
 // keep changing my mind which one is right...
-double Chi2BoxSet::rmsMC(int ) const{
+double ScpBoxSet::rmsMC(int ) const{
   return weightedMC2();
 }
 
 /*
-double Chi2BoxSet::rmsMC(int Ntotal) const{
+double ScpBoxSet::rmsMC(int Ntotal) const{
   bool dbThis=false;
   double dN = (double) Ntotal;
   double msq = weightedMC2() /(dN);
   double m   = weightedMC()  /(dN);
   if(dbThis){
-    cout << "Chi2BoxSet::rmsMC() "
-	 << " msq " << msq << " m " << m << " m*m " << m*m 
+    cout << "ScpBoxSet::rmsMC() "
+	 << " msq " << msq << " m " << m << " m*m " << m*m
 	 << " rms " << msq - m*m
 	 << endl;
   }
@@ -180,61 +179,68 @@ double Chi2BoxSet::rmsMC(int Ntotal) const{
 }
 */
 
-void Chi2BoxSet::setHistoColour(Color_t fcolor){
+void ScpBoxSet::setHistoColour(Color_t fcolor){
   setFillColour(fcolor);
   setLineColour(fcolor);
 }
-void Chi2BoxSet::setFillColour(Color_t fcolor){
+void ScpBoxSet::setFillColour(Color_t fcolor){
   histoData().setFillColour(fcolor);
   histoMC().setFillColour(fcolor);
 }
-void Chi2BoxSet::setLineColour(Color_t fcolor){
+void ScpBoxSet::setLineColour(Color_t fcolor){
   histoData().setLineColour(fcolor);
   histoMC().setLineColour(fcolor);
 }
 
-DalitzHistoSet& Chi2BoxSet::histoData(){
+DalitzHistoSet& ScpBoxSet::histoData(){
   return _histoData;
 }
-const DalitzHistoSet& Chi2BoxSet::histoData()const {
+const DalitzHistoSet& ScpBoxSet::histoData()const {
   return _histoData;
 }
-DalitzHistoSet& Chi2BoxSet::histoMC(){
+DalitzHistoSet& ScpBoxSet::histoMC(){
   return _histoMC;
 }
-const DalitzHistoSet& Chi2BoxSet::histoMC()const {
+const DalitzHistoSet& ScpBoxSet::histoMC()const {
   return _histoMC;
 }
 
-double Chi2BoxSet::chi2(double normFactorPassed) const{
-  double nf=normFactorPassed;
-  if(nf < 0){
-    nf = normFactor();
-  }
 
-  int n_data =  this->nData();
-  double weight_mc = this->weightedMC() * nf;
-
-  double var_mc = this->weightedMC2() * nf*nf;
-  double varData_expected = weight_mc;
-  
-  double varData;
-  if(0 != varData_expected) varData = varData_expected;
-  else varData = n_data;
-  
-  double var = varData + var_mc;
-
-  double delta_N = n_data - weight_mc;
-  double dNSq = delta_N * delta_N;
-  double chi2;
-  if( dNSq < var * 1.e-20) chi2=0; // catches legit. 0-entry cases
-  else chi2 = dNSq / var;
-  
-  return chi2;
-}
-
-std::ostream& operator<<(std::ostream& os, const Chi2BoxSet& c2bs){
+std::ostream& operator<<(std::ostream& os, const ScpBoxSet& c2bs){
   c2bs.print(os);
   return os;
 }
+
+double ScpBoxSet::scp(double normFactorPassed) const{
+
+
+  int n_data =  this->nData();
+  double n_dataCC = this->nMC();
+
+  double alpha = (normFactorPassed);
+
+//  alpha = normFactorPassed;
+
+  double scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
 //
+
+  return scp;
+}
+//
+//double ScpBoxSet::scpErr(double normFactorPassed) const{
+//
+//  int n_data =  this->nData();
+//  double n_dataCC = this->nMC();
+//
+//
+//
+//  double alpha = (n_data/n_dataCC);
+//
+//  alpha = normFactorPassed;
+//
+//  double scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
+//
+//  return scp;
+//}
+
+
