@@ -692,8 +692,9 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
 void RawDataFormatTool::fillFlatList( const LHCb::RichSmartID::Vector & smartIDs ) const
 {
-  // Make a new data bank
+  // Make a new data bank and reserve space
   RAWBank dataBank;
+  dataBank.reserve( smartIDs.size() );
 
   // Loop over digits and fill into raw bank as a simple int
   for ( LHCb::RichSmartID::Vector::const_iterator iDigit = smartIDs.begin();
@@ -704,6 +705,8 @@ void RawDataFormatTool::fillFlatList( const LHCb::RichSmartID::Vector & smartIDs
 
   // Save in the RawEvent
   // Hard code to use L1 board 1 - To be Fixed.
+  Warning( "Hardcoded use of L1 board 1 for 'FlatList'. To Be Fixed", 
+           StatusCode::SUCCESS, 10 ).ignore();
   rawEvent()->addBank( 1, LHCb::RawBank::Rich, FlatList, dataBank );
 }
 
@@ -830,6 +833,8 @@ RawDataFormatTool::decodeToSmartIDs_FlatList( const LHCb::RawBank & bank,
       //const Level1Input l1Input = m_richSys->level1InputNum(id);
 
       // Make up an input number for this PD
+      Warning( "Making up Level1Input numbers for 'FlatList'. To Be Fixed",
+               StatusCode::SUCCESS, 10 ).ignore();
       if ( pdMap.find(id) == pdMap.end() ) { pdMap[id] = Level1Input(input++); }
       const Level1Input l1Input = pdMap[id];
 
