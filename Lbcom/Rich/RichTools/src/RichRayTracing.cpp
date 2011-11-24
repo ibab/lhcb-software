@@ -77,9 +77,12 @@ StatusCode Rich::RayTracing::initialize()
   {
     for ( unsigned int panel=0; panel<m_photoDetPanels[rich].size(); ++panel )
     {
-      m_photoDetPanels[rich][panel] = m_rich[rich]->pdPanel((Rich::Side)panel);
+      const Rich::Side         side = (Rich::Side)panel;
+      const Rich::DetectorType RICH = (Rich::DetectorType)rich;
+      m_photoDetPanels[rich][panel] = m_rich[rich]->pdPanel(side);
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Stored photodetector panel " << m_photoDetPanels[rich][panel]->name() << endmsg;
+        debug() << "Stored for " << Rich::text(RICH,side) 
+                << " PD Panel " << m_photoDetPanels[rich][side]->name() << endmsg;
     }
   }
 
@@ -258,7 +261,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
     const Rich::Side side = m_rich[rich]->side(tmpPos);
 
     // smart ID for RICH and panel (to be filled further when possible in following methods)
-    LHCb::RichSmartID smartID ( rich, side );
+    LHCb::RichSmartID smartID ( rich, side, m_photoDetPanels[rich][side]->pdType() );
 
     // do ray tracing, depending on mode
 

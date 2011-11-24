@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Chris Jones
+ - Properly take into account PD type when constructing RichSmartIDs in
+   Rich::RayTracing::_traceToDetector
+
 ! 2011-11-21 - Chris Jones
  - Update SnellsLawRefraction with a better check to see if aerogel is present
    or not. Avoids a fatal message being printed when missing.
