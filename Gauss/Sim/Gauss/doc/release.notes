@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v41r1 2011-11-24 ============================
+! 2011-11-24 - Gloria Corti
+ - Remove obsolete properties no longer in use from Gauss() configurables.
+   This has the side effect that options for older version of Gauss in 
+   AppConfig will not work with this version of Gauss.
+ - Put default values of beam properties in configurable as for 2011 data.
+
 ! 2011-11-16 - Patrick Robbe
  - tests: update references for new physics list
 

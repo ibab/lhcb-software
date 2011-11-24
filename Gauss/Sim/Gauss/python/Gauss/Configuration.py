@@ -71,19 +71,17 @@ class Gauss(LHCbConfigurableUser):
        ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'LHEP', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
        ,"DeltaRays"         : True
        ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
-       ,"BeamMomentum"      : 5.0*SystemOfUnits.TeV
-       ,"BeamCrossingAngle" : 0.329*SystemOfUnits.mrad
-       ,"BeamEmittance"     : 0.704*(10**(-9))*SystemOfUnits.rad*SystemOfUnits.m
-       ,"BeamBetaStar"      : 2.0*SystemOfUnits.m
-       ,"BeamLineAngles"    : [ 0.0*SystemOfUnits.mrad, 0.0*SystemOfUnits.mrad ]
-       ,"CrossingRate"      : 11.245*SystemOfUnits.kilohertz
+       ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
+       ,"BeamCrossingAngle" : -0.520*SystemOfUnits.mrad
+       ,"BeamEmittance"     : 0.0022*SystemOfUnits.mm
+       ,"BeamBetaStar"      : 3.0*SystemOfUnits.m
+       ,"BeamLineAngles"    : [ -0.075*SystemOfUnits.mrad, 0.035*SystemOfUnits.mrad ]
        ,"InteractionPosition" : [ 0.0*SystemOfUnits.mm, 0.0*SystemOfUnits.mm,
                                   0.0*SystemOfUnits.mm ]
-       ,"InteractionSize"   : [ 0.027*SystemOfUnits.mm, 0.027*SystemOfUnits.mm,
-                                3.82*SystemOfUnits.cm ]
-       ,"BeamSize"          : [ 0.038*SystemOfUnits.mm, 0.038*SystemOfUnits.mm ]
-       ,"Luminosity"        : 0.116*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
-       ,"TotalCrossSection" : 97.2*SystemOfUnits.millibarn
+       ,"InteractionSize"   : [ 0.030*SystemOfUnits.mm, 0.030*SystemOfUnits.mm,
+                                5.7*SystemOfUnits.cm ]
+       ,"Luminosity"        : 0.247*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
+       ,"TotalCrossSection" : 91.1*SystemOfUnits.millibarn
        ,"Output"            : 'SIM'
        ,"Production"        : 'PHYS'
        ,"EnablePack"        : True
@@ -1299,7 +1297,7 @@ class Gauss(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        
+
         #defineDB() in Boole and
         # defineGeometry() in Brunel, need the same + random seeds
         self.configureRndmEngine()
