@@ -1,3 +1,8 @@
+2011-11-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the usage of getTarBallNameItems. Now
+	only uses the internal one.
+
 2011-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed the log message for the Update action.

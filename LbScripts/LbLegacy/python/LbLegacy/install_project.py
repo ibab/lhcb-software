@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111121'
+script_version = '111125'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r6p1"
@@ -1090,41 +1090,38 @@ def updateHTMLList(src_list, target_list):
             log.debug("Adding %s to the html list" % s)
             target_list.append(s)
 
-try :
-    from LbRelease.TarBall import getTarBallNameItems
-except ImportError:
-    def getTarBallNameItems(tar_name):
-        name = None
-        version = None
-        binary = None
-        core_name = tar_name.replace(".tar.gz", "")
-        from LbConfiguration.Platform import binary_list
-        for b in binary_list :
-            if core_name.endswith(b) :
-                binary = b
-                core_name = core_name.replace("_%s" % b, "")
-                break
+def getTarBallNameItems(tar_name):
+    name = None
+    version = None
+    binary = None
+    core_name = tar_name.replace(".tar.gz", "")
+    from LbConfiguration.Platform import binary_list
+    for b in binary_list :
+        if core_name.endswith(b) :
+            binary = b
+            core_name = core_name.replace("_%s" % b, "")
+            break
 
-        cptes = core_name.split("_")
-        nm = cptes[0]
-        from LbConfiguration import Project, Package
-        if nm.upper() in [ x.upper() for x in Project.project_names ] :
-            version = cptes[-1]
-            for x in Project.project_names :
-                if nm.upper() == x.upper() :
-                    name = x
-                    break
-        elif nm.upper() in [ x.upper() for x in Package.project_names ] :
-            version = cptes[-1]
-            for c in cptes :
-                if c in Package.package_names :
-                    name = c
-                    break
-        else :
-            if nm in lcg_tar :
-                name = nm
-                version = cptes[1]
-        return name, version, binary
+    cptes = core_name.split("_")
+    nm = cptes[0]
+    from LbConfiguration import Project, Package
+    if nm.upper() in [ x.upper() for x in Project.project_names ] :
+        version = cptes[-1]
+        for x in Project.project_names :
+            if nm.upper() == x.upper() :
+                name = x
+                break
+    elif nm.upper() in [ x.upper() for x in Package.project_names ] :
+        version = cptes[-1]
+        for c in cptes :
+            if c in Package.package_names :
+                name = c
+                break
+    else :
+        if nm in lcg_tar :
+            name = nm
+            version = cptes[1]
+    return name, version, binary
 
 
 def getUnknowTarBallNameItems(tb_name, binary):
