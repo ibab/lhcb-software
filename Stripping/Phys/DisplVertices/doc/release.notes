@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Fix various gcc 4.6 warnings
+
 ! 2011-11-07 - Veerle Heijne
  - Add CombineDV.cpp which merges all stripped candidates of an event into one candidate
 

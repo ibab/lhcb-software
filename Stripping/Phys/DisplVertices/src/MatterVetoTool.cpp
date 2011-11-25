@@ -151,9 +151,8 @@ StatusCode MatterVetoTool::i_cacheGeo(){
   Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
   Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
   if( msgLevel( MSG::DEBUG ) )
-    debug() <<"Velo global right half center "
-	    << rightcenter <<", left half center "<< lefthalv << endmsg;
-  
+    debug() << "Velo global right half center "
+            << rightcenter <<", left half center "<< leftcenter << endmsg;
   
   //matrix to transform to local velo frame
   m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;

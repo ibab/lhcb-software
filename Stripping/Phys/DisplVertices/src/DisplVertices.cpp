@@ -38,8 +38,7 @@ using namespace std ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DisplVertices );
-
+DECLARE_ALGORITHM_FACTORY( DisplVertices )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -229,7 +228,7 @@ StatusCode DisplVertices::initialize() {
     Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
     if( msgLevel( MSG::DEBUG ) )
       debug() <<"Velo global right half center "
-              << rightcenter <<", left half center "<< lefthalv << endmsg;
+              << rightcenter <<", left half center "<< leftcenter << endmsg;
     //matrix to transform to local velo frame
     m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
     //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
