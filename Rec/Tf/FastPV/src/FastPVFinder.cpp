@@ -106,7 +106,7 @@ StatusCode FastPVFinder::execute() {
       pvTracks.push_back( temp );
     }
   }
-  //== Create a vector of pointer to them, for faster sorting
+  //== Create a vector of pointer to these tracks, and sort them by zBeam
   std::vector<TrackForPV*> myTracks;
   for ( std::vector<TrackForPV>::iterator itTr = pvTracks.begin(); pvTracks.end() != itTr; ++itTr ) {
     myTracks.push_back( &(*itTr) );
@@ -115,16 +115,15 @@ StatusCode FastPVFinder::execute() {
   std::vector<TrackForPV*>::iterator itT;
   if ( m_debug ) {
     for ( itT = myTracks.begin(); myTracks.end() != itT; ++itT ) {
-      info() << format( "Track %3d IP %7.3f at z = %7.3f back%2d",
-                        (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam(), 
-                        (*itT)->track()->checkFlag( LHCb::Track::Backward) )
+      info() << format( "Track %3d IP %7.3f at z = %7.3f ",
+                        (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam() )
              << endmsg;
     }
   }
 
   //== At least enough tracks for a vertex
   if ( myTracks.size() < m_minTracksInPV ) return StatusCode::SUCCESS;
-  unsigned int minTracks = 0.3 * myTracks.size();
+  unsigned int minTracks = 0.3 * myTracks.size();  // Search first for large accumulation
   int nLoop = 2;
   if ( minTracks < m_minTracksInPV ) {
     minTracks = m_minTracksInPV;
@@ -146,7 +145,7 @@ StatusCode FastPVFinder::execute() {
     for ( itT1 = unusedTracks.begin(); unusedTracks.end() - minTracks > itT1; ++itT1 ) {
       std::vector<TrackForPV*>::iterator itT2 = itT1 +  minTracks - 1;
       if ( (*itT2)->zAtBeam() > (*itT1)->zAtBeam() + m_maxDeltaZ ) continue;  // consecutive zBeam close enough
-      //== extend the range
+      //== extend the range until maxDeltaZ
       while ( itT2+1 < unusedTracks.end() ) {
         if ( (*itT2+1)->zAtBeam() > (*itT1)->zAtBeam() + m_maxDeltaZ ) break;
         ++itT2;
@@ -158,8 +157,7 @@ StatusCode FastPVFinder::execute() {
       while ( itT1 >  unusedTracks.begin() ) {
         -- itT1;
         double chi2 = (*itT1)->chi2( temp.vertex() );
-        if ( chi2 > m_maxChi2ToAdd ) break;
-        temp.addTrack( *itT1 );
+        if ( chi2 < m_maxChi2ToAdd ) temp.addTrack( *itT1 );
       }
       itT1 = itT2;
 
@@ -179,7 +177,7 @@ StatusCode FastPVFinder::execute() {
       //== Final fit, and checks
       temp.removeWorsts( m_maxChi2Fit );
       if ( m_debug ) info() << "tentative vertex at z " << temp.vertex().z() << " n track " <<  temp.nTracks()
-                            << " nBack " << temp.nBack() << " chi2/DoF " << temp.chi2PerDoF() << endmsg;
+                            << " chi2/DoF " << temp.chi2PerDoF() << endmsg;
 
       if ( temp.nTracks() < minTracks ) continue;
       if ( temp.nbUsed() > 0.9 * temp.tracks().size() ) continue;  // avoid duplicates
@@ -191,7 +189,7 @@ StatusCode FastPVFinder::execute() {
     minTracks = m_minTracksInPV;
   }
 
-  //== Try with all (unused) tracks, iteratively.
+  //== Try with all (unused) tracks, without zBeam grouping, iteratively.
   bool found = true;
   while ( found ) {
     std::vector<TrackForPV*> unusedTracks;
@@ -201,9 +199,8 @@ StatusCode FastPVFinder::execute() {
     if ( m_debug ) {
       if ( m_debug ) info() << "-- Try unused tracks, size = " << unusedTracks.size() << endmsg;
       for ( itT = unusedTracks.begin(); unusedTracks.end() != itT; ++itT ) {
-        info() << format( "Track %3d beamIP %7.3f at z = %8.3f back%2d",
-                          (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam(), 
-                          (*itT)->track()->checkFlag( LHCb::Track::Backward) );
+        info() << format( "Track %3d beamIP %7.3f at z = %8.3f ",
+                          (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam() );
         for ( std::vector<FastVertex>::iterator itV = myVertices.begin(); myVertices.end() != itV; ++itV ) {
           info() << format( " %9.1f", (*itT)->chi2( (*itV).vertex() ) );
         }
@@ -214,44 +211,40 @@ StatusCode FastPVFinder::execute() {
     if ( m_minTracksInPV > unusedTracks.size() ) continue;
     FastVertex temp( unusedTracks.begin(), unusedTracks.end() -1 );
     temp.removeWorsts( m_maxChi2Fit );
-    if ( temp.nTracks() >= m_minTracksInPV &&
-         temp.chi2PerDoF() < m_maxChi2PerDoF ) {
+    if ( temp.nTracks()    >= m_minTracksInPV &&
+         temp.chi2PerDoF() <  m_maxChi2PerDoF ) {
       myVertices.push_back( temp );
       temp.setTracksUsed( true );
       found = true;
       if ( m_debug ) {
-        info() << format( "Unused Vertex at x %7.3f y%7.3f z%7.3f  Ntr %3d nBack%3d chi2/DoF%7.3f",
+        info() << format( "Unused Vertex at x %7.3f y%7.3f z%7.3f  Ntr %3d chi2/DoF%7.3f",
                           temp.vertex().x(), temp.vertex().y(), temp.vertex().z(),
-                          temp.nTracks(), temp.nBack(), temp.chi2PerDoF() )
+                          temp.nTracks(), temp.chi2PerDoF() )
                << endmsg;
         for ( std::vector<TrackForPV*>::iterator itT = temp.tracks().begin();
               temp.tracks().end() != itT; ++itT ) {
-          info() << format( "     Track %3d IP %7.3f at z = %7.3f chi2 %7.3f  back%2d",
+          info() << format( "     Track %3d IP %7.3f at z = %7.3f chi2 %7.3f ",
                             (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam(),
-                            (*itT)->chi2(temp.vertex()),
-                            (*itT)->track()->checkFlag( LHCb::Track::Backward) )
+                            (*itT)->chi2(temp.vertex()) )
                  << endmsg;
         }
       }
     }
   }
 
-  if ( m_debug ) info() << "Number of seed vertices " << myVertices.size() << endmsg;
-
   std::vector<FastVertex>::iterator itV, itV2;
   //== Summary
   if ( m_debug ) {
+    info() << "Number of reconstructed vertices " << myVertices.size() << endmsg;
     for ( itV = myVertices.begin(); myVertices.end() != itV; ++itV ) {
-      info() << format( "Vertex at x %7.3f y%7.3f z%7.3f  Ntr %3d nBack%3d",
-                        (*itV).vertex().x(), (*itV).vertex().y(), (*itV).vertex().z(),
-                        (*itV).nTracks(), (*itV).nBack() )
+      info() << format( "Vertex at x %7.3f y%7.3f z%7.3f  Ntr %3d ",
+                        (*itV).vertex().x(), (*itV).vertex().y(), (*itV).vertex().z(), (*itV).nTracks() )
              << endmsg;
       for ( std::vector<TrackForPV*>::iterator itT = (*itV).tracks().begin();
             (*itV).tracks().end() != itT; ++itT ) {
-        info() << format( "     Track %3d IP %7.3f at z = %7.3f chi2 %7.3f  back%2d",
+        info() << format( "     Track %3d IP %7.3f at z = %7.3f chi2 %7.3f ",
                           (*itT)->track()->key(), (*itT)->rAtBeam(), (*itT)->zAtBeam(),
-                          (*itT)->chi2((*itV).vertex()),
-                          (*itT)->track()->checkFlag( LHCb::Track::Backward) )
+                          (*itT)->chi2((*itV).vertex()) )
                << endmsg;
       }
     }
@@ -270,6 +263,9 @@ StatusCode FastPVFinder::execute() {
     tmp->setCovMatrix( (*itV).cov() );
     out->insert( tmp );
   }
+
+  setFilterPassed( !out->empty() );
+
   return StatusCode::SUCCESS;
 }
 

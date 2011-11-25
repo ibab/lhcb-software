@@ -4,6 +4,11 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Olivier Callot
+ - Cleanup of no longer ised feature: Backward track counting
+ - Add 90 micron MS error in quadrature.
+ - Ready for use by HLT1: SetFilterPassed(false) if no PV
+
 ! 2011-11-23 - Olivier Callot
  - Iterate, first with a large number of tracks (30% of total), then as usual.
  - Work with unused tracks in each iteration

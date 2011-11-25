@@ -14,14 +14,15 @@
 
 //=============================================================================
 // Standard constructor, initializes variables
-// Add 100 micron in quadrature to the error: This is the MS, for fixed Pt track.
+// Add 90 micron in quadrature to the error: This is the MS, for fixed Pt track.
 //=============================================================================
 TrackForPV::TrackForPV( LHCb::Track* track, double xBeam, double yBeam ) {
   m_track = track;
   m_point = track->position();
   m_dir   = track->slopes();
-  m_wx = ( 1. + m_dir.x() * m_dir.x() ) / ( m_track->firstState().errX2() + 0.01 );
-  m_wy = ( 1. + m_dir.y() * m_dir.y() ) / ( m_track->firstState().errY2() + 0.01 );
+  double msError = 0.0081;  // 90 microns squared
+  m_wx = ( 1. + m_dir.x() * m_dir.x() ) / ( m_track->firstState().errX2() + msError );
+  m_wy = ( 1. + m_dir.y() * m_dir.y() ) / ( m_track->firstState().errY2() + msError );
   m_used = false;
 
   double x0 = m_point.x() - m_point.z() * m_dir.x() - xBeam;

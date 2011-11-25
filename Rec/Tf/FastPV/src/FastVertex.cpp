@@ -27,7 +27,6 @@ FastVertex::FastVertex( std::vector<TrackForPV*>:: iterator itT1,
   m_uyTy = 0.;
   m_stx2 = 0.;
   m_uty2 = 0.;
-  m_nBack = 0;
   for ( std::vector<TrackForPV*>::iterator itT = itT1; itT2 >= itT ; ++itT ) {
     addTrack( *itT );
   }
@@ -42,7 +41,6 @@ FastVertex::~FastVertex() {}
 //=========================================================================
 void FastVertex::addTrack( TrackForPV* track ) {
   m_tracks.push_back( track );
-  if ( track->track()->checkFlag( LHCb::Track::Backward ) ) ++m_nBack;
   double tx = track->tx();
   double ty = track->ty();
   double x0 = track->x0();
@@ -76,7 +74,6 @@ void FastVertex::removeTrack( TrackForPV* track ) {
 //  Remove a track specified by an iterator
 //=========================================================================
 void FastVertex::removeTrack ( std::vector<TrackForPV*>::iterator it ) {
-  if ( (*it)->track()->checkFlag( LHCb::Track::Backward ) ) --m_nBack;
   double tx = (*it)->tx();
   double ty = (*it)->ty();
   double x0 = (*it)->x0();

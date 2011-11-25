@@ -29,7 +29,6 @@ public:
   Gaudi::XYZPoint& vertex() { return m_vertex; }
 
   unsigned int nTracks() { return m_tracks.size(); }
-  unsigned int nBack()   { return m_nBack; }
 
   Gaudi::SymMatrix3x3 cov ( );
 
@@ -65,7 +64,6 @@ protected:
 
 private:
   std::vector<TrackForPV*> m_tracks;
-  int m_nBack;
   double m_s0;
   double m_u0;
   double m_sx;

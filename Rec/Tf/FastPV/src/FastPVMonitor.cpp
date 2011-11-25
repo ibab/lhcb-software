@@ -97,28 +97,21 @@ StatusCode FastPVMonitor::execute() {
     Gaudi::XYZPoint point = (*itT)->position();
     Gaudi::XYZVector dir  = (*itT)->slopes();
     double lowestIP = 1.e9;
-    double lowestIPS = 1.e9;
     LHCb::RecVertex* best = NULL;
     for (  itPv = pvs->begin(); pvs->end() != itPv ; ++itPv ) {
       double dx = point.x() + ( (*itPv)->position().z() - point.z() ) * dir.x() - (*itPv)->position().x();
       double dy = point.y() + ( (*itPv)->position().z() - point.z() ) * dir.y() - (*itPv)->position().y();
       double ip2 = dx*dx + dy*dy;
-      double ips = dx * dx / ( (*itT)->firstState().errX2() + 0.01 ) + 
-        dy * dy / ( (*itT)->firstState().errY2() + 0.01 );
-      if ( ips < lowestIP ) {
+      if ( ip2 < lowestIP ) {
         lowestIP = ip2;
-        lowestIPS = ips;
         best = *itPv;
       }
     }
     lowestIP  = sqrt( lowestIP );
-    lowestIPS = sqrt( lowestIPS );
-    //if ( lowestIPS > 5 ) {
     if ( lowestIP > m_minIPForTrack &&
          lowestIP < m_maxIPForTrack    ) {
       if ( msgLevel( MSG::DEBUG ) ) {
-        info() << format( "Large IP Track %3d ip %7.3f ips%10.2f", (*itT)->key(),
-                          lowestIP, lowestIPS ) 
+        info() << format( "Large IP Track %3d ip %7.3f ", (*itT)->key(), lowestIP ) 
                << endmsg;
       }
       m_nLargeIP++;
