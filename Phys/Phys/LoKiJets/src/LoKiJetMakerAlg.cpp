@@ -59,8 +59,8 @@ namespace LoKi
       , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
-      ,m_setReferencePointToPV ( true )
-    {
+      , m_runJetID ( true  )
+    { 
       // 
       declareProperty 
         ( "JetMaker"  , 
@@ -71,21 +71,23 @@ namespace LoKi
           m_associate2Vertex , 
           "Jet reconstruction per vertex") ;  
       declareProperty 
-        ( "SetReferencePointToPV"  , 
-          m_setReferencePointToPV , 
-          "set the Ref Point of the Jet to the associate PV if Associate2Vertex is true") ;  
+        ( "JetID"  , 
+          m_runJetID , 
+          "Append Jet ID information to the jet") ;  
       //
     }
     /// destructor
     virtual ~JetMaker( ){}
     // ========================================================================    
-  public: 
+  public:
     // ========================================================================    
     /** standard execution of the algorithm 
      *  @see LoKi::Algo 
      *  @return status code 
      */
     virtual StatusCode analyse   () ;
+
+    StatusCode appendJetIDInfo   ( LHCb::Particle * jet ) ;
     // ========================================================================    
   private:
     // ========================================================================    
@@ -102,10 +104,11 @@ namespace LoKi
     std::string      m_makerName ; // jet maker name  
     /// maker
     const IJetMaker* m_maker     ; // jet maker to be used 
-    /// associate to vertex
+    /// associate two vertex?
     bool m_associate2Vertex      ; // make jet per vertex
-    /// set the Ref Point of the Jet to the associated vertex
-    bool m_setReferencePointToPV ;
+    /// append jet ID info
+    bool m_runJetID              ; // append jet ID info
+    
     
     // ========================================================================    
   };
@@ -166,8 +169,7 @@ StatusCode LoKi::JetMaker::analyse   ()
       while ( !jets.empty() ) 
       {
         LHCb::Particle* jet = jets.back() ;
-	if ( m_setReferencePointToPV )
-	  jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
+        if(m_runJetID) this->appendJetIDInfo(jet);
         this->relate ( jet , *i_pv );
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;
@@ -195,6 +197,7 @@ StatusCode LoKi::JetMaker::analyse   ()
     while ( !jets.empty() ) 
     {
       LHCb::Particle* jet = jets.back() ;
+      if(m_runJetID) this->appendJetIDInfo(jet);
       save ( "jets" , jet ).ignore() ;
       jets.pop_back() ;
       delete jet ;
@@ -207,6 +210,15 @@ StatusCode LoKi::JetMaker::analyse   ()
   
   return StatusCode::SUCCESS ;
 }
+
+StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
+{
+  // Do whatever
+  jet->addInfo ( 9001 , 0. );
+  
+  return SUCCESS;
+}
+
 // ===========================================================================
 /// The factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,JetMaker)
