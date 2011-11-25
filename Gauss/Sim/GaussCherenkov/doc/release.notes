@@ -3,7 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-
+!2011-11-25
+-Adapting to recent RichDet and SmartID classes.
 !======================== GaussCherenkov v1r1p1 2011-10-17 ===================
 ! 2011-10-17 - Sajan Easo
  - Remove use of Gauss
