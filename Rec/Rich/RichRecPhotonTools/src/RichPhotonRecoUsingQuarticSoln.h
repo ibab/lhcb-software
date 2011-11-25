@@ -107,6 +107,13 @@ namespace Rich
 
     private: // methods
 
+      /// Access the Snell's law refraction tool on demand when needed
+      inline const ISnellsLawRefraction * snellsLaw() const 
+      {
+        if ( !m_snellsLaw ) { acquireTool( "RichSnellsLawRefraction", m_snellsLaw ); }
+        return m_snellsLaw;
+      }
+
       /** Solves the characteristic quartic equation for the RICH optical system.
        *
        *  See note LHCB/98-040 RICH section 3 for more details
@@ -208,7 +215,7 @@ namespace Rich
       const IPhotonEmissionPoint * m_emissPoint;
 
       /// Snell's Law refraction tool
-      const ISnellsLawRefraction * m_snellsLaw;
+      mutable const ISnellsLawRefraction * m_snellsLaw;
 
       /** @brief Flag to indicate if the unambiguous photon test should be performed
        *  for each radiator

@@ -94,7 +94,6 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichRayTracing",      m_rayTracing      );
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichPhotonEmissionPoint", m_emissPoint  );
-  acquireTool( "RichSnellsLawRefraction", m_snellsLaw   );
 
   // loop over radiators
   for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
@@ -693,7 +692,7 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
                        double & thetaCerenkov ) const
 {
   // apply Snell's Law
-  m_snellsLaw->gasToAerogel( photonDirection, trSeg );
+  snellsLaw()->gasToAerogel( photonDirection, trSeg );
   // update CK theta
   const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
   thetaCerenkov = ( ctc>1 ? 0 : std::acos(ctc) );
