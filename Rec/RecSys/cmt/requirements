@@ -85,6 +85,7 @@ use TrackUtils           v1r43   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
 use PatPV                v3r20   Tr   # Mariusz Witek
+use FastPV               v1r0    Tf   # Olivier Callot
 
 # Velo
 use VeloRecMonitors      v2r15   Velo # Malcom John, Eduardo Rodrigues
