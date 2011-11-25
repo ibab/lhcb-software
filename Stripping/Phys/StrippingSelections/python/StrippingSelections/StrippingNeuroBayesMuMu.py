@@ -149,10 +149,10 @@ class StrippingNeuroBayesMuMuConf(LineBuilder):
         combCut   = "(AM> %(massMin)s *GeV) & (AM< %(massMax)s*GeV)"                                         % locals()
         motherCut = "(VFASPF(VCHI2/VDOF)< %(vertexChi2)s) &(MM > %(massMin)s *GeV) & (MM < %(massMax)s*GeV)" % locals()
         
-        from StandardParticles import StdLooseMuons
+        from StandardParticles import StdAllLooseMuons
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         muonFilter = FilterDesktop(Code = muonCut)
-        myMuons    = Selection(Name+'_MuonSel', Algorithm = muonFilter, RequiredSelections = [StdLooseMuons])
+        myMuons    = Selection(Name+'_MuonSel', Algorithm = muonFilter, RequiredSelections = [StdAllLooseMuons])
         
         _DiMu = CombineParticles (DecayDescriptor = "J/psi(1S) -> mu+ mu-" ,
                                   CombinationCut  = combCut,

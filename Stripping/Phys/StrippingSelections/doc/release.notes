@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-11-25 - Ulrich Kerzel
+- StrippingNeuroBayesMuMu.py:
+  change StdLooseMuons -> StdAllLooseMuons to aovid IP cuts
+
 ! 2011-11-02 - Alex Shires
  - python/StrippingSelections/Bd2KstarMuMu
  - python/StrippingSelections/B2XMuMu
