@@ -21,6 +21,7 @@ class L0Conf(LHCbConfigurableUser) :
         # Properties
          "RawEventLocations" : []
         ,"RootInTESOnDemand" : [""]
+        ,"EnableTAEOnDemand" : False 
         ,"ReplaceL0BanksWithEmulated" : False
         ,"ReplayL0DU"     : False 
         ,"SimulateL0"     : False
@@ -53,7 +54,8 @@ class L0Conf(LHCbConfigurableUser) :
     _propertyDocDct = {
         # Properties
          "RawEventLocations" : """List of raw event input locations."""
-        ,"RootInTESOnDemand" : """List of RootInTES for L0 algorithms decoding called via the on demand service""" 
+        ,"RootInTESOnDemand" : """List of RootInTES for L0 algorithms decoding called via the on demand service."""
+        ,"EnableTAEOnDemand" : """ If True, the data on demand service is set up to decode TAE events."""
         ,"ReplaceL0BanksWithEmulated" : """ If True, run the emulators and replace the existing L0 banks."""
         ,"ReplayL0DU"     : """ If True, run the L0DU emulation starting from the L0DU banks."""
         ,"SimulateL0"     : """ If True, run the L0 simulation and write L0Banks."""
@@ -104,6 +106,13 @@ class L0Conf(LHCbConfigurableUser) :
             raise L0ConfError("FilterL0FromRaw","DecodeL0")
         if self.getProp("FilterL0FromRaw") and self.getProp("DecodeL0DU"):
             raise L0ConfError("FilterL0FromRaw","DecodeL0DU")
+        rootInTESOnDemand_checked = []
+        for rootintes in self.getProp("RootInTESOnDemand"):
+            if len(rootintes)>0 :
+                rootintes += '/'
+                rootintes = rootintes.replace('//','/')
+            rootInTESOnDemand_checked.append(rootintes)
+        self.setProp("RootInTESOnDemand",rootInTESOnDemand_checked)    
 
     def l0decodingSeq(self, name="L0FromRawSeq" , writeOnTes=None ):
         """ Return a Gaudi Sequencer with the algorithms to decode the L0Calo, L0Muon and L0DU data. """
@@ -200,140 +209,143 @@ class L0Conf(LHCbConfigurableUser) :
         Fill the sequencer given to the L0Sequencer attribute.
         The filling of the sequencer is done according to the L0Conf properties. 
         """
-        if self.isPropertySet("L0Sequencer"):
 
-            # Set TCK
-            importOptions("$L0TCK/L0DUConfig.opts")
-            self._setAlgTCK( emulateL0DU()   )
-            self._setAlgTCK( emulateL0Muon() )
-            
-            seq=self.getProp("L0Sequencer")
+        # Set TCK
+        self._setAlgTCK( emulateL0DU()   )
+        self._setAlgTCK( emulateL0Muon() )
 
-            if self.getProp("ReplaceL0BanksWithEmulated"):
-                replacebanksSeq = GaudiSequencer("L0DUBankSwap")
-                from Configurables import bankKiller 
-                removebanks=bankKiller( "RemoveL0Banks" )
-                removebanks.BankTypes = ["L0DU", "L0Calo", "L0Muon", "L0MuonProcCand", "L0MuonProcData" ]
-                replacebanksSeq.Members+= [ removebanks, self.l0emulatorSeq( writeBanks=True, writeOnTes=False ) ]
-                
-                seq.Members += [ replacebanksSeq ]
-                log.warning("\n  \t** EXISTING L0 BANKS WILL BE REMOVED AND REPLACED BY EMULATED BANKS **\n\n")
+        seq=self.getProp("L0Sequencer")
 
-            if self.getProp("SimulateL0"):
-                l0simulationSeq = GaudiSequencer( "L0SimulationSeq" )
+        if self.getProp("ReplaceL0BanksWithEmulated"):
+            replacebanksSeq = GaudiSequencer("L0DUBankSwap")
+            from Configurables import bankKiller 
+            removebanks=bankKiller( "RemoveL0Banks" )
+            removebanks.BankTypes = ["L0DU", "L0Calo", "L0Muon", "L0MuonProcCand", "L0MuonProcData" ]
+            replacebanksSeq.Members+= [ removebanks, self.l0emulatorSeq( writeBanks=True, writeOnTes=False ) ]
 
-                # Pus specific processing : fill raw from MC
-                from Configurables import PuVetoFillRawBuffer
-                l0simulationSeq.Members+=[PuVetoFillRawBuffer()]
+            seq.Members += [ replacebanksSeq ]
+            log.warning("\n  \t** EXISTING L0 BANKS WILL BE REMOVED AND REPLACED BY EMULATED BANKS **\n\n")
 
-                # Run emulators (L0Calo + L0Muon + PUVeto + L0DU)
-                l0simulationSeq.Members+=[ self.l0emulatorSeq( writeBanks=True, writeOnTes=True ) ]
+        if self.getProp("SimulateL0"):
+            l0simulationSeq = GaudiSequencer( "L0SimulationSeq" )
 
-                seq.Members+= [l0simulationSeq ]
+            # Pus specific processing : fill raw from MC
+            from Configurables import PuVetoFillRawBuffer
+            l0simulationSeq.Members+=[PuVetoFillRawBuffer()]
 
-            if self.getProp("DecodeL0DU"):
-                seq.Members+= [ decodeL0DU() ]
+            # Run emulators (L0Calo + L0Muon + PUVeto + L0DU)
+            l0simulationSeq.Members+=[ self.l0emulatorSeq( writeBanks=True, writeOnTes=True ) ]
 
-            if self.getProp("DecodeL0"):
-                seq.Members+= [ self.l0decodingSeq( writeOnTes=True ) ]
+            seq.Members+= [l0simulationSeq ]
 
-            if self.getProp("EmulateL0"):
-                if not self.isPropertySet("L0EmulatorContext"):
-                    self.setProp("L0EmulatorContext" , "Emulator")
-                seq.Members+= [ self.l0emulatorSeq( writeBanks=False, writeOnTes=True ) ]
+        if self.getProp("DecodeL0DU"):
+            seq.Members+= [ decodeL0DU() ]
 
-            if self.getProp("ReplayL0DU"):
-                # Decode the l0du to produce the processor data (input to simulation)
-                decoding = decodeL0DU()
-                decoding.WriteProcData = True 
-                decoding.WriteOnTES = False # Do not write the L0DU report 
-                decoding.ProcessorDataLocation  = "Trig/L0/L0DUData"
-                # Emulate the l0du from the processor data
-                emulation = emulateL0DU()        
-                emulation.ProcessorDataLocations = ["Trig/L0/L0DUData"]
-                emulation.WriteBanks = False
-                emulation.WriteOnTES = True # Write the L0DU report
-                # Add decoder and emulator to the main sequence
-                seq.Members+= [decoding, emulation]
-                
-            if self.getProp("MonitorL0"):
-                seq.Members+= [ self.l0monitoringSeq( ) ]
-                
-            if self.getProp("FilterL0FromRaw"):
-                from Configurables import L0Filter
-                seq.Members+= [ decodeL0DU() , L0Filter()]
-                
-            if self.getProp("FilterL0"):
-                from Configurables import L0Filter
-                seq.Members+= [ L0Filter() ]
+        if self.getProp("DecodeL0"):
+            seq.Members+= [ self.l0decodingSeq( writeOnTes=True ) ]
+
+        if self.getProp("EmulateL0"):
+            if not self.isPropertySet("L0EmulatorContext"):
+                self.setProp("L0EmulatorContext" , "Emulator")
+            seq.Members+= [ self.l0emulatorSeq( writeBanks=False, writeOnTes=True ) ]
+
+        if self.getProp("ReplayL0DU"):
+            # Decode the l0du to produce the processor data (input to simulation)
+            decoding = decodeL0DU()
+            decoding.WriteProcData = True 
+            decoding.WriteOnTES = False # Do not write the L0DU report 
+            decoding.ProcessorDataLocation  = "Trig/L0/L0DUData"
+            # Emulate the l0du from the processor data
+            emulation = emulateL0DU()        
+            emulation.ProcessorDataLocations = ["Trig/L0/L0DUData"]
+            emulation.WriteBanks = False
+            emulation.WriteOnTES = True # Write the L0DU report
+            # Add decoder and emulator to the main sequence
+            seq.Members+= [decoding, emulation]
+
+        if self.getProp("MonitorL0"):
+            seq.Members+= [ self.l0monitoringSeq( ) ]
+
+        if self.getProp("FilterL0FromRaw"):
+            from Configurables import L0Filter
+            seq.Members+= [ decodeL0DU() , L0Filter()]
+
+        if self.getProp("FilterL0"):
+            from Configurables import L0Filter
+            seq.Members+= [ L0Filter() ]
                 
     def _defineL0LinkSequencer(self):                                                        
         """
         Fill the sequencer given to the LinkSequencer attribute (not configurable).
         This sequencer is always filled with 2 L0CaloToMCParticleAsct algorithms.
         """
-        if self.isPropertySet("LinkSequencer"):
-            from Configurables import L0CaloToMCParticleAsct
-            seq=self.getProp("LinkSequencer")
-            seq.Members += [ L0CaloToMCParticleAsct() ]
-            seq.Members += [ L0CaloToMCParticleAsct("L0CaloFullTruth", InputContainer = "Trig/L0/FullCalo") ]
+        from Configurables import L0CaloToMCParticleAsct
+        seq=self.getProp("LinkSequencer")
+        seq.Members += [ L0CaloToMCParticleAsct() ]
+        seq.Members += [ L0CaloToMCParticleAsct("L0CaloFullTruth", InputContainer = "Trig/L0/FullCalo") ]
 
     def _defineL0MoniSequence(self):
         """
         Fill the sequencer given to the MoniSequencer attribute (not configurable).
         This sequencer is always filled with the L0MoniSeq sequencer.
         """
-        if self.isPropertySet("MoniSequencer"):
-            seq=self.getProp("MoniSequencer")
-            seq.Members+= [ self.l0monitoringSeq( "L0MoniSeq" ) ]
+        seq=self.getProp("MoniSequencer")
+        seq.Members+= [ self.l0monitoringSeq( "L0MoniSeq" ) ]
 
     def _defineL0FilterSequence(self):
         """
         Fill the sequencer given to the FilterSequencer attribute (not configurable).
         This sequencer is always filled with the L0Filter algorithm.
         """
-        if self.isPropertySet("FilterSequencer"):
-            from Configurables import L0Filter
-            seq=self.getProp("FilterSequencer")
-            seq.Members+= [ L0Filter() ]
+        from Configurables import L0Filter
+        seq=self.getProp("FilterSequencer")
+        seq.Members+= [ L0Filter() ]
 
     def _defineETC(self):
         """
         Import the option file for writing a L0-ETC.
         """
-        if self.isPropertySet("ETCSequencer"):
-            from Configurables import L0ETC,TagCollectionSvc,TagCollectionStream,EvtCollectionStream
-            seq=self.getProp("ETCSequencer")
-            writeTagSeq= Sequencer("SeqWriteTag")
-            seq.Members+= [ writeTagSeq ]
+        from Configurables import L0ETC,TagCollectionSvc,TagCollectionStream,EvtCollectionStream
+        seq=self.getProp("ETCSequencer")
+        writeTagSeq= Sequencer("SeqWriteTag")
+        seq.Members+= [ writeTagSeq ]
+
+        evtTupleSvc = TagCollectionSvc("EvtTupleSvc")
+        # evtTupleSvc.Output = []
+
+        ApplicationMgr().ExtSvc  += [ evtTupleSvc ]
+
+        tagCreator=L0ETC("TagCreator")
+        tagCreator.EvtColsProduce = True
+        tagCreator.EvtColSplitDir = False
+        tagCreator.NTupleSplitDir = False
+        tagCreator.NTupleProduce  = False
+        tagCreator.HistoSplitDir  = False
+        tagCreator.HistoProduce   = False
+        tagCreator.EvtColLUN      = "EVTTAGS"
+        tagCreator.CollectionName = "EVTTAGS/TagCreator/Strip"
+
+        tagWriter = EvtCollectionStream("TagWriter")
+        tagWriter.ItemList = [ "/NTUPLES/EVTTAGS/TagCreator/1" ]
+        tagWriter.EvtDataSvc = "EvtTupleSvc";
+
+        MyWriter=TagCollectionStream("WR")
+        MyWriter.TagCollectionSvc = evtTupleSvc
+        MyWriter.ItemList =  [ "/Event#1" ]
+        MyWriter.ItemList += [ "DAQ/ODIN#1" ]
+        if not MyWriter.isPropertySet( "Output" ):
+            MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("ETCOutput") + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+
+        writeTagSeq.Members+= [ tagCreator , MyWriter ]
             
-            evtTupleSvc = TagCollectionSvc("EvtTupleSvc")
-            # evtTupleSvc.Output = []
-
-            ApplicationMgr().ExtSvc  += [ evtTupleSvc ]
-
-            tagCreator=L0ETC("TagCreator")
-            tagCreator.EvtColsProduce = True
-            tagCreator.EvtColSplitDir = False
-            tagCreator.NTupleSplitDir = False
-            tagCreator.NTupleProduce  = False
-            tagCreator.HistoSplitDir  = False
-            tagCreator.HistoProduce   = False
-            tagCreator.EvtColLUN      = "EVTTAGS"
-            tagCreator.CollectionName = "EVTTAGS/TagCreator/Strip"
-
-            tagWriter = EvtCollectionStream("TagWriter")
-            tagWriter.ItemList = [ "/NTUPLES/EVTTAGS/TagCreator/1" ]
-            tagWriter.EvtDataSvc = "EvtTupleSvc";
-            
-            MyWriter=TagCollectionStream("WR")
-            MyWriter.TagCollectionSvc = evtTupleSvc
-            MyWriter.ItemList =  [ "/Event#1" ]
-            MyWriter.ItemList += [ "DAQ/ODIN#1" ]
-            if not MyWriter.isPropertySet( "Output" ):
-                MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("ETCOutput") + "' TYP='POOL_ROOTTREE' OPT='RECREATE'"
-
-            writeTagSeq.Members+= [ tagCreator , MyWriter ]
+    def _enableTAEOnDemand(self):
+        list_of_taeintes = ['Prev%d/'%(itae) for itae in range(1,8)]+['']+['Next%d/'%(itae) for itae in range(1,8)]
+        for taeintes in list_of_taeintes:
+            self._setSpecificDecodingOptions(taeintes)
+            self._dataOnDemand(taeintes)
+            decodeL0Calo(taeintes).RawEventLocations = [taeintes+'DAQ/RawEvent']
+            decodeL0Muon(taeintes).RawEventLocations = [taeintes+'DAQ/RawEvent']
+            decodeL0DU(taeintes).RawEventLocations   = [taeintes+'DAQ/RawEvent']
             
     def _setSpecificDecodingOptions(self,rootintes=''):
         """Specific options to tune the L0 decoding components."""
@@ -345,7 +357,7 @@ class L0Conf(LHCbConfigurableUser) :
 
         # Fast decoding of L0DU
         if self.getProp("FastL0DUDecoding"):
-            log.info("Using Fast decoding for L0DU")
+            #log.info("Using Fast decoding for L0DU (rootInTES: %s)"%(rootintes))
             l0du   = decodeL0DU(rootintes)
             from Configurables import  L0DUFromRawTool
             l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
@@ -357,14 +369,14 @@ class L0Conf(LHCbConfigurableUser) :
 
         # Full decoding of L0Muon    
         if self.getProp("FullL0MuonDecoding"):
-            log.info("Activate L0MuonProcCand and L0MuonProcData decoding")
+            #log.info("Activate L0MuonProcCand and L0MuonProcData decoding (FullL0MuonDecoding) (rootInTES: %s)"%(rootintes))
             l0muon = decodeL0Muon(rootintes)
             l0muon.DAQMode = 1
 
         # Set l0context for the decoding
         if self.isPropertySet("L0DecodingContext"):
             l0context = self.getProp("L0DecodingContext")
-            log.info( "The results of the L0 decoding will be written at location+%s"%(l0context) )
+            #log.info( "The results of the L0 decoding will be written at location+%s (rootInTES: %s)"%(l0context,rootInTES) )
             decodeL0Calo(rootintes).L0Context = l0context
             decodeL0Muon(rootintes).L0Context = l0context
             decodeL0DU(rootintes).L0Context   = l0context
@@ -409,21 +421,15 @@ class L0Conf(LHCbConfigurableUser) :
 
     def _dataOnDemand(self,rootintes):
         """Configure the DataOnDemand service for L0."""
-        if self.getProp("EnableL0DecodingOnDemand"):
-            from Configurables import DataOnDemandSvc
-            log.info("L0 on demand activated")
-            print '*'*30
-            print 'L0Conf._dataOnDemand',rootintes
-            print '*'*30
-            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
-            if self.getProp("FullL0MuonDecoding"):
-                DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
-                DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonBCSU"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
-            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
-            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
-            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName+rootintes
-            if not self.isPropertySet("L0Sequencer"):
-                importOptions("$L0TCK/L0DUConfig.opts")
+        from Configurables import DataOnDemandSvc
+        log.info("L0 on demand activated (rootInTES : %s)"%(rootintes))
+        DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonCtrl"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
+        if self.getProp("FullL0MuonDecoding"):
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonData"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
+            DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/MuonBCSU"]   = "L0MuonCandidatesFromRaw/"+L0MuonFromRawAlgName+rootintes
+        DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/Calo"]       = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
+        DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/FullCalo"]   = "L0CaloCandidatesFromRaw/"+L0CaloFromRawAlgName+rootintes
+        DataOnDemandSvc().AlgMap[rootintes+"Trig/L0/L0DUReport"] = "L0DUFromRawAlg/"+L0DUFromRawAlgName+rootintes
 
     def __apply_configuration__(self):
         """
@@ -431,18 +437,36 @@ class L0Conf(LHCbConfigurableUser) :
         """
         log.info("Applying L0Conf")
         self.checkOptions()
-        self._defineL0Sequencer()
-        self._defineL0LinkSequencer()
-        self._defineL0MoniSequence()
-        self._defineL0FilterSequence()
-        self._defineETC()
+        
+        if self.isPropertySet("L0Sequencer"):
+            self._defineL0Sequencer()
+
+        if self.isPropertySet("LinkSequencer"):
+            self._defineL0LinkSequencer()
+
+        if self.isPropertySet("MoniSequencer"):
+            self._defineL0MoniSequence()
+
+        if self.isPropertySet("FilterSequencer"):
+            self._defineL0FilterSequence()
+
+        if self.isPropertySet("ETCSequencer"):
+            self._defineETC()
+
+        if self.getProp("EnableTAEOnDemand"):
+            self._enableTAEOnDemand()
+
+        if self.getProp("EnableL0DecodingOnDemand"):    
+            for _rootintes in self.getProp("RootInTESOnDemand"):
+                self._setSpecificDecodingOptions(_rootintes)
+                self._dataOnDemand(_rootintes)
+        else:
+            self._setSpecificDecodingOptions()
+            
         self._setSpecificEmulationOptions()
-        for _rootintes in self.getProp("RootInTESOnDemand"):
-            if len(_rootintes)>0 :
-                _rootintes += '/'
-                _rootintes = _rootintes.replace('//','/')
-            self._setSpecificDecodingOptions(_rootintes)
-            self._dataOnDemand(_rootintes)
+
+        # TCK definitions
+        importOptions("$L0TCK/L0DUConfig.opts")
 
 class L0ConfError(Exception):
     """ Raised when conflicting options have been selected in L0Conf."""

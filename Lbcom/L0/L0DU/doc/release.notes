@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-11-17 - Julien Cogan
+ - L0Conf : add option to configure the On-Demand decoding of TAE.
+  (+ reorganize and cleanup)
+
 ! 2011-11-16 - Julien Cogan
  - L0Conf : fix bug introduced in latest release affecting the emulators 
 
