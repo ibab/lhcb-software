@@ -1,3 +1,12 @@
+2011-11-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Version.py: added the global support for the "g" extension to the
+	version scheme. In summary:
+	   - v1r2g3 is authorized
+	   - v1r2p3g4 is authorized
+	   - v1r2g3p4 is not
+	* tests/VersionTest.py: idem
+
 2011-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Platform.py: added explicitly the gcc46 entries in the list of

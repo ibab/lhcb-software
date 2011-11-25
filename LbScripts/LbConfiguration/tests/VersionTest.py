@@ -18,20 +18,27 @@ class VersionTestCase(unittest.TestCase):
     def testConstructor(self):
         v1 = "v1r0"
         self.assertEqual(CoreVersion(v1).name(), v1)
-        self.assertEqual(CoreVersion(v1).version(), (1, 0, None))
+        self.assertEqual(CoreVersion(v1).version(), (1, 0, None, None))
 
         v2 = "v1r2"
         self.assertEqual(CoreVersion(v2).name(), v2)
-        self.assertEqual(CoreVersion(v2).version(), (1, 2, None))
-        self.assertNotEqual(CoreVersion(v2).version(), (1, 2, 0))
-        self.assertNotEqual(CoreVersion(v2).version(), (1, 1, None))
+        self.assertEqual(CoreVersion(v2).version(), (1, 2, None, None))
+        self.assertNotEqual(CoreVersion(v2).version(), (1, 2, 0, None))
+        self.assertNotEqual(CoreVersion(v2).version(), (1, 1, None, None))
 
         v3 = "v1r2p0"
         self.assertEqual(CoreVersion(v3).name(), v3)
-        self.assertEqual(CoreVersion(v3).version(), (1, 2, 0))
-        self.assertNotEqual(CoreVersion(v3).version(), (1, 2, 2))
-        self.assertNotEqual(CoreVersion(v3).version(), (1, 2, None))
-        self.assertNotEqual(CoreVersion(v3).version(), (1, 1, None))
+        self.assertEqual(CoreVersion(v3).version(), (1, 2, 0, None))
+        self.assertNotEqual(CoreVersion(v3).version(), (1, 2, 2, None))
+        self.assertNotEqual(CoreVersion(v3).version(), (1, 2, None, None))
+        self.assertNotEqual(CoreVersion(v3).version(), (1, 1, None, None))
+
+        v4 = "v1r2p0g1"
+        self.assertEqual(CoreVersion(v4).name(), v4)
+        self.assertEqual(CoreVersion(v4).version(), (1, 2, 0, 1))
+        self.assertNotEqual(CoreVersion(v4).version(), (1, 2, 2, None))
+        self.assertNotEqual(CoreVersion(v4).version(), (1, 2, None, 0))
+        self.assertNotEqual(CoreVersion(v4).version(), (1, 1, None, None))
 
         self.assertRaises(NotAVersion, CoreVersion, "v1r")
         self.assertRaises(NotAVersion, CoreVersion, "1r1")

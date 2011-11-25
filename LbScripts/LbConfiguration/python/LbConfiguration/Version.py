@@ -9,7 +9,7 @@ import re
 import os
 
 # This is the version style used in the releases: vXrY[pZ]
-_txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?'
+_txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+)(?:g([0-9]+))?)?'
 version_style = re.compile(_txt_version_style)
 
 # This is the version style for the LCGCMT releases: 56[a]
@@ -61,7 +61,7 @@ class CoreVersion(GenericVersion):
         except TypeError:
             raise NotAVersion, vname
         if m :
-            a, b, c = m.groups()
+            a, b, c, d = m.groups()
             if a is None or b is None :
                 raise NotAVersion, vname
             a = int(a)
@@ -69,7 +69,10 @@ class CoreVersion(GenericVersion):
             if c is not None:
                 self._patchversion = True
                 c = int(c)
-            self._version = (a, b, c)
+            if d is not None:
+                self._parallelversion = True
+                d = int(d)
+            self._version = (a, b, c, d)
         else :
             raise NotAVersion, vname
 
