@@ -10,8 +10,17 @@
 
 static const G4String RichPmtQuartzWindowMaterialName="/dd/Materials/RichMaterials/RichPMTQuartzMateral";
 static const G4String RichPmtHVMatTabPropPath="/dd/Materials/RichMaterialTabProperties/PmtHighVoltage";
+
 static const G4String RichPmtQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalPmtQuantumEff";
-static const G4String RichPmtBorosilicateQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalBorosilicatePmtQuantumEff";
+static const G4String RichPmtBorosilicateQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalCBABorosilicatePmtQuantumEff";
+static const G4String RichPmtCBABorosilicateQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalCBABorosilicatePmtQuantumEff";
+static const G4String RichPmtUBABorosilicateQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalUBABorosilicatePmtQuantumEff";
+static const G4String RichPmtCBAUVGlassQeffMatTabPropPath=
+                          "/dd/Materials/RichMaterialTabProperties/NominalCBAUVGlassPmtQuantumEff";
+static const G4String RichPmtUBAUVGlassQeffMatTabPropPath=
+                          "/dd/Materials/RichMaterialTabProperties/NominalUBAUVGlassPmtQuantumEff";
+
+
 static const G4String RichPmtPsfMatTabPropPath="/dd/Materials/RichMaterialTabProperties/PmtPointSpreadFunction";
 
 
