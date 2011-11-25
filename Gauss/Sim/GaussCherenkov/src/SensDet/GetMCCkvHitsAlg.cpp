@@ -8,6 +8,14 @@
 #include "GetMCCkvHitsAlg.h"
 #include "RichG4RadiatorMaterialIdValues.h"
 
+#include "RichDet/DeRichPMT.h"
+#include "RichDet/DeRich.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
+#include "RichDet/DeRichPDPanel.h"
+#include "RichDet/DeRichPMTPanel.h"
+#include "RichDet/DeRichSystem.h"
+
 // namespaces
 using namespace LHCb;
 
@@ -30,6 +38,7 @@ GetMCCkvHitsAlg::GetMCCkvHitsAlg( const std::string& name,
   , m_nEvts               ( 0                  )
   , m_invalidRichHits     ( 0                  )
   , m_richDets            ( Rich::NRiches      )
+  , m_NumPmtInAModule     (16 )
 {
   declareProperty( "MCRichHitsLocation",
                    m_dataToFill = MCRichHitLocation::Default );
@@ -226,22 +235,40 @@ StatusCode GetMCCkvHitsAlg::execute()
         // the following commented out temporarily until all the versions
         // of other related packages are upated. SE 28-3-2011.
         // get sensitive detector identifier from det elem
-        // const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
-        // if ( !detID.isValid() )
-        // {
-        //  std::ostringstream mess;
-        //  mess << "Invalid RichSmartID returned for silicon point " << mchit->entry();
-        //  Warning( mess.str() );
-        // }
-        // else
-        // {
-          // Fill value into hit
-        //  mchit->setSensDetID( detID );
-        // }
         // end of temporary commenting out.
+        // const RichSmartID detID( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
+        // test smartid val
+        // const LHCb::RichSmartID detID_test( m_richDets[rich]->sensitivePhDetVolumeID(mchit->entry()) );
+         const LHCb::RichSmartID detID_test( m_richDets[rich]->sensitiveVolumeID(mchit->entry()) );
+         int aM_test = detID_test.pdNumInCol();
+         int aP_test = detID_test.pdCol();
+         int PixX_test =detID_test.pixelCol();
+         int PixY_test =detID_test.pixelRow();
+
+         // info()<<" SmartId_test  rich side  aM_test aP_test PixX_test   PixY_test "    << detID_test.rich() <<"   "
+         //     <<detID_test.panel()<<"   "<<aM_test <<"   "<<aP_test<<"   "<<PixX_test<<"   "<< PixY_test<<endmsg;
+        // end test smartid val
+        // info()<<" SmartID test Hit coord "<<mchit->entry()<<endmsg;
+         
 
         // fill reference to MCParticle (need to const cast as method is not const !!)
         CkvG4Hit* nonconstg4hit = const_cast<CkvG4Hit*>(g4hit);  
+
+        const LHCb::RichSmartID detID = assembleMCPmtRichSmartID(g4hit);
+        if ( !detID.isValid() )
+         {     
+           warning()<<" Invalid richsmartID for Pmt from GaussCherenkov "<<endmsg; 
+           if( msgLevel(MSG::VERBOSE) ) {
+             nonconstg4hit->Print();
+           }
+         }else{
+          // Fill value into hit
+           mchit->setSensDetID( detID );
+         }
+
+
+        
+        
         const int trackID = nonconstg4hit->GetTrackID();
 
         const MCParticle * mcPart = table[trackID].particle();
@@ -328,6 +355,127 @@ StatusCode GetMCCkvHitsAlg::execute()
   }
 
   return StatusCode::SUCCESS;
+}
+LHCb::RichSmartID GetMCCkvHitsAlg::assembleMCPmtRichSmartID(const CkvG4Hit * aHit) 
+{
+  const int CurRich= aHit ->GetCurRichDetNum();
+  const int CurSide = aHit ->GetCurSectorNum();
+  const int CurM = aHit ->CurModuleNum();
+  const int CurP = aHit ->CurPmtNum();
+  const int CurMA = (int) CurP/m_NumPmtInAModule;
+  const int CurPInM  = CurP - ( CurMA * m_NumPmtInAModule);
+  
+  const int CurPiX= aHit ->GetCurPixelXNum();
+  const int CurPiY = aHit ->GetCurPixelYNum();  
+  Rich::DetectorType iRich = Rich::Rich1;
+  Rich::Side iSide = Rich::top;
+  if(CurRich == 0 ) {
+    iRich = Rich::Rich1;
+    if(CurSide == 0 ) {
+      iSide = Rich::top;  
+    }else if (CurSide == 1 ) {
+      iSide = Rich::bottom;
+    }    
+  }  else if ( CurRich == 1 ) {
+    iRich = Rich::Rich2;
+    if(CurSide == 0 ) {
+      iSide = Rich::left;  
+    }else if (CurSide == 1 ) {
+      iSide = Rich::right;
+    }
+
+  }
+
+  // test print
+  //  info()<<"Local hit pos "<<aHit-> GetLocalPos() <<endmsg;
+  // info()<<"Global hit pos "<< aHit->GetGlobalPos() <<endmsg;
+  
+  //  info()<<"smartIdInput from Pmt  rich side M P PxX PxY "<<iRich<<"   "<<iSide<<"  "
+  //        <<CurPInM<<"   "<<CurM<<"   "<<CurPiX<<"   "<<CurPiY<<endmsg; 
+
+  //    const LHCb::RichSmartID asmartID = LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
+  //                                                 CurPiY,CurPiX,LHCb::RichSmartID::MaPMTID );
+  //  info()<<" now det richdet info "<<endmsg;
+    
+    
+    //    SmartDataPtr<DeRichSystem> richsys( detSvc(), DeRichLocations::RichSystem );
+  //   const DeRich1 * adeRich1 = getDet<DeRich1>(DeRichLocations::Rich1);
+  //  const DeRich2 * adeRich2 = getDet<DeRich2>(DeRichLocations::Rich2);
+    
+  //  const std::vector<std::string>& panelLocR1 
+  //        = adeRich1 -> paramVect<std::string>("Rich1PMTPanelDetElemLocations");
+  //  const std::vector<std::string>& panelLocR2 
+  //        = adeRich2 -> paramVect<std::string>("Rich2PMTPanelDetElemLocations");
+     
+  //  SmartDataPtr<DeRichPMTPanel> iDePmtPanelR1T (detSvc(), panelLocR1 [0]);
+  //  SmartDataPtr<DeRichPMTPanel> iDePmtPanelR1B (detSvc(), panelLocR1 [1]);
+  //  SmartDataPtr<DeRichPMTPanel> iDePmtPanelR2L (detSvc(), panelLocR2 [0]);
+  //  SmartDataPtr<DeRichPMTPanel> iDePmtPanelR2R (detSvc(), panelLocR2 [1]);
+            
+  //  if(adeRich1 && adeRich2 ) {      
+
+
+         
+
+  //      if(  iDePmtPanelR1T  &&  iDePmtPanelR1B && iDePmtPanelR2L && iDePmtPanelR2R) {
+        
+      //    std::string aPmtLocationStr= richsys->  getDePDLocation( asmartID );
+        //info()<<"Current pmt location string "<<aPmtLocationStr<<endmsg;
+    
+
+    //SmartDataPtr<DeRichPMT> iDePmt( detSvc(), aPmtLocationStr );
+  //        Gaudi::XYZPoint aPointOnAnode;
+        
+     
+        //    if(iDePmt) {
+      
+        //Gaudi::XYZPoint aPointOnAnode= iDePmt->detPointOnAnode(asmartID);
+     
+  //    if(CurRich == 0 ) {
+  //        if( CurSide == 0 ) {
+  //          aPointOnAnode= iDePmtPanelR1T->detPointOnAnode(asmartID);
+  //        }else if (  CurSide == 1 ) {
+            
+  //          aPointOnAnode= iDePmtPanelR1B->detPointOnAnode(asmartID);
+  //        }
+  //      }else {
+          
+  //        if( CurSide == 0 ) {
+  //          aPointOnAnode= iDePmtPanelR2L->detPointOnAnode(asmartID);
+  //        }else if (  CurSide == 1 ) {
+  //          
+  //          aPointOnAnode= iDePmtPanelR2R->detPointOnAnode(asmartID);
+  //        }
+  //        
+  //      }        
+          
+  //          info()<<" Anode Coord from smartID " << aPointOnAnode<<endmsg;
+      
+      //    }else {
+      
+      // info()<<" No pmt location obtained "<<endmsg;
+      
+      // }
+  //    }else {
+  //    
+  //      info()<<" No pmt panel obtained "<<endmsg;
+  //      
+  //    }
+      
+      
+    
+  //  }else {
+  //    info()<<" no richdet info  obtained "<<endmsg;
+      
+      
+  //   }
+    
+    
+
+  //end test print  
+
+  return ( LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
+            CurPiY,CurPiX,LHCb::RichSmartID::MaPMTID ) );
 }
 
 //=============================================================================

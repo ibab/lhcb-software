@@ -35,11 +35,6 @@
 #include "CkvG4Hit.h"
 
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : CkvSensDet
-//
-// 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (compatible also with v18)
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( CkvSensDet );

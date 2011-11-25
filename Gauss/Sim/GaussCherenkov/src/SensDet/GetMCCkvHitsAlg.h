@@ -118,6 +118,11 @@ private:
   /// Print a monitoring statistic
   void printStat( std::string name, RMap & a );
 
+  //create  smartid 
+  LHCb::RichSmartID assembleMCPmtRichSmartID(const CkvG4Hit * aHit);
+  
+  int m_NumPmtInAModule;
+  
 };
 
 #endif // SENSDET_GetMCCkvHitsAlg_H
