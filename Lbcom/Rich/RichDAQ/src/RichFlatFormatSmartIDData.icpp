@@ -1,0 +1,96 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichFlatFormatSmartIDData.icpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichFlatFormatSmartIDData
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
+// local
+#include "RichFlatFormatSmartIDData.h"
+
+// =================================================================================================
+
+namespace Rich
+{
+  namespace DAQ
+  {
+
+    // ------------------------------------------------------------------------------------------------
+    template< class Version, class Header, class Footer >
+    void
+    RichFlatFormatSmartIDData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & digits )
+    {
+
+      // Set data words
+      for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
+            iDig != digits.end(); ++ iDig )
+      {
+        this->addData( (*iDig).key() );
+      }
+
+      // In extended format mode set footer parity
+      // basically, we don't simulate bit errors, so parity word here is just zero
+      if ( this->header().extendedFormat() )
+      {
+        this->setFooter ( Footer(1,0) );
+      }
+
+      // Fill the number of 8 bit words + 1 field in header
+      Header head ( this->header() );
+      //head.setNEightBitBlocks ( calcEightBitword(digits) );
+      this->setHeader( head );
+    }
+    // ------------------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------------------------------
+    template< class Version, class Header, class Footer >
+    ShortType
+    RichFlatFormatSmartIDData<Version,Header,Footer>::fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
+                                                                  const LHCb::RichSmartID hpdID ) const
+    {
+      m_nHits = 0; // reset number of hits to zero
+
+      // Number of data words
+      const int nDataWords = this->dataSize();
+
+      // any data words
+      if ( nDataWords>0 )
+      {
+        // Loop over data fields
+        for ( int iData = 0; iData < nDataWords; ++iData )
+        {
+          const LHCb::RichSmartID id( this->data()[iData] );
+          if ( id.pdID() != hpdID )
+          {
+            std::cout << "PD ID Error. Should never see this" << std::endl;
+          }
+          ids.push_back( id );
+        }
+      }
+      
+      return m_nHits;
+    }
+    // ------------------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------------------------------
+    template< class Version, class Header, class Footer >
+    ShortType RichFlatFormatSmartIDData<Version,Header,Footer>::hitCount() const
+    {
+      if ( m_nHits < 0 )
+      {
+        LHCb::RichSmartID::Vector ids;
+        this->fillRichSmartIDs( ids, LHCb::RichSmartID(Rich::Rich1,Rich::top,0,0) ); // fills m_nHits
+      }
+      return static_cast<ShortType>(m_nHits);
+    }
+    // ------------------------------------------------------------------------------------------------
+
+  }
+}

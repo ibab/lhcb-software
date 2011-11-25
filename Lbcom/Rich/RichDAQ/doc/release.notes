@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Remove some MaPMT specific hacks and work arounds
+
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID
  - Add support for a 'FlatList' data format

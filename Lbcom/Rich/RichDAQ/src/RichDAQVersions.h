@@ -4,8 +4,6 @@
  *
  *  Contains simple typedefs for the types to use for each LHCb L1 version
  *
- *  $Id: RichDAQVersions.h,v 1.6 2007-04-23 12:58:44 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   06/09/2006
  */
@@ -26,6 +24,7 @@
 #include "RichNonZeroSuppALICEData.h"
 #include "RichZeroSuppData.h"
 #include "RichZeroSuppALICEData.h"
+#include "RichFlatFormatSmartIDData.h"
 
 namespace Rich
 {
@@ -113,6 +112,19 @@ namespace Rich
       typedef RichZeroSuppDataV4::RichZeroSuppData<LHCb5,Header,Footer>                 ZeroSuppLHCb;
       /// Zero suppressed Alice mode data
       typedef RichZeroSuppALICEDataV1::RichZeroSuppALICEData<LHCb5,Header,Footer>       ZeroSuppAlice;
+    }
+
+    /// Data types for BankVersion::FlatList
+    namespace RichDAQ_FlatList
+    {
+      /// Tag class
+      class FlatList {};
+      /// Header version
+      typedef RichDAQHeaderV4::RichDAQHeaderPD                                          Header;
+      /// Footer version
+      typedef ParityFooter                                                              Footer;
+      /// Data Format
+      typedef RichFlatFormatSmartIDData<FlatList,Header,Footer>                         Data;
     }
 
   }

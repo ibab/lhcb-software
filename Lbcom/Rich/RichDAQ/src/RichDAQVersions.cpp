@@ -4,8 +4,6 @@
  *
  *  Instantiates specific versions of templated types for Rich DAQ software
  *
- *  $Id: RichDAQVersions.cpp,v 1.6 2007-03-08 18:14:27 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -32,6 +30,10 @@
 #include "RichZeroSuppData_V2.icpp"
 #include "RichZeroSuppData_V3.icpp"
 #include "RichZeroSuppData_V4.icpp"
+
+// Flat List format
+
+#include "RichFlatFormatSmartIDData.icpp"
 
 using namespace Rich::DAQ;
 
@@ -63,3 +65,7 @@ template class RichNonZeroSuppALICEDataV2::RichNonZeroSuppALICEData<RichDAQ_LHCb
 template class RichNonZeroSuppDataV3::RichNonZeroSuppData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
 template class RichZeroSuppALICEDataV1::RichZeroSuppALICEData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
 template class RichZeroSuppDataV4::RichZeroSuppData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
+
+// FlatList formats
+template class HPDDataBankImp<RichDAQ_FlatList::FlatList,RichDAQ_FlatList::Header,RichDAQ_FlatList::Footer> ;
+template class RichFlatFormatSmartIDData<RichDAQ_FlatList::FlatList,RichDAQ_FlatList::Header,RichDAQ_FlatList::Footer>;
