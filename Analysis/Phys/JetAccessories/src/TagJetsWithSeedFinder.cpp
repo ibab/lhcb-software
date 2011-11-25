@@ -1,14 +1,16 @@
 #include "TagJetsWithSeedFinder.h"
-
+//#include "boost/algorithm/string/replace.hpp"
 
 
 
 
 StatusCode  TagJetsWithSeedFinder::initialize ()
 {
-  StatusCode sc = DVAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;
   
+  
+  StatusCode sc = DVAlgorithm::initialize(); 
+  
+  if ( sc.isFailure() ) return sc;
   cnttagjet=0;
   cntuntagjet=0;
   cntstagjet=0;
@@ -21,6 +23,30 @@ StatusCode  TagJetsWithSeedFinder::initialize ()
   seedcnt=0;
   seedcntnZ = 0;
   jetcntnZ = 0;
+  // stdstring m_inputLocations = "Phys/"+m_JetName+"/Particles";
+  // location_tag =   m_inputLocations;
+  // location_stag = m_inputLocations;
+  // location_untag = m_inputLocations;
+  // location_tag_s = m_inputLocations;
+  // table_loc = m_inputLocations;
+
+  std::string m_inputLocations = "Phys/"+m_JetName;
+  location_tag =   m_inputLocations+"Tag/Particles";
+  location_stag = m_inputLocations+"STag/Particles";
+  location_untag = m_inputLocations+"UnTag/Particles";
+  location_tag_s = m_inputLocations+"Tag/StdSeeds/Particles";
+  table_loc = m_inputLocations+"Tag/Jets2SeedsRelations";
+
+
+
+  //  boost::replace_last(location_tag,"/Particles","Tag/Particles");
+  // boost::replace_last(location_stag,"/Particles","STag/Particles");
+  // boost::replace_last(location_untag,"/Particles","UnTag/Particles");
+  // boost::replace_last(location_tag_s,"/Particles","Tag/StdSeeds/Particles");
+  // boost::replace_last(table_loc,"/Particles","Tag/Jets2SeedsRelations");
+
+
+
   return StatusCode::SUCCESS ;
 } ;
 
@@ -30,39 +56,26 @@ StatusCode  TagJetsWithSeedFinder::initialize ()
 StatusCode TagJetsWithSeedFinder::execute()
 { 
   LHCb::Particles*   seeds(0);
-  LHCb::Particles*   jets(0);
+  // LHCb::Particles*   jets(0);
 
   
   //  m_seedfromjet =   m_seedfromjet_save ;
   
-  bool locjet = exist<LHCb::Particles>( "/Event/Phys/"+m_jetLoc+"/Particles");
-  if(!locjet){
-    error() << "Unable to find jets at '"
-	    <<  "/Event/Phys/"<<m_jetLoc<<"/Particles" << "'" << endreq;
-    setFilterPassed(true);
-    return StatusCode::SUCCESS;
 
-  }
-  jets = get<LHCb::Particles>( "/Event/Phys/"+m_jetLoc+"/Particles");
-  if( !jets ){
-    error() << "Unable to get jets at '"
-	    <<  "/Event/Phys/"<<m_jetLoc<<"/Particles" << "'" << endreq;
-    setFilterPassed(true);
-    return StatusCode::SUCCESS ;
-  }
+  LHCb::Particle::ConstVector jets = this->i_particles();  
   
-  bool locseed = exist<LHCb::Particles>( "/Event/Phys/"+m_seedLoc+"/Particles");
+  bool locseed = exist<LHCb::Particles>( m_seedLoc );
   if(!locseed && !m_seedfromjet){
     warning() << "Unable to find seed at '"
-	      <<  "/Event/Phys/"<<m_seedLoc<<"/Particles" << "'" << endreq;
+	      <<  m_seedLoc  << "'" << endreq;
     warning() << "The seed will be created with the jet daughters"<< endreq;
     setFilterPassed(true);
     return StatusCode::SUCCESS ;
   }else if(locseed){
-    seeds = get<LHCb::Particles>( "/Event/Phys/"+m_seedLoc+"/Particles");
+    seeds = get<LHCb::Particles>( m_seedLoc );
     if( !seeds ){
       debug()<< "Unable to get seeds at '"
-	     <<  "/Event/Phys/"<<m_seedLoc<<"/Particles" << "'" << endreq;
+	     << m_seedLoc  << "'" << endreq;
       setFilterPassed(true);
       return StatusCode::SUCCESS ;
     }
@@ -75,32 +88,18 @@ StatusCode TagJetsWithSeedFinder::execute()
   
   if(!m_seedfromjet) seedcnt += (int)seeds->size();
   if(!m_seedfromjet)  if((int)seeds->size() != 0) seedcntnZ++;
-  if((int)jets->size() != 0) jetcntnZ++;
+  if((int)jets.size() != 0) jetcntnZ++;
   
   
-  Particles* TagJets = new Particles();
-  Particles* UnTagJets = new Particles();
-  Particles* STagJets = new Particles();
+  LHCb::Particles* TagJets = new LHCb::Particles();
+  LHCb::Particles* UnTagJets = new LHCb::Particles();
+  LHCb::Particles* STagJets = new LHCb::Particles();
   
-  Particles* TagSeeds = new Particles();
+  LHCb::Particles* TagSeeds = new LHCb::Particles();
   
   Table* table = new Table();
   
-  
-  std::string location_tag,  location_stag, location_untag;
-  std::string location_tag_s,  location_stag_s, location_untag_s;
-  
-  location_tag = "/Event/Phys/"+m_jetLoc+"Tag/Particles";
-  location_stag = "/Event/Phys/"+m_jetLoc+"STag/Particles";
-  location_untag = "/Event/Phys/"+m_jetLoc+"UnTag/Particles";
-  
-  location_tag_s = "/Event/Phys/"+m_jetLoc+"Tag/StdSeeds/Particles";
-  // location_stag_s = "/Event/Phys/"+m_seedLoc+"STag/Particles";
-  // location_untag_s = "/Event/Phys/"+m_seedLoc+"UnTag/Particles";
-  
-  
-  std::string table_loc;
-  table_loc = "/Event/Phys/"+m_jetLoc+"Tag/Jets2SeedsRelations";
+ 
   
   put(TagJets, location_tag );
   if(!m_seedfromjet)   put(STagJets, location_stag );
@@ -118,17 +117,19 @@ StatusCode TagJetsWithSeedFinder::execute()
  
   
   
-  
+  LHCb::Particle::ConstVector::iterator ijet;
+
   
   if( m_seedfromjet ){
     //CREAT SEED WITH JETS DAU, TAG A JET IF A SEED IS FOUND WITH ITS DAUGHTERS
     
     debug() << "CREAT SEED WITH JETS DAU, TAG A JET IF A SEED IS FOUND WITH ITS DAUGHTERS"<< endreq;
-    LHCb::Particles::iterator ijet;
     int jetnum = 0;
-    for ( ijet = jets->begin(); jets->end() != ijet ;++ijet ) {
+    for ( ijet = jets.begin(); jets.end() != ijet ;++ijet ) {
       jetnum++;
-      LHCb::Particle* jet = *ijet;
+      const LHCb::Particle* i_jet = *ijet;
+      LHCb::Particle* jet = i_jet->clone();
+
       LHCb::Particle::ConstVector jetDaus = jet->daughtersVector();
 
       IJetMaker::Jets Seeds;     
@@ -172,17 +173,17 @@ StatusCode TagJetsWithSeedFinder::execute()
       }
     }   
   }else{    
-    
-    LHCb::Particles::iterator ijet;
+
     LHCb::Particles::iterator iseed;
     LHCb::Particle::ConstVector::iterator ijetdau;
     LHCb::Particle::ConstVector::iterator  iseeddau;    
     
-    for ( ijet = jets->begin(); jets->end() != ijet ;++ijet ) {
+    for ( ijet = jets.begin(); jets.end() != ijet ;++ijet ) {
       bool tagjet = false;
       bool stagjet = false;
       int testDau;
-      LHCb::Particle* jet = *ijet;
+      const LHCb::Particle* i_jet = *ijet;
+      LHCb::Particle* jet = i_jet->clone();
       LHCb::Particle::ConstVector jetDaus;
       jetDaus.insert(jetDaus.end(), jet->daughters().begin(),jet->daughters().end()) ;
       if(jetDaus.size()==0) continue;      

@@ -48,20 +48,25 @@ class TagJetsWithSeedFinder :  public DVAlgorithm
   TagJetsWithSeedFinder(const std::string& name,
 			ISvcLocator* pSvcLocator)
     : DVAlgorithm(name,pSvcLocator) 
-    , m_jetLoc("")  
-    , m_seedLoc("")  
     , m_seedfromjet(true)  
     , m_seedFinderName ( "LoKi__SeedFinder"  )
     , m_seedFinder     ( 0   )
 
     {
 
-      declareProperty ( "inputJetsLoc"        ,  m_jetLoc    ) ;
-      declareProperty ( "inputSeedsLoc"        ,  m_seedLoc, "seedloctation if needed"    ) ;
-      declareProperty ( "createSeedsFromJetsDau"        , m_seedfromjet,  "if true the seeds are create with the jets daugthers, if false the jet are tag with the seed located at 'inputSeedsLoc', if not set seed will be created as if the option was true"  ) ;
-      declareProperty ( "bestPV"        ,  m_bestPV = false, "chose the best pv (in fct of PT) instead of (0,0,) as the origine of the particle"    ) ;
+      declareProperty ( "inputSeedsLoc"        ,  m_seedLoc = "" , "seedloctation if needed"    ) ;
+      declareProperty ( "createSeedsFromJetsDau"        , m_seedfromjet = true,  "if true the seeds are create with the jets daugthers, if false the jet are tag with the seed located at 'inputSeedsLoc', if not set seed will be created as if the option was true"  ) ;
       declareProperty ( "SeedFinder",m_seedFinderName, "VVSeedFinder, UBSeedFinder, ..." );
-
+      
+      
+      declareProperty( "JetName", 
+		       m_JetName, 
+		       "Input Locations forwarded of Particles" );
+      declareProperty( "Inputs", 
+		       m_loc, 
+		       "Input Locations forwarded of Particles" );
+      
+      
     } ;
 
 
@@ -91,10 +96,11 @@ class TagJetsWithSeedFinder :  public DVAlgorithm
     // number of particle that have to verify the cut
     TagJetsWithSeedFinder operator=( const  TagJetsWithSeedFinder& )  ;
 
-    std::string m_jetLoc;
     std::string m_seedLoc;
-    bool  m_seedfromjet ;
-    bool   m_seedfromjet_save ;
+    std::string m_JetName ;
+    std::vector<std::string> m_loc;
+    bool m_seedfromjet ;
+    bool m_seedfromjet_save ;
 
     int cnttagjet;
     int cntuntagjet;
@@ -109,8 +115,12 @@ class TagJetsWithSeedFinder :  public DVAlgorithm
     int seedcntnZ;
     int jetcntnZ;
 
-    bool  m_bestPV ;
+    std::string location_tag,  location_stag, location_untag;
+    std::string location_tag_s,  location_stag_s, location_untag_s; 
+    std::vector<std::string> mloc;
+    std::string table_loc;
     std::string  m_seedFinderName ;
+
     mutable IJetMaker* m_seedFinder ; ///< combiner to be used 
 
     typedef LHCb::RelationWeighted1D< LHCb::Particle,LHCb::Particle, double >  Table ;
