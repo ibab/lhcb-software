@@ -42,7 +42,7 @@
  *
  *  alg = SubstitutePID ( 
  *        'MakeDsK'  , 
- *        Code = " DECTREE('[Beauty -> D+ X-]CC') " ,
+ *        Code = " DECTREE('[Beauty -> D+ X-]CC') & ( PT > 3 * GeV ) " ,
  *        Substitute = {
  *            ' Beauty -> ^( Charm & X+ ) X- '    : 'D_s+'  ,
  *            ' Beauty -> ^( Charm & X- ) X+ '    : 'D_s-'  ,
@@ -317,7 +317,7 @@ unsigned int SubstitutePID::substitute ( LHCb::Particle* p )
   if ( 0 == p ) { return 0 ; }
   //
   unsigned int substituted = 0 ;
-
+  //
   for ( Substitutions::iterator isub = m_subs.begin() ; 
         m_subs.end() != isub ; ++isub ) 
   {
@@ -339,44 +339,59 @@ unsigned int SubstitutePID::substitute ( LHCb::Particle* p )
       ++(isub->m_used) ;
     }
   }
-  if ( 0 < substituted ) {
-    correctP4( p ) ;
-  }
+  //
+  if ( 0 < substituted ) { correctP4( p ) ; }
   //
   return substituted ;
   //
 }
 // ============================================================================
-// perform recursive 4-momentum correction
+// perform the recursive 4-momentum correction
 // ============================================================================
 unsigned int SubstitutePID::correctP4 ( LHCb::Particle* p )
 {
-  if ( 0 == p ) { return 0 ; }
+  if ( 0 == p ) { return 0 ; } // RETURN 
   //
-  const SmartRefVector<LHCb::Particle> daughters = p->daughters() ;
-  if ( !daughters.empty() ) {
-    double energySum = 0.0, pxSum = 0.0, pySum = 0.0, pzSum = 0.0;
-    BOOST_FOREACH( const LHCb::Particle* daughter, daughters ) {
-      correctP4( const_cast<LHCb::Particle*>(daughter) ) ;
-      energySum += daughter->momentum().E() ;
-      pxSum += daughter->momentum().Px();
-      pySum += daughter->momentum().Py();
-      pzSum += daughter->momentum().Pz();
-    }    
-    // Correct momentum
+  if ( p->isBasicParticle () ) 
+  {
+    const Gaudi::LorentzVector& oldMom = p->momentum() ;
+    //
+    const double newMass   = LoKi::Particles::massFromPID ( p->particleID() ) ; 
+    const double newEnergy = ::sqrt ( oldMom.P2() + newMass*newMass ) ;
+    //
     Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( pxSum , pySum , pzSum , energySum ) ;
-    p->setMomentum(newMom) ;
-    p->setMeasuredMass(newMom.M());
-  } else {
-    double newMass = LoKi::Particles::massFromPID ( p->particleID() ) ;
-    Gaudi::LorentzVector oldMom = p->momentum () ;
-    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( oldMom.Px() , oldMom.Py() , oldMom.Pz() , ::sqrt( oldMom.P2() + newMass*newMass ) ) ;
-    p->setMomentum(newMom) ;
-    p->setMeasuredMass(newMass);
+    newMom.SetXYZT ( oldMom.Px () , 
+                     oldMom.Py () , 
+                     oldMom.Pz () , newEnergy ) ;
+    //
+    p -> setMomentum(newMom) ;
+    p -> setMeasuredMass(newMass);
+    return 1 ;
   }
-  return 1 ;
+  //
+  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
+  const DAUGHTERS& daughters = p->daughters() ;
+  //
+  unsigned int num = 0 ;
+  //
+  Gaudi::LorentzVector sum ;
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  {
+    const LHCb::Particle* dau = *idau ;
+    if ( 0 == dau ) { continue ; }                // CONTINUE
+    //
+    num += correctP4 ( const_cast<LHCb::Particle*> ( dau ) ) ;
+    sum += dau->momentum() ;
+  }
+  //
+  if (  0 != num ) 
+  {
+    p -> setMomentum     ( sum     ) ;
+    p -> setMeasuredMass ( sum.M() ) ;
+  }
+  //
+  return num ;
 }
 // ============================================================================
 /// the factory 

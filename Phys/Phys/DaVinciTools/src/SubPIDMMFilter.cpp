@@ -7,7 +7,7 @@
 #include <boost/foreach.hpp>
 #include "FilterDesktop.h"
 // ============================================================================
-/** @class SubstitutePID
+/** @class SubPIDMMFilter
  *  Simple algorithm to substitute PID and filter on resulting MM.
  *
  *  @code

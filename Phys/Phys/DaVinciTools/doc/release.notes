@@ -3,6 +3,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-11-25 - Vanya Belyaev
+ - tiny improvement in SubstitutePID 
+
 ! 2011-11-23 - V. Gligorov
  - Switch to using IP chi2 PV relator online
 
