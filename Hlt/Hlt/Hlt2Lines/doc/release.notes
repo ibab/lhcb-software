@@ -9,6 +9,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v8r8 2011-08-29 ========================
+! 2011-11-25 - Marcin Kucharczyk
+ - Add Hlt2HighPtJetsLines.py
+
 ! 2011-08-29 - Marco Gersabeck
  - Hlt2CharmSemilepD02HMuNuLines.py: Fixed dictionary
 
