@@ -375,7 +375,6 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         addAlgs ( sseq , pi0 ) 
     else :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
-        pi0.OutputLevel = 2
 
     if external  != '' :
         pi0.InputData = external
