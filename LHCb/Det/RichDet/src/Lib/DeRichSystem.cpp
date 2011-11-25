@@ -455,30 +455,20 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 const Rich::DAQ::HPDHardwareID
 DeRichSystem::hardwareID( const LHCb::RichSmartID smartID ) const
 {
-  if ( UNLIKELY( smartID.idType() == LHCb::RichSmartID::MaPMTID ) )
+  // See if this RichSmartID is known
+  SoftToHard::const_iterator id = m_soft2hard.find( smartID.pdID() );
+  if ( m_soft2hard.end() == id )
   {
-    /** Make something up for the moment. To be fixed
-     *  @todo Implement DeRichSystem::hardwareID properly for MaPMTs */
-    const unsigned int aPdn = smartID.pdCol() * 16 + smartID.pdNumInCol();
-    return Rich::DAQ::HPDHardwareID( aPdn + 10000 );
+    std::ostringstream mess;
+    mess << "Unknown PD RichSmartID "
+         << (int)smartID.pdID() << " " << smartID.pdID();
+    throw GaudiException( mess.str(),
+                          "DeRichSystem::hardwareID",
+                          StatusCode::FAILURE );
   }
-  else // HPD
-  {
-    // See if this RichSmartID is known
-    SoftToHard::const_iterator id = m_soft2hard.find( smartID.pdID() );
-    if ( m_soft2hard.end() == id )
-    {
-      std::ostringstream mess;
-      mess << "Unknown HPD RichSmartID "
-           << (int)smartID.pdID() << " " << smartID.pdID();
-      throw GaudiException( mess.str(),
-                            "DeRichSystem::hardwareID",
-                            StatusCode::FAILURE );
-    }
 
-    // Found, so return hardware ID
-    return (*id).second;
-  }
+  // Found, so return hardware ID
+  return (*id).second;
 }
 
 //=========================================================================
@@ -520,7 +510,7 @@ DeRichSystem::richSmartID( const Rich::DAQ::Level0ID l0ID ) const
 }
 
 //=========================================================================
-//  level0ID
+// level0ID
 //=========================================================================
 const Rich::DAQ::Level0ID
 DeRichSystem::level0ID( const LHCb::RichSmartID smartID ) const
@@ -547,28 +537,19 @@ DeRichSystem::level0ID( const LHCb::RichSmartID smartID ) const
 const Rich::DAQ::Level1HardwareID
 DeRichSystem::level1HardwareID( const LHCb::RichSmartID smartID ) const
 {
-  if ( UNLIKELY( smartID.idType() == LHCb::RichSmartID::MaPMTID ) )
+  // See if this RichSmartID is known
+  SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.pdID() );
+  if ( m_smartid2L1.end() == id )
   {
-    /** Make something up for the moment. To be fixed
-     *  @todo Implement DeRichSystem::level1HardwareID properly for MaPMTs */
-    return Rich::DAQ::Level1HardwareID(1);
+    std::ostringstream mess;
+    mess << "Unknown PD RichSmartID "
+         << (int)smartID.pdID() << " " << smartID.pdID();
+    throw GaudiException( mess.str(),
+                          "DeRichSystem::level1HardwareID",
+                          StatusCode::FAILURE );
   }
-  else // HPD
-  {
-    // See if this RichSmartID is known
-    SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.pdID() );
-    if ( m_smartid2L1.end() == id )
-    {
-      std::ostringstream mess;
-      mess << "Unknown PD RichSmartID "
-           << (int)smartID.pdID() << " " << smartID.pdID();
-      throw GaudiException( mess.str(),
-                            "DeRichSystem::level1HardwareID",
-                            StatusCode::FAILURE );
-    }
-    // Found, so return Level1 board number
-    return (*id).second;
-  }
+  // Found, so return Level1 board number
+  return (*id).second;
 }
 
 //=========================================================================
@@ -848,9 +829,9 @@ std::string DeRichSystem::getDePDLocation ( const LHCb::RichSmartID smartID ) co
     }
     else
     {
-      if( smartID.rich() == Rich::Rich1 )
+      if ( smartID.rich() == Rich::Rich1 )
       {
-        if( smartID.panel() == Rich::top )
+        if ( smartID.panel() == Rich::top )
         {
           loc = DeRichLocations::Rich1Panel0;
         }
@@ -861,7 +842,7 @@ std::string DeRichSystem::getDePDLocation ( const LHCb::RichSmartID smartID ) co
       }
       else
       {
-        if( smartID.panel() == Rich::left )
+        if ( smartID.panel() == Rich::left )
         {
           loc = DeRichLocations::Rich2Panel0;
         }
@@ -875,8 +856,7 @@ std::string DeRichSystem::getDePDLocation ( const LHCb::RichSmartID smartID ) co
     const unsigned int aM = smartID.pdCol();
     const unsigned int aP = smartID.pdNumInCol();
     const std::string ast_aM = boost::lexical_cast<std::string>(aM);
-    const std::string ast_aP = boost::lexical_cast<std::string> (aP);
-
+    const std::string ast_aP = boost::lexical_cast<std::string>(aP);
     return ( loc+"/MAPMT_MODULE:"+ast_aM+"/MAPMT:"+ast_aP );
 
   }

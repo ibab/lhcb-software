@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is 
+   now correct.
+
 ! 2011-11-24 - Chris Jones
  - Add a method to the PD Panel base class to return PD type
 
