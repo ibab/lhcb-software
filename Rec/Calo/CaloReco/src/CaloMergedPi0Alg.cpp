@@ -124,6 +124,11 @@ StatusCode CaloMergedPi0Alg::initialize()
   //
   if(m_createClusterOnly)info() << "only SplitClusters to be produced" << endmsg;
 
+  // get detectorElement
+  m_det = getDet<DeCalorimeter>( m_detData ) ;
+  if( !m_det ){ return Error("could not locate calorimeter '"+m_detData+"'");}
+
+
   // locate tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;m_toolTypeNames.end() != it ; ++it ){
     ICaloHypoTool* t = tool<ICaloHypoTool>( *it , this );
@@ -319,14 +324,11 @@ StatusCode CaloMergedPi0Alg::execute()
   typedef LHCb::CaloClusters              Clusters;
   typedef Clusters::iterator        Iterator;
 
-  /// load data
 
-  m_det = getDet<DeCalorimeter>( m_detData ) ;
-  if( !m_det ){ return Error("could not locate calorimeter '"+m_detData+"'");}
-  SmartDataPtr<Clusters>  clusters( eventSvc() , m_inputData );
-  if( 0 == clusters ){ return Error("Could not load input data ='"+m_inputData+"'");}
 
-  // create the container of split clusters (check it does not exist first)
+  // -------- create ouput containers
+
+  // split clusters (check it does not exist first)
   bool doSplitC = true;
   LHCb::CaloClusters* clusts = new LHCb::CaloClusters();
   try {
@@ -340,13 +342,7 @@ StatusCode CaloMergedPi0Alg::execute()
     delete clusts;
   }
 
-
-
-  //    doSplitC = false;
-  //  delete clusts;
-  //};
-
-  // create the containers of pi0s & SPlitPhotons
+  // pi0s & SPlitPhotons
   LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
   LHCb::CaloHypos* phots = new LHCb::CaloHypos();
   // put on TES if required
@@ -355,7 +351,15 @@ StatusCode CaloMergedPi0Alg::execute()
     put( phots , m_nameOfSplitPhotons);
   }
 
+  /// load cluster data
+  Clusters* clusters = ( exist<Clusters>(m_inputData) ) ? get<Clusters>( m_inputData ) : NULL ;
 
+  if( NULL == clusters ){
+    Warning("No cluster input container").ignore();
+    return StatusCode::SUCCESS;
+  }
+  
+    
 
   // count all clusters
   // modified by V.B. 2004-10-27
@@ -397,8 +401,7 @@ StatusCode CaloMergedPi0Alg::execute()
     /// Check # of digits/cells in this cluster
     int m_cluDigs;
     m_cluDigs = cluster->entries().size() ;
-    if( 1 >= m_cluDigs )                { return 0; }   ///< CONTINUE!
-
+    if( 1 >= m_cluDigs )continue;
 
     /// Find Cluster Seed
     const LHCb::CaloCluster::Digits::const_iterator iSeed =
