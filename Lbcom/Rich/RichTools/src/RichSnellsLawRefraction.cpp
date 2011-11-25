@@ -61,7 +61,7 @@ StatusCode SnellsLawRefraction::initialize()
     existDet<DeRichRadiator>( DeRichLocations::location(Rich::Aerogel) );
   if ( !m_aerogelOK )
   {
-    Warning( "No Aerogel. No Snell's law refraction corrections",
+    Warning( "No Aerogel -> Snell's law refraction corrections disabled",
              StatusCode::SUCCESS ).ignore();
   }
 

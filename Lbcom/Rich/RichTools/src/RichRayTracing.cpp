@@ -66,7 +66,6 @@ StatusCode Rich::RayTracing::initialize()
 
   // get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
-  acquireTool( "RichSnellsLawRefraction", m_snellsLaw   );
 
   // RICH detector elements
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
@@ -199,7 +198,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
   // Correct start point/direction for aerogel refraction, if appropriate
   if ( mode.aeroRefraction() && Rich::Rich1 == rich )
   {
-    m_snellsLaw->aerogelToGas(tmpPos,tmpDir,photonEnergy);
+    snellsLaw()->aerogelToGas(tmpPos,tmpDir,photonEnergy);
   }
 
   // Do the ray tracing
@@ -229,7 +228,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
        rich             == Rich::Rich1  && 
        trSeg.radiator() == Rich::Aerogel )
   {
-    m_snellsLaw->aerogelToGas(tmpPos,tmpDir,trSeg);
+    snellsLaw()->aerogelToGas(tmpPos,tmpDir,trSeg);
   }
 
   // Do the ray tracing

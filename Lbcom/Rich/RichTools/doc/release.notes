@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Load the Snell's law refraction tool in Rich::RayTracing on-demand, to 
+   avoid loading it when not needed.
+
 ! 2011-11-24 - Chris Jones
  - Properly take into account PD type when constructing RichSmartIDs in
    Rich::RayTracing::_traceToDetector

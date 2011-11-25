@@ -183,10 +183,17 @@ namespace Rich
       return m_deBeam[rich];
     }
 
+    /// Access the Snell's law refraction tool on demand when needed
+    inline const ISnellsLawRefraction * snellsLaw() const 
+    {
+      if ( !m_snellsLaw ) { acquireTool( "RichSnellsLawRefraction", m_snellsLaw ); }
+      return m_snellsLaw;
+    }
+
   private: // data
 
     /// Snell's Law refraction tool
-    const ISnellsLawRefraction * m_snellsLaw;
+    mutable const ISnellsLawRefraction * m_snellsLaw;
 
     /// Mirror segment finder tool
     const IMirrorSegFinder* m_mirrorSegFinder;
