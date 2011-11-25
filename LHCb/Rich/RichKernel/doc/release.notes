@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Add a first Minimal MaPMT0 data format
+
 ! 2011-11-18 - Chris Jones
  - Add the 'FlatList' data format to RichDAQDefinitions.h
  - Adapt to removal of obsolete methods from RichSmartID

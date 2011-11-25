@@ -636,8 +636,10 @@ namespace Rich
         LHCb4  = 128,
         /// Version compatible with the second (final?) version of the L1 firmware
         LHCb5  = 129,
-        /// Basic 'flat list' format.
-        FlatList = 3
+        /// HPD 'SmartID' Data blocks format
+        FlatList = 4,
+        /// Basic MaPMT format
+        MaPMT0 = 3
       };
 
     //---------------------------------------------------------------------------------
