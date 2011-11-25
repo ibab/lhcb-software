@@ -16,7 +16,7 @@ from Configurables import DaVinci
 #
 from Configurables import PrintDecayTree, PrintHeader, FilterDesktop
 DaVinci().UserAlgorithms = [ PrintHeader() ]
-MassRanges = [ [ 2600, 3200 ], [ 3050, 3150 ],  [ 3000, 3500 ] ]
+MassRanges = [ [ 3000, 3087 ], [ 3088, 3100 ],  [ 3100, 4000 ] ]
 for i in MassRanges :
     ln = str(i[0])
     hn = str(i[1])
@@ -39,9 +39,9 @@ DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "2010"
 DaVinci().Simulation = True
-DaVinci().Input = [ "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+DaVinci().Input = [ "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3088_3100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3100_4000.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCITESTSROOT/tests/qmtest/Sel.SeqJpsi_3000_3087.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
                     ]
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

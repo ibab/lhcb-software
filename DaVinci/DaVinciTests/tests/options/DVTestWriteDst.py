@@ -29,7 +29,7 @@ MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu/Particles')
 #
 # Loop over three overlapping mass zones
 #
-MassRanges = [ [ 2600, 3200 ], [ 3050, 3150 ],  [ 3000, 3500 ] ]
+MassRanges = [ [ 3000, 3087 ], [ 3088, 3100 ],  [ 3100, 4000 ] ]
 
 selections = []
 
@@ -71,7 +71,7 @@ DaVinci().UserAlgorithms = [ seq ]
 
 ##############################################################################
 DaVinci().EvtMax = 100
-DaVinci().PrintFreq = 10 
+DaVinci().PrintFreq = 100 
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "2010" 
 DaVinci().Simulation   = True
