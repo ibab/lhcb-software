@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include <cmath>
 #include <algorithm>
@@ -40,29 +40,29 @@ StrippingNBBhh::StrippingNBBhh( const std::string& name,
     m_PlotNBins  (120     )
 {
 
-    declareProperty( "Expertise"     , m_ExpertiseName                );
-    declareProperty( "NetworkVersion", m_netVersion  = "TuneMC10"     );
-    declareProperty( "NetworkCut"    , m_NetworkCut  =  -1            );
-    declareProperty( "PlotHisto"     , m_PlotHisto   =  false         );
-    declareProperty( "PlotMassMin"   , m_PlotMassMin =   5.0          );
-    declareProperty( "PlotMassMax"   , m_PlotMassMax =   5.6          );
-    declareProperty( "PlotNBins"     , m_PlotNBins   = 120            );
+  declareProperty( "Expertise"     , m_ExpertiseName                );
+  declareProperty( "NetworkVersion", m_netVersion  = "TuneMC10"     );
+  declareProperty( "NetworkCut"    , m_NetworkCut  =  -1            );
+  declareProperty( "PlotHisto"     , m_PlotHisto   =  false         );
+  declareProperty( "PlotMassMin"   , m_PlotMassMin =   5.0          );
+  declareProperty( "PlotMassMax"   , m_PlotMassMax =   5.6          );
+  declareProperty( "PlotNBins"     , m_PlotNBins   = 120            );
 
 
 } // constructor
 //=============================================================================
 // Destructor
 //=============================================================================
-StrippingNBBhh::~StrippingNBBhh() {} 
+StrippingNBBhh::~StrippingNBBhh() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode StrippingNBBhh::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
     debug() << "==> Initialize" << endmsg;
 
   //
@@ -71,7 +71,7 @@ StatusCode StrippingNBBhh::initialize() {
 
   info() <<  "Expertise      " <<  m_ExpertiseName << endmsg;
   info() <<  "NetworkVersion " <<  m_netVersion    << endmsg;
-  info() <<  "NetworkCut     " <<  m_NetworkCut    << endmsg; 
+  info() <<  "NetworkCut     " <<  m_NetworkCut    << endmsg;
   info() <<  "PlotHisto      " <<  m_PlotHisto     << endmsg;
   info() <<  "PlotMassMin    " <<  m_PlotMassMin   << endmsg;
   info() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
@@ -90,10 +90,10 @@ StatusCode StrippingNBBhh::initialize() {
   //
 #ifdef __GNUC__
 
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Setup NeuroBayes for Expertise " << m_ExpertiseName << endmsg;
 
-  if ( m_ExpertiseName.empty() ) 
+  if ( m_ExpertiseName.empty() )
     return Error( "No NeuroBayes Expertise specified" );
 
   std::string fullPath;
@@ -102,7 +102,7 @@ StatusCode StrippingNBBhh::initialize() {
   const std::string paramEnv = "STRIPPINGNEUROBAYESROOT";
   if ( getenv(paramEnv.c_str()) ) {
     debug() << "found environment for Expertise " << paramEnv << endmsg;
-    const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) + 
+    const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
                                     "/expertise/" + m_netVersion + "/" );
     fullPath = paramRoot+m_ExpertiseName;
   } else {
@@ -111,17 +111,17 @@ StatusCode StrippingNBBhh::initialize() {
 
 
   info() << "Take Expertise from " << fullPath << endmsg;
-     
+
   // FPE Guard for NB call
   FPE::Guard guard(true);
-  m_NBExpert = new Expert(fullPath.c_str()); 
-  
+  m_NBExpert = new Expert(fullPath.c_str());
+
   // prepare arry of input variables, use max. allowed length
   // (easier for switching between different networks)
   m_inArray = new float[NB_MAXNODE];
 
 
-#endif 
+#endif
 
 
   return StatusCode::SUCCESS;
@@ -143,7 +143,7 @@ StatusCode StrippingNBBhh::execute() {
   // dont' accept by default
   setFilterPassed(false);
 
-  // get particles - mother candidate  
+  // get particles - mother candidate
   const LHCb::Particle::ConstVector& cands = this->i_particles();
   const int nCand = cands.size();
 
@@ -165,17 +165,17 @@ StatusCode StrippingNBBhh::execute() {
           debug() << "input var [" << i << "] = " << m_inArray[  i ] << endmsg;
         } //for i
       } // if msg
-    
+
       const double netOut = m_NBExpert->nb_expert(m_inArray);
       const double prob   = (1.0 + netOut)*0.5;
 
       if ( msgLevel(MSG::DEBUG) ) {
-        debug() << "Bhh cand: Network output " << netOut 
+        debug() << "Bhh cand: Network output " << netOut
                 << " probability " << prob << endmsg;
       }
-      
+
       const double mass = (*iCand)->measuredMass()/Gaudi::Units::GeV;
-      
+
       if (m_PlotHisto) {
         plot1D(netOut, "BhhNet"  , "NeuroBayes Bhh  network output ", -1.0          , 1.0          ,         120);
         plot1D(prob  , "BhhProb" , "NeuroBayes Bhh  network prob "  ,  0.0          , 1.0          ,         120);
@@ -184,24 +184,24 @@ StatusCode StrippingNBBhh::execute() {
 
       // accept candidate?
       if (prob > m_NetworkCut) {
-        if ( msgLevel(MSG::DEBUG) ) 
+        if ( msgLevel(MSG::DEBUG) )
           debug() << "Bhh cand pass cut "  << m_NetworkCut << endmsg;
         if (m_PlotHisto) {
-          plot1D(mass  , "mAcc"        , "mass, acc cand"                         ,   m_PlotMassMin, m_PlotMassMax, m_PlotNBins); 
+          plot1D(mass  , "mAcc"        , "mass, acc cand"                         ,   m_PlotMassMin, m_PlotMassMax, m_PlotNBins);
           plot1D(prob  , "BhhProbAcc"  , "NeuroBayes Bhh  network prob acc cand"  ,  0.0           , 1.0          ,         120);
         } //if
         LHCb::Particle* particle = (*iCand)->clone();
         setFilterPassed(true);
-        particle->addInfo(LHCb::Particle::LastGlobal +  1, netOut);   
-        particle->addInfo(LHCb::Particle::LastGlobal +  2, prob);   
+        particle->addInfo(LHCb::Particle::LastGlobal +  1, netOut);
+        particle->addInfo(LHCb::Particle::LastGlobal +  2, prob);
         this->markNewTree(particle);
       } // if prob
     } // if sc
   } // for iCand
-  
+
   return sc;
-  
-#endif 
+
+#endif
   return StatusCode::SUCCESS;
 }
 
@@ -210,7 +210,7 @@ StatusCode StrippingNBBhh::execute() {
 //=============================================================================
 StatusCode StrippingNBBhh::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
     debug() << "==> Finalize" << endmsg;
 #ifdef __GNUC__
 
@@ -219,15 +219,15 @@ StatusCode StrippingNBBhh::finalize() {
 
   if (m_inArray)
     delete[] m_inArray;
-#endif 
+#endif
 
   return DVAlgorithm::finalize();
 }
 
 //=============================================================================
 bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
-  
-  
+
+
 
 #ifdef __GNUC__
   // get daughters
@@ -244,23 +244,23 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   SmartRefVector< LHCb::Particle >::const_iterator iDaughterBegin = daughters.begin();
   SmartRefVector< LHCb::Particle >::const_iterator iDaughterEnd   = daughters.end();
 
-  if ( msgLevel(MSG::VERBOSE) ) 
-    verbose() << " h 1 charge " << (*daughters[0]).charge() 
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " h 1 charge " << (*daughters[0]).charge()
               << " h 2 charge " << (*daughters[1]).charge()
               << endmsg;
 
   for (iDaughter = iDaughterBegin; iDaughter != iDaughterEnd; iDaughter++){
-        if ( (*iDaughter)->charge() > 0) {
-          hPlus  = *iDaughter;
-        } else {
-          hMinus = *iDaughter;
-        }// if
-      }//for iKaon
+    if ( (*iDaughter)->charge() > 0) {
+      hPlus  = *iDaughter;
+    } else {
+      hMinus = *iDaughter;
+    }// if
+  }//for iKaon
 
   // sanity check
   if (!hPlus || !hMinus) {
-        warning() << " Daughters obtained from not valid, skip candidate" << endmsg;
-        return false;
+    warning() << " Daughters obtained from not valid, skip candidate" << endmsg;
+    return false;
   }// if
 
 
@@ -276,22 +276,22 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   double hPlusTrackChi2  = hPlus ->proto()->track()->probChi2();
   double hMinusTrackChi2 = hMinus->proto()->track()->probChi2();
 
-
-  bool hPlusAboveThresholdK  = false;
-  bool hMinusAboveThresholdK = false;
-  if (hPlus ->proto()->richPID()) {
-    hPlusAboveThresholdK   = hPlus ->proto()->richPID()->kaonHypoAboveThres();
-  }
-  if (hMinus->proto()->richPID()) {
-    hMinusAboveThresholdK = hMinus ->proto()->richPID()->kaonHypoAboveThres();
-  }
+  // CRJ - Not used and generates gcc 4.6 warnings.
+  //   bool hPlusAboveThresholdK  = false;
+  //   bool hMinusAboveThresholdK = false;
+  //   if (hPlus ->proto()->richPID()) {
+  //     hPlusAboveThresholdK   = hPlus ->proto()->richPID()->kaonHypoAboveThres();
+  //   }
+  //   if (hMinus->proto()->richPID()) {
+  //     hMinusAboveThresholdK = hMinus ->proto()->richPID()->kaonHypoAboveThres();
+  //   }
 
   //double mB              = particle.measuredMass()/Gaudi::Units::GeV;
   double chi2B           = particle.endVertex()->chi2();
 
   double     docaB    = -999;
   double     docaChi2 = -999;
-  StatusCode sc2; 
+  StatusCode sc2;
   sc2 = distanceCalculator()->distance(hPlus, hMinus, docaB, docaChi2);
   if (sc2 != StatusCode::SUCCESS) {
     docaB     = -999;
@@ -306,7 +306,7 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
 
   //double minDllK         = std::min(hPlusDllK  , hMinusDllK);
   //double maxDllK         = std::max(hPlusDllK  , hMinusDllK);
-  
+
 
 
 
@@ -353,7 +353,7 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   if (hMinusMuonPID)
     hMinusIsMuon = hMinusMuonPID->IsMuon();
 
-  
+
   double mErrB           = particle.measuredMassErr()/Gaudi::Units::GeV;
   //double ptB             = particle.pt()/Gaudi::Units::GeV;
   double pB              = particle.p()/Gaudi::Units::GeV;
@@ -361,12 +361,12 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
 
   double cosTheta        = LoKi::Cuts::LV01(&particle);
   if (lnan(cosTheta))
-    cosTheta = -999; 
+    cosTheta = -999;
 
 
 
 
-  
+
   //
   // move delta functions to -999
   //
@@ -409,30 +409,30 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
   //
   m_inArray[  0 ] =  hPlusIsMuon;
   m_inArray[  1 ] =  hMinusIsMuon;
-  m_inArray[  2 ] =  hPlusDllK;                               
+  m_inArray[  2 ] =  hPlusDllK;
   m_inArray[  3 ] =  hMinusDllK;
   m_inArray[  4 ] =  hPlusGhost;
   m_inArray[  5 ] =  hMinusGhost;
-  m_inArray[  6 ] =  hPlusDllMu;                              
+  m_inArray[  6 ] =  hPlusDllMu;
   m_inArray[  7 ] =  hMinusDllMu;
-  m_inArray[  8 ] =  minPt;                                   
-  m_inArray[  9 ] =  maxPt;                                   
-  m_inArray[ 10 ] =  hPlusP;                                  
+  m_inArray[  8 ] =  minPt;
+  m_inArray[  9 ] =  maxPt;
+  m_inArray[ 10 ] =  hPlusP;
   m_inArray[ 11 ] =  hMinusP;
-  m_inArray[ 12 ] =  hPlusDllP;                               
+  m_inArray[ 12 ] =  hPlusDllP;
   m_inArray[ 13 ] =  hMinusDllP;
-  m_inArray[ 14 ] =  hPlusCaloE;                              
+  m_inArray[ 14 ] =  hPlusCaloE;
   m_inArray[ 15 ] =  hMinusCaloE;
-  m_inArray[ 16 ] =  chi2B;                                   
-  m_inArray[ 17 ] =  mErrB;                                   
-  m_inArray[ 18 ] =  pB;                                      
+  m_inArray[ 16 ] =  chi2B;
+  m_inArray[ 17 ] =  mErrB;
+  m_inArray[ 18 ] =  pB;
   m_inArray[ 19 ] =  docaB;
   m_inArray[ 20 ] =  hPlusTrackChi2;
   m_inArray[ 21 ] =  hMinusTrackChi2;
   m_inArray[ 22 ] =  fabs(cosTheta);
 
-   
-#endif  
+
+#endif
 
   return true;
 } //double getInputVar

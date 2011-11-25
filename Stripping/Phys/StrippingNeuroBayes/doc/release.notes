@@ -4,6 +4,9 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2011-11-25 - Chris Jones
+ - Fix gcc 44.6 warnings
+
 !======================= StrippingNeuroBayes v1r3 2011-03-10 =================
 
 ! 2011-03-08 - Ulrich Kerzel
