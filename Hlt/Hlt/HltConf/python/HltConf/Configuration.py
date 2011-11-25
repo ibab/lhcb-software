@@ -258,6 +258,7 @@ class HltConf(LHCbConfigurableUser):
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"   
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       , 87 : "HLT_PASS_RE('Hlt2DisplVertices.*Decision')"
+                      , 88 : "HLT_PASS_RE('Hlt2HighPtJets.*Decision')"
                          }
         HltRoutingBitsWriter().RoutingBits = routingBits
 
@@ -445,6 +446,7 @@ class HltConf(LHCbConfigurableUser):
                                    ("Express"        , "Hlt2Express.*Decision"),
                                    ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
+                                   ("HighPtJets"     , "Hlt2HighPtJets.*Decision"),
                                    ("Charm"          , "Hlt2Charm.*Decision"),
                                    ("Global"         , ".*Global.*"),
                                    ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
