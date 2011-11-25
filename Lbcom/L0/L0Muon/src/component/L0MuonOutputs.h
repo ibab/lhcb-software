@@ -40,7 +40,7 @@ public:
   StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates
   /// and L0MuonData containers on the TES
-  StatusCode writeOnTES(std::string l0context);
+  StatusCode writeOnTES(std::string l0context , std::string taeInTes="");
   /// From the registers of the converters, fill the L0ProcessorDatas
   StatusCode writeL0ProcessorData();
   /// Reset the registers used by the converters

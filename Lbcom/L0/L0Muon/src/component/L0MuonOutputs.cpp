@@ -550,7 +550,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
   
 }
 
-StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
+StatusCode L0MuonOutputs::writeOnTES(std::string l0context , std::string taeInTes){
 
   int nCandFinal  = 0;
   double sumPt = 0;
@@ -560,7 +560,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
   std::vector<L0Muon::PMuonCandidate>::iterator itcand;
   std::string location;
 
-  location = LHCb::L0MuonCandidateLocation::Default + l0context;
+  location = taeInTes + LHCb::L0MuonCandidateLocation::Default + l0context;
   LHCb::L0MuonCandidates* pl0mcands = new LHCb::L0MuonCandidates();
   put(pl0mcands , location );
   // Candidates selected by the controller boards (should always be there)
@@ -599,7 +599,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
 
   // Candidates selected by the BCSUs (seen by the controller boards)
   if (m_ctrlCandFlagBCSU && (m_mode>1) ) {
-    location = LHCb::L0MuonCandidateLocation::CtrlBCSU + l0context;
+    location = taeInTes + LHCb::L0MuonCandidateLocation::CtrlBCSU + l0context;
     LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
     put(pbcsucands , location );
     for (int i= 0; i<2; ++i) {
@@ -622,7 +622,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
 
   // Candidates selected by the BCSUs (sent by the processing boards)
   if (m_procCandFlag && (m_mode>0) ) {
-    location = LHCb::L0MuonCandidateLocation::BCSU + l0context;
+    location = taeInTes + LHCb::L0MuonCandidateLocation::BCSU + l0context;
     LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
     put(ppucands , location );
     for (int i= 0; i<4; ++i) {      
@@ -645,7 +645,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
   
   // Candidates found by the PUs
   if (m_procCandFlag && (m_mode>0) ) {
-    location = LHCb::L0MuonCandidateLocation::PU  + l0context;
+    location = taeInTes + LHCb::L0MuonCandidateLocation::PU  + l0context;
     LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
     put(ppucands , location );
     for (int i= 0; i<4; ++i) {      
@@ -668,7 +668,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
   
   // Data received by the PUs
   if (m_procDataFlag && (m_mode>0) ){
-    location = LHCb::L0MuonDataLocation::Default + l0context;
+    location = taeInTes + LHCb::L0MuonDataLocation::Default + l0context;
     LHCb::L0MuonDatas* pdata = new LHCb::L0MuonDatas();
     put(pdata , location );
     for (int i= 0; i<4; ++i) {
@@ -685,19 +685,19 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
   
 
   // Errors
-  location = LHCb::L0MuonErrorLocation::ProcPU + l0context;
+  location = taeInTes + LHCb::L0MuonErrorLocation::ProcPU + l0context;
   LHCb::L0MuonErrors* pl0merrors_proc_pu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_pu, location );
 
-  location = LHCb::L0MuonErrorLocation::ProcBCSU + l0context;
+  location = taeInTes + LHCb::L0MuonErrorLocation::ProcBCSU + l0context;
   LHCb::L0MuonErrors* pl0merrors_proc_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_bcsu, location );
 
-  location = LHCb::L0MuonErrorLocation::CtrlBCSU + l0context;
+  location = taeInTes + LHCb::L0MuonErrorLocation::CtrlBCSU + l0context;
   LHCb::L0MuonErrors* pl0merrors_ctrl_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_ctrl_bcsu, location );
 
-  location = LHCb::L0MuonErrorLocation::CtrlCUSU + l0context;
+  location = taeInTes + LHCb::L0MuonErrorLocation::CtrlCUSU + l0context;
   LHCb::L0MuonErrors* pl0merrors_ctrl_cusu = new LHCb::L0MuonErrors();
   put(pl0merrors_ctrl_cusu, location );
 
@@ -774,7 +774,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context){
 
 
   // Info
-  location = LHCb::L0MuonInfoLocation::Default + l0context;
+  location = taeInTes + LHCb::L0MuonInfoLocation::Default + l0context;
   LHCb::L0MuonInfo* pl0minfo = new LHCb::L0MuonInfo(m_l0EventNumber,m_l0_B_Id,status);
   put(pl0minfo, location );
   

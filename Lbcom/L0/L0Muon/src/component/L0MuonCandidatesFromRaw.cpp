@@ -169,7 +169,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
-      sc = m_outputTool->writeOnTES(m_l0context);
+      sc = m_outputTool->writeOnTES(m_l0context , taeInTes);
       if ( sc.isFailure() ) { 
         Warning("Error from writeOnTES - skip this time slice"
                        ,StatusCode::SUCCESS,50);
