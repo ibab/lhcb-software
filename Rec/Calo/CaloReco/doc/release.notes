@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r13 2011-11-26 =========================
 ! 2011-11-25 - Olivier Deschamps
   - CaloMergedPi0Rec : fix abusive 'return 0'
 
