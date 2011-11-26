@@ -5,6 +5,11 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-11-26 - Chris Jones
+ - Rename the libraries libSwimmingFunctions.so and libSwimmingFunctionsDict.so
+   to avoid any possible naming conflicts with other libraries (libFunctions.so 
+   is too generic a name).
+
 ! 2011-11-21 - Frederic Dupertuis
  - Add multi-candidates swimming functionality (SelectMethod = "all") and
 	 modified EventLoop and Configuration accordingly.

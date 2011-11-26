@@ -16,26 +16,21 @@ branches          cmt doc python
 use     GaudiPolicy     v*
 use     GaudiKernel     v*
 
+include_path      none
+
 #============================================================================
 # Linker library
 #============================================================================
-library          Functions         ../src/functions.cpp
-apply_pattern    linker_library    library=Functions
+library          SwimmingFunctions  ../src/functions.cpp
+apply_pattern    linker_library    library=SwimmingFunctions
 
 #============================================================================
 # Reflex dictionary
 #============================================================================
-apply_pattern     reflex_dictionary                                         \
-                  dictionary=RandomFunctions                                \
+apply_pattern     reflex_dictionary                                \
+                  dictionary=SwimmingFunctions                     \
                   headerfiles=$(SWIMMINGROOT)/dict/functions.h     \
                   selectionfile=$(SWIMMINGROOT)/dict/functions.xml \
                   options="-U__MINGW32__"
 
-include_path      none
-#============================================================================
-# Component library building rule
-#============================================================================
-#============================================================================
-# define component library link options
-#============================================================================
 apply_pattern install_python_modules
