@@ -1,10 +1,9 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.9 2010-03-03 21:03:20 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
 
 // local
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PrepareVeloFullRawBuffer );
+DECLARE_ALGORITHM_FACTORY( PrepareVeloFullRawBuffer )
 
 typedef std::map<unsigned int, std::pair<unsigned int, unsigned int*> > DATA_REPO;
 typedef DATA_REPO::const_iterator DR_IT;

@@ -14,7 +14,7 @@
 #include "VeloClusterFilter.h"
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloClusterFilter );
+DECLARE_ALGORITHM_FACTORY( VeloClusterFilter )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +40,7 @@ VeloClusterFilter::VeloClusterFilter( const std::string& name,
 //=============================================================================
 VeloClusterFilter::~VeloClusterFilter()
 {
-};
+}
 
 //=============================================================================
 // Initialization
@@ -55,7 +55,7 @@ StatusCode VeloClusterFilter::initialize()
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution

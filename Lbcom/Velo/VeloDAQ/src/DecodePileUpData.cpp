@@ -1,6 +1,6 @@
 // Include files 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // data model
 #include "Event/RawBank.h"
@@ -22,7 +22,7 @@ using namespace VeloTELL1;
 //----------------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DecodePileUpData );
+DECLARE_ALGORITHM_FACTORY( DecodePileUpData )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -27,7 +27,7 @@
 // 2006-02-15 : David Jones, Kurt Rinnert: complete rewrite for 1MHz raw buffer
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PrepareVeloRawBuffer );
+DECLARE_ALGORITHM_FACTORY( PrepareVeloRawBuffer )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -49,7 +49,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrepareVeloRawBuffer::~PrepareVeloRawBuffer() {}; 
+PrepareVeloRawBuffer::~PrepareVeloRawBuffer() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -84,7 +84,7 @@ StatusCode PrepareVeloRawBuffer::initialize() {
   std::sort( m_sensorNumbers.begin() , m_sensorNumbers.end() );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -175,7 +175,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Whatever needs to be done at the end
@@ -184,8 +184,8 @@ StatusCode PrepareVeloRawBuffer::finalize() {
 
   debug() << "==> Finalise" << endmsg;
 
-  return StatusCode::SUCCESS;
-};
+  return GaudiAlgorithm::finalize(); // must be executed last
+}
 
 
 void PrepareVeloRawBuffer::storeBank(

@@ -1,4 +1,3 @@
-// $Id: $
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/RawEvent.h"
@@ -25,7 +24,7 @@
 // 2011-09-20 : Kurt Rinnert
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( VeloClustersToRaw );
+DECLARE_ALGORITHM_FACTORY( VeloClustersToRaw )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,7 +35,8 @@ VeloClustersToRaw::VeloClustersToRaw( const std::string& name,
   GaudiAlgorithm (name , pSvcLocator),
   m_clusterLoc(LHCb::VeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
-  m_bankVersion(VeloDAQ::v3)
+  m_bankVersion(VeloDAQ::v3),
+  m_bankSizeInBytes(0)
 {
   declareProperty("VeloClusterLocation",m_clusterLoc="Raw/Velo/ClustersSelected");
   declareProperty("RawEventLocation",m_rawEventLoc="DAQ/RawEventSelected");
@@ -47,7 +47,7 @@ VeloClustersToRaw::VeloClustersToRaw( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloClustersToRaw::~VeloClustersToRaw() {}; 
+VeloClustersToRaw::~VeloClustersToRaw() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -72,7 +72,7 @@ StatusCode VeloClustersToRaw::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -130,14 +130,14 @@ StatusCode VeloClustersToRaw::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Whatever needs to be done at the end
 //=============================================================================
 StatusCode VeloClustersToRaw::finalize() {
-  return StatusCode::SUCCESS;
-};
+  return GaudiAlgorithm::finalize(); // must be executed last
+}
 
 
 StatusCode VeloClustersToRaw::storeBank( const unsigned int sensor,

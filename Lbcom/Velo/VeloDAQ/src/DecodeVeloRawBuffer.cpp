@@ -1,5 +1,3 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.28 2010-05-13 17:20:20 dhcroft Exp $
-
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
@@ -29,7 +27,7 @@
 //              - complete rewrite
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer );
+DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -58,7 +56,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-DecodeVeloRawBuffer::~DecodeVeloRawBuffer() {}; 
+DecodeVeloRawBuffer::~DecodeVeloRawBuffer() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -91,7 +89,7 @@ StatusCode DecodeVeloRawBuffer::initialize() {
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -133,7 +131,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Whatever needs to be done at the end
@@ -142,8 +140,8 @@ StatusCode DecodeVeloRawBuffer::finalize() {
 
   if ( msgLevel( MSG::DEBUG ) ) debug () << "==> Finalise" << endmsg;
 
-  return StatusCode::SUCCESS;
-};
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
 
 //=============================================================================
 // Private helpers

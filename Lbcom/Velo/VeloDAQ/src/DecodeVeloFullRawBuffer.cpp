@@ -1,8 +1,7 @@
-// $Id: DecodeVeloFullRawBuffer.cpp,v 1.6 2009-09-09 10:32:28 krinnert Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "DecodeVeloFullRawBuffer.h"
@@ -20,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DecodeVeloFullRawBuffer );
+DECLARE_ALGORITHM_FACTORY( DecodeVeloFullRawBuffer )
 
 
 //=============================================================================

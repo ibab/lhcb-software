@@ -1,4 +1,3 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.8 2010-03-03 21:03:20 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SmartVeloErrorBankDecoder );
+DECLARE_ALGORITHM_FACTORY( SmartVeloErrorBankDecoder )
 
 using namespace VeloTELL1;
 

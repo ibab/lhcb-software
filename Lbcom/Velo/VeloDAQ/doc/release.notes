@@ -3,6 +3,12 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2011-11-28 - Marco Cattaneo
+ - Fix coverity defect 28294: UNINIT_CTOR in VeloClustersToRaw
+ - Add some missing calls to GaudiAlgorithm::finalize
+ - Replace obsolete DeclareFactoryEntries includes
+ - Fix trivial icc remarks
+
 !========================= VeloDAQ v6r5 2011-11-08 =========================
 ! 2011-10-05 - Kurt Rinnert
  - Changed ZS decoder so it maintains event specific information in
