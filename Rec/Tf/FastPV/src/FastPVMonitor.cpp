@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -97,14 +96,14 @@ StatusCode FastPVMonitor::execute() {
     Gaudi::XYZPoint point = (*itT)->position();
     Gaudi::XYZVector dir  = (*itT)->slopes();
     double lowestIP = 1.e9;
-    LHCb::RecVertex* best = NULL;
+    //    LHCb::RecVertex* best = NULL;
     for (  itPv = pvs->begin(); pvs->end() != itPv ; ++itPv ) {
       double dx = point.x() + ( (*itPv)->position().z() - point.z() ) * dir.x() - (*itPv)->position().x();
       double dy = point.y() + ( (*itPv)->position().z() - point.z() ) * dir.y() - (*itPv)->position().y();
       double ip2 = dx*dx + dy*dy;
       if ( ip2 < lowestIP ) {
         lowestIP = ip2;
-        best = *itPv;
+        // best = *itPv; // variable set but never used
       }
     }
     lowestIP  = sqrt( lowestIP );

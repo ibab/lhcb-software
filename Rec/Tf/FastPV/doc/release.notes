@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
 
+! 2011-11-28 - Marco Cattaneo
+ - Fix a gcc46 warning (variable set but never used)
+
 ! 2011-11-25 - Olivier Callot
  - Cleanup of no longer ised feature: Backward track counting
  - Add 90 micron MS error in quadrature.
