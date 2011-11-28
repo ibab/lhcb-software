@@ -3,6 +3,9 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+! 2011-11-28 - Anton Poluektov 
+  - Fix tests reference
+
 </PRE><H1><A NAME=v3r1>2011-10-01 StrippingSys v3r1p1</A></H1><PRE>
 Patch release. Identical to v3r1, just built against LHCb v33r1 and Lbcom v11r1.
 
