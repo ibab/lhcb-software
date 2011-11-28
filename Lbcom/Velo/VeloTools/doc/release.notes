@@ -4,6 +4,10 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2011-11-28 - Marco Cattaneo
+ - Fix coverity defect 25048: UNINIT_CTOR in VeloSelectClustersByChannel
+ - Fix trivial icc remarks
+
 !========================= VeloTools v4r1 2011-07-27 =========================
 ! 2011-06-30 - Eduardo Rodrigues
  - Added tools VeloSelectClustersByChannel and VeloSelectChannelIDOnTrack.

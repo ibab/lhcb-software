@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 // -------------
 // from Gaudi
@@ -30,7 +29,7 @@ DECLARE_TOOL_FACTORY( VeloSelectClustersByChannel )
 VeloSelectClustersByChannel::VeloSelectClustersByChannel( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_selector(0)
 {
   declareProperty( "SelectorType", m_selectorType = "VeloSelectChannelIDOnTrack" );
   declareProperty( "SelectorName", m_selectorName = "Selector" );

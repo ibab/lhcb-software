@@ -1,4 +1,3 @@
-// $Id: LivDBTELL1SensorMap.cpp,v 1.2 2009-09-09 08:22:48 krinnert Exp $
 #include <sstream>
 
 #include <stdlib.h>
@@ -20,7 +19,7 @@
 namespace Velo
 {
 
-  DECLARE_TOOL_FACTORY( LivDBTELL1SensorMap );
+  DECLARE_TOOL_FACTORY( LivDBTELL1SensorMap )
 
   //=============================================================================
   // Standard constructor

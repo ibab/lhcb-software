@@ -1,4 +1,3 @@
-// $Id: PvssTell1Names.cpp,v 1.1 2009-09-08 16:44:19 krinnert Exp $
 #include <sstream>
 
 #include <time.h>
@@ -16,7 +15,7 @@
 namespace Velo
 {
   
-  DECLARE_TOOL_FACTORY( PvssTell1Names );
+  DECLARE_TOOL_FACTORY( PvssTell1Names )
   
   //=============================================================================
   // Standard constructor

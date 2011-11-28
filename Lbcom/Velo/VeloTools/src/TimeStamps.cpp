@@ -1,4 +1,3 @@
-// $Id: TimeStamps.cpp,v 1.1 2009-09-08 16:22:39 krinnert Exp $
 #include <sstream>
 
 #include <time.h>
@@ -16,7 +15,7 @@
 namespace Velo
 {
   
-  DECLARE_TOOL_FACTORY( TimeStamps );
+  DECLARE_TOOL_FACTORY( TimeStamps )
   
   //=============================================================================
   // Standard constructor
