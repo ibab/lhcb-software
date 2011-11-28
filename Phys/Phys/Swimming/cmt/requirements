@@ -15,6 +15,9 @@ branches          cmt doc python
 #============================================================================
 use     GaudiPolicy     v*
 use     GaudiKernel     v*
+use     GaudiCOnf       v*
+use     LHCbKernel      v*  Kernel
+use     TisTosTobbing   v*  Phys
 
 include_path      none
 

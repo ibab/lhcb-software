@@ -6,7 +6,7 @@ __all__ = ['getBinfo',
            'getSelector']
 
 import GaudiPython
-GaudiPython.loaddict( 'RandomFunctionsDict' )
+GaudiPython.loaddict( 'SwimmingFunctionsDict' )
 Random = GaudiPython.Bindings.gbl.Random
 
 def createObject(t, *args):

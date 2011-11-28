@@ -11,7 +11,6 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp,
 
 import GaudiKernel.ProcessJobOptions
 
-
 class Swimming(LHCbConfigurableUser) :
     
     __slots__ = {
