@@ -12,6 +12,10 @@ Purpose: LHCb reconstruction program
   . Monitor tracks with large IP (TrackCheckers)
   . Improve efficiency for large IP tracks (FastVelo)
 
+- Changes to tests
+  . Add brunel.2011-crashes for regression testing of fixes to crashes on 2011
+    data. Currently covers bug #89269 affecting Reco12, fixed in CaloReco v5r13
+
 </PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r1, Lbcom v11r1,
  Rec v12r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
