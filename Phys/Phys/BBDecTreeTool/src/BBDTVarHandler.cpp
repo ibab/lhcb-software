@@ -35,10 +35,11 @@ double totHeavyVChi2Dof(const LHCb::Particle *p){
   else return 0;
 }
 // ============================================================================
-BBDTVarHandler::BBDTVarHandler(): m_values(9),m_use(9,false),
+BBDTVarHandler::BBDTVarHandler(const DVAlgorithm* dva, const IDistanceCalculator* dist):
+  m_dist(dist), m_ipTool(dist), m_dva(dva), m_values(9),m_use(9,false),
   m_SUMPT(LoKi::Cuts::SUMTREE(LoKi::Cuts::PT,LoKi::Cuts::ISBASIC,0.0)),
   m_MINPT(LoKi::Cuts::MINTREE(LoKi::Cuts::ISBASIC,LoKi::Cuts::PT)),
-  m_BPVIPCHI2(""){
+  m_CHI2IP(m_ipTool, 0), m_BPVCORRM(0), m_BPVVDCHI2(0) {
   m_indices["PTSUM"] = 0;
   m_indices["M"] = 1;
   m_indices["DOCA"] = 2;
@@ -82,25 +83,27 @@ StatusCode BBDTVarHandler::initialize(const std::vector<bool> &use){
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-bool BBDTVarHandler::set(const LHCb::Particle* p,const DVAlgorithm *dvalg, 
-			 const IDistanceCalculator* dist) {
+bool BBDTVarHandler::set(const LHCb::Particle* p) {
 
   if(0 == p) return false;
 
   // get variables we need
-  const LHCb::VertexBase* bpv = dvalg->bestPV(p);
+  const LHCb::VertexBase* bpv = m_dva->bestPV(p);
   if(m_use[0]) m_values[0] = m_SUMPT(p)/Gaudi::Units::MeV; 
   if(m_use[1]) m_values[1] = p->measuredMass()/Gaudi::Units::MeV; 
-  if(m_use[2]) m_values[2] = docaMax(p,dist)/Gaudi::Units::mm;
-  if(m_use[3]) m_values[3] = m_BPVIPCHI2(p); 
+  if(m_use[2]) m_values[2] = docaMax(p,m_dist)/Gaudi::Units::mm;
+  if(m_use[3]){
+    m_CHI2IP.setVertex(bpv);
+    m_values[3] = m_CHI2IP(p); 
+  }
   if(m_use[4]){
-    const LoKi::Types::Fun BPVCORRM = LoKi::Cuts::CORRM(bpv);
-    m_values[4] = BPVCORRM(p)/Gaudi::Units::MeV; 
+    m_BPVCORRM.setVertex(bpv);
+    m_values[4] = m_BPVCORRM(p)/Gaudi::Units::MeV; 
   }
   if(m_use[5]) m_values[5] = m_MINPT(p)/Gaudi::Units::MeV; 
   if(m_use[6]){
-    const LoKi::Types::Fun BPVVDCHI2 = LoKi::Cuts::VDCHI2(bpv);
-    m_values[6] = BPVVDCHI2(p); 
+    m_BPVVDCHI2.setVertex(bpv);
+    m_values[6] = m_BPVVDCHI2(p); 
   }
   if(m_use[7]) m_values[7] = p->pt();
   if(m_use[8]) m_values[8] = totHeavyVChi2Dof(p);

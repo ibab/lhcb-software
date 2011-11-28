@@ -46,7 +46,7 @@ class BBDTSimpleTool : public extends1<GaudiTool,IParticleFilter>{
   virtual StatusCode initialize();
   
   /** finalize tool */
-  virtual StatusCode finalize() {return GaudiTool::finalize();}
+  virtual StatusCode finalize();
   
   /** performs the filtering based on the BBDT "easy" cuts
    *  @see IParticleFilter 
@@ -82,9 +82,7 @@ private:
   std::vector<std::map<std::string,std::pair<double,double> > > m_cuts; 
   
   // attributes
-  const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
-  const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
-  mutable BBDTVarHandler m_vars; ///< variables
+  mutable BBDTVarHandler *m_vars; ///< variables
 }; 
 // ============================================================================
 #endif /* BBDTSimpleTool_H */

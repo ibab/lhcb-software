@@ -38,7 +38,7 @@ class BBDecTreeTool : public extends1<GaudiTool,IParticleFilter>{
   virtual StatusCode initialize();
   
   /** finalize tool */
-  virtual StatusCode finalize() {return GaudiTool::finalize();}
+  virtual StatusCode finalize();
   
   /** performs the filtering based on the BBDecTreeTool response
    *  @see IParticleFilter 
@@ -90,7 +90,7 @@ private:
   std::vector<std::string> m_pids; ///< PID names for PT variabls
   const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
   const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
-  mutable BBDTVarHandler m_vars; ///< variables
+  mutable BBDTVarHandler* m_vars; ///< variables
 }; 
 // ============================================================================
 #endif /* BBDecTreeTool_H */

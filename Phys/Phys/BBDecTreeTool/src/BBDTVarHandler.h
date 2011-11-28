@@ -28,7 +28,7 @@
 class BBDTVarHandler {
 
 public:
-  BBDTVarHandler();
+  BBDTVarHandler(const DVAlgorithm* dva, const IDistanceCalculator* dist);
   virtual ~BBDTVarHandler(){}
   void setPIDs(const LoKi::PhysTypes::Cut &cut);
   StatusCode initialize(const std::vector<std::string> &vars);
@@ -36,8 +36,7 @@ public:
   const double& operator[](unsigned int index) const {
     return m_values[m_map[index]];
   }
-  bool set(const LHCb::Particle* p, const DVAlgorithm *dvalg, 
-	   const IDistanceCalculator* dist);
+  bool set(const LHCb::Particle* p);
   unsigned int numVars() const {
     int size = m_values.size(), num = 0;
     for(int i=0; i < size; i++){
@@ -57,12 +56,21 @@ public:
   bool cut(const std::map<std::string,std::pair<double,double> > &cuts) const;
 
 private:
+
+  const IDistanceCalculator* m_dist; ///< LoKi::DistanceCalculator
+  const LoKi::Vertices::ImpactParamTool m_ipTool;
+  const DVAlgorithm* m_dva; ///< DVAlgorithm (to get BPV)
+
   std::vector<double> m_values; ///< variables
   std::vector<bool> m_use; ///< use this variable?
   std::vector<int> m_map; ///< maps client index to internal index
+
   LoKi::PhysTypes::Fun m_SUMPT; ///< SUMTREE(PT,[...],0.0)
   LoKi::PhysTypes::Fun m_MINPT; ///< MINTREE([...],PT)
-  const LoKi::Cuts::BPVIPCHI2 m_BPVIPCHI2; ///< BPVIPCHI2()
+  const LoKi::Cuts::CHI2IP   m_CHI2IP; ///< BPVIPCHI2()
+  const LoKi::Cuts::CORRM    m_BPVCORRM; 
+  const LoKi::Cuts::VDCHI2   m_BPVVDCHI2;
+
   std::map<std::string,int> m_indices; ///< var name to (internal) index map
 };
 // ============================================================================

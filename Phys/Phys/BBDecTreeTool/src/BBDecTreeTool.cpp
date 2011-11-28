@@ -26,7 +26,7 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
 BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name, 
 			     const IInterface* parent) 
   : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1), 
-    m_dist(0), m_dva(0), m_vars(){
+    m_vars(0){
   // declare configurable properties
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
   declareProperty("ParamFile", m_paramFile, "parameter file (full path)");
@@ -45,20 +45,23 @@ StatusCode BBDecTreeTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;   
 
+  // get tools and algs
+  IDistanceCalculator* dist 
+     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
+  if (0 == dva) {
+    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
+  }
+  m_vars = new BBDTVarHandler(dva, dist);
+
   // configure the BBDT var handler to use specified PIDs
   int size = m_pids.size();
   if(size > 0){
     LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == m_pids[0]);
     for(int i = 1; i < size; i++)
       cut = (cut || (LoKi::Cuts::ABSID == m_pids[i]));
-    m_vars.setPIDs(cut);
+    m_vars->setPIDs(cut);
   }
-
-  // get tools and algs
-  m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  m_dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
-  if (0 == m_dva) 
-    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
  
   // read in parameters
   if(!m_paramFile.empty() && m_paramFile[0] != '/' && m_paramFile[0]!='$')  
@@ -79,7 +82,7 @@ StatusCode BBDecTreeTool::initialize() {
     if(!(inFile >> var_names[v]))
       return this->readError("error reading in variable names");
   }
-  if(!m_vars.initialize(var_names)) 
+  if(!m_vars->initialize(var_names)) 
     return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE); 
 
   // number of splits for each variable
@@ -116,6 +119,14 @@ StatusCode BBDecTreeTool::initialize() {
 
   return StatusCode::SUCCESS ;
 }
+// ===========================================================================
+StatusCode BBDecTreeTool::finalize() {
+   if (m_vars) {
+      delete m_vars;
+      m_vars = 0;
+   }
+   return GaudiTool::finalize();
+}
 // ============================================================================
 int BBDecTreeTool::getVarIndex(int varIndex, double value) const {  
   if(value < m_splits[varIndex][0]) return 0;
@@ -128,11 +139,11 @@ int BBDecTreeTool::getVarIndex(int varIndex, double value) const {
 // ============================================================================
 int BBDecTreeTool::getIndex() const {
   unsigned int size = m_splits.size();
-  if(size != m_vars.numVars()) return -1;
+  if(size != m_vars->numVars()) return -1;
   int ind_mult = 1, index = 0;
   for(int v = size-1; v >= 0; v--){
     if(v < (int)size-1) ind_mult *= m_splits[v+1].size();
-    index += this->getVarIndex(v,m_vars[v])*ind_mult;
+    index += this->getVarIndex(v,(*m_vars)[v])*ind_mult;
   }
   return index;
 }
@@ -143,7 +154,7 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
     Error("LHCb::Particle* points to NULL, return false");
     return false ;
   }
-  if(!m_vars.set(p,m_dva,m_dist)) return false;
+  if(!m_vars->set(p)) return false;
 
   // get response
   int index = this->getIndex();

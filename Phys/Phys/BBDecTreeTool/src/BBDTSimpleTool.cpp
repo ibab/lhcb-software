@@ -6,7 +6,7 @@
 BBDTSimpleTool::BBDTSimpleTool(const std::string& type, 
 			       const std::string& name, 
 			       const IInterface* parent) 
-  : base_class(type,name,parent), m_dist(0), m_dva(0), m_vars(){
+  : base_class(type,name,parent), m_vars(0){
   // declare configurable properties
   declareProperty("Cuts", m_cuts, "Simple tree of cuts");
 }
@@ -17,19 +17,21 @@ StatusCode BBDTSimpleTool::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc; 
 
+  // get tools and algs
+  IDistanceCalculator* dist 
+     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
+  if (0 == dva) 
+    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
+  m_vars = new BBDTVarHandler(dva, dist);
+
   // configure the BBDT var handler to use only K+
   LoKi::PhysTypes::Cut cut(LoKi::Cuts::ABSID == "K+"); 
-  m_vars.setPIDs(cut);
+  m_vars->setPIDs(cut);
   std::vector<bool> use(7,true); // use 1st 7 vars in the handler
-  if(!m_vars.initialize(use)) 
+  if(!m_vars->initialize(use)) 
     return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE);
  
-  // get tools and algs
-  m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  m_dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
-  if (0 == m_dva) 
-    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
-
   // display cuts 
   std::vector<std::map<std::string,std::pair<double,double> > > 
     ::const_iterator iter = m_cuts.begin();
@@ -57,6 +59,15 @@ StatusCode BBDTSimpleTool::initialize() {
   info() << "]" << endmsg;
   return StatusCode::SUCCESS;
 }
+// ===========================================================================
+StatusCode BBDTSimpleTool::finalize() {
+   // declare configurable properties
+   if (m_vars) {
+      delete m_vars;
+      m_vars = 0;
+   }
+   return GaudiTool::finalize();
+}
 // ============================================================================
 bool BBDTSimpleTool::operator()(const LHCb::Particle* p) const {
 
@@ -64,12 +75,12 @@ bool BBDTSimpleTool::operator()(const LHCb::Particle* p) const {
     Error("LHCb::Particle* points to NULL, return false");
     return false ;
   }
-  if(!m_vars.set(p,m_dva,m_dist)) return false;
+  if(!m_vars->set(p)) return false;
 
   std::vector<std::map<std::string,std::pair<double,double> > > 
     ::const_iterator iter = m_cuts.begin();
   while(iter != m_cuts.end()){
-    if(m_vars.cut(*iter)) return true;
+    if(m_vars->cut(*iter)) return true;
     iter++;
   }
   return false;
@@ -91,5 +102,4 @@ namespace Gaudi {
     }
   }
 }
-
 // ============================================================================
