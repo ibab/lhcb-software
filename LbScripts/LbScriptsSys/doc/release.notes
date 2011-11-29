@@ -1,4 +1,23 @@
-2011-11-21  Hubert Degaudenzi  <Hubert.Degaudenzi@gmail.com>
+2011-11-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v6r6p2
+
+	LbConfiguration:
+	* python/LbConfiguration/Version.py: added the global support for the "g" extension to the
+	version scheme. In summary:
+	   - v1r2g3 is authorized
+	   - v1r2p3g4 is authorized
+	   - v1r2g3p4 is not
+	* python/LbConfiguration/Platform.py: added explicitly the gcc46 entries in the list of
+	supported platforms.
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: fixed the usage of getTarBallNameItems. Now
+	only uses the internal one.
+	* python/LbLegacy/install_project.py: fixed the log message for the Update action.
+
+
+2011-11-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r6p1
 
