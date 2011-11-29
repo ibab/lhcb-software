@@ -10,7 +10,6 @@
 // local
 #include "L0TriggerTisTos.h"
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0TriggerTisTos
 //
@@ -29,8 +28,8 @@ L0TriggerTisTos::L0TriggerTisTos( const std::string& type,
   : TriggerTisTos ( type, name , parent )
 {
   declareInterface<ITriggerTisTos>(this);
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -39,21 +38,23 @@ L0TriggerTisTos::~L0TriggerTisTos() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode L0TriggerTisTos::initialize() {
-  StatusCode sc = TriggerTisTos::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode L0TriggerTisTos::initialize() 
+{
+  const StatusCode sc = TriggerTisTos::initialize(); 
+  if ( sc.isFailure() ) return sc; 
 
-  if( m_HltDecReportsLocation.value() == LHCb::HltDecReportsLocation::Default ){
+  if ( m_HltDecReportsLocation.value() == LHCb::HltDecReportsLocation::Default )
+  {
     m_HltDecReportsLocation = "HltLikeL0/DecReports";
   }
-  if( m_HltSelReportsLocation.value() == LHCb::HltSelReportsLocation::Default ){
+  if ( m_HltSelReportsLocation.value() == LHCb::HltSelReportsLocation::Default )
+  {
     m_HltSelReportsLocation = "HltLikeL0/SelReports";
   }
-  info() << " L0DecReportsMaker and L0SelReportsMaker must be executed before using this tool" << endmsg;  
-  info() << " DecReport location = " << m_HltDecReportsLocation.value();
-  info() << " SelReport location = " << m_HltSelReportsLocation.value();
-  info() << endmsg;  
-  
-  return StatusCode::SUCCESS;
+  debug() << "L0DecReportsMaker and L0SelReportsMaker must be executed before using this tool" 
+          << endmsg;  
+  debug() << "DecReport location = " << m_HltDecReportsLocation.value()
+          << " SelReport location = " << m_HltSelReportsLocation.value()
+          << endmsg; 
+  return sc;
 }
-

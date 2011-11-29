@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2011-11-29 - Chris Jones
+ - Downgrade info() messages during L0TriggerTisTos to debug.
+
 ! 2011-11-23 - Tomasz Skwarnicki
  - add some debugging code
 
