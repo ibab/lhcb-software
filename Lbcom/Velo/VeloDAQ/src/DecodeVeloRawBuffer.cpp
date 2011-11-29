@@ -50,6 +50,7 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("IgnoreErrors",m_ignoreErrors=false,"Decode clusters even if errors are present. Use with care, can cause crashes on corrupted banks.");
 
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
+  declareProperty("HideWarnings", m_hideWarnings = true);
 }
 
 
@@ -297,8 +298,15 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
               clusters,byteCount,errorMsg,m_ignoreErrors);
         if ( !errorMsg.empty() ) {
           unsigned int msgCount = 0;
-          if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
-          Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
+          if ( msgLevel(MSG::DEBUG) ) {
+            msgCount = 10;
+            Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
+          }else{
+            // currently suppressed due to presence of bug in TELL1 cluster maker
+            if(!m_hideWarnings){
+              Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();            
+            }
+          } 
         }
         break;
       default: // bank version is not supported: kill the event

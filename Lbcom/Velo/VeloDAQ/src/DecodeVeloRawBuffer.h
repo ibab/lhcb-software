@@ -126,5 +126,8 @@ private:
   /// if true, clusters will be decoded even in the presence of errors
   bool m_ignoreErrors;
 
+  /// if true hide the errors from multiple cluster using the same strip
+  bool m_hideWarnings;
+
 };
 #endif // DECODEVELORAWBUFFER_H

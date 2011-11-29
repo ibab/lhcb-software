@@ -3,6 +3,11 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2011-11-29 - David Hutchcroft
+ - Hide warning by default due to problems with TELL1 cluster maker
+   putting the same strip into two clusters (to be re-enabled for data/mc 
+   after the TELL1 bug is resolved).
+
 ! 2011-11-28 - Marco Cattaneo
  - Fix coverity defect 28294: UNINIT_CTOR in VeloClustersToRaw
  - Add some missing calls to GaudiAlgorithm::finalize
