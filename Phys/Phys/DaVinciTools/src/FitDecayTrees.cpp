@@ -6,7 +6,7 @@
 // ============================================================================
 #include "LoKi/select.h"
 // ============================================================================
-// DecayTreeFitter 
+// DecayTreeFitter
 // ============================================================================
 #include "DecayTreeFitter/Fitter.h"
 // ============================================================================
@@ -14,8 +14,8 @@
 // ============================================================================
 #include "FitDecayTrees.h"
 // ============================================================================
-/** @file 
- *  Implementation file for algorithm FitDecayTrees 
+/** @file
+ *  Implementation file for algorithm FitDecayTrees
  *  @author Vanya BELAYEV Ivan.Belyaev@cern.ch
  *  @author Vanya BELYAEV   Ivan.Belyaev@nikhef.nl
  *  @date 2010-07-09
@@ -25,7 +25,7 @@
  *                 by $Author$
  */
 // ============================================================================
-/* standard constructor 
+/* standard constructor
  *  @see DVAlgorithm
  *  @see GaudiTupleAlg
  *  @see GaudiHistoAlg
@@ -33,106 +33,106 @@
  *  @see Algorithm
  *  @see AlgFactory
  *  @see IAlgFactory
- *  @param name the algorithm instance name 
- *  @param pSvc pointer to Service Locator 
+ *  @param name the algorithm instance name
+ *  @param pSvc pointer to Service Locator
  */
 // ============================================================================
-FitDecayTrees::FitDecayTrees                       // standard contructor 
-( const std::string& name ,                        // the algorithm instance name 
+FitDecayTrees::FitDecayTrees                       // standard contructor
+( const std::string& name ,                        // the algorithm instance name
   ISvcLocator*       pSvc )                        // pointer to Service Locator
-  : FilterDesktop ( name , pSvc ) 
-// chi2 cut for decay tree fit  
+  : FilterDesktop ( name , pSvc )
+// chi2 cut for decay tree fit
   , m_chi2cut  ( 10 )
-// list of mass-constraints to be applied 
-  , m_mc_1 () 
-// list of mass-constraints to be applied 
+// list of mass-constraints to be applied
+  , m_mc_1 ()
+// list of mass-constraints to be applied
   , m_mc_2 ()
-// use PV-constraint ? 
-  , m_use_PV_Constraint ( false ) 
+// use PV-constraint ?
+  , m_use_PV_Constraint ( false )
 {
   //
   declareProperty
-    ( "MaxChi2PerDoF" , 
+    ( "MaxChi2PerDoF" ,
       m_chi2cut       ,
       "The maximal value for chi2/nDoF" ) ;
   //
   declareProperty
-    ( "UsePVConstraint"   , 
+    ( "UsePVConstraint"   ,
       m_use_PV_Constraint ,
       "Use Primary Vertex pointing constraint for Decay Tree Fitter " ) ;
-  // 
+  //
   declareProperty
-    ( "MassConstraints"                          , 
-      m_mc_1                                     , 
-      "List of particles to be mass-constrained" ) 
-    -> declareUpdateHandler 
+    ( "MassConstraints"                          ,
+      m_mc_1                                     ,
+      "List of particles to be mass-constrained" )
+    -> declareUpdateHandler
     ( &FitDecayTrees::updateConstraints   , this ) ;
   //
   StatusCode sc = setProperty ( "CloneFilteredParticles" , true ) ;
-  Assert ( sc.isSuccess() , "Unable to set 'CloneFilteresParticles'" ) ;    
+  Assert ( sc.isSuccess() , "Unable to set 'CloneFilteresParticles'" ) ;
   {
     Property* p = Gaudi::Utils::getProperty ( this , "CloneFilteredParticles" ) ;
-    if ( 0 != p && 0 == p->updateCallBack() ) 
+    if ( 0 != p && 0 == p->updateCallBack() )
     { p -> declareUpdateHandler ( &FitDecayTrees::updateCloneProp , this ) ; }
   }
 }
 // ============================================================================
-// virtual & protected destructor 
+// virtual & protected destructor
 // ============================================================================
-FitDecayTrees::~FitDecayTrees () {}                      // standard contructor 
+FitDecayTrees::~FitDecayTrees () {}                      // standard contructor
 // ============================================================================
-// intialize the algorithm 
+// intialize the algorithm
 // ============================================================================
-StatusCode FitDecayTrees::initialize () 
+StatusCode FitDecayTrees::initialize ()
 {
   StatusCode sc = FilterDesktop::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
   //
-  if ( !cloneFilteredParticles() ) 
+  if ( !cloneFilteredParticles() )
   {
-    warning() 
+    warning()
       << "The property 'CloneFilteredParticles' reset to be True"
       << endmsg ;
     setCloneFilteredParticles ( true ) ;
   }
-  /// decode mass-constraints 
+  /// decode mass-constraints
   return decodeConstraints () ;
 }
 // ============================================================================
-// finalize the algorithm 
+// finalize the algorithm
 // ============================================================================
-StatusCode FitDecayTrees::finalize () 
+StatusCode FitDecayTrees::finalize ()
 { return FilterDesktop::initialize () ; }
 // ============================================================================
-// update constraints 
+// update constraints
 // ============================================================================
-void FitDecayTrees::updateConstraints ( Property& /* p */ ) 
+void FitDecayTrees::updateConstraints ( Property& /* p */ )
 {
-  // no action if not yet initialized 
+  // no action if not yet initialized
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
-  // 
+  //
   StatusCode sc = decodeConstraints () ;
   Assert ( sc.isSuccess() , "Unable to decode Mass-Constraints" , sc ) ;
   //
 }
 // ==========================================================================
-// update handler for 'CloneFilteredParticles' property 
+// update handler for 'CloneFilteredParticles' property
 // ==========================================================================
 void FitDecayTrees::updateCloneProp ( Property& /* p */ )
 {
   setCloneFilteredParticles ( true ) ;
-  // no action if not yet initialized 
+  // no action if not yet initialized
   if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
   //
-  warning() 
+  warning()
     << "The property 'CloneFilteredParticles' reset to be True" << endmsg ;
   //
   setCloneFilteredParticles ( true ) ;
 }
 // ============================================================================
-// get the refitted tree 
+// get the refitted tree
 // ============================================================================
-LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const 
+LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const
 {
   //
   if ( 0 == p ) { return LHCb::DecayTree () ; }
@@ -140,65 +140,65 @@ LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const
   typedef DecayTreeFitter::Fitter Fitter ;
   //
   const LHCb::VertexBase* pv = 0 ;
-  if ( use_PV_Constraint ()  ) 
+  if ( use_PV_Constraint ()  )
   {
-    pv = bestVertex ( p ) ; 
-    if ( 0 == pv ) 
+    pv = bestVertex ( p ) ;
+    if ( 0 == pv )
     { Warning ("No bestVertex is found!", StatusCode::FAILURE , 1 ).ignore() ; }
   }
   //
-  // initialize fitter 
+  // initialize fitter
   std::auto_ptr<Fitter>  fitter ;
   //
-  // instantiate the fitter 
+  // instantiate the fitter
   fitter.reset ( 0 == pv ? new Fitter ( *p ) : new Fitter ( *p , *pv ) ) ;
   //
-  // apply mass-constraints (if needed) 
-  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ; 
-        m_mc_2.end() != ipid ; ++ipid ) 
+  // apply mass-constraints (if needed)
+  for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;
+        m_mc_2.end() != ipid ; ++ipid )
   { fitter->setMassConstraint ( *ipid )  ; }
   //
-  // fit! 
+  // fit!
   fitter->fit() ;
   //
   // get the status
   Fitter::FitStatus status = fitter->status() ;
-  if ( Fitter::Success != status ) 
-  { 
+  if ( Fitter::Success != status )
+  {
     Warning ( "Error from fitter, status" , 110 + status , 1 ) ;
     return LHCb::DecayTree () ;
   }
   //
-  // apply chi2/nDoF cut: 
-  if ( fitter->chiSquare() > m_chi2cut * fitter->nDof() ) 
+  // apply chi2/nDoF cut:
+  if ( fitter->chiSquare() > m_chi2cut * fitter->nDof() )
   { return LHCb::DecayTree () ; }
   //
   // finally get the refitted tree from the fitter
   return fitter->getFittedTree () ;
 }
-// ============================================================================  
-/*  the major method for filter input particles 
+// ============================================================================
+/*  the major method for filter input particles
  *  @param input    (INPUT) the input  container of particles
  *  @param filtered (OUPUT) the output container of particles
- *  @return Status code 
+ *  @return Status code
  */
-// ============================================================================  
-StatusCode FitDecayTrees::filter 
-( const LHCb::Particle::ConstVector& input    , 
-  LHCb::Particle::ConstVector&       filtered ) 
+// ============================================================================
+StatusCode FitDecayTrees::filter
+( const LHCb::Particle::ConstVector& input    ,
+  LHCb::Particle::ConstVector&       filtered )
 {
   //
-  // Filter particles!!  - the first important most important line :-) 
+  // Filter particles!!  - the first important most important line :-)
   //
   LHCb::Particle::ConstVector good ;
   good.reserve ( input.size  () ) ;
-  LoKi::select ( input.begin () , 
-                 input.end   () , 
+  LoKi::select ( input.begin () ,
+                 input.end   () ,
                  std::back_inserter ( good ) , predicate() ) ;
   if ( good.empty() ) { return StatusCode::SUCCESS ; }
   //
-  for ( LHCb::Particle::ConstVector::const_iterator ip = good.begin() ; 
-        good.end() != ip ; ++ip ) 
+  for ( LHCb::Particle::ConstVector::const_iterator ip = good.begin() ;
+        good.end() != ip ; ++ip )
   {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
@@ -216,42 +216,42 @@ StatusCode FitDecayTrees::filter
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-// decode mass-constraints 
+// decode mass-constraints
 // ============================================================================
 StatusCode FitDecayTrees::decodeConstraints ()    // decode constraints
 {
   m_mc_2.clear() ;
   //
-  if ( m_mc_1.empty() ) 
+  if ( m_mc_1.empty() )
   {
     MsgStream& log = debug() ;
-    log << " No Mass-Constraints will be applied " << endreq ;
+    log << "No Mass-Constraints will be applied" << endreq ;
     return StatusCode::SUCCESS ;
   }
   ///
-  const LHCb::IParticlePropertySvc* ppsvc = 
+  const LHCb::IParticlePropertySvc* ppsvc =
     svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc" ) ;
   //
   std::set<LHCb::ParticleID> pids ;
   for ( std::vector<std::string>::const_iterator ic = m_mc_1.begin() ;
-        m_mc_1.end() != ic ; ++ic ) 
+        m_mc_1.end() != ic ; ++ic )
   {
     const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
     if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
     pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
-  }  
+  }
   //
   m_mc_2.insert ( m_mc_2.end() , pids.begin() , pids.end() ) ;
   //
   MsgStream& log = info() ;
   std::set<std::string> parts ;
   for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;
-        m_mc_2.end() != ipid ; ++ipid ) 
+        m_mc_2.end() != ipid ; ++ipid )
   {
     const LHCb::ParticleProperty* pp = ppsvc->find ( *ipid ) ;
     if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
   }
-  log << " Mass Constraints will be applied for : " <<
+  log << "Mass Constraints will be applied for : " <<
     Gaudi::Utils::toString ( parts ) << endreq ;
   //
   release ( ppsvc ) ;
@@ -265,12 +265,12 @@ StatusCode FitDecayTrees::_saveInTES () { return DVAlgorithm::_saveInTES() ; }
 // ===========================================================================
 // attention:restore the original action by DVAlgorithm
 // ===========================================================================
-void FitDecayTrees::writeEmptyTESContainers() 
+void FitDecayTrees::writeEmptyTESContainers()
 { DVAlgorithm::writeEmptyTESContainers() ; }
 // ===========================================================================
-/// the factory 
-DECLARE_ALGORITHM_FACTORY(FitDecayTrees) 
+/// the factory
+DECLARE_ALGORITHM_FACTORY(FitDecayTrees)
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
-  
+
