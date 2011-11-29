@@ -5,6 +5,11 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-11-29 - Chris Jones
+ - Remove obsolete DC06 hacks
+ - Set default DataType to '' (So users must set themselves)
+ - Remove 'FilteredPrimary' filter. Now done in Brunel.
+
 !========================= PhysConf v1r13 2011-11-10 =========================
 
 ! 2011-11-04 - Chris Jones

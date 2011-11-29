@@ -29,7 +29,7 @@ def configureEventTime() :
 class PhysConf(LHCbConfigurableUser) :
 
     __slots__ = {
-           "DataType"          : '2011'  # Data type
+           "DataType"          : ''      # Data type
         ,  "Simulation"        : False   # set to True to use SimCond
         ,  "InputType"         : 'DST'   # Data type
         ,  "AllowPIDRerunning" : True    # Allow, under the correct circumstances, PID reconstruction to be rerun (e.g. MuonID)
@@ -97,11 +97,12 @@ class PhysConf(LHCbConfigurableUser) :
             caloReco.RecList = reco_new
             log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
 
-        # For backwards compatibility with MC09/DC06, we need the following to rerun
+        # For backwards compatibility with MC09, we need the following to rerun
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
         # is no longer needed
         inputtype = self.getProp('InputType').upper()
-        if self.getProp("DataType") == 'MC09' and inputtype != 'MDST' and self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
+        if ( self.getProp("DataType") == 'MC09' and inputtype != 'MDST' and
+             self.getProp("AllowPIDRerunning") and inputtype != 'RDST' ) :
             
             from Configurables import DataObjectVersionFilter, MuonRec, TESCheck
             from MuonID import ConfiguredMuonIDs
@@ -142,45 +143,8 @@ class PhysConf(LHCbConfigurableUser) :
         dataOnDemand.NodeMap['/Event/Phys']           = 'DataObject'
         dataOnDemand.NodeMap['/Event/Relations/Phys'] = 'DataObject'
         
-        # raw event, not for DC06
+        # raw event
         importOptions("$STDOPTS/DecodeRawEvent.py")
-        
-        if 'MDST' != self.getProp('InputType').upper() :
-            
-            log.info('PhysConf: Configure Filtering of Primary Vertices')
-            from Configurables import LoKi__VoidFilter
-            
-            original = '/Event/Rec/Vertex/Primary'
-            filtered = '/Event/Rec/Vertex/FilteredPrimary'
-            
-            fltr = LoKi__VoidFilter(
-                ##
-                "FilteredPrimaryVertices" ,
-                ##
-                Code = """
-                VSOURCE        ( '%s' )
-                >>  ( high_mult | beam_line )
-                >>  RV_SINKTES ( '%s' )
-                >> ~VEMPTY
-                """   % ( original , filtered ) ,
-                ##
-                Preambulo = [
-                "from LoKiPhys.decorators     import *" ,
-                "from LoKiTracks.decorators   import *" ,
-                ## keep for some time, remove later
-                #      the needed part is being moved now into LoKiPhys 
-                "from LoKiTrigger.decorators  import *" ,
-                "from LoKiCore.functions      import *" ,
-                #
-                ## 1) count total number of tracks in PV 
-                # "high_mult = 8 <= NTRACKS " ,
-                ## 2) count only LONG tracks in PV                 
-                "high_mult = 8 <= RV_TrNUM  ( TrLONG ) " ,
-                ## require good beam-line alignment
-                "beam_line = VX_BEAMSPOTRHO ( 1 * mm ) < 0.5 * mm " ,
-                ]
-                )
-            dataOnDemand.AlgMap[ filtered ] = fltr.getFullName()
             
 #
 # LoKi
