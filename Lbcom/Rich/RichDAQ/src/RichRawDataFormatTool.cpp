@@ -616,7 +616,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
            version != LHCb1 &&
            version != LHCb2 &&
            version != LHCb3 &&
-           version != LHCb4 && 
+           version != LHCb4 &&
            version != MaPMT0 )
       {
         // create ingress header word
@@ -649,8 +649,8 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
           debug() << "   HPD " << (*iHPD).second.hpdID() << " L1input=" << (*iHPD).first
                   << " Found " << (*iHPD).second.smartIDs().size() << " hits" << endmsg;
         }
-         if ( version != MaPMT0 )
-         {
+        if ( version != MaPMT0 )
+        {
           // Get raw data bank for this HPD, and fill into RAWBank
           const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
           if ( hpdData )
@@ -764,12 +764,12 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
       ++m_l1IdsDecoded[ L1ID ];
 
       // Now, delegate the work to a version of the decoding appropriate to the version
-      if      ( version == LHCb5    || 
-                version == FlatList  ) 
+      if      ( version == LHCb5    ||
+                version == FlatList  )
       {
         decodeToSmartIDs_2007(bank,decodedData);
       }
-      else if ( version == LHCb3 || 
+      else if ( version == LHCb3 ||
                 version == LHCb4  ) // RICH 2006 Testbeam
       {
         decodeToSmartIDs_2006TB(bank,decodedData);
@@ -799,7 +799,7 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
 
 void
 RawDataFormatTool::decodeToSmartIDs_MaPMT0( const LHCb::RawBank & bank,
-                                              Rich::DAQ::L1Map & decodedData ) const
+                                            Rich::DAQ::L1Map & decodedData ) const
 {
   // Get L1 ID
   const Level1HardwareID L1ID ( bank.sourceID() );
@@ -859,14 +859,14 @@ RawDataFormatTool::decodeToSmartIDs_MaPMT0( const LHCb::RawBank & bank,
           hpdMap[l1Input].setHpdID( id.pdID() );
           // set the header
           HPDInfo::Header header;
-// CRJ - Comment out until decide what to do about maPMT Level0 IDs ...
-//           const Level0ID l0id = m_richSys->level0ID(id);
-//           if ( ! header.setL0ID( l0id ) )
-//           {
-//             std::ostringstream mess;
-//             mess << "Failed to set L0ID " << l0id;
-//             Warning( mess.str() ).ignore();
-//           }
+          // CRJ - Comment out until decide what to do about maPMT Level0 IDs ...
+          //           const Level0ID l0id = m_richSys->level0ID(id);
+          //           if ( ! header.setL0ID( l0id ) )
+          //           {
+          //             std::ostringstream mess;
+          //             mess << "Failed to set L0ID " << l0id;
+          //             Warning( mess.str() ).ignore();
+          //           }
           hpdMap[l1Input].setHeader( header );
         }
         HPDInfo & hpdInfo = hpdMap[l1Input];

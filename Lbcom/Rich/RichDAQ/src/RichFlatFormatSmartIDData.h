@@ -63,8 +63,7 @@ namespace Rich
                                                           false, // Not ALICE mode
                                                           extendedFormat, // data format
                                                           false, // No GT inhibit
-                                                          //l0ID,  // The L0 ID
-                                                          Level0ID(0),  // Hardcode to 0 for the moment for PMTs. To Be Fixed
+                                                          l0ID,  // The L0 ID
                                                           EventID( odin ? odin->eventNumber() : 0 ), // Event ID
                                                           0 // filled by buildData call below in main body
                                                           ),
