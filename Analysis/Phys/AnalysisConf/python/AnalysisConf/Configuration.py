@@ -15,13 +15,13 @@ import GaudiKernel.ProcessJobOptions
 class AnalysisConf(LHCbConfigurableUser) :
     
     __slots__ = {
-          "DataType"        : 'MC09'                             # Data type, can be ['DC06','2008','2009','MC09']
-        , "Simulation"      : True                               # set to True to use SimCond
-        , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
+          "DataType"        : ''         # Data type, can be ['2008','2009','MC09','2010','2011']
+        , "Simulation"      : True       # set to True to use SimCond
+        , "RedoMCLinks"     : False      # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
     
     _propertyDocDct = { 
-        "DataType"          : """ Data type, can be ['DC06','2008','2009','MC09'] """ 
+        "DataType"          : """ Data type, can be ['2008','2009','MC09','2010','2011'] """ 
         , "Simulation"      : """ set to True to use SimCond """ 
         , "RedoMCLinks"     : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association """ 
         }
@@ -92,7 +92,7 @@ class AnalysisConf(LHCbConfigurableUser) :
             NeutralPP2MC                    , ## type 
             'NeutralPP2MC'                  , ## base-name 
             'Offline'                       , ## context 
-            'Relations/Rec/ProtoP/Neutrals' , ## base-location 
+            'Relations/Rec/ProtoP/Neutrals' , ## base-location
             True                            ) ## on-demand 
 
         ## hlt neutral protoparticles 
@@ -126,9 +126,9 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Do MC unpacking
         """
-        DataOnDemandSvc().Nodes += [ "DATA='/Event/MC' TYPE='DataObject'" ]
+        DataOnDemandSvc().NodeMap['/Event/MC']   = 'DataObject'
         DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
-        DataOnDemandSvc().AlgMap["MC/Vertices"] = "UnpackMCVertex"
+        DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
 #
 # Apply configuration
 #

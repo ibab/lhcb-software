@@ -5,6 +5,11 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2011-11-29 - Chris Jones
+ - Set default DataType to '' (Users must set it themselves via DaVinci)
+ - Change obsolete Nodes to NodeMap with DataOnDemandSvc
+ - Remove DC06 from supported data types.
+
 !========================== AnalysisConf v2r0 2010-04-08 ===================
 
 !========================== AnalysisConf v1r11 2010-01-26 ===================
