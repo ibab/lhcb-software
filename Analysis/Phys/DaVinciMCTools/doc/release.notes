@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-11-29 - Chris Jones
+ - Add some more debug and verbose printout to 
+   Particle2BackgroundCategoryRelationsAlg
+
 ! 2011-11-16 - Chris Jones
  - Do not return StatusCode::FAILURE (and thus abort processing) just because
    an empty Particle range is found by Particle2BackgroundCategoryRelationsAlg.
