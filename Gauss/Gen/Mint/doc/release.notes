@@ -6,7 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-
+! 24-11-2011 - Matt Coombes
+ - Changes to DiskResidentEventList to use a given tree name
+ - Updated from NTuple in DaltizEvent
+ 
 ! 24-11-2011 - Matt Coombes
  - Introduction of Miranda Method within MINT
 

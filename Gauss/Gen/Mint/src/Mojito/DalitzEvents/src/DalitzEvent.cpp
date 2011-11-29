@@ -239,7 +239,7 @@ DalitzEvent::DalitzEvent(TNtupleD* ntp)
   , _generatorPdfRelativeToPhaseSpace(1)
   , _permutationIndex(0)
 {
-  if(! fromNtuple(ntp)){
+  if(! fromTree(ntp)){
     cout << "ERROR in DalitzEvent constructor from ntuple"
 	 << " something went wrong!"
 	 << endl;
@@ -875,15 +875,17 @@ bool DalitzEvent::fromTree(TTree* tree){
   }
 }
 bool DalitzEvent::fromNtuple(TNtupleD* ntp){
+	std::cout << this->eventPattern() << std::endl;
   // assumes ntuple is set to the correct
   // entry (using ntp->GetEntry(int i))
   bool dbThis=false;
-  if(dbThis) cout << "DalitzEvent::fromNtuple(" << ntp << ") called" << endl;
+  if(dbThis) cout << "DalitzEvent::fromNtuple(" << ntp->GetName() << ") called" << endl;
   int arraySize = ntp->GetNvar();
   //  int arraySize = ntp->GetNbranches();
   if(dbThis) cout << " arraySize " << arraySize << endl;
   bool newFormat = false;
   if(0 == (arraySize-2)%singleParticleNtpArraySize() ){
+	if(dbThis) cout << "New Format" << endl;
     newFormat = true; // includes weight & generatorPdf
   }else if( 0 == (arraySize)%singleParticleNtpArraySize()){
     newFormat = false; // excludes weight & generatorPdf
@@ -896,6 +898,7 @@ bool DalitzEvent::fromNtuple(TNtupleD* ntp){
     return false;
   }
   const Double_t* array = ntp->GetArgs();
+
   if(dbThis) cout << " array ptr " << array << endl;
   int counter = 0;
   int maxCounter = arraySize - (singleParticleNtpArraySize()-1);

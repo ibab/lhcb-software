@@ -43,6 +43,9 @@ class ScpBinning {
 			 ) const;
   int mergeBoxes(ScpBoxSet& boxes, int minPerBin);
 
+ public:
+  ScpBinning();
+
   void resetEventCounts();
   void fillData(IDalitzEventList* data);
   void fillDataCC(IDalitzEventList* data);
@@ -50,9 +53,6 @@ class ScpBinning {
   void setBoxesNormFactors();
 //  void sortByChi2();
   void sortByScp();
-
- public:
-  ScpBinning();
   int createBinning(IDalitzEventList* events
 		    , int minPerBin = 10
 		    , int maxPerBin = 100

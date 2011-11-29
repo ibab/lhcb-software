@@ -27,14 +27,16 @@ class DiskResidentEventList : virtual public IDalitzEventList{
   mutable MINT::counted_ptr<DalitzEvent> _rEvent;
   std::string _fname;
   std::string _opt;
+
+
   TFile* _f; // object ownership with gDirectory
   TNtupleD* _ntp; // object ownership with gDirectory
   bool _initialised;
   unsigned int currentPosition, nextPosition;
 
   static int __maxBytes;
-  static std::string cName();
-  static std::string ntpName();
+  std::string cName();
+  std::string ntpName();
 
   bool openFile();
   bool makeNtp(const DalitzEvent& evt);
@@ -46,8 +48,14 @@ class DiskResidentEventList : virtual public IDalitzEventList{
  public:
 
   DiskResidentEventList();
+//  DiskResidentEventList(const std::string& fname
+//		  	, const std::string& treeName = "DalitzEventList"
+//			, const std::string& opt="UPDATE");
+
   DiskResidentEventList(const std::string& fname
-			, const std::string& opt="UPDATE");
+			, const std::string& opt="UPDATE"
+			, const std::string& treeName = "DalitzEventList"
+);
   //  DiskResidentEventList(TNtupleD* ntp);
   DiskResidentEventList(const DalitzEventPattern& pat
 			);
@@ -95,6 +103,9 @@ class DiskResidentEventList : virtual public IDalitzEventList{
 
 
   DalitzEvent operator()(unsigned int i);
+ private:
+  std::string _cName;
+  std::string _ntpName;
 
 };
 
