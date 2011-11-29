@@ -5,6 +5,8 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!======================== BBDecTreeTool v1r3p1 2011-11-29 ========================
+
 ! 2011-11-28 - Roel Aaij
  - Fix wrong usage of BPVIPCHI2 functor.
 
