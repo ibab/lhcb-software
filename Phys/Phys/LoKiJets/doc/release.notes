@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2011-11-28 - Murilo Rangel
+ - Add first JetID variables in JetMakerAlg.
+
 ! 2011-11-25 - Victor Coco
  - Add structure for appendin jet ID info in JetMakerAlg. To be continued...
 

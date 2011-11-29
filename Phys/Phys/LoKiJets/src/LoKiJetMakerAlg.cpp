@@ -213,8 +213,37 @@ StatusCode LoKi::JetMaker::analyse   ()
 
 StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
 {
-  // Do whatever
-  jet->addInfo ( 9001 , 0. );
+  // Get Jet Daughters
+  std::vector<const LHCb::Particle *> daughtersvector = jet->daughtersVector();
+  std::vector<const LHCb::Particle *>::iterator idaughter = daughtersvector.begin();
+
+  double mtf;    /// Highest pT track / Jet pT
+  int    n90;    /// Number of items responsible for at least 90% of the jet momentum
+  int    ntrk;   /// Number of tracks
+
+  float auxptmax=-1, sumpt=0; int iitems=0;
+  std::vector<float> itemspt;
+  ntrk=n90=0;
+
+  for (;idaughter != daughtersvector.end() ; ++idaughter){
+    const LHCb::Particle * daughter = *idaughter;
+    if(daughter->particleID().threeCharge()!=0) {
+      ntrk++; auxptmax = daughter->momentum().Pt() > auxptmax ? daughter->momentum().Pt() : auxptmax;
+    }
+    iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
+    itemspt.push_back(pt);
+    for(int ii=0; ii<iitems; ii++) if(itemspt[ii]<pt) {
+      float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;}
+  }
+
+  mtf = auxptmax / jet->momentum().Pt(); mtf = 0 > mtf ? 0 : mtf; mtf = 1 < mtf ? 1 : mtf;
+
+  float auxptsum = 0; n90=0;
+  for(int ii=0; ii<iitems; ii++) {auxptsum+=itemspt[ii]; n90++; if(auxptsum/sumpt>0.9) break; } 
+
+  jet->addInfo ( 9001 , ntrk );
+  jet->addInfo ( 9002 , n90 );
+  jet->addInfo ( 9003 , mtf );
   
   return SUCCESS;
 }
