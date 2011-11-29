@@ -3,6 +3,9 @@
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2011-11-29 - Chris Jones
+ - Fix icc warning
+
 ! 2011-11-25 - Vanya Belyaev
  - tiny improvement in SubstitutePID 
 

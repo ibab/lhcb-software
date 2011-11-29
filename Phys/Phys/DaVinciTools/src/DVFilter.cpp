@@ -123,7 +123,7 @@ protected:
   {}
   // ==========================================================================
   /// virtual & protected destructor 
-  virtual ~DVFilter2 () {} ;                  // virtual & protected destructor 
+  virtual ~DVFilter2 () {}                  // virtual & protected destructor 
   // ==========================================================================
 public:
   // ==========================================================================
@@ -134,7 +134,7 @@ public:
    */
   virtual StatusCode filter 
   ( const LHCb::Particle::ConstVector& input    , 
-    LHCb::Particle::ConstVector&       filtered ) const 
+    LHCb::Particle::ConstVector&       filtered )
   {
     filtered = m_pipe ( input ) ;
     return StatusCode::SUCCESS ;
