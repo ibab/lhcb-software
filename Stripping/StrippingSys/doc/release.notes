@@ -3,6 +3,9 @@ Package     : StrippingSys
 Package Coordinator : Thomas Blake, Greig Cowan, Juan Palacios
 Purpose     : LHCb stripping packages
 
+! 2011-11-29 - Anton Poluektov 
+  - Fix tests reference, 2nd attempt
+
 ! 2011-11-28 - Anton Poluektov 
   - Fix tests reference
 
