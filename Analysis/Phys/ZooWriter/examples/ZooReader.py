@@ -10,41 +10,8 @@
 # @author Manuel Schiller <manuel.schiller@nikhef.nl>
 # @date 2011-09-27
 
-#############################################################################
-# BEGIN setup phase: make sure ROOT/Zoo components are accessible
-#############################################################################
-# get Zoo libs into path
-import os, sys, re
-if not 'ZOOWRITERROOT' in os.environ:
-    # ZOOWRITERROOT environment variable unset, try to guess correct location
-    # of libZooROOT.so from location of python script
-    if os.path.exists(re.sub('(/|\\\\)[^/\\\\]+$', '/Zoo/libZooROOT.so', \
-	    sys.argv[0])):
-	os.environ['ZOOWRITERROOT'] = re.sub('(/|\\\\)[^/\\\\]+$', '', \
-		sys.argv[0])
-    else:
-	# try to ask user by reading from stdin
-        print 'Please enter location to be used for $ZOOWRITERROOT'
-        os.environ['ZOOWRITERROOT'] = re.sub('(\n|\r)+$', '', \
-		sys.stdin.readline())
-if not 'LD_LIBRARY_PATH' in os.environ or '' == os.environ['LD_LIBRARY_PATH']:
-    os.environ['LD_LIBRARY_PATH'] = os.environ['ZOOWRITERROOT'] + '/Zoo'
-else:
-    os.environ['LD_LIBRARY_PATH'] = \
-        os.environ['ZOOWRITERROOT'] + '/Zoo:' + os.environ['LD_LIBRARY_PATH']
-# ok, use root-config to get ROOT library path and set up python search paths
-# accordingly (on most installations, python does not know about ROOT)
-tmp = os.popen('root-config --libdir')
-sys.path.append(re.sub('(\n|\r)+$', '', tmp.readline()))
-tmp.close()
-#############################################################################
-# END setup phase
-#############################################################################
-
-# get ROOT stuff
+import ZooPy
 from ROOT import *
-# load Zoo library (including needed dictionaries)
-gSystem.Load('libZooROOT.so')
 
 # create a TChain and add files to it
 c = TChain('Forest')

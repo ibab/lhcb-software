@@ -4,6 +4,16 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2011-11-24 - Manuel Tobias Schiller
+ - work on ZooTuplePlayer, a class to implement functionality similar to the
+   TTree::Draw() method in ROOT for ZooTuples; this is meant to be used from
+   python interactively (we cannot use TTree's Draw because cint is not clever
+   enough to cope with all the methods in Zoo, and, moreover, it looks like
+   TTree's Draw was never meant to call methods of the objects contained in a
+   tree...
+   See ZooDrawExample.py for some examples, and of course the friendly
+   documentation.
+
 ! 2011-11-18 - Paul Seyfert
  - added method ZooP::LoKiBlock() {return Info<ZooLoKiBlock>();}
 
