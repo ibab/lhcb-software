@@ -4,11 +4,15 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-11-29 - Chris Jones
+ - Remove some redundant messages from initialisation of DecayTreeTuple
+
 ! 2011-11-24 - Patrick Koppenburg
  - TupleToolTrackInfo : add match chi2
 
 ! 2011-11-23 - Tomasz Skwarnicki
- - make TupleToolEventInfo, TupleToolTrigger try info location with and without RootInTES
+ - make TupleToolEventInfo, TupleToolTrigger try info location with and 
+   without RootInTES
 
 ! 2011-11-23 - Chris Jones
  - Fix various gcc 4.6 compilation warnings and errors

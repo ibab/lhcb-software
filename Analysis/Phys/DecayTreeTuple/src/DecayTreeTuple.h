@@ -127,9 +127,11 @@ MyDecayTreeTuple.Context = "HLT" \endverbatim
  * \author Jeremie Borel with the help of Patrick and lhcb-davinci@cern.ch
  * \date 2007-11-01 
  */
-class DecayTreeTuple : public DecayTreeTupleBase  {
+class DecayTreeTuple : public DecayTreeTupleBase  
+{
 
  public:
+
   /// Standard constructor
   DecayTreeTuple( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -137,9 +139,7 @@ class DecayTreeTuple : public DecayTreeTupleBase  {
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private:
 };
 
 #endif // JBOREL_DECAYTREETUPLE_H

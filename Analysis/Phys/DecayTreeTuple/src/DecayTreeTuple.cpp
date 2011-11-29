@@ -31,11 +31,10 @@ DecayTreeTuple::DecayTreeTuple( const std::string& name,
   m_toolList.push_back( "TupleToolKinematic" );
   m_toolList.push_back( "TupleToolPid" );
   m_toolList.push_back( "TupleToolGeometry" );
-  m_toolList.push_back( "TupleToolEventInfo" );
-  
+  m_toolList.push_back( "TupleToolEventInfo" );  
   declareProperty( "ToolList", m_toolList );
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -44,26 +43,32 @@ DecayTreeTuple::~DecayTreeTuple() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DecayTreeTuple::initialize() {
+StatusCode DecayTreeTuple::initialize() 
+{
   StatusCode sc = DecayTreeTupleBase::initialize(); 
-  if (!sc) err() << "Error from base class" << endmsg ;
-  if ( sc.isFailure() ) return sc;
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  sc =  initializeDecays(false);
-  if (!sc) err() << "Error from initializeDecays(false)" << endmsg ;
-  return sc ;
-  
+  if ( sc.isFailure() ) 
+  {
+    return Error( "Error from base class", sc );
+  }
+  sc = initializeDecays(false);
+  if ( sc.isFailure() ) 
+  {
+    return Error( "Error from initializeDecays(false)" );
+  }
+  return sc ;  
 }
+
 //=============================================================================
 // Execute
 //=============================================================================
-StatusCode DecayTreeTuple::execute(){
+StatusCode DecayTreeTuple::execute()
+{
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   counter("Event")++;
   const LHCb::Particle::ConstVector mothers(this->particles().begin(),
                                             this->particles().end()   );
-  if( mothers.empty() ){
+  if ( mothers.empty() )
+  {
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
@@ -72,34 +77,29 @@ StatusCode DecayTreeTuple::execute(){
 
   LHCb::Particle::ConstVector heads;
   StatusCode test = getDecayMatches( mothers, heads );
-  if( test ){
+  if ( test.isSuccess() )
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
                                           << " top particles matching the decay." << endreq;
   }
-  else {
+  else
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "No particle matching the decay." << endreq;
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
+
   //don't create the ntuple if there's nothing to fill!
   Tuple tuple = nTuple( m_tupleName,  m_tupleName );
   test = fillTuple( tuple, heads, m_dkFinder );
 
-  if( test ){
+  if ( test.isSuccess() )
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
   }
   
-  setFilterPassed(test);
+  setFilterPassed( test.isSuccess() );
+ 
   // Mandatory. Set to true if event is accepted.  
   return StatusCode::SUCCESS;
-  
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DecayTreeTuple::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DecayTreeTupleBase::finalize();
 }

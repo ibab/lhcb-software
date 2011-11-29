@@ -22,9 +22,11 @@
  * \author Patrick Koppenburg based on Jérémie Borels DecayTreeTuple
  * \date 2009-01-20
  */
-class DecayTreeTupleBase : public DVAlgorithm  {
+class DecayTreeTupleBase : public DVAlgorithm  
+{
 
  public:
+
   /// Standard constructor
   DecayTreeTupleBase( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -35,6 +37,7 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
  protected:
+
   //! Call the fill methode which does not take a particle as argument
   StatusCode fillEventRelatedVariables( Tuples::Tuple& );
 
@@ -63,32 +66,39 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   /// print infos
   void printInfos() const ;
   /// get daughters for Particles trivially
-  LHCb::Particle::ConstVector daughtersVector(const LHCb::Particle* d) const{
-    if (0==d) Exception("NULL Particle");
+  LHCb::Particle::ConstVector daughtersVector(const LHCb::Particle* d) const
+  {
+    if (!d) Exception("NULL Particle");
     return d->daughtersVector() ;
   }
   /// get daughters for MCParticles, not so trivially
   LHCb::MCParticle::ConstVector daughtersVector(const LHCb::MCParticle* d) const ;
   /// Switch for initializeStufferTools
-  void switchStufferTools(const LHCb::MCParticle*){
+  void switchStufferTools(const LHCb::MCParticle*)
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Initialize MCParticle tools" << endmsg ;
     initializeStufferTools(m_mcTools);
-  } ;
+  }
   /// Switch for initializeStufferTools
-  void switchStufferTools(const LHCb::Particle*){
+  void switchStufferTools(const LHCb::Particle*)
+  {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Initialize Particle tools" << endmsg ;
     initializeStufferTools(m_pTools);
-  } ;
+  }
   /// has oscillated (needed to tell if one needs reverting)
-  bool hasOscillated(const LHCb::Particle*)const{return false;};
+  bool hasOscillated(const LHCb::Particle*) const { return false; }
   /// has oscillated (needed to tell if one needs reverting)
-  bool hasOscillated(const LHCb::MCParticle* P)const{return P->hasOscillated();};
+  bool hasOscillated(const LHCb::MCParticle* P) const 
+  {
+    return P ? P->hasOscillated() : false ; 
+  }
   
  protected:
+
   std::vector<std::string> getEventTools() const;
 
   /// Initialize the main decay
-  bool initializeDecays(bool isMC);
+  bool initializeDecays(const bool isMC);
 
   /// Get branch name for given particle
   std::string getBranchName( const std::string& realname ) const ;
@@ -120,7 +130,7 @@ class DecayTreeTupleBase : public DVAlgorithm  {
   // to make sure the linker builds them.
   //=============================================================================
 #include "DecayTreeTupleBaseTemplates.icpp"
-};
 
+};
 
 #endif // JBOREL_DECAYTREETUPLEBASE_H
