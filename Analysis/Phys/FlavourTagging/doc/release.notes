@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2011-11-30 - Marc Grabalosa
+ - TaggerVertexCharge change property name
+
 ! 2011-11-10 - Marc Grabalosa
  - src/BTaggingTool
   . Same PV criterium as in DecayTrreeTuple

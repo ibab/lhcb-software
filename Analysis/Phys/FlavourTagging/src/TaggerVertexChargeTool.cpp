@@ -34,7 +34,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "Vtx_Ptsum",         m_Ptsum_vtx           = 1.5);
   declareProperty( "Vtx_Ptmean",        m_Ptmean_vtx          = 0.);
   declareProperty( "Vtx_IPSsum",        m_IPSsum_vtx          = 10);
-  declareProperty( "Vtx_DocaMaxsun",    m_DocaMaxsum_vtx      = 0.5);
+  declareProperty( "Vtx_DocaMaxsum",    m_DocaMaxsum_vtx      = 0.5);
   declareProperty( "Vtx_Psum",          m_Psum_vtx            = 10);
   declareProperty( "Vtx_Msum",          m_Msum_vtx            = 0.5);
 
