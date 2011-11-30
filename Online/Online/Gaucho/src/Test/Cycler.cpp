@@ -17,9 +17,8 @@ public:
 virtual void infoHandler()
 {
   char *state;
-  int ilen;
   state  = getString();
-  ilen = getSize();
+  getSize();
   std::string stat = std::string(state);
   sleep(5);
   if (stat == "READY")

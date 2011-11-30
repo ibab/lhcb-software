@@ -121,11 +121,11 @@ int main (int argc, char *argv[])
   gROOT->Draw();
   canv->Show();
   canv->Draw();
-  char *nam = (char*)"AAABBB";
-  if (argc > 1)
-  {
-    nam = argv[1];
-  }
+//  char *nam = (char*)"AAABBB";
+//  if (argc > 1)
+//  {
+//    nam = argv[1];
+//  }
   HistAdder *a=new HistAdder((char*)"Adder",(char*)"Histos/Data");
   a->SetCycleFn(&CycleFn,0);
   app->Run();

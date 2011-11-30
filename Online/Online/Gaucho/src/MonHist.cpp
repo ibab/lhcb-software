@@ -685,7 +685,7 @@ int MonHist::serialize(void* &ptr)
   char *ztits=0;
   double *ntries=0;
   double *errp=0;
-  int status;
+//  int status;
 //  double *sumbin;
   switch(m_type)
   {
@@ -773,7 +773,7 @@ int MonHist::serialize(void* &ptr)
       pp->nentries = ((TH1D*)m_rootobj)->GetEntries();
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
-      status  = 0;
+//      status  = 0;
       break;
     }
     case H_2DIM:
@@ -783,7 +783,7 @@ int MonHist::serialize(void* &ptr)
       memcpy(ntries,m_hentries,m_blocksize);
       memcpy(errp,m_hsumw2,m_blocksize);
       cpyBinLabels(ytits,m_Ylabels,m_ny);
-      status  = 0;
+//      status  = 0;
       break;
     }
     case H_3DIM:
@@ -794,7 +794,7 @@ int MonHist::serialize(void* &ptr)
       memcpy(errp,m_hsumw2,m_blocksize);
       cpyBinLabels(ytits,m_Ylabels,m_ny);
       cpyBinLabels(ztits,m_Zlabels,m_nz);
-      status  = 0;
+//      status  = 0;
       break;
     }
     case H_PROFILE:
@@ -820,13 +820,13 @@ int MonHist::serialize(void* &ptr)
 
       pp->yminval = ((MyTProfile*)m_rootobj)->fYmin;
       pp->ymaxval = ((MyTProfile*)m_rootobj)->fYmax;
-      status  = 0;
+//      status  = 0;
       break;
     }
 
     default:
     {
-      status  = -2;
+//      status  = -2;
       siz = 0;
       break;
     }
@@ -1112,7 +1112,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
     {
       DimStatBuff *b = (DimStatBuff*)ptr;
 //      mtype = (MONTYPE)b->type;
-      char *tit;
+//      char *tit;
 //      if (m_rootdeser != 0)
 //      {
 //        delete m_rootdeser;
@@ -1125,7 +1125,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
                    b->m_max ) ;
       /// destructor
 //      this->m_rootdeser = (TObject*)s;
-      tit = (char*)AddPtr(b,b->titoff);
+//      tit = (char*)AddPtr(b,b->titoff);
 //      cpyName(nam);
 //      cpytitle(tit);
       TH1::AddDirectory(dirstat);
