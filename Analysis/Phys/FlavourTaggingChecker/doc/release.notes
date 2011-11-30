@@ -6,6 +6,11 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+
+! 2011-11-30 - Marc Grabalosa
+ - Prepare CombProb for calibration in root/
+ - Add DZeroTagger and KFrag tagger in root/
+
 ! 2011-11-10 - Marc Grabalosa
  - BTaggingAnalysis, same default PV selection criterium as in DecayTreeTuple
  - Increase to v6r7p1
