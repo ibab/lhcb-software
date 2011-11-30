@@ -3,6 +3,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2011-11-30 - Marco Clemencic
+ - Fixed the previous fix to work on 32bits too.
+
 ! 2011-11-28 - Marco Clemencic
  - Fixed a warning in genreflex on gcc 4.6.
 

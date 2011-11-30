@@ -5,5 +5,5 @@
   <!-- <class name="std::map<std::string,HepMC::WeightContainer::size_type>" /> -->
   <!-- @FIXME: (MCl) for some reason the type above doesn't work with gcc4.6,
        while it's more explicit version below does.  -->
-  <class name="std::map<std::basic_string<char>,unsigned long>" />
+  <class name="std::map<std::basic_string<char>,size_t>" />
 </lcgdict>
