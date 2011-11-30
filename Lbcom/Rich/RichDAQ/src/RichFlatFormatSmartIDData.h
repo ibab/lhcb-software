@@ -55,7 +55,7 @@ namespace Rich
        *  @param extendedFormat
        *  @param odin   Pointer to the ODIN data object
        */
-      explicit RichFlatFormatSmartIDData( const Level0ID /* l0ID */,
+      explicit RichFlatFormatSmartIDData( const Level0ID l0ID,
                                           const LHCb::RichSmartID::Vector & digits,
                                           const bool extendedFormat = false,
                                           const LHCb::ODIN * odin = NULL )
