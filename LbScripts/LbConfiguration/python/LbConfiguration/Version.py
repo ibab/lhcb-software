@@ -9,7 +9,7 @@ import re
 import os
 
 # This is the version style used in the releases: vXrY[pZ]
-_txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+)(?:g([0-9]+))?)?'
+_txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?(?:g([0-9]+))?'
 version_style = re.compile(_txt_version_style)
 
 # This is the version style for the LCGCMT releases: 56[a]

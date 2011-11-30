@@ -45,6 +45,12 @@ class VersionTestCase(unittest.TestCase):
         self.assertRaises(NotAVersion, CoreVersion, "v1r1p0l")
         self.assertRaises(NotAVersion, CoreVersion, None)
 
+        v5 = "v1r2g1"
+        self.assertEqual(CoreVersion(v5).name(), v5)
+
+        v6 = "v1r2g3p1"
+        self.assertRaises(NotAVersion, CoreVersion, v6)
+
     def testString(self):
         v1 = "v1r0"
         self.assertEqual("%s" % CoreVersion(v1) , v1)
