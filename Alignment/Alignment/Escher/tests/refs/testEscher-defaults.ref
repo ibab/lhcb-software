@@ -5,9 +5,9 @@
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v33r1/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v33r1/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-AlignmentLevel = 'layers'
 # |-Persistency    = None
@@ -17,7 +17,7 @@
 # |-Kalman         = False
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = [<CountingPrescaler/EscherPrescaler at 0xbfc3e50>, 'ProcessPhase/Init', 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0xbf9b6a0>]
+# |-MainSequence   = [<CountingPrescaler/EscherPrescaler at 0x15d542e0>, 'ProcessPhase/Init', 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x15d13490>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
 # |-Incident       = ''
@@ -70,6 +70,7 @@
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
+# |-GlobalCuts               = {}  (default: {})
 # |-ExpertTracking           = []  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
@@ -93,6 +94,7 @@
 # /***** User TAlignment/TAlignment ******************************************************************
 # |-DatasetName                  = ''
 # |-EcalTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
+# |-ParticleLocation             = ''
 # |-MuonTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Muon'
 # |-Method                       = 'Millepede'
 # |-SolvTool                     = 'DiagSolvTool'
@@ -121,7 +123,7 @@
 # |-TrackLocation                = 'TrackLocation::Default'
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/TAlignmentSequencer at 0xbe85c60>
+# |-Sequencer                    = <GaudiSequencer/TAlignmentSequencer at 0x15bc2070>
 # |-ApplyMS                      = True
 # |-OTTopLevelElement            = '/dd/Structure/LHCb/AfterMagnetRegion/T/OT'
 # |-UsePreconditioning           = True
@@ -137,7 +139,8 @@
 # |-Persistency         = None
 # |-WriteFSR            = True
 # |-PackSequencer       = None
-# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
+# |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = False
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
@@ -150,17 +153,16 @@
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Escher version v4r10
-                                          running on lbcsrv01 on Mon Jun 20 15:20:25 2011
+                                                   Welcome to Escher version v4r11
+                                          running on lxplus404.cern.ch on Wed Nov 30 14:07:56 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: CountingPrescaler/EscherPrescaler, ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -171,15 +173,14 @@ InitEscherSeq        INFO Member list: RecInit/EscherInit, with context 'Offline
 EscherInit        SUCCESS ==================================================================
 EscherInit        SUCCESS Requested to process 10 events
 EscherInit        SUCCESS ==================================================================
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r4/data/PhotonPdf.root as CaloNeutralPIDs
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r4/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/CaloPIDs_DC09_v1.root as CaloPIDs
 InitCaloSeq          INFO Member list: , with context 'Offline'
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters
-DecodeVeloClusters   INFO Cancel processing of events with more than 10000 Velo clusters
+DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo clusters
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
@@ -196,11 +197,11 @@ RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_up.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_up.cdf
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c1_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c2_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c3_onemap_down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/c4_onemap_down.cdf
+MagneticFieldSvc     INFO Map scaled by factor 5.92981e-07 with polarity internally used: -1 signed relative current: -5.92981e-07
 TrackSeedPatSeq      INFO Member list: PatSeeding
 TrackMatchPatSeq     INFO Member list: PatMatch
 TrackDownstream...   INFO Member list: PatDownstream
@@ -220,11 +221,12 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT
-MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
+MagneticFieldSvc     INFO Map scaled by factor 5.92981e-07 with polarity internally used: -1 signed relative current: -5.92981e-07
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
+ToolSvc.PatTTMa...   INFO  No B field detected.
 ToolSvc.VeloClu...   INFO  --> Error para condition not found!
 ToolSvc.VeloClu...   INFO  --> The tool Will use the default values!
 ToolSvc.STOffli...   INFO APE set to 0.197
@@ -284,7 +286,7 @@ ToolSvc.Offline...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 
 ToolSvc.Offline...   INFO Aerogel  Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance [Will correct for refraction at Aerogel/Rich1Gas boundary] ]
 ToolSvc.Offline...   INFO Rich1Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
 ToolSvc.Offline...   INFO Rich2Gas Track RichTraceMode[ DetectionPrecision=SimpleHPDs DetPlaneBoundaries=IgnoreHPDAcceptance ]
-ToolSvc.Offline...   INFO Maximum number of RICH tracks per event = 500
+ToolSvc.Offline...   INFO Maximum number of RICH tracks per event = 1000
 ToolSvc.Offline...   INFO Beam pipe intersection test (Aero/R1Gas/R2Gas) = [0, 1, 0]
 ToolSvc.Offline...   INFO Will create track segments using all State information
 ToolSvc.Offline...   INFO Min radiator path lengths (aero/R1Gas/R2Gas) : [0, 500, 1500] mm
@@ -339,11 +341,16 @@ RichOfflineGPID...   INFO  Seed        : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 
 RichOfflineGPID...   INFO  VeloTT      : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
 RichOfflineGPID...   INFO  KsTrack     : P = 1.00e+00->1.00e+07 GeV : fitchi2 = 0.00e+00->1.00e+01
 RichOfflineGPID...   INFO Member list: Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0, Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1, Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1, with context 'Offline'
+RichOfflineBckE...   INFO Will ignore expected signals when computing backgrounds
+RichOfflineBckE...   INFO Minimum pixel background = 0
+RichOfflineBckE...   INFO Min HPD background level for setting background levels = 0
 RichOfflineGPID...   INFO Maximum event iterations                  = 500
 RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
 RichOfflineGPID...   INFO Track freeze-out DLL value                = 2
 RichOfflineGPID...   INFO Track forced change DLL value             = -1
 RichOfflineGPID...   INFO Maximum track changes per event iteration = 5
+RichOfflineBckE...   INFO Minimum pixel background = 0
+RichOfflineBckE...   INFO Min HPD background level for setting background levels = 0
 RichOfflineGPID...   INFO Maximum event iterations                  = 500
 RichOfflineGPID...   INFO Minimum signal for LL calculation         = 0.001
 RichOfflineGPID...   INFO Track freeze-out DLL value                = 4
@@ -358,10 +365,10 @@ HcalZSup             INFO Calorimeter has 1488 cells. Zsup method 1D Threshold 4
 ClusterReco          INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloSharedCellAlg/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
 EcalCovar.EcalC...   INFO  Has initialized with parameters:
 EcalCovar.EcalC...   INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
-EcalCovar.EcalC...   INFO  	 'Resolution'       = ' 'Resolution':0.1'
-EcalCovar.EcalC...   INFO  	 'GainError'        = ' 'GainError':0.01'
-EcalCovar.EcalC...   INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.3'
-EcalCovar.EcalC...   INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.3'
+EcalCovar.EcalC...   INFO  	 'Resolution'       = ' 'Resolution':0.10000000'
+EcalCovar.EcalC...   INFO  	 'GainError'        = ' 'GainError':0.01000000'
+EcalCovar.EcalC...   INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.30000000'
+EcalCovar.EcalC...   INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000'
 EcalCovar.EcalC...   INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
 EcalCovar.EcalC...   INFO    Resolution       is 0.1
 EcalCovar.EcalC...   INFO    Sigma Gain       is 0.01
@@ -429,42 +436,6 @@ ChargedProtoPar...   INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMa
 ChargedProtoPAd...   INFO VELO dE/dx charge parameters : normalisation = 35.6 ratio = 0.6
 ChargedProtoPCo...   INFO Using retuned RICH el and mu DLL values in combined DLLs
 ANNGPIDSeq           INFO Member list: ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDLongGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDDownstreamGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ANNGPIDUpstreamGhost, with context 'Offline'
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Long_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Downstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Electron_Upstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Muon_Upstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Pion_Upstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Kaon_Upstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Proton_Upstream_NeuroBayes.conf
- NB_READEXPERTISE: reading expertise from
- /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ChargedProtoANNPIDParam/v1r1/data/MC10TuneV1/GlobalPID_Ghost_Upstream_NeuroBayes.conf
 NeutralProtoPar...   INFO Member list: NeutralProtoPAlg/NeutralProtoPMaker, with context 'Offline'
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/Photons
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/MergedPi0s
@@ -476,7 +447,6 @@ MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVe
 MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEfficiencyMonitor
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor
 AlignSequence        INFO Member list:
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector        INFO End of event input reached.
@@ -516,14 +486,20 @@ FitVelo           SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 EcalClust            INFO Built <0> cellular automaton clusters/event  with <0> iterations (min,max)=(999999,0) on average
-MuonIDAlg            INFO ==> Total number of tracks with IsMuon=1 failing likelihood (p<0): 0
+MuonIDAlg            INFO ==> Total number of tracks with IsMuonLoose=1 failing likelihood (p<0): 0
+MuonIDAlg         SUCCESS Number of counters : 3
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "nIsMuon"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+ | "nIsMuonLoose"                                  |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+ | "nIsMuonTight"                                  |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
 VeloTrackMonitor  SUCCESS Booked 36 Histogram(s) : 1D=27 1DProf=9
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
-TrackVertexMonitorSUCCESS Booked 23 Histogram(s) : 1D=13 1DProf=10
+TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
 TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
+TrackITOverlapM...SUCCESS Booked 2 Histogram(s) : 1D=2
 TrackEcalMatchM...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
 TrackSpdMatchMo...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
 TrackPrsMatchMo...SUCCESS Booked 32 Histogram(s) : 1D=24 1DProf=8
@@ -541,7 +517,6 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ToolSvc              INFO Removing all tools created by ToolSvc
 SingleElectronR...   INFO  Applied corrections configured via options for  SingleElectronRec.LCorrection
 SingleElectronR...   INFO  Applied corrections configured via options for  SingleElectronRec.SCorrection
@@ -559,7 +534,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.40 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.64 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
