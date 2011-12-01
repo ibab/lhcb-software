@@ -39,31 +39,33 @@ void * getnsave::start(){
     }
     if (strncmp(cl.message.c_str(),"switch",6)==0){
       std::cerr<<"Manual switch initiated using directory "<<std::endl; // cpb new manual switching block
-      
+
       if ( sscanf(cl.message.c_str(),"%*s %s",bufm) ==1){
-	//std::string s = ldir+"/"+(std::string)buf;
-	std::cerr<<bufm<<std::endl;
-	pthread_mutex_lock(&(os->switchmtx));
-	if (os->Fswitch(bufm)<0){
-	  os->addline("SERVER/3/OutStack::Fswitch failed");
-	  std::cerr << "Manual switch failed." <<std::endl;
-	}
-	pthread_mutex_unlock(&(os->switchmtx));
+        //std::string s = ldir+"/"+(std::string)buf;
+        std::cerr<<bufm<<std::endl;
+        pthread_mutex_lock(&(os->switchmtx));
+        if (os->Fswitch(bufm)<0){
+          os->addline("SERVER/3/OutStack::Fswitch failed");
+          std::cerr << "Manual switch failed." <<std::endl;
+        }
+        pthread_mutex_unlock(&(os->switchmtx));
       }
       else {
-          os->addline("SERVER/3/sscanf failed");;
+        os->addline("SERVER/3/sscanf failed");;
       }
     }
     // std::cerr <<"unknown command: "<<cl.message<<std::endl;
     char nbuf[2049];
     int re=0;
-    int outn = getrest(nbuf,2048,&re);
+    //int outn =
+    getrest(nbuf,2048,&re);
     if (re>0){
       while(re>0){
-	re =0;
-	outn = getrest(nbuf,511,&re);
+        re =0;
+        //outn = 
+        getrest(nbuf,511,&re);
       }
-    } 
+    }
     return NULL;
     // cpb end of new switching block
   }
@@ -74,7 +76,7 @@ void * getnsave::start(){
     os->Fswitch(os->lastName.c_str(),os->DirNum);
   }
   pthread_mutex_unlock(&(os->switchmtx));
-  
+
   pthread_mutex_lock(&(os->switchmtx));
   if ( (os->MaxFiles >0) && (os->MessageCnt>=os->MaxFiles)) {
     (os->DirNum)++;
@@ -86,7 +88,8 @@ void * getnsave::start(){
   char nbuf[2049];
 
   int re=0;
-  int outn = getrest(nbuf,2048,&re);
+  //int outn = 
+  getrest(nbuf,2048,&re);
   //  std::cout << re <<" rest"<<std::endl;
 
   if (re>0){
@@ -100,7 +103,7 @@ void * getnsave::start(){
     sprintf(tempf,"%scam.%s.%d.XXXXXX",cldir.c_str(),id.c_str(),u);
     int s = mkstemp(tempf);
     // std::cout <<tempf<<std::endl;
-    
+
     std::string templ = tempf;
 
     string::size_type st = templ.find_last_of( "/" );
@@ -117,7 +120,7 @@ void * getnsave::start(){
     cl.out(sout);
     os->addline(sout.c_str());
     pthread_mutex_unlock(&(os->locmtx));
-  
+
     //}
 
     if (s<0) perror("mkstemp");
@@ -125,7 +128,8 @@ void * getnsave::start(){
     while(re>0){
       write(s,nbuf,re);
       re =0;
-      outn = getrest(nbuf,511,&re);
+      //outn = 
+      getrest(nbuf,511,&re);
     }
     close(s);
   }
