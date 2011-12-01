@@ -6,6 +6,17 @@ Purpose: LHCb Alignment packages.
          used by the Gaudi application Escher to align the LHCb detector 
          components.
 
+</PRE><H1><A NAME=v8r0>2011-12-01 AlignmentSys v8r0</A></H1><PRE>
+Depends on: Lbcom v11r1, Rec v12r1, Phys v13r1. For 2011 data.
+
+First version of Alignment to be based on the Phys project
+First released version with ROOT persistency as the default.
+
+Otherwise only minor changes.
+
+For more details and links to changesets see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Alignment&version=v8r0
+
 </PRE><H1><A NAME=v6r0>2011-03-15 AlignmentSys v6r0</A></H1><PRE>
 Based on Rec v11r5, on the LHCb v32r4 stack for 2011 data
 
@@ -13,7 +24,7 @@ This is the first release of Alignment compatible with ROOT data format.
 
 Only minor changes apart from the change of supported persistencies.
 
-For more details and liks to changesets see:
+For more details and links to changesets see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Alignment&version=v6r1
 
 
