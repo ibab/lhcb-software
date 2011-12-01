@@ -148,7 +148,8 @@ StatusCode BTaggingAnalysis::execute() {
   debug()<<">>>>>  Processing Run "<<evt->runNumber() 
          <<"   Event "<<evt->evtNumber()<<"  <<<<<" <<endreq;
   tuple -> column ("run", evt->runNumber());
-  tuple -> column ("event", (long)evt->evtNumber());
+  //  tuple -> column ("event", (long)evt->evtNumber());
+  tuple -> column ("event", (double)evt->evtNumber());
 
   //----------------------------------------------------------------------
   //MCinfo

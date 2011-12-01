@@ -6,6 +6,9 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-12-1 - Marc Grabalosa
+ - EventNumber in BTagAna to double
+ - SingleCandidateSelections into tarfile
 
 ! 2011-11-30 - Marc Grabalosa
  - Prepare CombProb for calibration in root/
