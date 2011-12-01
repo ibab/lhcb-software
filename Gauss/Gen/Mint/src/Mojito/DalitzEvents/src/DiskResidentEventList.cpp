@@ -46,6 +46,7 @@ DiskResidentEventList::DiskResidentEventList()
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
   , _ntp(0)
+  , _scaleData(1)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
 {
@@ -54,16 +55,39 @@ DiskResidentEventList::DiskResidentEventList()
 }
 
 DiskResidentEventList::DiskResidentEventList(const std::string& fname
-		    								, const std::string& opt
-		    								, const std::string& treeName)
+											, int scale
+		    								, const std::string& treeName
+		    								, const std::string& opt)
   : _currentEvent(0)
   , _rEvent(0)
   , _fname(fname)
   , _opt(opt)
   , _f(0)//new TFile(fname.c_str(), opt.c_str()))
   , _ntp(0)
+  , _scaleData(scale)
   , _cName(treeName)
   , _ntpName(treeName)
+{
+  bool dbThis=false;
+  openFile();
+  cout << "DiskResidentEventList created with file " << fname << endl;
+  fromFile();
+  if(dbThis)cout << " from file done, now init: " << endl;
+  init();
+  if(dbThis)cout << " finished creation" << endl;
+}
+
+DiskResidentEventList::DiskResidentEventList(const std::string& fname
+		    								, const std::string& opt)
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(fname)
+  , _opt(opt)
+  , _f(0)//new TFile(fname.c_str(), opt.c_str()))
+  , _ntp(0)
+  , _scaleData(1)
+  , _cName("DalitzEventList")
+  , _ntpName("DalitzEventList")
 {
   bool dbThis=false;
   openFile();
@@ -82,6 +106,7 @@ DiskResidentEventList::DiskResidentEventList(const IDalitzEventList& otherList)
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
   , _ntp(0)
+  , _scaleData(1)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
 {
@@ -99,6 +124,7 @@ DiskResidentEventList::DiskResidentEventList(const IDalitzEventList& otherList
   , _opt(opt)
   , _f(0)//new TFile(newFname.c_str(), opt.c_str()))
     //  , _counted_ntp(0)
+  , _scaleData(1)
   , _ntp(0)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
@@ -129,6 +155,7 @@ DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat)
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "RECREATE"))
   , _ntp(0)
+  , _scaleData(1)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
 {
@@ -147,6 +174,7 @@ DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat
   , _opt(opt)
   , _f(0)//new TFile(fname.c_str(), opt.c_str()))
   , _ntp(0)
+  , _scaleData(1)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
 {
@@ -207,7 +235,7 @@ bool DiskResidentEventList::init(){
 
 unsigned int DiskResidentEventList::size() const{
   if(0 == _ntp) return 0;
-  return _ntp->GetEntries();
+  return _ntp->GetEntries()/_scaleData;
 }
 bool DiskResidentEventList::empty() const{
   return (0 == this->size());

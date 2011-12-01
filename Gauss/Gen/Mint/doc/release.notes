@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 01-12-2011 - Matt Coombes
+ - Added contructor to DiskResidentEventList to use a given tree name and 
+   scale events. This should be used for MC not for data.
+ 
 ! 24-11-2011 - Matt Coombes
  - Changes to DiskResidentEventList to use a given tree name
  - Updated from NTuple in DaltizEvent

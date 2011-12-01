@@ -27,6 +27,8 @@ class DiskResidentEventList : virtual public IDalitzEventList{
   mutable MINT::counted_ptr<DalitzEvent> _rEvent;
   std::string _fname;
   std::string _opt;
+  double _scaleData;
+
 
 
   TFile* _f; // object ownership with gDirectory
@@ -54,7 +56,11 @@ class DiskResidentEventList : virtual public IDalitzEventList{
 
   DiskResidentEventList(const std::string& fname
 			, const std::string& opt="UPDATE"
-			, const std::string& treeName = "DalitzEventList"
+);
+  DiskResidentEventList(const std::string& fname
+		    , int scales
+			, const std::string& treeName
+			, const std::string& opt="UPDATE"
 );
   //  DiskResidentEventList(TNtupleD* ntp);
   DiskResidentEventList(const DalitzEventPattern& pat
