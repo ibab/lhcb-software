@@ -38,6 +38,15 @@
   <class name    = "Gaudi::Math::CrystalBallDoubleSided"  />
   <class name    = "Gaudi::Math::BifurcatedGauss"         />
   <class name    = "Gaudi::Math::GramCharlierA"           />
+  <class name    = "Gaudi::Math::PhaseSpace2"             />
+  <class name    = "Gaudi::Math::PhaseSpaceLeft"          />
+  <class name    = "Gaudi::Math::PhaseSpaceRight"         />
+  <class name    = "Gaudi::Math::PhaseSpaceNL"            />
+  <class name    = "Gaudi::Math::BreitWigner">
+    <field name = "m_rho_fun" transient = "true"/>      
+  </class>
+  <class name    = "Gaudi::Math::Rho0"   />
+  <class name    = "Gaudi::Math::Flatte" />
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
@@ -63,6 +72,7 @@
   <function name    = "LHCb::Math::equal_to_uint"          />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
+  <function pattern = "Gaudi::Math::Jackson::jackson*"     />
 
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />
@@ -84,6 +94,17 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
     
     <class name = "Gaudi::Math::Bukin">  
+      <field name = "m_workspace"/>      
+    </class>
+    <class name = "Gaudi::Math::BreitWigner::rho_fun"/>  
+    <class name = "Gaudi::Math::BreitWigner">  
+      <field name = "m_rho_fun"/>      
+      <field name = "m_workspace"/>      
+    </class>
+    <class name = "Gaudi::Math::Flatte">  
+      <field name = "m_workspace"/>      
+    </class>
+    <class name = "Gaudi::Math::PhaseSpaceNL">  
       <field name = "m_workspace"/>      
     </class>
   </exclusion> 

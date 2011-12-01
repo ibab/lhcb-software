@@ -7,11 +7,13 @@
 #include <cmath>
 #include <climits>
 #include <iostream>
+#include <complex>
 // ============================================================================
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Functions.h"
 #include "LHCbMath/LHCbMath.h"
+#include "LHCbMath/Power.h"
 // ============================================================================
 // GSL 
 // ============================================================================
@@ -19,6 +21,7 @@
 #include "gsl/gsl_sf_exp.h"
 #include "gsl/gsl_sf_log.h"
 #include "gsl/gsl_sf_erf.h"
+#include "gsl/gsl_sf_gamma.h"
 #include "gsl/gsl_integration.h"
 // ============================================================================
 // Boost
@@ -35,6 +38,124 @@
  *  Last modification $Date$
  *                 by $author$
  */
+// ============================================================================
+// Rho-functions from Jackson 
+// ============================================================================
+/* the simplest function: constant 
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_0
+( double /* m  */ , 
+  double /* m0 */ , 
+  double /* m1 */ , 
+  double /* m2 */ ) { return 1 ; }
+// ============================================================================
+/* the simple function for \f$ 1^- \rightarrow 0^- 0^- \f$, l = 1 
+ *  \f$\rho(\omega)= \omega^{-1}\f$
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_A2
+( double    m     , 
+  double /* m0 */ , 
+  double /* m1 */ , 
+  double /* m2 */ ) { return 1./m ; } ;
+// ============================================================================
+/*  the simple function for \f$ 1^- \rightarrow 0^- 1^- \f$, l = 1 
+ *  \f$\rho(\omega)= \omega \f$
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_A3
+( double    m     , 
+  double /* m0 */ , 
+  double /* m1 */ , 
+  double /* m2 */ ) { return m ; } ;
+// ============================================================================
+/*  the simple function for 
+ *  \f$ \frac{3}{2}^+ \rightarrow \frac{1}{2}^+ 0^- \f$, l = 1 
+ *  $\rho(\omega)= \frac{ ( \omega + M )^2 - m^2 }{ \omega^2} \f$
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @param m the invariant mass 
+ *  @param m1 the invariant mass of the first  (spinor) particle  
+ *  @param m2 the invariant mass of the secodn (scalar) particle  
+ *  @return the value of rho-function
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_A4
+( double    m     , 
+  double /* m0 */ , 
+  double    m1    , 
+  double    m2    ) 
+{
+  const double a = m + m1 ;
+  //
+  return ( a * a  - m2 * m2 ) / ( m * m ) ;
+}
+// ============================================================================
+/*  the simple function for 
+ *  \f$ \frac{3}{2}^- \rightarrow \frac{1}{2}^+ 0^- \f$, l = 2 
+ *  $\rho(\omega)= \left[ ( \omega + M )^2 - m^2 \right]^{-1} \f$
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @param m the invariant mass 
+ *  @param m1 the invariant mass of the first  (spinor) particle  
+ *  @param m2 the invariant mass of the secodn (scalar) particle  
+ *  @return the value of rho-function
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_A5
+( double    m     , 
+  double /* m0 */ , 
+  double    m1    , 
+  double    m2    ) 
+{
+  const double a = m + m1 ;
+  //
+  return 1 / ( a * a  - m2 * m2 ) ;  
+}
+// ============================================================================
+/*  the simple function for \f$\rho^- \rightarrow \pi^+ \pi^-\f$
+ *  \f$ 1- \rightarrow 0^- 0^- \f$, l = 1 
+ *  $\rho(\omega)= \left[ q_0^2 + q^2 \right]^{-1}f$
+ *  @see Gaudi::Math::BreitWigner
+ *  @see Gaudi::Math::BreitWigner::rho_fun
+ *  @param m the invariant mass 
+ *  @param m the nominam   mass 
+ *  @return the value of rho-function
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @date 2011-11-30
+ */
+// ============================================================================
+double Gaudi::Math::Jackson::jackson_A7
+( double    m   , 
+  double    m0  , 
+  double    m1  , 
+  double    m2  ) 
+{
+  //
+  const double q  = Gaudi::Math::PhaseSpace2::q ( m  , m1 , m2 ) ;
+  const double q0 = Gaudi::Math::PhaseSpace2::q ( m0 , m1 , m2 ) ;
+  //
+  if ( 0 >= q && 0 >= q0 ) { return 1 ; }
+  //
+  return 1. / ( q * q + q0 * q0 ) ;
+}
 // ============================================================================
 namespace 
 {
@@ -676,6 +797,44 @@ namespace
     return (*gca)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of Breit-Wigner shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double breit_wigner_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::BreitWigner* bw = 
+      (Gaudi::Math::BreitWigner*) params ;
+    //
+    return (*bw)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of Flatte shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double flatte_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::Flatte* f = (Gaudi::Math::Flatte*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of PhaseSpace shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double phase_space_NL_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::PhaseSpaceNL* ps = 
+      (Gaudi::Math::PhaseSpaceNL*) params ;
+    //
+    return (*ps)(x) ;
+  }
+  // ==========================================================================
 } //                                                 end of anonymous namespace 
 // ============================================================================
 // evaluate Chebyshev polynomial 
@@ -688,7 +847,7 @@ double Gaudi::Math::Chebyshev::operator() ( const double x ) const
 double Gaudi::Math::Legendre::operator() ( const double x ) const 
 { return _legendre ( m_N , x ) ; }
 // ============================================================================
-// evaluate Hrrmite polynomial 
+// evaluate Hermite polynomial 
 // ============================================================================
 double Gaudi::Math::Hermite::operator() ( const double x ) const 
 { return _hermite  ( m_N , x ) ; }
@@ -1028,8 +1187,9 @@ double Gaudi::Math::Bukin::integral
 {
   //
   if      ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
-  else if (           low > high   ) { return - integral ( high , 
-                                                           low  ) ; } // RETURN  
+  else if (           low > high   ) { return - integral ( high ,
+                                                           low  ) ; } // RETURN
+  //
   //
   // split into reasonable sub-intervals
   if      ( low < m_x1  && m_x1 < high ) 
@@ -1043,6 +1203,16 @@ double Gaudi::Math::Bukin::integral
     return 
       integral (  low , m_x2 ) + 
       integral ( m_x2 , high ) ;
+  }
+  //
+  // split, if the interval is too large
+  //
+  const double width = std::max ( std::abs  ( m_sigma )  , 0.0 ) ;
+  if ( 0 < width &&  6 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
   }
   //
   // left tail:
@@ -1292,6 +1462,16 @@ double Gaudi::Math::Novosibirsk::integral
     return 
       integral (   low  , x_high  ) + 
       integral ( x_high ,   high  ) ;
+  }
+  //
+  // split, if the interval is too large
+  //
+  const double width = std::max ( std::abs  ( m_sigma )  , 0.0 ) ;
+  if ( 0 < width &&  3 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
   }
   //
   //
@@ -1741,6 +1921,7 @@ double Gaudi::Math::CrystalBallDoubleSided::integral
   if ( low < x_high && x_high < high ) 
   { return integral ( low , x_high ) + integral ( x_high , high ) ; }
   //
+  //
   //  "left tail"
   if     ( high <= x_low ) 
   {
@@ -1918,6 +2099,17 @@ double Gaudi::Math::GramCharlierA::integral
       integral ( x_high ,   high  ) ;
   }
   //
+  //
+  // split, if the interval is too large
+  //
+  const double width = std::max ( std::abs  ( m_sigma)  , 0.0 ) ;
+  if ( 0 < width &&  3 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
   // use GSL to evaluate the integral 
   //
   GSL_Handler_Sentry sentry ;
@@ -1996,6 +2188,911 @@ bool Gaudi::Math::GramCharlierA::setKappa4 ( const double value )
   //
   return false ;
 }
+// ============================================================================
+
+
+// ============================================================================
+// constructor from two masses
+// ============================================================================
+Gaudi::Math::PhaseSpace2::PhaseSpace2
+( const double m1 , 
+  const double m2 ) 
+  : std::unary_function<double,double> () 
+  , m_m1 ( std::abs ( m1 ) ) 
+  , m_m2 ( std::abs ( m2 ) ) 
+{}
+// ============================================================================
+// desctructor 
+// ============================================================================
+Gaudi::Math::PhaseSpace2::~PhaseSpace2(){}
+// ============================================================================
+// evaluate 2-body phase space 
+// ============================================================================
+double Gaudi::Math::PhaseSpace2::operator () ( const double x ) const 
+{
+  //
+  if ( m_m1 + m_m2 >= x ) { return 0 ; } // return  
+  //
+  const double x2 = x * x ;
+  // 
+  return std::sqrt  ( triangle  ( x2          , 
+                                  m_m1 * m_m1 , 
+                                  m_m2 * m_m2 ) ) / x2 / 8 / M_PI ;
+}
+// ============================================================================
+/*  calculate the triangle function 
+ *  \f$ \lambda ( a , b, c ) = a^2 + b^2 + c^2 - 2ab - 2bc - 2 ca \f$ 
+ *  @param a parameter a 
+ *  @param b parameter b 
+ *  @param c parameter b 
+ */
+// ============================================================================
+double 
+Gaudi::Math::PhaseSpace2::triangle
+( const double a , 
+  const double b , 
+  const double c ) 
+{ return a*a + b*b + c*c - 2*a*b - 2*b*c - 2*a*c ; }
+// ============================================================================
+/**calculate the particle momentum in rest frame 
+ *  @param m the mass 
+ *  @param m1 the mass of the first particle 
+ *  @param m2 the mass of the second particle 
+ *  @return the momentum in rest frame (physical values only)
+ */
+// ============================================================================
+double Gaudi::Math::PhaseSpace2::q 
+( const double m  , 
+  const double m1 , 
+  const double m2 ) 
+{ return std::max ( 0.0 , q1 ( m , m1 , m2 ) ) ; }
+// ============================================================================
+/** calculate the particle momentum in rest frame 
+ *  @param m the mass 
+ *  @param m1 the mass of the first particle 
+ *  @param m2 the mass of the second particle 
+ *  @return the momentum in rest frame 
+ *  @return the momentum in rest frame  (negative for non-physical branch)
+ */
+// ============================================================================
+double Gaudi::Math::PhaseSpace2::q1 
+( const double m  , 
+  const double m1 , 
+  const double m2 ) 
+{
+  // 
+  if ( 0 >= m || 0 > m1 || 0 > m2 ) { return 0 ; }
+  //
+  const double m_2  = m  * m  ;
+  const double d1   = m1 + m2 ;
+  const double d2   = m1 - m2 ;
+  //
+  const double num  = ( m_2 - d1 * d1 ) * ( m_2 - d2 * d2 ) ;
+  //
+  return 
+    0 <= num ? 
+    0.5  * std::sqrt (  num ) / m :
+    -0.5 * std::sqrt ( -num ) / m ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from threshold and number of particles 
+// ============================================================================
+Gaudi::Math::PhaseSpaceLeft::PhaseSpaceLeft 
+( const double         threshold , 
+  const unsigned short num       ) 
+  : std::unary_function<double,double> () 
+  , m_threshold ( std::abs ( threshold ) ) 
+  , m_num       ( num ) 
+{}
+// ============================================================================
+// constructor from list of masses
+// ============================================================================
+Gaudi::Math::PhaseSpaceLeft::PhaseSpaceLeft 
+( const std::vector<double>& masses ) 
+  : std::unary_function<double,double> () 
+  , m_threshold ( 0              ) 
+  , m_num       ( masses.size()  ) 
+{
+  //
+  for ( std::vector<double>::const_iterator im = masses.begin() ; 
+        masses.end() != im ; ++im ) 
+  { 
+    m_threshold += std::abs ( *im ) ;
+  }
+  //
+}
+// ============================================================================
+// desctructor 
+// ============================================================================
+Gaudi::Math::PhaseSpaceLeft::~PhaseSpaceLeft(){}
+// ============================================================================
+// evaluate N-body phase space near left threhsold 
+// ============================================================================
+double Gaudi::Math::PhaseSpaceLeft::operator () ( const double x ) const 
+{
+  //
+  if ( m_threshold >= x ) { return 0 ; }
+  //
+  return std::pow ( x - m_threshold , 3 * 0.5 * m_num - 5 * 0.5  ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from threshold and number of particles 
+// ============================================================================
+Gaudi::Math::PhaseSpaceRight::PhaseSpaceRight 
+( const double         threshold , 
+  const unsigned short l         , 
+  const unsigned short n         ) 
+  : std::unary_function<double,double> () 
+  , m_threshold ( std::abs ( threshold ) ) 
+  , m_N         ( std::max ( l , n ) ) 
+  , m_L         ( std::min ( l , n ) ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::PhaseSpaceRight::~PhaseSpaceRight (){}
+// ============================================================================
+// evaluate N-body phase space near right threshold 
+// ============================================================================
+double Gaudi::Math::PhaseSpaceRight::operator () ( const double x ) const 
+{
+  //
+  if ( m_threshold <= x ) { return 0 ; }
+  //
+  return std::pow ( m_threshold - x , 1.5 * ( m_N - m_L ) - 1  ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from thresholds and number of particles 
+// ============================================================================
+Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL 
+( const double         threshold1 , 
+  const double         threshold2 , 
+  const unsigned short l          , 
+  const unsigned short n          ) 
+  : std::unary_function<double,double> () 
+  , m_threshold1 ( std::min ( std::abs ( threshold1 ) ,std::abs ( threshold2 ) ) ) 
+  , m_threshold2 ( std::max ( std::abs ( threshold1 ) ,std::abs ( threshold2 ) ) )                           
+  , m_N          ( std::max ( l , n ) ) 
+  , m_L          ( std::min ( l , n ) ) 
+  , m_norm       ( 1 ) 
+//
+  , m_workspace  ( 0 ) 
+//
+{
+  m_norm  = gsl_sf_gamma ( 3 * m_N *0.5 - 3       * 0.5 ) ;
+  m_norm /= gsl_sf_gamma ( 3 * m_L *0.5 - 3       * 0.5 ) ;
+  m_norm /= gsl_sf_gamma ( 3 * m_N *0.5 - 3 * m_L * 0.5 ) ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL 
+( const Gaudi::Math::PhaseSpaceNL& right ) 
+  : std::unary_function<double,double> ( right ) 
+  , m_threshold1 ( right.m_threshold1 ) 
+  , m_threshold2 ( right.m_threshold2 )         
+  , m_N          ( right.m_N    ) 
+  , m_L          ( right.m_L    ) 
+  , m_norm       ( right.m_norm ) 
+//
+  , m_workspace  ( 0 ) 
+//
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::PhaseSpaceNL::~PhaseSpaceNL()
+{
+  if ( 0 != m_workspace ) 
+  {
+    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
+    m_workspace = 0 ;
+    gsl_integration_workspace_free ( _ws );
+  }
+}
+// ============================================================================
+// evaluate N/L-body phase space
+// ============================================================================
+double Gaudi::Math::PhaseSpaceNL::operator () ( const double x ) const 
+{
+  //
+  if ( m_threshold1 >= x ) { return 0 ; }
+  if ( m_threshold2 <= x ) { return 0 ; }
+  //
+  const double y = (  x - m_threshold1 ) / ( m_threshold2 - m_threshold1 ) ;
+  if ( 0 >= y || 1 <= y )  { return 0 ; }
+  //
+  return m_norm 
+    / std::abs ( m_threshold2 - m_threshold1               ) 
+    * std::pow (     y , 3 * 0.5 *   m_L         - 5 * 0.5 ) 
+    * std::pow ( 1 - y , 3 * 0.5 * ( m_N - m_L ) - 1       ) ; 
+}
+// =======================================================================
+// set the thresholds 
+// =======================================================================
+void Gaudi::Math::PhaseSpaceNL::setThresholds 
+( const double mn , 
+  const double mx ) 
+{  
+  m_threshold1 =  std::min ( std::abs ( mn ) ,std::abs ( mx ) ) ;
+  m_threshold2 =  std::max ( std::abs ( mn ) ,std::abs ( mx ) ) ;
+}
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::PhaseSpaceNL::integral 
+( const double low  , 
+  const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( m_threshold2 <= low  ) { return 0 ; }
+  if ( m_threshold1 >= high ) { return 0 ; }
+  //
+  if ( m_threshold1 >  low  ) { return integral ( m_threshold1 ,  high        ) ; }
+  if ( m_threshold2 <  high ) { return integral ( low          , m_threshold2 ) ; }
+  //
+  // split, if the interval is too large
+  //
+  const double width = 0.2 * std::abs  ( m_threshold2 - m_threshold1 ) ;
+  if ( 0 < width &&  width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &phase_space_NL_GSL ;
+  const PhaseSpaceNL* _ps = this  ;
+  F.params   = const_cast<PhaseSpaceNL*> ( _ps ) ;
+  //
+  gsl_integration_workspace* ws = 0 ;
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  ws = (gsl_integration_workspace*) m_workspace ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      ws                ,            // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::PhaseSpaceNL::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+double  Gaudi::Math::PhaseSpaceNL::integral() const
+{ return integral ( m_threshold1 , m_threshold2 ) ; }
+// ============================================================================
+// constructor 
+// ============================================================================
+Gaudi::Math::BreitWigner::BreitWigner
+( const double         m0   , 
+  const double         gam0 ,
+  const double         m1   , 
+  const double         m2   , 
+  const unsigned short L    ) 
+  : std::unary_function<double,double> () 
+//
+  , m_m0      (             m0    )   
+  , m_gam0    ( std::abs ( gam0 ) ) 
+  , m_m1      ( std::abs (   m1 ) )  
+  , m_m2      ( std::abs (   m2 ) )  
+  , m_L       (              L    )   
+  , m_rho_fun ( &Gaudi::Math::Jackson::jackson_0 )   
+//
+  , m_workspace ( 0 ) 
+//
+{}
+// ============================================================================
+// constructor 
+// ============================================================================ 
+Gaudi::Math::BreitWigner::BreitWigner
+( const double                                m0   , 
+  const double                                gam0 ,
+  const double                                m1   , 
+  const double                                m2   , 
+  const unsigned short                        L    ,
+  const Gaudi::Math::BreitWigner::JacksonRho  r    ) 
+  : std::unary_function<double,double> ()  
+//
+  , m_m0      (             m0    )   
+  , m_gam0    ( std::abs ( gam0 ) ) 
+  , m_m1      ( std::abs (   m1 ) )  
+  , m_m2      ( std::abs (   m2 ) )  
+  , m_L       (              L    )   
+//
+  , m_rho_fun ( &Gaudi::Math::Jackson::jackson_0 )   
+//
+  , m_workspace ( 0 ) 
+//
+{
+  //
+  switch ( r ) 
+  {
+  case Jackson_0  : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_0  ; break ;
+  case Jackson_A2 : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_A2 ; break ;
+  case Jackson_A3 : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_A3 ; break ;
+  case Jackson_A4 : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_A4 ; break ;
+  case Jackson_A5 : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_A5 ; break ;
+  case Jackson_A7 : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_A7 ; break ;
+  default         : 
+    m_rho_fun = &Gaudi::Math::Jackson::jackson_0  ; break ;
+  }
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================ 
+Gaudi::Math::BreitWigner::BreitWigner
+( const Gaudi::Math::BreitWigner& right ) 
+  : std::unary_function<double,double> ( right )  
+//
+  , m_m0      ( right.m_m0      )    
+  , m_gam0    ( right.m_gam0    ) 
+  , m_m1      ( right.m_m1      ) 
+  , m_m2      ( right.m_m2      )  
+  , m_L       ( right.m_L       )   
+  , m_rho_fun ( right.m_rho_fun )   
+//
+  , m_workspace ( 0 ) 
+//
+{}
+// ============================================================================
+// destructor
+// ============================================================================ 
+Gaudi::Math::BreitWigner::~BreitWigner ()
+{
+  if ( 0 != m_workspace ) 
+  {
+    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
+    m_workspace = 0 ;
+    gsl_integration_workspace_free ( _ws );
+  }
+}
+// ============================================================================
+/*  calculate the Breit-Wigner shape
+ *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}{ (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
+ */
+// ============================================================================
+double Gaudi::Math::BreitWigner::operator() ( const double x ) const 
+{
+  
+  if ( m_m1 + m_m2 >= x ) { return 0 ; }
+  //
+  const double g  = m_gam0 ; // gamma ( x ) ;
+  if ( 0 >= g ) { return 0 ; }
+  //
+  const double omega2 = m_m0 * m_m0 ;
+  const double delta = omega2        -          x * x ;
+  const double v     = delta * delta + omega2 * g * g ;
+  //
+  return 2 * x * m_m0 * g / v / M_PI  ;
+}
+// ============================================================================ 
+// calculate the current width 
+// ============================================================================ 
+double Gaudi::Math::BreitWigner::gamma ( const double x ) const 
+{
+  //
+  if ( m_m1 + m_m2 >= x ) { return 0 ; }   // RETURN 
+  //
+  const double q  = Gaudi::Math::PhaseSpace2::q ( x    , m_m1 , m_m2 ) ;
+  const double q0 = Gaudi::Math::PhaseSpace2::q ( m_m0 , m_m1 , m_m2 ) ;
+  //
+  if ( 0 >= q || 0 >= q0 ) { return 0 ; }  // RETURN 
+  //
+  const double r  = 
+    0 != m_rho_fun ? (*m_rho_fun) ( x    , m_m0  , m_m1 , m_m2 ) : 1.0 ;
+  const double r0 =
+    0 != m_rho_fun ? (*m_rho_fun) ( m_m0 , m_m0  , m_m1 , m_m2 ) : 1.0 ;
+  //
+  if ( 0 >= r0 )           { return 0 ; }  // RETURN 
+  //
+  return m_gam0 * Gaudi::Math::pow ( q / q0 , 2 * m_L + 1 ) * ( r / r0 ) ;  
+}
+// ============================================================================
+void Gaudi::Math::BreitWigner::setM0     ( const double x ) 
+{ m_m0   = std::abs ( x ) ; }
+// ============================================================================
+void Gaudi::Math::BreitWigner::setGamma0 ( const double x ) 
+{ m_gam0 = std::abs ( x ) ; }   
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::BreitWigner::integral 
+( const double low  , 
+  const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( m_m1 + m_m2 >= high ) { return                              0   ; }
+  if ( m_m1 + m_m2 >  low  ) { return integral  ( m_m1 + m_m2 , high ) ; }
+  //
+  //
+  // split into reasonable sub intervals
+  //
+  const double x1     = m_m0 - 10 * m_gam0 ;
+  const double x2     = m_m0 + 10 * m_gam0  ;
+  const double x_low  = std::min ( x1 , x2 ) ;
+  const double x_high = std::max ( x1 , x2 ) ;
+  //
+  if ( low < x_low  && x_low < high ) 
+  {
+    return 
+      integral (   low , x_low  ) + 
+      integral ( x_low ,   high ) ;
+  }
+  if ( low <  x_high && x_high < high ) 
+  {
+    return 
+      integral (   low  , x_high  ) + 
+      integral ( x_high ,   high  ) ;
+  }
+  //
+  // split, if interval too large
+  //
+  const double width = std::max ( m_gam0 , 0.0 ) ;
+  if ( 0 < width &&  3 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &breit_wigner_GSL ;
+  const BreitWigner* _bw = this  ;
+  F.params   = const_cast<BreitWigner*> ( _bw ) ;
+  //
+  gsl_integration_workspace* ws = 0 ;
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  ws = (gsl_integration_workspace*) m_workspace ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      ( high   <= x_low  ) ? s_PRECISION_TAIL :
+      ( x_high <=   low  ) ? s_PRECISION_TAIL : 
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      ws                ,            // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::BreitWigner::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral b
+// ============================================================================
+double  Gaudi::Math::BreitWigner::integral () const 
+{
+  //
+  // split into reasonable sub intervals
+  //
+  const double x1     = m_m0 - 10 * m_gam0 ;
+  const double x2     = m_m0 + 10 * m_gam0  ;
+  const double x_high = std::max ( x1 , x2 ) ;
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &breit_wigner_GSL ;
+  const BreitWigner* _bw = this  ;
+  F.params   = const_cast<BreitWigner*> ( _bw ) ;
+  //
+  gsl_integration_workspace* ws = 0 ;
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  ws = (gsl_integration_workspace*) m_workspace ;
+  //
+  // right tail:
+  //
+  double result  =  0.0 ;
+  double error   = -1.0 ;
+  //
+  const int ierror = gsl_integration_qagiu
+    ( &F                ,   // the function 
+      x_high            ,   // "low" edge
+      s_PRECISION       ,   // absolute precision  
+      s_PRECISION_TAIL  ,   // relative precision 
+      s_SIZE            ,   // size of workspace 
+      ws                ,   // workspace  
+      &result           ,   // the result 
+      &error            ) ; // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::BreitWigner::QAGIU" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+    result = 0.0 ;
+  }
+  //
+  return result + integral ( m_m1 + m_m2 , x_high );
+}
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Gaudi::Math::Rho0::Rho0
+( const double m0       , 
+  const double gam0     ,
+  const double pi_mass  ) 
+  : Gaudi::Math::BreitWigner ( m0         , 
+                               gam0       ,
+                               pi_mass    , 
+                               pi_mass    ,
+                               1          , 
+                               Jackson_A5 ) 
+{}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::Rho0::Rho0
+( const Gaudi::Math::Rho0& right ) 
+  : Gaudi::Math::BreitWigner ( right ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Rho0::~Rho0(){}
+
+
+
+// ============================================================================
+//               Flatte
+// ============================================================================
+/* constructor  from three parameters 
+ *  @param m0    the mass 
+ *  @param m0g1  parameter \f$ m_0\times g_1\f$
+ *  @param g2og2 parameter \f$ g2/g_1       \f$
+ */
+// ============================================================================
+Gaudi::Math::Flatte::Flatte
+( const double m0    , 
+  const double m0g1  , 
+  const double g2og1 ,
+  const double mK    , 
+  const double mPi   ) 
+  : std::unary_function<double,double> () 
+//
+  , m_m0    ( std::fabs ( m0    ) ) 
+  , m_m0g1  ( std::fabs ( m0g1  ) )  
+  , m_g2og1 ( std::fabs ( g2og1 ) )  
+  , m_K     ( std::fabs ( mK    ) )  
+  , m_Pi    ( std::fabs ( mPi   ) )  
+//
+  , m_workspace ( 0 )  
+{}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::Flatte::Flatte
+( const Gaudi::Math::Flatte& right )
+  : std::unary_function<double,double> ( right ) 
+//
+  , m_m0    ( right.m_m0     ) 
+  , m_m0g1  ( right.m_m0g1   )  
+  , m_g2og1 ( right.m_g2og1  )  
+  , m_K     ( right.m_K      )  
+  , m_Pi    ( right.m_Pi     )  
+//
+  , m_workspace ( 0 )  
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Flatte::~Flatte() 
+{
+  if ( 0 != m_workspace ) 
+  {
+    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
+    m_workspace = 0 ;
+    gsl_integration_workspace_free ( _ws );
+  }
+}
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /// get the complex Flatte amplitude
+  std::complex<double> flatte 
+  ( const double x     , 
+    const double m0    , 
+    const double m0g1  , 
+    const double g2og1 , 
+    const double mK    , 
+    const double mPi   )
+  {
+    //
+    if ( 2 * mPi >= x ) { return 0 ; }
+    //
+    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
+    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
+    //
+    const std::complex<double> rho_PP = 
+      0 <= qPP ? 
+      std::complex<double> ( qPP , 0                ) :
+      std::complex<double> (   0 , std::abs ( qPP ) ) ;
+    //
+    const std::complex<double> rho_KK = 
+      0 <= qKK ? 
+      std::complex<double> ( qKK , 0                ) :
+      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+    //
+    // attention: normalization phactors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0g1 * qPP * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }
+  // ==========================================================================
+  /// get the complex Breit amplitude
+  std::complex<double> breit
+  ( const double x     , 
+    const double m0    , 
+    const double gamma )
+  {
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * m0 * gamma ;
+    //
+    // attention: normalization factors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0 * gamma  * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }  
+  // ==========================================================================
+} // end of the anonymous namespace 
+// ============================================================================
+// get the value of Flatte function 
+// ============================================================================
+double Gaudi::Math::Flatte::operator() ( const double x ) const 
+{
+  //
+  if ( 2 * m_Pi >= x ) { return 0 ; }
+  //
+  // get the amplitude...
+  std::complex<double> amp = flatte 
+    ( x       , 
+      m_m0    ,
+      m_m0g1  ,
+      m_g2og1 ,
+      m_K     ,
+      m_Pi    ) ;
+  //
+  return amp.real() * amp.real() + amp.imag () * amp.imag () ;
+} 
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::Flatte::integral 
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  if ( 2 * m_Pi >= high ) { return                           0   ; } 
+  if ( 2 * m_Pi >  low  ) { return integral  ( 2 * m_Pi , high ) ; }
+  //
+  // split into reasonable sub intervals
+  //
+  const double x_low  = m_m0 
+    -  3 * std::abs ( m_m0g1 / m_m0           )
+    -  3 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  const double x_high = m_m0 
+    + 10 * std::abs ( m_m0g1 / m_m0           )
+    + 10 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  //
+  if      ( low <  x_low  && x_low  < high )
+  {
+    return 
+      integral (   low  , x_low   ) + 
+      integral ( x_low  ,   high  ) ;
+  }
+  else if ( low <  x_high && x_high < high ) 
+  {
+    return 
+      integral (   low  , x_high  ) + 
+      integral ( x_high ,   high  ) ;
+  }
+  //
+  // split, if interval too large
+  //
+  const double width =  
+    0 > m_m0 ? 0.0 : 
+    std::fabs ( m_m0g1 / m_m0 ) +
+    std::fabs ( m_m0g1 / m_m0 * m_g2og1 ) ;  
+  //
+  if ( 0 < width &&  3 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &flatte_GSL ;
+  const Flatte* _f = this  ;
+  F.params   = const_cast<Flatte*> ( _f ) ;
+  //
+  gsl_integration_workspace* ws = 0 ;
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  ws = (gsl_integration_workspace*) m_workspace ;
+  //
+  double result   =  1.0 ;
+  double error    = -1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      ( high   <= x_low  ) ? s_PRECISION_TAIL :
+      ( x_high <=   low  ) ? s_PRECISION_TAIL : 
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      ws                ,            // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::Flatte::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral b
+// ============================================================================
+double  Gaudi::Math::Flatte::integral () const 
+{
+  //
+  // split into reasonable sub intervals
+  //
+  const double x_high = m_m0 
+    + 10 * std::abs ( m_m0g1 / m_m0           )
+    + 10 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &flatte_GSL ;
+  const Flatte* _f = this  ;
+  F.params   = const_cast<Flatte*> ( _f ) ;
+  //
+  gsl_integration_workspace* ws = 0 ;
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  ws = (gsl_integration_workspace*) m_workspace ;
+  //
+  // right tail:
+  //
+  double result  =  0.0 ;
+  double error   = -1.0 ;
+  //
+  const int ierror = gsl_integration_qagiu
+    ( &F                ,   // the function 
+      x_high            ,   // "low" edge
+      s_PRECISION       ,   // absolute precision  
+      s_PRECISION_TAIL  ,   // relative precision 
+      s_SIZE            ,   // size of workspace 
+      ws                ,   // workspace  
+      &result           ,   // the result 
+      &error            ) ; // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::Flatte::QAGIU" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+    result = 0.0 ;
+  }
+  //
+  return result + integral ( 2 * m_Pi , x_high );
+}
+// ============================================================================
+// set mass 
+// ============================================================================
+void Gaudi::Math::Flatte::setM0     ( const double x ) 
+{ m_m0 = std::abs    ( x ) ; }
+// ============================================================================
+// set mass times G1 
+// ============================================================================
+void Gaudi::Math::Flatte::setM0G1   ( const double x ) 
+{ m_m0g1 = std::abs  ( x ) ; }
+// ============================================================================
+// set G2 over G1 
+// ============================================================================
+void Gaudi::Math::Flatte::setG2oG1  ( const double x ) 
+{ m_g2og1 = std::abs ( x ) ; }
+// ============================================================================
+
+
+
+  
 // ============================================================================
 // The END 
 // ============================================================================

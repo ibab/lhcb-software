@@ -8,6 +8,7 @@
 // STD & STL 
 // ============================================================================
 #include <functional>
+#include <vector>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -92,23 +93,23 @@ namespace Gaudi
       Chebyshev ( const unsigned int N ) : m_N ( N ) {}
       // ======================================================================
     public:
-      // ======================================================================      
+      // ====================================================================== 
       /// evaluate the polynomial 
       double operator() ( const double x ) const ;
-      // ======================================================================      
+      // ======================================================================
     public:
-      // ======================================================================      
+      // ======================================================================
       unsigned int order() const { return m_N ; }
-      // ======================================================================      
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
       Chebyshev () ;                     // the default constructor is disabled 
-      // ======================================================================      
+      // ======================================================================
     private:
-      // ======================================================================      
+      // ======================================================================
       unsigned int m_N ;
-      // ======================================================================      
+      // ======================================================================
     } ;
     // ========================================================================
     // Legendre 
@@ -261,23 +262,23 @@ namespace Gaudi
       Hermite ( const unsigned int N ) : m_N ( N ) {}
       // ======================================================================
     public:
-      // ======================================================================      
+      // ======================================================================
       /// evaluate the polynomial 
       double operator() ( const double x ) const ;
-      // ======================================================================      
+      // ======================================================================
     public:
-      // ======================================================================      
+      // ======================================================================
       unsigned int order() const { return m_N ; }
-      // ======================================================================      
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled 
       Hermite () ;                      // the default constructor is disabled 
-      // ======================================================================      
+      // ======================================================================
     private:
-      // ======================================================================      
+      // ======================================================================
       unsigned int m_N ;
-      // ======================================================================      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class BifurcatedGauss 
@@ -611,7 +612,7 @@ namespace Gaudi
       double m_const    ;
       /// integral  
       double m_integral ;  // the integral  
-      // ======================================================================     
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class CrystalBallDoubleSided 
@@ -640,7 +641,7 @@ namespace Gaudi
         const double n_R     ) ;
       /// destructor 
       ~CrystalBallDoubleSided() ;
-      // ======================================================================     
+      // ======================================================================
     public:
       // ====================================================================== 
       /// evaluate CrystalBall's function 
@@ -731,7 +732,7 @@ namespace Gaudi
       GramCharlierA  ( const GramCharlierA& right ) ;
       /// destructor 
       ~GramCharlierA () ;
-      // ======================================================================     
+      // ======================================================================
     public:
       // ====================================================================== 
       /// evaluate Gram-Charlier type A approximation 
@@ -785,6 +786,552 @@ namespace Gaudi
       mutable void*  m_workspace ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class PhaseSpace2
+     *  simple function to represent two-body phase space 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpace2 
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from two masses
+      PhaseSpace2 ( const double m1 , 
+                    const double m2 ) ;
+      /// deststructor 
+      ~PhaseSpace2() ;                                          // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate 2-body phase space 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpace2 () ;                   // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the first mass 
+      double m_m1 ; // the first  mass 
+      /// the second mass 
+      double m_m2 ; // the second mass 
+      // ======================================================================
+    public :
+      // ======================================================================
+      /** calculate the triangle function 
+       *  \f$ \lambda ( a , b, c ) = a^2 + b^2 + c^2 - 2ab - 2bc - 2 ca \f$ 
+       *  @param a parameter a 
+       *  @param b parameter b 
+       *  @param c parameter b 
+       *  @return the value of triangle function 
+       */
+      static double triangle 
+      ( const double a , 
+        const double b , 
+        const double c ) ;
+      // ======================================================================
+      /** calculate the particle momentum in rest frame 
+       *  @param m the mass 
+       *  @param m1 the mass of the first particle 
+       *  @param m2 the mass of the second particle 
+       *  @return the momentum in rest frame (physical values only)
+       */
+      static double  q 
+      ( const double m  , 
+        const double m1 , 
+        const double m2 ) ;
+      // ====================================================================== 
+      /** calculate the particle momentum in rest frame 
+       *  @param m the mass 
+       *  @param m1 the mass of the first particle 
+       *  @param m2 the mass of the second particle 
+       *  @return the momentum in rest frame  (negative for non-physical branch)
+       */
+      static double  q1
+      ( const double m  , 
+        const double m1 , 
+        const double m2 ) ;
+      // ====================================================================== 
+    } ;  
+    // ========================================================================
+    /** @class PhaseSpaceLeft
+     *  simple function to represent N-body phase space near left-threshold 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpaceLeft 
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from threshold and number of particles 
+      PhaseSpaceLeft ( const double         threshold , 
+                       const unsigned short num       ) ;
+      /// constructor from list of masses
+      PhaseSpaceLeft ( const std::vector<double>& masses ) ;
+      /// deststructor 
+      ~PhaseSpaceLeft() ;                                       // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate N-body phase space near left threhsold 
+      double operator () ( const double x    ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpaceLeft () ;               // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the threshold 
+      double         m_threshold ; // the threshold 
+      /// number of particles 
+      unsigned short m_num       ; // number of particles 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PhaseSpaceRight
+     *  simple function to represent N/L-body phase space near right-threshold 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpaceRight
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from threshold and number of particles 
+      PhaseSpaceRight ( const double         threshold , 
+                        const unsigned short l         , 
+                        const unsigned short n         ) ;
+      /// deststructor 
+      ~PhaseSpaceRight () ;                                     // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate N/L-body phase space near right  threhsold 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpaceRight () ;               // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the threshold 
+      double         m_threshold ; // the threshold 
+      /// number of particles 
+      unsigned short m_N         ; // number of particles 
+      /// number of particles 
+      unsigned short m_L         ; // number of particles 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PhaseSpaceNL
+     *  simple function to represent N/L-body phase space
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpaceNL
+      : public std::unary_function<double,double>     
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from thresholds and number of particles 
+      PhaseSpaceNL ( const double         threshold1 , 
+                     const double         threshold2 , 
+                     const unsigned short l          , 
+                     const unsigned short n          ) ;
+      /// copy contructor
+      PhaseSpaceNL ( const PhaseSpaceNL& right ) ;
+      /// deststructor 
+      ~PhaseSpaceNL () ;                                     // deststructor 
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// evaluate N/L-body phase space 
+      double operator () ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// set the thresholds 
+      void setThresholds 
+      ( const double mn , 
+        const double mx ) ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PhaseSpaceNL () ;               // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the threshold 
+      double         m_threshold1 ; // the threshold 
+      double         m_threshold2 ; // the threshold 
+      /// number of particles 
+      unsigned short m_N          ; // number of particles 
+      /// number of particles  
+      unsigned short m_L          ; // number of particles 
+      /// normalization
+      double m_norm               ; // normalization
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      mutable void*  m_workspace ; // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BeitWigner
+     *
+     *  J.D.Jackson, 
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API BreitWigner
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** parameterization for \f$\rho(\omega)\f$-function from (A.1)
+       *  J.D.Jackson, 
+       *  "Remarks on the Phenomenological Analysis of Resonances",
+       *  In Nuovo Cimento, Vol. XXXIV, N.6
+       */
+      enum JacksonRho {
+        Jackson_0  = 0 ,  /// \f$\rho(\omega) = 1 \f$ 
+        Jackson_A2     ,  /// (A.2) \f$ 1^- \rightarrow 0^- 0^- \f$ , l = 1 
+        Jackson_A3     ,  /// (A.3) \f$          1^- \rightarrow 0^- 1^- \f$ , l = 1 
+        Jackson_A4     ,  /// (A.4) \f$ \frac{3}{2}+ \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 1
+        Jackson_A5     ,  /// (A.5) \f$ \frac{3}{2}- \rightarrow 0^- \frac{1}{2}^+ \f$ , l = 2
+        Jackson_A7     ,  /// (A.7) - recommended for rho0 -> pi+ pi-
+      } ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /** @typedef rho
+       *  the \f$\rho(\omega)\f$ function from Jackson
+       *  Arguments 
+       *    - the        mass 
+       *    - the pole   mass 
+       *    - the first  daughter mass 
+       *    - the second daughter mass 
+       */
+      typedef double (*rho_fun) ( double , double , double , double ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // constructor from all parameters
+      BreitWigner ( const double         m0       , 
+                    const double         gam0     ,
+                    const double         m1       , 
+                    const double         m2       , 
+                    const unsigned short L    = 0 ) ; 
+      // constructor from all parameters
+      BreitWigner ( const double         m0       , 
+                    const double         gam0     ,
+                    const double         m1       , 
+                    const double         m2       , 
+                    const unsigned short L        ,
+                    const JacksonRho     r        ) ;
+      // cpoy constructor
+      BreitWigner ( const BreitWigner&   right    ) ;
+      /// destructor 
+      ~BreitWigner () ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      BreitWigner() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** calculate the Breit-Wigner shape
+       *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}
+       *   { (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
+       */
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double m0     () const { return m_m0      ; }
+      double mass   () const { return   m0   () ; }
+      double peak   () const { return   m0   () ; }
+      double gam0   () const { return m_gam0    ; }
+      double gamma0 () const { return   gam0 () ; }
+      double gamma  () const { return   gam0 () ; }
+      double width  () const { return   gam0 () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      void setM0     ( const double x ) ;
+      void setMass   ( const double x ) { setM0     ( x ) ; }
+      void setPeak   ( const double x ) { setM0     ( x ) ; }      
+      void setGamma0 ( const double x ) ;
+      void setGamma  ( const double x ) { setGamma0 ( x ) ; }
+      void setWidth  ( const double x ) { setGamma0 ( x ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set rho-function
+      void setRhoFun ( rho_fun rho ) { m_rho_fun = rho ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the current width 
+      double gamma ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the mass 
+      double m_m0   ; // the mass 
+      /// the width
+      double m_gam0 ; // the width 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the mass of the first  particle 
+      double       m_m1      ;
+      /// the mass of the second particle 
+      double       m_m2      ;
+      /// the orbital momentum 
+      unsigned int m_L       ; // the orbital momentum 
+      /// the Jackson-Rho function 
+      rho_fun      m_rho_fun ; // the Jackson-Rho function 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      mutable void*  m_workspace ; // integration workspace 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class BeitWigner
+     *  J.D.Jackson, 
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Rho0 : public Gaudi::Math::BreitWigner
+    {
+    public:
+      // ======================================================================
+      // constructor from all parameters
+      Rho0  ( const double m0       = 770 , 
+              const double gam0     = 150 ,
+              const double pi_mass  = 139 ) ;
+      // copy constructor
+      Rho0  ( const Rho0& right ) ;
+      /// destructor 
+      ~Rho0 () ;
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Flatte
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Flatte 
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /** constructor  from three parameters 
+       *  @param m0    the mass 
+       *  @param m0g1  parameter \f$ m_0\times g_1\f$
+       *  @param g2og2 parameter \f$ g2/g_1       \f$
+       */
+      Flatte  ( const double m0    = 980      , 
+                const double m0g1  = 165*1000 ,  
+                const double g2og1 = 4.21     , 
+                const double mK    = 497      , 
+                const double mPi   = 139      ) ;                
+      // copy constructor 
+      Flatte  ( const Flatte& right ) ;
+      /// destructor 
+      ~Flatte () ;  
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the valeu of Flatte function 
+      // ======================================================================
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      double m0     () const { return m_m0      ; }
+      double mass   () const { return   m0   () ; }
+      double peak   () const { return   m0   () ; }
+      double m0g1   () const { return m_m0g1    ; }
+      double g2og1  () const { return m_g2og1   ; }
+      double mK     () const { return m_K       ; }
+      double mPi    () const { return m_K       ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      void setM0     ( const double x ) ;
+      void setMass   ( const double x ) { setM0     ( x ) ; }
+      void setPeak   ( const double x ) { setM0     ( x ) ; }      
+      void setM0G1   ( const double x ) ;
+      void setG2oG1  ( const double x ) ;
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      double integral () const ;
+      /// get the integral between low and high limits 
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      double m_m0     ;
+      double m_m0g1   ;
+      double m_g2og1  ;
+      double m_K      ;
+      double m_Pi     ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      mutable void*  m_workspace ; // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    namespace Jackson
+    {
+      // ======================================================================
+      /** the simplest function: constant 
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_0 ( double /* m  */ , 
+                         double /* m0 */ , 
+                         double /* m1 */ , 
+                         double /* m2 */ ) ;
+      // ======================================================================
+      /** the simple function for \f$ 1^- \rightarrow 0^- 0^- \f$, l = 1 
+       *  \f$\rho(\omega)= \omega^{-1} \f$
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @param m the invariant mass 
+       *  @return the value of rho-function
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_A2 ( double    m     , 
+                          double /* m0 */ , 
+                          double /* m1 */ , 
+                          double /* m2 */ ) ;
+      // ======================================================================
+      /** the simple function for \f$ 1^- \rightarrow 0^- 1^- \f$, l = 1 
+       *  \f$\rho(\omega)= \omega \f$
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @param m the invariant mass 
+       *  @return the value of rho-function
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_A3 ( double    m     , 
+                          double /* m0 */ , 
+                          double /* m1 */ , 
+                          double /* m2 */ ) ;
+      // ======================================================================
+      /** the simple function for 
+       *  \f$ \frac{3}{2}^+ \rightarrow \frac{1}{2}^+ 0^- \f$, l = 1 
+       *  $\rho(\omega)= \frac{ ( \omega + M )^2 - m^2 }{ \omega^2} \f$
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @param m the invariant mass 
+       *  @param m1 the invariant mass of the first  (spinor) particle  
+       *  @param m2 the invariant mass of the secodn (scalar) particle  
+       *  @return the value of rho-function
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_A4 ( double    m     , 
+                          double /* m0 */ , 
+                          double    m1    , 
+                          double    m2     ) ;
+      // ======================================================================
+      /** the simple function for 
+       *  \f$ \frac{3}{2}^- \rightarrow \frac{1}{2}^+ 0^- \f$, l = 2 
+       *  $\rho(\omega)= \left[ ( \omega + M )^2 - m^2 \right]^{-1} \f$
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @param m the invariant mass 
+       *  @param m1 the invariant mass of the first  (spinor) particle  
+       *  @param m2 the invariant mass of the secodn (scalar) particle  
+       *  @return the value of rho-function
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_A5 ( double    m     , 
+                          double /* m0 */ , 
+                          double    m1    , 
+                          double    m2     ) ;
+      // ======================================================================
+      /** the simple function for \f$\rho^- \rightarrow \pi^+ \pi^-\f$
+       *  \f$ 1- \rightarrow 0^- 0^- \f$, l = 1 
+       *  $\rho(\omega)= \left[ q_0^2 + q^2 \right]^{-1}f$
+       *  @see Gaudi::Math::BreitWigner
+       *  @see Gaudi::Math::BreitWigner::rho_fun
+       *  @param m the invariant mass 
+       *  @param m the nominam   mass 
+       *  @return the value of rho-function
+       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @date 2011-11-30
+       */
+      GAUDI_API 
+      double jackson_A7 ( double    m     , 
+                          double    m0    , 
+                          double    m1    , 
+                          double    m2    ) ;
+      // ======================================================================
+    } // end of namespace Jackson 
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
