@@ -2416,12 +2416,20 @@ double Gaudi::Math::PhaseSpaceNL::operator () ( const double x ) const
 // =======================================================================
 // set the thresholds 
 // =======================================================================
-void Gaudi::Math::PhaseSpaceNL::setThresholds 
+bool Gaudi::Math::PhaseSpaceNL::setThresholds 
 ( const double mn , 
   const double mx ) 
-{  
-  m_threshold1 =  std::min ( std::abs ( mn ) ,std::abs ( mx ) ) ;
-  m_threshold2 =  std::max ( std::abs ( mn ) ,std::abs ( mx ) ) ;
+{
+  const double v1 = std::min ( std::abs ( mn ) ,std::abs ( mx ) ) ;
+  const double v2 = std::max ( std::abs ( mn ) ,std::abs ( mx ) ) ;
+  //
+  if ( s_equal ( v1 , m_threshold1 ) && 
+       s_equal ( v2 , m_threshold2 ) ) { return false ; }
+  //
+  m_threshold1 = v1 ;
+  m_threshold2 = v2 ;
+  //
+  return true ;
 }
 // ============================================================================
 // get the integral between low and high limits 
@@ -2591,12 +2599,12 @@ Gaudi::Math::BreitWigner::~BreitWigner ()
  *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}{ (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
  */
 // ============================================================================
-double Gaudi::Math::BreitWigner::operator() ( const double x ) const 
+double Gaudi::Math::BreitWigner::breit_wigner ( const double x ) const 
 {
-  
+  //
   if ( m_m1 + m_m2 >= x ) { return 0 ; }
   //
-  const double g  = m_gam0 ; // gamma ( x ) ;
+  const double g  = gamma ( x ) ;
   if ( 0 >= g ) { return 0 ; }
   //
   const double omega2 = m_m0 * m_m0 ;
@@ -2605,6 +2613,13 @@ double Gaudi::Math::BreitWigner::operator() ( const double x ) const
   //
   return 2 * x * m_m0 * g / v / M_PI  ;
 }
+// ============================================================================
+/*  calculate the Breit-Wigner shape
+ *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}{ (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
+ */
+// ============================================================================
+double Gaudi::Math::BreitWigner::operator() ( const double x ) const 
+{ return breit_wigner ( x ) ; }
 // ============================================================================ 
 // calculate the current width 
 // ============================================================================ 
@@ -2628,11 +2643,21 @@ double Gaudi::Math::BreitWigner::gamma ( const double x ) const
   return m_gam0 * Gaudi::Math::pow ( q / q0 , 2 * m_L + 1 ) * ( r / r0 ) ;  
 }
 // ============================================================================
-void Gaudi::Math::BreitWigner::setM0     ( const double x ) 
-{ m_m0   = std::abs ( x ) ; }
+bool Gaudi::Math::BreitWigner::setM0     ( const double x ) 
+{
+  const double v       = std::abs ( x ) ;
+  if ( s_equal ( v , m_m0 ) ) { return false ; } // RETURN
+  m_m0   = v ; 
+  return true ;
+}
 // ============================================================================
-void Gaudi::Math::BreitWigner::setGamma0 ( const double x ) 
-{ m_gam0 = std::abs ( x ) ; }   
+bool Gaudi::Math::BreitWigner::setGamma0 ( const double x ) 
+{
+  const double v       = std::abs ( x ) ;
+  if ( s_equal ( v , m_gam0 ) ) { return false ; } // RETURN
+  m_gam0  = v ; 
+  return true ;
+}   
 // ============================================================================
 // get the integral between low and high limits 
 // ============================================================================
@@ -2797,7 +2822,47 @@ Gaudi::Math::Rho0::Rho0
 Gaudi::Math::Rho0::~Rho0(){}
 
 
-
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Gaudi::Math::Rho0FromEtaPrime::Rho0FromEtaPrime
+( const double m0        , 
+  const double gam0      ,
+  const double pi_mass   , 
+  const double eta_prime ) 
+  : Gaudi::Math::Rho0 ( m0 , gam0 , pi_mass ) 
+  , m_eta_prime ( std::abs ( eta_prime ) ) 
+{}
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Gaudi::Math::Rho0FromEtaPrime::Rho0FromEtaPrime
+( const Gaudi::Math::Rho0& rho       , 
+  const double             eta_prime ) 
+  : Gaudi::Math::Rho0 ( rho ) 
+  , m_eta_prime ( std::abs ( eta_prime ) ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Rho0FromEtaPrime::~Rho0FromEtaPrime(){}
+// ============================================================================
+// calculate the function 
+// ============================================================================
+double Gaudi::Math::Rho0FromEtaPrime::operator() ( const double x ) const 
+{
+  //
+  if ( m_eta_prime <= x ) { return 0 ; }
+  //
+  const double k_gamma = Gaudi::Math::PhaseSpace2::q ( m_eta_prime , x , 0 ) ;
+  if ( 0 >= k_gamma     ) { return 0 ; }
+  //
+  const double rho     = breit_wigner ( x ) ;
+  if ( 0 >= rho         ) { return 0 ; }
+  //
+  return rho * Gaudi::Math::pow ( 2 * k_gamma / m_eta_prime , 3 ) * 20 ;
+  //
+}
 // ============================================================================
 //               Flatte
 // ============================================================================
@@ -2950,6 +3015,7 @@ double  Gaudi::Math::Flatte::integral
   const double x_low  = m_m0 
     -  3 * std::abs ( m_m0g1 / m_m0           )
     -  3 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
+  //
   const double x_high = m_m0 
     + 10 * std::abs ( m_m0g1 / m_m0           )
     + 10 * std::abs ( m_m0g1 / m_m0 * m_g2og1 ) ;
@@ -3076,18 +3142,42 @@ double  Gaudi::Math::Flatte::integral () const
 // ============================================================================
 // set mass 
 // ============================================================================
-void Gaudi::Math::Flatte::setM0     ( const double x ) 
-{ m_m0 = std::abs    ( x ) ; }
+bool Gaudi::Math::Flatte::setM0     ( const double x ) 
+{ 
+  const double v = std::abs ( x ) ;
+  //
+  if ( s_equal ( v , m_m0 ) ) { return false ; }
+  //
+  m_m0 = v ;
+  //
+  return true ;
+}
 // ============================================================================
 // set mass times G1 
 // ============================================================================
-void Gaudi::Math::Flatte::setM0G1   ( const double x ) 
-{ m_m0g1 = std::abs  ( x ) ; }
+bool Gaudi::Math::Flatte::setM0G1   ( const double x ) 
+{
+  const double v = std::abs ( x ) ;
+  //
+  if ( s_equal ( v , m_m0g1 ) ) { return false ; }
+  //
+  m_m0g1 = v ;
+  //
+  return true ;
+}
 // ============================================================================
 // set G2 over G1 
 // ============================================================================
-void Gaudi::Math::Flatte::setG2oG1  ( const double x ) 
-{ m_g2og1 = std::abs ( x ) ; }
+bool Gaudi::Math::Flatte::setG2oG1  ( const double x ) 
+{
+  const double v = std::abs ( x ) ;
+  //
+  if ( s_equal ( v , m_g2og1 ) ) { return false ; }
+  //
+  m_g2og1 = v ;
+  //
+  return true ;
+}
 // ============================================================================
 
 

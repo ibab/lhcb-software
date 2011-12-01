@@ -965,7 +965,7 @@ namespace Gaudi
     public:
       // ====================================================================== 
       /// set the thresholds 
-      void setThresholds 
+      bool setThresholds 
       ( const double mn , 
         const double mx ) ;
       // ====================================================================== 
@@ -1061,7 +1061,7 @@ namespace Gaudi
       // cpoy constructor
       BreitWigner ( const BreitWigner&   right    ) ;
       /// destructor 
-      ~BreitWigner () ;
+      virtual ~BreitWigner () ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1073,7 +1073,11 @@ namespace Gaudi
        *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}
        *   { (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
        */
-      double operator() ( const double x ) const ;
+      virtual double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double breit_wigner  ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1087,12 +1091,12 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      void setM0     ( const double x ) ;
-      void setMass   ( const double x ) { setM0     ( x ) ; }
-      void setPeak   ( const double x ) { setM0     ( x ) ; }      
-      void setGamma0 ( const double x ) ;
-      void setGamma  ( const double x ) { setGamma0 ( x ) ; }
-      void setWidth  ( const double x ) { setGamma0 ( x ) ; }      
+      bool setM0     ( const double x ) ;
+      bool setMass   ( const double x ) { return setM0     ( x ) ; }
+      bool setPeak   ( const double x ) { return setM0     ( x ) ; }      
+      bool setGamma0 ( const double x ) ;
+      bool setGamma  ( const double x ) { return setGamma0 ( x ) ; }
+      bool setWidth  ( const double x ) { return setGamma0 ( x ) ; }      
       // ======================================================================
     public:
       // ======================================================================
@@ -1137,7 +1141,7 @@ namespace Gaudi
       // ======================================================================
     } ;  
     // ========================================================================
-    /** @class BeitWigner
+    /** @class Rho0
      *  J.D.Jackson, 
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
@@ -1155,7 +1159,37 @@ namespace Gaudi
       // copy constructor
       Rho0  ( const Rho0& right ) ;
       /// destructor 
-      ~Rho0 () ;
+      virtual ~Rho0 () ;
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Rho0FromEtaPrime
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Rho0FromEtaPrime : public Gaudi::Math::Rho0
+    {
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Rho0FromEtaPrime  ( const double m0        = 770 , 
+                          const double gam0      = 150 ,
+                          const double pi_mass   = 139 , 
+                          const double eta_prime = 958 ) ;
+      /// constructor from all parameters
+      Rho0FromEtaPrime  ( const Gaudi::Math::Rho0& rho , 
+                          const double eta_prime = 958 ) ;
+      /// destructor 
+      virtual ~Rho0FromEtaPrime () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the function 
+      virtual double operator() ( const double x ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_eta_prime ; 
       // ======================================================================
     } ;  
     // ========================================================================
@@ -1204,11 +1238,11 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      void setM0     ( const double x ) ;
-      void setMass   ( const double x ) { setM0     ( x ) ; }
-      void setPeak   ( const double x ) { setM0     ( x ) ; }      
-      void setM0G1   ( const double x ) ;
-      void setG2oG1  ( const double x ) ;
+      bool setM0     ( const double x ) ;
+      bool setMass   ( const double x ) { return setM0 ( x ) ; }
+      bool setPeak   ( const double x ) { return setM0 ( x ) ; }      
+      bool setM0G1   ( const double x ) ;
+      bool setG2oG1  ( const double x ) ;
       // ======================================================================
     public:
       // ====================================================================== 
