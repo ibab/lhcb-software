@@ -95,7 +95,7 @@ def stripMicroDSTStreamConf() :
                                           '/Event/Rec/Status#1',
                                           '/Event/Rec/Summary#1',
                                           '/Event/Strip/Phys/DecReports#1',
-                                          "/Event/Trigger/RawEvent#1"
+                                          '/Event/Trigger/RawEvent#1'
                                           ])
 
 def stripCalibMicroDSTStreamConf() :

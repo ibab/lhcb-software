@@ -128,8 +128,9 @@ class CloneMCInfo(MicroDSTElement) :
         """
         Copy related MC particles of candidates plus daughters
         """
-        from Configurables import P2MCRelatorAlg, CopyParticle2MCRelations
-        from Configurables import MCParticleCloner, MCVertexCloner
+        from Configurables import ( P2MCRelatorAlg, CopyParticle2MCRelations,
+                                    MCParticleCloner, MCVertexCloner,
+                                    CopyMCHeader )
         # first, get matches MCParticles for selected candidates.
         # This will make a relations table in mainLocation+"/P2MCPRelations"
         p2mcRelator = P2MCRelatorAlg(self.personaliseName(sel,'P2MCRel'))
@@ -142,6 +143,8 @@ class CloneMCInfo(MicroDSTElement) :
                                         name = 'ICloneMCVertex')
         cloner.InputLocations = self.dataLocations(sel,"P2MCPRelations")
         self.setOutputPrefix(cloner)
+        # MC Header
+        #copyMCHeader = 
         return [p2mcRelator, cloner]
 
 class CloneBTaggingInfo(MicroDSTElement) :
