@@ -25,6 +25,6 @@ library DSTWriters ../src/*.cpp
 
 # ======= the patterns ========================================================
 apply_pattern component_library library=DSTWriters
-macro DSTWritersConfUserModules "DSTWriters.BaseDSTWriter DSTWriters.MicroDSTWriter DSTWriters.SelDSTWriter"
+#macro DSTWritersConfUserModules "DSTWriters.BaseDSTWriter DSTWriters.MicroDSTWriter DSTWriters.SelDSTWriter"
 apply_pattern install_python_modules
 # =============================================================================
