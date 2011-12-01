@@ -13,18 +13,16 @@
 // 2011-01-10 : Juan Palacios
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( FixInputCopyStream );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 FixInputCopyStream::FixInputCopyStream( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_leavesTool   ( NULL )
 {
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -33,42 +31,37 @@ FixInputCopyStream::~FixInputCopyStream() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode FixInputCopyStream::initialize() {
-
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+StatusCode FixInputCopyStream::initialize() 
+{
+  const StatusCode sc = GaudiAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc;  
 
   return toolSvc()->retrieveTool("DataSvcFileEntriesTool", 
                                  "InputCopyStreamTool",
                                  m_leavesTool);
-
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode FixInputCopyStream::execute() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
+StatusCode FixInputCopyStream::execute() 
+{
   m_leavesTool->leaves();
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode FixInputCopyStream::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
+StatusCode FixInputCopyStream::finalize() 
+{
   toolSvc()->releaseTool(m_leavesTool).ignore();
-  m_leavesTool = 0;
+  m_leavesTool = NULL;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( FixInputCopyStream )
