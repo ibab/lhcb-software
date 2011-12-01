@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-12-01 - Chris Jones
+ - Promote the DEV versions of the python configurables to the main area.
+
 ! 2011-11-11 - Chris Jones
  - Update the Background Category element to save the categories for all
    Particles in the decay tree, not just the head Particles.
