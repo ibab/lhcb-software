@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
- *  CVS Log :-
- *  $Id: RichRecSummaryQC.h,v 1.7 2007-11-26 17:33:38 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
@@ -81,12 +78,12 @@ namespace Rich
         // job options
         double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
-        unsigned long m_nEvts;                   ///< Number of processed events
-        unsigned long m_nTracks;                 ///< Number of summary tracks produced
-        std::vector<unsigned long> m_nSegments;  ///< Number of summary segments produced per radiator
-        std::vector<unsigned long> m_nSegmentsMC;  ///< Number of summary segments produced per radiator, with at least one true CK hit
-        std::vector<unsigned long> m_nPhotons;   ///< Number of summary photons produced per radiator
-        std::vector<unsigned long> m_nTruePhotons; ///< Number of true summary photons produced per radiator
+        unsigned long long m_nEvts;                   ///< Number of processed events
+        unsigned long long m_nTracks;                 ///< Number of summary tracks produced
+        std::vector<unsigned long long> m_nSegments;  ///< Number of summary segments produced per radiator
+        std::vector<unsigned long long> m_nSegmentsMC;  ///< Number of summary segments produced per radiator, with at least one true CK hit
+        std::vector<unsigned long long> m_nPhotons;   ///< Number of summary photons produced per radiator
+        std::vector<unsigned long long> m_nTruePhotons; ///< Number of true summary photons produced per radiator
 
       };
 

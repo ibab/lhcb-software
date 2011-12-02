@@ -170,11 +170,11 @@ StatusCode SummaryQC::finalize()
     // Statistical tools
     const StatDivFunctor eff("%6.2f +-%5.2f");
 
-    const unsigned long totSegs =
+    const unsigned long long totSegs =
       m_nSegments[Rich::Aerogel]+m_nSegments[Rich::Rich1Gas]+m_nSegments[Rich::Rich2Gas];
-    const unsigned long totPhots =
+    const unsigned long long totPhots =
       m_nPhotons[Rich::Aerogel]+m_nPhotons[Rich::Rich1Gas]+m_nPhotons[Rich::Rich2Gas];
-    const unsigned long totPhotsTrue =
+    const unsigned long long totPhotsTrue =
       m_nTruePhotons[Rich::Aerogel]+m_nTruePhotons[Rich::Rich1Gas]+m_nTruePhotons[Rich::Rich2Gas];
 
     // print out summary info

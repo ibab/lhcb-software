@@ -225,7 +225,7 @@ namespace Rich
           bool hasR1Gas; ///< Has Rich1 Gas
           bool hasR2Gas; ///< Has Rich1 Gas
         };
-        typedef Rich::Map<Radiators,unsigned long> RadCount;
+        typedef Rich::Map<Radiators,unsigned long long> RadCount;
         /// Tally of tracks which each type of radiator
         RadCount m_radCount;
 
