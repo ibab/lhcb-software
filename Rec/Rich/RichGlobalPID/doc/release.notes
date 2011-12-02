@@ -4,7 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
-!========================= RichGlobalPID v3r17 2011-09-06 =========================
+! 2011-12-02 - Chris Jones
+ - Use int instead of long for keyed object key.
+
+!======================= RichGlobalPID v3r17 2011-09-06 ======================
 ! 2011-09-03 - Chris Jones
  - Various improvements designed to investigate instabilities seen in the
    nightlies.

@@ -6,7 +6,7 @@
             <import name="Event/RichRecTrack"/>
             <import name="Event/RichGlobalPID"/>
             <import name="RichGlobalPID/RichGlobalPIDTkQuality"/>
-            <base name="KeyedObject&lt;long&gt;"/>
+            <base name="KeyedObject&lt;int&gt;"/>
             <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::Rec::GlobalPID::TkQuality" init = "Rich::Rec::GlobalPID::Unknown"/>
             <attribute desc="Flag to freeze the track in the likelihood minimisation. I.e. Do not allow the track hypothesis to vary" name="frozenHypo" type="bool" init = "false" />
             <relation nonconstaccessor = "TRUE" desc="SmartRef to RichRecTrack" name="richRecTrack" type="LHCb::RichRecTrack"/>
