@@ -52,7 +52,7 @@ StatusCode PhotonCreatorWithMCHitPosition::initialize()
 LHCb::RichRecPhoton *
 PhotonCreatorWithMCHitPosition::buildPhoton( LHCb::RichRecSegment * segment,
                                              LHCb::RichRecPixel * pixel,
-                                             const RichRecPhotonKey key ) const
+                                             const Rich::Rec::PhotonKey key ) const
 {
 
   LHCb::RichRecPhoton * newPhoton = NULL;

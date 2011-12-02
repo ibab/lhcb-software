@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TrSegMakerFromMCRichTracks
  *
- *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.8 2007-06-01 09:47:08 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */

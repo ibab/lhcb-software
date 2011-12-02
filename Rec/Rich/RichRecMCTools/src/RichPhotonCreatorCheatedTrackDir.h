@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::PhotonCreatorCheatedTrackDir
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.6 2008-02-21 16:40:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -64,7 +61,7 @@ namespace Rich
         /// Form a Photon candidate from a Segment and a pixel.
         virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                    LHCb::RichRecPixel * pixel,
-                                                   const RichRecPhotonKey key ) const;
+                                                   const Rich::Rec::PhotonKey key ) const;
 
       private: // private data
 

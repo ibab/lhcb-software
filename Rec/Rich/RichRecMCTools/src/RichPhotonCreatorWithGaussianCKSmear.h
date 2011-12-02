@@ -82,7 +82,7 @@ namespace Rich
         /// Form a Photon candidate from a Segment and a pixel.
         virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                    LHCb::RichRecPixel * pixel,
-                                                   const RichRecPhotonKey key ) const;
+                                                   const Rich::Rec::PhotonKey key ) const;
 
         /// Access RICH MC reconstruction tool on demand
         inline const Rich::Rec::MC::IMCTruthTool * richMCRecTool() const
@@ -110,10 +110,10 @@ namespace Rich
         mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
 
         /// photon smearing done map
-        mutable Rich::HashMap<long int, bool> m_photSmearDone;
+        mutable Rich::HashMap<Rich::Rec::PhotonKey::Int64_t,bool> m_photSmearDone;
 
         /// count of smeared photons
-        mutable std::vector<unsigned long int> m_smearCount;
+        mutable std::vector<unsigned long long> m_smearCount;
 
       };
 

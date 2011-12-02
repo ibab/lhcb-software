@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithMCHitPosition
  *
- *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCHitPosition.h,v 1.1 2007-11-26 16:51:31 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   06/11/2007
  */
@@ -67,7 +64,7 @@ namespace Rich
         /// Form a Photon candidate from a Segment and a pixel.
         virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                    LHCb::RichRecPixel * pixel,
-                                                   const RichRecPhotonKey key ) const;
+                                                   const Rich::Rec::PhotonKey key ) const;
 
       private: // private data
 

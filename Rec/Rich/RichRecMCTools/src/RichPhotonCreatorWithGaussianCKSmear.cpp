@@ -138,7 +138,7 @@ StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
 LHCb::RichRecPhoton *
 PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
                                                LHCb::RichRecPixel * pixel,
-                                               const RichRecPhotonKey key ) const
+                                               const Rich::Rec::PhotonKey key ) const
 {
 
   // First, create a photon using the delegated tool

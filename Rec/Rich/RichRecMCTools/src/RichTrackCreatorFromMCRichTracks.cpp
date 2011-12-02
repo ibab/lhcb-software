@@ -87,7 +87,7 @@ StatusCode TrackCreatorFromMCRichTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-long TrackCreatorFromMCRichTracks::nInputTracks() const
+unsigned int TrackCreatorFromMCRichTracks::nInputTracks() const
 {
   const LHCb::MCRichTracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );

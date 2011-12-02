@@ -4,9 +4,6 @@
  *
  *  Header file for tool : Rich::Rec::TrackCreatorFromMCRichTracks
  *
- *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.10 2008-10-30 08:36:42 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -79,7 +76,7 @@ namespace Rich
         virtual StatusCode newTracks() const;
 
         /// Returns the number of tracks in the input Track container.
-        virtual long nInputTracks() const;
+        virtual unsigned int nInputTracks() const;
 
       protected: // methods
 

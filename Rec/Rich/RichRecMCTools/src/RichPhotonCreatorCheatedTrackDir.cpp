@@ -50,7 +50,7 @@ StatusCode PhotonCreatorCheatedTrackDir::initialize()
 LHCb::RichRecPhoton *
 PhotonCreatorCheatedTrackDir::buildPhoton( LHCb::RichRecSegment * segment,
                                            LHCb::RichRecPixel * pixel,
-                                           const RichRecPhotonKey key ) const
+                                           const Rich::Rec::PhotonKey key ) const
 {
   LHCb::RichRecPhoton * newPhoton            = NULL;
   const LHCb::MCRichOpticalPhoton * mcPhoton = NULL;

@@ -54,7 +54,7 @@ StatusCode PhotonCreatorWithMCSignal::initialize()
 LHCb::RichRecPhoton *
 PhotonCreatorWithMCSignal::buildPhoton( LHCb::RichRecSegment * segment,
                                         LHCb::RichRecPixel * pixel,
-                                        const RichRecPhotonKey key ) const
+                                        const Rich::Rec::PhotonKey key ) const
 {
 
   LHCb::RichRecPhoton * newPhoton = NULL;
