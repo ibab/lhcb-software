@@ -4,6 +4,9 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID
 
