@@ -107,7 +107,7 @@ StatusCode DelegatedTrackCreatorFromRecoTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-long DelegatedTrackCreatorFromRecoTracks::nInputTracks() const
+unsigned int DelegatedTrackCreatorFromRecoTracks::nInputTracks() const
 {
   return ( recoTracks() ? recoTracks()->size() : 0 );
 }

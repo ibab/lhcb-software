@@ -68,7 +68,7 @@ namespace Rich
       StatusCode newTracks() const;
 
       // Returns the number of tracks in the input Track container.
-      long nInputTracks() const;
+      unsigned int nInputTracks() const;
 
     protected: // methods
 

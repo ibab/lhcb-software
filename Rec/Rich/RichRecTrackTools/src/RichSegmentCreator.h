@@ -112,11 +112,11 @@ namespace Rich
       std::vector<unsigned int> m_binsEn;
 
       // debug segment counting
-      mutable std::vector<unsigned long int> m_segCount;
-      mutable std::vector<unsigned long int> m_segCountLast;
+      mutable std::vector<unsigned long long> m_segCount;
+      mutable std::vector<unsigned long long> m_segCountLast;
 
       /// Number of events processed tally
-      unsigned int m_Nevts;
+      unsigned long long m_Nevts;
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled;

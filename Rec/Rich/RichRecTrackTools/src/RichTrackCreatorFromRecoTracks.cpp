@@ -198,7 +198,7 @@ TrackCreatorFromRecoTracks::removeTracksByType( const Rich::Rec::Track::Type typ
   return richTracks()->size();
 }
 
-long TrackCreatorFromRecoTracks::nInputTracks() const
+unsigned int TrackCreatorFromRecoTracks::nInputTracks() const
 {
   const LHCb::Tracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );

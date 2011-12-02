@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+ - Adapt to changed return type for nInputTracks()
+
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID
 

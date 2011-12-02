@@ -74,7 +74,7 @@ namespace Rich
       virtual StatusCode newTracks() const;
 
       /// Returns the number of tracks in the input Track container.
-      virtual long nInputTracks() const;
+      virtual unsigned int nInputTracks() const;
 
     protected: // methods
 
