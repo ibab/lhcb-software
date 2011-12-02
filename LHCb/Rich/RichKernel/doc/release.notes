@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - use unsigned int instead of unsigned long for histogramming methods
+
 ! 2011-11-25 - Chris Jones
  - Add a first Minimal MaPMT0 data format
 
