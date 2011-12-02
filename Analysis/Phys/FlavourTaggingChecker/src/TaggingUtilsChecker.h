@@ -54,7 +54,7 @@ public:
   LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
   const LHCb::MCParticle* originof( const LHCb::MCParticle*  );
   int comes_from_excitedB(const LHCb::MCParticle* , const LHCb::MCParticle* );
-
+ 
   //-------------------------------------------------------------
 
 private:

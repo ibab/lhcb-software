@@ -15,7 +15,7 @@ from Configurables import GaudiSequencer, DaVinci
 from Configurables import CheatedSelection
 
 cheatsel = CheatedSelection("CheatedSelection")
-cheatsel.InputLocations = [ "Phys/TaggingPions" ]
+cheatsel.Inputs = [ "Phys/TaggingPions" ]
 cheatsel.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
 cheatsel.OutputLevel = 4
 
@@ -27,7 +27,7 @@ from Configurables import BTagging, BTaggingTool, BTaggingAnalysis, BTaggingChec
 location = "Phys/CheatedSelection"
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ location ]
+tag.Inputs = [ location ]
 
 tag.addTool( TriggerTisTos )
 tag.TriggerTisTos.OutputLevel = 4
@@ -55,7 +55,7 @@ tag.BTaggingTool.OutputLevel = 4
 # Flavour tagging Checker:
 
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ location ]
+tagcheck.Inputs = [ location ]
 tagcheck.TagsLocation = location+"/FlavourTags"
 tagcheck.OutputLevel = 3
 
@@ -63,15 +63,15 @@ tagcheck.OutputLevel = 3
 # BTaggingAnalysis ntuple creation
 
 tagana = BTaggingAnalysis("BTaggingAnalysis")
-tagana.InputLocations = [ location, 
-                          "Phys/TaggingParticles"
-                          ]
+tagana.Inputs = [ location, 
+                  "Phys/TaggingParticles"
+                  ]
 
 tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
-tagana.PVReFit = False
+#tagana.PVReFit = False
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
 tagana.OutputLevel = 4

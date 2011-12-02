@@ -274,13 +274,14 @@ StatusCode BTaggingAnalysis::execute() {
   //------------------------------------------------------------------------------
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0);
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0), pPl(0), ptheta(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
-  std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), 
-    pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0);
+  std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
+    pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0), pMC_OS_muon_type(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
   std::vector<float> pdeta(0), pdphi(0), pdQ(0);
+  std::vector<float> ppionCombinedMass(0);
   // data for multPV 
   std::vector<float> pnippu(0), pnippuerr(0), pipmean(0), pxpos(0), pypos(0), pzpos(0), 
     pxerrpos(0), pyerrpos(0), pzerrpos(0), pippubs(0), pippuchi2bs(0); 
@@ -302,6 +303,7 @@ StatusCode BTaggingAnalysis::execute() {
     long   ID  = axp->particleID().pid(); 
     double P   = axp->p()/GeV;
     double Pt  = axp->pt()/GeV;
+    double Pl  = axp->momentum().Dot(AXBS->momentum())/GeV;
     double deta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi= fabs(axp->momentum().phi() - AXBS->momentum().phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
@@ -318,6 +320,8 @@ StatusCode BTaggingAnalysis::execute() {
     double distphi;
     m_util->isinTree( axp, axdaugh, distphi );
 
+    double pionCombinedMass = GetInvariantMass(AXBS->measuredMass()/GeV, AXBS->momentum()/GeV, 0.1395702, axp->momentum()/GeV);
+    
     //calculate signed IP wrt RecVert
     double IP, IPerr, IPsign;
     IP=-1;
@@ -372,7 +376,9 @@ StatusCode BTaggingAnalysis::execute() {
     pID         .push_back(ID);
     pP          .push_back(P);
     pPt         .push_back(Pt);
+    pPl         .push_back(Pl);
     pphi        .push_back(axp->momentum().phi());
+    ptheta      .push_back(axp->momentum().theta());
     pch         .push_back((int) axp->charge());
     pip         .push_back(IP);
     pipsign     .push_back(IPsign);
@@ -392,6 +398,7 @@ StatusCode BTaggingAnalysis::execute() {
     pdeta       .push_back(deta);
     pdphi       .push_back(dphi);
     pdQ         .push_back(dQ);
+    ppionCombinedMass.push_back(pionCombinedMass);
     //different PU studies
     pipmean     .push_back(ipmean);
     pnippu      .push_back(nippu);
@@ -493,13 +500,14 @@ StatusCode BTaggingAnalysis::execute() {
 
     //store MC info of tagging candidate
     if (m_EnableMC) {
-      float MCP= 0.0, MCPt= 0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
-      long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0;
+      float MCP= 0.0, MCPt= 0.0, MCPl=0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
+      long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0, MC_OS_muon_type = -1;
       
       const MCParticle* mcp = m_assoc->relatedMCP( axp );
       if( mcp ) {
         MCP = mcp->momentum().P()/GeV;
         MCPt = mcp->pt()/GeV;
+        MCPl = mcp->momentum().Dot(m_BS->momentum())/GeV;
         MCphi = mcp->momentum().phi();
         MCID = mcp->particleID().pid();
 	
@@ -527,12 +535,23 @@ StatusCode BTaggingAnalysis::execute() {
         }
         if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
         if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
+
+        //Check direct mother of particle to see if it is the OSB. Excludes secondary OS muons.
+        bool isTruePrimaryOS = (mcp->mother() && mcp->mother()->particleID().hasBottom());
+        bool isTrueSecondaryOS = (mcp->mother() && mcp->mother()->mother() && mcp->mother()->mother()->particleID().hasBottom());
+        if(isTruePrimaryOS) {
+          MC_OS_muon_type = 1;
+        }
+        if(isTrueSecondaryOS) {
+          MC_OS_muon_type = 2;
+        }
 	
       }//if( mcp )
 
       pMCID  .push_back(MCID);
       pMCP   .push_back(MCP);
       pMCPt  .push_back(MCPt);
+      pMCPl  .push_back(MCPl);
       pMCphi .push_back(MCphi);
       pMCx   .push_back(MCx);
       pMCy   .push_back(MCy);
@@ -541,7 +560,8 @@ StatusCode BTaggingAnalysis::execute() {
       pancID .push_back(ancID);
       pxFlag .push_back(xFlag);
       pbFlag .push_back(bFlag);
-    
+      pMC_OS_muon_type.push_back(MC_OS_muon_type);
+      
     }
   }
 
@@ -554,7 +574,9 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("ID",      pID, "N", 200);
   tuple -> farray ("P",       pP, "N", 200);
   tuple -> farray ("Pt",      pPt, "N", 200);
+  tuple -> farray ("Pl",      pPl, "N", 200);
   tuple -> farray ("phi",     pphi, "N", 200);
+  tuple -> farray ("theta",     ptheta, "N", 200);
   tuple -> farray ("ch",      pch, "N", 200);
   tuple -> farray ("ip",      pip, "N", 200);
   tuple -> farray ("ipsign",      pipsign, "N", 200);
@@ -614,6 +636,7 @@ StatusCode BTaggingAnalysis::execute() {
     tuple -> farray ("MCID",    pMCID, "N", 200);
     tuple -> farray ("MCP",     pMCP, "N", 200);
     tuple -> farray ("MCPt",    pMCPt, "N", 200);
+    tuple -> farray ("MCPl",    pMCPl, "N", 200);
     tuple -> farray ("MCphi",   pMCphi, "N", 200);
     tuple -> farray ("MCx",     pMCx, "N", 200);
     tuple -> farray ("MCy",     pMCy, "N", 200);
@@ -622,6 +645,7 @@ StatusCode BTaggingAnalysis::execute() {
     tuple -> farray ("ancID",   pancID, "N", 200);
     tuple -> farray ("bFlag",   pbFlag, "N", 200);
     tuple -> farray ("xFlag",   pxFlag, "N", 200);
+    tuple -> farray ("MC_OS_muon_type",   pMC_OS_muon_type, "N", 200);
   }
   tuple -> farray ("vFlag",   pvFlag, "N", 200);
   tuple -> farray ("IPSV",    pIPSV, "N", 200);
@@ -631,6 +655,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("dphi",     pdphi, "N", 200);
   tuple -> farray ("deta",     pdeta, "N", 200);
   tuple -> farray ("dQ",     pdQ, "N", 200);
+  tuple -> farray ("pionCombinedMass",     ppionCombinedMass, "N", 200);
 
   if( !( tuple->write()) ) err() << "Cannot fill mytagging Ntuple" << endreq;
   ///----------------------------------------------------------------------
@@ -1267,6 +1292,19 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   tuple -> farray ("SecVtx_zerr",pSecVtx_zerr, "V", 100);
   tuple -> farray ("SecVtx_chi2",pSecVtx_chi2, "V", 100);
 }
+
+//=============================================================================
+double BTaggingAnalysis::GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB)
+{
+  double aPdot  = PA.px()*PB.px() + PA.py()*PB.py() + PA.pz()*PB.pz();
+  double AA = 2*( (PA.E()*PB.E()) - aPdot);
+  double msq = ((MA*MA) + (MB*MB) + AA );
+  double massInv= 0.0;
+  if(msq > 0.0 ) massInv = sqrt(msq);
+  return massInv;
+}
+
+
 
 //=============================================================================
 StatusCode BTaggingAnalysis::finalize() {  return DVAlgorithm::finalize(); }

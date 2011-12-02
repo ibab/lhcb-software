@@ -78,6 +78,8 @@ private:
 		    std::vector<Vertex>& svertices,
 		    const Particle *&SVpart1, 
 		    const Particle *&SVpart2 ) ;
+
+  double GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB);
   
   std::string m_veloChargeName, 
     m_SecondaryVertexToolName,
