@@ -1,4 +1,3 @@
-// $  $
 // Include files 
 #include "TrackOccupChecker.h"
 
@@ -45,7 +44,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TrackOccupChecker );
+DECLARE_ALGORITHM_FACTORY( TrackOccupChecker )
 
 
 //=============================================================================
@@ -60,7 +59,7 @@ TrackCheckerBase( name , pSvcLocator ){
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackOccupChecker::~TrackOccupChecker() {}; 
+TrackOccupChecker::~TrackOccupChecker() {}
 
 StatusCode TrackOccupChecker::initialize()
 {
@@ -125,13 +124,13 @@ void TrackOccupChecker::occupInfo() {
   m_ITChannels = IT->nStrip();
   m_OTChannels = OT->nChannels();
   debug() << "nChan IT: " << m_ITChannels;  
-  debug() << ", nChan OT: " << m_OTChannels << endreq;
+  debug() << ", nChan OT: " << m_OTChannels << endmsg;
 
   LinkedTo<LHCb::MCParticle>
     otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
   if( otLink.notFound() ) {
     error() << "Unable to retrieve OTCluster to MCParticle linker table."
-            << endreq;
+            << endmsg;
   }
 
 
@@ -240,13 +239,13 @@ void TrackOccupChecker::occupInfo() {
     }
   }
     
-  debug() << "nHitsOT: " << nHitsOT << endreq;
+  debug() << "nHitsOT: " << nHitsOT << endmsg;
   
   plot2D(nVert,nHitsSpill/double(m_OTChannels), "occSpill_vs_visible",
          0., 11., 0., 1., 11, 100);
 
   for (int imod=1; imod<10; imod++){
-    char name[10];
+    char name[20];
     sprintf(name, "occMod%i", imod);
     if (imod < 9) plot(hitsInMod[imod]/(128.*4*4*3),       std::string(name), 0., 1., 1000);  
     else          plot(hitsInMod[imod]/((128.+64.)*2*4*3), std::string(name), 0., 1., 1000); 
@@ -393,7 +392,7 @@ StatusCode TrackOccupChecker::finalize(){
   info() << format("OT: %.2f (T1: %.2f, T2: %.2f, T3: %.2f), IT (horizontal boxes): %.2f (T1: %.2f, T2: %.2f, T3: %.2f), IT (vertical boxes): %.2f (T1: %.2f, T2: %.2f, T3: %.2f)",
                     occupOT*100, occupOT0*100, occupOT1*100, occupOT2*100,
                     occupIThor*100, occupIThor0*100, occupIThor1*100, occupIThor2*100,
-                    occupITver*100, occupITver0*100, occupITver1*100, occupITver2*100     ) << endreq;
+                    occupITver*100, occupITver0*100, occupITver1*100, occupITver2*100     ) << endmsg;
 
   return TrackCheckerBase::finalize();
 }
