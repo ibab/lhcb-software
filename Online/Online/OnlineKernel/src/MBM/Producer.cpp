@@ -134,6 +134,28 @@ int MBM::Producer::declareEvent() {
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
+/// Declare event on space receival with possibility to declare multiple events
+int MBM::Producer::declareEventTry() {
+  void *fadd;
+  EventDesc& e = m_event;
+  int sc = MBM_NORMAL, flen;
+  if ( m_bmid != MBM_INV_DESC ) {
+    sc = ::mbm_declare_event_try(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    if ( sc == MBM_NORMAL )  {
+      e.data = (int*)fadd;
+      e.len  = flen;
+      return MBM_NORMAL;
+    }
+    else if ( sc == MBM_NO_ROOM ) {
+      e.data = 0;
+      e.len  = 0;
+      return sc;
+    }
+    throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
 // Action to be called on space receival
 int MBM::Producer::sendSpace() {
   if ( m_bmid != MBM_INV_DESC ) {
@@ -175,6 +197,27 @@ int MBM::Producer::spaceRearm(int new_length) {
 // Get space call to fill event data
 int MBM::Producer::getSpace(int len)  {
   return spaceRearm(len);
+}
+
+// Get space call to fill event data
+int MBM::Producer::getSpaceTry(int len)  {
+  if ( m_bmid != MBM_INV_DESC ) {
+    EventDesc& e = m_event;
+    e.len = len;
+    int sc = ::mbm_get_space_try(m_bmid, e.len, &e.data, spaceAst, this);
+    if ( sc == MBM_NORMAL )  {
+      sc = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
+      if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
+        return sc;
+      }
+      throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
+    }
+    else if ( sc == MBM_NO_ROOM ) {
+      return sc;
+    }
+    throw std::runtime_error("Failed to get event for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 /// send and declare event to consumers

@@ -50,9 +50,13 @@ namespace MBM {
     /// Event receival rearm
     virtual int spaceRearm(int new_length);
 
-    /// Declare event on space receival with possibility to declare multiple events
+    /// Declare event after space receival
     virtual int declareEvent();
 
+    /// Declare event after space receival
+    virtual int declareEventTry();
+
+    /// Declare event on space receival with possibility to declare multiple events
     int declareEvent(void** fadd, int* flen);
 
     /// send event space to consumers
@@ -60,6 +64,9 @@ namespace MBM {
 
     /// Get space call to fill event data
     virtual int getSpace(int len);
+
+    /// Get space call to fill event data
+    virtual int getSpaceTry(int len);
 
     /// send and declare event to consumers
     virtual int sendEvent();
