@@ -150,19 +150,19 @@ namespace Rich
       {
       public:
         /// Default Constructor
-        L1CountAndSize( const unsigned long _nHPDs  = 0,
-                        const unsigned long _nHits  = 0,
-                        const unsigned long _nWords = 0,
-                        const unsigned long _nFills = 0 )
+        L1CountAndSize( const unsigned long long _nHPDs  = 0,
+                        const unsigned long long _nHits  = 0,
+                        const unsigned long long _nWords = 0,
+                        const unsigned long long _nFills = 0 )
           : nHPDs  ( _nHPDs  ),
             nHits  ( _nHits  ),
             nWords ( _nWords ),
             nFills ( _nFills ) { }
       public:
-        unsigned long nHPDs;  ///< Number of HPDs
-        unsigned long nHits;  ///< Number of Hits
-        unsigned long nWords; ///< Number of 32 bit words
-        unsigned long nFills; ///< Number of data entries
+        unsigned long long nHPDs;  ///< Number of HPDs
+        unsigned long long nHits;  ///< Number of Hits
+        unsigned long long nWords; ///< Number of 32 bit words
+        unsigned long long nFills; ///< Number of data entries
       };
 
       /// Summary data per L1 board
@@ -301,7 +301,7 @@ namespace Rich
       mutable L1TypeCount m_l1encodeSummary; ///< Summary object for encoding
 
       /// Number of events processed
-      mutable unsigned long m_evtCount;
+      mutable unsigned long long m_evtCount;
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled;

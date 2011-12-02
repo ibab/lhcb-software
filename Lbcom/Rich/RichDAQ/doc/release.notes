@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
 ! 2011-11-25 - Chris Jones
  - Remove some MaPMT specific hacks and work arounds
 

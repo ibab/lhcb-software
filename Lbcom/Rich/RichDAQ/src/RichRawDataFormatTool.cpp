@@ -178,7 +178,7 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
     info() << LINES << endmsg
            << "                             " << title << " : " << m_evtCount << " events" << endmsg;
 
-    Rich::Map<Rich::DetectorType,unsigned long> totWordSize, totBanks, totHits, nEvFills, s;
+    Rich::Map<Rich::DetectorType,unsigned long long> totWordSize, totBanks, totHits, nEvFills, s;
     Rich::DetectorType lastrich = Rich::InvalidDetector;
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
@@ -197,14 +197,14 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID ).ignore();
         rich = Rich::InvalidDetector;
       }
-      const unsigned long nBanks      = (*iL1C).second.nHPDs;
-      totBanks[rich]                 += nBanks;
-      const unsigned long words       = (*iL1C).second.nWords;
-      totWordSize[rich]              += words;
-      const unsigned long hits        = (*iL1C).second.nHits;
-      totHits[rich]                  += hits;
-      const unsigned long nFills      = (*iL1C).second.nFills;
-      nEvFills[rich]                 += nFills;
+      const unsigned long long nBanks      = (*iL1C).second.nHPDs;
+      totBanks[rich]                      += nBanks;
+      const unsigned long long words       = (*iL1C).second.nWords;
+      totWordSize[rich]                   += words;
+      const unsigned long long hits        = (*iL1C).second.nHits;
+      totHits[rich]                       += hits;
+      const unsigned long long nFills      = (*iL1C).second.nFills;
+      nEvFills[rich]                      += nFills;
       ++s[rich];
 
       if ( rich != lastrich )
@@ -824,7 +824,7 @@ RawDataFormatTool::decodeToSmartIDs_MaPMT0( const LHCb::RawBank & bank,
     IngressMap & ingressMap = decodedData[L1ID];
 
     // Loop over bank, Fill data into RichSmartIDs
-    long lineC(0);
+    int lineC(0);
     while ( lineC < bankSize )
     {
       // Read the smartID direct from the banks
@@ -927,7 +927,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
-    long lineC(0);
+    int lineC(0);
     while ( lineC < bankSize )
     {
 
@@ -1295,7 +1295,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
-    long lineC(0);
+    int lineC(0);
     while ( lineC < bankSize )
     {
 
@@ -1430,7 +1430,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
-    long lineC(0);
+    int lineC(0);
     while ( lineC < bankSize )
     {
 
@@ -1445,10 +1445,10 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
           verbose() << " Found HPD header at line " << lineC << " of " << bankSize << endmsg;
 
         // Store start line for header
-        const long lineHeader = lineC;
+        const int lineHeader = lineC;
 
         // Find last line of block
-        long lineLast = lineC;
+        int lineLast = lineC;
         if ( header.zeroSuppressed() )
         {
           // For ZS blocks, have to search for the hext header to define the block length
