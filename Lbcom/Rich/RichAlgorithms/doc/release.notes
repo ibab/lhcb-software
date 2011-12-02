@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= RichAlgorithms v1r3 2011-02-25 =========================
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
+!======================== RichAlgorithms v1r3 2011-02-25 =====================
 ! 2011-02-23 - Chris Jones
  - Add work around for compilation issue on SLC5 gcc43 32-bit
 

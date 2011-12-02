@@ -80,13 +80,13 @@ namespace Rich
     RadiatorData m_nomTemperature;
 
     /// Event count
-    unsigned long int m_nEvt;
+    unsigned long long m_nEvt;
 
     /// Pressure variation amplitude (Pa)
     double m_presVaryAmp;
 
     /// Pressure variation period (# events)
-    unsigned long int m_presVaryPeriod;
+    unsigned long long m_presVaryPeriod;
 
     /// Tolerance on the pressure measurement values (Pa)
     double m_presTol;
