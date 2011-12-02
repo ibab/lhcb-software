@@ -55,6 +55,9 @@ namespace MBM {
       return m_bmid;
     }
 
+    // Access to processstart address of the buffer
+    const char* bufferAddress() const;
+
     /// Buffer name
     const std::string& bufferName()  const {
       return m_buffName;

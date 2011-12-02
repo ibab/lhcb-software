@@ -49,6 +49,11 @@ int MBM::Client::pid()  {
   return lib_rtl_pid();
 }
 
+// Access to processstart address of the buffer
+const char* MBM::Client::bufferAddress() const  {
+  return mbm_buffer_address(m_bmid);
+}
+
 // Switch to non-blocking execution mode
 void MBM::Client::setNonBlocking(int facility, bool /* subscribe */) {
   static bool first = true;
