@@ -8,7 +8,7 @@ package           AlignTrTools
 version           v4r10
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 include_path      none
@@ -55,5 +55,6 @@ apply_pattern    component_library library=AlignTrTools
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
 
-#macro_append AlignTrToolsGenConfUser_dependencies AlignTrToolsConfDbMerge
+#don't know why this was commented out, watch if it eliminates the warning in the nightlies
+macro_append AlignTrToolsGenConfUser_dependencies AlignTrToolsConfDbMerge
 
