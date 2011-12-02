@@ -6,6 +6,9 @@ Purpose: LHCb Alignment Tools
 
 !========================= AlignTrTools v4r10 2011-12-01 =========================
 
+! 2011-12-02 - Rob lambert
+ - make python depend on C++ compilation
+
 ! 2011-08-24 - Wouter Hulsbergen
  - moved algorithms that are not directly related to the core of the 
    TAlignment algorithm from TAlignment to AlignTrTools
