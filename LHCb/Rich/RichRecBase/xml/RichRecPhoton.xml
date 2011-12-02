@@ -21,7 +21,7 @@
         name             = "RichRecPhoton" 
         stdVectorTypeDef = "TRUE" >
 
-        <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
+        <base name="KeyedObject&lt;Rich::Rec::PhotonKey&gt;"/>
 
         <import name="RichRecBase/RichRecPhotonKey"/>
         <import name="RichKernel/RichHypoData"/>

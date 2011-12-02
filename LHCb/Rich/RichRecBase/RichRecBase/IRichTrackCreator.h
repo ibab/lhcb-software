@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ITrackCreator
  *
- *  CVS Log :-
- *  $Id: IRichTrackCreator.h,v 1.13 2009-05-21 17:18:05 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
@@ -84,7 +81,7 @@ namespace Rich
        *
        *  @return The number of data objects in the input container
        */
-      virtual long nInputTracks() const = 0;
+      virtual unsigned int nInputTracks() const = 0;
 
     };
 

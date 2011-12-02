@@ -634,7 +634,7 @@ void PhotonCreatorBase::InitNewEvent()
 {
   m_hasBeenCalled = false;
   if ( bookKeep() ) m_photonDone.clear();
-  m_photons = 0;
+  m_photons = NULL;
   m_photCountLast = m_photCount;
 }
 

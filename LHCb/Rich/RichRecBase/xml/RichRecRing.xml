@@ -19,7 +19,7 @@
         location = "Rec/Rich/RecoEvent/Rings" 
         name     = "RichRecRing" >
 
-        <base name="KeyedObject&lt;long&gt;"/>
+        <base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
             
         <import name="GaudiKernel/Point3DTypes.h"/>
@@ -56,7 +56,7 @@
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecRing with the same physics content" 
-                initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
+                initList = "KeyedObject&lt;int&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
                 <arg const="TRUE" name="ring" type="LHCb::RichRecRing"  />
                 <code/>
         </constructor>

@@ -201,7 +201,7 @@ namespace Rich
        */
       virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                  LHCb::RichRecPixel * pixel,
-                                                 const RichRecPhotonKey key ) const = 0;
+                                                 const Rich::Rec::PhotonKey key ) const = 0;
 
       /** Save a given photon to the TES container
        *
@@ -209,7 +209,7 @@ namespace Rich
        *  @param key    The key to save the photon with
        */
       void savePhoton( LHCb::RichRecPhoton * photon,
-                       const RichRecPhotonKey key ) const;
+                       const Rich::Rec::PhotonKey key ) const;
 
       /** Checks the photon signal probability is above a threshold value for
        *  any mass hypothesis
@@ -249,7 +249,7 @@ namespace Rich
       mutable bool m_hasBeenCalled;
 
       /// photon done map
-      mutable Rich::HashMap<long int, bool> m_photonDone;
+      mutable Rich::HashMap<Rich::Rec::PhotonKey::Int64_t,bool> m_photonDone;
 
     private: // data
 
@@ -302,8 +302,8 @@ namespace Rich
       std::string m_photPredName;
 
       // debug photon counting
-      mutable std::vector<unsigned long int> m_photCount;
-      mutable std::vector<unsigned long int> m_photCountLast;
+      mutable std::vector<unsigned int> m_photCount;
+      mutable std::vector<unsigned int> m_photCountLast;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
@@ -354,8 +354,8 @@ namespace Rich
       return m_bookKeep;
     }
 
-    inline void PhotonCreatorBase::savePhoton( LHCb::RichRecPhoton * photon,
-                                               const RichRecPhotonKey key ) const
+    inline void PhotonCreatorBase::savePhoton( LHCb::RichRecPhoton    * photon,
+                                               const Rich::Rec::PhotonKey key ) const
     {
       // save photon
       richPhotons()->insert( photon, key );

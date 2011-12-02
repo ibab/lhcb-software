@@ -185,7 +185,7 @@ namespace Rich
       mutable bool m_hasBeenCalled;
 
       /// Working object to keep track of formed objects
-      mutable Rich::HashMap<unsigned long, bool> m_trackDone;
+      mutable Rich::HashMap<int, bool> m_trackDone;
 
     private: // data
 

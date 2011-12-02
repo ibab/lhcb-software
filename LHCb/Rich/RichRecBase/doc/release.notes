@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Update Rich::Rec::PhotonKey with a better packing method.
+ - Remove use of long in favour of int and long long
+
 ! 2011-11-18 - Chris Jones
  - Adapt to removal of obsolete methods from RichSmartID
 
