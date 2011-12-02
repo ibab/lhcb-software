@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="../python/LbConfiguration/LHCbProjectConfig.xsd">
+	<project name="Gaudi" shortName="GA">
+		<baseName>LCGMT</baseName>
+		<applicationPackage>GaudiExamples</applicationPackage>
+		<LCGTarballName>LCGMT</LCGTarballName>
+		<afsVolumeRoot>gaudi</afsVolumeRoot>
+		<afsLibrarianGroup>gaudi</afsLibrarianGroup>
+		<setenvAlias>true</setenvAlias>
+		<fullSize>3000000</fullSize>
+	</project>
+	<project name="LHCb" shortName="LH">
+		<baseName>GAUDI</baseName>
+		<applicationPackage>Ex</applicationPackage>
+		<fullSize>6000000</fullSize>
+	</project>
+</projectConfiguration>

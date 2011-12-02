@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<packageConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../python/LbConfiguration/LHCbPackageConfig.xsd">
+ <package hat="Det" name="XmlDDDB" project="DBASE"/>
+ <package hat="Gen" name="DecFiles" project="DBASE"/>
+ <package name="FieldMap" project="DBASE"/>
+ <package hat="DQ" name="BooleDQ" project="DBASE"/>
+ <package hat="DQ" name="BrunelDQ" project="DBASE"/>
+ <package name="ParamFiles" project="PARAM"/>
+ <package hat="Det" name="XmlConditions" project="DBASE"/>
+ <package hat="Det" name="SQLDDDB" project="DBASE"/>
+ <package hat="Det" name="VeloSQLDDDB" project="DBASE"/>
+ <package hat="Det" name="STSQLDDDB" project="DBASE"/>
+ <package name="BcVegPyData" project="PARAM"/>
+ <package name="MCatNLOData" project="PARAM"/>
+ <package name="LHCbBkg" project="PARAM"/>
+ <package name="Geant4Files" project="PARAM"/>
+ <package name="MIBData" project="PARAM"/>
+ <package hat="TCK" name="L0TCK" project="DBASE"/>
+ <package hat="TCK" name="HltTCK" project="DBASE"/>
+ <package name="AppConfig" project="DBASE"/>
+ <package name="ChargedProtoANNPIDParam" project="PARAM"/>
+ <package hat="Tools" name="Emacs" project="TOOLS"/>
+ <package name="eclipse" project="TOOLS"/>
+ <package hat="Java" name="jre" project="TOOLS"/>
+ <package hat="WG" name="CPConfig" project="DBASE"/>
+ <package hat="WG" name="RDConfig" project="DBASE"/>
+ <package hat="WG" name="CharmConfig" project="DBASE">
+  <dereferenceTar>   true  </dereferenceTar>
+ </package>
+</packageConfiguration>

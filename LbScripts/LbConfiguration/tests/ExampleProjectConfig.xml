@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="../python/LbConfiguration/LHCbProjectConfig.xsd">
+ <project name="Gaudi" shortName="GA">
+  <releaseArea>
+   /afs/cern.ch/sw/Gaudi/releases
+  </releaseArea>
+  <baseName>
+   LCGCMT
+  </baseName>
+  <LCGTarballName>
+   LCGCMT
+  </LCGTarballName>
+  <afsVolumeRoot>
+   Gaudi
+  </afsVolumeRoot>
+  <afsLibrarianGroup>
+   gaudi
+  </afsLibrarianGroup>
+  <steeringPackage>
+   GaudiRelease
+  </steeringPackage>
+  <fullSize>
+   3000000
+  </fullSize>
+ </project>
+ <project name="LHCb" shortName="LH">
+  <baseName>
+   GAUDI
+  </baseName>
+  <fullSize>
+   6000000
+  </fullSize>
+ </project>
+ <project name="Lbcom" shortName="LO">
+  <fullSize>
+   1500000
+  </fullSize>
+ </project>
+ <project name="Rec" shortName="RE">
+  <fullSize>
+   6000000
+  </fullSize>
+ </project>
+ <project name="Boole" shortName="BO">
+  <fullSize>
+   1500000
+  </fullSize>
+ </project>
+ <project name="Brunel" shortName="BR">
+  <fullSize>
+   700000
+  </fullSize>
+ </project>
+ <project name="Gauss" shortName="GS">
+  <fullSize>
+   700000
+  </fullSize>
+  <extraexe name="AlpGen">
+   AlpGen
+  </extraexe>
+  <extraexe name="BcVegPy">
+   BcVegPy
+  </extraexe>
+  <extraexe name="Herwig">
+   Herwig
+  </extraexe>
+  <extraexe name="HidValley">
+   HidValley
+  </extraexe>
+  <extraexe name="Hijing">
+   Hijing
+  </extraexe>
+ </project>
+ <project name="Phys" shortName="PH">
+  <fullSize>
+   2000000
+  </fullSize>
+ </project>
+ <project name="Analysis" shortName="AN">
+  <afsVolumeName>
+   ANALY
+  </afsVolumeName>
+  <fullSize>
+   2000000
+  </fullSize>
+ </project>
+ <project name="Hlt" shortName="HL">
+  <fullSize>
+   2500000
+  </fullSize>
+ </project>
+ <project name="Alignment" shortName="AL">
+  <afsVolumeName>
+   ALIGN
+  </afsVolumeName>
+  <fullSize>
+   800000
+  </fullSize>
+ </project>
+ <project name="Moore">
+  <fullSize>
+   700000
+  </fullSize>
+ </project>
+ <project name="Online" shortName="ON">
+  <fullSize>
+   1500000
+  </fullSize>
+ </project>
+ <project name="Euler" shortName="EU">
+  <fullSize>
+   6000
+  </fullSize>
+ </project>
+ <project name="Geant4" shortName="G4">
+  <baseName>
+   GAUDI
+  </baseName>
+  <afsVolumeName>
+   G4
+  </afsVolumeName>
+  <fullSize>
+   2000000
+  </fullSize>
+ </project>
+ <project name="DaVinci" shortName="DV">
+  <afsVolumeName>
+   DAV
+  </afsVolumeName>
+  <fullSize>
+   800000
+  </fullSize>
+ </project>
+ <project name="Bender" shortName="BE">
+  <baseName>
+   DAVINCI
+  </baseName>
+  <fullSize>
+   500000
+  </fullSize>
+ </project>
+ <project name="Orwell" shortName="OR">
+  <fullSize>
+   50000
+  </fullSize>
+ </project>
+ <project name="Panoramix" shortName="PA">
+  <afsVolumeName>
+   PANORA
+  </afsVolumeName>
+  <fullSize>
+   1000000
+  </fullSize>
+ </project>
+ <project name="LbScripts" shortName="LB">
+  <afsVolumeName>
+   LB
+  </afsVolumeName>
+  <hasBinary>
+   false
+  </hasBinary>
+  <fullSize>
+   20000
+  </fullSize>
+ </project>
+ <project name="Dirac" shortName="DI">
+  <setenvAlias>
+   false
+  </setenvAlias>
+  <setupAlias>
+   false
+  </setupAlias>
+  <fullSize>
+   500000
+  </fullSize>
+ </project>
+ <project name="LHCbGrid" shortName="LG">
+  <LCGTarballName>
+   LCGGrid
+  </LCGTarballName>
+  <fullSize>
+   100000
+  </fullSize>
+ </project>
+ <project name="Panoptes" shortName="PT">
+  <fullSize>
+   50000
+  </fullSize>
+ </project>
+ <project name="Curie" shortName="CI">
+  <hasBinary>
+   false
+  </hasBinary>
+  <fullSize>
+   50000
+  </fullSize>
+ </project>
+ <project name="Vetra" shortName="VE"/>
+ <project name="Compat" shortName="CO"/>
+ <project name="VanDerMeer" shortName="VA">
+  <afsVolumeName>
+   VDM
+  </afsVolumeName>
+  <fullSize>
+   50000
+  </fullSize>
+ </project>
+ <project name="Ganga" shortName="GG">
+  <LCGTarballName>
+   LCGGanga
+  </LCGTarballName>
+ </project>
+ <project name="LHCbDirac" shortName="LD">
+  <LCGTarballName>
+   LCGGrid
+  </LCGTarballName>
+  <afsVolumeName>
+   LBDIRAC
+  </afsVolumeName>
+  <setenvAlias>
+   false
+  </setenvAlias>
+  <fullSize>
+   500000
+  </fullSize>
+ </project>
+ <project name="Integration" shortName="IN">
+  <afsVolumeName>
+   INTEG
+  </afsVolumeName>
+  <fullSize>
+   2500000
+  </fullSize>
+ </project>
+ <project name="Erasmus" shortName="ER">
+  <afsVolumeName>
+   ERASM
+  </afsVolumeName>
+ </project>
+ <project name="Feicim" shortName="FE"/>
+ <project name="Stripping" shortName="ST">
+  <afsVolumeName>
+   STRIP
+  </afsVolumeName>
+  <fullSize>
+   6000000
+  </fullSize>
+ </project>
+</projectConfiguration>
