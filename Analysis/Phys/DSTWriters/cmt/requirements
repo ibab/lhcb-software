@@ -10,21 +10,27 @@ version           v4r1
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc python src
+
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages. 
 #============================================================================
 use       GaudiPolicy v*     
 use       GaudiAlg    v*                        
 use       Python      v* LCG_Interfaces 
 # =============================================================================
+
 include_path      none
+
 # =============================================================================
 # build a component library
+# =============================================================================
 library DSTWriters ../src/*.cpp
-
-# ======= the patterns ========================================================
 apply_pattern component_library library=DSTWriters
+
+# =============================================================================
 #macro DSTWritersConfUserModules "DSTWriters.BaseDSTWriter DSTWriters.MicroDSTWriter DSTWriters.SelDSTWriter"
+
+macro_append DSTWritersGenConfUser_dependencies DSTWritersConfDbMerge 
+
 apply_pattern install_python_modules
 # =============================================================================
