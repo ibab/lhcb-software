@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Adapt to changes in Rich::Rec::PhotonKey
+
 ! 2011-11-25 - Chris Jones
  - Load the Snell's law refraction correction tool on demand in 
    PhotonRecoUsingQuarticSoln

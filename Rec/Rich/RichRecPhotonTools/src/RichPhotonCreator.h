@@ -55,7 +55,7 @@ namespace Rich
       /// Form a Photon candidate from a Segment and a pixel.
       virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                  LHCb::RichRecPixel * pixel,
-                                                 const RichRecPhotonKey key ) const;
+                                                 const Rich::Rec::PhotonKey key ) const;
 
     private: // private data
 
