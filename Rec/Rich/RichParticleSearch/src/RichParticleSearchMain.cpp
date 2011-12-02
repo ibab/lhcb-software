@@ -41,8 +41,8 @@ DECLARE_ALGORITHM_FACTORY( RichParticleSearchMain )
       m_richPartProp      ( NULL ),
       m_ckAngle           ( NULL ),
       m_isoTrack          ( NULL ),
-      m_tkIndex			  ( NULL ),
-      m_signal			  ( NULL )
+      m_tkIndex     ( NULL ),
+      m_signal     ( NULL )
 {
 
   // Maximum number of tracks
@@ -108,14 +108,14 @@ StatusCode RichParticleSearchMain::initialize() {
   m_particleType =2;//Pion
   debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
 
- // m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
+  // m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
   //debug() << "Fixed particle type:" << m_pType << endmsg;
 
 
   const std::string RAD = Rich::text(m_radiator);
 
   if (m_useMuonInfo){
-	  StatusCode scM = m_MuonInformation->initialize();
+    StatusCode scM = m_MuonInformation->initialize();
   }
 
   debug() << "Finished Initialization" << endmsg;
@@ -140,8 +140,8 @@ StatusCode RichParticleSearchMain::execute() {
       return Error( "Problem Making Tracks" );
     }
     debug () << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+             << " RichRecTracks " << richSegments()->size()
+             << " RichRecSegments" << endmsg;
   }
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -193,16 +193,16 @@ StatusCode RichParticleSearchMain::execute() {
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-	  //runNumber and eventNumber added by Viet Nga
-	long int runNumber = 0;
-	long int evtNumber = 0;
-	if (m_useMCTruth)
-	{
-		const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
-		const std::vector<long int> seeds = header-> randomSeeds();
-		runNumber = seeds[0];
-		evtNumber = seeds[1];
-	}
+    //runNumber and eventNumber added by Viet Nga
+    unsigned long long runNumber = 0;
+    unsigned long long evtNumber = 0;
+    if (m_useMCTruth)
+    {
+      const LHCb::ProcessHeader* header = get<LHCb::ProcessHeader>(LHCb::ProcessHeaderLocation::Digi);
+      const std::vector<long int> seeds = header-> randomSeeds();
+      runNumber = seeds[0];
+      evtNumber = seeds[1];
+    }
 
 
     LHCb::RichRecSegment* segment = *iSeg;
@@ -227,7 +227,7 @@ StatusCode RichParticleSearchMain::execute() {
     m_tkTotal++;
 
     // ========================================================================================== //
-    //									MC information											  //
+    //         MC information             //
     int MCtype(-1);
     if ( m_useMCTruth ) {
       const ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
@@ -243,7 +243,7 @@ StatusCode RichParticleSearchMain::execute() {
     // Momentum information
     double pt=0.0;
     double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
- 
+
     int numberOfUsedTracks = 0;
 
     const LHCb::RichRecTrack * richtrack = segment->richRecTrack();
@@ -287,7 +287,7 @@ StatusCode RichParticleSearchMain::execute() {
       std::vector<double> trackMass;
 
       // ============================================================================================//
-      // 							Photon LOOP														 //
+      //        Photon LOOP               //
       for ( LHCb::RichRecSegment::Photons::const_iterator iPhot2 = segment->richRecPhotons().begin();
             iPhot2 != segment->richRecPhotons().end(); ++iPhot2 )
       {
@@ -314,7 +314,7 @@ StatusCode RichParticleSearchMain::execute() {
         bool trueRadiator( false );
         if ( m_useMCTruth )
         {
-        	trueRadiator = ( NULL != m_richRecMCTruth->trueCherenkovRadiation( pixel, rad ) );
+          trueRadiator = ( NULL != m_richRecMCTruth->trueCherenkovRadiation( pixel, rad ) );
         }
 
         // Only true if radiation is from true parent (track)
@@ -322,7 +322,7 @@ StatusCode RichParticleSearchMain::execute() {
           TruePhotonCounter++;
           if (trueRadiator)
           {
-        	  TrueParentAndRadCounter++;
+            TrueParentAndRadCounter++;
           }
         }
 
@@ -331,187 +331,186 @@ StatusCode RichParticleSearchMain::execute() {
           break;
         } //END photon cut
       }// end photon counter loop
-      // 								END Photon LOOP											   	//
+      //         END Photon LOOP               //
       // ============================================================================================//
 
       if (PhotonCounter>m_minPhotons && PhotonCounter<m_maxPhotons-1)
       {
-    	  double AvThetaRec = thetaRecSum/PhotonCounter; // Average CK per track
+        double AvThetaRec = thetaRecSum/PhotonCounter; // Average CK per track
 
-    	  if (AvThetaRec > m_minCK) //  lower cut on average CK
-    	  {
-    		  // Setup Sort by largest variance first
-    		  MattTest mt;
-    		  mt.SetAvTheta(AvThetaRec);
-    		  std::stable_sort(CKTheta.begin(), CKTheta.end(), MattTestOb); // sort in order to remove furthest out-lyers first
+        if (AvThetaRec > m_minCK) //  lower cut on average CK
+        {
+          // Setup Sort by largest variance first
+          MattTest mt;
+          mt.SetAvTheta(AvThetaRec);
+          std::stable_sort(CKTheta.begin(), CKTheta.end(), MattTestOb); // sort in order to remove furthest out-lyers first
 
-    		  int CKcounter = 0;
-    		  double CKVariance = 0.0;
-    		  double thetaRecSumUpdate = 0.0; //Updated after outlyer removals
-    		  int UsedPhotons = 0; //Updated after outlyer removals
-    		  for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
-    		  // A method to remove outlyers
-    			  if (fabs(*it- AvThetaRec) > 500*RichPhotonCut[RICHint])
-    			  {
-    				  CKcounter++;
-    				  CKTheta.erase(it);// Remove the element outside variance range
-    				  // update ThetaRecAv for next removal
-    				  AvThetaRec = (AvThetaRec*(PhotonCounter - CKcounter +1) - *it)/(PhotonCounter- CKcounter);
-    				  it--;// in order to cover whole range
-    			  }
-    			  else
-    			  {
-    				  UsedPhotons++;
-        			  CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
-    			  }
-    			  thetaRecSumUpdate = *it + thetaRecSumUpdate;
+          int CKcounter = 0;
+          double CKVariance = 0.0;
+          double thetaRecSumUpdate = 0.0; //Updated after outlyer removals
+          int UsedPhotons = 0; //Updated after outlyer removals
+          for (vector<double>::iterator it=CKTheta.begin(); it < CKTheta.end(); ++it){
+            // A method to remove outlyers
+            if (fabs(*it- AvThetaRec) > 500*RichPhotonCut[RICHint])
+            {
+              CKcounter++;
+              CKTheta.erase(it);// Remove the element outside variance range
+              // update ThetaRecAv for next removal
+              AvThetaRec = (AvThetaRec*(PhotonCounter - CKcounter +1) - *it)/(PhotonCounter- CKcounter);
+              it--;// in order to cover whole range
+            }
+            else
+            {
+              UsedPhotons++;
+              CKVariance = CKVariance + std::pow((*it- AvThetaRec),2);//Standard deviation squared of CK Theta
+            }
+            thetaRecSumUpdate = *it + thetaRecSumUpdate;
 
-    		  }// end iterator
+          }// end iterator
 
-    		  AvThetaRec = thetaRecSumUpdate/UsedPhotons;
-    		  PhotonCounter = UsedPhotons; // Update photon counter
-			  // Average beta calculated per track
-			  double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
-			  // Average Mass calculated per track
-			  double avTrackMass = momentum * std::sqrt((1/(std::pow(avBetaTk,2)))-1.0);
+          AvThetaRec = thetaRecSumUpdate/UsedPhotons;
+          PhotonCounter = UsedPhotons; // Update photon counter
+          // Average beta calculated per track
+          double avBetaTk = 1.0/(std::cos(AvThetaRec)*refIndx);
+          // Average Mass calculated per track
+          double avTrackMass = momentum * std::sqrt((1/(std::pow(avBetaTk,2)))-1.0);
 
-			  // CK Standard Deviation per track
-			  double stdDevCK = std::pow(CKVariance/(PhotonCounter-1), 0.5);
-
-
-        	  if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut
-        			  && avTrackMass>m_minTrackMass )
-        	  { // Cut on CK standard Deviation weighted by mean CK per track
-
-				  if ( m_histoOutputLevel > 1 )
-				  {
-						//Make Plots per track
-						plot1D( avTrackMass, "TrackMass", "Mass per Track",9000, 0, 45000);
-						// Plot inverse Mass per Track
-						plot1D( 1/avTrackMass, "InverseMass", "Inverse Mass per track", 8000, 0, 0.0008);
-				  }
-
-				  //Get Any Muon Information
-				  int hasMuonPID = 0;
-				  if (m_useMuonInfo)
-				  {
-					hasMuonPID = m_MuonInformation->HasMuonInformation(track);
-				  }
-
-				  std::vector<float> trackProjection;
-
-				  if (findYields)
-				  {
-					  const Gaudi::XYZPoint & tkPtLocal = segment->LHCb::RichRecSegment::pdPanelHitPointLocal();
-
-					  trackProjection.push_back(tkPtLocal.x());
-					  trackProjection.push_back(tkPtLocal.y());
-					  trackProjection.push_back(tkPtLocal.z());
-				  }
+          // CK Standard Deviation per track
+          double stdDevCK = std::pow(CKVariance/(PhotonCounter-1), 0.5);
 
 
-				  if ( produceNTuples())
-				  {
-						Tuple TrackTuple = nTuple( "TrackTuple", "Rich Alignment" );
-						TrackTuple->column( "avThetaRec"      ,    AvThetaRec     );
-						TrackTuple->column( "tkNum",trackCounter);
-						TrackTuple->column( "pt"         , pt             );
-						TrackTuple->column( "refIndx"       , refIndx        );
-						TrackTuple->column( "momentum"      , std::sqrt(segment->trackSegment().bestMomentum().Mag2()));
-						TrackTuple->column( "nTracks"       ,  numberOfUsedTracks  );
-						TrackTuple->column( "MinimumTrackSeperation" , MinimumTrackSeperation );
-						TrackTuple->column( "EvtNum", EvtNum);
-						TrackTuple->column( "PhotonsPerTrack", PhotonCounter);
-						TrackTuple->column( "averageTrackMass", avTrackMass);
-						TrackTuple->column( "stdDevCK", stdDevCK);
-						TrackTuple->column( "TrackType", TrackType);
-						TrackTuple->column( "pathLength", pathLength);
-						TrackTuple->column( "trChi2", trChi2);
-						if (findYields){
-							TrackTuple->column( "TrackProjectionX", trackProjection[0]);
-							TrackTuple->column( "TrackProjectionY", trackProjection[1]);
-							TrackTuple->column( "TrackProjectionZ", trackProjection[2]);
+          if (((AvThetaRec-stdDevCK)/AvThetaRec)>m_CKDevCut
+              && avTrackMass>m_minTrackMass )
+          { // Cut on CK standard Deviation weighted by mean CK per track
 
-							// Photon Yield Info
-							TrackTuple->column( "trkenX",trkenX);
-							TrackTuple->column( "trkenY",trkenY);
-							TrackTuple->column( "trkexX",trkexX);
-							TrackTuple->column( "trkexY",trkexY);
-						}
+            if ( m_histoOutputLevel > 1 )
+            {
+              //Make Plots per track
+              plot1D( avTrackMass, "TrackMass", "Mass per Track",9000, 0, 45000);
+              // Plot inverse Mass per Track
+              plot1D( 1/avTrackMass, "InverseMass", "Inverse Mass per track", 8000, 0, 0.0008);
+            }
 
-						TrackTuple->column( "rad_length",rad_length);
+            //Get Any Muon Information
+            int hasMuonPID = 0;
+            if (m_useMuonInfo)
+            {
+              hasMuonPID = m_MuonInformation->HasMuonInformation(track);
+            }
+
+            std::vector<float> trackProjection;
+
+            if (findYields)
+            {
+              const Gaudi::XYZPoint & tkPtLocal = segment->LHCb::RichRecSegment::pdPanelHitPointLocal();
+
+              trackProjection.push_back(tkPtLocal.x());
+              trackProjection.push_back(tkPtLocal.y());
+              trackProjection.push_back(tkPtLocal.z());
+            }
+
+            if ( produceNTuples())
+            {
+              Tuple TrackTuple = nTuple( "TrackTuple", "Rich Alignment" );
+              TrackTuple->column( "avThetaRec"      ,    AvThetaRec     );
+              TrackTuple->column( "tkNum",trackCounter);
+              TrackTuple->column( "pt"         , pt             );
+              TrackTuple->column( "refIndx"       , refIndx        );
+              TrackTuple->column( "momentum"      , std::sqrt(segment->trackSegment().bestMomentum().Mag2()));
+              TrackTuple->column( "nTracks"       ,  numberOfUsedTracks  );
+              TrackTuple->column( "MinimumTrackSeperation" , MinimumTrackSeperation );
+              TrackTuple->column( "EvtNum", EvtNum);
+              TrackTuple->column( "PhotonsPerTrack", PhotonCounter);
+              TrackTuple->column( "averageTrackMass", avTrackMass);
+              TrackTuple->column( "stdDevCK", stdDevCK);
+              TrackTuple->column( "TrackType", TrackType);
+              TrackTuple->column( "pathLength", pathLength);
+              TrackTuple->column( "trChi2", trChi2);
+              if (findYields){
+                TrackTuple->column( "TrackProjectionX", trackProjection[0]);
+                TrackTuple->column( "TrackProjectionY", trackProjection[1]);
+                TrackTuple->column( "TrackProjectionZ", trackProjection[2]);
+
+                // Photon Yield Info
+                TrackTuple->column( "trkenX",trkenX);
+                TrackTuple->column( "trkenY",trkenY);
+                TrackTuple->column( "trkexX",trkexX);
+                TrackTuple->column( "trkexY",trkexY);
+              }
+
+              TrackTuple->column( "rad_length",rad_length);
 
 
-						if ( m_useMCTruth )
-						{ // if use Truth information
+              if ( m_useMCTruth )
+              { // if use Truth information
 
-							TrackTuple->column( "trackKey", trackKey);
-							TrackTuple->column( "runNumber", runNumber);
-							TrackTuple->column( "evtNumber", evtNumber);
-							TrackTuple->column( "MCParticleType", MCtype);
-							TrackTuple->column( "TruePhotonsPerTrack", TruePhotonCounter);
-							// TrackTuple->column( "TruePhotonsPerTrackTrueRad",TrueParentAndRadCounter);
-						}
+                TrackTuple->column( "trackKey", trackKey);
+                TrackTuple->column( "runNumber", (unsigned int)runNumber);
+                TrackTuple->column( "evtNumber", (unsigned int)evtNumber);
+                TrackTuple->column( "MCParticleType", MCtype);
+                TrackTuple->column( "TruePhotonsPerTrack", TruePhotonCounter);
+                // TrackTuple->column( "TruePhotonsPerTrackTrueRad",TrueParentAndRadCounter);
+              }
 
-						if (m_useMuonInfo)
-						{	// If use Muon information
-							TrackTuple->column( "hasMuonPID"    , hasMuonPID   );
-						}
-						TrackTuple->write();
-				  }//End produce NTuple
+              if (m_useMuonInfo)
+              { // If use Muon information
+                TrackTuple->column( "hasMuonPID"    , hasMuonPID   );
+              }
+              TrackTuple->write();
+            }//End produce NTuple
 
-				  //============================================================================================//
-				  //						Second Photon LOOP (very CPU intensive								//
+            //============================================================================================//
+            //      Second Photon LOOP (very CPU intensive        //
 
-				  if (m_plotPerPhoton)
-				  {
-						for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
-							  iPhot != segment->richRecPhotons().end(); ++iPhot )
-						{
-								LHCb::RichRecPhoton* photon = *iPhot;
-								const LHCb::RichGeomPhoton & gPhoton = photon->geomPhoton();
+            if (m_plotPerPhoton)
+            {
+              for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
+                    iPhot != segment->richRecPhotons().end(); ++iPhot )
+              {
+                LHCb::RichRecPhoton* photon = *iPhot;
+                const LHCb::RichGeomPhoton & gPhoton = photon->geomPhoton();
 
-								// Cherenkov angles
-								const double thetaRec = gPhoton.CherenkovTheta();
-								// Get true track parent if using MCTruth
-								bool trueParent2( false );
-								if ( m_useMCTruth ) {
-									trueParent2 = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
-								}
-								//track Beta = v/c
-								double beta = 1.0/(cos(thetaRec)*refIndx);
-								// Mass from photon track pair
-								double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
+                // Cherenkov angles
+                const double thetaRec = gPhoton.CherenkovTheta();
+                // Get true track parent if using MCTruth
+                bool trueParent2( false );
+                if ( m_useMCTruth ) {
+                  trueParent2 = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
+                }
+                //track Beta = v/c
+                double beta = 1.0/(cos(thetaRec)*refIndx);
+                // Mass from photon track pair
+                double mass = momentum * std::sqrt((1/(std::pow(beta,2)))-1.0);
 
-								if (thetaRec <= maxCK && beta >=1.0/refIndx && thetaRec > m_minCK)
-								{ // Make sure these are same cuts as in first photon loop
+                if (thetaRec <= maxCK && beta >=1.0/refIndx && thetaRec > m_minCK)
+                { // Make sure these are same cuts as in first photon loop
 
-									if ( m_histoOutputLevel > 1 ){
-										  //Make Plots per track
-										  plot1D( avTrackMass, "MassperPhoton", "Mass per Photon",90000, 0, 45000);
-										  plot1D( 1/avTrackMass, "InverseMassPerPhoton", "Inverse Mass per photon", 8000, 0, 0.0008);
-									}
+                  if ( m_histoOutputLevel > 1 ){
+                    //Make Plots per track
+                    plot1D( avTrackMass, "MassperPhoton", "Mass per Photon",90000, 0, 45000);
+                    plot1D( 1/avTrackMass, "InverseMassPerPhoton", "Inverse Mass per photon", 8000, 0, 0.0008);
+                  }
 
-									double Var = fabs(thetaRec- AvThetaRec);
-									if (Var < RichPhotonCut[RICHint])
-									{
-										if ( produceNTuples())
-										{
-											Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
-											photonTuple->column( "tkNum",trackCounter);
-											photonTuple->column( "mass"          , mass           );
-											photonTuple->column( "TrueParent", trueParent2 );
-											photonTuple->column( "Variance", Var );
-											photonTuple->column( "EvtNum", EvtNum);
-											photonTuple->write();
-										}
-									}
-								}
+                  double Var = fabs(thetaRec- AvThetaRec);
+                  if (Var < RichPhotonCut[RICHint])
+                  {
+                    if ( produceNTuples())
+                    {
+                      Tuple photonTuple = nTuple( "massTuplePhoton", "Rich Alignment" );
+                      photonTuple->column( "tkNum",trackCounter);
+                      photonTuple->column( "mass"          , mass           );
+                      photonTuple->column( "TrueParent", trueParent2 );
+                      photonTuple->column( "Variance", Var );
+                      photonTuple->column( "EvtNum", EvtNum);
+                      photonTuple->write();
+                    }
+                  }
+                }
 
-						}//end photon loop
-				  }//End if m_plotPhotons
-        	  }//End CKDev Cut
-    	  }// end Average CK cut
+              }//end photon loop
+            }//End if m_plotPhotons
+          }//End CKDev Cut
+        }// end Average CK cut
       }// end cut on photons
     }// End isolation Cuts
   }//end loop on track segements
@@ -554,7 +553,7 @@ double RichParticleSearchMain::MinimumTrackSeparation(LHCb::RichRecSegment* segm
         //Change minimum separation if track separation is less than previous minimum
         if ( centreXYdif < MinimumTrackSeperation )
         {
-        	MinimumTrackSeperation = centreXYdif;
+          MinimumTrackSeperation = centreXYdif;
         }
       }  // end segment comparison loop
     } // End segment != segment2

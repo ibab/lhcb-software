@@ -4,6 +4,9 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long where appropriate
+
 ! 2011-09-14 - Matt Coombes
  - Removed bug from Viet Nga code causing crashes when ran over data.
  - Added Track selector in order to have cut on momentum
