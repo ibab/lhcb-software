@@ -70,8 +70,8 @@ namespace Rich
       std::vector<ContainedObject*> m_richPIDs;
 
       // Data to compute average processing time per event and PID
-      unsigned long int m_nEvents; ///< Total number of events
-      unsigned long int m_nPIDs;   ///< Total PIDs considered
+      unsigned long long m_nEvents; ///< Total number of events
+      unsigned long long m_nPIDs;   ///< Total PIDs considered
       long double m_totTime;       ///< Log of total processing time
 
       double m_maxTime;         ///< Maximum overall processing time for plots
