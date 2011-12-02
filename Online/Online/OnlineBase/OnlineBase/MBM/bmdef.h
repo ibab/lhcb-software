@@ -60,7 +60,7 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
-  // Not implemented: int  mbm_buffer_address(BMID);
+  __MBM_CONST char* mbm_buffer_address(BMID);
   /// Register optional callback on _mbm_efree
   int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
   /// Register optional callback on _mbm_ealloc

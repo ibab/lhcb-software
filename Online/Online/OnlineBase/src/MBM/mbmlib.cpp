@@ -1515,6 +1515,13 @@ int mbm_buffer_size(BMID bm, int* size) {
   return lock.status();
 }
 
+const char* mbm_buffer_address(BMID bm) {
+  if ( bm != MBM_INV_DESC ) {
+    return bm->buffer_add;
+  }
+  return 0;
+}
+
 int mbm_events_in_buffer (BMID bm, int* events)  {
   Lock lock(bm);
   if ( lock )  {
