@@ -134,6 +134,7 @@ private:
 
   std::string m_instanceName;
   bool m_useOnline;                             ///< flag to use online partition of DB
+  bool m_doneInit;                              ///< flag to indicate intitalization
   IRateFromTCK* m_tckReader ; ///< Property Config Service
 
 };

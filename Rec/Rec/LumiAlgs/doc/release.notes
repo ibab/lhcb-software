@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Jaap Panman
+ - Fix ERROR message from PropertyConfigSvc at initialization. 
+
 ! 2011-11-22 - Marco Cattaneo
  - Fix gcc46 warning
 

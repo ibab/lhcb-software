@@ -54,6 +54,7 @@ StatusCode GetLumiParameters::initialize(){
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( !sc ) return sc ; 
 
+  m_doneInit = false;
   // initialize calibration factors
   m_statusScale = 1.0;
   m_calibScale = 0;
@@ -104,6 +105,7 @@ StatusCode GetLumiParameters::initialize(){
 
   runUpdate();               // initial update of DB
 
+  m_doneInit = true;
   return StatusCode::SUCCESS; 
 }
 //=============================================================================
@@ -325,14 +327,16 @@ StatusCode GetLumiParameters::i_cacheTriggerData() {
   }
   // trigger data - enquire TCK
   if ( m_triggerTCK != m_knownTCK ) {
-    m_knownTCK = m_triggerTCK;
-    if (0==m_tckReader) Exception("Trying to call NULL RateFromTCK tool");
-    if (m_tckReader->getTCK() != m_knownTCK){
-      err() << "TCK from RateFromTCK tool is " << m_tckReader->getTCK() 
-            << " while I expect " << m_knownTCK << endmsg;
-      return StatusCode::FAILURE;
+    if ( m_doneInit ) {
+      m_knownTCK = m_triggerTCK;
+      if (0==m_tckReader) Exception("Trying to call NULL RateFromTCK tool");
+      if (m_tckReader->getTCK() != m_knownTCK){
+	err() << "TCK from RateFromTCK tool is " << m_tckReader->getTCK() 
+	      << " while I expect " << m_knownTCK << endmsg;
+	return StatusCode::FAILURE;
+      }
+      m_rateHLT = m_tckReader->rateFromTCK(m_instanceName);
     }
-    m_rateHLT = m_tckReader->rateFromTCK(m_instanceName);
   }
   return StatusCode::SUCCESS;
 }
