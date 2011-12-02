@@ -86,7 +86,7 @@ public:
 
 private:
   enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
-                  theta, phi, eta, idcl, chi2 };
+                  theta, phi, eta, idcl, chi2, PPK };
 
   void printHeader( MsgStream& log, 
                     bool mcfirst, 

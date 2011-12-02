@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-12-02 - Patrick Koppenburg
+ - PrintDecayTreeTool.cpp: add a field PPkey to print the protoparticle key
+
 ! 2011-11-29 - Chris Jones
  - Add some more debug and verbose printout to 
    Particle2BackgroundCategoryRelationsAlg

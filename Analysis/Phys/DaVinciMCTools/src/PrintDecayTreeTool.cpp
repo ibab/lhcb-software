@@ -102,6 +102,7 @@ StatusCode PrintDecayTreeTool::initialize( void ){
     else if( tok=="eta" )   m_keys.push_back(eta);
     else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else if( tok=="chi2" )  m_keys.push_back(chi2);
+    else if( tok=="PPK" )   m_keys.push_back(PPK);
     else
       err() << "Unknown output key '" << tok << "'. Ignoring it."
             << endreq;
@@ -202,6 +203,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case eta:       log << std::setw(m_fWidth) << "eta";       break;
     case idcl:      log << std::setw(m_fWidth) << "ID CL";     break;
     case chi2:      log << std::setw(m_fWidth) << "chi2";      break;
+    case PPK:       log << std::setw(m_fWidth) << "PPkey";     break;
     }
   if( associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
@@ -222,6 +224,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
       case eta:     log << std::setw(m_fWidth) << "eta";       break;
       case idcl:    log << std::setw(m_fWidth) << "ID CL";     break;
       case chi2:    log << std::setw(m_fWidth) << "chi2";      break;
+      case PPK:     log << std::setw(m_fWidth) << "PPkey";     break;
       }
   log << std::endl;
 
@@ -243,6 +246,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case eta:       log << std::setw(m_fWidth) << "prap";      break;
     case idcl:      log << std::setw(m_fWidth) << " ";         break;
     case chi2:      log << std::setw(m_fWidth) << " ";         break;
+    case PPK:       log << std::setw(m_fWidth) << " ";         break;
    }
   if( associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
@@ -262,7 +266,8 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
       case phi:     log << std::setw(m_fWidth) << "mrad";      break;
       case eta:     log << std::setw(m_fWidth) << "prap";      break;
       case idcl:    log << std::setw(m_fWidth) << " ";         break;
-      case chi2:      log << std::setw(m_fWidth) << " ";         break;
+      case chi2:    log << std::setw(m_fWidth) << " ";         break;
+      case PPK:     log << std::setw(m_fWidth) << " ";         break;
       }
   log << std::endl;
 }
@@ -461,6 +466,10 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
           }
           else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
           break;
+        case PPK:
+          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+              << ((0!=reco->proto())?reco->proto()->key():-1);
+            break;
         default:
           break;          
         }
@@ -563,6 +572,10 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
             << reco->endVertex()->chi2()/reco->endVertex()->nDoF()  ;
       }
       else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
+      break;
+    case PPK:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << ((0!=reco->proto())?reco->proto()->key():-1);
       break;
     default:
       break;
