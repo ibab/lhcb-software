@@ -134,11 +134,11 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    AIDA::IHistogram1D* richHisto1D( const Rich::HistogramID & id,
-                                     const std::string &    title,
-                                     const double             low,
-                                     const double            high,
-                                     const unsigned long     bins,
+    AIDA::IHistogram1D* richHisto1D( const Rich::HistogramID &  id,
+                                     const std::string &     title,
+                                     const double              low,
+                                     const double             high,
+                                     const unsigned int       bins,
                                      const std::string&      xAxisLabel = "",
                                      const std::string&      yAxisLabel = "",
                                      const BinLabels& binLabels = BinLabels() ) const;
@@ -161,14 +161,14 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    AIDA::IHistogram2D* richHisto2D( const Rich::HistogramID & id,
+    AIDA::IHistogram2D* richHisto2D( const Rich::HistogramID &  id,
                                      const std::string &     title,
                                      const double             lowX,
                                      const double            highX,
-                                     const unsigned long     binsX,
+                                     const unsigned int      binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY,
+                                     const unsigned int      binsY,
                                      const std::string&      xAxisLabel = "",
                                      const std::string&      yAxisLabel = "",
                                      const std::string&      zAxisLabel = "",
@@ -192,7 +192,7 @@ namespace Rich
                                      const std::string &    title,
                                      const double             low,
                                      const double            high,
-                                     const unsigned long     bins,
+                                     const unsigned int      bins,
                                      const std::string&      xAxisLabel = "",
                                      const std::string&      yAxisLabel = "",
                                      const BinLabels& binLabels = BinLabels() ) const;
@@ -215,14 +215,14 @@ namespace Rich
      *
      * @return Pointer to booked histogram
      */
-    AIDA::IProfile2D* richProfile2D( const Rich::HistogramID & id,
-                                     const std::string &    title,
+    AIDA::IProfile2D* richProfile2D( const Rich::HistogramID &  id,
+                                     const std::string &     title,
                                      const double             lowX,
                                      const double            highX,
-                                     const unsigned long     binsX,
+                                     const unsigned int      binsX,
                                      const double             lowY,
                                      const double            highY,
-                                     const unsigned long     binsY,
+                                     const unsigned int      binsY,
                                      const std::string&      xAxisLabel = "",
                                      const std::string&      yAxisLabel = "",
                                      const std::string&      zAxisLabel = "",
