@@ -126,20 +126,20 @@ namespace Rich
      *  @date   21/03/2006
      */
     //-----------------------------------------------------------------------------
-    class HPDData : private std::pair<long unsigned,double>
+    class HPDData : private std::pair<unsigned long long,double>
     {
     public:
       /// Constructor
-      HPDData( const long unsigned tally = 0, const double occ = 0 )
-        : std::pair<long unsigned,double>(tally,occ) { }
+      HPDData( const unsigned long long tally = 0, const double occ = 0 )
+        : std::pair<unsigned long long,double>(tally,occ) { }
       /// Access the number of data entries for the HPD
-      inline long unsigned & fillCount()      { return this->first;  }
+      inline unsigned long long & fillCount()      { return this->first;  }
       /// Access the occupancy for the HPD
-      inline double & avOcc()                 { return this->second; }
+      inline double & avOcc()                      { return this->second; }
       /// Const Access the number of data entries for the HPD
-      inline long unsigned fillCount() const  { return this->first;  }
+      inline unsigned long long fillCount() const  { return this->first;  }
       /// Const Access the occupancy for the HPD
-      inline double avOcc() const             { return this->second; }
+      inline double avOcc() const                  { return this->second; }
     public:
       /// Overload output to ostream
       friend inline std::ostream& operator << ( std::ostream& os, const HPDData & data )

@@ -86,10 +86,10 @@ namespace Rich
   private: // private data
 
     /// Count of number of events since last search for hot pixels
-    unsigned long m_nEvts;
+    unsigned long long m_nEvts;
     
     /// Number of events to look for hot pixels over
-    unsigned long m_nEventsForAverage;
+    unsigned long long m_nEventsForAverage;
 
     /// pixel event occupancy to consider a pixel as hot
     double m_hotOcc;

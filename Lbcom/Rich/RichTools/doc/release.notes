@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
 ! 2011-11-25 - Chris Jones
  - Load the Snell's law refraction tool in Rich::RayTracing on-demand, to 
    avoid loading it when not needed.
