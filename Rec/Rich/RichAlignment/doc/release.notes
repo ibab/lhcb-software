@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
 !========================= RichAlignment v1r5 2011-08-31 =========================
 ! 2011-07-24 - Chris Jones
  - Various improvements to the alignment scripts.

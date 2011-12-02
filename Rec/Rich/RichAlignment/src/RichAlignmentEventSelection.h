@@ -59,7 +59,7 @@ namespace Rich
       // declare the arrays and other stuff
       //======================================
 
-      typedef std::map<unsigned long int,unsigned long int> IDToCount;
+      typedef std::map<unsigned long long,unsigned long long> IDToCount;
       IDToCount m_combiMap; ///< Count photons for each mirror pair, current event
       IDToCount m_totalMap; ///< Count photons for each mirror pair, overall
 
