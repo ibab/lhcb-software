@@ -75,8 +75,13 @@ extern "C"  {
 
   // Not implemented: int  mbm_get_space  (BMID bm, int size, int** ptr);
   int  mbm_get_space_a(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
+  // Returns MBM_NO_ROOM if space is not availible
+  int  mbm_get_space_try(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
   int  mbm_declare_event(BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask, const char* dest,
 			 void** free_add, int* free_size, int part_id);
+  // Returns MBM_NO_ROOM if no event slot is not availible
+  int  mbm_declare_event_try(BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask, const char* dest,
+			     void** free_add, int* free_size, int part_id);
   int  mbm_declare_event_and_send (BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask,
 				   const char* dest, void** free_add, int* free_size, int part_id);
   int  mbm_free_space  (BMID bm);

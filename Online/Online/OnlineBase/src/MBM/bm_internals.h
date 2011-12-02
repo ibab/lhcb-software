@@ -66,7 +66,7 @@ extern "C" {
 
   int _mbm_declare_event(BMID bm, int len, int evtype, TriggerMask& trmask,
                          const char* dest, void** free_add, 
-                         int* free_size, int part_id);
+                         int* free_size, int part_id, int wait);
 
   int _mbm_check_freqmode(BMID bm);
   int _mbm_send_space   (BMID bm);

@@ -678,8 +678,52 @@ int mbm_pause (BMID bm)  {
 }
 
 /*
-Producer Routines
-*/
+ * Producer Routines
+ */
+int mbm_get_space_try(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpar)  {
+  if ( bm && bm->lastVar != 0 ) {
+    return MBM_ERROR;
+  }
+  UserLock user(bm);
+  USER* us = user.user();
+  if ( us )  {
+    CONTROL* ctrl = bm->_control();
+    if (size <= 0 || size > ctrl->buff_size)    {
+      _mbm_return_err (MBM_ILL_LEN);
+    }
+    if ( us->p_state == S_wspace )    {
+      _mbm_del_wsp (bm, us);
+    }
+    if ( us->space_size )    {
+      _mbm_printf("mbm_get_space_a> Free event space:%08X\n",us->space_add);
+      _mbm_sfree (bm, us->space_add, us->space_size);
+      us->space_add = 0;
+      us->space_size = 0;
+    }
+    _mbm_update_rusage(us);
+    us->get_sp_calls++;
+    int status = _mbm_get_sp (bm, us, size, ptr);
+    if (status == MBM_NO_ROOM)  {
+      if (_mbm_check_freqmode(bm) > 0)  {
+        status = _mbm_get_sp(bm, us, size, ptr);
+      }
+      if (status == MBM_NO_ROOM)  {
+	return MBM_NO_ROOM;
+      }
+    }
+    us->reason      = BM_K_INT_SPACE;
+    us->ws_size     = size;
+    us->ws_ptr_add  = ptr;
+    us->p_state     = S_wspace_ast_ready;
+    us->p_astadd    = astadd;
+    us->p_astpar    = astpar;
+    if (!us->space_size)  {
+      _mbm_return_err(MBM_ZERO_LEN);
+    }
+  }
+  return user.status();
+}
+
 int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpar)  {
   if ( bm && bm->lastVar != 0 ) {
     return MBM_ERROR;
@@ -733,7 +777,20 @@ int mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask,
   }
   Lock lock(bm);
   if ( lock )  {
-    return _mbm_declare_event (bm,len,evtype,*(TriggerMask*)trmask,dst,free_add,free_size,part_id);
+    return _mbm_declare_event (bm,len,evtype,*(TriggerMask*)trmask,dst,free_add,free_size,part_id,1);
+  }
+  return lock.status();
+}
+
+int mbm_declare_event_try(BMID bm, int len, int evtype, const unsigned int* trmask,
+			  const char* dst, void** free_add, int* free_size, int part_id)
+{
+  if ( bm && bm->lastVar != 0 ) {
+    return MBM_ERROR;
+  }
+  Lock lock(bm);
+  if ( lock )  {
+    return _mbm_declare_event (bm,len,evtype,*(TriggerMask*)trmask,dst,free_add,free_size,part_id,0);
   }
   return lock.status();
 }
@@ -743,7 +800,7 @@ int mbm_declare_event_and_send (BMID bm, int len, int evtype, const unsigned int
 {
   Lock lock(bm);
   if ( lock )  {
-    int sc = _mbm_declare_event (bm, len, evtype, *(TriggerMask*)trmask, dest, free_add, free_size, part_id);
+    int sc = _mbm_declare_event(bm,len,evtype,*(TriggerMask*)trmask,dest,free_add,free_size,part_id,1);
     if (lib_rtl_is_success(sc))    {
       sc = _mbm_send_space(bm);
       if (lib_rtl_is_success(sc))      {
@@ -1853,7 +1910,8 @@ int _mbm_wes_ast(void* par)   {
 }
 
 int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
-                        const char* dest, void** free_add, int* free_size, int part_id)
+                        const char* dest, void** free_add, int* free_size, 
+			int part_id, int wait)
 {
   UserMask mask0(0), mask1(0), mask2(0);
   CONTROL* ctrl  = bm->ctrl;
@@ -1889,7 +1947,14 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
         ev = _mbm_ealloc(bm,us);
       }
     }
-    if ( ev == 0 )   {    // add on the wait event slot queue
+    if ( ev == 0 && wait )   {    // directly return
+      _mbm_printf("mbm_declare_event> Free event space:%08X\n",us->space_add);
+      _mbm_sfree (bm, us->space_add, us->space_size);
+      us->space_add = 0;
+      us->space_size = 0;
+      return MBM_NO_ROOM;
+    }
+    else if ( ev == 0 && wait )   {    // add on the wait event slot queue
       _mbm_add_wes(bm,us,_mbm_wes_ast_add);
       ::lib_rtl_clear_event(bm->WES_event_flag);
       int sp = ctrl->spare1;
