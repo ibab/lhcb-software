@@ -1,4 +1,3 @@
-// $Id: PatCheckerNTuple.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatCheckerNTuple );
+DECLARE_ALGORITHM_FACTORY( PatCheckerNTuple )
 
 
 //=============================================================================
@@ -102,7 +101,7 @@ StatusCode PatCheckerNTuple::execute() {
                            tr->key(), part->key(), position.x(), position.y(), position.z(),
                            slopes.x(), slopes.y() );
         debug() << format( " dx%8.3f dy%8.3f dp/p%8.4f%%",  position.x() - mcPosition.x(),
-                           position.y() - mcPosition.y(), 100.*(1.-mcMomentum/momentum) ) << endreq;
+                           position.y() - mcPosition.y(), 100.*(1.-mcMomentum/momentum) ) << endmsg;
       }
       part = link.next();
     }

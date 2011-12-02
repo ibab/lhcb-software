@@ -1,4 +1,3 @@
-// $Id: PatChecker.cpp,v 1.4 2008-06-30 12:37:20 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -18,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( PatChecker );
+DECLARE_ALGORITHM_FACTORY( PatChecker )
 
 
 //=============================================================================
@@ -43,7 +42,7 @@ PatChecker::PatChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatChecker::~PatChecker() {};
+PatChecker::~PatChecker() {}
 
 //=============================================================================
 // Initialization
@@ -196,7 +195,7 @@ StatusCode PatChecker::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -248,7 +247,7 @@ StatusCode PatChecker::execute() {
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
     LHCb::MCParticle* part = *itP;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
-    verbose() << "checking MCPart " << part->key() << endreq;
+    verbose() << "checking MCPart " << part->key() << endmsg;
 
     bool isLong  = trackInfo.hasVeloAndT( part );
     isLong = isLong && ( abs( part->particleID().pid() ) != 11 ); // and not electron
@@ -390,7 +389,7 @@ StatusCode PatChecker::execute() {
          3 < flags.size() && 
          fromKsFromB ) {
       info() << "=== Missed Downstream track key " << part->key() 
-             << " seed key " << foundSeed << endreq;
+             << " seed key " << foundSeed << endmsg;
     }
     
 
@@ -425,7 +424,7 @@ StatusCode PatChecker::execute() {
 
   if ( m_measureTime ) m_timer->stop( m_partTime );
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -4,6 +4,12 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Marco Cattaneo
+ - Fix trivial icc remarks
+ - Replace all endreq by endmsg
+ - In PrimaryVertexChecker, properly initialize MCPVInfo struct to avoid
+   floating point exceptions in debug mode.
+
 !========================= PatChecker v3r10 2011-04-05 =========================
 ! 2011-03-21 Wembin Qian
  - Modified PatTTCounter to inherit from a virtual class

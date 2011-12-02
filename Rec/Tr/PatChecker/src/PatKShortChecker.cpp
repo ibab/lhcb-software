@@ -1,4 +1,3 @@
-// $Id: PatKShortChecker.cpp,v 1.3 2009-01-20 15:49:30 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -18,7 +17,7 @@
 // 2002-11-23 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PatKShortChecker );
+DECLARE_ALGORITHM_FACTORY( PatKShortChecker )
 
 
 //=============================================================================
@@ -35,7 +34,7 @@ PatKShortChecker::PatKShortChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatKShortChecker::~PatKShortChecker() {};
+PatKShortChecker::~PatKShortChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -59,7 +58,7 @@ StatusCode PatKShortChecker::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -89,14 +88,14 @@ StatusCode PatKShortChecker::execute() {
   std::vector<LHCb::MCParticle*>::iterator itPi;
 
   if ( 0 != seedTable ) {
-    debug() << "Start counting seeds" << endreq;
+    debug() << "Start counting seeds" << endmsg;
 
     for ( itT = seeds->begin(); seeds->end() != itT; itT++  ) {
       TrAsct::DirectType::Range range = seedTable->relations( *itT );
       TrAsct::DirectType::iterator it;
       if ( range.empty() ) {
         m_cntSeed[0] += 1.;
-        verbose() << "No truth for track " << (*itT)->key() << endreq;
+        verbose() << "No truth for track " << (*itT)->key() << endmsg;
       } else {
         m_cntSeed[1] += 1.;
         verbose() << "Truth for track " << (*itT)->key() << " : ";
@@ -116,13 +115,13 @@ StatusCode PatKShortChecker::execute() {
             }
           }
         }
-        verbose() << endreq;
+        verbose() << endmsg;
       }
     }
   }
 
   if ( 0 != downTable ) {
-    debug() << "Start counting Downstream " << endreq;
+    debug() << "Start counting Downstream " << endmsg;
     
     for ( itT = downs->begin(); downs->end() != itT; itT++  ) {
       TrAsct::DirectType::Range range = downTable->relations( *itT );
@@ -151,7 +150,7 @@ StatusCode PatKShortChecker::execute() {
   
   //== Count the topology of true KShorts
 
-  debug() << "Start counting true KShorts " << endreq;
+  debug() << "Start counting true KShorts " << endmsg;
 
   m_counter[0]++;
 
@@ -188,7 +187,7 @@ StatusCode PatKShortChecker::execute() {
       m_counter[2]++;
       m_counter[12+nWithVelo]++;
 
-      debug() << "== KShort from B == N with velo : " << nWithVelo << endreq;
+      debug() << "== KShort from B == N with velo : " << nWithVelo << endmsg;
       unsigned int nbReco = 0;
       unsigned int nbLong = 0;
       unsigned int nbDown = 0;
@@ -212,7 +211,7 @@ StatusCode PatKShortChecker::execute() {
                 
                 debug() << "  -- child found as " << (*itT)->key()
                         << " type " << trackType( (*itT) )
-                        << endreq;
+                        << endmsg;
               }
             }
           }
@@ -246,54 +245,53 @@ StatusCode PatKShortChecker::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode PatKShortChecker::finalize() {
 
-  double frac;
   if ( 0 != m_counter[0] ) {
-    info() << format( "Nb events          %6d", m_counter[0] ) << endreq;
-    frac = m_counter[1] / (double)m_counter[0];
+    info() << format( "Nb events          %6d", m_counter[0] ) << endmsg;
+    double frac = m_counter[1] / (double)m_counter[0];
     info() << format( "Nb KShort from B   %6d %6.2f per event",
-                      m_counter[1], frac ) << endreq;
+                      m_counter[1], frac ) << endmsg;
     frac = m_counter[2] / (double)m_counter[0];
     info() << format( "Nb reconstructible %6d %6.2f per event",
-                      m_counter[2], frac ) << endreq;
+                      m_counter[2], frac ) << endmsg;
     if ( 0 != m_counter[2] ) {
       double den = 100. / m_counter[2];
 
       frac = m_counter[12] * den;
-      info() << format( "   with 0 Velo    %6d %6.2f %%",  m_counter[12], frac ) << endreq;
+      info() << format( "   with 0 Velo    %6d %6.2f %%",  m_counter[12], frac ) << endmsg;
       frac = m_counter[13] * den;
-      info() << format( "   with 1 Velo    %6d %6.2f %%",  m_counter[13], frac ) << endreq;
+      info() << format( "   with 1 Velo    %6d %6.2f %%",  m_counter[13], frac ) << endmsg;
       frac = m_counter[14] * den;
-      info() << format( "   with 2 Velo    %6d %6.2f %%",  m_counter[14], frac ) << endreq;
+      info() << format( "   with 2 Velo    %6d %6.2f %%",  m_counter[14], frac ) << endmsg;
 
       frac = m_counter[3] / (double)m_counter[2];
-      info() << format( "Nb with tracks    %6d %6.2f per reconstructible", m_counter[3], frac ) << endreq;
+      info() << format( "Nb with tracks    %6d %6.2f per reconstructible", m_counter[3], frac ) << endmsg;
       frac = m_counter[4] / (double)m_counter[2];
-      info() << format( "Nb with 2 tracks  %6d %6.2f per reconstructible", m_counter[4], frac ) << endreq;
+      info() << format( "Nb with 2 tracks  %6d %6.2f per reconstructible", m_counter[4], frac ) << endmsg;
     }
     if ( 0 != m_counter[4] ) {
       double den = 100. / m_counter[4];
 
       info() << format( "  2 Long          %6d %6.2f %% of 2-tracks",
-                        m_counter[5], m_counter[5] * den ) << endreq;
+                        m_counter[5], m_counter[5] * den ) << endmsg;
       info() << format( "  1 Long  1 Dwnst %6d %6.2f %% of 2-tracks",
-                        m_counter[6], m_counter[6] * den ) << endreq;
+                        m_counter[6], m_counter[6] * den ) << endmsg;
       info() << format( "  2 downstream    %6d %6.2f %% of 2-tracks",
-                        m_counter[7], m_counter[7] * den ) << endreq;
+                        m_counter[7], m_counter[7] * den ) << endmsg;
       info() << format( "  1 Long 1 Seed   %6d %6.2f %% of 2-tracks",
-                        m_counter[8], m_counter[8] * den ) << endreq;
+                        m_counter[8], m_counter[8] * den ) << endmsg;
       info() << format( "  1 Dwnst 1 Seed  %6d %6.2f %% of 2-tracks",
-                        m_counter[9], m_counter[9] * den ) << endreq;
+                        m_counter[9], m_counter[9] * den ) << endmsg;
       info() << format( "  2 Seed          %6d %6.2f %% of 2-tracks",
-                        m_counter[10], m_counter[10] * den ) << endreq;
+                        m_counter[10], m_counter[10] * den ) << endmsg;
       info() << format( "  Other...        %6d %6.2f %% of 2-tracks",
-                        m_counter[11], m_counter[11] * den ) << endreq;
+                        m_counter[11], m_counter[11] * den ) << endmsg;
     }
   }
 
@@ -301,7 +299,7 @@ StatusCode PatKShortChecker::finalize() {
     info() << "                     "
            << "Ghosts      Found          WithTT        >5GeV "
            << "   TT+KChild    TT+K+>5GeV"
-           << endreq;
+           << endmsg;
     double frac = 100. * m_cntSeed[0] / (m_cntSeed[0] + m_cntSeed[1]);
     info() << format( "Seed           %7.0f %5.1f%7.0f      ",
                       m_cntSeed[0], frac, m_cntSeed[1] );
@@ -311,7 +309,7 @@ StatusCode PatKShortChecker::finalize() {
     info() << format( "%7.0f %5.1f", m_cntSeed[3], mult * m_cntSeed[3]);
     info() << format( "%7.0f %5.1f", m_cntSeed[4], mult * m_cntSeed[4]);
     info() << format( "%7.0f %5.1f", m_cntSeed[5], mult * m_cntSeed[5]);
-    info() << endreq;
+    info() << endmsg;
 
     if ( 0 < m_cntDown[1] ) {
       // frac = 100. * m_cntDown[0] / (m_cntDown[0] + m_cntDown[1]);
@@ -323,7 +321,7 @@ StatusCode PatKShortChecker::finalize() {
       //info() << format( "%7.0f %5.1f", m_cntDown[3], mult * m_cntDown[3]);
       //info() << format( "%7.0f %5.1f", m_cntDown[4], mult * m_cntDown[4]);
       //info() << format( "%7.0f %5.1f", m_cntDown[5], mult * m_cntDown[5]);
-      //info() << endreq;
+      //info() << endmsg;
 
       //=== Ratios, Downstream efficiency...
 
@@ -336,7 +334,7 @@ StatusCode PatKShortChecker::finalize() {
         }
         info() << format( "%7.0f %5.1f", m_cntDown[kk], frac );
       }
-      info() << endreq;
+      info() << endmsg;
     }
   }
 

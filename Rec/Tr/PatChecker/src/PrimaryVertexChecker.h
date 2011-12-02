@@ -1,9 +1,7 @@
-// $Id: PrimaryVertexChecker.h,v 1.3 2010-02-11 08:23:58 pmorawsk Exp $
 #ifndef PRIMARYVERTEXCHECKER_H 
 #define PRIMARYVERTEXCHECKER_H 1
 
 // Include files
-#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 

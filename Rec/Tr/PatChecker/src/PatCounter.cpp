@@ -1,4 +1,3 @@
-// $Id: PatCounter.cpp,v 1.5 2008-07-11 08:28:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -13,7 +12,7 @@
 // 2005-06-02 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PatCounter );
+DECLARE_TOOL_FACTORY( PatCounter )
 
 
 //=============================================================================
@@ -43,7 +42,7 @@ PatCounter::PatCounter( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatCounter::~PatCounter() {};
+PatCounter::~PatCounter() {}
 
 //=========================================================================
 //  Finalize, delete the linker tool
@@ -243,16 +242,16 @@ void PatCounter::printStatistics ( ) {
   double frac = 100. * double( m_totGhost ) / totT;
   info() << "**** " << m_container
          << format( " : %8d tracks including %8d ghosts [%5.1f %%] Event average %5.1f %% ****",
-                    m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent ) << endreq;
+                    m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent ) << endmsg;
 
   if(m_totTrackSpc>0) info() << format( "                      %8d by \'RZ/Space\' PR %8d ghosts [%5.1f %%]",
-                      m_totTrackSpc, m_totGhostSpc, 100.*double(m_totGhostSpc)/double(m_totTrackSpc) ) << endreq;
+                      m_totTrackSpc, m_totGhostSpc, 100.*double(m_totGhostSpc)/double(m_totTrackSpc) ) << endmsg;
   if(m_totTrackGrl>0) info() << format( "                      %8d by \'General\'  PR %8d ghosts [%5.1f %%]",
-                      m_totTrackGrl, m_totGhostGrl, 100.*double(m_totGhostGrl)/double(m_totTrackGrl) ) << endreq;
+                      m_totTrackGrl, m_totGhostGrl, 100.*double(m_totGhostGrl)/double(m_totTrackGrl) ) << endmsg;
   if(m_totTrackGen>0) info() << format( "                      %8d by \'Generic\'  PR %8d ghosts [%5.1f %%]",
-                      m_totTrackGen, m_totGhostGen, 100.*double(m_totGhostGen)/double(m_totTrackGen) ) << endreq;
+                      m_totTrackGen, m_totGhostGen, 100.*double(m_totGhostGen)/double(m_totTrackGen) ) << endmsg;
   if(m_totTrackOpn>0) info() << format( "                      %8d by \'Open\'     PR %8d ghosts [%5.1f %%]",
-                      m_totTrackOpn, m_totGhostOpn, 100.*double(m_totGhostOpn)/double(m_totTrackOpn) ) << endreq;
+                      m_totTrackOpn, m_totGhostOpn, 100.*double(m_totGhostOpn)/double(m_totTrackOpn) ) << endmsg;
 
   for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {
     if ( 0 == m_wanted[kk] ) continue;
@@ -264,7 +263,7 @@ void PatCounter::printStatistics ( ) {
     info() << "  " << m_name[kk]
            << format( " :%8d from %8d [%5.1f %%] %6d clones [%4.1f %%]",
                       m_counted[kk], m_wanted[kk], frac, m_clone[kk], clo);
-    info() << format( ", purity %6.2f %% hitEff %6.2f %%", purity, hitEff ) << endreq;
+    info() << format( ", purity %6.2f %% hitEff %6.2f %%", purity, hitEff ) << endmsg;
   }
 }
 

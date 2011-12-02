@@ -1,4 +1,3 @@
-// $Id: PatLHCbID2MCParticle.cpp,v 1.3 2009-08-27 07:48:50 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -22,7 +21,7 @@
 
 using namespace Tf;
 
-DECLARE_ALGORITHM_FACTORY( PatLHCbID2MCParticle );
+DECLARE_ALGORITHM_FACTORY( PatLHCbID2MCParticle )
 
 
 //=============================================================================
@@ -43,7 +42,7 @@ PatLHCbID2MCParticle::PatLHCbID2MCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatLHCbID2MCParticle::~PatLHCbID2MCParticle() {}; 
+PatLHCbID2MCParticle::~PatLHCbID2MCParticle() {}
 
 //=============================================================================
 // Initialization
@@ -57,7 +56,7 @@ StatusCode PatLHCbID2MCParticle::initialize() {
   if (m_linkOT) m_othitcreator.retrieve().ignore();
  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -95,7 +94,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
             addToList( part );
             part = veloLink.next();
           }
-          if ( isVerbose ) verbose() << endreq;
+          if ( isVerbose ) verbose() << endmsg;
           id++;
         }
         for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
@@ -124,7 +123,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
               addToList( part );
               part = veloLink.next();
             }
-            if ( isVerbose ) verbose() << endreq;
+            if ( isVerbose ) verbose() << endmsg;
             id++;
           }
           for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
@@ -220,7 +219,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
         addToList( part );
         part = otLink.next();
       }
-      if ( isVerbose ) verbose() << endreq;
+      if ( isVerbose ) verbose() << endmsg;
       for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
           m_partList.begin();m_partList.end() != itP; ++itP ) {
         lhcbLink.link( lId.lhcbID(), *itP ); 
@@ -229,7 +228,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -1,4 +1,3 @@
-// $Id: PatTTCounter.cpp,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatTTCounter );
+DECLARE_TOOL_FACTORY( PatTTCounter )
 
 
 //=============================================================================
@@ -177,7 +176,7 @@ void PatTTCounter::printStatistics ( ) {
     double bad = m_nbGhostHit / m_nbGhost;
     info() << format( "%6.0f ghost, %5.2f TT per track", m_nbGhost, bad );
   }
-  info() << endreq;
+  info() << endmsg;
   
   for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {
     if ( 0.5 > m_nbTrack[kk] ) continue;
@@ -203,7 +202,7 @@ void PatTTCounter::printStatistics ( ) {
            << format( " :%6.0f tr %5.2f mcTT, OK%5.2f wrong%5.2f",
                       m_nbTrack[kk], meanHits, eff, bad);
     info() << format( " %6.0f tr>3TT %5.2f mcTT, OK%5.2f wrong %5.2f",
-                      m_nbTrack3[kk], meanHits3, eff3, bad3) << endreq;
+                      m_nbTrack3[kk], meanHits3, eff3, bad3) << endmsg;
   }
 }
 

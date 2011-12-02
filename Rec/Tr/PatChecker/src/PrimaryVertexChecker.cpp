@@ -1,4 +1,3 @@
-// $Id: PrimaryVertexChecker.cpp,v 1.5 2010-03-01 15:27:45 pmorawsk Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -26,7 +25,7 @@ bool sortmlt(MCPVInfo first, MCPVInfo second) {
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(PrimaryVertexChecker);
+DECLARE_ALGORITHM_FACTORY(PrimaryVertexChecker)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -48,7 +47,7 @@ PrimaryVertexChecker::PrimaryVertexChecker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrimaryVertexChecker::~PrimaryVertexChecker() {}; 
+PrimaryVertexChecker::~PrimaryVertexChecker() {}
 
 //=============================================================================
 // Initialization
@@ -59,7 +58,7 @@ StatusCode PrimaryVertexChecker::initialize() {
 
   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -97,7 +96,7 @@ StatusCode PrimaryVertexChecker::initialize() {
   m_nRecBFalse = 0;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -160,7 +159,12 @@ StatusCode PrimaryVertexChecker::execute() {
         MCPVInfo mcprimvert;
         mcprimvert.pMCPV = *itMCV;
         mcprimvert.nRecTracks = 0;
+        mcprimvert.nRecBackTracks = 0;
         mcprimvert.indexRecPVInfo = -1;
+        mcprimvert.nCorrectTracks = 0;
+        mcprimvert.multClosestMCPV = 0;
+        mcprimvert.m_mcPartInMCPV.clear();
+        mcprimvert.m_recTracksInMCPV.clear();
         mcpvvec.push_back(mcprimvert);
       }
     }
@@ -214,7 +218,7 @@ StatusCode PrimaryVertexChecker::execute() {
       debug() <<  format(" %3d %3d  xyz ( %7.4f %7.4f %8.3f )   nrec = %4d", 
                          imcpv,  rblemcpv[imcpv].indexRecPVInfo, 
                          mcpv->position().x(), mcpv->position().y(), mcpv->position().z(),
-                         rblemcpv[imcpv].nRecTracks) << ff << endreq;
+                         rblemcpv[imcpv].nRecTracks) << ff << endmsg;
     }
     debug() << " -----------------------------------" << endmsg << endmsg;
 
@@ -229,10 +233,10 @@ StatusCode PrimaryVertexChecker::execute() {
                         recpvvec[ipv].nTracks,
                         recpvvec[ipv].nVeloTracks,
                         recpvvec[ipv].positionSigma.x(),recpvvec[ipv].positionSigma.y(),recpvvec[ipv].positionSigma.z(),
-                        recpvvec[ipv].pRECPV->chi2PerDoF()) << ff << endreq;
+                        recpvvec[ipv].pRECPV->chi2PerDoF()) << ff << endmsg;
       
     }
-    debug() << " -----------------------------------" << endmsg << endmsg;
+    debug() << " -----------------------------------" << endmsg;
 
   }
 
@@ -497,7 +501,7 @@ StatusCode PrimaryVertexChecker::execute() {
     
   return StatusCode::SUCCESS;
 
-};
+}
 
 void  PrimaryVertexChecker::match_mc_vertex_by_tracks(int ipv, std::vector<RecPVInfo>&  rinfo, std::vector<MCPVInfo>& mcpvvec) {
 
@@ -604,22 +608,22 @@ StatusCode PrimaryVertexChecker::finalize() {
   debug() << "==> Finalize" << endmsg;
 
 
-  info() << " ============================================" << endreq;
-  info() << " Efficiencies for reconstructible MC vertices: " << endreq;
-  info() << " ============================================" << endreq;
-  info() << " " << endreq;
+  info() << " ============================================" << endmsg;
+  info() << " Efficiencies for reconstructible MC vertices: " << endmsg;
+  info() << " ============================================" << endmsg;
+  info() << " " << endmsg;
 
   info() << " MC PV is reconstructible if at least " << m_nTracksToBeRecble 
-         << "  tracks are reconstructed" << endreq;
+         << "  tracks are reconstructed" << endmsg;
   info() << " MC PV is isolated if dz to closest reconstructible MC PV >  " 
-         << m_dzIsolated << " mm" << endreq;
+         << m_dzIsolated << " mm" << endmsg;
   std::string ff = "by counting tracks";
   if ( !m_matchByTracks ) ff = "by dz distance";
   info() << " REC and MC vertices matched:  " 
-         <<  ff << endreq;
+         <<  ff << endmsg;
 
 
-  info() << " " << endreq;
+  info() << " " << endmsg;
 
             printRat("All",       m_nRecMCPV ,       m_nMCPV );
             printRat("Isolated",  m_nRecMCPV_isol,   m_nMCPV_isol );
@@ -630,37 +634,37 @@ StatusCode PrimaryVertexChecker::finalize() {
   	      printRat("Real false rate", m_nFalsePV_real , m_nRecMCPV+m_nFalsePV_real); 
 	    }
 
-            info() << endreq;
+            info() << endmsg;
             printRat("L0 accepted PV of B", m_nRecL0PvOfB, m_nL0PvOfB);
             printRat("False PV as B", m_nRecBFalse, m_nBFalse);
-            info() << endreq;
+            info() << endmsg;
 
 
-  info() << "      --------------------------------------------" << endreq;
-  info() << "           Substatistics: " << endreq;
-  info() << "      --------------------------------------------" << endreq;
-  info() << "      1st PV (highest multiplicity): " << endreq;
+  info() << "      --------------------------------------------" << endmsg;
+  info() << "           Substatistics: " << endmsg;
+  info() << "      --------------------------------------------" << endmsg;
+  info() << "      1st PV (highest multiplicity): " << endmsg;
             printRat("All",      m_nRecMCPV_1mult ,      m_nMCPV_1mult ) ;
             printRat("Isolated", m_nRecMCPV_isol_1mult,  m_nMCPV_isol_1mult ) ;
             printRat("Close",    m_nRecMCPV_close_1mult, m_nMCPV_close_1mult ) ;
 
-  info() << "      ---------------------------------------" << endreq;
-  info() << "      2nd PV: " << endreq;
+  info() << "      ---------------------------------------" << endmsg;
+  info() << "      2nd PV: " << endmsg;
             printRat("All",      m_nRecMCPV_2mult ,      m_nMCPV_2mult ) ;
             printRat("Isolated", m_nRecMCPV_isol_2mult , m_nMCPV_isol_2mult ) ;
             printRat("Close",    m_nRecMCPV_close_2mult, m_nMCPV_close_2mult ) ;
 
-  info() << "      ---------------------------------------" << endreq;
-  info() << "      3rd PV: " << endreq;
+  info() << "      ---------------------------------------" << endmsg;
+  info() << "      3rd PV: " << endmsg;
             printRat("All",      m_nRecMCPV_3mult ,       m_nMCPV_3mult ) ;
             printRat("Isolated", m_nRecMCPV_isol_3mult ,  m_nMCPV_isol_3mult ) ;
             printRat("Close",    m_nRecMCPV_close_3mult , m_nMCPV_close_3mult ) ;
 	    
-  info() << " " << endreq;
+  info() << " " << endmsg;
   if(debugLevel()) {
     info() << " * Real false rate means: no visible MC PV within 5 sigma of REC PV." 
-           << " Visible MC PV: 2 tracks reconstructed" << endreq;
-    info() << " " << endreq;
+           << " Visible MC PV: 2 tracks reconstructed" << endmsg;
+    info() << " " << endmsg;
   }
   const AIDA::IHistogram1D* dx = histo( HistoID(1021) ) ;
   const AIDA::IHistogram1D* pullx = histo( HistoID(1031) ) ;
@@ -669,44 +673,44 @@ StatusCode PrimaryVertexChecker::finalize() {
   const AIDA::IHistogram1D* dz = histo( HistoID(1023) ) ;
   const AIDA::IHistogram1D* pullz = histo( HistoID(1033) ) ;
   if( dx ) {
-    info() << "      ---------------------------------------" << endreq;
+    info() << "      ---------------------------------------" << endmsg;
     info() << "dx:    "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      dx->mean(), Gaudi::Utils::HistoStats::meanErr(dx),
-		      dx->rms(), Gaudi::Utils::HistoStats::rmsErr(dx)) << endreq ;
+		      dx->rms(), Gaudi::Utils::HistoStats::rmsErr(dx)) << endmsg ;
   }
   if( dy ) {
     info() << "dy:    "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      dy->mean(), Gaudi::Utils::HistoStats::meanErr(dy),
-		      dy->rms(), Gaudi::Utils::HistoStats::rmsErr(dy)) << endreq ;
+		      dy->rms(), Gaudi::Utils::HistoStats::rmsErr(dy)) << endmsg ;
   }
   if( dz ) {
     info() << "dz:    "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      dz->mean(), Gaudi::Utils::HistoStats::meanErr(dz),
-		      dz->rms(), Gaudi::Utils::HistoStats::rmsErr(dz)) << endreq ;
+		      dz->rms(), Gaudi::Utils::HistoStats::rmsErr(dz)) << endmsg ;
   }
-  info() << "      ---------------------------------------" << endreq;
+  info() << "      ---------------------------------------" << endmsg;
   if( pullx ) {
     info() << "pullx: "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      pullx->mean(), Gaudi::Utils::HistoStats::meanErr(pullx),
-		      pullx->rms(), Gaudi::Utils::HistoStats::rmsErr(pullx)) << endreq ;
+		      pullx->rms(), Gaudi::Utils::HistoStats::rmsErr(pullx)) << endmsg ;
   }
   if( pully ) {
     info() << "pully: "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      pully->mean(), Gaudi::Utils::HistoStats::meanErr(pully),
-		      pully->rms(), Gaudi::Utils::HistoStats::rmsErr(pully)) << endreq ;
+		      pully->rms(), Gaudi::Utils::HistoStats::rmsErr(pully)) << endmsg ;
   }
   if( pullz ) {
     info() << "pullz: "
 	   << format( "mean =  %5.3f +/- %5.3f, RMS =  %5.3f +/- %5.3f",
 		      pullz->mean(), Gaudi::Utils::HistoStats::meanErr(pullz),
-		      pullz->rms(), Gaudi::Utils::HistoStats::rmsErr(pullz)) << endreq ;
+		      pullz->rms(), Gaudi::Utils::HistoStats::rmsErr(pullz)) << endmsg ;
   }
-  info() << " ============================================" << endreq;
+  info() << " ============================================" << endmsg;
 
   return GaudiTupleAlg::finalize();  // Must be called after all other actions
 }
@@ -724,7 +728,7 @@ void PrimaryVertexChecker::printRat(std::string mes, int a, int b) {
   }
   pmes+= " : ";
 
-  info() << pmes << format(" %6.3f ( %7d / %8d )", rat,a,b) << endreq; 
+  info() << pmes << format(" %6.3f ( %7d / %8d )", rat,a,b) << endmsg; 
 
 }
 
@@ -827,7 +831,7 @@ bool PrimaryVertexChecker::getInputTracks( std::vector<LHCb::Track*>& vecOfTrack
   }
 
   if ( tracksName == "none" ) {
-    debug() << " Tracks not specified " << tracksName << endreq;
+    debug() << " Tracks not specified " << tracksName << endmsg;
     return false;
   }
 
@@ -862,7 +866,7 @@ bool PrimaryVertexChecker::getInputVertices( std::vector<LHCb::RecVertex*>& vecO
   }
 
   if ( verticesName == "none" ) {
-    debug() << " Vertices not specified " << verticesName << endreq;
+    debug() << " Vertices not specified " << verticesName << endmsg;
     return false;
   }
 

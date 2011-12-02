@@ -19,7 +19,7 @@
 // 2008-12-07 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(CheatedPrimaryVertices);
+DECLARE_ALGORITHM_FACTORY(CheatedPrimaryVertices)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,7 +36,7 @@ CheatedPrimaryVertices::CheatedPrimaryVertices(const std::string& name,
 // Destructor
 //=============================================================================
 CheatedPrimaryVertices::~CheatedPrimaryVertices() {
-};
+}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -46,7 +46,7 @@ StatusCode CheatedPrimaryVertices::initialize() {
   if (!sc) return sc;
   debug() << "Initialisation" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Execution
@@ -58,7 +58,7 @@ StatusCode CheatedPrimaryVertices::execute() {
   if(serviceLocator())
     serviceLocator()->service("EventDataSvc", m_EventSvc, true);
   if(!m_EventSvc) {
-    error() << "Unable to find EventDataSvc" << endreq;
+    error() << "Unable to find EventDataSvc" << endmsg;
     return StatusCode::FAILURE;
   }
   MCTrackInfo trInfo(m_EventSvc, msgSvc());

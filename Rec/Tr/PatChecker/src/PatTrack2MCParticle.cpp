@@ -1,4 +1,3 @@
-// $Id: PatTrack2MCParticle.cpp,v 1.2 2007-10-22 15:50:57 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +12,7 @@
 // 2005-06-01 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( PatTrack2MCParticle );
+DECLARE_ALGORITHM_FACTORY( PatTrack2MCParticle )
 
 
 //=============================================================================
@@ -39,7 +38,7 @@ PatTrack2MCParticle::PatTrack2MCParticle( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatTrack2MCParticle::~PatTrack2MCParticle() {};
+PatTrack2MCParticle::~PatTrack2MCParticle() {}
 
 //=============================================================================
 // Initialization
@@ -53,7 +52,7 @@ StatusCode PatTrack2MCParticle::initialize() {
   m_lhcbLinks = "Pat/LHCbID";
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -62,7 +61,7 @@ StatusCode PatTrack2MCParticle::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  debug() << "Loading LHCbID Links from " << m_lhcbLinks << endreq;
+  debug() << "Loading LHCbID Links from " << m_lhcbLinks << endmsg;
   LinkedTo<LHCb::MCParticle> lhcbIdLink( evtSvc(), msgSvc(), m_lhcbLinks );
 
   //== Process the list of locations
@@ -71,11 +70,11 @@ StatusCode PatTrack2MCParticle::execute() {
         m_locations.end() != itS; ++itS ) {
     const std::string & name =  (*itS);
     if ( !exist<LHCb::Tracks>( name ) ) {
-      debug() << "Container " << name << " not found." << endreq;
+      debug() << "Container " << name << " not found." << endmsg;
       continue;
     }
     LHCb::Tracks* container = get<LHCb::Tracks>( name );
-    debug() << "Processing " << container->size() << " Tracks from " << name << endreq;
+    debug() << "Processing " << container->size() << " Tracks from " << name << endmsg;
     LinkerWithKey<LHCb::MCParticle,LHCb::Track>
       trackLink( evtSvc(), msgSvc(), name );
     for ( LHCb::Tracks::const_iterator itT = container->begin();
@@ -84,7 +83,7 @@ StatusCode PatTrack2MCParticle::execute() {
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=========================================================================
 //  Associate a track
@@ -111,11 +110,11 @@ void PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
   const std::vector<LHCb::LHCbID> & ids = tr->lhcbIDs();
 
   debug() << "++++ MC truth for hits on track " << tr->key()
-          << " nHit = " << ids.size() << endreq;
+          << " nHit = " << ids.size() << endmsg;
 
   if ( tr->checkFlag( LHCb::Track::Invalid ) ) 
   {
-    debug() << " -> Track is Invalid -> Abort MC association" << endreq;
+    debug() << " -> Track is Invalid -> Abort MC association" << endmsg;
     return;
   }
 
@@ -176,7 +175,7 @@ void PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
         part = lhcbIdLink.next();
       }
     }
-    if ( isVerbose ) verbose() << endreq;
+    if ( isVerbose ) verbose() << endmsg;
   }
 
   //== For Long match, count also parents hits if in VELO !
@@ -202,7 +201,7 @@ void PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
                     << "[" << parts[j2]->particleID().pid()
                     << "] (" << nVelo[j2] << "," << nTT[j2]
                     << "," << nT[j2] << ")"
-                    << ". Merge hits to tag both." << endreq;
+                    << ". Merge hits to tag both." << endmsg;
 
             //== Daughter hits are added to mother.
             nVelo[j2] = nVelo[j1] + nVelo[j2];
@@ -247,13 +246,13 @@ void PatTrack2MCParticle::associateTrack ( const LHCb::Track* tr,
                 << " Velo " <<  nVelo[jj] << "/" << nTotVelo
                 << " TT " <<  nTT[jj] << "/" << nTotTT
                 << " T " <<  nT[jj] << "/" << nTotT
-                << endreq;
+                << endmsg;
     }
 
     //=== Decision. Use TT
 
     if ( veloOK && seedOK && TTOK) {
-      debug() << "  => match MC " << parts[jj]->key() << endreq;
+      debug() << "  => match MC " << parts[jj]->key() << endmsg;
       ratio = ( nVelo[jj] + nT[jj] + nTT[jj] ) / ( nTotVelo  + nTotT  + nTotTT  );
       trackLink.link( tr, parts[jj], ratio );
     }
