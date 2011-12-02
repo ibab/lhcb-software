@@ -15,7 +15,7 @@ namespace Lester
 
   template < class DATAMODEL >
   CircleParams ThreePointCircleProposer<DATAMODEL>::sample() const {
-    unsigned long failures=0;
+    unsigned long long failures=0;
     CircleParams ans;
     while(true)
     {

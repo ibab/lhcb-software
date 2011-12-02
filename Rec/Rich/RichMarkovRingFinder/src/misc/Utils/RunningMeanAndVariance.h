@@ -24,11 +24,11 @@ namespace Lester {
     double variance() const {
       return var_n;
     }
-    unsigned long N() const {
+    unsigned long long N() const {
       return n;
     }
   private:
-    unsigned long int n;
+    unsigned long long n;
     double mean_n;
     double var_n;
   };

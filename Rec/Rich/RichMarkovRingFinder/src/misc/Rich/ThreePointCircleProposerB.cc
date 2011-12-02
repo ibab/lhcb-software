@@ -39,7 +39,7 @@ namespace Lester
   template < class DATAMODEL >
   CircleParams ThreePointCircleProposerB<DATAMODEL>::samplePrivate() const
   {
-    unsigned long failures=0;
+    unsigned long long failures=0;
     CircleParams ans;
     while(true)
     {

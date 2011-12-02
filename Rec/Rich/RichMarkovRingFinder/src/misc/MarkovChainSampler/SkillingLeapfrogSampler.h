@@ -79,9 +79,9 @@ namespace Lester
       ++m_pointsReturned; // For statistics ...
 
       // frogger = "point doing the jumping"
-      const long froggerIndex = RandFlat::shootInt(m_numberOfPoints);
+      const long long froggerIndex = RandFlat::shootInt(m_numberOfPoints);
       // froggee = "point being jumped over"
-      const long froggeeIndex = (froggerIndex + 1 + RandFlat::shootInt(m_numberOfPointsMinusOne)) % m_numberOfPoints;
+      const long long froggeeIndex = (froggerIndex + 1 + RandFlat::shootInt(m_numberOfPointsMinusOne)) % m_numberOfPoints;
 
       //
       assert(froggerIndex!=froggeeIndex);
@@ -156,10 +156,10 @@ namespace Lester
     };
     mutable bool initialised;
     mutable InternalPointsType currentPoints;
-    const unsigned long m_numberOfPoints;
-    const unsigned long m_numberOfPointsMinusOne;
-    long m_pointsReturned;
-    long m_freshPointsReturned;
+    const unsigned long long m_numberOfPoints;
+    const unsigned long long m_numberOfPointsMinusOne;
+    long long m_pointsReturned;
+    long long m_freshPointsReturned;
     boost::shared_ptr<const PointType> m_last;
   public:
     double logProbabilityOfLastAcceptedPoint() const {

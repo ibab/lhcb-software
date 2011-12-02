@@ -26,7 +26,7 @@ namespace Lester
 
     typedef std::map<HitIndexTriple, double> Cache1;
     mutable Cache1 m_cache1;
-    typedef std::map<QuantizedCircleParams, long> VisitCache;
+    typedef std::map<QuantizedCircleParams, long long> VisitCache;
     mutable VisitCache m_visitCache;
     const Data & m_data;
     const RegularCPQuantizer & m_cpQuantizer;

@@ -4,6 +4,9 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Chris Jones
+ - Use long long instead of long
+
 ! 2010-12-03 - Marco Cattaneo
  - Fix Misc/Utils/CheckForNan.h for ICC, c.f. similar file in GaudiAlg
  - Fix some trivial ICC remarks 
