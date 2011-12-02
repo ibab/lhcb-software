@@ -2,6 +2,11 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Marco Cattaneo
+ - In MuonDigitChecker NTuples, store event number as a longlong. Fixes a 
+   compilation issue when compiling against the fix to bug #85377 (change 
+   in Gaudi::Tuple to support ulonglong #85377)
+
 ! 2011-11-24 - Marco Cattaneo
  - Fix trivial gcc46 warning and icc remarks
 

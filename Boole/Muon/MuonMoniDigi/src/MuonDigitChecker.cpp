@@ -291,8 +291,8 @@ StatusCode MuonDigitChecker::execute() {
   if(m_hitMonitor) {
     Tuple nt1 = nTuple(41,"MC HITS",CLID_ColumnWiseTuple);
     
-    long m_evt = (long)evt->evtNumber()&0x7FFFFFFF;  
-    StatusCode sc=nt1->column("Event",m_evt,0,10000);
+    longlong m_evt = evt->evtNumber();  
+    StatusCode sc=nt1->column("Event",m_evt,0LL,10000LL);
     if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("is", m_sta ,"Nhits",1000);
     if(sc.isFailure())debug()<<" nt error "<<endmsg;
@@ -345,8 +345,8 @@ StatusCode MuonDigitChecker::execute() {
   }
   Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
   
-  long m_digit_evt = (long)evt->evtNumber()&0x7FFFFFFF;
-  StatusCode sc=nt2->column("Event", m_digit_evt, 0,10000);
+  longlong m_digit_evt = evt->evtNumber();
+  StatusCode sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
   if(sc.isFailure())debug()<<" nt error "<<endmsg;
   sc=nt2->farray("is",    m_digit_s,      "Ndigits",1000);
   if(sc.isFailure())debug()<<" nt error "<<endmsg;
