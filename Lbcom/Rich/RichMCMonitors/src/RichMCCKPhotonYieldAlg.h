@@ -4,9 +4,6 @@
  *
  * Header file for monitor algorithm Rich::MC::MCCKPhotonYieldAlg
  *
- * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.h,v 1.7 2007-11-26 17:40:31 jonrob Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
  */
@@ -71,11 +68,11 @@ namespace Rich
       {
       public:
         /// Constructor with optional number of photons and tracks
-        TrackPhotonTally( const unsigned int tracks  = 0,
-                          const unsigned int photons = 0 )
+        TrackPhotonTally( const unsigned long long tracks  = 0,
+                          const unsigned long long photons = 0 )
           : nTracks(tracks), nPhotons(photons) { }
-        long unsigned int nTracks;   ///< tally for the number of tracks
-        long unsigned int nPhotons;  ///< tally for the number of photons
+        unsigned long long nTracks;   ///< tally for the number of tracks
+        unsigned long long nPhotons;  ///< tally for the number of photons
       };
 
     private: // definitions
