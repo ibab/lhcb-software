@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-12-02 - Patrick Koppenburg
+ - Remove ancient Gaudipython .opts file
+
 !========================== Analysis v10r2 2011-07-08 ================
 ! 2011-07-08 - Patrick Koppenburg
  - Remove obsolete Hlt settings
