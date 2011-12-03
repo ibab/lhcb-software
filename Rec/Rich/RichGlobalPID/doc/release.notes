@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2011-12-03 - Chris Jones
+ - Fix various compilation warnings
+
 ! 2011-12-02 - Chris Jones
  - Use int instead of long for keyed object key.
 

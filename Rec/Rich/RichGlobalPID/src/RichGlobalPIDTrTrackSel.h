@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
- *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.22 2008-03-25 16:26:44 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
@@ -90,10 +87,10 @@ namespace Rich
         bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
 
         /// Maximum number of Tracks with RICH information
-        int m_maxUsedTracks;
+        unsigned int m_maxUsedTracks;
 
         /// Maximum total number of input TrStoredTracks
-        int m_maxInputTracks;
+        unsigned int m_maxInputTracks;
 
         /// Turn on the use of 'frozen' tracks
         bool m_freezeTracks;

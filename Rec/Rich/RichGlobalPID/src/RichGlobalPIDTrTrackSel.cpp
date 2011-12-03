@@ -115,7 +115,7 @@ StatusCode TrackSel::eventInit()
     deleteGPIDEvent();
     return Warning("No tracks selected for processing -> Stopped",StatusCode::SUCCESS,0);
   }
-  else if ( (int)richTracks()->size() > m_maxUsedTracks )
+  else if ( richTracks()->size() > m_maxUsedTracks )
   {
     procStatus()->addAlgorithmStatus( gpidName(), "RICH", "ReachedRichTrackLimit",
                                       Rich::Rec::ReachedRichTrackLimit, true );
