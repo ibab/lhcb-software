@@ -13,15 +13,16 @@
 
 <lcgdict>
   
-  <class name = "Analysis::Selector"              />
-  <class name = "Analysis::Process"               />
-  <class name = "Analysis::RooMakeHistos"         />
-  <class name = "Analysis::UStat"                 />
-  <class name = "Gaudi::Utils::HStats"            />
-  <class name = "Analysis::Models::BreitWigner"   />
-  <class name = "Analysis::Models::Rho0"          />
-  <class name = "Analysis::Models::Flatte"        />
-  <class name = "Analysis::Models::PhaseSpaceNL"  />
+  <class name = "Analysis::Selector"               />
+  <class name = "Analysis::Process"                />
+  <class name = "Analysis::RooMakeHistos"          />
+  <class name = "Analysis::UStat"                  />
+  <class name = "Gaudi::Utils::HStats"             />
+  <class name = "Analysis::Models::BreitWigner"    />
+  <class name = "Analysis::Models::Rho0"           />
+  <class name = "Analysis::Models::Flatte"         />
+  <class name = "Analysis::Models::PhaseSpaceNL"   />
+  <class name = "Analysis::Models::CrystalBallDS"  />
   
 </lcgdict> 
 

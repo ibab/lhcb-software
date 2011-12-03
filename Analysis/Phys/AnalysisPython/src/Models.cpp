@@ -235,6 +235,81 @@ Double_t Analysis::Models::PhaseSpaceNL::evaluate() const
 // ============================================================================
 
 
+// ============================================================================
+// Double-sided CrystalBall
+// ============================================================================
+Analysis::Models::CrystalBallDS::CrystalBallDS
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,    
+  RooAbsReal&          alphaL    ,    
+  RooAbsReal&          nL        ,    
+  RooAbsReal&          alphaR    ,    
+  RooAbsReal&          nR        )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable"                 , this , x      ) 
+  , m_m0      ( "m0"      , "mass"                       , this , m0     ) 
+  , m_sigma   ( "sigma"   , "sigma"                      , this , sigma  )
+  , m_alphaL  ( "alphaL"  , "(left) alpha = 1 + |alpha|" , this , alphaL ) 
+  , m_nL      ( "nL"      , "(left) n     = 1 + |n|"     , this ,     nL ) 
+  , m_alphaR  ( "alphaR"  , "(left) alpha = 1 + |alpha|" , this , alphaR ) 
+  , m_nR      ( "nR"      , "(left) n     = 1 + |n|"     , this ,     nR ) 
+//  
+  , m_cb2 ( 10 , 1 , 1 , 1 , 1  , 1 ) 
+{
+  //
+  m_cb2.setM0      ( m_m0     ) ;
+  m_cb2.setSigma   ( m_sigma  ) ;
+  m_cb2.setAlpha_L ( m_alphaL ) ;
+  m_cb2.setAlpha_R ( m_alphaR ) ;
+  m_cb2.setN_L     ( m_nL     ) ;
+  m_cb2.setAlpha_R ( m_alphaR ) ;
+  m_cb2.setN_R     ( m_nR     ) ;
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Analysis::Models::CrystalBallDS::CrystalBallDS
+( const Analysis::Models::CrystalBallDS& right , 
+  const char*                            name ) 
+  : RooAbsPdf ( right     ) 
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigma   ( "sigma"   , this , right.m_sigma  )
+  , m_alphaL  ( "alphaL"  , this , right.m_alphaL ) 
+  , m_nL      ( "nL"      , this , right.m_nL     ) 
+  , m_alphaR  ( "alphaR"  , this , right.m_alphaR ) 
+  , m_nR      ( "nR"      , this , right.m_nR     ) 
+//  
+  , m_cb2     ( right.m_cb2 ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::CrystalBallDS::~CrystalBallDS(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::CrystalBallDS::evaluate() const 
+{
+  //
+  m_cb2.setM0      ( m_m0     ) ;
+  m_cb2.setSigma   ( m_sigma  ) ;
+  m_cb2.setAlpha_L ( m_alphaL ) ;
+  m_cb2.setAlpha_R ( m_alphaR ) ;
+  m_cb2.setN_L     ( m_nL     ) ;
+  m_cb2.setAlpha_R ( m_alphaR ) ;
+  m_cb2.setN_R     ( m_nR     ) ;
+  //
+  return m_cb2     ( m_x      ) ;
+}
+// ============================================================================
+
 
 
 // ============================================================================

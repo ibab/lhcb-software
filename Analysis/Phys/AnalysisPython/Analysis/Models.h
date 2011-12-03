@@ -126,7 +126,7 @@ namespace Analysis
     /** @class Flatte
      *
      *  S.M.Flatte, 
-     *  "Coupled-channel analysi of the \f$\pi\eta\f$ 
+     *  "Coupled-channel analysis of the \f$\pi\eta\f$ 
      *  and \f$K\bar{K}\f$ systems near \f$K\bar{K}\f$ threshold  
      *  Phys. Lett. B63, 224 (1976 
      *
@@ -182,8 +182,8 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
      */
-     class PhaseSpaceNL : public RooAbsPdf 
-    {
+    class PhaseSpaceNL : public RooAbsPdf
+    {    
     public:
       // ======================================================================
       ClassDef(Analysis::Models::PhaseSpaceNL, 1) ;
@@ -218,6 +218,55 @@ namespace Analysis
       mutable Gaudi::Math::PhaseSpaceNL m_ps ;           // the actual function 
       // ======================================================================
     };
+    // ========================================================================
+    /** @class CrystalBallDS 
+     *  double-sided ``Crystal Ball-function'' 
+     *  for description of gaussian with the tail
+     *  @date 2011-05-25
+     */
+    class GAUDI_API CrystalBallDS : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBallDS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBallDS
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  //    
+        RooAbsReal&          alphaL    ,  // alpha_L - 1   
+        RooAbsReal&          nL        ,  //     n_L - 1   
+        RooAbsReal&          alphaR    ,  // alpha_R - 1   
+        RooAbsReal&          nR        ); //     n_R - 1 
+      /// "copy" constructor 
+      CrystalBallDS ( const CrystalBallDS& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBallDS() ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alphaL ;
+      RooRealProxy m_nL     ;
+      RooRealProxy m_alphaR ;
+      RooRealProxy m_nR     ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBallDoubleSided m_cb2 ;       // the function 
+      // ======================================================================
+    } ;
     // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================
