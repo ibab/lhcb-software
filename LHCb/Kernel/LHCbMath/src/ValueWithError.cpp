@@ -280,12 +280,16 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::mean
 ( const Gaudi::Math::ValueWithError& b ) const
 {
-  if      ( 0 >=   cov2 () && 0 >= b.cov2 () ) { return 0.5*( value() + b.value() ) ; }
+  //
+  if ( &b == this ) { return *this ; } // self-mean ???
+  //
+  if      ( 0 >=   cov2 () && 0 >= b.cov2 () ) 
+  { return 0.5 * ( value() + b.value() ) ; }
   else if ( 0 >=   cov2 ()                   ) { return *this ; }
   else if ( 0 >= b.cov2 ()                   ) { return b     ; }
-
+  //
   const double _cov2 = 1.0/( 1.0/cov2() + 1.0/b.cov2() ) ;
-
+  //
   return Gaudi::Math::ValueWithError
     ( _cov2 * ( value()/cov2() + b.value()/b.cov2() ) ,  _cov2 ) ;
 }
@@ -456,6 +460,9 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__add__
 ( const Gaudi::Math::ValueWithError& right ) const
 {
+  //
+  if ( &right == this ) { return right * 2.0 ; }
+  //
   ValueWithError tmp ( *this ) ;
   return tmp += right ;
 }
@@ -464,6 +471,9 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__sub__
 ( const Gaudi::Math::ValueWithError& right ) const
 {
+  //
+  if ( &right == this ) { return  ValueWithError(0,0) ; }
+  //
   ValueWithError tmp ( *this ) ;
   return tmp -= right ;
 }
@@ -472,6 +482,9 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__mul__
 ( const Gaudi::Math::ValueWithError& right ) const
 {
+  //
+  if ( &right == this ) { return  pow ( *this , 2 ) ; }
+  //
   ValueWithError tmp ( *this ) ;
   return tmp *= right ;
 }
@@ -480,6 +493,9 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__div__
 ( const Gaudi::Math::ValueWithError& right ) const
 {
+  //
+  if ( &right == this ) { return  ValueWithError ( 1 , 0 ) ; }
+  //
   ValueWithError tmp ( *this ) ;
   return tmp /= right ;
 }
@@ -514,11 +530,11 @@ Gaudi::Math::ValueWithError::__div__ ( const double right ) const
 // =============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__rsub__ ( const double right ) const
-{ return ValueWithError( right - value() , cov2()  ) ; }
+{ return ValueWithError ( right - value() , cov2()  ) ; }
 // =============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__rdiv__ ( const double right ) const
-{
+{  
   ValueWithError tmp ( right ) ;
   return tmp /= (*this) ;
 }
@@ -586,7 +602,6 @@ Gaudi::Math::ValueWithError::__log__   () const { return log   ( *this ) ; }
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log10__ () const { return log10 ( *this ) ; }
 // ============================================================================
-
 
 
 // ============================================================================
@@ -781,6 +796,18 @@ Gaudi::Math::ValueWithError Gaudi::Math::pow
   const Gaudi::Math::ValueWithError& b )
 {
   //
+  if ( &a == &b ) 
+  {
+    if      ( 0 >= a.cov2 () || _zero ( a.cov2() ) )
+    { return std::pow ( a.value() , a.value() ) ; }
+    //
+    const double v2 = std::pow ( a.value() , a.value() ) ;
+    const double v3 = std::log ( a.value() ) + 1 ;
+    //
+    return Gaudi::Math::ValueWithError
+      ( v2 , v2 * v2 * v3 * v3 * a.cov2 () ) ;
+  }
+  //
   if      ( 0 >= a.cov2 () || _zero ( a.cov2() ) )
   { return pow ( a.value() , b         ) ; }
   else if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
@@ -845,6 +872,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
   static const double a  = 1.0 / std::log ( 10.0 ) ;
   //
   const double e1 = a / b.value() ;
+  //
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
 }
 // ============================================================================
