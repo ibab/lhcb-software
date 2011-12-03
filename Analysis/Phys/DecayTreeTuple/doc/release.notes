@@ -4,6 +4,15 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-03 - Chris Jones
+ - General tidy up
+ - Reimplement TupleToolRecoStats to only use information from the 
+   RecSummary object. Makes the tool compatible with uDSTs.
+ - Add a temporary hack to TupleToolEventInfo to split the 64bit event Number
+   and GPS time into two 32 bit ints and store these. Allows the full 64 bit
+   variable to be reconstructed later on if required.
+   Temporary hack until Gaudi fully supports 64bit variables in Tuples.
+
 ! 2011-11-29 - Chris Jones
  - Remove some redundant messages from initialisation of DecayTreeTuple
 

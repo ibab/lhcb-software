@@ -17,8 +17,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-// #include <boost/algorithm/string/replace.hpp>
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleTool
 //
@@ -92,13 +90,13 @@ StatusCode TupleToolDecay::initialize( const std::string& dcy, bool isMC ){
   m_stufferList.erase(std::unique(m_stufferList.begin(),m_stufferList.end()),
                       m_stufferList.end());
 
-  return StatusCode(test); 
+  return StatusCode(test);
 }
 
 //=============================================================================
 // get decay
 //=============================================================================
-std::string TupleToolDecay::decay() const 
+std::string TupleToolDecay::decay() const
 {
   return ( m_isMC ? m_mcdkFinder->decay() : m_dkFinder->decay() );
 }

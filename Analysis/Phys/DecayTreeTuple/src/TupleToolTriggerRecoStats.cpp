@@ -17,7 +17,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( TupleToolTriggerRecoStats );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -36,10 +35,11 @@ TupleToolTriggerRecoStats::TupleToolTriggerRecoStats( const std::string& type,
   m_locations.push_back("Hlt2BiKalmanFittedRichKaons");
   declareProperty("InputLocations",m_locations,"Locations to look at");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolTriggerRecoStats::~TupleToolTriggerRecoStats() {} 
+TupleToolTriggerRecoStats::~TupleToolTriggerRecoStats() { } 
 
 //=============================================================================
 //=============================================================================
@@ -49,7 +49,8 @@ StatusCode TupleToolTriggerRecoStats::fill( Tuples::Tuple& tup)
 {
   const std::string prefix=fullName();
   bool test = true;
-  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; l != m_locations.end() ; ++l)
+  for ( std::vector<std::string>::const_iterator l = m_locations.begin() ; 
+        l != m_locations.end() ; ++l)
   {
     test &= tup->column(prefix+"NumberOf"+*l,number<LHCb::Particles>("/Event/Hlt2/"+*l+"/Particles"));
   }

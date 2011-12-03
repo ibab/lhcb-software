@@ -33,8 +33,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolParticleReFit::TupleToolParticleReFit( const std::string& type,
-					  const std::string& name,
-					  const IInterface* parent )
+                                                const std::string& name,
+                                                const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_timefitter(0)
@@ -47,11 +47,13 @@ TupleToolParticleReFit::TupleToolParticleReFit( const std::string& type,
 
 }//=============================================================================
 
-StatusCode TupleToolParticleReFit::initialize() {
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  
+StatusCode TupleToolParticleReFit::initialize() 
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
+ 
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
   m_timefitter = tool<ILifetimeFitter>( m_timefitterName, this );
@@ -59,34 +61,33 @@ StatusCode TupleToolParticleReFit::initialize() {
     Error("Unable to retrieve the ILifetimeFitter tool");
     return StatusCode::FAILURE;
   }
-  
+
   m_vtxfitter = tool<IVertexFit>( m_vertexfitterName, this );
   if( !m_vtxfitter ){
     Error("Unable to retrieve the IVertexFit tool");
     return StatusCode::FAILURE;
   }
 
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 
 StatusCode TupleToolParticleReFit::fill( const Particle* mother
-				   , const Particle* P
-				   , const std::string& head
-				   , Tuples::Tuple& tuple )
+                                         , const Particle* P
+                                         , const std::string& head
+                                         , Tuples::Tuple& tuple )
 {
 
   std::string prefix=fullName(head);
   if (m_extraName=="") prefix  =prefix +  "_OVrefit";
-  
+
   Assert( m_timefitter && m_vtxfitter  && P,
-	  "Should not happen, you are inside TupleToolParticleReFit.cpp" );
+          "Should not happen, you are inside TupleToolParticleReFit.cpp" );
 
 
   // no proper-time for basic parts.
-  if( P->isBasicParticle() ) return StatusCode::SUCCESS; 
+  if( P->isBasicParticle() ) return StatusCode::SUCCESS;
 
   //only head of a decay chain
   if( P != mother ) return StatusCode::SUCCESS;
@@ -138,7 +139,7 @@ StatusCode TupleToolParticleReFit::fill( const Particle* mother
   }
 
   bool test = true;
-  test &= tuple->column( prefix+"_status" , refit_status ); 
+  test &= tuple->column( prefix+"_status" , refit_status );
   test &= tuple->column( prefix+"_ENDVERTEX_NDOF", refit_ndof );
   test &= tuple->column( prefix+"_ENDVERTEX_CHI2", refit_chi2 );
   test &= tuple->column( prefix+"_MM", refit_mass );
@@ -151,7 +152,7 @@ StatusCode TupleToolParticleReFit::fill( const Particle* mother
   test &= tuple->column( prefix+"_TAU" , time ); // nanoseconds
   test &= tuple->column( prefix+"_TAUERR" , timeErr );
   test &= tuple->column( prefix+"_TAUCHI2" , timeChi2 );
-  
+
   return StatusCode(test);
 
 }

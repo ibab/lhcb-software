@@ -26,9 +26,9 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolMuonPid::TupleToolMuonPid( const std::string& type,
-    const std::string& name,
-    const IInterface* parent )
-: TupleToolBase ( type, name , parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
+  : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -36,9 +36,9 @@ TupleToolMuonPid::TupleToolMuonPid( const std::string& type,
 //=============================================================================
 
 StatusCode TupleToolMuonPid::fill( const Particle*
-    , const Particle* P
-    , const std::string& head
-    , Tuples::Tuple& tuple )
+                                   , const Particle* P
+                                   , const std::string& head
+                                   , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
 
@@ -82,7 +82,7 @@ StatusCode TupleToolMuonPid::fill( const Particle*
       test &= tuple->column( prefix+"_NShared", NShared);
       test &= tuple->column( prefix+"_MuonLLmu", muonLLmu);
       test &= tuple->column( prefix+"_MuonLLbg", muonLLbg);
-      
+
       return StatusCode(test);
     }
   }

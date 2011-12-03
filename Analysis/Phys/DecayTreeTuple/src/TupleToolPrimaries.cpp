@@ -32,48 +32,47 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
+                                        const std::string& name,
+                                        const IInterface* parent )
   : TupleToolBase ( type, name , parent )
-  //, m_dva(0)
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", m_pvLocation = "" , 
+  declareProperty("InputLocation", m_pvLocation = "" ,
                   "PV location to be used. If empty, take default");
-  
 }
 
 //=============================================================================
 //=============================================================================
 
-StatusCode TupleToolPrimaries::initialize(){
-  if( !TupleToolBase::initialize() ) return StatusCode::FAILURE;
+StatusCode TupleToolPrimaries::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  if ( "" == m_pvLocation){
+  if ( m_pvLocation.empty() )
+  {
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
     m_pvLocation = oo->primaryVertexLocation();
     debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
-  } 
-  //m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  //if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+  }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 //=============================================================================
 
-StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) 
+StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName();
   const unsigned int maxPV = 100 ;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Storing PVs with prefix ``" << prefix << "''" << endmsg ;
-  
+
   std::vector<double>  pvx, pvy, pvz;
   std::vector<double>  epvx, epvy, epvz;
   std::vector<double>  pvchi2, pvndof, pvntracks;
-  
+
   const RecVertex::Container* PV = 0 ;
   //if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
   if (exist<RecVertex::Container>(m_pvLocation))
@@ -82,20 +81,20 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   }
   if (0!=PV)
   {
-    
+
     if( PV->size() > maxPV )
     {
       Warning("More than 100 primaries, no PVs will be stored.");
     } else {
-      
+
       for(RecVertex::Container::const_iterator i = PV->begin() ; PV->end()!=i ; ++i )
       {
         if (msgLevel(MSG::VERBOSE)) verbose() << "PV: " <<  (*i)->position() << endmsg ;
         pvx.push_back( (*i)->position().X() );
         pvy.push_back( (*i)->position().Y() );
         pvz.push_back( (*i)->position().Z() );
-        if (msgLevel(MSG::VERBOSE)) verbose() << "PV matrix: " << (*i)->covMatrix()(0,0) << " " 
-                                              << (*i)->covMatrix()(1,1)  << " " 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "PV matrix: " << (*i)->covMatrix()(0,0) << " "
+                                              << (*i)->covMatrix()(1,1)  << " "
                                               << (*i)->covMatrix()(2,2)  << endmsg ;
         epvx.push_back( std::sqrt((*i)->covMatrix()(0,0)) );
         epvy.push_back( std::sqrt((*i)->covMatrix()(1,1)) );
@@ -104,13 +103,13 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
         pvndof.push_back((double)(*i)->nDoF());
         pvntracks.push_back((double)(*i)->tracks().size());
         if (msgLevel(MSG::VERBOSE)) verbose() << "Tracks: "  << (*i)->tracks().size() << endmsg ;
-        
+
       }
-    } 
+    }
     if (msgLevel(MSG::DEBUG)) debug() << "There are " << PV->size() << " PVs at " <<  pvz << endmsg ;
   } else if (msgLevel(MSG::DEBUG)) debug() << "PV container is empty" << endmsg ;
-  
-  
+
+
   bool test=true;
   test &= tuple->farray( prefix+"PVX", pvx, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVY", pvy, prefix+"nPV",  maxPV );
@@ -118,11 +117,11 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   test &= tuple->farray( prefix+"PVXERR", epvx, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVYERR", epvy, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVZERR", epvz, prefix+"nPV",  maxPV );
-  
+
   test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
-  
+
   return StatusCode(test);
   //  return StatusCode::SUCCESS;
 }

@@ -54,7 +54,7 @@ StatusCode DecayTreeTupleBase::initialize()
     m_revertToPositiveID = false ;
     return Warning( "UseLabXSyntax and RevertToPositiveID are exclusive. Switched off reverting." );
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
 //=============================================================================
 // Main execution

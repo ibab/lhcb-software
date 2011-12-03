@@ -15,31 +15,26 @@ DECLARE_TOOL_FACTORY( TupleToolJets )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TupleToolJets::TupleToolJets( const std::string& type,
-					      const std::string& name,
-					      const IInterface* parent )
-: TupleToolJetsBase ( type, name , parent )
-   
+  TupleToolJets::TupleToolJets( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+    : TupleToolJetsBase ( type, name , parent )
+
 {
   declareInterface<IParticleTupleTool>(this);
 }
 
 //=============================================================================
-StatusCode TupleToolJets::initialize()
-{
-  if( ! TupleToolJetsBase::initialize() )
-    return StatusCode::FAILURE;
-  return StatusCode::SUCCESS ;
-}
+
 StatusCode TupleToolJets::fill( const LHCb::Particle* /* top */,
-                                  const LHCb::Particle* p,
-                                  const std::string& head ,
-                                  Tuples::Tuple& tuple )
+                                const LHCb::Particle* p,
+                                const std::string& head ,
+                                Tuples::Tuple& tuple )
 {
   m_tuple = &tuple;
   bool test = true;
   m_p = p;
-  m_head = m_extraName+head; 
+  m_head = m_extraName+head;
   test &= WriteJetToTuple(p,m_head);
   return StatusCode(test);
 }

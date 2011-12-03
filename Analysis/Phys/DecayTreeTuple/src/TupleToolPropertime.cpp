@@ -33,8 +33,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolPropertime::TupleToolPropertime( const std::string& type,
-					  const std::string& name,
-					  const IInterface* parent )
+                                          const std::string& name,
+                                          const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_fit(0)
@@ -49,9 +49,9 @@ TupleToolPropertime::TupleToolPropertime( const std::string& type,
 
 StatusCode TupleToolPropertime::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  
+
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
   m_fit = tool<ILifetimeFitter>( m_toolName, this );
@@ -59,25 +59,25 @@ StatusCode TupleToolPropertime::initialize() {
     Error("Unable to retrieve the ILifetimeFitter tool");
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 
 StatusCode TupleToolPropertime::fill( const Particle* mother
-				   , const Particle* P
-				   , const std::string& head
-				   , Tuples::Tuple& tuple )
+                                      , const Particle* P
+                                      , const std::string& head
+                                      , Tuples::Tuple& tuple )
 {
 
   const std::string prefix=fullName(head);
-  
+
   Assert( m_fit && P,
-	  "Should not happen, you are inside TupleToolPropertime.cpp" );
+          "Should not happen, you are inside TupleToolPropertime.cpp" );
 
   // no proper-time for basic parts.
-  if( P->isBasicParticle() ) return StatusCode::SUCCESS; 
+  if( P->isBasicParticle() ) return StatusCode::SUCCESS;
 
   const VertexBase* originVtx = NULL;
   if( m_fitToPV ){
@@ -85,7 +85,7 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   }
   else {
     if( mother != P ){
-      originVtx = originVertex( mother, P ); // the origin vertex is 
+      originVtx = originVertex( mother, P ); // the origin vertex is
                                              // somewhere in the decay
     } else { // the origin vertex is the primary.
       originVtx = m_dva->bestPV( mother );
@@ -114,13 +114,14 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   test &= tuple->column( prefix+"_TAU" , pt ); // nanoseconds
   test &= tuple->column( prefix+"_TAUERR" , ept );
   test &= tuple->column( prefix+"_TAUCHI2" , chi2 );
-  
+
   return StatusCode(test);
 
 }
 
 const Vertex* TupleToolPropertime::originVertex( const Particle* top
-						 , const Particle* P ) const {
+                                                 , const Particle* P ) const 
+{
   if( top == P || P->isBasicParticle() ) return NULL;
 
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
@@ -132,7 +133,7 @@ const Vertex* TupleToolPropertime::originVertex( const Particle* top
       return top->endVertex();
     }
   }
-  
+
   // vertex not yet found, get deeper in the decay:
   for( it = dau.begin(); dau.end()!=it; ++it ){
     if( P != *it && !(*it)->isBasicParticle() ){

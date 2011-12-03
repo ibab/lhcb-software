@@ -18,7 +18,6 @@ public:
                            , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
-  virtual StatusCode initialize();
 private:
   std::string m_RelationsContainer;
   bool m_Invert; // invert relation table

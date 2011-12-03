@@ -27,8 +27,8 @@ DECLARE_TOOL_FACTORY( TupleToolKinematic );
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolKinematic::TupleToolKinematic( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
+                                        const std::string& name,
+                                        const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_transporter()
   , m_transporterName ("ParticleTransporter:PUBLIC")
@@ -36,34 +36,29 @@ TupleToolKinematic::TupleToolKinematic( const std::string& type,
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty( "Transporter", m_transporterName );
-
 }
 
 //=============================================================================
+
 StatusCode TupleToolKinematic::initialize()
 {
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_transporter = tool<IParticleTransporter>(m_transporterName, this);
-  if( !m_transporter ){
-    Error("Unable to retrieve the IParticleTransporter tool");
-    return StatusCode::FAILURE;
-  }
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
-
 
 //=============================================================================
 
 StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
-				   , const LHCb::Particle* P
-				   , const std::string& head
-				   , Tuples::Tuple& tuple )
+                                     , const LHCb::Particle* P
+                                     , const std::string& head
+                                     , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
-  
+
   bool test = true;
   if( P )
   {
@@ -72,16 +67,16 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
 
     // momentum components
     test &= tuple->column( prefix+"_P", P->momentum() );
-    
+
     // reference point:
     if(isVerbose()) test &= tuple->column( prefix+"_REFP", P->referencePoint() );
     // mass before fit (what CombinationCut cuts on)
     //if(isVerbose() && !(P->isBasicParticle()) ) test &= tuple->column( prefix+"_PreFitMass", preFitMass(P) );
-    
+
     if( !P->isBasicParticle() ||  P->particleID().pid()  ==  111 ) test &= tuple->column( prefix+"_MM", P->measuredMass() );
     if( !P->isBasicParticle() ||  P->particleID().pid()  ==  111 ) test &= tuple->column( prefix+"_MMERR", P->measuredMassErr() );
     test &= tuple->column( prefix+"_M", P->momentum().M() );
-    
+
     if(isVerbose()&& mother &&P->isBasicParticle() && P->charge() != 0 ) {
       const LHCb::Vertex* originvtx = mother->endVertex();
       if(originvtx){
@@ -93,9 +88,9 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
 
         test &= tuple->column( prefix+"_AtVtx_P", transParticle.momentum() );
       }
-    } 
-  } 
-  else 
+    }
+  }
+  else
   {
     return StatusCode::FAILURE;
   }
@@ -103,7 +98,7 @@ StatusCode TupleToolKinematic::fill( const LHCb::Particle* mother
 }
 //=============================================================================
 double TupleToolKinematic::preFitMass(const LHCb::Particle* p) const {
-  
+
   Gaudi::LorentzVector Mom ;
   for ( SmartRefVector< LHCb::Particle >::const_iterator d = p->daughters().begin();
         d != p->daughters().end() ; ++d){

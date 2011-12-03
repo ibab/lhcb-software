@@ -33,9 +33,9 @@ TupleToolSwimmingInfo::TupleToolSwimmingInfo( const std::string& type,
                                               const IInterface* parent )
   : TupleToolBase ( type, name , parent )
 {
-   declareInterface<IParticleTupleTool>(this);
-   declareProperty("ReportsLocation" , m_swimRelTableLoc  = "/Event/SwimmingMicroDST/SingleCandidate/P2TPRelations");
-   declareProperty("ReportStage"     , m_swimRepsStage    = "Trigger");
+  declareInterface<IParticleTupleTool>(this);
+  declareProperty("ReportsLocation" , m_swimRelTableLoc  = "/Event/SwimmingMicroDST/SingleCandidate/P2TPRelations");
+  declareProperty("ReportStage"     , m_swimRepsStage    = "Trigger");
 }
 
 //=============================================================================
@@ -44,88 +44,88 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
                                         , const std::string& head
                                         , Tuples::Tuple& tuple )
 {
-   const std::string prefix=fullName(head);
-   const unsigned int maxTurns = 100 ;
+  const std::string prefix=fullName(head);
+  const unsigned int maxTurns = 100 ;
 
-   std::vector<double> raw, dec, tau, ip;
-   typedef std::map<std::string, std::vector<double> > MapType;
+  std::vector<double> raw, dec, tau, ip;
+  typedef std::map<std::string, std::vector<double> > MapType;
 
-   P2TPRelation* relatePart;
-   if (exist<P2TPRelation>(m_swimRelTableLoc) ) {
-      relatePart = get<P2TPRelation>(m_swimRelTableLoc);
-      debug() << "Found Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
-   } else {
-      warning() << "Could not get Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
-      return StatusCode::FAILURE;
-   }
+  P2TPRelation* relatePart;
+  if (exist<P2TPRelation>(m_swimRelTableLoc) ) {
+    relatePart = get<P2TPRelation>(m_swimRelTableLoc);
+    debug() << "Found Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
+  } else {
+    warning() << "Could not get Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
+    return StatusCode::FAILURE;
+  }
 
-   if( P ){
-      bool test = true;
-    
-      P2TPRelation::Range range = relatePart->relations(P);
-      if (range.size() != 1) return StatusCode::FAILURE;
-    
-      LHCb::SwimmingReport* report = range.begin()->to();
-    
-      if( !P->isBasicParticle() ) {
-         // Loop over turning points to fill decision names and insert vectors
-         MapType line_decisions;
-         const tPoints& turns = report->turningPoints(m_swimRepsStage);
-         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
-            BOOST_FOREACH(const std::string& name, tp.decisions()) {
-               line_decisions.insert(make_pair(name, std::vector<double>()));
-            }
-         }
-         // Loop over turning points to fill vectors
-         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
-            // Fill variables
-            raw.push_back(tp.raw());
-            dec.push_back(tp.dec());
-            tau.push_back(tp.tau());
-            ip.push_back (tp.ip() );
-            //Decisions must not change between turning points
-            BOOST_FOREACH(MapType::value_type& entry, line_decisions) {
-               if (!tp.dec()) {
-                  entry.second.push_back(false);
-               } else {
-                  entry.second.push_back(tp.decision(entry.first));
-               }
-            }
-         }
-         // Fill tuple from vectors
-         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_RAW", raw ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_DEC", dec ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_TAU", tau ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-         test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_IP" , ip  ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-         BOOST_FOREACH(const MapType::value_type& entry, line_decisions) {
-            test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
-                                  prefix + "_nTP", maxTurns);
-         }
-      } else if (m_swimRepsStage == "Trigger") { //The each track part is only for the trigger
-         // Loop over turning points to fill info names and insert vectors
-         MapType track_infos;
-         const tPoints& turns = report->turningPoints(m_swimRepsStage);
-         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
-            BOOST_FOREACH(const std::string& name, tp.infoNames()) {
-               track_infos.insert(make_pair(name, std::vector<double>()));
-            }
-         }
-         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
-            // Fill infos
-            BOOST_FOREACH(MapType::value_type& entry, track_infos) {
-               if (!tp.dec()) {
-                  entry.second.push_back(false);
-               } else {
-                  entry.second.push_back(tp.participated(entry.first, *P));
-               }
-            }
-         }
-         // Fill tuple with infos
-         BOOST_FOREACH(const MapType::value_type& entry, track_infos) {
-            test &= tuple->farray(prefix + "_"+m_swimRepsStage+"_TP_DEC_" + entry.first, entry.second,
-                                  prefix + "_"+m_swimRepsStage+"_nTP", maxTurns);
-         }
+  if( P ){
+    bool test = true;
+
+    P2TPRelation::Range range = relatePart->relations(P);
+    if (range.size() != 1) return StatusCode::FAILURE;
+
+    LHCb::SwimmingReport* report = range.begin()->to();
+
+    if( !P->isBasicParticle() ) {
+      // Loop over turning points to fill decision names and insert vectors
+      MapType line_decisions;
+      const tPoints& turns = report->turningPoints(m_swimRepsStage);
+      BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
+        BOOST_FOREACH(const std::string& name, tp.decisions()) {
+          line_decisions.insert(make_pair(name, std::vector<double>()));
+        }
       }
-   }
-   return StatusCode::SUCCESS;
+      // Loop over turning points to fill vectors
+      BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
+        // Fill variables
+        raw.push_back(tp.raw());
+        dec.push_back(tp.dec());
+        tau.push_back(tp.tau());
+        ip.push_back (tp.ip() );
+        //Decisions must not change between turning points
+        BOOST_FOREACH(MapType::value_type& entry, line_decisions) {
+          if (!tp.dec()) {
+            entry.second.push_back(false);
+          } else {
+            entry.second.push_back(tp.decision(entry.first));
+          }
+        }
+      }
+      // Fill tuple from vectors
+      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_RAW", raw ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_DEC", dec ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_TAU", tau ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_IP" , ip  ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+      BOOST_FOREACH(const MapType::value_type& entry, line_decisions) {
+        test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
+                              prefix + "_nTP", maxTurns);
+      }
+    } else if (m_swimRepsStage == "Trigger") { //The each track part is only for the trigger
+      // Loop over turning points to fill info names and insert vectors
+      MapType track_infos;
+      const tPoints& turns = report->turningPoints(m_swimRepsStage);
+      BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
+        BOOST_FOREACH(const std::string& name, tp.infoNames()) {
+          track_infos.insert(make_pair(name, std::vector<double>()));
+        }
+      }
+      BOOST_FOREACH(const LHCb::TurningPoint& tp, turns) {
+        // Fill infos
+        BOOST_FOREACH(MapType::value_type& entry, track_infos) {
+          if (!tp.dec()) {
+            entry.second.push_back(false);
+          } else {
+            entry.second.push_back(tp.participated(entry.first, *P));
+          }
+        }
+      }
+      // Fill tuple with infos
+      BOOST_FOREACH(const MapType::value_type& entry, track_infos) {
+        test &= tuple->farray(prefix + "_"+m_swimRepsStage+"_TP_DEC_" + entry.first, entry.second,
+                              prefix + "_"+m_swimRepsStage+"_nTP", maxTurns);
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
 }

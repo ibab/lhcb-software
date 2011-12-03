@@ -19,10 +19,6 @@
 #include "Event/VertexBase.h"
 #include "Event/Track.h"
 
-//#include "GaudiAlg/TupleObj.h"
-// #include "GaudiAlg/GaudiTupleAlg.h"
-
-
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
 //-----------------------------------------------------------------------------
@@ -41,119 +37,125 @@ DECLARE_TOOL_FACTORY( TupleToolEventInfo );
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
+                                        const std::string& name,
+                                        const IInterface* parent )
   : TupleToolBase ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty("InputLocation", m_pvLocation = "" , 
+  declareProperty("InputLocation", m_pvLocation = "" ,
                   "PV location to be used. If empty, take default");
   declareProperty("Mu", m_mu);
 }
 //=============================================================================
 StatusCode TupleToolEventInfo::initialize( )
 {
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
   m_magSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
-  return TupleToolBase::initialize();
+  return sc;
 }
 
 //=============================================================================
-StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ){
-  const std::string prefix=fullName();
-  int run = -1;
-  ulonglong ev = 0;
-  int bcid = -1;
-  int bctyp = -1;
-  unsigned int odintck = 0; 
-  unsigned int l0dutck = 0;
-  unsigned int hlttck = 0;
-  ulonglong gpstime = 0;
-  Gaudi::Time gtime ;
+StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
+{
+  const std::string prefix = fullName();
+
+  // Load the ODIN
+  LHCb::ODIN* odin(NULL);
+  if( exist<ODIN>( LHCb::ODINLocation::Default ) )
+  {
+    odin = get<ODIN>( LHCb::ODINLocation::Default );
+  }
+  else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) )
+  {
+    odin = get<ODIN>( LHCb::ODINLocation::Default, false );
+  } 
+  else 
+  {
+    // should always be available ...
+    return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
+  }
+
+  // Number PVs
   unsigned int nPVs = 0 ;
-  double mu = -1.;
-  int triggerType = -1;
-  if ( "" == m_pvLocation){
+  if ( m_pvLocation.empty() )
+  {
     const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
     m_pvLocation = oo->primaryVertexLocation();
     if (msgLevel(MSG::DEBUG)) debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
   }
   if (exist<RecVertex::Container>(m_pvLocation)) nPVs = (get<RecVertex::Container>(m_pvLocation))->size();
 
-  LHCb::ODIN* odin(0);
-
-  if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
-    odin = get<ODIN>( LHCb::ODINLocation::Default );
-    run = odin->runNumber();
-    if (m_mu.find(run)!=m_mu.end()) mu = m_mu[run];
-    ev = odin->eventNumber();
-    bcid = odin->bunchId();
-    odintck = odin->triggerConfigurationKey();
-    gpstime = odin->gpsTime();
-    gtime = odin->eventTime();
-    bctyp = odin->bunchCrossingType() ;
-    triggerType = odin->triggerType() ;
-  } else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) ){
-    odin = get<ODIN>( LHCb::ODINLocation::Default, false );
-    run = odin->runNumber();
-    if (m_mu.find(run)!=m_mu.end()) mu = m_mu[run];
-    ev = odin->eventNumber();
-    bcid = odin->bunchId();
-    odintck = odin->triggerConfigurationKey();
-    gpstime = odin->gpsTime();
-    gtime = odin->eventTime();
-    bctyp = odin->bunchCrossingType() ;
-    triggerType = odin->triggerType() ;
-  } else {
-    Error("Can't get LHCb::ODINLocation::Default (" +
-	  LHCb::ODINLocation::Default + ")" );
-  }
-
-  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) ) {
-    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-    l0dutck = report->tck();
-  } else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) ) {
-    LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
-    l0dutck = report->tck();
-  } else {
+  LHCb::L0DUReport* report = NULL;
+  if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default) ) 
+  {
+    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+  } 
+  else if(exist<L0DUReport>( LHCb::L0DUReportLocation::Default, false) ) 
+  {
+    report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default,false);
+  } 
+  else
+  {
     Warning("Can't get LHCb::L0DUReportLocation::Default (" +
-    LHCb::L0DUReportLocation::Default + ")");
+            LHCb::L0DUReportLocation::Default + ")").ignore();
   }
 
-  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) ) {
-    LHCb::HltDecReports* decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
-    hlttck = decreport->configuredTCK();
-  } else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) ) {
-    LHCb::HltDecReports* decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default, false);
-    hlttck = decreport->configuredTCK();
-  } else {
+  LHCb::HltDecReports* decreport = NULL;
+  if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default) ) 
+  {
+    decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default);
+  }
+  else if(exist<HltDecReports>( LHCb::HltDecReportsLocation::Default, false) ) 
+  {
+    decreport = get<LHCb::HltDecReports>(LHCb::HltDecReportsLocation::Default, false);
+  }
+  else 
+  {
     Warning("Can't get LHCb::HltDecReportsLocation::Default (" +
-    LHCb::HltDecReportsLocation::Default + ")");
+            LHCb::HltDecReportsLocation::Default + ")").ignore();
   }
-
-  if( msgLevel( MSG::DEBUG ) )
-    debug() << "Event " << ev << ", run " << run << endreq;
 
   bool test = true;
-  test &= tuple->column( prefix+"runNumber", run );
-  if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", mu );
-  test &= tuple->column( prefix+"eventNumber", (double)ev );
-  test &= tuple->column( prefix+"BCID", bcid );
-  test &= tuple->column( prefix+"BCType", bctyp );
-  test &= tuple->column( prefix+"OdinTCK", odintck );
-  test &= tuple->column( prefix+"L0DUTCK", l0dutck );
-  test &= tuple->column( prefix+"HLTTCK", hlttck );
-  test &= tuple->column( prefix+"GpsTime", (double)gpstime );
-  if ( isVerbose()){
+  
+  // Fill the tuple
+
+  if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", m_mu[odin->runNumber()] );
+
+  test &= tuple->column( prefix+"runNumber",    odin->runNumber() );
+  test &= tuple->column( prefix+"eventNumber",  (double)odin->eventNumber() ); // CRJ : Cast to double until Gaudi v23r0
+  test &= tuple->column( prefix+"BCID",         odin->bunchId() );
+  test &= tuple->column( prefix+"BCType",       odin->bunchCrossingType() );
+  test &= tuple->column( prefix+"OdinTCK",      odin->triggerConfigurationKey() );
+  test &= tuple->column( prefix+"L0DUTCK",      report ? report->tck() : 0 );
+  test &= tuple->column( prefix+"HLTTCK",       decreport ? decreport->configuredTCK() : 0 );
+  test &= tuple->column( prefix+"GpsTime",      (double)odin->gpsTime() ); // CRJ : Cast to double until Gaudi v23r0
+  if ( isVerbose() )
+  {
+    const Gaudi::Time gtime = odin->eventTime();
     test &= tuple->column( prefix+"GpsYear",  gtime.year(false) );
     test &= tuple->column( prefix+"GpsMonth", gtime.month(false) );
     test &= tuple->column( prefix+"GpsDay", gtime.day(false) );
     test &= tuple->column( prefix+"GpsHour", gtime.hour(false) );
     test &= tuple->column( prefix+"GpsMinute", gtime.minute(false) );
     test &= tuple->column( prefix+"GpsSecond", gtime.second(false)+gtime.nsecond()/1000000000. );
-    test &= tuple->column( prefix+"TriggerType", triggerType );
+    test &= tuple->column( prefix+"TriggerType", odin->triggerType() );
   }
   test &= tuple->column( prefix+"Primaries", nPVs );
-  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (m_magSvc->isDown()?-1:1)) ;
+  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (m_magSvc->isDown()?-1:1) );
+
+  // CRJ. Temporary hack, until Gaudi supports ulonglong directly (v23r0)
+  //---------------------------------------------------------------------
+  union Jack { ulonglong i; int b[2]; };
+  Jack convertEventN,convertGpsTime;
+  convertEventN.i  = odin->eventNumber();
+  convertGpsTime.i = odin->gpsTime();
+  test &= tuple->column( prefix+"eventNumberP1", convertEventN.b[0] );
+  test &= tuple->column( prefix+"eventNumberP2", convertEventN.b[1] );
+  test &= tuple->column( prefix+"GpsTimeP1", convertGpsTime.b[0] );
+  test &= tuple->column( prefix+"GpsTimeP2", convertGpsTime.b[1] );
+  //---------------------------------------------------------------------
+
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);
 }

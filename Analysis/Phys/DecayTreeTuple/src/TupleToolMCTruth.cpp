@@ -49,8 +49,10 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 
 //=============================================================================
 
-StatusCode TupleToolMCTruth::initialize(){
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
+StatusCode TupleToolMCTruth::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType,
                                              this);
@@ -72,7 +74,7 @@ StatusCode TupleToolMCTruth::initialize(){
               << " tools added " << endmsg ;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode TupleToolMCTruth::fill( const LHCb::Particle*

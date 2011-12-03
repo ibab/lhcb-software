@@ -8,7 +8,7 @@
 #include "TupleToolRICHPid.h"
 
 #include "GaudiAlg/Tuple.h"
-#include "GaudiAlg/TupleObj.h" 
+#include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
 #include "Event/RichPID.h"
@@ -29,8 +29,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   ,m_SegMaker()
 {
@@ -42,25 +42,25 @@ TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
 
 StatusCode TupleToolRICHPid::initialize()
 {
-  
+
   StatusCode sc = TupleToolBase::initialize();
-  if (!sc) return sc;
+  if ( sc.isFailure() ) return sc;
   m_SegMaker = tool<Rich::Rec::ITrSegMaker>( "Rich::Rec::DetailedTrSegMakerFromRecoTracks", this );
   if( !m_SegMaker )  return StatusCode::FAILURE;
-  
+
   return sc;
 }
 
-StatusCode TupleToolRICHPid::fill( const Particle* 
-				   , const Particle* P
-				   , const std::string& head
-				   , Tuples::Tuple& tuple ){
-  
+StatusCode TupleToolRICHPid::fill( const Particle*
+                                   , const Particle* P
+                                   , const std::string& head
+                                   , Tuples::Tuple& tuple ){
+
   const std::string prefix=fullName(head);
   assert(m_SegMaker);
   if( P ){
     bool test = true;
-    
+
     int Assign_PDGID = P->particleID().pid();
     Rich::ParticleIDType Assign_RICHID = Rich::Unknown;
     if(abs(Assign_PDGID)==211)
@@ -83,52 +83,52 @@ StatusCode TupleToolRICHPid::fill( const Particle*
     {
       Assign_RICHID = Rich::Proton;
     }
-    
+
     if( !P->isBasicParticle() ) return StatusCode(test); // no rich info for composite!
-    
+
     if( isPureNeutralCalo(P) )return StatusCode(test); // no rich information for calo neutrals
-    
+
     const ProtoParticle* proto = P->proto();
-    
+
     if( proto ){
       test &= tuple->column(  prefix+"_RICHDLLe"
                               ,proto->info(ProtoParticle::RichDLLe,-1000));
-      
+
       test &= tuple->column(  prefix+"_RICHDLLmu"
                               ,proto->info(ProtoParticle::RichDLLmu,-1000));
-      
+
       test &= tuple->column(  prefix+"_RICHDLLK"
                               ,proto->info(ProtoParticle::RichDLLk,-1000));
-     
+
       test &= tuple->column(  prefix+"_RICHDLLp"
                               ,proto->info(ProtoParticle::RichDLLp,-1000));
-     
+
       test &= tuple->column(  prefix+"_RICHDLLpi"
                               ,proto->info(ProtoParticle::RichDLLpi,-1000));
-      
-      if( !tuple->column( prefix+"_RICHBestID", proto->richPID() ? 
+
+      if( !tuple->column( prefix+"_RICHBestID", proto->richPID() ?
                           (proto->richPID()->bestParticleID()) : -2)) return StatusCode::FAILURE;
-      
-      if( !tuple->column( prefix+"_RICHThreshold", proto->richPID() ? 
+
+      if( !tuple->column( prefix+"_RICHThreshold", proto->richPID() ?
                           (proto->richPID()->isAboveThreshold(Assign_RICHID)) : -1)) return StatusCode::FAILURE;
 
-      if( !tuple->column( prefix+"_RICHAerogelUsed", proto->richPID() ? 
+      if( !tuple->column( prefix+"_RICHAerogelUsed", proto->richPID() ?
                           (proto->richPID()->traversedRadiator(Rich::Aerogel)) : -1)) return StatusCode::FAILURE;
 
-      if( !tuple->column( prefix+"_RICH1GasUsed", proto->richPID() ? 
+      if( !tuple->column( prefix+"_RICH1GasUsed", proto->richPID() ?
                           (proto->richPID()->traversedRadiator(Rich::Rich1Gas)) : -1)) return StatusCode::FAILURE;
 
-      if( !tuple->column( prefix+"_RICH2GasUsed", proto->richPID() ? 
+      if( !tuple->column( prefix+"_RICH2GasUsed", proto->richPID() ?
                           (proto->richPID()->traversedRadiator(Rich::Rich2Gas)) : -1)) return StatusCode::FAILURE;
-      
+
       if( !tuple->column( prefix+"_TRACK_Eta", proto->track() ?
                           (proto->track()->pseudoRapidity()) : -4.0)) return StatusCode::FAILURE;
 
       if( !tuple->column( prefix+"_TRACK_Phi", proto->track() ?
-                          (proto->track()->phi()) : -4.0)) return StatusCode::FAILURE; 
+                          (proto->track()->phi()) : -4.0)) return StatusCode::FAILURE;
 
       std::vector< LHCb::RichTrackSegment * > vec;
-            
+
       int ret = m_SegMaker->constructSegments(proto->track(), vec);
       const Gaudi::XYZPoint* pt_aerogel = getXYZ(vec, Rich::Aerogel);
       const Gaudi::XYZPoint* pt_rich1gas = getXYZ(vec, Rich::Rich1Gas);
@@ -144,7 +144,7 @@ StatusCode TupleToolRICHPid::fill( const Particle*
                           pt_aerogel->Rho(): -1)) return StatusCode::FAILURE;
       if( !tuple->column( prefix+"_Aerogel_Phi", ret!=0 && pt_aerogel!=NULL?
                           pt_aerogel->Phi(): -4)) return StatusCode::FAILURE;
-      
+
       if( !tuple->column( prefix+"_Rich1Gas_X", ret!=0 && pt_rich1gas!=NULL ?
                           pt_rich1gas->X(): -10000)) return StatusCode::FAILURE;
       if( !tuple->column( prefix+"_Rich1Gas_Y", ret!=0 && pt_rich1gas!=NULL ?
@@ -167,7 +167,7 @@ StatusCode TupleToolRICHPid::fill( const Particle*
       if( !tuple->column( prefix+"_Rich2Gas_Phi", ret!=0 && pt_rich2gas!=NULL ?
                           pt_rich2gas->Phi(): -4)) return StatusCode::FAILURE;
 
-      std::vector< LHCb::RichTrackSegment * >::iterator itr; 
+      std::vector< LHCb::RichTrackSegment * >::iterator itr;
       for(itr = vec.begin(); itr!=vec.end(); ++itr)
       {
         assert(*itr);
@@ -183,14 +183,14 @@ StatusCode TupleToolRICHPid::fill( const Particle*
 const Gaudi::XYZPoint* TupleToolRICHPid::getXYZ(std::vector< LHCb::RichTrackSegment * >& vec,
                                                 Rich::RadiatorType Rad)
 {
-  std::vector< LHCb::RichTrackSegment * >::iterator itr; 
-  
+  std::vector< LHCb::RichTrackSegment * >::iterator itr;
+
   const Gaudi::XYZPoint* entryPoint = 0;
   if(vec.size() == 0)
   {
     return entryPoint;
   }
- 
+
   for(itr = vec.begin(); itr!=vec.end(); ++itr)
   {
     assert(*itr);

@@ -30,8 +30,8 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
-						      const std::string& name,
-						      const IInterface* parent )
+                                                      const std::string& name,
+                                                      const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_backCatType("BackgroundCategory")
   , m_bkg(NULL)
@@ -40,32 +40,31 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty( "IBackgroundCategoryType", m_backCatType);
-  
+
 }
 
 //=============================================================================
 
-StatusCode TupleToolMCBackgroundInfo::initialize() 
+StatusCode TupleToolMCBackgroundInfo::initialize()
 {
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  
   m_bkg = tool<IBackgroundCategory>( m_backCatType, "BackgroundCategory", this );
 
-  return m_bkg != 0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
-
+  return sc;
 }
 
 //=============================================================================
 
 StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
-					    , const Particle* P
-					    , const std::string& head
-					    , Tuples::Tuple& tuple ) 
+                                            , const Particle* P
+                                            , const std::string& head
+                                            , Tuples::Tuple& tuple )
 {
-  
+
   const std::string prefix=fullName(head);
-    
+
   Assert( P && m_bkg , "This should not happen :(" );
 
   if( !P->isBasicParticle() )
@@ -76,7 +75,7 @@ StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
     if (msgLevel(MSG::DEBUG)) debug() << "BackgroundCategory decision for "
                                       << prefix <<": " << category << endreq;
 
-    if ( tuple->column( prefix+"_BKGCAT", category ) ) 
+    if ( tuple->column( prefix+"_BKGCAT", category ) )
       return StatusCode::SUCCESS;
   }
 

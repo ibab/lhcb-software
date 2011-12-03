@@ -17,7 +17,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( TupleToolSelResults );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -33,6 +32,7 @@ TupleToolSelResults::TupleToolSelResults( const std::string& type,
   //deprecated, use ExtraName instead
   //declareProperty("Head", m_head = "", "This will be appended before any tuple entry");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -41,8 +41,10 @@ TupleToolSelResults::~TupleToolSelResults() {}
 //=============================================================================
 // init
 //=============================================================================
-StatusCode TupleToolSelResults::initialize() {
+StatusCode TupleToolSelResults::initialize() 
+{
   StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
   m_selTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
   return sc ;
 } 
@@ -52,11 +54,14 @@ StatusCode TupleToolSelResults::initialize() {
 //=============================================================================
 StatusCode TupleToolSelResults::fill( Tuples::Tuple& tup) 
 {
-  const std::string prefix=fullName();
+  const std::string prefix = fullName();
   bool test = true;
-  for ( std::vector<std::string>::const_iterator s = m_selections.begin() ; s!= m_selections.end() ; ++s){
+  for ( std::vector<std::string>::const_iterator s = m_selections.begin() ; 
+        s != m_selections.end(); ++s )
+  {
     test &= tup->column(prefix+(*s),m_selTool->isSelected(*s));
-    if (!test) {
+    if (!test) 
+    {
       err() << "Cannot fill variable name " << prefix+(*s) << endmsg ;
       break;
     }

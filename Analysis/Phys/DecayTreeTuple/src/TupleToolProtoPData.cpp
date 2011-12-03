@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 
 
 #include "GaudiKernel/ToolFactory.h"
@@ -14,14 +14,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolProtoPData ); 
+DECLARE_TOOL_FACTORY( TupleToolProtoPData );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolProtoPData::TupleToolProtoPData( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent ): 
+                                          const std::string& name,
+                                          const IInterface* parent ):
   TupleToolBase ( type, name , parent ){
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "DataList", m_list );
@@ -35,7 +35,7 @@ TupleToolProtoPData::TupleToolProtoPData( const std::string& type,
 
 
 
-StatusCode TupleToolProtoPData::fill( const LHCb::Particle* 
+StatusCode TupleToolProtoPData::fill( const LHCb::Particle*
                                       , const LHCb::Particle* P
                                       , const std::string& head
                                       , Tuples::Tuple& tuple ){
@@ -46,10 +46,10 @@ StatusCode TupleToolProtoPData::fill( const LHCb::Particle*
   if( NULL ==  pp )return StatusCode::SUCCESS;
 
   bool fill=true;
-  
+
   double def = -999999.;
-  int last =  (m_last < 0) ?  LHCb::ProtoParticle::LastGlobal : m_last;  
-  for(int i=0; i < last ; ++i){ 
+  int last =  (m_last < 0) ?  LHCb::ProtoParticle::LastGlobal : m_last;
+  for(int i=0; i < last ; ++i){
     std::ostringstream var("");
     var << (LHCb::ProtoParticle::additionalInfo) i;
     if( std::string::npos != var.str().find("ERROR") )continue;
@@ -58,7 +58,7 @@ StatusCode TupleToolProtoPData::fill( const LHCb::Particle*
       fill &= tuple->column( prefix+"_PP_"+var.str(), val );
     }
   }
-  
- return StatusCode::SUCCESS;
+
+  return StatusCode::SUCCESS;
 }
 

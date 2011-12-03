@@ -1,11 +1,11 @@
 // $Id: TupleToolTrackPosition.cpp,v 1.2 2010-01-26 15:48:57 rlambert Exp $
-// Include files 
+// Include files
 
 
-#include "GaudiKernel/ToolFactory.h" 
-#include "Event/Particle.h"  
+#include "GaudiKernel/ToolFactory.h"
+#include "Event/Particle.h"
 //#include "Event/Track.h"
-// kernel 
+// kernel
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 //#include "GaudiKernel/PhysicalConstants.h"
@@ -23,67 +23,64 @@
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( TupleToolTrackPosition );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolTrackPosition::TupleToolTrackPosition( const std::string& type,
                                                 const std::string& name,
-                                                const IInterface* parent) : TupleToolBase ( type, name , parent ),
-                                                                            m_Z(2500.),
-                                                                            m_extrapolator(NULL),
-                                                                            m_extrapolatorName("")
+                                                const IInterface* parent)
+  : TupleToolBase ( type, name , parent ),
+    m_Z(2500.),
+    m_extrapolator(NULL),
+    m_extrapolatorName("")
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "Z", m_Z = 2500.,
                    "Which Z-position to propagate the track to, defaults to 2500, the position of the T-stations");
   declareProperty( "Extrapolator", m_extrapolatorName = "TrackMasterExtrapolator",
                    "Which extrapolator to use");
-  
+
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolTrackPosition::~TupleToolTrackPosition() {} 
+TupleToolTrackPosition::~TupleToolTrackPosition() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TupleToolTrackPosition::initialize() {
+StatusCode TupleToolTrackPosition::initialize() 
+{
   StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
-  
+
   m_extrapolator=tool<ITrackExtrapolator>(m_extrapolatorName,this);
-  
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  return StatusCode::SUCCESS;
 
-  
-
-
+  return sc;
 }
 
 //=============================================================================
 // Fill the tuple
 //=============================================================================
-StatusCode TupleToolTrackPosition::fill( const LHCb::Particle *, const LHCb::Particle *  	part,
-                                          const std::string &  	head, Tuples::Tuple &  	tuple	)
+StatusCode TupleToolTrackPosition::fill( const LHCb::Particle *, 
+                                         const LHCb::Particle *   part,
+                                         const std::string &   head,
+                                         Tuples::Tuple &   tuple )
 {
-  
   const std::string prefix=fullName(head);
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
-  
+
   bool test=true;
-  
+
   double X=-999999;
   double Y=-999999;
-  
-      
+
+
   if( part && part->proto() && part->proto()->track() )
   {
-    
+
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "extrapolating track to Z="<< m_Z << endmsg;
-    
+
     LHCb::StateVector aState=LHCb::StateVector();
     //const LHCb::Track aTrack= *(part->proto()->track());
     StatusCode sc=m_extrapolator->propagate(*(part->proto()->track()),m_Z,aState);
@@ -92,11 +89,11 @@ StatusCode TupleToolTrackPosition::fill( const LHCb::Particle *, const LHCb::Par
       X=aState.x();
       Y=aState.y();
     }
-    
-  } 
+
+  }
 
   test &= tuple->column( prefix+"_X", X );
   test &= tuple->column( prefix+"_Y", Y );
-  
+
   return StatusCode(test);
 }

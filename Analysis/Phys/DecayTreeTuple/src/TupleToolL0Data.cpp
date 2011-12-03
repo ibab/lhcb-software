@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 
 
 #include "GaudiKernel/ToolFactory.h"
@@ -15,19 +15,20 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolL0Data ); 
+DECLARE_TOOL_FACTORY( TupleToolL0Data );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolL0Data::TupleToolL0Data( const std::string& type,
                                   const std::string& name,
-                                  const IInterface* parent ): 
-  TupleToolBase ( type, name , parent ){
+                                  const IInterface* parent ):
+  TupleToolBase ( type, name , parent )
+{
   declareInterface<IEventTupleTool>(this);
   declareProperty( "DataList", m_list );
   declareProperty( "ScaledData",m_scale=false);
-  declareProperty( "TCKList" , m_tcks ); 
+  declareProperty( "TCKList" , m_tcks );
 
   // Accepted/rejected data
   m_list.push_back("!*Status*");
@@ -45,12 +46,14 @@ TupleToolL0Data::TupleToolL0Data( const std::string& type,
 }
 
 
-StatusCode TupleToolL0Data::initialize() {
-  StatusCode sc = TupleToolBase::initialize();
+StatusCode TupleToolL0Data::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
   m_l0    = tool<IL0DUFromRawTool>("L0DUFromRawTool","L0DUFromRaw" ,this );
   m_l0emu = tool<IL0DUEmulatorTool>("L0DUEmulatorTool","L0DUEmulator",this);
   m_l0conf= tool<IL0DUConfigProvider>( "L0DUMultiConfigProvider","L0DUConfig");
-  return sc; 
+  return sc;
 }
 
 
@@ -72,17 +75,17 @@ StatusCode TupleToolL0Data::fill( Tuples::Tuple& tuple){
     int val = (it->second).first;
     double scale=(it->second).second;
     if( LHCb::CaloAlgUtils::StringMatcher( m_list , name )){
-      if(m_scale)tuple->column( prefix+"L0Data_"+rename(name), double(val)*scale ); 
-      else tuple->column( prefix+"L0Data_"+rename(name), val ); 
+      if(m_scale)tuple->column( prefix+"L0Data_"+rename(name), double(val)*scale );
+      else tuple->column( prefix+"L0Data_"+rename(name), val );
       debug() << "++ ACCEPT L0Data : '" << prefix<<"L0Data_"<<rename(name) <<endmsg;
     }else
       debug() << "-- REJECT L0Data : '" << prefix<<"L0Data_"<<rename(name) <<endmsg;
-    
-  } 
+
+  }
 
 
   // L0DU emulated Decision (incl. downscaling !!) Useful on MC data
-  
+
   if( m_tcks.empty() )return StatusCode::SUCCESS;
   LHCb::L0ProcessorDatas* proDatas= m_l0->L0ProcessorDatas();
   for( std::vector<std::string>::iterator it=m_tcks.begin();m_tcks.end()!=it;++it ){
@@ -99,7 +102,7 @@ StatusCode TupleToolL0Data::fill( Tuples::Tuple& tuple){
     tuple->column( prefix+"L0Emu_TCK"+stck, dec);
     debug() << " >> emulated (pre)decision for TCK : " << stck << " ("<<itck <<") : " << dec << endmsg;
   }
- return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
 std::string TupleToolL0Data::rename(std::string name){

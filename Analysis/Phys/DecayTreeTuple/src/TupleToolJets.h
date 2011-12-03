@@ -5,12 +5,16 @@
 
 
 //autor: Albert Bursche
-class TupleToolJets : public TupleToolJetsBase, virtual public IParticleTupleTool {
+class TupleToolJets : public TupleToolJetsBase,
+                      virtual public IParticleTupleTool 
+{
+
 public:
+  
   /// Standard constructor
   TupleToolJets( const std::string& type,
-                   const std::string& name,
-                   const IInterface* parent);
+                 const std::string& name,
+                 const IInterface* parent);
 
   virtual ~TupleToolJets(){}; ///< Destructor
 
@@ -18,10 +22,12 @@ public:
                            , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
-  virtual StatusCode initialize();
+
 private:
+
   const LHCb::Particle * m_p;
   std::string m_head;
+
 };
 
 #endif // TUPLETOOLJETS_H

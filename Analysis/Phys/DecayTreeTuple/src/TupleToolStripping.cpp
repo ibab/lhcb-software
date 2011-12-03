@@ -1,8 +1,8 @@
 // $Id: TupleToolStripping.cpp,v 1.1 2010-04-26 12:49:59 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "TupleToolStripping.h"
@@ -22,7 +22,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( TupleToolStripping );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -33,37 +32,32 @@ TupleToolStripping::TupleToolStripping( const std::string& type,
 {
   declareInterface<IEventTupleTool>(this);
   /// @todochange with rootontes
-  declareProperty("StrippigReportsLocations", m_location = "/Event/Strip/Phys/DecReports" ); 
-
+  declareProperty("StrippigReportsLocations", m_location = "/Event/Strip/Phys/DecReports" );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-TupleToolStripping::~TupleToolStripping() {} 
-//=============================================================================
-// Destructor
-//=============================================================================
-StatusCode TupleToolStripping::initialize() {
-  StatusCode sc = TupleToolBase::initialize();
+TupleToolStripping::~TupleToolStripping() {}
 
-  return sc ;
-
-} 
-//=============================================================================
 //=============================================================================
 
-StatusCode TupleToolStripping::fill( Tuples::Tuple& tuple ){
+StatusCode TupleToolStripping::fill( Tuples::Tuple& tuple )
+{
 
-  if (exist<LHCb::HltDecReports>(m_location)){
+  if (exist<LHCb::HltDecReports>(m_location))
+  {
     LHCb::HltDecReports* dr = get<LHCb::HltDecReports>(m_location);
     if(msgLevel(MSG::DEBUG)) debug() << "There are " << dr->size() << " DecReports at " << m_location << endmsg ;
-    std::vector<std::string> names = dr->decisionNames() ;
+    const std::vector<std::string> & names = dr->decisionNames() ;
     if(msgLevel(MSG::VERBOSE)) verbose() << "NAMES: " << names << endmsg ;
     unsigned int i = 0 ;
-    for ( std::vector<std::string>::const_iterator s = names.begin() ; 
-          s != names.end() ; ++s){
+    for ( std::vector<std::string>::const_iterator s = names.begin() ;
+          s != names.end() ; ++s)
+    {
       if(msgLevel(MSG::VERBOSE)) verbose() << "Trying " << i << " " << *s << endmsg ;
-      if ( dr->hasDecisionName(*s) ){
+      if ( dr->hasDecisionName(*s) )
+      {
         const LHCb::HltDecReport* report = dr->decReport(*s);
         if ( 0==report ) Exception("Cannot find report "+*s);
         if(msgLevel(MSG::VERBOSE)) verbose() << *s << " says " << report->decision() << endmsg ;
@@ -71,7 +65,7 @@ StatusCode TupleToolStripping::fill( Tuples::Tuple& tuple ){
       } else {
         Exception("Don't have report name "+*s);
       }
-      i++ ;
+      ++i;
     }
   } else {
     Warning("No DecReports at "+m_location, StatusCode::SUCCESS, 1);
@@ -79,7 +73,7 @@ StatusCode TupleToolStripping::fill( Tuples::Tuple& tuple ){
   }
 
   return StatusCode::SUCCESS ;
-  
+
 }
- 
+
 //=============================================================================

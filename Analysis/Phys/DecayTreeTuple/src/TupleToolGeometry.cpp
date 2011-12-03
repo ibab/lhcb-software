@@ -31,32 +31,33 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolGeometry::TupleToolGeometry( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
-  : 
+                                      const std::string& name,
+                                      const IInterface* parent )
+  :
   TupleToolBase ( type, name , parent )
   , m_dist(0)
-  //, m_fillMother(true)
   , m_dva(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("RefitPVs",m_refitPVs=false,
                   "Refit PVs when doing next best PV checks");
-  
+
   //declareProperty("FillMother",m_fillMother=true,
   //                "Turn false if the mother is expected to be NULL, will not fill mother PV info");
   // replaced by Verbose
-  
+
 }
 
 //=============================================================================
 
-StatusCode TupleToolGeometry::initialize() {
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
+StatusCode TupleToolGeometry::initialize()
+{
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
-                             StatusCode::FAILURE);  
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
+                             StatusCode::FAILURE);
 
   m_dist = m_dva->distanceCalculator ();
   if( !m_dist ){
@@ -70,7 +71,7 @@ StatusCode TupleToolGeometry::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -80,8 +81,8 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
                                     , Tuples::Tuple& tuple )
 {
   const std::string prefix=fullName(head);
-  
-  
+
+
   Assert( P && m_dist && m_dva
           , "No mother or particle, or tools misconfigured." );
 
@@ -89,13 +90,13 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   if( isPureNeutralCalo(P) )
     return Warning("Will not fill geometry tuple for neutral Calo particles. No worry", StatusCode::SUCCESS, 10);
   verbose() << "TupleToolGeometry::fill " << mother << " " << P << " " << prefix << endmsg ;
-  
+
   //fill min IP
   StatusCode sc = fillMinIP(P,prefix,tuple);
   if (!sc) return sc;
-  
+
   const VertexBase* aPV = NULL;
-  
+
   //=========================================================================
   // fill IP for Particles's Own BPV.. if it isn't the mother!
   //=========================================================================
@@ -121,60 +122,60 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   {
     aPV = originVertex( mother, P );
     if (isVerbose()) sc = fillVertexFull(aPV,P,prefix,"_ORIVX",tuple);
-    else 
+    else
     {
       sc = fillVertex(aPV,prefix+"_ORIVX",tuple);
       if (!sc) return sc;
       if( !P->isBasicParticle() ) sc = fillFlight(aPV,P,prefix,tuple,"_ORIVX");
       if (!sc) return sc;
     }
-    
+
     if (!sc) return sc;
   }
   //=========================================================================
   // nothing more for basic particles
   if( P->isBasicParticle() ) return sc ;
   //=========================================================================
-  
+
   //=========================================================================
   //fill end vertex info
   //=========================================================================
   const VertexBase* evtx = P->endVertex();
   if( 0==evtx ) return Error("Can't retrieve the end vertex for " + prefix );
-  // end vertex 
+  // end vertex
   sc = fillVertex(evtx,prefix+"_ENDVERTEX",tuple);
 
   return sc ;
-  
+
 }
 //=========================================================================
-//  Fill Everything for this vertex for related PV 
+//  Fill Everything for this vertex for related PV
 //=========================================================================
-StatusCode TupleToolGeometry::fillVertexFull(const LHCb::VertexBase* vtx, 
-				      const LHCb::Particle* P, 
-				      std::string prefix, std::string vtx_name, 
-				      Tuples::Tuple& tuple) const 
+StatusCode TupleToolGeometry::fillVertexFull(const LHCb::VertexBase* vtx,
+                                             const LHCb::Particle* P,
+                                             std::string prefix, std::string vtx_name,
+                                             Tuples::Tuple& tuple) const
 {
-    if( 0==vtx ) counter("Can't retrieve the " +vtx_name+ " vertex for " + prefix )++;
-    StatusCode sc = fillVertex(vtx,prefix+vtx_name,tuple);
-    if (!sc) return sc;
-    sc = fillBPV(vtx,P,prefix,tuple,vtx_name);
-    if (!sc) return sc;
-    if( !P->isBasicParticle() ) sc = fillFlight(vtx,P,prefix,tuple,vtx_name);
-    return sc;
+  if( 0==vtx ) counter("Can't retrieve the " +vtx_name+ " vertex for " + prefix )++;
+  StatusCode sc = fillVertex(vtx,prefix+vtx_name,tuple);
+  if (!sc) return sc;
+  sc = fillBPV(vtx,P,prefix,tuple,vtx_name);
+  if (!sc) return sc;
+  if( !P->isBasicParticle() ) sc = fillFlight(vtx,P,prefix,tuple,vtx_name);
+  return sc;
 
 }
 
 //=========================================================================
-//  Fill PV for related PV 
+//  Fill PV for related PV
 //=========================================================================
 StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
-                                    , const Particle* P
-                                    , const std::string prefix
-                                    , Tuples::Tuple& tuple
-                                    , std::string trail) const {
+                                       , const Particle* P
+                                       , const std::string prefix
+                                       , Tuples::Tuple& tuple
+                                       , std::string trail) const {
   bool test = true ;
-  
+
   double ip=0, chi2=0;
   if ( 0==primVtx ){
     counter("No BPV for "+prefix)++;
@@ -189,7 +190,7 @@ StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
     test &= tuple->column( prefix + "_IP"+trail, ip );
     test &= tuple->column( prefix + "_IPCHI2"+trail, chi2 );
   }
-  
+
   return StatusCode(test) ;
 }
 //=========================================================================
@@ -211,54 +212,54 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   if ( !PV.empty() )
   {
     if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " << P << " PVs:" << PV.size() << endmsg ;
-    
+
     for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv)
     {
       RecVertex newPV(**pv);
       if (m_refitPVs)
       {
-        
+
         StatusCode scfit = m_pvReFitter->remove(P, &newPV);
         if(!scfit) { Warning("ReFitter fails!",StatusCode::SUCCESS,10).ignore(); continue; }
       }
-      
+
       double ip, chi2;
       //StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
-      
-      LHCb::VertexBase* newPVPtr = (LHCb::VertexBase*)&newPV; 
+
+      LHCb::VertexBase* newPVPtr = (LHCb::VertexBase*)&newPV;
       StatusCode test2 = m_dist->distance ( P, newPVPtr, ip, chi2 );
-      if( test2 ) 
+      if( test2 )
       {
-        if ((ip<ipmin) || (ipmin<0.)) 
+        if ((ip<ipmin) || (ipmin<0.))
         {
           ipminnextbest = ipmin;
           ipmin = ip ;
         }
         else
         {
-          if((ip < ipminnextbest) || (ipminnextbest < 0)) 
+          if((ip < ipminnextbest) || (ipminnextbest < 0))
           {
             ipminnextbest = ip;
           }
         }
 
-        if ((chi2<minchi2) || (minchi2<0.)) 
+        if ((chi2<minchi2) || (minchi2<0.))
         {
           minchi2nextbest = minchi2;
-          minchi2 = chi2 ;       
-        } 
+          minchi2 = chi2 ;
+        }
         else
         {
-          if((chi2 < minchi2nextbest) || (minchi2nextbest < 0)) 
+          if((chi2 < minchi2nextbest) || (minchi2nextbest < 0))
           {
-           minchi2nextbest = chi2;
+            minchi2nextbest = chi2;
           }
         }
       }
     }
   }
   if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
-  if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at " 
+  if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at "
                                        << minchi2nextbest << endmsg  ;
 
   test &= tuple->column( prefix + "_MINIP", ipmin );
@@ -266,18 +267,18 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 
   test &= tuple->column( prefix + "_MINIPNEXTBEST", ipminnextbest );
   test &= tuple->column( prefix + "_MINIPCHI2NEXTBEST", minchi2nextbest );
-  
+
   // --------------------------------------------------
   return StatusCode(test) ;
 }
 //=========================================================================
-// fill vertex stuff 
+// fill vertex stuff
 //=========================================================================
 StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
                                           , std::string vtx_name
                                           , Tuples::Tuple& tuple ) const {
   bool test = true ;
-  
+
   // decay vertex information:
   if ( 0==vtx){
     Gaudi::XYZPoint pt(-999.,-999.,-999.) ; // arbitrary point
@@ -289,7 +290,7 @@ StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
     test &= tuple->column(  vtx_name + "_CHI2", -999. );
     test &= tuple->column(  vtx_name + "_NDOF", -1 );
     test &= tuple->matrix(  vtx_name + "_COV_", tmp  );
-  } else { 
+  } else {
     test &= tuple->column( vtx_name+"_", vtx->position() );
     const Gaudi::SymMatrix3x3 & m = vtx->covMatrix ();
     test &= tuple->column(  vtx_name + "_XERR", std::sqrt( m(0,0) ) );
@@ -299,7 +300,7 @@ StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
     test &= tuple->column(  vtx_name + "_NDOF", vtx->nDoF() );
     test &= tuple->matrix(  vtx_name + "_COV_", m );
   }
-  
+
   // --------------------------------------------------
   return StatusCode(test) ;
 
@@ -317,15 +318,15 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
   if ( 0==oriVtx ){
     test &= tuple->column( prefix + "_FD"+trail, -999. );
     test &= tuple->column( prefix + "_FDCHI2"+trail, -999. );
-    test &= tuple->column( prefix + "_DIRA"+trail, -999.);    
+    test &= tuple->column( prefix + "_DIRA"+trail, -999.);
   } else {
-   
+
     // flight distance
     double dist = 0;
     double chi2 = 0 ;
     StatusCode sc = m_dist->distance( oriVtx, P->endVertex(), dist, chi2 );
     if (!sc) return sc ;
-    
+
     test &= tuple->column( prefix + "_FD"+trail, dist );
     test &= tuple->column( prefix + "_FDCHI2"+trail, chi2 );
     // --------------------------------------------------
@@ -338,19 +339,19 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
       return StatusCode::FAILURE;
     }
     Gaudi::XYZVector A = P->momentum().Vect();
-    Gaudi::XYZVector B = evtx->position() - oriVtx->position ();  
-    
+    Gaudi::XYZVector B = evtx->position() - oriVtx->position ();
+
     double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
     test &= tuple->column( prefix + "_DIRA"+trail, cosPFD );
   }
-  
+
   return StatusCode(test);
 }
 // =====================================================
 // find origin vertex in the decay chain
 // =====================================================
 const VertexBase* TupleToolGeometry::originVertex( const Particle* top
-						 , const Particle* P ) const 
+                                                   , const Particle* P ) const
 {
   //this used to pass back zero if P was a basic particle.
   //I don't think that's necessary. R Lambert 2009-08-14
@@ -365,7 +366,7 @@ const VertexBase* TupleToolGeometry::originVertex( const Particle* top
       return top->endVertex();
     }
   }
-  
+
   // vertex not yet found, get deeper in the decay:
   for( it = dau.begin(); dau.end()!=it; ++it ){
     if( P != *it && !(*it)->isBasicParticle() ){

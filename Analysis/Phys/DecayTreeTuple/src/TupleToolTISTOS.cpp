@@ -24,7 +24,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TupleToolTISTOS )
+DECLARE_TOOL_FACTORY( TupleToolTISTOS );
 
 //=============================================================================
 // Standard constructor, initializes variables
