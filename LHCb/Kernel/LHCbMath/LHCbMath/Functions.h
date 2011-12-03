@@ -346,6 +346,39 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class WorkSpace
+     *  helper utility to keep the integration workspace 
+     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @date 2011-12-03
+     */
+    class WorkSpace 
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      WorkSpace () ;
+      /// copy constructor 
+      WorkSpace ( const WorkSpace& right );
+      /// destructor 
+      ~WorkSpace () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integration workspace 
+      void* workspace () const ;               // get the integrtaion workspace 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the assignement operator  
+      WorkSpace& operator= ( const WorkSpace& right ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual GSL-workspace 
+      mutable void*  m_workspace ;  /// the actual GSL-workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Bukin
      *  ``Bukin-function'' 
      *  for description of asymmetric peaks with the exponential tails 
@@ -369,8 +402,6 @@ namespace Gaudi
         const double rhoL   = 0 , 
         const double rhoR   = 0 ) ;
       // ======================================================================
-      /// copy constructor 
-      Bukin ( const Bukin& right ) ;
       /// destructor 
       ~Bukin () ;
       // ======================================================================
@@ -446,11 +477,12 @@ namespace Gaudi
       double m_R         ;   // right tail  
       /// normalization integral 
       double m_integral  ;   // normalization integral 
-      mutable void*  m_workspace ;
+      /// workspace 
+      Gaudi::Math::WorkSpace m_workspace ;
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class Novosibitsk
+    /** @class Novosibirsk
      *  ``Novosibirsk-function'' for description of gaussian with tails
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-04-19
@@ -468,9 +500,6 @@ namespace Gaudi
       ( const double m0        , 
         const double sigma     , 
         const double tau   = 0 ) ;
-      // ======================================================================
-      /// copy constructor 
-      Novosibirsk ( const Novosibirsk& right ) ;
       /// destructor 
       ~Novosibirsk () ;                                           // destructor 
       // ======================================================================
@@ -530,7 +559,8 @@ namespace Gaudi
       double m_lambda    ;   // lambda value 
       // integration 
       double m_integral  ;
-      mutable void*  m_workspace ;
+      /// workspace 
+      Gaudi::Math::WorkSpace m_workspace ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -728,8 +758,6 @@ namespace Gaudi
                        const double sigma  , 
                        const double kappa3 , 
                        const double kappa4 ) ;
-      /// copy constructor 
-      GramCharlierA  ( const GramCharlierA& right ) ;
       /// destructor 
       ~GramCharlierA () ;
       // ======================================================================
@@ -782,8 +810,10 @@ namespace Gaudi
       /// the standartized 4th cumulant 
       double              m_kappa4 ;           // the standartized 4th cumulant 
       // ======================================================================
-      // integration 
-      mutable void*  m_workspace ;
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;
     // ========================================================================
@@ -802,7 +832,7 @@ namespace Gaudi
       PhaseSpace2 ( const double m1 , 
                     const double m2 ) ;
       /// deststructor 
-      ~PhaseSpace2() ;                                          // deststructor 
+      ~PhaseSpace2 () ;                                         // deststructor 
       // ======================================================================
     public:
       // ====================================================================== 
@@ -952,8 +982,6 @@ namespace Gaudi
                      const double         threshold2 , 
                      const unsigned short l          , 
                      const unsigned short n          ) ;
-      /// copy contructor
-      PhaseSpaceNL ( const PhaseSpaceNL& right ) ;
       /// deststructor 
       ~PhaseSpaceNL () ;                                     // deststructor 
       // ======================================================================
@@ -997,7 +1025,7 @@ namespace Gaudi
     private:
       // ======================================================================
       /// integration workspace 
-      mutable void*  m_workspace ; // integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;
     // ========================================================================
@@ -1058,8 +1086,6 @@ namespace Gaudi
                     const double         m2       , 
                     const unsigned short L        ,
                     const JacksonRho     r        ) ;
-      // cpoy constructor
-      BreitWigner ( const BreitWigner&   right    ) ;
       /// destructor 
       virtual ~BreitWigner () ;
       // ======================================================================
@@ -1137,7 +1163,7 @@ namespace Gaudi
     private:
       // ======================================================================
       /// integration workspace 
-      mutable void*  m_workspace ; // integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;  
     // ========================================================================
@@ -1156,8 +1182,6 @@ namespace Gaudi
       Rho0  ( const double m0       = 770 , 
               const double gam0     = 150 ,
               const double pi_mass  = 139 ) ;
-      // copy constructor
-      Rho0  ( const Rho0& right ) ;
       /// destructor 
       virtual ~Rho0 () ;
       // ======================================================================
@@ -1215,8 +1239,6 @@ namespace Gaudi
                 const double g2og1 = 4.21     , 
                 const double mK    = 497      , 
                 const double mPi   = 139      ) ;                
-      // copy constructor 
-      Flatte  ( const Flatte& right ) ;
       /// destructor 
       ~Flatte () ;  
       // ======================================================================
@@ -1263,7 +1285,7 @@ namespace Gaudi
     private:
       // ======================================================================
       /// integration workspace 
-      mutable void*  m_workspace ; // integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;
     // ========================================================================

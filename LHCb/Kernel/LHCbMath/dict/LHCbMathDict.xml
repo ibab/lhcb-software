@@ -48,6 +48,7 @@
   <class name    = "Gaudi::Math::Rho0"             />
   <class name    = "Gaudi::Math::Rho0FromEtaPrime" />
   <class name    = "Gaudi::Math::Flatte"           />
+  <class name    = "Gaudi::Math::Workspace"        />  
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />
@@ -94,20 +95,14 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
     
-    <class name = "Gaudi::Math::Bukin">  
+    <class name = "Gaudi::Math::Workspace">  
       <field name = "m_workspace"/>      
     </class>
     <class name = "Gaudi::Math::BreitWigner::rho_fun"/>  
     <class name = "Gaudi::Math::BreitWigner">  
       <field name = "m_rho_fun"/>      
-      <field name = "m_workspace"/>      
     </class>
-    <class name = "Gaudi::Math::Flatte">  
-      <field name = "m_workspace"/>      
-    </class>
-    <class name = "Gaudi::Math::PhaseSpaceNL">  
-      <field name = "m_workspace"/>      
-    </class>
+
   </exclusion> 
   
 

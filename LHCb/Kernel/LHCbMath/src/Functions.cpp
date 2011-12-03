@@ -196,6 +196,14 @@ namespace
     // ========================================================================
   } ;  
   // ==========================================================================
+  /// get GSL-workspace
+  gsl_integration_workspace* workspace 
+  ( const Gaudi::Math::WorkSpace& ws )  
+  {
+    void* _ws =  ws.workspace() ;
+    return (gsl_integration_workspace*) _ws ;
+  }  
+  // ==========================================================================
   BOOST_STATIC_ASSERT( std::numeric_limits<float>::is_specialized  ) ;
   // ==========================================================================
   /** @var s_INFINITY 
@@ -666,12 +674,11 @@ namespace
     params[1]  =  beta        ;
     F.params   = params       ;
     //
-    gsl_integration_workspace* ws =
-      gsl_integration_workspace_alloc ( s_SIZE ) ; 
     //
     double result   = 1.0 ;
     double error    = 1.0 ;
     //
+    Gaudi::Math::WorkSpace ws ;
     const int ierror = gsl_integration_qag 
       ( &F                ,            // the function 
         a     ,   b       ,            // low & high edges 
@@ -679,11 +686,9 @@ namespace
         s_PRECISION       ,            // relative precision 
         s_SIZE            ,            // size of workspace 
         GSL_INTEG_GAUSS31 ,            // integration rule  
-        ws                ,            // workspace  
+        workspace ( ws )  ,            // workspace  
         &result           ,            // the result 
         &error            ) ;          // the error in result 
-    //
-    gsl_integration_workspace_free ( ws );
     //
     if ( ierror ) 
     { 
@@ -962,6 +967,53 @@ bool Gaudi::Math::BifurcatedGauss::setPeak( const double value )
   return true ;
 }
 // ============================================================================
+// WorskSpace 
+// ============================================================================
+// constructor 
+// ============================================================================
+Gaudi::Math::WorkSpace::WorkSpace () : m_workspace ( 0 ){}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Gaudi::Math::WorkSpace::WorkSpace 
+( const Gaudi::Math::WorkSpace& /* right */ ) 
+  : m_workspace ( 0 )
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::WorkSpace::~WorkSpace ()
+{
+  if ( 0 != m_workspace ) 
+  { 
+    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
+    m_workspace = 0 ;
+    gsl_integration_workspace_free ( _ws );
+  }
+}
+// ============================================================================
+// get the integration workspace 
+// ============================================================================
+void* Gaudi::Math::WorkSpace::workspace () const 
+{
+  if ( 0 == m_workspace )  
+  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
+  //
+  return m_workspace ;
+} 
+// ============================================================================
+// fictive assignement operator 
+// ============================================================================
+Gaudi::Math::WorkSpace&
+Gaudi::Math::WorkSpace::operator=
+  ( const Gaudi::Math::WorkSpace& /* right */ ) { return *this ; }
+// ============================================================================
+
+
+
+
+  
+// ============================================================================
 // Bukin
 // ============================================================================
 /*  constructor from all parameters 
@@ -991,7 +1043,8 @@ Gaudi::Math::Bukin::Bukin
   , m_x2        ( M_PI ) 
 //
   , m_integral  ( -1000 ) 
-  , m_workspace ( 0     ) // NB! 
+//
+  , m_workspace () 
 {
   //
   setXi    ( xi    ) ; // must be the first 
@@ -1006,42 +1059,9 @@ Gaudi::Math::Bukin::Bukin
   //
 }
 // ============================================================================
-// copy constructor 
-// ============================================================================
-Gaudi::Math::Bukin::Bukin 
-( const Gaudi::Math::Bukin& right ) 
-  : std::unary_function<double,double> ( right )
-//
-  , m_peak      ( right.m_peak     )  
-  , m_sigma     ( right.m_sigma    ) 
-  , m_xi        ( right.m_xi       )  
-  , m_rho_L     ( right.m_rho_L    ) 
-  , m_rho_R     ( right.m_rho_R    ) 
-//
-  , m_x1        ( right.m_x1   ) 
-  , m_x2        ( right.m_x2   ) 
-  , m_A         ( right.m_A    ) 
-  , m_B2        ( right.m_B2   ) 
-  , m_L         ( right.m_L    ) 
-  , m_R         ( right.m_R    )
-//
-  , m_integral  ( right.m_integral ) 
-//
-  , m_workspace ( 0     ) // NB! 
-{}
-// ============================================================================
 // destructor 
 // ============================================================================
-Gaudi::Math::Bukin::~Bukin ()
-{
-  //
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::Bukin::~Bukin () {}
 // ============================================================================
 bool Gaudi::Math::Bukin::setPeak  ( const double value ) 
 {
@@ -1244,12 +1264,6 @@ double Gaudi::Math::Bukin::integral
   F.function = &bukin_GSL ;
   F.params   = const_cast<Bukin*> ( this ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
@@ -1260,7 +1274,7 @@ double Gaudi::Math::Bukin::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -1339,40 +1353,16 @@ Gaudi::Math::Novosibirsk::Novosibirsk
   , m_lambda    ( 0.0   ) 
 //
   , m_integral  ( -1000 ) 
-  , m_workspace ( 0     ) 
+  , m_workspace () 
 {
   //
   m_lambda = x_sinh ( m_tau * s_Novosibirsk ) ;
   //
 }
 // ============================================================================
-// copy constructor 
-// ============================================================================
-Gaudi::Math::Novosibirsk::Novosibirsk
-( const Gaudi::Math::Novosibirsk& right ) 
-  : std::unary_function<double,double> ( right )
-//
-  , m_m0        ( right.m_m0       ) 
-  , m_sigma     ( right.m_sigma    ) 
-  , m_tau       ( right.m_tau      ) 
-//
-  , m_lambda    ( right.m_lambda   ) 
-//
-  , m_integral  ( right.m_integral ) 
-  , m_workspace ( 0                ) 
-{}
-// ============================================================================
 // destructor 
 // ============================================================================
-Gaudi::Math::Novosibirsk::~Novosibirsk()
-{
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::Novosibirsk::~Novosibirsk() {}
 // ============================================================================
 // set parameter m0
 // ============================================================================
@@ -1483,12 +1473,6 @@ double Gaudi::Math::Novosibirsk::integral
   F.function = &novosibirsk_GSL ;
   F.params   = const_cast<Novosibirsk*> ( this ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
@@ -1501,7 +1485,7 @@ double Gaudi::Math::Novosibirsk::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -1546,11 +1530,6 @@ void Gaudi::Math::Novosibirsk::integrate()
   F.function = &novosibirsk_GSL ;
   F.params   = const_cast<Novosibirsk*> ( this ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
   //
   // left tail:
   //
@@ -1558,14 +1537,14 @@ void Gaudi::Math::Novosibirsk::integrate()
   double error_l  = -1.0 ;
   //
   const int ierror_l = gsl_integration_qagil
-    ( &F                ,   // the function 
-      x_low             ,   // "high" edge
-      s_PRECISION       ,   // absolute precision  
-      s_PRECISION_TAIL  ,   // relative precision 
-      s_SIZE            ,   // size of workspace 
-      ws                ,   // workspace  
-      &tail_l           ,   // the result 
-      &error_l          ) ; // the error in result 
+    ( &F                ,         // the function 
+      x_low             ,         // "high" edge
+      s_PRECISION       ,         // absolute precision  
+      s_PRECISION_TAIL  ,         // relative precision 
+      s_SIZE            ,         // size of workspace 
+      workspace ( m_workspace ) , // workspace  
+      &tail_l           ,         // the result 
+      &error_l          ) ;        // the error in result 
   //
   if ( ierror_l ) 
   { 
@@ -1582,14 +1561,14 @@ void Gaudi::Math::Novosibirsk::integrate()
   double error_r  = -1.0 ;
   //
   const int ierror_r = gsl_integration_qagiu
-    ( &F                ,   // the function 
-      x_high            ,   // "low" edge
-      s_PRECISION       ,   // absolute precision  
-      s_PRECISION_TAIL  ,   // relative precision 
-      s_SIZE            ,   // size of workspace 
-      ws                ,   // workspace  
-      &tail_r           ,   // the result 
-      &error_r          ) ; // the error in result 
+    ( &F                ,         // the function 
+      x_high            ,         // "low" edge
+      s_PRECISION       ,         // absolute precision  
+      s_PRECISION_TAIL  ,         // relative precision 
+      s_SIZE            ,         // size of workspace 
+      workspace ( m_workspace ) , // workspace  
+      &tail_r           ,         // the result 
+      &error_r          ) ;       // the error in result 
   //
   if ( ierror_r ) 
   { 
@@ -2017,36 +1996,13 @@ Gaudi::Math::GramCharlierA::GramCharlierA
   , m_kappa3 ( kappa3 ) 
   , m_kappa4 ( kappa4 ) 
 //
-  , m_workspace ( 0 ) 
+  , m_workspace () 
 //
 {}
 // ============================================================================
-// cpoy constructor
+// destructor
 // ============================================================================
-Gaudi::Math::GramCharlierA::GramCharlierA 
-( const Gaudi::Math::GramCharlierA& right ) 
-  : std::unary_function<double,double> ( right ) 
-//
-  , m_mean   ( right.m_mean   )
-  , m_sigma  ( right.m_sigma  ) 
-  , m_kappa3 ( right.m_kappa3 ) 
-  , m_kappa4 ( right.m_kappa4 ) 
-//
-  , m_workspace ( 0 ) 
-//
-{}
-// ============================================================================
-// destrructor
-// ============================================================================
-Gaudi::Math::GramCharlierA::~GramCharlierA()
-{
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::GramCharlierA::~GramCharlierA() {}
 // ============================================================================
 // evaluate Gram-Charlier type A approximation 
 // ============================================================================
@@ -2118,12 +2074,6 @@ double Gaudi::Math::GramCharlierA::integral
   F.function = &gram_charlier_A_GSL ;
   F.params   = const_cast<GramCharlierA*> ( this ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
@@ -2136,7 +2086,7 @@ double Gaudi::Math::GramCharlierA::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -2362,7 +2312,7 @@ Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL
   , m_L          ( std::min ( l , n ) ) 
   , m_norm       ( 1 ) 
 //
-  , m_workspace  ( 0 ) 
+  , m_workspace  () 
 //
 {
   m_norm  = gsl_sf_gamma ( 3 * m_N *0.5 - 3       * 0.5 ) ;
@@ -2370,32 +2320,9 @@ Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL
   m_norm /= gsl_sf_gamma ( 3 * m_N *0.5 - 3 * m_L * 0.5 ) ;
 }
 // ============================================================================
-// copy constructor
-// ============================================================================
-Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL 
-( const Gaudi::Math::PhaseSpaceNL& right ) 
-  : std::unary_function<double,double> ( right ) 
-  , m_threshold1 ( right.m_threshold1 ) 
-  , m_threshold2 ( right.m_threshold2 )         
-  , m_N          ( right.m_N    ) 
-  , m_L          ( right.m_L    ) 
-  , m_norm       ( right.m_norm ) 
-//
-  , m_workspace  ( 0 ) 
-//
-{}
-// ============================================================================
 // destructor
 // ============================================================================
-Gaudi::Math::PhaseSpaceNL::~PhaseSpaceNL()
-{
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::PhaseSpaceNL::~PhaseSpaceNL() {}
 // ============================================================================
 // evaluate N/L-body phase space
 // ============================================================================
@@ -2467,12 +2394,6 @@ double  Gaudi::Math::PhaseSpaceNL::integral
   const PhaseSpaceNL* _ps = this  ;
   F.params   = const_cast<PhaseSpaceNL*> ( _ps ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
@@ -2483,7 +2404,7 @@ double  Gaudi::Math::PhaseSpaceNL::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -2512,14 +2433,14 @@ Gaudi::Math::BreitWigner::BreitWigner
   const unsigned short L    ) 
   : std::unary_function<double,double> () 
 //
-  , m_m0      (             m0    )   
-  , m_gam0    ( std::abs ( gam0 ) ) 
-  , m_m1      ( std::abs (   m1 ) )  
-  , m_m2      ( std::abs (   m2 ) )  
-  , m_L       (              L    )   
-  , m_rho_fun ( &Gaudi::Math::Jackson::jackson_0 )   
+  , m_m0        (             m0    )   
+  , m_gam0      ( std::abs ( gam0 ) ) 
+  , m_m1        ( std::abs (   m1 ) )  
+  , m_m2        ( std::abs (   m2 ) )  
+  , m_L         (              L    )   
+  , m_rho_fun   ( &Gaudi::Math::Jackson::jackson_0 )   
 //
-  , m_workspace ( 0 ) 
+  , m_workspace () 
 //
 {}
 // ============================================================================
@@ -2534,15 +2455,15 @@ Gaudi::Math::BreitWigner::BreitWigner
   const Gaudi::Math::BreitWigner::JacksonRho  r    ) 
   : std::unary_function<double,double> ()  
 //
-  , m_m0      (             m0    )   
-  , m_gam0    ( std::abs ( gam0 ) ) 
-  , m_m1      ( std::abs (   m1 ) )  
-  , m_m2      ( std::abs (   m2 ) )  
-  , m_L       (              L    )   
+  , m_m0        (             m0    )   
+  , m_gam0      ( std::abs ( gam0 ) ) 
+  , m_m1        ( std::abs (   m1 ) )  
+  , m_m2        ( std::abs (   m2 ) )  
+  , m_L         (              L    )   
 //
-  , m_rho_fun ( &Gaudi::Math::Jackson::jackson_0 )   
+  , m_rho_fun   ( &Gaudi::Math::Jackson::jackson_0 )   
 //
-  , m_workspace ( 0 ) 
+  , m_workspace () 
 //
 {
   //
@@ -2566,34 +2487,9 @@ Gaudi::Math::BreitWigner::BreitWigner
   //
 }
 // ============================================================================
-// copy constructor 
-// ============================================================================ 
-Gaudi::Math::BreitWigner::BreitWigner
-( const Gaudi::Math::BreitWigner& right ) 
-  : std::unary_function<double,double> ( right )  
-//
-  , m_m0      ( right.m_m0      )    
-  , m_gam0    ( right.m_gam0    ) 
-  , m_m1      ( right.m_m1      ) 
-  , m_m2      ( right.m_m2      )  
-  , m_L       ( right.m_L       )   
-  , m_rho_fun ( right.m_rho_fun )   
-//
-  , m_workspace ( 0 ) 
-//
-{}
-// ============================================================================
 // destructor
 // ============================================================================ 
-Gaudi::Math::BreitWigner::~BreitWigner ()
-{
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::BreitWigner::~BreitWigner (){}
 // ============================================================================
 /*  calculate the Breit-Wigner shape
  *  \f$\frac{1}{\pi}\frac{\omega\Gamma(\omega)}{ (\omega_0^2-\omega^2)^2-\omega_0^2\Gammma^2(\omega)-}\f$
@@ -2712,12 +2608,6 @@ double  Gaudi::Math::BreitWigner::integral
   const BreitWigner* _bw = this  ;
   F.params   = const_cast<BreitWigner*> ( _bw ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
@@ -2730,7 +2620,7 @@ double  Gaudi::Math::BreitWigner::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -2764,11 +2654,6 @@ double  Gaudi::Math::BreitWigner::integral () const
   const BreitWigner* _bw = this  ;
   F.params   = const_cast<BreitWigner*> ( _bw ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
   //
   // right tail:
   //
@@ -2776,14 +2661,14 @@ double  Gaudi::Math::BreitWigner::integral () const
   double error   = -1.0 ;
   //
   const int ierror = gsl_integration_qagiu
-    ( &F                ,   // the function 
-      x_high            ,   // "low" edge
-      s_PRECISION       ,   // absolute precision  
-      s_PRECISION_TAIL  ,   // relative precision 
-      s_SIZE            ,   // size of workspace 
-      ws                ,   // workspace  
-      &result           ,   // the result 
-      &error            ) ; // the error in result 
+    ( &F                ,         // the function 
+      x_high            ,         // "low" edge
+      s_PRECISION       ,         // absolute precision  
+      s_PRECISION_TAIL  ,         // relative precision 
+      s_SIZE            ,         // size of workspace 
+      workspace ( m_workspace ) , // workspace  
+      &result           ,         // the result 
+      &error            ) ;       // the error in result 
   //
   if ( ierror ) 
   { 
@@ -2808,13 +2693,6 @@ Gaudi::Math::Rho0::Rho0
                                pi_mass    ,
                                1          , 
                                Jackson_A5 ) 
-{}
-// ============================================================================
-// copy constructor 
-// ============================================================================
-Gaudi::Math::Rho0::Rho0
-( const Gaudi::Math::Rho0& right ) 
-  : Gaudi::Math::BreitWigner ( right ) 
 {}
 // ============================================================================
 // destructor 
@@ -2886,35 +2764,12 @@ Gaudi::Math::Flatte::Flatte
   , m_K     ( std::fabs ( mK    ) )  
   , m_Pi    ( std::fabs ( mPi   ) )  
 //
-  , m_workspace ( 0 )  
-{}
-// ============================================================================
-// copy constructor 
-// ============================================================================
-Gaudi::Math::Flatte::Flatte
-( const Gaudi::Math::Flatte& right )
-  : std::unary_function<double,double> ( right ) 
-//
-  , m_m0    ( right.m_m0     ) 
-  , m_m0g1  ( right.m_m0g1   )  
-  , m_g2og1 ( right.m_g2og1  )  
-  , m_K     ( right.m_K      )  
-  , m_Pi    ( right.m_Pi     )  
-//
-  , m_workspace ( 0 )  
+  , m_workspace ()  
 {}
 // ============================================================================
 // destructor 
 // ============================================================================
-Gaudi::Math::Flatte::~Flatte() 
-{
-  if ( 0 != m_workspace ) 
-  {
-    gsl_integration_workspace * _ws = (gsl_integration_workspace*) m_workspace ;
-    m_workspace = 0 ;
-    gsl_integration_workspace_free ( _ws );
-  }
-}
+Gaudi::Math::Flatte::~Flatte(){}
 // ============================================================================
 namespace 
 {
@@ -3056,11 +2911,6 @@ double  Gaudi::Math::Flatte::integral
   const Flatte* _f = this  ;
   F.params   = const_cast<Flatte*> ( _f ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
   //
   double result   =  1.0 ;
   double error    = -1.0 ;
@@ -3074,7 +2924,7 @@ double  Gaudi::Math::Flatte::integral
       s_PRECISION       ,            // relative precision 
       s_SIZE            ,            // size of workspace 
       GSL_INTEG_GAUSS31 ,            // integration rule  
-      ws                ,            // workspace  
+      workspace ( m_workspace ) ,    // workspace  
       &result           ,            // the result 
       &error            ) ;          // the error in result 
   //
@@ -3108,26 +2958,20 @@ double  Gaudi::Math::Flatte::integral () const
   const Flatte* _f = this  ;
   F.params   = const_cast<Flatte*> ( _f ) ;
   //
-  gsl_integration_workspace* ws = 0 ;
-  if ( 0 == m_workspace )  
-  { m_workspace = gsl_integration_workspace_alloc ( s_SIZE ) ; }
-  //
-  ws = (gsl_integration_workspace*) m_workspace ;
-  //
   // right tail:
   //
   double result  =  0.0 ;
   double error   = -1.0 ;
   //
   const int ierror = gsl_integration_qagiu
-    ( &F                ,   // the function 
-      x_high            ,   // "low" edge
-      s_PRECISION       ,   // absolute precision  
-      s_PRECISION_TAIL  ,   // relative precision 
-      s_SIZE            ,   // size of workspace 
-      ws                ,   // workspace  
-      &result           ,   // the result 
-      &error            ) ; // the error in result 
+    ( &F                ,         // the function 
+      x_high            ,         // "low" edge
+      s_PRECISION       ,         // absolute precision  
+      s_PRECISION_TAIL  ,         // relative precision 
+      s_SIZE            ,         // size of workspace 
+      workspace ( m_workspace ) , // workspace  
+      &result           ,         // the result 
+      &error            ) ;       // the error in result 
   //
   if ( ierror ) 
   { 
