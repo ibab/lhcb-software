@@ -21,6 +21,7 @@
   <class name = "Analysis::Models::BreitWigner"    />
   <class name = "Analysis::Models::Rho0"           />
   <class name = "Analysis::Models::Flatte"         />
+  <class name = "Analysis::Models::Flatte2"        />
   <class name = "Analysis::Models::PhaseSpaceNL"   />
   <class name = "Analysis::Models::CrystalBallDS"  />
   

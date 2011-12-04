@@ -181,7 +181,59 @@ Double_t Analysis::Models::Flatte::evaluate() const
   //
   return m_flatte ( m_x ) ;
 }
+// ===========================================================================
+
+
+
+
+
 // ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Flatte2::Flatte2 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          m0g1      ,
+  RooAbsReal&          g2og1     ,
+  const double         k_mass    , 
+  const double         pi_mass   ) 
+  : Analysis::Models::Flatte ( name    , 
+                               title   , 
+                               x       , 
+                               m0      , 
+                               m0g1    , 
+                               g2og1   , 
+                               k_mass  , 
+                               pi_mass ) 
+{}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Flatte2::Flatte2 
+( const Analysis::Models::Flatte2& right , 
+  const char*                     name  ) 
+  : Analysis::Models::Flatte ( right , name ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Flatte2::~Flatte2 (){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Flatte2::evaluate() const 
+{
+  m_flatte.setM0          ( m_m0    ) ;
+  m_flatte.setM0G1        ( m_m0g1  ) ;
+  m_flatte.setG2oG1       ( m_g2og1 ) ;
+  //
+  return m_flatte.flatte2 ( m_x ) ;
+}
+// ============================================================================
+
+
 
 
 
@@ -276,7 +328,7 @@ Analysis::Models::CrystalBallDS::CrystalBallDS
 Analysis::Models::CrystalBallDS::CrystalBallDS
 ( const Analysis::Models::CrystalBallDS& right , 
   const char*                            name ) 
-  : RooAbsPdf ( right     ) 
+  : RooAbsPdf ( right , name ) 
 //
   , m_x       ( "x"       , this , right.m_x      ) 
   , m_m0      ( "m0"      , this , right.m_m0     ) 

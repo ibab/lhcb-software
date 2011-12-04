@@ -132,6 +132,7 @@ namespace Analysis
      *
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
+     *  \f$\pi\pi\f$-channel
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
      */
@@ -167,12 +168,54 @@ namespace Analysis
       double       m_pi    ;
       // ======================================================================
       // the actual evaluation of function 
-      Double_t evaluate() const ;
+      virtual Double_t evaluate() const ;
       // ======================================================================
-    private:
+    protected:
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::Flatte m_flatte ;             // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Flatte
+     *
+     *  S.M.Flatte, 
+     *  "Coupled-channel analysis of the \f$\pi\eta\f$ 
+     *  and \f$K\bar{K}\f$ systems near \f$K\bar{K}\f$ threshold  
+     *  Phys. Lett. B63, 224 (1976 
+     *
+     *  http://www.sciencedirect.com/science/article/pii/0370269376906547
+     *
+     *  KK-channel
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Flatte2 : public Analysis::Models::Flatte
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Flatte2, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Flatte2 ( const char*          name      , 
+                const char*          title     ,
+                RooAbsReal&          x         ,
+                RooAbsReal&          m0        ,
+                RooAbsReal&          m0g1      ,
+                RooAbsReal&          g2og1     ,
+                const double         k_mass    , 
+                const double         pi_mass   ) ;
+      /// "copy" constructor 
+      Flatte2 ( const Flatte2& , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Flatte2 () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
       // ======================================================================
     } ;
     // ========================================================================
