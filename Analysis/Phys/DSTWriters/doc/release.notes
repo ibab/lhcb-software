@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2011-12-04 - Chris Jones
+ - Fix a Configurables build problem (thanks to Marco Cl.)
+
 ! 2011-12-01 - Chris Jones
  - Promote the DEV versions of the python configurables to the main area.
 

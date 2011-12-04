@@ -5,7 +5,7 @@ __all__ = ('DSTWriterSelectionSequence',
 
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-from Configurables import GaudiSequencer, RecordStream, FixInputCopyStream
+from Configurables import GaudiSequencer, RecordStream
 
 from copy import copy
 
@@ -51,7 +51,7 @@ class DSTWriterSelectionSequence(object) :
             for _algs in [x(selSequence) for x in extras] :
                 self.algos += _algs
         
-        
+        from Configurables import FixInputCopyStream
         self.algos.append( FixInputCopyStream() )
         
         for alg in algs:
