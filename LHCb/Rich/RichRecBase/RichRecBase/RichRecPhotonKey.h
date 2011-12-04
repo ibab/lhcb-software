@@ -39,6 +39,7 @@ namespace Rich
 
       /// 32 bit Type
       typedef boost::uint32_t Int32_t;
+
       /// 64 bit Type
       typedef boost::uint64_t Int64_t;
 
@@ -77,6 +78,8 @@ namespace Rich
       /// Destructor
       ~PhotonKey() {}
 
+    public:
+
       /// Retrieve 32 bit integer key
       inline Int64_t key() const
       {
@@ -90,7 +93,7 @@ namespace Rich
       }
 
       /// Update 32 bit integer key
-      inline void setKey(const Int64_t key)
+      inline void setKey( const Int64_t key )
       {
         m_data.raw = key;
       }
@@ -112,9 +115,10 @@ namespace Rich
       /// Fill the ASCII output stream
       inline std::ostream& fillStream(std::ostream& s) const
       {
-        return s << "{ " 
+        return s << "{" 
                  << " pixel = "   << pixelNumber()
                  << " segment = " << segmentNumber()
+                 << " photon = "  << key()
                  << " } ";
       }
 

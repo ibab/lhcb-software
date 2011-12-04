@@ -374,7 +374,7 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
   const PhotonKey photonKey( pixel->key(), segment->key() );
 
   // See if this photon already exists
-  if ( bookKeep() && m_photonDone[ photonKey ] )
+  if ( UNLIKELY( bookKeep() && m_photonDone[ photonKey ] ) )
   {
     // return pre-made photon
     return static_cast<LHCb::RichRecPhoton*>( richPhotons()->object(photonKey) );
