@@ -1215,12 +1215,13 @@ namespace Gaudi
       // ======================================================================
       double m_eta_prime ; 
       // ======================================================================
-    } ;  
+    } ;
     // ========================================================================
     /** @class Flatte
      *
      *  http://www.springerlink.com/content/q773737260425652/
      *
+     *  \f$\pi\pi\f$-channel
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
      */
@@ -1240,13 +1241,20 @@ namespace Gaudi
                 const double mK    = 497      , 
                 const double mPi   = 139      ) ;                
       /// destructor 
-      ~Flatte () ;  
+      virtual ~Flatte () ;  
       // ======================================================================
     public:
       // ======================================================================
-      /// get the valeu of Flatte function 
+      /// get the value of Flatte function 
       // ======================================================================
-      double operator() ( const double x ) const ;
+      virtual double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the curve for pipi-channel
+      double flatte  ( const double x ) const ;
+      /// get the curve for   KK-channel
+      double flatte2 ( const double x ) const ;
       // ======================================================================
     public:
       // ====================================================================== 
@@ -1269,10 +1277,10 @@ namespace Gaudi
     public:
       // ====================================================================== 
       /// get the integral 
-      double integral () const ;
+      virtual double integral () const ;
       /// get the integral between low and high limits 
-      double integral ( const double low  , 
-                        const double high ) const ;
+      virtual double integral ( const double low  , 
+                                const double high ) const ;
       // ====================================================================== 
     private:
       // ======================================================================
@@ -1286,6 +1294,40 @@ namespace Gaudi
       // ======================================================================
       /// integration workspace 
       Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Flatte2
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  KK-channel
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Flatte2 : public Gaudi::Math::Flatte
+    {
+    public:
+      // ======================================================================
+      /** constructor  from three parameters 
+       *  @param m0    the mass 
+       *  @param m0g1  parameter \f$ m_0\times g_1\f$
+       *  @param g2og2 parameter \f$ g2/g_1       \f$
+       */
+      Flatte2  ( const double m0    = 980      , 
+                 const double m0g1  = 165*1000 ,  
+                 const double g2og1 = 4.21     , 
+                 const double mK    = 497      , 
+                 const double mPi   = 139      ) ;                
+      /// destructor 
+      virtual ~Flatte2 () ;  
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value of Flatte function (KK-channel)
+      // ======================================================================
+      virtual double operator() ( const double x ) const ;
       // ======================================================================
     } ;
     // ========================================================================

@@ -6,8 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2011-12-04 - Vanya Belyaev
+ - more functions 
+
 ! 2011-12-03 - Vanya Belyaev
- - few minmor fixes with ValueWithError 
+ - few minor fixes with ValueWithError 
 
 ! 2011-12-01 - Vanya Belyaev
  - add few useful functions 

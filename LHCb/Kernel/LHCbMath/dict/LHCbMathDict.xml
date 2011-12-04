@@ -48,6 +48,7 @@
   <class name    = "Gaudi::Math::Rho0"             />
   <class name    = "Gaudi::Math::Rho0FromEtaPrime" />
   <class name    = "Gaudi::Math::Flatte"           />
+  <class name    = "Gaudi::Math::Flatte2"          />
   <class name    = "Gaudi::Math::Workspace"        />  
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />

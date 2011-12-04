@@ -2774,8 +2774,8 @@ Gaudi::Math::Flatte::~Flatte(){}
 namespace 
 {
   // ==========================================================================
-  /// get the complex Flatte amplitude
-  std::complex<double> flatte 
+  /// get the complex Flatte amplitude (pipi-channel)
+  std::complex<double> flatte_amp 
   ( const double x     , 
     const double m0    , 
     const double m0g1  , 
@@ -2811,6 +2811,43 @@ namespace
     return  std::sqrt ( d ) / v ;
   }
   // ==========================================================================
+  /// get the complex Flatte amplitude (KK-channel)
+  std::complex<double> flatte2_amp 
+  ( const double x     , 
+    const double m0    , 
+    const double m0g1  , 
+    const double g2og1 , 
+    const double mK    , 
+    const double mPi   )
+  {
+    //
+    if ( 2 * mK >= x ) { return 0 ; }
+    //
+    const double qPP = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mPi , mPi ) / x ;
+    const double qKK = 2 * Gaudi::Math::PhaseSpace2::q1 ( x , mK  , mK  ) / x ;
+    //
+    const std::complex<double> rho_PP = 
+      0 <= qPP ? 
+      std::complex<double> ( qPP , 0                ) :
+      std::complex<double> (   0 , std::abs ( qPP ) ) ;
+    //
+    const std::complex<double> rho_KK = 
+      0 <= qKK ? 
+      std::complex<double> ( qKK , 0                ) :
+      std::complex<double> (   0 , std::abs ( qKK ) ) ;
+    //
+    static const std::complex<double> s_j ( 0 , 1 ) ;
+    //
+    const std::complex<double> v = 
+      m0 * m0 - x * x - s_j * ( m0g1 * rho_PP + m0g1 * g2og1 * rho_KK ) ;
+    //
+    // attention: normalization phactors and phase space are here!
+    //
+    const double d = 2 * std::abs ( m0g1 * g2og1 * qKK * x ) / M_PI ;
+    //
+    return  std::sqrt ( d ) / v ;
+  }
+  // ==========================================================================
   /// get the complex Breit amplitude
   std::complex<double> breit
   ( const double x     , 
@@ -2834,13 +2871,37 @@ namespace
 // ============================================================================
 // get the value of Flatte function 
 // ============================================================================
-double Gaudi::Math::Flatte::operator() ( const double x ) const 
+double Gaudi::Math::Flatte::operator() ( const double x ) const
+{ return flatte ( x ) ; }
+// ============================================================================
+// get the function for pipi-channel  
+// ============================================================================
+double Gaudi::Math::Flatte::flatte ( const double x ) const
 {
-  //
+  
   if ( 2 * m_Pi >= x ) { return 0 ; }
   //
   // get the amplitude...
-  std::complex<double> amp = flatte 
+  std::complex<double> amp = flatte_amp
+    ( x       , 
+      m_m0    ,
+      m_m0g1  ,
+      m_g2og1 ,
+      m_K     ,
+      m_Pi    ) ;
+  //
+  return amp.real() * amp.real() + amp.imag () * amp.imag () ;
+} 
+// ============================================================================
+// get the function for KK-channel  
+// ============================================================================
+double Gaudi::Math::Flatte::flatte2 ( const double x ) const
+{
+  //
+  if ( 2 * m_K >= x ) { return 0 ; }
+  //
+  // get the amplitude...
+  std::complex<double> amp = flatte2_amp
     ( x       , 
       m_m0    ,
       m_m0g1  ,
@@ -3026,6 +3087,32 @@ bool Gaudi::Math::Flatte::setG2oG1  ( const double x )
 
 
 
+// ============================================================================
+//               Flatte
+// ============================================================================
+/* constructor  from three parameters 
+ *  @param m0    the mass 
+ *  @param m0g1  parameter \f$ m_0\times g_1\f$
+ *  @param g2og2 parameter \f$ g2/g_1       \f$
+ */
+// ============================================================================
+Gaudi::Math::Flatte2::Flatte2
+( const double m0    , 
+  const double m0g1  , 
+  const double g2og1 ,
+  const double mK    , 
+  const double mPi   )
+  : Gaudi::Math::Flatte ( m0 , m0g1 , g2og1 ,mK , mPi ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Flatte2::~Flatte2(){}
+// ============================================================================
+// get the value of Flatte function 
+// ============================================================================
+double Gaudi::Math::Flatte2::operator() ( const double x ) const
+{ return flatte2 ( x ) ; }
   
 // ============================================================================
 // The END 
