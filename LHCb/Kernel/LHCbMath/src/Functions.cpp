@@ -2315,9 +2315,21 @@ Gaudi::Math::PhaseSpaceNL::PhaseSpaceNL
   , m_workspace  () 
 //
 {
-  m_norm  = gsl_sf_gamma ( 3 * m_N *0.5 - 3       * 0.5 ) ;
-  m_norm /= gsl_sf_gamma ( 3 * m_L *0.5 - 3       * 0.5 ) ;
-  m_norm /= gsl_sf_gamma ( 3 * m_N *0.5 - 3 * m_L * 0.5 ) ;
+  if ( ( 3 * m_N * 0.5 - 3       * 0.5 ) < GSL_SF_GAMMA_XMAX && 
+       ( 3 * m_L * 0.5 - 3       * 0.5 ) < GSL_SF_GAMMA_XMAX && 
+       ( 3 * m_N * 0.5 - 3 * m_L * 0.5 ) < GSL_SF_GAMMA_XMAX ) 
+  {
+    m_norm  = gsl_sf_gamma   ( 3 * m_N * 0.5 - 3       * 0.5 ) ;
+    m_norm /= gsl_sf_gamma   ( 3 * m_L * 0.5 - 3       * 0.5 ) ;
+    m_norm /= gsl_sf_gamma   ( 3 * m_N * 0.5 - 3 * m_L * 0.5 ) ;
+  }
+  else
+  {
+    m_norm  = gsl_sf_lngamma ( 3 * m_N * 0.5 - 3       * 0.5 ) ;
+    m_norm -= gsl_sf_lngamma ( 3 * m_L * 0.5 - 3       * 0.5 ) ;
+    m_norm -= gsl_sf_lngamma ( 3 * m_N * 0.5 - 3 * m_L * 0.5 ) ;
+    m_norm  = gsl_sf_exp     ( m_norm ) ;
+  }     
 }
 // ============================================================================
 // destructor
