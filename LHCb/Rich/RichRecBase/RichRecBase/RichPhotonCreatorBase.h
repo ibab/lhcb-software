@@ -249,7 +249,7 @@ namespace Rich
       mutable bool m_hasBeenCalled;
 
       /// photon done map
-      mutable Rich::HashMap<Rich::Rec::PhotonKey::Int64_t,bool> m_photonDone;
+      mutable Rich::HashMap<Rich::Rec::PhotonKey::KeyType,bool> m_photonDone;
 
     private: // data
 

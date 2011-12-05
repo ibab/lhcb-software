@@ -13,7 +13,7 @@
 
         
 <class 
-        author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+        author           = "Chris Jones (Christopher.Rob.Jones@cern.ch)" 
         desc             = "Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." 
         id               = "12424" 
         keyedContTypeDef = "TRUE" 

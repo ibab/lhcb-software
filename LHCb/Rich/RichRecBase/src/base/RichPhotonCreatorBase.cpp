@@ -373,17 +373,30 @@ PhotonCreatorBase::reconstructPhoton( LHCb::RichRecSegment * segment,
   // Form the key for this photon
   const PhotonKey photonKey( pixel->key(), segment->key() );
 
+//   info() << "Sizes     " << sizeof(pixel->key()) << " " << sizeof(segment->key()) 
+//          << " " << sizeof(photonKey.key()) << endmsg;
+//   info() << "Before    " << pixel->key() << " " << segment->key() << endmsg;
+//   info() << "PhotonKey " << photonKey << endmsg;
+
   // See if this photon already exists
+  LHCb::RichRecPhoton * phot = NULL;
   if ( UNLIKELY( bookKeep() && m_photonDone[ photonKey ] ) )
   {
     // return pre-made photon
-    return static_cast<LHCb::RichRecPhoton*>( richPhotons()->object(photonKey) );
+    phot = static_cast<LHCb::RichRecPhoton*>( richPhotons()->object(photonKey) );
   }
   else
   {
     // return brand new photon
-    return buildPhoton( segment, pixel, photonKey );
+    phot = buildPhoton( segment, pixel, photonKey );
   }
+
+//   if ( phot )
+//   {
+//     info() << "New Photon key " << sizeof(phot->key()) << " " << phot->key() << endmsg;
+//   }
+
+  return phot;
 }
 
 LHCb::RichRecPhotons * PhotonCreatorBase::richPhotons() const

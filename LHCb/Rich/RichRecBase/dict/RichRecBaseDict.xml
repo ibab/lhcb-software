@@ -34,8 +34,8 @@
   <class name = "Rich::Rec::TrackID" />
 
   <class name = "Rich::Rec::PhotonKey" />
-  <class name = "Rich::Rec::PhotonKey::Int32_t" />
-  <class name = "Rich::Rec::PhotonKey::Int64_t" />
+  <class name = "Rich::Rec::PhotonKey::PackedType" />
+  <class name = "Rich::Rec::PhotonKey::KeyType" />
 
   <class name = "LHCb::RichRecPointOnRing" />
   <class name = "LHCb::RichRecPointOnRing::Vector" />

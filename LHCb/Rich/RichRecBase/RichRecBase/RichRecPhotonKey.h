@@ -37,11 +37,11 @@ namespace Rich
 
     public:
 
-      /// 32 bit Type
-      typedef boost::uint32_t Int32_t;
+      /// Type for packed fields
+      typedef boost::uint16_t PackedType;
 
-      /// 64 bit Type
-      typedef boost::uint64_t Int64_t;
+      /// Type for overall word
+      typedef boost::uint32_t KeyType;
 
     private:
 
@@ -50,64 +50,95 @@ namespace Rich
       {
         struct
         {
-          Int32_t pixelKey   : 32; ///< The pixel key
-          Int32_t segmentKey : 32; ///< The segment key
+          PackedType pixelKey   : 16; ///< The pixel key
+          PackedType segmentKey : 16; ///< The segment key
         } packed; ///< Representation as a packed struct
-        Int64_t raw; ///< Raw data as a 64 bit int
+        KeyType raw; ///< Raw data
       } m_data;
 
     public:
 
-      /** Constructor from 64 bit int
+      /** Constructor from a full int
        *  @param key The raw data key to use as the bit-packed data
        */
-      PhotonKey( const Int64_t key = 0 ) { m_data.raw = key; }
+      PhotonKey( const KeyType key = 0 ) { m_data.raw = key; }
 
       /** Constructor from segment and pixel numbers
        *
        *  @param pixelKey    The key for the associated RichRecPixel
        *  @param segmentKey  The key for the associated RichRecSegment
        */
-      PhotonKey ( const Int32_t pixelKey,
-                  const Int32_t segmentKey )
+      PhotonKey ( const PackedType pixelKey,
+                  const PackedType segmentKey )
       {
         m_data.packed.pixelKey   = pixelKey;
         m_data.packed.segmentKey = segmentKey;
       }
 
+      /// Copy Constructor
+      PhotonKey( const PhotonKey & k ) { m_data.raw = k.key(); }
+
       /// Destructor
-      ~PhotonKey() {}
+      ~PhotonKey() { }
 
     public:
 
       /// Retrieve 32 bit integer key
-      inline Int64_t key() const
+      inline KeyType key() const
       {
         return m_data.raw;
       }
 
-      /// Int64_t operator
-      inline operator Int64_t() const
+      /// KeyType operator
+      inline operator KeyType() const
       {
         return key();
       }
 
       /// Update 32 bit integer key
-      inline void setKey( const Int64_t key )
+      inline void setKey( const KeyType key )
       {
         m_data.raw = key;
       }
 
+    public:
+
       /// Retrieve associated RichRecSegment key
-      inline int segmentNumber() const
+      inline PackedType segmentNumber() const
       {
         return m_data.packed.segmentKey;
       }
 
       /// Retrieve associated RichRecPixel key
-      inline int pixelNumber() const
+      inline PackedType pixelNumber() const
       {
         return m_data.packed.pixelKey;
+      }
+
+    public:
+
+      /// Operator ==
+      inline bool operator== ( const PhotonKey & k ) const
+      { 
+        return k.key() == this->key(); 
+      }      
+
+      /// Operator !=
+      inline bool operator!= ( const PhotonKey & k ) const
+      { 
+        return k.key() != this->key(); 
+      }
+
+      /// Operator <
+      inline bool operator<  ( const PhotonKey & k ) const
+      { 
+        return k.key() < this->key(); 
+      }
+
+      /// Operator >
+      inline bool operator>  ( const PhotonKey & k ) const
+      { 
+        return k.key() > this->key(); 
       }
 
     public:
