@@ -110,7 +110,7 @@ namespace Rich
         mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
 
         /// photon smearing done map
-        mutable Rich::HashMap<Rich::Rec::PhotonKey::Int64_t,bool> m_photSmearDone;
+        mutable Rich::HashMap<Rich::Rec::PhotonKey::KeyType,bool> m_photSmearDone;
 
         /// count of smeared photons
         mutable std::vector<unsigned long long> m_smearCount;
