@@ -104,8 +104,16 @@ StatusCode L0DecReportsMaker::execute() {
 
 
   //       individual L0 trigger lines
+  if (0==pL0DUReport->configuration()) {
+    return Warning("Null configuration",StatusCode::SUCCESS,10) ;
+  }
   L0DUChannel::Map channels = pL0DUReport->configuration()->channels();
   for( L0DUChannel::Map::const_iterator it=channels.begin();it!=channels.end();++it){
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " it->second " << it->second << endmsg;
+    if (0==it->second){
+      Warning("Channel config is empty",StatusCode::SUCCESS,10).ignore();
+      continue;
+    }
     if( ( it->second->decisionType() & L0DUDecision::Physics ) == 0 )continue;    
     if ( msgLevel(MSG::VERBOSE) ){      
       verbose() << " L0 trigger name= " << it->first << " decision= " << pL0DUReport->channelDecision(it->second->id()) << endmsg;
