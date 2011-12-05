@@ -173,6 +173,8 @@ StatusCode HltMoveVerticesForSwimming::execute() {
 
   sc = move_PVs(pars[0],offPV_Clone);
   
+  delete offPV_Clone;
+
   int ncan = m_selections.output()->size();
   debug() << " candidates found " << ncan << endmsg;
   return sc;
