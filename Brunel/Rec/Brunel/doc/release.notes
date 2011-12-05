@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
   . MuonPID objects now saved only if track is InAcceptance (MuonID)
   . Monitor tracks with large IP (TrackCheckers)
   . Improve efficiency for large IP tracks (FastVelo)
+  . Fix error message from PropertyConfigSvc at initialization (LumiAlgs)
 
 - Changes to tests
   . Add brunel.2011-crashes for regression testing of fixes to crashes on 2011
