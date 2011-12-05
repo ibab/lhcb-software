@@ -66,10 +66,13 @@ void FitAmpPairList::addEvent(IDalitzEvent* evtPtr, double weight){
   double ps = evtPtr->phaseSpace();
 
   if(ps <= 0.0){
-    cout << "WARNING in FitAmpPairList::addToHistograms"
-	 << " " << ++nZeroPs << " th"
-	 << " event with phase space = " << ps << endl;
-    return; // should not happen.
+	  if (!(nZeroPs%1000))
+	  {
+		cout << "WARNING in FitAmpPairList::addToHistograms"
+		 << " " << ++nZeroPs << " th"
+		 << " event with phase space = " << ps << endl;
+		return; // should not happen.
+	  }
   }
 
   for(unsigned int i=0; i< this->size(); i++){

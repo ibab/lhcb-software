@@ -875,7 +875,6 @@ bool DalitzEvent::fromTree(TTree* tree){
   }
 }
 bool DalitzEvent::fromNtuple(TNtupleD* ntp){
-	std::cout << this->eventPattern() << std::endl;
   // assumes ntuple is set to the correct
   // entry (using ntp->GetEntry(int i))
   bool dbThis=false;

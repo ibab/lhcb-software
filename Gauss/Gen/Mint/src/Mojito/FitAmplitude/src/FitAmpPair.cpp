@@ -322,9 +322,11 @@ double FitAmpPair::add(IDalitzEvent* evtPtr
   if(0 == evtPtr) return 0;
   
   double ps = evtPtr->phaseSpace();
-  if(ps <= 0.0){
+  if(ps <= 0.0000){
+	  if(!(_Nevents%100000)){
     cout << "WARNING in FitAmpPair::addToHistograms"
 	 << " event with phase space = " << ps << endl;
+	  }
     return 0; // should not happen.
   }
 

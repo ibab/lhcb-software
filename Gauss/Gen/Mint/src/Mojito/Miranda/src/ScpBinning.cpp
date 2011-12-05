@@ -35,25 +35,22 @@ void ScpBinning::makeColourPaletteBlueGrey(){
   for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
 }
 void ScpBinning::makeColourPaletteBlueWhite(){
-  static const int NRGBs = 7;
+  static const int NRGBs = 3;
   if(0 != __colourPalette) delete[] __colourPalette;
   __colourPalette = new int[__Ncol];
 
-  Double_t stops[NRGBs] = { 0.00, 0.10, 0.25, 0.45, 0.60, 0.75, 1.00 };
-  Double_t red[NRGBs]   = { 1.00, 0.00, 0.00, 0.00, 0.97, 0.97, 0.10 };
-  Double_t green[NRGBs] = { 1.00, 0.97, 0.30, 0.40, 0.97, 0.00, 0.00 };
-  Double_t blue[NRGBs]  = { 1.00, 0.97, 0.97, 0.00, 0.00, 0.00, 0.00 };
-  Int_t Fi = TColor::CreateGradientColorTable(NRGBs
-					    , stops
-					    , red, green, blue
-					    , __Ncol);
+	  Double_t stops[NRGBs] = { 0.00, 0.50, 1.00};
+	  Double_t red[NRGBs]   = { 1.00, 0.00, 0.00};
+	  Double_t white[NRGBs] = { 0.00, 1.00, 0.00};
+	  Double_t blue[NRGBs]  = { 0.00, 0.00, 1.00};
+	  Int_t Fi = TColor::CreateGradientColorTable(NRGBs
+						    , stops
+						    , red, white, blue
+						    , __Ncol);
 
-//  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
-  for(int i=-1*__Ncol/2; i < __Ncol/2; i++) __colourPalette[i]=Fi + i + __Ncol/2;
+	  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi+i;
+	}
 
-  std::cout << "Fi2: " << Fi << std::endl;
-
-}
 void ScpBinning::makeColourPaletteRGB(){
   static const int NRGBs = 5;
   
@@ -72,13 +69,11 @@ void ScpBinning::makeColourPaletteRGB(){
 //  for(int i=0; i < __Ncol; i++) __colourPalette[i]=Fi + i;
   for(int i=-1*__Ncol/2; i < __Ncol/2; i++) __colourPalette[i]=Fi + i + __Ncol/2;
 
-  std::cout << "Fi3: " << Fi << std::endl;
-
 }
 void ScpBinning::makeColourPalette(){
   makeColourPaletteBlueGrey();
-  //makeColourPaletteRGB();
-  //makeColourPaletteBlueWhite();
+//  makeColourPaletteRGB();
+//  makeColourPaletteBlueWhite();
 }
 
 int* ScpBinning::getColourPalette(){
@@ -152,7 +147,7 @@ ScpBoxSet ScpBinning::splitBoxes(IDalitzEventList* events
     events->Start();
     while(events->Next()){
       bool added = boxes.addData(events->getEvent());
-
+      
       if(! added) failedSet++;
       if(! box.addData(events->getEvent())){
     	  failedBox++;
@@ -251,7 +246,7 @@ double ScpBinning::setEvents(IDalitzEventList* data
 
   if(0 == numBins()) createBinning(data);
 //  if(0 != fas) setFas(fas);
-  if(dbThis) cout << "...number of chi2 bins = " << numBins() << endl;
+  if(dbThis) cout << "...number of scp bins = " << numBins() << endl;
   resetEventCounts();
   if(dbThis) cout << "...about to fill in the data " << endl;
   fillData(data);
@@ -370,7 +365,7 @@ double ScpBinning::getMinScp() const{
 }
 double ScpBinning::getMaxScp() const{
 
-	double max=-1;
+	double max=-9999;
 	  for(unsigned int i=0; i < _boxSets.size(); i++){
 	    double scp = scp_ofBin(i);
 	    if((scp) > (max)) max=scp;
@@ -394,14 +389,24 @@ void ScpBinning::setHistoColours(){
   }
 }
 */
+double round(double d)
+{
+  return floor(d + 0.5);
+}
 void ScpBinning::setHistoColours(){
-  double maxScp = getMaxScp();
-  double minScp = getMinScp();
+  double maxScp;
+  double minScp;
   maxScp = 5.0;
   minScp = -5.0;
+  if (getMaxScp()>maxScp){
+	  maxScp = getMaxScp();
+  }
+  if (getMinScp()<minScp){
+	  minScp = getMinScp();
+  }
   for(unsigned int i=0; i < _boxSets.size(); i++){
     double scp = scp_ofBin(i);
-    int colIndex = (((scp-minScp)/(maxScp-minScp))*((__Ncol)-1));
+    int colIndex = ((scp-minScp)/(maxScp-minScp))*((__Ncol));
     int col = (getColourPalette())[colIndex];
     _boxSets[i].setHistoColour(col);
   }
@@ -414,12 +419,16 @@ DalitzHistoStackSet ScpBinning::getDataHistoStack(){
 //	  std::cout << "Adding data: " << _boxSets[i].histoData()
     hstack.add(_boxSets[i].histoData());
   }
-  double mx = getMaxScp();
-  double min = getMinScp();
+  double mx;
+  double min;
   mx = 5.0;
   min = -5.0;
-  double diff = mx - min;
-
+  if (getMaxScp()>mx){
+	  mx = getMaxScp();
+  }
+  if (getMinScp()<min){
+	  min = getMinScp();
+  }
   if(mx > 20) mx=20;
 
   hstack.setColourPalette(__Ncol, __colourPalette, mx, min);
@@ -449,6 +458,12 @@ counted_ptr<TH1D> ScpBinning::getScpDistribution() const{
   int nbins=40;
 //  double from=-1*getMaxScp(), to=getMaxScp();
   double from=-5.0, to=5.0;
+  if (getMaxScp()>to){
+	  to = getMaxScp();
+  }
+  if (getMinScp()<from){
+	  from = getMinScp();
+  }
 
   //  double from=-2, to=2;
 
@@ -500,7 +515,7 @@ int ScpBinning::ndof() const
 }
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
-
+ 
   return fabs(a.scp()) < fabs(b.scp());
 }
 

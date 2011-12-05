@@ -6,6 +6,11 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 05-12-2011 - Matt Coombes
+ - Fixed Binning for SCP stack histo
+ - Compressed warnings in FitAmpPair.cpp
+ - Removed debugging statement left in DalitzEvent.cpp
+   
 ! 01-12-2011 - Matt Coombes
  - Added contructor to DiskResidentEventList to use a given tree name and 
    scale events. This should be used for MC not for data.

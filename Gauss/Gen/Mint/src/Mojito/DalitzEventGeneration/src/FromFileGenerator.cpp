@@ -8,10 +8,12 @@ using namespace MINT;
 FromFileGenerator::FromFileGenerator(const std::string& fname)
   : BaseGenerator()
   , _opt("READ")
-  , _dL(fname)
+  , _dL(fname,1,"DalitzEventList")
   , _listExhausted(false)
   , _gen(0)
 {
+	  std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+
   _dL.Start();
 }
 FromFileGenerator::FromFileGenerator(const std::string& fname
@@ -20,10 +22,11 @@ FromFileGenerator::FromFileGenerator(const std::string& fname
 				     , const std::string& opt)
   : BaseGenerator()
   , _opt(opt)
-  , _dL(fname, _opt)
+  , _dL(fname, 1, "DalitzEventList", _opt)
   , _listExhausted(false)
   , _gen(addThisWhenFileEmpty)
 {
+  std::cout << "Got Intergrator events " << _dL.size() << std::endl;
   _dL.Start();
 }
 
