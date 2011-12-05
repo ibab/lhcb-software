@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v8r2p2 2011-12-05 ==================
 ! 2011-12-05 - Roel Aaij
  - Fix small memory leak in HltMoveVerticesForSwimming.
 
