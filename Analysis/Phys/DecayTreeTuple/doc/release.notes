@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-05 - Patrick Koppenburg
+ - First working version of PID-changing decaytreefitter. Task #24643
+   . TODO : extract functionality in a tool that can be shared with
+     SubstututePID. Now there's a lot of code duplication.
+
 ! 2011-12-03 - Chris Jones
  - General tidy up
  - Reimplement TupleToolRecoStats to only use information from the 

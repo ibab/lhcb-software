@@ -31,7 +31,7 @@ tuple.Branches = { "B"  : "["+bh+"]cc : "+decay.replace("^","") }
 from Configurables import TupleToolDecayTreeFitter
 tuple.B.ToolList +=  [ "TupleToolDecayTreeFitter/Fit",            # just a refit
                        "TupleToolDecayTreeFitter/MassFit",        # fit with J/psi mass constraint
-                       "TupleToolDecayTreeFitter/PVFit" ]       # fit with all constraints I can think of
+                       "TupleToolDecayTreeFitter/PVFit" ]         # fit with all constraints I can think of
 
 tuple.B.addTool(TupleToolDecayTreeFitter("MassFit"))
 tuple.B.MassFit.constrainToOriginVertex = False
@@ -40,7 +40,7 @@ tuple.B.MassFit.daughtersToConstrain = [ "J/psi(1S)" ]
 tuple.B.addTool(TupleToolDecayTreeFitter("PVFit"))
 tuple.B.PVFit.Verbose = True
 tuple.B.PVFit.constrainToOriginVertex = True
-tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
+tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)", "KS0" ]
 
 @endcode
     * 
@@ -51,6 +51,10 @@ tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
     *     - B_PVFit_PERR B_PVFit_ctau B_PVFit_ctauErr B_PVFit_decayLength B_PVFit_decayLengthErr B_PVFit_J_psi_1S_ctau  
     *       B_PVFit_J_psi_1S_ctauErr B_PVFit_J_psi_1S_decayLength B_PVFit_J_psi_1S_decayLengthErr B_PVFit_KS0_ctau  
     *       B_PVFit_KS0_ctauErr B_PVFit_KS0_decayLength B_PVFit_KS0_decayLengthErr
+    *
+    * - One can also hange the PID of some particles in the chain, using the same syntax as SubstitutePID
+    *
+    * \sa SubstitutePID
     *
     * \sa DecayTreeTuple
     *
@@ -67,11 +71,14 @@ tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)" ]
 #include "GaudiAlg/GaudiTool.h"
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"
+#include "LoKi/IDecay.h"
+#include "LoKi/Decays.h"
 
 // STL
 #include <vector>
 #include <string>
 
+typedef std::map<std::string,std::string> SubstitutionMap ;
 class IParticleDescendants;
 // pid
 namespace LHCb{
@@ -159,6 +166,9 @@ public:
   
   std::string getName(int id) const;  ///< name of particle
   
+  unsigned int substitute( LHCb::Particle* ) const;  ///< perform the actual substitution 
+  unsigned int correctP4( LHCb::Particle* ) const;  ///< correct momentum
+
   ///  origin vertex
   std::vector<const LHCb::VertexBase*> originVertex( const  LHCb::Particle*,
                                                      const LHCb::Particle* ) const; 
@@ -175,8 +185,30 @@ public:
   LHCb::IParticlePropertySvc* m_ppSvc ;
   IParticleDescendants* m_particleDescendants;
 
-  unsigned int m_maxPV ;
-  
+  // Stolen from SubstitutePD
+  struct  Substitution
+  {
+    // ========================================================================
+    Substitution () 
+      : m_finder ( Decays::Trees::Types_<const LHCb::Particle*>::Invalid() ) 
+      , m_pid    ( 0 ) 
+    {}  
+    Substitution 
+    ( Decays::IDecay::iTree&  tree , 
+      const LHCb::ParticleID& pid  ) 
+      : m_finder ( tree ) 
+      , m_pid    ( pid  ) 
+    {}
+    // ========================================================================
+    Decays::IDecay::Finder m_finder  ;     //                 the decay finder 
+    LHCb::ParticleID       m_pid     ;     //                              PID 
+    // ========================================================================
+  } ;
+  typedef std::vector<Substitution> Substitutions ;
+  unsigned int m_maxPV ; ///< maximum number of PVs
+  SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
+  /// the actual substitution engine 
+  Substitutions    m_subs ; // the actual substitution engine 
 
  };
 #endif // TUPLETOOLDECAYTREEFITTER_H
