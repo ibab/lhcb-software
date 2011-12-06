@@ -1,4 +1,4 @@
-from GaudiTest import LineSkipper
+from GaudiTest import LineSkipper, RegexpReplacer
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 
 preprocessor = LHCbPreprocessor + \
@@ -18,4 +18,10 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["MagnetRegion/"]) +\
   LineSkipper(["BeforeMagnetRegion/"]) +\
   LineSkipper(["DownstreamRegion"]) +\
-  LineSkipper(["MD5 sum:"])
+  LineSkipper(["MD5 sum:"]) + \
+  RegexpReplacer(when = "RichHotPixels     WARNING Rich::HPDAnalysisAlg::",
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "Message = 'Fully suppressed     {",
+                 orig = r'[01 ]{33}', repl = r'')
