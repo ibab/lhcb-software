@@ -49,7 +49,15 @@
   <class name    = "Gaudi::Math::Rho0FromEtaPrime" />
   <class name    = "Gaudi::Math::Flatte"           />
   <class name    = "Gaudi::Math::Flatte2"          />
-  <class name    = "Gaudi::Math::Workspace"        />  
+  <class name    = "Gaudi::Math::WorkSpace"        >
+    <field name = "m_workspace" transient = "true"/>      
+  </class>
+  <class name    = "Gaudi::Math::Positive1"        />
+  <class name    = "Gaudi::Math::Positive2"        />
+  <class name    = "Gaudi::Math::PositiveN1"       />
+  <class name    = "Gaudi::Math::PositiveN2"       />
+  <class name    = "Gaudi::Math::PositiveN"        />
+  <class name    = "Gaudi::Math::Voigt"            />
   
   <class name    = "std::vector<ROOT::Math::SVector<double,2> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,3> >" />

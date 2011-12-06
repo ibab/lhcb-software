@@ -24,6 +24,10 @@
 #include "gsl/gsl_sf_gamma.h"
 #include "gsl/gsl_integration.h"
 // ============================================================================
+// ROOT 
+// ============================================================================
+#include "TMath.h"
+// ============================================================================
 // Boost
 // ============================================================================
 #include "boost/static_assert.hpp"
@@ -840,6 +844,18 @@ namespace
     return (*ps)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of Voigt shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double voigt_GSL ( double x , void* params )  
+  {
+    //
+    const Gaudi::Math::Voigt* f = (Gaudi::Math::Voigt*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
 } //                                                 end of anonymous namespace 
 // ============================================================================
 // evaluate Chebyshev polynomial 
@@ -920,18 +936,18 @@ double  Gaudi::Math::BifurcatedGauss::integral
   if       ( high <= m_peak ) 
   {
     return gaussian_int ( 0.5 / sigma_L / sigma_L , 
-                          0                           , 
-                          low  - m_peak , 
-                          high - m_peak ) / norm ;
+                          0                       , 
+                          low  - m_peak           , 
+                          high - m_peak           ) / norm ;
     
   }
   // right half-gaussian 
   else if ( low >= m_peak )  
   {
     return gaussian_int ( 0.5 / sigma_R / sigma_R , 
-                          0                           , 
-                          low  - m_peak , 
-                          high - m_peak ) / norm ;
+                          0                       , 
+                          low  - m_peak           , 
+                          high - m_peak           ) / norm ;
     
   }  
   //
@@ -1053,9 +1069,9 @@ Gaudi::Math::Bukin::Bukin
   //
   setSigma ( sigma ) ;
   //
-  setRho_L ( rho_L ) ;
+  setRhoL  ( rho_L ) ;
   //
-  setRho_R ( rho_R ) ;
+  setRhoR  ( rho_R ) ;
   //
 }
 // ============================================================================
@@ -1144,7 +1160,7 @@ bool Gaudi::Math::Bukin::setXi    ( const double value )
   return true ;
 }
 // ============================================================================
-bool Gaudi::Math::Bukin::setRho_L  ( const double value ) 
+bool Gaudi::Math::Bukin::setRhoL  ( const double value ) 
 {
   //
   const double value_ = std::fabs ( value ) ;
@@ -1156,7 +1172,7 @@ bool Gaudi::Math::Bukin::setRho_L  ( const double value )
   return true ;
 }  
 // ============================================================================
-bool Gaudi::Math::Bukin::setRho_R  ( const double value ) 
+bool Gaudi::Math::Bukin::setRhoR  ( const double value ) 
 {
   //
   const double value_ = std::fabs ( value ) ;
@@ -2268,7 +2284,18 @@ double Gaudi::Math::PhaseSpaceLeft::operator () ( const double x ) const
   return std::pow ( x - m_threshold , 3 * 0.5 * m_num - 5 * 0.5  ) ;
 }
 // ============================================================================
-
+// set the new value for threshold
+// ============================================================================
+bool Gaudi::Math::PhaseSpaceLeft::setThreshold ( const double x ) 
+{
+  //
+  if ( s_equal ( x , m_threshold ) ) { return false ; } // RETURN
+  //
+  m_threshold = x ;
+  //
+  return true ;
+  //
+}
 // ============================================================================
 // constructor from threshold and number of particles 
 // ============================================================================
@@ -2296,6 +2323,18 @@ double Gaudi::Math::PhaseSpaceRight::operator () ( const double x ) const
   return std::pow ( m_threshold - x , 1.5 * ( m_N - m_L ) - 1  ) ;
 }
 // ============================================================================
+// set the new value for threshold
+// ============================================================================
+bool Gaudi::Math::PhaseSpaceRight::setThreshold ( const double x )
+{
+  //
+  if ( s_equal ( x , m_threshold ) ) { return false ; } // RETURN
+  //
+  m_threshold = x ;
+  //
+  return true ;
+  //
+}
 
 // ============================================================================
 // constructor from thresholds and number of particles 
@@ -3125,8 +3164,531 @@ Gaudi::Math::Flatte2::~Flatte2(){}
 // ============================================================================
 double Gaudi::Math::Flatte2::operator() ( const double x ) const
 { return flatte2 ( x ) ; }
-  
+
+
+// ============================================================================
+// Positive polinomials 
+// ============================================================================
+// Linear 
+// ============================================================================
+// constructor from parameter "alpha" and the interval 
+// ============================================================================
+Gaudi::Math::Positive1::Positive1 
+( const double alpha , 
+  const double xmin  ,
+  const double xmax  ) 
+  : m_slope ( alpha / std::sqrt ( 1 + alpha*alpha ) ) 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{}
+// ============================================================================
+// get the value 
+// ============================================================================
+double Gaudi::Math::Positive1::operator() ( const double x ) const 
+{
+  //
+  const double y = ( x - m_xmin ) / ( m_xmax - m_xmin ) ;
+  //
+  return 1 + m_slope * y ;
+}
+// ============================================================================
+// set the proper slope 
+// ============================================================================
+bool Gaudi::Math::Positive1::setAlpha ( const double x ) 
+{
+  //
+  const double v = x / std::sqrt ( 1 + x*x ) ;
+  //
+  if ( s_equal ( v , m_slope ) ) { return false ; }
+  //
+  m_slope = v ;
+  //
+  return true ;
+}
+
+// ============================================================================
+// Quadratic
+// ============================================================================
+// constructor from parameter "alpha" and the interval 
+// ============================================================================
+Gaudi::Math::Positive2::Positive2 
+( const double alpha1 , 
+  const double alpha2 , 
+  const double xmin   ,
+  const double xmax   ) 
+  : m_alpha ( alpha1 ) 
+  , m_beta  ( alpha2 / std::sqrt ( 1 + alpha2 * alpha2 ) ) 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{}
+// ======================================================================
+// get the value 
+// ======================================================================
+double Gaudi::Math::Positive2::operator() ( const double x ) const 
+{
+  //
+  const double y = ( x - m_xmin ) / ( m_xmax - m_xmin ) ;
+  //
+  return 
+    y * y * m_alpha * m_alpha  - 
+    2 * y * m_alpha * m_beta   + 1 ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::Positive2::setAlpha1 ( const double x ) 
+{
+  //
+  if ( s_equal ( x , m_alpha ) ) { return false ; }
+  //
+  m_alpha = x ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::Positive2::setAlpha2 ( const double x ) 
+{
+  //
+  const double v = x / std::sqrt ( 1 + x*x ) ;
+  //
+  if ( s_equal ( v , m_beta ) ) { return false ; }
+  //
+  m_beta = v ;
+  //
+  return true ;
+}
+
+
+// ============================================================================
+// Nth order 
+// ============================================================================
+// constructor from parameters and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN1::PositiveN1 
+( const std::vector<double>& alphas , 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_alphas () 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{
+  for ( std::vector<double>::const_iterator it = alphas.begin() ; 
+        alphas.end() != it ; ++it ) 
+  {
+    const double a = *it ;
+    m_alphas.push_back ( a / std::sqrt ( 1 + a * a ) ) ; 
+  }
+}
+// ============================================================================
+// constructor from parameters and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN1::PositiveN1 
+( const unsigned short       N1     , 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_alphas ( N1 , 0 ) 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{}
+// ======================================================================
+// get the value 
+// ======================================================================
+double Gaudi::Math::PositiveN1::operator() ( const double x ) const 
+{
+  //
+  const double y = ( x - m_xmin ) / ( m_xmax - m_xmin ) ;
+  //
+  double result = 1 ;
+  //
+  for ( std::vector<double>::const_iterator it = m_alphas.begin() ; 
+        m_alphas.end() != it ; ++it ) 
+  { result *=  1 + (*it) * y  ; }
+  //
+  return result ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::PositiveN1::setAlpha 
+( const unsigned int i , const double x ) 
+{
+  //
+  if ( m_alphas.size() <= i ) { return false ; }
+  //
+  const double v = x / std::sqrt ( 1 + x * x ) ;
+  //
+  if ( s_equal ( v , m_alphas[i] ) ) { return false ; }
+  //
+  m_alphas[i] = v ;
+  //
+  return true ;
+}
+
+// ============================================================================
+// 2Nth order 
+// ============================================================================
+// constructor from parameters and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN2::PositiveN2 
+( const std::vector<double>& alpha1, 
+  const std::vector<double>& alpha2 , 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_alphas () 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{
+  //
+  std::vector<double> alpha_1  ( alpha1 ) ;
+  std::vector<double> alpha_2  ( alpha2 ) ;
+  //
+  while ( alpha_1.size() < alpha_2.size() ) { alpha_1.push_back ( 0 ) ; }
+  while ( alpha_2.size() < alpha_1.size() ) { alpha_2.push_back ( 0 ) ; }
+  //
+  for ( unsigned int i = 0 ; i < alpha1.size() ; ++i ) 
+  {
+    const double v  = alpha_2[i] ;
+    const double v2 = v / std::sqrt ( 1 + v * v ) ;
+    m_alphas.push_back ( std::make_pair ( alpha_1[i] , v2 ) ) ; 
+  }
+  //
+}
+// ============================================================================
+// constructor from parameters and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN2::PositiveN2 
+( const unsigned short N2   , 
+  const double         xmin ,
+  const double         xmax ) 
+  : m_alphas () 
+  , m_xmin  ( std::min ( xmin , xmax ) ) 
+  , m_xmax  ( std::max ( xmin , xmax ) ) 
+{
+  //
+  for ( unsigned int i = 0 ; i < N2 ; ++i ) 
+  { m_alphas.push_back ( std::make_pair ( 0 , 0 ) ) ; }
+  //
+}
+// ============================================================================
+// constructor from parameters and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN2::PositiveN2 
+( const std::vector<std::pair<double,double> >& alpha, 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_alphas () 
+  , m_xmin   ( std::min ( xmin , xmax ) ) 
+  , m_xmax   ( std::max ( xmin , xmax ) ) 
+{
+  //
+  for ( std::vector<std::pair<double,double> >::const_iterator ia = 
+          alpha.begin() ; alpha.end() != ia ; ++ia ) 
+  {
+    const double v  = ia -> second ;
+    const double v2 = v / std::sqrt ( 1 + v * v ) ;
+    { m_alphas.push_back ( std::make_pair ( ia->first , v2 ) ) ; } 
+  }
+  //
+}
+// ======================================================================
+// get the value 
+// ======================================================================
+double Gaudi::Math::PositiveN2::operator() ( const double x ) const 
+{
+  //
+  const double y = ( x - m_xmin ) / ( m_xmax - m_xmin ) ;
+  //
+  double result = 1 ;
+  //
+  for ( std::vector<std::pair<double,double> >::const_iterator it = m_alphas.begin() ; 
+        m_alphas.end() != it ; ++it )
+  {
+    //
+    const double a = it -> first   ;
+    const double b = it -> second  ;
+    //
+    result *= y * y * a * a  - 2 * y * a * b + 1 ;
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::PositiveN2::setAlpha1 
+( const unsigned int i , const double x ) 
+{
+  //
+  if ( m_alphas.size() <= i ) { return false ; }
+  //
+  if ( s_equal ( x , m_alphas[i].first ) ) { return false ; }
+  //
+  m_alphas[i].first = x ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::PositiveN2::setAlpha2 
+( const unsigned int i , const double x ) 
+{
+  //
+  if ( m_alphas.size() <= i ) { return false ; }
+  //
+  const double v = x / std::sqrt ( 1 + x * x ) ;
+  if ( s_equal ( v , m_alphas[i].second ) ) { return false ; }
+  //
+  m_alphas[i].second = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::PositiveN2::setAlpha
+( const unsigned int i , const double x ) 
+{
+  //
+  if ( m_alphas.size()*2 <= i ) { return false ; }
+  //
+  return 
+    ( 0 == i % 2 ) ? 
+    setAlpha1 (   i       / 2 , x ) : 
+    setAlpha2 ( ( i - 1 ) / 2 , x ) ;
+  //
+}
 // ============================================================================
 // The END 
 // ============================================================================
+// constructor from parameter "alpha" and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN::PositiveN
+( const std::vector<double>& alphas ,
+  const unsigned short       roots  , 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_n1 ( std::vector<double>()                     , xmin, xmax ) 
+  , m_n2 ( std::vector<std::pair<double,double> > () , xmin, xmax ) 
+{
+  //
+  unsigned int N  = alphas.size () ;
+  unsigned int N1 = std::min ( (unsigned int) roots , N ) ;
+  //
+  // adjustments 
+  if      ( 0 == N % 2 && 1 == N1 % 2 ) { N1 -= 1 ; }
+  //
+  if      ( 1 == N % 2 && 0 == N1     ) { N1  = 1 ; }
+  else if ( 1 == N % 2 && 0 == N1 % 2 ) { N1 -= 1 ; }
+  //
+  const unsigned int N2 = std::min ( N - N1 , N ) ;
+  const unsigned int n2 = N2/2 ;
+  //
+  std::vector<double> n1 = std::vector<double> ( alphas.begin()      , 
+                                                 alphas.begin() + N1 ) ;
+  //
+  m_n1 = Gaudi::Math::PositiveN1 ( n1 , xmin , xmax );
+  
+  std::vector<double> a1 = std::vector<double> ( alphas.begin() + N1       , 
+                                                 alphas.begin() + N1 + n2 ) ;
+  std::vector<double> a2 = std::vector<double> ( alphas.begin() + N1 + n2 , 
+                                                 alphas.begin() + N1 + N2 ) ;
+  
+  m_n2 = Gaudi::Math::PositiveN2 ( a1 , a2 , xmin , xmax ) ;  
+}
+// ============================================================================
+// constructor from parameter "alpha" and the interval 
+// ============================================================================
+Gaudi::Math::PositiveN::PositiveN
+( const unsigned short       N      , 
+  const unsigned short       roots  , 
+  const double               xmin   ,
+  const double               xmax   ) 
+  : m_n1 ( roots , xmin, xmax ) 
+  , m_n2 ( N     , xmin, xmax ) 
+{
+  //
+  unsigned short N1 = std::min ( roots , N ) ;
+  //
+  // adjustments 
+  if      ( 0 == N % 2 && 1 == N1 % 2 ) { N1 -= 1 ; }
+  //
+  if      ( 1 == N % 2 && 0 == N1     ) { N1  = 1 ; }
+  else if ( 1 == N % 2 && 0 == N1 % 2 ) { N1 -= 1 ; }
+  //
+  const unsigned int N2 = N - N1 ;
+  const unsigned int n2 = N2/2   ;
+  //
+  m_n1 = Gaudi::Math::PositiveN1 ( N1 , xmin , xmax );
+  m_n2 = Gaudi::Math::PositiveN2 ( n2 , xmin , xmax ) ;  
+}
+// ======================================================================
+// get the value 
+// ======================================================================
+double Gaudi::Math::PositiveN::operator() ( const double x ) const 
+{ return m_n1 ( x ) * m_n2 ( x ) ; }
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::PositiveN::setAlpha
+( const unsigned int i , const double x ) 
+{
+  //
+  if ( m_n1.n1() + 2 * m_n2.n2()  <= i ) { return false ; }
+  //
+  if ( m_n1.n1() > i ) { return m_n1.setAlpha ( i , x ) ; }
+  //
+  return m_n2.setAlpha ( i - m_n1.n1() , x ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// Voigtian
+// ============================================================================
+// constructor  from all parameters
+// ============================================================================
+Gaudi::Math::Voigt::Voigt
+( const double m0    , 
+  const double gamma , 
+  const double sigma ,  
+  const int    r     ) 
+  : std::unary_function<double,double>() 
+//
+  , m_m0        ( m0 ) 
+  , m_gamma     ( std::abs ( gamma ) ) 
+  , m_sigma     ( std::abs ( sigma ) )
+  , m_r         ( std::min ( std::max ( r , 2 ) , 5 ) )  
+//
+  , m_workspace () 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Voigt::~Voigt(){}
+// ============================================================================
+// get the value of Voigt function 
+// ============================================================================
+double Gaudi::Math::Voigt::operator() ( const double x ) const 
+{ return TMath::Voigt ( x - m_m0 , m_sigma , m_gamma , m_r ) ; }
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::Voigt::integral 
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN 
+  if (           low > high   ) { return - integral ( high ,                                                     
+                                                      low  ) ; } // RETURN 
+  //
+  const double width = std::max ( m_sigma , m_gamma ) ;
+  //
+  // split into reasonable sub intervals
+  //
+  const double x_low   = m_m0 - 3 * width ;
+  const double x_high  = m_m0 + 3 * width ;
+  //
+  if      ( low <  x_low  && x_low  < high )
+  {
+    return 
+      integral (   low  , x_low   ) + 
+      integral ( x_low  ,   high  ) ;
+  }
+  else if ( low <  x_high && x_high < high ) 
+  {
+    return 
+      integral (   low  , x_high  ) + 
+      integral ( x_high ,   high  ) ;
+  }
+  //
+  // split, if interval too large
+  //
+  if ( 0 < width && 3 * width < high - low  ) 
+  {
+    return 
+      integral ( low                   , 0.5 *  ( high + low ) ) + 
+      integral ( 0.5 *  ( high + low ) ,          high         ) ;
+  }
+  //
+  // use GSL to evaluate the integral 
+  //
+  GSL_Handler_Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function = &voigt_GSL ;
+  const Voigt* _f = this  ;
+  F.params   = const_cast<Voigt*> ( _f ) ;
+  //
+  //
+  double result   =  1.0 ;
+  double error    = -1.0 ;
+  //
+  const int ierror = gsl_integration_qag 
+    ( &F                ,            // the function 
+      low   , high      ,            // low & high edges 
+      s_PRECISION       ,            // absolute precision            
+      ( high   <= x_low  ) ? s_PRECISION_TAIL :
+      ( x_high <=   low  ) ? s_PRECISION_TAIL : 
+      s_PRECISION       ,            // relative precision 
+      s_SIZE            ,            // size of workspace 
+      GSL_INTEG_GAUSS31 ,            // integration rule  
+      workspace ( m_workspace ) ,    // workspace  
+      &result           ,            // the result 
+      &error            ) ;          // the error in result 
+  //
+  if ( ierror ) 
+  { 
+    GSL_Handler_Sentry sentry ;
+    gsl_error ( "Gaudi::Math::Voigt::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ; 
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral between low and high limits 
+// ============================================================================
+double  Gaudi::Math::Voigt::integral () const { return 1 ; }
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::Voigt::setM0 ( const double x ) 
+{
+  //
+  if ( s_equal ( x , m_m0 ) ) { return false ; }
+  //
+  m_m0 = x ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::Voigt::setGamma ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_gamma ) ) { return false ; }
+  //
+  m_gamma = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters 
+// ============================================================================
+bool Gaudi::Math::Voigt::setSigma ( const double x ) 
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_sigma ) ) { return false ; }
+  //
+  m_sigma = v ;
+  //
+  return true ;
+}
 

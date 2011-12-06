@@ -37,7 +37,7 @@ namespace Gaudi
     template <unsigned int N> class  Chebyshev_ ;
     // ========================================================================
     /** @class Chebychev_
-     *  Efficienct evaluator of Chebyshev polynomial
+     *  Efficient evaluator of Chebyshev polynomial
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-04-19
      */
@@ -281,6 +281,276 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Positive1 
+     *
+     *  The trivial linear function for building of "positive polinomials": 
+     *  the polinomials that have no zeros within the specified interval 
+     *
+     *  Using the normalization \f$ f(0)=1 \f$, for n=1 the definition 
+     *  of such polinom for interval \f$ \left[ -1, 1 \right]\f$ is trivial:  
+     *  \f$ f(x) = 1 + \beta x \f$, where \f$ \left| \beta \right <1 \f$
+     *  We are using \f$ \beta = \frac{\alpha}{\sqrt{1+\alpha^2}}\f$
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-04
+     */
+    class GAUDI_API Positive1 : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from parameter "alpha" and the interval 
+      Positive1 ( const double alpha =  0 , 
+                  const double xmin  = -1 ,
+                  const double xmax  =  1 ) ;            
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set parameter alpha 
+      bool setAlpha  ( const double x )  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual slope  ( |slope|<=1 !)  
+      double m_slope ; // the actual slope  ( |slope|<=1 !)  
+      // ======================================================================
+      /// the left edge of interval 
+      double m_xmin  ;                             // the left edge of interval 
+      /// the right edge of interval 
+      double m_xmax  ;                             // the right edge of interval 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Positive2 
+     *
+     *  The trivial quadratic function for building of "positive polinomials": 
+     *  the polinomials that have no zeros within the specified interval
+     *
+     *  Using the normalization \f$ f(0)=1 \f$, for n=2 there are two 
+     *  series of 2nd order polinom for interval \f$ \left[ -1, 1 \right]\f$:
+     *   - the product of linear polinoms of form 
+     *  \f$ f(x) =  ( 1 + \beta_1 x ) \times ( 1 + \beta_1 x ) \f$, 
+     *   where \f$ \left| \beta_{1,2} \right <1 \f$ 
+     *   - the polinom that has no real roots at all:
+     *  \f$ f(x) =  \alpha^2\x^2-2\alpha^2x \x_0 + 1 \f$, where 
+     *    \f$ \left| \alpha \x_0\right| < 1 \f$, or :
+     *  \f$ f(x) =  \alpha^2\x^2-2\alpha \beta + 1 \f$, where
+     *    \f$\left| \beta \right| < 1 \f$, and we use 
+     *    \f$ \beta = \frac{\alpha_2}{\sqrt{1 + \alpha_2^2}}< 1 \f$
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-04
+     */
+    class GAUDI_API Positive2 : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from parameter "alpha" and the interval 
+      Positive2 ( const double alpha1 =  0 , 
+                  const double alpha2 =  0 , 
+                  const double xmin   = -1 ,
+                  const double xmax   =  1 ) ;            
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set parameter alpha_1 
+      bool setAlpha1 ( const double x )  ;
+      /// set parameter alpha_2 
+      bool setAlpha2 ( const double x )  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual quadratic parameter 
+      double m_alpha  ; /// the actual quadractic  parameter 
+      /// the second parameter 
+      double m_beta   ; /// the second parameter 
+      // ======================================================================
+      /// the left edge of interval 
+      double m_xmin  ;                             // the left edge of interval 
+      /// the right edge of interval 
+      double m_xmax  ;                             // the right edge of interval 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class PositiveN1 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-04
+     */
+    class GAUDI_API PositiveN1 : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from parameter "alpha" and the interval 
+      PositiveN1 ( const std::vector<double>& alphas      , 
+                   const double               xmin   = -1 ,
+                   const double               xmax   =  1 ) ;
+      /// constructor from parameter "alpha" and the interval 
+      PositiveN1 ( const unsigned short       N1          , 
+                   const double               xmin   = -1 ,
+                   const double               xmax   =  1 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set parameter alpha_i
+      bool setAlpha ( const unsigned int i , const double x )  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the order 
+      unsigned int n1 () const { return m_alphas.size() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PositiveN1 () ;                    // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual quadratic parameter 
+      std::vector<double> m_alphas ;
+      // ======================================================================
+      /// the left edge of interval 
+      double m_xmin  ;                             // the left edge of interval 
+      /// the right edge of interval 
+      double m_xmax  ;                             // the right edge of interval 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class PositiveN2 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-04
+     */
+    class GAUDI_API PositiveN2 : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from order and interval 
+      PositiveN2 ( const unsigned short N2          ,  
+                   const double         xmin   = -1 ,
+                   const double         xmax   =  1 ) ;
+      /// constructor from parameter "alpha" and the interval 
+      PositiveN2 ( const std::vector<std::pair<double,double> >& alphas      ,  
+                   const double                                  xmin   = -1 ,
+                   const double                                  xmax   =  1 ) ;
+      /// constructor from parameter "alpha" and the interval 
+      PositiveN2 ( const std::vector<double>&                    alpha1      ,
+                   const std::vector<double>&                    alpha2      ,  
+                   const double                                  xmin   = -1 ,
+                   const double                                  xmax   =  1 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set parameter alpha_i
+      bool setAlpha  ( const unsigned int i , const double x )  ;
+      bool setAlpha1 ( const unsigned int i , const double x )  ;
+      bool setAlpha2 ( const unsigned int i , const double x )  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the 2*order 
+      unsigned int n2 () const { return m_alphas.size() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PositiveN2 () ;                    // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual quadratic parameter 
+      std::vector<std::pair<double,double> > m_alphas ;
+      // ======================================================================
+      /// the left edge of interval 
+      double m_xmin  ;                             // the left edge of interval 
+      /// the right edge of interval 
+      double m_xmax  ;                             // the right edge of interval 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class PositiveN 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-04
+     */
+    class GAUDI_API PositiveN : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from parameter "alpha" and the interval 
+      PositiveN ( const std::vector<double>& alphas      ,
+                  const unsigned short       roots       , 
+                  const double               xmin   = -1 ,
+                  const double               xmax   =  1 ) ;
+      // ======================================================================
+      /// constructor from order ans roots 
+      PositiveN ( const unsigned short       N           ,
+                  const unsigned short       roots       , 
+                  const double               xmin   = -1 ,
+                  const double               xmax   =  1 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value 
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set parameter alpha_i
+      bool setAlpha  ( const unsigned int i , const double x )  ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PositiveN1& posN1 () const { return m_n1       ; }
+      const Gaudi::Math::PositiveN2& posN2 () const { return m_n2       ; }
+      // ======================================================================
+      double  vN1          ( const double x ) const { return m_n1 ( x ) ; }
+      double  vN2          ( const double x ) const { return m_n2 ( x ) ; }
+      // ======================================================================
+      /// get the 1*order 
+      unsigned int n1 () const { return m_n1.n1() ; }
+      /// get the 2*order 
+      unsigned int n2 () const { return m_n2.n2() ; }
+      /// get the order 
+      unsigned int n  () const { return n1() + 2 * n2() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PositiveN () ;                     // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      Gaudi::Math::PositiveN1 m_n1 ;
+      Gaudi::Math::PositiveN2 m_n2 ;
+      // ======================================================================
+    } ;  
+    // ========================================================================
     /** @class BifurcatedGauss 
      *  @date 2011-04-19
      */
@@ -426,8 +696,10 @@ namespace Gaudi
       bool setMass  ( const double value ) { return setPeak ( value ) ; }
       bool setSigma ( const double value ) ;
       bool setXi    ( const double value ) ;
-      bool setRho_L ( const double value ) ;
-      bool setRho_R ( const double value ) ;
+      bool setRhoL  ( const double value ) ;
+      bool setRhoR  ( const double value ) ;
+      bool setRho_L ( const double value ) { return setRhoL ( value ) ; }
+      bool setRho_R ( const double value ) { return setRhoR ( value ) ; }
       // ====================================================================== 
     public:
       // ====================================================================== 
@@ -749,7 +1021,7 @@ namespace Gaudi
     public:
       // ======================================================================
       /** constructor from all parameters
-       *  @param mean   the mean value for districbution 
+       *  @param mean   the mean value for distribution 
        *  @param sigma  the sigma 
        *  @param kappa3 the standartized 3rd cumulant 
        *  @param kappa4 the standartized 4th cumulant 
@@ -913,6 +1185,10 @@ namespace Gaudi
       /// evaluate N-body phase space near left threhsold 
       double operator () ( const double x    ) const ;
       // ====================================================================== 
+    public:
+      // ====================================================================== 
+      bool setThreshold ( const double x ) ;
+      // ====================================================================== 
     private:
       // ======================================================================
       /// the default constructor is disabled 
@@ -949,6 +1225,10 @@ namespace Gaudi
       // ====================================================================== 
       /// evaluate N/L-body phase space near right  threhsold 
       double operator () ( const double x ) const ;
+      // ====================================================================== 
+    public:
+      // ====================================================================== 
+      bool setThreshold ( const double x ) ;
       // ====================================================================== 
     private:
       // ======================================================================
@@ -1328,6 +1608,68 @@ namespace Gaudi
       /// get the value of Flatte function (KK-channel)
       // ======================================================================
       virtual double operator() ( const double x ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    class GAUDI_API Voigt
+      : public std::unary_function<double,double>     
+    {
+    public:
+      // ======================================================================
+      /// constructor  from three parameters
+      Voigt  ( const double m0         , 
+               const double gamma      , 
+               const double sigma      ,  
+               const int    r     = 5  ) ;
+      /// destructor 
+      virtual ~Voigt () ;  
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value of Voigt function 
+      // ======================================================================
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      double m0     () const { return m_m0      ; }
+      double mass   () const { return   m0   () ; }
+      double peak   () const { return   m0   () ; }
+      double gamma  () const { return m_gamma   ; }
+      double sigma  () const { return m_sigma   ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setM0     ( const double x ) ;
+      bool setMass   ( const double x ) { return setM0 ( x ) ; }
+      bool setPeak   ( const double x ) { return setM0 ( x ) ; }      
+      bool setGamma  ( const double x ) ;
+      bool setSigma  ( const double x ) ;
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// get the integral 
+      virtual double integral () const ;
+      /// get the integral between low and high limits 
+      virtual double integral ( const double low  , 
+                                const double high ) const ;
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Voigt() ;                          // the default constructor is disabled 
+      // ====================================================================== 
+    private:
+      // ======================================================================
+      double m_m0     ;
+      double m_gamma  ;
+      double m_sigma  ;
+      int    m_r      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace 
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace 
       // ======================================================================
     } ;
     // ========================================================================
