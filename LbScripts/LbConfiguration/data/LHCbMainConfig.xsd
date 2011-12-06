@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="mainConfiguration" type="MainConfigurationType" />
+
+	<xs:complexType name="MainConfigurationType">
+		<xs:sequence>
+			<xs:element name="distributionUrl" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="pythonVersion" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="CMTVersion" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="tbroadcastVersion" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="doxygenVersion" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="externalProjects" type="ProjectListType" />
+			<xs:element name="LCGProjects" type="ProjectListType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProjectListType">
+		<xs:sequence>
+			<xs:element name="project" type="xs:string" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

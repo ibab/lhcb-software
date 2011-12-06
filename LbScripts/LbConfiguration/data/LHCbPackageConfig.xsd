@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="packageConfiguration" type="packageConfigurationType" />
+
+	<xs:complexType name="packageType">
+		<xs:sequence>
+			<xs:element name="releaseArea" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="distLocation" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="tarballName" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="dereferenceTar" type="xs:boolean"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="hat" type="xs:string" />
+		<xs:attribute name="project" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="packageConfigurationType">
+		<xs:sequence>
+			<xs:element name="package" type="packageType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+</xs:schema>
