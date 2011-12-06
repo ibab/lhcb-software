@@ -2,7 +2,7 @@
      * $Id: $ 
      * ========================================================================
      * @file
-     * The seleciton file to build Reflex dictionaries for AnalysisPython
+     * The selection file to build Reflex dictionaries for AnalysisPython
      * @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      * @date 2011-01-21
      *                    $Revision$
@@ -13,17 +13,24 @@
 
 <lcgdict>
   
-  <class name = "Analysis::Selector"               />
-  <class name = "Analysis::Process"                />
-  <class name = "Analysis::RooMakeHistos"          />
-  <class name = "Analysis::UStat"                  />
-  <class name = "Gaudi::Utils::HStats"             />
-  <class name = "Analysis::Models::BreitWigner"    />
-  <class name = "Analysis::Models::Rho0"           />
-  <class name = "Analysis::Models::Flatte"         />
-  <class name = "Analysis::Models::Flatte2"        />
-  <class name = "Analysis::Models::PhaseSpaceNL"   />
-  <class name = "Analysis::Models::CrystalBallDS"  />
+  <class name = "Analysis::Selector"                />
+  <class name = "Analysis::Process"                 />
+  <class name = "Analysis::RooMakeHistos"           />
+  <class name = "Analysis::UStat"                   />
+  <class name = "Gaudi::Utils::HStats"              />
+  <class name = "Analysis::Models::BreitWigner"     />
+  <class name = "Analysis::Models::Rho0"            />
+  <class name = "Analysis::Models::Flatte"          />
+  <class name = "Analysis::Models::Flatte2"         />
+  <class name = "Analysis::Models::Bukin"           />
+  <class name = "Analysis::Models::PhaseSpace2"     />
+  <class name = "Analysis::Models::PhaseSpaceNL"    />
+  <class name = "Analysis::Models::PhaseSpaceLeft"  />
+  <class name = "Analysis::Models::PhaseSpaceRight" />
+  <class name = "Analysis::Models::CrystalBallDS"   />
+  <class name = "Analysis::Models::GramCharlierA"   />
+  <class name = "Analysis::Models::PolyPositive"    />
+  <class name = "Analysis::Models::Voigt"           />
   
 </lcgdict> 
 

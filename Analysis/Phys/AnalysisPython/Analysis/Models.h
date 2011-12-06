@@ -13,6 +13,7 @@
 // ============================================================================
 #include "RooAbsPdf.h"
 #include "RooRealProxy.h"
+#include "RooListProxy.h"
 #include "RooAbsReal.h"
 // ============================================================================
 namespace Analysis
@@ -219,6 +220,123 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PhaseSpace2
+     *  simple model for 2-body phase space 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class PhaseSpace2 : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::PhaseSpace2, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      PhaseSpace2 ( const char*          name      , 
+                    const char*          title     ,
+                    RooAbsReal&          x         ,
+                    const double         m1        , 
+                    const double         m2        ) ;
+      /// "copy constructor"
+      PhaseSpace2 ( const PhaseSpace2& right , const char* name )  ;
+      /// destructor 
+      virtual ~PhaseSpace2() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      RooRealProxy m_x     ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::PhaseSpace2 m_ps2 ;           // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PhaseSpaceLeft
+     *  simple model for left-edge of N-body phase-space 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class PhaseSpaceLeft : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::PhaseSpaceLeft, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      PhaseSpaceLeft ( const char*          name      , 
+                       const char*          title     ,
+                       RooAbsReal&          x         ,
+                       RooAbsReal&          threshold ,
+                       const unsigned short N         ) ;
+      /// "copy constructor"
+      PhaseSpaceLeft ( const PhaseSpaceLeft& right , const char* name )  ;
+      /// destructor 
+      virtual ~PhaseSpaceLeft() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      RooRealProxy m_x         ;
+      RooRealProxy m_threshold ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::PhaseSpaceLeft m_left ;        // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PhaseSpaceRight
+     *  simple model for right-edge of L-body phase-space in N-body decays 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class PhaseSpaceRight : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::PhaseSpaceRight, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      PhaseSpaceRight ( const char*          name      , 
+                        const char*          title     ,
+                        RooAbsReal&          x         ,
+                        RooAbsReal&          threshold ,
+                        const unsigned short L         , 
+                        const unsigned short N         ) ;
+      /// "copy constructor"
+      PhaseSpaceRight ( const PhaseSpaceRight& right , const char* name )  ;
+      /// destructor 
+      virtual ~PhaseSpaceRight () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      RooRealProxy m_x         ;
+      RooRealProxy m_threshold ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::PhaseSpaceRight m_right ;     // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class PhaseSpaceNL
      *  
      *  @see Gaudi::Math::PhaseSpaceNL
@@ -310,6 +428,232 @@ namespace Analysis
       mutable Gaudi::Math::CrystalBallDoubleSided m_cb2 ;       // the function 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class PolyPositive
+     *  Non-negative polynomial: 
+     *  the polinomial that  has no roots
+     *  for the specified interval of observable
+     *  for description of gaussian with the tail
+     *  @see Gaudi::Math::PositiveN 
+     *  @date 2011-05-25
+     */
+    class GAUDI_API PolyPositive : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolyPositive, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// linear polinomial
+      PolyPositive 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          alpha1    , 
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quadric
+      PolyPositive 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          alpha1    , 
+        RooAbsReal&          alpha2    , 
+        const bool           roots     ,  // allow roots ?
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// qubic 
+      PolyPositive 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          alpha1    , 
+        RooAbsReal&          alpha2    , 
+        RooAbsReal&          alpha3    , 
+        const unsigned short N         ,  // roots ?
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// quartic
+      PolyPositive 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          alpha1    , 
+        RooAbsReal&          alpha2    , 
+        RooAbsReal&          alpha3    , 
+        RooAbsReal&          alpha4    , 
+        const unsigned short N         ,  // roots ?
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// general 
+      PolyPositive 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        const RooArgList&    coeffs    ,
+        const unsigned short N         ,  // roots ?
+        const double         xmin      , 
+        const double         xmax      ) ;
+      /// copy 
+      PolyPositive 
+      ( const PolyPositive&  right     , 
+        const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~PolyPositive() ;
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooListProxy m_alphas ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::PositiveN m_pos ;                    // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class GramCharlierA
+     *  The peak with Gram-Charlier type A parameterization
+     *  @see Gaudi::Math::GramCharlierA 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API GramCharlierA : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GramCharlierA, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GramCharlierA 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mean      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          kappa3    ,
+        RooAbsReal&          kappa4    );
+      /// "copy" constructor 
+      GramCharlierA ( const GramCharlierA& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GramCharlierA () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_kappa3 ;
+      RooRealProxy m_kappa4 ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GramCharlierA m_gca ;                // the function 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Bukin
+     *  "Bukin"-function
+     *  @see Gaudi::Math::Bukin
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API Bukin : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Bukin, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bukin
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          peak      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          xi        ,
+        RooAbsReal&          rhoL      ,
+        RooAbsReal&          rhoR      ) ;
+      /// "copy" constructor 
+      Bukin ( const Bukin& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Bukin () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_peak   ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_rhoL   ;
+      RooRealProxy m_rhoR   ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bukin m_bukin ;                      // the function 
+      // ======================================================================      
+    } ;  
+    // ========================================================================
+    class GAUDI_API Voigt : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Voigt, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Voigt
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          m0        , 
+        RooAbsReal&          gamma     , 
+        RooAbsReal&          sigma     ) ;
+      /// "copy" constructor 
+      Voigt ( const Voigt& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Voigt () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_gamma  ;
+      RooRealProxy m_sigma  ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Voigt m_voigt ;                      // the function 
+      // ======================================================================      
+    };    
     // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================

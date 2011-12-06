@@ -6,6 +6,10 @@
 // ============================================================================
 #include "Analysis/Models.h"
 // ============================================================================
+// ROOT 
+// ============================================================================
+#include "RooArgSet.h"
+// ============================================================================
 /** @file 
  *  Implementation file for namespace Analysis::Models
  *
@@ -300,7 +304,7 @@ Analysis::Models::CrystalBallDS::CrystalBallDS
   RooAbsReal&          nL        ,    
   RooAbsReal&          alphaR    ,    
   RooAbsReal&          nR        )
-  : RooAbsPdf ( name , title ) 
+  : RooAbsPdf ( name , title )
 //
   , m_x       ( "x"       , "Observable"                 , this , x      ) 
   , m_m0      ( "m0"      , "mass"                       , this , m0     ) 
@@ -361,6 +365,527 @@ Double_t Analysis::Models::CrystalBallDS::evaluate() const
   return m_cb2     ( m_x      ) ;
 }
 // ============================================================================
+
+
+// ============================================================================
+// Two-body phase space 
+// ============================================================================
+Analysis::Models::PhaseSpace2::PhaseSpace2
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         m1        , 
+  const double         m2        ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x   ( "x" , "Observable" , this , x ) 
+//  
+  , m_ps2 ( m1 , m2 ) 
+{}
+// ============================================================================
+// "copy constructor"
+// ============================================================================
+Analysis::Models::PhaseSpace2::PhaseSpace2
+( const Analysis::Models::PhaseSpace2& right , const char* name )  
+  : RooAbsPdf ( right , name )
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+//
+  , m_ps2     ( right.m_ps2 ) 
+//
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PhaseSpace2::~PhaseSpace2(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PhaseSpace2::evaluate() const 
+{ return m_ps2 ( m_x ) ; }
+// ============================================================================
+
+
+// ============================================================================
+// Left-edge of N-body phase space 
+// ============================================================================
+Analysis::Models::PhaseSpaceLeft::PhaseSpaceLeft
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          threshold ,
+  const unsigned short N         ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x         ( "x"  , "Observable" , this , x         ) 
+  , m_threshold ( "th" , "Threshold"  , this , threshold  ) 
+//  
+  , m_left ( 10 , N ) 
+{
+  m_left.setThreshold ( m_threshold ) ;  
+}
+// ============================================================================
+// "copy constructor"
+// ============================================================================
+Analysis::Models::PhaseSpaceLeft::PhaseSpaceLeft
+( const Analysis::Models::PhaseSpaceLeft& right , const char* name )  
+  : RooAbsPdf ( right , name )
+//
+  , m_x         ( "x"  , this , right.m_x         ) 
+  , m_threshold ( "tr" , this , right.m_threshold ) 
+//
+  , m_left     ( right.m_left ) 
+//
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PhaseSpaceLeft::~PhaseSpaceLeft(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PhaseSpaceLeft::evaluate() const 
+{
+  //
+  m_left.setThreshold ( m_threshold ) ;
+  //
+  return m_left ( m_x ) ; 
+}
+// ============================================================================
+
+
+// ============================================================================
+// Right-edge of L-body phase space in N-body decays  
+// ============================================================================
+Analysis::Models::PhaseSpaceRight::PhaseSpaceRight
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          threshold ,
+  const unsigned short L         ,
+  const unsigned short N         ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x         ( "x"  , "Observable" , this , x         ) 
+  , m_threshold ( "th" , "Threshold"  , this , threshold  ) 
+//  
+  , m_right ( 10 , L , N ) 
+{
+  m_right.setThreshold ( m_threshold ) ;  
+}
+// ============================================================================
+// "copy constructor"
+// ============================================================================
+Analysis::Models::PhaseSpaceRight::PhaseSpaceRight
+( const Analysis::Models::PhaseSpaceRight& right , const char* name )  
+  : RooAbsPdf ( right , name )
+//
+  , m_x         ( "x"  , this , right.m_x         ) 
+  , m_threshold ( "tr" , this , right.m_threshold ) 
+//
+  , m_right     ( right.m_right ) 
+//
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PhaseSpaceRight::~PhaseSpaceRight(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PhaseSpaceRight::evaluate() const 
+{
+  //
+  m_right.setThreshold ( m_threshold ) ;
+  //
+  return m_right ( m_x ) ; 
+}
+// ============================================================================
+
+// ============================================================================
+// linear polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          alpha1    , 
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf  ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+    //
+  , m_pos      ( 1 , xmin , xmax )           
+{
+  //
+  m_alphas.add ( alpha1 ) ;
+  m_iterator = m_alphas.createIterator() ;
+  //
+}
+// ============================================================================
+//  quadric polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          alpha1    , 
+  RooAbsReal&          alpha2    , 
+  const bool           roots     ,
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_pos      ( 2 , roots ? 2 : 0 , xmin , xmax  ) 
+{
+  m_alphas.add ( alpha1 ) ;
+  m_alphas.add ( alpha2 ) ;
+  m_iterator = m_alphas.createIterator() ;
+}
+// ============================================================================
+//  qubic polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          alpha1    , 
+  RooAbsReal&          alpha2    , 
+  RooAbsReal&          alpha3    , 
+  const unsigned short roots     ,   // roots ? 
+  const double         xmin      , 
+  const double         xmax      ) 
+ : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_pos      ( 3 , roots , xmin , xmax ) 
+{
+  m_alphas.add ( alpha1 ) ;
+  m_alphas.add ( alpha2 ) ;
+  m_alphas.add ( alpha3 ) ;
+  m_iterator = m_alphas.createIterator() ;
+}
+// ============================================================================
+//  quartic polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          alpha1    , 
+  RooAbsReal&          alpha2    , 
+  RooAbsReal&          alpha3    , 
+  RooAbsReal&          alpha4    , 
+  const unsigned short roots     ,   // roots ?
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_pos      ( 4 , roots , xmin , xmax ) 
+{
+  m_alphas.add ( alpha1 ) ;
+  m_alphas.add ( alpha2 ) ;
+  m_alphas.add ( alpha3 ) ;
+  m_alphas.add ( alpha4 ) ;
+  m_iterator = m_alphas.createIterator() ;
+}
+// ============================================================================
+// generic polinomial
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const RooArgList&    alphas    , 
+  const unsigned short roots     ,   // roots ?
+  const double         xmin      , 
+  const double         xmax      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_alphas   ( "alphas"  , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_pos      ( alphas.getSize() , roots , xmin , xmax ) 
+{
+  //
+  TIterator* tmp  = alphas.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_alphas.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_alphas.createIterator() ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::PolyPositive::PolyPositive
+( const Analysis::Models::PolyPositive&  right ,      
+  const char*                            name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x      ) 
+  , m_alphas   ( "alphas" , this , right.m_alphas ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_pos      ( right.m_pos ) 
+{
+  m_iterator = m_alphas.createIterator () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PolyPositive::~PolyPositive() { delete m_iterator ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PolyPositive::evaluate() const 
+{
+  //
+  m_iterator->Reset() ;
+  //
+  RooAbsArg*       alpha = 0 ;
+  const RooArgSet* nset  = m_alphas.nset() ;
+  unsigned int i = 0 ;
+  while ( ( alpha = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( alpha ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    m_pos.setAlpha ( i , r->getVal( nset ) ) ; ++i ;
+  }
+  //
+  return m_pos ( m_x ) ; 
+}
+// ============================================================================
+
+
+// ============================================================================
+//         Gram-Charlier type A 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::GramCharlierA::GramCharlierA 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          m0        , 
+  RooAbsReal&          sigma     , 
+  RooAbsReal&          kappa3    ,
+  RooAbsReal&          kappa4    )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_m0      ( "m0"      , "m0"         , this , m0     ) 
+  , m_sigma   ( "sigma"   , "sigma"      , this , sigma  )
+  , m_kappa3  ( "kappa3"  , "kappa3"     , this , kappa3 )
+  , m_kappa4  ( "kappa4"  , "kappa4"     , this , kappa4 )
+//
+  , m_gca         ( 10 , 1 , 0 , 0 ) 
+{
+  //
+  m_gca.setM0     ( m_m0     ) ;
+  m_gca.setSigma  ( m_sigma  ) ;
+  m_gca.setKappa3 ( m_kappa3 ) ;
+  m_gca.setKappa4 ( m_kappa4 ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::GramCharlierA::GramCharlierA
+( const Analysis::Models::GramCharlierA& right , 
+  const char*                            name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_m0     ( "m0"     , this , right.m_m0     ) 
+  , m_sigma  ( "sigma"  , this , right.m_sigma  ) 
+  , m_kappa3 ( "kappa3" , this , right.m_kappa3 ) 
+  , m_kappa4 ( "kappa4" , this , right.m_kappa4 ) 
+//
+  , m_gca    ( right.m_gca ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::GramCharlierA::~GramCharlierA(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::GramCharlierA::evaluate() const 
+{
+  //
+  m_gca.setM0     ( m_m0     ) ;
+  m_gca.setSigma  ( m_sigma  ) ;
+  m_gca.setKappa3 ( m_kappa3 ) ;
+  m_gca.setKappa4 ( m_kappa4 ) ;
+  //
+  return m_gca ( m_x ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+//         Bukin
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Bukin::Bukin 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          peak      , 
+  RooAbsReal&          sigma     , 
+  RooAbsReal&          xi        ,
+  RooAbsReal&          rhoL      ,
+  RooAbsReal&          rhoR      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_peak    ( "peak"    , "peak"       , this , peak   ) 
+  , m_sigma   ( "sigma"   , "sigma"      , this , sigma  )
+  , m_xi      ( "xi"      , "xi"         , this , xi     )
+  , m_rhoL    ( "rhoL"    , "rhoL"       , this , rhoL   )
+  , m_rhoR    ( "rhoR"    , "rhoR"       , this , rhoR   )
+//
+  , m_bukin   ( 10 , 1 , 0 , 0 , 0 ) 
+{
+  //
+  m_bukin.setPeak   ( m_peak  ) ;
+  m_bukin.setSigma  ( m_sigma ) ;
+  m_bukin.setXi     ( m_xi    ) ;
+  m_bukin.setRho_L  ( m_rhoL  ) ;
+  m_bukin.setRho_R  ( m_rhoR  ) ;
+  //
+} 
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Bukin::Bukin
+( const Analysis::Models::Bukin& right  , 
+  const char*                    name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_peak   ( "peak"   , this , right.m_peak   ) 
+  , m_sigma  ( "sigma"  , this , right.m_sigma  ) 
+  , m_xi     ( "xi"     , this , right.m_xi     ) 
+  , m_rhoL   ( "rhoL"   , this , right.m_rhoL   ) 
+  , m_rhoR   ( "rhoR"   , this , right.m_rhoR   ) 
+//
+  , m_bukin  ( right.m_bukin ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Bukin::~Bukin(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Bukin::evaluate() const 
+{
+  //
+  m_bukin.setPeak   ( m_peak  ) ;
+  m_bukin.setSigma  ( m_sigma ) ;
+  m_bukin.setXi     ( m_xi    ) ;
+  m_bukin.setRhoL   ( m_rhoL  ) ;
+  m_bukin.setRhoR   ( m_rhoR  ) ;
+  //
+  return m_bukin    ( m_x     ) ;
+}
+// ============================================================================
+
+  
+
+
+
+// ============================================================================
+//         Voigt
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Voigt::Voigt 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          m0        , 
+  RooAbsReal&          gamma     , 
+  RooAbsReal&          sigma     )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_m0      ( "m0"      , "m0"         , this , m0     ) 
+  , m_gamma   ( "gamma"   , "gamma"      , this , gamma  )
+  , m_sigma   ( "sigma"   , "sigma"      , this , sigma  )
+//
+  , m_voigt   ( 10 , 1 , 1 ) 
+{
+  //
+  m_voigt.setM0     ( m_m0    ) ;
+  m_voigt.setSigma  ( m_sigma  ) ;
+  m_voigt.setGamma  ( m_gamma  ) ;
+  //
+} 
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Voigt::Voigt
+( const Analysis::Models::Voigt& right  , 
+  const char*                    name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_m0     ( "m0"     , this , right.m_m0     ) 
+  , m_gamma  ( "gamma"  , this , right.m_gamma  ) 
+  , m_sigma  ( "sigma"  , this , right.m_sigma  ) 
+//
+  , m_voigt  ( right.m_voigt ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Voigt::~Voigt(){}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Voigt::evaluate() const 
+{
+  //
+  m_voigt.setM0     ( m_m0     ) ;
+  m_voigt.setSigma  ( m_sigma  ) ;
+  m_voigt.setGamma  ( m_gamma  ) ;
+  //
+  return m_voigt    ( m_x     ) ;
+}
+// ============================================================================
+
+  
 
 
 
