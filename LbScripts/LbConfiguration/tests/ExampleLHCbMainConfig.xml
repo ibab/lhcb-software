@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mainConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../data/LHCbMainConfig.xsd">
+	<distributionUrl>http://cern.ch/lhcbproject/dist</distributionUrl>
+	<pythonVersion>2.5</pythonVersion>
+	<CMTVersion>v1r20p20090520</CMTVersion>
+	<tbroadcastVersion>v2.0.5</tbroadcastVersion>
+	<doxygenVersion>1.7.2</doxygenVersion>
+	<externalProjects>
+		<project>LCGMT</project>
+		<project>GENSER</project>
+		<project>OpenScientist</project>
+	</externalProjects>
+	<LCGProjects>
+		<project>LCGMT</project>
+		<project>SEAL</project>
+		<project>POOL</project>
+		<project>GENSER</project>
+		<project>COOL</project>
+		<project>GDML</project>
+		<project>CORAL</project>
+		<project>RELAX</project>
+	</LCGProjects>
+</mainConfiguration>

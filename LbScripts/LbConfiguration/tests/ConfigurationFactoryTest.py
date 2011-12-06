@@ -1,4 +1,4 @@
-from LbConfiguration.ConfigurationFactory import loadProjects
+from LbConfiguration.ConfigurationFactory import loadProjects, loadMainConfig
 from LbConfiguration.ConfigurationFactory import loadPackages
 from LbConfiguration.ConfigurationFactory import serializeProjects
 from LbConfiguration.ConfigurationFactory import serializePackages
@@ -46,7 +46,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         f = open("ExampleProjectConfig.xml", "r")
         oldxml = f.read()
         oldxml = oldxml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
-        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../python/LbConfiguration/LHCbProjectConfig.xsd\"", "")
+        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../data/LHCbProjectConfig.xsd\"", "")
         oldxml = oldxml.replace("\r", "")
         oldxml = oldxml.replace("\n", "")
         oldxml = oldxml.replace(" >", ">")
@@ -75,7 +75,7 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         f = open("ExamplePackageConfig.xml", "r")
         oldxml = f.read()
         oldxml = oldxml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
-        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../python/LbConfiguration/LHCbPackageConfig.xsd\"", "")
+        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../data/LHCbPackageConfig.xsd\"", "")
         oldxml = oldxml.replace("\r", "")
         oldxml = oldxml.replace("\n", "")
         oldxml = oldxml.replace("<packageConfiguration  >", "<packageConfiguration>")
@@ -89,6 +89,18 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         #        print "Err:" + newxml[i] + " - " + oldxml[i]
 
         self.assertEquals(newxml,  oldxml)
+
+
+    def testMainConfigLoad(self):
+        config = loadMainConfig("ExampleLHCbMainConfig.xml")
+        self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
+        self.assertEqual(config.Python_version, u"2.5")
+        self.assertEqual(config.CMT_version, u"v1r20p20090520")
+        self.assertEqual(config.tbroadcast_version, u"v2.0.5")
+        self.assertEqual(config.doxygen_version, u"1.7.2")
+        self.assertEqual(len(config.external_projects), 3)
+        self.assertEqual(len(config.lcg_projects), 8)
+
 
 if __name__ == '__main__':
     logging.basicConfig()
