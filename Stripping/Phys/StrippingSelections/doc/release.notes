@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-12-06 - Ulrich Kerzel
+- rewrite ChiC with conversion line, base on full BremCorr for one of e+/e-,
+  none for the other. Introduce control line for "wrong-sign" background
+  using e+e+ or e-e-
+
 ! 2011-11-25 - Ulrich Kerzel
 - StrippingNeuroBayesMuMu.py:
   change StdLooseMuons -> StdAllLooseMuons to aovid IP cuts

@@ -31,6 +31,8 @@ __all__ = ('StrippingChiCJPsiGammaConversionConf',
 #    , 'mMaxChiCFit'           :   4.0 #GeV
 #    , 'PrescaleChiC'          :   1.0
 #    , 'PostscaleChiC'         :   1.0
+#    , 'PrescaleChiCWS'        :   1.0
+#    , 'PostscaleChiCWS'       :   1.0
 #    }
 
 from Gaudi.Configuration import *
@@ -72,6 +74,8 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
         , 'mMaxChiCFit'       #    :   4.0 GeV
         , 'PrescaleChiC'
         , 'PostscaleChiC'
+        , 'PrescaleChiCWS'
+        , 'PostscaleChiCWS'
         )
 
 
@@ -96,7 +100,15 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
                                              nBins         = 120,
                                              doPlot        = False)
 
-        self.SelGammaEE        = self.GammaEE(name+"GammaEE",
+        self.SelGammaEERS      = self.GammaEE(Name         = name+"GammaEE_RS",
+                                              Type         = "RS",
+                                              eDLLe        = config['eDLLe'],
+                                              GammaEEChi2  = config['GammaEEChi2'],
+                                              GammaEEMass  = config['GammaEEMass'],
+                                              GammaEETau   = config['GammaEETau'])
+        
+        self.SelGammaEEWS      = self.GammaEE(Name         = name+"GammaEE_WS",
+                                              Type         = "WS",
                                               eDLLe        = config['eDLLe'],
                                               GammaEEChi2  = config['GammaEEChi2'],
                                               GammaEEMass  = config['GammaEEMass'],
@@ -104,7 +116,15 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
 
         self.SelChiC           = self.ChiC(name+"ChiC",
                                            self.SelJPsiNB,
-                                           self.SelGammaEE,
+                                           self.SelGammaEERS,
+                                           mMinChiCRaw = config['mMinChiCRaw'],       
+                                           mMaxChiCRaw = config['mMaxChiCRaw'],      
+                                           mMinChiCFit = config['mMinChiCFit'],       
+                                           mMaxChiCFit = config['mMaxChiCFit'])
+
+        self.SelChiCWS         = self.ChiC(name+"ChiCWS",
+                                           self.SelJPsiNB,
+                                           self.SelGammaEEWS,
                                            mMinChiCRaw = config['mMinChiCRaw'],       
                                            mMaxChiCRaw = config['mMaxChiCRaw'],      
                                            mMinChiCFit = config['mMinChiCFit'],       
@@ -115,8 +135,13 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
                                                 prescale  = config['PrescaleChiC'],
                                                 postscale = config['PostscaleChiC'],
                                                 selection = self.SelChiC)
+        self.ChiCLineWS         = StrippingLine(name+"ChiCConversionLineWS",
+                                                prescale  = config['PrescaleChiCWS'],
+                                                postscale = config['PostscaleChiCWS'],
+                                                selection = self.SelChiCWS)
 
         self.registerLine(self.ChiCLine)
+        self.registerLine(self.ChiCLineWS)
 
 
     #####################################################################################################################
@@ -131,10 +156,10 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
         combCut   = "(AM> %(massMin)s *GeV) & (AM< %(massMax)s*GeV)"                                         % locals()
         motherCut = "(VFASPF(VCHI2/VDOF)< %(vertexChi2)s) &(MM > %(massMin)s *GeV) & (MM < %(massMax)s*GeV)" % locals()
         
-        from StandardParticles import StdLooseMuons
+        from StandardParticles import StdAllLooseMuons
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         muonFilter = FilterDesktop(Code = muonCut)
-        myMuons    = Selection(Name+'_MuonSel', Algorithm = muonFilter, RequiredSelections = [StdLooseMuons])
+        myMuons    = Selection(Name+'_MuonSel', Algorithm = muonFilter, RequiredSelections = [StdAllLooseMuons])
         
         _DiMu = CombineParticles (DecayDescriptor = "J/psi(1S) -> mu+ mu-" ,
                                   CombinationCut  = combCut,
@@ -173,44 +198,84 @@ class StrippingChiCJPsiGammaConversionConf(LineBuilder):
     #   implemented using KShort for the photon
     #
     ######################################################################################################################  
-    def GammaEE(self, Name, eDLLe, GammaEEChi2, GammaEEMass, GammaEETau):
+    def GammaEE(self, Name, Type, eDLLe, GammaEEChi2, GammaEEMass, GammaEETau):
 
         # cuts
-        daughterCut =  "PIDe > %(eDLLe)s"                                                                                                % locals()
+        daughterCut = "(PIDe > %(eDLLe)s)"  % locals()
         motherCut   =  "(VFASPF(VCHI2/VDOF)<%(GammaEEChi2)s) & (MM < %(GammaEEMass)s*MeV) & (abs(BPVLTIME()) <   %(GammaEETau)s*ps )"    % locals()
         
-        
-
         # imports
-        from PhysSelPython.Wrappers import MergedSelection
+        from PhysSelPython.Wrappers                import MergedSelection
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 
-        # all required electrons
+        # define Filters
+        ePlusFilter        = FilterDesktop(Code   = "(11==ID) & "    + daughterCut)
+        eMinusFilter       = FilterDesktop(Code   = "(-11==ID) & "   + daughterCut)
+        eFilter            = FilterDesktop(Code   = "(11==ABSID) & " + daughterCut)
+
+        # all required electrons - no correction for Bremsstrahlung
         from CommonParticles import NoBremNoPIDsElectrons
         from CommonParticles import NoBremNoPIDsDownElectrons
         from CommonParticles import NoBremNoPIDsUpElectrons
         from CommonParticles import NoBremNoPIDsVeloElectrons 
 
-        eLong        = DataOnDemand('Phys/NoBremNoPIDsElectrons/Particles')
-        eUp          = DataOnDemand('Phys/NoBremNoPIDsUpElectrons/Particles')
-        eDown        = DataOnDemand('Phys/NoBremNoPIDsDownElectrons/Particles')
-        eTtrack      = DataOnDemand('Phys/NoBremNoPIDsTtrackElectrons/Particles')
-        allElectrons = MergedSelection('allElectrons', RequiredSelections = [eLong, eUp, eDown, eTtrack])
-        
-        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        electronFilter = FilterDesktop(Code = daughterCut)
-        myElectrons    = Selection(Name+'_MuonSel', Algorithm = electronFilter, RequiredSelections = [allElectrons])
-        
-        ConvFind  =  CombineParticles( DecayDescriptor  = "KS0 -> e+ e-",
-                                       CombinationCut   = "(AM>0*MeV)"  ,
-                                       MotherCut        = motherCut)
-                                                       
-        #ConvFind.DecayDescriptor  = "KS0 -> e+ e-"
-        #ConvFind.DaughtersCuts    = {"e+" : "ALL" }
-        #ConvFind.CombinationCut   = "(AM>0*MeV)"
-        #ConvFind.MotherCut        = motherCut
+        eLongNoBrem        = DataOnDemand('Phys/NoBremNoPIDsElectrons/Particles')
+        eUpNoBrem          = DataOnDemand('Phys/NoBremNoPIDsUpElectrons/Particles')
+        eDownNoBrem        = DataOnDemand('Phys/NoBremNoPIDsDownElectrons/Particles')
+        eTtrackNoBrem      = DataOnDemand('Phys/NoBremNoPIDsTtrackElectrons/Particles')
 
-        GammaEESel = Selection(Name+"_GammaEESel", Algorithm = ConvFind, RequiredSelections = [myElectrons])
+        eNoBremList        = MergedSelection("eNoBremList" + "_" + Name + "_" + Type,
+                                             RequiredSelections =  [eLongNoBrem,
+                                                                    eUpNoBrem,
+                                                                    eDownNoBrem,
+                                                                    eTtrackNoBrem])
+            
+                                             
+        ePlusNoBrem        = Selection("ePlusNoBrem" + "_" + Name + "_" + Type,
+                                       Algorithm = ePlusFilter, RequiredSelections = [ eNoBremList ] )
+        eNoBrem            = Selection("eNoBrem" + "_" + Name + "_" + Type,
+                                       Algorithm = eFilter    , RequiredSelections = [ eNoBremList ] )
 
+
+         # all required electrons - with correction for Bremsstrahlung
+        from CommonParticles import StdAllNoPIDsElectrons
+        from CommonParticles import StdNoPIDsDownElectrons
+        from CommonParticles import StdNoPIDsUpElectrons
+        from CommonParticles import StdNoPIDsVeloElectrons        
+
+        eLongBrem        = DataOnDemand('Phys/StdAllNoPIDsElectrons/Particles')
+        eUpBrem          = DataOnDemand('Phys/StdNoPIDsUpElectrons/Particles')
+        eDownBrem        = DataOnDemand('Phys/StdNoPIDsDownElectrons/Particles')
+        eTtrackBrem      = DataOnDemand('Phys/StdNoPIDsTtrackElectrons/Particles')
+
+        eBremList        = MergedSelection("eBremList" + "_" + Name + "_" + Type ,
+                                           RequiredSelections =  [eLongBrem,
+                                                                  eUpBrem,
+                                                                  eDownBrem,
+                                                                  eTtrackBrem])
+        
+                                         
+        
+        eMinusBrem       = Selection("eMinusBrem" + "_" + Name + "_" + Type,
+                                     Algorithm = eMinusFilter, RequiredSelections = [ eBremList ])
+        eBrem            = Selection("eBrem" + "_" + Name + "_" + Type,
+                                     Algorithm = eFilter     , RequiredSelections = [ eBremList ])
+        
+
+        descriptor = None
+        eSel       = None
+        if Type == "RS":
+            descriptor = "KS0 -> e+ e-"
+            eSel       = [ePlusNoBrem,eMinusBrem]
+        if Type == "WS":
+            descriptor = "[KS0 -> e- e-]cc"
+            eSel       = [eNoBrem,eBrem]
+
+        ConvFind =  CombineParticles(DecayDescriptor  = descriptor,
+                                     CombinationCut   = "(AM>0*MeV)"  ,
+                                     MotherCut        = motherCut)
+        
+        GammaEESel = Selection(Name+"_GammaEESel_"+Type, Algorithm = ConvFind, RequiredSelections = eSel)
         
         return GammaEESel
 
