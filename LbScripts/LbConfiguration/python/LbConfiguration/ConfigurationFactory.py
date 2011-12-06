@@ -19,6 +19,109 @@ logging.basicConfig()
 log.setLevel(logging.CRITICAL)
 
 
+#
+# Container class for the main configuration parameters
+#
+class MainConfig:
+
+    def __init__(self):
+        """ Constructor for the MainConfig class """
+        self.distribution_url = None
+        self.Python_version = None
+        self.CMT_version = None
+        self.tbroadcast_version = None
+        self.doxygen_version = None
+        self.external_projects = []
+        self.lcg_projects = []
+
+# SAX handler for the project tag in the project XML description
+# After parsing, call the getProjectList method to get the list
+# of initialized ProjectConf projects
+class SAXMainConfigHandler(sax.handler.ContentHandler):
+
+    # Constructor
+    def __init__(self):
+        """ Constructor for the Project SAX Handler """
+        self.getChars = 0
+        self.buffer = ""
+        self.config = MainConfig()
+        self.inExternalProjects = False
+        self.inLCGProjects = False
+
+    def getConfig(self):
+        """ Method that returns the actual values for the configuration """
+        return self.config
+
+    # Methods needed for SAX parsing
+    def startElement(self, name, attributes):
+        """ Method for SAX Parsing """
+        log.debug("StartElement %s" % name)
+        self.currentTag = name
+        self.getChars = 0
+
+        if name == "mainConfiguration":
+            # Container tag, just ignore
+            None
+        elif name == "externalProjects":
+            self.inExternalProjects = True
+        elif name == "LCGProjects":
+            self.inLCGProjects = True
+        else:
+            self.buffer = ""
+            self.getChars = 1
+
+
+    def characters(self, data):
+        """ Method for SAX Parsing """
+        log.debug("characters %s" % self.currentTag)
+        if self.getChars:
+            self.buffer += data
+
+    def endElement(self, name):
+        """ Method for SAX Parsing """
+        log.debug("endElement %s %s" % (name, self.currentTag))
+
+        # Cleaning up the buffer if needed
+        if self.buffer != None:
+            self.buffer.strip()
+
+        # No need to keep chars any more, startElement can reset it if needed
+        self.getChars = 0
+
+        # Checking the current tag to set the data accordingly
+        if name == "mainConfiguration":
+            # Container tag just ignore
+            None
+        elif name == "distributionUrl":
+            self.config.distribution_url = self.buffer
+        elif name == "pythonVersion":
+            self.config.Python_version = self.buffer
+        elif name == "CMTVersion":
+            self.config.CMT_version = self.buffer
+        elif name == "tbroadcastVersion":
+            self.config.tbroadcast_version = self.buffer
+        elif name == "doxygenVersion":
+            self.config.doxygen_version = self.buffer
+        elif name == "externalProjects":
+            self.inExternalProjects = False
+        elif name == "LCGProjects":
+            self.inLCGProjects = False
+        elif name == "project":
+            log.debug("project tag External: %s LCG: %s" % (str(self.inExternalProjects), str(self.inLCGProjects)))
+            if self.inExternalProjects:
+                self.config.external_projects.append(self.buffer)
+            elif self.inLCGProjects:
+                self.config.lcg_projects.append(self.buffer)
+        else:
+            log.error("Unhandled tag:" +  name)
+
+
+
+
+
+
+
+
 # SAX handler for the project tag in the project XML description
 # After parsing, call the getProjectList method to get the list
 # of initialized ProjectConf projects
@@ -206,9 +309,7 @@ class SAXPackageHandler(sax.handler.ContentHandler):
 
     # creates a ProjectConf instance based on the name and short names retrieved
     def createPackage(self, name, hat, projectName):
-        """ Create the ProjectConf """
-        # TODO: Set short name, ignored for the moment
-        # Not set method on the ProjectConf at the moment
+        """ Create the PackageConf """
         p = PackageConf(name)
         if hat != None:
             p.setHat(hat)
@@ -228,7 +329,7 @@ class SAXPackageHandler(sax.handler.ContentHandler):
             if value != None and value.lower().strip() == "true":
                 boolValue = True
             else:
-                boolvalue = False
+                boolValue = False
 
             if boolValue == None:
                 log.error("Could not set attribute:" + name)
@@ -252,17 +353,25 @@ class SAXPackageHandler(sax.handler.ContentHandler):
 
 # Method that looks for a method name in the object passed
 # and returns it in order to set the attribute
-def findMethod(object, prefix, partialMethodName):
+def findMethod(obj, prefix, partialMethodName):
     """ Find the method named prefix + partialMethodName in the object instance """
-    allmethods = inspect.getmembers(object, predicate=inspect.ismethod)
+    allmethods = inspect.getmembers(obj, predicate=inspect.ismethod)
     foundMethod = None
-    methodPrefixes = ["set"]
     for m in allmethods:
             if m[0].lower() == (prefix + partialMethodName.lower()):
                 log.debug("## Found Method " + m[0])
                 foundMethod = m[1]
     return foundMethod
 
+
+# Main method for loading the configuration based on XML file
+def loadMainConfig(filename):
+    """ Load Main configuration from the specified file """
+    parser = sax.make_parser()
+    handler = SAXMainConfigHandler()
+    parser.setContentHandler(handler)
+    parser.parse(filename)
+    return handler.getConfig()
 
 
 # Main method for loading projects based on XML file
@@ -401,7 +510,7 @@ def serializeProjects(projectList):
             e.appendChild(ptext)
             pack.appendChild(e)
 
-           # AFS Librarian Group
+        # AFS Librarian Group
         if p._afslibgroup != "z5":
             e = doc.createElement("afsLibrarianGroup")
             ptext = doc.createTextNode(p._afslibgroup)
@@ -415,14 +524,14 @@ def serializeProjects(projectList):
             e.appendChild(ptext)
             pack.appendChild(e)
 
-       # setenvAlias
+        # setenvAlias
         if p._setenvalias != True:
             e = doc.createElement("setenvAlias")
             ptext = doc.createTextNode("false")
             e.appendChild(ptext)
             pack.appendChild(e)
 
-       # setenvAlias
+        # setenvAlias
         if p._setupalias != True:
             e = doc.createElement("setupAlias")
             ptext = doc.createTextNode("false")
@@ -457,10 +566,7 @@ def serializeProjects(projectList):
 
 
 # Main method
-# TODO: To be replaced by a test
 if __name__ == '__main__':
-    log = logging.getLogger()
-    logging.basicConfig()
     log.setLevel(logging.DEBUG)
 
     #packxml = serializePackages(package_list)
@@ -469,10 +575,13 @@ if __name__ == '__main__':
     #projxml = serializeProjects(project_list)
     #print projxml.toprettyxml(indent=" ")
 
+    newconfig = loadMainConfig("../../tests/ExampleLHCbMainConfig.xml")
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(vars(newconfig))
 
-    projects = loadProjects("../../tests/ExampleProjectConfig.xml")
-    for p in projects:
-        print p
+    #projects = loadProjects("../../tests/ExampleProjectConfig.xml")
+    #for p in projects:
+    #    print p
 
     #packages = loadPackages("../../tests/ExamplePackageConfig.xml")
     #for p in packages:
