@@ -62,7 +62,7 @@ StatusCode TrackProjectorSelector::initialize()
 
   for (ProjectorNames::const_iterator i=m_projNames.begin();i!=m_projNames.end();++i) { 
     m_projectors.insert(i->first, tool<ITrackProjector>( i->second)) ;
-    debug() << " projector for " << i->first << " : " << i->second << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << " projector for " << i->first << " : " << i->second << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -78,7 +78,7 @@ ITrackProjector* TrackProjectorSelector::projector( const LHCb::Measurement& m )
   Projectors::const_iterator i = m_projectors.find(m.type());
   if ( i == m_projectors.end() || i->second ==0 ) {
     Warning("No projector in for measurement type ").ignore();
-    debug() << "No projector in for measurement type " << m.type() << "!";
+    if(msgLevel(MSG::DEBUG)) debug() << "No projector in for measurement type " << m.type() << "!";
     return 0;
   }
   return i->second;
