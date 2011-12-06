@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-12-06 - Chris Jones
+ - Add a python file that contains the options needed to create the 
+   Rec/Summary and Trigger/RawEvent TES data objects when missing.
+
 ! 2011-11-29 - Chris Jones
  - Remove obsolete DC06 hacks
  - Set default DataType to '' (So users must set themselves)
