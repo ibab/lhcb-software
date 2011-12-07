@@ -117,6 +117,7 @@ def matchLists(list1,list2) :
             if (id.lhcbID() == ID.lhcbID()) :
                 nummatch += 1
                 break
+    # Rely on integer rounding for the return value
     return nummatch/num
 #
 #
@@ -155,4 +156,5 @@ def matchCands(myGlobs,cand1,cand2) :
             return False
     if myGlobs.DEBUGMODE:
         print (nummatch*1.)/(num_cand1*1.)
-    return (nummatch*1.)/(num_cand1*1.)
+    # Rely on integer rounding for the return value
+    return nummatch/num_cand1
