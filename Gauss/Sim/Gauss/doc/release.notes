@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Patrick Robbe
+ - Gauss-DEV.py: remove import of Beam parameters, use default ones instead
+ - QMTests: use new Beam options for MC11
+
 !========================= Gauss v41r1 2011-11-24 ============================
 ! 2011-11-24 - Gloria Corti
  - Remove obsolete properties no longer in use from Gauss() configurables.
