@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Patrick Koppenburg
+ - Task #24643:
+	. src/TupleToolDecayTreeFitter : use new Tool SubstitutePIDTool
+  These changes need Phys/DaVinciInterfaces r132662 and Phys/DaVicniTools r132663
+  
+
 ! 2011-12-05 - Patrick Koppenburg
  - First working version of PID-changing decaytreefitter. Task #24643
    . TODO : extract functionality in a tool that can be shared with

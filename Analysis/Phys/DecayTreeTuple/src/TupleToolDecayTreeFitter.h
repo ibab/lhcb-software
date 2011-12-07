@@ -42,6 +42,15 @@ tuple.B.PVFit.Verbose = True
 tuple.B.PVFit.constrainToOriginVertex = True
 tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)", "KS0" ]
 
+# now two that check for reflections
+tuple.B.ToolList +=  ["TupleToolDecayTreeFitter/SubLambda", "TupleToolDecayTreeFitter/SubLambdabar" ]
+subDTF = TupleToolDecayTreeFitter("SubLambda", Verbose=True,
+                                  daughtersToConstrain = [ "J/psi(1S)" ],
+                                  constrainToOriginVertex=True,
+                                  Substitutions={ 'Beauty -> Meson (Strange -> ^pi+ pi-)': 'p+' })
+tuple.B.addTool(subDTF)
+tuple.B.addTool(subDTF.clone("SubLambdabar",Substitutions={ 'Beauty -> Meson (Strange -> pi+ ^pi-)': 'p-' }))
+
 @endcode
     * 
     * - This will produce the following columns for the B (from this tool):
@@ -71,8 +80,7 @@ tuple.B.PVFit.daughtersToConstrain = [ "J/psi(1S)", "KS0" ]
 #include "GaudiAlg/GaudiTool.h"
 #include "TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"
-#include "LoKi/IDecay.h"
-#include "LoKi/Decays.h"
+#include "Kernel/ISubstitutePID.h"
 
 // STL
 #include <vector>
@@ -165,9 +173,6 @@ public:
                     TupleMap& tMap)const ;
   
   std::string getName(int id) const;  ///< name of particle
-  
-  unsigned int substitute( LHCb::Particle* ) const;  ///< perform the actual substitution 
-  unsigned int correctP4( LHCb::Particle* ) const;  ///< correct momentum
 
   ///  origin vertex
   std::vector<const LHCb::VertexBase*> originVertex( const  LHCb::Particle*,
@@ -185,30 +190,11 @@ public:
   LHCb::IParticlePropertySvc* m_ppSvc ;
   IParticleDescendants* m_particleDescendants;
 
-  // Stolen from SubstitutePD
-  struct  Substitution
-  {
-    // ========================================================================
-    Substitution () 
-      : m_finder ( Decays::Trees::Types_<const LHCb::Particle*>::Invalid() ) 
-      , m_pid    ( 0 ) 
-    {}  
-    Substitution 
-    ( Decays::IDecay::iTree&  tree , 
-      const LHCb::ParticleID& pid  ) 
-      : m_finder ( tree ) 
-      , m_pid    ( pid  ) 
-    {}
-    // ========================================================================
-    Decays::IDecay::Finder m_finder  ;     //                 the decay finder 
-    LHCb::ParticleID       m_pid     ;     //                              PID 
-    // ========================================================================
-  } ;
-  typedef std::vector<Substitution> Substitutions ;
   unsigned int m_maxPV ; ///< maximum number of PVs
-  SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
-  /// the actual substitution engine 
-  Substitutions    m_subs ; // the actual substitution engine 
+  /// mapping : { 'decay-component' : "new-pid" } (property)
+  ISubstitutePID::SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
+  /// Substitute Tool
+  ISubstitutePID* m_substitute  ; // tool
 
  };
 #endif // TUPLETOOLDECAYTREEFITTER_H

@@ -42,8 +42,8 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
   , m_dva()
   , m_ppSvc()
   , m_particleDescendants()
-  , m_map () 
-  , m_subs ()
+  , m_map ()
+  , m_substitute()
   
 {
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
@@ -57,7 +57,7 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
 //=============================================================================
 StatusCode TupleToolDecayTreeFitter::initialize()
 {
-  const StatusCode sc = TupleToolBase::initialize();
+  StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // convert the list of names to a list of pids
@@ -82,29 +82,10 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     if ( "TupleToolDecayTreeFitter" == m_extraName )  m_extraName = ""; // user has not chanegd instance name
     info() << "All fields will be prepended with ``" << m_extraName << "''" <<endmsg;
   }
+
   if ( !m_map.empty() ){ 
-    Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" , this ) ;
-    info() << "Will sbstitute decay chain as ``" << m_map << "''" <<endmsg;
-    m_subs.clear() ;
-    for ( SubstitutionMap::const_iterator item = m_map.begin() ; m_map.end() != item ; ++item ){
-      /// construct the tree 
-      Decays::IDecay::Tree tree = factory->tree ( item->first ) ;
-      if ( !tree  ) {
-        StatusCode sc = tree.validate ( m_ppSvc ) ;
-        if ( sc.isFailure() ) {
-          return Error ( "Unable to validate the tree '" + 
-                         tree.toString() + "' built from the descriptor '"
-                         + item->first   + "'" , sc ) ;
-        }
-      }
-      // get ParticleID 
-      const LHCb::ParticleProperty* pp = m_ppSvc->find ( item->second ) ;
-      if ( 0 == pp ) 
-      { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
-      Substitution sub ( tree , pp->particleID() ) ;
-      m_subs.push_back ( sub ) ; 
-    }
-    
+    m_substitute = tool<ISubstitutePID>("SubstitutePIDTool",this);
+    sc = m_substitute->decodeCode( m_map );
   }
   return sc;
 }
@@ -129,9 +110,9 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   // get origin vertices
   std::vector<const VertexBase*> originVtx;
   LHCb::DecayTree tree ( *P ) ;
-  if ( !m_map.empty()){ // substitute
+  if ( m_substitute ){ // substitute
     if (msgLevel(MSG::DEBUG)) debug() << "Calling substitute" << endmsg ;
-    substitute ( tree.head() ) ;
+    m_substitute->substitute ( tree.head() ) ;
   }
 
   if (m_constrainToOriginVertex){  
@@ -410,73 +391,3 @@ double TupleToolDecayTreeFitter::sumPT(const LHCb::RecVertex* pv) const {
   return spt ;
 }
 
-// ============================================================================
-// perform the actual substitution  --- Copied from SubstitutePID
-// ============================================================================
-unsigned int TupleToolDecayTreeFitter::substitute ( LHCb::Particle* p ) const {
-  if ( 0 == p ) { return 0 ; }
-  //
-  unsigned int substituted = 0 ;
-  for ( Substitutions::const_iterator isub = m_subs.begin() ; m_subs.end() != isub ; ++isub ){
-    LHCb::Particle** _p = &p ;
-    if (msgLevel(MSG::DEBUG)) debug() << "Substitute " << (*_p)->particleID().pid() << " ? "<< endmsg ;
-    //
-    LHCb::Particle::ConstVector found ;
-    if ( 0 == isub->m_finder.findDecay ( _p , _p + 1 , found ) ) { continue ; }
-    if (msgLevel(MSG::DEBUG)) debug() << "Substituting " << (*_p)->particleID().pid() << endmsg ;
-    //
-    for ( LHCb::Particle::ConstVector::const_iterator ip = found.begin() ; 
-          found.end() != ip ; ++ip ) 
-    {
-      const LHCb::Particle* pf = *ip ;
-      if ( 0 == pf  ) { continue ; }
-      LHCb::Particle* pf_ = const_cast<LHCb::Particle*>( pf ) ;
-      if ( 0 == pf_ ) { continue ; }
-      pf_ ->setParticleID ( isub -> m_pid ) ;
-      //
-      ++substituted    ;   
-    }
-  }
-  if ( 0 < substituted ) {
-    correctP4( p ) ; 
-  }
-  if (msgLevel(MSG::DEBUG)) debug() << "Substitute " << substituted << endmsg ;
-  
-  //
-  return substituted ;
-  //
-}
-// ============================================================================
-// perform recursive 4-momentum correction
-// ============================================================================
-unsigned int TupleToolDecayTreeFitter::correctP4 ( LHCb::Particle* p ) const {
-  if ( 0 == p ) { return 0 ; }
-  //
-  const SmartRefVector<LHCb::Particle> daughters = p->daughters() ;
-  if ( !daughters.empty() ) {
-    double energySum = 0.0, pxSum = 0.0, pySum = 0.0, pzSum = 0.0;
-    BOOST_FOREACH( const LHCb::Particle* daughter, daughters ) {
-      correctP4( const_cast<LHCb::Particle*>(daughter) ) ;
-      energySum += daughter->momentum().E() ;
-      pxSum += daughter->momentum().Px();
-      pySum += daughter->momentum().Py();
-      pzSum += daughter->momentum().Pz();
-    }    
-    // Correct momentum
-    Gaudi::LorentzVector oldMom = p->momentum () ;
-    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( pxSum , pySum , pzSum , energySum ) ;
-    p->setMomentum(newMom) ;
-    p->setMeasuredMass(newMom.M());
-    if (msgLevel(MSG::DEBUG)) debug() << "Set new mass of " << p->particleID() << " to " << newMom.M() << endmsg ;
-  } else {
-    double newMass = LoKi::Particles::massFromPID ( p->particleID() ) ;
-    Gaudi::LorentzVector oldMom = p->momentum () ;
-    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( oldMom.Px() , oldMom.Py() , oldMom.Pz() , ::sqrt( oldMom.P2() + newMass*newMass ) ) ;
-    p->setMomentum(newMom) ;
-    p->setMeasuredMass(newMass);
-    if (msgLevel(MSG::DEBUG)) debug() << "Set new mass of " << p->particleID() << " to " << newMass << endmsg ;
-  }
-  return 1 ;
-}
