@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Patrick Koppenburg
+ - New Interface ISubstitutePID.h for SubstitutePIDTool. See DaVinciTools.
+
 !========================= DaVinciInterfaces v2r10 2011-04-29 =========================
 ! 2011-04-20 - Cedric Potterat
  - New implementation of IJetMaker and IJets2Jets
