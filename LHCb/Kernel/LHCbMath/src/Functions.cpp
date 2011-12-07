@@ -2743,7 +2743,7 @@ Gaudi::Math::Rho0::Rho0
                                pi_mass    , 
                                pi_mass    ,
                                1          , 
-                               Jackson_A5 ) 
+                               Jackson_A7 ) 
 {}
 // ============================================================================
 // destructor 
