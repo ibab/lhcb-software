@@ -230,9 +230,8 @@ void FilterDesktop::updateHandler1 ( Property& p )
   /// mark as "to-be-updated" 
   m_to_be_updated1 = true ;
   Warning ( "The structural property '" + p.name() + 
-            "' is updated. It will take affect at the next 'execute'" , 
+            "' is updated. It will take effect at the next 'execute'" , 
             StatusCode( StatusCode::SUCCESS, true ) ) ;
-  info () << "The updated property is: " << p << endreq ;
 }
 // ============================================================================
 // update the histogram property  
@@ -338,13 +337,12 @@ StatusCode FilterDesktop::updateHistos ()
 StatusCode FilterDesktop::execute ()       // the most interesting method 
 {
 
-  m_accepted.clear();
-  //
+  m_accepted.clear();//
   if  ( m_to_be_updated1 ) 
   {
     StatusCode sc = updateMajor () ;
     if ( sc.isFailure() ) 
-    { return Error ( "The error from updateMajor"  , sc ) ; }    // RETURN 
+    { return Error ( "Error from updateMajor"  , sc ) ; }    // RETURN 
   }
   if  ( m_to_be_updated2 ) 
   {

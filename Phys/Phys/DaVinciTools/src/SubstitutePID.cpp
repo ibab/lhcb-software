@@ -4,14 +4,15 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/IDecay.h"
-#include "LoKi/Decays.h"
 #include "LoKi/select.h"
-#include "LoKi/ParticleProperties.h"
 // ============================================================================
 // Boost
 // ============================================================================
 #include <boost/foreach.hpp>
+// ============================================================================
+// Functionality now in a tool
+// ============================================================================
+#include "Kernel/ISubstitutePID.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -119,44 +120,11 @@ private:
   // ==========================================================================
 private:
   // ==========================================================================
-  // perform the actual sustitution 
-  unsigned int substitute ( LHCb::Particle* p0 ) ;
-  // ==========================================================================
-  // perform correction of 4-momentum of the particle
-  unsigned int correctP4 ( LHCb::Particle* p0 ) ; 
-  // ==========================================================================
-private:
-  // ==========================================================================
-  typedef std::map<std::string,std::string>                   SubstitutionMap ;
-  // ==========================================================================
-  struct  Substitution
-  {
-    // ========================================================================
-    Substitution () 
-      : m_finder ( Decays::Trees::Types_<const LHCb::Particle*>::Invalid() ) 
-      , m_pid    ( 0 ) 
-      , m_used   ( 0 ) 
-    {}  
-    Substitution 
-    ( Decays::IDecay::iTree&  tree , 
-      const LHCb::ParticleID& pid  ) 
-      : m_finder ( tree ) 
-      , m_pid    ( pid  ) 
-      , m_used   ( 0    ) 
-    {}
-    // ========================================================================
-    Decays::IDecay::Finder m_finder  ;     //                 the decay finder 
-    LHCb::ParticleID       m_pid     ;     //                              PID 
-    unsigned long long     m_used    ;     //                            #used 
-    // ========================================================================
-  } ;
-  // ==========================================================================
-  typedef std::vector<Substitution> Substitutions ;
-  // ========================================================================== 
   /// mapping : { 'decay-component' : "new-pid" } (property)
-  SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
-  /// the actual substitution engine 
-  Substitutions    m_subs ; // the actual substitution engine 
+  ISubstitutePID::SubstitutionMap  m_map  ; // mapping : { 'decay-component' : "new-pid" }
+  // ==========================================================================
+  /// Substitute Tool
+  ISubstitutePID* m_substitute  ; // tool
 } ;
 // ============================================================================
 /* standard constructor 
@@ -177,8 +145,7 @@ SubstitutePID::SubstitutePID                   //        standard constructor
   : FitDecayTrees ( name , pSvc )
 // mapping : { 'decay-component' : "new-pid" } (property)
   , m_map  ()
-// the actual substitution engine 
-  , m_subs () 
+  ,  m_substitute(0)
 {
   FilterDesktop* _this = this ;
   declareProperty 
@@ -197,11 +164,10 @@ SubstitutePID::~SubstitutePID () {}        // virtual & protected destructor
 // ============================================================================
 StatusCode SubstitutePID::finalize   () 
 {
-  m_subs.clear() ;
   return FitDecayTrees::finalize () ;
 }
 // ============================================================================
-// decode the code 
+// decode the code --- overrides FilterDesktop method
 // ============================================================================
 StatusCode SubstitutePID::decodeCode () 
 {
@@ -213,39 +179,12 @@ StatusCode SubstitutePID::decodeCode ()
   //
   // 2. decode "substitutions" 
   //
-  if ( m_map.empty() ) { return Error ( "Empty 'Substitute' map" ) ; }
-  //
-  /// get the factory
-  Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" , this ) ;
-  ///
-  m_subs.clear() ;
-  for ( SubstitutionMap::const_iterator item = m_map.begin() ; 
-        m_map.end() != item ; ++item ) 
-  {
-    /// construct the tree 
-    Decays::IDecay::Tree tree = factory->tree ( item->first ) ;
-    if ( !tree  )
-    {
-      sc = tree.validate ( ppSvc () ) ;
-      if ( sc.isFailure() ) 
-      {
-        return Error ( "Unable to validate the tree '" + 
-                       tree.toString() + "' built from the descriptor '"
-                       + item->first   + "'" , sc ) ;
-      }
-    }
-    // get ParticleID 
-    const LHCb::ParticleProperty* pp = ppSvc()->find ( item->second ) ;
-    if ( 0 == pp ) 
-    { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
-    //
-    Substitution sub ( tree , pp->particleID() ) ;
-    //
-    m_subs.push_back ( sub ) ; 
+  if ( 0== m_substitute){
+    m_substitute = tool<ISubstitutePID>("SubstitutePIDTool",this);
   }
-  //
-  if ( m_subs.size() != m_map.size() ) 
-  { return Error("Mismatch in decoded substitution container") ; }
+  if (msgLevel(MSG::DEBUG)) debug() << "Calling decodeCode with " << m_map << endmsg ;
+  sc = m_substitute->decodeCode( m_map );
+  if (!sc) return sc;
   //
   return StatusCode::SUCCESS ;
 }
@@ -269,129 +208,31 @@ StatusCode SubstitutePID::filter
   LoKi::select ( input.begin () , 
                  input.end   () , 
                  std::back_inserter ( filtered ) , predicate() ) ;
-  // 
-  // substitute 
   //
-  StatEntity& cnt = counter("#substituted") ;
+  if (filtered.empty()) return StatusCode::SUCCESS ;
+  LHCb::Particle::ConstVector substituted ;
+  substituted.reserve ( input.size() ) ; 
+
+  m_substitute->substitute(filtered, substituted);
+  // refit if needed, store in TES
   for ( LHCb::Particle::ConstVector::const_iterator ip = 
-          filtered.begin() ; filtered.end() != ip ; ++ip ) 
+          substituted.begin() ; substituted.end() != ip ; ++ip ) 
   {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     //
-    // clone the whole decay tree 
-    LHCb::DecayTree tree ( *p ) ;
+    LHCb::DecayTree tree = reFitted ( p ) ;
     //
-    cnt += substitute ( tree.head()     ) ;
+    if ( !tree ) { continue ; }
     //
-    // the final tree 
-    //
-    // refit the tree ?
-    if ( 0 < chi2cut()  ) 
-    {
-      LHCb::DecayTree nTree = reFitted ( tree.head() ) ;
-      if ( !nTree ) { continue ; }
-      //
-      // mark & store new decay tree 
-      markNewTree       ( nTree.head()     ) ; // mark & store new decay tree 
-      //
-      output.push_back  ( nTree.release () ) ;
-    }
-    else
-    {
-      // mark & store new decay tree 
-      markNewTree       ( tree.head()     ) ; // mark & store new decay tree 
-      //
-      output.push_back  ( tree.release () ) ;
-    }
-    //
+    output.push_back ( tree.release() ) ;
   }
+  // mark & store output particles in DVAlgorithm local container
+  markNewTrees ( output ) ;
+  
+
   //
   return StatusCode::SUCCESS ;
-}
-// ============================================================================
-// perform the actual substitution 
-// ============================================================================
-unsigned int SubstitutePID::substitute ( LHCb::Particle* p )
-{
-  if ( 0 == p ) { return 0 ; }
-  //
-  unsigned int substituted = 0 ;
-  //
-  for ( Substitutions::iterator isub = m_subs.begin() ; 
-        m_subs.end() != isub ; ++isub ) 
-  {
-    LHCb::Particle** _p = &p ;
-    //
-    LHCb::Particle::ConstVector found ;
-    if ( 0 == isub->m_finder.findDecay ( _p , _p + 1 , found ) ) { continue ; }
-    //
-    for ( LHCb::Particle::ConstVector::const_iterator ip = found.begin() ; 
-          found.end() != ip ; ++ip ) 
-    {
-      const LHCb::Particle* pf = *ip ;
-      if ( 0 == pf  ) { continue ; }
-      LHCb::Particle* pf_ = const_cast<LHCb::Particle*>( pf ) ;
-      if ( 0 == pf_ ) { continue ; }
-      pf_ ->setParticleID ( isub -> m_pid ) ;
-      //
-      ++substituted    ;   
-      ++(isub->m_used) ;
-    }
-  }
-  //
-  if ( 0 < substituted ) { correctP4( p ) ; }
-  //
-  return substituted ;
-  //
-}
-// ============================================================================
-// perform the recursive 4-momentum correction
-// ============================================================================
-unsigned int SubstitutePID::correctP4 ( LHCb::Particle* p )
-{
-  if ( 0 == p ) { return 0 ; } // RETURN 
-  //
-  if ( p->isBasicParticle () ) 
-  {
-    const Gaudi::LorentzVector& oldMom = p->momentum() ;
-    //
-    const double newMass   = LoKi::Particles::massFromPID ( p->particleID() ) ; 
-    const double newEnergy = ::sqrt ( oldMom.P2() + newMass*newMass ) ;
-    //
-    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( oldMom.Px () , 
-                     oldMom.Py () , 
-                     oldMom.Pz () , newEnergy ) ;
-    //
-    p -> setMomentum(newMom) ;
-    p -> setMeasuredMass(newMass);
-    return 1 ;
-  }
-  //
-  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
-  const DAUGHTERS& daughters = p->daughters() ;
-  //
-  unsigned int num = 0 ;
-  //
-  Gaudi::LorentzVector sum ;
-  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
-        daughters.end() != idau ; ++idau ) 
-  {
-    const LHCb::Particle* dau = *idau ;
-    if ( 0 == dau ) { continue ; }                // CONTINUE
-    //
-    num += correctP4 ( const_cast<LHCb::Particle*> ( dau ) ) ;
-    sum += dau->momentum() ;
-  }
-  //
-  if (  0 != num ) 
-  {
-    p -> setMomentum     ( sum     ) ;
-    p -> setMeasuredMass ( sum.M() ) ;
-  }
-  //
-  return num ;
 }
 // ============================================================================
 /// the factory 

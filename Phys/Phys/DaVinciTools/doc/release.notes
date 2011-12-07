@@ -1,7 +1,14 @@
 !============================================================================
 ! Package     : DaVinciTools
-! Responsible : J. Palacios
+! Responsible : Chris Jones
 !============================================================================
+
+! 2011-12-07 - Patrick Koppenburg
+ - Task #24643:
+   . New Tool SubstitutePIDTool containing the functionality of SubstitutePID
+   . SubstitutePID: Move functionality into new tool
+   . FilterDesktop : Improve english in messages
+   These changes need Phys/DaVinciInterfaces r132662 
 
 ! 2011-11-29 - Chris Jones
  - Fix icc warning
