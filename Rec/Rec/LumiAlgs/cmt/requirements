@@ -20,7 +20,6 @@ use LHCbKernel      v* Kernel
 use DetDesc         v* Det
 use GaudiAlg        v*
 use GaudiConf       v*
-use GaudiPoolDb     v*
 use HltInterfaces   v* Kernel
 
 ### for access to the config.tar file with configurations

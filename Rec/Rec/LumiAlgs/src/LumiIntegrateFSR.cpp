@@ -35,7 +35,10 @@ DECLARE_ALGORITHM_FACTORY( LumiIntegrateFSR )
 //=============================================================================
 LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_fileRecordSvc(0),
+    m_integratorTool(0),
+    m_databaseTool(0)
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );

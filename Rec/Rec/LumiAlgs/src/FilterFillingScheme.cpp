@@ -29,7 +29,7 @@ DECLARE_ALGORITHM_FACTORY( FilterFillingScheme )
 //=============================================================================
 FilterFillingScheme::FilterFillingScheme( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_bxid(0)
 {
   declareProperty( "Beam"             ,  m_beam = "0" );
   declareProperty( "MagnetState"      ,  m_MagnetState = "NONE" );

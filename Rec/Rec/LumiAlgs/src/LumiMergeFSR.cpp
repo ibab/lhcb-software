@@ -28,6 +28,7 @@ DECLARE_ALGORITHM_FACTORY( LumiMergeFSR )
 LumiMergeFSR::LumiMergeFSR( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_fileRecordSvc(0),
     m_BXTypes(0),
     m_subtractBXTypes(0),
     m_lumiFSRsVec(0),

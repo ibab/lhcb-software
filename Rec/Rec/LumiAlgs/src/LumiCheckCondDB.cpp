@@ -26,6 +26,7 @@ DECLARE_ALGORITHM_FACTORY( LumiCheckCondDB )
 LumiCheckCondDB::LumiCheckCondDB( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_databaseTool(0),
     m_incSvc(0)
 {
   // expect the data to be written at LHCb::LumiFSRLocation::Default
