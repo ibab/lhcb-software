@@ -1,4 +1,3 @@
-// $Id: Archive.cpp,v 1.90 2010-10-26 18:33:30 robbep Exp $
 // This Class
 #include "Archive.h"
 
@@ -38,12 +37,12 @@ namespace ArchiveSpace {
   bool datecomp( boost::filesystem::path pfirst ,
                  boost::filesystem::path psecond) {
     TObjArray* fileDateMatchGroup = 0;
-    fileDateMatchGroup = pres::s_fileDateRegexp.MatchS(pfirst.leaf());
+    fileDateMatchGroup = pres::s_fileDateRegexp.MatchS(pfirst.filename().string());
     boost::posix_time::ptime firstTime =
       boost::posix_time::from_iso_string
       ((((TObjString *)fileDateMatchGroup->At(3))->
         GetString()).Data());
-    fileDateMatchGroup = pres::s_fileDateRegexp.MatchS(psecond.leaf());
+    fileDateMatchGroup = pres::s_fileDateRegexp.MatchS(psecond.filename().string());
     boost::posix_time::ptime secondTime =
       boost::posix_time::from_iso_string
       ((((TObjString *)fileDateMatchGroup->At(3))->
@@ -140,7 +139,7 @@ Archive::listAvailableRootFiles(const boost::filesystem::path & dirPath,
       }
     } else {
       std::cout << " --- non existent area !"<< std::endl;
-      
+
     }
   }
 
@@ -172,7 +171,7 @@ std::vector<std::string> Archive::listPartitions() {
           if (is_directory(partition_itr->path()) &&
               std::string::npos ==
               partition_itr->path().string().find("ByRun"))
-            foundPartitionDirectories.push_back(partition_itr->path().leaf());
+            foundPartitionDirectories.push_back(partition_itr->path().filename().string());
         }
       }
     }
@@ -269,8 +268,9 @@ std::string Archive::substractIsoTimeDate(const std::string &
 std::string Archive::taskNameFromFile(const std::string & fileName) const {
   TObjArray* fileNameMatchGroup = 0;
   std::string taskNameFound("");
+  std::string fn = boost::filesystem::path(fileName).filename().string();
   fileNameMatchGroup =
-    pres::s_fileDateRegexp.MatchS(boost::filesystem::path(fileName).leaf());
+    pres::s_fileDateRegexp.MatchS(fn);
   if (!fileNameMatchGroup->IsEmpty())
     taskNameFound =
       (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
@@ -282,7 +282,7 @@ std::string Archive::taskNameFromFile(const std::string & fileName) const {
     }
     // try with run-aggregated saveset
     fileNameMatchGroup =
-      pres::s_fileRunRegexp.MatchS(boost::filesystem::path(fileName).leaf());
+      pres::s_fileRunRegexp.MatchS(fn);
     if (!fileNameMatchGroup->IsEmpty())
       taskNameFound =
         (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
@@ -294,8 +294,7 @@ std::string Archive::taskNameFromFile(const std::string & fileName) const {
         fileNameMatchGroup = 0;
       }
       fileNameMatchGroup =
-        pres::s_offlineJobRegexp.
-        MatchS(boost::filesystem::path(fileName).leaf()) ;
+        pres::s_offlineJobRegexp.MatchS(fn);
       if (!fileNameMatchGroup->IsEmpty())
         taskNameFound =
           (((TObjString *)fileNameMatchGroup->At(1))->GetString()).Data();
@@ -324,7 +323,7 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
   } else {
     endTime = boost::posix_time::ptime(boost::posix_time::from_iso_string(endTimeIsoString));
   }
-  
+
   //if (m_verbosity >= pres::Verbose)
   std::cout << "Archive::findSavesets: " << taskname
             << " timePoint " << to_iso_string(endTime)
@@ -349,7 +348,7 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
     --foundSavesetsIt;
     while ( foundSavesetsIt >= m_foundSavesets.begin()) {
       TObjArray* fileDateMatchGroup = 0;
-      fileDateMatchGroup = pres::s_fileDateRegexp.MatchS((*foundSavesetsIt).leaf());
+      fileDateMatchGroup = pres::s_fileDateRegexp.MatchS((*foundSavesetsIt).filename().string());
       if (fileDateMatchGroup->GetEntriesFast() > 4 ) {
         // the array contains the matched strings +2
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
@@ -371,7 +370,7 @@ std::vector< boost::filesystem::path> Archive::findSavesets(const std::string & 
             foundRootFiles.push_back(*foundSavesetsIt);
           } else if ( fileTime < startTime) {
             std::string run = (((TObjString *)fileDateMatchGroup->At(2))->GetString()).Data();
-            std::cout << "Ignore file " << (*foundSavesetsIt).leaf() << " run string '" << run 
+            std::cout << "Ignore file " << (*foundSavesetsIt).leaf() << " run string '" << run
                       << "' time " << fileTimeFound << std::endl;
             if ( "" != run ) {
               if (fileDateMatchGroup) {
@@ -409,7 +408,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
   m_runNumbers.clear();
 
   iendRun >> endRun;
-  irunDuration >> startRun; 
+  irunDuration >> startRun;
   startRun=endRun-startRun;
   if (endRun < startRun) {
     std::cout << "Invalid run interval "<<startRun << " - "<<endRun
@@ -477,7 +476,7 @@ std::vector< boost::filesystem::path> Archive::findSavesetsByRun(const std::stri
         if ( is_regular(itr->path()) &&
              pres::s_rootFileExtension == extension(itr->path()) ) {
           TObjArray* fileRunMatchGroup = 0;
-          fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((itr->path()).leaf());
+          fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((itr->path()).filename().string());
           if (fileRunMatchGroup->GetSize() > 2) {
             std::istringstream icurRun((((TObjString *)(fileRunMatchGroup->At(2)))->GetString()).Data());
             int curRun;
@@ -517,7 +516,7 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
       if ( m_presenterInfo->offlineContext() ) {
         run = m_runNumbers[rootFilesIt-rootFiles.begin()];
       } else {
-        TObjArray* fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((*rootFilesIt).leaf());
+        TObjArray* fileRunMatchGroup = pres::s_fileRunRegexp.MatchS((*rootFilesIt).filename().string());
         std::istringstream irun((((TObjString *)fileRunMatchGroup->At(2))->GetString()).Data());
         irun >> run;
       }
@@ -539,7 +538,7 @@ void Archive::setHistoryLabels(TH1* h, std::vector<boost::filesystem::path>& roo
            rootFiles.begin(); rootFilesIt != rootFiles.end(); rootFilesIt++ ) {
       bin++;
       TObjArray* fileDateMatchGroup = 0;
-      fileDateMatchGroup = pres::s_fileDateRegexp.MatchS((*rootFilesIt).leaf());
+      fileDateMatchGroup = pres::s_fileDateRegexp.MatchS((*rootFilesIt).filename().string());
       boost::posix_time::ptime fileTime =
         boost::posix_time::from_iso_string
         ((((TObjString *)fileDateMatchGroup->At(3))->
@@ -595,7 +594,7 @@ void Archive::setFiles ( const std::string& task,
         m_rootFiles.push_back(filePath);
       } else if ( exists( m_savesetPath/filePath ) ) {
         m_rootFiles.push_back( m_savesetPath/filePath );
-      } else if ( boost::algorithm::starts_with( filePath.file_string() , "castor:/") ) {
+      } else if ( boost::algorithm::starts_with( filePath.native() , "castor:/") ) {
         m_rootFiles.push_back( filePath ) ;
       }
       std::cout << "Archive::setFiles: File is " << m_rootFiles.back() << std::endl;
@@ -644,24 +643,25 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
 
   for ( std::vector< boost::filesystem::path >::const_iterator itF = m_rootFiles.begin();
         m_rootFiles.end() != itF; ++itF ) {
-    std::cout << "++ Opening root file " << (*itF).file_string().c_str() << std::endl;
-    TFile* rootFile = TFile::Open( (*itF).file_string().c_str() ) ;
+    std::string f = itF->native();
+    std::cout << "++ Opening root file " << f.c_str() << std::endl;
+    TFile* rootFile = TFile::Open( f.c_str() ) ;
     if ( 0 == rootFile ) {
-      std::cout << "Error reading file " << (*itF).file_string()
+      std::cout << "Error reading file " << f
                 << std::endl
                 << "History not available !"
                 << std::endl ;
       for ( unsigned int kk = 0; histos.size() > kk; ++kk ) histos[kk].createDummyHisto();
       break ;
     }
-    
+
     if ( rootFile -> IsZombie() ) {
-      std::cout << "Error opening Root file: " << (*itF).file_string() << std::endl;
+      std::cout << "Error opening Root file: " << f << std::endl;
       continue;
     }
     m_openFiles.push_back( rootFile );
-    
-    std::cout << " ++ file " << (*itF).file_string() << " is open." << std::endl;
+
+    std::cout << " ++ file " << f << " is open." << std::endl;
 
     //== Loop over histograms
 
@@ -678,7 +678,7 @@ void Archive::fillHistogramsFromFiles ( std::vector<DisplayHistogram>& histos ) 
       if (archiveHisto) {
         list[kk]->Add( archiveHisto );
         mean[kk].push_back ( archiveHisto->GetMean() );
-        error[kk].push_back( archiveHisto->GetMeanError() );        
+        error[kk].push_back( archiveHisto->GetMeanError() );
         if ( first ) {
           goodRootFiles.push_back(*itF);
           first = false;

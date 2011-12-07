@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3).
+   Requires Gaudi >= v23.
+
 ! 2011-11-18 - Olivier Callot
  - Fix warnings from gcc 4.6 compiler
 
@@ -70,7 +74,7 @@
  - Make problem database report working with old server
 
 ! 2011-06-27 - Olivier Callot
- - Protect updateBanner is no banner pad. 
+ - Protect updateBanner is no banner pad.
  - Clear refresh when adding an histo to the page
 
 ! 2011-06-24 - Olivier Callot
@@ -177,7 +181,7 @@
  - History by 1 hour and by 8 hours now working.
 
 ! 2011-04-27 - Olivier Callot
- - reload the page if the doc is non blank before any use of it. 
+ - reload the page if the doc is non blank before any use of it.
  - No page reload after alarm list update if we are loading a page.
 
 ! 2011-04-27 - Olivier Callot
@@ -213,7 +217,7 @@
  - Display the database title in the legend of superimposed histos
 
 ! 2011-04-14 - Olivier Callot
- - Fix the saving of a new page to the database. 
+ - Fix the saving of a new page to the database.
 
 ! 2011-04-14 - Olivier Callot
  - Fix the ZMIN/ZMAX option for 2D plots
@@ -250,7 +254,7 @@
 
 ! 2011-03-31 - Olivier Callot
  - Use TLegend only if the first plot has no title positionned.
- - Browsing of histograms in Editor Online works, but only with the new monitoring 
+ - Browsing of histograms in Editor Online works, but only with the new monitoring
    service
  - Deleting pages is possible by tree, a second confirmation is needed if one will delete
    more than one page.
@@ -345,10 +349,10 @@
    which is very sensitive to the naming convention used for analysed files.
 
 ! 2010-09-13 - Patrick Robbe
- - PresenterMainFrame.cpp: 
-     * change "DataQuality" to "OfflineDataQuality" for folder name for data 
+ - PresenterMainFrame.cpp:
+     * change "DataQuality" to "OfflineDataQuality" for folder name for data
        quality logbook entries.
-     * open saveset-file in history mode at startup when option is given in 
+     * open saveset-file in history mode at startup when option is given in
        option file
      * reload page from hist db each time a page is displayed. This will allow
        to have automatically updated comments for example.
@@ -357,7 +361,7 @@
  - Add the crypto.c code of Elog (with minor changes to allow silent compilation)
    into Elog.cpp to cope with Elog 2.8 to be released soon.
  - Fix the reporting of error in Elog posting, so that failure are indicated
-   as such in the reporting window! 
+   as such in the reporting window!
 
 !============ Presenter v2r1 2010-08-23 =============
 ! 2010-08-19 - G.Graziani
@@ -388,12 +392,12 @@
  - src/TrendingHistogram.h,.cpp: add new class to contain trending
    histograms (interfaced to TrendingTool)
  - src/CreateTrendingHistogramDialog.h,.cpp: new GUI class to create
-   trending histograms in the HistDB 
+   trending histograms in the HistDB
 
 ! 2010-08-03 - Patrick Robbe
  - cmt/requirements: use Trending package, needs also to use CLHEP in order
    to be able to load the Gaudi ToolSvc from the presenter.
- - src/DbRootHist.cpp: set log scale also if histo is empty but the minimum 
+ - src/DbRootHist.cpp: set log scale also if histo is empty but the minimum
    and the maximum of the histogram have been set to values different from 0
  - src/presenter.cpp: change "startup-histograms" flag from -D to -H to prevent
    clash with already existing option
@@ -427,7 +431,7 @@
  - cleanup command line options
 
 ! 2010-06-03 - Patrick Robbe
- - src/DbRootHist.h/.cpp: move rootHistogram and hostingPad to private 
+ - src/DbRootHist.h/.cpp: move rootHistogram and hostingPad to private
    members and use accessors to deal with it.
  - src/Archive.cpp, src/DatabasePagePathDialog.cpp, src/HistogramIdentifier.h,
    src/ParallelWait.cpp, src/PresenterMainFrame.cpp, src/ReferencePicker.cpp:
@@ -445,7 +449,7 @@
  - src/DbRootHist.cpp: also display ellipses from overdrawn pattern
 
 ! 2010-05-19 - Patrick Robbe
- - src/DbHistRoot.cpp: retransform double into float 
+ - src/DbHistRoot.cpp: retransform double into float
  - src/PageDescriptionTestView.cpp: fix problem with http links when they
    are outside the visible part
  - src/PresenterMainFrame.cpp: make the page comments text field resizable
@@ -476,13 +480,13 @@
  - only use end of run savesets for EFF histograms (not reset during run) in history mode
 
 ! 2010-05-05 - Patrick Robbe
- - src/PageDescriptionTextView.cpp: fix for Exceed problem with "FreeColor" 
+ - src/PageDescriptionTextView.cpp: fix for Exceed problem with "FreeColor"
    call from PageDescriptionTextView
 
 ! 2010-04-29 - Patrick Robbe
  - cmt/requirements: add dependancy on GuiHtlm (ROOT)
- - PageDecriptionTextView.h/.cpp: now inherits from THtml to show text in 
-   nicer format. Also add possibility to open "firefox" on links in the 
+ - PageDecriptionTextView.h/.cpp: now inherits from THtml to show text in
+   nicer format. Also add possibility to open "firefox" on links in the
    decription text.
  - PresenterMainFrame.h/.cpp: display first the description text of the page
 
@@ -497,7 +501,7 @@
  - PresenterMainFrame.cpp and requirements: use the PageDescriptionTextView class
 
 ! 2010-04-22 - Patrick Robbe
- - ProblemDB.cpp/.h: add getListOfOpenedProblems function to retrieve from 
+ - ProblemDB.cpp/.h: add getListOfOpenedProblems function to retrieve from
    Problems database the list of current problems
  - KnownProblemList.h/.cpp: new object to vizualize list of problems in the
    Problem database (add in cmt/requirements)
@@ -506,7 +510,7 @@
  - PresenterMainFrame.cpp: add problem list pannel
 
 ! 2010-04-20 - Giacomo Graziani
- - small fix for labels in history trend mode 
+ - small fix for labels in history trend mode
  - call OMAlib destructor before root garbage collector
 
 ! 2010-04-13 - Patrick Robbe
@@ -519,7 +523,7 @@
 ! 2010-03-29 - Olivier Callot
  - Made the stat box transparent. Draw it only once -> smaller if single line
    Use the stat window size options in the database if needed.
- - When using the default stat option '1', it is replaced by '1110', i.e. 
+ - When using the default stat option '1', it is replaced by '1110', i.e.
    remove the name of the histo
 
 ! 2010-03-24 - Giacomo Graziani
@@ -528,7 +532,7 @@
 
 ! 2010-03-23 - Olivier Callot
  - Fix a bug in ShiftDB to get the shift start time.
- - New file ProblemDB to store entries in the Problem Database. 
+ - New file ProblemDB to store entries in the Problem Database.
  - Upgraded the ElogDialog to retrieve the information for the Problem database
  - popup window to confirm th eproper posting in the logbook (and problem database)
  - PROBLEM: The system name for the problem database (and Elog) is extracted from
@@ -572,7 +576,7 @@
    or the list of alarms. The list wraps around, i.e. next of last is first.
 
 2010-01-27 G.Graziani
-+ fixes for Presenter without HistDB 
++ fixes for Presenter without HistDB
 
 !============ Presenter v0r23 2010-01-22 =============
 2010-01-22 G.Graziani
@@ -656,7 +660,7 @@ o hopefully fixed history mode file browser issues
 + history mode partition,
 + red refs, statopts global setting
 ! disabling of virtual analysis histo references
-+ initial EFF Adder DIM address support 
++ initial EFF Adder DIM address support
 + DIM cached in DB, seeking only when broken
 + Giacomo's "trend" aggregation
 
@@ -666,7 +670,7 @@ o hopefully fixed history mode file browser issues
 + support missing partition names from UTGID
 + attempt to remove dead-body feature of ROOT
 ! 2008-09-26
-+ from Giacomo: algorithm name for savesets, 
++ from Giacomo: algorithm name for savesets,
     ref. management moved to OMAlib
 
 !============ Presenter v0r11 2008-09-01 =============
@@ -707,7 +711,7 @@ o Root-style multiple selection on trees
 + references can be saved in editor mode and be selected
   through the GUI (selection is one-by-one)
 + overlay display is steered by a reference button
-  and the HistoDB entry 
+  and the HistoDB entry
 - navigation panel in history mode does not work
 o savesets and references need to be parametrized via
   command-line or config file (defaults in the pit
@@ -731,5 +735,5 @@ o savesets and references need to be parametrized via
 
 !============ Presenter v0r4 2007-10-29 =============
 ! 2007-10-29
- - New test package. 
+ - New test package.
 

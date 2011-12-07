@@ -65,7 +65,7 @@ bool PageDescriptionTextView::retrieveListOfProblems( const std::string&
       >> (rn=+boost::xpressive::_d) >> "_"
       >> +boost::xpressive::_w >> ".root" ;
     boost::xpressive::smatch whrn ;
-    if ( boost::xpressive::regex_search( fp.filename() , whrn , rnbrx ) ) {
+    if ( boost::xpressive::regex_search( fp.filename().string() , whrn , rnbrx ) ) {
       std::stringstream ss( whrn[ rn ] ) ;
       ss >> runNumber ;
     }
