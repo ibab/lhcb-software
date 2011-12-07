@@ -1,30 +1,30 @@
-# --> Including file '/cvmfs/lhcb.cern.ch/lib/lhcb/DBASE/AppConfig/v3r114/options/Gauss/Beam3500GeV-md100-nu1,8.py'
-# <-- End of file '/cvmfs/lhcb.cern.ch/lib/lhcb/DBASE/AppConfig/v3r114/options/Gauss/Beam3500GeV-md100-nu1,8.py'
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/18412431.py'
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/Upsilon.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r118/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r118/options/Gauss/Beam3500GeV-md100-MC11-nu2.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/18412431.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/Upsilon.opts'
 # Generation.PileUpTool = "FixedLuminosityForRareProcess";
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/SwitchOffAllPythiaProcesses.opts'
-# --> Including file '/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v40r5/GaudiConf/options/units.opts'
-# <-- End of file '/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v40r5/GaudiConf/options/units.opts'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/SwitchOffAllPythiaProcesses.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts'
 # Generation.Special.PythiaProduction.Commands +=  { "pysubs msub 11 0" ,    "pysubs msub 12 0" ,    "pysubs msub 13 0" ,    "pysubs msub 28 0" ,    "pysubs msub 53 0" ,    "pysubs msub 68 0" ,    "pysubs msub 91 0" ,    "pysubs msub 92 0" ,    "pysubs msub 93 0" ,    "pysubs msub 94 0" ,    "pysubs msub 95 0" ,    "pysubs msub 421 0" ,    "pysubs msub 422 0" ,    "pysubs msub 423 0" ,    "pysubs msub 424 0" ,    "pysubs msub 425 0" ,    "pysubs msub 426 0" ,    "pysubs msub 427 0" ,    "pysubs msub 428 0" ,    "pysubs msub 429 0" ,    "pysubs msub 430 0" ,    "pysubs msub 431 0" ,    "pysubs msub 432 0" ,    "pysubs msub 433 0" ,    "pysubs msub 434 0" ,    "pysubs msub 435 0" ,    "pysubs msub 436 0" ,    "pysubs msub 437 0" ,    "pysubs msub 438 0" ,    "pysubs msub 439 0" ,    "pysubs msub 461 0" ,    "pysubs msub 462 0" ,    "pysubs msub 463 0" ,    "pysubs msub 464 0" ,    "pysubs msub 465 0" ,    "pysubs msub 466 0" ,    "pysubs msub 467 0" ,    "pysubs msub 468 0" ,    "pysubs msub 469 0" ,    "pysubs msub 470 0" ,    "pysubs msub 471 0" ,    "pysubs msub 472 0" ,    "pysubs msub 473 0" ,    "pysubs msub 474 0" ,    "pysubs msub 475 0" ,    "pysubs msub 476 0" ,    "pysubs msub 477 0" ,    "pysubs msub 478 0" ,    "pysubs msub 479 0" ,    "pysubs msub 480 0" ,    "pysubs msub 481 0" ,    "pysubs msub 482 0" ,    "pysubs msub 483 0" ,    "pysubs msub 484 0" ,    "pysubs msub 485 0"};
 # Generation.MinimumBias.PythiaProduction.Commands +=  { "pysubs msub 11 0" ,    "pysubs msub 12 0" ,    "pysubs msub 13 0" ,    "pysubs msub 28 0" ,    "pysubs msub 53 0" ,    "pysubs msub 68 0" ,    "pysubs msub 91 0" ,    "pysubs msub 92 0" ,    "pysubs msub 93 0" ,    "pysubs msub 94 0" ,    "pysubs msub 95 0" ,    "pysubs msub 421 0" ,    "pysubs msub 422 0" ,    "pysubs msub 423 0" ,    "pysubs msub 424 0" ,    "pysubs msub 425 0" ,    "pysubs msub 426 0" ,    "pysubs msub 427 0" ,    "pysubs msub 428 0" ,    "pysubs msub 429 0" ,    "pysubs msub 430 0" ,    "pysubs msub 431 0" ,    "pysubs msub 432 0" ,    "pysubs msub 433 0" ,    "pysubs msub 434 0" ,    "pysubs msub 435 0" ,    "pysubs msub 436 0" ,    "pysubs msub 437 0" ,    "pysubs msub 438 0" ,    "pysubs msub 439 0" ,    "pysubs msub 461 0" ,    "pysubs msub 462 0" ,    "pysubs msub 463 0" ,    "pysubs msub 464 0" ,    "pysubs msub 465 0" ,    "pysubs msub 466 0" ,    "pysubs msub 467 0" ,    "pysubs msub 468 0" ,    "pysubs msub 469 0" ,    "pysubs msub 470 0" ,    "pysubs msub 471 0" ,    "pysubs msub 472 0" ,    "pysubs msub 473 0" ,    "pysubs msub 474 0" ,    "pysubs msub 475 0" ,    "pysubs msub 476 0" ,    "pysubs msub 477 0" ,    "pysubs msub 478 0" ,    "pysubs msub 479 0" ,    "pysubs msub 480 0" ,    "pysubs msub 481 0" ,    "pysubs msub 482 0" ,    "pysubs msub 483 0" ,    "pysubs msub 484 0" ,    "pysubs msub 485 0"};
 # Generation.Inclusive.PythiaProduction.Commands +=  { "pysubs msub 11 0" ,    "pysubs msub 12 0" ,    "pysubs msub 13 0" ,    "pysubs msub 28 0" ,    "pysubs msub 53 0" ,    "pysubs msub 68 0" ,    "pysubs msub 91 0" ,    "pysubs msub 92 0" ,    "pysubs msub 93 0" ,    "pysubs msub 94 0" ,    "pysubs msub 95 0" ,    "pysubs msub 421 0" ,    "pysubs msub 422 0" ,    "pysubs msub 423 0" ,    "pysubs msub 424 0" ,    "pysubs msub 425 0" ,    "pysubs msub 426 0" ,    "pysubs msub 427 0" ,    "pysubs msub 428 0" ,    "pysubs msub 429 0" ,    "pysubs msub 430 0" ,    "pysubs msub 431 0" ,    "pysubs msub 432 0" ,    "pysubs msub 433 0" ,    "pysubs msub 434 0" ,    "pysubs msub 435 0" ,    "pysubs msub 436 0" ,    "pysubs msub 437 0" ,    "pysubs msub 438 0" ,    "pysubs msub 439 0" ,    "pysubs msub 461 0" ,    "pysubs msub 462 0" ,    "pysubs msub 463 0" ,    "pysubs msub 464 0" ,    "pysubs msub 465 0" ,    "pysubs msub 466 0" ,    "pysubs msub 467 0" ,    "pysubs msub 468 0" ,    "pysubs msub 469 0" ,    "pysubs msub 470 0" ,    "pysubs msub 471 0" ,    "pysubs msub 472 0" ,    "pysubs msub 473 0" ,    "pysubs msub 474 0" ,    "pysubs msub 475 0" ,    "pysubs msub 476 0" ,    "pysubs msub 477 0" ,    "pysubs msub 478 0" ,    "pysubs msub 479 0" ,    "pysubs msub 480 0" ,    "pysubs msub 481 0" ,    "pysubs msub 482 0" ,    "pysubs msub 483 0" ,    "pysubs msub 484 0" ,    "pysubs msub 485 0"};
 # Generation.SignalPlain.PythiaProduction.Commands +=  { "pysubs msub 11 0" ,    "pysubs msub 12 0" ,    "pysubs msub 13 0" ,    "pysubs msub 28 0" ,    "pysubs msub 53 0" ,    "pysubs msub 68 0" ,    "pysubs msub 91 0" ,    "pysubs msub 92 0" ,    "pysubs msub 93 0" ,    "pysubs msub 94 0" ,    "pysubs msub 95 0" ,    "pysubs msub 421 0" ,    "pysubs msub 422 0" ,    "pysubs msub 423 0" ,    "pysubs msub 424 0" ,    "pysubs msub 425 0" ,    "pysubs msub 426 0" ,    "pysubs msub 427 0" ,    "pysubs msub 428 0" ,    "pysubs msub 429 0" ,    "pysubs msub 430 0" ,    "pysubs msub 431 0" ,    "pysubs msub 432 0" ,    "pysubs msub 433 0" ,    "pysubs msub 434 0" ,    "pysubs msub 435 0" ,    "pysubs msub 436 0" ,    "pysubs msub 437 0" ,    "pysubs msub 438 0" ,    "pysubs msub 439 0" ,    "pysubs msub 461 0" ,    "pysubs msub 462 0" ,    "pysubs msub 463 0" ,    "pysubs msub 464 0" ,    "pysubs msub 465 0" ,    "pysubs msub 466 0" ,    "pysubs msub 467 0" ,    "pysubs msub 468 0" ,    "pysubs msub 469 0" ,    "pysubs msub 470 0" ,    "pysubs msub 471 0" ,    "pysubs msub 472 0" ,    "pysubs msub 473 0" ,    "pysubs msub 474 0" ,    "pysubs msub 475 0" ,    "pysubs msub 476 0" ,    "pysubs msub 477 0" ,    "pysubs msub 478 0" ,    "pysubs msub 479 0" ,    "pysubs msub 480 0" ,    "pysubs msub 481 0" ,    "pysubs msub 482 0" ,    "pysubs msub 483 0" ,    "pysubs msub 484 0" ,    "pysubs msub 485 0"};
 # Generation.SignalRepeatedHadronization.PythiaProduction.Commands +=  { "pysubs msub 11 0" ,    "pysubs msub 12 0" ,    "pysubs msub 13 0" ,    "pysubs msub 28 0" ,    "pysubs msub 53 0" ,    "pysubs msub 68 0" ,    "pysubs msub 91 0" ,    "pysubs msub 92 0" ,    "pysubs msub 93 0" ,    "pysubs msub 94 0" ,    "pysubs msub 95 0" ,    "pysubs msub 421 0" ,    "pysubs msub 422 0" ,    "pysubs msub 423 0" ,    "pysubs msub 424 0" ,    "pysubs msub 425 0" ,    "pysubs msub 426 0" ,    "pysubs msub 427 0" ,    "pysubs msub 428 0" ,    "pysubs msub 429 0" ,    "pysubs msub 430 0" ,    "pysubs msub 431 0" ,    "pysubs msub 432 0" ,    "pysubs msub 433 0" ,    "pysubs msub 434 0" ,    "pysubs msub 435 0" ,    "pysubs msub 436 0" ,    "pysubs msub 437 0" ,    "pysubs msub 438 0" ,    "pysubs msub 439 0" ,    "pysubs msub 461 0" ,    "pysubs msub 462 0" ,    "pysubs msub 463 0" ,    "pysubs msub 464 0" ,    "pysubs msub 465 0" ,    "pysubs msub 466 0" ,    "pysubs msub 467 0" ,    "pysubs msub 468 0" ,    "pysubs msub 469 0" ,    "pysubs msub 470 0" ,    "pysubs msub 471 0" ,    "pysubs msub 472 0" ,    "pysubs msub 473 0" ,    "pysubs msub 474 0" ,    "pysubs msub 475 0" ,    "pysubs msub 476 0" ,    "pysubs msub 477 0" ,    "pysubs msub 478 0" ,    "pysubs msub 479 0" ,    "pysubs msub 480 0" ,    "pysubs msub 481 0" ,    "pysubs msub 482 0" ,    "pysubs msub 483 0" ,    "pysubs msub 484 0" ,    "pysubs msub 485 0"};
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/SwitchOffAllPythiaProcesses.opts'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/SwitchOffAllPythiaProcesses.opts'
 # Generation.Special.PythiaProduction.Commands +=  {"pysubs msel 0" ,    "pysubs msub 461 1" ,    "pysubs msub 462 1" ,    "pysubs msub 463 1" ,    "pysubs msub 464 1" ,    "pysubs msub 465 1" ,    "pysubs msub 466 1" ,    "pysubs msub 467 1" ,    "pysubs msub 468 1" ,    "pysubs msub 469 1" ,    "pysubs msub 470 1" ,    "pysubs msub 471 1" ,    "pysubs msub 473 1" ,    "pysubs msub 474 1" ,    "pysubs msub 475 1" ,    "pysubs msub 476 1" ,    "pysubs msub 477 1" ,    "pysubs msub 478 1" ,    "pysubs msub 479 1" ,    "pysubs msub 481 1" ,    "pysubs msub 482 1" ,    "pysubs msub 483 1" ,    "pysubs msub 484 1"};
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/Upsilon.opts'
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Gen/DecFiles/options/18412431.py'
-# --> Including file '/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v40r5/Gen/LbPythia/options/Pythia.py'
-# <-- End of file '/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v40r5/Gen/LbPythia/options/Pythia.py'
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/options/GenStandAlone.py'
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/options/GenStandAlone.py'
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# <-- End of file '/home/robbe/cmtuser/Gauss_v40r5/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/Upsilon.opts'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Gen/DecFiles/options/18412431.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPythia/options/Pythia.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/Gen/LbPythia/options/Pythia.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/GenStandAlone.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/options/GenStandAlone.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/afs/cern.ch/user/r/robbep/cmtuser/Gauss_v41r1/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
 # applying configuration of Gauss
-# WARNING: file '/cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_v40r5/GaudiConf/options/units.opts' already included, ignored.
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/GAUSS/GAUSS_v41r1/GaudiConf/options/units.opts' already included, ignored.
 # WARNING: No simulation phase.
 # WARNING: No event data output produced
 # WARNING: No histograms produced
@@ -33,30 +33,28 @@
 # |-DetectorGeo         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
 # |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
 # |-Histograms          = 'NONE'  (default: 'DEFAULT')
-# |-BeamEmittance       = 6.7000000000000004e-07  (default: 7.0400000000000006e-07)
+# |-BeamEmittance       = 0.0022000000000000001  (default: 0.0022000000000000001)
 # |-Phases              = ['Generator']  (default: ['Generator', 'Simulation'])
 # |-Production          = 'PHYS'
-# |-TotalCrossSection   = 9.1099999999999988e-24  (default: 9.7199999999999989e-24)
-# |-BeamCrossingAngle   = -0.00052000000000000006  (default: 0.00032900000000000003)
-# |-InteractionPosition = [0.0, 0.0, 10.0]  (default: [0.0, 0.0, 0.0])
-# |-BeamLineAngles      = [-7.4999999999999993e-05, 3.5000000000000004e-05]  (default: [0.0, 0.0])
-# |-PhysicsList         = {'Em': 'Opt1', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True}
-# |                     (default: {'Em': 'Opt1', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True})
+# |-TotalCrossSection   = 9.1099999999999988e-24  (default: 9.1099999999999988e-24)
+# |-BeamCrossingAngle   = -0.00052000000000000006  (default: -0.00052000000000000006)
+# |-InteractionPosition = [0.0, 0.0, 0.90000000000000002]  (default: [0.0, 0.0, 0.0])
+# |-BeamLineAngles      = [-7.4999999999999993e-05, 3.5000000000000004e-05]
+# |                     (default: [-7.4999999999999993e-05, 3.5000000000000004e-05])
+# |-PhysicsList         = {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True}
+# |                     (default: {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'LHEP', 'LHCbPhys': True})
 # |-DetectorMoni        = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
 # |                     (default: {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'TT': ['TT'], 'OT': ['OT'], 'IT': ['IT']})
-# |-BeamSize            = [0.037999999999999999, 0.037999999999999999]
-# |                     (default: [0.037999999999999999, 0.037999999999999999])
 # |-DeltaRays           = True
 # |-EnablePack          = True
-# |-BeamBetaStar        = 3000.0  (default: 2000.0)
-# |-Luminosity          = 2.22e+18  (default: 1.16e+18)
-# |-CrossingRate        = 1.1245000000000002e-05
+# |-BeamBetaStar        = 3000.0  (default: 3000.0)
+# |-Luminosity          = 2.47e+18  (default: 2.47e+18)
 # |-DataPackingChecks   = True
-# |-InteractionSize     = [0.050000000000000003, 0.050000000000000003, 41.0]
-# |                     (default: [0.027, 0.027, 38.199999999999996])
+# |-InteractionSize     = [0.029999999999999999, 0.029999999999999999, 57.0]
+# |                     (default: [0.029999999999999999, 0.029999999999999999, 57.0])
 # |-Persistency         = None
 # |-Output              = 'NONE'  (default: 'SIM')
-# |-BeamMomentum        = 3500000.0  (default: 5000000.0)
+# |-BeamMomentum        = 3500000.0  (default: 3500000.0)
 # |-DataType            = ''
 # |-WriteFSR            = True
 # |-DetectorSim         = {'VELO': ['Velo', 'PuVeto'], 'MUON': ['Muon'], 'TT': ['TT'], 'IT': ['IT'], 'MAGNET': True, 'RICH': ['Rich1', 'Rich2'], 'CALO': ['Spd', 'Prs', 'Ecal', 'Hcal'], 'OT': ['OT']}
@@ -71,8 +69,8 @@
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v40r5
-                                          running on localhost.localdomain on Thu Oct 20 16:08:25 2011
+                                                   Welcome to Gauss version v41r1
+                                          running on lxplus431.cern.ch on Wed Dec  7 11:11:44 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -81,9 +79,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.44 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -91,11 +89,28 @@ GaussGen                SUCCESS Requested to process 10 events
 GaussGen                SUCCESS ==================================================================
 RootHistSvc                INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
+GaussGen                   INFO Beam Parameters :
+GaussGen                   INFO Energy = 3.5 TeV
+GaussGen                   INFO Bunch length RMS = 57 mm
+GaussGen                   INFO Normalized emittance = 0.0022 mm
+GaussGen                   INFO Revolution frequency = 11.245 kHz
+GaussGen                   INFO Total cross-section assumed = 91.1 mb
+GaussGen                   INFO Horizontal crossing angle = -0.52 mrad
+GaussGen                   INFO Vertical crossing angle = 0 mrad
+GaussGen                   INFO Horizontal beam line angle = -0.075 mrad
+GaussGen                   INFO Vertical beam line angle = 0.035 mrad
+GaussGen                   INFO beta star = 3 m
+GaussGen                   INFO Bunch spacing = 50 ns
+GaussGen                   INFO Beam spot = (0,0,0.9) mm
+GaussGen                   INFO Luminosity = 2.47e+29 /cm2/s
+GaussGen                   INFO Nu = 2.00104
+GaussGen                   INFO emittance = 5.89771e-07
+GaussGen                   INFO Luminous region = ( 0.0297432, 0.0297432, 40.3051 ), mm
 GaussGen                   INFO Create BeamForInitialization
 Generation.FixedLumin...   INFO Poisson distribution with fixed luminosity.
 COOLConfSvc                INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                       INFO Connected to database "sqlite_file:/cvmfs/lhcb.cern.ch/lib/lhcb/DBASE/Det/SQLDDDB/v6r17/db/DDDB.db/DDDB"
+DDDB                       INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
 DDDB                       INFO Using TAG "head-20101206"
 ParticlePropertySvc        INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.EvtGenDecay.P...SUCCESS ==================================================================
@@ -116,14 +131,12 @@ EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
 ApplicationMgr             INFO Application Manager Started successfully
 GaussGen                   INFO Evt 1,  Run 1082,  Nr. in job = 1 with seeds [1082, 1, 2119103972, 0]
-GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
-GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 Generation.Special.Mi...SUCCESS ==================================================================
 Generation.Special.Mi...SUCCESS Using as production engine  PythiaProduction
 Generation.Special.Mi...SUCCESS ==================================================================
+GaussGen                   INFO Evt 2,  Run 1082,  Nr. in job = 2 with seeds [1082, 2, 1474865432, 0]
+GaussGen                   INFO Evt 3,  Run 1082,  Nr. in job = 3 with seeds [1082, 3, 645125023, 0]
 GaussGen                   INFO Evt 4,  Run 1082,  Nr. in job = 4 with seeds [1082, 4, 1010630449, 0]
-ToolSvc.EvtGenDecay       ERROR EvtGenDecay:: EvtGen particle not decayed StatusCode=FAILURE
-Generation.Special.Up...  ERROR UpsilonDaughtersInLHCb:: Skip event StatusCode=FAILURE
 GaussGen                   INFO Evt 5,  Run 1082,  Nr. in job = 5 with seeds [1082, 5, 1094777801, 0]
 GaussGen                   INFO Evt 6,  Run 1082,  Nr. in job = 6 with seeds [1082, 6, 856514402, 0]
 GaussGen                   INFO Evt 7,  Run 1082,  Nr. in job = 7 with seeds [1082, 7, 1402449382, 0]
@@ -136,50 +149,50 @@ GaussGen                SUCCESS 10 events processed
 GaussGen                SUCCESS ==================================================================
 Generation                 INFO **************************************************
 Generation.FixedLumin...   INFO ***********   Luminosity counters   **************
-Number of all events (including empty events) : 5665
+Number of all events (including empty events) : 5072
 
 Generation                 INFO ***********   Generation counters   **************
-Number of generated events : 5665
-Number of generated interactions : 15810
-Number of generated interactions with >= 1b : 86
+Number of generated events : 5072
+Number of generated interactions : 15325
+Number of generated interactions with >= 1b : 66
 Number of generated interactions with >= 3b : 0
-Number of generated interactions with 1 prompt B : 5579
-Number of generated interactions with >= 1c : 931
-Number of generated interactions with >= 3c : 148
+Number of generated interactions with 1 prompt B : 5008
+Number of generated interactions with >= 1c : 832
+Number of generated interactions with >= 3c : 102
 Number of generated interactions with >= prompt C : 0
-Number of generated interactions with b and c : 23
+Number of generated interactions with b and c : 17
 Number of accepted events : 10
-Number of interactions in accepted events : 29
-Number of accepted interactions with >= 1b : 0
+Number of interactions in accepted events : 37
+Number of accepted interactions with >= 1b : 2
 Number of accepted interactions with >= 3b : 0
 Number of accepted interactions with 1 prompt B : 10
-Number of accepted interactions with >= 1c : 2
+Number of accepted interactions with >= 1c : 3
 Number of accepted interactions with >= 3c : 0
 Number of accepted interactions with >= prompt C : 0
-Number of accepted interactions with b and c : 0
+Number of accepted interactions with b and c : 1
 
 Generation.Special         INFO ************* Special generation counters   ***************
-Number of events for generator level cut, before : 5665, after : 10
-Efficiency of the generator level cut : 0.0017652 +/- 0.00055772
+Number of events for generator level cut, before : 5072, after : 10
+Efficiency of the generator level cut : 0.0019716 +/- 0.00062286
 
 GenMonitorAlg              INFO
 ======================== Generators Statistics ====================
 =                                                                 =
-= Number of particles generated: 9753
+= Number of particles generated: 13768
 = Number of events: 10
-= Mean multiplicity: 975.3
+= Mean multiplicity: 1376.8
 =                                                                 =
-= Number of pseudo stable particles generated: 8229
+= Number of pseudo stable particles generated: 11692
 = Number of events: 10
-= Mean pseudo stable multiplicity: 822.9
+= Mean pseudo stable multiplicity: 1169.2
 =                                                                 =
-= Number of charged stable particles generated: 2456
+= Number of charged stable particles generated: 3510
 = Number of events: 10
-= Mean charged stable multiplicity: 245.6
+= Mean charged stable multiplicity: 351
 =                                                                 =
-= Number of charged stable particles in LHCb eta 601
+= Number of charged stable particles in LHCb eta 830
 = Number of events: 10
-= Mean charged stable multiplicity in LHCb eta: 60.1
+= Mean charged stable multiplicity in LHCb eta: 83
 =                                                                 =
 ===================================================================
 GenMonitorAlg           SUCCESS Booked 21 Histogram(s) : 1D=19 2D=2
@@ -189,18 +202,16 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |      0.396 |   0.044000 |    0.12445 |      0.0000 |     0.39600 |
- | "Total Memory/MB"                               |        10 |   6916.372 |     691.64 |    0.18147 |      691.36 |      691.76 |
+ | "Delta Memory/MB"                               |         9 |       0.04 |  0.0044444 |    0.26050 |    -0.62000 |     0.39600 |
+ | "Total Memory/MB"                               |        10 |   7548.836 |     754.88 |    0.19875 |      754.70 |      755.36 |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   2.44 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 Generation.Special.Up...   INFO *****************************************
 ************** Upsilon Counters *********
-Number of generated signal Upsilon = 84
-Generation.Special.Up...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/1/0/0
-Generation.Special.Up...SUCCESS  #ERRORS     = 1        Message = 'Skip event'
+Number of generated signal Upsilon = 80
  ==== PYTHIA WILL USE LHAPDF ====
  *************************************
  *       LHAPDF Version 5.8.5        *
@@ -221,7 +232,7 @@ Generation.Special.Up...SUCCESS  #ERRORS     = 1        Message = 'Skip event'
  Parametrization: CTEQ6
 
  ==============================================
- PDFset name /cvmfs/lhcb.cern.ch/lib/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/shar
+ PDFset name /afs/cern.ch/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/share/lhapdf
  with          1 members
  ====  initialized. ===========================
  Strong coupling at Mz for PDF is:  0.12978
@@ -247,35 +258,35 @@ Generation.Special.Up...SUCCESS  #ERRORS     = 1        Message = 'Skip event'
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I         3481         76932 I  4.723D-03 I
- I 461 g + g  -> bb~[3S1(1)] + g    I           96           918 I  1.360D-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I          173          3821 I  2.628D-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I           76          1190 I  8.676D-05 I
- I 464 g + g  -> bb~[3PJ(8)] + g    I           13           295 I  1.883D-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I           65          1611 I  8.267D-05 I
- I 466 g + q  -> q + bb~[1S0(8)]    I           19           565 I  1.688D-05 I
- I 467 g + q  -> q + bb~[3PJ(8)]    I            4           156 I  3.154D-06 I
- I 468 q + q~ -> g + bb~[3S1(8)]    I            1             7 I  3.680D-07 I
+ I   0 All included subprocesses    I         4887        111463 I  4.723D-03 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I          156          1412 I  1.385D-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I          268          5635 I  2.529D-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I           83          1667 I  8.735D-05 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I           22           471 I  2.076D-05 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I           81          2489 I  7.882D-05 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I           12           762 I  1.504D-05 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            6           208 I  4.421D-06 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            1            11 I  2.048D-06 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000D+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000D+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I         1075         19413 I  1.453D-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I         1357         25560 I  1.821D-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I          170          8316 I  2.421D-04 I
- I 475 q + g  -> q + bb~[3P1(1)]    I            2          1701 I  2.267D-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I          248         11464 I  3.441D-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I         1530         28066 I  1.436D-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I         1879         36871 I  1.853D-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I          239         12035 I  2.497D-04 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            4          2483 I  2.597D-06 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I          371         16643 I  3.373D-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000D+00 I
- I 478 q + q~ -> g + bb~[3P1(1)]    I            0             2 I  7.324D-08 I
- I 479 q + q~ -> g + bb~[3P2(1)]    I            0             3 I  3.462D-08 I
- I 481 g + g  -> Upsilon(2S) + g    I           76           705 I  9.257D-05 I
- I 482 g + g  -> Upsilon(3S) + g    I           53           569 I  8.048D-05 I
- I 483 g + g  -> Upsilon(4S) + g    I           53           636 I  7.915D-05 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             7 I  2.667D-08 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            0             2 I  1.719D-09 I
+ I 481 g + g  -> Upsilon(2S) + g    I           83           965 I  8.964D-05 I
+ I 482 g + g  -> Upsilon(3S) + g    I           74           802 I  8.240D-05 I
+ I 483 g + g  -> Upsilon(4S) + g    I           78           934 I  7.213D-05 I
  I                                  I                            I            I
  ==============================================================================
 
  ********* Total number of errors, excluding junctions =        0 *************
  ********* Total number of errors, including junctions =        0 *************
- ********* Total number of warnings =                          12 *************
- ********* Fraction of events that fail fragmentation cuts =  0.00229 *********
+ ********* Total number of warnings =                          11 *************
+ ********* Fraction of events that fail fragmentation cuts =  0.00245 *********
 
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -289,35 +300,35 @@ Generation.Special.Up...SUCCESS  #ERRORS     = 1        Message = 'Skip event'
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I         3481         76932 I  4.723D-03 I
- I 461 g + g  -> bb~[3S1(1)] + g    I           96           918 I  1.360D-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I          173          3821 I  2.628D-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I           76          1190 I  8.676D-05 I
- I 464 g + g  -> bb~[3PJ(8)] + g    I           13           295 I  1.883D-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I           65          1611 I  8.267D-05 I
- I 466 g + q  -> q + bb~[1S0(8)]    I           19           565 I  1.688D-05 I
- I 467 g + q  -> q + bb~[3PJ(8)]    I            4           156 I  3.154D-06 I
- I 468 q + q~ -> g + bb~[3S1(8)]    I            1             7 I  3.680D-07 I
+ I   0 All included subprocesses    I         4887        111463 I  4.723D-03 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I          156          1412 I  1.385D-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I          268          5635 I  2.529D-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I           83          1667 I  8.735D-05 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I           22           471 I  2.076D-05 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I           81          2489 I  7.882D-05 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I           12           762 I  1.504D-05 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            6           208 I  4.421D-06 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            1            11 I  2.048D-06 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000D+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000D+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I         1075         19413 I  1.453D-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I         1357         25560 I  1.821D-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I          170          8316 I  2.421D-04 I
- I 475 q + g  -> q + bb~[3P1(1)]    I            2          1701 I  2.267D-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I          248         11464 I  3.441D-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I         1530         28066 I  1.436D-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I         1879         36871 I  1.853D-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I          239         12035 I  2.497D-04 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            4          2483 I  2.597D-06 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I          371         16643 I  3.373D-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000D+00 I
- I 478 q + q~ -> g + bb~[3P1(1)]    I            0             2 I  7.324D-08 I
- I 479 q + q~ -> g + bb~[3P2(1)]    I            0             3 I  3.462D-08 I
- I 481 g + g  -> Upsilon(2S) + g    I           76           705 I  9.257D-05 I
- I 482 g + g  -> Upsilon(3S) + g    I           53           569 I  8.048D-05 I
- I 483 g + g  -> Upsilon(4S) + g    I           53           636 I  7.915D-05 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             7 I  2.667D-08 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            0             2 I  1.719D-09 I
+ I 481 g + g  -> Upsilon(2S) + g    I           83           965 I  8.964D-05 I
+ I 482 g + g  -> Upsilon(3S) + g    I           74           802 I  8.240D-05 I
+ I 483 g + g  -> Upsilon(4S) + g    I           78           934 I  7.213D-05 I
  I                                  I                            I            I
  ==============================================================================
 
  ********* Total number of errors, excluding junctions =        0 *************
  ********* Total number of errors, including junctions =        0 *************
- ********* Total number of warnings =                          12 *************
- ********* Fraction of events that fail fragmentation cuts =  0.00229 *********
+ ********* Total number of warnings =                          11 *************
+ ********* Fraction of events that fail fragmentation cuts =  0.00245 *********
 
 1********* PYSTAT:  Statistics on Number of Events and Cross-sections *********
 
@@ -326,20 +337,18 @@ Generation.Special.Up...SUCCESS  #ERRORS     = 1        Message = 'Skip event'
  I            Subprocess            I      Number of points      I    Sigma   I
  I                                  I                            I            I
  I----------------------------------I----------------------------I    (mb)    I
- IToolSvc.EvtGenDecay     SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/1/0/0
-ToolSvc.EvtGenDecay     SUCCESS  #ERRORS     = 1        Message = 'EvtGen particle not decayed'
-TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   2.33 times the speed of a 2.8 GHz Xeon.
+ ITimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER        INFO This machine has a speed about   1.82 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    |  5990.089 |  6125.903 |  122.309   19101.5 |      10 |    61.259 |
-TimingAuditor.TIMER        INFO  GaussSequencer               |  5990.089 |  6125.761 |  122.266   19101.4 |      10 |    61.258 |
-TimingAuditor.TIMER        INFO   Generator                   |  5990.089 |  6125.748 |  122.264   19101.4 |      10 |    61.257 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  5990.089 |  6125.736 |  122.262   19101.4 |      10 |    61.257 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.000 |     0.718 |    0.261       2.4 |      10 |     0.007 |
-TimingAuditor.TIMER        INFO     Generation                |  5989.090 |  6124.390 |  121.395   19100.3 |      10 |    61.244 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.000 |     0.432 |    0.148       0.8 |      10 |     0.004 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.000 |     0.405 |    0.146       0.8 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    |  6469.617 |  6469.854 |  132.447   17068.3 |      10 |    64.699 |
+TimingAuditor.TIMER        INFO  GaussSequencer               |  6469.617 |  6469.773 |  132.414   17068.3 |      10 |    64.698 |
+TimingAuditor.TIMER        INFO   Generator                   |  6469.617 |  6469.771 |  132.412   17068.3 |      10 |    64.698 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  6469.617 |  6469.769 |  132.410   17068.3 |      10 |    64.698 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.200 |     0.365 |    0.155       1.2 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO     Generation                |  6468.917 |  6468.882 |  131.683   17067.6 |      10 |    64.689 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.500 |     0.510 |    0.272       0.9 |      10 |     0.005 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.500 |     0.507 |    0.269       0.9 |      10 |     0.005 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr             INFO Application Manager Finalized successfully
 ApplicationMgr             INFO Application Manager Terminated successfully
@@ -348,33 +357,33 @@ ApplicationMgr             INFO Application Manager Terminated successfully
  I                                  I                            I            I
  ==============================================================================
  I                                  I                            I            I
- I   0 All included subprocesses    I         3481         76932 I  4.723D-03 I
- I 461 g + g  -> bb~[3S1(1)] + g    I           96           918 I  1.360D-04 I
- I 462 g + g  -> bb~[3S1(8)] + g    I          173          3821 I  2.628D-04 I
- I 463 g + g  -> bb~[1S0(8)] + g    I           76          1190 I  8.676D-05 I
- I 464 g + g  -> bb~[3PJ(8)] + g    I           13           295 I  1.883D-05 I
- I 465 g + q  -> q + bb~[3S1(8)]    I           65          1611 I  8.267D-05 I
- I 466 g + q  -> q + bb~[1S0(8)]    I           19           565 I  1.688D-05 I
- I 467 g + q  -> q + bb~[3PJ(8)]    I            4           156 I  3.154D-06 I
- I 468 q + q~ -> g + bb~[3S1(8)]    I            1             7 I  3.680D-07 I
+ I   0 All included subprocesses    I         4887        111463 I  4.723D-03 I
+ I 461 g + g  -> bb~[3S1(1)] + g    I          156          1412 I  1.385D-04 I
+ I 462 g + g  -> bb~[3S1(8)] + g    I          268          5635 I  2.529D-04 I
+ I 463 g + g  -> bb~[1S0(8)] + g    I           83          1667 I  8.735D-05 I
+ I 464 g + g  -> bb~[3PJ(8)] + g    I           22           471 I  2.076D-05 I
+ I 465 g + q  -> q + bb~[3S1(8)]    I           81          2489 I  7.882D-05 I
+ I 466 g + q  -> q + bb~[1S0(8)]    I           12           762 I  1.504D-05 I
+ I 467 g + q  -> q + bb~[3PJ(8)]    I            6           208 I  4.421D-06 I
+ I 468 q + q~ -> g + bb~[3S1(8)]    I            1            11 I  2.048D-06 I
  I 469 q + q~ -> g + bb~[1S0(8)]    I            0             0 I  0.000D+00 I
  I 470 q + q~ -> g + bb~[3PJ(8)]    I            0             0 I  0.000D+00 I
- I 471 g + g  -> bb~[3P0(1)] + g    I         1075         19413 I  1.453D-03 I
- I 473 g + g  -> bb~[3P2(1)] + g    I         1357         25560 I  1.821D-03 I
- I 474 q + g  -> q + bb~[3P0(1)]    I          170          8316 I  2.421D-04 I
- I 475 q + g  -> q + bb~[3P1(1)]    I            2          1701 I  2.267D-06 I
- I 476 q + g  -> q + bb~[3P2(1)]    I          248         11464 I  3.441D-04 I
+ I 471 g + g  -> bb~[3P0(1)] + g    I         1530         28066 I  1.436D-03 I
+ I 473 g + g  -> bb~[3P2(1)] + g    I         1879         36871 I  1.853D-03 I
+ I 474 q + g  -> q + bb~[3P0(1)]    I          239         12035 I  2.497D-04 I
+ I 475 q + g  -> q + bb~[3P1(1)]    I            4          2483 I  2.597D-06 I
+ I 476 q + g  -> q + bb~[3P2(1)]    I          371         16643 I  3.373D-04 I
  I 477 q + q~ -> g + bb~[3P0(1)]    I            0             0 I  0.000D+00 I
- I 478 q + q~ -> g + bb~[3P1(1)]    I            0             2 I  7.324D-08 I
- I 479 q + q~ -> g + bb~[3P2(1)]    I            0             3 I  3.462D-08 I
- I 481 g + g  -> Upsilon(2S) + g    I           76           705 I  9.257D-05 I
- I 482 g + g  -> Upsilon(3S) + g    I           53           569 I  8.048D-05 I
- I 483 g + g  -> Upsilon(4S) + g    I           53           636 I  7.915D-05 I
+ I 478 q + q~ -> g + bb~[3P1(1)]    I            0             7 I  2.667D-08 I
+ I 479 q + q~ -> g + bb~[3P2(1)]    I            0             2 I  1.719D-09 I
+ I 481 g + g  -> Upsilon(2S) + g    I           83           965 I  8.964D-05 I
+ I 482 g + g  -> Upsilon(3S) + g    I           74           802 I  8.240D-05 I
+ I 483 g + g  -> Upsilon(4S) + g    I           78           934 I  7.213D-05 I
  I                                  I                            I            I
  ==============================================================================
 
  ********* Total number of errors, excluding junctions =        0 *************
  ********* Total number of errors, including junctions =        0 *************
- ********* Total number of warnings =                          12 *************
- ********* Fraction of events that fail fragmentation cuts =  0.00229 *********
+ ********* Total number of warnings =                          11 *************
+ ********* Fraction of events that fail fragmentation cuts =  0.00245 *********
 
