@@ -24,4 +24,10 @@ preprocessor = LHCbPreprocessor + \
   RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
                  orig = r'[01 ]{33}', repl = r'') +\
   RegexpReplacer(when = "Message = 'Fully suppressed     {",
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "RichRawDataDBCheckWARNING Rich::DAQ::DataDBCheck::",
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "RichRawDataDBCheckSUCCESS  #WARNINGS   =",
+                 orig = r'[01 ]{33}', repl = r'') +\
+  RegexpReplacer(when = "EventID Mismatch : HPD L0ID=",
                  orig = r'[01 ]{33}', repl = r'')
