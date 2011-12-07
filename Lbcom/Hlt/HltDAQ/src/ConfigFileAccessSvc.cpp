@@ -69,31 +69,31 @@ StatusCode ConfigFileAccessSvc::finalize() {
 bool ConfigFileAccessSvc::create_directories( fs::path dir ) const {
    try {
         return fs::create_directories(dir);
-   } 
-   catch ( const fs::basic_filesystem_error<fs::path>& x )  {
+   }
+   catch ( const fs::filesystem_error& x )  {
         error() << x.what() << endmsg;
    }
    return false;
 }
 
-fs::path 
+fs::path
 ConfigFileAccessSvc::propertyConfigPath( const PropertyConfig::digest_type& digest ) const {
      std::string sref=digest.str();
      return fs::path(m_dir) / "PropertyConfigs" / sref.substr(0,2) / sref;
 }
 
-fs::path 
+fs::path
 ConfigFileAccessSvc::configTreeNodePath( const ConfigTreeNode::digest_type& digest)  const{
      std::string sref=digest.str();
      return fs::path(m_dir) / "ConfigTreeNodes" / sref.substr(0,2) / sref;
 }
 
-fs::path 
+fs::path
 ConfigFileAccessSvc::configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const {
      return fs::path(m_dir) / "Aliases" / alias.str();
 }
 
-boost::optional<PropertyConfig> 
+boost::optional<PropertyConfig>
 ConfigFileAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) {
    fs::path fnam = propertyConfigPath(ref);
    if (!fs::exists(fnam)) {
@@ -106,7 +106,7 @@ ConfigFileAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) 
    return c;
 }
 
-boost::optional<ConfigTreeNode> 
+boost::optional<ConfigTreeNode>
 ConfigFileAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) {
    fs::path fnam = configTreeNodePath(ref);
    if (!fs::exists(fnam)) {
@@ -119,7 +119,7 @@ ConfigFileAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) 
    return c;
 }
 
-boost::optional<ConfigTreeNode>  
+boost::optional<ConfigTreeNode>
 ConfigFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
    fs::path fnam = configTreeNodeAliasPath(alias);
    if (!fs::exists(fnam)) {
@@ -154,7 +154,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
             debug() << " created " << fnam.string() << " for " << config.name() << endmsg;
             return digest;
    } else {
-            PropertyConfig x; 
+            PropertyConfig x;
             fs::ifstream s( fnam );
             s >> x;
             if ( x==config ) return digest;
@@ -180,7 +180,7 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
             info() << " created " << fnam.string() << endmsg;
             return digest;
    } else {
-            ConfigTreeNode x; 
+            ConfigTreeNode x;
             fs::ifstream s( fnam );
             s >> x;
             if ( x==config ) return digest;
@@ -190,15 +190,15 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
 }
 
 // TODO: replace fs::path with a concrete config...
-bool 
+bool
 ConfigFileAccessSvc::isCompatible(const ConfigTreeNodeAlias& /*alias*/, const fs::path& /*dirName*/ ) const {
     // TODO: only allow write of TOPLEVEL alias if _consistent_ with other configs in same directory...
-    // (nasty: we wrote everything, only to find out in the end that 
-    // should be common to all implementations -- mix-in ?? 
+    // (nasty: we wrote everything, only to find out in the end that
+    // should be common to all implementations -- mix-in ??
     return true;
 }
 
-ConfigTreeNodeAlias::alias_type 
+ConfigTreeNodeAlias::alias_type
 ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
    // verify that we're pointing at something existing
    if ( !readConfigTreeNode(alias.ref()) ) {
@@ -237,22 +237,23 @@ ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) 
 }
 
 std::vector<ConfigTreeNodeAlias>
-ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias) 
+ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias)
 {
     std::vector<ConfigTreeNodeAlias> x;
-  
+
     // use std::list as iterators are not invalidated when extending list...
     fs::path basedir = fs::path(m_dir) / "Aliases" ;
     std::list<fs::path> dirs; dirs.push_back( basedir / alias.major() );
-     
-    for (std::list<fs::path>::const_iterator dir  = dirs.begin(); dir!=dirs.end(); ++dir ) { 
+
+    for (std::list<fs::path>::const_iterator dir  = dirs.begin(); dir!=dirs.end(); ++dir ) {
 
         if ( !fs::exists( *dir) ) continue; //@todo: add warning about this...
 
         fs::directory_iterator end; // default construction yields past-the-end
-        for ( fs::directory_iterator i( *dir ); i!= end; ++i) {
+        for ( fs::directory_iterator i( *dir ); i != end; ++i) {
             if ( fs::is_directory(i->status()) ) {
-              if ( i->leaf()  == "CVS" || i->leaf() == ".svn" ) continue;
+              std::string fn = i->path().filename().string();
+              if ( fn  == "CVS" || fn == ".svn" ) continue;
               // push back on stack of directories...
               dirs.push_back(*i);
               debug() << " configTreeNodeAliases: adding dir " << *i << endmsg;
@@ -261,8 +262,8 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
               std::string ref;
               fs::ifstream s( *i );
               s >> ref;
-              std::string _alias = i->string().substr( basedir.string().size()+1 );
-              std::stringstream str; 
+              std::string _alias = i->path().string().substr( basedir.string().size()+1 );
+              std::stringstream str;
               str << "Ref: " << ref << '\n' << "Alias: " << _alias << std::endl;
               ConfigTreeNodeAlias a;
               str >> a;

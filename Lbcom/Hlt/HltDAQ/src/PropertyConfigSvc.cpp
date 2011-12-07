@@ -410,7 +410,7 @@ PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef)
                 resolvePropertyConfig(*i);
          }
          return validateConfig( nodeRef );
-     } catch ( const boost::filesystem::basic_filesystem_error<boost::filesystem::path>& x )  {
+     } catch ( const boost::filesystem::filesystem_error& x )  {
          error() << x.what() << endmsg;
          throw x;
      }

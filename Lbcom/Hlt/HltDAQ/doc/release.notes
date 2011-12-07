@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3).
+   Requires Gaudi >= v23.
+
 ! 2011-11-23 - Marco Cattaneo
  - Fix a gcc46 warning
 
@@ -13,7 +17,7 @@
 
 !========================= HltDAQ v2r13 2011-11-08 =========================
 ! 2011-11-07 - Gerhard Raven
- - add some scaffolding needed for writing directly to zip files. Actual 
+ - add some scaffolding needed for writing directly to zip files. Actual
    writing is not yet implemented
 
 !========================= HltDAQ v2r11p1 2011-08-29 =========================
