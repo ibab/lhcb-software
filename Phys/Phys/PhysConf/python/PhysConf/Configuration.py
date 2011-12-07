@@ -128,6 +128,10 @@ class PhysConf(LHCbConfigurableUser) :
             rerunPIDSeq.Members += [ ChargedProtoParticleAddMuonInfo("CProtoPAddNewMuon"),
                                      ChargedProtoCombineDLLsAlg("CProtoPCombDLLNewMuon") ]
 
+        # Compatibility with pre-2011 data, where Rec/Summary and Trigger/RawEvent are missing
+        import PhysConf.CheckMissingTESData as DataCheck
+        DataCheck.checkForMissingData()
+
 #
 # Data on demand
 #

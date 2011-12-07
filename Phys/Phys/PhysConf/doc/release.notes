@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Chris Jones
+ - Update last commit to run the algs on demand, when neded, instead of every 
+   event. Also enable by default in PhysConf, so users don't have to ...
+
 ! 2011-12-06 - Chris Jones
  - Add a python file that contains the options needed to create the 
    Rec/Summary and Trigger/RawEvent TES data objects when missing.

@@ -1,17 +1,21 @@
 
-def checkForMissingData(mainSeq):
+def checkForMissingData():
 
     from Configurables import GaudiSequencer, TESCheck
 
+    from Configurables import DataOnDemandSvc
+    dod = DataOnDemandSvc()
+    dod.Dump = True
+        
     # Make sure Trigger RawEvent is there
-    rawEvSeq = GaudiSequencer("RawEventCheckSeq")
-    rawEvSeq.ReturnOK = True
-    rawEvSeq.ModeOR = True
-    mainSeq.Members += [ rawEvSeq ]
+    #rawEvSeq = GaudiSequencer("RawEventCheckSeq")
+    #rawEvSeq.ReturnOK = True
+    #rawEvSeq.ModeOR = True
+    #mainSeq.Members += [ rawEvSeq ]
     trigEvTES = "Trigger/RawEvent"
-    rawEvSeq.Members += [ TESCheck( "CheckTriggerRawEvent",
-                                    Inputs = [trigEvTES],
-                                    Stop = False ) ]
+    #rawEvSeq.Members += [ TESCheck( "CheckTriggerRawEvent",
+    #                                Inputs = [trigEvTES],
+    #                                Stop = False ) ]
     from Configurables import RawEventSelectiveCopy 
     trigRawBankCopy = RawEventSelectiveCopy('CopyTriggerRawEvent') 
     trigRawBankCopy.RawBanksToCopy =[ 'ODIN', 
@@ -25,18 +29,21 @@ def checkForMissingData(mainSeq):
                                       'L0PU' 
                                       ] 
     trigRawBankCopy.OutputRawEventLocation = trigEvTES
-    rawEvSeq.Members += [ trigRawBankCopy ]
+    #rawEvSeq.Members += [ trigRawBankCopy ]
+
+    dod.AlgMap [ trigEvTES ] = trigRawBankCopy
 
     # Make sure RecSummary is there
-    recSumSeq = GaudiSequencer("RecSummaryCheckSeq")
-    recSumSeq.ReturnOK = True
-    recSumSeq.ModeOR = True
-    mainSeq.Members += [ recSumSeq ]
+    #recSumSeq = GaudiSequencer("RecSummaryCheckSeq")
+    #recSumSeq.ReturnOK = True
+    #recSumSeq.ModeOR = True
+    #mainSeq.Members += [ recSumSeq ]
     recSumTES = "Rec/Summary"
-    recSumSeq.Members += [ TESCheck( "CheckRecSummary",
-                                     Inputs = [recSumTES],
-                                     Stop = False ) ]
+    #recSumSeq.Members += [ TESCheck( "CheckRecSummary",
+    #                                 Inputs = [recSumTES],
+    #                                 Stop = False ) ]
     from Configurables import RecSummaryAlg
     summary = RecSummaryAlg("CreateRecSummary")
-    recSumSeq.Members += [summary]
-    
+    #recSumSeq.Members += [summary]
+
+    dod.AlgMap [ recSumTES ] = summary
