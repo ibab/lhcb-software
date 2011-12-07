@@ -7,7 +7,6 @@
 ##############################################################################
 
 from Gaudi.Configuration import *
-importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 
 ##############################################################################
 # latest database tags 
