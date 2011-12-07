@@ -29,7 +29,7 @@ CaloTrackAlg::CaloTrackAlg
 {
   //
   StatusCode sc = m_use.declareProperties ( this ) ;
-  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endreq;
+  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endmsg;
   //
   _setProperty ( "CheckTracks" , "true" ) ;
   std::vector<int> stat;
@@ -50,7 +50,7 @@ StatusCode CaloTrackAlg::initialize()
   if ( sc.isFailure() ) { return sc ; }
   //
   if ( propsPrint() || msgLevel ( MSG::DEBUG ) || m_use.check() ) 
-  { info () << m_use << endreq ; } ;
+  { info () << m_use << endmsg ; } ;
   //
   return StatusCode::SUCCESS ;  
 }
@@ -63,10 +63,10 @@ StatusCode CaloTrackAlg::finalize  () { return GaudiAlgorithm::finalize() ; }
 void CaloTrackAlg::_setProperty(const std::string& p ,const std::string& v){
   StatusCode sc = setProperty(p,v);
   if(sc.isSuccess()){
-    debug() << " setting Property "<<p<< " to " << v <<endreq ;
+    if( msgLevel(MSG::DEBUG) ) debug() << " setting Property "<<p<< " to " << v <<endmsg ;
   }
   else{
-    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endreq ;
+    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endmsg ;
   }
 }
 

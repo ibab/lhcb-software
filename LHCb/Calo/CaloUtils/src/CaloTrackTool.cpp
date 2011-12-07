@@ -53,7 +53,7 @@ Calo::CaloTrackTool::CaloTrackTool
   declareProperty ( "Calorimeter"          , m_detectorName         ) ; 
   // use track types 
   StatusCode sc = m_use.declareProperties ( this ) ;
-  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endreq;
+  if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endmsg;
   // 
   _setProperty     ( "CheckTracks"          , "false"               ) ;
 }
@@ -66,7 +66,7 @@ StatusCode Calo::CaloTrackTool::initialize ()
   if ( sc.isFailure() ) { return sc ; }                             // RETURN 
   //
   if ( propsPrint() || msgLevel ( MSG::DEBUG ) || m_use.check() ) 
-  { info () << m_use << endreq ; } ;
+  { info () << m_use << endmsg ; } ;
   //
   if ( !m_detectorName.empty() ) 
   { m_calo = getDet<DeCalorimeter> ( detectorName()  ) ; }
@@ -79,10 +79,10 @@ StatusCode Calo::CaloTrackTool::initialize ()
 void Calo::CaloTrackTool::_setProperty(const std::string& p ,const std::string& v){
   StatusCode sc = setProperty(p,v);
   if(sc.isSuccess()){
-    debug() << " setting Property "<<p<< " to " << v <<endreq ;
+    if( msgLevel(MSG::DEBUG) ) debug() << " setting Property "<<p<< " to " << v <<endmsg ;
   }
   else{
-    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endreq ;
+    warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endmsg ;
   }
 }
 

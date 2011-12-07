@@ -241,15 +241,15 @@ MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const
 {
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
-      << endreq 
+      << endmsg 
       << "   Resolution       is " << ( sqrt( a2GeV() / Gaudi::Units::GeV ) ) 
-      << endreq 
+      << endmsg 
       << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
-      << endreq 
+      << endmsg 
       << "   Coherent Noise   is " << ( sqrt( s2coherent   ()       ) ) 
-      << endreq 
+      << endmsg 
       << "   InCoherent Noise is " << ( sqrt( s2incoherent ()       ) )
-      << endreq ;
+      << endmsg ;
   ///
   return log ;
 }

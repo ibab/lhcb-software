@@ -57,7 +57,7 @@ StatusCode CaloHistoTrackAlg::initialize()
   StatusCode sc = GaudiHistoAlg::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
   
-  always() << m_use << endreq ;
+  always() << m_use << endmsg ;
   
   return StatusCode::SUCCESS ;  
 }

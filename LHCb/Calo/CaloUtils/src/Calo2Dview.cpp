@@ -1,4 +1,3 @@
-// $Id: Calo2Dview.cpp,v 1.20 2009-11-30 18:13:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -35,6 +34,9 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_xsize(),
     m_ysize(),
     m_refCell(),
+    m_fCard(0),
+    m_lCard(0),
+    m_nChan(0),
     m_threshold(-256.),
     m_offset(0.0),
     m_dim(true),
@@ -71,7 +73,7 @@ StatusCode Calo2Dview::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   //protection against splitting when non-goemetrical view or 1D is requested.
   if( !m_geo)m_split =false;
@@ -137,7 +139,7 @@ StatusCode Calo2Dview::initialize() {
 //=============================================================================
 StatusCode Calo2Dview::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
@@ -168,7 +170,7 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 void Calo2Dview::bookCalo2D(const HistoID& unit,const std::string title,  std::string name , int area){
   int calo =  CaloCellCode::CaloNumFromName(name);
   if(calo < 0){
-    error() << "Calo name : " << name << "is unknown " <<endreq;
+    error() << "Calo name : " << name << "is unknown " <<endmsg;
     return;
   }
   bookCalo2D(unit, title, calo, area);
@@ -400,9 +402,10 @@ void  Calo2Dview::fillCalo2D(const HistoID& unit, const LHCb::CaloCellID& id , d
   // check the cellID is consistent with the calo
   
   if(caloViewMap[ unit ] !=  calo){
-    debug() << "Cannot put the  CaloCellID " << id << " in the "
-            << CaloCellCode::CaloNameFromNum( caloViewMap[unit] ) 
-            << " view '" << unit << "'" << endreq;
+    if( msgLevel(MSG::DEBUG) ) 
+      debug() << "Cannot put the  CaloCellID " << id << " in the "
+              << CaloCellCode::CaloNameFromNum( caloViewMap[unit] ) 
+              << " view '" << unit << "'" << endmsg;
     return; 
   } 
   // -------------- 1D view
@@ -508,9 +511,10 @@ void  Calo2Dview::fillCaloPin2D(const HistoID& unit, const LHCb::CaloCellID& id 
     }  
     // check the cellID is consistent with the calo
     if(caloViewMap[(HistoID) lun ] !=  id.calo() ){
-      debug() << "Cannot put the  CaloCellID " << id << " in the "
-              << CaloCellCode::CaloNameFromNum( caloViewMap[(HistoID) lun ] ) 
-              << " view " << unit << endreq;
+      if( msgLevel(MSG::DEBUG) ) 
+        debug() << "Cannot put the  CaloCellID " << id << " in the "
+                << CaloCellCode::CaloNameFromNum( caloViewMap[(HistoID) lun ] ) 
+                << " view " << unit << endmsg;
       return;
     }
     unsigned int ibox = m_split ? 1 : m_reg/(area+1); 
