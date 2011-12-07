@@ -1,5 +1,3 @@
-// $Id: $
-// ============================================================================
 #include "BBDecTreeTool.h"
 #include "GaudiKernel/System.h"
 #include "boost/filesystem/path.hpp"
@@ -12,7 +10,7 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
   boost::filesystem::path::iterator i = path.begin();
   boost::filesystem::path out;
   while (i != path.end()) {
-    if ( (*i)[0]=='$' ) {
+    if ( *(i->c_str())=='$' ) {
       std::string x = System::getEnv( i->c_str()+1 );
       out /= x.empty() ? *i : x ;
     } else {
@@ -23,9 +21,9 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
   return out.string();
 }
 // ============================================================================
-BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name, 
-			     const IInterface* parent) 
-  : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1), 
+BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
+			     const IInterface* parent)
+  : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1),
     m_vars(0){
   // declare configurable properties
   declareProperty("Threshold", m_threshold, "response threshold (cut)");
@@ -43,14 +41,14 @@ StatusCode BBDecTreeTool::initialize() {
 
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
-  if(sc.isFailure()) return sc;   
+  if(sc.isFailure()) return sc;
 
   // get tools and algs
-  IDistanceCalculator* dist 
+  IDistanceCalculator* dist
      = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
   if (0 == dva) {
-    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);  
+    return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
   }
   m_vars = new BBDTVarHandler(dva, dist);
 
@@ -62,9 +60,9 @@ StatusCode BBDecTreeTool::initialize() {
       cut = (cut || (LoKi::Cuts::ABSID == m_pids[i]));
     m_vars->setPIDs(cut);
   }
- 
+
   // read in parameters
-  if(!m_paramFile.empty() && m_paramFile[0] != '/' && m_paramFile[0]!='$')  
+  if(!m_paramFile.empty() && m_paramFile[0] != '/' && m_paramFile[0]!='$')
     m_paramFile = "$PARAMFILESROOT/data/" + m_paramFile;
   std::string fnam = SubstituteEnvVarInPath(m_paramFile);
   std::ifstream inFile(fnam.c_str());
@@ -72,23 +70,23 @@ StatusCode BBDecTreeTool::initialize() {
   unsigned int nvar,index, value;
   double dvalue;
   std::vector<std::string> var_names;
-  // number of variables 
+  // number of variables
   inFile >> nvar;
   var_names.resize(nvar);
   m_splits.resize(nvar);
-  
-  // variable names 
+
+  // variable names
   for(unsigned int v = 0; v < nvar; v++){
     if(!(inFile >> var_names[v]))
       return this->readError("error reading in variable names");
   }
-  if(!m_vars->initialize(var_names)) 
-    return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE); 
+  if(!m_vars->initialize(var_names))
+    return Error("Couldn't init BBDTVarHandler", StatusCode::FAILURE);
 
   // number of splits for each variable
   unsigned int numSplits = 1;
   for(unsigned int v = 0; v < nvar; v++) {
-    if(!(inFile >> value)) 
+    if(!(inFile >> value))
       return this->readError("error reading no. of splits");
     m_splits[v].resize(value);
     numSplits *= value;
@@ -102,9 +100,9 @@ StatusCode BBDecTreeTool::initialize() {
     }
   }
   // number of trees
-  if(!(inFile >> m_ntrees)) 
+  if(!(inFile >> m_ntrees))
     return this->readError("error reading no. of trees");
-  // actual values  
+  // actual values
   m_values.resize(numSplits);
   while(inFile >> index >> value){
     if(index > numSplits) return this->readError("error reading values");
@@ -113,8 +111,8 @@ StatusCode BBDecTreeTool::initialize() {
   inFile.close();
 
   // print info
-  info() << "Initialized w/ Threshold = "  << m_threshold << ", ParamFile = " 
-	 << m_paramFile << " -> " << fnam  << " (" << m_ntrees << " trees," 
+  info() << "Initialized w/ Threshold = "  << m_threshold << ", ParamFile = "
+	 << m_paramFile << " -> " << fnam  << " (" << m_ntrees << " trees,"
 	 << nvar << " vars," << numSplits << " splits)." << endmsg;
 
   return StatusCode::SUCCESS ;
@@ -128,7 +126,7 @@ StatusCode BBDecTreeTool::finalize() {
    return GaudiTool::finalize();
 }
 // ============================================================================
-int BBDecTreeTool::getVarIndex(int varIndex, double value) const {  
+int BBDecTreeTool::getVarIndex(int varIndex, double value) const {
   if(value < m_splits[varIndex][0]) return 0;
   unsigned int size = m_splits[varIndex].size();
   for(unsigned int s = 1; s < size; s++){
@@ -165,7 +163,7 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
   double response = m_values[index]/(double)m_ntrees;
   if(m_key >= 0){
     if(p->hasInfo(m_key)){
-      /* don't write msg b/c it's OK for STD, mu, e lines to write to same 
+      /* don't write msg b/c it's OK for STD, mu, e lines to write to same
 	 place since they report the same response */
     }
     else const_cast<LHCb::Particle*>(p)->addInfo(m_key, response);
@@ -173,6 +171,6 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
   return response > m_threshold;
 }
 // ============================================================================
-/// declare & implement the factory 
+/// declare & implement the factory
 DECLARE_TOOL_FACTORY(BBDecTreeTool);
 // ============================================================================

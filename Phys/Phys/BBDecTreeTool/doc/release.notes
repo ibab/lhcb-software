@@ -1,9 +1,12 @@
-! $Id:$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/BBDecTreeTool
 ! Responsible : Michael Williams
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
+
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3).
+   Requires Gaudi >= v23.
 
 !======================== BBDecTreeTool v1r3p1 2011-11-29 ========================
 
