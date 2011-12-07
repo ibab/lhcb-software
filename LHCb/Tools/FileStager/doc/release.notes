@@ -4,6 +4,10 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3).
+   Requires Gaudi >= v23.
+
 ! 2011-11-23 - Marco Cattaneo
  - Fix trivial gcc warnings and icc remarks
 
@@ -103,7 +107,7 @@
 
 ! 2010-07-14 - Roel Aaij
  - Try to copy files several times.
-    
+
  - To be done: refactor retry staging after failure because
    of overlaps with more attempts to copy
 

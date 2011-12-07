@@ -169,7 +169,7 @@ StatusCode FileStagerSvc::finalize()
             waited += 1;
          } else if ( r == -1 ) {
             if ( errno == EINTR ) {
-               warning() << "Interrupted while waiting for the garbage collector " 
+               warning() << "Interrupted while waiting for the garbage collector "
                          << "to exit." << endmsg;
                break;
             }
@@ -178,10 +178,10 @@ StatusCode FileStagerSvc::finalize()
          }
       }
       if ( err < 0 ) {
-         warning() << "The garbage collector exited with an error: " 
+         warning() << "The garbage collector exited with an error: "
                    << strerror( err ) << endmsg;
       } else if ( waited == 60 ) {
-         warning() << "The garbage collector has taken more than a minute " 
+         warning() << "The garbage collector has taken more than a minute "
                    << "to exit, trying to kill harder." << endmsg;
          kill( m_garbagePID, SIGKILL );
       }
@@ -340,7 +340,7 @@ void FileStagerSvc::stage()
 
             // Check if file exists
             bool err = false;
-            
+
             if ( !stageFile->exists() && !fs::exists( temporaryPath ) ) {
                error() << "Error: " << stageFile->remote() << " does not exists" << endmsg;
                err = true;
@@ -386,7 +386,7 @@ void FileStagerSvc::stage()
                }
                do {
                   --pos;
-               } while( !pos->file()->good() && !pos->file()->staged() 
+               } while( !pos->file()->good() && !pos->file()->staged()
                         && pos != filesByPosition.begin() );
             }
          }
@@ -401,7 +401,7 @@ void FileStagerSvc::stage()
          }
 
          info() <<  "Staging file " << stageFile->remote() << endmsg;
-         
+
          bool err = false;
          unsigned int tries = 0;
          while ( tries < m_copyTries ) {
@@ -417,7 +417,7 @@ void FileStagerSvc::stage()
             vector< string > lines;
             int ret = 0;
             stringstream command;
-            command << stageFile->command() << " \"" << stageFile->remote() 
+            command << stageFile->command() << " \"" << stageFile->remote()
                     << "\" \"" << stageFile->temporary() << "\"";
             verbose() << "Calling command: " << command.str() << endmsg;
             if ( !( pipe = ( FILE* )popen( command.str().c_str(), "w" ) ) ) {
@@ -446,7 +446,7 @@ void FileStagerSvc::stage()
                err = true;
                boost::this_thread::sleep( pt::seconds( 10 ) );
             } else if ( !fs::exists( temporary ) ) {
-               warning() << "Staging command returned, but the file is not there, retrying." 
+               warning() << "Staging command returned, but the file is not there, retrying."
                          << endmsg;
                err = true;
                boost::this_thread::sleep( pt::seconds( 10 ) );
@@ -455,7 +455,7 @@ void FileStagerSvc::stage()
                break;
             }
          }
-            
+
          if ( err ) {
             // Handle errors
             lock_guard< recursive_mutex > lock( m_fileMutex );
@@ -603,17 +603,17 @@ StatusCode FileStagerSvc::garbage()
 
    fs::path command(m_garbageCommand);
    if (m_checkLocalGarbage) {
-      // Check if the garbage command is in the current dir, if so, use it. If not try 
+      // Check if the garbage command is in the current dir, if so, use it. If not try
       // the command as is.
       fs::path current = fs::initial_path();
       for (fs::directory_iterator it(current); it != fs::directory_iterator(); ++it) {
-         if (it->path().string().find(command.filename()) != std::string::npos) 
+         if (it->path().string().find(command.filename().string()) != std::string::npos)
             command = it->path();
       }
    }
    vector< string > arguments;
-   arguments += command.filename(), lexical_cast< string >( ppid ), m_tmpdir;
-    
+   arguments += command.filename().string(), lexical_cast< string >( ppid ), m_tmpdir;
+
    // Put the arguments into the correct format for execvp
    size_t n = arguments.size();
    char** args = new char*[ n + 1 ];
@@ -661,7 +661,7 @@ StatusCode FileStagerSvc::garbage()
       delete[] args;
 
       int count = 0, err = 0;
-       
+
       // Close the wrong end of the pipe.
       close( pipefds[ 1 ] );
 
@@ -701,7 +701,7 @@ File* FileStagerSvc::createFile( const string& filename )
    }
 
    if ( !success ) {
-      warning() << "Error manipulating the original descriptor: " << filename 
+      warning() << "Error manipulating the original descriptor: " << filename
                 << " into a suitable remote filename" << endmsg;
       File* f = new File( filename, "", "", "" );
       f->setGood( false );
@@ -711,7 +711,7 @@ File* FileStagerSvc::createFile( const string& filename )
    boost::hash< string > hash;
    fs::path p( remote );
    stringstream temp;
-   string extension = p.extension();
+   string extension = p.extension().string();
    if ( result = ba::find_first( extension, "?" ) ) {
       boost::iterator_range< string::iterator > range( result.begin(), extension.end() );
       ba::erase_range( extension, range );
@@ -726,7 +726,7 @@ File* FileStagerSvc::createFile( const string& filename )
                 << " grid related problems, proxy for example" << endmsg;
       f->setGood( false );
    } else {
-      verbose() << "Created file: " << file << " " << command 
+      verbose() << "Created file: " << file << " " << command
                 << " " << remote << " " << temp.str() << endmsg;
       f->setGood( true );
    }
@@ -753,7 +753,7 @@ bool FileStagerSvc::createPFN( string& remote, string& command )
       // strip mdf:
       ba::erase_range( remote, result );
    }
-   
+
    re = "^((?:rfio)|(?:castor):)//(?:\\w\\.\\w\\.\\w:\\d+/+castor)";
    if ( regex_search( remote.begin(), remote.end(), match, re, flags ) ) {
       boost::iterator_range< string::iterator >
