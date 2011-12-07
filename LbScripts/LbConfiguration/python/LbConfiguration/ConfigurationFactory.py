@@ -3,20 +3,26 @@
 import logging
 import inspect
 import pprint
-import sys, os
+import os
 
 from xml import sax
 from xml.dom.minidom import Document
 
 from Project import ProjectConf
-from Project import project_list
-
 from Package import PackageConf
-from Package import package_list
+
 
 log = logging.getLogger()
 logging.basicConfig()
 log.setLevel(logging.CRITICAL)
+
+# Constants for the factory
+CONFIG_ENV_VAR="LHCBCONFIG"
+CONFIG_WEB_LOCATION_PREFIX="http://bcouturi.web.cern.ch/bcouturi/config/"
+CONFIG_LOCAL_LOCATION_PREFIX="/afs/cern.ch/user/b/bcouturi/public/config/"
+CONFIG_MAIN_FILENAME="MainConfig.xml"
+CONFIG_PROJECT_FILENAME="ProjectConfig.xml"
+CONFIG_PACKAGE_FILENAME="PackageConfig.xml"
 
 
 #
@@ -48,7 +54,7 @@ class SAXMainConfigHandler(sax.handler.ContentHandler):
         self.inExternalProjects = False
         self.inLCGProjects = False
 
-    def getConfig(self):
+    def getResult(self):
         """ Method that returns the actual values for the configuration """
         return self.config
 
@@ -115,13 +121,6 @@ class SAXMainConfigHandler(sax.handler.ContentHandler):
         else:
             log.error("Unhandled tag:" +  name)
 
-
-
-
-
-
-
-
 # SAX handler for the project tag in the project XML description
 # After parsing, call the getProjectList method to get the list
 # of initialized ProjectConf projects
@@ -184,7 +183,7 @@ class SAXProjectHandler(sax.handler.ContentHandler):
         else:
             self.setProjectAttribute(self.project, self.currentTag, self.buffer.strip())
 
-    def getProjectList(self):
+    def getResult(self):
         """ Returns the lit of projects after parsing """
         return self.projectList
 
@@ -242,8 +241,6 @@ class SAXProjectHandler(sax.handler.ContentHandler):
             method(value)
         else:
             log.error("Could not set attribute:" + name)
-
-
 
 # SAX handler for the package tag in the package XML description
 # After parsing, call the getPackageList method to get the list
@@ -303,7 +300,7 @@ class SAXPackageHandler(sax.handler.ContentHandler):
         else:
             self.setPackageAttribute(self.package, self.currentTag, self.buffer)
 
-    def getPackageList(self):
+    def getResult(self):
         """ Returns the lit of projects after parsing """
         return self.packageList
 
@@ -350,7 +347,6 @@ class SAXPackageHandler(sax.handler.ContentHandler):
         else:
             log.error("Could not set attribute:" + name)
 
-
 # Method that looks for a method name in the object passed
 # and returns it in order to set the attribute
 def findMethod(obj, prefix, partialMethodName):
@@ -364,34 +360,106 @@ def findMethod(obj, prefix, partialMethodName):
     return foundMethod
 
 
-# Main method for loading the configuration based on XML file
-def loadMainConfig(filename):
-    """ Load Main configuration from the specified file """
-    parser = sax.make_parser()
-    handler = SAXMainConfigHandler()
-    parser.setContentHandler(handler)
-    parser.parse(filename)
-    return handler.getConfig()
+# Mapping between type of config and the associated filename
+
+# Base class for loading configuration
+# Only specialized version should be used
+class ConfigLoader(object):
+    """ Ancestor for configuration loaders, should not be used directly but sub class should be used instead """
+    def __init__(self):
+        self.loadMethods = [self.__envConfigLocation, self.__webConfigLocation, self.__localConfigLocation]
 
 
-# Main method for loading projects based on XML file
-def loadProjects(filename):
+    def __envConfigLocation(self):
+        """ Method checking whether an environment variable has been defined for the config file location"""
+        result = None
+        try:
+            conflocation = os.environ[CONFIG_ENV_VAR]
+            if (conflocation != None):
+                result = conflocation + os.sep + self.filename
+        except:
+            # We ignore key errors...
+            pass
+        return result
+
+    def __webConfigLocation(self):
+        """ Default URL for main config on the web """
+        return CONFIG_WEB_LOCATION_PREFIX + self.filename
+
+    def __localConfigLocation(self):
+        """ Default URL for local config """
+        return CONFIG_LOCAL_LOCATION_PREFIX + self.filename
+
+    def __parse(self):
+        """ Parse from a specific file """
+        parser = sax.make_parser()
+        parser.setContentHandler(self.handler)
+        parser.parse(self.configURL)
+
+    #
+    #
+    # Main method to looks for the config files in various places
+    def load(self, configURL=None):
+        """ Load configuration from the specified file """
+        result = None
+        if configURL != None:
+            self.configURL = configURL
+            self.__parse()
+            result = self.handler.getResult()
+        else:
+            for m in self.loadMethods:
+                loc = m()
+                if loc == None:
+                    continue
+                try:
+                    self.configURL = loc
+                    self.__parse()
+                    result = self.handler.getResult()
+                    log.info("Using configuration from %s" % self.configURL)
+                except:
+                    pass
+                    # We ignore and try next algorithm
+        return result
+
+class MainConfigLoader(ConfigLoader):
+    """ Class to load the Main Config """
+    def __init__(self):
+        super(MainConfigLoader, self).__init__()
+        self.handler = SAXMainConfigHandler()
+        self.filename = CONFIG_MAIN_FILENAME
+
+class ProjectLoader(ConfigLoader):
+    """ Class to load the Projects config """
+    def __init__(self):
+        super(ProjectLoader, self).__init__()
+        self.handler = SAXProjectHandler()
+        self.filename = CONFIG_PROJECT_FILENAME
+
+class PackageLoader(ConfigLoader):
+    """ Class to load the package config """
+    def __init__(self):
+        super(PackageLoader, self).__init__()
+        self.handler = SAXPackageHandler()
+        self.filename = CONFIG_PACKAGE_FILENAME
+
+#
+# Util method to load the main config from a specific file
+def loadMainConfig(configURL = None):
+    """ Load main config  from the specified file """
+    p = MainConfigLoader()
+    return p.load(configURL)
+
+# Util method to load the projects from a specific file
+def loadProjects(configURL):
     """ Load projects from the specified file """
-    parser = sax.make_parser()
-    handler = SAXProjectHandler()
-    parser.setContentHandler(handler)
-    parser.parse(filename)
-    return handler.getProjectList()
+    p = ProjectLoader()
+    return p.load(configURL)
 
-
-# Main method for loading packages based on XML file
-def loadPackages(filename):
+# Util method to load packages from a specific file
+def loadPackages(configURL):
     """ Load packages from the specified file """
-    parser = sax.make_parser()
-    handler = SAXPackageHandler()
-    parser.setContentHandler(handler)
-    parser.parse(filename)
-    return handler.getPackageList()
+    p = PackageLoader()
+    return p.load(configURL)
 
 
 # Utility method to serialize a list of packages
@@ -569,15 +637,28 @@ def serializeProjects(projectList):
 if __name__ == '__main__':
     log.setLevel(logging.DEBUG)
 
+    #mc = MainConfigLoader()
+    #result = mc.load()
+    #pp = pprint.PrettyPrinter(indent=4)
+    #pp.pprint(vars(result))
+
+    #mc = ProjectLoader()
+    #result = mc.load()
+    result = loadProjects()
+    pp = pprint.PrettyPrinter(indent=4)
+    for p in result:
+        pp.pprint(vars(p))
+
+
     #packxml = serializePackages(package_list)
     #print packxml.toprettyxml(indent=" ")
 
     #projxml = serializeProjects(project_list)
     #print projxml.toprettyxml(indent=" ")
 
-    newconfig = loadMainConfig("../../tests/ExampleLHCbMainConfig.xml")
-    pp = pprint.PrettyPrinter(indent=4)
-    pp.pprint(vars(newconfig))
+    #newconfig = loadMainConfig("../../tests/ExampleLHCbMainConfig.xml")
+    #pp = pprint.PrettyPrinter(indent=4)
+    #pp.pprint(vars(newconfig))
 
     #projects = loadProjects("../../tests/ExampleProjectConfig.xml")
     #for p in projects:

@@ -33,9 +33,9 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         self.assertEquals(gaudi.FullSize(), "6000000")#TODO this is not good, needs cast
 
 
-    def testLoadAllProjects(self):
+    def loadAllProjects(self, url):
         # Loading all projects and serializing them as XML
-        projects = loadProjects("ExampleProjectConfig.xml")
+        projects = loadProjects(url)
         projxml = serializeProjects(projects)
         newxml = projxml.toprettyxml(indent=" ")
         newxml = newxml.encode("ascii")
@@ -52,19 +52,26 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         oldxml = oldxml.replace(" >", ">")
         oldxml = oldxml.replace("encoding=\"UTF-8\"", "")
 
+        #print newxml
+        #print oldxml
 
         #for i in range(1, len(newxml)):
         #    if newxml[i] != oldxml[i]:
-        #        print "ProjErr:" + newxml[i] + " - " + oldxml[i]
-        #print newxml
-        #print oldxml
+        #        print "Err:" + newxml[i] + " - " + oldxml[i]
 
         self.assertEquals(newxml,  oldxml)
 
 
-    def testLoadAllPackages(self):
+    def testLoadAllProjectsFromFile(self):
+        self.loadAllProjects("ExampleProjectConfig.xml")
+
+    def testLoadAllProjectsFromURL(self):
+        self.loadAllProjects("http://bcouturi.web.cern.ch/bcouturi/config/ProjectConfig.xml")
+
+
+    def loadAllPackages(self, url):
         # Loading all projects and serializing them as XML
-        packages = loadPackages("ExamplePackageConfig.xml")
+        packages = loadPackages(url)
         pdom = serializePackages(packages)
         newxml = pdom.toprettyxml(indent=" ")
         newxml = newxml.encode("ascii")
@@ -91,8 +98,25 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         self.assertEquals(newxml,  oldxml)
 
 
+    def testLoadAllPackagesFromFile(self):
+        self.loadAllPackages("ExamplePackageConfig.xml")
+
+    def testLoadAllPackagesFromURL(self):
+        self.loadAllPackages("http://bcouturi.web.cern.ch/bcouturi/config/PackageConfig.xml")
+
     def testMainConfigLoad(self):
         config = loadMainConfig("ExampleLHCbMainConfig.xml")
+        self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
+        self.assertEqual(config.Python_version, u"2.5")
+        self.assertEqual(config.CMT_version, u"v1r20p20090520")
+        self.assertEqual(config.tbroadcast_version, u"v2.0.5")
+        self.assertEqual(config.doxygen_version, u"1.7.2")
+        self.assertEqual(len(config.external_projects), 3)
+        self.assertEqual(len(config.lcg_projects), 8)
+
+
+    def testMainConfigLoadFromURL(self):
+        config = loadMainConfig("http://bcouturi.web.cern.ch/bcouturi/config/MainConfig.xml")
         self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
         self.assertEqual(config.Python_version, u"2.5")
         self.assertEqual(config.CMT_version, u"v1r20p20090520")
