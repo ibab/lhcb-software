@@ -164,7 +164,7 @@ StatusCode PropertyConfigSvc::queryInterface(const InterfaceID& riid,
 // Initialization
 //=============================================================================
 StatusCode PropertyConfigSvc::initialize() {
-   debug() << "Initialize" << endmsg;
+   if(msgLevel(MSG::DEBUG)) debug() << "Initialize" << endmsg;
    StatusCode status = Service::initialize();
    if ( !status.isSuccess() )   return status;
    status = service(s_accessSvc,m_accessSvc);
@@ -199,7 +199,7 @@ void PropertyConfigSvc::onCreate(const IAlgTool* tool) {
     assert(tool!=0);
     string name = tool->name();
     //string key = name.substr(0,name.rfind('.'));
-    debug() << "adding " << name << " to toolmap " << endmsg;
+    if(msgLevel(MSG::DEBUG)) debug() << "adding " << name << " to toolmap " << endmsg;
     m_toolmap.insert( make_pair(name,tool) );
 }
 

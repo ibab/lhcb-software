@@ -101,7 +101,7 @@ ANNDispatchSvc::initialize(  )
     return sc;
   }
 
-  verbose() << "==> Initialize" << endmsg;
+  if( msgLevel(MSG::VERBOSE) ) verbose() << "==> Initialize" << endmsg;
 
   m_rawEventLocations.clear();
   if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
