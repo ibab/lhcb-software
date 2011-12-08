@@ -27,12 +27,7 @@ def configureFileStager( keep = False, tmpdir = None, garbageCommand = 'garbage.
 
     from os import environ, listdir
     if tmpdir:
-        tempdir = tmpdir
-    elif "TMPDIR" in environ.keys():
-        tempdir = environ[ "TMPDIR" ]
-    else:
-        tempdir = "."
-    FileStagerSvc().Tempdir = tempdir
+        FileStagerSvc().Tempdir = tmpdir
     FileStagerSvc().KeepFiles = keep
     FileStagerSvc().GarbageCollectorCommand = garbageCommand
     FileStagerSvc().CheckForLocalGarbageCollector = True

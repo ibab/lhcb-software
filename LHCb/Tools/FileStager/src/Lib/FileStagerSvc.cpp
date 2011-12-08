@@ -10,6 +10,7 @@
 // stdlib
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -21,12 +22,10 @@
 // STL
 #include <vector>
 
-#ifndef WIN32
 // boost
 #include <boost/range.hpp>
 #include <boost/regex.hpp>
 #include <boost/format.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/assign/std/vector.hpp>
@@ -34,7 +33,6 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
-#endif
 
 // local
 #include "File.h"
@@ -74,7 +72,7 @@ FileStagerSvc::FileStagerSvc( const string& name, ISvcLocator* svcLoc )
      m_initialized( false )
 {
 
-   declareProperty( "Tempdir", m_tmpdir, "The base of the temporary directory "
+   declareProperty( "Tempdir", m_tmpdir = "", "The base of the temporary directory "
                     "where the files will be staged" );
    declareProperty( "StageNFiles", m_stageNFiles = 2, "The number of files to stage" );
    declareProperty( "KeepFiles", m_keepFiles = false, "Keep staged files" );
@@ -107,8 +105,16 @@ StatusCode FileStagerSvc::initialize()
    if ( m_initialized ) return StatusCode::SUCCESS;
    StatusCode sc = Service::initialize();
 
-   // Remove trailing slashes
-   ba::trim_right_if( m_tmpdir, ba::is_any_of( "/" ) );
+   // Check if the property was set, if not try TMPDIR and else set to .
+   if (m_tmpdir.empty()) {
+      const char* dir = getenv("TMPDIR");
+      if (0 != dir) {
+         m_tmpdir = dir;
+         ba::trim_right_if( m_tmpdir, ba::is_any_of( "/" ) );
+      } else {
+         m_tmpdir = fs::initial_path().string();
+      }
+   }
 
    // Check if the base dir exists.
    if ( !fs::exists( m_tmpdir ) ) {
