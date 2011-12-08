@@ -173,14 +173,14 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "Reached end of file, we're done!"
                 break
 
-        odin = TES['/Event/DAQ/ODIN']
-        if DEBUGMODE :
-            print "Processing %d %d" % (odin.runNumber(), odin.eventNumber())
-        if not swimStripping and \
-               odin.triggerConfigurationKey() != int(Swimming().getProp('TCK'), 16):
-            print "WARNING, TCK 0x%08x does not match configured TCK %s, skipping event." \
-                  % (odin.triggerConfigurationKey(), Swimming().getProp('TCK'))
-            continue
+        ## odin = TES['/Event/DAQ/ODIN']
+        ## if DEBUGMODE :
+        ##     print "Processing %d %d" % (odin.runNumber(), odin.eventNumber())
+        ## if not swimStripping and \
+        ##        odin.triggerConfigurationKey() != int(Swimming().getProp('TCK'), 16):
+        ##     print "WARNING, TCK 0x%08x does not match configured TCK %s, skipping event." \
+        ##           % (odin.triggerConfigurationKey(), Swimming().getProp('TCK'))
+        ##     continue
         
         #Safety checks
         mycands = TES[offCands + "/Particles"]
@@ -361,4 +361,6 @@ def SwimmingEventLoop(gaudi, nEvents):
         # Write the Output
         myGlobs.gaudi.algorithm(writerName).execute()
 
+    # Print the number of events processed
+    print Swimming().getProp('EventPrint') % eventNumber
     return StatusCode(True)

@@ -63,6 +63,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SelectMethod"       : 'random'        # The method for selecting offline candidates (random, first, or '')
         , "UseFileStager"      : False           # Use the file stager.
         , "WriteFSR"           : True            # Write FSRs in output DST.
+        , "EventPrint"         : "L0Muon INFO - Total number of events processed : %d"
        }
 
     _propertyDocDct = {  
@@ -112,6 +113,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SelectMethod"       : """ The method for selecting offline candidates (random, first, or '')"""
         , "UseFileStager"      : """ Use the file stager. """
         , "WriteFSR"           : """ Write FSRs in output DST. """
+        , "EventPrint"         : """ The string to be printed at the end of the job. Should contain once %d """
         }
 
     __used_configurables__ = [
