@@ -49,3 +49,6 @@ private
 macro_append presenter_cppflags "-isystem $(Boost_home)/include/boost-$(Boost_file_version)" \
   WIN32 " /wd4503 /wd4800 -D_WIN32_WINNT=0x0501 "
 
+# Work around to be able to compile with Gaudi v22r5
+macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
+end_private
