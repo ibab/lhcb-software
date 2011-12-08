@@ -5,6 +5,10 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2011-12-8 - Stefania Vecchi
+ - Bug FIXED in choosePrimary (BTaggingAnalysis.cpp) that caused wrong list of PU verices 
+   Bug was included AFTER v6r7.
+ - EventNumber from ODIN banks
 
 ! 2011-12-2 - Marc Grabalosa
  - EventNumber in BTagAna to double

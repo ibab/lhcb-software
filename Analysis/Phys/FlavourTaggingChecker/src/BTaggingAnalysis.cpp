@@ -1,6 +1,7 @@
 // Include files 
 #include "BTaggingAnalysis.h"
 
+#include "Event/ODIN.h" // event & run number
 //-----------------------------------------------------------------------------
 // Implementation file for class : BTaggingAnalysis
 //
@@ -143,6 +144,25 @@ StatusCode BTaggingAnalysis::execute() {
   Tuple tuple = nTuple("mytagging","mytagging",CLID_ColumnWiseTuple);
     
   //----------------------------------------------------------------------
+ // Load the ODIN
+  LHCb::ODIN* odin(NULL);
+  if( exist<ODIN>( LHCb::ODINLocation::Default ) ){
+    odin = get<ODIN>( LHCb::ODINLocation::Default );
+  }else if( exist<ODIN>( LHCb::ODINLocation::Default, false ) ){
+    odin = get<ODIN>( LHCb::ODINLocation::Default, false );
+  }else{
+    // should always be available ...
+    return Error( "Cannot load the ODIN data object", StatusCode::SUCCESS );
+  }
+  debug()<<">>>>>  Processing Run "<<odin->runNumber() 
+         <<"   Event "<<odin->eventNumber()<<"  <<<<<" <<endreq;
+  tuple -> column ("run",             odin->runNumber());
+  tuple -> column ("event",   (double)odin->eventNumber());
+  tuple -> column ("gpsTime", (double)odin->gpsTime());
+  tuple -> column ("bunchID",         odin->bunchId());
+
+
+  /*
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
 
   debug()<<">>>>>  Processing Run "<<evt->runNumber() 
@@ -150,7 +170,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("run", evt->runNumber());
   //  tuple -> column ("event", (long)evt->evtNumber());
   tuple -> column ("event", (double)evt->evtNumber());
-
+  */
   //----------------------------------------------------------------------
   //MCinfo
   MCParticles* mcpart = 0;
@@ -201,6 +221,7 @@ StatusCode BTaggingAnalysis::execute() {
   RecVertex PV(0);
   const RecVertex::ConstVector PileUpVtx = choosePrimary(AXBS, verts, PV);
   const RecVertex* RecVert=   (const RecVertex*)  &PV;
+
   if( !RecVert ) {
     err() <<"No Reconstructed Vertex!! Skip." <<endreq;
     return StatusCode::SUCCESS;
@@ -766,12 +787,44 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   
   //-------------------------------------------------------
   //build a vector of pileup vertices 
+  
+  double min_chiPV=1000;
+  double the_chiPV=1000;
+  int nPV=0;
+  
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++){
-    if( (*jv) == PV ) continue;
-    PileUpVtx.push_back(*jv);
+    double chiPV = sqrt( 
+                        pow((RecVert.position().x()-(*jv)->position().x()),2)/RecVert.covMatrix()(0,0) +
+                        pow((RecVert.position().y()-(*jv)->position().y()),2)/RecVert.covMatrix()(1,1) +
+                        pow((RecVert.position().z()-(*jv)->position().z()),2)/RecVert.covMatrix()(2,2)
+                        );
+    
+    if(chiPV < min_chiPV) min_chiPV = chiPV;
+    
+    if(chiPV < 3) {
+      the_chiPV = chiPV;      
+      nPV++;      
+      continue;
+      
+    } else    
+      PileUpVtx.push_back(*jv);
   }
   
+  if(min_chiPV!=the_chiPV || nPV!=1 ) {
+    PileUpVtx.clear();    
+    for(jv=verts.begin(); jv!=verts.end(); jv++){
+      double chiPV = sqrt( 
+                          pow((RecVert.position().x()-(*jv)->position().x()),2)/RecVert.covMatrix()(0,0) +
+                          pow((RecVert.position().y()-(*jv)->position().y()),2)/RecVert.covMatrix()(1,1) +
+                          pow((RecVert.position().z()-(*jv)->position().z()),2)/RecVert.covMatrix()(2,2)
+                          );
+      
+      if(chiPV == min_chiPV) continue;
+      else PileUpVtx.push_back(*jv);
+     }   
+  }
+
   return PileUpVtx;
 }
 
