@@ -49,4 +49,6 @@ apply_pattern install_python_modules
 #============================================================================
 private
 use Boost v* LCG_Interfaces
+# Work around to be able to compile with Gaudi v22r5
+macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
 end_private
