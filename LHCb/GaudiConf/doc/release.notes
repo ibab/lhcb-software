@@ -11,6 +11,8 @@
 ! 2011-12-08 - Rob Lambert
  - Add isPoolSupported to IOHelper in preparation for POOL being removed.
  - Add .gen and .xgen to supported types of IOExtension, guess to be Root type, print warning
+ - Add check on the version of GaudiSvc from the requirements file,
+   maybe there is a better way to check this, but at the moment not.
 
 ! 2011-11-18 - Gloria Corti
  - Add "NextNext" to default DigiConf().SpilloverPaths
