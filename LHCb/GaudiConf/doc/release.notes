@@ -3,7 +3,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-! 2011-09-26 - Rob Lambert
+! 2011-12-08 - Marco Cattaneo
+ - DstConf:
+   . Remove support for RDST (never used in real data, superseded by SDST)
+   . Rename _doWritePOOL method to _doWriteROOT
+
+! 2011-12-08 - Rob Lambert
  - Add isPoolSupported to IOHelper in preparation for POOL being removed.
 
 ! 2011-11-18 - Gloria Corti
