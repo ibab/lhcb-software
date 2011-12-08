@@ -450,13 +450,13 @@ def loadMainConfig(configURL = None):
     return p.load(configURL)
 
 # Util method to load the projects from a specific file
-def loadProjects(configURL):
+def loadProjects(configURL = None):
     """ Load projects from the specified file """
     p = ProjectLoader()
     return p.load(configURL)
 
 # Util method to load packages from a specific file
-def loadPackages(configURL):
+def loadPackages(configURL = None):
     """ Load packages from the specified file """
     p = PackageLoader()
     return p.load(configURL)
