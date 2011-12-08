@@ -1032,6 +1032,8 @@ class IOExtension(object):
                        'XDST'  : '',
                        'MDST'  : '',
                        'SDST'  : 'Warning',
+                       'GEN'  : 'Warning',
+                       'XGEN'  : 'Warning',
                        'MDF'    : 'MDF',
                        'RAW'  : 'MDF'
                        }
