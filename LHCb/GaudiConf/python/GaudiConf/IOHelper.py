@@ -25,12 +25,12 @@ class IOHelper(object):
 
     2) configuring services:
         IOHelper().setupServices()
-        IOHelper("POOL","POOL").setupServices()
+        IOHelper("ROOT","ROOT").setupServices()
         ioh.setupServices()
 
     3) building an EventSelector from a list of files:
         evtsel=IOHelper().inputFiles(filelist)
-        evtsel=IOHelper("POOL","POOL").inputFiles(filelist)
+        evtsel=IOHelper("ROOT","ROOT").inputFiles(filelist)
         evtsel=ioh.inputFiles(filelist)
 
     4) adding a simple OutputStream to the OutStream of Application Manager
@@ -150,6 +150,11 @@ class IOHelper(object):
             if not self.isRootSupported():
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
+
+        if self._inputPersistency=='POOL' or self._outputPersistency=='POOL':
+            if not self.isPoolSupported():
+                raise TypeError("POOL persistency is not supported in this Application version"+
+                                "Ask your release manager for details or change to ROOT")
 
         if self._outputPersistency=="FSR" and self._inputPersistency not in ['ROOT','POOL']:
             raise TypeError("FSR is not a proper persistency type. To configure services, you would need to specify a proper type.")
@@ -375,9 +380,14 @@ class IOHelper(object):
     ###############################################################
 
     def isRootSupported(self):
-        '''Services:  Check if the root services exist in this version'''
+        '''Services:  Check if the ROOT services exist in this version'''
         import Configurables
         return hasattr(Configurables,"Gaudi__RootCnvSvc")
+
+    def isPoolSupported(self):
+        '''Services: Check if the POOL services exist in this version'''
+        import Configurables
+        return (hasattr(Configurables, "PoolDbCnvSvc") and hasattr(Configurables, "PoolDbCacheSvc"))
 
     def svcTypString(self,IO):
         '''Services:  given the IO type, return the selection string for the active services'''
@@ -407,7 +417,7 @@ class IOHelper(object):
             rootSvc = Gaudi__RootCnvSvc( "RootCnvSvc", EnableIncident = 1 )
             # disable caches by default
             if not rootSvc.isPropertySet("VetoBranches")  : rootSvc.VetoBranches = ["*"]
-            if not rootSvc.isPropertySet("CacheBranches") : rootSvc.CacheBranches = [] 
+            if not rootSvc.isPropertySet("CacheBranches") : rootSvc.CacheBranches = []
             EventPersistencySvc().CnvServices += [ rootSvc ]
             ApplicationMgr().ExtSvc           += [ rootSvc ]
 

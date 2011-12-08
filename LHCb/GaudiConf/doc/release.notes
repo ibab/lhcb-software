@@ -3,20 +3,23 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-09-26 - Rob Lambert
+ - Add isPoolSupported to IOHelper in preparation for POOL being removed.
+
 ! 2011-11-18 - Gloria Corti
  - Add "NextNext" to default DigiConf().SpilloverPaths
 
 !========================= GaudiConf v15r3 2011-11-07 =========================
 ! 2011-11-04 - Marco Cattaneo
  - In IOHelper().SetupServices() disable by default the ROOT tree caches. Can
-   be overridden by setting the RootCnv options externally as postConfigAction 
+   be overridden by setting the RootCnv options externally as postConfigAction
  - Update ioh-postconfig-pool2root.ref.new test reference accordingly
 
 ! 2011-11-04 - Patrick Robbe
  - IOHelper.py: add "xdigi" file extension to list of known extensions
 
 ! 2011-10-18 - J. Helder Lopes
- - Set the AncestorFor property of UnpackMuonTracks in DstConf.py to the same 
+ - Set the AncestorFor property of UnpackMuonTracks in DstConf.py to the same
    path as InputName, to allow the ancestor track association.
 
 !========================= GaudiConf v15r2 2011-09-27 =========================
