@@ -5,7 +5,7 @@
     <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagUp.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="RDST"; Brunel().PackType="MDF" </text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=1000;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF" </text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2010magup.ref</text></argument>
   <argument name="validator"><text>

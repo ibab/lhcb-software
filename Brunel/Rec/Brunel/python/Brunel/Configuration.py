@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.126 2010-04-21 12:02:38 cattanem Exp $"
+__version__ = "v41r2"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -111,7 +111,7 @@ class Brunel(LHCbConfigurableUser):
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
        }
 
-    KnownInputTypes  = [ "MDF",  "DST", "RDST", "SDST", "XDST", "DIGI" ]
+    KnownInputTypes  = [ "MDF",  "DST", "SDST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
 
     def defineGeometry(self):
@@ -154,12 +154,12 @@ class Brunel(LHCbConfigurableUser):
 
         withMC = self.getProp("WithMC")
         if withMC:
-            if inputType in [ "MDF", "RDST", "SDST" ]:
+            if inputType in [ "MDF", "SDST" ]:
                 log.warning( "WithMC = True, but InputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, MDF, RDST, SDST never contain MC truth
-            if outputType in [ "RDST", "SDST" ]:
+                withMC = False # Force it, MDF, SDST never contain MC truth
+            if outputType in [ "SDST" ]:
                 log.warning( "WithMC = True, but OutputType = '%s'. Forcing WithMC = False"%inputType )
-                withMC = False # Force it, RDST, SDST never contains MC truth
+                withMC = False # Force it, SDST never contains MC truth
 
         if self.getProp("WriteFSR") and self.getProp("PackType").upper() in ["MDF"]:
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
@@ -349,7 +349,7 @@ class Brunel(LHCbConfigurableUser):
         if self.isPropertySet( "RawBanksToKill" ):
             bkKill.BankTypes = self.getProp( "RawBanksToKill" )
         else:
-            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","RDST","SDST"]):
+            if ("2009" == self.getProp("DataType")) and (inputType in ["MDF","SDST"]):
                 bkKill.BankTypes = ["VeloFull", "L0PUFull"]
         GaudiSequencer("InitBrunelSeq").Members += [ bkKill ]
         
@@ -387,7 +387,7 @@ class Brunel(LHCbConfigurableUser):
         # Only set to zero if not previously set to something else.
         if not IODataManager().isPropertySet("AgeLimit") : IODataManager().AgeLimit = 0
         
-        if inputType in [ "XDST", "DST", "RDST", "SDST" ]:
+        if inputType in [ "XDST", "DST", "SDST" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
             InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
@@ -398,7 +398,7 @@ class Brunel(LHCbConfigurableUser):
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes  = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
-        if inputType in [ "RDST", "SDST" ]:
+        if inputType in [ "SDST" ]:
             # Allow navigation to ancestor file
             IODataManager().AgeLimit += 1
 
@@ -414,7 +414,7 @@ class Brunel(LHCbConfigurableUser):
             self.setOtherProps(LHCbApp(),["Persistency"])
             self.setOtherProps(DstConf(),["Persistency"])
             
-        if dstType in [ "XDST", "DST", "RDST", "SDST" ]:
+        if dstType in [ "XDST", "DST", "SDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
 
@@ -469,19 +469,8 @@ class Brunel(LHCbConfigurableUser):
                 
                 
             from Configurables import TrackToDST
-            if dstType == "RDST":
-                # Sequence for altering content of rDST compared to DST
-                # Filter Track States to be written
-                trackFilter = TrackToDST("TrackToRDST")
-                trackFilter.veloStates = ["ClosestToBeam"]
-                trackFilter.longStates = ["ClosestToBeam"]
-                trackFilter.TTrackStates = ["FirstMeasurement"]
-                trackFilter.downstreamStates = ["FirstMeasurement"]
-                trackFilter.upstreamStates = ["ClosestToBeam"]
-            else:
-                # Sequence for altering DST content
-                # Filter Track States to be written
-                trackFilter = TrackToDST()
+            # Filter Track States to be written
+            trackFilter = TrackToDST()
                 
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
