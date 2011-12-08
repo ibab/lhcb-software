@@ -4,6 +4,9 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2011-12-08 - Marco Clemencic
+ - Enabled backward compatibility with Gaudi v22r5.
+
 ! 2011-12-07 - Marco Clemencic
  - Fixed compilation with Boost 1.48 (filesystem V3).
    Requires Gaudi >= v23.
