@@ -154,7 +154,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   const RecVertex::ConstVector PileUpVtx= choosePrimary(AXB, verts, RecVert, RefitRecVert);
 
   if( msgLevel(MSG::DEBUG) ) {
-    debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<endreq;
+    debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
     if(m_UseReFitPV)
       debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
     for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
@@ -285,7 +285,9 @@ BTaggingTool::choosePrimary(const Particle* AXB,
     }
   } else if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
     RecVert = (const RecVertex*) m_dva->bestPV(AXB);
+
     debug()<<"Will use the bestPV criteria found z="<<RecVert->position().z()<<endreq;    
+    
     if(m_UseReFitPV) {  //----------------------------- Refit PV without B tracks
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
@@ -339,11 +341,43 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   }//else bestPV
   
   //build a vector of pileup vertices --------------------------
+  double min_chiPV=1000;
+  double the_chiPV=1000;
+  int nPV=0;
+  
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++){
-    if( (*jv) == RecVert ) continue;
-    PileUpVtx.push_back(*jv);
+
+    double chiPV = sqrt( 
+                        pow((RecVert->position().x()-(*jv)->position().x()),2)/RecVert->covMatrix()(0,0) +
+                        pow((RecVert->position().y()-(*jv)->position().y()),2)/RecVert->covMatrix()(1,1) +
+                        pow((RecVert->position().z()-(*jv)->position().z()),2)/RecVert->covMatrix()(2,2)
+                        );
+    
+    if(chiPV < min_chiPV) min_chiPV = chiPV;
+    
+    if(chiPV < 3) {
+      the_chiPV = chiPV;      
+      nPV++;      
+      continue;
+      
+    } else    
+      PileUpVtx.push_back(*jv);
   }
+  if(min_chiPV!=the_chiPV || nPV!=1 ) {
+    PileUpVtx.clear();    
+    for(jv=verts.begin(); jv!=verts.end(); jv++){
+      double chiPV = sqrt( 
+                          pow((RecVert->position().x()-(*jv)->position().x()),2)/RecVert->covMatrix()(0,0) +
+                          pow((RecVert->position().y()-(*jv)->position().y()),2)/RecVert->covMatrix()(1,1) +
+                          pow((RecVert->position().z()-(*jv)->position().z()),2)/RecVert->covMatrix()(2,2)
+                          );
+      
+      if(chiPV == min_chiPV) continue;
+      else PileUpVtx.push_back(*jv);
+     }   
+  }
+  
   //UseReFitPV means that it will use the refitted pV for the ip calculation 
   //of taggers and SV building. Do not move this line above PileUpVtx building
   if( m_UseReFitPV ) RecVert = (&RefitRecVert);
