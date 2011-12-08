@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111129'
+script_version = '111207'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r6p2"
@@ -434,15 +434,15 @@ def getCommandFile(postscr, flavor="PostInstall"):
 
     return cmd_file
 
-def registerProjectCommand(pack_ver, flavor="PostInstall"):
+def getProjectCommandFile(pack_ver, flavor="PostInstall"):
     postscr_name = "%s.py" % flavor
+    postscr = None
     try :
         if "/" in pack_ver[0] :
             p_name = pack_ver[0].split("/")[-1]
         else :
             p_name = pack_ver[0]
         prj = getCachedProjectConf(p_name)
-        postscr = None
         if prj :
             cmtcontainer = os.path.join(pack_ver[3], prj.SteeringPackage(), "cmt")
             postscr = os.path.join(cmtcontainer, postscr_name)
@@ -453,11 +453,25 @@ def registerProjectCommand(pack_ver, flavor="PostInstall"):
                 postscr = os.path.join(cmtcontainer, postscr_name)
         if postscr :
             postscr = getCommandFile(postscr, flavor)
-            if postscr :
-                if flavor == "PostInstall" :
-                    registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
-                if flavor == "Update" :
-                    registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
+    except ImportError:
+        pass
+    return postscr
+
+
+def registerProjectCommand(pack_ver, flavor="PostInstall"):
+    try :
+        if "/" in pack_ver[0] :
+            p_name = pack_ver[0].split("/")[-1]
+        else :
+            p_name = pack_ver[0]
+
+        postscr = getProjectCommandFile(pack_ver, flavor)
+
+        if postscr :
+            if flavor == "PostInstall" :
+                registerPostInstallCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
+            if flavor == "Update" :
+                registerUpdateCommand(p_name, pack_ver[1], "python %s" % postscr, os.path.dirname(postscr))
     except ImportError:
         pass
 
@@ -1293,9 +1307,16 @@ def delInstalled(fname):
     os.remove(installedfilename)
 
 # check installed project
-def checkInstalledProjects(project_list):
+def checkInstalledProjects(project_list, main_file=None):
     log = logging.getLogger()
     log.info('check all project in the list %s' % project_list)
+    if main_file :
+        pack_ver = getPackVer(main_file)
+        update_scr = getProjectCommandFile(pack_ver, "Update")
+        if update_scr :
+            log.error("%s is not installed" % main_file)
+            sys.exit("some projects are not installed. Exiting ...")
+            sys.exit()
     import LbConfiguration.Platform
     for f in project_list.keys() :
         if project_list[f] == "source":
@@ -2191,7 +2212,7 @@ def runInstall(pname, pversion, binary=None):
     log.debug('global html_list %s' % html_list)
 
     if check_only :
-        checkInstalledProjects(project_list)
+        checkInstalledProjects(project_list, html_list[0])
 
 
 
