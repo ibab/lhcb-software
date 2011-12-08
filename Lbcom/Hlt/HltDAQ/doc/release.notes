@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2011-12-08 - Marco Clemencic
+ - Enabled backward compatibility with Gaudi v22r5.
+
 ! 2011-12-06 - Marco Cattaneo
  - Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
    (in ANNDispatchSvc) streams. Only those in non-const methods have been 

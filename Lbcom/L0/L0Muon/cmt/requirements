@@ -21,3 +21,8 @@ use ParamFiles      v*   -no_auto_imports
 library L0Muon ../src/component/*.cpp
 
 apply_pattern component_library library=L0Muon
+
+private
+# Work around to be able to compile with Gaudi v22r5
+macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
+end_private
