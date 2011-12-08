@@ -1,5 +1,9 @@
 2011-12-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r6p3
+
+2011-12-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: fixed --check behavior for projects and packages which have Update.py
 	scripts. They are always not installed (!!!)
 
