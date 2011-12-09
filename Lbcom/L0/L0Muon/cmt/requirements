@@ -15,7 +15,10 @@ use L0Event         v*   Event
 use DAQEvent        v*   Event
 use DigiEvent       v*   Event
 use MuonDAQ         v*   Muon
+use Boost           v*   LCG_Interfaces
 use ParamFiles      v*   -no_auto_imports
+
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
 
 # ================ component library =====================================
 library L0Muon ../src/component/*.cpp
