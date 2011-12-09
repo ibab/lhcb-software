@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2011-12-09 - Marco Cattaneo
+ - Remove GaudiPoolDB dependency to prepare migration to Gaudi v23r0.
+ - Explicitly add needed Boost linkopts, no longer picked up from GaudiSvc
+
 !========================= XMLSummaryKernel v1r2p1 2011-12-09 =========================
 ! 2011-11-18 - Marco Cattaneo
  - Update POOL test to use a post DC06 file and remove need to load HepMCBack
