@@ -1,3 +1,12 @@
+2011-12-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/Info.py: New file. for the release informations extraction
+	* python/LbRelease/ReleaseNotes.py: New file. for the release notes management
+	* scripts/getReleaseInfo: New file. script to extract release informations
+	* python/LbRelease/CMT/LbPackage.py: implemented version and name methods. Added releaseNotes method
+	* python/LbRelease/CMT/LbProject.py: idem
+	* python/LbRelease/CMT/Version.py: fixed the version translation LHCb <-> CMT
+
 2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r6

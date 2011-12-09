@@ -19,3 +19,6 @@ class LbPackage(Package):
                 if b in topdirs:
                     self._binarylist.add(b)
         return self._binarylist
+    def releaseNotes(self):
+        notes = ""
+        return notes

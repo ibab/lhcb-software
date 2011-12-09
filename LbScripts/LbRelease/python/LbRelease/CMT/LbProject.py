@@ -1,8 +1,10 @@
+from LbRelease.CMT.Version import LHCb2CMT, CMT2LHCb
+
 from LbUtils.CMT import Project
 from LbUtils.CMT import CMTWhich
 from LbPackage import LbPackage
 from LbConfiguration.Project import getProject
-from LbConfiguration.Version import LHCb2CMT, sortStrings
+from LbConfiguration.Version import sortStrings
 
 import logging
 
@@ -25,10 +27,23 @@ class LbProject(Project):
             if self._container == "" :
                 self._container = self.configuration().SteeringPackage()
         return self._container
+    def CMTVersion(self):
+        return super(LbProject, self).version()
+    def version(self):
+        return CMT2LHCb(self.CMTName().upper(), self.CMTVersion())[1]
+    def CMTName(self):
+        return super(LbProject, self).name()
+    def name(self):
+        return CMT2LHCb(self.CMTName(),self.CMTVersion())[0]
+    def releaseNotes(self):
+        notes = ""
+
+        return notes
 
 
 def LbCMTWhich(project, package=None, version=None, all_occurences=False,
-               casesense=True, with_user_area=True):
+               casesense=True, with_user_area=True,
+               project_class=LbProject, package_class=LbPackage):
     log = logging.getLogger()
 
     result = None
@@ -54,11 +69,13 @@ def LbCMTWhich(project, package=None, version=None, all_occurences=False,
         if version :
             proj = "%s_%s" % (project, version)
             if os.path.exists(os.path.join(os.environ["User_release_area"], proj)) :
-                result = CMTWhich(proj, package, None, all_occurences, casesense)
+                result = CMTWhich(proj, package, None, all_occurences, casesense,
+                                  project_class=project_class)
         else :
             proj = "%s_%s" % (project, package)
             if os.path.exists(os.path.join(os.environ["User_release_area"], proj)) :
-                result = CMTWhich(proj, None, None, all_occurences, casesense)
+                result = CMTWhich(proj, None, None, all_occurences, casesense,
+                                  project_class=project_class)
 
         if not result and not version :
             prjlist = []
@@ -69,23 +86,28 @@ def LbCMTWhich(project, package=None, version=None, all_occurences=False,
             prjlist.insert(0, "%s_HEAD" % project)
             for p in prjlist :
                 if os.path.exists(os.path.join(os.environ["User_release_area"], p)) :
-                    result = CMTWhich(p, package , None, all_occurences, casesense)
+                    result = CMTWhich(p, package , None, all_occurences, casesense,
+                                      project_class=project_class)
                     if result :
                         break
 
     if not result :
-        result = CMTWhich(project, package, version, all_occurences, casesense)
+        result = CMTWhich(project, package, version, all_occurences, casesense,
+                          project_class=project_class)
 
     if not result :
         if version :
             proj, ver = LHCb2CMT(project, version)
-            result = CMTWhich(proj, package, ver, all_occurences, casesense)
+            result = CMTWhich(proj, package, ver, all_occurences, casesense,
+                              project_class=project_class)
         else :
             proj, pack = LHCb2CMT(project, package)
-            result = CMTWhich(proj, pack, version, all_occurences, casesense)
+            result = CMTWhich(proj, pack, version, all_occurences, casesense,
+                              project_class=project_class)
 
     if not result :
-        result = CMTWhich(proj, package, version, all_occurences, casesense)
+        result = CMTWhich(proj, package, version, all_occurences, casesense,
+                          project_class=project_class)
 
     return result
 

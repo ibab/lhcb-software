@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# $Id$
+""" Extract information about a release from the release area """
+
+
+from LbRelease.Info import getReleaseInfo
+
+from LbUtils.Script import Script
+from LbConfiguration.Version import ParseSvnVersion
+
+import logging
+import sys
+import os
+
+__version__ = ParseSvnVersion("$Id$", "$URL$")
+__author__  = "hmd"
+
+class getReleaseInfoScript(Script):
+    _version = __version__
+    _description = __doc__
+
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(html=True)
+        parser.add_option("--html",
+                          dest = "html",
+                          action = "store_true",
+                          help = "Parse also the html informations [default: %default]")
+        parser.add_option("--no-html",
+                          dest = "html",
+                          action = "store_false",
+                          help = "Prevent the parsing of the html informations")
+    def main(self):
+        log = logging.getLogger()
+        opts = self.options
+        args = self.args
+        version = None
+        if len(args) < 1 :
+            log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            project   = args[0]
+            if len(args) > 1 :
+                version   = args[1]
+        del os.environ["CMTUSERCONTEXT"] # remove the fake project from the dependencies
+
+        print getReleaseInfo(project, version, opts.html)
+
+        return 0
+
+
+if __name__ == '__main__':
+    s = getReleaseInfoScript(usage="%prog [options]")
+    sys.exit(s.run())

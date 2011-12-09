@@ -24,9 +24,9 @@ class LHCbVersion(Version):
             a,b,c = m.groups()
             self._major = int(a)
             self._minor = int(b)
-            if c: 
+            if c:
                 self._patch = int(c)
-            else: 
+            else:
                 self._patch = 0
 
 
@@ -38,5 +38,8 @@ def CMT2LHCb(projectname, projectversion):
 
 def LHCb2CMT(projectname, projectversion):
     newname = projectname.upper()
-    newversion = "_".join(projectname.upper(),projectversion)
+    if projectversion :
+        newversion = "_".join([projectname.upper(),projectversion])
+    else :
+        newversion = None
     return newname, newversion
