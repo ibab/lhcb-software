@@ -4,6 +4,11 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2011-12-09 - Marco Cattaneo
+ - In requirements:
+   . Add explicit linkopts for Boost, for compatibility with Gaudi v23
+   . Clean up dependencies
+
 ! 2011-12-08 - Roel Aaij
  - Move search for tmpdir into C++ to ensure correct behaviour with pickled
    options files. If the property is set, it is always used.
