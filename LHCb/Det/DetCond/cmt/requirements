@@ -16,6 +16,9 @@ use           DetDesc           v*      Det
 # This one is for the interface ICondDBInfo
 use           LHCbKernel        v*      Kernel
 
+macro_append Boost_linkopts " $(Boost_linkopts_system) "
+
+
 # =========== own includes ====================================================
 apply_pattern	install_more_includes more=DetCond
 

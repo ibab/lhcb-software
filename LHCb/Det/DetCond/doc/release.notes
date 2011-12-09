@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
 !========================= DetCond v12r21 2011-08-30 =========================
 ! 2011-08-26 - Alexander Mazurov
  - Update of parser function in CondDBTimeSwitchSvc. This version works only with
