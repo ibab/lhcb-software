@@ -4,17 +4,17 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
-! 2011-12-08 - Marco Clemencic
- - Enabled backward compatibility with Gaudi v22r5.
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3) (for Gaudi v23)
+ - Enabled backward compatibility with Boost 1.44 (i.e. Gaudi v22r5)
 
 ! 2011-12-06 - Marco Cattaneo
  - Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
    (in ANNDispatchSvc) streams. Only those in non-const methods have been 
    protected, because the msgLevel() function is not declared as const...
-
-! 2011-12-07 - Marco Clemencic
- - Fixed compilation with Boost 1.48 (filesystem V3).
-   Requires Gaudi >= v23.
 
 ! 2011-11-23 - Marco Cattaneo
  - Fix a gcc46 warning

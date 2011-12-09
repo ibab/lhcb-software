@@ -52,7 +52,7 @@ library          HltDAQ    ../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=HltDAQ
-macro_append Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_iostreams) "
+macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem) "
 
 private
 # Work around to be able to compile with Gaudi v22r5
