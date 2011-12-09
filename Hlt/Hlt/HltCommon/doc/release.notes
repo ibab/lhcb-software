@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
 !========================== HltCommon v8r2p2 2011-12-05 ==================
 ! 2011-12-05 - Roel Aaij
  - Fix small memory leak in HltMoveVerticesForSwimming.

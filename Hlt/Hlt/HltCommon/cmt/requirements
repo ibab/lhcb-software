@@ -31,6 +31,8 @@ use Boost               v*   LCG_Interfaces
 
 use LoKi                v*    Phys
 
+macro_append Boost_linkopts " $(Boost_linkopts_system) "
+
 #============================================================================
 # Component library building rule
 #============================================================================
