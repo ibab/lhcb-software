@@ -100,7 +100,8 @@ def evaluateTisTos(myGlobs,mycand):
                         if not myGlobs.swimOffline :
                             return myGlobs.StrDecTrue
                         # Import offline selection
-                        OffSelFunc = __import__('Swimming.' + myGlobs.offSelName).OffSelFunc
+                        OffSelFunc = __import__(myGlobs.offSelName,
+                                                fromlist = ['OffSelFunc']).OffSelFunc
                         if OffSelFunc(myGlobs,mycand):
                             return myGlobs.StrDecTrue
         return myGlobs.StrDecFalse

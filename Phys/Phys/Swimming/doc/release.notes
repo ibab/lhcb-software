@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-12-09 - Roel Aaij
+ - Fix the logic for importing the module containing the offline selection to
+   allow it to be from an external package.
+
 !====================== Phys/Swimming v2r4 2011-12-07 =======================
 ! 2011-12-08 - Roel Aaij
  - Add a printout string at the end of the event loop to print number of events
