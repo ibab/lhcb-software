@@ -251,7 +251,7 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         match    = getAlgo ( GaudiSequencer  ,
                              'CaloMatch'     ,
                              context         )
-        cluster  = trackMatch ( context , enableRecoOnDemand , trackLocations)
+        cluster  = trackMatch ( context , enableRecoOnDemand , trackLocations,fastPID,external)
         electron = getAlgo ( ElectronMatchAlg         ,
                              "ElectronMatch"          ,
                              context                  ,
@@ -262,10 +262,6 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
                              context                  ,
                              'Rec/Calo/BremMatch'     ,
                              enableRecoOnDemand       )
-
-        if external != '' :
-            electron.Calos = [ external ]
-            brem.Calos = [ external ]
 
 
         match.Members = [
