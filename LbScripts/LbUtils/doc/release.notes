@@ -1,3 +1,8 @@
+2011-12-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/CMT/Project.py: made an indirection in order to be able to
+	override the version and name methods in subclasses.
+
 2011-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v3r6

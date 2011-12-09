@@ -76,7 +76,7 @@ class Project(object):
         """ string repr. used for sorting """
         return self._fulllocation
 
-    def name(self):
+    def __name(self): # internal name, not to be overridden by subclasses
         log = logging.getLogger()
         if self._name is None:
             env = Env.getDefaultEnv()
@@ -95,6 +95,9 @@ class Project(object):
                 log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         return self._name
 
+    def name(self): # displayed name. Can be overridden by subclasses
+        return self.__name()
+
     def projectFile(self):
         if self._projectfile is None :
             self._projectfile = ProjectFile(os.path.join(self.fullLocation(), "cmt", "project.cmt"))
@@ -105,19 +108,22 @@ class Project(object):
             self._container = self.projectFile().container()
         return self._container
 
-    def version(self):
+    def __version(self):
         if self._version is None :
             tmlist = self.fullLocation().split(os.sep)
-            if tmlist[-2] == self.name():
+            if tmlist[-2] == self.__name():
                 self._version = tmlist[-1]
             else :
                 self._version = ""
         return self._version
 
+    def version(self):
+        return self.__version()
+
     def location(self):
         if self._location is None :
             tmlist = self.fullLocation().split(os.sep)
-            if self.version() == "":
+            if self.__version() == "":
                 self._location = tmlist[-1]
             else :
                 self._location = os.sep.join([tmlist[-2],tmlist[-1]])
@@ -126,7 +132,7 @@ class Project(object):
     def _setCMTPathEnv(self, cmtpath=None, cmtprojectpath=None):
         if cmtprojectpath is None:
             tmlist = self.fullLocation().split(os.sep)
-            if self.version() == "" :
+            if self.__version() == "" :
                 cmtprojectpath = os.sep.join(tmlist[:-1])
             else :
                 cmtprojectpath = os.sep.join(tmlist[:-2])
@@ -146,7 +152,7 @@ class Project(object):
             parentlist = []
             p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
             for line in p.stdout:
-                if re.compile("^"+self.name()).match(line):
+                if re.compile("^"+self.__name()).match(line):
                     parmatch = re.compile("C=[a-zA-Z]+").findall(line)
                     for w in parmatch :
                         parentlist.append(w.replace("C=",""))
@@ -173,7 +179,7 @@ class Project(object):
             tmplist = Set()
             projectpath_list = cmtprojectpath.split(os.pathsep)
             for c in projectpath_list :
-                tmplist |= getProjectsFromDir(directory=c)
+                tmplist |= getProjectsFromDir(directory=c, prjclass=self.__class__)
             for p in tmplist :
                 for b in p.base() :
                     if b == self:
@@ -586,12 +592,13 @@ def getProjects(cmtprojectpath, name=None, version=None,
         p.getBase(projlist)
     return FilterProjects(projlist, name=name, version=version, casesense=casesense)
 
-def findProject(cmtprojectpath, name, version=None, casesense=False):
+def findProject(cmtprojectpath, name, version=None, casesense=False,
+                project_class=Project):
     """ find project in the path. if version is None find a versionless project
     or the latest version of a regular project """
     prj = None
     for p in cmtprojectpath.split(os.pathsep) :
-        prjlist = getProjectsFromPath(p, name, version, casesense)
+        prjlist = getProjectsFromPath(p, name, version, casesense, prjclass=project_class)
         if len(prjlist) :
             srtlist = versionSort(prjlist, reverse=True)
             prj = srtlist[0]
@@ -620,13 +627,15 @@ def walk(top, topdown=True, toclients=False,
         yield (proj, deps, packs)
     for d in deps :
         if d not in alreadyfound :
-            for w in walk(d, topdown, toclients, onerror, alreadyfound, cmtpath, cmtprojectpath) :
+            for w in walk(d, topdown, toclients, onerror, alreadyfound, cmtpath,
+                          cmtprojectpath) :
                 yield w
     if not topdown :
         yield (proj, deps, packs)
 
 
-def CMTWhich(project, package=None, version=None, all_occurences=False, casesense=True):
+def CMTWhich(project, package=None, version=None, all_occurences=False, casesense=True,
+             project_class=Project):
     """ function to extract the project or package class"""
     if version :
         ver = version
@@ -637,20 +646,22 @@ def CMTWhich(project, package=None, version=None, all_occurences=False, casesens
         ver = package
         pak = None
 
-    prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
+    prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense,
+                      project_class=project_class)
 
     if not prj :
         # try versionless project or latest version of a project
         ver = None
         pak = package
-        prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense)
+        prj = findProject(os.environ["CMTPROJECTPATH"], project, ver, casesense=casesense,
+                          project_class=project_class)
 
     result = prj
 
     if prj and pak :
         # case where there is a second argument
         pkg =None
-        for p, _, _ in walk(prj, cmtprojectpath=os.environ["CMTPROJECTPATH"],light=True) :
+        for p, _, _ in walk(prj, cmtprojectpath=os.environ["CMTPROJECTPATH"], light=True) :
             if p.version() :
                 pkg = p.findPackage(pak)
             else :
