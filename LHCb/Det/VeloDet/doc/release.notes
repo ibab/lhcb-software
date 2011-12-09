@@ -2,6 +2,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
 !========================= VeloDet v13r16 2011-11-07 =========================
 ! 2011-10-05 - Kurt Rinnert
  - Added TEll1 event info to DeVeloSensor to propagate decoding problems to

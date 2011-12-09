@@ -17,6 +17,8 @@ use GaudiAlg    v*
 use GSL         v*    LCG_Interfaces
 use Boost       v*    LCG_Interfaces
 
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+
 # =============== own includes ============================================
 apply_pattern install_more_includes more=VeloDet
 
