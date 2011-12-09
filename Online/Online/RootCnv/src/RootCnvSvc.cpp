@@ -233,7 +233,10 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
         connection.release();
       }
       else  {
-        return sc;
+	m_incidentSvc->fireIncident(Incident(dataset,mode == IDataConnection::READ
+					     ? IncidentType::FailInputFile
+					     : IncidentType::FailOutputFile));
+	return error("Cannot open data file:"+dataset);
       }
     }
     RootDataConnection* pc = dynamic_cast<RootDataConnection*>(c);
