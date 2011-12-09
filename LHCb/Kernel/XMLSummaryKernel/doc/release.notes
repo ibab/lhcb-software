@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r2p1 2011-12-09 =========================
 ! 2011-11-18 - Marco Cattaneo
  - Update POOL test to use a post DC06 file and remove need to load HepMCBack
 
