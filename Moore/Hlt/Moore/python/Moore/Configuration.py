@@ -548,6 +548,8 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
+	# raw event location for L0 decoding
+	L0Conf().RawEventLocations = ['DAQ/RawEvent']
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv 

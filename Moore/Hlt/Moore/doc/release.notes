@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2011-12-09 - Eric van Herwijnene
+ - Modified Moore/python/Configuration.py 
+   - added the TES RawEventLocation for L0 decoding
+
 ! 2011-09-02 - Roel Aaij
  - Update tests to search for the correct string.
  - More test_independence to Hlt/IndependenceTests.
