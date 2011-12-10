@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2011-12-10 - Marco Cattaneo
+ - Removed use of Gaudi ParticlePropertySvc (obsolete) from DDDBConf.
+
 ! 2011-11-15 - Marco Cattaneo
  - Update database tags for SQLDDDB v6r20:
    . LHCBCOND, 2011: head-20111111

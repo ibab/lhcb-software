@@ -96,9 +96,6 @@ class DDDBConf(ConfigurableUser):
         self.__data_types_handlers__[dataType](self)
 
         # Get particle properties table from condDB
-        # Old Gaudi implementation
-        ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
-        # New LHCb implementation
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc( ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt' )
 
