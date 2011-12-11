@@ -1,151 +1,174 @@
 // $Id$
 // ============================================================================
-#ifndef DECAYS_TREEGRAMMAR_H 
-#define DECAYS_TREEGRAMMAR_H 1
+#ifndef LOKI_TREEGRAMMAR_H 
+#define LOKI_TREEGRAMMAR_H 1
 // ============================================================================
 // Include files
-// ============================================================================
-// LoKi
 // ============================================================================
 #include "LoKi/NodeGrammar.h"
 #include "LoKi/TreeHelpers.h"
 // ============================================================================
-namespace Decays
+/** @file LoKi/TreeGrammar.h
+ *
+ *  The grammars for decay trees, 
+ *  reimplementation using Boost.Spirit version 2.
+ *
+ *  This file is a part of LoKi project - 
+ *  ``C++ ToolKit  for Smart and Friendly Physics Analysis''
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Alexander Mazurov
+ *  @date   2011-12-11
+ *  
+ *  Version           $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
+namespace Decays 
 {
   // ==========================================================================
   namespace Grammars 
   {
     // ========================================================================
-    typedef    Decays::Parsers::Tree                                    Tree_ ;
+    // Namespace Aliases
     // ========================================================================
-    /** @struct TreeClosure 
-     *  helper closure class to keep/construct tree.
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2009--09-12
+    namespace sp  = boost::spirit;
+    namespace ph  = boost::phoenix;
+    namespace qi  = sp::qi;
+    namespace enc = sp::ascii;
+    namespace dt  = Decays::Trees;
+    // ========================================================================
+    // Typedefs
+    // ========================================================================
+    typedef Decays::Parsers::Tree Tree_;
+    // =========================================================================
+    /** @class Tree
+     *  Main grammar for decay trees 
+     *  @author Alexander Mazurov
+     *  @date   2011-12-11
      */
-    struct TreeClosure 
-      : public boost::spirit::classic::closure <TreeClosure,Tree_>
+    template<typename Iterator, typename Skipper>
+    struct Tree: qi::grammar<Iterator, Tree_(), Skipper> 
     {
       // ======================================================================
-      /// the actual holder for the node 
-      member1 tree     ;                     //  the actual holder for the node 
+      typedef Tree_ ResultT;
+      typedef std::vector<std::string> VectorOfStringsT;
       // ======================================================================
-    };
-    // ========================================================================
-    /** @struct Tree
-     *  grammar class to keep/construct trees 
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date 2009-05-22
-     */
-    class Tree : public boost::spirit::classic::grammar 
-    <Tree,TreeClosure::context_t>
-    {
-      // ======================================================================
-    public:
-      // ======================================================================
-      typedef Tree_                                                   ResultT ;
-      typedef std::vector<std::string>                               Symbols_ ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      Tree ( const Symbols_* sym   ,
-             const Symbols_* parts ) 
-        : m_symbols   ( sym   ) 
-        , m_particles ( parts )
-        
-      {}
-      // ======================================================================
-    public:
-      // ======================================================================
-      template <class ScannerT>
-      struct definition
+      struct Operations
       {
-        typedef rule<ScannerT,TreeClosure::context_t> tree_rule ;
-        
-        // the constructor: define the actual grammar
-        definition ( const Tree& self)
-          : node ( self.m_symbols   , 
-                   self.m_particles ) 
-        {
-          
-          head = 
-            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1        ) ] >> "]nos" )
-            [ head.tree += Decays::Trees::NotOscillated ] |  
-            ( str_p("[") >> node [ head.tree = construct_<Tree_> ( arg1        ) ] >> "]os"  )
-            [ head.tree += Decays::Trees::Oscillated    ] |  
-            ( str_p("<") >> node [ head.tree = construct_<Tree_> ( arg1 , true ) ] >> ">"    ) 
-            | (             node [ head.tree = construct_<Tree_> ( arg1        ) ] ) ;
-          
-          expression = 
-            // node      [ expression.tree = construct_<Tree_> ( arg1 )  ] |
-            tree      [ expression.tree = arg1 ] | 
-            operation [ expression.tree = arg1 ] |
-            head      [ expression.tree = arg1 ] |
-            ( str_p ( "(") >> expression [ expression.tree = arg1 ] >> ')') | 
-            ( str_p ( "^") >> expression [ expression.tree = arg1 ] ) [ expression.tree /= true ] |
-            ( str_p ( "~") >> operation  [ expression.tree = arg1 ] ) [ expression.tree *= true ] |
-            ( str_p ( "~") >> tree       [ expression.tree = arg1 ] ) [ expression.tree *= true ] ;
-          
-          tree = str_p("(") 
-            >> head [ tree.tree = arg1 ] 
-            >> ( str_p ( "==x>" ) [ tree.tree += Decays::Trees::LongDoubleX ] |
-                 str_p ( "=x>"  ) [ tree.tree += Decays::Trees::DoubleX     ] |
-                 str_p ( "--x>" ) [ tree.tree += Decays::Trees::LongSingleX ] |
-                 str_p ( "-x>"  ) [ tree.tree += Decays::Trees::SingleX     ] |
-                 str_p ( "==>"  ) [ tree.tree += Decays::Trees::LongDouble  ] |
-                 str_p ( "=>"   ) [ tree.tree += Decays::Trees::Double      ] |
-                 str_p ( "-->"  ) [ tree.tree += Decays::Trees::LongSingle  ] |
-                 str_p ( "->"   ) [ tree.tree += Decays::Trees::Single      ] )
-            >>    expression [ tree.tree += arg1 ]  // the first child (mandatory!) 
-            >> *( expression [ tree.tree += arg1 ] |                           // children 
-                  ( str_p("{") >> expression [ tree.tree %= arg1 ] >> '}' ) )  // optional
-            >> !( str_p("...") [ tree.tree += true ]        )                  // inclusive 
-            >> ')' ;
-          
-          operation  = 
-            ( str_p ( "(" ) 
-              >> expression [ operation.tree = arg1 ] 
-              >> +(( str_p( "&&" ) >> expression [ operation.tree  &= arg1 ] ) | 
-                   ( str_p( "||" ) >> expression [ operation.tree  |= arg1 ] ) )
-              >> ')' ) | 
-            ( str_p ( "[" ) 
-              >> expression [ operation.tree = arg1 ] 
-              >> +( str_p( "," ) >> expression [ operation.tree  |= arg1 ] )
-              >> ']' ) ;
-          
-          res = expression [ self.tree = arg1 ] ; 
-          // res = tree [ self.tree = arg1 ] ; 
-          
-        }      
-        // return the final contructed rule 
-        const rule<ScannerT>& start() const { return res ; }
-        // data members:
-        //
-        Node        node       ;                         //            the node 
-        
-        tree_rule   head       ;                         //      the decay head 
-        tree_rule   expression ;                         //          expression 
-        tree_rule   tree       ;                         //       the full tree
-        tree_rule   operation  ;                         //  logical operations 
-        //
-        rule<ScannerT> res   ;                           //    the final result
+        template <typename A, typename B = boost::fusion::unused_type,
+                  typename C = boost::fusion::unused_type,
+                  typename D = boost::fusion::unused_type>
+        struct result { typedef void type; };
         // ====================================================================
-      } ; // end of deninition 
+        void operator()( Tree_&       res   , 
+                         const Node_& value , 
+                         bool stable=false  ) const
+        {
+          res = Tree_(value, stable);
+        }    
+        // ====================================================================
+      };
       // ======================================================================
-    private:
-      // ======================================================================
-      /// symbols 
-      const Symbols_* m_symbols   ;                               //   symbols 
-      /// particles 
-      const Symbols_* m_particles ;                               // particles 
-      // ======================================================================
-    } ; // end of class Tree
+      Tree ( const VectorOfStringsT& symbols   , 
+             const VectorOfStringsT& particles )
+        : Tree::base_type(res)
+        , node( symbols , particles ) 
+      {
+        // ====================================================================
+        res %= expression;
+        // ====================================================================
+        expression %= tree | operation | head | unary;
+        // ====================================================================
+        head = 
+          ( qi::lit("[") 
+            >>  node [op(qi::_val, qi::_1)][qi::_val += dt::NotOscillated] 
+            >> "]nos"
+            )
+          |
+          ( qi::lit("[") 
+            >>  node [op(qi::_val, qi::_1)][qi::_val += dt::Oscillated] 
+            >> "]os"
+            ) 
+          |
+          ( qi::lit("<") >> node[op(qi::_val, qi::_1, true)] >> ">")
+          |
+          node[op(qi::_val, qi::_1)]
+          ;
+        // ====================================================================
+        operation  = 
+          ( qi::lit("(") 
+            >> expression [qi::_val = qi::_1] 
+            >> +(
+                 ("&&" >> expression[qi::_val &= qi::_1]) 
+                 | 
+                 ("||" >> expression[qi::_val |= qi::_1])
+                 ) 
+            >> ')' 
+            ) 
+          | 
+          ( qi::lit("[") 
+            >> expression[qi::_val = qi::_1] 
+            >> +("," >> expression[qi::_val |= qi::_1])
+            >> "]"
+            ) ;
+        // ====================================================================
+        tree = 
+          qi::lit("(") 
+          >> head [ qi::_val = qi::_1] 
+          >>  ( qi::lit("==x>")[qi::_val += Decays::Trees::LongDoubleX] |
+                qi::lit("=x>")[qi::_val += Decays::Trees::DoubleX] |
+                qi::lit("--x>")[qi::_val += Decays::Trees::LongSingleX] |
+                qi::lit("-x>")[qi::_val += Decays::Trees::SingleX] |
+                qi::lit("==>")[qi::_val += Decays::Trees::LongDouble] |
+                qi::lit("=>")[qi::_val += Decays::Trees::Double] |
+                qi::lit("-->")[qi::_val += Decays::Trees::LongSingle] |
+                qi::lit("->")[qi::_val += Decays::Trees::Single] 
+                )
+          >> expression[qi::_val += qi::_1] // the first child (mandatory!) 
+          >> *( expression[qi::_val += qi::_1] 
+                |                           // children 
+                (qi::lit("{") >> expression [qi::_val %= qi::_1] >> "}" ) 
+                )  // optional
+          >> -(qi::lit("...")[qi::_val += true]) // inclusive 
+          >> ')' ;   
+        unary = 
+          (qi::lit("(") >> expression[qi::_val = qi::_1] >> ")") 
+          | 
+          ("^" >> expression[qi::_val = qi::_1][qi::_val /= true ])
+          |
+          ("~" >> operation[qi::_val = qi::_1][qi::_val *= true ]) 
+          |
+          ("~" >> tree[qi::_val = qi::_1][qi::_val *= true ]);  
+        // ====================================================================
+      }
+        // ====================================================================
+        qi::rule<Iterator, Tree_(), Skipper> 
+          res        , 
+          expression , 
+          tree       , 
+          head       , 
+          operation  ,
+          unary      ;
+        Node<Iterator, Skipper>  node ;    
+        ph::function<Operations> op   ;
+        // ====================================================================
+  } ;
     // ========================================================================
-  } // end of namespace Grammars 
+  } //                                        end of namespace Decays::Grammars
   // ==========================================================================
-} // end of namespace Decays 
+} //                                                    end of namespace Decays 
 // ============================================================================
-// The  END 
+//                                                                      The END 
 // ============================================================================
-#endif // DECAYS_TREEGRAMMAR_H
+#endif // LOKI_TREEGRAMMAR_H
 // ============================================================================
