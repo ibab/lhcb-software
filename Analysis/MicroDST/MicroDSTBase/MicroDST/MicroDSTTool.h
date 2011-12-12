@@ -15,6 +15,7 @@
  */
 class GAUDI_API MicroDSTTool : public MicroDSTCommon<GaudiTool>
 {
+
 public:
   
   /// Standard constructor
@@ -26,6 +27,6 @@ public:
 
   virtual ~MicroDSTTool( ); ///< Destructor
 
-
 };
+
 #endif // MICRODST_MICRODSTTOOL_H

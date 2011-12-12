@@ -1,118 +1,113 @@
 // $Id: KeyedContainerClonerAlg.h,v 1.9 2010-09-07 10:25:55 jpalac Exp $
-#ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
+#ifndef MICRODST_KEYEDCONTAINERCLONERALG_H
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 // From MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
 #include "MicroDST/BindType2ClonerDef.h"
 #include "MicroDST/Defaults.h"
-/** @class KeyedContainerClonerAlg KeyedContainerClonerAlg.h MicroDST/KeyedContainerClonerAlg.h
- *  
- *
- *  @author Juan PALACIOS
- *  @date   2008-08-29
- */
 
-namespace MicroDST 
+namespace MicroDST
 {
 
-template <typename T>
-class KeyedContainerClonerAlg : public MicroDSTAlgorithm {
+  /** @class KeyedContainerClonerAlg KeyedContainerClonerAlg.h MicroDST/KeyedContainerClonerAlg.h
+   *
+   *  Clones objects in Keyed Containers
+   *  
+   *  @author Juan PALACIOS
+   *  @date   2008-08-29
+   */
 
-private:
-  typedef Defaults<T> DEFAULTS;
-  typedef Location<T> LOCATION;
-  typedef typename BindType2Cloner<T>::Cloner CLONER;
-public:
-
-  /// Standard constructor
-  KeyedContainerClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
-    :
-    MicroDSTAlgorithm ( name , pSvcLocator ),
-    m_cloner(0),
-    m_clonerType(DEFAULTS::clonerType)
+  template <typename T>
+  class KeyedContainerClonerAlg : public MicroDSTAlgorithm
   {
-    declareProperty("ClonerType", m_clonerType);
-  }
 
-  ~KeyedContainerClonerAlg( ) {} ///< Destructor
+  private:
 
-  StatusCode initialize() 
-  {
-    StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
+    typedef Defaults<T> DEFAULTS;
+    typedef Location<T> LOCATION;
+    typedef typename BindType2Cloner<T>::Cloner CLONER;
 
-    debug() << "==> Initialize" << endmsg;
+  public:
 
-    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-    if ( inputTESLocation()=="")  {
-      verbose() << "Setting input TES location default: " 
-                << LOCATION::Default << endmsg;
-      setInputTESLocation(LOCATION::Default);
-    }
-    verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
-
-    m_cloner = tool<CLONER>(m_clonerType, this);
-
-    if (m_cloner) {
-      debug() << "Found cloner " << m_clonerType << endmsg;
-    } else {
-      sc = Error("Failed to find cloner " + m_clonerType,
-            StatusCode::FAILURE, 10);
+    /// Standard constructor
+    KeyedContainerClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
+      :
+      MicroDSTAlgorithm ( name , pSvcLocator   ),
+      m_cloner          ( NULL                 ),
+      m_clonerType      ( DEFAULTS::clonerType )
+    {
+      declareProperty( "ClonerType", m_clonerType );
     }
 
-    return sc;
+    ~KeyedContainerClonerAlg( ) {} ///< Destructor
 
-  }
-  
-  StatusCode execute() 
-  {
-    
-    debug() << "==> Execute" << endmsg;
+    StatusCode initialize()
+    {
+      StatusCode sc = MicroDSTAlgorithm::initialize();
+      if ( sc.isFailure() ) return sc;
 
-    typedef std::vector<std::string>::const_iterator stringIter;
-    stringIter locBegin = this->inputTESLocations().begin();
-    stringIter locEnd = this->inputTESLocations().end();
-    
-    for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
-
-      const std::string inputLocation = niceLocationName(*iLoc);
-      const std::string outputLocation = 
-        this->outputTESLocation( inputLocation );
-        
-      verbose() << "Going to clone KeyedContainer from " << inputLocation
-                << " into " << outputLocation << endmsg;
-
-      const typename T::Container* cont = 
-        copyKeyedContainer<CLONER>(inputLocation, m_cloner      );
-
-      if (0==cont) {
-        Warning("Unable to clone or get container from "+ inputLocation,
-                StatusCode::FAILURE, 0).ignore();
+      if ( inputTESLocation().empty() )
+      {
+        setInputTESLocation(LOCATION::Default);
       }
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
+
+      m_cloner = tool<CLONER>(m_clonerType, this);
+
+      if ( m_cloner )
+      {
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Found cloner " << m_clonerType << endmsg;
+      }
+      else
+      {
+        sc = Error( "Failed to find cloner " + m_clonerType );
+      }
+
+      return sc;
     }
 
-    setFilterPassed(true);
-    return StatusCode::SUCCESS;
+    StatusCode execute()
+    {
+      for ( std::vector<std::string>::const_iterator iLoc = this->inputTESLocations().begin();
+            iLoc != this->inputTESLocations().end(); ++iLoc )
+      {
 
-  }
-  
-  StatusCode finalize() 
-  {
-    debug() << "==> Finalize" << endmsg;
-    return MicroDSTAlgorithm::finalize();
-  }
-  
-private:
+        const std::string inputLocation = niceLocationName(*iLoc);
+        const std::string outputLocation =
+          this->outputTESLocation( inputLocation );
 
-  CLONER* m_cloner;
-  std::string m_clonerType;
-  
-};
- 
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "Going to clone KeyedContainer from " << inputLocation
+                    << " into " << outputLocation << endmsg;
+
+        const typename T::Container* cont =
+          copyKeyedContainer<CLONER>( inputLocation, m_cloner );
+
+        if ( !cont )
+        {
+          Warning("Unable to clone or get container from "+ inputLocation,
+                  StatusCode::FAILURE, 0).ignore();
+        }
+      }
+
+      setFilterPassed(true);
+
+      return StatusCode::SUCCESS;
+    }
+
+  private:
+
+    CLONER* m_cloner;
+    std::string m_clonerType;
+
+  };
+
 }
 
 #endif // MICRODST_KEYEDCONTAINERCLONERALG_H

@@ -1,5 +1,5 @@
 // $Id: MicroDSTAlgorithm.cpp,v 1.3 2009-08-17 19:13:18 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include <GaudiKernel/AlgFactory.h>
@@ -18,7 +18,7 @@
 //=============================================================================
 MicroDSTAlgorithm::MicroDSTAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : 
+  :
   MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator ),
   m_inputTESLocation(""),
   m_inputTESLocations()
@@ -31,42 +31,44 @@ MicroDSTAlgorithm::MicroDSTAlgorithm( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MicroDSTAlgorithm::~MicroDSTAlgorithm() {} 
+MicroDSTAlgorithm::~MicroDSTAlgorithm() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode MicroDSTAlgorithm::initialize() {
-
-  StatusCode sc = MicroDSTCommon<GaudiAlgorithm>::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode MicroDSTAlgorithm::initialize() 
+{
+  StatusCode sc = MicroDSTCommon<GaudiAlgorithm>::initialize(); 
+  if ( sc.isFailure() ) return sc; 
 
   debug() << "==> Initialize" << endmsg;
 
-  if ( !m_inputTESLocations.empty() && m_inputTESLocation != "" ) {
+  if ( !m_inputTESLocations.empty() && !m_inputTESLocation.empty() )
+  {
     sc = Error("You have set both InputLocation AND InputLocations properties");
   }
- 
-  if ( m_inputTESLocations.empty() ) {
+
+  if ( m_inputTESLocations.empty() )
+  {
     this->setInputTESLocation(m_inputTESLocation);
   }
-
+  
   return sc;
 }
+
 //=============================================================================
-StatusCode MicroDSTAlgorithm::execute() {
-
+StatusCode MicroDSTAlgorithm::execute() 
+{
   debug() << "==> Execute" << endmsg;
-
   return StatusCode::SUCCESS;
 }
+
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode MicroDSTAlgorithm::finalize() {
-
+StatusCode MicroDSTAlgorithm::finalize() 
+{
   debug() << "==> Finalize" << endmsg;
-
-  return MicroDSTCommon<GaudiAlgorithm>::finalize();  // must be called after all other actions
+  return MicroDSTCommon<GaudiAlgorithm>::finalize();
 }
 //=============================================================================

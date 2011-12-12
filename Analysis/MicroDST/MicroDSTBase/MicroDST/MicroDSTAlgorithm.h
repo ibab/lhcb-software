@@ -21,7 +21,9 @@ class ObjectContainerBase;
  */
 class GAUDI_API MicroDSTAlgorithm : public MicroDSTCommon<GaudiAlgorithm>
 {
+
 public: 
+
   /// Standard constructor
   MicroDSTAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -40,7 +42,7 @@ protected:
       : m_inputTESLocations[0];
   }
 
-  inline std::vector<std::string>& inputTESLocations()
+  inline const std::vector<std::string>& inputTESLocations()
   {
     return m_inputTESLocations;
   }
