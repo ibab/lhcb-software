@@ -309,8 +309,18 @@ class IOHelper(object):
         return true if it is larger than v18r3'''
         apath="${GAUDISVCROOT}/cmt/requirements"
         import os
+        #Without the env variable, all new Gaudi versions are fine
+        if "GAUDISVCROOT" not in os.environ:
+            return True
         apath=os.path.expandvars(apath)
-        requirements=file(apath)
+        try:
+            requirements=file(apath)
+        except:
+            return False
+        
+        if not requirements:
+            requirements.close()
+            return False
         version=None
         for line in requirements.readlines():
             if 'version' in line.strip()[:7]:
@@ -326,7 +336,7 @@ class IOHelper(object):
                 break
         requirements.close()
         if version is None:
-            raise ValueError("unable to find version from GaudiSvc")
+            return False
         #v17 or lower
         if version[0]<18:
             return False
@@ -422,14 +432,18 @@ class IOHelper(object):
     ###############################################################
     #              Services
     ###############################################################
-
+    
     def isRootSupported(self):
         '''Services:  Check if the ROOT services exist in this version'''
         import Configurables
         #check the RootCnv service exists and that the GaudiSvc version
-        #is greater than v18r16
-        return (hasattr(Configurables,"Gaudi__RootCnvSvc") and self._gaudiSvcVersion())
-
+        #is greater than v18r16, only print a warning for the moment.
+        if not self._gaudiSvcVersion():
+            print "# WARNING: It looks like this version of GaudiSvc is from before v18r16, so will suffer from bugs"
+            print "# WARNING: To avoid segfaulting in finalize and writing out corrupted files you need to be using a patched version with at least revision r6649 of GaudiSvc"
+            print "# WARNING: If you've already patched the software, you can ignore this warning."
+        return hasattr(Configurables,"Gaudi__RootCnvSvc")
+    
     def isPoolSupported(self):
         '''Services: Check if the POOL services exist in this version'''
         import Configurables

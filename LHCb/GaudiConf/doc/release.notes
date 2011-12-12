@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-12-08 - Rob Lambert
+ - Allow for the nonexistance of the GAUDISVCROOT variable
+ - Print a very large warning instead fo returning false for the tests
+
 ! 2011-12-08 - Marco Cattaneo
  - DstConf:
    . Remove support for RDST (never used in real data, superseded by SDST)
