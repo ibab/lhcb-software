@@ -84,6 +84,8 @@ ChiCJPsiGammaConversion = {
         , 'mMaxChiCFit'           :   4.0
         , 'PrescaleChiC'          :   1.0
         , 'PostscaleChiC'         :   1.0
+        , 'PrescaleChiCWS'        :   1.0
+        , 'PostscaleChiCWS'       :   1.0
           },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'PSWG' ]   

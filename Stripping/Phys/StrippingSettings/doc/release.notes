@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-12-12 - Anton Poluektov 
+ - Fixed config dictionary for StrippingChiCJPsiGammaConversion. 
+
 !========================= StrippingSettings v2r8 2011-09-30 ===================
 ! 2011-09-30 - Jibo He
  - Revert Rob's changes to SL conf dicts in Stripping17
