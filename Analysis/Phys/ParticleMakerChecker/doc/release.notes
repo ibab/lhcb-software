@@ -5,6 +5,9 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2011-12-12 - Chris Jones
+ - Clean up
+
 !========================== ParticleMakerChecker v1r4p2 2011-04-29 ========
 ! 2011-04-08 - Juan Palacios
  - src/ParticleEffPurMoni.h

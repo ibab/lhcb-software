@@ -590,10 +590,11 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
                                  const std::string & history,
                                  const bool toplevel ) const
 {
-  // protect against too many recursive calls... (should never ever get this deep)
-  if ( recurCount > 9999 )
+  // protect against too many recursive calls...
+  // (should never ever get this deep, but to just to be safe ...)
+  if ( recurCount > 99999 )
   {
-    Warning( "Recursive limit in addParticle reached. Aborting Particle tree scan" );
+    Warning( "Recursive limit in addParticle reached. Aborting Particle tree scan" ).ignore();
     return;
   }
 
@@ -1005,14 +1006,6 @@ ParticleEffPurMoni::protoLinker( const LHCb::ProtoParticle * proto ) const
                                   ( 0 != proto->charge() ?
                                     Particle2MCMethod::ChargedPP : Particle2MCMethod::NeutralPP ),
                                   std::vector<std::string>(1,loc) );
-    /*
-      if ( linker->notFound() )
-      {
-      Warning( "Failed to get MC Linker for '" + loc + "'" );
-      delete linker;
-      linker = NULL;
-      }
-    */
   }
   return linker;
 }
