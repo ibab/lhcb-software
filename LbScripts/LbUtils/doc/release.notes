@@ -1,3 +1,8 @@
+2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/CMT/Project.py: added the containerPackage method that returns an instance of the
+	Package class. The original container method only returns the name of the container.
+
 2011-12-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/CMT/Project.py: made an indirection in order to be able to

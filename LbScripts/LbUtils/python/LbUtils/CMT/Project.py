@@ -65,6 +65,7 @@ class Project(object):
         self._extpaklist = None
         self._allextpaklist = None
         self._container = None
+        self._container_pkg = None
         self._afsmount = None
     def __eq__(self, other):
         return self.fullLocation() == other.fullLocation()
@@ -107,6 +108,18 @@ class Project(object):
         if self._container is None :
             self._container = self.projectFile().container()
         return self._container
+
+    def containerPackage(self):
+        if self._container_pkg is None :
+            cont_name = self.container()
+            if cont_name :
+                for p in self.packages() :
+                    if p.name() == cont_name :
+                        self._container_pkg = p
+                        break ;
+        return self._container_pkg
+
+
 
     def __version(self):
         if self._version is None :
