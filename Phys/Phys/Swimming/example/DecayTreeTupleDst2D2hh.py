@@ -19,7 +19,8 @@ MessageSvc().Format = "% F%30W%S%15W%R%T %0W%M"
 
 ## mDST paths
 locationRoot = '/Event'
-selectionPath = 'CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
+selectionPath = 'CharmCompleteEvent/Phys/D2hhPromptDst2D2RSLine'
+D0path = 'CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
 particlePath = selectionPath + '/Particles'
 #pvLocation = 'Rec/Vertex/Primary'
 
@@ -52,24 +53,29 @@ dtt = DecayTreeTuple (
     WriteP2PVRelations = False,
     )
 
-dtt.Decay = "[[D0]cc -> ^K- ^pi+]cc"
+dtt.Decay = "[D*(2010)+ -> (^D0 -> ^K- ^pi+) ^pi+]cc"
 if mDST: dtt.RootInTES = locationRoot
 
 from DecayTreeTuple.Configuration import *
 ## Add appropriate tools
 
-dtt.addBranches({
-    "D" : "D0 : [[D0]cc -> K- pi+]cc"
-})
+from Configurables import TupleToolDecay
+dtt.addTool(TupleToolDecay, name = 'D0')
+dtt.Branches = {
+    "D0" : "[D*(2010)+ -> (^D0 -> K- pi+) pi+]cc"
+}
 
-dtt.D.addTupleTool('TupleToolPropertime')
-ttsi = dtt.D.addTupleTool('TupleToolSwimmingInfo/TriggerInfo')
-ttsis = dtt.D.addTupleTool('TupleToolSwimmingInfo/StrippingInfo')
-ttsi.ReportsLocation = selectionPath + '/P2TPRelations'
-ttsis.ReportsLocation = selectionPath + '/P2TPRelations'
+ttptime = dtt.D0.addTupleTool('TupleToolPropertime')
+ttptime.FitToPV = True
+ttsi = dtt.D0.addTupleTool('TupleToolSwimmingInfo/TriggerInfo')
+ttsis = dtt.D0.addTupleTool('TupleToolSwimmingInfo/StrippingInfo')
+ttsi.ReportsLocation =  D0path + '/P2TPRelations'
+ttsis.ReportsLocation =  D0path + '/P2TPRelations'
 ttsis.ReportStage = "Stripping"
+ttsi.OutputLevel = 1
+ttsis.OutputLevel = 1 
 
-tttt = dtt.D.addTupleTool('TupleToolTISTOS')
+tttt = dtt.D0.addTupleTool('TupleToolTISTOS')
 tttt.TriggerList = ['Hlt1TrackAllL0Decision', 'Hlt1TrackMuonDecision', 'Hlt1DiMuonHighMassDecision',
                     'Hlt2DiMuonDetachedJpsiDecision', 'Hlt2DiMuonJpsiDecision']
 tttt.VerboseHlt1 = True
@@ -100,6 +106,6 @@ NTupleSvc().OutputLevel = 1
 from GaudiConf import IOHelper
 if mDST:
     ## IOHelper().inputFiles(['/castor/cern.ch/user/r/raaij/test/Swimming.SwimmingMicroDST.mdst'])
-    IOHelper().inputFiles(['Swimming.SwimmingMDSTUntagged.mdst'])
+    IOHelper().inputFiles(['Swimming.SwimmingMDSTTagged.mdst'])
 else:
     IOHelper().inputFiles(['/castor/cern.ch/user/r/raaij/test/SwimTrigDST.dst'])

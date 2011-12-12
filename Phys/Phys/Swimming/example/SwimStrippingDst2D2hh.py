@@ -15,9 +15,12 @@ Swimming().StrippingFile = 'D2hh'
 Swimming().StrippingLine = 'D2hh'
 Swimming().StripCands = '/Event/Phys/D2hhPromptD2KPiLine'
 Swimming().OffCands = '/Event/CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
+Swimming().MuDSTCands = ['/Event/CharmCompleteEvent/Phys/D2hhPromptDst2D2RSLine']
+Swimming().SkipEventIfNoMuDSTCandFound = True
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'MDST'
 Swimming().UseFileStager = False
+Swimming().Input = ["DATAFILE='PFN:/afs/cern.ch/user/g/gligorov/w0/cmtuser/DaVinci_v29r2p1/Phys/Swimming/example/SwimTrigDST.dst'"]
 
 from Configurables import CondDB
 CondDB(UseOracle = False, DisableLFC = True)
