@@ -18,6 +18,7 @@ class LbProject(Project):
         self._pkgclass = LbPackage
         self._conf = None
         self._release_notes = None
+        self._release_date = None
     def configuration(self):
         if self._conf is None :
             self._conf = getProject(self.name())
@@ -42,7 +43,10 @@ class LbProject(Project):
         if self._release_notes is None :
             self._release_notes = self.containerPackage().releaseNotes()
         return self._release_notes
-
+    def releaseDate(self):
+        if self._release_date is None :
+            self._release_date = self.containerPackage().releaseDate()
+        return self._release_date
 
 def LbCMTWhich(project, package=None, version=None, all_occurences=False,
                casesense=True, with_user_area=True,

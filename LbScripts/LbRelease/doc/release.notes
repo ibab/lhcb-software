@@ -1,5 +1,7 @@
 2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbRelease/CMT/LbProject.py: added releaseDate method
+	* python/LbRelease/Info.py: added the extraction of the various html informations
 	* LbRelease/python/LbRelease/CMT/LbPackage.py: added the releaseNotes method.
 	* LbRelease/python/LbRelease/CMT/LbProject.py: idem
 	* LbRelease/python/LbRelease/Info.py: added the release notes information to the output
