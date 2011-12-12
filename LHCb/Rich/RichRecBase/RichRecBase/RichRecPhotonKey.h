@@ -9,8 +9,8 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RichRecEvent_RichRecPhotonKey_H
-#define RichRecEvent_RichRecPhotonKey_H 1
+#ifndef RichRecBase_RichRecPhotonKey_H
+#define RichRecBase_RichRecPhotonKey_H 1
 
 // Gaudi
 #include "GaudiKernel/StreamBuffer.h"
@@ -83,7 +83,7 @@ namespace Rich
 
     public:
 
-      /// Retrieve 32 bit integer key
+      /// Retrieve the full key
       inline KeyType key() const
       {
         return m_data.raw;
@@ -95,7 +95,7 @@ namespace Rich
         return key();
       }
 
-      /// Update 32 bit integer key
+      /// Update the full key
       inline void setKey( const KeyType key )
       {
         m_data.raw = key;
@@ -165,4 +165,4 @@ namespace Rich
   }
 }
 
-#endif   // RichRecEvent_RichRecPhotonKey_H
+#endif   // RichRecBase_RichRecPhotonKey_H
