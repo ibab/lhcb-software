@@ -8,6 +8,8 @@ from LbUtils import Env
 from LbUtils.Set import Set
 
 # global imports
+
+from time import gmtime, strftime
 import os, re, sys
 import logging
 from subprocess import Popen, PIPE
@@ -35,6 +37,7 @@ class Package(object):
         self._binarylist = None
         self._hasconstituents = None
         self._usedbybinary = None
+        self._release_date = None
     def __eq__(self, other):
         return self._fulllocation == other.fullLocation()
     def __str__(self):
@@ -405,6 +408,10 @@ class Package(object):
             log.debug("return code of 'cmt show set_value %s' in %s is %s" % (set_name, wdir, retcode))
         os.chdir(here)
         return set_val
+    def releaseDate(self):
+        if self._release_date is None:
+            self._release_date = strftime("%Y-%m-%d",gmtime(os.path.getmtime(os.path.join(self.fullLocation(), "cmt", "requirements"))))
+        return self._release_date
 
 def hasRequirementsFile(dirpath):
     hasfile = False

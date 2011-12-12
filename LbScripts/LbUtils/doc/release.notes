@@ -1,5 +1,6 @@
 2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/CMT/Package.py: added the releaseDate method.
 	* LbUtils/python/LbUtils/CMT/Project.py: added the containerPackage method that returns an instance of the
 	Package class. The original container method only returns the name of the container.
 
