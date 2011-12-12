@@ -38,12 +38,12 @@ sc = StrippingConf( Streams = streams,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )
 
-from DSTWriters.__dev__.microdstelements import *
-from DSTWriters.__dev__.Configuration import (SelDSTWriter,
-                                              stripDSTStreamConf,
-                                              stripDSTElements,
-                                              stripMicroDSTStreamConf,
-                                              stripMicroDSTElements)
+from DSTWriters.microdstelements import *
+from DSTWriters.Configuration import (SelDSTWriter,
+                                      stripDSTStreamConf,
+                                      stripDSTElements,
+                                      stripMicroDSTStreamConf,
+                                      stripMicroDSTElements)
 
 #
 # Configuration of MicroDST
@@ -52,17 +52,17 @@ mdstStreamConf = stripMicroDSTStreamConf()
 mdstElements = stripMicroDSTElements()
 
 #
-# Configuration of Calibration stream 
+# Configuration of Calibration stream
 # to include additional track containers
 #
 copyExtraTrackData = MoveObjects(objects = [ "Rec/TrackEffMuonTT_SelMuonTTPParts/ProtoParticles",
                                              "Rec/TrackEffMuonTT_SelMakeMuonTT/Tracks",
-					     "Rec/Downstream/Tracks",
-					     "Rec/Downstream/FittedTracks",
-					     "Rec/ProtoP/DownMuonTrackEffDownMuonNominalProtoPMaker/ProtoParticles",
-					     "Rec/VeloMuon/Tracks",
-					     "Rec/ProtoP/VeloMuonTrackEffVeloMuonProtoPMaker/ProtoParticles" ])
-				 
+          "Rec/Downstream/Tracks",
+          "Rec/Downstream/FittedTracks",
+          "Rec/ProtoP/DownMuonTrackEffDownMuonNominalProtoPMaker/ProtoParticles",
+          "Rec/VeloMuon/Tracks",
+          "Rec/ProtoP/VeloMuonTrackEffVeloMuonProtoPMaker/ProtoParticles" ])
+
 
 calibElements = stripDSTElements() + [ copyExtraTrackData ]
 

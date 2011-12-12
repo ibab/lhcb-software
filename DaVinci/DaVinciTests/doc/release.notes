@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-12-12 - Chris Jones
+ - Adapt to changes in python configurables in DSTWriters (remove __dev__)
+
 ! 2011-11-25 - P. Koppenburg
  - Update I/O test
 

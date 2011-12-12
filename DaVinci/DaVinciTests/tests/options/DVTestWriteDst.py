@@ -21,8 +21,8 @@ from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler,
 #
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 #from Configurables import SelDSTWriter
-from DSTWriters.__dev__.Configuration import SelDSTWriter
-from DSTWriters.__dev__.microdstelements import CloneMCInfo
+from DSTWriters.Configuration import SelDSTWriter
+from DSTWriters.microdstelements import CloneMCInfo
 
 MyLooseJpsi = DataOnDemand(Location = 'Phys/StdLooseJpsi2MuMu/Particles')
 
