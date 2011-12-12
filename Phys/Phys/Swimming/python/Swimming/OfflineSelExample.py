@@ -7,23 +7,15 @@ def OffSelFunc(myGlobs,Particle):
     import ROOT
     Result = 0 
     #Cut variables here
-    Min_Mother_FD = 2.4 
-    Min_Mother_FDChi2 = 50
-    Max_Mother_IP = 0.09
-    Max_Mother_IPChi2 = 16  
+    Max_Mother_IPChi2 = 12  
         
-    Mother_PT = 900 
-    Max_Daughter_PT = 2450
-    Min_Daughter_PT = 700 
-    Min_Daughter_P  = 13500
+    Mother_PT = 1200 
+    Max_Daughter_PT = 2700
 
-    Max_Daughter_IP = 0.25
-    Min_Daughter_IP = 0.11
-    Max_Daughter_IPChi2 = 140.
-    Min_Daughter_IPChi2 = 80. 
+    Max_Daughter_IPChi2 = 200.
+    Min_Daughter_IPChi2 = 100. 
   
-    Min_Daughter_TrackChi2 = 3 
-    Max_Daughter_TrackChi2 = 4 
+    Max_Daughter_TrackChi2 = 3 
  
     B_VertexBase = myGlobs.TES[myGlobs.offlinePVs]
     B_imppar = 0.
@@ -69,12 +61,7 @@ def OffSelFunc(myGlobs,Particle):
  
     if (Min_daughter_chi2 > Min_Daughter_IPChi2) and \
        (Max_daughter_chi2 > Max_Daughter_IPChi2) and \
-       (Min_daughter_ip   > Min_Daughter_IP)     and \
-       (Max_daughter_ip   > Max_Daughter_IP)     and \
-       (B_imppar          < Max_Mother_IP)       and \
-       (B_chi2            < Max_Mother_IPChi2)   and \
-       (B_fd              > Min_Mother_FD)       and \
-       (B_fd_chi2         > Min_Mother_FDChi2) :
+       (B_chi2            < Max_Mother_IPChi2)   :
         return True
     else :
         return False

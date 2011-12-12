@@ -11,6 +11,8 @@ swimCands               = Swimming().getProp('SwimmingPrefix')
 offlinePVs              = Swimming().getProp('OfflinePV')
 DEBUGMODE               = Swimming().getProp('Debug')
 startingEvent           = Swimming().getProp('SkipEvents')
+skipIfNoMuDSTCand       = Swimming().getProp('SkipEventIfNoMuDSTCandFound')
+muDSTCands              = Swimming().getProp('MuDSTCands')
 
 # Shorter names for some of the options
 # The maximum swimming distance is maxSwimDistance (in mm)
@@ -196,6 +198,24 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "Container of offline candidates empty!" 
                 print "Skipping the event but this is bad, check what you are doing!!"
             continue
+        if skipIfNoMuDSTCand :
+            skipEvent = False
+            for candloc in muDSTCands :
+                mdstcands = TES[candloc + "/Particles"]
+                if not mdstcands :
+                    if DEBUGMODE :
+                        print "Incident while processing event number",startingEvent+eventNumber
+                        print "No container of muDST candidates "+candloc+" found!" 
+                        print "Skipping the event"
+                    skipEvent = True
+                if mdstcands.size() == 0 :
+                    if DEBUGMODE :
+                        print "Incident while processing event number",startingEvent+eventNumber
+                        print "Empty container of muDST candidates "+candloc+" found!" 
+                        print "Skipping the event"
+                    skipEvent = True
+            if skipEvent :
+                continue
         if DEBUGMODE :
             print "Passed the safety checks OK"
             print "Candidates in event =", mycands.size()

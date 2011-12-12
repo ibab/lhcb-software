@@ -64,6 +64,7 @@ class Swimming(LHCbConfigurableUser) :
         , "UseFileStager"      : False           # Use the file stager.
         , "WriteFSR"           : True            # Write FSRs in output DST.
         , "EventPrint"         : "L0Muon INFO - Total number of events processed : %d"
+        , "SkipEventIfNoMuDSTCandFound" : False
        }
 
     _propertyDocDct = {  
@@ -114,6 +115,7 @@ class Swimming(LHCbConfigurableUser) :
         , "UseFileStager"      : """ Use the file stager. """
         , "WriteFSR"           : """ Write FSRs in output DST. """
         , "EventPrint"         : """ The string to be printed at the end of the job. Should contain once %d """
+        , "SkipEventIfNoMuDSTCandFound" : """ If this is True (default is False) not only the OffCands location but also the MuDSTCands location must contain candidates for the event to be processed """
         }
 
     __used_configurables__ = [
