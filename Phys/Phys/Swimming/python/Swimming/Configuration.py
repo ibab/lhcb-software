@@ -306,10 +306,6 @@ def ConfigureDaVinci():
     DaVinci().appendToMainSequence( [deathstar] )
     DaVinci().appendToMainSequence( [ sc.sequence() ] )
 
-    # Output
-    inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
-    selectionSeq = SelectionSequence("Swimming" + config.getProp('OutputType'),
-                                     TopSelection = inputData)
     dstWriter = None
     print config.getProp('OutputType')
     if config.getProp('OutputType') == 'MDST':
@@ -324,6 +320,20 @@ def ConfigureDaVinci():
                                                          ReFitAndClonePVs,
                                                          CloneLHCbIDs,
                                                          CloneRawBanks)
+        # selection sequence for offline candidates
+        offData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
+        offSeq = SelectionSequence("Swimming" + config.getProp('OutputType') + "Off",
+                                   TopSelection = offInputData)
+        sequences = [offSeq]
+        muCands = config.getProp('MuDSTCands')
+        for i, cands in enumerate(muCands):
+            # Add extra selections for additional MuDSTCands
+            data = AutomaticData(Location =  + "/Particles")
+            seq = SelectionSequence("MuDSTCands_%d" % i, TopSelection = data)
+            sequences.append(seq)
+        selectionSeq = MultiSelectionSequence("Swimming" + config.getProp('OutputType'),
+                                              Sequences = sequences)
+
         SwimmingConf = microDSTStreamConf()
         streamConf = { 'default' : SwimmingConf }
         SwimmingElements = [ CloneRecHeader(),
@@ -349,6 +359,12 @@ def ConfigureDaVinci():
     elif config.getProp('OutputType') == 'DST':
         from DSTWriters.__dev__.streamconf import OutputStreamConf
         from DSTWriters.__dev__.Configuration import SelDSTWriter
+
+        # Output
+        inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
+        selectionSeq = SelectionSequence("Swimming" + config.getProp('OutputType'),
+                                         TopSelection = inputData)
+
         streamConf = OutputStreamConf(streamType = InputCopyStream,
                                       fileExtension = '.dst',
                                       extraItems = [config.getProp('OffCands') + '/P2TPRelations#1',
