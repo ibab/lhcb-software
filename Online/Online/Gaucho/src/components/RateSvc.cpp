@@ -78,7 +78,7 @@ void RateSvc::makerate(MonMap* mmap)
   std::string nnam;
   MonMap::iterator it;
   double rate;
-  if (m_enableTrending)
+  if (m_enableTrending && m_trender)
   {
     m_trender->startEvent();
   }
@@ -128,7 +128,7 @@ void RateSvc::makerate(MonMap* mmap)
         }
       }
       if (s!=0) s->Updater(sizeof(rate));
-      if (m_enableTrending)
+      if (m_enableTrending && m_trender)
       {
         std::string tnam;
         size_t i=nams.find('/');
@@ -137,7 +137,7 @@ void RateSvc::makerate(MonMap* mmap)
       }
     }
   }
-  if (m_enableTrending)
+  if (m_enableTrending && m_trender)
   {
     m_trender->saveEvent();
   }
@@ -266,17 +266,7 @@ StatusCode RateSvc::queryInterface(const InterfaceID& riid, void** ppvIF)
 
 StatusCode RateSvc::start()
 {
-  PubSvc::start();
-  m_adder->SetCycleFn(RATESVC::Analyze,this);
-  m_started = true;
-  m_NamePrefix = m_PartitionName+"_";
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RateSvc::initialize()
-{
-  StatusCode sc = PubSvc::initialize();
-  StringReplace(m_prefix,"<part>",m_PartitionName);
+  StatusCode sc;
   if (sc.isSuccess() && m_enableTrending && m_trender == 0)
   {
     SmartIF<IToolSvc> tools;
@@ -294,13 +284,38 @@ StatusCode RateSvc::initialize()
       m_trender->setMaxTimeNoWrite(600);
     }
   }
+  PubSvc::start();
+  m_adder->SetCycleFn(RATESVC::Analyze,this);
+  m_started = true;
+  m_NamePrefix = m_PartitionName+"_";
   return StatusCode::SUCCESS;
 }
-StatusCode RateSvc::finalize()
+
+StatusCode RateSvc::initialize()
 {
+  StatusCode sc = PubSvc::initialize();
+  StringReplace(m_prefix,"<part>",m_PartitionName);
+  return StatusCode::SUCCESS;
+}
+StatusCode RateSvc::stop()
+{
+  StatusCode sc;
   if (m_trender != 0)
   {
     m_trender->close();
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->releaseTool(m_trender);
+    m_trender = 0;
   }
+  sc = PubSvc::stop();
+  return sc;
+}
+StatusCode RateSvc::finalize()
+{
   return StatusCode::SUCCESS;
 }

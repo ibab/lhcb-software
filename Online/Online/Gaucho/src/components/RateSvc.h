@@ -46,6 +46,7 @@ public:
   virtual ~RateSvc();
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   StatusCode start();
+  StatusCode stop();
   void makerate(MonMap* mmap);
   void makecounters(MonMap* mmap);
   void *m_oldProf;
