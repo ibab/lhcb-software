@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-12-12 - Roel Aaij
+ - Allow adding additional locations to an MDST using the MuDSTCands property.
+
 ! 2011-12-09 - Roel Aaij
  - Fix the logic for importing the module containing the offline selection to
    allow it to be from an external package.

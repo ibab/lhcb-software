@@ -45,7 +45,7 @@ class Swimming(LHCbConfigurableUser) :
         , "Hlt2RecoLine"       : 'Hlt2ForwardDecision'                      # The trigger line used for Hlt2 reconstruction studies                 
         , "OffCands"           : ''              # The TES location of the offline selected candidates
         , "StripCands"         : ''              # The TES location of the stripping candidates
-        , "MuDSTCands"         : ''              # The TES location of the candidates to write to MuDST
+        , "MuDSTCands"         : []              # The TES location of the candidates to write to MuDST
         , "OnlinePV"           : 'TES:Hlt/Vertex/PV3D'      # The TES location of the HLT primary vertices
         , "OfflinePV"          : '/Event/Rec/Vertex/Primary'# The TES location of the offline primary vertices
         , "OutPVSel"           : 'PV3D'          # The name of the HLT1 PV3D 'selection' 
@@ -95,7 +95,7 @@ class Swimming(LHCbConfigurableUser) :
         , "Hlt2RecoLine"       : """ The trigger line used for Hlt2 reconstruction studies                 """
         , "OffCands"           : """ The TES location of the offline selected candidates"""
         , "StripCands"         : """ The TES location of the stripping candidates"""
-        , "MuDSTCands"         : """ The TES location of the candidates to write to MuDST"""
+        , "MuDSTCands"         : """ The TES locations of extra candidates to write to MuDST"""
         , "OnlinePV"           : """ The TES location of the HLT primary vertices"""
         , "OfflinePV"          : """ The TES location of the offline primary vertices"""
         , "OutPVSel"           : """ The name of the HLT1 PV3D 'selection' """
@@ -145,6 +145,9 @@ class Swimming(LHCbConfigurableUser) :
         if not self.getProp('SwimStripping') and self.getProp('OutputType') == 'MDST':
             raise TypeError, "You cannot write a MicroDST when swimming the trigger."
                
+        if type(self.getProp('MuDSTCands')) != list:
+            raise TypeError, "MuDSTCands must be a list."
+
         from Configurables import DataOnDemandSvc
 
         app = LHCbApp()
@@ -239,7 +242,8 @@ def ConfigureDaVinci():
     from StrippingConf.Configuration import StrippingConf
     from Configurables import ProcStatusCheck
     from Configurables import EventNodeKiller,GaudiSequencer
-    from PhysSelPython.Wrappers import AutomaticData, SelectionSequence
+    from PhysSelPython.Wrappers import (AutomaticData, SelectionSequence,
+                                        MultiSelectionSequence)
 
     # Get the stripping line
     from StrippingSettings.Utils import lineBuilderConfiguration
@@ -323,12 +327,12 @@ def ConfigureDaVinci():
         # selection sequence for offline candidates
         offData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
         offSeq = SelectionSequence("Swimming" + config.getProp('OutputType') + "Off",
-                                   TopSelection = offInputData)
+                                   TopSelection = offData)
         sequences = [offSeq]
         muCands = config.getProp('MuDSTCands')
         for i, cands in enumerate(muCands):
             # Add extra selections for additional MuDSTCands
-            data = AutomaticData(Location =  + "/Particles")
+            data = AutomaticData(Location = cands + "/Particles")
             seq = SelectionSequence("MuDSTCands_%d" % i, TopSelection = data)
             sequences.append(seq)
         selectionSeq = MultiSelectionSequence("Swimming" + config.getProp('OutputType'),

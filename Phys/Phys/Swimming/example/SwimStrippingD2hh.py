@@ -8,7 +8,6 @@ Swimming().DDDBtag = 'head-20110914'
 Swimming().CondDBtag = 'head-20110914'
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
-Swimming().Input = ["DATAFILE='PFN:castor:/afs/cern.ch/user/g/gligorov/w0/cmtuser/DaVinci_HEAD/Phys/Swimming/example/SwimTrigDST.dst'"]
 Swimming().SwimStripping = True
 Swimming().StrippingStream = 'CharmCompleteEvent'
 Swimming().StrippingVersion = 'Stripping17'
@@ -16,9 +15,10 @@ Swimming().StrippingFile = 'D2hh'
 Swimming().StrippingLine = 'D2hh'
 Swimming().StripCands = '/Event/Phys/D2hhPromptD2KPiLine'
 Swimming().OffCands = '/Event/CharmCompleteEvent/Phys/D2hhPromptD2KPiLine'
+Swimming().MuDSTCands = ['/Event/CharmCompleteEvent/Phys/D2hhPromptDst2D2RSLine']
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'MDST'
-Swimming().UseFileStager = True
+Swimming().UseFileStager = False
 
 from Configurables import CondDB
 CondDB(UseOracle = False, DisableLFC = True)
