@@ -1,3 +1,10 @@
+2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbRelease/python/LbRelease/CMT/LbPackage.py: added the releaseNotes method.
+	* LbRelease/python/LbRelease/CMT/LbProject.py: idem
+	* LbRelease/python/LbRelease/Info.py: added the release notes information to the output
+	* LbRelease/python/LbRelease/ReleaseNotes.py: implemented extract function for a given release version
+
 2011-12-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/Info.py: New file. for the release informations extraction

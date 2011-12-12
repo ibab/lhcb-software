@@ -8,7 +8,6 @@ Created on Dec 6, 2011
 from LbRelease.CMT import LbCMTWhich
 
 import json
-import logging
 
 def getReleaseInfo(project, version=None, with_html=True):
     output = {
@@ -24,7 +23,6 @@ def getReleaseInfo(project, version=None, with_html=True):
 
     output["version"] = p.version()
     output["name"] = p.name()
-    output["notes"] = p.releaseNotes()
 
     for b in  p.base() :
         output["dependencies"].append({"name":b.name(), "version": b.version()})
@@ -34,7 +32,6 @@ def getReleaseInfo(project, version=None, with_html=True):
                                    "version": pak.version(),
                                    "notes": pak.releaseNotes()})
 
+    output["notes"] = p.releaseNotes()
 
-    print p.summary(showpackages=True)
-
-    return json.dumps(output)
+    return json.dumps(output, sort_keys=True, indent=4)

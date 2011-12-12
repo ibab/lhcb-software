@@ -17,14 +17,17 @@ class LbProject(Project):
         super(LbProject,self).__init__(projectpath)
         self._pkgclass = LbPackage
         self._conf = None
+        self._release_notes = None
     def configuration(self):
         if self._conf is None :
             self._conf = getProject(self.name())
         return self._conf
     def container(self):
+        log = logging.getLogger()
         if self._container is None :
             self._container = super(LbProject, self).container()
             if self._container == "" :
+                log.debug("Native container not found. Using configuration.")
                 self._container = self.configuration().SteeringPackage()
         return self._container
     def CMTVersion(self):
@@ -36,9 +39,9 @@ class LbProject(Project):
     def name(self):
         return CMT2LHCb(self.CMTName(),self.CMTVersion())[0]
     def releaseNotes(self):
-        notes = ""
-
-        return notes
+        if self._release_notes is None :
+            self._release_notes = self.containerPackage().releaseNotes()
+        return self._release_notes
 
 
 def LbCMTWhich(project, package=None, version=None, all_occurences=False,
