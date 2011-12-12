@@ -21,13 +21,14 @@ class ICloneMuonPID;
  *  ICloneMuonPID, ICloneCaloHypo implementations. The LHCb::RichPID is 
  *  shallow-cloned.
  *
- *
  *  @author Juan PALACIOS
  *  @date   2010-08-15
  */
 class ProtoParticleDeepCloner : public extends1<MicroDSTTool, ICloneProtoParticle>
 {
+
 public: 
+
   /// Standard constructor
   ProtoParticleDeepCloner( const std::string& type, 
                        const std::string& name,

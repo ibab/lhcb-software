@@ -17,8 +17,11 @@
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
-class TrackCloner : public extends1<MicroDSTTool, ICloneTrack> {
+class TrackCloner : public extends1<MicroDSTTool, ICloneTrack> 
+{
+
 public: 
+
   /// Standard constructor
   TrackCloner( const std::string& type, 
                const std::string& name,
@@ -26,11 +29,7 @@ public:
 
   virtual ~TrackCloner( ); ///< Destructor
 
-  StatusCode initialize();
-
   virtual LHCb::Track* operator() (const LHCb::Track* track);
-
-protected:
 
 private:
 
@@ -41,4 +40,5 @@ private:
   typedef MicroDST::BasicItemCloner<LHCb::Track> BasicTrackCloner;
 
 };
+
 #endif // MICRODST_TRACKCLONER_H
