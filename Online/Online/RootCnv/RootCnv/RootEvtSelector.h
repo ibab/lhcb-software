@@ -132,8 +132,10 @@ namespace Gaudi {
     mutable RootCnvSvc*             m_dbMgr;
     /// Class id of root node to create opaque address
     CLID                            m_rootCLID;
+    /// Property; Name of the persistency service to search for conversion service.
+    std::string                     m_persName;
     /// Property; Name of the concversion service used to create opaque addresses
-    std::string                     m_cnvSvcName;    
+    std::string                     m_cnvSvcName;
     /// Property: Name of the ROOT entry name
     std::string                     m_rootName;
     /// Property: File criteria to define item iteration

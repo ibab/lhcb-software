@@ -85,7 +85,9 @@ namespace Gaudi {
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Tokenizer.h"
+#include "GaudiKernel/TypeNameString.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IPersistencySvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "RootCnv/RootCnvSvc.h"
 #include "RootCnv/RootDataConnection.h"
@@ -95,11 +97,13 @@ using namespace Gaudi;
 using namespace std;
 
 // Service Constructor
-RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc )
+RootEvtSelector::RootEvtSelector(const string& name,ISvcLocator* svcloc)
 : base_class(name, svcloc), m_rootCLID(CLID_NULL)
 {
-  m_cnvSvcName = "RootCnvSvc";
-  declareProperty("DbType",  m_dummy);
+  m_cnvSvcName = "Gaudi::RootCnvSvc/RootCnvSvc";
+  m_persName   = "EventPersistencySvc";
+  declareProperty("EvtPersistencySvc",m_persName="EventPersistencySvc");
+  declareProperty("DbType",m_dummy);
 }
 
 // Helper method to issue error messages
@@ -116,13 +120,25 @@ StatusCode RootEvtSelector::initialize()    {
   if ( !status.isSuccess() ) {
     return error("Error initializing base class Service!");
   }
-  // Retrieve conversion service handling event iteration
-  SmartIF<IConversionSvc> cnv(serviceLocator()->service(m_cnvSvcName));
-  m_dbMgr = dynamic_cast<RootCnvSvc*>(cnv.get());
+  
+  SmartIF<IPersistencySvc> ipers(serviceLocator()->service(m_persName));
+  if( !ipers.isValid() )   {
+    return error("Unable to locate IPersistencySvc interface of "+m_persName);
+  }
+  IConversionSvc *cnvSvc = 0;
+  Gaudi::Utils::TypeNameString itm(m_cnvSvcName);
+  status = ipers->getService(itm.name(),cnvSvc);
+  if( !status.isSuccess() )   {
+    status = ipers->getService(itm.type(),cnvSvc);
+    if( !status.isSuccess() )   {
+      return error("Unable to locate IConversionSvc interface of database type "+m_cnvSvcName);
+    }
+  }
+  m_dbMgr = dynamic_cast<RootCnvSvc*>(cnvSvc);
   if( !m_dbMgr ) {
+    cnvSvc->release();
     return error("Unable to localize service:"+m_cnvSvcName);
   }
-  m_dbMgr->addRef();
   // Get DataSvc
   SmartIF<IDataManagerSvc> eds(serviceLocator()->service("EventDataSvc"));
   if( !eds.isValid() ) {
@@ -165,8 +181,8 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
       pCtxt->setEntry(-1);
       if ( fileit != pCtxt->files().end() ) {
         RootDataConnection* con=0;
-        string input = *fileit;
-        StatusCode sc=m_dbMgr->connectDatabase(input,IDataConnection::READ,&con);
+        string     in = *fileit;
+        StatusCode sc = m_dbMgr->connectDatabase(in,IDataConnection::READ,&con);
         if ( sc.isSuccess() ) {
           string section = m_rootName[0] == '/' ? m_rootName.substr(1) : m_rootName;
           b = con->getBranch(section,m_rootName);
@@ -176,7 +192,7 @@ StatusCode RootEvtSelector::next(Context& ctxt) const  {
             return next(ctxt);
           }
         }
-        m_dbMgr->disconnect(input).ignore();
+        m_dbMgr->disconnect(in).ignore();
         pCtxt->setFileIterator(++fileit);
         return next(ctxt);
       }
