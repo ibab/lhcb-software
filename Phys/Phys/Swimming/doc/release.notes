@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-12-12 - V. Gligorov
+ - Add option to skip events in which no particle is found in the mdst location
+ - Update examples directory to contain examples for swimming tagged charm 
+
 ! 2011-12-12 - Roel Aaij
  - Allow adding additional locations to an MDST using the MuDSTCands property.
 
