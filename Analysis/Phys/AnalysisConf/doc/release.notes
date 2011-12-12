@@ -9,6 +9,7 @@
  - Set default DataType to '' (Users must set it themselves via DaVinci)
  - Change obsolete Nodes to NodeMap with DataOnDemandSvc
  - Remove DC06 from supported data types.
+ - Make the default for Simulation False
 
 !========================== AnalysisConf v2r0 2010-04-08 ===================
 

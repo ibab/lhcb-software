@@ -15,9 +15,9 @@ import GaudiKernel.ProcessJobOptions
 class AnalysisConf(LHCbConfigurableUser) :
     
     __slots__ = {
-          "DataType"        : ''         # Data type, can be ['2008','2009','MC09','2010','2011']
-        , "Simulation"      : True       # set to True to use SimCond
-        , "RedoMCLinks"     : False      # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
+          "DataType"        : ''       # Data type, can be ['2008','2009','MC09','2010','2011']
+        , "Simulation"      : False    # set to True for MC
+        , "RedoMCLinks"     : False    # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
     
     _propertyDocDct = { 
