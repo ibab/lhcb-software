@@ -1,11 +1,11 @@
 // $Id: CopyParticle2PVMap.cpp,v 1.1 2010-08-26 17:06:44 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include <GaudiKernel/ObjectVector.h>
-// LHCb 
-#include "Kernel/ITriggerTisTos.h" 
+// LHCb
+#include "Kernel/ITriggerTisTos.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
 // MicroDST
@@ -24,9 +24,6 @@
 // 2010-08-18 : Juan Palacios
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CopyParticle2PVMap );
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -39,7 +36,7 @@ CopyParticle2PVMap::CopyParticle2PVMap( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CopyParticle2PVMap::~CopyParticle2PVMap() {} 
+CopyParticle2PVMap::~CopyParticle2PVMap() {}
 
 //=============================================================================
 // Initialization
@@ -68,36 +65,36 @@ StatusCode CopyParticle2PVMap::execute() {
   stringIter iLoc = this->inputTESLocations().begin();
   stringIter locEnd = this->inputTESLocations().end();
 
-      
+
   for ( ; iLoc != locEnd; ++iLoc) {
-    
+
     const std::string inputLocation = niceLocationName(*iLoc);
 
     executeLocation(inputLocation);
 
   }
-    
+
   return StatusCode::SUCCESS;
 
 }
 //=============================================================================
-void CopyParticle2PVMap::executeLocation(const std::string& inputLocation) 
+void CopyParticle2PVMap::executeLocation(const std::string& inputLocation)
 {
 
   typedef DaVinci::Map::Particle2VertexBase Map;
 
-  const std::string outputLocation = 
+  const std::string outputLocation =
     this->outputTESLocation( inputLocation );
-  
+
   if ( msgLevel(MSG::VERBOSE) ) {
-    verbose() << "Going to clone relations from " 
+    verbose() << "Going to clone relations from "
               << inputLocation
               << " into " << outputLocation << endmsg;
   }
 
   if (exist<Map>(outputLocation) )
   {
-    this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
+    this->Warning("Object "+ outputLocation + " already exists. Not cloning.",
                   StatusCode::SUCCESS, 0).ignore() ;
     return;
   }
@@ -105,14 +102,14 @@ void CopyParticle2PVMap::executeLocation(const std::string& inputLocation)
   if (exist<Map>(inputLocation) )
   {
     if ( msgLevel(MSG::VERBOSE) ) {
-      verbose() << "Retrieving relations table from " 
+      verbose() << "Retrieving relations table from "
                 << inputLocation << endmsg;
     }
     const Map* p2pv = get<Map>(inputLocation);
     if ( p2pv && !p2pv->empty() ) {
-          
+
       if ( msgLevel(MSG::VERBOSE) ) {
-        verbose() << "found P->PV map with "<< p2pv->size() 
+        verbose() << "found P->PV map with "<< p2pv->size()
                   << " entries!" << endmsg;
       }
       Map* p2pvClone = new Map();
@@ -131,9 +128,9 @@ void CopyParticle2PVMap::executeLocation(const std::string& inputLocation)
           }
         }
       }
-      
+
       if ( msgLevel(MSG::VERBOSE) ) {
-        verbose() << "Going to store relations table from " 
+        verbose() << "Going to store relations table from "
                   << inputLocation
                   << " into " << outputLocation << endmsg;
         verbose() << "Number of relations in cloned table: "
@@ -145,17 +142,17 @@ void CopyParticle2PVMap::executeLocation(const std::string& inputLocation)
     } else {
       if ( msgLevel(MSG::VERBOSE) ) {
         this->Warning("Found no table at "+inputLocation,
-                      StatusCode::FAILURE).ignore();  
+                      StatusCode::FAILURE).ignore();
       }
     }
-        
+
   } else {
     if ( msgLevel(MSG::VERBOSE) ) {
       this->Warning("Found no table at "+inputLocation,
                     StatusCode::FAILURE).ignore();
     }
   }
-  
+
 }
 //=============================================================================
 //  Finalize
@@ -168,3 +165,6 @@ StatusCode CopyParticle2PVMap::finalize() {
 }
 
 //=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyParticle2PVMap )

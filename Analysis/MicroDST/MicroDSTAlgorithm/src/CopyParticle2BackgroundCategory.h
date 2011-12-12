@@ -41,8 +41,8 @@
  *  @date   2010-02-24
  */
 //=============================================================================
-namespace Particle2BackCat {
-  
+namespace Particle2BackCat 
+{  
   typedef LHCb::Relation1D<LHCb::Particle, int> Table;
 }
 //=============================================================================

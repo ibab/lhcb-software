@@ -14,8 +14,10 @@ class ICloneVertexBase;
  *  @author Juan Palacios
  *  @date   2010-08-26
  */
-class CopyParticle2PVMap : public MicroDSTAlgorithm {
+class CopyParticle2PVMap : public MicroDSTAlgorithm 
+{
 public: 
+
   /// Standard constructor
   CopyParticle2PVMap( const std::string& name, ISvcLocator* pSvcLocator );
 
