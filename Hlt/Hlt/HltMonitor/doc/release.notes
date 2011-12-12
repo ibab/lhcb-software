@@ -3,7 +3,9 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Offline monitoring of Hlt from raw data
 !-----------------------------------------------------------------------------
-
+! 2011-12-12 - Eric van Herwijnen
+ - Replace L0TCK v4r99 by v* in requirements file
+ 
 ! 2011-10-24 - Roel Aaij
  - Fix bug in CombinedMonitor.
 

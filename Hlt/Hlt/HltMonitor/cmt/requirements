@@ -15,5 +15,5 @@ branches          cmt doc python
 #============================================================================
 # use   Package			v1r*    Hat
 use     GaudiKernel             v*
-use     L0TCK                   v4r99   TCK
+use     L0TCK                   v*      TCK
 apply_pattern install_python_modules
