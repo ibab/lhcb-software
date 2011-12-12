@@ -1,8 +1,8 @@
 // $Id: P2MCRelatorAlg.cpp,v 1.6 2010-05-28 12:15:07 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "P2MCRelatorAlg.h"
@@ -13,16 +13,12 @@
 // 2009-04-16 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( P2MCRelatorAlg );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 P2MCRelatorAlg::P2MCRelatorAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : 
+  :
   GaudiAlgorithm ( name , pSvcLocator ),
   m_particleLocations(),
   m_mcpLocation(LHCb::MCParticleLocation::Default),
@@ -38,7 +34,7 @@ P2MCRelatorAlg::P2MCRelatorAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-P2MCRelatorAlg::~P2MCRelatorAlg() {} 
+P2MCRelatorAlg::~P2MCRelatorAlg() {}
 
 //=============================================================================
 // Initialization
@@ -63,13 +59,13 @@ StatusCode P2MCRelatorAlg::execute() {
 
   m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
   if (0==m_mcParticles) {
-    return Warning("Found no MCParticles in "+ m_mcpLocation, 
+    return Warning("Found no MCParticles in "+ m_mcpLocation,
                    StatusCode::SUCCESS, 0);
   }
   typedef std::vector<std::string> StringVector;
   StringVector::const_iterator _begin = m_particleLocations.begin();
   StringVector::const_iterator _end = m_particleLocations.end();
-  
+
   for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
 
     m_table.clear();
@@ -83,9 +79,9 @@ StatusCode P2MCRelatorAlg::execute() {
                 StatusCode::SUCCESS, 0).ignore();
       }
 
-    
+
       Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
-      const std::string outputLocation = 
+      const std::string outputLocation =
         trunkLocation(*iLoc) + "/P2MCPRelations";
 
       put(table, outputLocation);
@@ -95,7 +91,7 @@ StatusCode P2MCRelatorAlg::execute() {
     }
 
   }
-  
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -107,7 +103,7 @@ std::string P2MCRelatorAlg::trunkLocation(const std::string& location) const
   } else {
     return std::string(location);
   }
-  
+
 }
 //=============================================================================
 //  Finalize
@@ -120,3 +116,6 @@ StatusCode P2MCRelatorAlg::finalize() {
 }
 
 //=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( P2MCRelatorAlg )

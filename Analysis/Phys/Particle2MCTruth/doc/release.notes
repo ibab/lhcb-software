@@ -6,6 +6,9 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2011-12-12 - Chris Jones
+ - Tidy up
+
 ! 2011-11-11 - Chris Jones
  - Update MCMatchObjP2MCRelator to make it more inteligent in where it
    looks for the relations tables. Will now try to look in the same place in

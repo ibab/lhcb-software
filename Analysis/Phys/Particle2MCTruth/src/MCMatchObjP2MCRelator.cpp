@@ -18,10 +18,6 @@
 // 2009-03-04 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCMatchObjP2MCRelator );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -141,7 +137,7 @@ void MCMatchObjP2MCRelator::addTable(const LHCb::Particle* particle) const
 //=============================================================================
 void MCMatchObjP2MCRelator::addTables() const
 {
-  for ( Addresses::const_iterator item = m_tables.begin(); 
+  for ( Addresses::const_iterator item = m_tables.begin();
         item != m_tables.end(); ++item )
   {
     loadTable( *item );
@@ -180,7 +176,7 @@ void MCMatchObjP2MCRelator::loadTable(const std::string & address) const
 
   else
   {
-    Warning ( " There is no valid data at '" + address + "'", 
+    Warning ( " There is no valid data at '" + address + "'",
               StatusCode::FAILURE, 0 ).ignore() ;
   }
 
@@ -197,3 +193,6 @@ void MCMatchObjP2MCRelator::handle(const Incident&)
 //=============================================================================
 MCMatchObjP2MCRelator::~MCMatchObjP2MCRelator() {}
 //=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( MCMatchObjP2MCRelator )

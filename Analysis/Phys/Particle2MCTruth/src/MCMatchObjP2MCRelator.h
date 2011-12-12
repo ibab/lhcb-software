@@ -66,12 +66,12 @@ private:
   {
     always() << "==================================" << endmsg;
     for (LHCb::MCParticle::ConstVector::const_iterator mcp = mcps.begin();
-         mcp!=mcps.end(); ++mcp) 
+         mcp!=mcps.end(); ++mcp)
     {
       always() << "\tMCP PID " << (*mcp)->particleID().pid() << endmsg;
     }
   }
-  
+
   /** Returns the full location of the given object in the Data Store
    *
    *  @param pObj Data object
