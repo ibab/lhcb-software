@@ -27,16 +27,28 @@ FSRNavigator::FSRNavigator( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_ToolName("")
+    m_ToolName(""), m_fileRecordSvc(0)
 {
   declareInterface<IFSRNavigator>(this);
-  // get the File Records service
-  m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 FSRNavigator::~FSRNavigator() {} 
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+StatusCode FSRNavigator::initialize() {
+
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( !sc ) return sc ; 
+
+  // get the File Records service
+  m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
+
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 std::vector< std::string > FSRNavigator::navigate(std::string rootname, std::string tag) {

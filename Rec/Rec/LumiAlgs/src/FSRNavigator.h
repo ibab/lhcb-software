@@ -25,6 +25,8 @@ public:
 
   virtual ~FSRNavigator( ); ///< Destructor
 
+  StatusCode initialize();  
+
   // return list of addresses found below the address
   std::vector< std::string > navigate(std::string rootname, std::string tag);
 
