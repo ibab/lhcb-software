@@ -24,7 +24,7 @@ export Class0_task="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so Onli
 export Class1_task="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
 export Class2_task="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -tasktype=LHCb::Class2Task -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
 export MINITERM='xterm  -ls -132 -geometry 132x12 -title '
-export BIGTERM='xterm  -ls -132 -geometry 132x55 -title '
+export BIGTERM='xterm  -ls -132 -geometry 132x65 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
