@@ -4,9 +4,8 @@
   <argument name="args"><set>
     <text>$DAVINCIROOT/options/DaVinci-Default.py</text>
     <text>$DAVINCITESTSROOT/tests/options/fsrs/DVStripping-RealData-MagUp.py</text>
-    <text>$APPCONFIGROOT/options/DaVinci/InputType-SDST.py</text>
     <text>--option</text>
-    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r3-20ev-FSR2.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().EvtMax=-1; from Configurables import SelDSTWriter; SelDSTWriter.OutputFileSuffix = 'MagUp'</text>
+    <text>from Configurables import DaVinci; DaVinci().DataType = "2010"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r3-20ev-FSR2.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().EvtMax=-1;</text>
   </set></argument>
   <argument name="timeout"><integer>3000</integer></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>

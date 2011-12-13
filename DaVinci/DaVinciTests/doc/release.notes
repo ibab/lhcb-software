@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-12-13 - Anton Poluektov 
+ - Change the way DSTWriter is called in davinci-strip-mag{up,down} tests
+
 ! 2011-12-12 - Chris Jones
  - Adapt to changes in python configurables in DSTWriters (remove __dev__)
 

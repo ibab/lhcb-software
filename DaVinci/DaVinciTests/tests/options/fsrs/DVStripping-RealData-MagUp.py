@@ -2,7 +2,7 @@ from Gaudi.Configuration import *
 
 from CommonParticles.Utils import DefaultTrackingCuts
 
-from Configurables import SelDSTWriter, DaVinci
+from Configurables import DaVinci
 
 from StrippingConf.Configuration import StrippingConf
 from StrippingArchive.Utils import buildStreams
@@ -17,11 +17,31 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 sc = StrippingConf( Streams = allStreams )
 
-dstWriter = SelDSTWriter("MyDSTWriter",
-	SelectionSequences = sc.activeStreams(),
-        OutputPrefix = 'Strip',
-	OutputFileSuffix = '000000'
-        )
+from DSTWriters.microdstelements import *
+from DSTWriters.Configuration import (SelDSTWriter,
+                                              stripDSTStreamConf,
+                                              stripDSTElements,
+                                              stripMicroDSTStreamConf,
+                                              stripMicroDSTElements,
+                                              stripCalibMicroDSTStreamConf
+                                              )
+
+
+SelDSTWriterElements = {
+    'default'              : stripDSTElements(),
+    }
+
+
+SelDSTWriterConf = {
+    'default'              : stripDSTStreamConf(),
+    }
+
+dstWriter = SelDSTWriter( "MyDSTWriter",
+                          StreamConf = SelDSTWriterConf,
+                          MicroDSTElements = SelDSTWriterElements,
+                          OutputFileSuffix ='MagUp',
+                          SelectionSequences = sc.activeStreams()
+                          )
 
 DaVinci().EvtMax = 10                        # Number of events
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
