@@ -139,8 +139,8 @@ class Swimming(LHCbConfigurableUser) :
         if not self.getProp('SwimStripping') and self.getProp('SwimOffSel'):
             raise TypeError, "You cannot swim the trigger and offline selection in the same job!"
                 
-        if self.getProp('SelectMethod') not in ['random', 'first', 'all', 'none']:
-            raise TypeError, 'The selectMethod must be eiter "random", "first", "all" or "none".'
+        if self.getProp('SelectMethod') not in ['random', 'first', 'none']:
+            raise TypeError, 'The selectMethod must be eiter "random", "first", or "none".'
 
         if not self.getProp('OutputType') in ['DST', 'MDST']:
             raise TypeError, "The only supported output types are DST and MDST."
