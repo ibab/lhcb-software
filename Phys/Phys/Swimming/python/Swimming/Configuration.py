@@ -52,6 +52,9 @@ class Swimming(LHCbConfigurableUser) :
         , "RelPVFinder"        : 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2' # Related PV finder
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
         , "TauCalc"            : 'PropertimeFitter'         # The decay time calculator
+        , "HltNodesToKill"     : ["Hlt","Hlt1","Hlt2","Trig","Raw","Rec/Vertices/Hlt2DisplVerticesV3D",
+                                  "/Event/Rec/Rich/RecoEvent/Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking_RichRecSysConf",
+                                  "/Event/Rec/Rich/GlobalPID/Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking_RichRecSysConf"]#Nodes to kill HLT 
         , "MaxSwimDistance"    : 200.            # The maximum distance to swim with "fine" granularity
         , "InitialGranularity" : 4.              # The "fine" granularity with which to swim.              
         , "GranularityRefinement" : 4.           # The amount by which to refine the granularity
@@ -103,6 +106,7 @@ class Swimming(LHCbConfigurableUser) :
         , "RelPVFinder"        : """ Related PV finder"""
         , "DistCalc"           : """ The distance calculator"""
         , "TauCalc"            : """ The decay time calculator"""
+        , "HltNodesToKill"     : """ Which TES nodes must be killed to rerun the HLT multiple times for the same event """
         , "MaxSwimDistance"    : """ The maximum distance to swim with "fine" granularity"""
         , "InitialGranularity" : """ The "fine" granularity with which to swim.              """
         , "GranularityRefinement" : """ The amount by which to refine the granularity"""
@@ -190,7 +194,7 @@ def ConfigureMoore():
 
     #Global configuration
     mykiller    = EventNodeKiller("killHlt")
-    mykiller.Nodes          = ["Hlt","Hlt1","Hlt2","Trig","Raw"]
+    mykiller.Nodes          = config.getProp('HltNodesToKill')
     deathstar               = GaudiSequencer("killHltSeq")
     deathstar.Members       = [mykiller]
     from Swimming import MooreSetup
