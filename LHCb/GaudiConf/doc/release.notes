@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-12-13 - Marco Cattaneo
+ - In requirements, fix a dependency problem in macro GaudiConfConfUserModules
+
 ! 2011-12-08 - Rob Lambert
  - Allow for the nonexistance of the GAUDISVCROOT variable
  - Print a very large warning instead fo returning false for the tests

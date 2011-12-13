@@ -15,7 +15,7 @@ set STDOPTS    $(GaudiConf_root)/options
 
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
 
-macro GaudiConfConfUserModules "GaudiConf.SimConf GaudiConf.DigiConf GaudiConf.CaloPackingConf GaudiConf.DstConf GaudiConf.Configuration"
+macro GaudiConfConfUserModules "GaudiConf.Configuration GaudiConf.SimConf GaudiConf.DigiConf GaudiConf.CaloPackingConf GaudiConf.DstConf"
 apply_pattern install_python_modules
 apply_pattern install_scripts
 
