@@ -144,7 +144,7 @@ void OnlineBaseEvtSelector::handle(const Incident& inc)    {
       OnlineContext* ctxt = const_cast<OnlineContext*>(m_context);
       if ( ctxt ) {
 	ctxt->flagEvent(14).ignore(); // 14 = SIGALRM; see "kill -l"
-	ctxt->freeEvent().ignore();
+	ctxt->releaseEvent().ignore();
       }
       m_context = 0;
     }

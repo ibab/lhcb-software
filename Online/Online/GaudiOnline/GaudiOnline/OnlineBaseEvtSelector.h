@@ -75,6 +75,8 @@ namespace LHCb  {
     virtual StatusCode rearmEvent() = 0;
     /// Free event resources
     virtual StatusCode freeEvent() = 0;
+    /// Force release of event resources
+    virtual StatusCode releaseEvent()                    { return freeEvent();  }
     /// Flag event resources
     virtual StatusCode flagEvent(int /* flag */) {  return StatusCode::SUCCESS; }
     /// Close connection to event data source
