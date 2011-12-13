@@ -216,10 +216,7 @@ int MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const Frags
   MEPID id = m_mepMgr->mepID();
   EventDesc& e = m_producer->event();
   MEPEVENT* ev = (MEPEVENT*)evt.data;
-  //MEP_SINGLE_EVT* sev = (MEP_SINGLE_EVT*)e.data;
   RawEventHeader* h = (RawEventHeader*)e.data;
-  //sev->begin = long(ev)-id->mepStart;
-  //sev->evID  = evID;
   h->setEventID(evID);
   h->setMEPID(ev->evID);
   h->setDataStart(ev->begin);
