@@ -18,50 +18,36 @@
 // 2008-04-01 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CaloClusterCloner );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 CaloClusterCloner::CaloClusterCloner( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : 
-  base_class ( type, name , parent )
-{
-}
-//=============================================================================
-StatusCode CaloClusterCloner::initialize() 
-{
+  : base_class ( type, name , parent ) { }
 
-  debug() << "==> Initialize" << endmsg;
-
-  StatusCode sc = base_class::initialize();
-  
-  if (! sc.isSuccess() ) return sc;
-  
-  return StatusCode::SUCCESS;
-}
 //=============================================================================
+
 LHCb::CaloCluster* CaloClusterCloner::operator() (const LHCb::CaloCluster* cluster)
 {
   return this->clone(cluster);
 }
+
 //=============================================================================
+
 LHCb::CaloCluster* CaloClusterCloner::clone(const LHCb::CaloCluster* cluster)
 {
   LHCb::CaloCluster* clone = 
     cloneKeyedContainerItem<BasicCaloClusterCloner>(cluster);
 
-  const std::vector<LHCb::CaloClusterEntry>& entries = cluster->entries();
+  const std::vector<LHCb::CaloClusterEntry> & entries = cluster->entries();
 
-  if (!entries.empty()) {
+  if (!entries.empty()) 
+  {
     std::vector<LHCb::CaloClusterEntry> clonedEntries;
-    std::vector<LHCb::CaloClusterEntry>::const_iterator iCalo = entries.begin();
-    std::vector<LHCb::CaloClusterEntry>::const_iterator caloEnd = entries.end();
-    for ( ; iCalo != caloEnd; ++iCalo) {
+    for ( std::vector<LHCb::CaloClusterEntry>::const_iterator iCalo = entries.begin();
+          iCalo != entries.end(); ++iCalo ) 
+    {
       const LHCb::CaloDigit* digitClone = cloneKeyedContainerItem<BasicCaloDigitCloner>((*iCalo).digit());
       LHCb::CaloClusterEntry entryClone = (*iCalo);
       entryClone.setDigit(digitClone);
@@ -70,12 +56,15 @@ LHCb::CaloCluster* CaloClusterCloner::clone(const LHCb::CaloCluster* cluster)
     clone->setEntries( clonedEntries );
   }
 
-  return clone;
-  
+  return clone;  
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 CaloClusterCloner::~CaloClusterCloner() {} 
 
 //=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( CaloClusterCloner )

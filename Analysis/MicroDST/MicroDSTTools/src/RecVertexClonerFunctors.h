@@ -1,5 +1,5 @@
 // $Id: RecVertexClonerFunctors.h,v 1.3 2010-08-11 12:50:50 jpalac Exp $
-#ifndef RECVERTEXCLONERFUNCTORS_H 
+#ifndef RECVERTEXCLONERFUNCTORS_H
 #define RECVERTEXCLONERFUNCTORS_H 1
 
 // Include files
@@ -8,16 +8,19 @@
 #include <Event/Track.h>
 
 /** @namespace MicroDST RecVertexClonerFunctors.h
- *  
+ *
+ *  MicroDST namespace
  *
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-namespace MicroDST {
+namespace MicroDST
+{
 
   typedef BasicItemCloner<LHCb::RecVertex> BasicRecVertexCloner;
 
-  /**
+  /** @struct RecVertexClonerShallowTracks RecVertexClonerFunctors.h
+   *
    * Functor to custom-clone an LHCb::RecVertex object.
    * Takes care that the RecVertex's track SmartRefs are
    * de-referenced before cloning the action. This ensures
@@ -28,17 +31,21 @@ namespace MicroDST {
    */
   struct RecVertexClonerShallowTracks
   {
+    
     typedef LHCb::RecVertex Type;
+  
   public:
+    
     static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
     {
-      const SmartRefVector< LHCb::Track >& tracks = pv->tracks();
+      const SmartRefVector<LHCb::Track> & tracks = pv->tracks();
       std::for_each(tracks.begin(), tracks.end(), MicroDST::DeReference());
       LHCb::RecVertex* item = pv->clone();
       return item;
     }
-    
+
   };
 
 }
+
 #endif // RECVERTEXCLONERFUNCTORS_H

@@ -1,8 +1,8 @@
 // $Id: FlavourTagDeepCloner.cpp,v 1.6 2010-08-11 12:52:52 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // LHCb
 #include "Event/FlavourTag.h"
@@ -18,54 +18,54 @@
 // 2008-08-08 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FlavourTagDeepCloner );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 FlavourTagDeepCloner::FlavourTagDeepCloner( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : 
+  :
   base_class ( type, name , parent ),
-  m_particleCloner(0),
+  m_particleCloner(NULL),
   m_particleClonerName("ParticleCloner")
 
 {
   declareProperty("ICloneParticle", m_particleClonerName);
 }
+
 //=============================================================================
+
 StatusCode FlavourTagDeepCloner::initialize()
 {
-  debug() << "==> Initialize" << endmsg;
+  const StatusCode sc = base_class::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  StatusCode sc = base_class::initialize();
-  if (! sc.isSuccess() ) return sc;
-
-  debug() << "Going to get ParticleCloner" << endmsg;
-  
-  m_particleCloner = tool<ICloneParticle>(m_particleClonerName, 
+  m_particleCloner = tool<ICloneParticle>(m_particleClonerName,
                                           this->parent() );
 
-  if (m_particleCloner) {
+  if (m_particleCloner) 
+  {
     debug() << "Found ParticleCloner " << m_particleCloner->name() << endmsg;
-  } else {
+  }
+  else
+  {
     error() << "Failed to find ParticleCloner" << endmsg;
   }
-  return StatusCode::SUCCESS;
+  return sc;
 }
+
 //=============================================================================
+
 LHCb::FlavourTag* FlavourTagDeepCloner::operator() (const LHCb::FlavourTag* tag)
 {
   return this->clone(tag);
 }
+
 //=============================================================================
+
 LHCb::FlavourTag* FlavourTagDeepCloner::clone( const LHCb::FlavourTag* tag )
 {
-
-  LHCb::FlavourTag* tmp = 
+  LHCb::FlavourTag* tmp =
     cloneKeyedContainerItem<BasicFTCopy>(tag);
 
   tmp->setTaggedB( getStoredClone<LHCb::Particle>( tag->taggedB() ) );
@@ -76,47 +76,57 @@ LHCb::FlavourTag* FlavourTagDeepCloner::clone( const LHCb::FlavourTag* tag )
 
   cloneTaggers(tmp);
 
-  return tmp; 
+  return tmp;
 }
+
 //=============================================================================
+
 void FlavourTagDeepCloner::cloneTaggers(LHCb::FlavourTag* tag) const
 {
-
   const std::vector<LHCb::Tagger>& taggers = tag->taggers();
 
   std::vector<LHCb::Tagger> clonedTaggers;
 
   std::vector<LHCb::Tagger>::const_iterator iTagger = taggers.begin();
-  for ( ; iTagger!=taggers.end(); ++iTagger ) {
+  for ( ; iTagger!=taggers.end(); ++iTagger ) 
+  {
     clonedTaggers.push_back(cloneTagger(*iTagger));
   }
-  
-  tag->setTaggers(clonedTaggers);
 
+  tag->setTaggers(clonedTaggers);
 }
+
 //=============================================================================
+
 LHCb::Tagger FlavourTagDeepCloner::cloneTagger(const LHCb::Tagger& tagger) const
 {
-
   LHCb::Tagger tmp(tagger);
   const SmartRefVector<LHCb::Particle>& taggerParts = tagger.taggerParts();
   SmartRefVector<LHCb::Particle> clonedTaggerParts;
   SmartRefVector<LHCb::Particle>::const_iterator iTaggerPart = taggerParts.begin();
-  for ( ;  iTaggerPart != taggerParts.end(); ++iTaggerPart) {
+  for ( ;  iTaggerPart != taggerParts.end(); ++iTaggerPart) 
+  {
     clonedTaggerParts.push_back(cloneParticle(*iTaggerPart));
   }
 
   tmp.setTaggerParts(clonedTaggerParts);
 
   return tmp;
-
 }
+
 //=============================================================================
-const LHCb::Particle* FlavourTagDeepCloner::cloneParticle(const LHCb::Particle* particle) const {
+
+const LHCb::Particle* 
+FlavourTagDeepCloner::cloneParticle(const LHCb::Particle* particle) const 
+{
   return (*m_particleCloner)(particle);
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-FlavourTagDeepCloner::~FlavourTagDeepCloner() {} 
+FlavourTagDeepCloner::~FlavourTagDeepCloner() {}
 //=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( FlavourTagDeepCloner )

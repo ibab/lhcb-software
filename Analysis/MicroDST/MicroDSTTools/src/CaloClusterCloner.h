@@ -1,5 +1,5 @@
 // $Id: CaloClusterCloner.h,v 1.1 2010-08-13 14:33:57 jpalac Exp $
-#ifndef MICRODST_CALOCLUSTERCLONER_H 
+#ifndef MICRODST_CALOCLUSTERCLONER_H
 #define MICRODST_CALOCLUSTERCLONER_H 1
 
 // Include files
@@ -8,30 +8,31 @@
 #include <MicroDST/ICloneCaloCluster.h>            // Interface
 #include <MicroDST/Functors.hpp>
 
-/** @class CaloClusterCloner CaloClusterCloner.h src/CaloClusterCloner.h
- *  
- *  Clone an LHCb::CaloCluster. Deep-clones CaloClusterEntries (CaloDigits).
- *  
- *  @author Juan PALACIOS
- *  @date   2010-08-13
- */
-
-namespace LHCb {
+namespace LHCb
+{
   class CaloDigit;
   class CaloCluster;
 }
 
+/** @class CaloClusterCloner CaloClusterCloner.h src/CaloClusterCloner.h
+ *
+ *  Clone an LHCb::CaloCluster. Deep-clones CaloClusterEntries (CaloDigits).
+ *
+ *  @author Juan PALACIOS
+ *  @date   2010-08-13
+ */
 
-class CaloClusterCloner : public extends1<MicroDSTTool, ICloneCaloCluster> {
-public: 
+class CaloClusterCloner : public extends1<MicroDSTTool, ICloneCaloCluster>
+{
+
+public:
+
   /// Standard constructor
-  CaloClusterCloner( const std::string& type, 
+  CaloClusterCloner( const std::string& type,
                      const std::string& name,
                      const IInterface* parent);
 
   virtual ~CaloClusterCloner( ); ///< Destructor
-
-  StatusCode initialize();
 
   virtual LHCb::CaloCluster* operator() (const LHCb::CaloCluster* hypo);
 
@@ -45,4 +46,5 @@ private:
   typedef MicroDST::BasicItemCloner<LHCb::CaloDigit> BasicCaloDigitCloner;
 
 };
+
 #endif // MICRODST_CALOCLUSTERCLONER_H

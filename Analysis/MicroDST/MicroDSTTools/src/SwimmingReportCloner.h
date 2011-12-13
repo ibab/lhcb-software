@@ -1,5 +1,5 @@
 // $Id: SwimmingReportCloner.h,v 1.1 2010-08-11 12:48:36 jpalac Exp $
-#ifndef SWIMMINGREPORTCLONER_H 
+#ifndef SWIMMINGREPORTCLONER_H
 #define SWIMMINGREPORTCLONER_H 1
 
 // Include files
@@ -8,12 +8,13 @@
 #include <MicroDST/MicroDSTTool.h>
 #include <MicroDST/ICloneSwimmingReport.h>
 
-namespace LHCb {
-   class SwimmingReport;
+namespace LHCb
+{
+  class SwimmingReport;
 }
 
 /** @class SwimmingReportCloner SwimmingReportCloner.h
- *  
+ *
  *  MicroDSTTool that clones an LHCb::SwimmingReport for storage on the MicroDST.
  *
  *  @author Roel Aaij
@@ -21,23 +22,24 @@ namespace LHCb {
  */
 class SwimmingReportCloner : public extends1<MicroDSTTool, ICloneSwimmingReport>
 {
-public: 
-   /// Standard constructor
-   SwimmingReportCloner( const std::string& type, 
-                         const std::string& name,
-                         const IInterface* parent);
 
-   virtual ~SwimmingReportCloner( ); ///< Destructor
+public:
 
-   StatusCode initialize();
+  /// Standard constructor
+  SwimmingReportCloner( const std::string& type,
+                        const std::string& name,
+                        const IInterface* parent );
+
+  virtual ~SwimmingReportCloner( ); ///< Destructor
 
 private:
 
-   LHCb::SwimmingReport* operator() (const LHCb::SwimmingReport* report);
+  LHCb::SwimmingReport* operator() (const LHCb::SwimmingReport* report);
 
-   typedef MicroDST::BasicItemCloner<LHCb::SwimmingReport> Cloner;
+  typedef MicroDST::BasicItemCloner<LHCb::SwimmingReport> Cloner;
 
-   LHCb::SwimmingReport* clone (const LHCb::SwimmingReport* report);
+  LHCb::SwimmingReport* clone (const LHCb::SwimmingReport* report);
 
 };
+
 #endif // SWIMMINGREPORTCLONER_H

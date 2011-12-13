@@ -1,5 +1,5 @@
 // $Id: RecVertexCloner.h,v 1.9 2010-08-11 12:51:28 jpalac Exp $
-#ifndef RECVERTEXCLONER_H 
+#ifndef RECVERTEXCLONER_H
 #define RECVERTEXCLONER_H 1
 
 // Include files
@@ -11,7 +11,7 @@
 #include "RecVertexClonerFunctors.h"
 
 /** @class RecVertexCloner RecVertexCloner.h
- *  
+ *
  *  MicroDSTTool that clones an LHCb::RecVertex for storage on the MicroDST.
  *  The LHCb::RecVertex's constituent LHCb::Tracks are not cloned for storage.
  *  SmartRefs to them are stored instead.
@@ -21,17 +21,17 @@
  */
 class RecVertexCloner : public extends1<MicroDSTTool, ICloneRecVertex>
 {
-public: 
+
+public:
+
   /// Standard constructor
-  RecVertexCloner( const std::string& type, 
+  RecVertexCloner( const std::string& type,
                    const std::string& name,
-                   const IInterface* parent);
+                   const IInterface* parent );
 
   virtual ~RecVertexCloner( ); ///< Destructor
 
   virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
-
-  StatusCode initialize();
 
 private:
 

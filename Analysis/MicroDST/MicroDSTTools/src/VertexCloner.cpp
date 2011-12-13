@@ -1,8 +1,8 @@
 // $Id: VertexCloner.cpp,v 1.5 2010-08-11 12:52:52 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from LHCb
 #include "Event/Particle.h"
@@ -17,83 +17,78 @@
 // 2007-11-30 : Juan PALACIOS
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( VertexCloner );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 VertexCloner::VertexCloner( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : 
+  :
   base_class ( type, name , parent ),
-  m_particleCloner(0),
+  m_particleCloner(NULL),
   m_particleClonerName("ParticleCloner")
 {
   declareProperty("ICloneParticle", m_particleClonerName);
 }
+
 //=============================================================================
-StatusCode VertexCloner::initialize() 
+
+StatusCode VertexCloner::initialize()
 {
+  const StatusCode sc = base_class::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
-
-  StatusCode sc = base_class::initialize();
-  
-  if (! sc.isSuccess() ) return sc;
-
-  debug() << "Going to get ParticleCloner" << endmsg;
-  
-  m_particleCloner = tool<ICloneParticle>(m_particleClonerName, 
+  m_particleCloner = tool<ICloneParticle>(m_particleClonerName,
                                           this->parent() );
 
-  if (m_particleCloner) {
+  if (m_particleCloner) 
+  {
     debug() << "Found ParticleCloner " << m_particleCloner->name() << endmsg;
-  } else {
+  }
+  else
+  {
     error() << "Failed to find ParticleCloner" << endmsg;
   }
-  return StatusCode::SUCCESS;
+
+  return sc;
 }
+
 //=============================================================================
+
 LHCb::Vertex* VertexCloner::operator() (const LHCb::Vertex* vertex)
 {
   return this->clone(vertex);
 }
+
 //=============================================================================
-//=============================================================================
+
 LHCb::Vertex* VertexCloner::clone(const LHCb::Vertex* vertex)
 {
+  if ( !vertex ) return NULL;
 
-  if (0==vertex) return 0;
-  
-  LHCb::Vertex* vertexClone = 
+  LHCb::Vertex* vertexClone =
     cloneKeyedContainerItem<BasicVertexCloner>(vertex);
   
   vertexClone->clearOutgoingParticles();
 
-  const SmartRefVector< LHCb::Particle > &outParticles = 
-    vertex->outgoingParticles();
+  const SmartRefVector< LHCb::Particle > & outParticles = vertex->outgoingParticles();
 
-  for (SmartRefVector<LHCb::Particle>::const_iterator iPart = outParticles.begin();
-       iPart != outParticles.end();
-       ++iPart) {
+  for ( SmartRefVector<LHCb::Particle>::const_iterator iPart = outParticles.begin();
+        iPart != outParticles.end(); ++iPart )
+  {
     LHCb::Particle* particleClone = (*m_particleCloner)(*iPart);
-    vertexClone->addToOutgoingParticles(particleClone);
+    if (particleClone) { vertexClone->addToOutgoingParticles(particleClone); }
   }
 
   return vertexClone;
-  
 }
-//=============================================================================
-StatusCode VertexCloner::finalize() 
-{
-  return base_class::finalize();
-}
+
 //=============================================================================
 // Destructor
 //=============================================================================
-VertexCloner::~VertexCloner() {} 
+VertexCloner::~VertexCloner() {}
 
 //=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( VertexCloner )

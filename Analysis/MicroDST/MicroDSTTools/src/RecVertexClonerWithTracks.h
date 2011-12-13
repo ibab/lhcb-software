@@ -1,5 +1,5 @@
 // $Id: RecVertexClonerWithTracks.h,v 1.5 2009-07-30 10:03:01 jpalac Exp $
-#ifndef RECVERTEXCLONERWITHTRACKS_H 
+#ifndef RECVERTEXCLONERWITHTRACKS_H
 #define RECVERTEXCLONERWITHTRACKS_H 1
 
 // Include files
@@ -8,13 +8,13 @@
 #include <MicroDST/ICloneRecVertex.h>            // Interface
 
 class ICloneTrack;
-namespace LHCb 
+namespace LHCb
 {
   class RecVertex;
 }
 
 /** @class RecVertexClonerWithTracks RecVertexClonerWithTracks.h
- *  
+ *
  *  MicroDSTTool that clones an LHCb::RecVertex and its consituent
  *  LHCb::Tracks for storage on the MicroDST.
  *  The LHCb::Track cloning is performed by an implementation of the
@@ -24,10 +24,13 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-12-05
  */
-class RecVertexClonerWithTracks : public extends1<MicroDSTTool, ICloneRecVertex> {
-public: 
+class RecVertexClonerWithTracks : public extends1<MicroDSTTool, ICloneRecVertex> 
+{
+
+public:
+
   /// Standard constructor
-  RecVertexClonerWithTracks( const std::string& type, 
+  RecVertexClonerWithTracks( const std::string& type,
                              const std::string& name,
                              const IInterface* parent);
 
@@ -35,11 +38,7 @@ public:
 
   virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 
-
-
   virtual StatusCode initialize();
-  
-  virtual StatusCode finalize();
 
 private:
 
@@ -49,6 +48,7 @@ private:
 
   ICloneTrack* m_trackCloner;
   std::string m_trackClonerType;
-  
+
 };
+
 #endif // RECVERTEXCLONERWITHTRACKS_H

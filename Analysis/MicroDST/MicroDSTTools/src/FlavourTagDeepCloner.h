@@ -1,5 +1,5 @@
 // $Id: FlavourTagDeepCloner.h,v 1.4 2009-11-18 14:42:13 jpalac Exp $
-#ifndef FLAVOURTAGDEEPCLONER_H 
+#ifndef FLAVOURTAGDEEPCLONER_H
 #define FLAVOURTAGDEEPCLONER_H 1
 
 // Include files
@@ -15,17 +15,20 @@ namespace LHCb
 class ICloneParticle;
 
 /** @class FlavourTagDeepCloner FlavourTagDeepCloner.h
- *  
+ *
  *  Clone an LHCb::FlavourTag
  *  Clone its LHCb::Taggers complete with all their tagger LHCb::Particles.
- * 
+ *
  *  @author Juan PALACIOS
  *  @date   2009-11-17
  */
-class FlavourTagDeepCloner : public extends1<MicroDSTTool, ICloneFlavourTag> {
-public: 
+class FlavourTagDeepCloner : public extends1<MicroDSTTool, ICloneFlavourTag>
+{
+
+public:
+
   /// Standard constructor
-  FlavourTagDeepCloner( const std::string& type, 
+  FlavourTagDeepCloner( const std::string& type,
                         const std::string& name,
                         const IInterface* parent);
 
@@ -80,4 +83,5 @@ private:
   std::string m_particleClonerName;
 
 };
+
 #endif // FLAVOURTAGDEEPCLONER_H
