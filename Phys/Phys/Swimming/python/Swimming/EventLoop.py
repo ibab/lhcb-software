@@ -248,7 +248,7 @@ def SwimmingEventLoop(gaudi, nEvents):
         swimLoop    = int(-1.*maxSwimDistance + -1.*extraSwimDistance)
         while (swimLoop <= (maxSwimDistance + extraSwimDistance)) :
             if DEBUGMODE:
-                print "Running over event", startingEvent+eventNumber,"swimming step",swimLoop             
+                print "Running over event", startingEvent+eventNumber,"swimming step",swimLoop            
             # We got this far now get the candidate and, for the "zero" step only
             # fill the corresponding event variables for it 
             # Note that this function call also executes the stripping algorithm
