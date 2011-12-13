@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mainConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="../data/LHCbMainConfig.xsd">
+	xsi:noNamespaceSchemaLocation="../../data/LHCbMainConfig.xsd">
 	<distributionUrl>http://cern.ch/lhcbproject/dist</distributionUrl>
 	<pythonVersion>2.5</pythonVersion>
 	<CMTVersion>v1r20p20090520</CMTVersion>

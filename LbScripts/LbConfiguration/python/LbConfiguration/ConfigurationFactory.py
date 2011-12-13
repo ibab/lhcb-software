@@ -1,8 +1,24 @@
 """ Module to load Packages and Projects from XML configuration"""
+""" This source comtains various classes and utility functions:
+
+ - The SAX parsers for the XML files, for internal use only
+ - Util functions to serialize a list of packages or projects to XML, used for unit tests (serializeProjects, serializePackages)
+ - The Loader Classes for MainConfig. Packages and Projects which can be used to load an XML directly (no caching involved),
+   in the follwoing manner for example:
+
+        loader = ProjectLoader()
+        projects = loader.loadFile("./conf/MyProjectConfig.xml")
+
+ - The actual factory class that looks for the files in the environment and caches the result for faster access:
+
+        factory = Factory()
+        projects = factory.getProjects()
+        gaudi = factory.getProject("Gaudi")
+
+"""
 
 import logging
 import inspect
-import pprint
 import os
 
 from xml import sax
@@ -18,8 +34,10 @@ log.setLevel(logging.CRITICAL)
 
 # Constants for the factory
 CONFIG_ENV_VAR="LHCBCONFIG"
-CONFIG_WEB_LOCATION_PREFIX="http://bcouturi.web.cern.ch/bcouturi/config/"
-CONFIG_LOCAL_LOCATION_PREFIX="/afs/cern.ch/user/b/bcouturi/public/config/"
+CONFIG_ENV_AFS_RELEASE_DIR="LHCBTAR"
+CONFIG_DIRNAME="conf"
+CONFIG_WEB_LOCATION_PREFIX="http://cern.ch/lhcbproject/dist/conf/"
+#CONFIG_WEB_LOCATION_PREFIX="http://bcouturi.web.cern.ch/bcouturi/config/"
 CONFIG_MAIN_FILENAME="MainConfig.xml"
 CONFIG_PROJECT_FILENAME="ProjectConfig.xml"
 CONFIG_PACKAGE_FILENAME="PackageConfig.xml"
@@ -39,6 +57,11 @@ class MainConfig:
         self.doxygen_version = None
         self.external_projects = []
         self.lcg_projects = []
+
+
+# SAX Parsing classes
+#
+###############################################################################
 
 # SAX handler for the project tag in the project XML description
 # After parsing, call the getProjectList method to get the list
@@ -360,66 +383,37 @@ def findMethod(obj, prefix, partialMethodName):
     return foundMethod
 
 
-# Mapping between type of config and the associated filename
+# Actual config loaders
+# Their role is to parse the XML configuration file
+#
+###############################################################################
 
 # Base class for loading configuration
 # Only specialized version should be used
+
 class ConfigLoader(object):
     """ Ancestor for configuration loaders, should not be used directly but sub class should be used instead """
-    def __init__(self):
-        self.loadMethods = [self.__envConfigLocation, self.__webConfigLocation, self.__localConfigLocation]
-
-
-    def __envConfigLocation(self):
-        """ Method checking whether an environment variable has been defined for the config file location"""
-        result = None
-        try:
-            conflocation = os.environ[CONFIG_ENV_VAR]
-            if (conflocation != None):
-                result = conflocation + os.sep + self.filename
-        except:
-            # We ignore key errors...
-            pass
-        return result
-
-    def __webConfigLocation(self):
-        """ Default URL for main config on the web """
-        return CONFIG_WEB_LOCATION_PREFIX + self.filename
-
-    def __localConfigLocation(self):
-        """ Default URL for local config """
-        return CONFIG_LOCAL_LOCATION_PREFIX + self.filename
-
-    def __parse(self):
+    def __parse(self, url):
         """ Parse from a specific file """
         parser = sax.make_parser()
         parser.setContentHandler(self.handler)
-        parser.parse(self.configURL)
+        parser.parse(url)
 
-    #
-    #
-    # Main method to looks for the config files in various places
-    def load(self, configURL=None):
-        """ Load configuration from the specified file """
-        result = None
-        if configURL != None:
-            self.configURL = configURL
-            self.__parse()
-            result = self.handler.getResult()
-        else:
-            for m in self.loadMethods:
-                loc = m()
-                if loc == None:
-                    continue
-                try:
-                    self.configURL = loc
-                    self.__parse()
-                    result = self.handler.getResult()
-                    log.info("Using configuration from %s" % self.configURL)
-                except:
-                    pass
-                    # We ignore and try next algorithm
+    # Main method to load the
+    def load(self, configDir):
+        """ Load configuration from a specific directory """
+        url = configDir + os.sep + self.filename
+        self.__parse(url)
+        result = self.handler.getResult()
         return result
+
+    # Main method to load the
+    def loadFile(self, url):
+        """ Load configuration from a specific directory """
+        self.__parse(url)
+        result = self.handler.getResult()
+        return result
+
 
 class MainConfigLoader(ConfigLoader):
     """ Class to load the Main Config """
@@ -427,6 +421,7 @@ class MainConfigLoader(ConfigLoader):
         super(MainConfigLoader, self).__init__()
         self.handler = SAXMainConfigHandler()
         self.filename = CONFIG_MAIN_FILENAME
+        self.key = "MAINCONFIG"
 
 class ProjectLoader(ConfigLoader):
     """ Class to load the Projects config """
@@ -434,6 +429,7 @@ class ProjectLoader(ConfigLoader):
         super(ProjectLoader, self).__init__()
         self.handler = SAXProjectHandler()
         self.filename = CONFIG_PROJECT_FILENAME
+        self.key = "PROJECTS"
 
 class PackageLoader(ConfigLoader):
     """ Class to load the package config """
@@ -441,25 +437,161 @@ class PackageLoader(ConfigLoader):
         super(PackageLoader, self).__init__()
         self.handler = SAXPackageHandler()
         self.filename = CONFIG_PACKAGE_FILENAME
+        self.key = "PACKAGES"
 
+# Factory class for the config
+# Its role is to locate the configuration dir and cache it when found
+# It also caches the projects, packages when loaded...
 #
+###############################################################################
+class Factory(object):
+    """ Factory for the configuration """
+
+    def __init__(self):
+        self.mainConfigLoader = MainConfigLoader()
+        self.projectLoader = ProjectLoader()
+        self.packageLoader = PackageLoader()
+        self.loadMethods = [self.__envConfigLocation, self.__afsReleaseConfigLocation, self.__webConfigLocation]
+        self.cachedConfigDir = None
+        self.cache = {}
+
+    def setConfigDir(self, configDir):
+        self.cachedConfigDir = configDir
+
+    def __afsReleaseConfigLocation(self):
+        """ Method checking whether an environment variable has been defined for the config file location"""
+        log.warning("Looking for config in $" + CONFIG_ENV_AFS_RELEASE_DIR)
+        result = None
+        try:
+            conflocation = os.environ[CONFIG_ENV_AFS_RELEASE_DIR]
+            if (conflocation != None):
+                result = conflocation + os.sep + CONFIG_DIRNAME
+        except:
+            # We ignore key errors...
+            pass
+        return result
+
+    def __envConfigLocation(self):
+        """ Method checking whether an environment variable has been defined for the config file location"""
+        log.warning("Looking for config in $" + CONFIG_ENV_VAR)
+        result = None
+        try:
+            conflocation = os.environ[CONFIG_ENV_VAR]
+            if (conflocation != None):
+                result = conflocation
+        except:
+            # We ignore key errors...
+            pass
+        return result
+
+    def __webConfigLocation(self):
+        """ Default URL for main config on the web """
+        log.warning("Looking for config in " + CONFIG_WEB_LOCATION_PREFIX)
+        return CONFIG_WEB_LOCATION_PREFIX
+
+    # Main method to looks for the config files in various places
+    def __loadAndCache(self, loader, configDir):
+        """ Load configuration from the specified file. The result is cached if it comes from normal config dir (e.g. configDir = None """
+        result = None
+
+        # First handle the case when the configDir is explicitely specified
+        # We do not cache the data in this case and just call the loader
+        if configDir != None:
+            log.warning("ConfigDIR explicitely specified: " + configDir)
+            return loader.load(configDir)
+
+        # In this case we load first from cache, otherwise we lookup for the files
+        try:
+            result = self.cache[loader.key]
+            log.warning(loader.key + " found in cache")
+            return result
+        except KeyError:
+            # In this case we know we need to load from XML
+            pass
+
+
+        # In this case we haven't located the config dir...
+        if self.cachedConfigDir != None:
+            log.warning("Config DIR already cached: %s loading %s" % (self.cachedConfigDir, loader.key))
+            result = loader.load(self.cachedConfigDir)
+            # Now caching the actual loaded data
+            self.cache[loader.key] = result
+        else:
+            # In this case we haven't found the config dir so we look for it
+            for m in self.loadMethods:
+                loc = m()
+                if loc == None:
+                    continue
+                try:
+                    result = loader.load(loc)
+                    log.warning("Found configuration in %s and caching %s" % (loc, loader.key))
+                    # Now caching the location and the result
+                    self.cachedConfigDir = loc
+                    self.cache[loader.key] = result
+                except:
+                    pass
+                    # We ignore and try next algorithm
+        return result
+
+    def getMainConfig(self, confDir=None):
+        """ Load main config from a specific config dir or looks it up  """
+        return self.__loadAndCache(self.mainConfigLoader, confDir)
+
+    def getProjects(self, confDir=None):
+        """ Load projects from a specific config dir or looks it up  """
+        return self.__loadAndCache(self.projectLoader, confDir)
+
+    def getProject(self, name):
+        """ gets a specific project  """
+        result = None
+        projects = self.getProjects()
+        for p in projects:
+            if p.Name() == name:
+                result = p
+        return result
+
+    def getPackages(self, confDir=None):
+        """ Load packages from a specific config dir or looks it up  """
+        return self.__loadAndCache(self.packageLoader, confDir)
+
+    def getPackage(self, name):
+        """ gets a specific package  """
+        result = None
+        packages = self.getPackages()
+        for p in packages:
+            if p.Name() == name:
+                result = p
+        return result
+
+
+# Direct accors to the files loaders
+# They do not use the factory and do not cache the location of the config
+#
+###############################################################################
+
 # Util method to load the main config from a specific file
 def loadMainConfig(configURL = None):
     """ Load main config  from the specified file """
     p = MainConfigLoader()
-    return p.load(configURL)
+    return p.loadFile(configURL)
 
 # Util method to load the projects from a specific file
 def loadProjects(configURL = None):
     """ Load projects from the specified file """
     p = ProjectLoader()
-    return p.load(configURL)
+    return p.loadFile(configURL)
 
 # Util method to load packages from a specific file
 def loadPackages(configURL = None):
     """ Load packages from the specified file """
     p = PackageLoader()
-    return p.load(configURL)
+    return p.loadFile(configURL)
+
+
+# Serialization methods for projects and packages
+# To be moved to project/package.py
+# Used to converting the old config and for tests
+###############################################################################
 
 
 # Utility method to serialize a list of packages
@@ -635,7 +767,13 @@ def serializeProjects(projectList):
 
 # Main method
 if __name__ == '__main__':
-    log.setLevel(logging.DEBUG)
+    log.setLevel(logging.CRITICAL)
+    f = Factory()
+    p = f.getPackages()
+    p = f.getPackages()
+    p = f.getProjects()
+    p = f.getMainConfig()
+    p = f.getProjects()
 
     #mc = MainConfigLoader()
     #result = mc.load()
@@ -644,10 +782,10 @@ if __name__ == '__main__':
 
     #mc = ProjectLoader()
     #result = mc.load()
-    result = loadProjects()
-    pp = pprint.PrettyPrinter(indent=4)
-    for p in result:
-        pp.pprint(vars(p))
+    #result = loadProjects()
+    #pp = pprint.PrettyPrinter(indent=4)
+    #for p in result:
+    #    pp.pprint(vars(p))
 
 
     #packxml = serializePackages(package_list)

@@ -1,11 +1,11 @@
-from LbConfiguration.ConfigurationFactory import loadProjects, loadMainConfig
-from LbConfiguration.ConfigurationFactory import loadPackages
-from LbConfiguration.ConfigurationFactory import serializeProjects
-from LbConfiguration.ConfigurationFactory import serializePackages
-
+from LbConfiguration.ConfigurationFactory import loadProjects, loadMainConfig, loadPackages
+from LbConfiguration.ConfigurationFactory import Factory
+from LbConfiguration.ConfigurationFactory import serializeProjects, serializePackages
 
 import logging
 import unittest
+import os
+
 #
 # Unitest for the configuration factory
 # loads examples config and checks the parameters
@@ -32,21 +32,24 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         self.assertEquals(gaudi.ApplicationPackage(), "Ex")
         self.assertEquals(gaudi.FullSize(), "6000000")#TODO this is not good, needs cast
 
-
     def loadAllProjects(self, url):
         # Loading all projects and serializing them as XML
         projects = loadProjects(url)
         projxml = serializeProjects(projects)
         newxml = projxml.toprettyxml(indent=" ")
+        # Loading initial fine and sanitizing (serialized version does not have xsd ref
+        f = open("conf/ProjectConfig.xml", "r")
+        oldxml = f.read()
+        self.compareProjectsXML(oldxml, newxml)
+
+
+    def compareProjectsXML(self, oldxml, newxml):
         newxml = newxml.encode("ascii")
         newxml = newxml.replace("\r", "")
         newxml = newxml.replace("\n", "")
 
-        # Loading initial fine and sanitizing (serialized version does not have xsd ref
-        f = open("ExampleProjectConfig.xml", "r")
-        oldxml = f.read()
         oldxml = oldxml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
-        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../data/LHCbProjectConfig.xsd\"", "")
+        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../../data/LHCbProjectConfig.xsd\"", "")
         oldxml = oldxml.replace("\r", "")
         oldxml = oldxml.replace("\n", "")
         oldxml = oldxml.replace(" >", ">")
@@ -58,31 +61,45 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         #for i in range(1, len(newxml)):
         #    if newxml[i] != oldxml[i]:
         #        print "Err:" + newxml[i] + " - " + oldxml[i]
-
         self.assertEquals(newxml,  oldxml)
 
 
     def testLoadAllProjectsFromFile(self):
-        self.loadAllProjects("ExampleProjectConfig.xml")
+        self.loadAllProjects("conf/ProjectConfig.xml")
 
-    def testLoadAllProjectsFromURL(self):
-        self.loadAllProjects("http://bcouturi.web.cern.ch/bcouturi/config/ProjectConfig.xml")
 
+    def testProjectFactory(self):
+        factory = Factory()
+        factory.setConfigDir("./conf")
+        projects = factory.getProjects()
+        projxml = serializeProjects(projects)
+        newxml = projxml.toprettyxml(indent=" ")
+        f = open("conf/ProjectConfig.xml", "r")
+        oldxml = f.read()
+        self.compareProjectsXML(oldxml, newxml)
+
+    def testSingleProjectFactory(self):
+        factory = Factory()
+        factory.setConfigDir("./conf")
+        gaudi = factory.getProject("Gaudi")
+        self.assertEquals(gaudi.Name(), "Gaudi")
 
     def loadAllPackages(self, url):
-        # Loading all projects and serializing them as XML
         packages = loadPackages(url)
         pdom = serializePackages(packages)
         newxml = pdom.toprettyxml(indent=" ")
+        f = open("conf/PackageConfig.xml", "r")
+        oldxml = f.read()
+        self.comparePackagesXML(oldxml, newxml)
+
+
+    def comparePackagesXML(self, oldxml, newxml):
         newxml = newxml.encode("ascii")
         newxml = newxml.replace("\r", "")
         newxml = newxml.replace("\n", "")
 
-        # Loading initial fine and sanitizing (serialized version does not have xsd ref
-        f = open("ExamplePackageConfig.xml", "r")
-        oldxml = f.read()
         oldxml = oldxml.replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "")
-        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../data/LHCbPackageConfig.xsd\"", "")
+        oldxml = oldxml.replace("xsi:noNamespaceSchemaLocation=\"../../data/LHCbPackageConfig.xsd\"", "")
         oldxml = oldxml.replace("\r", "")
         oldxml = oldxml.replace("\n", "")
         oldxml = oldxml.replace("<packageConfiguration  >", "<packageConfiguration>")
@@ -97,15 +114,22 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
 
         self.assertEquals(newxml,  oldxml)
 
-
     def testLoadAllPackagesFromFile(self):
-        self.loadAllPackages("ExamplePackageConfig.xml")
+        self.loadAllPackages("conf/PackageConfig.xml")
 
-    def testLoadAllPackagesFromURL(self):
-        self.loadAllPackages("http://bcouturi.web.cern.ch/bcouturi/config/PackageConfig.xml")
+    def testPackageFactory(self):
+        factory = Factory()
+        factory.setConfigDir("./conf")
+        projects = factory.getPackages()
+        projxml = serializePackages(projects)
+        newxml = projxml.toprettyxml(indent=" ")
+        f = open("conf/PackageConfig.xml", "r")
+        oldxml = f.read()
+        self.comparePackagesXML(oldxml, newxml)
+
 
     def testMainConfigLoad(self):
-        config = loadMainConfig("ExampleLHCbMainConfig.xml")
+        config = loadMainConfig("conf/MainConfig.xml")
         self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
         self.assertEqual(config.Python_version, u"2.5")
         self.assertEqual(config.CMT_version, u"v1r20p20090520")
@@ -113,23 +137,11 @@ class ConfigurationFactoryTestCase(unittest.TestCase):
         self.assertEqual(config.doxygen_version, u"1.7.2")
         self.assertEqual(len(config.external_projects), 3)
         self.assertEqual(len(config.lcg_projects), 8)
-
-
-    def testMainConfigLoadFromURL(self):
-        config = loadMainConfig("http://bcouturi.web.cern.ch/bcouturi/config/MainConfig.xml")
-        self.assertEqual(config.distribution_url, u"http://cern.ch/lhcbproject/dist")
-        self.assertEqual(config.Python_version, u"2.5")
-        self.assertEqual(config.CMT_version, u"v1r20p20090520")
-        self.assertEqual(config.tbroadcast_version, u"v2.0.5")
-        self.assertEqual(config.doxygen_version, u"1.7.2")
-        self.assertEqual(len(config.external_projects), 3)
-        self.assertEqual(len(config.lcg_projects), 8)
-
 
 if __name__ == '__main__':
     logging.basicConfig()
     log = logging.getLogger()
-    log.setLevel(logging.CRITICAL)
+    log.setLevel(logging.DEBUG)
     console = logging.StreamHandler()
     console.setFormatter(logging.Formatter("%(levelname)-8s: %(message)s"))
     log.addHandler(console)

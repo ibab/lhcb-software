@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<packageConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../data/LHCbPackageConfig.xsd">
+<packageConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../data/LHCbPackageConfig.xsd">
  <package hat="Det" name="XmlDDDB" project="DBASE"/>
  <package hat="Gen" name="DecFiles" project="DBASE"/>
  <package name="FieldMap" project="DBASE"/>
