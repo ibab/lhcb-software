@@ -36,9 +36,20 @@ namespace LHCb  {
     */
   class MBMContext : public OnlineContext  {
   private:
+    typedef std::vector<LHCb::MEPFragment*> Frags;
+    typedef std::map<unsigned int, Frags >  SubEvents;
+    SubEvents             m_events;
+    std::vector<int>      m_memory;
     MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
-    void*                 m_mepStart;
+    const void*           m_mepStart;
+    int                   m_evID;
+
+    /// Convert standard descriptor event structure to banks
+    StatusCode convertDescriptor(const MBM::EventDesc& e);
+    /// Convert MEP into a sequence of events being worked down.
+    StatusCode convertMEP(const MBM::EventDesc& e);
+    
     /// Connect to MEP buffer
     StatusCode connectMEP(const std::string& input);
     /// Connect to regular MBM buffer
@@ -58,6 +69,8 @@ namespace LHCb  {
     virtual StatusCode rearmEvent();
     /// Free event resources
     virtual StatusCode freeEvent();
+    /// Force release of event resources
+    virtual StatusCode releaseEvent();
     /// Flag event resources
     virtual StatusCode flagEvent(int flag);
     /// Close connection to event data source
@@ -216,6 +229,14 @@ void MBMContext::testExceptions() {
   if ( test == 0 ) test = 888;
 }
 
+StatusCode MBMContext::releaseEvent()  {
+  if ( !m_events.empty() ) {
+    m_events.clear();
+    m_needFree = true;
+  }
+  return freeEvent();
+}
+
 StatusCode MBMContext::freeEvent()  {
   if ( m_consumer )  {
     if ( m_needFree )   {
@@ -252,29 +273,105 @@ StatusCode MBMContext::rearmEvent()  {
   return StatusCode::SUCCESS;
 }
 
+StatusCode MBMContext::convertDescriptor(const MBM::EventDesc& e)  {
+  m_evdesc.setPartitionID(m_consumer->partitionID());
+  m_evdesc.setTriggerMask(e.mask);
+  m_evdesc.setEventType(e.type);
+  m_evdesc.setHeader(e.data);
+  m_evdesc.setSize(e.len);
+  m_needFree = true;
+  //testExceptions();
+  m_evdesc.setMepBuffer(m_mepStart);
+  m_sel->increaseEvtCount();
+  for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)
+    decodeFragment(m_evdesc.fragment(i), m_banks);
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
+  RawEventHeader*   h = 0;
+  MEPEVENT*        ev = (MEPEVENT*)e.data;
+  unsigned int    pid = m_consumer->partitionID();
+  unsigned int mask[] = {pid,0,0,0};
+  if ( m_events.empty() )   {
+    if ( ev->magic != mep_magic_pattern() )  {
+      m_sel->error("Bad MEP magic pattern!!!!");
+    }
+    decodeMEP2EventFragments((MEPEvent*)ev->data, pid, m_events);
+    if ( m_events.empty() )  {
+      m_sel->error("Bad MEP received. No sub-events !!!!");
+    }
+    for(size_t evID=1; evID<=m_events.size(); ++evID)  {
+      ev->events[evID].begin  = long(ev)-long(m_mepStart);
+      ev->events[evID].status = EVENT_TYPE_OK;
+      ev->events[evID].signal = 0;
+      ev->events[evID].evID   = evID;
+    }
+    m_evID = 0;
+  }
+  const Frags& frags = (*m_events.begin()).second;
+  size_t evt_len = ((RawEventHeader::size(frags.size())+1)*sizeof(int))/sizeof(int);
+  if ( m_memory.size() < evt_len ) {
+    m_memory.resize(evt_len+256); // Increase memmory size with some safety margin
+  }
+  h = (RawEventHeader*)&m_memory[0];
+  m_evdesc.setPartitionID(pid);
+  m_evdesc.setTriggerMask(mask);
+  m_evdesc.setEventType(EVENT_TYPE_EVENT);
+  m_evdesc.setHeader(h);
+  m_evdesc.setSize(evt_len);
+  m_evdesc.setMepBuffer(m_mepStart);
+  m_sel->increaseEvtCount();
+	
+  h->setEventID(++m_evID);
+  h->setMEPID(ev->evID);
+  h->setDataStart(ev->begin);
+  h->setNumberOfFragments(frags.size());
+  h->setErrorMask(0);
+  h->setNumberOfMissing(0);
+  h->setOffsetOfMissing(0);
+  for(size_t j=0; j<frags.size(); ++j)  {
+    MEPFragment* f = frags[j];
+    long off =  long(long(f)-long(m_mepStart));
+    h->setOffset(j, off);
+  }
+  for(int k=0, n=m_evdesc.numberOfFragments(); k<n; ++k)
+    decodeFragment(m_evdesc.fragment(k), m_banks);
+  m_events.erase(m_events.begin());
+  if ( m_events.empty() ) m_needFree = true;
+  return StatusCode::SUCCESS;
+}
+
 StatusCode MBMContext::receiveEvent()  {
   m_banks.clear();
   if ( m_consumer )  {
     int max_retry = m_onlineSel->m_maxRetry;
     Retry:
     try  {
-      m_sel->increaseReqCount();
-      m_needFree = false;
-      if ( m_consumer->getEvent() == MBM_NORMAL )  {
-        const MBM::EventDesc& e = m_consumer->event();
+      if ( m_events.empty() ) {
+	m_sel->increaseReqCount();
+	m_needFree = false;
+	if ( m_consumer->getEvent() != MBM_NORMAL )  {
+	  return StatusCode::FAILURE;
+	}
+      }
+      const MBM::EventDesc& e = m_consumer->event();
+      // The event is a descriptor event, which must be decoded using the MEP data:
+      if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
+	return convertDescriptor(e);
+      }
+      // The event is a MEP with multiple events, which must be decoded:
+      else if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
+	return convertMEP(e);
+      }
+      // Or: simple case data are data - as it should be
+      else {
         m_evdesc.setPartitionID(m_consumer->partitionID());
         m_evdesc.setTriggerMask(e.mask);
         m_evdesc.setEventType(e.type);
         m_evdesc.setHeader(e.data);
         m_evdesc.setSize(e.len);
         m_needFree = true;
-        //testExceptions();
-        if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
-          m_evdesc.setMepBuffer(m_mepStart);
-          m_sel->increaseEvtCount();
-          for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)
-            decodeFragment(m_evdesc.fragment(i), m_banks);
-        }
         return StatusCode::SUCCESS;
       }
     }
@@ -299,6 +396,7 @@ StatusCode MBMContext::receiveEvent()  {
 
 StatusCode MBMContext::connect(const string& input)  {
   StatusCode sc = StatusCode::SUCCESS;
+  m_events.clear();
   if ( input=="EVENT" || input=="RESULT" || input=="MEP" )
     sc = connectMEP(input);
   else 
@@ -347,6 +445,7 @@ StatusCode MBMContext::connectMBM(const string& input)  {
       if ( m_consumer->id() == MBM_INV_DESC ) {
         return StatusCode::FAILURE;
       }
+      m_mepStart = m_consumer->bufferAddress();
       return StatusCode::SUCCESS;
     }
     m_sel->error("Data buffer \""+input+"\" is not mapped. "
@@ -356,6 +455,8 @@ StatusCode MBMContext::connectMBM(const string& input)  {
 }
 
 void MBMContext::close()  {
+  if ( !m_events.empty() ) m_needFree=true;
+  m_events.clear();
   if ( m_consumer )  {
     for (int i=0, n=m_sel->numReq(); i<n; ++i )  {
       m_consumer->delRequest(m_sel->req(i));
