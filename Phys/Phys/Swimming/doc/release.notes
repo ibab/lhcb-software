@@ -5,6 +5,13 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2011-12-13 - V. Gligorov
+ - Add fixes to Configuration.py for some trigger reconstruction steps which
+   put their outputs in non-standard TES locations. Enable banks which need to
+   be killed when rerunning the HLT to be passed as an argument, in case this
+   fix does not catch all the misbehaving lines. 
+ - Add more examples. 
+
 ! 2011-12-13 - Roel Aaij
  - Revert addition of multiple candidate swimming.
 
