@@ -139,3 +139,18 @@ def runPanoramixSim(source,load=1,print_freq=1.0):
 def runMepBuffer():
   flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c'
   return _run(mbmInitApp(pid,pnam,flags))
+#------------------------------------------------------------------------------------------------
+#  New HLT architecture
+#------------------------------------------------------------------------------------------------
+def runHlt2Buffer():
+  flags = '-s=7000 -e=100 -u=14 -b=12 -f -i=Mep -c -s=2000 -e=100 -u=14 -b=8 -f -i=HltDeferred -c -s=2000 -e=100 -u=14 -b=8 -f -i=Hlt1Accept -c -s=2000 -e=100 -u=14 -b=8 -f -i=Hlt2Input -c -s=2000 -e=100 -u=14 -b=8 -f -i=Send '
+  return _run(mbmInitApp(pid,pnam,flags))
+#------------------------------------------------------------------------------------------------
+def runHlt1Read(percent=25,print_freq=0.0001,delay=3):
+  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=['Mep','Hlt1Accept'],type='ONE',decode=True,event_type=1))
+#------------------------------------------------------------------------------------------------
+def runHlt2Read(percent=5,print_freq=0.0001,delay=100):
+  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=['Hlt2Input','Send'],type='ONE',decode=False))
+#------------------------------------------------------------------------------------------------
+def runHltShuffle():
+  return _run(deferApp(pid,pnam,buffers=['Hlt1Accept','Hlt2Input','HltDeferred'],type='ALL'))

@@ -24,20 +24,20 @@ mbm_requirements['RESULT']= "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffff
 
 mbm_requirements['SEND']  = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 
-mbm_requirements['OTHER'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
+mbm_requirements['ERROR'] = "EvType=3;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 
-mbm_requirements['ERROR']  = "EvType=3;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
+mbm_requirements['OTHER'] = "EvType=%s;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
 
 ApplicationMgr = CFG.ApplicationMgr
 
 #------------------------------------------------------------------------------------------------
-def _mbmRequirement(input,type,TAE=False):
-  if input == 'MEP' and TAE:  return mbm_requirements['TAE']
-  elif input == 'MEP':        return mbm_requirements['MEP']
-  elif input == 'EVENT':      return mbm_requirements['EVENT']
-  elif input == 'RESULT':     return mbm_requirements['RESULT']
-  elif input == 'SEND':       return mbm_requirements['SEND']
-  elif type is not None:      return mbm_requirements['OTHER']%(str(type),)
+def _mbmRequirement(input,type,TAE=False,event_type=2):
+  if   input == 'MEP' and TAE: return mbm_requirements['TAE']
+  elif input == 'MEP':         return mbm_requirements['MEP']
+  elif input == 'EVENT':       return mbm_requirements['EVENT']
+  elif input == 'RESULT':      return mbm_requirements['RESULT']
+  elif input == 'SEND':        return mbm_requirements['SEND']
+  elif type is not None:       return mbm_requirements['OTHER']%(str(event_type),str(type),)
   return 'Unknown requirement'
 
 #------------------------------------------------------------------------------------------------
@@ -112,14 +112,15 @@ def evtSender(target,name='Sender',input_type=MDF_NONE):
   return sender
   
 #------------------------------------------------------------------------------------------------
-def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE):
-  merger                   = Configs.LHCb__RawEvent2MBMMergerAlg(name)
-  merger.Buffer            = buffer
-  merger.Compress          = 0
-  #merger.DataType          = MDF_RECORDS
-  merger.InputDataType     = datatype
-  merger.BankLocation      = location
-  merger.RoutingBits       = routing
+def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE,silent=False):
+  merger                  = Configs.LHCb__RawEvent2MBMMergerAlg(name)
+  merger.Buffer           = buffer
+  merger.Compress         = 0
+  #merger.DataType        = MDF_RECORDS
+  merger.InputDataType    = datatype
+  merger.BankLocation     = location
+  merger.RoutingBits      = routing
+  merger.Silent           = silent
   return merger
   
 #------------------------------------------------------------------------------------------------
@@ -219,8 +220,8 @@ def serialPersistencySvc():
 
 #------------------------------------------------------------------------------------------------
 def evtDataSvc():
-  svc                  = CFG.EventDataSvc()
-  svc.RootCLID         = 1
+  svc                    = CFG.EventDataSvc()
+  svc.RootCLID           = 1
   svc.EnableFaultHandler = True
   return svc
 
@@ -229,13 +230,13 @@ def monSvc(name='MonitorSvc'):
   return Configs.MonitorSvc(name)
   
 #------------------------------------------------------------------------------------------------
-def mbmSelector(input=None,type=None,decode=True,TAE=False):
+def mbmSelector(input=None,type=None,decode=True,TAE=False,event_type=2):
   svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
   if decode is not None:
-    svc.Decode     = decode
+    svc.Decode = decode
   if input is not None:
-    svc.Input    = input
-    svc.REQ1 = _mbmRequirement(input,type,TAE)
+    svc.Input  = input
+    svc.REQ1   = _mbmRequirement(input=input,type=type,TAE=TAE,event_type=event_type)
   return svc
 
 #------------------------------------------------------------------------------------------------
@@ -424,11 +425,53 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
-def simpleFilterApp(partID, partName, percent, print_freq):
-  mepMgr               = mepManager(partID,partName,['EVENT','OUT'],True)
+def hltApp(partID, partName, percent, print_freq, delay=None, buffers=['IN','OUT'], decode=False, type=None, event_type=None):
+  mepMgr               = mepManager(partID,partName,buffers)
   mepMgr.HandleSignals = True
   runable              = evtRunable(mepMgr)
-  evtSel               = mbmSelector('EVENT')
+  if event_type is None:
+    evtSel             = mbmSelector(input=buffers[0],type=type,decode=decode)
+  else:
+    evtSel             = mbmSelector(input=buffers[0],type=type,decode=decode,event_type=event_type)
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  algs                 = [storeExplorer(load=1,freq=print_freq)]
+  if delay:
+    delay_alg          = Configs.LHCb__DelaySleepAlg('Delay')
+    delay_alg.DelayTime = 0
+    delay_alg.MicroDelayTime = int(delay)
+    algs.append(delay_alg)
+  seq                  = CFG.Sequencer('SendSequence')
+  seq.Members          = [prescaler(percent=percent),evtMerger(buffer=buffers[1])]
+  algs.append(seq)
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def deferApp(partID, partName, buffers=None, type=None, event_type=None):
+  mepMgr               = mepManager(partID,partName,buffers)
+  mepMgr.HandleSignals = True
+  runable              = evtRunable(mepMgr)
+  if event_type is None:
+    evtSel             = mbmSelector(input=buffers[0],type=type,decode=False)
+  else:
+    evtSel             = mbmSelector(input=buffers[0],type=type,decode=False,event_type=event_type)
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  seq                  = CFG.GaudiSequencer('SendSequence')
+  a1                   = evtMerger(name="Hlt2Supply", buffer=buffers[1],datatype=MDF_BANKS,silent=True)
+  a1.DataType          = MDF_BANKS
+  a2                   = evtMerger(name="DeferSupply",buffer=buffers[2],datatype=MDF_BANKS)
+  a2.DataType          = MDF_BANKS
+  seq.Members          = [a1,a2]
+  seq.ModeOR           = True
+  return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=[seq])
+
+#------------------------------------------------------------------------------------------------
+def simpleFilterApp(partID, partName, percent, print_freq,buffers=['EVENT','OUT']):
+  mepMgr               = mepManager(partID,partName,buffers,True)
+  mepMgr.HandleSignals = True
+  runable              = evtRunable(mepMgr)
+  evtSel               = mbmSelector(buffers[0])
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=print_freq),prescaler(percent=percent)]
