@@ -2,8 +2,8 @@
 None
 =============================
 - streams
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>]
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x3342b00>, <OutputStream/OutputStream at 0x333d4f0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x33caee0>, <TagCollectionStream/SomethingElseWeirdROOT at 0x3346400>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x1568a470>, <OutputStream/OutputStream at 0x156644d0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x1501c350>, <TagCollectionStream/SomethingElseWeirdROOT at 0x1501baa0>, 'InputCopyStream']
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 file://file2.mdf
@@ -21,8 +21,8 @@ DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
 POOL
 =============================
 - streams
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>]
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x3342b00>, <OutputStream/OutputStream at 0x333d4f0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x33ccc60>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x33caee0>, <TagCollectionStream/SomethingElseWeirdROOT at 0x3346400>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x33cc970>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>, <InputCopyStream/InputCopyStream at 0x1501dae0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x1568a470>, <OutputStream/OutputStream at 0x156644d0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x1501e940>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x1501c350>, <TagCollectionStream/SomethingElseWeirdROOT at 0x1501baa0>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x1501e530>, 'InputCopyStream']
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
@@ -48,8 +48,8 @@ DATAFILE='out2.dst' TYP='POOL_ROOTTREE' OPT='REC'
 ROOT
 =============================
 - streams
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>, <InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>]
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>, <InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x3342b00>, <OutputStream/OutputStream at 0x333d4f0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x33ccc60>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x33caee0>, <TagCollectionStream/SomethingElseWeirdROOT at 0x3346400>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x33cc970>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>, <InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>, <InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/InputCopyStream at 0x1501dae0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x1568a470>, <OutputStream/OutputStream at 0x156644d0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x1501e940>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x1501c350>, <TagCollectionStream/SomethingElseWeirdROOT at 0x1501baa0>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x1501e530>, 'InputCopyStream']
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out1.dst' TYP='POOL_ROOTTREE' OPT='REC'
@@ -81,8 +81,8 @@ MDF
 # WARNING: FSRs can not be written to MDF file  out1.dst . Set writeFSR to False to supress this warning
 # WARNING: FSRs can not be written to MDF file  out2.dst . Set writeFSR to False to supress this warning
 - streams
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>, <InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdMDF at 0x33ccf30>]
-[<InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdPOOL at 0x33cc3d0>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x33cc6a0>, <InputCopyStream/SomethingWeirdROOT at 0x33af2b0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x33bfbc0>, <InputCopyStream/SomethingWeirdMDF at 0x33ccf30>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x3342b00>, <OutputStream/OutputStream at 0x333d4f0>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x33ccc60>, <TagCollectionStream/SomethingElseWeirdMDF at 0x33cd200>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x33caee0>, <TagCollectionStream/SomethingElseWeirdROOT at 0x3346400>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x33cc970>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>, <InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdMDF at 0x1501eaf0>]
+[<InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdPOOL at 0x1501dc90>, <RecordStream/FSRInputCopyStreamSomethingWeirdPOOL at 0x1501e380>, <InputCopyStream/SomethingWeirdROOT at 0x156e66f0>, <RecordStream/FSRInputCopyStreamSomethingWeirdROOT at 0x15011d00>, <InputCopyStream/SomethingWeirdMDF at 0x1501eaf0>, <InputCopyStream/InputCopyStream at 0x1501dae0>, <LHCb::MDFWriter/LHCb::MDFWriter at 0x1568a470>, <OutputStream/OutputStream at 0x156644d0>, <TagCollectionStream/SomethingElseWeirdMDF at 0x1501ef20>, <TagCollectionStream/SomethingElseWeirdPOOL at 0x1501e530>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdPOOL at 0x1501e940>, <RecordStream/FSRTagCollectionStreamSomethingElseWeirdROOT at 0x1501c350>, <TagCollectionStream/SomethingElseWeirdROOT at 0x1501baa0>, 'InputCopyStream']
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
@@ -92,10 +92,10 @@ DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 file://file2.mdf
 DATAFILE='file1.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
-DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='LHCb::RawDataCnvSvc' OPT='REC'
-DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
 - after conversion
 DATAFILE='out1.dst' SVC='RootCnvSvc' OPT='REC'
@@ -107,8 +107,8 @@ DATAFILE='out1.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out1.dst' SVC='LHCb::RawDataCnvSvc' OPT='REC'
 file://file2.mdf
 DATAFILE='file1.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'
-DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='LHCb::RawDataCnvSvc' OPT='REC'
-DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
+DATAFILE='out2.dst' SVC='FileRecordCnvSvc' OPT='REC'
 DATAFILE='out2.dst' SVC='RootCnvSvc' OPT='REC'

@@ -193,7 +193,7 @@ class IOHelper(object):
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
-
+    
     def _isOutputStream(self, streamstr):
         '''Helper:  returns true if the string is one of the known output streams'''
         for stream in self._knownOutputStreams:
@@ -201,7 +201,14 @@ class IOHelper(object):
             if stream in streamstr.split('/')[0]:
                 return True
         return False
-
+    
+    def _isSequencer(self, confstr):
+        '''Helper:  returns true if the string is one of the known output streams'''
+        #only check the type!
+        if "GaudiSequencer" in confstr.split('/')[0]:
+            return True
+        return False
+    
     def _isPersistencySvc(self,svcstring):
         '''Helper:  Returns true if the svcstring is one of the known persistencies'''
         for service in self._knownPerServices:
@@ -260,7 +267,14 @@ class IOHelper(object):
         for key in GaudiConfigurables.allConfigurables:
             retdict[GaudiConfigurables.allConfigurables[key].getFullName()]=GaudiConfigurables.allConfigurables[key]
         return retdict
-
+    
+    def _nameFromConfigurable(self,conf):
+        if type(conf) is str:
+            return conf
+        elif hasattr(conf, "getFullName"):
+            return conf.getFullName()
+        return None
+    
     def _configurableInstanceFromString(self, config):
         '''Get a configurable instance given only the string'''
 
@@ -837,7 +851,8 @@ class IOHelper(object):
 
     def activeStreams(self):
         '''Output:  Find the list of Output Stream-type objects,
-        search through allConfigurables AppMgr.TopAlg and and AppMgr.OutStream'''
+        search through allConfigurables AppMgr.TopAlg and and AppMgr.OutStream
+        also search all gaudi sequencers'''
         streams=[]
         from Gaudi.Configuration import ApplicationMgr
         for alg in ApplicationMgr().TopAlg:
@@ -846,19 +861,30 @@ class IOHelper(object):
                 algname=alg.getFullName()
             if self._isOutputStream(algname):
                 streams.append(alg)
-
+        
+        #everything in OutStream is an output stream
         if ApplicationMgr().OutStream is not None:
             streams+=ApplicationMgr().OutStream
 
+        #all defined configurables which match my expressions are output streams
         allConfigurables=self._fullNameConfigurables()
-        #from Gaudi.Configuration import allConfigurables
         for key in allConfigurables:
             if self._isOutputStream(key):
                 if key not in streams and allConfigurables[key] not in streams:
                     streams.append(allConfigurables[key])
-
+        
+        #all streams added to GaudiSequencers are Output Streams...
+        for sequencer in allConfigurables:
+            if self._isSequencer(sequencer):
+                if (not hasattr(allConfigurables[sequencer], "Members")) or (allConfigurables[sequencer].Members is None):
+                    continue
+                for member in allConfigurables[sequencer].Members:
+                    membername=self._nameFromConfigurable(member)
+                    if self._isOutputStream(membername):
+                        if member not in streams and membername not in streams:
+                            streams.append(member)
         return streams
-
+    
     def detectStreamType(self, stream):
         '''Output:  From the name of the stream, deduce its type'''
 

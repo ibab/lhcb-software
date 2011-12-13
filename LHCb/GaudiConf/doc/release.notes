@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-12-13 - Rob Lambert
+ - IOHelper: fix a missing part of the logic with respect to sequencers
+ - it will now also look for streams inside defined GaudiSequencers
+ - modified the streams test for this
+
 ! 2011-12-13 - Marco Cattaneo
  - In requirements, fix a dependency problem in macro GaudiConfConfUserModules
 

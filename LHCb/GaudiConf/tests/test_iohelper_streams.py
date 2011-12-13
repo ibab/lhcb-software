@@ -10,23 +10,29 @@ def testthisioh(ioh):
     
     print ioh.activeStreams()
     for stream in ioh.activeStreams():
-        if hasattr(stream,"Output") or "Output" in stream.__slots__:
+        if hasattr(stream,"Output"):# or (hasattr(stream,"__slots__") and "Output" in stream.__slots__):
             print stream.Output
-        else:
+        elif hasattr(stream,"Connection"):
             print stream.Connection
     
     ioh.convertStreams()
     print "- after conversion"
     for stream in ioh.activeStreams():
-        if hasattr(stream,"Output") or "Output" in stream.__slots__:
+        if hasattr(stream,"Output"):# or (hasattr(stream,"__slots__") and "Output" in stream.__slots__):
             print stream.Output
-        else:
+        elif hasattr(stream,"Connection"):
             print stream.Connection
 
 #preload with some MDFs, check they make it through the conversions
 ioh=IOHelper("MDF","MDF")
 ioh.outputAlgs("file1.mdf",writeFSR=False)
 ioh.outputAlgs("file2.mdf","LHCb::MDFWriter",writeFSR=False)
+
+#add a bare InputCopyStream to a GaudiSequencer, check it's OK
+from Gaudi.Configuration import ApplicationMgr
+from Configurables import GaudiSequencer
+ApplicationMgr().TopAlg=["Rubbish",GaudiSequencer("MoreRubbish")]
+GaudiSequencer("MoreRubbish").Members=["InputCopyStream"]
 
 for persistency in [None,'POOL','ROOT','MDF']:
     print '============================='
