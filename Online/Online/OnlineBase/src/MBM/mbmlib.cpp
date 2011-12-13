@@ -1947,7 +1947,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
         ev = _mbm_ealloc(bm,us);
       }
     }
-    if ( ev == 0 && wait )   {    // directly return
+    if ( ev == 0 && !wait )   {    // directly return
       _mbm_printf("mbm_declare_event> Free event space:%08X\n",us->space_add);
       _mbm_sfree (bm, us->space_add, us->space_size);
       us->space_add = 0;
