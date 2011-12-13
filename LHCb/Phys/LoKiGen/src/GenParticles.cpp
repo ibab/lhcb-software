@@ -1806,6 +1806,323 @@ std::ostream& LoKi::GenParticles::DecTree::fillStream( std::ostream& s ) const
 // ============================================================================
 
 
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const unsigned int           index )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun   ) 
+  , m_child ( index )  
+{} 
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const unsigned int           index1 ,
+  const unsigned int           index2 )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun             ) 
+  , m_child ( index1 , index2 ) 
+{} 
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const std::vector<unsigned int>& indices )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun   ) 
+  , m_child ( indices ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/* constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc&    fun      , 
+  const LoKi::GenChild::Selector& selector ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/* constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const std::string&           selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+}
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc&    fun       , 
+  const Decays::IGenDecay::iTree& selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const Decays::iNode&         selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildFun::ChildFun
+( const LoKi::GenTypes::GFunc& fun   , 
+  const LoKi::GenTypes::GCuts& selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Function () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid:!" ) ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+LoKi::GenParticles::ChildFun::~ChildFun(){}
+// ============================================================================
+// clone method  ("virtual destructor" )
+// ============================================================================
+LoKi::GenParticles::ChildFun*
+LoKi::GenParticles::ChildFun::clone() const 
+{ return new LoKi::GenParticles::ChildFun (*this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::ChildFun::result_type 
+LoKi::GenParticles::ChildFun::operator()  
+  ( LoKi::GenParticles::ChildFun::argument p ) const
+{
+  if ( 0 == p ) 
+  {
+    Error ("HepMC::GenParticle* points to NULL, return NegativeInfinity") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  const HepMC::GenParticle* c = m_child.child ( p ) ;
+  if ( 0 == c ) 
+  {
+    Error (" child HepMC::GenParticle* points to NULL, return NegativeInfinity") ;
+    return LoKi::Constants::NegativeInfinity ;
+  }
+  //
+  return m_fun ( c ) ;
+}
+// ============================================================================
+//  OPTIONAL:  specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::ChildFun::fillStream( std::ostream& s ) const 
+{ return s << " GCHILD(" << m_fun << "," << m_child << " ) " ; }
+// ============================================================================
+
+
+
+
+
+
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================ 
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+ const unsigned int           index )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun   ) 
+  , m_child ( index )  
+{} 
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const unsigned int           index1 ,
+  const unsigned int           index2 )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun             ) 
+  , m_child ( index1 , index2 ) 
+{} 
+// ============================================================================
+/*  constructor from the function and daughter index 
+ *  @param fun    the function to be used 
+ *  @param index  the index of daughter particle
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const std::vector<unsigned int>& indices )
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun   ) 
+  , m_child ( indices ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/* constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const LoKi::GenChild::Selector& selector ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/* constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const std::string&           selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+}
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts&    fun       , 
+  const Decays::IGenDecay::iTree& selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const Decays::iNode&         selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid!" ) ;
+} 
+// ============================================================================
+/*  constructor from the function and child selector 
+ *  @param fun      the function to be used 
+ *  @param selector the child selector 
+ */
+// ============================================================================
+LoKi::GenParticles::ChildCut::ChildCut
+( const LoKi::GenTypes::GCuts& fun   , 
+  const LoKi::GenTypes::GCuts& selector  ) 
+  : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
+  , m_fun   ( fun      ) 
+  , m_child ( selector ) 
+{
+  Assert ( m_child.valid() , "Child selector is invalid:!" ) ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+LoKi::GenParticles::ChildCut::~ChildCut(){}
+// ============================================================================
+// clone method  ("virtual destructor" )
+// ============================================================================
+LoKi::GenParticles::ChildCut*
+LoKi::GenParticles::ChildCut::clone() const 
+{ return new LoKi::GenParticles::ChildCut (*this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::ChildCut::result_type 
+LoKi::GenParticles::ChildCut::operator()  
+  ( LoKi::GenParticles::ChildCut::argument p ) const
+{
+  if ( 0 == p ) 
+  {
+    Error ("HepMC::GenParticle* points to NULL, return false") ;
+    return false ;
+  }
+  const HepMC::GenParticle* c = m_child.child ( p ) ;
+  if ( 0 == c ) 
+  {
+    Error (" child HepMC::GenParticle* points to NULL, return false") ;
+    return false ;
+  }
+  //
+  return m_fun ( c ) ;
+}
+// ============================================================================
+//  OPTIONAL:  specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::ChildCut::fillStream( std::ostream& s ) const 
+{ return s << " GCHILDCUT(" << m_fun << "," << m_child << " ) " ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 

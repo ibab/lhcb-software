@@ -8,8 +8,9 @@
 // HepMC 
 // ============================================================================
 #ifdef __INTEL_COMPILER
-  #pragma warning (disable:1572) // floating-point equality and inequality comparisons are unreliable
-  #pragma warning(push)
+// floating-point equality and inequality comparisons are unreliable
+#pragma warning (disable:1572)
+#pragma warning(push)
 #endif
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenVertex.h"
@@ -18,12 +19,39 @@
   #pragma warning(pop)
 #endif
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/CmpBarCode.h"
 // ============================================================================
+/** @file
+ *  Set of functions to access daughtr particles 
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace GenChild 
   {
     // ========================================================================
@@ -34,6 +62,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */
+    GAUDI_API 
     std::size_t nChildren ( const HepMC::GenParticle*   mother ) ;     
     // ========================================================================
     /** Trivial accessor to the daughter "decay" particles for 
@@ -48,6 +77,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02
      */    
+    GAUDI_API 
     const HepMC::GenParticle* child 
     ( const HepMC::GenParticle* mother , 
       const size_t              index  ) ;    
@@ -118,12 +148,18 @@ namespace LoKi
       const size_t               index4   )
     { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
     // ========================================================================
+    GAUDI_API 
+    const HepMC::GenParticle* child
+    ( const HepMC::GenParticle*        particle , 
+      const std::vector<unsigned int>& indices  ) ;
+    // ========================================================================
     /*  get all "in"-particles for the given vertex 
      *  @see HepMC::GenVertex::particles_in_const_begin() 
      *  @see HepMC::GenVertex::particles_in_const_end()
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API
     std::vector<const HepMC::GenParticle*>
     particles_in  ( const HepMC::GenVertex* vertex ) ;
     // ========================================================================
@@ -133,6 +169,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API
     std::vector<const HepMC::GenParticle*>
     particles_out ( const HepMC::GenVertex* vertex ) ;
     // ========================================================================
@@ -142,6 +179,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API
     std::vector<const HepMC::GenParticle*> 
     particles_all ( const HepMC::GenEvent* event )  ;
     // ========================================================================
@@ -151,6 +189,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API
     std::vector<const HepMC::GenVertex*> 
     vertices_all ( const HepMC::GenEvent* event )  ;
     // ========================================================================
@@ -160,6 +199,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API
     size_t particles 
     ( const HepMC::GenVertex*                 vertex , 
       const HepMC::IteratorRange              range  , 
@@ -171,6 +211,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    GAUDI_API 
     size_t particles 
     ( const HepMC::GenVertex*                 vertex , 
       const HepMC::IteratorRange              range  , 
@@ -225,7 +266,8 @@ namespace LoKi
     /** get all "daughter" particles form the given particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
-     */    
+     */
+    GAUDI_API
     size_t daughters 
     ( const HepMC::GenParticle*               particle , 
       std::vector<const HepMC::GenParticle*>& output   ) ;
@@ -233,7 +275,8 @@ namespace LoKi
     /** get all "daughter" particles form the given particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
-     */    
+     */
+    GAUDI_API
     size_t daughters 
     ( const HepMC::GenParticle* particle , 
       LoKi::GenTypes::GenSet&   output   ) ;
@@ -297,7 +340,8 @@ namespace LoKi
     /** get all "descendant" particles form the given particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
-     */    
+     */
+    GAUDI_API
     std::vector<const HepMC::GenParticle*> 
     descendants ( const HepMC::GenParticle* particle ) ;
     // ========================================================================
@@ -310,16 +354,18 @@ namespace LoKi
     relatives  ( const HepMC::GenVertex*    vertex ) 
     { return particles ( vertex , HepMC::relatives ) ; }    
     // ========================================================================
-  } // end of namespace LoKi::GenChild 
+  } //                                          end of namespace LoKi::GenChild 
+  // ==========================================================================
   namespace Child 
   {
+    // ========================================================================
     using namespace LoKi::GenChild ;
-  } // end of namespace LoKi::Child
-} // end of namespace LoKi 
+    // ========================================================================
+  } //                                             end of namespace LoKi::Child
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
-
-// ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_GENCHILD_H
 // ============================================================================

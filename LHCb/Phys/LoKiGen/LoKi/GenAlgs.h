@@ -28,8 +28,16 @@
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi
@@ -352,7 +360,7 @@ namespace LoKi
       return false ;
     } 
     // ========================================================================
-    /** simple fuction to check the presence of "good" particle in HepMC-graph
+    /** simple function to check the presence of "good" particle in HepMC-graph
      *  @param vertex pointer to the vertex 
      *  @param cut defintion of "good" particle
      *  @param range HepMC-graph 
@@ -372,7 +380,7 @@ namespace LoKi
           _v -> particles_end   ( range ) , cut ) ;
     }
     // ======================================================================== 
-    /** simple fuction to check the presence of "good" particle in the decay 
+    /** simple function to check the presence of "good" particle in the decay 
      *  tree of the mother particle
      *  @param particle pointer to mother particle
      *  @param cut defintion of "good" particle
@@ -389,6 +397,76 @@ namespace LoKi
       { return LoKi::GenAlgs::found 
           ( particle->end_vertex() , cut , HepMC::descendants ) ; }
       return false ;
+    }
+    // =====================================================================
+    template <class PREDICATE>
+    inline 
+    const HepMC::GenParticle*
+    foundFirst 
+    ( const HepMC::GenVertex*   vertex ,
+      const PREDICATE&          cut    ) ;
+    // ======================================================================
+    template <class PREDICATE>
+    inline 
+    const HepMC::GenParticle*
+    foundFirst 
+    ( const HepMC::GenParticle* particle ,
+      const PREDICATE&          cut    ) ;
+    // ======================================================================
+    template <class PARTICLE, class PREDICATE>
+    inline 
+    const HepMC::GenParticle*
+    foundFirst 
+    ( PARTICLE         begin ,
+      PARTICLE         end   , 
+      const PREDICATE& cut   )
+    {
+      //
+      const HepMC::GenParticle* result = 0 ;
+      //
+      for ( ; 0 == result && begin != end ; ++begin ) 
+      { result = foundFirst ( *begin , cut ) ; } 
+      //
+      return result ;
+    }
+    // ======================================================================
+    /** simple function to get the first matched element in tree 
+     *  tree of the mother particle
+     *  @param particle pointer to mother particle
+     *  @param cut defintion of "good" particle
+     *  @return good particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     */
+    template <class PREDICATE>
+    inline 
+    const HepMC::GenParticle*
+    foundFirst 
+    ( const HepMC::GenParticle* particle ,
+      const PREDICATE&          cut      ) 
+    {
+      if ( 0 ==  particle   ) { return        0 ; }      // RETURN 
+      if ( cut ( particle ) ) { return particle ; }      // RETURN 
+      //
+      if ( 0 == particle->end_vertex()  ) { return 0 ; } // RETURN 
+      //
+      return foundFirst ( particle->end_vertex() , cut ) ;
+    }
+    // ========================================================================
+    template <class PREDICATE>
+    inline 
+    const HepMC::GenParticle*
+    foundFirst 
+    ( const HepMC::GenVertex* vertex ,
+      const PREDICATE&        cut    ) 
+    {
+      //
+      if ( 0 == vertex ) { return 0 ; } // RETURN  
+      //
+      HepMC::GenVertex* _v = const_cast<HepMC::GenVertex*> ( vertex ) ;
+      //
+      return foundFirst 
+        ( _v -> particles_begin ( HepMC::children ) ,
+          _v -> particles_end   ( HepMC::children ) , cut ) ;
     }
     // ========================================================================
     /** useful helper function (a'la STL) to efficiently check the
@@ -1208,8 +1286,10 @@ namespace LoKi
       HepMC::GenParticle* _t2 = const_cast<HepMC::GenParticle*> ( particle ) ;
       return fun(_t2) < fun(_t1) ? tmp : particle ;
     }
-  }  // end of namespace LoKi::GenAlgs
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                           end of namespace LoKi::GenAlgs
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

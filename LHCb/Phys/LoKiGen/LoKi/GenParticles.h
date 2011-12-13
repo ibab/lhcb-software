@@ -22,6 +22,7 @@
 #include "LoKi/Functions.h"
 #include "LoKi/GenTypes.h"
 #include "LoKi/iTree.h"
+#include "LoKi/GenChildSelector.h"
 // ============================================================================
 /** @file
  *
@@ -33,12 +34,21 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 namespace LoKi 
 { 
+  // ==========================================================================
   /** @namespace LoKi::GenParticles GenParticles.h LoKi/GenParticles.h
    * 
    *  Collection of LoKi functions and predicates to manipulate with 
@@ -60,9 +70,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class BarCode : public LoKi::GenTypes::GFunc 
+    class GAUDI_API BarCode : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  BarCode* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -71,6 +82,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Identifier 
@@ -88,9 +100,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class Identifier : public LoKi::GenTypes::GFunc 
+    class GAUDI_API Identifier : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  Identifier* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -99,6 +112,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class AbsIdentifier 
@@ -116,9 +130,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class AbsIdentifier : public LoKi::GenTypes::GFunc 
+    class GAUDI_API AbsIdentifier : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  AbsIdentifier* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -127,6 +142,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class Status
@@ -139,9 +155,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class Status : public LoKi::GenTypes::GFunc 
+    class GAUDI_API Status : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  Status* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -150,6 +167,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class PseudoRapidity
@@ -160,7 +178,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class PseudoRapidity : public LoKi::GenTypes::GFunc
+    class GAUDI_API PseudoRapidity : public LoKi::GenTypes::GFunc
     {   
     public:
       // ======================================================================
@@ -201,7 +219,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Rapidity : public PseudoRapidity
+    class GAUDI_API Rapidity : public PseudoRapidity
     {   
     public:
       // ======================================================================
@@ -226,7 +244,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Rapidity0 : public PseudoRapidity
+    class GAUDI_API Rapidity0 : public PseudoRapidity
     {   
     public:
       // ======================================================================
@@ -249,7 +267,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Phi : public LoKi::GenTypes::GFunc
+    class GAUDI_API  Phi : public LoKi::GenTypes::GFunc
     { 
     public:
       // ======================================================================
@@ -289,9 +307,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Theta : public LoKi::GenTypes::GFunc
+    class GAUDI_API Theta : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  Theta* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -300,6 +319,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class Momentum
@@ -310,9 +330,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Momentum : public LoKi::GenTypes::GFunc
+    class GAUDI_API Momentum : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  Momentum* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -321,6 +342,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class TransverseMomentum
@@ -331,9 +353,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class TransverseMomentum : public LoKi::GenTypes::GFunc
+    class GAUDI_API TransverseMomentum : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  TransverseMomentum* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -342,6 +365,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Energy
@@ -352,9 +376,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Energy : public LoKi::GenTypes::GFunc
+    class GAUDI_API Energy : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  Energy* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -363,6 +388,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Mass
@@ -373,9 +399,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-17
      */
-    class Mass : public LoKi::GenTypes::GFunc
+    class GAUDI_API Mass : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  Mass* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -384,6 +411,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumX
@@ -394,9 +422,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumX : public LoKi::GenTypes::GFunc
+    class GAUDI_API MomentumX : public LoKi::GenTypes::GFunc
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  MomentumX* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -405,6 +434,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumY
@@ -415,9 +445,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumY : public LoKi::GenTypes::GFunc
+    class GAUDI_API MomentumY : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  MomentumY* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -426,6 +457,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumZ
@@ -436,9 +468,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-03
      */
-    class MomentumZ : public LoKi::GenTypes::GFunc
+    class GAUDI_API MomentumZ : public LoKi::GenTypes::GFunc
     { 
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual  MomentumZ* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -447,6 +480,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class ValidEndVertex 
@@ -460,9 +494,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class ValidEndVertex : public LoKi::GenTypes::GCuts
+    class GAUDI_API ValidEndVertex : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  ValidEndVertex* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -471,6 +506,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MomentumDistance 
@@ -501,9 +537,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class MomentumDistance : public LoKi::GenTypes::GFunc 
+    class GAUDI_API MomentumDistance : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// constructor from 4 components
       MomentumDistance
       ( const double px , 
@@ -526,11 +563,16 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is private
       MomentumDistance() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::LorentzVector m_vct ;
+      // ======================================================================
     }; 
     // ========================================================================   
     /** @class TransverseMomentumRel
@@ -551,9 +593,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class TransverseMomentumRel : public LoKi::GenTypes::GFunc 
+    class GAUDI_API TransverseMomentumRel : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /** constructor from theta and phi
        *  @param theta theta angle for the direction 
        *  @param phi phi angle for the direction
@@ -595,11 +638,16 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private
       TransverseMomentumRel() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::ThreeVector m_vct ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class FromHepMCTree
@@ -612,9 +660,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class FromHepMCTree : public LoKi::GenTypes::GCuts 
+    class GAUDI_API FromHepMCTree : public LoKi::GenTypes::GCuts 
     {
     public:
+      // ======================================================================
       /** constructor from particle ("head")
        *  @param p pointer to HepMC::GenParticle 
        */
@@ -650,7 +699,9 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       template <class ITERATOR>
       FromHepMCTree& add ( ITERATOR first , ITERATOR last  ) 
       { _add ( first , last ) ; return *this ; }
@@ -662,18 +713,25 @@ namespace LoKi
       { _add ( p.begin() , p.end() ) ; return *this  ; }
       FromHepMCTree& remove ( const HepMC::GenVertex*   v ) ;
       FromHepMCTree& remove ( const HepMC::GenParticle* v ) ;      
+      // ======================================================================
     protected:
+      // ======================================================================
       template <class ITERATOR>
       void _add ( ITERATOR first , ITERATOR last  ) 
       { for ( ; first != last ; ++first ) { _add ( *first ) ; } }
       void _add ( const HepMC::GenParticle* p ) ;
       void _add ( const HepMC::GenVertex*   v ) ;
+      // ======================================================================
     private:
-      // defautl constructor is disabled 
+      // ======================================================================
+      // default constructor is disabled 
       FromHepMCTree();
+      // ======================================================================
     private:
+      // ======================================================================
       typedef std::vector<HepMC::GenVertex*> VERTICES ;
       VERTICES m_vertices ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class IsAnAncestor
@@ -686,9 +744,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class IsAnAncestor : public LoKi::GenTypes::GCuts 
+    class GAUDI_API IsAnAncestor : public LoKi::GenTypes::GCuts 
     {
     public:
+      // ======================================================================
       /** constructor from particle 
        *  @param p pointer to HepMC::GenParticle 
        */
@@ -707,11 +766,16 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       // defautl constructor is disabled 
       IsAnAncestor();
+      // ======================================================================
     private:
+      // ======================================================================
       const HepMC::GenParticle* m_particle ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class HasQuark 
@@ -720,9 +784,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class  HasQuark : public LoKi::GenTypes::GCuts
+    class  GAUDI_API HasQuark : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       HasQuark (  const LHCb::ParticleID::Quark quark ) ;
       // copy constructor 
       HasQuark (  const HasQuark& right ) ;
@@ -733,10 +798,15 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
       LHCb::ParticleID::Quark quark() const { return m_quark ; }
+      // ======================================================================
     private:
+      // ======================================================================
       HasQuark();
+      // ======================================================================
     private :
+      // ======================================================================
       LHCb::ParticleID::Quark m_quark ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsCharged
@@ -744,15 +814,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsCharged : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsCharged : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsCharged* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsNeutral
@@ -760,15 +832,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsNeutral : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsNeutral : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsNeutral* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsLepton
@@ -776,15 +850,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsLepton : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsLepton : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsLepton* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsMeson
@@ -792,15 +868,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsMeson : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsMeson : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsMeson* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsBaryon
@@ -808,15 +886,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */ 
-    class IsBaryon : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsBaryon : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsBaryon* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsHadron
@@ -824,15 +904,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
-    class IsHadron : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsHadron : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsHadron* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class IsNucleus
@@ -840,15 +922,17 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class IsNucleus : public LoKi::GenTypes::GCuts
+    class GAUDI_API IsNucleus : public LoKi::GenTypes::GCuts
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsNucleus* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================
     /** @class ProperLifeTime 
@@ -857,9 +941,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    class ProperLifeTime : public LoKi::GenTypes::GFunc
+    class GAUDI_API ProperLifeTime : public LoKi::GenTypes::GFunc
     {
     public:
+      // ======================================================================
       /** constructor
        *  @param bad the valut toi be returned for particles
        *  where the evaluation end vertex is not possible 
@@ -877,8 +962,11 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;    
+      // ======================================================================
     private:
+      // ======================================================================
       double m_bad ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class NominalLifeTime
@@ -886,15 +974,17 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
-    class NominalLifeTime : public LoKi::GenTypes::GFunc
+    class GAUDI_API NominalLifeTime : public LoKi::GenTypes::GFunc
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual NominalLifeTime* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class AdapterToProductionVertex 
@@ -906,7 +996,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    class AdapterToProductionVertex : public LoKi::GenTypes::GFunc
+    class GAUDI_API AdapterToProductionVertex : public LoKi::GenTypes::GFunc
     {
     public:
       // ======================================================================
@@ -950,7 +1040,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    class AdapterToEndVertex : public LoKi::GenTypes::GFunc
+    class GAUDI_API AdapterToEndVertex : public LoKi::GenTypes::GFunc
     {
     public:
       // ======================================================================
@@ -999,9 +1089,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-03-07
      */
-    class ThreeCharge : public LoKi::GenTypes::GFunc 
+    class GAUDI_API ThreeCharge : public LoKi::GenTypes::GFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  ThreeCharge* clone() const { return new ThreeCharge(*this) ; }
       /// MANDATORY: virtual destructor 
@@ -1010,6 +1101,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class DeltaPhi
@@ -1020,7 +1112,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi : public Phi
+    class GAUDI_API DeltaPhi : public Phi
     {
     public:
       // ======================================================================
@@ -1088,7 +1180,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public PseudoRapidity 
+    class GAUDI_API DeltaEta : public PseudoRapidity 
     {
     public:
       // ======================================================================
@@ -1159,7 +1251,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public DeltaPhi 
+    class GAUDI_API DeltaR2 : public DeltaPhi 
     {
     public:
       // ======================================================================
@@ -1249,7 +1341,7 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-03-23 
      */
-    class NInTree : public LoKi::GenTypes::GFunc
+    class GAUDI_API NInTree : public LoKi::GenTypes::GFunc
     {
     public:
       // ======================================================================
@@ -1309,7 +1401,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2004-05-05
      */
-    class InTree : public LoKi::GenTypes::GCuts 
+    class GAUDI_API InTree : public LoKi::GenTypes::GCuts 
     {
     public:
       /** standard constructor 
@@ -1347,7 +1439,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nkhef.nl
      *  @date 2008-07-03
      */
-    class Oscillated : public LoKi::GenTypes::GCuts 
+    class GAUDI_API Oscillated : public LoKi::GenTypes::GCuts 
     {
     public:
       // ======================================================================
@@ -1391,7 +1483,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nkhef.nl
      *  @date 2008-07-03
      */
-    class Oscillated2 : public LoKi::GenTypes::GCuts 
+    class GAUDI_API Oscillated2 : public LoKi::GenTypes::GCuts 
     {
     public:
       // ======================================================================
@@ -1413,7 +1505,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-12-17
      */
-    class DecNode
+    class GAUDI_API DecNode
       : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
     {
     public:
@@ -1457,7 +1549,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-12-17
      */
-    class DecTree
+    class GAUDI_API DecTree
       : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
     {
     public:
@@ -1512,11 +1604,186 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } // end of namespace GenParticles  
+    /** @class ChildFun 
+     *  adapter to child-function
+     *  @see LoKi::Cuts::GCHILD 
+     *  @see LoKi::Cuts::GCHILDFUN 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-12-11
+     */
+    class GAUDI_API ChildFun 
+      : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Function
+    {
+    public:
+      // ======================================================================
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFun 
+      ( const LoKi::GenTypes::GFunc& fun   , 
+        const unsigned int           index ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFun
+      ( const LoKi::GenTypes::GFunc& fun    , 
+        const unsigned int           index1 , 
+        const unsigned int           index2 ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildFun
+      ( const LoKi::GenTypes::GFunc& fun         , 
+        const std::vector<unsigned int>& indices ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildFun
+      ( const LoKi::GenTypes::GFunc&    fun       , 
+        const LoKi::GenChild::Selector& selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFun 
+      ( const LoKi::GenTypes::GFunc& fun       , 
+        const std::string&           selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFun
+      ( const LoKi::GenTypes::GFunc&    fun      , 
+        const Decays::IGenDecay::iTree& selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFun
+      ( const LoKi::GenTypes::GFunc&  fun      , 
+        const Decays::iNode&          selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildFun 
+      ( const LoKi::GenTypes::GFunc& fun      , 
+        const LoKi::GenTypes::GCuts& selector ) ;
+      // ======================================================================
+      /// MANDATORY: virtual destructor
+      virtual ~ChildFun () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildFun*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the function itself 
+      LoKi::GenTypes::GFun     m_fun   ;                 // the function itself 
+      /// the child selector 
+      LoKi::GenChild::Selector m_child ;                 //  the child selector 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class ChildCut
+     *  adapter to child-predicate
+     *  @see LoKi::Cuts::GCHILDCUT 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date   2011-12-11
+     */
+    class GAUDI_API ChildCut
+      : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts& fun   , 
+        const unsigned int           index ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts& fun    , 
+        const unsigned int           index1 , 
+        const unsigned int           index2 ) ;
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts& fun         , 
+        const std::vector<unsigned int>& indices ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector 
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts&    fun       , 
+        const LoKi::GenChild::Selector& selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts& fun       , 
+        const std::string&           selector  ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts&    fun      , 
+        const Decays::IGenDecay::iTree& selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts&  fun      , 
+        const Decays::iNode&          selector ) ;
+      /** constructor from the function and child selector 
+       *  @param fun      the function to be used 
+       *  @param selector the child selector
+       */
+      ChildCut
+      ( const LoKi::GenTypes::GCuts&  fun      ,
+        const LoKi::GenTypes::GCuts&  selector ) ;
+      // ======================================================================
+      /// MANDATORY: virtual destructor
+      virtual ~ChildCut () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildCut*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the function itself 
+      LoKi::GenTypes::GCut     m_fun   ;                 // the function itself 
+      /// the child selector 
+      LoKi::GenChild::Selector m_child ;                 //  the child selector 
+      // ======================================================================
+    };
+    // ========================================================================
+  } //                                      end of namespace LoKi::GenParticles  
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_GENPARTICLES_H
 // ============================================================================

@@ -25,11 +25,20 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-08 
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 namespace LoKi 
 {
+  // ==========================================================================
   /** @namespace LoKi::GenVertices GenVertices.h LoKi/GenVertices.h
    *  
    *  Collection of LoKi functions and predicates to manipulate with 
@@ -51,9 +60,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class BarCode : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API BarCode : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  BarCode* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -62,6 +72,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class PositionX
@@ -75,9 +86,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionX : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionX : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionX* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -86,6 +98,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionY
@@ -99,9 +112,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionY : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionY : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionY* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -110,6 +124,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionZ
@@ -123,9 +138,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class  PositionZ : public LoKi::GenTypes::GVFunc 
+    class  GAUDI_API PositionZ : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionZ* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -134,6 +150,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class PositionT
@@ -147,9 +164,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class PositionT : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API PositionT : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /// MANDATORY: clone method ("virtual" constructor")
       virtual  PositionT* clone() const ;
       /// MANDATORY: virtual destructor 
@@ -158,6 +176,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class CountIF
@@ -171,9 +190,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class CountIF : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API CountIF : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /** constructor from the criteria and "range"
        *  @param cut the criteria
        *  @param range search region 
@@ -200,12 +220,17 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       CountIF () ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Types::GCut    m_cut   ;
       HepMC::IteratorRange m_range ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class SumIF
@@ -220,9 +245,10 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date   2005-03-26
      */
-    class SumIF : public LoKi::GenTypes::GVFunc 
+    class GAUDI_API SumIF : public LoKi::GenTypes::GVFunc 
     {
     public:
+      // ======================================================================
       /** constructor from the function and the "range" 
        *  @param fun function to be accuulated  
        *  @param range search region 
@@ -279,19 +305,25 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       SumIF () ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Types::GFun    m_fun   ;
       LoKi::Types::GCut    m_cut   ;
       HepMC::IteratorRange m_range ;
+      // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::GenVertices
-} // end of namespace LoKi
+  } //                                       end of namespace LoKi::GenVertices
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_GENVERTICES_H
 // ============================================================================

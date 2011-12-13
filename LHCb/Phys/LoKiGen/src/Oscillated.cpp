@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,9 +27,9 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-11-11
  *
- *                    $Revision: 124208 $
- *  Last modification $Date: 2011-06-02 18:05:48 +0200 (Thu, 02 Jun 2011) $
- *                 by $Author: ibelyaev $
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ===========================================================================
 /* check the oscillation for the particle 

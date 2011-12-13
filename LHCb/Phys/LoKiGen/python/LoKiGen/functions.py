@@ -109,6 +109,12 @@ GCHARGED  = LoKi.GenParticles.IsCharged ()
 ## @see LoKi::Cuts::GCHARM
 ##GCHARM  = GQUARK( LHCb.ParticleID.charm  )
 GCHARM    = LoKi.GenParticles.HasQuark ( 4 )
+## @see LoKi::Cuts::GCHILD 
+GCHILD    = LoKi.GenParticles.ChildFun
+## @see LoKi::Cuts::GCHILDCUT
+GCHILDCUT = LoKi.GenParticles.ChildCut
+## @see LoKi::Cuts::GCHILDFUN
+GCHILDFUN = LoKi.GenParticles.ChildFun
 ## @see LoKi::Cuts::GCTAU
 GCTAU     = LoKi.GenParticles.ProperLifeTime ()
 ## @see LoKi::Cuts::GDECNODE 

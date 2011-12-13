@@ -53,6 +53,8 @@ namespace LoKi
     // ========================================================================
     /// the basic imported type for the sequence of HepMC-particles 
     typedef std::vector<const HepMC::GenParticle*>  GenContainer      ;
+    /// the basic imported type for the sequence of HepMC-particles 
+    typedef GenContainer                            ConstVector       ;
     /// the basic imported type for the sequence of HepMC-vertices 
     typedef std::vector<const HepMC::GenVertex*>    GenVContainer     ;
     //

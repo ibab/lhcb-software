@@ -225,6 +225,35 @@ namespace LoKi
      */
     const LoKi::GenParticles::HasQuark     GCHARM ( LHCb::ParticleID::charm ) ;
     // ========================================================================
+    /** @typedef GCHILD 
+     *  Simple adapter that delegates the function to certain child particle
+     *  @see LoKi::GenParticles::ChildFun 
+     *  @see LoKi::GenChild::Selector
+     *  @see LoKi::Cuts::GCHILDFUN
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-13
+     */
+    typedef LoKi::GenParticles::ChildFun                               GCHILD ;
+    // ========================================================================
+    /** @typedef GCHILDCUT
+     *  Simple adapter that delegates the predicate to certain child particle
+     *  @see LoKi::GenParticles::ChildCut
+     *  @see LoKi::GenChild::Selector
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-13
+     */
+    typedef LoKi::GenParticles::ChildCut                            GCHILDCUT ;
+    // ========================================================================
+    /** @typedef GCHILDFUN 
+     *  Simple adapter that delegates the function to certain child particle
+     *  @see LoKi::GenParticles::ChildFun 
+     *  @see LoKi::GenChild::Selector
+     *  @see LoKi::Cuts::GCHILD
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-13
+     */
+    typedef LoKi::GenParticles::ChildFun                            GCHILDFUN ;
+    // ========================================================================
     /** @typedef GCOUNTER
      *  Simple monitoring counter for predicates
      *
