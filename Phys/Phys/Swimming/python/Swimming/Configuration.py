@@ -53,6 +53,7 @@ class Swimming(LHCbConfigurableUser) :
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
         , "TauCalc"            : 'PropertimeFitter'         # The decay time calculator
         , "HltNodesToKill"     : ["Hlt","Hlt1","Hlt2","Trig","Raw","Rec/Vertices/Hlt2DisplVerticesV3D",
+                                  "/Event/Rec/Rich/RecoEvent/Hlt2BiKalmanFittedForwardTracking_RichRecSysConf",
                                   "/Event/Rec/Rich/RecoEvent/Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking_RichRecSysConf",
                                   "/Event/Rec/Rich/GlobalPID/Hlt2BiKalmanFittedRichForLowPTProtonsForwardTracking_RichRecSysConf"]#Nodes to kill HLT 
         , "MaxSwimDistance"    : 200.            # The maximum distance to swim with "fine" granularity
