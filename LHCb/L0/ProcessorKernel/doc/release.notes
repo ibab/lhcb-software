@@ -4,6 +4,7 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!========================= ProcessorKernel v7r0 2011-12-14 =========================
 ! 2011-11-16 - Marco Cattaneo
  - Fix an include for gcc 4.6
 
