@@ -42,7 +42,7 @@ namespace LHCb  {
     std::vector<int>      m_memory;
     MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
-    const void*           m_mepStart;
+    void*                 m_mepStart;
     int                   m_evID;
 
     /// Convert standard descriptor event structure to banks
@@ -445,7 +445,7 @@ StatusCode MBMContext::connectMBM(const string& input)  {
       if ( m_consumer->id() == MBM_INV_DESC ) {
         return StatusCode::FAILURE;
       }
-      m_mepStart = m_consumer->bufferAddress();
+      m_mepStart = (void*)m_consumer->bufferAddress();
       return StatusCode::SUCCESS;
     }
     m_sel->error("Data buffer \""+input+"\" is not mapped. "
