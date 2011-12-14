@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package           LHCbAlgs
-version           v2r44
+version           v2r45
 
 #============================================================================
 # Structure, i.e. directories to process.

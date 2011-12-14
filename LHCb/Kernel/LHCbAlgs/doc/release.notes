@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r45 2011-12-14 =========================
 ! 2011-11-24 - Chris Jones
  - Update default RawEvent search locations in ODINDecodeTool
   + Remove obsolete LHCb::RawEventLocation::Copied
