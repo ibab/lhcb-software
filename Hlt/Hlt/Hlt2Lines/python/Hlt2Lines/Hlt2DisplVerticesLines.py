@@ -149,7 +149,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         ######################################################################
         # Run PatPV3D : reconstruction of displaced vertices
-        Hlt2PatPV3D = PatPV3D("Hlt2DisplVerticesV3D")
+        Hlt2PatPV3D = PatPV3D("Hlt2DisplVertices3D")
         DVSeq.append( Hlt2PatPV3D )
         Hlt2PatPV3D.addTool(PVOfflineTool)
         Hlt2PatPV3D.PVOfflineTool.InputTracks = [ hlt2VeloTracking.outputSelection() ]
@@ -162,7 +162,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3D.PVOfflineTool.addTool( LSAdaptPV3DFitter)
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
-        Hlt2PatPV3D.OutputVerticesName = "Rec/Vertices/Hlt2DisplVerticesV3D"
+        Hlt2PatPV3D.OutputVerticesName = "Hlt2/Hlt2V3D/Vertices"
 
         #######################################################################
         #Get the pions

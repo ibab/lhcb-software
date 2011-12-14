@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-12-14 - Victor Coco
+ - Fixed improper vertex location in Hlt2DisplVerticesLines.py
+
 !========================== Hlt2Lines v8r8 2011-08-29 ========================
 ! 2011-11-25 - Marcin Kucharczyk
  - Add Hlt2HighPtJetsLines.py
