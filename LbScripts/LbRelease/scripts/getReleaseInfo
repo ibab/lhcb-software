@@ -42,7 +42,8 @@ class getReleaseInfoScript(Script):
             project   = args[0]
             if len(args) > 1 :
                 version   = args[1]
-        del os.environ["CMTUSERCONTEXT"] # remove the fake project from the dependencies
+        if "CMTUSERCONTEXT" in os.environ:
+            del os.environ["CMTUSERCONTEXT"] # remove the fake project from the dependencies
 
         print getReleaseInfo(project, version, opts.html)
 

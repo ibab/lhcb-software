@@ -1,3 +1,10 @@
+2011-12-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/Info.py: use CMTPROJECTPATH when looking for project bases,
+	striped release notes, ignore unknown projects
+	* LbRelease/python/LbRelease/CMT/Version.py: fixed CMT2LHCb for projects without version
+	* LbRelease/scripts/getReleaseInfo: fixed error when CMTUSERCONTEXT is not set
+
 2011-12-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/CMT/LbProject.py: added releaseDate method

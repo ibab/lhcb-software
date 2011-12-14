@@ -31,7 +31,10 @@ class LHCbVersion(Version):
 
 
 def CMT2LHCb(projectname, projectversion):
-    newversion = projectversion.split("_")[1]
+    if "_" in projectversion:
+        newversion = projectversion.split("_")[1]
+    else:
+        newversion = projectversion
     newname = getProject(projectname).Name()
     return newname, newversion
 

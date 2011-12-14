@@ -7,6 +7,7 @@ Created on Dec 6, 2011
 
 from LbRelease.CMT import LbCMTWhich
 from LbConfiguration.Version import getVersionsFromDir
+from LbConfiguration.Project import getProject, ProjectConfException
 
 import json
 
@@ -65,15 +66,18 @@ def getReleaseInfo(project, version=None, with_html=True):
         output["version"] = p.version()
         output["name"] = p.name()
 
-        for b in  p.base() :
-            output["dependencies"].append({"name":b.name(), "version": b.version()})
-
+        for b in  p.base(cmtprojectpath=os.environ["CMTPROJECTPATH"]) :
+            try:
+                output["dependencies"].append({"name":b.name(), "version": b.version()})
+            except ProjectConfException:
+                # ignore non-versioned projects
+                pass
         for pak in p.packages() :
             output["packages"].append({"name":pak.name(),
                                        "version": pak.version(),
-                                       "notes": pak.releaseNotes()})
+                                       "notes": pak.releaseNotes().strip()})
 
-        output["notes"] = p.releaseNotes()
+        output["notes"] = p.releaseNotes().strip()
         output["date"] = p.releaseDate()
 
     if with_html and version :
