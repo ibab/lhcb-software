@@ -5,7 +5,163 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-- Packages removed: Gen/HepMCBack: Obsolete, was for DC06
+</PRE><H1><A NAME=v33r2>2011-12-15 LHCbSys v33r2</A></H1><PRE>
+This version uses Gaudi v22r5 and LCG_61b
+Production version for 2011 analysis.
+
+- Packages removed:  Gen/HepMCBack: Obsolete, was for DC06
+- Packages modified: Calo/CaloDAQ v4r25, Calo/CaloUtils v9r2p1, Det/DDDB v1r49,
+    Det/DetCond v12r22, Det/DetDesc v18r28, Det/DetDescChecks v5r6p1,
+    Det/Magnet v7r5, Det/RichDet v16r8, Det/VeloDet v13r17, Event/DAQEvent v9r6,
+    Event/GenEvent v6r3, Event/HltEvent v9r2p1, Event/RecEvent v2r39p1,
+    Event/TrackEvent v5r13p1, Ex/IOExample v4r3, GaudiConf v15r5,
+    Kernel/HistoStrings v1r3, Kernel/LHCbAlgs v2r45, Kernel/LHCbKernel v13r7,
+    Kernel/LHCbMath v3r28, Kernel/PartProp v1r12, Kernel/Relations v6r0p2,
+    Kernel/XMLSummaryKernel v1r3, L0/L0Base v2r0, L0/L0Interfaces v2r0,
+    L0/ProcessorKernel v7r0, Phys/LoKiCore v11r5, Phys/LoKiGen v10r4,
+    Rich/RichKernel v7r47, Rich/RichRecBase v4r10, ST/STKernel v2r6p1,
+    Tools/CondDBUI v3r13, Tools/FileStager v1r6
+
+- In CaloUtils v9r2p1
+  . Fix unprotected debug() messages
+  . Replace endreq by endmsg
+  . Fix an UNINIT_CTOR coverity defect
+
+- DDDB v1r49
+  . Removed use of Gaudi ParticlePropertySvc (obsolete) from DDDBConf.
+  . Update database tags for SQLDDDB v6r20:
+    o LHCBCOND, 2011: head-20111111
+
+- In DetDescChecks v5r6p1
+  . Remove obsolete HepMCBack dependency
+
+- In Magnet v7r5
+  . Various tidy ups to the last commit to the MagneticFieldSvc
+
+- In RichDet v16r8
+  . Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is
+    now correct.
+  . Add a method to the PD Panel base class to return PD type
+  . Made a fix to DeRichPMTPanel for rich2 plane definition.
+  . Made a fix to the pmt smartid decoding to hits in DeRichPMT and added more
+    utilities to DeRichPMTPanel
+  . Add PMT classes from Sajan
+
+- In DAQEvent v9r6
+  . Add RawEventLocation::Trigger to RawEvent.h
+
+- In IOExample v4r3
+  . No longer load HepMCBack in the tests, was only needed for DC06!
+  . Change input file of pooldst tests to an MC09 compatible file
+
+- In GaudiConf v15r5
+  . IOHelper: 
+    o Fix a missing part of the logic with respect to sequencers. It will now 
+      also look for streams inside defined GaudiSequencers. Modified the streams
+      test for this
+    o Add isPoolSupported to IOHelper in preparation for POOL being removed
+      Uses check on the version of GaudiSvc from the requirements file
+  . Add .gen and .xgen to supported types of IOExtension, guess to be Root type,
+    print warning
+  . In requirements, fix a dependency problem in macro GaudiConfConfUserModules
+  . DstConf:
+    o Remove support for RDST (never used in real data, superseded by SDST)
+    o Rename _doWritePOOL method to _doWriteROOT
+  . Add "NextNext" to default DigiConf().SpilloverPaths
+
+- In HistoStrings v1r3
+  . Provide parser/conversions functions for TH1F and TH2F classes
+
+- In LHCbAlgs v2r45
+  . Update default RawEvent search locations in ODINDecodeTool
+    o Remove obsolete LHCb::RawEventLocation::Copied
+    o Add LHCb::RawEventLocation::Trigger as first location searched by default
+
+- In LHCbKernel v13r7
+  . Extend the RichSmartID class with an 'Undefined' PD type enum
+  . Add LHCb::RichSmartID::HPD, LHCb::RichSmartID::MaPMT and
+    LHCb::RichSmartID::IDType to the python dictionary
+  . Update the space allocated to the PD numbers by 1 when printing MaPMT
+    RichSmartIDs
+  . Update sizes of bit fields for MaPMTs
+  . Remove obsolete methods from RichSmartID
+
+- In LHCbMath v3r28
+  . Few minor fixes with ValueWithError
+  . Add few useful functions
+
+- In PartProp v1r12
+  . Fix bug in enumeration of PDG ID digits, spin of particles was wrongly
+    retrieved
+
+- In XMLSummaryKernel v1r3
+  . Remove GaudiPoolDB dependency to prepare migration to Gaudi v23r0.
+
+- In L0Base v2r0
+  . L0FromRawBase : 
+    o Add possibility to use RootInTES to search for raw event location. The raw
+      events are first searched in the list of given locations ignoring the
+      RootInTES. If no valid location is found, RootInTES is used and a flag is
+      raised for further use in the specialized decoding algorithms.
+    o Add RawEventLocations : list of possible raw event locations, common
+      property for L0 decoders.
+    o Add  selectRawEventLocation : method to scan these raw event locations and
+      to select the first valid one.
+    o Add  m_statusOnTES : common flag to L0 decoders to unable/disable the
+      writing of the bank readout status on the TES. This flag is set in the
+      selectRawEventLocation method according to the selected raw event location.
+      Bank read out statuses are written only if the default raw event location
+      is used (i.e. the one used in the raw data).
+  . New dependency : Event/DAQEvent
+
+- In L0Interfaces v2r0
+  . IL0DUFromRawTool : New virtual method to set tool property (_setProperty)
+
+- In ProcessorKernel v7r0
+  . Add flag to indicate whether a registerfactory has already been build from
+    xml or not. Needed to allow several instances of the L0Muon decoding.
+
+- In LoKiCore v11r5
+  . Use new reimplementation of decay node and decay tree parsers
+    (based on Spirit v2)
+
+- In LoKiGen v10r4
+  . Add GCHILD/GCHILDFUN and GCHILDCUT functors
+  . Fix the oscillation flags in decay tree matching functions
+
+- In RichKernel v7r47
+  . Use unsigned int instead of unsigned long for histogramming methods
+  . Add a first Minimal MaPMT0 data format
+  . Add the 'FlatList' data format to RichDAQDefinitions.h
+  . Adapt to removal of obsolete methods from RichSmartID
+
+- In RichRecBase v4r10
+  . Update Rich::Rec::PhotonKey with a better packing method.
+  . Remove use of long in favour of int and long long
+  . Adapt to removal of obsolete methods from RichSmartID
+
+- In CondDBUI v3r13
+  . The commitment machinery now states a fact of a new nodes insertion to the db
+    in the release notes web page (xsd&xsl were also changed to visualize this).
+  . Minor options changes for the TSDBAdmin_Commit.py script.
+
+- In FileStager v1r5, v1r6
+  . Move search for tmpdir into C++ to ensure correct behaviour with pickled
+    options files. If the property is set, it is always used.
+  . Fixed compilation with Boost 1.48 (filesystem V3).
+  . Fix the regex used to find the xrootd host (port definition is optional).
+  . Allow dashes in filenames when matching a descriptor.
+
+- In CaloDAQ v4r25, DetDesc v18r28, GenEvent v6r3, HltEvent v9r2p1,
+     Relations v6r0p2, ProcessorKernel v7r0, LoKiCore v11r5, FileStager v1r6
+  . Fixes to gcc46 compilation issues
+
+- In CaloUtils v9r2p1, RecEvent v2r39p1, TrackEvent v5r13p1, STKernel v2r6p1, 
+     FileStager v1r6
+  . Fix icc remarks
+
+- In DetCond v12r22, VeloDet v13r17, XMLSummaryKernel v1r3, FileStager v1r6
+  . Add explicit Boost_linkopts for compatibility with Gaudi v23
 
 </PRE><H1><A NAME=v33r1>2011-11-11 LHCbSys v33r1</A></H1><PRE>
 This version uses Gaudi v22r5 and LCG_61b
