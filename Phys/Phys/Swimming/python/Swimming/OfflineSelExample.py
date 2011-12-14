@@ -27,14 +27,14 @@ def OffSelFunc(myGlobs,Particle):
     B_fd_chi2 = 0.  
     B_fd = 0.
 
-    B_imppar = Double()
-    p1_imppar = Double()
-    p2_imppar = Double()
-    B_chi2 = Double()
-    p1_chi2 = Double()
-    p2_chi2 = Double()
-    B_fd_chi2 = Double()
-    B_fd = Double()   
+    B_imppar = ROOT.Double()
+    p1_imppar = ROOT.Double()
+    p2_imppar = ROOT.Double()
+    B_chi2 = ROOT.Double()
+    p1_chi2 = ROOT.Double()
+    p2_chi2 = ROOT.Double()
+    B_fd_chi2 = ROOT.Double()
+    B_fd = ROOT.Double()   
  
     myrelatedPV = myGlobs.m_relatedPVTool.relatedPV(Particle, B_VertexBase )#Feed function vertex base, which is then becomes best PV
     myGlobs.m_distanceTool.distance( Particle, myrelatedPV, B_imppar, B_chi2 ) #vertex base here becomes is PV
