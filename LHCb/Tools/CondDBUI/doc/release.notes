@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!========================= CondDBUI v3r13 2011-12-14 =========================
 ! 2011-11-17 - Illya Shapoval
  - The commitment machinery now states a fact of a new nodes insertion to the db
    in the release notes web page (xsd&xsl were also changed to visualize this).
