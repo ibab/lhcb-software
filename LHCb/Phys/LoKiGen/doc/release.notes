@@ -13,9 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r4 2011-12-14 =========================
 ! 2011-12-13 - Vanya Belyaev
  - add GCHILD/GCHILDFUN and GCHILDCUT functors on Jibo's request
-
 
 ! 2011-11-11 - Vanya Belyaev
  - fix the oscillation flags in decay tree matching functions 
