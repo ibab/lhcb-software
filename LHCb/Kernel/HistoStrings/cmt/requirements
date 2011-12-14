@@ -2,7 +2,7 @@
 package HistoStrings
 author  Vanya Belyaev 
 
-version           v1r2
+version           v1r3
 
 # ============================================================================
 branches cmt doc Kernel src dict python

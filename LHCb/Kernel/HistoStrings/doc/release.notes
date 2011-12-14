@@ -4,8 +4,8 @@
 ! Purpose     : Various histogram <---> string conversion functions
 ! -----------------------------------------------------------------------------
 
+!========================= HistoStrings v1r3 2011-12-14 =========================
 ! 2011-11-18 - Vanya Belyaev
-
  - provide parser/conversions functions for TH1F and TH2F classes, 
    it appears to be rather useful for interactive analysis 
 
