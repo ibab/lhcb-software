@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r8 2011-12-14 =========================
 ! 2011-11-25 - Chris Jones
  - Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is 
    now correct.
