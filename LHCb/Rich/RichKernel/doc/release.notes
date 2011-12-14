@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r47 2011-12-14 =========================
 ! 2011-12-02 - Chris Jones
  - use unsigned int instead of unsigned long for histogramming methods
 
