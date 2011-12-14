@@ -5,6 +5,7 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!====================== Phys/Swimming v2r4p1 2011-12-07 =======================
 ! 2011-12-13 - V. Gligorov
  - Add fixes to Configuration.py for some trigger reconstruction steps which
    put their outputs in non-standard TES locations. Enable banks which need to
