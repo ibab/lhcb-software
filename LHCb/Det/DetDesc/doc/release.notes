@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+!========================= DetDesc v18r28 2011-12-14 =========================
 ! 2011-11-23 - Marco Clemencic
  - Fixed gcc 4.6 warning: operation on ‘...’ may be undefined
    [-Wsequence-point]
