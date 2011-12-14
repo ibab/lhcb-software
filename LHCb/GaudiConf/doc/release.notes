@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v15r5 2011-12-14 =========================
 ! 2011-12-13 - Rob Lambert
  - IOHelper: fix a missing part of the logic with respect to sequencers
  - it will now also look for streams inside defined GaudiSequencers
