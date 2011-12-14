@@ -4,6 +4,11 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2011-12-13 - Marco Cattaneo
+ - Add some missing run time dependencies to run tests with cmt run
+ - Remove tests that write POOL files. Remaining tests reading POOL files
+   copy to ROOT files and read them back, comparing outputs.
+
 !========================= IOExample v4r3 2011-12-13 =========================
 ! 2011-11-18 - Marco Cattaneo
  - No longer load HepMCBack in the tests, was only needed for DC06!

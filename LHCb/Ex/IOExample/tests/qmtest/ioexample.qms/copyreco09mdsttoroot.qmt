@@ -15,11 +15,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
   LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/FileRecordCnvSvc' ]"]) + \
   LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
-  LineSkipper(["PoolRootEvtCnvSvc    INFO"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>ioexample.copyreco09mdsttopool</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>
 </extension>

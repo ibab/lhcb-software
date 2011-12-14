@@ -1,5 +1,6 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLsim.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadPOOLsim.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTsim.py'
+# ROOT output file requested. Forcing reading of POOL input files with RootCnv
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTsim.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -15,10 +16,9 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Wed May 25 07:56:54 2011
+                                          running on lxbuild163.cern.ch on Tue Dec 13 18:07:52 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -61,59 +61,58 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
 TESFingerPrint      DEBUG ==> Initialize
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOL.sim' TYP='POOL_ROOT' OPT='READ'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOT.sim' SVC='RootCnvSvc' OPT='REC'
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOT.sim' SVC='FileRecordCnvSvc' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
-RootDBase.open    SUCCESS POOL.sim File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=0E498AA5-9286-E011-A870-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=0000002B-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x85f18a0@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2cf]
-StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x1d]
-StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xde]
-StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x102]
-StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x262]
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xc0]
-StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x3a6]
-StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x66d]
-StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x738]
-StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x6e]
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x866]
-StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x202]  KeyedContainer<LHCb::MCRichOptic [0x866]
-StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x202]  KeyedContainer<LHCb::MCRichSegme [0x60]
-StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x202]  KeyedContainer<LHCb::MCRichTrack [0x49]
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO ========= /Event[0x18106fd0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x2cf]
+StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x1d]
+StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0xde]
+StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x102]
+StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x262]
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0xc0]
+StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x3a6]
+StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x66d]
+StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x738]
+StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x6e]
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x2]  ObjectVector<LHCb::MCRichHit> [0x866]
+StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x2]  KeyedContainer<LHCb::MCRichOptic [0x866]
+StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x2]  KeyedContainer<LHCb::MCRichSegme [0x60]
+StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x2]  KeyedContainer<LHCb::MCRichTrack [0x49]
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
 TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 72, 695130229, 0]
@@ -836,49 +835,50 @@ Vertex:     -106 ID:    1 (X,cT)=+6.88e-03,-5.01e-02,-7.72e+01,+0.00e+00
           10184       22 -8.33e-05,+3.70e-05,-5.31e-05,+1.05e-04 999
 ________________________________________________________________________________
 
+IODataManager        INFO Referring to dataset ROOT.sim by its file ID:227B3900-AD25-E111-9616-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x9819ba0@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x57d]
-StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x37]
-StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x183]
-StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x101]
-StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x353]
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x175]
-StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x492]
-StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x85d]
-StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xa3d]
-StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x144]
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0xe3b]
-StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x202]  KeyedContainer<LHCb::MCRichOptic [0xe3b]
-StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x202]  KeyedContainer<LHCb::MCRichSegme [0xa4]
-StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x202]  KeyedContainer<LHCb::MCRichTrack [0x72]
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO ========= /Event[0x1a1adb10@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x57d]
+StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x37]
+StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x183]
+StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x101]
+StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x353]
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x175]
+StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x492]
+StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x85d]
+StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0xa3d]
+StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x144]
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x2]  ObjectVector<LHCb::MCRichHit> [0xe3b]
+StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x2]  KeyedContainer<LHCb::MCRichOptic [0xe3b]
+StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x2]  KeyedContainer<LHCb::MCRichSegme [0xa4]
+StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x2]  KeyedContainer<LHCb::MCRichTrack [0x72]
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
 TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 73, 1360340929, 0]
@@ -2363,47 +2363,47 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x8c50d70@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x167]
-StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x44]
-StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x6b]
-StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x137]
-StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x151]
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x125]
-StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x329]
-StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x636]
-StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x7da]
-StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xef]
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x4fd]
-StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x202]  KeyedContainer<LHCb::MCRichOptic [0x4fd]
-StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x202]  KeyedContainer<LHCb::MCRichSegme [0x35]
-StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x202]  KeyedContainer<LHCb::MCRichTrack [0x2e]
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO ========= /Event[0x19564cb0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x167]
+StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x44]
+StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x6b]
+StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x137]
+StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x151]
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x125]
+StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x329]
+StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x636]
+StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x7da]
+StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0xef]
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x2]  ObjectVector<LHCb::MCRichHit> [0x4fd]
+StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x2]  KeyedContainer<LHCb::MCRichOptic [0x4fd]
+StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x2]  KeyedContainer<LHCb::MCRichSegme [0x35]
+StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x2]  KeyedContainer<LHCb::MCRichTrack [0x2e]
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
 TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 74, 2049830586, 0]
@@ -3300,47 +3300,47 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x8db5650@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x3]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x3]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x131]
-StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x8]
-StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x52]
-StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xae]
-StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x1a8]
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x90]
-StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x2a0]
-StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x4cf]
-StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x4bc]
-StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x5e]
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x2ef]
-StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x202]  KeyedContainer<LHCb::MCRichOptic [0x2ef]
-StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x202]  KeyedContainer<LHCb::MCRichSegme [0x27]
-StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x202]  KeyedContainer<LHCb::MCRichTrack [0x1f]
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO ========= /Event[0x18e35560@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x3]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x3]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x131]
+StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x8]
+StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x52]
+StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0xae]
+StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x1a8]
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x90]
+StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x2a0]
+StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x4cf]
+StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x4bc]
+StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x5e]
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x2]  ObjectVector<LHCb::MCRichHit> [0x2ef]
+StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x2]  KeyedContainer<LHCb::MCRichOptic [0x2ef]
+StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x2]  KeyedContainer<LHCb::MCRichSegme [0x27]
+StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x2]  KeyedContainer<LHCb::MCRichTrack [0x1f]
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
 TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 75, 1149207390, 0]
@@ -3852,47 +3852,47 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x8db5650@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x43]
-StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x4]
-StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2e]
-StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0]
-StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2f]
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x8]
-StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x24]
-StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x30]
-StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x42]
-StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x4]
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x54]
-StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x202]  KeyedContainer<LHCb::MCRichOptic [0x54]
-StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x202]  KeyedContainer<LHCb::MCRichSegme [0x4]
-StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x202]  KeyedContainer<LHCb::MCRichTrack [0x3]
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO ========= /Event[0x18b09070@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x43]
+StoreExplorerAlg     INFO | | +--> /PuVeto [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x4]
+StoreExplorerAlg     INFO | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x2e]
+StoreExplorerAlg     INFO | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0]
+StoreExplorerAlg     INFO | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x2f]
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x200e6 Type=0x2]  ObjectVector<LHCb::MCHit> [0x8]
+StoreExplorerAlg     INFO | | +--> /Spd [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x24]
+StoreExplorerAlg     INFO | | +--> /Prs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x30]
+StoreExplorerAlg     INFO | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x42]
+StoreExplorerAlg     INFO | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x207d0 Type=0x2]  ObjectVector<LHCb::MCCaloHit> [0x4]
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Hits [Address: CLID=0x2307d Type=0x2]  ObjectVector<LHCb::MCRichHit> [0x54]
+StoreExplorerAlg     INFO | | | +--> /OpticalPhotons [Address: CLID=0x6307c Type=0x2]  KeyedContainer<LHCb::MCRichOptic [0x54]
+StoreExplorerAlg     INFO | | | +--> /Segments [Address: CLID=0x6307e Type=0x2]  KeyedContainer<LHCb::MCRichSegme [0x4]
+StoreExplorerAlg     INFO | |   +--> /Tracks [Address: CLID=0x6307f Type=0x2]  KeyedContainer<LHCb::MCRichTrack [0x3]
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Particles2MCRichTracks [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | |   +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Hits2MCRichOpticalPhotons [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO     +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
 TESFingerPrint      DEBUG ==> Execute
 DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
 { randomSeeds :	[1082, 76, 1453533093, 0]
@@ -4030,10 +4030,13 @@ TESFingerPrint    VERBOSE ==> TES Container sizes: {/Event/Gen/Collisions: {1: 1
 TESFingerPrint      DEBUG Finalize base class GaudiAlgorithm
 TESFingerPrint      DEBUG Tools to release :
 TESFingerPrint      DEBUG Services to release :
+InputCopyStream      INFO Events output: 5
+FSRInputCopyStream   INFO Set up File Summary Record
+FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:0E498AA5-9286-E011-A870-003048C9CD62[POOL.sim]
+RootCnvSvc           INFO Disconnected data IO:227B3900-AD25-E111-9616-003048C9CD62 [ROOT.sim]
+RootCnvSvc           INFO Disconnected data IO:4298ECD3-A723-DE11-BD72-000CF1F44509 [root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim?svcClass=default]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

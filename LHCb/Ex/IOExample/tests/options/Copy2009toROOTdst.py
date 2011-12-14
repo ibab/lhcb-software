@@ -2,7 +2,7 @@
 from Configurables import IOTest
 from GaudiConf.IOHelper import IOHelper
 
-IOTest( EvtMax = 5 )
+IOTest( EvtMax = 5, LoadAll = True )
 
 ioh = IOHelper('POOL','ROOT')
 ioh.setupServices()

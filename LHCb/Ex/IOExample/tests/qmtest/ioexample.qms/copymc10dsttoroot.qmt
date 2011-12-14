@@ -5,21 +5,7 @@
   <argument name="reference"><text>../refs/MC10dst.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
-preprocessor = LHCbPreprocessor + \
-  LineSkipper(["StoreExplorerAlg     INFO"]) + \
-  LineSkipper(["TESFingerPrint"]) + \
-  LineSkipper(["EventPersistenc...   INFO  'CnvServices':"]) + \
-  LineSkipper(["InputCopyStream      INFO"]) + \
-  LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"]) + \
-  LineSkipper(["FSRInputCopyStream   INFO "]) + \
-  LineSkipper(["FileRecordCnvSvc     INFO File sharing enabled. Do not retire files"]) + \
-  LineSkipper(["FileRecordPersi...   INFO  'CnvServices':[ 'Gaudi::RootCnvSvc/FileRecordCnvSvc' ]"]) + \
-  LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
-  LineSkipper(["PoolRootEvtCnvSvc    INFO"]) + \
-  LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:"])
+preprocessor = LHCbPreprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>ioexample.copymc10dsttopool</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>
 </extension>

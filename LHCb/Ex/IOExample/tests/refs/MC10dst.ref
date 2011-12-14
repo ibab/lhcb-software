@@ -1,5 +1,6 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadMC10POOLdst.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadMC10POOLdst.py'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
+# ROOT output file requested. Forcing reading of POOL input files with RootCnv
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
 # applying configuration of IOTest
 # /***** User IOTest/IOTest **************************************************************************
 # |-DataType    = '2011'
@@ -17,8 +18,11 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Persistency         = None
+# |-WriteFSR            = True
 # |-PackSequencer       = None
-# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
+# |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = True  (default: False)
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
@@ -30,8 +34,11 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Persistency         = None
+# |-WriteFSR            = True
 # |-PackSequencer       = None
-# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: ['Prev', 'PrevPrev', 'Next'])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
+# |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = True  (default: False)
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
@@ -41,10 +48,9 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Wed May 25 07:55:40 2011
+                                          running on lxbuild163.cern.ch on Tue Dec 13 17:39:09 2011
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-EventPersistenc...   INFO  'CnvServices':[ 'PoolDbCnvSvc/PoolRootEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootTreeEvtCnvSvc' , 'PoolDbCnvSvc/PoolRootKeyEvtCnvSvc' , 'LHCb::RawDataCnvSvc' ]
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -126,163 +132,162 @@ DumpTracks          DEBUG Property ['Name': Value] =  'ErrorCount':0
 DumpTracks          DEBUG Property ['Name': Value] =  'ErrorMax':1
 DumpTracks          DEBUG Property ['Name': Value] =  'Enable':True
 DumpTracks          DEBUG Property ['Name': Value] =  'OutputLevel':2
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:POOL-MC10.dst' TYP='POOL_ROOT' OPT='READ'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOT-MC10.dst' SVC='RootCnvSvc' OPT='REC'
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOT-MC10.dst' SVC='FileRecordCnvSvc' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
-RootDBase.open    SUCCESS POOL-MC10.dst File version:52800
-PoolRootEvtCnvSvc    INFO Records token:[DB=B867A495-9286-E011-BCCF-003048C9CD62][CNT=/FileRecords][CLID=00000001-0000-0000-0000-000000000000][TECH=00000202][OID=00000106-00000000]
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1d9dee30@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x6]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x6]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
-StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x202]  LHCb::PackedMCRichDigitSummarys
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
-StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
-StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
-StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
-StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /AllWSB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Z02ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /W2e [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullD2KKK [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO       +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO         +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO ========= /Event[0x113045d0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x6]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x6]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x2]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x2]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x2]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x2]  LHCb::PackedMCRichDigitSummarys
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x2]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x2]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x2]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /AllWSB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Z02ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /W2e [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullD2KKK [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO       +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO         +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 157 tracks in Rec/Track/Best
@@ -593,221 +598,222 @@ evtTime :	301000000
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 3544 Vertices:
 DumpMCEventAlg       INFO There are 3306 Particles:
+IODataManager        INFO Referring to dataset ROOT-MC10.dst by its file ID:F212CF01-A925-E111-81C3-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1e039a50@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x3]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x3]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
-StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x202]  LHCb::PackedMCRichDigitSummarys
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
-StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
-StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
-StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
-StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bd2eeKstarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bd2JpsieeKstarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Jpsi2eeLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PiMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PiMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2KMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2KMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuPhi_line [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DiMuonHighMassSameSignLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /JpsippForD0mumu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PiMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PiMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D02K3PiForBXX [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Ds2piPhiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2PPP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KPP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO ========= /Event[0x12d894b0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x3]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x3]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x2]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x2]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x2]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x2]  LHCb::PackedMCRichDigitSummarys
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x2]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x2]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x2]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bd2eeKstarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bd2JpsieeKstarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Jpsi2eeLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PiMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PiMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2KMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2KMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuPhi_line [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DiMuonHighMassSameSignLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /JpsippForD0mumu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PiMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PiMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D02K3PiForBXX [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Ds2piPhiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2PPP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KPP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x2]  KeyedContainer<LHCb::RecVertex,C [0x1]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 252 tracks in Rec/Track/Best
@@ -1120,217 +1126,217 @@ DumpMCEventAlg       INFO There are 4585 Vertices:
 DumpMCEventAlg       INFO There are 4300 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1f9565d0@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
-StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x202]  LHCb::PackedMCRichDigitSummarys
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
-StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
-StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
-StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
-StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /StripD02KPiPi0M [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripD02KPiPi0R [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PiMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PiMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2KMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2KMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2ee4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /PP2PPMuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PiMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2PiMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KMuMuSS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2KMuMuOS [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Ds2KKPi_forBSemi [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2PPP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KPP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO ========= /Event[0x1f01f550@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x2]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x2]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x2]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x2]  LHCb::PackedMCRichDigitSummarys
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x2]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x2]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x2]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /StripD02KPiPi0M [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripD02KPiPi0R [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0PiPiPiLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2D0KPiPiLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DPiPiPiLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DKPiPiLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2KstKst [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PiMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PiMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2KMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2KMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2ee4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /PP2PPMuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PiMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2PiMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KMuMuSS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2KMuMuOS [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Ds2KKPi_forBSemi [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2PPP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KPP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x2]  KeyedContainer<LHCb::RecVertex,C [0x1]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 118 tracks in Rec/Track/Best
@@ -1643,156 +1649,156 @@ DumpMCEventAlg       INFO There are 3223 Vertices:
 DumpMCEventAlg       INFO There are 2885 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1dd462b0@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
-StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x202]  LHCb::PackedMCRichDigitSummarys
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
-StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
-StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
-StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
-StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Z02ee [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /W2MuNoPIDs_ps [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /W2e [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DY2ee4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /JpsippForD0mumu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     | +--> /FullD2KKK [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO       +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO         +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO ========= /Event[0x1f004840@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x2]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x2]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x2]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x2]  LHCb::PackedMCRichDigitSummarys
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x2]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x2]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x2]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Bu2eeK_ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /IncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /BiasedIncDiElectronLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Z02ee [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /W2MuNoPIDs_ps [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /W2e [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DY2ee4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /JpsippForD0mumu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullLambdaCForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     | +--> /FullD2KKK [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO     | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO       +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO         +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 161 tracks in Rec/Track/Best
@@ -2105,177 +2111,177 @@ DumpMCEventAlg       INFO There are 3426 Vertices:
 DumpMCEventAlg       INFO There are 3250 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1de9fd80@EventDataSvc]:
-StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
-StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
-StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
-StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
-StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
-StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
-StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
-StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
-StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x202]  LHCb::PackedMCRichDigitSummarys
-StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
-StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x202]  LHCb::RecHeader
-StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x202]  LHCb::ProcStatus
-StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x202]  LHCb::PackedTracks
-StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x202]  LHCb::PackedRichPIDs
-StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x202]  LHCb::PackedMuonPIDs
-StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x202]  LHCb::PackedCaloHypos
-StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x202]  LHCb::PackedProtoParticles
-StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x202]  LHCb::PackedRecVertices
-StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x202]  LHCb::PackedWeightsVector
-StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x202]  LHCb::PackedTwoProngVertices
-StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x202]  LHCb::HltDecReports
-StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Bs2MuMuPhi_line [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Psi2SToMuMuLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /PP2PPMuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x202]  KeyedContainer<LHCb::Particle,Co [0]
-StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x202]  DataObject
-StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x202]  KeyedContainer<LHCb::RecVertex,C [0x1]
+StoreExplorerAlg     INFO ========= /Event[0x220d3d60@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x2]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x2]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x2]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x2]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x2]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x2]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Hcal [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |     +--> /Best [Address: CLID=0x190 Type=0x2]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | +--> /pSim [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MCParticles [Address: CLID=0x5e6 Type=0x2]  LHCb::PackedMCParticles
+StoreExplorerAlg     INFO | | +--> /MCVertices [Address: CLID=0x5e7 Type=0x2]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DigitSummaries [Address: CLID=0x5f7 Type=0x2]  LHCb::PackedMCRichDigitSummarys
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs
+StoreExplorerAlg     INFO | | +--> /Calo [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Photons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /Electrons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /MergedPi0s [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | | +--> /SplitPhotons [Address: CLID=0x60f Type=0x2]  LHCb::PackedCaloHypos
+StoreExplorerAlg     INFO | | +--> /ProtoP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Charged [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | | +--> /Neutrals [Address: CLID=0x610 Type=0x2]  LHCb::PackedProtoParticles
+StoreExplorerAlg     INFO | | +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Primary [Address: CLID=0x611 Type=0x2]  LHCb::PackedRecVertices
+StoreExplorerAlg     INFO | | | +--> /Weights [Address: CLID=0x613 Type=0x2]  LHCb::PackedWeightsVector
+StoreExplorerAlg     INFO | |   +--> /V0 [Address: CLID=0x612 Type=0x2]  LHCb::PackedTwoProngVertices
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /Strip [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | |   +--> /DecReports [Address: CLID=0x1d61 Type=0x2]  LHCb::HltDecReports
+StoreExplorerAlg     INFO   +--> /AllStreams [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /Phys [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Jpsi2eeForElectronIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StrippingJpsiFromBNoPIDFromBCombine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2twobodyLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2PPbarLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2Charged2Body [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2KSLLhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripBu2hhh [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /StripB2hhLTUnbiased [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0MergedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KshhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhhhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2hhLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithD2KPiPi0ResolvedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2DXWithLambdaLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /AllB2DDLineLoose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuNoMuIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuWideMassLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DetachedJPsiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /B2MuMuMuMuLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Bs2MuMuPhi_line [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Jpsi2MuMuForBetasLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Psi2SToMuMuLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Z02MuMuNoPIDs [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Muloose [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2Mu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /W2e [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu2 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DY2MuMu4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /PP2PPMuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /TrkClusterFinder [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS3 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /MuMuSS4 [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DKMuMuWithDsKMuMu [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /Ccbar2Ppbar [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /DstarPromptWithD02K3PiLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /D2hhLTUnbiasedMBNBLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD02hhPIDLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDsForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullDForPromptCharm [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKP [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2KKK [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | | +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO   | | +--> /FullD2hhLTUnbiasedLine [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | |   +--> /Particles [Address: CLID=0x60321 Type=0x2]  KeyedContainer<LHCb::Particle,Co [0]
+StoreExplorerAlg     INFO     +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO       +--> /Vertex [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO         +--> /Primary [Address: CLID=0x6272e Type=0x2]  KeyedContainer<LHCb::RecVertex,C [0x1]
 TESFingerPrint      DEBUG ==> Execute
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
 DumpTracks           INFO There are 136 tracks in Rec/Track/Best
@@ -2604,10 +2610,13 @@ TESFingerPrint      DEBUG Services to release :
 DumpTracks          DEBUG Finalize base class GaudiAlgorithm
 DumpTracks          DEBUG Tools to release :
 DumpTracks          DEBUG Services to release :
+InputCopyStream      INFO Events output: 5
+FSRInputCopyStream   INFO Set up File Summary Record
+FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 15/5/25(Alg/Node/Total).
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-PoolRootEvtCnvSvc    INFO Disconnected data IO:B867A495-9286-E011-BCCF-003048C9CD62[POOL-MC10.dst]
+RootCnvSvc           INFO Disconnected data IO:7C3CB66C-021D-E011-B1B8-003048CBA516 [root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst]
+RootCnvSvc           INFO Disconnected data IO:F212CF01-A925-E111-81C3-003048C9CD62 [ROOT-MC10.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
