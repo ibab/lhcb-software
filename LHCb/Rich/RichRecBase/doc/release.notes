@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r10 2011-12-14 =========================
 ! 2011-12-02 - Chris Jones
  - Update Rich::Rec::PhotonKey with a better packing method.
  - Remove use of long in favour of int and long long
