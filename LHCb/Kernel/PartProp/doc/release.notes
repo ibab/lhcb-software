@@ -4,6 +4,11 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!========================= PartProp v1r12 2011-12-14 =========================
+! 2011-11-11 - A Martens
+ - Fix bug in enumeration of PDG ID digits, spin of particles was wrongly
+   retrieved
+
 !========================= PartProp v1r11 2011-11-07 =========================
 ! 2011-10-28 - Marco Clemencic
  - Fixed a bug in the test partprop.usesvc1: GaudiPython script used as an
