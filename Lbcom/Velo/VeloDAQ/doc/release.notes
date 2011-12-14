@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r6 2011-12-14 =========================
 ! 2011-11-29 - David Hutchcroft
  - Hide warning by default due to problems with TELL1 cluster maker
    putting the same strip into two clusters (to be re-enabled for data/mc 
