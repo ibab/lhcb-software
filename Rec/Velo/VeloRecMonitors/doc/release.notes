@@ -4,6 +4,18 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-12-14 - Manuel Tobias Schiller
+ - work on VeloOccupancyMonitor to have code to monitor dead/noisy channels
+   based on ZS data during normal data taking:
+   - most plots have labelled axes now
+   - add a few monitoring plots for dead/noisy channels
+   - some changes in the internal structure which make the algorithm a factor
+     35 faster (histograms are now updated only every 255 events)
+   - some effort to make the XML and txt files with dead/noisy channels a bit
+     more informative (now have comments with who and where the list was
+     produced, and which run numbers were seen)
+   - removed some obsolete plots after discussion with Marco Gersabeck
+
 ! 2011-11-22 - Marco Cattaneo
  - Fix trivial gcc warnings and icc remarks
 
