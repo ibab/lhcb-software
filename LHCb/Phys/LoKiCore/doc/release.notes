@@ -13,15 +13,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r5 2011-12-14 =========================
 ! 2011-12-11 - Vanya Belyaev
-
  - use new reimplementation (by Sascha) of decay node and decay 
    tree parsers (based on Spirit v2)
 
 ! 2011-11-18 - Vanya Belyaev
-
  - LoKi/Sources.h
-
     fix a compilation error for gcc46 
 
 !========================= LoKiCore v11r4 2011-11-07 =========================
