@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r6 2011-12-14 =========================
 ! 2011-11-08 - Chris Jones
  - Add RawEventLocation::Trigger to RawEvent.h
 
