@@ -14,8 +14,6 @@
 //
 // 2007-11-01 : Jeremie Borel
 //-----------------------------------------------------------------------------
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DecayTreeTupleBase );
 
 using namespace Gaudi ;
 using namespace LHCb ;
@@ -25,7 +23,7 @@ using namespace LHCb ;
 DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-  , m_dkFinder(0)
+  , m_dkFinder  ( NULL               )
 {
   declareProperty( "Branches", m_decayMap, "Branches with other tools" );
   declareProperty( "Decay", m_headDecay, "decay descriptor" );
@@ -45,7 +43,7 @@ DecayTreeTupleBase::~DecayTreeTupleBase() {}
 //=============================================================================
 StatusCode DecayTreeTupleBase::initialize()
 {
-  StatusCode sc = DVAlgorithm::initialize();
+  const StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
@@ -56,6 +54,7 @@ StatusCode DecayTreeTupleBase::initialize()
   }
   return sc;
 }
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -64,6 +63,7 @@ StatusCode DecayTreeTupleBase::execute()
   err() << "==> Do not call DecayTreeTupleBase::Execute" << endmsg;
   return StatusCode::FAILURE;
 }
+
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -148,7 +148,7 @@ std::vector<std::string> DecayTreeTupleBase::getEventTools() const
 }
 //=============================================================================
 //=============================================================================
-/// get daughters
+// get daughters
 LHCb::MCParticle::ConstVector DecayTreeTupleBase::daughtersVector(const LHCb::MCParticle* d) const
 {
   if ( !d ) Exception("NULL MCParticle");
@@ -313,16 +313,19 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
                                       , const MCParticle* pp )
 {
   bool test = true;
-  if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart MC " << pp->particleID().pid() << " " << op->headName() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "FillOnePart MC " << pp->particleID().pid() << " " << op->headName() << endmsg ;
   for( std::vector< IMCParticleTupleTool* >::iterator it = op->mctools().begin();
        op->mctools().end()!=it; ++it )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "FillOnePart MC " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "FillOnePart MC " << pp->particleID().pid() << " in " << (*it)->type() << endmsg ;
     const bool localTest = (*it)->fill( mother, pp, op->headName(), tuple );
     test &= localTest;
     if ( !localTest )
     {
-      Warning("Tool '" + (*it)->type() + "' acting on particle '"+ op->headName() + "' returned a failure status." );
+      Warning( "Tool '" + (*it)->type() + "' acting on particle '" + 
+               op->headName() + "' returned a failure status." ).ignore();
     }
   }
   return test;
@@ -343,7 +346,9 @@ bool DecayTreeTupleBase::getDecayMatches( const Particle::ConstVector& pool
   }
   return !( heads.empty() );
 }
+
 //=============================================================================
+
 bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
                                           , MCParticle::ConstVector& heads )
 {
@@ -354,8 +359,10 @@ bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
   }
   return !( heads.empty() );
 }
-// ===============================================================
-/// Get branch name for given particle
+
+// ============================================================================
+
+// Get branch name for given particle
 std::string DecayTreeTupleBase::getBranchName( const std::string& realname ) const
 {
   if( m_useLabName )
@@ -364,25 +371,28 @@ std::string DecayTreeTupleBase::getBranchName( const std::string& realname ) con
 
   std::string name = Decays::escape( realname ), buffer = name;
 
-  // check that it is not yet used, if yes, append a number until not
-  // used.
+  // check that it is not yet used, if yes, append a number until not used.
   bool flag = false;
   int kk = 0;
   do
   {
     flag = false;
-    for( int k=0; k<(int)m_parts.size(); ++k )
+    for( int k = 0; k<(int)m_parts.size(); ++k )
     {
-      if( buffer == m_parts[k]->headName() )
+      if ( buffer == m_parts[k]->headName() )
       {
         flag = true;
         break;
       }
     }
-    if( !flag ) break;
+    if ( !flag ) break;
     buffer = name + boost::lexical_cast<std::string>( kk );
     ++kk;
   } while( kk<100 ); //for security.
   return buffer;
 }
 
+// ============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( DecayTreeTupleBase )

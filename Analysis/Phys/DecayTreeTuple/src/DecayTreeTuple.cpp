@@ -1,8 +1,8 @@
 // $Id: DecayTreeTuple.cpp,v 1.17 2010-04-20 06:40:48 rlambert Exp $
-// Include files 
+// Include files
 
 
-#include "boost/lexical_cast.hpp" 
+#include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
 // local
 #include "DecayTreeTuple.h"
@@ -14,10 +14,6 @@ using namespace Gaudi ;
 //
 // 2009-01-20 : Patrick Koppenburg based on Jérémie Borel's initial vesion
 //-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DecayTreeTuple );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -31,31 +27,31 @@ DecayTreeTuple::DecayTreeTuple( const std::string& name,
   m_toolList.push_back( "TupleToolKinematic" );
   m_toolList.push_back( "TupleToolPid" );
   m_toolList.push_back( "TupleToolGeometry" );
-  m_toolList.push_back( "TupleToolEventInfo" );  
+  m_toolList.push_back( "TupleToolEventInfo" );
   declareProperty( "ToolList", m_toolList );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DecayTreeTuple::~DecayTreeTuple() {} 
+DecayTreeTuple::~DecayTreeTuple() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DecayTreeTuple::initialize() 
+StatusCode DecayTreeTuple::initialize()
 {
-  StatusCode sc = DecayTreeTupleBase::initialize(); 
-  if ( sc.isFailure() ) 
+  StatusCode sc = DecayTreeTupleBase::initialize();
+  if ( sc.isFailure() )
   {
     return Error( "Error from base class", sc );
   }
   sc = initializeDecays(false);
-  if ( sc.isFailure() ) 
+  if ( sc.isFailure() )
   {
     return Error( "Error from initializeDecays(false)" );
   }
-  return sc ;  
+  return sc;
 }
 
 //=============================================================================
@@ -65,8 +61,8 @@ StatusCode DecayTreeTuple::execute()
 {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   counter("Event")++;
-  const LHCb::Particle::ConstVector mothers(this->particles().begin(),
-                                            this->particles().end()   );
+  const LHCb::Particle::ConstVector mothers( this->particles().begin(),
+                                             this->particles().end()   );
   if ( mothers.empty() )
   {
     setFilterPassed(false);
@@ -90,16 +86,21 @@ StatusCode DecayTreeTuple::execute()
   }
 
   //don't create the ntuple if there's nothing to fill!
-  Tuple tuple = nTuple( m_tupleName,  m_tupleName );
+  Tuple tuple = nTuple( m_tupleName, m_tupleName );
   test = fillTuple( tuple, heads, m_dkFinder );
 
   if ( test.isSuccess() )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
   }
-  
+
   setFilterPassed( test.isSuccess() );
- 
-  // Mandatory. Set to true if event is accepted.  
+
+  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( DecayTreeTuple )

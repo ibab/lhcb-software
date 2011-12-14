@@ -20,32 +20,39 @@ namespace LHCb{
  * An answer is only filled for composite particles.
  *
  * IBackgroundCategory controlled by property <b>IBackgroundCatagoryType</b>, default "BackgroundCategory".
- * 
+ *
  * head_BKGCAT : category.
- * 
+ *
  * \sa DecayTreeTuple
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
  */
-class TupleToolMCBackgroundInfo : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolMCBackgroundInfo : public TupleToolBase, 
+                                  virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolMCBackgroundInfo( const std::string& type,
-			     const std::string& name,
-			     const IInterface* parent);
+                             const std::string& name,
+                             const IInterface* parent);
 
   virtual ~TupleToolMCBackgroundInfo( ){}; ///< Destructor
 
   virtual StatusCode initialize();
 
-  StatusCode fill( const LHCb::Particle*
-		   , const LHCb::Particle*
-		   , const std::string&
-		   , Tuples::Tuple& );
+  StatusCode fill( const LHCb::Particle*,
+                   const LHCb::Particle*,
+                   const std::string&,
+                   Tuples::Tuple& );
 
 private:
-  std::string m_backCatType;
-  IBackgroundCategory* m_bkg;
+
+  std::vector<std::string> m_backCatTypes;
+  std::vector<IBackgroundCategory*> m_bkgs;
+
 };
+
 #endif // JBOREL_TUPLETOOLMCBACKGROUNDINFO_H

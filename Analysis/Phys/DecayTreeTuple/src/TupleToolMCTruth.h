@@ -5,8 +5,8 @@
 // Include files
 // from Gaudi
 #include "TupleToolBase.h"
-#include "Kernel/IMCParticleTupleTool.h"            // Interface
-#include "Kernel/IParticleTupleTool.h"            // Interface
+#include "Kernel/IMCParticleTupleTool.h"  // Interface
+#include "Kernel/IParticleTupleTool.h"    // Interface
 
 //struct Particle2MCLinker;
 #include <vector>
@@ -21,12 +21,12 @@ class IParticle2MCAssociator;
  * <b> Properties: </b>
  *
  * IP2MCPAssociatorType: Implementation of IP2MCAssociator to be used. Default: DaVinciSmartAssociator.
- * 
- * ToolList: List of MCTupleTools to run. Default: [MCTupleToolKinematic] 
+ *
+ * ToolList: List of MCTupleTools to run. Default: [MCTupleToolKinematic]
  *
  * - head_TRUEID : true pid
  *
- 
+
  * To add more entries, add the appropriate MCTupleTool
 
  * Configure the option ToolList to add MCTupleTools
@@ -42,31 +42,33 @@ class IParticle2MCAssociator;
  *  2009-06-03 Rob Lambert - Major Changes
  */
 
-class TupleToolMCTruth : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolMCTruth : public TupleToolBase, virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolMCTruth( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                    const std::string& name,
+                    const IInterface* parent);
 
   virtual ~TupleToolMCTruth(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::Particle*
-			   , const LHCb::Particle*
-			   , const std::string&
-			   , Tuples::Tuple& );
+                           , const LHCb::Particle*
+                           , const std::string&
+                           , Tuples::Tuple& );
 
   virtual StatusCode initialize();
-  //  virtual StatusCode finalize();
 
 private:
 
-  IParticle2MCAssociator* m_p2mcAssoc;
-  std::string m_p2mcAssocType;
-  std::vector< std::string > m_toolList;///<names of all MCTupleTools, set by the option ToolList
-  
-  std::vector< IMCParticleTupleTool* > m_mcTools;///<vector of MCTools to fill
-  
+  std::vector<IParticle2MCAssociator*> m_p2mcAssocs;
+  std::vector<std::string> m_p2mcAssocTypes;
+  std::vector<std::string> m_toolList; ///< names of all MCTupleTools, set by the option ToolList
+
+  std::vector<IMCParticleTupleTool*> m_mcTools; ///<vector of MCTools to fill
+
 };
 
 #endif // TUPLETOOLMCTRUTH_H

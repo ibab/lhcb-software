@@ -14,18 +14,14 @@
 
 #include "Event/Particle.h"
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCBackgroundInfoTupleTool
 //
 // 2007-11-07 : Jeremie Borel
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-// actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolMCBackgroundInfo );
-
 using namespace LHCb;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -33,14 +29,11 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
   : TupleToolBase ( type, name , parent )
-  , m_backCatType("BackgroundCategory")
-  , m_bkg(NULL)
 {
-
   declareInterface<IParticleTupleTool>(this);
-
-  declareProperty( "IBackgroundCategoryType", m_backCatType);
-
+  m_backCatTypes.push_back( "BackgroundCategoryViaRelations" );
+  m_backCatTypes.push_back( "BackgroundCategory" );
+  declareProperty( "IBackgroundCategoryTypes", m_backCatTypes );
 }
 
 //=============================================================================
@@ -50,35 +43,56 @@ StatusCode TupleToolMCBackgroundInfo::initialize()
   const StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_bkg = tool<IBackgroundCategory>( m_backCatType, "BackgroundCategory", this );
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "Background Category tools " << m_backCatTypes << endmsg;
+
+  for ( std::vector<std::string>::const_iterator iT = m_backCatTypes.begin();
+        iT != m_backCatTypes.end(); ++iT )
+  {
+    m_bkgs.push_back( tool<IBackgroundCategory>( *iT, *iT, this ) );
+  }
 
   return sc;
 }
 
 //=============================================================================
 
-StatusCode TupleToolMCBackgroundInfo::fill( const Particle*
-                                            , const Particle* P
-                                            , const std::string& head
-                                            , Tuples::Tuple& tuple )
+StatusCode TupleToolMCBackgroundInfo::fill( const Particle* headP,
+                                            const Particle* P,
+                                            const std::string& head,
+                                            Tuples::Tuple& tuple )
 {
+  StatusCode sc = StatusCode::SUCCESS;
 
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
 
-  Assert( P && m_bkg , "This should not happen :(" );
+  Assert( P && !m_bkgs.empty() , "This should not happen :(" );
 
-  if( !P->isBasicParticle() )
+  if ( !P->isBasicParticle() )
   {
+    IBackgroundCategory::categories cat = IBackgroundCategory::Undefined;
+    
+    for ( std::vector<IBackgroundCategory*>::const_iterator iT = m_bkgs.begin();
+          iT != m_bkgs.end(); ++iT )
+    {
+      cat = (*iT)->category( P, headP );
+      if ( cat != IBackgroundCategory::Undefined ) break;
+    }
+    
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "BackgroundCategory decision for "
+              << prefix << " : " << cat << endreq;
 
-    const int category = (int)(m_bkg->category( P ));
-
-    if (msgLevel(MSG::DEBUG)) debug() << "BackgroundCategory decision for "
-                                      << prefix <<": " << category << endreq;
-
-    if ( tuple->column( prefix+"_BKGCAT", category ) )
-      return StatusCode::SUCCESS;
+    sc = sc && tuple->column( prefix+"_BKGCAT", (int)cat );
   }
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
+
+//=============================================================================
+
+// Declaration of the Tool Factory
+// actually acts as a using namespace TupleTool
+DECLARE_TOOL_FACTORY( TupleToolMCBackgroundInfo )
+
+//=============================================================================

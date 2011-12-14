@@ -17,7 +17,7 @@
  *  @author Rob Lambert
  *  @date   2010-01-19
  */
-class TupleToolBase : public GaudiTupleTool 
+class TupleToolBase : public GaudiTupleTool
 {
 
 public:
@@ -34,7 +34,7 @@ public:
                     "add extra variables for this tool");
   }
 
-  virtual ~TupleToolBase( ){} ///< Destructor
+  virtual ~TupleToolBase( ) { } ///< Destructor
 
 protected:
 
@@ -66,6 +66,13 @@ protected:
   inline int number( const std::string& location)
   {
     return ( safeExist<CLASS>(location) ? (get<CLASS>(location))->size() : -1 );
+  }
+
+  /// Get the TES location of an object.
+  const std::string objectLocation(const DataObject* pObject) const
+  {
+    return (!pObject ? "Null DataObject" :
+            (pObject->registry() ? pObject->registry()->identifier() : "UnRegistered"));
   }
 
 protected:

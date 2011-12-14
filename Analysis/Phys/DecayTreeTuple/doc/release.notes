@@ -4,11 +4,18 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-14 - Chris Jones
+ - Extend TupleToolMCBackgroundInfo to use a list of background category 
+   tools. Allows for out-the-box running on both DSTs and uDSTs.
+ - Extend TupleToolMCTruth to use a list of MC associators instead of a
+   single one. Allows (almost) for out-the-box running on both DSTs and uDSTs.
+   A few warnings/errors need to be squash when running on uDSTs.
+
 ! 2011-12-07 - Patrick Koppenburg
  - Task #24643:
 	. src/TupleToolDecayTreeFitter : use new Tool SubstitutePIDTool
-  These changes need Phys/DaVinciInterfaces r132662 and Phys/DaVicniTools r132663
-  
+    These changes need Phys/DaVinciInterfaces r132662 and 
+    Phys/DaVinciTools r132663
 
 ! 2011-12-05 - Patrick Koppenburg
  - First working version of PID-changing decaytreefitter. Task #24643
