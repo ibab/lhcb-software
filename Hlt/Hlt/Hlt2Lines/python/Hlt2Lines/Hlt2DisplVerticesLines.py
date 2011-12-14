@@ -162,7 +162,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3D.PVOfflineTool.addTool( LSAdaptPV3DFitter)
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 2*units.mm
         Hlt2PatPV3D.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 4
-        Hlt2PatPV3D.OutputVerticesName = "Hlt2/Hlt2V3D/Vertices"
+        Hlt2PatPV3D.OutputVerticesName = "Hlt2/Hlt2VeloVertices/Vertices"
 
         #######################################################################
         #Get the pions
@@ -445,7 +445,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2PatPV3DDown = PatPV3D("Hlt2DisplVerticesV3DDown")
         Hlt2PatPV3DDown.addTool(PVOfflineTool)
         Hlt2PatPV3DDown.PVOfflineTool.InputTracks = [ 'Hlt2/Track/BiKalmanFitted/DVDownstream']
-        Hlt2PatPV3DDown.OutputVerticesName = "Rec/Vertices/Hlt2DisplVerticesV3DDown"
+        Hlt2PatPV3DDown.OutputVerticesName = "Hlt2/Hlt2DownVertices/Vertices"
         Hlt2PatPV3DDown.PVOfflineTool.addTool( LSAdaptPVFitter())
         Hlt2PatPV3DDown.PVOfflineTool.PVFitterName = "LSAdaptPVFitter"
         Hlt2PatPV3DDown.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
