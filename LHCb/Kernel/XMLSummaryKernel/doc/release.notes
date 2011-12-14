@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r3 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - Remove GaudiPoolDB dependency to prepare migration to Gaudi v23r0.
  - Explicitly add needed Boost linkopts, no longer picked up from GaudiSvc
