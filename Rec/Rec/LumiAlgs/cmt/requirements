@@ -27,7 +27,7 @@ use HltTCK          v*    TCK         -no_auto_imports
 
 # for tests
 private
-use GaudiPoolDb v*
+use RELAX v* LCG_Interfaces
 end_private
 
 include_path      none

@@ -4,6 +4,14 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2011-12-14 - Marco Cattaneo
+ - Prepare migration to Gaudi v23:
+   . Remove GaudiPoolDb run time dependency, replace it with RELAX
+   . Remove tests that require POOL:
+     lumialgs.framework.poolfsrwriter, lumialgs.framework.poolreadpoolfsr
+   . Put output file of former lumialgs.framework.poolfsrwriter test in SVN, to
+     continue testing with lumialgs.framework.rootreadpoolfsr (testPoolFsr.dst)
+
 !========================= LumiAlgs v7r2 2011-12-14 =========================
 ! 2011-12-12 - Marco Cattaneo
  - In FSRNavigator, move service retrieval from constructor to initialize

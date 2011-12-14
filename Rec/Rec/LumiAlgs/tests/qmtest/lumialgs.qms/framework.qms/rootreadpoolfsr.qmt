@@ -6,9 +6,6 @@
     <text>--option</text>
     <text>from LumiAlgs.LumiFsrReaderConf import LumiFsrReaderConf as LumiFsrReader; LumiFsrReader().Persistency="ROOT"; LumiFsrReader().inputFiles=["testPoolFsr.dst"]; </text>
   </set></argument>
-  <argument name="prerequisites"><set>
-	<tuple><text>lumialgs.framework.poolfsrwriter</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>
   <argument name="reference"><text>../refs/rootreadpoolfsr.ref</text></argument>
   <argument name="validator"><text>
 from LumiAlgs.QMTest.LumiAlgsExclusions import preprocessor
