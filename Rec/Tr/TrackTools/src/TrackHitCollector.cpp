@@ -490,8 +490,10 @@ void TrackHitCollector::updateWithProperResiduals(
 	std::vector<IDWithResidual>& ids, const LHCb::Track& tr) const
 {
     if (ids.empty()) return;
-    typedef LHCb::Track::ConstNodeRange Nodes;
-    Nodes nodes(tr.nodes());
+    const LHCb::TrackFitResult* fitresult = tr.fitResult() ;
+    if( !fr || fr->nodes().empty()) return ;
+    typedef LHCb::TrackFitResult::NodeContainer Nodes ;
+    const Nodes& nodes(fr->nodes());
     if (nodes.begin() == nodes.end()) return;
     BOOST_FOREACH(IDWithResidual& idwr, ids) {
 	/// check if we have a node for given LHCbID

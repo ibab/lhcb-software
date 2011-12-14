@@ -12,6 +12,7 @@
 // from TrackEvent
 #include "Event/TrackUnitsConverters.h"
 #include "Event/FitNode.h"
+#include "Event/KalmanFitResult.h"
 
 // local
 #include "TrackInterpolator.h"
@@ -83,13 +84,16 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
                                            double z,
                                            State& state )
 {
-
-  StatusCode sc = StatusCode::SUCCESS ;
-  // Check if there are nodes on the track
-  typedef LHCb::Track::ConstNodeRange NodeContainer ;
-  NodeContainer nodes = track.nodes();
-  if ( nodes.empty() ) 
+  // Check that track was actally fitted. Otherwise quietly call
+  // extrapolator.
+  const LHCb::KalmanFitResult* fr = 
+    dynamic_cast<const LHCb::KalmanFitResult*>(track.fitResult()) ;
+  if( fr==0 || fr->nodes().empty() )
     return m_extrapolator->propagate( track, z, state ) ;
+  
+  StatusCode sc = StatusCode::SUCCESS ;
+  typedef std::vector<LHCb::Node*> NodeContainer ;
+  const NodeContainer& nodes = fr->nodes() ;
   
   // If we are between the first and last node with a measurement, we
   // interpolate. If not, we extrapolate from the closest 'inside'
@@ -140,7 +144,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   } 
   
   // so, we interpolate. Get the nodes:
-  const LHCb::FitNode* nodeNext   = dynamic_cast<const LHCb::FitNode*>(*nextnode) ;
+  const LHCb::FitNode* nodeNext = dynamic_cast<const LHCb::FitNode*>(*nextnode) ;
   const LHCb::FitNode* nodePrev = dynamic_cast<const LHCb::FitNode*>(*prevnode) ;
   
   if( (z-nodeNext->z()) * (z-nodePrev->z()) > 0 ) {
