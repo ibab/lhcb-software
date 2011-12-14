@@ -1,5 +1,5 @@
 // $Id: BackgroundCategory.h,v 1.29 2009-11-27 07:42:26 odescham Exp $
-#ifndef BACKGROUNDCATEGORY_H 
+#ifndef BACKGROUNDCATEGORY_H
 #define BACKGROUNDCATEGORY_H 1
 
 // Include files
@@ -16,74 +16,79 @@
 #include "CaloInterfaces/ICalo2MCTool.h"
 #include "Kernel/IPrintDecay.h"
 
-typedef std::vector<const LHCb::MCParticle*> MCParticleVector;
-typedef std::vector<const LHCb::Particle*> ParticleVector;
-typedef std::pair<const LHCb::Particle*, const LHCb::MCParticle*> DaughterAndPartnerPair;
-typedef std::vector<DaughterAndPartnerPair> DaughterAndPartnerVector;
-
 /** @class BackgroundCategory BackgroundCategory.h
- * 
- *  For further documentation, please see the file IBackgroundCategory.h
- *  Available properties: 
  *
- *  UseSoftPhotonCut - whether to ignore "soft" photons 
- *  
+ *  For further documentation, please see the file IBackgroundCategory.h
+ *  Available properties:
+ *
+ *  UseSoftPhotonCut - whether to ignore "soft" photons
+ *
  *  SoftPhotonCut - the maximum energy of a "soft" photon, if using the cut. (default to 300MeV or less)
  *
  *  LowMassBackgroundCut - the mass cut used to classify background as Low Mass. For
- *			   an explanation of usage, see IBackgroundCategory.h. It 
- *			   defaults to 100MeV.
+ *      an explanation of usage, see IBackgroundCategory.h. It
+ *      defaults to 100MeV.
  *
  *  MCmatchQualityPIDoverrideLevel - At present the tool will occasionally find that
- *				     one ProtoParticle has more than one MCParticle
- *				     associated to it. The MCParticle with the "correct"
- *				     PID is chosen unless its weight is lower than the
+ *         one ProtoParticle has more than one MCParticle
+ *         associated to it. The MCParticle with the "correct"
+ *         PID is chosen unless its weight is lower than the
  *                                   cut. The default is 0.5, since the "weight" is the
  *                                   probability of the particle with the "correct" PID to
  *                                   be the "correct" associated MCParticle, given that at least one
  *                                   MCParticle exists which is associated to the ProtoParticle.
  *
  *  InclusiveDecay - is this an inclusive decay? If you want to reconstruct an exclusive
- *			semi-leptonic decay chain, set this to 0 and the SemileptonicDecay property to 1.
+ *   semi-leptonic decay chain, set this to 0 and the SemileptonicDecay property to 1.
  *
  *  SemileptonicDecay - is this a smei-leptonic decay? If so, all neutrinos will be ignored when deciding if
- *			the decay is correctly reconstructed or not. 
+ *   the decay is correctly reconstructed or not.
  *
  *  NumNeutrinos - The number of neutrinos expected in our decay chain.
- *  
+ *
  *  ResonanceCut - The maximum lifetime at which a particle is considered a short lived resonance.
- *  		   Defaults to 10^-6 nanoseconds.
+ *       Defaults to 10^-6 nanoseconds.
  *
  *  @author Vladimir Gligorov
  *  @date   2005-11-23
  */
-class BackgroundCategory : public GaudiTool, virtual public IBackgroundCategory {
-public: 
-  /// Standard constructor
-  BackgroundCategory( const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
-
-  IBackgroundCategory::categories category(const LHCb::Particle*);
-
-  const LHCb::MCParticle* origin( const LHCb::Particle* );
-  const DaughterAndPartnerVector getDaughtersAndPartners( const LHCb::Particle* ); 
-
-  StatusCode initialize(); 
-  StatusCode finalize();
-
-  virtual ~BackgroundCategory( ); ///< Destructor
-
-protected:
+class BackgroundCategory : public GaudiTool,
+                           virtual public IBackgroundCategory
+{
 
 private:
 
-  MCParticleVector associate_particles_in_decay(ParticleVector, const LHCb::Particle*);
+  typedef std::vector<const LHCb::MCParticle*> MCParticleVector;
+  typedef std::vector<const LHCb::Particle*> ParticleVector;
+  typedef std::pair<const LHCb::Particle*, const LHCb::MCParticle*> DaughterAndPartnerPair;
+  typedef std::vector<DaughterAndPartnerPair> DaughterAndPartnerVector;
+
+public:
+
+  /// Standard constructor
+  BackgroundCategory( const std::string& type,
+                      const std::string& name,
+                      const IInterface* parent);
+
+  StatusCode initialize();
+
+  virtual ~BackgroundCategory( ); ///< Destructor
+
+public:
+
+  IBackgroundCategory::categories category( const LHCb::Particle * reconstructed_mother,
+                                            const LHCb::Particle * headP = NULL );
+  const LHCb::MCParticle* origin( const LHCb::Particle* );
+  const DaughterAndPartnerVector getDaughtersAndPartners( const LHCb::Particle* );
+
+private:
+
+  MCParticleVector associate_particles_in_decay(const ParticleVector &, const LHCb::Particle*);
   MCParticleVector get_mc_mothers(MCParticleVector);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle*);
   const LHCb::MCParticle* get_top_mother_of_MCParticle(const LHCb::MCParticle*);
-  const LHCb::MCParticle* get_lowest_common_mother(MCParticleVector,ParticleVector);
-  const LHCb::MCParticle* get_lowest_common_mother(MCParticleVector);
+  const LHCb::MCParticle* get_lowest_common_mother(const MCParticleVector&,const ParticleVector&);
+  const LHCb::MCParticle* get_lowest_common_mother(const MCParticleVector&);
 
   int topologycheck(const LHCb::MCParticle*);
   int topologycheck(const LHCb::Particle*);
@@ -105,16 +110,17 @@ private:
   int areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVector);
 
 private:
+
   LHCb::IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
   IParticle2MCWeightedAssociator* m_smartAssociator;
   IPrintDecay* m_printDecay ;
   ICalo2MCTool* m_calo2MC;
-  
+
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
 
-  
+
   int m_inclusiveDecay; //are we studying an inclusive decay?
   int m_semileptonicDecay; //are we studying a semileptnoic decay?
   int m_numNeutrinos; //How many neutrinos expected in our decay chain?
@@ -125,7 +131,7 @@ private:
   double m_caloWeight;
   double m_minWeight; //dummy sorting variable
   double m_rescut; //A cut on the minimum lifetime for a mother not to be
-			//considered a short-lived resonance
+  //considered a short-lived resonance
 
 };
 #endif // BACKGROUNDCATEGORY_H

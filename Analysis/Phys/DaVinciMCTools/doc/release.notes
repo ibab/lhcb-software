@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2011-12-14 - Chris Jones
+ - Various small improvements to the Background Category tools to mke them
+   work better out the box with uDSTs
+
 ! 2011-12-02 - Patrick Koppenburg
  - PrintDecayTreeTool.cpp: add a field PPkey to print the protoparticle key
 

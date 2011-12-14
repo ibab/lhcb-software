@@ -1,5 +1,5 @@
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "BackgroundCategoryViaRelations.h"
@@ -10,18 +10,13 @@
 // 2009-11-27 : Vladimir Gligorov
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( BackgroundCategoryViaRelations );
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 BackgroundCategoryViaRelations::BackgroundCategoryViaRelations( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
+                                                                const std::string& name,
+                                                                const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_P2BCLocation(0)
 {
   IBackgroundCategory::m_cat[-1]   = "Undefined";
   IBackgroundCategory::m_cat[0]    = "Signal";
@@ -44,67 +39,103 @@ BackgroundCategoryViaRelations::BackgroundCategoryViaRelations( const std::strin
   declareInterface<IBackgroundCategory>(this);
   declareProperty("inputTable", m_P2BCLocation);
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-BackgroundCategoryViaRelations::~BackgroundCategoryViaRelations() {};
+BackgroundCategoryViaRelations::~BackgroundCategoryViaRelations() {}
+
 //=============================================================================
-IBackgroundCategory::categories BackgroundCategoryViaRelations::category(const LHCb::Particle* reconstructed_mother)
+IBackgroundCategory::categories
+BackgroundCategoryViaRelations::category( const LHCb::Particle* reconstructed_mother,
+                                          const LHCb::Particle* headP )
 //In this implementation just a) checks if the relation table exists and b) returns the category of the requested particle
 {
 
   m_catRelations.clear();
 
-  for (std::vector<std::string>::const_iterator item = m_P2BCLocation.begin(); item!=m_P2BCLocation.end(); ++item) {
-    const std::string& address = *item;
-      if (exist<TableP2BC>(address) ) {
-        verbose() << "Adding table " << address << endmsg;
-        TableP2BC* table = get<TableP2BC>(address);
-        m_catRelations.push_back(table);
-      } else {
-        Error ( " There is no valid data at '" + address + "'" ).ignore() ;
-      }
+  // locations in JOs
+  std::vector<std::string> locs = m_P2BCLocation;
+
+  // add particle dependent locations
+  if ( headP && headP != reconstructed_mother ) 
+  {
+    locs.push_back( b2cLocation(headP->parent()) );
+  }
+  if ( reconstructed_mother ) 
+  {
+    locs.push_back( b2cLocation(reconstructed_mother->parent()) );
   }
 
-  //If the location provided is rubbish complain
-  if (m_catRelations.size() == 0) {
-    Error ( " There is no valid data at the locations provided, returning category -1" ).ignore() ;
+  locs.erase( std::unique(locs.begin(),locs.end()), locs.end() );
+
+  for ( std::vector<std::string>::const_iterator item = locs.begin(); 
+        item != locs.end(); ++item )
+  {
+    const std::string& address = *item;
+    if (exist<TableP2BC>(address) ) 
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Adding table " << address << endmsg;
+      TableP2BC* table = get<TableP2BC>(address);
+      m_catRelations.push_back(table);
+    } 
+    //    else 
+    //    {
+    //    Warning ( "There is no valid data at '" + address + "'" ).ignore() ;
+    //    }
+  }
+
+  // If the location provided is rubbish complain
+  if ( m_catRelations.empty() )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "There is no valid data at the locations provided, returning category Undefined"
+              << endmsg;
+    //Warning( "There is no valid data at the locations provided, returning category Undefined",
+    //         StatusCode::SUCCESS, 0 ).ignore() ;
     return Undefined;
   }
-
-  //Else we are OK so find the particle and return its category
-  for (TablesP2BC::const_iterator iTableP2BC = m_catRelations.begin();
-         iTableP2BC != m_catRelations.end();
-         ++iTableP2BC) {
-      TableP2BC::Range range = (*iTableP2BC)->relations(reconstructed_mother);
-      //For the moment we only allow one category per particle so if more than one category is
-      //related return undefined, else just return the category we find 
-      if (range.size() == 0 || range.size() > 1) continue; 
-      else return (IBackgroundCategory::categories) range.begin()->to(); 
+  
+  // Else we are OK so find the particle and return its category
+  for ( TablesP2BC::const_iterator iTableP2BC = m_catRelations.begin();
+        iTableP2BC != m_catRelations.end(); ++iTableP2BC ) 
+  {
+    TableP2BC::Range range = (*iTableP2BC)->relations(reconstructed_mother);
+    //For the moment we only allow one category per particle so if more than one category is
+    //related return undefined, else just return the category we find
+    if ( range.empty() || range.size() > 1) 
+    {
+      continue;
+    }
+    else
+    {
+      return (IBackgroundCategory::categories) range.begin()->to();
+    }
   }
 
-  //If we have not found anything else to return yet we return undefined, 
+  //If we have not found anything else to return yet we return undefined,
   //the user probably supplied the tables for the wrogn particles
   return Undefined;
 }
-//=============================================================================
-StatusCode BackgroundCategoryViaRelations::finalize(){
 
-  StatusCode sc = GaudiTool::finalize();
-  if (!sc) return sc;
-  return StatusCode::SUCCESS;
-
-}
 //=============================================================================
-StatusCode BackgroundCategoryViaRelations::initialize(){
+StatusCode BackgroundCategoryViaRelations::initialize()
+{
   //Initialize and get the required tools
-
   StatusCode sc = GaudiTool::initialize();
-  
+  if ( sc.isFailure() ) return sc;
+
   //Check that someone provided a location for the relations table
   //maybe set a default eventually but not for now
-  if (m_P2BCLocation.size() == 0) return StatusCode::FAILURE;
+  //if ( m_P2BCLocation.empty() ) return Error( "P2BC Location not set !" );
 
-  if (!sc) return sc;
-  return StatusCode::SUCCESS;
+  return sc;
 }
+
+//=============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( BackgroundCategoryViaRelations )
+
+//=============================================================================
