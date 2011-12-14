@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r6 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - In requirements:
    . Add explicit linkopts for Boost, for compatibility with Gaudi v23
