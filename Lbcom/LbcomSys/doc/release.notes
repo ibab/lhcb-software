@@ -14,7 +14,8 @@ This version uses Gaudi v22r5 and LHCb v33r2
 - Packages updated: Calo/CaloTools v6r3p1, Hlt/HltDAQ v2r14, L0/L0Calo v11r6,
     L0/L0DU v10r17, L0/L0Muon v9r8, Rich/RichAlgorithms v1r4, Rich/RichDAQ v3r35,
     Rich/RichMCMonitors v1r9, Rich/RichMCTools v3r17, Rich/RichTools v2r39,
-    Velo/VeloAssociators v2r4p1, Velo/VeloDAQ v6r6, Velo/VeloTools v4r1p1
+    ST/STMonitors v3r7p1, ST/STTools v4r10, Velo/VeloAssociators v2r4p1,
+    Velo/VeloDAQ v6r6, Velo/VeloTools v4r1p1
 
 - In HltDAQ v2r14
   . Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
@@ -81,10 +82,11 @@ This version uses Gaudi v22r5 and LHCb v33r2
   . Add explicit Boost_linkopts for compatibility with Gaudi v23
   . Fixed compilation with Boost 1.48 (filesystem V3) (for Gaudi v23)
 
-- In CaloTools v6r3p1, HltDAQ v2r14, VeloAssociators v2r4p1
+- In CaloTools v6r3p1, HltDAQ v2r14, VeloAssociators v2r4p1, STMonitors v3r7p1,
+     STTools v4r10
   . Fix gcc warnings
 
-- In CaloTools v6r3p1, VeloDAQ v6r6, VeloTools v4r1p1
+- In CaloTools v6r3p1, VeloDAQ v6r6, VeloTools v4r1p1, STMonitors v3r7p1
   . Fix trivial icc remarks
 
 - In VeloAssociators v2r4p1, VeloDAQ v6r6
