@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v7r1 2011-12-14 =========================
+! 2011-12-12 - Marco Cattaneo
+ - In FSRNavigator, move service retrieval from constructor to initialize
+   Fixes a problem when building configurables with Gaudi v23
+
 ! 2011-12-07 - Marco Cattaneo
  - Fix some UNINIT_CTOR Coverity defects
 
