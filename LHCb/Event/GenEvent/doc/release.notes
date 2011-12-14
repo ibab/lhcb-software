@@ -3,6 +3,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r3 2011-12-14 =========================
 ! 2011-11-30 - Marco Clemencic
  - Fixed the previous fix to work on 32bits too.
 
