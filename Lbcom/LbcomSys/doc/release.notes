@@ -6,6 +6,90 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v11r2>2011-12-15 LbcomSys v11r2</A></H1><PRE>
+This version uses Gaudi v22r5 and LHCb v33r2
+
+- Production release for 2011 data analysis
+
+- Packages updated: Calo/CaloTools v6r3p1, Hlt/HltDAQ v2r14, L0/L0Calo v11r6,
+    L0/L0DU v10r17, L0/L0Muon v9r8, Rich/RichAlgorithms v1r4, Rich/RichDAQ v3r35,
+    Rich/RichMCMonitors v1r9, Rich/RichMCTools v3r17, Rich/RichTools v2r39,
+    Velo/VeloAssociators v2r4p1, Velo/VeloDAQ v6r6, Velo/VeloTools v4r1p1
+
+- In HltDAQ v2r14
+  . Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
+    (in ANNDispatchSvc) streams. Only those in non-const methods have been
+    protected, because the msgLevel() function is not declared as const...
+  . Equip all decoders with list of RawEvent locations to try, try both without
+    and with RootInTES
+  . Add RawEventLoocation::Trigger to the locations to try for RawEvent location
+    in decoders
+
+- In L0DU v10r17
+  . L0Conf:
+    o Add option to configure the On-Demand decoding of TAE
+      (+ reorganize and cleanup)
+    o Fix bug introduced in latest release affecting the emulators
+    o Add new property to allow the DataOnDemand service to handle
+      several RootInTES for the candidates/report location.
+    o Propagate the RawEventLocations property to all L0 decoders
+
+- In L0Muon v9r8
+  . L0MuonCandidatesFromRaw, L0MuonOutputs : fix output location for TAE
+  . L0MuonCandidatesFromRaw : Add possibility to instanciante several instances
+    of the L0Muon decoding without rebuilding the RegisterFactory
+
+- In L0Calo v11r6, L0DU v10r17, L0Muon v9r8
+  . In L0CaloCandidatesFromRaw, L0DUFromRaw, L0MuonCandidatesFromRaw:
+    o Add possibility to use rootIInTES using recently added flag in
+      L0FromRawBase (m_useRootInTES)
+    o Configure the raw event location using the new property defined in
+      L0/L0Base/L0FromRaw. Protect against rootintes when accessing this
+      location; Write bank read status only if the raw event is
+      in the default location.
+
+- In RichAlgorithms v1r4, RichDAQ v3r35, RichMCMonitors v1r9, RichTools v2r39
+  . Use long long instead of long
+
+- In RichDAQ v3r35, RichMCTools v3r17, RichTools v2r39
+  . Adapt to changes in RichSmartID
+
+- In RichDAQ v3r35
+  . Remove some MaPMT specific hacks and work arounds
+  . Add support for a 'FlatList' data format
+
+- In RichTools v2r39
+  . Load the Snell's law refraction tool in Rich::RayTracing on-demand, to
+    avoid loading it when not needed.
+  . Properly take into account PD type when constructing RichSmartIDs in
+    Rich::RayTracing::_traceToDetector
+  . Update SnellsLawRefraction with a better check to see if aerogel is present
+    or not. Avoids a fatal message being printed when missing.
+  . Various improvements to support running with MaPMTs instead of HPDs
+  . Improvements to allow running without an Aerogel volume
+
+- In VeloDAQ v6r6
+  . Hide warning by default due to problems with TELL1 cluster maker
+    putting the same strip into two clusters (to be re-enabled for data/mc
+    after the TELL1 bug is resolved).
+  . Add some missing calls to GaudiAlgorithm::finalize
+
+- In VeloDAQ v6r6, VeloTools v4r1p1
+  . Fix  UNINIT_CTOR coverity defects
+
+- In HltDAQ v2r14, L0Muon v9r8
+  . Add explicit Boost_linkopts for compatibility with Gaudi v23
+  . Fixed compilation with Boost 1.48 (filesystem V3) (for Gaudi v23)
+
+- In CaloTools v6r3p1, HltDAQ v2r14, VeloAssociators v2r4p1
+  . Fix gcc warnings
+
+- In CaloTools v6r3p1, VeloDAQ v6r6, VeloTools v4r1p1
+  . Fix trivial icc remarks
+
+- In VeloAssociators v2r4p1, VeloDAQ v6r6
+  . Replace obsolete include DeclareFactoryEntries.h with AlgFactory.h
+
 </PRE><H1><A NAME=v11r1>2011-11-11 LbcomSys v11r1</A></H1><PRE>
 This version uses Gaudi v22r5 and LHCb v33r1
 
