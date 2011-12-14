@@ -1,8 +1,6 @@
 // $Id$
 // Include files 
 
-
-
 // local
 #include "Kernel/Particle2MCParticle.h"
 
@@ -25,7 +23,6 @@ namespace Particle2MCParticle
       std::remove_if(tmp.begin(), tmp.end(), pred);
     return Particle2MCParticle::ToVector(tmp.begin(), new_last);
   }
-  
 
 }
 
