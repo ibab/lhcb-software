@@ -25,6 +25,11 @@ use HltInterfaces   v* Kernel
 ### for access to the config.tar file with configurations
 use HltTCK          v*    TCK         -no_auto_imports
 
+# for tests
+private
+use GaudiPoolDb v*
+end_private
+
 include_path      none
 #============================================================================
 # Component library building rule
