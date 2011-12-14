@@ -103,8 +103,10 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
       m_writeErrors++;
       return sc;
     }
-    MsgStream log0(m_msgSvc, m_parent);
-    log0 << MSG::ERROR << "Failed allocate output space." << endmsg;
+    if ( !m_silent ) {
+      MsgStream log0(m_msgSvc, m_parent);
+      log0 << MSG::ERROR << "Failed allocate output space." << endmsg;
+    }
     m_spaceErrors++;
     return StatusCode::FAILURE;
   }
@@ -262,8 +264,10 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
     privateBank.removeBank( hdrBank );
     return StatusCode::FAILURE;
   }
-  MsgStream log2(m_msgSvc, m_parent);
-  log2 << MSG::ERROR << "Failed to retrieve raw event object at " << location << endmsg;
+  if ( !m_silent ) {
+    MsgStream log2(m_msgSvc, m_parent);
+    log2 << MSG::ERROR << "Failed to retrieve raw event object at " << location << endmsg;
+  }
   return StatusCode::FAILURE;
 }
 

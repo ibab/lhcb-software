@@ -81,13 +81,13 @@ namespace LHCb    {
       m_TrMask[2] = mask[2];
       m_TrMask[3] = mask[3];
     }
-    const _H* header()      const { return (const _H*)m_Ptr;                   }
-    void setHeader(void* val)     { m_Ptr = (char*)val;                        }
-    const char* buffer()    const { return m_mepPtr;                           }
-    void setMepBuffer(void* val)  { m_mepPtr = (char*)val;                     }
-    int numberOfFragments() const { return header()->numberOfFragments();      }
-    _F* fragment(int i) const  {   return (_F*)(m_mepPtr+header()->offset(i)); }
-    int offset(int which)   const {  return header()->offset(which);           }
+    const _H* header()      const      { return (const _H*)m_Ptr;                    }
+    void setHeader(void* val)          { m_Ptr = (char*)val;                         }
+    const char* buffer()    const      { return m_mepPtr;                            }
+    void setMepBuffer(const void* val) { m_mepPtr = (char*)val;                      }
+    int numberOfFragments() const      { return header()->numberOfFragments();       }
+    _F* fragment(int i) const          { return (_F*)(m_mepPtr+header()->offset(i)); }
+    int offset(int which)   const      { return header()->offset(which);             }
   };
 }      // End namespace LHCb
 #endif // MDF_RAWEVENTDESCRIPTOR_H

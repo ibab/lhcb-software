@@ -109,29 +109,27 @@ MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t le
 
 /// Execute procedure
 StatusCode MDFWriter::execute()    {
+  StatusCode sc = StatusCode::FAILURE;
   std::pair<const char*,int> data;
   setupMDFIO(msgSvc(),eventSvc());
-  MsgStream log(msgSvc(), name());
-  if( UNLIKELY(log.level() <= MSG::VERBOSE) )
-    log << MSG::VERBOSE << "Got data as " << m_inputType 
-        << " Send as " << m_dataType << endmsg;
+
   switch(m_inputType)   {
     case MDFIO::MDF_NONE:
-      return commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);
+      sc = commitRawBanks(m_compress, m_genChecksum, m_connection, m_bankLocation);
+      break;
     case MDFIO::MDF_BANKS:
       data = getDataFromAddress();
       if ( data.first )  {
-	StatusCode sc = StatusCode::SUCCESS;
 	RawBank* b = (RawBank*)data.first;
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
 	  sc = writeBuffer(m_connection,b->data(), data.second-b->hdrSize());
 	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-	  return sc;
+	  break;
 	case MDFIO::MDF_BANKS:
 	  sc = writeBuffer(m_connection,data.first, data.second);
 	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-	  return sc;
+	  break;
 	default:
 	  break;
 	}
@@ -140,12 +138,11 @@ StatusCode MDFWriter::execute()    {
     case MDFIO::MDF_RECORDS:
       data = getDataFromAddress();
       if ( data.first )  {
-	StatusCode sc = StatusCode::SUCCESS;
 	switch(m_dataType) {
 	case MDFIO::MDF_RECORDS:
 	  sc = writeBuffer(m_connection,data.first, data.second);
 	  sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-	  return sc;
+	  break;
 	case MDFIO::MDF_BANKS:
 	  {
 	    MDFHeader* h = (MDFHeader*)data.first;
@@ -160,7 +157,7 @@ StatusCode MDFWriter::execute()    {
 	    ::memcpy(b->data(), data.first, data.second);
 	    sc = writeBuffer(m_connection,m_data.data(),data.second+b->hdrSize());
 	    sc.isSuccess() ? ++m_writeActions : ++m_writeErrors;
-	    return sc;
+	    break;
 	  }	    
 	default:
 	  break;
@@ -170,7 +167,7 @@ StatusCode MDFWriter::execute()    {
   default:
     break;
   }
-  return StatusCode::FAILURE;
+  return sc;
 }
 
 /// Write byte buffer to output stream

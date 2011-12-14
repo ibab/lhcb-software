@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r32 2011-12-14 =========================
+! 2011-12-14 - Markus Frank
+ - Add flag to MDFIO to suppress error messages if getDataSpace fails.
+   Default is current behaviour
+
 !========================= MDF v3r31 2011-07-25 =========================
 ! 2011-07-25 - Marco Cattaneo
  - Protect creation of DEBUG msg streams by test on output level
