@@ -5,6 +5,7 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+!========================= DetDescChecks v5r6p1 2011-12-14 =========================
 ! 2011-11-21 - Marco Cattaneo
  - Remove obsolete HepMCBack dependency
 
