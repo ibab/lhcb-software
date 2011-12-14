@@ -4,6 +4,7 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+!========================= RichMCMonitors v1r9 2011-12-14 =========================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
 
