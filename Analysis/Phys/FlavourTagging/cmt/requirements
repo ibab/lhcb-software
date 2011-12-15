@@ -7,7 +7,7 @@
 package      FlavourTagging
 version      v12r6
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src options summary
 
@@ -15,9 +15,9 @@ branches          cmt doc src options summary
 #============================================================================
 set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
 
-# Used packages. 
+# Used packages.
 #============================================================================
-use GaudiPython     v*  
+use GaudiPython     v*
 use PhysSelPython   v*   PhysSel
 use TrackInterfaces v*   Tr
 use PhysEvent       v*   Event
@@ -41,6 +41,6 @@ apply_pattern component_library library=FlavourTagging
 apply_pattern install_python_modules
 
 # =================== summary application  ==================================
-private 
+private
 application       summaryof      ../summary/summaryof.cpp
 # apply_pattern     application_path
