@@ -6,8 +6,10 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTTools v2r3 2011-12-15 =========================
+
 ! 2011-12-12 - Chris Jones
- - Fix a bug in ProtoParticleCloner, where
+ - Fix bugs in ProtoParticleCloner, where
   + The main MuonPID idTrack was not being correctly set
   + Properly clone and set the MuonTrack associated to selected MuonPIDs
  - Various other minor clean ups
