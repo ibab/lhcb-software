@@ -4,6 +4,8 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================= BBDecTreeTool v1r4 2011-12-15 =========================
+
 ! 2011-12-09 - Marco Cattaneo
  - Add explicit Boost_linkopts for compatibility with Gaudi v23
 
@@ -33,3 +35,4 @@
 !========================== BBDecTreeTool v1r0 2011-02-07 ==================
 ! 2011-02-02 - Michael Williams
  - initial import
+!========================= BBDecTreeTool v1r4 2011-12-15 =========================
