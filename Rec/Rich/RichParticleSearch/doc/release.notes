@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Noble price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r5 2011-12-15 ================
 ! 2011-12-02 - Chris Jones
  - Use long long where appropriate
 
