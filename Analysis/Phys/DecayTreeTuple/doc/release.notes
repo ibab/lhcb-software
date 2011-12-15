@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r19 2011-12-15 =========================
+
 ! 2011-12-14 - Chris Jones
  - Extend TupleToolMCBackgroundInfo to use a list of background category 
    tools. Allows for out-the-box running on both DSTs and uDSTs.
@@ -29,7 +31,7 @@
  - Add a temporary hack to TupleToolEventInfo to split the 64bit event Number
    and GPS time into two 32 bit ints and store these. Allows the full 64 bit
    variable to be reconstructed later on if required.
-   Temporary hack until Gaudi fully supports 64bit variables in Tuples.
+   Temporary hack until Gaudi fully supports 64bit variables in Tuples (v23r0).
 
 ! 2011-11-29 - Chris Jones
  - Remove some redundant messages from initialisation of DecayTreeTuple
@@ -38,7 +40,7 @@
  - TupleToolTrackInfo : add match chi2
 
 ! 2011-11-23 - Tomasz Skwarnicki
- - make TupleToolEventInfo, TupleToolTrigger try info location with and 
+ - Make TupleToolEventInfo, TupleToolTrigger try info location with and 
    without RootInTES
 
 ! 2011-11-23 - Chris Jones
