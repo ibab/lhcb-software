@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2011-12-15 - Chris Jones
+ - Update reference for tagging test
+
 ! 2011-12-13 - Anton Poluektov 
  - Change the way DSTWriter is called in davinci-strip-mag{up,down} tests
 
