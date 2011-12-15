@@ -5,10 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r7 2011-12-15 =========================
+
 ! 2011-12-15 - Vanya Belyaev
  - add functions for efficieny calculations
-
-!========================= AnalysisPython v2r7 2011-12-15 =========================
 
 ! 2011-12-01 - Vanya Belyaev
  - new functions 
