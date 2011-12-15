@@ -957,8 +957,7 @@ def useLL ( histo         ,
             diff  = 1.e-5 ) :
     """
     Use Likelihood in histogram fit?
-    """
-    
+    """    
     minv = 1.e+9    
     for ibin in histo : 
 
