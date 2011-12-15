@@ -10,6 +10,14 @@
 
 !========================= DaVinci v30r0 2011-12-15 =========================
 
+! 2011-12-15 - Chris Jones
+ - Update DaVinci Configurable for the new release
+  + Remove now obsolete UseTrigRawEvent option
+  + Add a new option VerboseMessages to control some of the more verbose 
+    messages printed by DaVinci. By default is off.
+  + Remove DC06 from known data types
+  + Remove various bits of commented out code
+
 ! 2011-11-23 - Tomasz Skwarnicki
  - add standard trigger decoding setup for mdsts (previously only for dsts) 
 
