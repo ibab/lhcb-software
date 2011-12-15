@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           DecayTreeFitter
-version           v1r11p1
+version           v1r12
 
 #============================================================================
 # Structure, i.e. directories to process. 
