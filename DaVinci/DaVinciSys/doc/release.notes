@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v29r3>2011-12-15 DaVinci v29r3</A></H1><PRE>
+
+New development release, based on LHCb v32r2 stack.
+
 </PRE><H1><A NAME=v29r1>2011-11-10 DaVinci v29r2</A></H1><PRE>
 
 Depends on Stripping v3r0, Analysis v7r1, Phys v13r1
