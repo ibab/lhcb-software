@@ -5,6 +5,8 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciMCKernel v4r3 2011-12-15 =========================
+
 ! 2011-12-14 - Chris Jones
  - Extend IBackgroundCategory to allow the passing of the top level Particle
    to the tool. Useful for uDSTs in finding the saved relations table.
