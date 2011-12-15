@@ -23,9 +23,10 @@ This version uses Gaudi v22r5 and LHCb v33r2
     Rich/RichRecQC v2r56, Rich/RichRecStereoTools v1r8p1,
     Rich/RichRecTools v4r20, Rich/RichRecTrackTools v1r32, Tf/FastVelo v1r6,
     Tf/PatAlgorithms v4r16, Tf/PatVelo v3r25p2, Tf/PatVeloTT v3r16,
-    Tf/TrackMatching v2r33p1, Tf/TsaAlgorithms v3r25p1, Tr/TrackCheckers v4r12,
-    Tr/TrackExtrapolators v2r32p1, Tr/TrackProjectors v2r29p3,
-    Tr/TrackTools v4r10, Tr/TrackUtils v1r43p1, Velo/VeloRecMonitors v2r16
+    Tf/TrackMatching v2r33p1, Tf/TsaAlgorithms v3r25p1, Tr/PatChecker v3r11,
+    Tr/TrackCheckers v4r12, Tr/TrackExtrapolators v2r32p1,
+    Tr/TrackProjectors v2r29p3, Tr/TrackTools v4r10, Tr/TrackUtils v1r43p1,
+    Velo/VeloRecMonitors v2r16
 
 - In CaloPIDs v5r11
   . CaloPIDs/PIDs.py : fix external cluster setup
@@ -90,6 +91,10 @@ This version uses Gaudi v22r5 and LHCb v33r2
   . Fix in PatAddTTCoord: If chi2 was still much too high with only 3 hits left
     (in method calculateChi2), it went into an infinite loop.
 
+- In PatChecker v3r11
+  . In PrimaryVertexChecker, properly initialize MCPVInfo struct to avoid
+    floating point exceptions in debug mode.
+
 - In TrackCheckers v4r12
   . Fix a wrong length string, was causing a memory corruption on occasions
     when running debug version of Brunel.
@@ -128,11 +133,11 @@ This version uses Gaudi v22r5 and LHCb v33r2
 
 - In MuonID v9r3, MuonTools v5r2p2, RecoUpgradeMC v1r3p1, FastVelo v1r6,
      PatAlgorithms v4r16, PatVelo v3r25p2, PatVeloTT v3r16,
-     TrackMatching v2r33p1, TrackTools v4r10, TrackUtils v1r43p1,
-     VeloRecMonitors v2r16
+     TrackMatching v2r33p1, PatChecker v3r11, TrackTools v4r10,
+     TrackUtils v1r43p1, VeloRecMonitors v2r16
   . Fix trivial icc remarks
 
-- In MuonTools v5r2p2
+- In MuonTools v5r2p2, PatChecker v3r11
   . Replace endreq by endmsg
 
 </PRE><H1><A NAME=v12r1>2011-11-11 RecSys v12r1</A></H1><PRE>

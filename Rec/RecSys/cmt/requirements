@@ -69,7 +69,7 @@ use TsaAlgorithms        v3r25p1 Tf   # Matt Needham
 
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v3r10   Tr   # Olivier Callot, David Hutchcroft
+use PatChecker           v3r11   Tr   # Olivier Callot, David Hutchcroft
 use PatFitParams         v4r1    Tr   # Olivier Callot
 use TrackAssociators     v2r9    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r12   Tr   # Eduardo Rodrigues
