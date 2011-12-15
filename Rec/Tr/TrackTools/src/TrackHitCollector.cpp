@@ -490,7 +490,7 @@ void TrackHitCollector::updateWithProperResiduals(
 	std::vector<IDWithResidual>& ids, const LHCb::Track& tr) const
 {
     if (ids.empty()) return;
-    const LHCb::TrackFitResult* fitresult = tr.fitResult() ;
+    const LHCb::TrackFitResult* fr = tr.fitResult() ;
     if( !fr || fr->nodes().empty()) return ;
     typedef LHCb::TrackFitResult::NodeContainer Nodes ;
     const Nodes& nodes(fr->nodes());
