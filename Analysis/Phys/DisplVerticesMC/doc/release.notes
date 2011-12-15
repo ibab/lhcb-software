@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+!========================= DisplVerticesMC v1r4p1 2011-12-15 =========================
+
 ! 2011-11-23 - Chris Jones
  - Fix gcc 4.6 warnings
 
