@@ -8,6 +8,133 @@ Purpose: LHCb reconstruction packages.
 ! 2011-11-25 - Olivier Callot
  - add FastPV package
 
+</PRE><H1><A NAME=v12r2>2011-12-16 RecSys v12r2</A></H1><PRE>
+This version uses Gaudi v22r5 and LHCb v33r2
+
+- Production release for 2011 data analysis
+
+- Packages added:   Tf/FastPV: Reconstruct the PV in a fast way
+- Packages updated: Calo/CaloPIDs v5r11, Calo/CaloReco v5r13, Muon/MuonID v9r3,
+    Muon/MuonTools v5r2p2, Muon/MuonTrackRec v3r6p1, Rec/LumiAlgs v7r2,
+    Rec/RecoUpgradeMC v1r3p1, Rich/RichAlignment v1r6, Rich/RichGlobalPID v3r18,
+	  Rich/RichHPDImageAnalysis v1r11, Rich/RichIFBAnalysis v1r2,
+	  Rich/RichParticleSearch v1r5, Rich/RichRecMCTools v2r29,
+    Rich/RichRecMonitors v2r33, Rich/RichRecPhotonTools v1r9,
+    Rich/RichRecQC v2r56, Rich/RichRecStereoTools v1r8p1,
+    Rich/RichRecTools v4r20, Rich/RichRecTrackTools v1r32, Tf/FastVelo v1r6,
+    Tf/PatAlgorithms v4r16, Tf/PatVelo v3r25p2, Tf/PatVeloTT v3r16,
+    Tf/TrackMatching v2r33p1, Tf/TsaAlgorithms v3r25p1, Tr/TrackCheckers v4r12,
+    Tr/TrackExtrapolators v2r32p1, Tr/TrackProjectors v2r29p3,
+    Tr/TrackTools v4r10, Tr/TrackUtils v1r43p1, Velo/VeloRecMonitors v2r16
+
+- In CaloPIDs v5r11
+  . CaloPIDs/PIDs.py : fix external cluster setup
+
+- In CaloReco v5r13
+  . CaloMergedPi0Rec : fix abusive 'return 0'
+
+- In MuonID v9r3
+  . Remove an unused variable from ImuIDTool interface, fixes gcc46 warning
+  . MuonPID objects are now saved only if track is InAcceptance, unless
+    AllMuonTracks = True.
+
+- In LumiAlgs v7r2
+  . In FSRNavigator, move service retrieval from constructor to initialize
+    Fixes a problem when building configurables with Gaudi v23
+  . Fix ERROR message from PropertyConfigSvc at initialization.
+
+- In RichAlignment v1r6, RichIFBAnalysis v1r2, RichRecMonitors v2r33,
+     RichRecQC v2r56, RichRecTrackTools v1r32
+  . Use long long instead of long
+
+- In RichGlobalPID v3r18
+  . Use int instead of long for keyed object key.
+
+- In RichHPDImageAnalysis v1r11, RichIFBAnalysis v1r2, RichRecMonitors v2r33,
+     RichRecTrackTools v1r32
+  . Adapt to changes in RichSmartID
+
+- In RichParticleSearch v1r5
+  . Use long long where appropriate
+  . Removed bug from Viet Nga code causing crashes when ran over data.
+  . Added Track selector in order to have cut on momentum
+  . Added slot for Max/Min number of photons per track
+  . Use stable_sort instead of sort, to avoid reproducibility problems
+
+- In RichRecMCTools v2r29, RichRecPhotonTools v1r9
+  . Adapt to changes to PhotonKey in RichRecBase
+
+- In RichRecPhotonTools v1r9
+  . Load the Snell's law refraction correction tool on demand in
+    PhotonRecoUsingQuarticSoln
+
+- In RichRecQC v2r56
+  . Adapt to changes in method names, to make things PD neutral.
+  . Introduce RichHPDFlashMoni
+
+- In RichRecTools v4r20
+  . Adapt to changes in method names to make things PD neutral
+  . Use DeRich detectors to get the PD panels, to correctly get PMT/HPD types.
+
+- In RichRecTrackTools v1r32
+  . Adapt to changed return type for nInputTracks()
+
+- In FastVelo v1r6
+  . Loop on phi pair combination, not only the best one. Improve efficiency
+    for tracks at large IP. Increases the ghost rate by 0.5%
+  . Change the definition of dSin (remove centre offset ) in space search.
+    Gains some tracks...
+  . Update default cut in FastTTValidation to 3.
+
+- In PatAlgorithms v4r16
+  . Fix in PatAddTTCoord: If chi2 was still much too high with only 3 hits left
+    (in method calculateChi2), it went into an infinite loop.
+
+- In TrackCheckers v4r12
+  . Fix a wrong length string, was causing a memory corruption on occasions
+    when running debug version of Brunel.
+  . New algorithm VertexChecker to measure the performance of vertexing
+  . New type of tracks monitored in TrackEffChecker: 
+    Tracks with IP between 1 and 2 mm
+
+- In TrackProjectors v2r29p3
+  . Fix an unprotected debug() stream
+
+- In TrackTools v4r10
+  . Remove use of Track::nodes
+  . Fix memoryleak in unused method of VeloMuonBuilder
+
+- In VeloRecMonitors v2r16
+  . Work on VeloOccupancyMonitor to have code to monitor dead/noisy channels
+    based on ZS data during normal data taking:
+    o most plots have labelled axes now
+    o add a few monitoring plots for dead/noisy channels
+    o some changes in the internal structure which make the algorithm a factor
+      35 faster (histograms are now updated only every 255 events)
+    o some effort to make the XML and txt files with dead/noisy channels a bit
+      more informative (now have comments with who and where the list was
+      produced, and which run numbers were seen)
+    o removed some obsolete plots after discussion with Marco Gersabeck
+
+- In LumiAlgs v7r2
+  . Fix some UNINIT_CTOR Coverity defects
+
+- In MuonID v9r3, MuonTools v5r2p2, MuonTrackRec v3r6p1, LumiAlgs v7r2,
+     RecoUpgradeMC v1r3p1, RichGlobalPID v3r18, RichRecStereoTools v1r8p1,
+     FastVelo v1r6, PatAlgorithms v4r16, PatVelo v3r25p2, PatVeloTT v3r16, 
+     TrackMatching v2r33p1, TsaAlgorithms v3r25p1, TrackExtrapolators v2r32p1,
+     TrackTools v4r10, TrackUtils v1r43p1, VeloRecMonitors v2r16
+  . Fix gcc4.6 warnings
+
+- In MuonID v9r3, MuonTools v5r2p2, RecoUpgradeMC v1r3p1, FastVelo v1r6,
+     PatAlgorithms v4r16, PatVelo v3r25p2, PatVeloTT v3r16,
+     TrackMatching v2r33p1, TrackTools v4r10, TrackUtils v1r43p1,
+     VeloRecMonitors v2r16
+  . Fix trivial icc remarks
+
+- In MuonTools v5r2p2
+  . Replace endreq by endmsg
+
 </PRE><H1><A NAME=v12r1>2011-11-11 RecSys v12r1</A></H1><PRE>
 This version uses Gaudi v22r5 and LHCb v33r1
 
