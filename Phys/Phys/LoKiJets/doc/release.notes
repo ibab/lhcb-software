@@ -7,11 +7,13 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiJets v6r2 2011-12-15 =========================
+
 ! 2011-11-28 - Murilo Rangel
  - Add first JetID variables in JetMakerAlg.
 
 ! 2011-11-25 - Victor Coco
- - Add structure for appendin jet ID info in JetMakerAlg. To be continued...
+ - Add structure for appending jet ID info in JetMakerAlg. To be continued...
 
 ! 2011-11-23 - Chris Jones
  - Fix various gcc 4.6 warnings
