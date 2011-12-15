@@ -1,11 +1,97 @@
 <PRE>
 Package     : AnalysisSys
-Package Coordinator : Juan Palacios
+Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v7r0>2011-11-10 Analysis v7r1 </A></H1><PRE>
+</PRE><H1><A NAME=v7r2>2011-11-10 Analysis v7r2 </A></H1><PRE>
 
-based on Phys v13r1. Updated for Swimming support.
+Based on Phys v13r2.
+
+Updated Packages : HltSelChecker v12r1p1, MicroDSTAlgorithm v5r6,
+                   MicroDSTBase v3r1p2, MicroDSTConf v2r10p1,
+                   MicroDSTTools v2r3, AnalysisConf v2r1,
+                   AnalysisPython v2r7, DSTWriters v4r2,
+                   DaVinciMCTools v10r2, DaVinciMonitors v1r16,
+                   DecayTreeTuple v3r19, DisplVerticesMC v1r4p1,
+                   FlavourTagging v12r6, JetAccessories v1r2p1,
+                   Particle2MCTruth v2r4, ParticleMakerChecker v1r4p3,
+                   Tutorial/Analysis v10r2p1, FlavourTaggingChecker v6r8
+
+- In MicroDSTTools v2r3
+ . Fix bugs in ProtoParticleCloner, where :-
+  + The main MuonPID idTrack was not being correctly set
+  + Properly clone and set the MuonTrack associated to selected MuonPIDs
+
+- In AnalysisConf v2r1
+ . Set default DataType to '' (Users must set it themselves via DaVinci)
+ . Change obsolete Nodes to NodeMap with DataOnDemandSvc
+ . Remove DC06 from supported data types.
+ . Make the default for Simulation False
+
+- In DSTWriters v4r2
+ . Promote the DEV versions of the python configurables to the main area.
+ . Update the Background Category element to save the categories for all
+   Particles in the decay tree, not just the head Particles.
+
+- In DaVinciMCTools v10r2
+ . Various small improvements to the Background Category tools to mke them
+   work better out the box with uDSTs
+ . PrintDecayTreeTool.cpp: add a field PPkey to print the protoparticle key
+ . Do not return StatusCode::FAILURE (and thus abort processing) just because
+   an empty Particle range is found by Particle2BackgroundCategoryRelationsAlg.
+   This can happen. Instead print a warning and continue.
+ . Protect against (impossible?) infinite loops when recursing the decay tree.
+ . Update Particle2BackgroundCategoryRelationsAlg with an option to allow
+   the BC relations for all Particles in the decay tree to be stored, not
+   just the head Particle.
+
+- In DaVinciMonitors v1r16
+ . MuEffMonitor algorithm reorganized to improve speed and add some histograms:
+  - some cleanup and compactification of the code
+  - simplified faster selection
+  - using MuonFastPosTool to get muon hit positions and speedup of muon hit loop
+  - new histograms for efficiency versus P, XY, chamber
+
+- In DecayTreeTuple v3r19
+ . Extend TupleToolMCBackgroundInfo to use a list of background category 
+   tools. Allows for out-the-box running on both DSTs and uDSTs.
+ . Extend TupleToolMCTruth to use a list of MC associators instead of a
+   single one. Allows (almost) for out-the-box running on both DSTs and uDSTs.
+   A few warnings/errors need to be squash when running on uDSTs.
+ . src/TupleToolDecayTreeFitter : use new Tool SubstitutePIDTool
+ . Reimplement TupleToolRecoStats to only use information from the 
+   RecSummary object. Makes the tool compatible with uDSTs.
+ . Add a temporary hack to TupleToolEventInfo to split the 64bit event Number
+   and GPS time into two 32 bit ints and store these. Allows the full 64 bit
+   variable to be reconstructed later on if required.
+   Temporary hack until Gaudi fully supports 64bit variables in Tuples (v23r0)
+ . TupleToolTrackInfo : add match chi2
+ . Make TupleToolEventInfo, TupleToolTrigger try info location with and 
+   without RootInTES
+ . TupleToolMuonPid: Added LHCb::ProtoParticle::InAccMuon to tuple 
+ . Update TupleToolMCBackgroundInfo to always load the Background category
+   tool using the same runtime name.
+
+- In FlavourTagging v12r6
+ . Bug FIXED in choosePrimary (BTaggingTool.cpp) that caused wrong list of 
+   PU vertices 
+ . TaggerVertexCharge change property name
+
+- In FlavourTaggingChecker v6r8
+ . Various improvements and bug fixes. See package release.notes.
+
+- In Particle2MCTruth v2r4
+ . Update MCMatchObjP2MCRelator to make it more inteligent in where it
+   looks for the relations tables. Will now try to look in the same place in
+   the TES location as the input Particle container, which helps when running
+   on uDSTs.
+
+
+
+
+</PRE><H1><A NAME=v7r1>2011-11-10 Analysis v7r1 </A></H1><PRE>
+
+Based on Phys v13r1. Updated for Swimming support.
 
 Updated Packages : MicroDSTAlgorithm v5r5, MicroDSTinterfaces v1r7
                    MicroDSTTools v2r2, AnalysisPython v2r6, DstwriterTests v2r4,
