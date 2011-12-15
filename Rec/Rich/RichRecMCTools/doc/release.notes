@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecMCTools v2r29 2011-12-15 ====================
 ! 2011-12-02 - Chris Jones
  - Adapt to changes to PhotonKey in RichRecBase
 
