@@ -4,9 +4,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r11 2011-12-15 =========================
 ! 2011-12-09 - Olivier Deschamps 
   - CaloPIDs/PIDs.py : fix external cluster setup
-
 
 !========================= CaloPIDs v5r10 2011-11-08 =========================
 ! 2011-09-30 - Olivier Deschamps for Victor Coco
