@@ -1,3 +1,12 @@
+2011-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the variable LHCB_CONF_DIR to store the LHCB
+	runtime configuration:
+		- on AFS: $LHCBTAR/conf
+		- LOCAL: $LHCBHOME/conf
+	This directory will store either the original version of the files (AFS) or the local cached
+	copy updated automatically with install_project.py
+
 2011-12-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r6p3

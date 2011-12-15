@@ -499,6 +499,7 @@ class LbLoginScript(SourceScript):
         if opts.cmtsite != "standalone" :
             if opts.cmtsite == "LOCAL" :
                 ev["LHCBHOME"] = opts.mysiteroot.split(os.pathsep)[0]
+                ev["LHCB_CONF_DIR"] = os.path.join(ev["LHCBHOME"], "conf")
                 ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "log", "users")
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
@@ -533,6 +534,7 @@ class LbLoginScript(SourceScript):
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
                 ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV")
                 ev["LHCBTAR"] = os.path.join(ev["SITEROOT"], "lhcb", "distribution")
+                ev["LHCB_CONF_DIR"] = os.path.join(ev["LHCBTAR"], "conf")
                 ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
                 ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
                 ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
