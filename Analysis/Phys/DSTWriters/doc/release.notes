@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r2 2011-12-15 =========================
+
 ! 2011-12-04 - Chris Jones
  - Fix a Configurables build problem (thanks to Marco Cl.)
 
