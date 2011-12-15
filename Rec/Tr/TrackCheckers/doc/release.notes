@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!========================= TrackCheckers v4r12 2011-12-15 ====================
 ! 2011-12-02 - Marco Cattaneo
  - Fix a wrong length string, was causing a memory corruption on occasions
    when running debug version of Brunel.
