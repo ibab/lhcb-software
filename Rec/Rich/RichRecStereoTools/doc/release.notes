@@ -4,11 +4,15 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
-!========================= RichRecStereoTools v1r8 2011-07-27 =========================
+!========================= RichRecStereoTools v1r8p1 2011-12-15 ==============
+! 2011-11-19 - Chris Jones
+ - Fix gcc 4.6 warning
+
+!========================= RichRecStereoTools v1r8 2011-07-27 ================
 ! 2011-07-25 - Chris Jones
  - Add missing protection to some debug messages.
 
-!========================= RichRecStereoTools v1r7p1 2011-02-28 =========================
+!========================= RichRecStereoTools v1r7p1 2011-02-28 ==============
 ! 2011-02-10 - Chris Jones
  - Various icc warning fixes.
 
