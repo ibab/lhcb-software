@@ -5,6 +5,8 @@
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTConf v2r10p1 2011-12-15 =========================
+
 ! 2011-11-15 - Chris Jones
  - Use RootInTES specific names for decoders in TriggerConfUtils.py
 
