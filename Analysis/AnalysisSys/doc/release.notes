@@ -86,9 +86,6 @@ Updated Packages : HltSelChecker v12r1p1, MicroDSTAlgorithm v5r6,
    the TES location as the input Particle container, which helps when running
    on uDSTs.
 
-
-
-
 </PRE><H1><A NAME=v7r1>2011-11-10 Analysis v7r1 </A></H1><PRE>
 
 Based on Phys v13r1. Updated for Swimming support.
