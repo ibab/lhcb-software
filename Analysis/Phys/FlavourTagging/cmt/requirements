@@ -4,8 +4,8 @@
 # Maintainer : Marc Grabalosa
 #
 #============================================================================
-package           FlavourTagging
-version           v12r5
+package      FlavourTagging
+version      v12r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -42,5 +42,5 @@ apply_pattern install_python_modules
 
 # =================== summary application  ==================================
 private 
- application       summaryof      ../summary/summaryof.cpp
+application       summaryof      ../summary/summaryof.cpp
 # apply_pattern     application_path

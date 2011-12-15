@@ -4,9 +4,11 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!========================== FlavourTagging v12r6 2011-07-29 ================
 ! 2011-12-08 - Stefania Vecchi
- - Bug FIXED in choosePrimary (BTaggingTool.cpp) that caused wrong list of PU verices 
-   Bug was included AFTER v12r5.
+ - Bug FIXED in choosePrimary (BTaggingTool.cpp) that caused wrong list of 
+   PU vertices. Bug was included AFTER v12r5.
 
 ! 2011-11-30 - Marc Grabalosa
  - TaggerVertexCharge change property name
