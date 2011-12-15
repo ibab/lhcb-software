@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v30r0 2011-12-15 =========================
+
 ! 2011-11-23 - Tomasz Skwarnicki
  - add standard trigger decoding setup for mdsts (previously only for dsts) 
 
