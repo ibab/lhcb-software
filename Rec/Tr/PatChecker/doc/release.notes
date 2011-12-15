@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r11 2011-12-15 =========================
 ! 2011-12-02 - Marco Cattaneo
  - Fix trivial icc remarks
  - Replace all endreq by endmsg
