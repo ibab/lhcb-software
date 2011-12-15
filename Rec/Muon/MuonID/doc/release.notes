@@ -3,12 +3,14 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r3 2011-12-15 =========================
 ! 2011-11-22 - M.Cattaneo
  - Remove an unused variable from ImuIDTool interface, fixes gcc46 warning
  - Fix trivial icc remarks
 
 ! 2011-11-13 - J. Helder Lopes
- - MuonPID objects are now saved only if track is InAcceptance, unless AllMuonTracks = True.
+ - MuonPID objects are now saved only if track is InAcceptance, unless
+   AllMuonTracks = True.
 
 !========================= MuonID v9r2 2011-11-08 =========================
 ! 2011-10-18 - J. Helder Lopes
