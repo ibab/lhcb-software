@@ -12,7 +12,8 @@ Improvements to support reading uDSTs + new developments for 2012
                     DaVinciMCKernel v4r3, DaVinciTools v22r11,
                     DecayTreeFitter v1r12, LoKiJets v6r2,
                     LoKiPhys v10r5, LoKiTracks v2r3, PhysConf v1r14,
-                    Swimming v2r4p1, TisTosTobbing v7r5
+                    Swimming v2r4p1, TisTosTobbing v7r5, 
+                    PhysDict v4r2p1
 
 - In BBDecTreeTool v1r4
  . Support for upcoming Gaudi v23r0 (Boost filesystem v3)

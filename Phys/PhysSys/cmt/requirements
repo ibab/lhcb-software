@@ -23,7 +23,7 @@ use  ParticleMaker      	v6r0 	 Phys    # Chris Jones
 use  VertexFit			v6r7p3   Phys    # Yuehong Xie
 use  LoKiFitters                v4r2     Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r12    Phys    # Wouter Hulsbergen
-use  PhysDict                   v4r2     Phys    # Juan Palacios
+use  PhysDict                   v4r2p1   Phys    # Juan Palacios
 use  HighPtJets                 v1r5     Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r4     Phys    # Mike Williams
 
