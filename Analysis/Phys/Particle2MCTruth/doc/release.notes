@@ -6,13 +6,15 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+!========================= Particle2MCTruth v2r4 2011-12-15 =========================
+
 ! 2011-12-12 - Chris Jones
  - Tidy up
 
 ! 2011-11-11 - Chris Jones
  - Update MCMatchObjP2MCRelator to make it more inteligent in where it
    looks for the relations tables. Will now try to look in the same place in
-   the TES location as the input Particle container, which helps when runnin
+   the TES location as the input Particle container, which helps when running
    on uDSTs.
 
 ! ======================== Particle2MCTruth v2r3p6 2010-04-29 ===============

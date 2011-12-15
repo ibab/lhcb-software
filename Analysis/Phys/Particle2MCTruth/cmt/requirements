@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           Particle2MCTruth
-version           v2r3p6
+version           v2r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
