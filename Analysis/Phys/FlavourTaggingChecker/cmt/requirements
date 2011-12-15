@@ -4,8 +4,8 @@
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
-package    FlavourTaggingChecker
-version    v6r7
+package           FlavourTaggingChecker
+version           v6r8
 
 # Structure, i.e. directories to process.
 #============================================================================
@@ -35,4 +35,3 @@ library          FlavourTaggingChecker    ../src/*.cpp -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern component_library library=FlavourTaggingChecker
-

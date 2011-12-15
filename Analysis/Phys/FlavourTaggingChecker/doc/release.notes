@@ -5,6 +5,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================== FlavourTaggingChecker v6r8 2012-12-15 ==========
+
 ! 2011-12-8 - Stefania Vecchi
  - Bug FIXED in choosePrimary (BTaggingAnalysis.cpp) that caused wrong list of PU verices 
    Bug was included AFTER v6r7.
