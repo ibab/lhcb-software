@@ -4,6 +4,8 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r11 2011-12-15 =============
+
 ! 2011-11-18 - Chris Jones
  - Adapt to changes in RichSmartID
 
