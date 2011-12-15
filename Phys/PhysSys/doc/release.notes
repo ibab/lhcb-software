@@ -3,7 +3,66 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v13r0>2011-11-10 Phys v13r1 </A></H1><PRE>
+</PRE><H1><A NAME=v13r2>2011-12-15 Phys v13r2 </A></H1><PRE>
+- Based on LHCb v33r2, REC v12r2
+
+Improvements to support reading uDSTs + new developments for 2012
+
+- Packages updated: BBDecTreeTool v1r4, DaVinciInterfaces v2r11,
+                    DaVinciMCKernel v4r3, DaVinciTools v22r11,
+                    DecayTreeFitter v1r12, LoKiJets v6r2,
+                    LoKiPhys v10r5, LoKiTracks v2r3, PhysConf v1r14,
+                    Swimming v2r4p1, TisTosTobbing v7r5
+
+- In BBDecTreeTool v1r4
+ . Support for upcoming Gaudi v23r0 (Boost filesystem v3)
+ . Fix wrong usage of BPVIPCHI2 functor.
+
+- In DaVinciInterfaces v2r11
+ . add ISubstitutePID.h
+
+- In DaVinciMCKernel v4r3
+ . Extend IBackgroundCategory to allow the passing of the top level 
+   Particle to the tool. Useful for uDSTs in finding the saved 
+   relations table.
+
+- In DaVinciTools v22r11
+ . New Tool SubstitutePIDTool containing the functionality of 
+   SubstitutePID
+ . Switch to using IP chi2 PV relator online
+ . Add three related components for pi0-veto
+  + trivial filter
+  + trivial photon tagger 
+  + di-photon tagger 
+
+- In DecayTreeFitter v1r12
+ . Fix for merged pi0
+
+- In LoKiJets v6r2
+ . Add first JetID variables in JetMakerAlg
+
+- In LoKiPhys v10r5
+ . add RV_P and RV_PT 
+ . small imporvements for pi0-veto
+ . fix in LHCb.Particle.Selection decorators (in tag v10r4)
+
+- In LoKiTracks v2r3
+ . Add into dictionaries the classes needed for propet TrINFO hierarchy
+
+- In PhysConf v1r14
+ . Add options that create on demand the Rec/Summary and Trigger/RawEvent 
+   TES data objects when missing.
+ . Remove obsolete DC06 hacks
+ . Set default DataType to ''
+ . Remove 'FilteredPrimary' filter. Now done in Brunel.
+
+- In Swimming v2r4p1
+ . Many fixes related to running in production. See package release notes.
+
+- In TisTosTobbing v7r5
+ . Many fixes related to making it easier to run out-the-box on uDSTs
+
+</PRE><H1><A NAME=v13r1>2011-11-10 Phys v13r1 </A></H1><PRE>
 - Based on LHCb v33r1, REC v12r1
 
 Additions to support Swimming, plus various other bug fixes and improvements.
