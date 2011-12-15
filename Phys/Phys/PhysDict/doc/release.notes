@@ -4,6 +4,8 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+!========================= PhysDict v4r2p1 2011-12-15 =========================
+
 ! 2010-08-19 - Juan Palacios
  - Changes removed. Particle2LHCbIDVectorMap equivalent class is now in
    Phys/DaVinciMaps, which generates the necessary dictionaries.
