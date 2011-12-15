@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r14 2011-12-15 =========================
+
 ! 2011-12-07 - Chris Jones
  - Update last commit to run the algs on demand, when neded, instead of every 
    event. Also enable by default in PhysConf, so users don't have to ...
