@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r9 2011-12-15 ================
 ! 2011-12-02 - Chris Jones
  - Adapt to changes in Rich::Rec::PhotonKey
 
