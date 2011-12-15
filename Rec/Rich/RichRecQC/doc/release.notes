@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r56 2011-12-15 ========================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
 
