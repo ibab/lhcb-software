@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r32 2011-12-15 ================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
  - Adapt to changed return type for nInputTracks()
