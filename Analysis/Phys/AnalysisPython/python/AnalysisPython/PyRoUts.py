@@ -59,6 +59,8 @@ import math
 
 # =============================================================================
 ## global identifier for ROOT objects 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def rootID ( prefix = 'o_') :
     """
     Construct the unique ROOT-id 
@@ -141,6 +143,8 @@ def _int ( ve , precision = 1.e-5 ) :
 
 # =============================================================================
 ## iterator for histogram  axis 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _axis_iter_1_ ( a ) :
     """
     Iterator for axis
@@ -158,6 +162,8 @@ ROOT.TAxis . __iter__ = _axis_iter_1_
 
 # =============================================================================
 ## get item for the 1-D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_get_item_ ( h1 , ibin ) :
     """
     ``Get-item'' for the 1D-histogram :
@@ -176,6 +182,8 @@ def _h1_get_item_ ( h1 , ibin ) :
 
 # ==========================================================================
 ## get item for the 2D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_set_item_ ( h1 , ibin , v ) :
     """
     ``Set-item'' for the 1D-histogram :
@@ -206,6 +214,8 @@ ROOT.TH1D. __setitem__ = _h1_set_item_
 
 # ==========================================================================
 ## get item for the 2D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_set_item_ ( h2 , ibin , v ) :
     """
     ``Set-item'' for the 2D-histogram :
@@ -237,6 +247,8 @@ ROOT.TH2D. __setitem__ = _h2_set_item_
 
 # ==========================================================================
 ## get item for the 3D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_set_item_ ( h3 , ibin , v ) :
     """
     ``Set-item'' for the 3D-histogram :
@@ -267,6 +279,8 @@ ROOT.TH3D. __setitem__ = _h3_set_item_
 
 # =============================================================================
 ## get item for the 2D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_get_item_ ( h2 , ibin ) :
     """
     ``Get-item'' for the 2D-histogram :
@@ -286,6 +300,8 @@ def _h2_get_item_ ( h2 , ibin ) :
 
 # =============================================================================
 ## get item for the 3D histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_get_item_ ( h3 , ibin ) :
     """
     ``Get-item'' for the 2D-histogram :
@@ -306,6 +322,8 @@ def _h3_get_item_ ( h3 , ibin ) :
 
 # =============================================================================
 ## iterator for 1D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_iter_ ( h1 ) :
     """
     Iterator over 1D-histogram
@@ -323,6 +341,8 @@ ROOT.TH1D . __iter__ = _h1_iter_
 
 # =============================================================================
 ## iterator for 2D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_iter_ ( h2 ) :
     """
     Iterator over 2D-histogram
@@ -347,6 +367,8 @@ ROOT.TH2D . __iter__ = _h2_iter_
 
 # =============================================================================
 ## iterator for 3D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_iter_ ( h3 ) :
     """
     Iterator over 3D-histogram
@@ -376,6 +398,8 @@ ROOT.TH3D . __iter__ = _h3_iter_
 # interpolate 
 # =============================================================================
 ## linear interpolation 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def interpolate_1D ( x       ,
                      x0 , v0 ,
                      x1 , v1 ) :
@@ -393,6 +417,8 @@ def interpolate_1D ( x       ,
 
 # ========================================================================
 ## bilinear interpolation 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def interpolate_2D ( x   , y  ,
                      x0  , x1 , 
                      y0  , y1 ,
@@ -419,6 +445,8 @@ def interpolate_2D ( x   , y  ,
 
 # =============================================================================
 ## histogram as function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     """
     Histogram as function:
@@ -478,6 +506,8 @@ ROOT.TH3   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbin
 
 # =============================================================================
 ## check bin in 2D-histo 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_contains_ ( s , ibin ) :
     """
     Check if the bin contains in 3D-histogram:
@@ -494,6 +524,8 @@ ROOT.TH2D  . __contains__ = _h2_contains_
 
 # ============================================================================
 ## check bin in 3D-histo 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_contains_ ( s , ibin ) :
     """
     Check if the bin contains in 3D-histogram:
@@ -516,6 +548,8 @@ ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 # =============================================================================
 ## find bin in 1D-histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_find_ ( h1 , x ) :
     """
     Find the bin in 1D-histogram
@@ -529,6 +563,8 @@ def _h1_find_ ( h1 , x ) :
     return ax.FindBin ( x )
 # =============================================================================
 ## find bin in 2D-histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_find_ ( h2 , x , y ) :
     """
     Find the bin in 3D-histogram
@@ -545,7 +581,9 @@ def _h2_find_ ( h2 , x , y ) :
               ay.FindBin ( y ) )
 # =============================================================================
 ## find bin in 3D-histogram
-def _h3_find_ ( h3 , x , y ) :
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h3_find_ ( h3 , x , y , z ) :
     """
     Find the bin in 3D-histogram
 
@@ -573,6 +611,8 @@ ROOT.TH3D . findBin  = _h3_find_
 
 # =============================================================================
 ## histogram as function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_call_ ( h2 , x , y , func = lambda s : s , interpolate = True ) :
     """
     Histogram as function:
@@ -652,6 +692,8 @@ ROOT.TH2D  . __getitem__  = _h2_get_item_
 
 # =============================================================================
 ## histogram as function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_call_ ( h3 , x , y , z , func = lambda s : s ) :
     """
     Histogram as function:
@@ -690,6 +732,8 @@ ROOT.TH3D  . __getitem__  = _h3_get_item_
 # iterate over items
 # =============================================================================
 ## iterate over entries in 1D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_iteritems_ ( h1 ) :
     """
     Iterate over histogram items:
@@ -717,6 +761,8 @@ ROOT.TH1D  . iteritems     = _h1_iteritems_
 
 # =============================================================================
 ## iterate over entries in 2D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_iteritems_ ( h2 ) :
     """
     Iterate over histogram items:
@@ -752,6 +798,8 @@ ROOT.TH2D  . iteritems     = _h2_iteritems_
 
 # =============================================================================
 ## iterate over entries in 3D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_iteritems_ ( h3 ) :
     """
     Iterate over histogram items:
@@ -799,6 +847,8 @@ ROOT.TH3D  . iteritems     = _h3_iteritems_
 
 # =============================================================================
 ## iterate over items in TAxis
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _a_iteritems_ ( axis ) :
     """
     Iterate over items in axis 
@@ -822,7 +872,9 @@ ROOT.TAxis. iteritems     = _a_iteritems_
 # =============================================================================
 
 # =============================================================================
-## representaion of TFitResult object 
+## representation of TFitResult object 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _fit_repr_ ( self ) :
     """
     Representaion of TFitResult object
@@ -841,6 +893,8 @@ def _fit_repr_ ( self ) :
     return _r
 # =============================================================================
 ## iterator over fit-result object 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _fit_iter_ ( r ) :
     """
     Iterator over fit-result object 
@@ -856,6 +910,8 @@ def _fit_iter_ ( r ) :
         
 # =============================================================================
 ## getitem for fit-result-object            
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _fit_get_item_ ( self , i ) :
     """
     Getitem for fit-result-object            
@@ -879,6 +935,8 @@ ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() )
 #    - number of signal events
 #    - background level under the signal (per bin)
 #    - background slope
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def histoGuess ( histo , mass , sigma ) :
     """
     Get the guess for three major parameters of the histogram:
@@ -952,6 +1010,8 @@ ROOT.TH1.histoGuess = histoGuess
 
 # =============================================================================
 ## use likelihood in histogram fit ? 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def useLL ( histo         ,
             minc  = 10    ,
             diff  = 1.e-5 ) :
@@ -974,7 +1034,9 @@ def useLL ( histo         ,
 ROOT.TH1.useLL = useLL
 
 # =============================================================================
-## Natural histiogram with all integer entries ?
+## Natural histogram with all integer entries ?
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def allInts ( histo         ,
               diff  = 1.e-4 ) :
     """
@@ -996,6 +1058,8 @@ ROOT.TH1.allInts = allInts
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def binomEff_h1 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
@@ -1033,6 +1097,8 @@ ROOT.TH1.  binomEff    = binomEff_h1
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def binomEff_h2 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
@@ -1070,6 +1136,8 @@ ROOT.TH2.  binomEff    = binomEff_h2
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def binomEff_h3 ( h1 , h2 ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
@@ -1112,6 +1180,8 @@ ROOT.TH3.__floordiv__  = binomEff_h3
 
 # =============================================================================
 ## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_oper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
@@ -1151,6 +1221,8 @@ def _h1_oper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_ioper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
@@ -1185,6 +1257,8 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_div_ ( h1 , h2 ) :
     """
     Divide the histograms 
@@ -1192,6 +1266,8 @@ def _h1_div_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_mul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
@@ -1199,6 +1275,8 @@ def _h1_mul_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_add_ ( h1 , h2 ) :
     """
     Add the histograms 
@@ -1206,6 +1284,8 @@ def _h1_add_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_sub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
@@ -1213,6 +1293,8 @@ def _h1_sub_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 ##  Fraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
@@ -1220,6 +1302,8 @@ def _h1_frac_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ##  ``Asymmetry'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_asym_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram (h1-h2)/(h1+h2)
@@ -1227,6 +1311,8 @@ def _h1_asym_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_chi2_ ( h1 , h2 ) :
     """
     ``Chi2-tension'' the histogram
@@ -1234,6 +1320,8 @@ def _h1_chi2_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_mean_ ( h1 , h2 ) :
     """
     ``Mean'' the histograms
@@ -1242,6 +1330,8 @@ def _h1_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_pow_ ( h1 , val ) :
     """
     ``pow'' the histogram 
@@ -1281,6 +1371,8 @@ ROOT.TH1.  average = _h1_mean_
 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_idiv_ ( h1 , h2 ) :
     """
     Divide the histograms 
@@ -1288,6 +1380,8 @@ def _h1_idiv_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_imul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
@@ -1295,6 +1389,8 @@ def _h1_imul_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_iadd_ ( h1 , h2 ) :
     """
     Add the histograms 
@@ -1302,6 +1398,8 @@ def _h1_iadd_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_isub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
@@ -1316,6 +1414,8 @@ ROOT.TH1.__isub__   = _h1_isub_
 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_rdiv_ ( h1 , h2 ) :
     """
     Divide the histograms 
@@ -1323,6 +1423,8 @@ def _h1_rdiv_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y/x ) 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_rmul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
@@ -1330,6 +1432,8 @@ def _h1_rmul_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y*x ) 
 # =============================================================================
 ##  Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_radd_ ( h1 , h2 ) :
     """
     Add the histograms 
@@ -1337,6 +1441,8 @@ def _h1_radd_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y+x ) 
 # =============================================================================
 ##  Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_rsub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
@@ -1354,6 +1460,8 @@ ROOT.TH1F.__rsub__   = _h1_rsub_
 
 # =============================================================================
 ## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_oper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
@@ -1385,6 +1493,8 @@ def _h2_oper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_div_ ( h1 , h2 ) :
     """
     Divide the histograms 
@@ -1392,6 +1502,8 @@ def _h2_div_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_mul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
@@ -1399,6 +1511,8 @@ def _h2_mul_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_add_ ( h1 , h2 ) :
     """
     Add the histograms 
@@ -1406,6 +1520,8 @@ def _h2_add_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_sub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
@@ -1413,6 +1529,8 @@ def _h2_sub_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 ##  ``Fraction'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
@@ -1420,6 +1538,8 @@ def _h2_frac_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ##  ``Asymmetry'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_asym_ ( h1 , h2 ) :
     """
     ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
@@ -1427,6 +1547,8 @@ def _h2_asym_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_chi2_ ( h1 , h2 ) :
     """
     ``Chi2-tension'' for the histograms 
@@ -1434,6 +1556,8 @@ def _h2_chi2_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_mean_ ( h1 , h2 ) :
     """
     ``Average'' for the histograms 
@@ -1442,6 +1566,8 @@ def _h2_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_pow_ ( h1 , val ) :
     """
     ``pow'' the histogram 
@@ -1487,6 +1613,8 @@ ROOT.TH2.  lego = _h2_lego_
 
 # =============================================================================
 ## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_oper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
@@ -1516,6 +1644,8 @@ def _h3_oper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_div_ ( h1 , h2 ) :
     """
     Divide the histograms 
@@ -1523,6 +1653,8 @@ def _h3_div_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_mul_ ( h1 , h2 ) :
     """
     Multiply the histograms 
@@ -1530,6 +1662,8 @@ def _h3_mul_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_add_ ( h1 , h2 ) :
     """
     Add the histograms 
@@ -1537,6 +1671,8 @@ def _h3_add_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_sub_ ( h1 , h2 ) :
     """
     Subtract the histogram 
@@ -1544,6 +1680,8 @@ def _h3_sub_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 ##  ``Fraction'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_frac_ ( h1 , h2 ) :
     """
     ``Fraction'' the histogram h1/(h1+h2)
@@ -1551,6 +1689,8 @@ def _h3_frac_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ##  ``Asymmetry'' of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_asym_ ( h1 , h2 ) :
     """
     ``Asymmetry'' the histogram (h1-h2)/(h1+h2)
@@ -1558,6 +1698,8 @@ def _h3_asym_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_chi2_ ( h1 , h2 ) :
     """
     ``Chi2-tension'' for the histograms 
@@ -1565,6 +1707,8 @@ def _h3_chi2_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_mean_ ( h1 , h2 ) :
     """
     ``Average'' for the histograms 
@@ -1573,6 +1717,8 @@ def _h3_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h3_pow_ ( h1 , val ) :
     """
     ``pow'' the histogram 
@@ -1611,7 +1757,108 @@ ROOT.TH3.  chi2    = _h3_chi2_
 ROOT.TH3.  average = _h3_mean_
 
 # =============================================================================
+## get the runnig sum over the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_sumv_ ( h , increasing = True ) :
+    """
+    Create the ``runnig sum'' over the histogram 
+
+    >>> h   = ...
+    >>> h1 = h.sumv()
+    
+    """
+    result = h.Clone ( hID() )
+    result.Reset() 
+    if not result.GetSumw2() : result.Sumw2()
+    
+    if increasing :
+        
+        _s = VE ( 0 , 0 ) 
+        for ibin in h :
+            _s            += h [ibin]
+            result [ibin]  = VE( _s ) 
+    else :
+        
+        for ibin in h :
+            _s  = VE(0,0) 
+            for jbin in h :
+                if jbin < ibin : continue
+                _s += h [jbin]
+                
+            result [ibin]  = VE( _s ) 
+        
+    return result 
+
+# ==============================================================================
+ROOT.TH1F.sumv   = _h1_sumv_ 
+ROOT.TH1D.sumv   = _h1_sumv_ 
+        
+
+# =============================================================================
+## Calculate the "cut-efficiency from the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_effic_ ( h , increasing = True ) :
+    """
+    Calculate the cut efficiency for the histogram
+
+    >>> h  = ...
+    >>> he = h.effic ( 14.2 )
+    
+    """
+    
+    result = h.Clone ( hID() )
+    result.Reset() 
+    if not result.GetSumw2() : result.Sumw2()
+
+    for ibin in h :
+
+        s1 = VE(0,0)
+        s2 = VE(0,0)
+        
+        for jbin in h :
+            
+            if jbin < ibin : s1 += h [ jbin ]
+            else           : s2 += h [ jbin ]
+
+        result [ibin] = s1.frac( s2 ) if increasing else s2.frac( s1 ) 
+
+    return result 
+
+
+# =============================================================================
+## Calculate the "cut-efficiency from the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def _h1_effic2_ ( h , value , increasing = True ) :
+    """
+    Calculate the cut efficiency for the histogram
+
+    >>> h  = ...
+    >>> he = h.efficiency ( 14.2 )
+    
+    """
+
+    s1 = VE(0,0)
+    s2 = VE(0,0)
+
+    for i,x,y in h.iteritems () :
+
+        if x.value() < value : s1 += y 
+        else                 : s2 += y 
+        
+    return s1.frac( s2 ) if increasing else s2.frac ( s1 ) 
+
+ROOT.TH1F.effic      = _h1_effic_ 
+ROOT.TH1D.effic      = _h1_effic_ 
+ROOT.TH1F.efficiency = _h1_effic2_ 
+ROOT.TH1D.efficiency = _h1_effic2_ 
+
+# =============================================================================
 ## make graph from data 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
 
     """
@@ -1658,6 +1905,9 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
     return gr
 
 # =============================================================================
+## convert histogram to graph
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def hToGraph ( h1                   ,
                funcx = lambda s : s ,
                funcv = lambda s : s ) :
@@ -1684,6 +1934,8 @@ def hToGraph ( h1                   ,
 # iterate over graph items
 # =============================================================================
 ## iterate over points in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _gr_iter_ ( graph ) :
     """
     Iterate over graph points 
@@ -1698,6 +1950,8 @@ def _gr_iter_ ( graph ) :
         
 # =============================================================================
 ## iterate over points in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _gr_iteritems_ ( graph ) :
     """
     Iterate over graph points 
@@ -1714,6 +1968,8 @@ def _gr_iteritems_ ( graph ) :
         
 # =============================================================================
 ## get the point in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _gr_getitem_ ( graph , ipoint )  :
     """
     Get the point from the Graph
@@ -1733,6 +1989,8 @@ def _gr_getitem_ ( graph , ipoint )  :
 
 # =============================================================================
 ## set the point in TGraphError
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _gr_setitem_ ( graph , ipoint , point )  :
     """
     Get the point from the Graph
@@ -1762,6 +2020,8 @@ ROOT.TH1D.toGraph = hToGraph
 
 # =============================================================================
 ## get edges from the axis:
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _edges_ ( axis ) :
     """
     Get list of edges form the TAxis
@@ -1780,6 +2040,8 @@ ROOT.TAxis.edges = _edges_
 
 # =============================================================================
 ## make 2D-histogram from axes
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def h2_axes ( x_axis       ,
               y_axis       ,
               title = '2D' , 
@@ -1807,6 +2069,8 @@ def h2_axes ( x_axis       ,
 
 # =============================================================================
 ## make 1D-histogram from axis
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def h1_axis ( axis         ,
               title = '1D' , 
               name  = None ) :
@@ -1830,6 +2094,8 @@ def h1_axis ( axis         ,
 
 # =============================================================================
 ## make axis form bins 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def axis_bins ( bins         ) :
     """
     Make axis according to the binning 
@@ -1849,6 +2115,8 @@ def axis_bins ( bins         ) :
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 class _H1Func(object) :
     """
     Helper class to Wrap 1D-histogram as function 
@@ -1869,6 +2137,8 @@ class _H1Func(object) :
 
 # ==============================================================================
 ## helper class to wrap 2D-histogram as function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 class _H2Func(object) :
     """
     Helper class to Wrap 2D-histogram as function 
@@ -1888,6 +2158,8 @@ class _H2Func(object) :
 
 # =============================================================================
 ## construct helper class 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
     """
     construct the function fomr the histogram 
@@ -1895,6 +2167,8 @@ def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
     return _H1Func ( self , func )
 # =============================================================================
 ## construct helper class 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
     """
     construct the function fomr the histogram 
@@ -1902,6 +2176,8 @@ def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
     return _H2Func ( self , func )
 # =============================================================================
 ## construct function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
     """
     Construct the function from the 1D-histogram
@@ -1923,6 +2199,8 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
     
 # =============================================================================
 ## construct function 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     """
     Construct the function from the histogram
@@ -1963,11 +2241,12 @@ ROOT.TH2D . asFunc = _h2_as_fun_
 
 # =======================================================================
 ## calculate the ``difference'' between two histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h_diff_ ( h1 , h2 , func = lambda s1,s2 : (s1/s2).value() ) :
     """
     Estimate the ``difference'' between two histograms
 
-    
     """
     
     se = SE()
@@ -1992,6 +2271,8 @@ ROOT.TH3D.histoDiff = _h_diff_
 
 # =============================================================================
 ## perform some accumulation for the histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h_accumulate_ ( h                         ,
                      func = lambda s,v : s + v ,
                      cut  = lambda s   : True  , 
@@ -2009,6 +2290,8 @@ def _h_accumulate_ ( h                         ,
 
 # =============================================================================
 ## get the sum of entries 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h_sum_ ( h    ,
               low  ,
               high ) :
@@ -2023,6 +2306,8 @@ def _h_sum_ ( h    ,
 
 # =============================================================================
 ## simple scaling
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h_scale_ ( histo , val = 1.0 ) :
     """
     Scale the histogram to certain integral
@@ -2066,6 +2351,8 @@ HStats   = cpp.Gaudi.Utils.HStats
 
 # =============================================================================
 ## calculate bin-by-bin momenta 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_moment_ ( h1 , order ) :
     """
     Get ``bin-by-bin''-moment around the specified value
@@ -2084,6 +2371,8 @@ _h1_moment_ .__doc__ += '\n' + HStats.momentErr .__doc__
 
 # =============================================================================
 ## calculate bin-by-bin central momenta 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_central_moment_ ( h1 , order ) :
     """
     Get ``bin-by-bin'' central moment
@@ -2102,6 +2391,8 @@ _h1_central_moment_ .__doc__ += '\n' + HStats.centralMomentErr .__doc__
 
 # =============================================================================
 ## get skewness
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_skewness_ ( h1 ) :
     """
     Get the skewness
@@ -2119,6 +2410,8 @@ _h1_skewness_ .__doc__ += '\n' + HStats.skewnessErr .__doc__
 
 # =============================================================================
 ## get kurtosis
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_kurtosis_ ( h1 ) :
     """
     Get the kurtosis
@@ -2136,6 +2429,8 @@ _h1_kurtosis_ .__doc__ += '\n' + HStats.kurtosisErr .__doc__
 
 # =============================================================================
 ## get mean
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_mean_ ( h1 ) :
     """
     Get the mean
@@ -2152,7 +2447,9 @@ _h1_mean_ .__doc__ += '\n' + HStats.mean    .__doc__
 _h1_mean_ .__doc__ += '\n' + HStats.meanErr .__doc__
 
 # =============================================================================
-## get mean
+## get RMS
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _h1_rms_ ( h1 ) :
     """
     Get the rms
@@ -2181,6 +2478,8 @@ for h in ( ROOT.TH1F , ROOT.TH1D ) :
 
 # =============================================================================
 ## adjust the "efficiency"
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
     """
     Adjust the efficiency
@@ -2193,6 +2492,8 @@ def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
 
 # =============================================================================
 ## iterator for RooArgList 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _ral_iter_ ( self ) :
     """
     Iterator for RooArgList:
@@ -2212,6 +2513,8 @@ ROOT.RooArgList . __iter__      = _ral_iter_
 
 # =============================================================================
 ## iterator for RooArgSet
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _ras_iter_ ( self ) :
     """
     Simple iterator fior RotoArgSet:
@@ -2236,6 +2539,8 @@ ROOT.RooArgSet . __iter__      = _ras_iter_
 
 # =============================================================================
 ## iterator for RooDataSet
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _rds_iter_ ( self ) :
     """
     Iterator for RooDataSet 
@@ -2250,6 +2555,8 @@ ROOT.RooDataSet . __iter__      = _ras_iter_
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _rfr_print_ ( self , opts = 'v' ) :
     """
     Easy print of RooFitResult
@@ -2257,7 +2564,10 @@ def _rfr_print_ ( self , opts = 'v' ) :
     self.Print( opts )
     return 'RooFitResult'
 
+# =============================================================================
 ## get parameters from RooFitResult
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _rfr_params_ ( self ) :
     """
     GetParameters from RooFitResult:
@@ -2273,7 +2583,10 @@ def _rfr_params_ ( self ) :
         pars_ [ p.GetName() ] = p.as_VE(), p
     return pars_
 
+# =============================================================================
 ## get parameter by name  from RooFitResult
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
 def _rfr_param_  ( self , pname ) :
     """
     Get Parameter from RooFitResult by name 
