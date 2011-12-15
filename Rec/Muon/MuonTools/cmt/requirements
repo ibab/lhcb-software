@@ -1,7 +1,6 @@
-# $Id: requirements,v 1.23 2010-03-19 00:05:29 rlambert Exp $
 # ==========================================================================
 package            MuonTools
-version            v5r2p1
+version           v5r2p2
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
