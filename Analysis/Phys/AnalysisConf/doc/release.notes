@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisConf v2r1 2011-12-15 =========================
+
 ! 2011-11-29 - Chris Jones
  - Set default DataType to '' (Users must set it themselves via DaVinci)
  - Change obsolete Nodes to NodeMap with DataOnDemandSvc
