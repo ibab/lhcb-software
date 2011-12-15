@@ -5,9 +5,10 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
-! 2011-11-22 - Vanya Belyaev
+!========================= LoKiTracks v2r3 2011-12-15 =========================
 
- - add into dictionaries the classes needed for propet TrINFO hierarchy 
+! 2011-11-22 - Vanya Belyaev
+ - Add into dictionaries the classes needed for propet TrINFO hierarchy 
 
 !========================= LoKiTracks v2r2 2011-07-26 =========================
 ! 2011-07-26 - Rob Lambert
