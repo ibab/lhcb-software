@@ -3,6 +3,46 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
+This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
+ and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Development release for MC11b simulation.
+
+ - Changes to configurables:
+   . Allow more sorts of Rich digitisation sequences to be set up
+     (RichDigiSys v1r1, Boole v23r2)
+   . Add "NextNext" to default DigiConf().SpilloverPaths (GaudiConf v15r5)
+
+ - New functionality
+   . Prepare support for multiple Rich photodetector technologies
+     (RichDigiQC v3r13, RichReadout v2r14, LHCb v33r1&v33r2, Lbcom v11r1&v11r2)
+   . Improvements to allow running without an Aerogel volume (RichTools v2r39)
+
+ - New tuning
+   . Disable by default the ROOT tree caches in the event persistency
+     (GaudiConf v15r3)
+   . Use long long instead of long
+     (RichAlgorithms v1r4, RichDAQ v3r35, RichMCMonitors v1r9, RichTools v2r39)
+
+ - Bug fixes
+   . Many fixes to trivial gcc46 warnings and icc11 remarks
+     (MuonAlgs v6r10p1, MuonBackground v2r11p1, MuonMoniDigi v2r5 and many
+      packages in underlying projects)
+   . Fix IOExtension problem with SvcClass (GaudiConf v15r2)
+   . Fix Root bug #87880: xrootd was returning wrong buffer length on rare
+     occasions (Root 5.30.04)
+   . Fix various UNINIT_CTOR defects, gcc46 warnings, icc11 remarks
+   . Add some missing calls to GaudiAlgorithm::finalize (VeloDAQ v6r6)
+
+ - Monitoring changes
+   . In MuonDigitChecker NTuples, store event number as a longlong. Fixes a
+     compilation issue when compiling against the fix to bug #85377 (change
+     in Gaudi::Tuple to support ulonglong) (MuonMoniDigi v2r5)
+
+ - Changes to tests
+   . Add specific reference for boole-2011-latestdb, for post MC11a db changes
+
 </PRE><H1><A NAME=v23r1>2011-10-21 Boole v23r1</A></H1><PRE>
 This version uses projects LCGCMT 61, Gaudi v22r4, LHCb v33r0, Lbcom v11r0
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
