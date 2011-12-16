@@ -41,7 +41,7 @@ while ($i < $nar)
 end
 
 #   
-set Bversion = "v23r1"
+set Bversion = "v23r2"
 echo "Executing valgrind for Boole $Bversion using options $options"
 #
 
