@@ -4,10 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r46 2011-12-16 =========================
+
 ! 2011-12-16 - Vanya Belyaev
-
  - Add two simple algorithms: 
-
      Incidentfilter and IncidentVeto 
 
 !========================= LHCbAlgs v2r45 2011-12-14 =========================
