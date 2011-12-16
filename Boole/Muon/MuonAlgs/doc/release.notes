@@ -4,6 +4,7 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonAlgs v6r10p1 2011-12-16 =======================
 ! 2011-11-24 - Marco Cattaneo
  - Fix trivial gcc46 warning and icc remarks
  - Replace endreq by endmsg
