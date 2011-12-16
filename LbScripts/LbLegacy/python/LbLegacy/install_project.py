@@ -33,8 +33,20 @@ line_size = 120
 url_dist = 'http://lhcbproject.web.cern.ch/lhcbproject/dist/'
 
 # list of subdirectories created in runInstall
-site_subdirs = [ 'lcg', 'lhcb', 'contrib', 'html', 'targz', 'tmp', 'etc' ]
 lcg_tar      = [ "LCGCMT", "LCGGrid", "LCGGanga" ]
+
+subdir_dict = {}
+subdir_dict["lcg"]             = None
+subdir_dict["lhcb"]            = None
+subdir_dict["contrib"]         = None
+subdir_dict["html"]            = None
+subdir_dict["targz"]           = None
+subdir_dict["tmp"]             = None
+subdir_dict["etc"]             = None
+subdir_dict["conf"]            = None
+subdir_dict["log"]             = None
+subdir_dict["bootscripts"]     = None
+
 # dynamic modules
 
 LbLegacy = None
@@ -43,15 +55,6 @@ LbRelease = None
 
 
 # base directories
-log_dir = None
-contrib_dir = None
-lcg_dir = None
-lhcb_dir = None
-html_dir = None
-etc_dir = None
-bootscripts_dir = None
-targz_dir = None
-tmp_dir = None
 cur_tmp_dir = None # current tmp directory. Unique. Not chained
 boot_script_loc = None
 
@@ -215,6 +218,18 @@ def retrieve(url, dest):
     _file_size = 0
 
     return fname, finfo
+
+def getLocalDirs(type_list):
+    """
+    get local verson of the subdirs
+    @param type_list: list of subdirs
+    @type type_list: list
+    """
+    local_dirs = {}
+    for d in subdir_dict.keys() :
+        local_dirs[d] = subdir_dict[d].split(os.pathsep)[0]
+
+    return local_dirs
 
 project_conf_cache = []
 
@@ -425,10 +440,10 @@ def getCommandFile(postscr, flavor="PostInstall"):
     returns None if no valid file has been found.
     """
     cmd_file = None
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
-    lhcb_rooted_dir = postscr.replace(this_lhcb_dir,"").lstrip(os.sep)
+    this_dir = getLocalDirs(["lhcb"])
+    lhcb_rooted_dir = postscr.replace(this_dir["lhcb"],"").lstrip(os.sep)
     if flavor == "Update" : # look at the first valid entry in the chain
-        cmd_file = _multiPathGetFirst(lhcb_dir, lhcb_rooted_dir, None)
+        cmd_file = _multiPathGetFirst(subdir_dict["lhcb"], lhcb_rooted_dir, None)
     elif os.path.exists(postscr) :
         cmd_file = postscr
 
@@ -657,20 +672,20 @@ def createDir(here, logname):
 
     log.info('create necessary sub-directories')
 
-    this_log_dir = log_dir.split(os.pathsep)[0]
+    this_dir = getLocalDirs(["log"])
 
     good = False
     if checkWriteAccess(here) :
         good = True
-        if not os.path.isdir(this_log_dir):
-            safeMakeDirs(this_log_dir)
+        if not os.path.isdir(this_dir["log"]):
+            safeMakeDirs(this_dir["log"])
         elif logname:
-            if os.path.exists(os.path.join(this_log_dir, logname + '_old')):
+            if os.path.exists(os.path.join(this_dir["log"], logname + '_old')):
                 os.remove(logname + '_old')
             if os.path.exists(logname):
                 os.rename(logname, logname + '_old')
 
-        for dirnm in site_subdirs:
+        for dirnm in subdir_dict.keys():
             if os.path.isdir(os.path.join(here, dirnm)):
                 log.debug('%s exists in %s ' % (dirnm, here))
             else:
@@ -682,7 +697,7 @@ def createDir(here, logname):
                         found_dbase = False
                         found_param = False
                         found_tools = False
-                        for b in lhcb_dir.split(os.pathsep)[1:] :
+                        for b in subdir_dict["lhcb"].split(os.pathsep)[1:] :
                             if os.path.isdir(os.path.join(b, 'DBASE')) :
                                 found_dbase = True
                             if os.path.isdir(os.path.join(b, 'PARAM')) :
@@ -760,8 +775,9 @@ def getCMT(version=0):
     log.debug('install CMT if not there')
     here = os.getcwd()
 
-    this_contrib_dir = contrib_dir.split(os.pathsep)[0]
-    this_targz_dir = targz_dir.split(os.pathsep)[0]
+    this_dir = getLocalDirs(["contrib", "targz"])
+    this_contrib_dir = this_dir["contrib"]
+    this_targz_dir = this_dir["targz"]
 
     # get the CMT version number from ExtCMT
     if version == 0:
@@ -823,7 +839,7 @@ def getCMT(version=0):
     else:
         location = getInstallLocation(fname)
         log.info('CMT %s is already installed in %s' % (cmtvers, location))
-        for cd in contrib_dir.split(os.pathsep) :
+        for cd in subdir_dict["contrib"].split(os.pathsep) :
             if cd.startswith(location) :
                 that_contrib_dir = cd
                 break
@@ -852,7 +868,7 @@ def getFile(url, fname):
 
     if fname.find('.tar.gz') != -1:
         filetype = 'x-gzip'
-        this_targz_dir = targz_dir.split(os.pathsep)[0]
+        this_targz_dir = subdir_dict["targz"].split(os.pathsep)[0]
         dest = os.path.join(this_targz_dir, fname)
         if url.find('scripts') != -1 or url.find('system') != -1:
             if os.path.exists(dest) :
@@ -861,7 +877,7 @@ def getFile(url, fname):
                 except:
                     log.info("can't remove file name %s" % dest)
     elif fname.find('.html') != -1 or fname.find('.htm') != -1 :
-        this_html_dir = html_dir.split(os.pathsep)[0]
+        this_html_dir = subdir_dict["html"].split(os.pathsep)[0]
         dest = os.path.join(this_html_dir, fname)
         filetype = 'html'
 
@@ -1017,9 +1033,9 @@ def getHTMLFileName(filename):
 #
 def getPackVer(fname):
 
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
-    this_lcg_dir = lcg_dir.split(os.pathsep)[0]
-    this_contrib_dir = contrib_dir.split(os.pathsep)[0]
+    this_lhcb_dir = subdir_dict["lhcb"].split(os.pathsep)[0]
+    this_lcg_dir = subdir_dict["lcg"].split(os.pathsep)[0]
+    this_contrib_dir = subdir_dict["contrib"].split(os.pathsep)[0]
 
 
     # get the binary if any
@@ -1051,7 +1067,7 @@ def getPackVer(fname):
     vers = packver[-1]
     name = packver[0]
     file_path = os.path.join(this_lhcb_dir, name, name + '_' + vers)
-    base_dir = lhcb_dir.split(os.pathsep)
+    base_dir = subdir_dict["lhcb"].split(os.pathsep)
     file_base = []
     for bd in base_dir :
         file_base.append(os.path.join(bd, name, name + '_' + vers))
@@ -1062,13 +1078,13 @@ def getPackVer(fname):
         if len(packver) >= 2:
             vers = '_'.join(packver[1:])
             file_path = os.path.join(this_lcg_dir, name, name + '_' + vers)
-            base_dir = lcg_dir.split(os.pathsep)
+            base_dir = subdir_dict["lcg"].split(os.pathsep)
             file_base = []
             for bd in base_dir :
                 file_base.append(os.path.join(bd, name, name + '_' + vers))
     if name == "OpenScientist" or name == "osc_vis" or name == "DIM" :
         file_path = os.path.join(this_contrib_dir, name, vers)
-        base_dir = contrib_dir.split(os.pathsep)
+        base_dir = subdir_dict["contrib"].split(os.pathsep)
         file_base = []
         for bd in base_dir :
             file_base.append(os.path.join(bd, name, vers))
@@ -1078,7 +1094,7 @@ def getPackVer(fname):
         else:
             name = os.path.join(packver[1], packver[2])
         file_path = os.path.join(this_lhcb_dir, packver[0], name, vers)
-        base_dir = lhcb_dir.split(os.pathsep)
+        base_dir = subdir_dict["lhcb"].split(os.pathsep)
         file_base = []
         if len(base_dir) > 1 :
             file_base.append(os.path.join(this_lhcb_dir, 'EXTRAPACKAGES', name, vers))
@@ -1181,7 +1197,7 @@ def getProjectList(name, version, binary=None, recursive=True):
             if binary:
                 tar_file += "_%s" % binary
 
-    this_html_dir = html_dir.split(os.pathsep)[0]
+    this_html_dir = subdir_dict["html"].split(os.pathsep)[0]
 
     os.chdir(this_html_dir)
 
@@ -1265,12 +1281,12 @@ def isInstalled(fname):
     if not overwrite_mode :
         # special case: the LbScripts project has to be installed locally anyway
         if fname.find("LbScripts") != -1 or fname.find("LBSCRIPTS") != -1 :
-            installedfilename = os.path.join(log_dir.split(os.pathsep)[0], fname.replace(".tar.gz", ".installed"))
+            installedfilename = os.path.join(subdir_dict["log"].split(os.pathsep)[0], fname.replace(".tar.gz", ".installed"))
             if os.path.exists(installedfilename) :
                 installed = True
         else :
             # regular case: the project can be installed in different locations
-            for ld in log_dir.split(os.pathsep) :
+            for ld in subdir_dict["log"].split(os.pathsep) :
                 installedfilename = os.path.join(ld, fname.replace(".tar.gz", ".installed"))
                 if os.path.exists(installedfilename) :
                     installed = True
@@ -1280,7 +1296,7 @@ def isInstalled(fname):
 def getInstallLocation(fname) :
     location = None
     if isInstalled(fname) :
-        for ld in log_dir.split(os.pathsep) :
+        for ld in subdir_dict["log"].split(os.pathsep) :
             installedfilename = os.path.join(ld, fname.replace(".tar.gz", ".installed"))
             if os.path.exists(installedfilename) :
                 location = os.path.dirname(ld)
@@ -1289,7 +1305,7 @@ def getInstallLocation(fname) :
     return location
 
 def setInstalled(filenm):
-    this_log_dir = log_dir.split(os.pathsep)[0]
+    this_log_dir = subdir_dict["log"].split(os.pathsep)[0]
 
     installedfilename = os.path.join(this_log_dir, filenm.replace(".tar.gz", ".installed"))
 
@@ -1301,7 +1317,7 @@ def setInstalled(filenm):
     f.close()
 
 def delInstalled(fname):
-    this_log_dir = log_dir.split(os.pathsep)[0]
+    this_log_dir = subdir_dict["log"].split(os.pathsep)[0]
 
     installedfilename = os.path.join(this_log_dir, fname.replace(".tar.gz", ".installed"))
     os.remove(installedfilename)
@@ -1357,7 +1373,7 @@ def scriptsPostInstall(pack_ver):
     @type mysiteroot: string
     """
     log = logging.getLogger()
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
+    this_lhcb_dir = subdir_dict["lhcb"].split(os.pathsep)[0]
     updateLHCbProjectPath(os.environ["MYSITEROOT"])
     log.debug("LHCBPROJECTPATH: %s" % os.environ.get("LHCBPROJECTPATH", None))
     if boot_script_loc :
@@ -1505,10 +1521,10 @@ def getProjectTar(tar_list, already_present_list=None):
     log = logging.getLogger()
     here = os.getcwd()
 
-    this_lcg_dir = lcg_dir.split(os.pathsep)[0]
-    this_contrib_dir = contrib_dir.split(os.pathsep)[0]
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
-    this_targz_dir = targz_dir.split(os.pathsep)[0]
+    this_lcg_dir = subdir_dict["lcg"].split(os.pathsep)[0]
+    this_contrib_dir = subdir_dict["contrib"].split(os.pathsep)[0]
+    this_lhcb_dir = subdir_dict["lhcb"].split(os.pathsep)[0]
+    this_targz_dir = subdir_dict["targz"].split(os.pathsep)[0]
 
     soft_type = "LHCb"
 
@@ -1663,7 +1679,7 @@ def getBootScripts():
     if isInstalled(scripttar) and not overwrite_mode :
         location = getInstallLocation(scripttar)
         log.debug("LbScripts %s is already installed in %s" % (lbscripts_version, location))
-        for l in lhcb_dir.split(os.pathsep) :
+        for l in subdir_dict["lhcb"].split(os.pathsep) :
             if l.startswith(location) :
                 that_lhcb_dir = l
                 break
@@ -1674,8 +1690,8 @@ def getBootScripts():
         if not check_only :
             log.info("LbScripts %s is not installed. Dowloading it." % lbscripts_version)
             getFile(url_dist + 'LBSCRIPTS/', scripttar)
-            this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
-            this_targz_dir = targz_dir.split(os.pathsep)[0]
+            this_bootscripts_dir = subdir_dict["bootscripts"].split(os.pathsep)[0]
+            this_targz_dir = subdir_dict["targz"].split(os.pathsep)[0]
             safeMakeDirs(this_bootscripts_dir)
             checkWriteAccess(this_bootscripts_dir)
             os.chdir(this_bootscripts_dir)
@@ -1707,10 +1723,13 @@ def getBootScripts():
 
 def cleanBootScripts():
     log = logging.getLogger()
-    this_bootscripts_dir = bootscripts_dir.split(os.pathsep)[0]
+    this_bootscripts_dir = subdir_dict["bootscripts"].split(os.pathsep)[0]
     if os.path.isdir(this_bootscripts_dir) :
         log.debug("Removing the %s directory" % this_bootscripts_dir)
         removeAll(this_bootscripts_dir)
+
+def updateConf():
+    pass
 
 def showCompatibleConfigs():
     from LbConfiguration.Platform import NativeMachine
@@ -1853,12 +1872,12 @@ def removeProject(project, pvers):
     log = logging.getLogger()
     log.info('%s %s ' % (project, pvers))
 
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
-    this_html_dir = html_dir.split(os.pathsep)[0]
-    this_targz_dir = targz_dir.split(os.pathsep)[0]
-    this_lcg_dir = lcg_dir.split(os.pathsep)[0]
-    this_log_dir = log_dir.split(os.pathsep)[0]
-    this_contrib_dir = contrib_dir.split(os.pathsep)[0]
+    this_lhcb_dir = subdir_dict["lhcb"].split(os.pathsep)[0]
+    this_html_dir = subdir_dict["html"].split(os.pathsep)[0]
+    this_targz_dir = subdir_dict["targz"].split(os.pathsep)[0]
+    this_lcg_dir = subdir_dict["lcg"].split(os.pathsep)[0]
+    this_log_dir = subdir_dict["log"].split(os.pathsep)[0]
+    this_contrib_dir = subdir_dict["contrib"].split(os.pathsep)[0]
 
     import LbConfiguration.Project
 
@@ -1955,7 +1974,7 @@ def removeProject(project, pvers):
 # Generate SetupScript
 def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     log = logging.getLogger()
-    this_lhcb_dir = lhcb_dir.split(os.pathsep)[0]
+    this_lhcb_dir = subdir_dict["lhcb"].split(os.pathsep)[0]
     targetshells = ["sh", "csh", "bat"]
     usedshell = "csh"
     for t in targetshells :
@@ -2042,8 +2061,7 @@ def _cleanPath(path_value, normalize=False):
 
 def createBaseDirs(pname, pversion):
     global cmtconfig
-    global log_dir, contrib_dir, lcg_dir, lhcb_dir, html_dir, etc_dir
-    global bootscripts_dir, targz_dir, tmp_dir
+    global subdir_dict
     global cur_tmp_dir
 
 
@@ -2063,31 +2081,26 @@ def createBaseDirs(pname, pversion):
             log.warning("Using the directory %s for installation" % mypath)
             os.chdir(mypath)
 
+    for d in ["log", "contrib", "lhcb", "html", "etc", "bootscripts", "targz", "conf"] :
+        subdir_dict[d] = _multiPathJoin(mysiteroot, d)
 
-    log_dir = _multiPathJoin(mysiteroot, "log")
-    contrib_dir = _multiPathJoin(mysiteroot, "contrib")
-    lcg_dir = _multiPathJoin(mysiteroot, os.path.join("lcg", "external"))
-    lhcb_dir = _multiPathJoin(mysiteroot, "lhcb")
-    html_dir = _multiPathJoin(mysiteroot, "html")
-    etc_dir = _multiPathJoin(mysiteroot, "etc")
-    bootscripts_dir = _multiPathJoin(mysiteroot, "bootscripts")
-    targz_dir = _multiPathJoin(mysiteroot, "targz")
+    subdir_dict["lcg"] = _multiPathJoin(mysiteroot, os.path.join("lcg", "external"))
 
     if sys.platform != "win32" and "USER" in os.environ :
-        tmp_dir = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
+        subdir_dict["tmp"] = _multiPathJoin(mysiteroot, os.path.join("tmp", os.environ["USER"]))
     else :
-        tmp_dir = _multiPathJoin(mysiteroot, "tmp")
+        subdir_dict["tmp"] = _multiPathJoin(mysiteroot, "tmp")
 
     if not cur_tmp_dir :
-        cur_tmp_dir = tmp_dir.split(os.pathsep)[0]
+        cur_tmp_dir = subdir_dict["tmp"].split(os.pathsep)[0]
 
     logname = None
 
     if pversion :
         if logname :
-            logname = os.path.join(log_dir.split(os.pathsep)[0], pname + '_' + pversion + '.log')
+            logname = os.path.join(subdir_dict["log"].split(os.pathsep)[0], pname + '_' + pversion + '.log')
         else :
-            logname = os.path.join(log_dir.split(os.pathsep)[0], pname + '.log')
+            logname = os.path.join(subdir_dict["log"].split(os.pathsep)[0], pname + '.log')
     if not check_only :
         done = createDir(mypath.split(os.pathsep)[0], logname)
     else :
@@ -2116,6 +2129,7 @@ def runInstall(pname, pversion, binary=None):
 
 # start the project installation
     getBootScripts()
+    updateConf()
 
 # if list_flag is set: give the list of available versions for this project
     if list_flag :
@@ -2375,11 +2389,11 @@ def untarFile(fname, output_path=""):
 
     log.info("untarring %s in %s" % (fname, os.getcwd()))
 
-    this_targz_dir = targz_dir.split(os.pathsep)[0]
+    this_targz_dir = subdir_dict["targz"].split(os.pathsep)[0]
 
     filename = os.path.join(this_targz_dir, fname)
     md5filename = getMD5FileName(filename)
-    htmlfilename = os.path.join(html_dir, getHTMLFileName(fname))
+    htmlfilename = os.path.join(subdir_dict["html"], getHTMLFileName(fname))
     if not os.path.isfile(filename):
         log.warning('%s does not exist' % filename)
         retcode = 1

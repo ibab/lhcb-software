@@ -1,3 +1,8 @@
+2011-12-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: simplified the management of the local subdirectories. Now
+	uses a global dictionary.
+
 2011-12-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v4r6p3
