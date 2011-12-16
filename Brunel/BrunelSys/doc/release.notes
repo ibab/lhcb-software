@@ -3,6 +3,65 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v41r3>2011-12-19 Brunel v41r3</A></H1><PRE>
+This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2,
+ Rec v12r2 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version to pick up LHCb v33r2 software stack.
+ 
+- Changes to configurable
+  . Explicitly set L0Conf().RawEventLocations to take L0 banks from DAQ/RawEvent
+    (follows changes to L0Base, L0DU, L0Muon, L0Calo)
+  . Remove support for RDST (superseded by SDST) (Brunel v41r3, GaudiConf v15r5)
+
+- New functionality
+  . More updates to support multiple Rich photodetector technologies
+  . Updates to support running without Aerogel (RichTools v2r39)
+  . Allow to select Max/Min number of photons per track (RichParticleSearch v1r5)
+
+- New tuning
+  . Improve efficiency for large IP tracks (FastVelo v1r6)
+  . Use long long instead of long where appropriate (various Rich packages)
+  . Remove use of Track::nodes (TrackTools v4r10)
+  . Improve packing of Rich::Rec::PhotonKey
+    (RichRecBase v4r10, RichRecMCTools v2r29, RichRecPhotonTools v1r9)
+ 
+- Persistency changes
+  . MuonPID objects now saved only if track is InAcceptance (MuonID v9r3)
+
+- Bug fixes
+  . Fix bug #89269 affecting two Reco12 jobs: MergedPi0Rec was returning 0 from
+    execute() in rare case of pathological clusters (CaloReco v5r13)
+    (Also fixed in Brunel v41r1p1)
+  . Fix error message from PropertyConfigSvc at initialization (LumiAlgs v7r2)
+  . Use stable_sort instead of sort, to avoid reproducibility problems
+    (RichParticleSearch v1r5)
+  . Fix in PatAddTTCoord: If chi2 was still much too high with only 3 hits left
+    it went into an infinite loop. (PatAlgorithms v4r16)
+  . In PrimaryVertexChecker, properly initialize MCPVInfo struct to avoid
+    floating point exceptions in debug mode (PatChecker v3r11)
+  . Fix a wrong length string, was causing a memory corruption on occasions
+    when running debug version of Brunel (TrackCheckers v4r12)
+  . Add some missing calls to GaudiAlgorithm::finalize (VeloDAQ v6r6)
+  . Fix some unprotected debug() streams
+  . Various fixes to UNINIT_CTOR defects, gcc46 warnings and icc remarks
+
+- Monitoring changes
+  . Monitor tracks with large IP (TrackCheckers v4r12)
+  . New algorithm VertexChecker to measure the performance of vertexing
+    (TrackCheckers v4r12)
+  . Hide warning by default due to problems with TELL1 cluster maker
+    putting the same strip into two clusters (to be re-enabled for data/mc
+    after the TELL1 bug is resolved) (VeloDAQ v6r6)
+
+- Changes to tests
+  . Add brunel.2011-crashes for regression testing of fixes to crashes on 2011
+    data. Currently covers bug #89269 affecting Reco12, fixed in CaloReco v5r13
+  . Add RegexpReplacer expression to BrunelExclusions.py, to take into account
+    different printout format from RichHotPixels and RichRawDataDBCheck when
+    running in debug mode
+  . brunel2010magup test now writes SDST in MDF format, was RDST
+
 </PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r1, Lbcom v11r1,
  Rec v12r1 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
@@ -48,6 +107,8 @@ Development version to pick up LHCb v33r1 software stack.
   . Fix typo in TsaKernel/SeedTrack.h, coverity bug 22106 (TsaKernel v3r6p1)
   . Fix Root bug #87880: xrootd was returning wrong buffer length on rare
     occasions (Root 5.30.04) 
+  . Fix IOExtension problem with SvcClass (GaudiConf v15r2)
+    (Also fixed in Brunel v41r1p1)
 
 - Monitoring changes
   . Print Magnetic Field polarity also when ProductionMode is True
