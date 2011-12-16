@@ -1,16 +1,11 @@
 #============================================================================
 # Created    : 2005-05-05
 # Maintainer : Alessio Sarti
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
-package MuonMoniDigi 
-version v2r4p1
+package           MuonMoniDigi 
+version           v2r5
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
 # Structure, i.e. directories to process. 
 #============================================================================
 branches src cmt doc

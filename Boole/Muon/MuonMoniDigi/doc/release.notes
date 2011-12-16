@@ -1,7 +1,9 @@
+!-----------------------------------------------------------------------------
 !Package         : MuonMoniDigi
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+!========================= MuonMoniDigi v2r5 2011-12-16 =========================
 ! 2011-12-02 - Marco Cattaneo
  - In MuonDigitChecker NTuples, store event number as a longlong. Fixes a 
    compilation issue when compiling against the fix to bug #85377 (change 
