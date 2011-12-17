@@ -61,6 +61,12 @@ __all__     = (
     'dumpHistos'        ,
     'next'              ,
     ##
+    'fireIncident'      ,
+    'tagEvent'          ,    
+    'markEvent'         ,
+    'copyGoodEvents'    ,
+    'writeEvent'        ,
+    ##
     'post_Action'       , 
     'pre_Action'        , 
     'setPostAction'     , 
@@ -419,6 +425,7 @@ def skip ( nEvents ) :
 
     return st 
 
+# =============================================================================
 ## go to next  event 
 def next ( num = 1 )  :
     """
@@ -428,6 +435,183 @@ def next ( num = 1 )  :
     
     """
     return run ( num )
+
+
+# ===========================================================================
+## fire the incident with given name
+def fireIncident ( name   = "GoodEvent" ,
+                   source = "Bender"    ) :
+    """
+    Fire the incident
+    
+    >>> fireIncident()
+    
+    """
+    _g  = appMgr    ()
+    _is = _g.incSvc ()
+    _is.fireIncident ( name , source )
+
+# =============================================================================
+## fire the incident with the given name    
+tagEvent  = fireIncident
+markEvent = fireIncident
+
+# =============================================================================
+## helper function to write interesint event into the separate stream
+#
+#  It is assumed that the proper configuration is done with
+#   "copyGoodEvent"  function  ( static CONFIGURABLE)
+#
+#  @code
+#
+#  #
+#  ##Configurables:
+#  #
+#  from Bender.Utils import copyGoodEvents
+#  copyGoodEvents ( filename = 'SelectedEvents' )
+#
+#  ...
+#
+#  #
+#  ## run-time command line: 
+#  #
+#  >>> writeEvent () 
+#
+#  #
+#  ## run-time (algorithm)
+#  #
+#          ...
+#          writeEvent()
+#          ...
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-12-17
+#
+#  @see copyGoodEvents
+#
+def writeEvent ( name = "GoodEvent" ) :
+    """
+    Helper function to write interesint event into the separate stream
+
+    It is assumed that the proper configuration is done with
+    copyGoodEvent  function  ( static CONFIGURABLE)
+    
+    #
+    ##Configurables:
+    #
+    from Bender.Utils import copyGoodEvents
+    copyGoodEvents ( filename = 'SelectedEvents' )
+    
+    ...
+    
+    #
+    ## run-time command line: 
+    #
+    >>> writeEvent () 
+    
+    #
+    ## run-time (algorithm)
+    #
+                  ...
+
+                  writeEvent()
+                  ...
+    
+    """
+    _g     = appMgr()      
+    _icntx = _g.cntxSvc ()
+    #
+    ## get the "current" algorithm from ContextService 
+    _curr  = _icntx.current()
+    if not _curr :
+        ## we are out of event-scope ?
+        #  try to execute manually the writer 
+        writer = _g.algorithm ( name )
+        if not writer._ialg : writer.retrieveInterface()
+        if not writer._ialg :
+            raise RuntimeError , 'Unable to find writer "%s"' % name
+        # run it! 
+        return writer.sysExecute()
+    #
+    ## otherwise fire the incident
+    #
+    fireIncident ( name )
+    #
+    from GaudiPython.Bindings import SUCCESS
+    #
+    return SUCCESS 
+    
+# ============================================================================
+## Utility to copy selected events to some file
+#  It is based on configurables,
+#  thus it needs to be invoked BEFORE GaudiPython
+#
+#  @code
+#
+#  #
+#  ##Configurables:
+#  #
+#  from Bender.Utils import copyGoodEvents
+#  copyGoodEvents ( filename = 'SelectedEvents' )
+#
+#  @endcode 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date 2011-12-16
+#  @see InputCopyStream
+#  @see IOHelper
+#  @see writeEvents
+#  @see Gaudi::IncidentFilter
+#  @see fireIncident
+def copyGoodEvents ( filename                 ,
+                     extraitems = []          ,
+                     incident   = 'GoodEvent' ) :
+    """
+    Utitity to copy ``good/tagged'' events
+
+    It is based on configurables,
+    thus it needs to be invoked BEFORE GaudiPython
+    
+    #
+    ##Configurables:
+    #
+    from Bender.Utils import copyGoodEvents
+    copyGoodEvents ( filename = 'SelectedEvents' )
+    
+    """
+    from GaudiConf import IOHelper
+    ioh   = IOHelper       ('ROOT','ROOT') 
+    algs  = ioh.outputAlgs ( filename , 'InputCopyStream/%s' % incident )
+    
+    ioh.setupServices()
+    from Configurables import Gaudi__IncidentFilter as Tagger    
+    tag   = Tagger ( "%sInc"   % incident , Incidents = [ incident] ) 
+    
+    from Configurables import GaudiSequencer
+    seq   = GaudiSequencer ( '%sSeq' % incident        ,
+                             Members = [ tag ] +  algs ) 
+
+    ## prepare the stuff for event tag collections
+    #  is it a rigthplace fo rthis action?
+    from Configurables import TagCollectionSvc
+    tsvc = TagCollectionSvc ( "EvtTupleSvc")
+    #
+    p       = filename.rfind('.')
+    tagname = filename[:p] + '.tags'
+    #
+    tsvc.Output += [
+        "GOODTAGS DATAFILE='%s' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" % tagname 
+        ]
+    
+    from Configurables import ApplicationMgr
+    AM    = ApplicationMgr ()
+    AM.ExtSvc += [ tsvc ]
+    
+    if not AM.OutStream : AM.OutStream =[]
+    
+    AM.OutStream.append ( seq )
+    
     
 # =============================================================================
 if __name__ == '__main__' :
@@ -438,7 +622,6 @@ if __name__ == '__main__' :
     print ' Date    : %s ' %   __date__
     print '*'*120
     
-
 # =============================================================================
 # The END 
 # =============================================================================

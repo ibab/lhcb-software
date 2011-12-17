@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-## @file Benedr/Fixes_Gaudi.py
+## @file Bender/Fixes_Gaudi.py
 #  The helper Python module for Bender application 
 #
 #  This file is a part of 
@@ -50,9 +50,8 @@ __version__ = '$Revision: 129470 $'
 __all__     = ()
 # =============================================================================
 ## some straneglines... Reflex feature ?
-from GaudiPython.Bindings import gbl as cpp
+from   GaudiPython.Bindings import gbl as cpp
 import GaudiPython.Bindings
-
               
 print '*'*120
 print 'Bender.Fixes: - Fix some Gaudi features'
@@ -289,6 +288,148 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
     print 'Bender.Fixes: - decorate AppMgr.disableAllAlgs() '
 
 
+## decorate Incident Service 
+if not hasattr ( _AppMgr , 'incSvc' ) : 
+    # =========================================================================
+    iService = GaudiPython.Bindings.iService
+    iHelper  = GaudiPython.Bindings.Helper
+    iCast    = GaudiPython.Bindings.InterfaceCast
+    # =========================================================================
+    ## @class iIncSvc
+    #  python wrapper for IIncidentSvc
+    #  @see IIncidentSvc
+    #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+    #  @date   2011-12-16
+    class iIncSvc(iService) :
+        """
+        Python wrapper for IIncidentSvc 
+        """
+        def __init__( self , name , isvc ) :
+            iService.__init__(self, name, isvc )
+            self.__dict__['_iincs'] = iCast ( cpp.IIncidentSvc ) ( isvc )
+            
+        ## fire the incident 
+        def fireIncident ( self , name , source = "<unknown source>") :
+            """
+            Fire the incident 
+            """
+            if not self._iincs :
+                raise RuntimeError , " Invalid pointer to IIncidentSvc "
+            incident = cpp.Incident( source , name ) 
+            return self._iincs.fireIncident ( incident ) 
+    
+    # =========================================================================
+    ## get incident service form Gaudi 
+    def _incSvc_ ( self , name = "IncidentSvc" ) :
+        """
+        Get incident service form Gaudi:
+        
+        >>> gaudi = ...
+        >>> iSvc  = gaudi.incSvc()
+        
+        """
+        if self.state() == cpp.Gaudi.StateMachine.CONFIGURED :  self.initialize()
+        svc    = iHelper.service( self._svcloc, name )
+        return iIncSvc(name, svc)
+    
+    _AppMgr. incSvc = _incSvc_
+    print 'Bender.Fixes: - decorate AppMgr.incSvc() '
+
+## decorate Context Service 
+if not hasattr ( _AppMgr , 'cntxSvc' ) : 
+    # =========================================================================
+    iService   = GaudiPython.Bindings.iService
+    iAlgorithm = GaudiPython.Bindings.iAlgorithm
+    iCast      = GaudiPython.Bindings.InterfaceCast
+    iHelper    = GaudiPython.Bindings.Helper
+    # =========================================================================
+    ## @class iCntxSvc
+    #  python wrapper for IAlgContextSvc
+    #  @see IIncidentSvc
+    #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+    #  @date   2011-12-16
+    class iCntxSvc(iService) :
+        """
+        Python wrapper for IAlgContextSvc 
+        """
+        def __init__( self , name , isvc ) :
+            iService.__init__(self, name, isvc )
+            self.__dict__['_ictxs'] = iCast( cpp.IAlgContextSvc )( isvc )
+
+        ## get the current algorithm
+        def current ( self ) :
+            """
+            Get the current algorithm
+            
+            >>> icntx = ...
+            >>> alg = icntx.current()
+            
+            """
+            if not self._ictxs :
+                raise RuntimeError , " Invalid pointer to IIncidentSvc "
+            # 
+            curr = self._ictxs.currentAlg()
+            if not curr : return None
+            # 
+            return iAlgorithm ( curr.name() , curr )
+        
+        ## get he stack of algorithms 
+        def stack   ( self ) :
+            """
+            Get the stack of algorithms
+
+            >>> icntx = ...
+            >>> algs  = icntx.stack()
+            
+            """
+            if not self._ictxs :
+                raise RuntimeError , " Invalid pointer to IIncidentSvc "
+            # 
+            algs = self._ictxs.algorithms()
+            #
+            result = []
+            for a in algs : result.append ( iAlgorithm ( a.name() , a ) ) 
+            # 
+            return result 
+            
+    # =========================================================================
+    ## get incident service form Gaudi 
+    def _cntxSvc_ ( self , name = "AlgContextSvc" ) :
+        """
+        Get context service from Gaudi:
+        
+        >>> gaudi = ...
+        >>> iSvc  = gaudi.cntxSvc()
+        
+        """
+        if self.state() == cpp.Gaudi.StateMachine.CONFIGURED :  self.initialize()
+        svc  = iHelper.service( self._svcloc, name )
+        return iCntxSvc( name , svc )
+    
+    _AppMgr.   cntxSvc = _cntxSvc_
+    _AppMgr. contexSvc = _cntxSvc_
+    print 'Bender.Fixes: - decorate AppMgr.cntxSvc() '
+
+
+## decorate Event Colleciton service
+if not hasattr ( _AppMgr , 'evtColSvc' ) :
+    
+    iNTupleSvc = GaudiPython.Bindings.iNTupleSvc 
+    iHelper    = GaudiPython.Bindings.Helper
+    
+    def _evtcolsvc_( self , name='EvtTupleSvc' ) :
+        #
+        if   name                         in self.ExtSvc : pass 
+        elif 'TagCollectionSvc/%s'% name  in self.ExtSvc : pass
+        else : self.ExtSvc += [ 'TagCollectionSvc/%s'% name ]
+        #
+        svc = iHelper.service ( self._svcloc , name , False )
+        return iNTupleSvc ( name , svc )
+
+    _AppMgr. evtcolSvc = _evtcolsvc_
+    _AppMgr. evtColSvc = _evtcolsvc_
+    print 'Bender.Fixes: - decorate AppMgr.evtColSvc() '
+    
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120

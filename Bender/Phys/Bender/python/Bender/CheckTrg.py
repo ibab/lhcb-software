@@ -131,64 +131,12 @@ def chkTrg  ( ) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    from optparse import OptionParser as OptParser
-    parser = OptParser( usage   = __usage__   ,
-                        version = ' %prog '  + __version__ )
+    from Bender.DstExplorer import makeParser
+    
+    parser = makeParser ( usage   = __usage__                ,
+                          version = ' %prog '  + __version__ )
     
     ##
-    parser.add_option (
-        '-t'                  ,
-        '--datatype'          ,
-        dest    = 'DataType'  ,
-        type    = 'str'       , 
-        help    = "``DataType''    attribute to be specified for DaVinci [default : %default]" ,
-        default = '2011'  
-        )
-    ## 
-    parser.add_option (
-        '-s'                          ,
-        '--simulation'                ,
-        action  = "store_true"        ,
-        dest    = 'Simulation'        ,
-        help    = "``Simulation''  flag to be propagated to DaVinci" ,
-        default = False   
-        )
-    ## 
-    parser.add_option (
-        '-c'                          ,
-        '--castor'                    ,
-        action  = "store_true"        ,
-        dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
-        default = True   
-        )
-    ## 
-    parser.add_option (
-        '-p'                          ,
-        '--persistency'               ,
-        type    = 'str'               , 
-        dest    = 'Persistency'       ,
-        help    = "``Persistency'' attribute for DaVinci [default : %default]" ,
-        default = 'ROOT'                  
-        )
-    ## 
-    parser.add_option (
-        '-x'                          ,
-        '--xml'                        ,
-        dest    = 'XmlCatalogue'       ,
-        help    = "``XmlCatalog'' to be transferred to setData-function [default : %default]" ,
-        default = ''                  
-        )
-    ## 
-    parser.add_option (
-        '-q'                          ,
-        '--quiet'                     ,
-        action  = "store_true"        ,
-        dest    = 'Quiet'             ,
-        help    = "``Quiet'' processing"  ,
-        default = False   
-        )
-    ## 
     parser.add_option (
         '-m'                          ,
         '--micro'                     ,

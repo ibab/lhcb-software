@@ -33,7 +33,7 @@
 #       >>> ls('/Event/Charm/Phys')
 #       >>> ls('/Event/Charm/Phys/D2KKK')
 #
-#    2) getting particles form TES and loop over them :
+#    2) getting particles from TES and loop over them :
 # 
 #       >>> Ds = get('/Event/Charm/Phys/D2KKK')
 #       >>> for D in Ds : print D.decay()
@@ -89,7 +89,7 @@ Usage:
        >>> ls('/Event/Charm/Phys')
        >>> ls('/Event/Charm/Phys/D2KKK')
 
-    2) getting particles form TES and loop over them :
+    2) getting particles from TES and loop over them :
  
        >>> Ds = get('/Event/Charm/Phys/D2KKK')
        >>> for D in Ds : print D.decay()
@@ -182,6 +182,15 @@ def makeParser ( usage = None ,
         )
     ## 
     parser.add_option (
+        '-m'                          ,
+        '--micro'                     ,
+        action  = "store_true"        ,
+        dest    = 'MicroDST'          ,
+        help    = "MicroDST format?"  ,
+        default = False   
+        )
+    ##
+    parser.add_option (
         '-x'                          ,
         '--xml'                        ,
         dest    = 'XmlCatalogue'       ,
@@ -223,13 +232,27 @@ def configure ( options , arguments ) :
     #
     from Configurables       import DaVinci
     
+    ext = "dst"
+    for a in arguments :
+        p   = a.rfind ( '.' )
+        if 0 <= p : 
+            ext = a[p+1:]
+            break
+        
     daVinci = DaVinci (
         DataType    = options.DataType    ,
         Simulation  = options.Simulation  ,
         Persistency = options.Persistency , 
         Lumi        = False              
         )
-
+    
+    if options.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
+        daVinci.InputType = 'MDST'
+        
+    if hasattr ( options , 'RootInTES' ) and options.RootInTES :
+        from Bender.MicroDST import uDstConf 
+        uDstConf(options.RootInTES)
+            
     if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
         #
         ## try to use the latest available tags:
@@ -244,7 +267,6 @@ def configure ( options , arguments ) :
                         #
                         ## Use Oracle if possible
                         CondDB ( UseOracle = True  )
-
 
     ## Reset all DaVinci sequences 
     def _action ( ) :
@@ -277,6 +299,15 @@ def configure ( options , arguments ) :
             ioh.setupServices()
             
 
+
+    ## prepare to copy good/marked/tagged evenst
+    if hasattr ( options, 'OutputFile' ) and options.OutputFile :
+        from Bender.Utils import copyGoodEvents
+        if 0 <= options.OutputFile.find ( '.' ) : 
+            copyGoodEvents ( options.OutputFile ) 
+        else :
+            copyGoodEvents ( "%s.%s" % ( options.OutputFile , ext ) ) 
+            
     from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction ( _action )
     
@@ -297,9 +328,27 @@ if '__main__' == __name__ :
     print ' Version : ', __version__ 
     print ' Date    : ', __date__ 
     
-
-    parser = makeParser  ()
     
+    parser = makeParser  ( usage = __usage__   ,
+                           vers  = __version__ )
+    
+    parser.add_option (
+        '-r'                     ,
+        '--root'                 ,
+        type    = 'str'          ,
+        dest    = 'RootInTES'    ,
+        help    = 'Root-In-TES'  ,
+        default = ''           
+        )
+    parser.add_option (
+        '-o'                     ,
+        '--output'               ,
+        type    = 'str'          ,
+        dest    = 'OutputFile'   ,
+        help    = 'The name of output file with selected events' ,
+        default = 'GoodEvents'           
+        )
+    ##
     options , arguments = parser.parse_args()
     
     print 120*'*'
@@ -319,10 +368,12 @@ if '__main__' == __name__ :
     
     ## instantiate the application manager 
     gaudi=appMgr ()
+    
+    evtSel = gaudi.evtSel() 
 
     ## initialize and read the first event
     gaudi.run(1)
-
+    
         
 # =============================================================================
 # The END 
