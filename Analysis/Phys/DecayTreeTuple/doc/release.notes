@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-17 - Chris Jones
+ - Add RICHDLLbt to variables saved by the TupleToolRICHPid
+
 !========================= DecayTreeTuple v3r19 2011-12-15 =========================
 
 ! 2011-12-14 - Chris Jones

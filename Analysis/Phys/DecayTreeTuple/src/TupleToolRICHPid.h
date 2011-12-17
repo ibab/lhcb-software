@@ -25,27 +25,32 @@
  *  @author Andrew Powell
  *  @date   02-Nov-2010
  */
-class TupleToolRICHPid : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolRICHPid : public TupleToolBase, virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolRICHPid( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
-  
+                    const std::string& name,
+                    const IInterface* parent);
+
   virtual ~TupleToolRICHPid(){}; ///< Destructor
 
   StatusCode initialize() ;
 
-  virtual StatusCode fill( const LHCb::Particle*, 
-			   const LHCb::Particle*, 
-			   const std::string&, 
-			   Tuples::Tuple& );
+  virtual StatusCode fill( const LHCb::Particle*,
+                           const LHCb::Particle*,
+                           const std::string&,
+                           Tuples::Tuple& );
 
-private: 
-  
-  const Gaudi::XYZPoint* getXYZ(std::vector< LHCb::RichTrackSegment * >& vec,
-                                Rich::RadiatorType Rad);
-  
+private:
+
+  const Gaudi::XYZPoint* getXYZ(const std::vector< LHCb::RichTrackSegment * >& vec,
+                                const Rich::RadiatorType Rad);
+
+private:
+
   Rich::Rec::ITrSegMaker* m_SegMaker;
 
 };

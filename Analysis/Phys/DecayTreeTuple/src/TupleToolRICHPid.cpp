@@ -20,11 +20,8 @@
 // 02 Nov 20010 : Andrew Powell
 //-----------------------------------------------------------------------------
 
-// Declarations of the Tool Factory
-// actually acts as a using namespace TupleTool
-DECLARE_TOOL_FACTORY( TupleToolRICHPid );
-
 using namespace LHCb;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -39,14 +36,12 @@ TupleToolRICHPid::TupleToolRICHPid( const std::string& type,
 
 //=============================================================================
 
-
 StatusCode TupleToolRICHPid::initialize()
 {
-
   StatusCode sc = TupleToolBase::initialize();
   if ( sc.isFailure() ) return sc;
+
   m_SegMaker = tool<Rich::Rec::ITrSegMaker>( "Rich::Rec::DetailedTrSegMakerFromRecoTracks", this );
-  if( !m_SegMaker )  return StatusCode::FAILURE;
 
   return sc;
 }
@@ -54,11 +49,13 @@ StatusCode TupleToolRICHPid::initialize()
 StatusCode TupleToolRICHPid::fill( const Particle*
                                    , const Particle* P
                                    , const std::string& head
-                                   , Tuples::Tuple& tuple ){
+                                   , Tuples::Tuple& tuple )
+{
 
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
   assert(m_SegMaker);
-  if( P ){
+  if( P )
+  {
     bool test = true;
 
     int Assign_PDGID = P->particleID().pid();
@@ -90,7 +87,8 @@ StatusCode TupleToolRICHPid::fill( const Particle*
 
     const ProtoParticle* proto = P->proto();
 
-    if( proto ){
+    if( proto )
+    {
       test &= tuple->column(  prefix+"_RICHDLLe"
                               ,proto->info(ProtoParticle::RichDLLe,-1000));
 
@@ -105,6 +103,9 @@ StatusCode TupleToolRICHPid::fill( const Particle*
 
       test &= tuple->column(  prefix+"_RICHDLLpi"
                               ,proto->info(ProtoParticle::RichDLLpi,-1000));
+
+      test &= tuple->column(  prefix+"_RICHDLLbt"
+                              ,proto->info(ProtoParticle::RichDLLbt,-1000));
 
       if( !tuple->column( prefix+"_RICHBestID", proto->richPID() ?
                           (proto->richPID()->bestParticleID()) : -2)) return StatusCode::FAILURE;
@@ -180,24 +181,30 @@ StatusCode TupleToolRICHPid::fill( const Particle*
   return StatusCode::FAILURE;
 }
 
-const Gaudi::XYZPoint* TupleToolRICHPid::getXYZ(std::vector< LHCb::RichTrackSegment * >& vec,
-                                                Rich::RadiatorType Rad)
+const Gaudi::XYZPoint* 
+TupleToolRICHPid::getXYZ( const std::vector< LHCb::RichTrackSegment * >& vec,
+                          const Rich::RadiatorType Rad )
 {
-  std::vector< LHCb::RichTrackSegment * >::iterator itr;
-
-  const Gaudi::XYZPoint* entryPoint = 0;
-  if(vec.size() == 0)
+  const Gaudi::XYZPoint* entryPoint = NULL;
+  if ( vec.empty() )
   {
     return entryPoint;
   }
 
-  for(itr = vec.begin(); itr!=vec.end(); ++itr)
+  for ( std::vector< LHCb::RichTrackSegment * >::const_iterator itr = vec.begin(); 
+        itr != vec.end(); ++itr )
   {
     assert(*itr);
-
-    if(Rad != (*itr)->radiator())
-      continue;
-    entryPoint = &((*itr)->entryPoint());
+    if ( Rad == (*itr)->radiator() )
+    {
+      entryPoint = &((*itr)->entryPoint());
+      break;
+    }
   }
+
   return entryPoint;
 }
+
+// Declarations of the Tool Factory
+// actually acts as a using namespace TupleTool
+DECLARE_TOOL_FACTORY( TupleToolRICHPid )
