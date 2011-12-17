@@ -32,7 +32,6 @@ use HltTCK             v*    TCK            -no_auto_imports
 
 # From GAUDI project
 use GaudiSvc           v*                   -no_auto_imports
-use GaudiPoolDb        v*                   -no_auto_imports
 use GaudiPython        v*                   -no_auto_imports
 
 # From LHCB project
