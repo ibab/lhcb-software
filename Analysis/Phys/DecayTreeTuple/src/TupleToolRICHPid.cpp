@@ -95,14 +95,14 @@ StatusCode TupleToolRICHPid::fill( const Particle*
       test &= tuple->column(  prefix+"_RICHDLLmu"
                               ,proto->info(ProtoParticle::RichDLLmu,-1000));
 
+      test &= tuple->column(  prefix+"_RICHDLLpi"
+                              ,proto->info(ProtoParticle::RichDLLpi,-1000));
+
       test &= tuple->column(  prefix+"_RICHDLLK"
                               ,proto->info(ProtoParticle::RichDLLk,-1000));
 
       test &= tuple->column(  prefix+"_RICHDLLp"
                               ,proto->info(ProtoParticle::RichDLLp,-1000));
-
-      test &= tuple->column(  prefix+"_RICHDLLpi"
-                              ,proto->info(ProtoParticle::RichDLLpi,-1000));
 
       test &= tuple->column(  prefix+"_RICHDLLbt"
                               ,proto->info(ProtoParticle::RichDLLbt,-1000));
@@ -112,6 +112,21 @@ StatusCode TupleToolRICHPid::fill( const Particle*
 
       if( !tuple->column( prefix+"_RICHThreshold", proto->richPID() ?
                           (proto->richPID()->isAboveThreshold(Assign_RICHID)) : -1)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_RICHThresholdEl", proto->richPID() ?
+                          (proto->richPID()->isAboveThreshold(Rich::Electron)) : -1)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_RICHThresholdMu", proto->richPID() ?
+                          (proto->richPID()->isAboveThreshold(Rich::Muon)) : -1)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_RICHThresholdPi", proto->richPID() ?
+                          (proto->richPID()->isAboveThreshold(Rich::Pion)) : -1)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_RICHThresholdKa", proto->richPID() ?
+                          (proto->richPID()->isAboveThreshold(Rich::Kaon)) : -1)) return StatusCode::FAILURE;
+
+      if( !tuple->column( prefix+"_RICHThresholdPr", proto->richPID() ?
+                          (proto->richPID()->isAboveThreshold(Rich::Proton)) : -1)) return StatusCode::FAILURE;
 
       if( !tuple->column( prefix+"_RICHAerogelUsed", proto->richPID() ?
                           (proto->richPID()->traversedRadiator(Rich::Aerogel)) : -1)) return StatusCode::FAILURE;

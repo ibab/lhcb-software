@@ -6,6 +6,8 @@
 
 ! 2011-12-17 - Chris Jones
  - Add RICHDLLbt to variables saved by the TupleToolRICHPid
+ - Explicitly store the above-threshold flag for each PID hypothese, regardless
+   of the Particle type.
 
 !========================= DecayTreeTuple v3r19 2011-12-15 =========================
 
