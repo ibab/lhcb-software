@@ -24,6 +24,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v18r4 2011-12-18 ===========================
+
 ! 2011-12-18 - Vanya Belyaev
 
  - TisTos module: 
@@ -34,11 +36,9 @@
  - dst-explorer, dst-dump, trg-check
       - more coherent setting of properties & parameters 
 
- - add possibility to copy "interetsing" events into output, 
-      it is as simple as:
+ - add possibility to copy "interetsing" events into output, it is as simple as:
  
     >>> writeEvent() 
-
 
 ! ==================== Phys/Bender v18r3 2011-11-23 ===========================
 
