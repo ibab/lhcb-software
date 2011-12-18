@@ -24,6 +24,22 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2011-12-18 - Vanya Belyaev
+
+ - TisTos module: 
+
+      - add TPS category for classification 
+      - add TPS/TUS bits in n-tuple 
+
+ - dst-explorer, dst-dump, trg-check
+      - more coherent setting of properties & parameters 
+
+ - add possibility to copy "interetsing" events into output, 
+      it is as simple as:
+ 
+    >>> writeEvent() 
+
+
 ! ==================== Phys/Bender v18r3 2011-11-23 ===========================
 
 ! 2011-11-23 - Vanya Belyaev

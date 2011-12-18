@@ -90,15 +90,6 @@ if '__main__' == __name__ :
         help    = "Number of events to process " ,
         default = -1    
         )
-    
-    parser.add_option (
-        '-r'                        ,
-        '--root'                    ,
-        dest    = 'LocationRoot'    ,
-        help    = "Root in TES tobe dumped " ,
-        type    = 'str'       , 
-        default = '/Event'    
-        )
 
     parser.add_option (
         '-o'                         ,
@@ -141,8 +132,8 @@ if '__main__' == __name__ :
     else                  : from Bender.Main     import *
 
     
-    if 0 != options.LocationRoot.find ( '/Event' ) :
-        options.LocationRoot = '/Event/' + options.LocationRoot 
+    if options.RootInTES and 0 != options.RootInTES.find ( '/Event/' ) :
+        options.RootInTES = '/Event/' + options.RootInTES 
         
     ## instantiate the application manager 
     gaudi=appMgr ()
@@ -170,10 +161,10 @@ if '__main__' == __name__ :
         ##
         iEvent += 1
         #
-        nodes = evtSvc.nodes ( node      = options.LocationRoot ,
-                               forceload = True                 )
+        nodes = evtSvc.nodes ( node      = options.RootInTES ,
+                               forceload = True              )
         if not nodes :
-            print "warning: no nodes are selected for Root:'%s'" % options.LocationRoot
+            print "warning: no nodes are selected for Root:'%s'" % options.RootInTES
             
         for loc in nodes :
             data = evtSvc[loc]

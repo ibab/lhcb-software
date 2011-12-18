@@ -207,6 +207,15 @@ def makeParser ( usage = None ,
         default = False   
         )
     ## 
+    parser.add_option (
+        '-r'                     ,
+        '--root'                 ,
+        type    = 'str'          ,
+        dest    = 'RootInTES'    ,
+        help    = 'Root-In-TES'  ,
+        default = ''           
+        )
+    ##
     return parser
 
 # =============================================================================
@@ -249,7 +258,12 @@ def configure ( options , arguments ) :
     if options.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
         daVinci.InputType = 'MDST'
         
-    if hasattr ( options , 'RootInTES' ) and options.RootInTES :
+    if options.RootInTES and '/' == options.RootInTES[-1] :
+        options.RootInTES = options.RootInTES[:-1]
+    if options.RootInTES and  0  != options.RootInTES.find ( '/Event/' ) :
+        options.RootInTES = '/Event/' + options.RootInTES
+        
+    if options.RootInTES :
         from Bender.MicroDST import uDstConf 
         uDstConf(options.RootInTES)
             
@@ -298,8 +312,6 @@ def configure ( options , arguments ) :
             ioh = IOHelper ( Input = options.Persistency ) 
             ioh.setupServices()
             
-
-
     ## prepare to copy good/marked/tagged evenst
     if hasattr ( options, 'OutputFile' ) and options.OutputFile :
         from Bender.Utils import copyGoodEvents
@@ -307,7 +319,7 @@ def configure ( options , arguments ) :
             copyGoodEvents ( options.OutputFile ) 
         else :
             copyGoodEvents ( "%s.%s" % ( options.OutputFile , ext ) ) 
-            
+
     from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction ( _action )
     
@@ -332,14 +344,6 @@ if '__main__' == __name__ :
     parser = makeParser  ( usage = __usage__   ,
                            vers  = __version__ )
     
-    parser.add_option (
-        '-r'                     ,
-        '--root'                 ,
-        type    = 'str'          ,
-        dest    = 'RootInTES'    ,
-        help    = 'Root-In-TES'  ,
-        default = ''           
-        )
     parser.add_option (
         '-o'                     ,
         '--output'               ,

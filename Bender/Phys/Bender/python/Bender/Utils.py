@@ -581,7 +581,7 @@ def copyGoodEvents ( filename                 ,
     
     """
     from GaudiConf import IOHelper
-    ioh   = IOHelper       ('ROOT','ROOT') 
+    ioh   = IOHelper       ( 'ROOT' , 'ROOT' ) 
     algs  = ioh.outputAlgs ( filename , 'InputCopyStream/%s' % incident )
     
     ioh.setupServices()
@@ -592,21 +592,8 @@ def copyGoodEvents ( filename                 ,
     seq   = GaudiSequencer ( '%sSeq' % incident        ,
                              Members = [ tag ] +  algs ) 
 
-    ## prepare the stuff for event tag collections
-    #  is it a rigthplace fo rthis action?
-    from Configurables import TagCollectionSvc
-    tsvc = TagCollectionSvc ( "EvtTupleSvc")
-    #
-    p       = filename.rfind('.')
-    tagname = filename[:p] + '.tags'
-    #
-    tsvc.Output += [
-        "GOODTAGS DATAFILE='%s' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" % tagname 
-        ]
-    
     from Configurables import ApplicationMgr
     AM    = ApplicationMgr ()
-    AM.ExtSvc += [ tsvc ]
     
     if not AM.OutStream : AM.OutStream =[]
     

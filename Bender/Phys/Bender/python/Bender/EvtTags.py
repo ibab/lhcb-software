@@ -93,15 +93,10 @@ def etcSeq ( name  = "GoodEvent" ,
     if   'TagCollectionSvc/EvtTupleSvc' in _g.ExtSvc : pass 
     elif 'EvtTupleSvc'                  in _g.ExtSvc : pass
     else :
-        print ' I AM HERE '
         _g.ExtSvc += [ 'TagCollectionSvc/EvtTupleSvc' ]
 
     if not fname :
         fname = "%s.etc" % name
-
-    # evtColSvc = _g.evtColSvc()
-    # evtColSvc.defineOutput( {'EVTTAGS' : 'PFN:%s' % fname } , typ='POOL_ROOT' )
-    # evtColSvc.OutputLevel = 2
 
     tagName = '%sETC'                           % name
     wrtName = 'EvtCollectionStream/%sEtcWriter' % name  

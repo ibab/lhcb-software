@@ -155,10 +155,13 @@ def decisions ( self             ,
     
     if not triggers.has_key ( 'L0_TOS'   ) : triggers [ 'L0_TOS'   ] = {}
     if not triggers.has_key ( 'L0_TIS'   ) : triggers [ 'L0_TIS'   ] = {}
+    if not triggers.has_key ( 'L0_TPS'   ) : triggers [ 'L0_TPS'   ] = {}
     if not triggers.has_key ( 'Hlt1_TOS' ) : triggers [ 'Hlt1_TOS' ] = {}
     if not triggers.has_key ( 'Hlt1_TIS' ) : triggers [ 'Hlt1_TIS' ] = {}
+    if not triggers.has_key ( 'Hlt1_TPS' ) : triggers [ 'Hlt1_TPS' ] = {}
     if not triggers.has_key ( 'Hlt2_TOS' ) : triggers [ 'Hlt2_TOS' ] = {}
     if not triggers.has_key ( 'Hlt2_TIS' ) : triggers [ 'Hlt2_TIS' ] = {}
+    if not triggers.has_key ( 'Hlt2_TPS' ) : triggers [ 'Hlt2_TPS' ] = {}
 
 
     if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
@@ -170,7 +173,7 @@ def decisions ( self             ,
             
     if hasattr ( p , 'particle' ) : p = p.particle()
     
-    
+    ## TOS 
     trigs = l0tistos.triggerSelectionNames ( p  , 'L0.*Decision'  ,
                                              ITriggerSelectionTisTos.kTrueRequired , ## decision 
                                              ITriggerSelectionTisTos.kAnything     , ## TIS
@@ -184,7 +187,8 @@ def decisions ( self             ,
         if not tos.has_key(t) : tos[t]  = 1 
         else                  : tos[t] += 1
         
-    
+
+    ## TIS 
     trigs = l0tistos.triggerSelectionNames ( p  , 'L0.*Decision'  ,
                                              ITriggerSelectionTisTos.kTrueRequired , ## decision 
                                              ITriggerSelectionTisTos.kTrueRequired , ## TIS
@@ -196,9 +200,24 @@ def decisions ( self             ,
     for t in trigs :
         if not tis.has_key(t) : tis[t]  = 1 
         else                  : tis[t] += 1 
+
+    ## TPS 
+    trigs = l0tistos.triggerSelectionNames ( p  , 'L0.*Decision'  ,
+                                             ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                             ITriggerSelectionTisTos.kAnything     , ## TIS
+                                             ITriggerSelectionTisTos.kAnything     , ## TOS
+                                             ITriggerSelectionTisTos.kTrueRequired ) ## TPS
+    tis = triggers['L0_TPS']
+    if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
+    else                        : tis['TOTAL'] += 1
+    for t in trigs :
+        if not tis.has_key(t) : tis[t]  = 1 
+        else                  : tis[t] += 1 
+
         
     for i in ( 'Hlt1' , 'Hlt2' ) :
-        
+
+        ## TOS 
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
                                                ITriggerSelectionTisTos.kTrueRequired , ## decision 
                                                ITriggerSelectionTisTos.kAnything     , ## TIS
@@ -210,13 +229,27 @@ def decisions ( self             ,
         for t in trigs :
             if not tos.has_key(t) : tos[t]  = 1 
             else                  : tos[t] += 1 
-        
+
+        ## TIS 
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
                                                ITriggerSelectionTisTos.kTrueRequired , ## decision 
                                                ITriggerSelectionTisTos.kTrueRequired , ## TIS
                                                ITriggerSelectionTisTos.kAnything     , ## TOS
                                                ITriggerSelectionTisTos.kAnything     ) ## TPS
         tis = triggers[ i + '_TIS']
+        if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
+        else                        : tis['TOTAL'] += 1
+        for t in trigs :
+            if not tis.has_key(t) : tis[t]  = 1 
+            else                  : tis[t] += 1
+            
+        ## TPS 
+        trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
+                                               ITriggerSelectionTisTos.kTrueRequired , ## decision 
+                                               ITriggerSelectionTisTos.kAnything     , ## TIS
+                                               ITriggerSelectionTisTos.kAnything     , ## TOS
+                                               ITriggerSelectionTisTos.kTrueRequired ) ## TPS
+        tis = triggers[ i + '_TPS']
         if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
         else                        : tis['TOTAL'] += 1
         for t in trigs :
@@ -291,7 +324,7 @@ def trgDecs ( self            ,
             for k in keys :
                 v   = trg[k]
                 eff = be ( v , tot ) * 100 
-                print ' %s  \t %s ' % ( eff.toString ("(%6.2f+-%5.2f )") , k ) 
+                print ' %s  \t %s ' % ( eff.toString ("(%6.2f +-%5.2f )") , k ) 
 
 
     print 90*'*'
@@ -475,6 +508,10 @@ def tisTos ( self             ,
     l2_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TOS' ]  )
     l2_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TIS' ]  )
     
+    #
+    ## main TOS & TIS categories:
+    #
+    
     ntuple.column ( label + 'l0tos_1' , l0_tos.tos      () , 0 , 1 )
     ntuple.column ( label + 'l0tis_1' , l0_tos.tis      () , 0 , 1 )
     ntuple.column ( label + 'l0dec_1' , l0_tos.decision () , 0 , 1 )
@@ -498,7 +535,29 @@ def tisTos ( self             ,
     ntuple.column ( label + 'l2tos_2' , l2_tis.tos      () , 0 , 1 )
     ntuple.column ( label + 'l2tis_2' , l2_tis.tis      () , 0 , 1 )
     ntuple.column ( label + 'l2dec_2' , l2_tis.decision () , 0 , 1 )
+
+    #
+    ## TPS & TUS categories:
+    #
     
+    ntuple.column ( label + 'l0tps_1' , l0_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l0tus_1' , l0_tos.tus      () , 0 , 1 )
+
+    ntuple.column ( label + 'l0tps_2' , l0_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l0tus_2' , l0_tis.tus      () , 0 , 1 )
+    
+    ntuple.column ( label + 'l1tps_1' , l1_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l1tus_1' , l1_tos.tus      () , 0 , 1 )
+
+    ntuple.column ( label + 'l1tps_2' , l1_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l1tus_2' , l1_tis.tus      () , 0 , 1 )
+
+    ntuple.column ( label + 'l2tps_1' , l2_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l2tus_1' , l2_tos.tus      () , 0 , 1 )
+
+    ntuple.column ( label + 'l2tps_2' , l2_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l2tus_2' , l2_tis.tus      () , 0 , 1 )
+
     return SUCCESS
 
 # =============================================================================

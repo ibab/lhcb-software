@@ -113,7 +113,8 @@ def chkTrg  ( ) :
                 self.decisions ( p , self.triggers[ pname ] ) 
 
             self.setFilterPassed ( not particles.empty() )
-            
+
+
             return SUCCESS 
 
         ## finalization 
@@ -133,18 +134,9 @@ if '__main__' == __name__ :
 
     from Bender.DstExplorer import makeParser
     
-    parser = makeParser ( usage   = __usage__                ,
-                          version = ' %prog '  + __version__ )
+    parser = makeParser ( usage = __usage__                ,
+                          vers  = ' %prog '  + __version__ )
     
-    ##
-    parser.add_option (
-        '-m'                          ,
-        '--micro'                     ,
-        action  = "store_true"        ,
-        dest    = 'MicroDST'          ,
-        help    = "MicroDST format?"  ,
-        default = False   
-        )
     ##
     parser.add_option (
         '-n'                          ,
@@ -176,18 +168,28 @@ if '__main__' == __name__ :
     ## line to be checked
     Line  = arguments [0]
     Files = arguments [1:] 
-        
-    if not 0 <= Line.find ('Phys') :
-        parser.error ( 'Invalid line name %s' % Line  ) 
+
+    if options.RootInTES and '/' == options.RootInTES[-1] :
+        options.RootInTES = options.RootInTES[:-1]
+    if options.RootInTES and  0  != options.RootInTES.find ( '/Event/' ) :
+        options.RootInTES = '/Event/' + options.RootInTES 
+
+    if options.RootInTES :
+        if   0  < Line.find ( 'Phys' ) :
+            Line = Line [ Line.find('Phys'): ]
+            Line = options.RootInTES + '/' + Line
+        elif 0 == Line.find ( 'Phys' ) :
+            Line = options.RootInTES + '/'      + Line
+        else :
+            Line = options.RootInTES + '/Phys/' + Line
 
     if     0 != Line.find ('/Event/') :
         parser.error ( 'Invalid line name %s' % Line  ) 
-
-    if not 0 <= Line.find ('/Particles') :
+        
+    if not 0 < Line.rfind ('/Particles') :
         Line = Line + '/Particles'
         
-    if 0>= options.Nevents <= 0 and -1 != nEvents : 
-        nEvents = 1000
+    if 0 >= options.Nevents and -1 != nEvents : nEvents = 1000
     #
     ## data type for MC 
     #
@@ -231,38 +233,34 @@ if '__main__' == __name__ :
         Simulation      = options.Simulation       ,
         Persistency     = options.Persistency      ,
         EventPreFilters = fltrs.filters('Filters') ,
-        UseTrigRawEvent = False , #True                     , 
         InputType       = InputType                ,
         Lumi            = False          
         )
     
-    if not options.Simulation and options.DataType in ( '2010' , '2011' ) :
-        #
-        ## try to use the latest availabel tags:
-        #
-        from Configurables import CondDB    
-        CondDB ( UseLatestTags = [ options.DataType ] )
-        import os 
-        if os.environ.has_key('LHCBGRIDSYSROOT') :
-            if os.environ.has_key('LHCBGRIDCONFIGROOT') :
-                if os.path.exists ( os.environ['LHCBGRIDSYSROOT'] )  :
-                    if os.path.exists ( os.environ['LHCBGRIDCONFIGROOT'] )  :
-                        #
-                        ## Use Oracle if possible
-                        CondDB ( UseOracle = True  )
+    if not options.Simulation : 
+        if options.DataType in ( '2010' , '2011' ) :
+            #
+            ## try to use the latest available tags:
+            #
+            from Configurables import CondDB    
+            CondDB ( UseLatestTags = [ options.DataType ] )
+            import os 
+            if os.environ.has_key('LHCBGRIDSYSROOT') :
+                if os.environ.has_key('LHCBGRIDCONFIGROOT') :
+                    if os.path.exists ( os.environ['LHCBGRIDSYSROOT'] )  :
+                        if os.path.exists ( os.environ['LHCBGRIDCONFIGROOT'] ) :
+                            #
+                            ## Use Oracle if possible
+                            #
+                            CondDB ( UseOracle = True  )
 
 
-    rootInTES = ''
-    if micro or options.MicroDST :
-        pos       = Line.find ( '/Phys')
-        rootInTES = Line[:pos]
-        
-    if rootInTES: 
+    if options.RootInTES: 
         # ------- decoding set-up start ----------
         #from MicroDSTConf.TriggerConfUtils import configureL0AndHltDecoding
         #from Bender.uDstTisTos import configureL0AndHltDecoding
         from Bender.MicroDST import uDstConf 
-        uDstConf(rootInTES)
+        uDstConf(options.RootInTES)
         # ------- decoding set-up end  -----------
         
     
@@ -278,8 +276,10 @@ if '__main__' == __name__ :
     ## instantiate the application manager
     gaudi=appMgr ()
     
+    rootInTES = options.RootInTES 
+
     ## Set properties of the TisTosTools
-    if rootInTES: 
+    if rootInTES : 
         for t in ( gaudi.tool ( 'CheckTrg.L0TriggerTisTos' ) ,
                    gaudi.tool ( 'CheckTrg.TriggerTisTos'   ) ) : 
             t . UseParticle2LHCbIDsMap = 2
@@ -292,16 +292,16 @@ if '__main__' == __name__ :
     if rootInTES :
         inputLine =  inputLine[ len(rootInTES) + 1 : ] 
         alg = Alg (
-            'CheckTrg' ,
-            Inputs    = [ inputLine ] ,
-            PropertiesPrint  = False , 
-            RootInTES = rootInTES
+            'CheckTrg'                       ,
+            Inputs           = [ inputLine ] ,
+            PropertiesPrint  = False         , 
+            RootInTES        = rootInTES
             ) 
     else :
         alg = Alg (
             'CheckTrg' ,
-            PropertiesPrint  = False , 
-            Inputs    = [ inputLine ]
+            PropertiesPrint  =   False , 
+            Inputs           = [ inputLine ]
             )
         
     #
@@ -316,8 +316,10 @@ if '__main__' == __name__ :
     # dod = gaudi.service('DataOnDemandSvc' )
     # dod.Dump = True
     
+    print 90*'*'
     print '  Line     : ' , Line
     print '  RootInTES: ' , rootInTES
+    print 90*'*'
     
     alg.trgDecs()
 
