@@ -33,8 +33,12 @@
  *
  *  @data   2010-03-04
  */
-class TupleToolPid : public TupleToolBase, virtual public IParticleTupleTool {
+class TupleToolPid : public TupleToolBase,
+                     virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolPid( const std::string& type,
                 const std::string& name,
@@ -42,9 +46,11 @@ public:
 
   virtual ~TupleToolPid(){}; ///< Destructor
 
-  virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
-                           , const std::string&, Tuples::Tuple& );
+  virtual StatusCode fill( const LHCb::Particle*,
+                           const LHCb::Particle*,
+                           const std::string&,
+                           Tuples::Tuple& );
 
-private:
 };
+
 #endif // JBOREL_TUPLETOOLPID_H

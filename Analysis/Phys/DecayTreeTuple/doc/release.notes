@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-18 - Chris Jones
+ - Extend the TupleToolPid to include all of the main sub-detector PID
+   variables when in verbose mode.
+
 ! 2011-12-17 - Chris Jones
  - Add RICHDLLbt to variables saved by the TupleToolRICHPid
  - Explicitly store the above-threshold flag for each PID hypothese, regardless
