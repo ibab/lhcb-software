@@ -33,6 +33,12 @@ It is likely to be the last verison of Bender
 </li>
 
 <li>
+The version has been tested only with Stripping17 data.
+It is not excluded that earlier microDST formats, 
+line Stripping13b would meet some problems for TisTos
+</li>
+
+<li>
 There are few minor fixes in 
 <c>dst-explorer</c>, 
 <c>dst-dumpM</c> and <c>trg-check</c> 
