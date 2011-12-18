@@ -23,6 +23,39 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v18r4>2011-12-18 Bender v18r4 based on the DaVinci v29r3</A>
+
+<PRE>		
+The version in general is rather similar  to v18r3,  but it is based on fresh DaVinci v29r3
+
+<li>
+It is likely to be the last verison of Bender
+</li>
+
+<li>
+There are few minor fixes in 
+<c>dst-explorer</c>, 
+<c>dst-dumpM</c> and <c>trg-check</c> 
+scripts to make them more smart and much more coherent 
+</li>
+
+<li>
+TisTos-module has been enhanced to get the infomation about 
+TPS and TUS categories 
+</li>
+
+<li>
+<b>Highlight of this release</b>
+There is set of new functions/utilities to copy "interesting" 
+events into the separate file. 
+It can be used both for "algorithmic" approach and for python-prompt approach. 
+Unfortunately the "natural" output format for such 
+event selection, ETC is not supported anymore.  
+Therefore  the dumb event copy is used.
+</li>
+</PRE>
+
+
 <A NAME=v18r3>2011-11-23 Bender v18r3 based on the DaVinci v29r2</A>
 
 <PRE>		
