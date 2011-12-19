@@ -86,9 +86,9 @@ Track::ConstNodeRange Track::nodes() const
     //
     BOOST_STATIC_ASSERT( sizeof(Iterator1) == sizeof(Iterator2) ) ;
   } ;
-  //
-  volatile _IteratorCast _begin ;
-  volatile _IteratorCast _end   ;
+  // somehow, volatile didn't work here in gcc46
+  static _IteratorCast _begin ;
+  static _IteratorCast _end   ;
   //
   _begin . input = &begin ;
   _end   . input = &end   ;
