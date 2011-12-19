@@ -25,7 +25,6 @@ use AppConfig          v3r*         -no_auto_imports
 
 # From GAUDI project
 use Gaudi              v*           -no_auto_imports
-use GaudiPoolDb        v*           -no_auto_imports
 
 # From LHCbSys
 use EventPacker        v*    Event  -no_auto_imports

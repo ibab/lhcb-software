@@ -3,6 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to configuration:
+   . Remove dependency on GaudiPoolDb
+
+ - Changes to tests
+   . Remove boole.boole-mc10pool, writing POOL files no longer supported
+
 </PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
 This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
