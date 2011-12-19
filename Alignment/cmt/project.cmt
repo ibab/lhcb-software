@@ -1,7 +1,6 @@
 project ALIGNMENT
 
 use LBCOM LBCOM_v11r1
-use REC   REC_v12r1
 use PHYS   PHYS_v13r1
 
 build_strategy	with_installarea
