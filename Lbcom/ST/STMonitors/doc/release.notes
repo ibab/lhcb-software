@@ -4,6 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2011-12-19 - Marco Cattaneo
+ - Remove unnecessary build dependency on STDAQ, fixes annoying warning from
+   SetupProject when working with LbcomSys against the nightlies
+
 !========================= STMonitors v3r7p1 2011-12-14 =========================
 ! 2011-11-23 Marco Cattaneo
  - Fix trivial gcc46 warnings and icc remarks

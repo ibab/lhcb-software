@@ -20,7 +20,6 @@ branches src cmt doc python
 
 use STTELL1Event  v*  ST
 use STKernel      v*  ST
-use STDAQ         v*  ST
 use RecEvent      v*  Event
 use GaudiAlg      v* 
 use AIDA          v*  LCG_Interfaces -no_auto_imports
