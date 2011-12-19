@@ -509,7 +509,7 @@ int lib_rtl_diskspace(const char* name,
 {
 #ifdef _WIN32
   DWORD SectorsPerCluster,BytesPerSector,NumberOfFreeClusters,TotalNumberOfClusters;
-  if ( GetDiskFreeSpace(name,&SectorsPerCluster,&BytesPerSector,
+  if ( ::GetDiskFreeSpace(name,&SectorsPerCluster,&BytesPerSector,
 			&NumberOfFreeClusters,&TotalNumberOfClusters) ) {
     *blk_size = BytesPerSector;
     *total_blk = SectorsPerCluster*TotalNumberOfClusters;
