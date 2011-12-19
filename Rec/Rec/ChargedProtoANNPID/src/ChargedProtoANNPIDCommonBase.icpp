@@ -37,8 +37,8 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
   if ( sc.isFailure() )
-  { 
-    return this -> Error( "Failed to initialise Gaudi Base class", sc ); 
+  {
+    return this -> Error( "Failed to initialise Gaudi Base class", sc );
   }
 
   // Printout from initialize
@@ -70,7 +70,7 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 
 //=============================================================================
 template <class PBASE>
-const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt & 
+const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::StringToInt &
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
 {
   static const StringToInt sToI = boost::assign::map_list_of
@@ -86,6 +86,12 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
     ( "MuonIsMuon"            , (int)LHCb::ProtoParticle::LastGlobal + 10 )
     ( "TrackLikelihood"       , (int)LHCb::ProtoParticle::LastGlobal + 11 )
     ( "TrackGhostProbability" , (int)LHCb::ProtoParticle::LastGlobal + 12 )
+    ( "TrackFitMatchChi2"     , (int)LHCb::ProtoParticle::LastGlobal + 24 )
+    ( "TrackFitVeloChi2"      , (int)LHCb::ProtoParticle::LastGlobal + 25 )
+    ( "TrackFitVeloNDoF"      , (int)LHCb::ProtoParticle::LastGlobal + 26 )
+    ( "TrackFitTChi2"         , (int)LHCb::ProtoParticle::LastGlobal + 27 )
+    ( "TrackFitTNDoF"         , (int)LHCb::ProtoParticle::LastGlobal + 28 )
+    ( "TrackCloneDist"        , (int)LHCb::ProtoParticle::LastGlobal + 29 )
     ( "NumProtoParticles"     , (int)LHCb::ProtoParticle::LastGlobal + 13 )
     ( "NumCaloHypos"          , (int)LHCb::ProtoParticle::LastGlobal + 14 )
     ( "NumLongTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 15 )
@@ -131,7 +137,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringID( const int id ) cons
 
 //=============================================================================
 template <class PBASE>
-int 
+int
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::variableID( const std::string & name ) const
 {
   int id(0);
@@ -216,6 +222,30 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
     var = proto->track()->ghostProbability();
     if ( var > 0.99999 ) var = -999.0; // Move delta at 1 to -999 for NeuroBayes
   }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+24 == input )
+  {
+    var = proto->track()->info(LHCb::Track::FitMatchChi2,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+25 == input )
+  {
+    var = proto->track()->info(LHCb::Track::FitVeloChi2,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+26 == input )
+  {
+    var = proto->track()->info(LHCb::Track::FitVeloNDoF,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+27 == input )
+  {
+    var = proto->track()->info(LHCb::Track::FitTChi2,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+28 == input )
+  {
+    var = proto->track()->info(LHCb::Track::FitTNDoF,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+29 == input )
+  {
+    var = proto->track()->info(LHCb::Track::CloneDist,-999);
+  }
 
   // -----------------------------------------------------------------------------------------------
   // Global Event Quantities
@@ -223,55 +253,55 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
 
   else if ( (int)LHCb::ProtoParticle::LastGlobal+15 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nLongTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+16 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nDownstreamTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+17 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nUpstreamTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+18 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nVeloTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+19 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nTTracks, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+20 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nPVs, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+21 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nSPDhits, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+22 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nRich1Hits, 0 );
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+23 == input )
   {
-    const LHCb::RecSummary * summary = 
+    const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nRich2Hits, 0 );
   }
@@ -402,7 +432,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   // NaN ?
   if ( lnan(var) )
   {
-    this->Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0" ).ignore(); 
+    this->Warning( "Variable " + stringID(input) + " is NaN -> Setting to 0" ).ignore();
     var = 0.0;
   }
 

@@ -40,6 +40,8 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    // Tracking
                    ("TrackP")("TrackPt")("TrackChi2PerDof")("TrackType")("TrackHistory")
                    ("TrackNumDof")("TrackLikelihood")("TrackGhostProbability")
+                   ("TrackFitMatchChi2")("TrackCloneDist")
+                   ("TrackFitVeloChi2")("TrackFitVeloNDoF")("TrackFitTChi2")("TrackFitTNDoF")
                    // Combined DLLs
                    ("CombDLLe")("CombDLLmu")("CombDLLpi")("CombDLLk")("CombDLLp")
                    // RICH
