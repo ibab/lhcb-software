@@ -18,8 +18,6 @@ use AIDA         v*    LCG_Interfaces -no_auto_imports
 # the configuration database :
 use L0TCK        v4r*  TCK
 use L0Base       v*     L0
-# L0Muon needed at run time by L0Sequence.opts
-use L0Muon       v*    L0    -no_auto_imports
 # ================ component library =====================================
 library		L0DU  *.cpp -import=AIDA
 
