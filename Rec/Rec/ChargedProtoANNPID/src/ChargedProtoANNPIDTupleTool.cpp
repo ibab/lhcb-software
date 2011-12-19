@@ -34,6 +34,9 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    m_variablesS = boost::assign::list_of
                    // General event variables
                    ("NumProtoParticles")("NumCaloHypos")
+                   ("NumLongTracks")("NumDownstreamTracks")("NumUpstreamTracks")
+                   ("NumVeloTracks")("NumTTracks")("NumPVs")("NumSPDHits")
+                   ("NumRich1Hits")("NumRich2Hits")
                    // Tracking
                    ("TrackP")("TrackPt")("TrackChi2PerDof")("TrackType")("TrackHistory")
                    ("TrackNumDof")("TrackLikelihood")("TrackGhostProbability")

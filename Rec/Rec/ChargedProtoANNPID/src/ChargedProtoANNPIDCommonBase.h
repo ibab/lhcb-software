@@ -23,6 +23,7 @@
 
 // Event Model
 #include "Event/ProtoParticle.h"
+#include "Event/RecSummary.h"
 
 //-----------------------------------------------------------------------------
 /** @namespaceANNGlobalPID
