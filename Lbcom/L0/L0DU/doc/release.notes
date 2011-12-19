@@ -3,6 +3,10 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2011-12-19 - Marco Cattaneo
+ - Remove unnecessary build dependency on L0Muon, fixes annoying warning from
+   SetupProject when working with LbcomSys against the nightlies
+
 !========================= L0DU v10r17 2011-12-14 =========================
 ! 2011-11-17 - Julien Cogan
  - L0Conf : add option to configure the On-Demand decoding of TAE.
