@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes in Brunel v42r0 output:
+  . Fixes to primitive types that can be saved in Tuples::TupleObj
+
+- Changes to configuration
+  . Remove GaudiPoolDb dependency
+
+- Changes to tests
+  . Remove tests that write to POOL files, no longer supported
+
 </PRE><H1><A NAME=v41r3>2011-12-19 Brunel v41r3</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2,
  Rec v12r2 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

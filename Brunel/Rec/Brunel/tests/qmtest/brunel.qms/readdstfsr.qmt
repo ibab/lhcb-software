@@ -11,6 +11,6 @@ from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>brunel.brunel-bigeventspool</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>brunel.brunel-bigevents</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
 </extension>
