@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-12-19 - Wouter Hulsbergen
+ - Adapt to change in TrackV0Finder
+
 !========================= RecConf v2r4 2011-11-08 =========================
 ! 2011-10-10 - Chris Jones
  - Change the number of the sequencer used for the inclusive timing monitor
