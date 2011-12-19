@@ -19,9 +19,6 @@
 
 using namespace ANNGlobalPID;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDTrainingTuple )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -44,10 +41,10 @@ StatusCode ChargedProtoANNPIDTrainingTuple::initialize()
   const StatusCode sc = ChargedProtoANNPIDAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_tuple = 
-    tool<IChargedProtoANNPIDTupleTool>( "ANNGlobalPID::ChargedProtoANNPIDTupleTool", 
+  m_tuple =
+    tool<IChargedProtoANNPIDTupleTool>( "ANNGlobalPID::ChargedProtoANNPIDTupleTool",
                                         "Tuple", this );
-  
+
   return sc;
 }
 
@@ -72,3 +69,9 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
 }
 
 //=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDTrainingTuple )
+
+//=============================================================================
+

@@ -15,14 +15,9 @@ template <class PBASE>
 void ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initCommonConstructor()
 {
   // context specific locations
-  if ( this->context() == "HLT" || this->context() == "Hlt" )
-  {
-    m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
-  }
-  else
-  {
-    m_protoPath = LHCb::ProtoParticleLocation::Charged;
-  }
+  m_protoPath = ( ( this->context() == "HLT" || this->context() == "Hlt" ) ?
+                  LHCb::ProtoParticleLocation::HltCharged                  :
+                  LHCb::ProtoParticleLocation::Charged                     );
   // Job Options
   this->declareProperty( "ProtoParticleLocation", m_protoPath );
 }
@@ -42,11 +37,15 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::initialize()
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
   if ( sc.isFailure() )
-  { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
+  { 
+    return this -> Error( "Failed to initialise Gaudi Base class", sc ); 
+  }
 
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
+  {
     this -> debug() << "Initialize" << endmsg;
+  }
 
   return sc;
 }
@@ -60,7 +59,9 @@ StatusCode ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
+  {
     this -> debug() << "Finalize" << endmsg;
+  }
 
   // Finalise base class and return
   return PBASE::finalize();
@@ -170,15 +171,15 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   // -----------------------------------------------------------------------------------------------
   if ( (int)LHCb::ProtoParticle::TrackP == input )
   {
-    const double MaxP = 5000.0 * Gaudi::Units::GeV;
+    //const double MaxP = 5000.0 * Gaudi::Units::GeV;
     var = proto->track()->p();
-    if ( var > MaxP ) var = -999;
+    //if ( var > MaxP ) var = -999;
   }
   else if ( (int)LHCb::ProtoParticle::TrackPt == input )
   {
-    const double MaxPt = 1000.0 * Gaudi::Units::GeV;
+    //const double MaxPt = 1000.0 * Gaudi::Units::GeV;
     var = proto->track()->pt();
-    if ( var > MaxPt ) var = -999;
+    //if ( var > MaxPt ) var = -999;
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+13 == input )
   {
