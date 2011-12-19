@@ -70,6 +70,7 @@ namespace ROMon {
       int          vsize, rss, data, stack;
       size_t       taskCount, missTaskCount, totalTaskCount;
       size_t       connCount, missConnCount, totalConnCount;
+      long         blk_size, blk_total, blk_availible;
 
       void _cpy(const Node& n) {
         name = n.name;
@@ -84,15 +85,18 @@ namespace ROMon {
         rss = n.rss;
         data = n.data;
         stack = n.stack;
-
         conns = n.conns;
         totalConnCount = n.totalConnCount;
         missConnCount = n.missConnCount;
         connCount = n.connCount;
+	blk_size = n.blk_size;
+	blk_total = n.blk_total;
+	blk_availible = n.blk_availible;
       }
       Node() : perc_cpu(0.), perc_mem(0.), vsize(0), rss(0), data(0), stack(0),
-           taskCount(0), missTaskCount(0), totalTaskCount(0), 
-           connCount(0), missConnCount(0), totalConnCount(0)
+	       taskCount(0), missTaskCount(0), totalTaskCount(0), 
+	       connCount(0), missConnCount(0), totalConnCount(0),
+	       blk_size(0), blk_total(0), blk_availible(0)
       {}
       Node(const std::string& n,const std::string&s) : name(n), status(s) {}
       Node(const Node& n)  { _cpy(n); }
@@ -266,6 +270,11 @@ namespace ROMon {
     int                 m_numBadTasks;
     /// Number of bad tasks
     int                 m_numBadConnections;
+    /// Total number of MB of the local disk capacity
+    float               m_diskSize;
+    /// Total number of MB left of the local disk capacity
+    float               m_diskAvailible;
+
 
   public:
     /// Initializing constructor
@@ -294,6 +303,11 @@ namespace ROMon {
     int numBadTasks() const                    {  return m_numBadTasks;       }
     /// Access the number of bad connections
     int numBadConnections() const              {  return m_numBadConnections; }
+    /// Total number of MB of the local disk capacity
+    float diskSize()  const                    {  return m_diskSize;          }
+    /// Total number of MB left of the local disk capacity
+    float diskAvailible()  const               {  return m_diskAvailible;     }
+
     /// Access to node state
     State state() const                        {  return m_state;             }
     /// Start monitoring activity of this object

@@ -91,23 +91,25 @@ CtrlSubfarmDisplay::~CtrlSubfarmDisplay()  {
 /// Display the node information
 void CtrlSubfarmDisplay::showNodes()  {
   char text[1024];
+  float GB = 1.0/float(1024*1024*1024);
   Cluster& c = m_cluster;
   MonitorDisplay* disp = m_nodes;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
-  const char* fmt = " %-12s %3s %8s %5zd/%-4zd %5zd/%-5zd %6d %6d %6d %3.0f %3.0f %-19s %s";
+  const char* fmt = " %-12s %3s %8s %5zd/%-4zd %5zd/%-5zd %4d %5d %5d %3.0f %3.0f %-19s %4.0f/%-4.0f %s";
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
-  disp->draw_line_bold(   " %-12s %3s %8s    Tasks   Connections %6s %6s %6s %3s %3s %-19s %s",
-                          "","","","RSS","Stack","VSize","CPU","MEM","","");
-  disp->draw_line_bold(   " %-12s %3s %8s found/miss found/miss  %6s %6s %6s %3s %3s %-19s %s",
-                          "Node","","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
-  for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
+  disp->draw_line_bold(   " %-12s %3s %8s    Tasks   Connections %4s %5s %5s %3s %3s %-18s %10s %10s",
+                          "","","","RSS","Stack","VSize","CPU","MEM","","LocalDisk","Last");
+  disp->draw_line_bold(   " %-12s %3s %8s found/miss found/miss  %4s %5s %5s %3s %3s %-18s %10s %10s",
+                          "Node","","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","[GB/GB] ","Reading");
+  for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i)    {
     const Cluster::Node& n = (*i).second;
     if ( n.status == "DEAD" ) {
       disp->draw_line_normal(" %-12s %3s %8s %76s",n.name.c_str(),"",n.status.c_str(),n.time.c_str());
     }
     else {
+      float blk_size = float(n.blk_size != 0 ? n.blk_size : 4096)*GB;
       const char* inc_exc = m_excluded.find(n.name)==m_excluded.end() ? "INC" : "EXC";
       taskCount     += n.taskCount;
       missTaskCount += n.missTaskCount;
@@ -116,7 +118,10 @@ void CtrlSubfarmDisplay::showNodes()  {
       disp->draw_line_normal(fmt,n.name.c_str(),inc_exc,n.status.c_str(),
                              n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
                              int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
-                             n.perc_cpu, n.perc_mem, n.boot.c_str(),n.time.c_str());
+                             n.perc_cpu, n.perc_mem, n.boot.c_str(),
+			     float(n.blk_availible)*blk_size,float(n.blk_total)*blk_size,
+			     n.time.length()>10 ? n.time.c_str()+10 : n.time.c_str()
+			     );
       //                             n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
     }
   }

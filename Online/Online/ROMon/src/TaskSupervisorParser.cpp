@@ -10,6 +10,7 @@ using namespace XML;
 static const XMLTag BOOT              ( "Boot");
 static const XMLTag SYSTEM            ( "System");
 static const XMLTag TASKS             ( "Tasks");
+static const XMLTag LOCALDISK         ( "Localdisk");
 static const XMLTag TASKNODE          ( "Task");
 static const XMLTag NODE              ( "Node");
 static const XMLTag CONNECTIONS       ( "Connections");
@@ -36,6 +37,9 @@ static const XMLTag Attr_stack        ( "stack");
 static const XMLTag Attr_vsize        ( "vsize");
 static const XMLTag Attr_perc_mem     ( "perc_mem");
 static const XMLTag Attr_perc_cpu     ( "perc_cpu");
+static const XMLTag Attr_blk_size     ( "blk_size");
+static const XMLTag Attr_blk_total    ( "total");
+static const XMLTag Attr_blk_availible( "availible");
 
 static const string Status_OK("OK");
 
@@ -59,6 +63,7 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
   for(XMLCollection c(child(fde,"Node"), false); c; ++c) {
     XMLElement b(child(c,BOOT));
     XMLElement s(child(c,SYSTEM));
+    XMLElement l(child(c,LOCALDISK));
     XMLElement e(child(c,TASKS));
     XMLElement p(child(c,PROJECTS));
     XMLElement g(child(c,CONNECTIONS));
@@ -71,6 +76,9 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
     node.tasks.clear();
     node.conns.clear();
     node.projects.clear();
+    node.blk_size = 0;
+    node.blk_total = 0;
+    node.blk_availible = 0;
     node.totalTaskCount = node.missTaskCount = node.taskCount = 0;
     node.totalConnCount = node.missConnCount = node.connCount = 0;
     node.rss = node.vsize = node.data = node.stack = 0;
@@ -81,6 +89,11 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
       time_t boot_time = ::atoi(b.attr(Attr_time).c_str());
       ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&boot_time));
       node.boot = buff;
+    }
+    if ( l ) {
+      node.blk_size = ::atol(l.attr(Attr_blk_size).c_str());
+      node.blk_total = ::atol(l.attr(Attr_blk_total).c_str());
+      node.blk_availible = ::atol(l.attr(Attr_blk_availible).c_str());
     }
     if ( s ) {
       node.rss = ::atoi(s.attr(Attr_rss).c_str());

@@ -71,12 +71,32 @@ namespace ROMon {
     long   sizeOf() const {  return sizeof(Memory); }
   };
 
-  /**@class CPU CPUMon.h ROMon/CPUMon.h
+  /**@class Memory CPUMon.h ROMon/CPUMon.h
+   *
+   * Class which represents the Diskspace information of a single node.
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) Diskspace {
+  public:
+  /**@class Diskspace CPUMon.h ROMon/CPUMon.h
    *
    * Class which represents a CPU core in a single node
    *
    * @author M.Frank
    */
+    long    blockSize;
+    long    numBlocks;
+    long    freeBlocks;
+
+    /// Empty constructor
+    Diskspace();
+    /// Reset data content
+    Diskspace*          reset();
+    /// Size of the object
+    long   sizeOf() const {  return sizeof(Diskspace); }
+  };
+
   PACK_DATA(class) CPU {
   public:
     /// Clock speed [from cpu/info]
@@ -304,9 +324,11 @@ namespace ROMon {
     /// Time stamp of the monitor snapshot [milli seconds]
     unsigned int millitm;
     /// Memory information
-    Memory memory;
+    Memory    memory;
+    /// Local disk information
+    Diskspace localdisk;
     /// Object name
-    char name[32];
+    char      name[32];
 
   public:    // Public data accessors
     /// Reset object structure
@@ -388,6 +410,10 @@ namespace ROMon {
     int  numBadTasks;
     /// Number of bad connections from this node    
     int  numBadConnections;
+    /// Total number of MB of the local disk capacity
+    float diskSize;
+    /// Total number of MB left of the local disk capacity
+    float diskAvailible;
     /// Standard constructor
     NodeSummary(const std::string& n);
     /// Reset data structure content

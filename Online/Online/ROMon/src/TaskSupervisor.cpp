@@ -297,13 +297,19 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
     }
   }
   bad = t.size()-good;
-  m_numBadTasks = bad;
+  m_numBadTasks   = bad;
+  m_diskSize      = float(ns->localdisk.numBlocks)*float(ns->localdisk.blockSize)/float(1024*1024*1024);
+  m_diskAvailible = float(ns->localdisk.freeBlocks)*float(ns->localdisk.blockSize)/float(1024*1024*1024);
   xml << "\t\t<System perc_cpu=\"" << cpu 
       << "\" perc_mem=\"" << mem 
       << "\" vsize=\"" << vsize 
       << "\" rss=\"" << rss 
       << "\" data=\"" << data
       << "\" stack=\"" << stack
+      << "\"/>" << endl;
+  xml << "\t\t<Localdisk blk_size=\"" << ns->localdisk.blockSize
+      << "\" total=\"" << ns->localdisk.numBlocks
+      << "\" availible=\"" << ns->localdisk.freeBlocks
       << "\"/>" << endl;
   xml << "\t\t<Tasks count=\"" << t.size() 
       << "\" ok=\"" << good 
@@ -560,12 +566,17 @@ int SubfarmTaskMon::publish() {
     char time_buf[128];
     stringstream xml;
     size_t good=0, bad=0;
+    float disk_free = 0.0, disk_total = 0.0;
     Monitors::const_iterator i;
     SubfarmSummary::Nodes::iterator ni;
     string status="DEAD", txt = ::lib_rtl_timestr(TIME_FORMAT);
 
-    for(i=m_nodes.begin(); i!=m_nodes.end(); ++i)
-      (*i).second->state()==NodeTaskMon::ALIVE ? ++good : ++bad;
+    for(i=m_nodes.begin(); i!=m_nodes.end(); ++i) {
+      NodeTaskMon* n=(*i).second;
+      n->state()==NodeTaskMon::ALIVE ? ++good : ++bad;
+      disk_free += n->diskSize();
+      disk_total += n->diskAvailible();
+    }
     if ( bad == 0 && good == m_nodes.size() ) status = "ALIVE";
     else if ( bad>0 && good>0               ) status = "MIXED";
     else if ( bad == m_nodes.size()         ) status = "DEAD";
@@ -573,6 +584,8 @@ int SubfarmTaskMon::publish() {
         << "\" status=\"" << status
         << "\" time=\"" << txt.c_str()+11
         << "\" nodes=\"" << m_nodes.size()
+        << "\" disk_total=\"" << disk_total
+        << "\" disk_availible=\"" << disk_free
         << "\">" << endl;
 
     { DimLock lock;
@@ -592,12 +605,16 @@ int SubfarmTaskMon::publish() {
           (*ni).numBadTasks = n->numBadTasks();
           (*ni).numBadConnections = n->numBadConnections();
           (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
+	  (*ni).diskSize = n->diskSize();
+	  (*ni).diskAvailible = n->diskAvailible();
         }
         else {
           (*ni).state = NodeSummary::DEAD;
           (*ni).status = NodeSummary::BAD;
           (*ni).numBadTasks = 1;
           (*ni).numBadConnections = 1;
+	  (*ni).diskSize = 0;
+	  (*ni).diskAvailible = 0;
         }
         (*ni).time = (int)n->taskUpdate();
         xml << "\t</Node>\n";

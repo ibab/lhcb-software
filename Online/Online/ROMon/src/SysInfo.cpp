@@ -176,9 +176,16 @@ int SysInfo::init() {
 
 /// Update changing object data items
 int SysInfo::update() {
+  unsigned long long blk_size=0,total_blk=0,availible_blk=0;
+
   newReading();
   read(m_mem);
-  //cout << m_mem << endl;
+  ::lib_rtl_diskspace("/localdisk",&blk_size,&total_blk,&availible_blk);
+
+  statistics()->localdisk.blockSize  = blk_size;
+  statistics()->localdisk.numBlocks  = total_blk;
+  statistics()->localdisk.freeBlocks = availible_blk;
+
   ::memcpy(&statistics()->memory,&m_mem,sizeof(Memory));
   read(*cpuNow()->reset(),CPUINFO_SIZE);
   //readStat(*cpuNow(), CPUINFO_SIZE, m_numCores);
