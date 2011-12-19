@@ -86,12 +86,6 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
     ( "MuonIsMuon"            , (int)LHCb::ProtoParticle::LastGlobal + 10 )
     ( "TrackLikelihood"       , (int)LHCb::ProtoParticle::LastGlobal + 11 )
     ( "TrackGhostProbability" , (int)LHCb::ProtoParticle::LastGlobal + 12 )
-    ( "TrackFitMatchChi2"     , (int)LHCb::ProtoParticle::LastGlobal + 24 )
-    ( "TrackFitVeloChi2"      , (int)LHCb::ProtoParticle::LastGlobal + 25 )
-    ( "TrackFitVeloNDoF"      , (int)LHCb::ProtoParticle::LastGlobal + 26 )
-    ( "TrackFitTChi2"         , (int)LHCb::ProtoParticle::LastGlobal + 27 )
-    ( "TrackFitTNDoF"         , (int)LHCb::ProtoParticle::LastGlobal + 28 )
-    ( "TrackCloneDist"        , (int)LHCb::ProtoParticle::LastGlobal + 29 )
     ( "NumProtoParticles"     , (int)LHCb::ProtoParticle::LastGlobal + 13 )
     ( "NumCaloHypos"          , (int)LHCb::ProtoParticle::LastGlobal + 14 )
     ( "NumLongTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 15 )
@@ -103,6 +97,13 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
     ( "NumSPDHits"            , (int)LHCb::ProtoParticle::LastGlobal + 21 )
     ( "NumRich1Hits"          , (int)LHCb::ProtoParticle::LastGlobal + 22 )
     ( "NumRich2Hits"          , (int)LHCb::ProtoParticle::LastGlobal + 23 )
+    ( "TrackFitMatchChi2"     , (int)LHCb::ProtoParticle::LastGlobal + 24 )
+    ( "TrackFitVeloChi2"      , (int)LHCb::ProtoParticle::LastGlobal + 25 )
+    ( "TrackFitVeloNDoF"      , (int)LHCb::ProtoParticle::LastGlobal + 26 )
+    ( "TrackFitTChi2"         , (int)LHCb::ProtoParticle::LastGlobal + 27 )
+    ( "TrackFitTNDoF"         , (int)LHCb::ProtoParticle::LastGlobal + 28 )
+    ( "TrackCloneDist"        , (int)LHCb::ProtoParticle::LastGlobal + 29 )
+    ( "NumMuonTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 30 )
     ;
   return sToI;
 }
@@ -304,6 +305,12 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
     const LHCb::RecSummary * summary =
       this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
     var = summary->info( LHCb::RecSummary::nRich2Hits, 0 );
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+30 == input )
+  {
+    const LHCb::RecSummary * summary =
+      this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default );
+    var = summary->info( LHCb::RecSummary::nMuonTracks, 0 );
   }
 
   // -----------------------------------------------------------------------------------------------

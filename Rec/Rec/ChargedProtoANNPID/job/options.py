@@ -31,7 +31,7 @@ DaVinci().Simulation = True
 ##     "DATAFILE='PFN:/usera/jonesc/NFS/data/MC/MC11a/DST/Inc-B/00013171_00000009_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ##     ]
 
-EventSelector().Input=[
+EventSelector().Input = [
     "DATAFILE='PFN:/usera/jonesc/NFS/data/MC/MC11a/DST/Inc-B/00013256_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:/usera/jonesc/NFS/data/MC/MC11a/DST/Inc-B/00013256_00000002_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:/usera/jonesc/NFS/data/MC/MC11a/DST/Inc-B/00013256_00000003_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'",

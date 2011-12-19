@@ -36,7 +36,7 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
                    ("NumProtoParticles")("NumCaloHypos")
                    ("NumLongTracks")("NumDownstreamTracks")("NumUpstreamTracks")
                    ("NumVeloTracks")("NumTTracks")("NumPVs")("NumSPDHits")
-                   ("NumRich1Hits")("NumRich2Hits")
+                   ("NumRich1Hits")("NumRich2Hits")("NumMuonTracks")
                    // Tracking
                    ("TrackP")("TrackPt")("TrackChi2PerDof")("TrackType")("TrackHistory")
                    ("TrackNumDof")("TrackLikelihood")("TrackGhostProbability")
