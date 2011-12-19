@@ -8,7 +8,6 @@ branches src cmt doc
 # =========== dependencies ====================================================
 
 use L0MuonKernel  v*    L0
-use L0Muon        v*    L0
 use L0Event       v*    Event
 use MuonDAQ       v*    Muon
 use MuonDet       v*    Det

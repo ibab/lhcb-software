@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.39 2010-06-21 08:18:15 cattanem Exp $
+!----------------------------------------------------------------------------
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
-!========================= L0MuonMonitor v2r2 2011-04-27 =========================
+! 2011-12-19 - Marco Cattaneo
+ - Remove unnecessary build dependency on L0Muon, fixes annoying warning from
+   SetupProject when working with LbcomSys against the nightlies
+
+!========================= L0MuonMonitor v2r2 2011-04-27 ========================
 ! 2011-04-21 - Julien Cogan
  - L0MuonMonitorInput : allow to mask some channels in the comparison with muon data
 
