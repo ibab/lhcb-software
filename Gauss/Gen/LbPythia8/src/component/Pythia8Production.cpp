@@ -60,8 +60,9 @@ Pythia8Production::Pythia8Production( const std::string& type,
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
-  declareProperty( "ValidateHEPEVT"  , m_validate_HEPEVT ); //The flag to force the validation (mother&daughter) of HEPEVT
+  declareProperty( "ValidateHEPEVT"  , m_validate_HEPEVT = false ); //The flag to force the validation (mother&daughter) of HEPEVT
   declareProperty( "Inconsistencies" , m_inconsistencies ); //The file to dump HEPEVT inconsinstencies
+  declareProperty( "ListAllParticles", m_listAllParticles = false ); //list all particles
 
   // Set the default settings for Pythia8 here:
   m_defaultSettings.clear() ;
@@ -418,7 +419,9 @@ StatusCode Pythia8Production::hadronize( HepMC::GenEvent * theEvent ,
 // Debug print out to be printed after all initializations
 //=============================================================================
 void Pythia8Production::printRunningConditions( ) { 
-  m_pythia->settings.listChanged();
+  if (m_nEvents==0 && m_listAllParticles==true) m_pythia->particleData.listAll();
+  if (msgLevel(MSG::DEBUG)) m_pythia->settings.listAll();
+  else m_pythia->settings.listChanged();
 }
 
 //=============================================================================
@@ -582,7 +585,7 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   
     int status = (*p) -> status() ;
 
- if (status>3 && status<20)
+     if (status>3 && status<20)
 	(*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
     else if (status>19 && status<80)
         (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );

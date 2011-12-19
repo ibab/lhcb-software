@@ -20,14 +20,17 @@ Pythia8ListOfCommands = [
     "MultipleInteractions:Kfactor = 1.0" ,
     "MultipleInteractions:pTmin = 0.2" ,
     "MultipleInteractions:bProfile = 1" ,
+    # old tuning from pyhtia6
     "MultipleInteractions:pT0Ref = 4.28" ,
     "MultipleInteractions:ecmRef = 14000.0" ,
     "MultipleInteractions:ecmPow = 0.238" ,
+    # new tuning proposed for pyhtia8
+    "MultipleInteractions:ecmRef = 7000" ,
+    "MultipleInteractions:pT0Ref = 2.88" ,
+    "MultipleInteractions:ecmPow = 0.238" ,    
     "BeamRemnants:primordialKThard = 1.0" ,
     "ParticleDecays:mixB = off" ,
     "StringFragmentation:stopMass = 0.4" ,
-#    "PDF:useLHAPDF = off" ,
-#    "PDF:pSet = 8" ,
     "StringFlav:mesonUDvector = 0.6" ,
     "StringFlav:mesonSvector = 0.6" , 
     "StringFlav:mesonCvector = 3.0" ,
@@ -38,12 +41,12 @@ Pythia8ListOfCommands = [
     "StringFlav:probQQ1toQQ0 = 0.05" ,
     "StringFlav:mesonUDL1S0J1 = 0.0989" ,
     "StringFlav:mesonUDL1S1J0 = 0.0132" ,
-    "StringFlav:mesonUDL1S1J1 = 0.5971" ,
-    "StringFlav:mesonUDL1S1J2 = 0.5971" ,
+    "StringFlav:mesonUDL1S1J1 = 0.0597" ,
+    "StringFlav:mesonUDL1S1J2 = 0.0597" ,
     "StringFlav:mesonSL1S0J1 = 0.0989" ,
     "StringFlav:mesonSL1S1J0 = 0.0132" ,
-    "StringFlav:mesonSL1S1J1 = 0.5971" ,
-    "StringFlav:mesonSL1S1J2 = 0.5971" ,
+    "StringFlav:mesonSL1S1J1 = 0.0597" ,
+    "StringFlav:mesonSL1S1J2 = 0.0597" ,
     "StringFlav:mesonCL1S0J1 = 0.0990" ,
     "StringFlav:mesonCL1S1J0 = 0.0657" ,
     "StringFlav:mesonCL1S1J1 = 0.2986" ,
@@ -52,6 +55,12 @@ Pythia8ListOfCommands = [
     "StringFlav:mesonBL1S1J0 = 0.0657" ,
     "StringFlav:mesonBL1S1J1 = 0.2986" ,
     "StringFlav:mesonBL1S1J2 = 0.2986" ,
+    "StringFlav:etaSup = 1." ,
+    "StringFlav:etaPrimeSup = 0.4" ,
+    "StringZ:aLund = 0.3" ,
+    "StringZ:bLund = 0.58" ,
+    "StringZ:rFactB = 1." ,
+    "StringPT:sigma = 0.36"
     ]
 
 Pythia8TurnOffFragmentation = [ "HadronLevel:all = off" ]
@@ -66,7 +75,6 @@ gen.addTool( Inclusive , name = "Inclusive" )
 gen.Inclusive.ProductionTool = "Pythia8Production"
 gen.Inclusive.addTool( Pythia8Production , name = "Pythia8Production" )
 gen.Inclusive.Pythia8Production.Commands += Pythia8ListOfCommands 
-gen.Inclusive.Pythia8Production.ValidateHEPEVT = True
 
 gen.addTool( SignalPlain , name = "SignalPlain" )
 gen.SignalPlain.ProductionTool = "Pythia8Production"

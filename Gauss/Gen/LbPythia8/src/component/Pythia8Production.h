@@ -116,5 +116,8 @@ private:
    std::ostream* m_HEPEVT_errors ;
    // ==========================================================================
 
+   bool m_listAllParticles ; ///list particles.
+
+
 } ;
 #endif // LBPYTHIA8_PYTHIA8PRODUCTION_H
