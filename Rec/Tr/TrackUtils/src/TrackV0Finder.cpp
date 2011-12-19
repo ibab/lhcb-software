@@ -51,7 +51,6 @@ private:
   std::string m_v0ContainerName;
   IMagneticFieldSvc* m_magfieldsvc ;
   ITrajPoca* m_pocatool ;
-  ToolHandle<ITrackExtrapolator> m_extrapolator ;
   ToolHandle<ITrackInterpolator> m_interpolator ;
   ITrackVertexer* m_vertexer ;
   const LHCb::ParticleProperty* m_ksProperty ;
@@ -119,7 +118,6 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_trackInputListName(LHCb::TrackLocation::Default),
-    m_extrapolator("TrackMasterExtrapolator",this),
     m_interpolator("TrackInterpolator",this),
     m_maxTrackChi2PerDoF(10),
     m_zmin(-100*Gaudi::Units::cm),
@@ -157,7 +155,6 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
   declareProperty( "RejectUpstreamHits", m_rejectUpstreamHits ) ;
   declareProperty( "AddExtraInfo", m_addExtraInfo ) ;
   declareProperty( "Interpolator", m_interpolator ) ;
-  declareProperty( "Extrapolator", m_extrapolator ) ;
   declareProperty( "MaxDistanceLong", m_distanceCutLong ) ;
   declareProperty( "MaxDistanceUpstream", m_distanceCutLong ) ;
   declareProperty( "AddStateAtVertex", m_addStateAtVertex ) ;
@@ -181,11 +178,6 @@ StatusCode TrackV0Finder::initialize() {
   m_pocatool = tool<ITrajPoca>( "TrajPoca" );
   m_vertexer = tool<ITrackVertexer>( "TrackVertexer" );
   if(m_useExtrapolator) {
-    sc = m_extrapolator.retrieve() ;
-    if( sc.isFailure() ) {
-      error() << "Cannot retrieve extrapolator" << endmsg ;
-      return sc; 
-    }
     sc = m_interpolator.retrieve() ;
     if( sc.isFailure() ) {
        error() << "Cannot retrieve interpolator" << endmsg ;
@@ -208,10 +200,7 @@ StatusCode TrackV0Finder::initialize() {
 }
 
 StatusCode TrackV0Finder::finalize() {
-  if( m_useExtrapolator ) {
-    m_extrapolator.release().ignore() ;
-    m_interpolator.release().ignore() ;
-  }
+  if( m_useExtrapolator )  m_interpolator.release().ignore() ;
   return GaudiAlgorithm::finalize() ;
 }
 
@@ -347,23 +336,15 @@ StatusCode TrackV0Finder::execute()
 		// this correctly even if we are between nodes. (The
 		// extrapolators are guaranteed to be wrong half the
 		// time!)
-		if( (*ipos)->nodes().empty() ) 
-		  sc = m_extrapolator->propagate( **ipos, z, posstate ) ;
+		sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
+		if( sc.isSuccess() ) posstate.setLocation(LHCb::State::V0Vertex) ;
 		else {
-		  sc = m_interpolator->interpolate( **ipos, z, posstate ) ;
-		  if( sc.isSuccess() ) posstate.setLocation(LHCb::State::V0Vertex) ;
-		}
-		if(!sc.isSuccess() ) {
 		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  posstate = postraj.state(z) ;
 		} 
-		if( (*ineg)->nodes().empty() ) 
-		  sc = m_extrapolator->propagate( **ineg, z, negstate ) ;
+		sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
+		if( sc.isSuccess() ) negstate.setLocation(LHCb::State::V0Vertex) ;
 		else {
-		  sc = m_interpolator->interpolate( **ineg, z, negstate ) ;
-		  if( sc.isSuccess() ) negstate.setLocation(LHCb::State::V0Vertex) ;
-		}
-		if(!sc.isSuccess() ) {
 		  Warning("Extrapolation failed. Rely on trajectory interpolation.",StatusCode::SUCCESS,0).ignore() ;
 		  negstate = negtraj.state(z) ;
 		}
@@ -396,7 +377,6 @@ StatusCode TrackV0Finder::execute()
 		    (mstatepos && mstatepos->z() < vertex->position().z() ) ||
 		    (mstateneg && mstateneg->z() < vertex->position().z() ) ;
 		}
-		
 		if( !hasUpstreamHits && (iskscandidate || islambdacandidate || isantilambdacandidate )) {
 		  
 		  if( m_addExtraInfo ) {
