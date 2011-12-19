@@ -13,7 +13,9 @@ using namespace std;
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #include <winsock.h>
+
 #include <stdexcept>
+
 namespace {
   struct __init__ {
     __init__()  {
@@ -32,6 +34,7 @@ namespace {
 #include <unistd.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <sys/statvfs.h>
 #endif
 
 
@@ -496,6 +499,33 @@ int lib_rtl_pipe_close(FILE* stream) {
 /// Safe wrapper around getenv
 const char* lib_rtl_getenv(const char* value) {
   return value ? ::getenv(value) : 0;
+}
+
+/// Access total/free disk space on file system (linux:statvfs call)
+int lib_rtl_diskspace(const char* name, 
+		      unsigned long long int* blk_size,
+		      unsigned long long int* total_blk,
+		      unsigned long long int* availible_blk)
+{
+#ifdef _WIN32
+  DWORD SectorsPerCluster,BytesPerSector,NumberOfFreeClusters,TotalNumberOfClusters;
+  if ( GetDiskFreeSpace(name,&SectorsPerCluster,&BytesPerSector,
+			&NumberOfFreeClusters,&TotalNumberOfClusters) ) {
+    *blk_size = BytesPerSector;
+    *total_blk = SectorsPerCluster*TotalNumberOfClusters;
+    *availible_blk = SectorsPerCluster*NumberOfFreeClusters;
+    return 1;
+  }
+#else
+  struct statvfs disk;
+  if ( 0 == ::statvfs(name,&disk) ) {
+    *blk_size = disk.f_bsize;
+    *total_blk = disk.f_blocks;
+    *availible_blk = disk.f_bavail;
+    return 1;
+  }
+#endif
+  return 0;
 }
 
 /// POSIX/ISO compiant wrapper around unlink

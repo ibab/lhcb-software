@@ -266,6 +266,11 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   /// POSIX/ISO compiant wrapper around unlink
   int lib_rtl_unlink(__CXX_CONST char* fname);
 
+  /// Access total/free disk space on file system (linux:statvfs call)
+  int lib_rtl_diskspace(__CXX_CONST char* name, unsigned long long int* blk_size,
+			unsigned long long int* total_blk,
+			unsigned long long int* availible_blk);
+			  
 
 #ifdef __cplusplus
 }

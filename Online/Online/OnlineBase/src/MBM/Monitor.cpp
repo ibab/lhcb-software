@@ -269,7 +269,7 @@ int Monitor::get_bm_list()   {
   m_numBM = 0;
   int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
-    ::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
+    //::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
     m_buffers = 0;
     m_bms = 0;
