@@ -11,7 +11,7 @@ from LbUtils.CMT.Parse import parseReq
 import thread, Queue
 from LbUtils.Processes import callCommand
 
-url = str(getRepositories()["lbsvn"])
+url = str(getRepositories(protocol='anonymous')["lbsvn"])
 lbsvn = rcs.connect(url)
 
 

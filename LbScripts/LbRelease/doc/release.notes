@@ -1,3 +1,8 @@
+2011-12-20  Rob Lambert rob.lambert@cern.ch
+
+	* python/LbRelease/SvnTools/Package.py: use anonymous repository by default
+	* python/LbRelease/SvnTools/Project.py: use anonymous repository by default
+
 2011-12-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/Info.py: use CMTPROJECTPATH when looking for project bases,
