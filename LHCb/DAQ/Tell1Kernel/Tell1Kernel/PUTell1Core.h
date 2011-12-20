@@ -56,5 +56,5 @@ namespace PuTell1
   
   // Data
   typedef dataObject DataTable[SENSOR][BEETLE]; 
-};
+}
 #endif // PUTELL1CORE_H
