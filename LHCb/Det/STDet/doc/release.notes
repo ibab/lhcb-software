@@ -4,7 +4,7 @@
 !-------------------------------------------------------------------------
 
 ! 2011-12-20 - Marco Cattaneo
- - Fix headers include recusions, Coverity defects 15534,15537,15538,15540,15543
+ - Fix headers include recursions, Coverity defects 15534 to 15544
 
 !========================= STDet v4r26 2011-07-25 =========================
 ! 2011-06-23 - Marco Cattaneo

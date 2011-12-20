@@ -1,4 +1,3 @@
-// $Id: DeITBox.h,v 1.7 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_ 1
 
@@ -115,9 +114,6 @@ private:
 };
 
 
-#include "STDet/DeITBox.h"
-#include "STDet/DeITStation.h"
-
 inline unsigned int DeITBox::id() const{
   return m_id;
 }
@@ -125,12 +121,6 @@ inline unsigned int DeITBox::id() const{
 inline const DeITBox::Children& DeITBox::layers() const{
   return m_layers;
 }
-
-inline bool DeITBox::contains(const LHCb::STChannelID aChannel) const{
-  return ((aChannel.detRegion() == elementID().detRegion()) 
-         && m_parent->contains(aChannel)) ;
-}
-
 
 /** ouput operator for class DeITBox
  *  @see DeITBox
@@ -166,10 +156,3 @@ inline const DeITLayer* DeITBox::lastLayer() const{
 
 
 #endif // _DeITBox_H
-
-
-
-
-
-
-

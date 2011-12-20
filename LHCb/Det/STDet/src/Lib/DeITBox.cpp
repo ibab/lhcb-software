@@ -1,4 +1,5 @@
 
+#include "STDet/DeITStation.h"
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
 #include "Kernel/ITNames.h"
@@ -114,6 +115,10 @@ double DeITBox::fractionActive() const {
   return std::accumulate(m_layers.begin(), m_layers.end(), 0.0,  _1 + bind(&DeITLayer::fractionActive,_2))/double(m_layers.size());   
 }
 
+bool DeITBox::contains(const LHCb::STChannelID aChannel) const{
+  return ((aChannel.detRegion() == elementID().detRegion()) 
+         && m_parent->contains(aChannel)) ;
+}
 
 
 

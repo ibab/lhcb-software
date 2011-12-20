@@ -6,7 +6,6 @@
 #include "STDet/DeSTBaseElement.h"
 
 class DeITSector;
-class DeITLadder;
 
 /** @class DeITLadder DeITLadder.h "STDet/DeITLadder.h"
  *
