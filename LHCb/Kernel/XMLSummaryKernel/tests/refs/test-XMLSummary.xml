@@ -10,7 +10,7 @@
 		<file GUID="96219CE3-0330-DE11-9662-00304879EE40" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst" status="part">5</file>
 	</input>
 	<output>
-		<file GUID="82197A7B-4FB2-DE11-89EC-001E4F3E5C1F" name="PFN:PoolDst.root" status="full">5</file>
+		<file GUID="82197A7B-4FB2-DE11-89EC-001E4F3E5C1F" name="PFN:RootDst.root" status="full">5</file>
 	</output>
 	<counters>
 		<counter name="CounterSummarySvc/handled">12</counter>

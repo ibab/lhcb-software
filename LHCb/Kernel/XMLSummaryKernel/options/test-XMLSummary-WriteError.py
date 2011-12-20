@@ -2,10 +2,11 @@
 # Will fill some counters, and output the summary.xml
 # These options are mostly copied from $GAUDIEXAMPLESROOT/python/CounterEx.py
 from Gaudi.Configuration import *
+from GaudiConf import IOHelper
 
 importOptions("$XMLSUMMARYKERNELROOT/options/test-XMLSummary.py")
 
 # Set up the OutputStream that fails to copy an event data file
 FailCopyStream=InputCopyStream()
-FailCopyStream.Output = "DATAFILE='PFN:/SomeFileYouCannotWriteTo.root' TYP='POOL_ROOTTREE' OPT='REC'";
+FailCopyStream.Output = IOHelper().dressFile('PFN:/SomeFileYouCannotWriteTo.root',"O")
 

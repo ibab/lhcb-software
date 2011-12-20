@@ -38,12 +38,12 @@ for l in refblock:
   ########################################
   #allow GUID of file to change
   ########################################
-  elif 'PoolDst' in l:
+  elif 'RootDst' in l:
     pass
     #do something special
     restr=l[:l.find('&quot;')+1]+'.*-.*-.*-.*-.*'+l[l.find('&quot;',l.find('&quot;')+1):]
     for r in sumblock:
-      if 'PoolDst' in r:
+      if 'RootDst' in r:
         if not re.search(restr,r):
           causes.append('XMLsummary output file error')
           result['xmlsummarykernel.exit']=result.Quote(restr)
