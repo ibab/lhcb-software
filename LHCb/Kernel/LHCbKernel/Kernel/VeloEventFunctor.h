@@ -157,5 +157,5 @@ public:
   }
 };
 
-};
+}
 #endif // _VeloEventFunctor_H_

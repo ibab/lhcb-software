@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2011-12-20 - Marco Cattaneo
+ - Fix trivial icc remark
+
 !========================= LHCbKernel v13r7 2011-12-14 =========================
 ! 2011-11-24 - Chris Jones
  - Extend the RichSmartID class with an 'Undefined' PD type enum
