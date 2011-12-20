@@ -270,7 +270,8 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   int lib_rtl_diskspace(__CXX_CONST char* name, unsigned long long int* blk_size,
 			unsigned long long int* total_blk,
 			unsigned long long int* availible_blk);
-			  
+  /// Check for read/write/exectute permissions or existence using bit mask mode (1, 2, 4, 8)
+  int lib_rtl_access(__CXX_CONST char *name, int mode);			  
 
 #ifdef __cplusplus
 }

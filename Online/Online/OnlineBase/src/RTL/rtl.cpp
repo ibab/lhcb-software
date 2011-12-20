@@ -525,7 +525,26 @@ int lib_rtl_diskspace(const char* name,
     return 1;
   }
 #endif
-  return 0;
+ return 0;
+}
+
+/// access checks it is ok to read, write, execute the file *name
+/// mode is a bit-mask (1 read, 2 write, 4 execute, 8 file exists)
+int lib_rtl_access(const char *name, int mode)
+{
+#ifdef _WIN32
+// under windows AFAICS this requires using the security API so we just assume it's fine
+  return 1;
+#else
+  int amode = 0;
+
+  if (mode & 0x1) amode |= R_OK;
+  if (mode & 0x2) amode |= W_OK;
+  if (mode & 0x4) amode |= X_OK;
+  if (mode & 0x8) amode |= F_OK; 	
+  if (::access(name, amode)) return 0;
+  return 1;
+#endif
 }
 
 /// POSIX/ISO compiant wrapper around unlink
