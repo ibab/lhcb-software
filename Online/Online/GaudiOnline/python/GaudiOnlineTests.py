@@ -154,3 +154,6 @@ def runHlt2Read(percent=5,print_freq=0.0001,delay=100):
 #------------------------------------------------------------------------------------------------
 def runHltShuffle():
   return _run(deferApp(pid,pnam,buffers=['Hlt1Accept','Hlt2Input','HltDeferred'],type='ALL'))
+#------------------------------------------------------------------------------------------------
+def runMepFeeder():
+  return _run(mepFeederApp(pid,pnam,buffer='Mep'))

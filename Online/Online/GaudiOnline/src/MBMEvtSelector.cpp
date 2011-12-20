@@ -294,10 +294,11 @@ StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
   unsigned int    pid = m_consumer->partitionID();
   unsigned int mask[] = {pid,0,0,0};
   if ( m_events.empty() )   {
+    MEPEvent* event = (MEPEvent*)ev->data;
     if ( ev->magic != mep_magic_pattern() )  {
       m_sel->error("Bad MEP magic pattern!!!!");
     }
-    decodeMEP2EventFragments((MEPEvent*)ev->data, pid, m_events);
+    decodeMEP2EventFragments(event, pid, m_events);
     if ( m_events.empty() )  {
       m_sel->error("Bad MEP received. No sub-events !!!!");
     }
@@ -307,6 +308,7 @@ StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
       ev->events[evID].signal = 0;
       ev->events[evID].evID   = evID;
     }
+    //cout << "Decoded " << m_events.size() << " sub events" << endl;
     m_evID = 0;
   }
   const Frags& frags = (*m_events.begin()).second;
@@ -364,8 +366,7 @@ StatusCode MBMContext::receiveEvent()  {
       else if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
 	return convertMEP(e);
       }
-      // Or: simple case data are data - as it should be
-      else {
+      else { // Or: simple case data are data - as it should be
         m_evdesc.setPartitionID(m_consumer->partitionID());
         m_evdesc.setTriggerMask(e.mask);
         m_evdesc.setEventType(e.type);

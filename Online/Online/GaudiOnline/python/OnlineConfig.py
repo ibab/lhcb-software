@@ -240,10 +240,10 @@ def mbmSelector(input=None,type=None,decode=True,TAE=False,event_type=2):
   return svc
 
 #------------------------------------------------------------------------------------------------
-def netSelector(input=None,type=None):
+def netSelector(input=None,type=None,event_type=2):
   svc = Configs.LHCb__NetworkEvtSelector('EventSelector')
-  if input is not None:    svc.Input    = input
-  if type is not None:     svc.REQ1 = mbm_requirements['OTHER']%(str(type),)
+  if input is not None: svc.Input = input
+  if type is not None:  svc.REQ1  = _mbmRequirement(input='Other',type=type,event_type=event_type)
   return svc
 
 #------------------------------------------------------------------------------------------------
@@ -355,6 +355,19 @@ def mepConverterApp(partID, partName, bursts=True, freq=0.,errors=None):
   evtloop.Wait         = 1
   msgSvc().OutputLevel = 1
   return _application('NONE',evtsel='NONE',extsvc=[monSvc(),mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
+
+#------------------------------------------------------------------------------------------------
+def mepFeederApp(partID, partName, buffer, directory='./data', partitionBuffers=False):
+  "MEP file reader app feeding HLT tasks from disk."
+  mep                  = mepManager(partID,partName,[buffer], partitionBuffers)
+  mep.ConnectWhen      = 'initialize'
+  runable              = Configs.LHCb__HltBufferedIOReader('Runable')
+  runable.Buffer       = buffer
+  runable.Directory    = directory
+  evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
+  evtloop.Wait         = 1
+  msgSvc().OutputLevel = 1
+  return _application('NONE',evtsel='NONE',extsvc=[monSvc(),mep,evtloop,runable],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
 def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,request=None,algs=[],input_type=MDF_NONE):

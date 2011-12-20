@@ -242,6 +242,21 @@ MBM::Producer* MEPManager::createProducer(const string& buffer,const string& ins
   map<string,BMID>::iterator i=m_buffMap.find(buffer);
   if ( i == m_buffMap.end() ) {
     string bm_name = buffer;
+    if ( m_mepID != MEP_INV_DESC )  {
+      if ( bm_name == "EVENT" ) {
+	BMID bmid = m_mepID->evtBuffer;
+	return new MBM::Producer(bmid,instance,partitionID());
+      }
+      else if ( bm_name == "RESULT" ) {
+	BMID bmid = m_mepID->resBuffer;
+	return new MBM::Producer(bmid,instance,partitionID());
+      }
+      else if ( bm_name == "MEP" ) {
+	BMID bmid = m_mepID->mepBuffer;
+	return new MBM::Producer(bmid,instance,partitionID());
+      }
+    }
+
     bm_name += "_";
     if ( m_partitionName.empty() ) {
       char txt[32];

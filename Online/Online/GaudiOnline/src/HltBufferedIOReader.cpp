@@ -9,7 +9,10 @@
 #include "GaudiKernel/IEventProcessor.h"
 #include "MBM/Producer.h"
 #include "RTL/rtl.h"
+
+// C/C++ include files
 #include <ctime>
+#include <set>
 
 // Forward declarations
 class IIncidentSvc;
@@ -43,7 +46,7 @@ namespace LHCb  {
     std::string            m_buffer;
     std::string            m_current;
     std::string            m_directory;
-    std::list<std::string> m_files;
+    std::set<std::string>  m_files;
 
     /// Monitoring quantity: Number of events processed
     int                    m_evtCount;
@@ -107,7 +110,7 @@ using namespace std;
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)   
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_producer(0), m_evtCount(0)
 {
-  declareProperty("InputDirectory",m_directory = "/localdisk");
+  declareProperty("Directory",m_directory = "/localdisk");
   declareProperty("Buffer",m_buffer = "Mep");
   ::lib_rtl_create_lock(0,&m_lock);
 }
@@ -134,6 +137,10 @@ StatusCode HltBufferedIOReader::initialize()   {
     return error("Failed to initialize service base class.");
   else if ( !(sc=service("MEPManager/MEPManager",m_mepMgr)).isSuccess() )
     return error("Failed to access MEP manager service.");
+  m_producer = m_mepMgr->createProducer(m_buffer,RTL::processName());
+  if ( 0 == m_producer ) {
+    return error("Fatal error: Failed to create MBM producer object.");
+  }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
   ::lib_rtl_lock(m_lock);
@@ -149,19 +156,22 @@ StatusCode HltBufferedIOReader::finalize()     {
     delete m_producer;
     m_producer = 0;
   }
-  m_current = "";
   m_files.clear();
   releaseInterface(m_mepMgr);
   return OnlineService::finalize();
 }
 
 StatusCode HltBufferedIOReader::sysStart()   {
+#if 0
   if ( m_producer ) {
     m_producer->exclude();
     delete m_producer;
     m_producer = 0;
   }
   m_producer = m_mepMgr->createProducer(m_buffer,RTL::processName());
+#endif
+  m_receiveEvts = true;
+  ::lib_rtl_unlock(m_lock);
   return StatusCode::SUCCESS;
 }
 
@@ -174,6 +184,7 @@ StatusCode HltBufferedIOReader::sysStop()     {
     }
   }
   ::lib_rtl_unlock(m_lock);
+  m_receiveEvts = false;
   return StatusCode::SUCCESS;
 }
 
@@ -218,10 +229,14 @@ size_t HltBufferedIOReader::scanFiles() {
   m_files.clear();
   DIR* dir = opendir(m_directory.c_str());
   if ( dir ) {
-    struct dirent *entry = ::readdir(dir);
-    while ( entry ) {
-      m_files.push_front(entry->d_name);
-      entry = ::readdir(dir);
+    struct dirent *entry;
+    while ( (entry=::readdir(dir)) != 0 ) {
+      string fname = entry->d_name;
+      //cout << "File:" << fname << endl;
+      if ( fname == "." || fname == ".." )   {
+	continue;
+      }
+      m_files.insert(m_directory+"/"+entry->d_name);
     }
     ::closedir(dir);
     return m_files.size();
@@ -233,18 +248,21 @@ size_t HltBufferedIOReader::scanFiles() {
 
 int HltBufferedIOReader::openFile() {
   while ( m_files.size()>0 ) {
-    string fname = m_files.back();
-    m_files.pop_back();
+    set<string>::iterator i=m_files.begin();
+    string fname = *i;
+    m_files.erase(i);
     int fd = ::open(fname.c_str(),O_RDONLY|O_BINARY,S_IREAD);
     if ( fd ) {
       int sc = ::unlink(fname.c_str());
       if ( sc != 0 ) {
-	error("CANNOT UNLINK file: "+fname);
+	error("CANNOT UNLINK file: "+fname+": "+RTL::errorString());
 	::exit(0);
       }
+      m_current = fname;
       info("Opened file: "+fname+" for deferred HLT processing");
       return fd;
     }
+    error("FAILD to open file: "+fname+" for deferred HLT processing: "+RTL::errorString());
   }
   return 0;
 }
@@ -252,19 +270,30 @@ int HltBufferedIOReader::openFile() {
 void HltBufferedIOReader::safeRestOfFile(int file_handle) {
   if ( file_handle ) {
     char buffer[10*1024];
-    int ret, fd = ::open(m_current.c_str(),O_WRONLY|O_BINARY,S_IWRITE);
-    while( (ret=::read(file_handle,buffer,sizeof(buffer))) > 0 ) {
-      file_write(fd,buffer,ret);
+    cout << "Saving rest of file[" << file_handle << "]:" << m_current << endl;
+    int cnt=0, ret, fd = ::open(m_current.c_str(),O_CREAT|O_BINARY|O_WRONLY,0777);
+    if ( fd < 0 ) {
+      error("CANNOT Create file: "+m_current+": "+RTL::errorString());
     }
+    while( (ret=::read(file_handle,buffer,sizeof(buffer))) > 0 ) {
+      if ( !file_write(fd,buffer,ret) ) {
+	error("CANNOT write file: "+m_current+": "+RTL::errorString());
+      }
+      cnt += ret;
+    }
+    cout << "Wrote " << cnt << " bytes to file:" << m_current << " fd:" << fd << endl;
     ::close(fd);
+    ::close(file_handle);
+    m_current = "";
+    file_handle = 0;
   }
 }
 
 /// IRunable implementation : Run the class implementation
 StatusCode HltBufferedIOReader::run()   {  
   int file_handle = 0;
+  m_receiveEvts = true;
   while(1) {
-    m_receiveEvts = true;
     info("Locking event loop. Waiting for work....");
     ::lib_rtl_lock(m_lock);
     if ( !m_receiveEvts ) {
@@ -302,19 +331,19 @@ StatusCode HltBufferedIOReader::run()   {
 	  me->setSize(evt_size);
 	  e->refCount    = m_refCount;
 	  e->evID        = ++id;
-	  e->begin       = 0;//long(long(e)-m_mepID->mepStart);
+	  e->begin       = long(e)-long(m_producer->bufferAddress());
 	  e->packing     = -1;
 	  e->valid       = 1;
 	  e->magic       = mep_magic_pattern();
 	  for(size_t j=0; j<MEP_MAX_PACKING; ++j) {
-	    e->events[j].begin = 0;
-	    e->events[j].evID = 0;
+	    e->events[j].begin  = 0;
+	    e->events[j].evID   = 0;
 	    e->events[j].status = EVENT_TYPE_OK;
 	    e->events[j].signal = 0;
 	  }
-	  ::memset(e->events,0,sizeof(e->events));
-	  char* ptr = ((char*)e->data)+me->sizeOf()+sizeof(MEPEVENT);
-	  status = ::file_read(file_handle,ptr,me->size());
+	  //::memset(e->events,0,sizeof(e->events));
+	  //char* ptr = ((char*))+me->sizeOf()+sizeof(MEPEVENT);
+	  status = ::file_read(file_handle,(char*)me->start(),me->size());
 	  if ( status <= 0 )  {
 	    ::close(file_handle);
 	    file_handle = 0;
@@ -322,7 +351,8 @@ StatusCode HltBufferedIOReader::run()   {
 	    continue;
 	  }
 	  if ( status == MBM_NORMAL )  {
-	    dsc.len = sizeof(MEPEVENT)+me->sizeOf();
+	    dsc.len = sizeof(MEPEVENT)+me->sizeOf()+me->size();
+	    //cout << "Event length:" << dsc.len << endl;
 	    dsc.mask[0] = m_mepMgr->partitionID();
 	    dsc.mask[1] = 0;
 	    dsc.mask[2] = 0;
@@ -335,9 +365,12 @@ StatusCode HltBufferedIOReader::run()   {
 	    }
 	  }
 	}
+	else if ( file_handle )  {
+	  // undo reading of the first integer before saving rest of file
+	  ::lseek(file_handle,-sizeof(evt_size),SEEK_CUR);
+	}
       }
     }
-    m_current = "";
     safeRestOfFile(file_handle);
     // Bad file: Cannot read input (m_evtCount==0)
     m_evtCount = 0;
