@@ -32,6 +32,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                      ,"Downstream" : { "Chi2Cut" : [0,10] }
                                    }
                   ,"AddANNPIDInfo" : True
+                  ,"DataType"     : "" # Type of data, propagated from application
                   }
 
     ## Configure a track selector with the given name
@@ -120,7 +121,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
             nnpidseq = GaudiSequencer("ANNGPIDSeq")
             cseq.Members += [nnpidseq]
             annconf = ChargedProtoANNPIDConf()
-            self.setOtherProps(annconf,["OutputLevel","Context"])
+            self.setOtherProps(annconf,["DataType","OutputLevel","Context"])
             annconf.RecoSequencer = nnpidseq
 
 ## @class GlobalRecoChecks

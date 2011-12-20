@@ -25,26 +25,18 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker )
   ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
     : GaudiAlgorithm ( name , pSvcLocator ),
-      m_protoPath_(""),
       m_protoPath(""),
       m_trSel        ( NULL )
 {
 
   // context specific locations
   m_tracksPath.clear();
-  m_tracksPath_.clear();
 
   // track selector type
   declareProperty( "TrackSelectorType", m_trSelType );
 
   // Input data
-  declareProperty( "InputTrackLocation", m_tracksPath_ );
-
-  // Input data
   declareProperty( "Inputs", m_tracksPath );
-
-  // output data
-  declareProperty( "OutputProtoParticleLocation", m_protoPath_ );
 
   // output data, new scheme
   declareProperty( "Output", m_protoPath );
@@ -64,45 +56,29 @@ StatusCode ChargedProtoParticleMaker::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if ( m_protoPath_!="" ) {
-    Warning("You are using deprecated OutputProtoParticle property. Use Output instead.").ignore();
-    if ( m_protoPath != "")  {
-      return Error("Both Output and OutputProtoParticle are set. Choose Output!");
-    }
-    m_protoPath=m_protoPath_;
-    m_protoPath_="";
-  }
-
-  if ( (!m_tracksPath_.empty()) ) {
-    Warning("You are using deprecated InputTrackLocation property. Use Inputs instead.").ignore();
-    if (!m_tracksPath.empty())  {
-      return Error("Both Inputs and InputTrackLocation are set. Choose Inputs!");
-    }
-    m_tracksPath=m_tracksPath_;
-    m_tracksPath_.clear();
-  }
-
   if ( context() == "HLT" || context() == "Hlt" )
   {
     if (m_trSelType=="") m_trSelType  = "TrackSelector";
   }
   else
   {
-    if (m_tracksPath.empty() ) {
+    if (m_tracksPath.empty() ) 
+    {
       m_tracksPath.push_back(LHCb::TrackLocation::Default);
     }
-    if (m_protoPath=="") {
+    if (m_protoPath=="") 
+    {
       m_protoPath  = LHCb::ProtoParticleLocation::Charged;
     }
     if (m_trSelType=="") m_trSelType  = "DelegatingTrackSelector";
   }
 
 
-  if ( msgLevel(MSG::VERBOSE) ) {
+  if ( msgLevel(MSG::VERBOSE) )
+  {
     verbose() << "Inputs = " << m_tracksPath << endmsg;
     verbose() << "Output = " << m_protoPath << endmsg;
   }
-
 
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );

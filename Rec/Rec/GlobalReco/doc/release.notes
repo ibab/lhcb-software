@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-12-20 - Chris Jones
+ - Add the slot DataType to the Configurable, and pass this on to the ANN PID
+   Configurable
+ - Remove obsolete properties for inputs and outputs from 
+   ChargedProtoParticleMaker
+
 !========================= GlobalReco v6r39 2011-11-08 =========================
 ! 2011-10-19 - Marco Cattaneo
  - Fix coverity defects 23869, 23870, 23871 (UNINIT_CTOR)
