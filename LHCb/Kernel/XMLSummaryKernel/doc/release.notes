@@ -6,6 +6,8 @@
 
 ! 2011-12-20 - Rob Lambert
  - Migrate tests to Gaudi v23r0, no POOL, and different exit codes.
+ - Tests now depend on IOHelper, and tehrefore GaudiConf, 
+   declare the dependency to avoid make -j problems
 
 !========================= XMLSummaryKernel v1r3 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo

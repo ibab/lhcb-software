@@ -13,6 +13,7 @@ branches          cmt doc src options python tests
 # Packages needed to compile and link the application
 use XMLSummaryBase     v* Kernel
 use GaudiKernel        v*
+use GaudiConf          v*
 use GaudiUtils         v*
 use Boost              v* LCG_Interfaces
 
