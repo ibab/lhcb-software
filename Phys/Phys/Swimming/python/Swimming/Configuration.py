@@ -3,6 +3,7 @@ High level configuration tools for Swimming
 """
 __author__ = "V. Gligorov <vladimir.gligorov@cern.ch>"
 
+import os
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
@@ -156,6 +157,11 @@ class Swimming(LHCbConfigurableUser) :
         if type(self.getProp('MuDSTCands')) != list:
             raise TypeError, "MuDSTCands must be a list."
 
+        extension = self.getProp("OutputFile").rsplit(os.path.extsep, 1)[-1]
+        if extension.upper() != self.getProp('OutputType'):
+            log.warning("You have specified a different output file extension " +
+                        "than OutputType; this is ignored.")
+        
         from Configurables import DataOnDemandSvc
 
         app = LHCbApp()
@@ -318,6 +324,20 @@ def ConfigureDaVinci():
     DaVinci().appendToMainSequence( [deathstar] )
     DaVinci().appendToMainSequence( [ sc.sequence() ] )
 
+    # Since the name of the output file is configured in two places in DaVinci,
+    # do some splitting.
+    splitName = config.getProp('OutputFile').split(os.path.extsep)
+    seqName = ''
+    prefix = ''
+    if len(splitName) <= 2:
+        seqName = splitName[0]
+        print "Warning, an output filename in three parts was specified. This does not work well, " + \
+              " so 'Swimming.' will be prefixed."
+        prefix = 'Swimming'
+    else:
+        prefix = splitName[0]
+        seqName = os.path.extsep.join(splitName[1 : -1])
+
     dstWriter = None
     print config.getProp('OutputType')
     if config.getProp('OutputType') == 'MDST':
@@ -334,8 +354,7 @@ def ConfigureDaVinci():
                                                          CloneRawBanks)
         # selection sequence for offline candidates
         offData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
-        offSeq = SelectionSequence("Swimming" + config.getProp('OutputType') + "Off",
-                                   TopSelection = offData)
+        offSeq = SelectionSequence("OfflineCandidates", TopSelection = offData)
         sequences = [offSeq]
         muCands = config.getProp('MuDSTCands')
         for i, cands in enumerate(muCands):
@@ -343,8 +362,7 @@ def ConfigureDaVinci():
             data = AutomaticData(Location = cands + "/Particles")
             seq = SelectionSequence("MuDSTCands_%d" % i, TopSelection = data)
             sequences.append(seq)
-        selectionSeq = MultiSelectionSequence("Swimming" + config.getProp('OutputType'),
-                                              Sequences = sequences)
+        selectionSeq = MultiSelectionSequence(seqName, Sequences = sequences)
 
         SwimmingConf = microDSTStreamConf()
         streamConf = { 'default' : SwimmingConf }
@@ -366,7 +384,7 @@ def ConfigureDaVinci():
                                    StreamConf         = streamConf,
                                    MicroDSTElements   = elementsConf,
                                    WriteFSR           = config.getProp('WriteFSR'),
-                                   OutputFileSuffix   = 'Swimming',
+                                   OutputFileSuffix   = prefix,
                                    SelectionSequences = [selectionSeq])
     elif config.getProp('OutputType') == 'DST':
         from DSTWriters.__dev__.streamconf import OutputStreamConf
@@ -374,8 +392,7 @@ def ConfigureDaVinci():
 
         # Output
         inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
-        selectionSeq = SelectionSequence("Swimming" + config.getProp('OutputType'),
-                                         TopSelection = inputData)
+        selectionSeq = SelectionSequence(seqName, TopSelection = inputData)
 
         streamConf = OutputStreamConf(streamType = InputCopyStream,
                                       fileExtension = '.dst',
@@ -387,7 +404,7 @@ def ConfigureDaVinci():
                                  StreamConf         = SelDSTWriterConf,
                                  MicroDSTElements   = SelDSTWriterElements,
                                  WriteFSR           = config.getProp('WriteFSR'),
-                                 OutputFileSuffix   = 'Swimming',
+                                 OutputFileSuffix   = prefix,
                                  SelectionSequences = [selectionSeq])
 
     DaVinci().appendToMainSequence([dstWriter.sequence()])
