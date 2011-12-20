@@ -1,5 +1,3 @@
-// $Id: DeTTHalfModule.h,v 1.10 2009-04-03 06:33:00 jluisier Exp $
-
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
 
@@ -10,7 +8,6 @@
 #include "STDet/DeSTBaseElement.h"
 
 class DeTTSector;
-class DeTTLayer;
 
 /** @class DeTTHalfModule DeTTHalfModule.h "STDet/DeTTHalfModule.h"
  *
@@ -146,9 +143,6 @@ private:
   std::string m_prodIDString;
 };
 
-#include "STDet/DeTTLayer.h"
-#include "STDet/DeTTSector.h"
-
 inline const DeTTHalfModule::Children& DeTTHalfModule::sectors() const{
   return m_sectors;
 }
@@ -176,14 +170,6 @@ inline unsigned int DeTTHalfModule::firstSector() const {
 inline unsigned int DeTTHalfModule::column() const{
   return m_column;
 }
-
-inline bool DeTTHalfModule::contains(const LHCb::STChannelID aChannel) const{
-  return((aChannel.detRegion() == m_detRegion 
-         && aChannel.sector() >= m_firstSector 
-         && aChannel.sector() < m_firstSector + m_sectors.size())
-         && m_parent->contains(aChannel)) ;
-}
- 
 
 inline unsigned int DeTTHalfModule::prodID() const{
   return m_prodID;

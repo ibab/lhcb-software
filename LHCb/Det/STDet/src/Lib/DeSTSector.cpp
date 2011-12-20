@@ -1,4 +1,5 @@
 #include "STDet/DeSTSector.h"
+#include "STDet/StatusMap.h"
 
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"

@@ -1,7 +1,7 @@
 
-#include "STDet/DeTTHalfModule.h"
 #include "STDet/DeTTSector.h"
 #include "STDet/DeTTLayer.h"
+#include "STDet/DeTTHalfModule.h"
 
 #include "DetDesc/IGeometryInfo.h"
 
@@ -164,3 +164,10 @@ double DeTTHalfModule::fractionActive() const {
   
 }
 
+bool DeTTHalfModule::contains(const LHCb::STChannelID aChannel) const{
+  return((aChannel.detRegion() == m_detRegion 
+         && aChannel.sector() >= m_firstSector 
+         && aChannel.sector() < m_firstSector + m_sectors.size())
+         && m_parent->contains(aChannel)) ;
+}
+ 

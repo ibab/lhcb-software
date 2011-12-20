@@ -1,4 +1,3 @@
-// $Id: DeITLayer.h,v 1.8 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeITLayer_H_
 #define _DeITLayer_H_
 
@@ -106,7 +105,6 @@ private:
 
 
 #include "STDet/DeITLadder.h"
-#include "STDet/DeITLayer.h"
 
 
 inline const DeITLayer::Children& DeITLayer::ladders() const{

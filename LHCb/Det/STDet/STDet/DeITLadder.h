@@ -1,4 +1,3 @@
-// $Id: DeITLadder.h,v 1.8 2009-03-14 09:18:07 mneedham Exp $
 #ifndef _DeITLadder_H_
 #define _DeITLadder_H_
 
@@ -89,7 +88,6 @@ private:
 };
 
 #include "STDet/DeITSector.h"
-#include "STDet/DeITLayer.h"
 
 inline unsigned int DeITLadder::id() const{
   return m_id;

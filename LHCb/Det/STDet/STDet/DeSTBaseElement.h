@@ -1,4 +1,3 @@
-// $Id: DeSTBaseElement.h,v 1.17 2009-05-08 16:57:02 jvantilb Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 

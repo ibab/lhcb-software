@@ -1,4 +1,3 @@
-// $Id: DeSTSector.h,v 1.47 2010-04-05 09:43:18 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -783,7 +782,4 @@ inline const Condition* DeSTSector::noiseCondition() const{
 inline double DeSTSector::measEff() const {
   return m_measEff;
 }
-
-#include "STDet/StatusMap.h"
- 
 #endif // _DeSTSector_H

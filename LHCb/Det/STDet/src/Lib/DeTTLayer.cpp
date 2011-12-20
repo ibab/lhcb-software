@@ -1,4 +1,5 @@
 
+#include "STDet/DeTTSector.h"
 #include "STDet/DeTTLayer.h"
 #include "STDet/DeTTHalfModule.h"
 #include "STDet/DeTTStation.h"
