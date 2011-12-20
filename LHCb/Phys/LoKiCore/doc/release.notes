@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2011-12-20 - Marco Cattaneo
+ - Fix include recursion between AddRef.h and Release.h, Coverity defect 15553
+
 !========================= LoKiCore v11r5 2011-12-14 =========================
 ! 2011-12-11 - Vanya Belyaev
  - use new reimplementation (by Sascha) of decay node and decay 
