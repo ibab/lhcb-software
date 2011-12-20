@@ -1,3 +1,7 @@
+2011-12-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: added skeleton for the LHCb configuration update.
+
 2011-12-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: simplified the management of the local subdirectories. Now

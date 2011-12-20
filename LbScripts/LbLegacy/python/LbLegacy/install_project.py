@@ -1728,8 +1728,40 @@ def cleanBootScripts():
         log.debug("Removing the %s directory" % this_bootscripts_dir)
         removeAll(this_bootscripts_dir)
 
+def isConfUpToDate(name):
+    """
+    check if the md5 sums have changed or not. If the don't match
+    the configuration is not up to date.
+    @param name: name of the configuration file
+    @type name: string
+    """
+    uptodate = False
+
+    return uptodate
+
+def getConfFile(name):
+    this_dir = getLocalDirs(["conf"])
+    fpath = os.path.join(this_dir["conf"], name)
+    md5path = os.path.join(this_dir["conf"], "%s.md5" % name)
+    # clean up first the remaining files if any
+    if os.path.exists(fpath) :
+        os.remove(fpath)
+    if os.path.exists(md5path) :
+        os.remove(md5path)
+
 def updateConf():
-    pass
+    log = logging.getLogger()
+    this_dir = getLocalDirs(["conf"])
+    file_list = ["projects", "packages"]
+    for f in file_list :
+        fpath = os.path.join(this_dir["conf"], f)
+        if os.path.exists(fpath) :
+            if not isConfUpToDate(f) :
+                log.debug("The %s configuration file is not up to date. Downloading it" % f )
+                getConfFile(f)
+        else:
+            log.debug("The %s configuration file doesn't exist. Downloading it" % f )
+            getConfFile(f)
 
 def showCompatibleConfigs():
     from LbConfiguration.Platform import NativeMachine
@@ -2129,6 +2161,9 @@ def runInstall(pname, pversion, binary=None):
 
 # start the project installation
     getBootScripts()
+
+# update main lhcb project configuration
+
     updateConf()
 
 # if list_flag is set: give the list of available versions for this project
