@@ -4,23 +4,26 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= VeloSimulation v3r11 2011-10-18 =========================
+! 2011-12-20 - Marco Cattaneo
+ - Fix trivial icc remarks
+
+!========================= VeloSimulation v3r11 2011-10-18 ===================
 ! 2011-05-24 - David Hutchcroft
  - Suppress the creation of noise only channels which are later killed to 
    prevent FPE exceptions
 
-!========================= VeloSimulation v3r10 2011-06-15 =========================
+!========================= VeloSimulation v3r10 2011-06-15 ===================
 ! 2011-05-24 - David Hutchcroft
  - Added a variable response verse radius to match data and later to 
    simulate radiation damage
  - Will give warnings until new db released
 
-!========================= VeloSimulation v3r9 2011-04-27 =========================
+!========================= VeloSimulation v3r9 2011-04-27 ====================
 ! 2011-04-19 - David Hutchcroft
  - Added explicit setting of variables in VeloSim::VeloSim to remove Coventry
    defect 17434 (the variables were set before use so no change in output)
 
-!========================= VeloSimulation v3r8 2010-12-06 =========================
+!========================= VeloSimulation v3r8 2010-12-06 ====================
 ! 2010-12-06 - Tomasz Szumlak
  - change that is a part of the VELO tuning for MC 2011 production
    now the default BiasVoltage is set to 150 V

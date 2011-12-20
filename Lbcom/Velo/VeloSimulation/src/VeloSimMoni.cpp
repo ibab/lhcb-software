@@ -1,4 +1,3 @@
-// $Id: VeloSimMoni.cpp,v 1.14 2008-05-19 13:47:25 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@ using namespace Gaudi::Units;
 // 2005-11-03 : Tomasz Szumlak & Chris Parkes
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( VeloSimMoni );
+DECLARE_ALGORITHM_FACTORY( VeloSimMoni )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -46,7 +45,7 @@ VeloSimMoni::VeloSimMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloSimMoni::~VeloSimMoni() {}; 
+VeloSimMoni::~VeloSimMoni() {}
 
 //=============================================================================
 // Initialization
@@ -63,7 +62,7 @@ StatusCode VeloSimMoni::initialize() {
   setHistoTopDir("Velo/");
   //  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -77,7 +76,7 @@ StatusCode VeloSimMoni::execute() {
   if(m_veloFEMoni) VeloFEMonitor();
   //  
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
