@@ -6,11 +6,15 @@ ApplicationMgr.ExtSvc               += {"MonitorSvc",
 					"AdderSvc",
 					"AdderSvc/GauchoHistAdder",
 					"AdderSvc/GauchoCountAdder",
+					"AdderSvc/OverflowAdder",
 					"AdderSvc/MEPrxHistAdder",
 					"AdderSvc/MEPrxCountAdder",
 					"AdderSvc/EVTProdCountAdder",
-					"AdderSvc/DiskWRCountAdder"
+					"AdderSvc/DiskWRCountAdder",
+					"AdderSvc/BusyAdder"
 					};
+// ApplicationMgr.ExtSvc               += {"MemTrnd" };
+
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -21,6 +25,9 @@ MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = 3;//@OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
+
+MemTrnd.PartitionName                = @OnlineEnv.PartitionName;
+MemTrnd.TrendInterval                = 30;
 
 AdderSvc.MyName                      = "<part>_<node>_Adder";
 AdderSvc.PartitionName               = @OnlineEnv.PartitionName;
@@ -42,6 +49,13 @@ GauchoCountAdder.TaskPattern         = "<node>[0-9][0-9]_Adder";
 GauchoCountAdder.ServicePattern      = "MON_<node>[0-9][0-9]_GauchoJob/Counter/";
 GauchoCountAdder.AdderClass          = "Counter";
 GauchoCountAdder.InDNS               = "<node>";
+
+OverflowAdder.MyName              = "<part>_<node>_Overflow";
+OverflowAdder.PartitionName       = @OnlineEnv.PartitionName;
+OverflowAdder.TaskPattern         = "<node>[0-9][0-9]_Adder";
+OverflowAdder.ServicePattern      = "MON_<node>[0-9][0-9]_Overflow/Counter/";
+OverflowAdder.AdderClass          = "Counter";
+OverflowAdder.InDNS               = "<node>";
 
 MEPrxHistAdder.MyName                = "<part>_<node>_MEPrx";
 MEPrxHistAdder.PartitionName         = @OnlineEnv.PartitionName;
@@ -71,9 +85,17 @@ DiskWRCountAdder.ServicePattern        = "MON_<node>[0-9][0-9]_DiskWR/Counter/";
 DiskWRCountAdder.AdderClass            = "Counter";
 DiskWRCountAdder.InDNS                 = "<node>";
 
+BusyAdder.MyName                = "<part>_<node>_Busy";
+BusyAdder.PartitionName         = @OnlineEnv.PartitionName;
+BusyAdder.TaskPattern           = "<node>[0-9][0-9]_Adder";
+BusyAdder.ServicePattern        = "MON_<node>[0-9][0-9]_Adder_01/Counter/";
+BusyAdder.AdderClass            = "Counter";
+BusyAdder.InDNS                 = "<node>";
+
 MEPrxCountAdder.ReceiveTimeout     = 3;
 GauchoHistAdder.ReceiveTimeout     = 6;
 GauchoCountAdder.ReceiveTimeout    = 6;
 MEPrxHistAdder.ReceiveTimeout      = 6;
 EVTProdHistAdder.ReceiveTimeout    = 6;
 DiskWRHistAdder.ReceiveTimeout    = 6;
+BusyAdder.ReceiveTimeout          = 3;

@@ -8,7 +8,9 @@ ApplicationMgr.ExtSvc               += {"MonitorSvc",
 					"AdderSvc/MEPrxHistAdder",
 					"AdderSvc/MEPrxCountAdder",
 					"AdderSvc/EVTProdCountAdder",
-					"AdderSvc/DiskWRCountAdder"
+					"AdderSvc/DiskWRCountAdder",
+					"AdderSvc/OverflowAdder",
+          "BusySvc"
 					};
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -31,6 +33,11 @@ GauchoCountAdder.MyName           = "<node>_GauchoJob";
 GauchoCountAdder.TaskPattern      = "<node>_GauchoJob_";
 GauchoCountAdder.ServicePattern   = "MON_<node>_GauchoJob_(.*)/Counter/";
 GauchoCountAdder.AdderClass       = "Counter";
+
+OverflowAdder.MyName           = "<node>_Overflow";
+OverflowAdder.TaskPattern      = "<node>_Overflow_";
+OverflowAdder.ServicePattern   = "MON_<node>_Overflow_(.*)/Counter/";
+OverflowAdder.AdderClass       = "Counter";
 
 MEPrxHistAdder.MyName             = "<node>_MEPrx";
 MEPrxHistAdder.ServicePattern     = "MON_<node>_MEPrx_(.*)/Histos/";
@@ -58,3 +65,7 @@ GauchoCountAdder.ReceiveTimeout    = 3;
 MEPrxHistAdder.ReceiveTimeout      = 3;
 EVTProdCountAdder.ReceiveTimeout   = 3;
 DiskWRCountAdder.ReceiveTimeout   = 3;
+OverflowAdder.ReceiveTimeout    = 3;
+
+BusySvc.BogusMips            = 0.0;
+MonitorSvc.CounterUpdateInterval = 5;
