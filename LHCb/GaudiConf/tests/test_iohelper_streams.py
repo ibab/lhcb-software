@@ -34,7 +34,11 @@ from Configurables import GaudiSequencer
 ApplicationMgr().TopAlg=["Rubbish",GaudiSequencer("MoreRubbish")]
 GaudiSequencer("MoreRubbish").Members=["InputCopyStream"]
 
-for persistency in [None,'POOL','ROOT','MDF']:
+persistencies=[None, "ROOT","MDF"]
+if IOHelper().isPoolSupported():
+    persistencies.append("POOL")
+
+for persistency in persistencies:
     print '============================='
     print persistency
     print '============================='

@@ -49,7 +49,11 @@ def testthisioh(ioh):
     print ioh.activeServices()
     
 
-for persistency in [None,'POOL','ROOT','MDF']:
+persistencies=[None, "ROOT","MDF"]
+if IOHelper().isPoolSupported():
+    persistencies.append("POOL")
+
+for persistency in persistencies:
     print '============================='
     print persistency
     print '============================='

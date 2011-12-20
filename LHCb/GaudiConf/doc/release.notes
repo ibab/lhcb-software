@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2011-12-20 - Rob Lambert
+ - Remove GaudiPoolDb from requirements ready for Gaudi v23r0
+ - Move tests around to cope with missing POOL services
+
 !========================= GaudiConf v15r5 2011-12-14 =========================
 ! 2011-12-13 - Rob Lambert
  - IOHelper: fix a missing part of the logic with respect to sequencers

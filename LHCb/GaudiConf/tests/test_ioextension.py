@@ -62,7 +62,11 @@ def testthisiox(iox):
         print commands.getstatusoutput("python -c '"+iox.extensionString(setPersistency=setPersistency)+"'")
 
 
-for persistency in [None,'POOL','ROOT']:
+persistencies=[None, "ROOT"]
+if IOHelper().isPoolSupported():
+    persistencies.append("POOL")
+
+for persistency in persistencies:
     print '============================='
     print persistency
     print '============================='
