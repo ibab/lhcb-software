@@ -182,7 +182,8 @@ class RecSysConf(LHCbConfigurableUser):
 
         # PROTO
         if "PROTO" in recoSeq:
-            self.setOtherProps(GlobalRecoConf(),["SpecialData","Context","OutputLevel"])
+            self.setOtherProps(GlobalRecoConf(),["DataType","SpecialData",
+                                                 "Context","OutputLevel"])
             GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")
 
         # SUMMARY

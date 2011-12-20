@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2011-12-20 - Chris Jones
+ - Propagate the DataType to the GlobalReco Configurable
+
 ! 2011-12-19 - Wouter Hulsbergen
  - Adapt to change in TrackV0Finder
 
