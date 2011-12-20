@@ -2,7 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set><text>../test_iohelper.py</text></set></argument>
-  <argument name="reference"><text>../refs/test_iohelper.ref</text></argument>
+  <argument name="reference"><text>../refs/test_iohelper_pool.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor
 validateWithReference(preproc = preprocessor)

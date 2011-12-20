@@ -4,6 +4,9 @@
 !----------------------------------------------------------------------------
 
 ! 2011-12-20 - Rob Lambert
+ - Fixed moved tests so that they keep their own references.
+
+! 2011-12-20 - Rob Lambert
  - Remove GaudiPoolDb from requirements ready for Gaudi v23r0
  - Move tests around to cope with missing POOL services
 

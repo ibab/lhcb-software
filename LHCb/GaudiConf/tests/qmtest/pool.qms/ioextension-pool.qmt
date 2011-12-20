@@ -2,7 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set><text>../test_ioextension.py</text></set></argument>
-  <argument name="reference"><text>../refs/test_ioextension.ref</text></argument>
+  <argument name="reference"><text>../refs/test_ioextension_pool.ref</text></argument>
   <argument name="prerequisites"><set>
     <tuple><text>gaudiconf.iohelper</text><enumeral>PASS</enumeral></tuple>
     <tuple><text>gaudiconf.iohelper_streams</text><enumeral>PASS</enumeral></tuple>
