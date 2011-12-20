@@ -2,7 +2,7 @@
 //==============================================================
 #include "$INFOOPTIONS"
 ApplicationMgr.ExtSvc               += {
-					"BusyPub"
+					"OvrPub"
                                        };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -17,11 +17,11 @@ HistogramPersistencySvc.Warnings   = false;
 
 
 
-BusyPub.MyName              = "<part>_X_BusyPub";
-BusyPub.PartitionName       = @OnlineEnv.PartitionName;
-BusyPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
-BusyPub.ServicePattern      = "MON_<part>_hlt01_Busy_00/Counter/";
-BusyPub.AdderClass          = "Counter";
-BusyPub.InDNS               = "mona08";
-BusyPub.TrendingOn          = true;
+OvrPub.MyName              = "<part>_X_OvrPub";
+OvrPub.PartitionName       = @OnlineEnv.PartitionName;
+OvrPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+OvrPub.ServicePattern      = "MON_<part>_hlt01_Overflow_00/Counter/";
+OvrPub.AdderClass          = "Counter";
+OvrPub.InDNS               = "mona08";
+OvrPub.TrendingOn          = true;
 
