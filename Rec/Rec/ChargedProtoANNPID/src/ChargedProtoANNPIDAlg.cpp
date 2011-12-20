@@ -122,7 +122,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       }
     }
 
-    // Load the network
+    // Load the network   
     if ( "NeuroBayes" == annType )
     {
       // FPE Guard for NB call
@@ -286,7 +286,7 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
-
+  
   // FPE Guard for NB call
   FPE::Guard guard(true);
 

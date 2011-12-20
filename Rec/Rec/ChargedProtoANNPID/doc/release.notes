@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-12-20 - Chris Jones
+ - Extend the Configurable to allow different net tunings by year
+ - Set the default for 2011 to be new tunings based on MC11a
+
 ! 2011-12-19 - Chris Jones
  - Remove truncation of P and Pt variables
  - Add various GE variables from RecSummary

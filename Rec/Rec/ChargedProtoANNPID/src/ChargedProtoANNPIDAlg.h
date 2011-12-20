@@ -121,9 +121,9 @@ namespace ANNGlobalPID
        *  @param inputs The list of inputs needed for this network
        *  @param parent Point to parent algorithm
        */
-      NeuroBayesANN( const std::string &              paramFileName,
-                     const ChargedProtoANNPIDAlgBase::IntInputs inputs,
-                     const ChargedProtoANNPIDAlgBase *          parent )
+      NeuroBayesANN( const std::string &                  paramFileName,
+                     const ChargedProtoANNPIDAlgBase::IntInputs& inputs,
+                     const ChargedProtoANNPIDAlgBase *           parent )
         : ANNHelper ( inputs, parent ),
           m_expert  ( new Expert(paramFileName.c_str(),-2) ),
           m_inArray ( new float[inputs.size()]             )

@@ -21,7 +21,11 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  ,"NetworkVersion" : "MC10TuneV1" # Old "MC2010Tune"
+                  ,"NetworkVersions" : { "2012" : "MC11aTuneV1",
+                                         "2011" : "MC11aTuneV1",
+                                         "2010" : "MC10TuneV1",
+                                         "2009" : "MC10TuneV1" }
+                  ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
                   }
@@ -36,6 +40,9 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
             raise RuntimeError("ERROR : PROTO ANN PID Sequencer not set")
         nnpidseq = self.getProp("RecoSequencer")
 
+        dataType   = self.getProp("DataType")
+        annVersion = self.getProp("NetworkVersions")[dataType]
+
         # Loop over track types
         for track in self.getProp("TrackTypes") :
 
@@ -49,7 +56,7 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                 nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"
 
                 # Network version
-                nn.NetworkVersion = self.getProp("NetworkVersion")
+                nn.NetworkVersion = annVersion
 
                 # If configured, set the OutputLevel
                 if self.isPropertySet("OutputLevel") :
