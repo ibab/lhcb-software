@@ -104,6 +104,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::stringToIntMap() const
     ( "TrackFitTNDoF"         , (int)LHCb::ProtoParticle::LastGlobal + 28 )
     ( "TrackCloneDist"        , (int)LHCb::ProtoParticle::LastGlobal + 29 )
     ( "NumMuonTracks"         , (int)LHCb::ProtoParticle::LastGlobal + 30 )
+    ( "TrackMatchChi2"        , (int)LHCb::ProtoParticle::LastGlobal + 31 )
     ;
   return sToI;
 }
@@ -246,6 +247,10 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   else if ( (int)LHCb::ProtoParticle::LastGlobal+29 == input )
   {
     var = proto->track()->info(LHCb::Track::CloneDist,-999);
+  }
+  else if ( (int)LHCb::ProtoParticle::LastGlobal+31 == input )
+  {
+    var = proto->track()->info(LHCb::Track::MatchChi2,-999);
   }
 
   // -----------------------------------------------------------------------------------------------
