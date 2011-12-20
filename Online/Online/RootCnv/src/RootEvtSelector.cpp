@@ -139,6 +139,8 @@ StatusCode RootEvtSelector::initialize()    {
     cnvSvc->release();
     return error("Unable to localize service:"+m_cnvSvcName);
   }
+  m_dbMgr->addRef();
+
   // Get DataSvc
   SmartIF<IDataManagerSvc> eds(serviceLocator()->service("EventDataSvc"));
   if( !eds.isValid() ) {
