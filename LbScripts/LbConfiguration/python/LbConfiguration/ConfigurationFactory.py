@@ -4,7 +4,7 @@
  - The SAX parsers for the XML files, for internal use only
  - Util functions to serialize a list of packages or projects to XML, used for unit tests (serializeProjects, serializePackages)
  - The Loader Classes for MainConfig. Packages and Projects which can be used to load an XML directly (no caching involved),
-   in the follwoing manner for example:
+   in the follooing manner for example:
 
         loader = ProjectLoader()
         projects = loader.loadFile("./conf/MyProjectConfig.xml")
@@ -33,7 +33,7 @@ logging.basicConfig()
 log.setLevel(logging.CRITICAL)
 
 # Constants for the factory
-CONFIG_ENV_VAR="LHCBCONFIG"
+CONFIG_ENV_VAR="LHCB_CONF_DIR"
 CONFIG_ENV_AFS_RELEASE_DIR="LHCBTAR"
 CONFIG_DIRNAME="conf"
 CONFIG_WEB_LOCATION_PREFIX="http://cern.ch/lhcbproject/dist/conf/"
@@ -451,11 +451,12 @@ class Factory(object):
         self.mainConfigLoader = MainConfigLoader()
         self.projectLoader = ProjectLoader()
         self.packageLoader = PackageLoader()
-        self.loadMethods = [self.__envConfigLocation, self.__afsReleaseConfigLocation, self.__webConfigLocation]
+        self.loadMethods = [self.__envConfigLocation]
         self.cachedConfigDir = None
         self.cache = {}
 
     def setConfigDir(self, configDir):
+        """ Method to force the configuration to be laoaded from a specific directory  """
         self.cachedConfigDir = configDir
 
     def __afsReleaseConfigLocation(self):
@@ -770,6 +771,7 @@ if __name__ == '__main__':
     log.setLevel(logging.CRITICAL)
     f = Factory()
     p = f.getPackages()
+    print p
     p = f.getPackages()
     p = f.getProjects()
     p = f.getMainConfig()
