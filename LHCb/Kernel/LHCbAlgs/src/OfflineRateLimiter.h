@@ -1,10 +1,8 @@
-// $Id: $
 #ifndef OFFLINERATELIMITER_H 
 #define OFFLINERATELIMITER_H 1
 
 // Include files
 // from Gaudi
-#include "OfflineRateLimiter.h"
 #include "OfflineDeterministicPrescaler.h"
 #include "Kernel/IRateFromTCK.h"
 /** @class OfflineRateLimiter OfflineRateLimiter.h
