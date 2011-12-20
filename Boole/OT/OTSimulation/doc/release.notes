@@ -3,6 +3,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2011-12-19 - Jeroen Van Tilburg
+ - Double pulses are now added by a tool
+ - Two implementation: OTSimpleDoublePulseTool (old) and OTLUTDoublePulseTool.
+
 !========================= OTSimulation v5r1 2011-09-21 =========================
 ! 2011-09-13 - Jeroen Van Tilburg
  - Changed MCOTDepositCreator to use NextNext spill instead of reusing PrevPrev.

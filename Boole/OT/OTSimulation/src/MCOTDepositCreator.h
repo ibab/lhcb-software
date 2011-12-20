@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.15 2010-02-26 14:54:15 nserra Exp $
+// $Id: $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -6,10 +6,10 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-
 // forward declarations
 class IOTEffCalculator;
 class IOTRandomDepositCreator;
+class IOTDoublePulseTool;
 class DeOTDetector;
 
 namespace LHCb
@@ -71,6 +71,7 @@ private:
   /// pointers to Tools
   std::vector<IOTEffCalculator*> m_singleCellEffVector;
   IOTRandomDepositCreator*       m_noiseTool;
+  IOTDoublePulseTool*            m_pulseTool;
 
   typedef std::vector<LHCb::MCOTDeposit*> OTDeposits;
   mutable OTDeposits       m_deposits;               ///< Vector of tmp deposits
@@ -82,11 +83,9 @@ private:
   double                   m_crossTalkLevel;         ///< Level of crosstalk
   bool                     m_addNoise;               ///< Flag to add random noise
   bool                     m_addDoublePulse;         ///< Flag to add double pulses
-  double                   m_doublePulseTime;        ///< Double pulse time
-  double                   m_doublePulseProbability; ///< Double pulse probability
-  mutable Rndm::Numbers    m_flat;                   ///< Flat random dist for crosstalk & double pulses
+  mutable Rndm::Numbers    m_flat;                   ///< Flat random dist for crosstalk and double pulse
   mutable Rndm::Numbers    m_gauss;                  ///< Gauss random dist
-
+  std::string              m_doublePulseToolName;    ///< Choose between Simple and LUT tool
 
 };
 
