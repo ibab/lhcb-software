@@ -36,7 +36,7 @@ int& Pysubs::kfin(int iside, int jflav) {
     m_dummy = -999;
     return m_dummy;
   }
-  return s_pysubs->kfin[jflav+lenKfin()][iside-1];
+  return s_pysubs->kfin[jflav+lenKfin()/2][iside-1];
 }
 
 // access ckin in common

@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2011-12-20 - Patrick Robbe
+ - Pysubs.cpp: fix bug in accessing the KFIN Pythia common block
+
 !========================= LbPythia v10r1 2011-11-11 =========================
 ! 2011-10-20 - Patrick Robbe 
  - JetProduction.cpp
