@@ -21,10 +21,19 @@ repositories = { "gaudi": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch",
                  "dirac": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/dirac" ),
                             "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/dirac" ) },
                  }
+
+#only needed information for svn switch --relocate
+repository_shortpaths = {
+    "ssh" : SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps" ),
+    "anonymous" : SVNReposInfo( "http", "svn.cern.ch", "/guest" ),
+    }
+
 # Define default repositories
 for k in repositories:
     repositories[k]["default"] = repositories[k]["ssh"]
 
+repository_shortpaths["default"]=repository_shortpaths["ssh"] #default protocol
+repository_shortpaths["authenticated"]=repository_shortpaths["ssh"] #default authenticated protocol
 
 def getRepositories( user_svn = None, user_cvs = None, protocol = "default" ):
     from urllib import splittype, splituser, splithost

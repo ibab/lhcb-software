@@ -1,3 +1,9 @@
+2011-12-17  Rob Lambert
+
+	* python/LbConfiguration/Repository.py
+          add support for switching after checkout
+          requires a short-url for the repositories
+
 2011-12-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the variable LHCB_CONF_DIR to store the LHCB
