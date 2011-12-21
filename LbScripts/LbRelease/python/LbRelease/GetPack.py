@@ -348,6 +348,9 @@ class GetPack(Script):
         self.parser.add_option("-f",
                                dest = "protocol",
                                help = "obsolete: same as -p, --protocol")
+        self.parser.add_option("-s", "--switch", action = "store_true",
+                               help = "svn switch to recommended authenticated protocol after checkout"
+                                      " False by default.")
         self.parser.add_option("-u", "--unversioned", action = "store_false",
                                dest = "version_dirs",
                                help = "do not use versioned subdirectories for the packages [default]")
@@ -404,6 +407,7 @@ class GetPack(Script):
                                "If the file name is '-' the list is taken from the standard input. "
                                "Note: it implies '--batch' and cannot be used for projects.")
         self.parser.set_defaults(protocol = "default",
+                                 switch = False,
                                  version_dirs = False,
                                  user_svn = [],
                                  user_cvs = [],
@@ -483,6 +487,27 @@ class GetPack(Script):
         except KeyError:
             return None
 
+    def _switchProtocol(self, local_path, protocol_start, protocol_end):
+        ''' use --relocate to change the repository location from start to end
+        local_path, local path to checked-out VCS package
+        protocol_start, the protocol which was originally used
+        protocol_end, the protocol to go to
+        
+        TODO: need to add same support for usernames
+        
+        '''
+        self.log.info("svn switching "+local_path+" "+protocol_start+" "+protocol_end)
+        from LbUtils.VCS import svn_command
+        from LbConfiguration.Repository import repository_shortpaths as rps
+        if protocol_start not in rps or protocol_end not in rps:
+            self.log.warning("no mechanism to translate %s to %s, skipping the switch statement" % (protocol_start,protocol_end))
+            return False
+        if protocol_start == protocol_end or rps[protocol_start]==rps[protocol_end]:
+            self.log.info("no need to switch from %s to %s, skipping the switch statement" % (protocol_start,protocol_end))
+            return True
+        #insert username setting here
+        return svn_command("switch","--relocate","%s" % rps[protocol_start],"%s" % rps[protocol_end],local_path)
+        
     def checkout(self, package, version = "trunk"):
         # Get the repository containing the package
         rep = self._getModuleRepo(package, isProject = False)
@@ -533,6 +558,9 @@ class GetPack(Script):
             pkgdir = os.path.join(package, version, "cmt")
         else:
             pkgdir = os.path.join(package, "cmt")
+        #svn switch?
+        if self.options.switch:
+            self._switchProtocol(pkgdir,self.options.protocol,"authenticated")
         if self.options.eclipse and self.options.eclipse_config:
             # add package-specific configuration
             eclipseConfigurationAddPackage(os.getcwd(), package)
@@ -580,6 +608,9 @@ class GetPack(Script):
                      eclipse = self.options.eclipse, global_tag = self.options.global_tag)
         project = project.upper()
         pkgdir =  os.path.abspath(os.path.join(project, "%s_%s" % (project, version)))
+        #svn switch?
+        if self.options.switch:
+            self._switchProtocol(pkgdir,self.options.protocol,"authenticated")
         if self.options.eclipse and self.options.eclipse_config:
             # add project-specific configuration
             createEclipseConfiguration(pkgdir,

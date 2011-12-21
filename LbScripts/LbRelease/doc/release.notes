@@ -1,3 +1,9 @@
+2011-12-17  Rob Lambert
+
+	* python/LbRelease/GetPack.py
+          add support for switching after checkout
+          at the moment False, still needs support for username setting
+
 2011-12-20  Rob Lambert rob.lambert@cern.ch
 
 	* python/LbRelease/SvnTools/Package.py: use anonymous repository by default
