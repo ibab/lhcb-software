@@ -21,7 +21,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '111208'
+script_version = '111220'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v6r6p3"
@@ -863,6 +863,7 @@ def getCMT(version=0):
 #
 def getFile(url, fname):
     log = logging.getLogger()
+    isConf = False
     if not url.endswith("/") :
         url = url + "/"
 
@@ -892,6 +893,11 @@ def getFile(url, fname):
                     os.remove(dest)
                 except:
                     log.warning("Can't remove file name %s" % dest)
+        elif url.endswith("conf") or url.endswith("conf/") :
+            # to download configuration files
+            this_conf_dir = subdir_dict["conf"].split(os.pathsep)[0]
+            dest = os.path.join(this_conf_dir, fname)
+            isConf = True
 
 
     exist_flag = False
@@ -907,7 +913,7 @@ def getFile(url, fname):
                 log.warning("Can't download %s - retry" % fname)
                 os.remove(dest)
             else:
-                if md5_check and isTarBall(dest):
+                if md5_check and ( isTarBall(dest) or isConf ) :
                     if not checkMD5(url, fname, os.path.dirname(dest)):
                         removeReferenceMD5(fname, os.path.dirname(dest))
                         os.remove(dest)
@@ -983,7 +989,7 @@ def getReferenceMD5(url, filen, dest):
 def checkMD5(url, filenm, dest):
     log = logging.getLogger()
     isok = False
-    log.info("Checking %s tar ball consistency ..." % filenm)
+    log.info("Checking %s file consistency ..." % filenm)
     refmd5 = getReferenceMD5(url, filenm, dest)
     log.debug("   reference md5 sum is: %s" % refmd5)
     compmd5 = calculateMD5(os.path.join(dest, filenm))
@@ -1748,6 +1754,7 @@ def getConfFile(name):
         os.remove(fpath)
     if os.path.exists(md5path) :
         os.remove(md5path)
+    getFile(url_dist + "conf/", name)
 
 def updateConf():
     log = logging.getLogger()
@@ -1762,6 +1769,7 @@ def updateConf():
         else:
             log.debug("The %s configuration file doesn't exist. Downloading it" % f )
             getConfFile(f)
+    os.environ["LHCB_CONF_DIR"] = this_dir["conf"]
 
 def showCompatibleConfigs():
     from LbConfiguration.Platform import NativeMachine

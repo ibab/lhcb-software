@@ -50,6 +50,10 @@ class MD5Test(unittest.TestCase):
         fn = os.path.join("/tmp", "blah", "toto.html")
         self.assertEqual(os.path.join("/tmp", "blah", "toto.md5"), getMD5FileName(fn))
 
+        fn = "projects"
+        self.assertEqual("projects.md5", getMD5FileName(fn))
+        fn = os.path.join("/tmp", "blah", "projects")
+        self.assertEqual(os.path.join("/tmp", "blah", "projects.md5"), getMD5FileName(fn))
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,8 @@
+2011-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fully implemented the download of the configuration files. Checking
+	for update based on the md5 sum still to be done.
+
 2011-12-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: added skeleton for the LHCb configuration update.
