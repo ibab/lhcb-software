@@ -1,6 +1,12 @@
 2011-12-17  Rob Lambert
 
 	* python/LbRelease/GetPack.py
+	  allow setting of the username with the usual gymnastics
+          need to check svn switching and svn updating to a given version work
+
+2011-12-17  Rob Lambert
+
+	* python/LbRelease/GetPack.py
           add support for switching after checkout
           at the moment False, still needs support for username setting
 

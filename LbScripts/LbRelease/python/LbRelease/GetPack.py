@@ -486,17 +486,15 @@ class GetPack(Script):
             return self.repositories[reps[idx]]
         except KeyError:
             return None
-
-    def _switchProtocol(self, local_path, protocol_start, protocol_end):
-        ''' use --relocate to change the repository location from start to end
-        local_path, local path to checked-out VCS package
-        protocol_start, the protocol which was originally used
-        protocol_end, the protocol to go to
         
-        TODO: need to add same support for usernames
+    def _switchProtocol(self, local_path, protocol_start, protocol_end):
+        ''' use svn switch --relocate to change the repository location from start to end
+        local_path: local path to checked-out VCS package
+        protocol_start: the protocol which was originally used
+        protocol_end: the protocol to go to
         
         '''
-        self.log.info("svn switching "+local_path+" "+protocol_start+" "+protocol_end)
+        self.log.info("svn switching: "+local_path+", "+protocol_start+" to "+protocol_end)
         from LbUtils.VCS import svn_command
         from LbConfiguration.Repository import repository_shortpaths as rps
         if protocol_start not in rps or protocol_end not in rps:
@@ -506,6 +504,14 @@ class GetPack(Script):
             self.log.info("no need to switch from %s to %s, skipping the switch statement" % (protocol_start,protocol_end))
             return True
         #insert username setting here
+        for protocol in [protocol_start, protocol_end]:
+            if self.options.user and rps[protocol] != rps["anonymous"]:
+                rps[protocol].user=self.options.user
+        #user repositories cannot be handled so simply, since it's not clear what the protocol will need to do
+        # the short repository paths are only known for CERN-based lhcb repositories
+        if self.options.user_svn or self.options.user_cvs:
+            self.log.warning("cannot switch when using a user repository, specify the protocol directly please and turn of switching")
+            return False
         return svn_command("switch","--relocate","%s" % rps[protocol_start],"%s" % rps[protocol_end],local_path)
         
     def checkout(self, package, version = "trunk"):
@@ -616,7 +622,8 @@ class GetPack(Script):
             createEclipseConfiguration(pkgdir,
                                        os.environ.get("CMTPROJECTPATH",""))
         return (project, version, pkgdir)
-
+    
+    
     ## Prepare the repository access objects according to options
     @property
     def repositories(self):
