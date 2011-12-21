@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2011-12-21 - Chris Jones
+ - Add default net tunings for DataTypes MC09 and 2008 
+ - Temporarily switch back to MC10TuneV1 for 2012 and 2011, as the new tunings 
+   are causing some annoying vogue printouts from the Neurobayes library ....
+
 ! 2011-12-20 - Chris Jones
  - Extend the Configurable to allow different net tunings by year
  - Set the default for 2011 to be new tunings based on MC11a

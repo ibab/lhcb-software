@@ -166,12 +166,14 @@ namespace ANNGlobalPID
     /// Track selector tool
     ITrackSelector * m_trSel;
 
-    // Track Pre-selection
+    /// Track Pre-selection
     std::string m_trackPreSel;
 
-    std::string m_configFile;      ///< Configuration file
+    /// Configuration file
+    std::string m_configFile;  
 
-    ANNHelper * m_netHelper;       ///< Network Helper
+    /// Network Helper
+    ANNHelper * m_netHelper;     
 
     /// The extra info to fill on the ProtoParticle
     LHCb::ProtoParticle::additionalInfo m_protoInfo;

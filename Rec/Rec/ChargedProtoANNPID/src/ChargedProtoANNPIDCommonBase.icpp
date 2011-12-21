@@ -190,15 +190,15 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
 
   if ( (int)LHCb::ProtoParticle::TrackP == input )
   {
-    //const double MaxP = 5000.0 * Gaudi::Units::GeV;
+    const double MaxP = 5000.0 * Gaudi::Units::GeV;
     var = proto->track()->p();
-    //if ( var > MaxP ) var = -999;
+    if ( var > MaxP ) var = -999;
   }
   else if ( (int)LHCb::ProtoParticle::TrackPt == input )
   {
-    //const double MaxPt = 1000.0 * Gaudi::Units::GeV;
+    const double MaxPt = 1000.0 * Gaudi::Units::GeV;
     var = proto->track()->pt();
-    //if ( var > MaxPt ) var = -999;
+    if ( var > MaxPt ) var = -999;
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+13 == input )
   {
@@ -222,7 +222,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   else if ( (int)LHCb::ProtoParticle::LastGlobal+12 == input )
   {
     var = proto->track()->ghostProbability();
-    if ( var > 0.99999 ) var = -999.0; // Move delta at 1 to -999 for NeuroBayes
+    if ( var < 0.00001 ) var = -999.0; // Move delta at 0 to -999 for NeuroBayes
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+24 == input )
   {

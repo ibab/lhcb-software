@@ -21,10 +21,12 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  ,"NetworkVersions" : { "2012" : "MC11aTuneV1",
-                                         "2011" : "MC11aTuneV1",
+                  ,"NetworkVersions" : { "2012" : "MC10TuneV1", # MC11aTuneV1 gives rogue messages
+                                         "2011" : "MC10TuneV1", # MC11aTuneV1 gives rogue messages
                                          "2010" : "MC10TuneV1",
-                                         "2009" : "MC10TuneV1" }
+                                         "2009" : "MC10TuneV1",
+                                         "2008" : "MC10TuneV1",
+                                         "MC09" : "MC10TuneV1" }
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]

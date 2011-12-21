@@ -164,7 +164,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
               << "ParamFile        = " << paramFileName << endmsg
               << "ANN inputs (" << inputs.size() << ")  = " << inputs
               << endmsg;
-
+    
   }
   else
   {
@@ -286,11 +286,12 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
-  
+ 
   // FPE Guard for NB call
   FPE::Guard guard(true);
 
   // get the NN output
+  //m_parent->verbose() << "Calling NB" << endmsg;
   const double nnOut = m_expert->nb_expert(m_inArray);
 
   // return final output, rescaled to the range 0 to 1
