@@ -8,6 +8,8 @@ Purpose: LHCb Digitization program
 
  - Changes to tests
    . Remove boole.boole-mc10pool, writing POOL files no longer supported
+   . Add a reference file for boole-2010-latestdb test, since 2010 geometry has
+     evolved since MC10
 
 </PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
 This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2

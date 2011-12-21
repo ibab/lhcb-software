@@ -9,7 +9,7 @@
     <text>--option</text>
     <text>from Boole.Configuration import *; Boole().Histograms="Expert";</text>
    </set></argument>
-  <argument name="reference"><text>../refs/boole-mc10.ref</text></argument>
+  <argument name="reference"><text>../refs/boole-2010.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
