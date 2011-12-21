@@ -913,7 +913,7 @@ class SubversionCmd(RevisionControlSystem):
         return self._computePaths(module, version, isProject, branch=branch)[0]
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False, global_tag = False):
+                 project = False, eclipse = False, global_tag = False, ifExistsAction=None):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -927,6 +927,8 @@ class SubversionCmd(RevisionControlSystem):
                         it is created only if in an eclipse workspace)
         @param global_tag: if True and project == True, check out the complete
                            project tag, otherwise only the 'cmt' directory
+        @param ifExistsAction: what to do if the directory already exists, usually nothing
+                               but maybe try --relocate first if protocols are not equal
         """
         from os.path import exists, join, dirname, abspath, isdir
         # check for the validity of the version
@@ -985,6 +987,8 @@ class SubversionCmd(RevisionControlSystem):
 
         if isdir(join(dst,".svn")): # looks like a SVN working copy
             # try with "switch"
+            if ifExistsAction is not None:
+                ifExistsAction(dst)
             sub_cmd = "switch"
         else:
             # normal case

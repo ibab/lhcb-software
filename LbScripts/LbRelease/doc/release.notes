@@ -1,5 +1,15 @@
 2011-12-17  Rob Lambert
 
+	* python/LbRelease/rcs.py
+	  add callback command in the case a directory already exists
+          this will check the protocol if switching is enabled
+
+	* python/LbRelease/GetPack.py
+	  implement the callback command for switching
+          fix a bug where only the cmt directory was ever switched!
+
+2011-12-17  Rob Lambert
+
 	* python/LbRelease/GetPack.py
 	  allow setting of the username with the usual gymnastics
           need to check svn switching and svn updating to a given version work

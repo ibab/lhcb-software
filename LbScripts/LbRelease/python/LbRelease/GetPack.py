@@ -494,7 +494,7 @@ class GetPack(Script):
         protocol_end: the protocol to go to
         
         '''
-        self.log.info("svn switching: "+local_path+", "+protocol_start+" to "+protocol_end)
+        self.log.debug("svn switching: "+local_path+", "+protocol_start+" to "+protocol_end)
         from LbUtils.VCS import svn_command
         from LbConfiguration.Repository import repository_shortpaths as rps
         if protocol_start not in rps or protocol_end not in rps:
@@ -513,7 +513,34 @@ class GetPack(Script):
             self.log.warning("cannot switch when using a user repository, specify the protocol directly please and turn of switching")
             return False
         return svn_command("switch","--relocate","%s" % rps[protocol_start],"%s" % rps[protocol_end],local_path)
+    
+    def _detectProtocol(self, directory):
+        """
+        detect the short URL used in the protocol of the checked out directory
+        """
+        self.log.debug("detecting protocol at existing directory: "+directory)
+        from LbUtils.VCS import svn_command
+        from LbConfiguration.Repository import repository_shortpaths as rps
+        out = svn_command("info", directory, stderr = None)[0]
+        url = (l for l in out.splitlines() if l.startswith("URL:")).next().split()[-1]
+        #print url
+        for protocol in rps:
+            if str(rps[protocol]) in url:
+                self.log.debug(" detected ", protocol)
+                return protocol
+        return "default"
         
+    def _ifExistsAction(self,directory):
+        """
+        callback command for inside the repository.checkout command, only used if switch is true
+        """
+        #If I'm not supposed to be doing any switching, just throw the usual error
+        if not self.options.switch:
+            return True
+        protocol_old=self._detectProtocol(directory)
+        self._switchProtocol(directory,protocol_old,self.options.protocol)
+        return True
+    
     def checkout(self, package, version = "trunk"):
         # Get the repository containing the package
         rep = self._getModuleRepo(package, isProject = False)
@@ -558,15 +585,22 @@ class GetPack(Script):
         if version.lower() in ["trunk", "head"]:
             version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
-        rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
+        try:
+            rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse,ifExistsAction=self._ifExistsAction)
+        except TypeError:
+            #need to have this option in case it's a CVS user repository, don't want to break those immediately!
+            rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
+        pkgtopdir=""
         # Call "cmt config"
         if self.options.version_dirs:
+            pkgtopdir = os.path.join(package, version)
             pkgdir = os.path.join(package, version, "cmt")
         else:
+            pkgtopdir = package
             pkgdir = os.path.join(package, "cmt")
         #svn switch?
         if self.options.switch:
-            self._switchProtocol(pkgdir,self.options.protocol,"authenticated")
+            self._switchProtocol(pkgtopdir,self.options.protocol,"authenticated")
         if self.options.eclipse and self.options.eclipse_config:
             # add package-specific configuration
             eclipseConfigurationAddPackage(os.getcwd(), package)
