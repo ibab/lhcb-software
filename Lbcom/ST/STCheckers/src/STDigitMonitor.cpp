@@ -1,5 +1,3 @@
-// $Id: STDigitMonitor.cpp,v 1.7 2008-12-03 09:31:39 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -13,7 +11,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STDigitMonitor );
+DECLARE_ALGORITHM_FACTORY( STDigitMonitor )
 
 //--------------------------------------------------------------------
 //

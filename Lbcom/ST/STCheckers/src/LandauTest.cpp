@@ -1,5 +1,3 @@
-// $Id: LandauTest.cpp,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -10,7 +8,7 @@
 // local
 #include "LandauTest.h"
 
-DECLARE_ALGORITHM_FACTORY( LandauTest );
+DECLARE_ALGORITHM_FACTORY( LandauTest )
 
 ///_________________________________________________
 /// Test of Landau generator

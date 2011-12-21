@@ -1,4 +1,3 @@
-// $Id: MCSTDepositMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef MCSTDepositMonitor_H
 #define MCSTDepositMonitor_H 1
 
@@ -6,7 +5,7 @@
 
 namespace LHCb{
   class MCSTDeposit;
-};
+}
 
 class DeSTDetector;
 

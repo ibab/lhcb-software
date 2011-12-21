@@ -1,4 +1,3 @@
-// $Id: STClusterResolution.h,v 1.9 2009-01-09 16:16:42 jvantilb Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
@@ -10,7 +9,7 @@
 namespace LHCb{
   class MCHit;
   class STCluster;
-};
+}
 
 namespace AIDA {
   class IHistogram1D;

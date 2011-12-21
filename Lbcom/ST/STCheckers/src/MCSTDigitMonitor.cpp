@@ -1,5 +1,3 @@
-// $Id: MCSTDigitMonitor.cpp,v 1.5 2008-10-16 13:10:34 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -11,7 +9,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDigitMonitor );
+DECLARE_ALGORITHM_FACTORY( MCSTDigitMonitor )
 
 //--------------------------------------------------------------------
 //

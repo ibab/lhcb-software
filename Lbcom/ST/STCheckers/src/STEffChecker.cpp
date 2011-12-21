@@ -1,5 +1,3 @@
-// $Id: STEffChecker.cpp,v 1.11 2008-12-11 14:41:13 cattanem Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -28,7 +26,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STEffChecker );
+DECLARE_ALGORITHM_FACTORY( STEffChecker )
 
 //--------------------------------------------------------------------
 //
@@ -201,7 +199,7 @@ StatusCode STEffChecker::finalize()
 
   } // iterLayer
 
-  info() << " -----------------------" << endreq;
+  info() << " -----------------------" << endmsg;
 
 
   // hack to prevent crash

@@ -1,5 +1,3 @@
-// $Id: STDumpGeom.cpp,v 1.4 2008-10-16 13:10:34 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -10,7 +8,7 @@
 // local
 #include "STDumpGeom.h"
 
-DECLARE_ALGORITHM_FACTORY( STDumpGeom );
+DECLARE_ALGORITHM_FACTORY( STDumpGeom )
 
 //--------------------------------------------------------------------
 //

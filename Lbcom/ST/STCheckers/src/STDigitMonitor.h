@@ -1,4 +1,3 @@
-// $Id: STDigitMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STDigitMonitor_H
 #define STDigitMonitor_H 1
 
@@ -6,7 +5,7 @@
 
 namespace LHCb{
  class STDigit;
-};
+}
 
 class DeSTDetector;
 

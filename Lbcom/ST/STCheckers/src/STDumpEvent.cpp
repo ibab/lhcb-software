@@ -1,5 +1,3 @@
-// $Id: STDumpEvent.cpp,v 1.1 2009-01-06 13:47:56 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -10,7 +8,7 @@
 #include "Event/STSummary.h"
 #include "Event/ODIN.h"
 
-DECLARE_ALGORITHM_FACTORY( STDumpEvent );
+DECLARE_ALGORITHM_FACTORY( STDumpEvent )
 
 using namespace LHCb;
 

@@ -1,5 +1,3 @@
-// $Id: STClusterResolution.cpp,v 1.21 2010-04-05 09:49:19 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -30,7 +28,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STClusterResolution );
+DECLARE_ALGORITHM_FACTORY( STClusterResolution )
 
 //--------------------------------------------------------------------
 //

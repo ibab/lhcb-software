@@ -1,6 +1,3 @@
-// $Id: STClusterClassification.cpp,v 1.8 2010-04-05 09:49:18 mneedham Exp $
-
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -19,7 +16,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STClusterClassification );
+DECLARE_ALGORITHM_FACTORY( STClusterClassification )
 
 //--------------------------------------------------------------------
 //

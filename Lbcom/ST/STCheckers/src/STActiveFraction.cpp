@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -23,7 +22,7 @@
 
 // Declaration of the Algorithm Factory
 namespace ST {
-  DECLARE_ALGORITHM_FACTORY( STActiveFraction );
+  DECLARE_ALGORITHM_FACTORY( STActiveFraction )
 }
 
 //=============================================================================
@@ -64,32 +63,34 @@ StatusCode ST::STActiveFraction::initialize() {
 //=============================================================================
 StatusCode ST::STActiveFraction::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  debug() << m_event << endmsg;
-
-  // get the disabled sectors
-  const DeSTDetector::Sectors disabledSec = tracker()->disabledSectors();
-  if (disabledSec.size() != 0u){  
-    for (DeSTDetector::Sectors::const_iterator iterS = disabledSec.begin(); 
-         iterS != disabledSec.end(); ++iterS){    
-      debug() << "disabled " << (*iterS)->nickname() << endmsg;  
-    } // for      
-  }
-  else {
-    debug() << "All sectors enabled " << endmsg;
-  }
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "==> Execute" << endmsg;
+    debug() << m_event << endmsg;
   
-  // get the disabled beetles
-  std::vector<LHCb::STChannelID> disabledB = tracker()->disabledBeetles();
-  if (disabledB.size() != 0u){  
-    for (std::vector<LHCb::STChannelID>::const_iterator iterB = disabledB.begin(); 
-         iterB != disabledB.end(); ++iterB){    
-      debug() << "disabled " << uniqueBeetle(*iterB) << endmsg;  
-    } // for      
-  }
-  else {
-    debug() << "All beetles enabled " << endmsg;
-  }
+    // get the disabled sectors
+    const DeSTDetector::Sectors disabledSec = tracker()->disabledSectors();
+    if (disabledSec.size() != 0u){  
+      for (DeSTDetector::Sectors::const_iterator iterS = disabledSec.begin(); 
+           iterS != disabledSec.end(); ++iterS){    
+        debug() << "disabled " << (*iterS)->nickname() << endmsg;  
+      } // for      
+    }
+    else {
+      debug() << "All sectors enabled " << endmsg;
+    }
+  
+    // get the disabled beetles
+    std::vector<LHCb::STChannelID> disabledB = tracker()->disabledBeetles();
+    if (disabledB.size() != 0u){  
+      for (std::vector<LHCb::STChannelID>::const_iterator iterB = disabledB.begin(); 
+           iterB != disabledB.end(); ++iterB){    
+        debug() << "disabled " << uniqueBeetle(*iterB) << endmsg;  
+      } // for      
+    }
+    else {
+      debug() << "All beetles enabled " << endmsg;
+    }
+  } // MSG::DEBUG
 
   // active fraction
   info () << m_event << " fraction active " << tracker()->fractionActive() 

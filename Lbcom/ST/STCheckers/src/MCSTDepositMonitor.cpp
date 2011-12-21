@@ -1,6 +1,3 @@
-// $Id: MCSTDepositMonitor.cpp,v 1.4 2008-10-16 13:10:34 mneedham Exp $
-
-
 // GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
 
@@ -13,7 +10,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDepositMonitor );
+DECLARE_ALGORITHM_FACTORY( MCSTDepositMonitor )
 
 //--------------------------------------------------------------------
 //

@@ -1,5 +1,3 @@
-// $Id: STPerformanceMonitor.cpp,v 1.8 2009-08-08 11:11:12 mneedham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -25,7 +23,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STPerformanceMonitor );
+DECLARE_ALGORITHM_FACTORY( STPerformanceMonitor )
 
 //--------------------------------------------------------------------
 //

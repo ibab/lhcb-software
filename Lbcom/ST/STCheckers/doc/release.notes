@@ -3,6 +3,12 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2011-12-21 - Marco Cattaneo
+ - Add a missing include following cleanup of STDet headers
+ - Fix trivial icc remarks
+ - Replace endreq by endmsg
+ - Fix unprotected debug()
+
 !========================= STCheckers v3r3 2011-08-31 =========================
 ! 2011-08-08 Mark Tobin
  - Add new algorithm to check active fraction of detector in conditions

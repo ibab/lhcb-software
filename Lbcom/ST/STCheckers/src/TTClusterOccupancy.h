@@ -1,5 +1,3 @@
-// $Id: TTClusterOccupancy.h,v 1.4 2010-04-05 09:49:19 mneedham Exp $
-
 #ifndef TTClusterOccupancy_H 
 #define TTClusterOccypancy_H !
 
@@ -44,6 +42,6 @@ inline double  TTClusterOccupancy::SN(const LHCb::STCluster* obj) const{
 
 //template class TTOccupancy<LHCb::STCluster>;
 
-DECLARE_NAMED_ALGORITHM_FACTORY( TTClusterOccupancy, TTClusterOccupancy );
+DECLARE_NAMED_ALGORITHM_FACTORY( TTClusterOccupancy, TTClusterOccupancy )
 
 #endif

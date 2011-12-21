@@ -1,4 +1,3 @@
-// $Id: HistFun.h,v 1.4 2007-03-23 15:21:10 cattanem Exp $
 #ifndef HISTFUN_H 
 #define HISTFUN_H 1
 
@@ -31,6 +30,6 @@ inline void eraseVector(std::vector<TYPE > & histoVector){
   } // iterHisto
 }
  
-};
+}
 
 #endif // HISTFUN_H

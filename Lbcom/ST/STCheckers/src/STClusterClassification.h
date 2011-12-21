@@ -1,4 +1,3 @@
-// $Id: STClusterClassification.h,v 1.4 2010-04-05 09:49:19 mneedham Exp $
 #ifndef STClusterClassification_H
 #define STClusterClassification_H 1
 
@@ -9,7 +8,7 @@
 namespace LHCb{
  class STCluster;
  class MCHit;
-};
+}
 
 /** @class STClusterClassification STClusterClassification.h
  *

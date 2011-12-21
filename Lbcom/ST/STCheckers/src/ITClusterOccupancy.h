@@ -1,5 +1,3 @@
-// $Id: ITClusterOccupancy.h,v 1.4 2010-04-05 09:49:18 mneedham Exp $
-
 #ifndef ITClusterOccupancy_H 
 #define ITClusterOccypancy_H !
 
@@ -44,6 +42,6 @@ inline double  ITClusterOccupancy::SN(const LHCb::STCluster* obj) const{
 
 //template class ITOccupancy<LHCb::STCluster>;
 
-DECLARE_NAMED_ALGORITHM_FACTORY( ITClusterOccupancy, ITClusterOccupancy );
+DECLARE_NAMED_ALGORITHM_FACTORY( ITClusterOccupancy, ITClusterOccupancy )
 
 #endif

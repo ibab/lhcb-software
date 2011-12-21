@@ -1,4 +1,3 @@
-// $Id: ITOccupancy.h,v 1.8 2010-04-05 09:49:18 mneedham Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
@@ -10,7 +9,7 @@ namespace AIDA {
 
 namespace LHCb{
  class STChannelID;
-};
+}
 
 class DeSTDetector;
 

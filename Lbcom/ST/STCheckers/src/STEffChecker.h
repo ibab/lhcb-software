@@ -1,4 +1,3 @@
-// $Id: STEffChecker.h,v 1.5 2008-12-11 14:41:13 cattanem Exp $
 #ifndef STEffChecker_H
 #define STEffChecker_H 1
 
@@ -13,7 +12,7 @@ namespace LHCb {
   class MCParticle;
   class STCluster;
   class STChannelID;
-};
+}
 
 class DeSTLayer;
 class IMCParticleSelector;

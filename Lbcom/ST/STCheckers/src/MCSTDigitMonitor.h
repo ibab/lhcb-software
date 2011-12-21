@@ -1,4 +1,3 @@
-// $Id: MCSTDigitMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef MCSTDigitMonitor_H
 #define MCSTDigitMonitor_H 1
 
@@ -6,7 +5,7 @@
 
 namespace LHCb{
   class MCSTDigit;
-};
+}
 
 /** @class MCSTDigitMonitor MCSTDigitMonitor.h
  *
