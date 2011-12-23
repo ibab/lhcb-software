@@ -23,19 +23,19 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName", m_NeuralNetName    = "NNetTool_MLP" );
 
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.8 *GeV );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 5.875 *GeV );
-  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4.05 );
-  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.25 );
-  declareProperty( "Kaon_lcs_cut",  m_lcs_kaon      = 2.125 );
-  declareProperty( "Kaon_PIDk_cut",     m_PID_k_cut     =  6.5);
-  declareProperty( "Kaon_PIDkp_cut",    m_PIDkp_cut     = -3.5 );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon   = 0.7 *GeV );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon    = 5.0 *GeV );
+  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon  = 4.3 );
+  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon   = 1.45 );
+  declareProperty( "Kaon_lcs_cut",  m_lcs_kaon      = 2.45 );
+  declareProperty( "Kaon_PIDk_cut",     m_PID_k_cut     =  0.75);
+  declareProperty( "Kaon_PIDkp_cut",    m_PIDkp_cut     = -3. );
   declareProperty( "Kaon_ghost_cut",m_ghost_cut     = -999.0 );
-  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 4.72 );
-  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= -0.005 );
-  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.390 ); 
-  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.90 ); 
-  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.362 ); 
+  declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 7.5 );
+  declareProperty( "Kaon_distPhi_cut", m_distPhi_cut_kaon= 0.005 );
+  declareProperty( "Kaon_P0_Cal",  m_P0_Cal_kaon   = 0.393 ); 
+  declareProperty( "Kaon_P1_Cal",  m_P1_Cal_kaon   = 0.706 ); 
+  declareProperty( "Kaon_Eta_Cal", m_Eta_Cal_kaon  = 0.354 ); 
   declareProperty( "Kaon_AverageOmega",  m_AverageOmega     = 0.33 );
   declareProperty( "Kaon_ProbMin",  m_ProbMin_kaon  = 0.54 ); //no cut
 
@@ -166,7 +166,8 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_kaon - m_P1_Cal_kaon * ( (1-pn)-m_Eta_Cal_kaon);
     debug() << " Kaon pn="<< pn <<" w="<<1-pn<<endmsg;
-
+    if( pn < 0 ) pn = 0;
+    if( pn > 1 ) pn = 1;
     if( pn < m_ProbMin_kaon ) return tkaon;
 
   }

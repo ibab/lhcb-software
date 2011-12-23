@@ -43,9 +43,13 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   declareProperty( "P2_k_scale",  m_P2k  = -32.958);
   declareProperty( "P3_k_scale",  m_P3k  = 16.7165);
 
-  declareProperty( "P0_ks_scale", m_P0ks =  1.0012);
-  declareProperty( "P1_ks_scale", m_P1ks = -0.988425);
-
+  //  declareProperty( "P0_ks_scale", m_P0ks =  0.8562); //dec2011_v1 
+  //  declareProperty( "P1_ks_scale", m_P1ks = -0.6897);
+  //  declareProperty( "P2_ks_scale", m_P2ks = -0.1932);
+  declareProperty( "P0_ks_scale", m_P0ks =  1.22418); //dec2011_v2                 
+  declareProperty( "P1_ks_scale", m_P1ks = -1.63297);  
+  declareProperty( "P2_ks_scale", m_P2ks =  0.401361);
+  
   declareProperty( "P0_ps_scale", m_P0ps =  1.22123);
   declareProperty( "P1_ps_scale", m_P1ps = -1.76027);
   declareProperty( "P2_ps_scale", m_P2ps =  0.651766);
@@ -89,6 +93,8 @@ void NNetTool_MLP::normaliseOS(std::vector<double>& par) {
   par.at(9) = (par.at(9)-1)/3;//ncands
 }
 void NNetTool_MLP::normaliseSS(std::vector<double>& par) { 
+  par.at(9) = (par.at(9) * 3) + 1;//undo ncands 
+  par.at(9) /= 4.; //nndr
   par.at(5) /= 2.; //nndeta
   par.at(6) /= 3.; //nndphi
   par.at(7) /= 12.;//nndq
@@ -173,10 +179,10 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par) {
   normaliseOS( par );
   normaliseSS( par );
   NNkaonS net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(1));
+  double rnet = net.value(0, par.at(0),par.at(3),par.at(8),par.at(5),
+                          par.at(6),par.at(1),par.at(7));
   
-  double pn = 1.0-pol2(rnet, m_P0ks, m_P1ks);// <=========
+  double pn = 1.0-pol3(rnet, m_P0ks, m_P1ks, m_P2ks);// <=========
 
   if(msgLevel(MSG::DEBUG))debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)

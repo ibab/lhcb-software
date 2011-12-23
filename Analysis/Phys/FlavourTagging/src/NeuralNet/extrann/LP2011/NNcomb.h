@@ -6,7 +6,6 @@ public:
    NNcomb() {}
    ~NNcomb() {}
    double Value(int index,double in0,double in1,double in2,double in3,double in4);
-   double Value(int index, double* input);
 private:
    double input0;
    double input1;

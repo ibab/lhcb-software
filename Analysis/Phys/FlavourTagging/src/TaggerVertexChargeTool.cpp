@@ -29,19 +29,19 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique    = "NNet" ); 
   declareProperty( "NeuralNetName",  m_NeuralNetName      = "NNetTool_MLP" );
 
-  declareProperty( "Vtx_PowerK",        m_PowerK              = 0.4 );
-  declareProperty( "Vtx_MinimumVCharge",m_MinimumVCharge      = 0.275 );
-  declareProperty( "Vtx_Ptsum",         m_Ptsum_vtx           = 1.5);
+  declareProperty( "Vtx_PowerK",        m_PowerK              = 0.55 );
+  declareProperty( "Vtx_MinimumVCharge",m_MinimumVCharge      = 0.2 );
+  declareProperty( "Vtx_Ptsum",         m_Ptsum_vtx           = 1.55);
   declareProperty( "Vtx_Ptmean",        m_Ptmean_vtx          = 0.);
-  declareProperty( "Vtx_IPSsum",        m_IPSsum_vtx          = 10);
+  declareProperty( "Vtx_IPSsum",        m_IPSsum_vtx          = 0.);
   declareProperty( "Vtx_DocaMaxsum",    m_DocaMaxsum_vtx      = 0.5);
-  declareProperty( "Vtx_Psum",          m_Psum_vtx            = 10);
-  declareProperty( "Vtx_Msum",          m_Msum_vtx            = 0.5);
+  declareProperty( "Vtx_Psum",          m_Psum_vtx            = 8.);
+  declareProperty( "Vtx_Msum",          m_Msum_vtx            = 0.6);
 
   declareProperty( "Vtx_ProbMin", m_ProbMin_vtx           = 0.54);
-  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.401 ); 
-  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.90 ); 
-  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.368 ); 
+  declareProperty( "Vtx_P0_Cal",  m_P0_Cal_vtx   = 0.404 ); 
+  declareProperty( "Vtx_P1_Cal",  m_P1_Cal_vtx   = 0.84 ); 
+  declareProperty( "Vtx_Eta_Cal", m_Eta_Cal_vtx  = 0.362 ); 
 
   //For CombinationTechnique: "Probability"
   declareProperty( "P0",           m_P0                   = 5.255669e-01 );
@@ -192,7 +192,9 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
   debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
-
+  if( omega < 0 ) omega = 0;
+  if( omega > 1 ) omega = 1;
+  
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 

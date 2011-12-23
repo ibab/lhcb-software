@@ -24,17 +24,17 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "KaonSame_AverageOmega",    m_AverageOmega   = 0.33 );
   
-  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.75 *GeV );
+  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.85 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 5.25 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 4.125 );
-  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 0.7 );
-  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 0.525 );
+  declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 0.825 );
+  declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 0.6 );
   declareProperty( "KaonSame_dR_cut", m_dRcut_kaonS= 10. );
-  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.4625 *GeV);
+  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.850 *GeV);
   declareProperty( "KaonSame_lcs_cut",   m_lcs_cut      = 3.75 );
   declareProperty( "KaonSame_ipPU_cut", m_ipPU_cut_kS      = 3.0 );
   declareProperty( "KaonSame_distPhi_cut", m_distPhi_cut_kS= 0.005 );
-  declareProperty( "KaonSame_PIDk_cut", m_KaonSPID_kS_cut  =  4.5 );
+  declareProperty( "KaonSame_PIDk_cut", m_KaonSPID_kS_cut  =  3.5 );
   declareProperty( "KaonSame_PIDkp_cut",m_KaonSPID_kpS_cut = -8.5 );
 
   declareProperty( "KaonSame_ProbMin",   m_ProbMin_kaonS    = 0. ); //no cut
@@ -140,11 +140,11 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     double dphi  = fabs((*ipart)->momentum().Phi() - ptotB.Phi()); 
     if(dphi>3.1416) dphi=6.2832-dphi;
-    //double dR = sqrt(deta*deta+dphi*dphi);
+    double dR = sqrt(deta*deta+dphi*dphi);
 
     if(deta > m_etacut_kaonS) continue;
     if(dphi > m_phicut_kaonS) continue;
-    //if(dR> m_dRcut_kaonS) continue; //future studies, seems to be better than eta phi
+    if(dR > m_dRcut_kaonS) continue;
 
     Gaudi::LorentzVector pm  = (*ipart)->momentum();
     double E = sqrt(pm.P() * pm.P()+ 493.677*MeV * 493.677*MeV);
@@ -175,18 +175,21 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double ang = asin(ikaonS->pt()/ikaonS->p());
     double deta= log(tan(ptotB.Theta()/2))-log(tan(ang/2));
+    double dphi  = fabs(ikaonS->momentum().Phi() - ptotB.Phi());
+    if(dphi>3.1416) dphi=6.2832-dphi;
+    double dR = sqrt(deta*deta+dphi*dphi);
 
     std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;
-    NNinputs.at(2) = ikaonS->p()/GeV;
+    //    NNinputs.at(2) = ikaonS->p()/GeV;
     NNinputs.at(3) = ikaonS->pt()/GeV;
-    NNinputs.at(4) = fabs(save_IPsig);
+    NNinputs.at(4) = save_IPsig;
     NNinputs.at(5) = deta;
     NNinputs.at(6) = save_dphi;
     NNinputs.at(7) = save_dQ/GeV;
     NNinputs.at(8) = allVtx.size();
-    NNinputs.at(9) = ncand;
+    NNinputs.at(9) = dR;
 
     pn = m_nnet->MLPkS( NNinputs );
     verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
@@ -196,6 +199,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = 1 - m_P0_Cal_kaonS - m_P1_Cal_kaonS * ( (1-pn)-m_Eta_Cal_kaonS);
     debug() << " SS Kaon pn="<< pn <<" w="<<1-pn<<endmsg;
 
+    if( pn < 0 ) pn = 0;
+    if( pn > 1 ) pn = 1;
     if( pn < m_ProbMin_kaonS ) return tkaonS;
 
   }

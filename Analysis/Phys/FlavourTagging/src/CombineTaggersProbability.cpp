@@ -22,11 +22,11 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
   declareProperty( "OmegaMaxBin", m_omegamaxbin  = 0.38 );
   declareProperty( "OmegaScale",  m_omegascale  = 0.07 );
 
-  declareProperty( "ProbMin",     m_ProbMin     = 0.5);
-  declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.5);
-  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.376); 
-  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.928 ); 
-  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.354);
+  declareProperty( "ProbMin",     m_ProbMin     = 0.);
+  declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.);
+  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392); 
+  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921); 
+  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.363);
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}

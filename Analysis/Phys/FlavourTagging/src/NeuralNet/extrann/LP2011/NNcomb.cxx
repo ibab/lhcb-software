@@ -15,19 +15,6 @@ double NNcomb::Value(int index,double in0,double in1,double in2,double in3,doubl
    }
 }
 
-double NNcomb::Value(int index, double* input) {
-   input0 = (input[0] - 0)/1;
-   input1 = (input[1] - 0)/1;
-   input2 = (input[2] - 0)/1;
-   input3 = (input[3] - 0)/1;
-   input4 = (input[4] - 0)/1;
-   switch(index) {
-     case 0:
-         return neuron0x21972500();
-     default:
-         return 0.;
-   }
-}
 
 double NNcomb::neuron0x2167d900() {
    return input0;

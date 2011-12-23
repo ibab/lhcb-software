@@ -32,9 +32,9 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "Muon_PIDm_cut",m_PIDm_cut     = 2.5 );
   declareProperty( "Muon_ipPU_cut", m_ipPU_cut_muon      = 3.0 );
   declareProperty( "Muon_distPhi_cut", m_distPhi_cut_muon= 0.005 );
-  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.304 ); 
-  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.10 ); 
-  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.303 ); 
+  declareProperty( "Muon_P0_Cal",  m_P0_Cal_muon   = 0.309 ); 
+  declareProperty( "Muon_P1_Cal",  m_P1_Cal_muon   = 1.1953 ); 
+  declareProperty( "Muon_Eta_Cal", m_Eta_Cal_muon  = 0.304 ); 
 
   declareProperty( "Muon_ProbMin", m_ProbMin_muon = 0. ); //no cut
 
@@ -165,7 +165,8 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_muon - m_P1_Cal_muon * ( (1-pn)-m_Eta_Cal_muon);
     debug() << " Muon pn="<< pn <<" w="<<1-pn<<endmsg;
-
+    if( pn < 0 ) pn = 0;
+    if( pn > 1 ) pn = 1;
     if( pn < m_ProbMin_muon ) return tmu;
 
   }

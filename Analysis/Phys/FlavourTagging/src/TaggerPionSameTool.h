@@ -54,6 +54,10 @@ private:
   double m_Pt_cut_pionS;
   double m_P_cut_pionS;
   double m_IPs_cut_pionS;
+  double m_eta_max_cut_pionS;
+  double m_eta_min_cut_pionS;
+  double m_phi_cut_pionS;
+  double m_dR_cut_pionS;
   double m_dQcut_pionS;
   double m_dQcut_extra_pionS;
   double m_AverageOmega;

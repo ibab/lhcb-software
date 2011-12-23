@@ -5,6 +5,14 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2011-12-23 - Marc Grabalosa
+ - OS and SS optimized for Strip17
+ - OS calibration Strip17
+ - new NN for SSk
+ - corrected dQ calculation in SSK
+ - new tuning.py
+
+
 !========================== FlavourTagging v12r6 2011-07-29 ================
 ! 2011-12-08 - Stefania Vecchi
  - Bug FIXED in choosePrimary (BTaggingTool.cpp) that caused wrong list of 

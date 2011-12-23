@@ -27,18 +27,18 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele    = 1. * GeV );
   declareProperty( "Ele_P_cut",    m_P_cut_ele     = 0.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 5 );
-  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 2. );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele   = 3.85 );
+  declareProperty( "Ele_IPs_cut",  m_IPs_cut_ele   = 1. );
   declareProperty( "Ele_ghost_cut",m_ghost_cut_ele = -999 );
   declareProperty( "Ele_VeloChargeMin",m_VeloChMin     = 0.0 );
   declareProperty( "Ele_VeloChargeMax",m_VeloChMax     = 1.6 );
-  declareProperty( "Ele_EoverP",       m_EoverP        = 0.6 );
+  declareProperty( "Ele_EoverP",       m_EoverP        = 0.75 );
   declareProperty( "Ele_PIDe_cut", m_PIDe_cut      = 4. );
-  declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 3.0 );
-  declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.03 );
-  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.3305 ); 
-  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 1.09 ); 
-  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.345 ); 
+  declareProperty( "Ele_ipPU_cut", m_ipPU_cut_ele      = 5.0 );
+  declareProperty( "Ele_distPhi_cut", m_distPhi_cut_ele= 0.005 );
+  declareProperty( "Ele_P0_Cal",  m_P0_Cal_ele   = 0.306 ); 
+  declareProperty( "Ele_P1_Cal",  m_P1_Cal_ele   = 0.974 ); 
+  declareProperty( "Ele_Eta_Cal", m_Eta_Cal_ele  = 0.346 ); 
 
   declareProperty( "Ele_ProbMin",  m_ProbMin_ele   = 0. ); //no cut
 
@@ -184,7 +184,8 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);
     debug() << " Elec pn="<< pn <<" w="<<1-pn<<endmsg;
-
+    if( pn < 0 ) pn = 0;
+    if( pn > 1 ) pn = 1;
     if( pn < m_ProbMin_ele ) return tele;
 
   }

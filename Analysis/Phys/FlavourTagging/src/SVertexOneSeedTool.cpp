@@ -32,8 +32,9 @@ SVertexOneSeedTool::SVertexOneSeedTool( const std::string& type,
   declareProperty( "MinSeedPtmin", m_ptmin = 0.1 );
   declareProperty( "MinSeedIPSmin", m_ipsmin = 2.5 );
   declareProperty( "MinSeedDphimin", m_dphimin = 0. );
-  //  declareProperty( "MinSeedProbability", m_maxprobf = 0.4 );
-  declareProperty( "maxprobf", m_maxprobf = 0.4 );
+  //declareProperty( "MinSeedProbability", m_maxprobf = 0.4 );
+  declareProperty( "MinSeedProbability", m_maxprobf = 0.42 );
+  declareProperty( "maxprobf", m_maxprobf = 0.42 );
   declareProperty( "noclones", m_noclones = true );
 
 }
