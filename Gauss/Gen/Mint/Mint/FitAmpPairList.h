@@ -86,6 +86,9 @@ class FitAmpPairList
   virtual DalitzHistoSet histoSet() const;
   void saveEachAmpsHistograms(const std::string& prefix) const;
 
+  std::vector<DalitzHistoSet> GetEachAmpsHistograms();
+
+
   virtual void doFinalStats(MINT::Minimiser* min=0);
 
   virtual bool save(const std::string& asSubdirOf=".") const;

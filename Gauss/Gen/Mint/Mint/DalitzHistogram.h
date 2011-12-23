@@ -14,6 +14,8 @@
 #include "TTree.h"
 #include "TBranch.h"
 #include "TH1.h"
+#include "TCanvas.h"
+
 
 #include <string>
 
@@ -27,6 +29,7 @@ class DalitzHistogram{
   DalitzCoordSet _c;
   DalitzEventPattern _pat;
   std::string _name;
+  std::string _smartTitle;
   mutable TTree* _tree;
   std::vector<int> _patForTree;
   
@@ -54,6 +57,9 @@ class DalitzHistogram{
   DalitzHistogram(const DalitzHistogram& other);
 
   const std::string& name() const{return _name;}
+  void smartTitle(const DalitzCoordSet& c_in
+  				  , const DalitzEventPattern& pat_in);
+  const std::string smartTitle() const;
   const std::string hname() const;
   const std::string& htitle() const;
   const std::string& dirName() const;
@@ -96,6 +102,23 @@ class DalitzHistogram{
 		   , const std::string& format="eps"
 		   , const std::string& fitDrawOpt="HIST C SAME"
 		   ) const;
+
+  bool drawWithFit(	TCanvas& can
+		   , const DalitzHistogram& fit
+		   , const std::string& baseName=""
+		   , const std::string& format="eps"
+		   , const std::string& fitDrawOpt="HIST C SAME"
+		   ) const;
+
+  bool drawEachAmp( TCanvas& can
+		, const std::string& baseName=""
+	    , const std::string& drawOpt="SAME"
+	    , const std::string& format="eps"
+	    ) const;
+
+  MINT::counted_ptr<TH1> getHisto();
+
+
 
   double integral() const;
 

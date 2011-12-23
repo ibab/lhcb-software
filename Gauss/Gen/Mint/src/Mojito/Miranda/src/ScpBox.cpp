@@ -134,6 +134,51 @@ double ScpBox::rmsMC(int Ntotal) const{
   return (msq - m*m) * dN;
   */
 }
+
+
+bool ScpBox::subtractData(const IDalitzEvent& evt){
+  if(! _area.isInside(evt)) return false;
+  _nData--;
+  return true;
+}
+bool ScpBox::subtractData(const IDalitzEvent* evt){
+  bool dbThis=false;
+  if(0 == evt) return false;
+  if(dbThis) cout << "ScpBox::subtractData for pointers called" << endl;
+  if(! _area.isInside(*evt)) return false;
+  if(dbThis){
+    cout << "found data event inside area. This is the event:" << endl;
+    evt->print();
+  }
+
+  _nData--;
+  return true;
+}
+bool ScpBox::subtractMC(const IDalitzEvent& evt, double weight){
+  if(! _area.isInside(evt)) return false;
+  _nMC--;
+  _nWeightedMC += weight;
+  return true;
+}
+bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
+  bool dbThis=false;
+  if(dbThis) cout << "ScpBox::subtractMC for pointers called" << endl;
+  if(0 == evt) return false;
+  if(dbThis){
+    cout << "...area inside for this event:" << endl;
+    evt->print();
+  }
+  if(! _area.isInside(*evt)) return false;
+  _nMC--;
+  _nWeightedMC += weight;
+  _weightMC_Squared += weight*weight;
+
+  if(dbThis) cout << "ScpBox::subtractMC returning; have nMC = "<< _nMC << endl;
+  return true;
+}
+
+
+
 void ScpBox::print(std::ostream& os) const{
   os << "box: with area " << _area;
 }

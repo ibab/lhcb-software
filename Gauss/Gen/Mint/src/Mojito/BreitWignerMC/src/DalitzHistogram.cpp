@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <sstream>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -123,6 +124,37 @@ DalitzHistogram& DalitzHistogram::operator=(const DalitzHistogram& other){
   _patForTree = other._patForTree;
   return *this;
 }
+std::string convertInt(int number)
+{
+   stringstream ss;//create a stringstream
+   ss << number;//add number to the stream
+   return ss.str();//return a string with the contents of the stream
+}
+void DalitzHistogram::smartTitle(const DalitzCoordSet& c_in
+								, const DalitzEventPattern& pat_in)
+{
+	std::cout << "DaltizEventPattern " << pat_in << std::endl;
+	std::cout << "DalitzCoordSet " << c_in.name() << std::endl;
+	std::cout << "Pattern1" << pat_in[1].name() << std::endl;
+//	pat_in
+	TString c_out = c_in.name();
+//	for
+
+	std::string string1 = convertInt(pat_in[1]);
+	std::cout << "Pattern1: " << string1 << std::endl;
+
+	for (unsigned int i = 1; i< pat_in.size(); i++)
+	{
+		std::string sij = convertInt(i);
+		c_out.ReplaceAll(sij,pat_in[i].name());
+	}
+	_smartTitle = c_out;
+}
+
+const std::string DalitzHistogram::smartTitle() const
+{
+	return _smartTitle;
+}
 void DalitzHistogram::init(const DalitzCoordSet& c_in
 			   , const DalitzEventPattern& pat_in
 			   , int bins
@@ -135,6 +167,9 @@ void DalitzHistogram::init(const DalitzCoordSet& c_in
   _nbins = bins;
   _units = units;
   _patForTree = _pat.getVectorOfInts();
+
+  smartTitle(c_in,pat_in);
+
 
   double mi=0, ma=0;
   for(std::map<DalitzCoordKey, DalitzCoordinate>::iterator it = _c.begin();
@@ -156,7 +191,7 @@ void DalitzHistogram::init(const DalitzCoordSet& c_in
   counted_ptr<TH1D> local_h(new TH1D(name().c_str(), name().c_str()
 				     , _nbins, mi, ma));
   local_h->SetDirectory(0);
-  local_h->SetNameTitle(hname().c_str(), htitle().c_str());
+  local_h->SetNameTitle(hname().c_str(), smartTitle().c_str());
   local_h->Sumw2();
   local_h->SetLineWidth(2);
 
@@ -584,6 +619,51 @@ bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
   can.Print(fname.c_str());
   return true;
 }
+
+bool DalitzHistogram::drawWithFit( TCanvas& can
+			      , const DalitzHistogram& fit
+				  , const std::string& baseName // =""
+				  , const std::string& format
+				  , const std::string& fitDrawOpt
+				  ) const{
+  if(0 == _h) return false;
+  string fname = baseName + _c.nameFileSave() + "." + format;
+
+  counted_ptr<TH1> h_c( (TH1*) histo()->Clone());
+  counted_ptr<TH1> fit_c( (TH1*) fit.histo()->Clone());
+
+  double maxiThis = h_c->GetMaximum();//Stored();
+  double maxiThat = fit_c->GetMaximum();//Stored();
+
+  if(maxiThat > maxiThis) h_c->SetMaximum(maxiThat*1.05);
+  //  else h_c->SetMaximum(maxiThis);
+
+  h_c->Draw("E1");
+
+  fit_c->SetLineWidth(3);
+  fit_c->SetLineColor(2);
+  fit_c->SetMarkerColor(2);
+
+  fit_c->Draw(fitDrawOpt.c_str());
+  can.Print(fname.c_str());
+  return true;
+}
+MINT::counted_ptr<TH1> DalitzHistogram::getHisto(){
+	return _h;
+}
+
+bool DalitzHistogram::drawEachAmp( TCanvas& can
+			   , const std::string& baseName // =""
+			   , const std::string& drawOpt// =""
+			   , const std::string& format// = "eps"
+			   ) const{
+  if(0 == _h) return false;
+  string fname = baseName + _c.nameFileSave() + "." + format;
+  _h->Draw(drawOpt.c_str());
+//  can.Print(fname.c_str());
+  return true;
+}
+
 
 double DalitzHistogram::integral() const{
   if(0 == _h) return 0;

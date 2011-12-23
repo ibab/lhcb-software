@@ -388,7 +388,9 @@ DalitzHistoSet FastAmplitudeIntegrator::histoSet() const{
 void FastAmplitudeIntegrator::saveEachAmpsHistograms(const std::string& prefix) const{
   return _integCalc->saveEachAmpsHistograms(prefix);
 }
-
+std::vector<DalitzHistoSet> FastAmplitudeIntegrator::GetEachAmpsHistograms(){
+  return _integCalc->GetEachAmpsHistograms();
+}
 void FastAmplitudeIntegrator::doFinalStats(Minimiser* mini){
   bool dbThis=true;
   if(dbThis) cout << "FastAmplitudeIntegrator::doFinalStats() called" << endl;

@@ -708,6 +708,17 @@ int NamedDecayTreeList::makeKKpipiList(){
   delete dk;
   
 
+  // D0->f(0)(980) NonResVbar0(pi-,pi+)
+  dk = new DecayTree(421);
+  dk->addDgtr(-9993)->addDgtr( -211, 211);
+  dk->addDgtr( 9010221)->addDgtr( -211,  +211);
+  add(AmpInitialiser(*dk, "FocusFlatte"));
+  add(AmpInitialiser(*dk, "Flatte"));
+  add(*dk);
+  if(dbThis) cout << "11th decay: " << *dk << endl;
+  delete dk;
+
+
   // f(0)(980) KK
   dk = new DecayTree(421);
   dk->addDgtr( 9010221)->addDgtr( -211,  +211);
@@ -1308,6 +1319,19 @@ int NamedDecayTreeList::makeK3piList(){
   dk->addDgtr(    225)->addDgtr( -211,  +211);
   add(*dk);
   if(dbThis) cout << "18th decay: " << *dk << endl;
+
+  // D0->f(2)(1270)0(->pi+,pi-),NonResV0(->pi-,pi+)
+  dk = new DecayTree(421);
+  dk->addDgtr(225)->addDgtr( -211,  +211);
+  dk->addDgtr(9993)->addDgtr(-211,  +211);
+  add(*dk);
+
+  // D0->f(2)(1270)0(->pi+,pi-),NonResT0(->pi-,pi+)
+//  dk = new DecayTree(421);
+//  dk->addDgtr(225)->addDgtr( -211,  +211);
+//  dk->addDgtr(9985)->addDgtr(-211,  +211);
+//  add(*dk);
+
 
   // D0->f(2)(1430)0(->pi+,pi-),K*(892)bar0(->K-,pi+) P, D
   dk = new DecayTree(421);

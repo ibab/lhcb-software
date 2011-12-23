@@ -368,6 +368,10 @@ void DalitzPdfBaseFastInteg::saveEachAmpsHistograms(const std::string& prefix) c
   _faint.saveEachAmpsHistograms(prefix);
   return;
 }
+
+std::vector<DalitzHistoSet> DalitzPdfBaseFastInteg::GetEachAmpsHistograms(){
+  return _faint.GetEachAmpsHistograms();
+}
 void DalitzPdfBaseFastInteg::endFit(){
 
   //_faint.doFinalStats();

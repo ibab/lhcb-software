@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 23-12-2011 - Matt Coombes
+ - Added Capability to plot all amps on fit histo
+ - Changed title to show particles.
+ 
 ! 05-12-2011 - Matt Coombes
  - Fixed Binning for SCP stack histo
  - Compressed warnings in FitAmpPair.cpp

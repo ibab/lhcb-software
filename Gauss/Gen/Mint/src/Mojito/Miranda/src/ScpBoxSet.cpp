@@ -232,6 +232,47 @@ double ScpBoxSet::scp(double normFactorPassed) const{
 
   return scp;
 }
+
+bool ScpBoxSet::subtractData(const IDalitzEvent& evt){
+  for(unsigned int i=0; i < this->size(); i++){
+    if ((*this)[i].subtractData(evt)){
+      return true;
+    }
+  }
+  return false;
+}
+bool ScpBoxSet::subtractData(const IDalitzEvent* evt){
+  for(unsigned int i=0; i < this->size(); i++){
+    if ((*this)[i].subtractData(evt)){
+      return true;
+    }
+  }
+  return false;
+}
+bool ScpBoxSet::subtractMC(IDalitzEvent& evt, double weight){
+  for(unsigned int i=0; i < this->size(); i++){
+    if((*this)[i].subtractMC(evt, weight)){
+      return true;
+    }
+  }
+  return false;
+}
+bool ScpBoxSet::subtractMC(IDalitzEvent* evt, double weight){
+  bool dbThis=false;
+  if(dbThis) {
+    cout << "ScpBoxSet::subtractMC for pointers called with evt = "
+	 << evt << endl;
+  }
+  for(unsigned int i=0; i < this->size(); i++){
+    if((*this)[i].subtractMC(evt, weight)){
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
 //
 //double ScpBoxSet::scpErr(double normFactorPassed) const{
 //

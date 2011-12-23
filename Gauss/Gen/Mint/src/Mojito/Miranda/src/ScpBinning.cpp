@@ -8,6 +8,8 @@
 
 #include "TCanvas.h"
 #include "TH1D.h"
+#include <stdio.h>
+#include <math.h>
 
 #include <algorithm>
 #include <iostream>
@@ -16,7 +18,7 @@ using namespace MINT;
 using namespace std;
 
 int* ScpBinning::__colourPalette=0;
-int  ScpBinning::__Ncol=256;
+int  ScpBinning::__Ncol=100;
 
 void ScpBinning::makeColourPaletteBlueGrey(){
   static const int NRGBs = 7;
@@ -404,6 +406,7 @@ void ScpBinning::setHistoColours(){
   if (getMinScp()<minScp){
 	  minScp = getMinScp();
   }
+
   for(unsigned int i=0; i < _boxSets.size(); i++){
     double scp = scp_ofBin(i);
     int colIndex = ((scp-minScp)/(maxScp-minScp))*((__Ncol));
@@ -513,6 +516,75 @@ int ScpBinning::ndof() const
 {
 	return _boxSets.size()-1;
 }
+
+
+void ScpBinning::SubtractBackgroundData(IDalitzEventList* data){
+  data->Start();
+  while(data->Next()){
+    bool foundBox=false;
+    for(unsigned int i=0; i < _boxSets.size(); i++){
+      if(_boxSets[i].subtractData(data->getEvent())){
+    	  foundBox=true;
+    	  _nData--;
+    	  break;
+      }
+    }
+    if(! foundBox){
+      cout << "WARNING in ScpBinning::fillData:"
+	   << "\n\t didn't find box for event "
+	   << endl;
+//      data->getEvent()->print();
+      cout << "compare to first event: " << endl;
+//      data->getREvent(0)->print();
+      ScpBox box(data->getEvent()->eventPattern());
+      cout << "would have fit into large? "
+	   << box.addData(data->getEvent()) << endl;
+    }
+  }
+}
+
+void ScpBinning::SubtractBackgroundDataCC(IDalitzEventList* data){
+  data->Start();
+  while(data->Next()){
+    bool foundBox=false;
+    for(unsigned int i=0; i < _boxSets.size(); i++){
+      if(_boxSets[i].subtractMC(data->getEvent(),1.0)){
+	foundBox=true;
+	_nDataCC--;
+	break;
+      }
+    }
+  }
+}
+
+double ScpBinning::setBackgroundEvents(IDalitzEventList* data
+				    , IDalitzEventList* dataCC
+				    ){
+  bool dbThis=false;
+  if(dbThis) cout << "ScpBinning::setEventsAndPdf" << endl;
+  if(0 == data) return -9999;
+  if(0 == dataCC) return -9999;
+  //(could do this: if 0 == pdf: mc generated with pdf from fit result.
+  // But for now, leave it like this for safety)
+//  if(0 != fas) setFas(fas);
+  if(dbThis) cout << "...number of scp bins = " << numBins() << endl;
+  if(dbThis) cout << "...about to fill in the data " << endl;
+  SubtractBackgroundData(data);
+  if(dbThis) cout << "...done that - now the MC" << endl;
+  SubtractBackgroundDataCC(dataCC);
+  if(dbThis) cout << "... fillMC done, now setting norm factors" << endl;
+  if(dbThis) cout << " done the norm factors, now sorting by chi2" << endl;
+  sortByScp();
+  if(dbThis) cout << " ScpBinning::setEventsAndPdf done" << endl;
+  return 0;
+}
+
+int ScpBinning::NEntires()
+{
+	return _nData + _nDataCC;
+}
+
+
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
  

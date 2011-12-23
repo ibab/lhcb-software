@@ -10,6 +10,7 @@
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzHistogram.h"
 #include "Mint/DalitzCoordSet.h"
+#include "TLegend.h"
 
 class TTree;
 class IDalitzEvent;
@@ -51,6 +52,14 @@ class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
 		   , const std::string& format="eps"
 		   , const std::string& fitDrawOpt="HIST C SAME"
 		   ) const;
+  bool drawWithFitAndEachAmps(
+		  	  	   DalitzHistoSet& data
+		  	  	 , DalitzHistoSet& fit
+  				 , std::vector<DalitzHistoSet>& amps
+  				 , const std::string& baseName =""
+  				 , const std::string& format = "eps"
+  				 , const std::string& fitDrawOpt = "HIST C SAME"
+  				 ) const;
   bool drawWithFitNorm(const DalitzHistoSet& fit
 		       , const std::string& baseName=""
 		       , const std::string& format="eps"

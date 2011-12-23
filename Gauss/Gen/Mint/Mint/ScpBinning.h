@@ -62,6 +62,10 @@ class ScpBinning {
 			 , IDalitzEventList* mc
 			 );
 
+  double setBackgroundEvents(IDalitzEventList* data
+			 , IDalitzEventList* mc
+			 );
+
 
   void setFas(IFastAmplitudeIntegrable* fas);
 
@@ -90,6 +94,11 @@ class ScpBinning {
   DalitzHistoStackSet getMCHistoStack();
   MINT::counted_ptr<TH1D> getScpDistribution() const;
   void drawScpDistribution(const std::string& fname = "scpDistribution.eps")const;
+
+  void SubtractBackgroundData(IDalitzEventList* data);
+  void SubtractBackgroundDataCC(IDalitzEventList* data);
+
+  int NEntires();
 
 };
 

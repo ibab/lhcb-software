@@ -147,6 +147,8 @@ class DalitzPdfBaseFastInteg
   bool makePlots(const std::string& filename) const;
   DalitzHistoSet histoSet() const;
   void saveEachAmpsHistograms(const std::string& prefix) const;
+  std::vector<DalitzHistoSet> GetEachAmpsHistograms();
+
   IFastAmplitudeIntegrable* getFitAmpSum(){ return _amps;}
   //double efficiency(){return _efficiency->RealVal();}
   virtual void endFit();

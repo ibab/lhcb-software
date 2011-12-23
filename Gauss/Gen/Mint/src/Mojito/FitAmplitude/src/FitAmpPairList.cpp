@@ -302,6 +302,29 @@ void FitAmpPairList::saveEachAmpsHistograms(const std::string& prefix) const{
   return;
 }
 
+std::vector<DalitzHistoSet> FitAmpPairList::GetEachAmpsHistograms(){
+	std::vector<DalitzHistoSet> HistoSet;
+	 DalitzHistoSet sum;
+	  int counter=0;
+	  for(unsigned int i=0; i< this->size(); i++){
+	    if((*this)[i].isSingleAmp()){
+	      counter++;
+	      std::string name =  anythingToString(counter) + ".root";
+	      DalitzHistoSet hs((*this)[i].histoSet());
+	      std::string title = (*this)[i].amp1()->name();
+	      hs.setTitle(title);
+	      cout << "FitAmpPairList::saveEachAmpsHistograms: "
+		   << "saving " << title << " as " << name << endl;
+	      HistoSet.push_back(hs);
+	    }
+	  }
+	  return HistoSet;
+}
+
+//Add Plot of eveything on top of each other here
+//Get EachAmpHistograms
+// Can we from there get the ROOT histograms?
+
 void FitAmpPairList::doFinalStats(Minimiser* mini){
   bool dbThis=true;
   if(dbThis) cout << "FitAmpPairList::doFinalStats() called" << endl;

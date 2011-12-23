@@ -136,6 +136,11 @@ DalitzHistoSet IntegCalculator::histoSet() const{
 void IntegCalculator::saveEachAmpsHistograms(const std::string& prefix) const{
   return noEff().saveEachAmpsHistograms(prefix);
 }
+
+std::vector<DalitzHistoSet> IntegCalculator::GetEachAmpsHistograms(){
+  return noEff().GetEachAmpsHistograms();
+}
+
 void IntegCalculator::doFinalStats(Minimiser* mini){
   makeAndStoreFractions(mini);
 }

@@ -12,8 +12,9 @@
 using namespace std;
 using namespace MINT;
 
-int DiskResidentEventList::__maxBytes = 100000000; // 100 MB
+//int DiskResidentEventList::__maxBytes = 100000000; // 100 MB
 //int DiskResidentEventList::__maxBytes = 50000000; // 50 MB
+int DiskResidentEventList::__maxBytes = 10000000; // 10 MB
 //int DiskResidentEventList::__maxBytes = 1000000; // 1 MB
 //int DiskResidentEventList::__maxBytes = 1000;  // 1 kB
 
@@ -66,7 +67,7 @@ DiskResidentEventList::DiskResidentEventList(const std::string& fname
   , _ntp(0)
   , _scaleData(scale)
   , _cName(treeName)
-  , _ntpName(treeName)
+  , _ntpName(treeName+"NTP")
 {
   bool dbThis=false;
   openFile();
@@ -194,6 +195,7 @@ bool DiskResidentEventList::openFile(){
   if(_f->IsZombie()) return makeNewFile();
   if(! _f->IsOpen()) return makeNewFile();
   if(! _f->IsWritable()) return makeNewFile();
+//  if (1 ==1) return makeNewFile();
   return true;
 }
 bool DiskResidentEventList::fromFile(){
@@ -311,6 +313,7 @@ bool DiskResidentEventList::makeNtp(const DalitzEvent& evt){
     _ntp = new TNtupleD(cName().c_str(), ntpName().c_str()
 			, evt.makeNtupleVarnames().c_str()
 			);
+    _ntp->SetDirectory(0);
   }
   if(0 != _ntp){
     _ntp->SetDirectory(_f);

@@ -133,6 +133,7 @@ class FastAmplitudeIntegrator : virtual public IDalitzIntegrator{
 
   DalitzHistoSet histoSet() const;
   void saveEachAmpsHistograms(const std::string& prefix) const;
+  std::vector<DalitzHistoSet> GetEachAmpsHistograms();
   virtual void doFinalStats(MINT::Minimiser* mini=0);
   double getFractionChi2()const;
 
