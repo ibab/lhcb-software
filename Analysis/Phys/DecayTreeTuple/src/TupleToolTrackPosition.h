@@ -14,8 +14,8 @@
  * \brief Plot the X/Y position at a given Z
  * 
  * Steer with:
- * - Z : the Z-position at which to plot the X/Y, double, defaults to 2500 (T-stations)
- * - Extrapolator : which track extrapolator to use, defaults to the TrackMasterExtrapolator
+ * - Z : the Z-position at which to plot the X/Y, double, defaults to 2500 (TT-stations)
+ * - Extrapolator : which track extrapolator to use, defaults to the TrackStateProvider
  * - ExtraName : the universal TupleTool option, in case you want to use multiples of this tool
  * 
  * fills:
@@ -29,6 +29,7 @@
  */
 
 class ITrackExtrapolator;
+class ITrackStateProvider;
 
 
 class TupleToolTrackPosition : public TupleToolBase, virtual public IParticleTupleTool {
@@ -55,7 +56,7 @@ protected:
 private:
 
   double m_Z;   ///<Where to propagate the track
-  const ITrackExtrapolator* m_extrapolator; ///<pointer tot the track extrapolator
+  const ITrackStateProvider* m_extrapolator; ///<pointer tot the track extrapolator
   std::string m_extrapolatorName;///<which extrapolator to use
   
   
@@ -65,3 +66,4 @@ private:
 
 
 #endif // TUPLETOOLTRACKPOSITION_H
+

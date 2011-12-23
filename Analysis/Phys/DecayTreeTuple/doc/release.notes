@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2011-12-23 - Rob Lambert
+ - Switch to TrackStateProvider in TupleToolTrackPosition
+
 ! 2011-12-18 - Chris Jones
  - Extend the TupleToolPid to include all of the main sub-detector PID
    variables when in verbose mode.
