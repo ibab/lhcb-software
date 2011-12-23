@@ -45,7 +45,8 @@ from Configurables import (DecayTreeTuple,TupleToolDecay,TupleToolVtxIsoln ,
 
 #job = 'Grid'
 job = ''
-data = 'mc10'
+#data = 'mc10'
+data = 'data'
 outputlevel = 6
 
 ##############################################################################################
@@ -304,8 +305,8 @@ seqB2JpsiX.ShortCircuit  =   False
 from Configurables import EventTuple , TupleToolTrigger
 evtTuple                = EventTuple()
 evtTuple.ToolList      += [ "TupleToolEventInfo", "TupleToolTrigger"]
-DaVinci().EvtMax        =  -1
-DaVinci().EvtMax        =  500
+#DaVinci().EvtMax        =  -1
+DaVinci().EvtMax        =  5000
 DaVinci().SkipEvents    =  -1
 DaVinci().DataType      = '2011'
 
@@ -339,9 +340,9 @@ elif data=='data':
     DaVinci().DDDBtag   = "head-20110914"
     DaVinci().CondDBtag = "head-20110914"
     # run HLT2 on Data
-    DaVinci().Hlt             = True
-    DaVinci().Hlt2Requires    = 'L0+Hlt1'
-    DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10'
+#    DaVinci().Hlt             = True
+#    DaVinci().Hlt2Requires    = 'L0+Hlt1'
+#    DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Hlt2_Feb10'
 
 
 DaVinci().TupleFile       = "DTT.root"  # Ntuple
@@ -349,8 +350,8 @@ DaVinci().UserAlgorithms += [myselBu, evtTuple , seqB2JpsiX, taganaBu ]
 from Gaudi.Configuration import *
 
 EventSelector().Input   = [
-    " DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008932/0000/00008932_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-
+#    " DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008932/0000/00008932_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/LHCb/Collision11/DIMUON.DST/00012549/0000/00012549_00000001_1.dimuon.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 """
 EventSelector().Input   = [

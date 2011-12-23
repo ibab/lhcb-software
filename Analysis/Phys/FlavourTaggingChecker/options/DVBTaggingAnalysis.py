@@ -48,8 +48,9 @@ tag.BTaggingTool.UseReFitPV = False
 tag.BTaggingTool.OutputLevel = 4
 
 #Import cuts
-#from FlavourTagging.Tunings import TuneTool
+from FlavourTagging.Tunings import TuneTool
 #TuneTool(tag,"MC10") #for example
+TuneTool(tag,"Xmass_2011") #for example
 
 ########################################################################
 # Flavour tagging Checker:
@@ -71,7 +72,7 @@ tagana.TagOutputLocation =  location + "/FlavourTags"
 
 tagana.ChoosePVCriterium = "PVbyIP"  #needed by CheatedSel
 tagana.BHypoCriterium = "MaximumPt"  #needed by CheatedSel
-#tagana.PVReFit = False
+tagana.PVReFit = False
 tagana.RequireTisTos = True #TisTosTool
 #tagana.SaveHlt1Lines = False #SaveHlt1Lines (require tistos)
 tagana.OutputLevel = 4
@@ -89,8 +90,9 @@ tagana.BackgroundCategory.OutputLevel = 5
 # Standard configuration
 MessageSvc().Format  = "% F%30W%S%7W%R%T %0W%M"
 
-DaVinci().EvtMax     = 250                        # Number of events
-#DaVinci().SkipEvents = 0                           # Events to skip
+DaVinci().EvtMax     = 4500                        # Number of events
+DaVinci().SkipEvents = 278                           # Events to skip
+#DaVinci().EvtMax     = 500                        # Number of events
 DaVinci().PrintFreq  = 1
 DaVinci().TupleFile  = "analysis.root"     # Ntuple
 
@@ -111,6 +113,7 @@ DaVinci().MoniSequence = [ cheatsel,
 
 
 EventSelector().Input = [
+    #Bs
     "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008916/0000/00008916_00000083_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"
     #jpsik+
     #"DATAFILE='PFN:/castor/cern.ch/grid/lhcb/LHCb/Collision11/DIMUON.DST/00010193/0000/00010193_00000479_1.dimuon.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
@@ -118,4 +121,6 @@ EventSelector().Input = [
     #"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00006522/0000/00006522_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
     #bdjpsikshort
     #"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2010/DST/00007353/0000/00007353_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+    #bujpsik
+    #"DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008941/0000/00008941_00000001_1.allstreams.dst?svcClass=lhcbdisk' TYP='POOL_ROOTTREE' OPT='READ'"
     ]

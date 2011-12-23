@@ -6,6 +6,14 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2011-12-23 - Marc Grabalosa
+ - changes in /root
+  .fix for dQ calculation in SSk
+  .pn<0 and pn>1
+  .new NN for SSk
+  .OS and SS optimized cuts(strip17)
+  .OS calibration
+
 !========================== FlavourTaggingChecker v6r8 2012-12-15 ==========
 
 ! 2011-12-8 - Stefania Vecchi
