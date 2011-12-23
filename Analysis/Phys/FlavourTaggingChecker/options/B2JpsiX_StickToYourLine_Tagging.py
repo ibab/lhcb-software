@@ -45,8 +45,8 @@ from Configurables import (DecayTreeTuple,TupleToolDecay,TupleToolVtxIsoln ,
 
 #job = 'Grid'
 job = ''
-#data = 'mc10'
-data = 'data'
+data = 'mc10'
+#data = 'data'
 outputlevel = 6
 
 ##############################################################################################
@@ -350,8 +350,8 @@ DaVinci().UserAlgorithms += [myselBu, evtTuple , seqB2JpsiX, taganaBu ]
 from Gaudi.Configuration import *
 
 EventSelector().Input   = [
-#    " DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008932/0000/00008932_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/LHCb/Collision11/DIMUON.DST/00012549/0000/00012549_00000001_1.dimuon.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+    " DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/MC10/ALLSTREAMS.DST/00008932/0000/00008932_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
 
 """
 EventSelector().Input   = [

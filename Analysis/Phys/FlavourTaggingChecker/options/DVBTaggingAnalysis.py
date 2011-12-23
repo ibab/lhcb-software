@@ -48,9 +48,9 @@ tag.BTaggingTool.UseReFitPV = False
 tag.BTaggingTool.OutputLevel = 4
 
 #Import cuts
-from FlavourTagging.Tunings import TuneTool
+#from FlavourTagging.Tunings import TuneTool
 #TuneTool(tag,"MC10") #for example
-TuneTool(tag,"Xmass_2011") #for example
+#TuneTool(tag,"Xmass_2011") #for example
 
 ########################################################################
 # Flavour tagging Checker:
