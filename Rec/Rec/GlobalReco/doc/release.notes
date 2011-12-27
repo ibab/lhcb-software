@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2011-12-27 - Chris Jones
+ - Try and fix the qmtests
+
 ! 2011-12-20 - Chris Jones
  - Add the slot DataType to the Configurable, and pass this on to the ANN PID
    Configurable

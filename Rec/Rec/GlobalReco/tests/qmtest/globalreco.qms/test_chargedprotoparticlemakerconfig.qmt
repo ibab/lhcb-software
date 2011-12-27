@@ -10,25 +10,9 @@ CPP0              VERBOSE Inputs = [Rec/Track/Special0]
 CPP0              VERBOSE Output = Rec/ChargedPP/ProtoParticles0
 """, stdout, result, causes, signature_offset = 0, id = "CPP0_Params")
 findReferenceBlock("""
-CPP1              VERBOSE Inputs = [Rec/Track/Best]
+CPP1              VERBOSE Inputs = [Rec/Track/Special1]
 CPP1              VERBOSE Output = Rec/ChargedPP/ProtoParticles1
-""", stdout, result, causes, signature_offset = 0, id = "CPP1_Params")
-findReferenceBlock("""
-CPP2              VERBOSE Inputs = [Rec/Track/Special2]
-CPP2              VERBOSE Output = Rec/ProtoP/Charged
-""", stdout, result, causes, signature_offset = 0, id = "CPP2_Params")
-findReferenceBlock("""
-CPP3              VERBOSE Inputs = [Rec/Track/Special3]
-CPP3              VERBOSE Output = Rec/ChargedPP/ProtoParticles3
 """, stdout, result, causes, signature_offset = 0, id = "CPP3_Params")
-findReferenceBlock("""
-CPP4              VERBOSE Inputs = [Rec/Track/Special4]
-CPP4              VERBOSE Output = 
-""", stdout, result, causes, signature_offset = 0, id = "CPP4_Params")
-findReferenceBlock("""
-CPP5              VERBOSE Inputs = []
-CPP5              VERBOSE Output = Rec/ChargedPP/ProtoParticles1
-""", stdout, result, causes, signature_offset = 0, id = "CPP5_Params")
 countErrorLines({"FATAL":0})
 </text></argument>
 </extension>

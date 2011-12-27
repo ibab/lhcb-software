@@ -16,17 +16,14 @@
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
-                                                        ISvcLocator* pSvcLocator )
-    : GaudiAlgorithm ( name , pSvcLocator ),
-      m_protoPath(""),
-      m_trSel        ( NULL )
+ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
+                                                      ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_protoPath(""),
+    m_trSel        ( NULL )
 {
 
   // context specific locations
@@ -62,11 +59,11 @@ StatusCode ChargedProtoParticleMaker::initialize()
   }
   else
   {
-    if (m_tracksPath.empty() ) 
+    if (m_tracksPath.empty() )
     {
       m_tracksPath.push_back(LHCb::TrackLocation::Default);
     }
-    if (m_protoPath=="") 
+    if (m_protoPath=="")
     {
       m_protoPath  = LHCb::ProtoParticleLocation::Charged;
     }
@@ -178,5 +175,10 @@ StatusCode ChargedProtoParticleMaker::execute()
   // return
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker )
 
 //=============================================================================
