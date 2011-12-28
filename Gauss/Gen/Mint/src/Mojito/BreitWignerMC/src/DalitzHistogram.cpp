@@ -133,16 +133,8 @@ std::string convertInt(int number)
 void DalitzHistogram::smartTitle(const DalitzCoordSet& c_in
 								, const DalitzEventPattern& pat_in)
 {
-	std::cout << "DaltizEventPattern " << pat_in << std::endl;
-	std::cout << "DalitzCoordSet " << c_in.name() << std::endl;
-	std::cout << "Pattern1" << pat_in[1].name() << std::endl;
 //	pat_in
 	TString c_out = c_in.name();
-//	for
-
-	std::string string1 = convertInt(pat_in[1]);
-	std::cout << "Pattern1: " << string1 << std::endl;
-
 	for (unsigned int i = 1; i< pat_in.size(); i++)
 	{
 		std::string sij = convertInt(i);

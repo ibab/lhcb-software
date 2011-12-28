@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 28-12-2011 - Matt Coombes
+ - Removed some unnecessary print statements.
+ 
 ! 23-12-2011 - Matt Coombes
  - Added Capability to plot all amps on fit histo
  - Changed title to show particles.
