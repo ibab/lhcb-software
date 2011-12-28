@@ -353,7 +353,6 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
     map< DalitzCoordSet, DalitzHistogram >::iterator jt
       = fit.find(it->first);
     if(jt == fit.end()) continue;
-    sc &= it->second.drawWithFit(can, jt->second, baseName, format, fitDrawOpt);
     MINT::counted_ptr<TH1> dataHisto = (it->second).getHisto();
     std::cout << it->first << endl;
 
@@ -404,7 +403,7 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
     }
 
     std::string SaveName = it->first.name();
-    TString SaveFull = "EachAmpsAndFit"+SaveName+".pdf";
+    TString SaveFull = baseName+SaveName+".pdf";
     SaveFull.ReplaceAll("(","");
     SaveFull.ReplaceAll(")","");
     SaveFull.ReplaceAll(",","_");
