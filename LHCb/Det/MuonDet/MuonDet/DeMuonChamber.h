@@ -99,10 +99,10 @@ public:
   int getGasGapNumber();
   StatusCode  isPointInGasGap(Gaudi::XYZPoint 
   pointInChamber,Gaudi::XYZPoint&
-  pointInGap,IPVolume* gasVolume);
+  pointInGap,IPVolume* & gasVolume);
   StatusCode  isPointInGasGap(Gaudi::XYZPoint 
   pointInChamber,Gaudi::XYZPoint&
-  pointInGap,int& number,IPVolume* gasVolume);
+  pointInGap,int& number,IPVolume*  & gasVolume);
   IPVolume* getGasGapLayer(int number);
 
 private:
