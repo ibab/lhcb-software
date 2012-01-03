@@ -1718,8 +1718,16 @@ void ZooWriter::writeMC()
 	} else {
 	    for (unsigned i = 0; i < m_MCList.size(); ++i) {
 		// ok, if it's on the list, write it out (along with its children)
-		if (m_MCList[i] == std::abs(part->particleID().pid()))
-		    GetSaved(part);
+	        if (m_MCList[i] == std::abs(part->particleID().pid())) {
+		    if (!m_writeMCtrees)
+		        GetSaved(part);
+		    else {
+		        const LHCb::MCParticle* buffer = part;
+			while (buffer->mother())
+			    buffer = buffer->mother();
+			GetSaved(buffer);
+		    }
+		}
 	    }
 	}
     }
