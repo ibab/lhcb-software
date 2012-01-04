@@ -1,16 +1,16 @@
 
 //---------------------------------------------------------------------------------
-/** @file RichDetailedTrSegMakerFromRecoTracks.h
+/** @file RichDetailedTrSegMakerFromRecoTracksStateProvider.h
  *
- *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
+ *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracksStateProvider
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */
 //---------------------------------------------------------------------------------
 
-#ifndef RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H
-#define RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H 1
+#ifndef RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracksStateProvider_H
+#define RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracksStateProvider_H 1
 
 // base class
 #include "RichBaseTrSegMakerFromRecoTracks.h"
@@ -22,8 +22,8 @@
 #include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/RichTrackSegment.h"
 
-// Track Extrapolator
-#include "TrackInterfaces/ITrackExtrapolator.h"
+// Track State Provider
+#include "TrackInterfaces/ITrackStateProvider.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -34,11 +34,11 @@ namespace Rich
   {
 
     //---------------------------------------------------------------------------------
-    /** @class DetailedTrSegMakerFromRecoTracks RichDetailedTrSegMakerFromRecoTracks.h
+    /** @class DetailedTrSegMakerFromRecoTracksStateProvider RichDetailedTrSegMakerFromRecoTracksStateProvider.h
      *
      *  Tool to create RichTrackSegments from Tracks.
      *
-     *  Uses the tracking extrapolation tools to access the state information at the
+     *  Uses the tracking state provider tool to access the state information at the
      *  entrance and exit points to the radiators, which is then used to create the
      *  RichTrackSegments using a detailed approach.
      *
@@ -51,18 +51,18 @@ namespace Rich
      */
     //---------------------------------------------------------------------------------
 
-    class DetailedTrSegMakerFromRecoTracks : public BaseTrSegMakerFromRecoTracks
+    class DetailedTrSegMakerFromRecoTracksStateProvider : public BaseTrSegMakerFromRecoTracks
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard Constructor
-      DetailedTrSegMakerFromRecoTracks( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+      DetailedTrSegMakerFromRecoTracksStateProvider( const std::string& type,
+                                                     const std::string& name,
+                                                     const IInterface* parent );
 
       /// Standard Destructor
-      virtual ~DetailedTrSegMakerFromRecoTracks( );
+      virtual ~DetailedTrSegMakerFromRecoTracksStateProvider( );
 
       // Initialization of the tool after creation
       virtual StatusCode initialize();
@@ -107,7 +107,7 @@ namespace Rich
        *  @param refState     Reference starting state.
        */
       void fixRich1GasEntryPoint( LHCb::State *& state,
-                                  const LHCb::State * refState = 0 ) const;
+                                  const LHCb::Track * track ) const;
 
       /** Correct the exit state to the point where the track traverses the spherical mirror
        *
@@ -117,13 +117,13 @@ namespace Rich
        */
       void correctRadExitMirror( const DeRichRadiator* radiator,
                                  LHCb::State *& state,
-                                 const LHCb::State * refState = 0  ) const;
+                                 const LHCb::Track * track ) const;
 
       /** Extrapolate a state to a new z position
        *
        * @param stateToMove  The state to extrapolate
        * @param z            The z position to extrapolate the state to
-       * @param refState     Reference starting state.
+       * @param track        The parent track
        *
        * @return The status of the extrapolation
        * @retval true  State was successfully extrapolated to the new z position
@@ -131,32 +131,24 @@ namespace Rich
        *         State remains unaltered.
        */
       bool moveState( LHCb::State *& stateToMove,
-                      const double z,
-                      const LHCb::State * refState = 0 ) const;
+                      const LHCb::Track * track,
+                      const double z ) const;
 
-      /// Access primary track extrapolator tool
-      inline ITrackExtrapolator * primaryExtrapolator() const
+      /// Access track state provider tool
+      inline ITrackStateProvider * stateProvider() const
       {
-        return m_trExt1;
-      }
-
-      /// Access on-demand backup track extrapolator tool
-      inline ITrackExtrapolator * backupExtrapolator() const
-      {
-        if ( !m_trExt2 ) { m_trExt2 = tool<ITrackExtrapolator>( m_trExt2Name ); }
-        return m_trExt2;
+        return m_trStateP;
       }
 
       /// Creates the middle point information
       bool createMiddleInfo( const Rich::RadiatorType rad,
+                             const LHCb::Track * track,
                              LHCb::State *& fState,
-                             const LHCb::State * fStateRef,
                              LHCb::State *& lState,
-                             const LHCb::State * lStateRef,
                              Gaudi::XYZPoint & midPoint,
                              Gaudi::XYZVector & midMomentum,
                              LHCb::RichTrackSegment::StateErrors & errors ) const;
-      
+
     private: // data
 
       /// Ray tracing tool
@@ -188,14 +180,8 @@ namespace Rich
       /// sanity checks on state information
       std::vector<double> m_minStateDiff;
 
-      // Track extrapolators
-      ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
-      mutable ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
-      std::string m_trExt1Name; ///< Primary track extrapolation tool name
-      std::string m_trExt2Name; ///< Secondary track extrapolation tool name
-
-      /// Flag to indicate if extrapolation should always be done from the reference states
-      bool m_extrapFromRef;
+      /// Track state provider
+      ITrackStateProvider * m_trStateP;
 
       /// Minimum state movement in z to bother with
       double m_minZmove;
@@ -214,4 +200,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H
+#endif // RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracksStateProvider_H

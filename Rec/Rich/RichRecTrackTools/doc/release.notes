@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-01-04 - Chris Jones
+ - Add new implementation of the "detailed" track segment creator that uses
+   the tracking TrackStateProvider tool, instead of extrapolators.
+
 !========================= RichRecTrackTools v1r32 2011-12-15 ================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
