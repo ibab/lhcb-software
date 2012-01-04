@@ -4,7 +4,12 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
-!========================= RichKernel v7r47 2011-12-14 =========================
+! 2012-01-04 - Chris Jones
+ - Add an option to the RichTools Configurable to use the new detailed 
+   track segment creator that uses the tracking State provider tool, 
+   instead of the extrapolators.
+
+!===================== RichKernel v7r47 2011-12-14 =====================
 ! 2011-12-02 - Chris Jones
  - use unsigned int instead of unsigned long for histogramming methods
 
