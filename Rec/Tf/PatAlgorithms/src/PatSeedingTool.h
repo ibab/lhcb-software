@@ -246,11 +246,15 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     int m_timeReuseTracks;
     int m_timePerRegion;
     int m_timeX;
+    int m_timeXOT;
+    int m_timeXIT;
     int m_timeStereo;
     int m_timeItOt;
     int m_timeLowQual;
     bool m_useForward;
     bool m_useForwardTracks;
+
+    unsigned m_nDblOTHitsInXSearch;
 
     bool m_printing;
 
@@ -537,6 +541,9 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     inline double propagateEY2(const double dz, const Gaudi::TrackSymMatrix& cov) const
     { return cov(1, 1) + dz * (2.0 * cov(1, 3) + dz * cov(3, 3)); }
 
+    struct unused {
+      bool operator()(const PatFwdHit* h) const { return !h->isUsed(); }
+    };
 };
 
 inline void PatSeedingTool::restoreCoordinate(PatFwdHit* hit) const

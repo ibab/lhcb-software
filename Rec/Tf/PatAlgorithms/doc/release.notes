@@ -4,6 +4,19 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-01-04 - Manuel Tobias Schiller
+ - include somewhat more fine-grained timing measurements in PatSeedingTool for
+   the initial x search (not active by default)
+ - for trigger use, add the NDblOTHitsInXSearch property which cuts on the
+   number of double hits in the OT (i.e. hits in two monolayers of the same
+   layer) for the three layers which are used to form the initial search parabola
+   if that number is lower then NDblOTHitsInXSearch, the candidate is abandoned
+   early
+   the default value for the new property is 0, so the default behaviour does
+   not change, however, putting 2 there in the trigger saved O(20%) execution
+   time while only 0.5-1% of efficiency is lost (all momenta, for p > 5GeV, the
+   efficiency loss is on the order of 0.1-0.3%)
+
 !========================= PatAlgorithms v4r16 2011-11-25 =========================
 ! 2011-11-24 - Michel De Cian
  - Fix in PatAddTTCoord: If chi2 was still much too high with only 3 hits left (in method

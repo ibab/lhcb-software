@@ -88,6 +88,9 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
   declareProperty( "QualityWeights",		m_qualityWeights	= boost::assign::list_of(1.0)(-0.2) );
+  // demands that NDblOTHitsInXSearch out of three layers used for the initial
+  // parabola have a hits in both monolayers
+  declareProperty( "NDblOTHitsInXSearch",	m_nDblOTHitsInXSearch	= 0 );
 
   //------------------------------------------------------------------------
   // options for track search in stereo layers
@@ -241,6 +244,10 @@ StatusCode PatSeedingTool::initialize() {
     m_timeReuseTracks=m_timer->addTimer( "reuse tracks" );
     m_timePerRegion = m_timer->addTimer( "find all regions" );
     m_timeX         = m_timer->addTimer( "find X projections" );
+    m_timer->increaseIndent();
+    m_timeXIT	    = m_timer->addTimer( "IT X projections" );
+    m_timeXOT	    = m_timer->addTimer( "OT X projections" );
+    m_timer->decreaseIndent();
     m_timeStereo    = m_timer->addTimer( "find stereo" );
     m_timeItOt      = m_timer->addTimer( "find IT+OT" );
     m_timeLowQual   = m_timer->addTimer( "find low quality tracks" );
@@ -256,6 +263,9 @@ StatusCode PatSeedingTool::initialize() {
       "lower limit <= upper limit" << endmsg;
     std::swap(m_driftRadiusRange[0], m_driftRadiusRange[1]);
   }
+
+  if (m_nDblOTHitsInXSearch > 3)
+    return Error("nDoubleHitsOT must be at most 3!");
 
   return StatusCode::SUCCESS;
 }
@@ -600,7 +610,11 @@ void PatSeedingTool::collectPerRegion(
       for ( unsigned reginc = m_cosmics?(m_nReg*m_nReg):1; reginc--; ) {
         pool.clear();
 
-        if ( m_measureTime ) m_timer->start( m_timeX );
+        if ( m_measureTime ) {
+	  m_timer->start( m_timeX );
+	  if (isRegionOT(reg)) m_timer->start(m_timeXOT);
+	  else if (isRegionIT(reg)) m_timer->start(m_timeXIT);
+	}
 
         const unsigned reginc1 = (m_nReg - 1u - (reginc / m_nReg));
         const unsigned reginc2 = (m_nReg - 1u - (reginc % m_nReg));
@@ -612,11 +626,14 @@ void PatSeedingTool::collectPerRegion(
                   << " x candidates" << endmsg;
 
         if ( m_measureTime ) {
+	  if (isRegionOT(reg)) m_timer->stop(m_timeXOT);
+	  else if (isRegionIT(reg)) m_timer->stop(m_timeXIT);
           m_timer->stop( m_timeX );
           if ( pool.empty() ) continue;
           m_timer->start( m_timeStereo );
-        }
-        if ( pool.empty() ) continue;
+        } else {
+	  if ( pool.empty() ) continue;
+	}
 
         lowQualTracks.reserve(lowQualTracks.size() + pool.size());
         finalSelection.clear();
@@ -1574,7 +1591,6 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
   HitRange rangeX0 = (0 == state) ? hits(0, lay0, reg0) :
     hitsInRange(predictXinRegion(state, 0, lay0, reg0), 0, lay0, reg0);
   // NB: no correction for the tilt for a single point
-
   for ( itH0 = rangeX0.begin(); rangeX0.end() != itH0; ++itH0 ) {
     PatFwdHit* hit0 = *itH0;
     if ( hit0->isUsed() )  continue;
@@ -1584,10 +1600,12 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
     double x0 = hit0->hit()->xAtYEq0();
     double z0 = hit0->hit()->zAtYEq0();
 
+    bool combine0 = false;
     if (hit0->hasNext() && rangeX0.end() != (itH0 + 1) && !(*(itH0 + 1))->isUsed()) {
       hit0 = *(++itH0);
       if ( matchIn0 ) info() << "*** Hit0 " << x0 << " + " << hit0->x();
       combineCluster(*(itH0 - 1), *itH0, x0, z0);
+      combine0 = true;
     } else if ( matchIn0 ) {
       info() << "*** Hit0 " << hit0->x();
     }
@@ -1621,10 +1639,12 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 
       m_printing = matchIn0;
 
+      bool combine2 = false;
       if (hit2->hasNext() && rangeX2.end() != (itH2 + 1) && !(*(itH2 + 1))->isUsed()) {
         hit2 = *(++itH2);
         if ( m_printing ) info() << "    hit2 " << x2 << " + " << hit2->x();
         combineCluster(*(itH2 - 1), *itH2, x2, z2);
+	combine2 = true;
       } else if ( m_printing ) {
         info() << "    hit2 " <<  hit2->hit()->xAtYEq0();
       }
@@ -1677,7 +1697,6 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         x1Range.max() << " linear " << x0 + dz * slope << endmsg;
 
       HitRange rangeX1 = hitsInRange( x1Range, 1, lay1, reg1 );
-
       // find best (and next-to-best if applicable) candidate hits in terms
       // of distance of hit to predicted x position in T2
       HitRange::const_iterator itH1Best = rangeX1.end(), itH1NextBest = rangeX1.end();
@@ -1734,10 +1753,12 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         double x1 = hit1->hit()->xAtYEq0();
         double z1 = hit1->hit()->zAtYEq0();
 
+	bool combine1 = false;
         if (hit1->hasNext() && rangeX1.end() != (itH1 + 1) && !(*(itH1 + 1))->isUsed()) {
           hit1 = *(++itH1);
           if ( m_printing ) info() << "         ==> found hit1 " << x1 << " + " << hit1->x() << endmsg;
           combineCluster(*(itH1 - 1), *itH1, x1, z1);
+	  combine1 = true;
         } else if ( m_printing ) {
           info() << "         ==> found hit1 " << x1 << endmsg;
         }
@@ -1745,6 +1766,14 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         // isolation in station 1?
         if (m_enforceIsolation && !isIsolated(itH1, rangeX1))
           continue;
+	if (m_nDblOTHitsInXSearch && isRegionOT(reg0) &&
+	    isRegionOT(reg1) && isRegionOT(reg2)) {
+	  unsigned nDoubleHitsOT = 0;
+	  if (combine0) ++nDoubleHitsOT;
+	  if (combine2) ++nDoubleHitsOT;
+	  if (combine1) ++nDoubleHitsOT;
+	  if (nDoubleHitsOT < m_nDblOTHitsInXSearch) continue;
+	}
 
         PatSeedTrack track( x0, x1, x2, z0, z1, z2, m_zReference, m_dRatio );
         // one more slope check to make sure our third hit is ok
