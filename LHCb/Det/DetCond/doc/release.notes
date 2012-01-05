@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-01-05 - Marco Clemencic
+ - Fixed ICC warning (Boost 1.48).
+
 !========================= DetCond v12r22 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - Add explicit Boost_linkopts for compatibility with Gaudi v23
