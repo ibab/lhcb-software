@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2012-01-05 - Marco Cattaneo
+ - Adapt Configurables test to Gaudi v23, compatible with Gaudi v22r5
+
 </PRE><H1><A NAME=v33r2>2011-12-15 LHCbSys v33r2</A></H1><PRE>
 This version uses Gaudi v22r5 and LCG_61b
 Production version for 2011 analysis.
