@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2011-08-19 - Fred Blanc
+ - StrippingB2CharmlessQuasi2Body.py
+ - combine two lines (4pi1n and 4pi2n) into a single line
+ - tighten mass window cut, and release other kinematic cuts. The line is
+   more efficient for the decays with little missing mass, but possibly more
+   restrictive for decays with large missing mass
+
 ! 2011-12-06 - Ulrich Kerzel
 - rewrite ChiC with conversion line, base on full BremCorr for one of e+/e-,
   none for the other. Introduce control line for "wrong-sign" background
