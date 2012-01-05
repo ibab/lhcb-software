@@ -81,7 +81,7 @@ namespace
           WeightType newWeight = 0;
           if (boost::algorithm::icontains(key,site)) {
             // it means that this is the site with highest priority
-            newWeight = RandomGenType::max();
+            newWeight = gen.max();
           } else {
             // all other sites are distributed randomly
             newWeight = gen();
