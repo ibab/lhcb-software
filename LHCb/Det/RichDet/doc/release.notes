@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-01-05 - Chris Jones
+ - Fix a bug where a few maps where not cleared in 
+   DeRichSystem::buildPDMappings() before being (re)filled.
+
 !========================= RichDet v16r8 2011-12-14 =========================
 ! 2011-11-25 - Chris Jones
  - Remove MaPMT specific hacks from DeRichSystem. No longer needed as DB is 

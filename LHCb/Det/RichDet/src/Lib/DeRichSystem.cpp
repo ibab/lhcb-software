@@ -127,27 +127,30 @@ StatusCode DeRichSystem::buildPDMappings()
   // clear maps and containers
   m_soft2hard.clear();
   m_hard2soft.clear();
+  m_l0hard2soft.clear();
   m_activePDSmartIDs.clear();
+  m_inactivePDSmartIDs.clear();
+  m_allPDSmartIDs.clear();
   m_activePDHardIDs.clear();
-  m_l1IDs.clear();
-  m_smartid2L1.clear();
-  m_hardid2L1.clear();
+  m_inactivePDHardIDs.clear();
+  m_allPDHardIDs.clear();
   m_smartid2L0.clear();
   m_hardid2L0.clear();
+  m_l0ToL1.clear();
+  m_smartid2L1.clear();
+  m_hardid2L1.clear();
+  m_smartid2L1In.clear();
+  m_hardid2L1In.clear();
   m_l1ToRich.clear();
   m_l12smartids.clear();
   m_l12hardids.clear();
-  m_smartid2L1In.clear();
-  m_hardid2L1In.clear();
-  m_l0hard2soft.clear();
-  m_l0ToL1.clear();
+  m_L1HardIDAndInputToPDHardID.clear();
+  m_l1IDs.clear();
   m_smartid2copyNumber.clear();
   m_copyNumber2smartid.clear();
-  m_inactivePDSmartIDs.clear();
-  m_inactivePDHardIDs.clear();
-  m_allPDSmartIDs.clear();
-  m_allPDHardIDs.clear();
-  m_L1HardIDAndInputToPDHardID.clear();
+  m_l1H2CopyN.clear();
+  m_l1LogToHard.clear();
+  m_l1HardToLog.clear();
   m_firstL1CopyN = 0;
 
   // Fill the maps for each RICH
