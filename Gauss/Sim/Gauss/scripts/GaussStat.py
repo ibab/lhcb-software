@@ -1,9 +1,22 @@
 #!/usr/bin/env python
 
+
 #==============================================================================================
 #==============================================================================================
 global script_version
-script_version = '090827'
+script_version = '20120105'
+
+
+def float__(s):
+    """emulate the behaviour of python float, but makes it valid oalso on
+    FORTRAN scientific notation with Double.  1.2D+03 """ 
+    from __builtin__ import float
+    try:
+        return float(s)
+    except ValueError:
+        return float(s.replace('D', 'E'))
+#replacing the native float function
+float = float__
 
 # ========================================================================
 # Operations for the generation process
@@ -1061,8 +1074,11 @@ def process_one_file(file):
             pass
         else:
             flr = string.split(info[evt:evt+50],"\n")[0]
-            evntp = string.strip(string.split(flr,"=")[1])
-#            evntp = string.strip(string.split(flr," ")[1])
+            if string.strip(string.split(flr," ")[1]) != '=':                
+                evntp = string.strip(string.split(flr," ")[1])  # OK for MC11 MOB
+            else:
+                evntp = string.strip(string.split(flr,"=")[1])  # OK for MC10 MOB
+            
             # GC20080118 remove ; if found
             pos = evntp.find(';')
             if pos > -1:

@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-01-05 - Marc-Olivier Bettler
+ - Update scripts/GaussStat.py to be working with MC11a, specifically:
+   -- locally modified the float() function to be compatible with fortran 
+      scientific notation with Double
+   -- modified the way the eventype is retrieved to be working on MC11 
+      and MC10 logs
+
+
 ! 2011-12-07 - Patrick Robbe
  - Gauss-DEV.py: remove import of Beam parameters, use default ones instead
  - QMTests: use new Beam options for MC11
