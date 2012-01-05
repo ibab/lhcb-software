@@ -182,7 +182,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         from Configurables import FilterDesktop
         from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions, BiKalmanFittedKaons
-        from Hlt2SharedParticles.Ks import KsLL as KsData 
+        from Hlt2SharedParticles.Ks import KsLLTF as KsData 
         from HltTracking.HltPVs import PV3D
 
         ## Start applying the member functions we have been defining above
