@@ -539,24 +539,24 @@ def tisTos ( self             ,
     #
     ## TPS & TUS categories:
     #
+
+    ## ntuple.column ( label + 'l0tps_1' , l0_tos.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l0tus_1' , l0_tos.tus      () , 0 , 1 )
+
+    ## ntuple.column ( label + 'l0tps_2' , l0_tis.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l0tus_2' , l0_tis.tus      () , 0 , 1 )
     
-    ntuple.column ( label + 'l0tps_1' , l0_tos.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l0tus_1' , l0_tos.tus      () , 0 , 1 )
+    ## ntuple.column ( label + 'l1tps_1' , l1_tos.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l1tus_1' , l1_tos.tus      () , 0 , 1 )
 
-    ntuple.column ( label + 'l0tps_2' , l0_tis.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l0tus_2' , l0_tis.tus      () , 0 , 1 )
-    
-    ntuple.column ( label + 'l1tps_1' , l1_tos.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l1tus_1' , l1_tos.tus      () , 0 , 1 )
+    ## ntuple.column ( label + 'l1tps_2' , l1_tis.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l1tus_2' , l1_tis.tus      () , 0 , 1 )
 
-    ntuple.column ( label + 'l1tps_2' , l1_tis.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l1tus_2' , l1_tis.tus      () , 0 , 1 )
+    ## ntuple.column ( label + 'l2tps_1' , l2_tos.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l2tus_1' , l2_tos.tus      () , 0 , 1 )
 
-    ntuple.column ( label + 'l2tps_1' , l2_tos.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l2tus_1' , l2_tos.tus      () , 0 , 1 )
-
-    ntuple.column ( label + 'l2tps_2' , l2_tis.tps      () , 0 , 1 )
-    ntuple.column ( label + 'l2tus_2' , l2_tis.tus      () , 0 , 1 )
+    ## ntuple.column ( label + 'l2tps_2' , l2_tis.tps      () , 0 , 1 )
+    ## ntuple.column ( label + 'l2tus_2' , l2_tis.tus      () , 0 , 1 )
 
     return SUCCESS
 
