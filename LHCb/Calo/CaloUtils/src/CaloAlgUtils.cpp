@@ -187,13 +187,13 @@ bool LHCb::CaloAlgUtils::StringMatcher(std::vector<std::string> refs, std::strin
   if( refs.empty())return true;
   for( std::vector<std::string>::iterator iref=refs.begin() ; refs.end() != iref; ++iref){
     std::string ref = *iref;
-    if( toUpper(ref) == "ALL")return true;
+    if( toUpper(ref) == "ALL")ok=true;
     if( toUpper(ref) == "NONE")return false;
     bool match = StringMatcher( ref , name );
-    if( ref.find("!") != std::string::npos && match)ko=false;
-    else if( match )ok=true;
+    if( ref.find("!") != std::string::npos && !match)ko=false;
+    if( ref.find("!") == std::string::npos && match )ok=true;
   }
-  if( !ko )return  false; // rejection win
+  if( !ko )return  false; // rejection wins
   if(  ok )return  true;
   return false;
 }
