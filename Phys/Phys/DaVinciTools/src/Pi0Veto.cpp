@@ -205,7 +205,7 @@ Pi0Veto::Tagger::Tagger
       "The selection criteria for ``another'' photon" ) 
     -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , fd ) ;
   //
-  m_photons.push_back ( "/Event/Phys/StdLooseAllPhtons/Particles" ) ;
+  m_photons.push_back ( "/Event/Phys/StdLooseAllPhotons/Particles" ) ;
   declareProperty 
     ( "Photons"        , 
       m_photons        , 
