@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2012-01-06 - Chris Jones
+ - Add some additional debug and verbose printouts to DeRichSystem
+
 ! 2012-01-05 - Chris Jones
  - Fix a bug where a few maps where not cleared in 
    DeRichSystem::buildPDMappings() before being (re)filled.

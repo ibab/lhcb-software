@@ -166,6 +166,8 @@ StatusCode DeRichSystem::buildPDMappings()
 //=========================================================================
 StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 {
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Building Mappings for " << rich << endmsg;
 
   std::string str_NumberOfPDs              = "NumberOfHPDs";
   std::string str_PDSmartIDs               = "HPDSmartIDs";
@@ -204,6 +206,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   }
 
   // load conditions
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Loading Conditions from " <<  m_condDBLocs[rich] << endmsg;
   const SmartRef<Condition> numbers = condition(m_condDBLocs[rich]);
 
   // local typedefs for vector from Conditions
@@ -212,28 +216,51 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
   // number of PDs
   const unsigned int nPDs  = numbers->param<int>(str_NumberOfPDs);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_NumberOfPDs << " = " << nPDs << endmsg;
+
   // vector of PD RichSmartIDs
   const CondData & softIDs = numbers->paramVect<int>(str_PDSmartIDs);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDSmartIDs << " = " << softIDs << endmsg;
+
   // vector of PD hardware IDs
   const CondData & hardIDs = numbers->paramVect<int>(str_PDHardwareIDs);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDHardwareIDs << " = " << hardIDs << endmsg;
+
   // vector of PD Level0 IDs
   const CondData & l0IDs   = numbers->paramVect<int>(str_PDLevel0IDs);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDLevel0IDs << " = " << l0IDs << endmsg;
+
   // vector of PD Level1 board Hardware IDs
   const CondData & l1IDs   = numbers->paramVect<int>(str_PDLevel1HardwareIDs);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDLevel1HardwareIDs << " = " << l1IDs << endmsg;
+
   // vector of PD Level1 input numbers
   const CondData & l1Ins   = numbers->paramVect<int>(str_PDLevel1InputNums);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDLevel1InputNums << " = " << l1Ins << endmsg;
+
   // vector of PD Copy numbers
   const CondData & copyNs  = numbers->paramVect<int>(str_PDCopyNumbers);
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_PDCopyNumbers << " = " << copyNs << endmsg;
+
   // inactive PDs
   CondData inacts;
-  bool inactivePDListInSmartIDs( false );
-  if ( numbers->exists(str_InactivePDListInSmartIDs) )
+  const bool inactivePDListInSmartIDs( numbers->exists(str_InactivePDListInSmartIDs) );
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition " << str_InactivePDListInSmartIDs 
+              << " exists = " << inactivePDListInSmartIDs << endmsg;
+  if ( inactivePDListInSmartIDs )
   {
     // smartIDs
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Inactive PDs are taken from the smartID list" << endmsg;
     const CondData& inactsHuman = numbers->paramVect<int>(str_InactivePDListInSmartIDs);
-    inactivePDListInSmartIDs = true;
     inacts.reserve(inactsHuman.size());
     for ( CondData::const_iterator inpd = inactsHuman.begin();
           inpd != inactsHuman.end(); ++inpd )
@@ -254,6 +281,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       debug() << "Inactive PDs are taken from the hardware list" << endmsg;
     inacts = numbers->paramVect<int>(str_InactivePDs);
   }
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Condition InactiveHPDs = " << inacts << endmsg;
 
   // check consistency
   if ( nPDs != softIDs.size() ||
