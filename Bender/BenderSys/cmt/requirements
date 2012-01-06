@@ -22,7 +22,7 @@
 #
 # =============================================================================
 package       BenderSys
-version       v18r4
+version       v18r4p1
 
 author        Vanya BELYAEV
 
@@ -30,7 +30,7 @@ author        Vanya BELYAEV
 use           LHCbAlgs       v2r46    Kernel
 
 # =========== Bender Application itself =======================================
-use           Bender         v18r4    Phys 
+use           Bender         v18r4p1  Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v18r0    Ex
