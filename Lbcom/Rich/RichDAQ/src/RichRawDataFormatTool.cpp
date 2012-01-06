@@ -1611,21 +1611,27 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
       // get bank
       LHCb::RawBank * bank = *iBank;
       // test bank is OK
-      if ( !bank ) Exception( "Retrieved null pointer to RawBank" );
-      // Decode this bank
-      try
+      if ( bank ) 
       {
-        decodeToSmartIDs( *bank, decodedData );
+        // Decode this bank
+        try
+        {
+          decodeToSmartIDs( *bank, decodedData );
+        }
+        catch ( const GaudiException & expt )
+        {
+          // Print error message
+          std::ostringstream mess;
+          mess << "Error decoding bank ID=" << bank->sourceID() << " version=" << bankVersion(*bank)
+               << " '" << expt.message() << "' '" << expt.tag() << "'";
+          Error( mess.str() ).ignore();
+          // dump the full bank
+          if ( m_verboseErrors ) dumpRawBank( *bank, error() );
+        }
       }
-      catch ( const GaudiException & expt )
+      else
       {
-        // Print error message
-        std::ostringstream mess;
-        mess << "Error decoding bank ID=" << bank->sourceID() << " version=" << bankVersion(*bank)
-             << " '" << expt.message() << "' '" << expt.tag() << "'";
-        Error( mess.str() ).ignore();
-        // dump the full bank
-        if ( m_verboseErrors ) dumpRawBank( *bank, error() );
+        Error( "Retrieved null pointer to RawBank" ).ignore();
       }
     }
 
