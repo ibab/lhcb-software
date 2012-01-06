@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2012-01-06 - Marco Clemencic
+ - Changed the semantic of ParamValidDataObject::update() (Condition) to
+   replace the old content instead of just merge the new values in.
+
 !========================= DetDesc v18r28 2011-12-14 =========================
 ! 2011-11-23 - Marco Clemencic
  - Fixed gcc 4.6 warning: operation on ‘...’ may be undefined
@@ -39,9 +43,9 @@
 !========================= DetDesc v18r23 2011-02-22 =========================
 ! 2011-02-15 - Chris Jones
  - Add to Material and Mixture classes a new reset() method, that resets the
-   objects back to their default constructor states. Starting point to  
+   objects back to their default constructor states. Starting point to
    develop functionality in RichDet to update the radiator gas mixtures on
-   the fly. Developmental, so may evolve. Does NOT affect any existing 
+   the fly. Developmental, so may evolve. Does NOT affect any existing
    functionality.
 
 ! 2011-02-08 - Marco Cattaneo
@@ -64,17 +68,17 @@
    in DetDesc
 
 !====================== DetDesc v18r20 2010-04-09 =============================
-! 2010-04-08 - Wouter Hulsbergen 
+! 2010-04-08 - Wouter Hulsbergen
 - increased max capcity of ISolid::Ticks
 - throw exceptions from complicated Solids if capacity insufficient
 
 !====================== DetDesc v18r19 2010-01-20 =============================
-! 2010-01-11 - Wouter Hulsbergen 
+! 2010-01-11 - Wouter Hulsbergen
 - Added method to set pivot point to AlignmentCondition
 
-! 2010-01-08 - Wouter Hulsbergen 
+! 2010-01-08 - Wouter Hulsbergen
 - Fix bug in 3DTransformationFunctions: getZYXTransformParameters was
-  not correctly dealing with the pivot point. (It was essentially ignoring it.) 
+  not correctly dealing with the pivot point. (It was essentially ignoring it.)
   This affects the TT alignment.
 
 !====================== DetDesc v18r18 2009-12-11 =============================
@@ -101,11 +105,11 @@
 ! 2009-11-15 - Vanya Belyaev
  - DetDesc/Compare.h
     substitute gsl_cmp ( "Knuth's-compare") by "Lomont-compare
-    remove dependency on GLS 
+    remove dependency on GLS
 
  - cmt/requirements
-    remove GSL-related lines   
-    version increment to v18r17 
+    remove GSL-related lines
+    version increment to v18r17
 
 !====================== DetDesc v18r16 2009-11-13 =============================
 ! 2009-11-13 - Wouter Hulsbergen
@@ -118,10 +122,10 @@
 
  - add "histograms conditions": conditions which are able to hold the histograms:
 
-     DetDesc::Histo1DCond 
-     DetDesc::Histo2DCond 
+     DetDesc::Histo1DCond
+     DetDesc::Histo2DCond
 
-   new files: 
+   new files:
 
      DetDesc/HistoCondition.h
      DetDesc/HistoParam.h
@@ -129,9 +133,9 @@
      src/Lib/HistoCondition.cpp
      src/Lib/HistoParam.cpp
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v8r16 
+     version increment to v8r16
 
 !====================== DetDesc v18r15 2009-09-02 =============================
 ! 2009-09-02 - Marco Cattaneo
@@ -145,8 +149,8 @@
  - add missing classes into the dictionary:
         ILVolume::PVolumes
         ILVolume::PVolumePath, etc...
- - cmt/requirements 
-    version increment to v19r14 
+ - cmt/requirements
+    version increment to v19r14
 
 !====================== DetDesc v18r13p1 2009-05-28 ===========================
 ! 2009-05-28 - Marco Cattaneo
@@ -229,7 +233,7 @@
 
 !====================== DetDesc v18r6 2008-06-30 ==============================
 ! 2008-06-24 - Chris Jones
- - Fix division by zero errors in Solidbase.h 
+ - Fix division by zero errors in Solidbase.h
  - Remove some multiple return statements in SolidBase.h (prevents inlining).
 
 !====================== DetDesc v18r5 2008-06-04 ==============================
@@ -241,7 +245,7 @@
  - Fix compilation warning in latest changes
 
 ! 2008-05-20 - Stephanie Hansmann-Menzemer
- - Add computation of mean excitation energy and density effect correction 
+ - Add computation of mean excitation energy and density effect correction
    parameters to elements and materials
 
 !====================== DetDesc v18r4p1 2008-03-28 ============================
@@ -251,17 +255,17 @@
     localDeltaFromAnyFrame(...IGeometryInfo...) instead of
     localDeltaFromAnyFrameDelta(...IGeometryInfo...)
   + remove unused line in localDeltaFromAnyFrameDelta(...IGeometryInfo...)
-   
+
 ! 2008-03-19 - Juan Palacios
  - cmt/requirements
   . Increase version to v18r4p1
 
 ! 2008-03-19 - Jan Amoraal
  - Bug fix in AlignmentCondition.cpp
-  + m_matrixInv was set to m_matrix in the method offNominalMatrix which 
-    meant that both were actually set to newMatrix.Inverse(), while 
+  + m_matrixInv was set to m_matrix in the method offNominalMatrix which
+    meant that both were actually set to newMatrix.Inverse(), while
     m_matrixInv should be set to newMatrix.
-   
+
 !====================== DetDesc v18r4 2008-02-22 ==============================
 ! 2008-02-22 - Marco Clemencic
  - Clean up, fixes and improvements to Condition::toXml.
@@ -269,7 +273,7 @@
    + Allow to specify the precision of the doubles
    + Added support for std:map (only those supported in the converter)
    + Disabled (by default) the HTML header and trailer (can be enabled with a flag)
- - Improved Python bindings for Condition. 
+ - Improved Python bindings for Condition.
 
 !====================== DetDesc v18r3 2008-01-22 ==============================
 ! 2008-01-15 - Juan PALACIOS
@@ -279,33 +283,33 @@
 ! 2008-01-14 - Juan Palacios
  - DetDesc/GlobalToLocalDelta.h
   . Add methods to estimate "off-nominal" delta matrix at local level, starting
-    from either total position or "off-nominal" corrections in an arbitrary 
+    from either total position or "off-nominal" corrections in an arbitrary
     frame, independent of the detector element hierarchy.
 
   const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
                                                   const IDetectorElement* DE,
-                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+                                                  const Gaudi::Transform3D& toGlobalInFrame);
 
   const Gaudi::Transform3D localDeltaFromAnyFrame(const Gaudi::Transform3D& frame,
                                                   const IGeometryInfo* GI,
-                                                  const Gaudi::Transform3D& toGlobalInFrame); 
+                                                  const Gaudi::Transform3D& toGlobalInFrame);
 
   const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
                                                        const IDetectorElement* DE,
-                                                       const Gaudi::Transform3D& deltaInFrame); 
+                                                       const Gaudi::Transform3D& deltaInFrame);
 
   const Gaudi::Transform3D localDeltaFromAnyFrameDelta(const Gaudi::Transform3D& frame,
                                                        const IGeometryInfo* GI,
-                                                       const Gaudi::Transform3D& deltaInFrame); 
+                                                       const Gaudi::Transform3D& deltaInFrame);
 
 ! 2008-01-14 - Juan Palacios
  - DetDesc/3DTransformationFunctions.h
   . Add method
     template <class ROT>
     void getZYXRotationParameters( const ROT& rotation,
-                                   double& rotX, 
-                                   double& rotY, 
-                                   double& rotZ           ) 
+                                   double& rotX,
+                                   double& rotY,
+                                   double& rotZ           )
 
   Takes any MathCore 3D rotation and estimates the equivalent
   Euler 321 rotation parameters.
@@ -320,7 +324,7 @@
     const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params);
     Method is replaced by direct use of new ROOT::Math::Translation3D class.
 
-    const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params);  
+    const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params);
     Method replaced by direct ure of new ROOT::Math::RotationZYX class.
 
     void getZYXRotationParameters(const Gaudi::Rotation3D& rot,
@@ -341,8 +345,8 @@
  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
   . Add new functions:
 
-   Obtain a global off-nominal correction D_global on top of the current total 
-   transformation of a IGeometryInfo or IDetectorElement (T_global) starting from 
+   Obtain a global off-nominal correction D_global on top of the current total
+   transformation of a IGeometryInfo or IDetectorElement (T_global) starting from
    a correction D' calculated at the local level of that IGeometryInfo or IDetectorElement
 
   const Gaudi::Transform3D globalDeltaFromLocalDeltaPrime(const IDetectorElement*   DE,
@@ -356,7 +360,7 @@
   const Gaudi::Transform3D globalDelta(const IDetectorElement* DE);
   const Gaudi::Transform3D globalDelta(const IGeometryInfo* GI);
 
-   Obtain the 3D transformation, T_relative, representing the placement of 
+   Obtain the 3D transformation, T_relative, representing the placement of
    DetectorElement DE in the frame of DetectorElement referenceDE.
 
   const Gaudi::Transform3D relativeTransformation(const IDetectorElement* referenceDE,
@@ -365,35 +369,35 @@
 ! 2007-12-19 - Vanya BELYAEV
  New treatment of geometry overlaps:
 
- New files: 
+ New files:
   - DetDesc/Compare.h
-      comparison of floating numbers 
+      comparison of floating numbers
   - DetDesc/IGeometryErrorSvc.h, src/Lib/IGeometryErrorSvc.cpp
-        abstract interface for hadnling of geomety errors 
+        abstract interface for hadnling of geomety errors
   - DetDesc/IntersectionErrors.h, src/Lib/IntersectionErrors.cpp
-       helper utility to make a bridge between volumes and 
-       geometry error handling service 
+       helper utility to make a bridge between volumes and
+       geometry error handling service
 
- Modified files: 
+ Modified files:
   - DetDesc/VolumeIntersectionIntervals.h
       add new functions:
        1) MergeOwnAndChildIntersections2
-       2) correct 
+       2) correct
        3) intersect
-       4) ... 
+       4) ...
 
   - src/Lib/LAssembly.cpp, src/Lib/LVolume.cpp, src/Lib/LogVolBase.cpp
-      make use of new functions 
+      make use of new functions
 
-  - cmt/requirements 
-      version increment to v18r3 
+  - cmt/requirements
+      version increment to v18r3
 
 !====================== DetDesc v18r2 2007-12-04 ==============================
 ! 2007-12-04 - Juan Palacios
- - Removal of 
-   ROOT::Math::Transform3D(ROOT::Math::XYZVector, 
-                           ROOT::Math::Rotation3D) 
-   constructor, for 3D transformation made from translation followed by 
+ - Removal of
+   ROOT::Math::Transform3D(ROOT::Math::XYZVector,
+                           ROOT::Math::Rotation3D)
+   constructor, for 3D transformation made from translation followed by
    rotation. Modify code to produce the equivalent transformation thus:
    ROOT::Math::VectorXYZ translation = ...;
    ROOT::Math::Rotation3D rotation = ...'
@@ -407,7 +411,7 @@
 ! 2007-11-09 - Marco Clemencic
  - Added specialized fillStream() member function for ValidDataObject and
    ParamValidDataObject.
- - Use GaudiKernel/SerializeSTL.h to print parameters of ParamValidDataObject. 
+ - Use GaudiKernel/SerializeSTL.h to print parameters of ParamValidDataObject.
 
 !====================== DetDesc v18r1p1 2007-10-25 ============================
 ! 2007-10-25 - Marco Cattaneo
@@ -443,7 +447,7 @@
  - DetDesc/IGeometryInfo.h
    . Improve some doxygen comments
  - DetDesc/GeometryInfoPlus.h
-   . Remove "duplicated" doxygen comments. These should be picked up from 
+   . Remove "duplicated" doxygen comments. These should be picked up from
      abstract base class IGeometryInfo.
    . Remove "inline" virtual methods and move to implementation file.
  - DetDesc/AlignmentCondition.h
@@ -458,7 +462,7 @@
   - cmt/requirements
     . Increase version to 18r0
   - DetDesc/IGeometryInfo.h, AlignmentCondition.h
-    . Change names of methods returning 3D transformations for more explicit 
+    . Change names of methods returning 3D transformations for more explicit
       and hopefully clearer ones.
     . Increase IGeometryInfo interface major version to 3.
   - DetDesc/GeometryInfoPlus.h
@@ -495,7 +499,7 @@
    . Add methods
 
   const Gaudi::Transform3D localDeltaFromGlobalTransform(const IGeometryInfo* GI,
-                                                         const Gaudi::Transform3D& globalTransform); 
+                                                         const Gaudi::Transform3D& globalTransform);
   const Gaudi::Transform3D localDeltaFromParentTransform(const IGeometryInfo* ParentGI,
                                                          const IGeometryInfo* GI,
                                                          const Gaudi::Transform3D& globalTransform);
@@ -510,12 +514,12 @@
  - Fix some doxygen warnings
 
 ! 2007-06-29 M Needham
-  - Use cbrt in Gaudi::Math rather than pow 
+  - Use cbrt in Gaudi::Math rather than pow
 
 ! 2007-06-25 - Juan PALACIOS
 
   - src/Lib/AlignmentCondition.cpp
-    . Tidy up makeMatrices method by using functions from 
+    . Tidy up makeMatrices method by using functions from
       DetDesc/3DTransformationFunctions.h
 
   - src/Lib/GeometryInfoPlus.cpp
@@ -526,7 +530,7 @@
     . Fix localDeltaMatrix function algebra again. Previous was still wrong!
 
   - src/Lib/GeometryInfoPlus.cpp
-    . Revert to previous revision. Changes of 2007-06-22 were actually 
+    . Revert to previous revision. Changes of 2007-06-22 were actually
       incorrect.
 
 ! 2007-06-22 - Juan PALACIOS
@@ -536,7 +540,7 @@
     . Fix calculateFullMatrices: Order of matrix multiplications was wrong.
       Was: d_0*N_0*d_1*N_1*d_2*N_2*...*d_N*N_N
       Is:  N_0*d_0*N_1*d_1*N_2*d_2*...*N_N*d_N
-      where d_i and N_i are the misalign->align and global->parent matrices 
+      where d_i and N_i are the misalign->align and global->parent matrices
       at level i.
 
 !====================== DetDesc v17r4 2007-06-14 ==============================
@@ -546,7 +550,7 @@
 ! 2007-06-13 - Juan PALACIOS
 
   - DetDesc/3DTransformationFunctions.h, src/Lib/3DTransformationFunctions.cpp
-    . Moved more general functions, ie those not depending on DetDesc classes, 
+    . Moved more general functions, ie those not depending on DetDesc classes,
       from GlobalToDelta.h, .cpp to this new file. Funcitons are still in the DetDesc
       namespace.
 
@@ -582,33 +586,33 @@
   - src/Lib/AlignmentCondition.cpp
     . Fix small but in transformation matrix setter method.
   - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
-    . Add functions to make Gaudi::Transform3D out of 3 parameters representing either a 
+    . Add functions to make Gaudi::Transform3D out of 3 parameters representing either a
       cartesian translation or three rotation angles about the cartesian axes.
     . Add a function to construct a local to global Gaudi::Transform3D out of nine parameters
       describing a pivot, a translation and a rotation about three cartesian axes.
-    . All these functions are independent of DetDesc and should be put elsewhere, but for the time 
+    . All these functions are independent of DetDesc and should be put elsewhere, but for the time
       being they rely on src/Lib/3DConversions.h, which will disappear when a version of
       MathCore with a fully integrated ROOT::Math::RotationXYZ is released.
 
 ! 2007-05-31 - Juan PALACIOS
   - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
-    . Fix bug in matrix(const Gaudi::Transform3D&) method. This method takes 
-      the matrix which moves the detector element from nominal to misalinged 
-      position. Internally, this is m_matrixInv. Since we do most operations 
+    . Fix bug in matrix(const Gaudi::Transform3D&) method. This method takes
+      the matrix which moves the detector element from nominal to misalinged
+      position. Internally, this is m_matrixInv. Since we do most operations
       with the misaligned -> nominal matrix, m_matrix is, confusingly,
       actually the inverse of the misalign matrix.
     . Move matrix(const Gaudi::Transform3D&) and StatusCode setTransformation( const std::vector<double>&, const std::vector<double>&, const std::vector<double>&); to .cpp file.
   - Add DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
     . Simple standalone functions to convert a misalignment calculated in the
       global frame to the corresponding misalignment in the frame of the parent
-      of the detector element in question. 
+      of the detector element in question.
 
 ! 2007-05-30 - Juan PALACIOS
   - added temporary files in src/Lib:
     . RotationZYX{.h, .cpp}   : Hacked from homonimous MathCore file in ROOT cvs.
-      Describes a 3D rotation transformation about the Z, Y' and X" axes, 
+      Describes a 3D rotation transformation about the Z, Y' and X" axes,
       which is what we use in LHCb.
-    . 3DConversions{.h, .cpp} : Hacked from homonymous MathCore file in ROOT 
+    . 3DConversions{.h, .cpp} : Hacked from homonymous MathCore file in ROOT
       cvs head. Provides conversions between RotationZYX and other MathCore 3D
       rotation representations.
 
@@ -627,8 +631,8 @@
 
 ! 2007-05-05 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h
-    . Add virtual const Gaudi::Transform3D IGeometryInfo::localMatrix() const. 
-      Returns full transformation (incl. misalignment) relating it's frame to 
+    . Add virtual const Gaudi::Transform3D IGeometryInfo::localMatrix() const.
+      Returns full transformation (incl. misalignment) relating it's frame to
       that is it's detector element parent.
   - DetDesc/GeometryInfoPlus.h
     . inline implementasion of const Gaudi::Transform3D IGeometryInfo::localMatrix() const.
@@ -649,7 +653,7 @@
 !====================== DetDesc v17r0 2007-01-31 ============================
 ! 2007-01-31 - Marco Cattaneo
  - Fix link options for Windows and retag requirements
- 
+
 ! 2007-01-16 - Marco Cattaneo
  - Remove LHCbDefinitions dependency
 
@@ -671,14 +675,14 @@
 ! 2006-10-17 - Matt Needham
  - Changes in: SolidBox::IntersectTicks method speeded up
                LAssembly ++not++, remove/protect MsgStream calls
-               DetectorElement: reduce number of virtual function calls   
- 
+               DetectorElement: reduce number of virtual function calls
+
 ! 2006-10-11 - Marco Cattaneo
  - Use SystemOfUnits.h from GaudiKernel
 
 ! 2006-10-10 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h
-    . Add method 
+    . Add method
       virtual const ILVolume::ReplicaPath& IGeometryInfo::supportPath()
 
   - DetDesc/GeometryInfoPlus.h, src/Lib/GeometryInfoPlus.cpp
@@ -692,14 +696,14 @@
 !====================== DetDesc v16r7 2006-09-28 ==============================
 ! 2006-09-25 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h
-    . Add method idealMatrixInv(), returning the inverse of the ideal matrix 
+    . Add method idealMatrixInv(), returning the inverse of the ideal matrix
       linking the GeometryInfo to the global frame.
 
 ! 2006-08-08 - Juan PALACIOS
   - Added DetDesc/SU2LHCb.h
     . In-line methods for transformations from LHCb cavern surveying frame of
-      reference to LHCb frame and back. Accounts for X <-> Y axis shift and 
-      tilt wrt. beam. 
+      reference to LHCb frame and back. Accounts for X <-> Y axis shift and
+      tilt wrt. beam.
 
 !====================== DetDesc v16r6 2006-06-16 ==============================
 ! 2006-06-16 - Marco Cattaneo
@@ -707,12 +711,12 @@
 
 ! 2006-06-15 - Vanya BELYAEV
  - move DetectorElement::Assert functions from private to protected interface
-   to eliminate code duplication in Calorimeter software  
- - improve the printout of exceptions 
+   to eliminate code duplication in Calorimeter software
+ - improve the printout of exceptions
 
 !====================== DetDesc v16r5p1 2006-06-01 =========================
 ! 2006-06-01 - Marco Cattaneo
- - Backward compatible fixes for gcc345 compilation errors and warnings 
+ - Backward compatible fixes for gcc345 compilation errors and warnings
 
 !====================== DetDesc v16r5 2006-05-17 =========================
 ! 2006-05-17 - Marco Cattaneo
@@ -770,7 +774,7 @@
 ! *********** Requires MathCore-5_06_02 or higher.************************
 
 ! 2005-12-07 - Juan PALACIOS
- - Move implementation of DetectorElement::name() method to .cpp file. 
+ - Move implementation of DetectorElement::name() method to .cpp file.
    Implementation in header was causing problems with forward declaration
    of class IRegistry.
  - Small changes using new Transform3D constructors and Point3D multiplication
@@ -807,14 +811,14 @@
  - Bug fix in UpdateManagerSvc
 
 ! 2005-11-25 - Juan Palacios
- - method sensitiveVolumeID(const HepPoint3D& globalPos ) const now looks 
+ - method sensitiveVolumeID(const HepPoint3D& globalPos ) const now looks
    recursively for the last daughter detector element in the hierarchy to
    contain the point. Along the way a specialised DetectorElement should
    overload the method to take control and end the recursion.
 
 ! 2005-11-24 - Juan Palacios
  - Add method const int sensitiveVolumeID(const HepPoint3D& globalPos ) const
-   to IDetectorElement interface. Provide default implementation in 
+   to IDetectorElement interface. Provide default implementation in
    DetectorElement base class. At the moment it returns invalid number (-1).
 
 !======================== DetDesc v15r5 2005-11-21 ========================
@@ -880,16 +884,16 @@
    to generate XML strings to store in the CondDB (as it was already done
    for Condition)
  - Added to TabulatedProperty the method update, needed to change the content
-   of the object when a new version is retrieved from 
+   of the object when a new version is retrieved from
 
 ! 2005-08-01 - Marco Clemencic
  - fixed a Win32 warning about Param.h and a bug when writing empty vectors.
 
 !======================== DetDesc v15r3 2005-07-15 ========================
 ! 2005-07-14 - Juan Palacios
- - Registering of conditions and parent IGeometryInfos enabled in 
+ - Registering of conditions and parent IGeometryInfos enabled in
    GeometryInfoPlus enabled and re-structured. Automatic re-calculation
-   of transformation matrices if parents changed now done through 
+   of transformation matrices if parents changed now done through
    UpdateManagerSvc.
 
 ! 2005-07-14 - Marco Clemencic
@@ -902,12 +906,12 @@
 ! 2005-07-13 - Juan Palacios
  - Added UpdateManagerSvc to GeometryInfoPlus.
  - Changed StatusCode IGeometryInfo::updateMatrices(gi_iterator, gi_iterator)
-   to StatusCode IGeometryInfo::updateChildren() to have an 
-   updateManager-compatible signature, so IGeometryInfo interface changed 
+   to StatusCode IGeometryInfo::updateChildren() to have an
+   updateManager-compatible signature, so IGeometryInfo interface changed
    again.
- 
+
  - Re-structured GeometryInfoPlus initialisation.
- - Register GeometryInfoPlus::cache() and GeometryInfoPlus::updateChildren() 
+ - Register GeometryInfoPlus::cache() and GeometryInfoPlus::updateChildren()
    methods with AlignmentCondition.
 
 ! 2005-07-08 - Marco Clemencic
@@ -932,22 +936,22 @@
  - Add methods to re-set AlignmentConditions to IGeometryInfo.
 
 ! 2005-07-03 - Juan Palacios
- - Add dict directory with dictionary generation. Add necessary patterns to 
+ - Add dict directory with dictionary generation. Add necessary patterns to
    requirements file (from P. Mato).
 
 ! 2005-06-29 - Juan Palacios
- - Add constructor to AlignmentCondition. Allows construction from 
+ - Add constructor to AlignmentCondition. Allows construction from
    transformation parameters.
    Add methods to GeometryInfoPlus to change its AlignmentCondition via
    transformation parameters.
 
 !======================== DetDesc v15r2 2005-06-24 ========================
 ! 2005-06-24 - Juan Palacios
- - delete all dynamically allocated matrices and pointer to MsgStream in 
+ - delete all dynamically allocated matrices and pointer to MsgStream in
    GeometryInfoPlus destructor.
 
 ! 2005-06-23 - Marco Clemencic
- - Modified the UpdateManagerSvc in order to allow changes in item's IOV and 
+ - Modified the UpdateManagerSvc in order to allow changes in item's IOV and
    to find objects using the CondDB path.
 
 ! 2005-06-21 - Marco Clemencic
@@ -955,10 +959,10 @@
    from children to parents)
 
 ! 2005-06-20 - Juan Palacios
-  - DetDesc/Condition.h 
+  - DetDesc/Condition.h
      change toXml(const std::string) method to const method.
 
-  - DetDesc/IGeometryInfo.h 
+  - DetDesc/IGeometryInfo.h
      Add virtual const AlignmentCondition* alignmentCondition() const method
      to return pointer to GeometryInfo's AlignmentCondition
 
@@ -966,7 +970,7 @@
      Change most MSG::DEBUG to MSG::VERBOSE
 
   - src/Lib/Condition.cpp
-     Add ClassID attribute to string returned by toXml method. Allows 
+     Add ClassID attribute to string returned by toXml method. Allows
      convertor to generate AlignmentCondition if needed.
 
   - src/Lib/GeometryInfo.h and GeometryInfoPlus.h
@@ -988,7 +992,7 @@
 ! 2005-06-08 - P. Koppenburg
   - src/Lib/GeometryInfoPlus.cpp, LAssembly.cpp
     . Changed all DEBUG to VERBOSE
-    
+
 ! 2005-06-07 - Marco Clemencic
  - Added requested optimization to UpdateManagerSvc: check the intersection
 	 of validities of the head items before starting the update loop.
@@ -1002,7 +1006,7 @@
           DetDesc/AlignmentCondition.h
           DetDesc/CLIDAlignmentCondition.h
           src/Lib/AlignmentCondition.cpp
-          
+
  - Added new implementation of IGeometryInfo:
           src/Lib/GeometryInfoPlus.cp
           src/Lib/GeometryInfoPlus.h
@@ -1059,7 +1063,7 @@
  - Fix a few doxygen warnings
 
 ! 2004-12-07 - Vanya BELYAEV
- - DetDesc/Element.h 
+ - DetDesc/Element.h
     remove invalid "inline" qualifier for method Element::isotopeFraction
     (to please LCG dictionaries with Visual C++)
 
@@ -1080,8 +1084,8 @@
 !======================== DetDesc v14r0 2003-12-09 ========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13 (use GaudiKernel v14r* in requirements)
- - Remove private default constructors of SolidBase and SolidBoolean, 
-   to please vc71 
+ - Remove private default constructors of SolidBase and SolidBoolean,
+   to please vc71
 
 !======================= DetDesc v13r0p1 2003-11-24 =======================
 ! 2003-11-24 - Marco Cattaneo
@@ -1095,24 +1099,24 @@
 
 !======================== DetDesc v13r0 2003-10-09 ========================
 ! 2003-10-09 - Marco Cattaneo
- - Removed (commented out) all code and interface changes concerning copy 
+ - Removed (commented out) all code and interface changes concerning copy
    numbers, as this was completely untested and breaks current implementations
-   of detector elements with current XmlDDDB 
+   of detector elements with current XmlDDDB
 
 ! 2003-09-20 - Vanya BELYAEV
- - DetDesc/IDetectorElement.h, IGeometryInfo.h, ILVolume.h, ISolid.h 
-    Add the empty non-implementer constructor, increase interface minor version 
+ - DetDesc/IDetectorElement.h, IGeometryInfo.h, ILVolume.h, ISolid.h
+    Add the empty non-implementer constructor, increase interface minor version
  - DetDesc/IPVolume.h
     Add method for copy number and increase interface major version
-    Add methods to apply and remove misalignment <<< Temporary !! 
+    Add methods to apply and remove misalignment <<< Temporary !!
  - DetDesc/LogVolBase.h
-    add metods to deal with copy numbers of daughter physical volumes 
+    add metods to deal with copy numbers of daughter physical volumes
  - DetDesc/SolidBase.h, SolidBoolean.h, src/Lib/Solid*
-    solve the old problem with "anonymous solid" for boolean operations 
+    solve the old problem with "anonymous solid" for boolean operations
  - src/Lib/Interfaces.cpp
-    implementation of empty destructors for interfaces 
+    implementation of empty destructors for interfaces
  - src/Lib/PVolume.h,PVolume.cpp
-    implement new copy() method 
+    implement new copy() method
     implement methods to apply and remove misalignment <<< Temporary !!
  - src/Lib/LogVolBase.cpp
     add the techniques to manage the copy number
@@ -1135,10 +1139,10 @@
  - src/Lib/LVolume.cpp
  - src/Lib/LogVolBase.cpp
  - src/Lib/PVolume.cpp
-   Remove calls for virtal methods from destructors. 
+   Remove calls for virtal methods from destructors.
    It should fix the problem with Panoramix's crash.
 
-! 2003-05-14 - Vanya BELYAEV 
+! 2003-05-14 - Vanya BELYAEV
  - src/Lib/Solid*.cpp  - remove call for virtual method reset() from destructors
                          (fixes Savannah bug #135)
 
@@ -1161,27 +1165,27 @@
 ! 2003-04-15 - Sebastien Ponce
  - fix a memory leak in DetectorElement reported by valgrind (bug #396)
  - fix missing include file for compiling under windows
- - add virtual destructor to IConditionInfo 
+ - add virtual destructor to IConditionInfo
 
 ! 2003-04-04 - Ivan BELYAEV
- - src/SolidSphere.cpp        the next iteration of bug removal from setBP method   
- - src/SolidCons.cpp          the next iteration of bug removal from setBP method   
- - src/SolidTubs.cpp          the next iteration of bug removal from setBP method   
- - src/SolidSolidPolycone.cpp the next iteration of bug removal from setBP method   
+ - src/SolidSphere.cpp        the next iteration of bug removal from setBP method
+ - src/SolidCons.cpp          the next iteration of bug removal from setBP method
+ - src/SolidTubs.cpp          the next iteration of bug removal from setBP method
+ - src/SolidSolidPolycone.cpp the next iteration of bug removal from setBP method
 
 ! 2003-04-03 - Vanya BELYAEV
- - src/SolidSphere.cpp     reimplement the SolidSphere::setBP   to take into account 
-                           *ALL* exceptional cases. 
- - src/SolidCons.cpp       reimplement the SolidCons::setBP     to take into account 
-                           *ALL* exceptional cases. 
- - src/SolidTubs.cpp       reimplement the SolidTubs::setBP     to take into account 
-                           *ALL* exceptional cases. 
- - src/SolidPolycone.cpp   reimplement the SolidPolycone::setBP to take into account 
-                           *ALL* exceptional cases. 
+ - src/SolidSphere.cpp     reimplement the SolidSphere::setBP   to take into account
+                           *ALL* exceptional cases.
+ - src/SolidCons.cpp       reimplement the SolidCons::setBP     to take into account
+                           *ALL* exceptional cases.
+ - src/SolidTubs.cpp       reimplement the SolidTubs::setBP     to take into account
+                           *ALL* exceptional cases.
+ - src/SolidPolycone.cpp   reimplement the SolidPolycone::setBP to take into account
+                           *ALL* exceptional cases.
 
-      I guess that some day I need to reimplement "setBP" 
-      method for all other solids also :-((( 
-                           
+      I guess that some day I need to reimplement "setBP"
+      method for all other solids also :-(((
+
 
 ! 2003-04-01 - Sebastien Ponce
  - add the possibility to use parameters for the indexes of physical volumes
@@ -1189,7 +1193,7 @@
  - corrected new code for gcc 3.2
 
 ! 2003-03-28 - Vanya BELYAEV
- - src/Lib/SolidSphere.cpp    fix a bug, observed and reported by 
+ - src/Lib/SolidSphere.cpp    fix a bug, observed and reported by
                               Antonis Papanestis.
 
 ! 2003-01-17 - Sebastien Ponce
@@ -1197,9 +1201,9 @@
 
 !==================== DetDesc v11r8 2002-12-13 ============================
 ! 2002-12-13 - Ivan Belyaev
- - DetDesc::Services        fix a problem with resetting a static pointer 
+ - DetDesc::Services        fix a problem with resetting a static pointer
                             after the deletion of the object
- - cmt/requirements         increase the version 
+ - cmt/requirements         increase the version
 
 !===================== DetDesc v11r7 2002-12-09 =============================
 ! 2002-12-09 - Sebastien Ponce
@@ -1228,9 +1232,9 @@
 
 !===================== DetDesc v11r2 2002-10-29 =============================
 ! 2002-10-30 - Ivan Belyaev
- - DetDesc/SolidMath.h  
-  fix a trivial bug (my stupid misprint!!!) for calculation of 
-  intersection of the line with the cone 
+ - DetDesc/SolidMath.h
+  fix a trivial bug (my stupid misprint!!!) for calculation of
+  intersection of the line with the cone
 
 ! 2002-10-29 - Florence Ranjard
    merge v11r1b branch with main trunk
@@ -1247,7 +1251,7 @@
 !===================== DetDesc v11r1 2002-10-02 ================================
 ! 2002-10-02 - Marco Cattaneo
  - requirements: set version to v11r1
- - SolidTrap.cpp, SolidPolycone.cpp, SolidBox.h: use fabs() instead of abs() 
+ - SolidTrap.cpp, SolidPolycone.cpp, SolidBox.h: use fabs() instead of abs()
 
 !===================== DetDesc v11r0 2002-07-16 ==============================
 ! 2002-07-16 - Florence Ranjard
@@ -1261,10 +1265,10 @@
 
 !====================== DetDesc v10r3 2002-07-09 ==============================
 ! 2002-07-03 - Olivier Callot
- - Added a 'cover' box to the Assembly volumes, to decide faster in the 
+ - Added a 'cover' box to the Assembly volumes, to decide faster in the
    Transport Service if we are outside the assembly. Gains 1/3 of the time...
  - Clean-up of the 'FindLocalGI' function of the Transport Service.
- - Fix a few minor problems with error printing in the Transport Service, 
+ - Fix a few minor problems with error printing in the Transport Service,
    thanks to Witold Pokorski.
 
 ! 2002-06-22 - Olivier Callot
@@ -1286,12 +1290,12 @@
 ! 2002-06-03 - Olivier Callot
  - Fix the TransportSvc initial step, where a good local geometry has to be
    found and memorized. Affects TransportSvc.cpp, TransportSvcFindLocalGI.h and
-   TransportSvcGoodLocalGI.h . Note that the debug printing is still there, 
+   TransportSvcGoodLocalGI.h . Note that the debug printing is still there,
    with a flag to switch it off by default.
  - Try to remove some print of inconsistencies when merging Ticks in the
    transport service, allowing two intersection of the same material to
    overlap. This occurs in Rich1.
- - Introduce a tolerance in DetDesc/VolumeIntersectionIntervals.h when 
+ - Introduce a tolerance in DetDesc/VolumeIntersectionIntervals.h when
    comparing floating point numbers for equality.
  - Remove intersections with radlength below threshold in LVolume.cpp, and also
    improve the printing of clashes in the merging of intersections.
@@ -1323,13 +1327,13 @@
    should be done or not. Default value is true, which means check them.
 
 ! 2002-05-26 - Vanya Belyaev
- - doc/DoxyFile.cfg                : new file 
- - src/Test/SolidsTest.cpp         : remove 
+ - doc/DoxyFile.cfg                : new file
+ - src/Test/SolidsTest.cpp         : remove
  - cmt/requirements                : use new standard patterns
 
 ! 2002-05-25 - Vanya Belyaev
- - src/component/MaterialBudgetAlg : remove 
- - src/Lib/SolidBoolean.cpp        : improve the printout  
+ - src/component/MaterialBudgetAlg : remove
+ - src/Lib/SolidBoolean.cpp        : improve the printout
 
 ! 2002-05-24 - Sebastien Ponce
  - Message "found element DDDB at top level of xml file" went to VERBOSE mode
@@ -1342,9 +1346,9 @@
 
 ! 2002-05-21 - Ivan Belyaev
  - DetDesc/SolidSphrere.h
- - src/Lib/SolidSphere.cpp 
-   fix the bug in calculation of intersection ticks. 
-   Add the tiny optimization into "intersectionTicks" method  
+ - src/Lib/SolidSphere.cpp
+   fix the bug in calculation of intersection ticks.
+   Add the tiny optimization into "intersectionTicks" method
 
 ! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -1355,22 +1359,22 @@
    fix my stupid bug (thanks to Olivier)
 
 ! 2002-05-13 - Vanya Belyaev
- - DetDesc/SolidMath.h 
-        fix trivial bug in finding the intersection of the 
-        line and the conical surface 
- - src/Lib/SolidPolyHedronHelper.cpp 
+ - DetDesc/SolidMath.h
+        fix trivial bug in finding the intersection of the
+        line and the conical surface
+ - src/Lib/SolidPolyHedronHelper.cpp
         fix the bug with constructor of the Plane3D from point and normal
- - SolidTrd, SolidTubs, SolidCons, SolidSphere 
-        improve a little bit the printout  
- - src/Test/SolidsTest.cpp 
-        primitive application to perform some tests of Solids. 
- - cmt/requirements 
-        add the test application  
+ - SolidTrd, SolidTubs, SolidCons, SolidSphere
+        improve a little bit the printout
+ - src/Test/SolidsTest.cpp
+        primitive application to perform some tests of Solids.
+ - cmt/requirements
+        add the test application
 
 ! 2002-05-12 - Vanya Belyaev
   - DetDesc/SolidBase.h
-    improduce tolerance parameter for bounding box, 
-    bounding sphere and bounding cylinder - preparation for future tolerance 
+    improduce tolerance parameter for bounding box,
+    bounding sphere and bounding cylinder - preparation for future tolerance
 
 ! 2002-05-11 - Vanya Belyaev
   - modified files:
@@ -1406,37 +1410,37 @@
     src/Lib/SolidTubs.cpp
     src/Lib/SolidUnion.cpp
     src/component/MaterialBudgetAlg.cpp
-      Significant upgrade of functionality of SolidBase class. 
-      Now SolidBase  contains parameters of "bounding box", 
-      "bounding sphere" and "bounding cylinder". Several 
-      optimization methods are implemented for navigation and 
-      for finding the "intersection ticks". 
+      Significant upgrade of functionality of SolidBase class.
+      Now SolidBase  contains parameters of "bounding box",
+      "bounding sphere" and "bounding cylinder". Several
+      optimization methods are implemented for navigation and
+      for finding the "intersection ticks".
       Also bug with SolidTrd is fixed.
 
   - new file:
-    DetDesc/SolidMath.h  
-      mathematical utilities for fast and effective 
-      calculationof interection ticks with primitives - 
-      planes , spheres, cylinders and cones  
+    DetDesc/SolidMath.h
+      mathematical utilities for fast and effective
+      calculationof interection ticks with primitives -
+      planes , spheres, cylinders and cones
 
 ! 2002-05-04 Vanya Belyaev
-  - src/Lib/LVolume.cpp  
-    Implement a bright idea of O.Callot for major optimization 
+  - src/Lib/LVolume.cpp
+    Implement a bright idea of O.Callot for major optimization
     of "LVolume::intersectLine" method
-  - src/component/MaterialBudgetAlg.h,.cpp  
-    new algorithm to evaluate the material budget 
-    between given point to given z-plane. It produces 2D histogram of 
-    the distance in radiation length units between teh initial point 
+  - src/component/MaterialBudgetAlg.h,.cpp
+    new algorithm to evaluate the material budget
+    between given point to given z-plane. It produces 2D histogram of
+    the distance in radiation length units between teh initial point
     to the (xy)-point in the reference plane.
-  - cmt/requirements   
+  - cmt/requirements
     add explicit dependence on AIDA to allow the compilation
-    of Material Budget Algorithm. I know that it is not ideal 
-    solution, but the simplest one for a moment. 
-    Need to be revisited in the future. 
-  - src/component/DetDesc_load.cpp  
+    of Material Budget Algorithm. I know that it is not ideal
+    solution, but the simplest one for a moment.
+    Need to be revisited in the future.
+  - src/component/DetDesc_load.cpp
     add declaration of Material Budget Algorithm and redesign tehoveral layout
-    to improve readability 
-  - DetDesc/ISolidFactory.h 
+    to improve readability
+  - DetDesc/ISolidFactory.h
     add MACRO DECLARE_SOLID for declaration of Solid Factories
   - DetDesc/SolidFactory.h
     add the MACRO IMPLEMENT_SOLID for implementation of Solid Factories
@@ -1457,15 +1461,15 @@
 ! 2002-04-24 Pere Mato
   - Removed warnings in Windows (added base class IInterface in IConditionInfo)
 
-! 2002-04-24 Vanya Belyaev 
-  - Fix problems with Transport Service 
+! 2002-04-24 Vanya Belyaev
+  - Fix problems with Transport Service
 
 ! 2002-04-19 (M.Cattaneo)
   - Use GaudiKernel v12r*, XERCES v16r* (for Gaudi v10)
 
 ! 2002-04-03 - Vanya Belyaev
-  - change the layout of TransportSvc-files 
-  - fix the problems with uage of Assemblies for TransportSvc 
+  - change the layout of TransportSvc-files
+  - fix the problems with uage of Assemblies for TransportSvc
     (infinite loops observed by O.Callot for Rich geometry)
 
 ! 2002-02-21 - Sebastien Ponce
@@ -1490,9 +1494,9 @@
 
 ! 2002-01-18 - Vanya Belyaev
   - XmlIsotopeCnv and XmlElementCnv bug fin in signature of i_fillObj
-    and i_processObj methods 
-  - Mixture,Element and Material classes - reduce compiler warnings and 
-    improve (a little bit) printout        
+    and i_processObj methods
+  - Mixture,Element and Material classes - reduce compiler warnings and
+    improve (a little bit) printout
 
 ! 2002-01-18 - Sebastien Ponce
   - changes in the signature of method i_fillSpecificObj for the user
@@ -1518,7 +1522,7 @@
    Changes needed to use the "update" functionality for Condition objects.
    - introduce Condition::update(Condition&) to deep copy a condition
    - comment out the overloaded operator= (which also deep copies the
-     properties of a DataObject, like its registry and ref counts) 
+     properties of a DataObject, like its registry and ref counts)
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v9r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -1568,9 +1572,9 @@
    - add code convention compliance to many files
 
 ! 2001-11-18 - Vanya Belyaev
-  - new notion of Logical Assembly (class LAssembly) 
-  - new base class LogVolBase 
-  - small update of ILVolume and IPVolume interfaces 
+  - new notion of Logical Assembly (class LAssembly)
+  - new base class LogVolBase
+  - small update of ILVolume and IPVolume interfaces
     (more methods are "const" now)
 
 ! 2001-11-05 - Sebastien Ponce
@@ -1578,22 +1582,22 @@
     HepVis package.
   - requirements : switch to the XERCES package, forget about the XML one
 
-! 2001-10-25 - Vanya Belyaev 
-  - src/lib/SolidSphere.h  bug fix 
+! 2001-10-25 - Vanya Belyaev
+  - src/lib/SolidSphere.h  bug fix
 
-! 2001-10-25 - Vanya Belyaev 
-  - DetDesc/SolidPolycone.h 
-    src/Lib/SolidPolycone.cpp 
-    New solid is added 
+! 2001-10-25 - Vanya Belyaev
+  - DetDesc/SolidPolycone.h
+    src/Lib/SolidPolycone.cpp
+    New solid is added
     (corresponds to Geant3 shape PCON and Geant4 shape G4Polycone)
-    SolidFactories.cpp adn DetDesc_load.cpp are updated 
+    SolidFactories.cpp adn DetDesc_load.cpp are updated
 
 ! 2001-08-25 - Vanya Belyaev
-  - PVolume.h/.cpp 
-    bug fix for uninitialized pointer 
+  - PVolume.h/.cpp
+    bug fix for uninitialized pointer
 
 ! 2001-08-24 - Vanya Belyaev
-  - put some modification to Logical Volume to take into account 
+  - put some modification to Logical Volume to take into account
   - the notion of Assembly Volumes
 
 ! 2001-08-22 - Sebastien Ponce
@@ -1602,21 +1606,21 @@
     The first one is the maximum number of files cached, the second is the
     behavior of the cache (FIFO for a 0 value, more and more "keep most used"
     as value grows)
-	       
-! 2001-08-15 - Vanya Belyaev 
+
+! 2001-08-15 - Vanya Belyaev
   - DetDesc/SolidChild.h bug fix ("protected" versus "public")
- 
-! 2001-08-10 - Vanya Belyaev 
+
+! 2001-08-10 - Vanya Belyaev
   - modification in IDetectorElement interface and related classes
 
 ! 2001-08-10 - Vanya Belyaev
-  - modification in IGeometryInfo interface and related classes  
+  - modification in IGeometryInfo interface and related classes
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v8 <<<<<<<<<<<<<<<<<<<<<<<<<
 
 ! 2001-08-09 - Vanya Belyaev
   - change in ISolid, ILVolume and IPVolume interfaces
-  - several changes in solids 
+  - several changes in solids
   - simplify LVolume and PVolume classes
 
 ! 2001-07-03 - Sebastien Ponce
@@ -1706,20 +1710,20 @@
    Fix compilation warning on XmlMixtureCnv.cpp
 
 ! 2001-04-26 - Gonzalo Gracia
- - Modified DetDesc_load.cpp to include: 
+ - Modified DetDesc_load.cpp to include:
    DLL_DECL_CONVERTER( XmlSurfaceCnv           );
    DLL_DECL_OBJECTFACTORY( Surface           );
 
 ! 2001-04-12 - Gonzalo Gracia
- - Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs. 
+ - Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs.
    Include new tag "component" in mixtures
    Allow relative paths in components.
    Changed files:
      XmlCatalogCnv.cpp
      XmlMixtureCnv.cpp/.h
 
-! 2001-03-20 - Vanya Belyaev 
- - src/component/XmlMixtureCnv.cpp - bug fix 
+! 2001-03-20 - Vanya Belyaev
+ - src/component/XmlMixtureCnv.cpp - bug fix
 
 ! 2001-03-20 - Sebastien Ponce
  - ISolid.h: Corrected mistype #ifdef logic to avoid using std::deque for gcc-2.91
@@ -1750,58 +1754,58 @@
  - remove all tabulations from all files
 
 ! 2001-03-04 - Vanya Belyaev
- - src/Lib/Element.cpp - 3 lines are modified to please NT compiler 
+ - src/Lib/Element.cpp - 3 lines are modified to please NT compiler
 
 ! 2001-03-04 - Vanya Belyaev
- - class Material now holds the container of tabulated properties 
-   ==> add tabulatedProperties() accessors (const and non const) 
-       to the Material class 
+ - class Material now holds the container of tabulated properties
+   ==> add tabulatedProperties() accessors (const and non const)
+       to the Material class
  - class LVolume  now holds the container of assosiated surfaces
-   ==> add surfaces()     acessors (const and non-const) 
+   ==> add surfaces()     acessors (const and non-const)
        to class LVolume
-   NB! These acessors are not available from ILVolume interface! 
- - new class Surface which described (optical) surfaces 
-   Probably it is quite useless in DetDesc, but it is important 
+   NB! These acessors are not available from ILVolume interface!
+ - new class Surface which described (optical) surfaces
+   Probably it is quite useless in DetDesc, but it is important
    for G4 conversions
- - TabulatedProperty class is modified according to 
-   desicions of "coffee-meeting" with P.M. and G.G. 
+ - TabulatedProperty class is modified according to
+   desicions of "coffee-meeting" with P.M. and G.G.
  - class Material now has output operators to MsgStream and std::ostream
- - a lot of polishing business with exception classes and Materials 
+ - a lot of polishing business with exception classes and Materials
      New and Modified files:
   ===
-  DetDesc/DetectorElement.h              - update in exceptions 
+  DetDesc/DetectorElement.h              - update in exceptions
   DetDesc/DetectorElement.icpp
-  DetDesc/DetectorElementException.h     
-  DetDesc/Element.h                       
-  DetDesc/Element.icpp                   - new file  
+  DetDesc/DetectorElementException.h
+  DetDesc/Element.h
+  DetDesc/Element.icpp                   - new file
   DetDesc/Isotope.h
-  DetDesc/Isotope.icpp                   - new file 
+  DetDesc/Isotope.icpp                   - new file
   DetDesc/Material.h
-  DetDesc/Material.icpp                  - new file 
+  DetDesc/Material.icpp                  - new file
   DetDesc/Mixture.h
-  DetDesc/Mixture.icpp                   - new file 
+  DetDesc/Mixture.icpp                   - new file
   DetDesc/LVolume.h
   DetDesc/LVolume.icpp
   DetDesc/LVolumeException.h
   DetDesc/SolidBox.h
-  DetDesc/SolidBox.icpp                   - new file 
+  DetDesc/SolidBox.icpp                   - new file
   DetDesc/SolidException.h
   DetDesc/XmlCnvException.h
   DetDesc/XmlCnvException.icpp
-  DetDesc/CLIDTabulatedProperty.h         - new file 
+  DetDesc/CLIDTabulatedProperty.h         - new file
   DetDesc/TabulatedProperty.h             - new class
-  DetDesc/TabulatedProperty.icpp          - new file  
-  DetDesc/CLIDSurface.h                   - new file  
+  DetDesc/TabulatedProperty.icpp          - new file
+  DetDesc/CLIDSurface.h                   - new file
   DetDesc/Surface.h                       - new class
-  DetDesc/Surface.icpp                    - new file 
-  DetDesc/MaterialException.h             - new class  
-  DetDesc/SolidTrd.icpp                   - new file 
-  DetDesc/SolidCons.icpp                  - new file 
-  DetDesc/SolidSphere.icpp                - new file 
-  DetDesc/SolidTrap.icpp                  - new file 
-  DetDesc/SolidTubs.icpp                  - new file 
-  DetDesc/SolidChild.icpp                 - new file 
-  DetDesc/SolidBoolean.icpp               - new file 
+  DetDesc/Surface.icpp                    - new file
+  DetDesc/MaterialException.h             - new class
+  DetDesc/SolidTrd.icpp                   - new file
+  DetDesc/SolidCons.icpp                  - new file
+  DetDesc/SolidSphere.icpp                - new file
+  DetDesc/SolidTrap.icpp                  - new file
+  DetDesc/SolidTubs.icpp                  - new file
+  DetDesc/SolidChild.icpp                 - new file
+  DetDesc/SolidBoolean.icpp               - new file
   ===
   src/component/DetDesc_load.cpp
   src/component/XmlCatalogCnv.cpp
@@ -1811,17 +1815,17 @@
   src/component/XmlLVolumeCnv.h
   src/component/XmlLVolumeCnv.cpp
   src/component/XmlMixtureCnv.cpp
-  src/component/XmlTabulatedPropertyCnv.cpp   - new file 
-  src/component/XmlTabulatedPropertyCnv.h     - new file 
-  src/component/XmlSurfaceCnv.h               - new file 
-  src/component/XmlSurfaceCnv.cpp             - new file  
+  src/component/XmlTabulatedPropertyCnv.cpp   - new file
+  src/component/XmlTabulatedPropertyCnv.h     - new file
+  src/component/XmlSurfaceCnv.h               - new file
+  src/component/XmlSurfaceCnv.cpp             - new file
   ===
   src/Lib/DetectorElement.cpp
   src/Lib/Element.cpp
   src/Lib/GeometryInfo.cpp
   src/Lib/GeometryInfo.h
   src/Lib/GeometryInfo.icpp
-  src/Lib/GeometryInfoInlines.h             - REMOVED! 
+  src/Lib/GeometryInfoInlines.h             - REMOVED!
   src/Lib/GeometryInfoMethods.h             - REMOVED!
   src/Lib/GeometryInfoRelations.h           - REMOVED!
   src/Lib/PVolumeInlines.h                  - REMOVED!
@@ -1829,23 +1833,23 @@
   src/Lib/LVolume.cpp
   src/Lib/LVolumePVolumes.cpp
   src/Lib/Mixture.cpp
-  src/Lib/PVolume.cpp 
+  src/Lib/PVolume.cpp
   src/Lib/PVolume.h
   src/Lib/SolidBox.cpp
-  src/Lib/PVolume.icpp                     - new file 
-  src/Lib/Material.cpp                     - new file 
-  src/Lib/Surface.cpp                      - new file 
-  src/Lib/TabulatedProperty.cpp            - new file 
-  src/Lib/SolidException.cpp               - new file 
-  src/Lib/PVolumeException.cpp             - new file 
-  src/Lib/MaterialException.cpp            - new file 
-  src/Lib/LVolumeException.cpp             - new file 
-  src/Lib/DetectorElementException.cpp     - new file 
-  src/Lib/GeometryInfoException.cpp        - new file 
+  src/Lib/PVolume.icpp                     - new file
+  src/Lib/Material.cpp                     - new file
+  src/Lib/Surface.cpp                      - new file
+  src/Lib/TabulatedProperty.cpp            - new file
+  src/Lib/SolidException.cpp               - new file
+  src/Lib/PVolumeException.cpp             - new file
+  src/Lib/MaterialException.cpp            - new file
+  src/Lib/LVolumeException.cpp             - new file
+  src/Lib/DetectorElementException.cpp     - new file
+  src/Lib/GeometryInfoException.cpp        - new file
 
 ! 2001-02-26 - Vanya Belyaev
- - new class TabulatedProperty, used  to hold some specific properties 
-   of materials and surfaces (and might be more?) 
+ - new class TabulatedProperty, used  to hold some specific properties
+   of materials and surfaces (and might be more?)
 
 ! 2001-02-15 - Gonzalo Gracia Abril & Vanya Belyaev
  - Corrections for proper treatment of rotations
@@ -1853,10 +1857,10 @@
 
 ! 2001-02-13 - Marco Cattaneo
  - requirements - replace {} with () in macros, to please nmake
- 
+
 
 ! 2001-02-11 - Vanya Belyaev
- - remove all *.*.* files to please some CMT macros 
+ - remove all *.*.* files to please some CMT macros
 
 ! 2001-02-05 - Flr
  - src/
@@ -1871,57 +1875,57 @@
 ! 2001-01-31 - Gonzalo Gracia
  - SolidTrd.cpp: Bug fixed.
 
-! 2001-01-29 - Vanya Belyaev 
+! 2001-01-29 - Vanya Belyaev
  - LVolume:
     o remove IDataProvider, IMessageSvc* from constructor
     o add ISvcLocator* as data member, initialize it in constructor fro Gaudi::svcLocator()
     o update for change in ILVoluem interface (backward compatible)
  - PVolume:
     o Now this class is ABSOLUTELY internal. User shoudl use only interface.
- - all PVolume.* files are moved into src/Lib, where they are used by LVolume.cpp 
- - all CONCRETE Xml*Cnv.h are moved from DetDesc directrory 
+ - all PVolume.* files are moved into src/Lib, where they are used by LVolume.cpp
+ - all CONCRETE Xml*Cnv.h are moved from DetDesc directrory
  - GeometryInfo
-    o Now this class is ABSOLUTELY internal, user shoudl use only interface 
+    o Now this class is ABSOLUTELY internal, user shoudl use only interface
  - all GeometryInfo.* fileas are moved into src/Lib directory, where hey are used by DetectorElement.cpp
- - Xml converters updated to incorporate these changes 
+ - Xml converters updated to incorporate these changes
 
-! 2001-01-25 - Vanya Belyaev 
+! 2001-01-25 - Vanya Belyaev
  - Package polishing:
-   o small modification to reduce a little bit some compiler warnings 
-   o remove the remaining "extern const CLID&" from all places 
-   o extract CLID_DetectorElement into separate file to 
+   o small modification to reduce a little bit some compiler warnings
+   o remove the remaining "extern const CLID&" from all places
+   o extract CLID_DetectorElement into separate file to
      avoid the load of base class, if one need only it's CLID and it's interafce
-   o now all CLIDs, defined in DetDesc package belongd to a separate files 
-     DetDesc/CLIDxxxx.h (just for convinience and easy maintainance) (is it true?) 
-   o remove artificial src/LVolume.cpp 
-   o rename CLID_LogicalVolume into CLID_LVolume for better mnemonics 
-   o a lot of unnesessary "#include" directives removed from header files. 
- 
+   o now all CLIDs, defined in DetDesc package belongd to a separate files
+     DetDesc/CLIDxxxx.h (just for convinience and easy maintainance) (is it true?)
+   o remove artificial src/LVolume.cpp
+   o rename CLID_LogicalVolume into CLID_LVolume for better mnemonics
+   o a lot of unnesessary "#include" directives removed from header files.
+
 ! 2001-01-25 - Pere Mato
  - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
  - Fixed some bugs in the calculation of radiation and absorption lenght.
  - Modified to use the CLHEP expression evaluator function
  - New functionality: use of <parameter \> tag for defining XML parameters instead
-   of using XML entyties. The XML files in XMLDDDB package have been changed to 
+   of using XML entyties. The XML files in XMLDDDB package have been changed to
    exploit that new functionality
  - Changes is the DTD required some changes in the XML converters. These changes are:
    - element geometryinfo has now only attributes
    - default class ID for detelem
    - elementref can now have a fractionmass in addition to natoms attribute
 
-! 2001-01-22 - Vanya Belyaev 
+! 2001-01-22 - Vanya Belyaev
  - Solids , LVolumes , PVolumes, DetectorElements and Geometry Info are "Instectable"
  - restructurization of the package : introduce new library DetDescLib
- - optimization of SolidTrap and SolidTrd 
+ - optimization of SolidTrap and SolidTrd
 
-! 2001-01-16 - Vanya Belyaev 
- - now LVolume could be read/write to database (implementation of serialize methods) 
+! 2001-01-16 - Vanya Belyaev
+ - now LVolume could be read/write to database (implementation of serialize methods)
    (head revision of GaudiKernel v9 is required)
- - A helper class SolidPolyHedronHelper is introduced to simplifyt SolidTrap and SolidTrd shapes 
+ - A helper class SolidPolyHedronHelper is introduced to simplifyt SolidTrap and SolidTrd shapes
 
-! 2001-01-16 - Vanya Belyaev 
- - DetDesc/LVolume.h 
- - DetDesc/LVolume.create.... 
+! 2001-01-16 - Vanya Belyaev
+ - DetDesc/LVolume.h
+ - DetDesc/LVolume.create....
  - Add new functionality
    a possibility of 2 and even 3 loops in creation on parametrized volumes.
 
@@ -1936,10 +1940,10 @@
    o New materials.dtd is understood by converters, affected converters
      are XmlCatalogCnv XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
 
-! 2000-10-04 - Vanya Belyaev 
- - DetDesc/Solid/SolidTrap.h 
- - DetDesc/Solid/SolidTrap.cpp 
- - A new type of Solid is added (general trapezoid) by request of Velo group. 
+! 2000-10-04 - Vanya Belyaev
+ - DetDesc/Solid/SolidTrap.h
+ - DetDesc/Solid/SolidTrap.cpp
+ - A new type of Solid is added (general trapezoid) by request of Velo group.
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v4r1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -2036,16 +2040,16 @@
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v2r1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 2000-02-26 - Vanya Belyaev 
+! 2000-02-26 - Vanya Belyaev
  - New functionality
    o intersectLine methods are added to LVolume and PVolume (and to their
      interfaces)
    o reset() method is added to LVolume, Pvolume,Solids, GeometryInfo and
      DetectorElements (and to their interfaces)
    o DetDesc/Volumes/doc directory is created and some documentation has been put there
-   o update on solid documentation in DetDesc/Solid/doc directory 
+   o update on solid documentation in DetDesc/Solid/doc directory
 
-! 2000-02-24 - Vanya Belyaev 
+! 2000-02-24 - Vanya Belyaev
  - New functionality
    For all solids "intersectionTicks" method is added (to implement the
    extended ISolid interface). This method is to be used to estimation of the
@@ -2090,6 +2094,6 @@
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 1999-06-18 - Rado Chytracek 
+! 1999-06-18 - Rado Chytracek
  - This is a new package for the LHCb detector description.
 

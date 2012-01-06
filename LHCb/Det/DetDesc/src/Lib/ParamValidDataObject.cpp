@@ -33,7 +33,7 @@ std::ostream& ParamValidDataObject::fillStream( std::ostream& s ) const {
 
 //---------------------------------------------------------------------------
 
-void ParamValidDataObject::reset() 
+void ParamValidDataObject::reset()
 {
   m_paramList.clear();
   m_comments.clear();
@@ -48,16 +48,12 @@ void ParamValidDataObject::update( ValidDataObject& obj ){
     throw GaudiException("Trying to do a deep copy between different classes",
                          "ParamValidDataObject",StatusCode::FAILURE);
   }
-  // call the 
+  // call the
   ValidDataObject::update(obj);
-  
-  // default merge
-  m_paramList += pvdo->m_paramList;
-  CommentMap::const_iterator i;
-  for ( i = pvdo->m_comments.begin(); i != pvdo->m_comments.end(); ++i ){
-  	// TODO: optimize!
-    m_comments[i->first] = i->second;
-  }
+
+  // default to 'replace'
+  m_paramList = pvdo->m_paramList;
+  m_comments = pvdo->m_comments;
 }
 
 //----------------------------------------------------------------------------
@@ -89,7 +85,7 @@ std::string ParamValidDataObject::comment (const std::string &name) const {
 
   CommentMap::const_iterator i = m_comments.find(name);
   if (i != m_comments.end()) return i->second;
-  
+
   return std::string();
 }
 
@@ -120,49 +116,50 @@ void ParamValidDataObject::setComment (const std::string &name, const char *comm
 const std::string &ParamValidDataObject::paramAsString (const std::string &name) const {
   return param<std::string>(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a string (non const version).
 std::string &ParamValidDataObject::paramAsString (const std::string &name){
   return param<std::string>(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as an int.
 int ParamValidDataObject::paramAsInt (const std::string &name) const {
   return param<int>(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a double.
 double ParamValidDataObject::paramAsDouble (const std::string &name) const {
   try {
     return param<double>(name);
-  } catch (std::bad_cast) {
+  } catch (std::bad_cast &) {
     if (type(name) == typeid(int)){
       return param<int>(name);
-  	} else throw;
+    } else throw;
   }
+  return 0; // avoid Eclipse analyzer warning
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a string.
 const std::vector<std::string> &ParamValidDataObject::paramAsStringVect (const std::string &name) const {
   return param<std::vector<std::string> >(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a string.
 std::vector<std::string> &ParamValidDataObject::paramAsStringVect (const std::string &name){
   return param<std::vector<std::string> >(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as an int.
 const std::vector<int> &ParamValidDataObject::paramAsIntVect (const std::string &name) const {
   return param<std::vector<int> >(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a double.
 const std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::string &name) const {
@@ -174,7 +171,7 @@ const std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::s
 std::vector<int> &ParamValidDataObject::paramAsIntVect (const std::string &name) {
   return param<std::vector<int> >(name);
 }
-  
+
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a double.
 std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::string &name) {
@@ -186,15 +183,15 @@ std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::string 
 std::vector<std::string> ParamValidDataObject::paramNames() const {
   return m_paramList.getKeys();
 }
- 
+
 //----------------------------------------------------------------------------
 /// Print the user parameters on a string
 std::string ParamValidDataObject::printParams() const {
   std::ostringstream os;
   ParamList::const_iterator i;
-  for ( i = m_paramList.begin(); i != m_paramList.end() ; ++i ){    
+  for ( i = m_paramList.begin(); i != m_paramList.end() ; ++i ){
     os << "(" << System::typeinfoName(i->second->type()) << ") " << i->first ;
-    
+
     CommentMap::const_iterator c = m_comments.find(i->first);
     if ( c != m_comments.end() ) os << " (" << c->second << ")";
     os << " = " << i->second->toStr() << "\n";
