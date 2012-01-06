@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-01-06 - Marco Clemencic
+ - Modified LoadDDDB to trigger the initialization of the UpdateManagerSvc in
+   the initialize (to avoid that is gets triggered in the middle of an event).
+
 ! 2012-01-05 - Marco Clemencic
  - Fixed ICC warning (Boost 1.48).
 

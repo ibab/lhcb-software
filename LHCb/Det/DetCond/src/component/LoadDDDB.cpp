@@ -55,6 +55,7 @@ StatusCode LoadDDDB::initialize() {
     info() << "Database " << db->first << " tag " << db->second << endmsg;
   }
 
+  updMgrSvc(); // trigger the initialization of the Condition Update sub-system
   return StatusCode::SUCCESS;
 }
 
