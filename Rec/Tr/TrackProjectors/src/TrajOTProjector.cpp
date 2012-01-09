@@ -7,15 +7,6 @@
 #include "Event/OTMeasurement.h"
 #include "Event/StateVector.h"
 
-// from TrackKernel
-#include "TrackKernel/StateZTraj.h"
-
-// from TrackInterfaces
-#include "Kernel/ITrajPoca.h"
-
-// from LHCbKernel
-#include "Kernel/AlignTraj.h"
-
 // local
 #ifdef __INTEL_COMPILER         // Disable ICC warning
   #pragma warning(disable:654)  // ITrackProjector::project" only partially overridden
@@ -66,8 +57,8 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   double measureddrifttime = meas.driftTime(m_sMeas) ;
   const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
   bool gooddrifttime = useDriftTime() &&
-    measureddrifttime > -m_driftTimeTolerance && 
-    measureddrifttime < rtr.tmax() + m_driftTimeTolerance ;
+    measureddrifttime > -m_outOfTimeTolerance && 
+    measureddrifttime < rtr.tmax() + m_outOfTimeTolerance ;
   
   if ( gooddrifttime ) {
     // a zero ambiguity may indicate that we should not use the drifttime
@@ -80,21 +71,44 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
       m_errMeasure = std::sqrt( radiusWithError.val * radiusWithError.val +
 				radiusWithError.err * radiusWithError.err ) ;
       }
-    } else if(m_fitDriftTime) {
-      double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
-      OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( radius ) ;
-      double dtdr                             = rtr.dtdr( radius ) ;
-      m_residual   = measureddrifttime - predictedtime.val ;
-      m_errMeasure = predictedtime.err ;
-      m_H          *= ( meas.ambiguity() * dtdr ) ;
-      nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitTime ) ;
     } else {
-      OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
-      m_residual = -m_doca + meas.ambiguity() * radiusWithError.val ;
-      m_errMeasure = radiusWithError.err ;
-      nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitDistance ) ;
+      // now, there are two problems. first, we have hits assigned to
+      // tracks that are just far away: so we will not use drifttimes
+      // if the penalty of the chi2 would be too large. we'll choose
+      // '3mm' as the maximum distance. (cell radius is 2.5mm) these
+      // hits should neverbe on the track, and they would also be 
+      // removed by outlier removal but that's quite
+      // expensive. instead, we'll just ignore the drifttime. (need to
+      // think more.)
+      //
+      // second, we have a large fraction of hits with very poor
+      // drifttime measurements. if they are more than 3 sigma of the
+      // prediction, we'll not use driftttime.
+
+      if( m_maxDriftTimePull>0 ) {
+	double predictedradius = std::min( rtr.rmax(), std::abs(m_doca) ) ;      
+	OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( predictedradius ) ;
+	gooddrifttime = std::abs( measureddrifttime - predictedtime.val ) / predictedtime.err < m_maxDriftTimePull ;
+      }
+      
+      if(gooddrifttime ) {
+	if(m_fitDriftTime) {
+	  double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
+	  OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( radius ) ;
+	  double dtdr                             = rtr.dtdr( radius ) ;
+	  m_residual   = measureddrifttime - predictedtime.val ;
+	  m_errMeasure = predictedtime.err ;
+	  m_H          *= ( meas.ambiguity() * dtdr ) ;
+	  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitTime ) ;
+	} else {
+	  OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
+	  m_residual = -m_doca + meas.ambiguity() * radiusWithError.val ;
+	  m_errMeasure = radiusWithError.err ;
+	  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitDistance ) ;
+	}
+      } 
     }
-  } 
+  }
   
   m_errResidual = m_errMeasure ;
 
@@ -130,7 +144,8 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
   declareProperty( "FitDriftTime", m_fitDriftTime = false );
   declareProperty( "UpdateAmbiguity", m_updateAmbiguity = true ) ;
   declareProperty( "PrefitStrategy", m_prefitStrategy = TjeerdKetel ) ;
-  declareProperty( "DriftTimeTolerance", m_driftTimeTolerance = 6 ) ;
+  declareProperty( "OutOfTimeTolerance", m_outOfTimeTolerance = 6 ) ; 
+  declareProperty( "MaxDriftTimePull", m_maxDriftTimePull = 3 ) ;
 }
 
 //-----------------------------------------------------------------------------

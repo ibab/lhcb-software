@@ -51,6 +51,7 @@ private:
   bool m_fitDriftTime ;  ///< Fit drift times residuals instead of 'distance' residuals
   bool m_updateAmbiguity ;
   int m_prefitStrategy ;
-  double m_driftTimeTolerance ;
+  double m_outOfTimeTolerance ; ///< number of [ns] the drifttime is allowed outside [0,tmax]
+  double m_maxDriftTimePull ;   ///< number of sigmas the drifttime is allowed from the reference
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

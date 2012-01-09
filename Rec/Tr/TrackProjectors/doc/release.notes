@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2012-01-09 - Wouter Hulsbergen
+ - introduced 'dynamic' use of OT drifttimes (Pieter David)
+
 !========================= TrackProjectors v2r29p3 2011-12-15 ================
 ! 2011-12-06 - Marco Cattaneo
  - Fix an unprotected debug() stream
