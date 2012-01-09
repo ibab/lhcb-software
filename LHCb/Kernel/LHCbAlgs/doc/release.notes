@@ -4,13 +4,19 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-01-09 - Marco Clemencic
+ - New test algorithm to retrieve a service during initialize, start or
+   execute (LHCbAlgsTest::ServiceStarter).
+ - Modified test lhcbalgs.late_evt_clock after the change in the behavior of
+   LoadDDDB (using LHCbAlgsTest::ServiceStarter).
+
 ! 2011-12-20 - Marco Cattaneo
  - Fix include recursion, Coverity defect 26577
 
 !========================= LHCbAlgs v2r46 2011-12-16 =========================
 ! 2011-12-16 - Vanya Belyaev
- - Add two simple algorithms: 
-     Incidentfilter and IncidentVeto 
+ - Add two simple algorithms:
+     Incidentfilter and IncidentVeto
 
 !========================= LHCbAlgs v2r45 2011-12-14 =========================
 ! 2011-11-24 - Chris Jones

@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import EventClockSvc, RecEventTime, FakeEventTime
 from Configurables import LHCbAlgsTest__CreateFakeRecHeader as CreateFakeRecHeader
 from Configurables import LHCbAlgsTest__PrintEventTime as PrintEventTime
-from Configurables import LoadDDDB, DDDBConf
+from Configurables import LHCbAlgsTest__ServiceStarter as ServiceStarter
 
 # Prepare the EventClockSvc and add the decoder
 ecs = EventClockSvc()
@@ -24,18 +24,15 @@ cfh.addTool(FakeEventTime, "EventTimeDecoder")
 cfh.EventTimeDecoder.StartTime = 1000000000
 cfh.EventTimeDecoder.TimeStep = 1000000000
 
-# Load a detector element
-loadAlg = LoadDDDB()
-loadAlg.Node = "/dd/Structure/LHCb"
-DDDBConf()
+# Trigger an instantiation of UpdateManagerSvc (thus EventClockSvc) during execute.
+starter = ServiceStarter("ServiceStarter", Phase="execute", Service="UpdateManagerSvc")
 
-app = ApplicationMgr(TopAlg = [PrintEventTime("Test_Time1"), loadAlg, PrintEventTime("Test_Time2")],
+app = ApplicationMgr(TopAlg = [PrintEventTime("Test_Time1"), starter, PrintEventTime("Test_Time2")],
                      EvtSel = "NONE",
                      EvtMax = 3,
                      ExtSvc = [ToolSvc(), cfh])
 
 EventDataSvc(ForceLeaves = True)
-
 
 #MessageSvc(OutputLevel = DEBUG)
 
