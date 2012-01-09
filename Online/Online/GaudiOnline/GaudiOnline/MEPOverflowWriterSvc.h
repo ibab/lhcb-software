@@ -150,6 +150,7 @@ namespace LHCb
     virtual void CreateMonitoringInfo(unsigned int runn);
     /// get the file time string
     std::string FileTime();
+    virtual void handleFileWriteError();
   };
 } // End namespace LHCb
 #endif //  GAUDIONLINE_MEPCONVERTERSVC_H

@@ -36,6 +36,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <time.h>
+#include <errno.h>
 
 
 
@@ -163,8 +164,7 @@ StatusCode MEPOverflowWriterSvc::run()
 {
 //  ulonglong prtCount = fabs(m_freq) > 1. / ULONGLONG_MAX ? ulonglong(1.0/ m_freq) : ULONGLONG_MAX;
   m_receiveEvts = true;
-  for (int sc = m_consumer->getEvent(); sc == MBM_NORMAL && m_receiveEvts; sc
-      = m_consumer->getEvent())
+  for (int sc = m_consumer->getEvent(); sc == MBM_NORMAL && m_receiveEvts; sc = m_consumer->getEvent())
   {
 //    unsigned int pid = id->partitionID;
     const EventDesc& e = m_consumer->event();
@@ -199,17 +199,51 @@ StatusCode MEPOverflowWriterSvc::run()
     }
     RunDesc *r = m_RunList[m_RunNumber];
     m_FileDesc = r->m_CurrentFileDescr;
-    write(m_FileDesc->m_Handle, me, me->m_size);
-    m_BytesOut += me->m_size;
-    r->m_MEPs++;
-    m_mepOut++;
-    m_FileDesc->m_BytesWritten+=me->m_size;
-    r->m_BytesWritten += me->m_size;
-    if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
+    ssize_t status;
+    status = write(m_FileDesc->m_Handle, me, me->m_size);
+    if (status == -1)
     {
-      close(m_FileDesc->m_Handle);
-      m_FileDesc->state = C_CLOSED;
-      m_FileDesc = openFile(m_RunNumber);
+      if (errno == EIO || errno == ENOSPC)
+      {
+        handleFileWriteError();
+      }
+      else if (errno == EINTR)
+      {
+        status = write(m_FileDesc->m_Handle, me, me->m_size);
+        if (status == -1)
+        {
+          if (errno == EIO || errno == ENOSPC)
+          {
+            handleFileWriteError();
+          }
+          else if (errno == EINTR)
+          {
+            printf("File Write Interrupted again... Giving up...");
+          }
+          else
+          {
+            printf("File Write Error: Errno = %d",errno);
+          }
+        }
+      }
+      else
+      {
+        printf("File Write Error: Errno = %d",errno);
+      }
+    }
+    else
+    {
+      m_BytesOut += me->m_size;
+      r->m_MEPs++;
+      m_mepOut++;
+      m_FileDesc->m_BytesWritten+=me->m_size;
+      r->m_BytesWritten += me->m_size;
+      if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
+      {
+        close(m_FileDesc->m_Handle);
+        m_FileDesc->state = C_CLOSED;
+        m_FileDesc = openFile(m_RunNumber);
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -283,4 +317,8 @@ std::string MEPOverflowWriterSvc::FileTime()
   strftime(buffer, 80, "%Y%m%d-%H%M%S", timeinfo);
   std::string ret = std::string(buffer);
   return ret;
+}
+void MEPOverflowWriterSvc::handleFileWriteError()
+{
+
 }
