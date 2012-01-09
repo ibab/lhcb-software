@@ -19,7 +19,7 @@ localDb = CondDBAccessSvc("VeloAlignCondTestDB",
                           DefaultTAG = "updates")
 CondDB().addLayer(localDb) # use local DB
 
-# This is needed to trigger the instantiation of the update manager service 
+# This is needed to trigger the instantiation of the update manager service
 from Configurables import DetCondTest__TestConditionAlg
 alg = DetCondTest__TestConditionAlg()
 alg.Conditions = ConditionPaths
@@ -40,6 +40,6 @@ ecs.EventTimeDecoder.TimeStep =  10 * unit.s
 <argument name="reference"><text>../data/VeloAlignCondUpdates.ref</text></argument>
 <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor
-validateWithReference(preproc = preprocessor)
+validateWithReference(preproc = preprocessor + LineSkipper("OffsetCoeffs = []"))
 </text></argument>
 </extension>
