@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r55>???????? OnlineSys v4r58</A></H1>
+<H1><A NAME=v4r58>???????? OnlineSys v4r58</A></H1>
 <PRE>
    Based in Gaudi v22r5, 
    Updated packages are:
@@ -19,9 +19,14 @@
      UPI                 v1r21    Online
      UPIR                v1r4     Online
      Writer              v1r38    Online
+     DIM                 v19r25   Online
+     Gaucho              v7r19    Online
+     GaudiRootCnvTests   v1r5     Online
+     OnlineTasks         v1r42    Online
+     RootCnv             v1r11    Online
 </PRE>
 
-<H1><A NAME=v4r55>2011-09-01 OnlineSys v4r57</A></H1>
+<H1><A NAME=v4r57>2011-09-01 OnlineSys v4r57</A></H1>
 <PRE>
    Based in Gaudi v22r2, 
    Updated packages are:
@@ -42,7 +47,7 @@
      Writer              v1r37    Online
 </PRE>
 
-<H1><A NAME=v4r55>2011-06-06 OnlineSys v4r56</A></H1>
+<H1><A NAME=v4r56>2011-06-06 OnlineSys v4r56</A></H1>
 <PRE>
    Based in Gaudi v22r2, 
    New package:
