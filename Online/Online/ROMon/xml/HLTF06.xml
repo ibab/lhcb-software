@@ -1,0 +1,27 @@
+<TaskInventory>
+  <NodeList name="HLTF06">
+   <Name>HLTF06</Name>
+   <Node name="hltf06"     type="HLTControl"/>
+   <Node name="hltf0601"   type="HLTWorker"/>
+   <Node name="hltf0602"   type="HLTWorker"/>
+   <Node name="hltf0603"   type="HLTWorker"/>
+   <Node name="hltf0604"   type="HLTWorker"/>
+   <Node name="hltf0605"   type="HLTWorker"/>
+   <Node name="hltf0606"   type="HLTWorker"/>
+   <Node name="hltf0607"   type="HLTWorker"/>
+   <Node name="hltf0608"   type="HLTWorker"/>
+   <Node name="hltf0609"   type="HLTWorker"/>
+   <Node name="hltf0610"   type="HLTWorker"/>
+   <Node name="hltf0611"   type="HLTWorker"/>
+   <Node name="hltf0612"   type="HLTWorker"/>
+   <Node name="hltf0613"   type="HLTWorker"/>
+   <Node name="hltf0614"   type="HLTWorker"/>
+   <Node name="hltf0615"   type="HLTWorker"/>
+   <Node name="hltf0616"   type="HLTWorker"/>
+   <Node name="hltf0617"   type="HLTWorker"/>
+   <Node name="hltf0618"   type="HLTWorker"/>
+   <Node name="hltf0619"   type="HLTWorker"/>
+   <Node name="hltf0620"   type="HLTWorker"/>
+  </NodeList>
+</TaskInventory>
+

@@ -19,8 +19,10 @@
 #include "ROMon/SysInfo.h"
 #include "ROMonDefs.h"
 #include "RTL/Lock.h"
+#include "RTL/readdir.h"
 #include "dis.hxx"
 #include <stdexcept>
+#include <map>
 
 using namespace std;
 using namespace ROMon;
@@ -38,14 +40,17 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   : m_sys(0), m_print(0), m_verbose(false),
     m_mbmDelay(500), m_mbmSvc(0), m_mbmSize(100), m_mbmBuffer(0),
     m_statDelay(4000), m_statSvc(0), m_statSize(100), m_statBuffer(0),
+    m_hltSvc(0), m_hltSize(10), m_hltBuffer(0),
     m_mbm(0), m_fsm()
 {
   RTL::CLI cli(argc, argv, NodeStatsCollector::help);
   std::string svc, nam;
   check_dbg(cli);
+  bool has_hlt = true;//cli.getopt("hlt",3) != 0;
   cli.getopt("publish",   2, svc);
   cli.getopt("statSize",  5, m_statSize);
   cli.getopt("mbmSize",   4, m_mbmSize);
+  cli.getopt("hltSize",   4, m_hltSize);
   cli.getopt("statDelay", 5, m_statDelay);
   cli.getopt("mbmDelay",  4, m_mbmDelay);
   m_print   = cli.getopt("print",2) != 0;
@@ -54,18 +59,26 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   m_statBuffer  = new char[m_statSize];
   m_mbmSize    *= 1024;
   m_mbmBuffer   = new char[m_mbmSize];
+  m_hltSize    *= 1024;
+  m_hltBuffer   = new char[m_hltSize];
+
   CPUMonData cpu(m_statBuffer);
   cpu.node->reset();
   ROMonData mbm(m_mbmBuffer);
   mbm.node->reset();
+  new(m_hltBuffer) DeferredHLTStats(RTL::nodeNameShort());
+
   nam = svc;
   if ( !svc.empty() )  {
     std::string dns = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "None";
     bool has_mbm = RTL::nodeNameShort() != dns;
+    has_hlt &= RTL::nodeNameShort() != dns && RTL::nodeNameShort().substr(0,3)=="hlt";
     nam = svc + "/Statistics";
     m_statSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedStats,(long)this);
     nam = svc + "/Readout";
     if ( has_mbm ) m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
+    nam = svc + "/HltDefer";
+    if ( has_hlt ) m_hltSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;
@@ -80,6 +93,7 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
 NodeStatsCollector::~NodeStatsCollector() {
   ::dis_remove_service(m_statSvc);
   if ( 0 != m_mbmSvc ) ::dis_remove_service(m_mbmSvc);
+  if ( 0 != m_hltSvc ) ::dis_remove_service(m_hltSvc);
 }
 
 /// Help printout in case of -h /? or wrong arguments
@@ -130,6 +144,24 @@ void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* first) {
   *buf = (void*)empty;
 }
 
+/// Feed data to DIS when updating data
+void NodeStatsCollector::feedHLT(void* tag, void** buf, int* size, int* first) {
+  static const char* empty = "";
+  NodeStatsCollector* h = *(NodeStatsCollector**)tag;
+  if ( !(*first) ) {
+    CPUMonData hlt(h->m_hltBuffer);
+    *buf = h->m_hltBuffer;
+    *size  = hlt.hlt->length();
+    if ( h->m_verbose ) {
+      log() << "[NodeStatsCollector] Published " << *size 
+            << " Bytes of data HLTMon @" << *buf << std::endl;
+    }
+    return;
+  }
+  *size = 0;
+  *buf = (void*)empty;
+}
+
 /// Monitor Node statistics information
 int NodeStatsCollector::monitorStats() {
   CPUMonData buf(m_statBuffer);
@@ -141,6 +173,52 @@ int NodeStatsCollector::monitorStats() {
           << "========================" << endl
           << *buf.node << endl;
     log() << "------ Data size:" << m_sys->statistics()->length() << endl;
+  }
+  return 1;
+}
+
+/// Monitor Deferred HLT statistics information
+int NodeStatsCollector::monitorHLT() {
+  int count = 0;
+  unsigned long long blk_size=0,total_blk=0,availible_blk=0;
+  DeferredHLTStats* h = new(m_hltBuffer) DeferredHLTStats(RTL::nodeNameShort());
+
+  /// Now load data into object
+  ro_gettime(&h->time,&h->millitm);
+  ::lib_rtl_diskspace("/localdisk",&blk_size,&total_blk,&availible_blk);
+  h->localdisk.blockSize  = blk_size;
+  h->localdisk.numBlocks  = total_blk;
+  h->localdisk.freeBlocks = availible_blk;
+  map<int,int> files;
+  DIR* dir = ::opendir("/localdisk/overflow");
+  if ( dir ) {
+    struct dirent *entry;
+    while ( (entry=::readdir(dir)) != 0 ) {
+      int run=0,date,time;
+      int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-%d.MEP",&run,&date,&time);
+      if ( ret == 3 ) {
+	map<int,int>::iterator i=files.find(run);
+	if ( i==files.end() ) files[run]=1;
+	else ++((*i).second);
+	++count;
+      }
+      else {
+	log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
+      }
+    }
+    ::closedir(dir);
+  }
+  DeferredHLTStats::Runs::iterator ir = h->runs.reset();
+  map<int,int>::iterator           i  = files.begin();
+  for(; i!=files.end(); ++i) {
+    *ir = *i;
+    ir = h->runs.add(ir);
+  }
+  if ( m_print ) {
+    log() << "SysInfo: ========================" 
+          << ::lib_rtl_timestr() 
+          << "========================" << endl
+          << *h << endl;
   }
   return 1;
 }
@@ -184,7 +262,7 @@ int NodeStatsCollector::monitor() {
   sys.init();
   m_sys = &sys;
   ::dim_unlock();
-  int stat_delay = m_statDelay;
+  int nclients, stat_delay = m_statDelay;
   while(exec)    {
     stat_delay -= m_mbmDelay;
     ::dim_lock();
@@ -194,6 +272,7 @@ int NodeStatsCollector::monitor() {
       }
       if ( stat_delay<=0 ) {
         monitorStats();
+        monitorHLT();
       }
     }
     catch(const std::exception& e) {
@@ -203,15 +282,16 @@ int NodeStatsCollector::monitor() {
       log() << "Unknown exception while task information:" << endl;
     }
     if ( 0 != m_mbmSvc ) {
-      int nclients = ::dis_update_service(m_mbmSvc);
-      if ( nclients == 0 ) {
+      if ( (nclients=::dis_update_service(m_mbmSvc)) == 0 ) {
 	log() << "No client was listening to my MBM information......" << std::endl;
       }
     }
     if ( stat_delay<=0 ) {
-      int nclients = ::dis_update_service(m_statSvc);
-      if ( nclients == 0 ) {
+      if ( (nclients=::dis_update_service(m_statSvc)) == 0 ) {
 	log() << "No client was listening to my node statistics information." << std::endl;
+      }
+      if ( (nclients=::dis_update_service(m_hltSvc)) == 0 ) {
+	//log() << "No client was listening to the deferred HLT information." << std::endl;
       }
       stat_delay = m_statDelay;
     }

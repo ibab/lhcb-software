@@ -449,6 +449,78 @@ namespace ROMon {
   };
 
 
+  /**@class SubfarmSummary ROMon.h ROMon/ROMon.h
+   *
+   * Class which collects run-dependent information on pending 
+   * deferred HLT running.
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) DeferredHLTStats {
+  public:
+    enum { TYPE = 11 };
+    typedef std::pair<int,int> RunItem;
+    typedef FixItems<RunItem> Runs;
+    /// First word: Data type descriptor (MUST always be 9)
+    int          type;
+    /// Node name
+    char         name[32];
+    /// Time stamp of last information update
+    int          time;
+    /// Time stamp of the monitor snapshot [milli seconds]
+    unsigned int millitm;
+    /// Disk space info
+    Diskspace    localdisk;
+    /// Variable size array of node items
+    Runs         runs;
+    /// Default constructor
+    DeferredHLTStats(const std::string& n);
+    /// Reset object structure
+    DeferredHLTStats* reset();
+    /// Load data into object
+    void update();
+    /// Length of the object in bytes
+    int length()  const {  return sizeof(DeferredHLTStats)+runs.data_length(); }
+  };
+
+  /**@class CPUfarm ROMon.h ROMon/ROMon.h
+   *
+   * Class which represents all CPUs in a DIM_DNS_NODE
+   *
+   * @author M.Frank
+   */
+  PACK_DATA(class) DeferredHLTSubfarmStats {
+  public:
+    typedef DeferredHLTStats::Runs Runs;
+    typedef DeferredHLTStats::RunItem RunItem;
+    typedef VarItems<DeferredHLTStats> Nodes;
+    enum { TYPE = 12 };
+    /// First word: Data type descriptor (MUST always be 4)
+    int    type;
+    /// Total size of the node information
+    int    totalSize;
+    /// Total size of Runs object
+    int    runsSize;
+    /// Date of last update [seconds since epoche]
+    int    time;
+    /// Farm name
+    char   name[32];
+    /// Variable size array of run items
+    Runs   runs;
+    /// Reset object structure
+    DeferredHLTSubfarmStats* reset();
+    /// Fix-up object sizes
+    void fixup();
+    /// Length of the object in bytes
+    int length()  const {  return totalSize; }
+    /// Variable size array of node items
+    Nodes*  nodes() const;
+    /// Retrieve timestamp of earliest updated node
+    TimeStamp firstUpdate() const;
+    /// Retrieve timestamp of most recent updated node
+    TimeStamp lastUpdate() const;
+  };
+
 
   std::vector<std::string> psItems(const char*& ptr);
   std::vector<std::string> psLabels();
@@ -488,18 +560,20 @@ namespace ROMon {
     CPU_TIME,
     CMDLINE
   };
+
   union CPUMonData {
-    char*            str;
-    void*            ptr;
-    CPU*             cpu;
-    CPUset*          cpuSet;
-    CPUfarm*         farm;
-    Process*         proc;
-    Procset*         processes;
-    Connectionset*   connections;
-    SubfarmSummary*  subfarmSummary;
-    ProcFarm*        procFarm;
-    NodeStats*       node;
+    char*             str;
+    void*             ptr;
+    CPU*              cpu;
+    CPUset*           cpuSet;
+    CPUfarm*          farm;
+    Process*          proc;
+    Procset*          processes;
+    Connectionset*    connections;
+    SubfarmSummary*   subfarmSummary;
+    ProcFarm*         procFarm;
+    NodeStats*        node;
+    DeferredHLTStats* hlt;
     CPUMonData(void* buffer) { ptr=buffer; }
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
@@ -517,6 +591,9 @@ std::ostream& operator<<(std::ostream& os, const ROMon::Procset& c);
 std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
 std::ostream& operator<<(std::ostream& os, const ROMon::NodeStats& c);
 std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::Diskspace& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::DeferredHLTStats& c);
+std::ostream& operator<<(std::ostream& os, const ROMon::DeferredHLTSubfarmStats& c);
 
 #endif /* ROMON_CPUMON_H */
 

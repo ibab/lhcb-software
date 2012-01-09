@@ -34,6 +34,8 @@ using namespace ROMon;
 using namespace std;
 typedef FMCMonListener::Descriptor DSC;
 typedef RODimListener::Clients Clients;
+typedef DeferredHLTSubfarmStats HLTStats;
+
 static std::string PUBLISHING_NODE = "ECS03";
 
 namespace {
@@ -163,6 +165,46 @@ namespace {
     }
     return 1;
   }
+
+  /// Update buffer with MBM information
+  template <> int _Svc<HLTStats>::get_data() {
+    HLTStats* n = ((HLTStats*)buff)->reset();
+    HLTStats::Runs&    runs  = n->runs;
+    const Clients&     cl    = info.clients();
+    DeferredHLTStats::Runs::iterator ir;
+    Clients::const_iterator ic;
+    map<int,int>::iterator i;
+
+    ro_get_node_name(n->name,sizeof(n->name));
+    n->type = HLTStats::TYPE;
+    map<int,int> files;
+    for(ic = cl.begin(); ic != cl.end(); ++ic) {
+      DeferredHLTStats* stats = (DeferredHLTStats*)(*ic).second->data<DSC>()->data;
+      if ( stats ) {
+	DeferredHLTStats::Runs& rs = stats->runs;
+	for(ir = rs.begin(); ir != rs.end(); ir=rs.next(ir) ) {
+	  i = files.find((*ir).first);
+	  if ( i==files.end() ) files[(*ir).first] = (*ir).second;
+	  else (*i).second += (*ir).second;
+	}
+      }
+    }
+    for(i=files.begin(), ir=runs.reset(); i!=files.end(); ++i) {
+      *ir = *i;
+      ir = runs.add(ir);
+    }
+    HLTStats::Nodes* nodes = n->nodes();
+    DeferredHLTStats* curr = nodes->reset();
+    for(ic = cl.begin(); ic != cl.end(); ++ic)   {
+      DeferredHLTStats* stats = (DeferredHLTStats*)(*ic).second->data<DSC>()->data;
+      if ( stats ) {
+        if ( ((char*)nodes+stats->length()) > buff+buffLen ) return 2;
+        ::memcpy(curr,stats,stats->length());
+        curr = nodes->add(curr);
+      }
+    }
+    return 1;
+  }
 }
 
 
@@ -187,6 +229,7 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_service[1] = new _Svc<CPUfarm> (m_stat, 32,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
   m_service[3] = new _Svc<ProcFarm>(m_stat, 64,svc + "/ROTasks",1);
+  m_service[1] = new _Svc<HLTStats>(m_stat,32,svc + "/HLTDefer");
 
   if ( svc.empty() )  {
     log() << "Unknown data type -- cannot be published." << std::endl;

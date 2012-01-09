@@ -46,7 +46,7 @@ namespace ROMon {
     FMCMonListener m_mbm;
     int            m_print;
     bool           m_verbose;
-    _BaseSvc*      m_service[4];
+    _BaseSvc*      m_service[5];
     bool           m_needUpdate;
     int            m_mbmDelay;
     int            m_statDelay;

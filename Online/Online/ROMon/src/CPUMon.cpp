@@ -1,6 +1,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include "ROMonDefs.h"
 #include "ROMon/CPUMon.h"
 #include "ROMon/ROMonGblBuffer.h"
 
@@ -78,6 +79,21 @@ ostream& operator<<(ostream& os, const NodeStats& n) {
   return os;
 }
 
+ostream& operator<<(ostream& os, const Diskspace& n) {
+  os << "Local disk:" << n.blockSize << " " << n.numBlocks << "/" << n.freeBlocks << endl;
+  return os;
+}
+
+ostream& operator<<(ostream& os, const DeferredHLTStats& n) {
+  os << n.name << endl << "  " << n.localdisk << endl;
+  return os;
+}
+
+ostream& operator<<(ostream& os, const DeferredHLTSubfarmStats& n) {
+  os << n.name << endl << "  " << endl;
+  return os;
+}
+
 /// Empty constructor
 Memory::Memory() {
   reset();
@@ -86,6 +102,17 @@ Memory::Memory() {
 /// Reset data content
 Memory* Memory::reset() {
   ::memset(this,0,sizeof(Memory));
+  return this;
+}
+
+/// Empty constructor
+Diskspace::Diskspace() {
+  reset();
+}
+
+/// Reset data content
+Diskspace* Diskspace::reset() {
+  ::memset(this,0,sizeof(Diskspace));
   return this;
 }
 
@@ -258,4 +285,45 @@ SubfarmSummary* SubfarmSummary::reset() {
   return this;
 }
 
+/// Default constructor
+DeferredHLTStats::DeferredHLTStats(const std::string& n) {
+  reset();
+  ::strncpy(name,n.c_str(),sizeof(name));
+  name[sizeof(name)-1] = 0;
+}
+
+/// Reset object structure
+DeferredHLTStats* DeferredHLTStats::reset() {
+  ::memset(this,0,sizeof(DeferredHLTStats));
+  type = TYPE;
+  return this;
+}
+
+/// Access to the buffer part of the node structure
+DeferredHLTSubfarmStats::Nodes* DeferredHLTSubfarmStats::nodes()  const {
+  return (Nodes*)(&runs + runs.length());
+}
+
+/// Fix the lengths before sending. This is the last statement after filling
+void DeferredHLTSubfarmStats::fixup() {
+  type = TYPE;
+  totalSize = runs.length() + nodes()->length() + sizeof(DeferredHLTStats);
+}
+
+/// Reset node structure to allow re-filling
+DeferredHLTSubfarmStats* DeferredHLTSubfarmStats::reset() {
+  ::memset(this,0,sizeof(DeferredHLTSubfarmStats)+sizeof(Runs)+sizeof(Nodes));
+  type = TYPE;
+  return this;
+}
+
+/// Retrieve timestamp of earliest updated node
+TimeStamp DeferredHLTSubfarmStats::firstUpdate() const {
+  return _firstUpdate(*nodes());
+}
+
+/// Retrieve timestamp of most recent updated node
+TimeStamp DeferredHLTSubfarmStats::lastUpdate() const {
+  return _lastUpdate(*nodes());
+}
 

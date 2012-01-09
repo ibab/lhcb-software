@@ -48,6 +48,9 @@ namespace ROMon  {
     int               m_statSvc;
     size_t            m_statSize;
     char*             m_statBuffer;
+    int               m_hltSvc;
+    size_t            m_hltSize;
+    char*             m_hltBuffer;
 
     ROMonServer       m_mbm;
     RODimFSMListener  m_fsm;
@@ -61,6 +64,8 @@ namespace ROMon  {
     virtual int monitor();
     /// Monitor Node statistics information
     virtual int monitorStats();
+    /// Monitor deferred HLT statistics information
+    virtual int monitorHLT();
     /// Monitor task and MBM information
     virtual int monitorTasks();
     /// Help printout in case of -h /? or wrong arguments
@@ -68,6 +73,7 @@ namespace ROMon  {
     /// Feed data to DIS when updating data
     static void feedStats(void* tag, void** buf, int* size, int* first);
     static void feedMBM(void* tag, void** buf, int* size, int* first);
+    static void feedHLT(void* tag, void** buf, int* size, int* first);
   };
 }      // End namespace ROMon
 #endif /* ROMON_NODESTATSCOLLECTOR_H */

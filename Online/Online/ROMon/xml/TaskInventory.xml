@@ -291,7 +291,9 @@
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="&lt;NODE&gt;"/>
+  <!-- 
   <Project name="REC&lt;NODE&gt;"/>
+  -->
 </NodeType>
 
 <NodeType name="HLTControlHLT">
@@ -305,6 +307,18 @@
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="&lt;NODE&gt;"/>
+</NodeType>
+
+<NodeType name="HLTControlNOPVSS">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogGaudiSumSrv"/>
+  <Task name="LogRecoSumSrv"/>
+  <Task name="LogPVSS"/>
+  <Task name="LogPVSSSrv"/>
+  <ConnectionList name="ControlsPC"/>
 </NodeType>
 
 <NodeType name="HLTWorker">
