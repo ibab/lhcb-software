@@ -73,64 +73,61 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
   LHCb::KalmanFitResult* kalfit = dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
   if( !kalfit) return Warning("No kalfit on track",StatusCode::FAILURE,0) ;
   
-  LHCb::KalmanFitResult::NodeContainer& nodes = kalfit->nodes() ;
+  LHCb::KalmanFitResult::FitNodeRange nodes = kalfit->fitNodes() ;
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
   
-  // get the total chisquare of the forward filter
-  double chisq(0) ;
-  int ndof(0) ;
-  double chisqbw(0) ;
-  const LHCb::State* laststate(0) ;
-
   // This is set up with the aim to trigger the cache such that there
   // will be no nested calls. That makes it easier to profile the
   // fit. Eventually, we could do without all of this, since
   // everything is anyway computed on demand.
-  for( LHCb::TrackFitResult::NodeContainer::iterator inode = kalfit->nodes().begin() ;
-       inode != kalfit->nodes().end(); ++inode) {
-    LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*inode) ;
-    fitnode->predictedState(LHCb::FitNode::Forward) ;
-    fitnode->filteredState(LHCb::FitNode::Forward) ;
+  for( LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
+       inode != nodes.end(); ++inode) {
+    (*inode)->predictedState(LHCb::FitNode::Forward) ;
+    (*inode)->filteredState(LHCb::FitNode::Forward) ;
   }
   if(m_forceBidirectional){
-    for( LHCb::TrackFitResult::NodeContainer::reverse_iterator inode = kalfit->nodes().rbegin() ;
-	 inode != kalfit->nodes().rend(); ++inode) {
-      LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*inode) ;
-      fitnode->predictedState(LHCb::FitNode::Backward) ;
-      fitnode->filteredState(LHCb::FitNode::Backward) ;
-    }
-  }
-  // This is the only thing we KalmanFilter stll for: set the total
-  // chisquare of the track. This could also be done from
-  // TrackMasterFitter.
-  BOOST_FOREACH( LHCb::Node* node, nodes) {
-    LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(node) ;
-    if( node->type()==LHCb::Node::HitOnTrack ) {
-      chisq   += fitnode->deltaChi2Forward() ;
-      chisqbw += fitnode->deltaChi2Backward() ;
-      laststate = &(fitnode->filteredState(LHCb::FitNode::Forward)) ;
-      ++ndof ;
+    for( LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode) {
+      (*inode)->predictedState(LHCb::FitNode::Backward) ;
+      (*inode)->filteredState(LHCb::FitNode::Backward) ;
     }
   }
   // force the smoothing. 
   if (m_forceSmooth){
-    for( LHCb::TrackFitResult::NodeContainer::iterator inode = kalfit->nodes().begin() ;
-	 inode != kalfit->nodes().end(); ++inode)
-      static_cast<LHCb::FitNode*>(*inode)->state() ; 
+    for( LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode) 
+      (*inode)->state() ; 
   }
 
   if (kalfit->inError()){
     sc = Warning(kalfit->getError(), StatusCode::FAILURE, 0 ) ;
   }
 
+  // This is the only thing we need KalmanFilter still for: set the
+  // total chisquare of the track. This could also be done from
+  // TrackMasterFitter.
+  
   // Count the number of active track parameters. For now, just look at the momentum.
-  if(laststate) {
-    const double threshold = 0.1 ;
-    size_t npar = m_DoF != 5u ? m_DoF :
-      (laststate->covariance()(4,4) / kalfit->seedCovariance()(4,4) < threshold ? 5 : 4) ;
-    dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult())->setNTrackParameters( npar ) ;
-    ndof -= npar ;
+  size_t npar = m_DoF ;
+  if( npar == 5u ) {
+    const LHCb::State* laststate(0) ;
+    for( LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode) {
+      if( (*inode)->type()==LHCb::Node::HitOnTrack ) 
+	laststate = &((*inode)->filteredState(LHCb::FitNode::Forward)) ;
+    }
+    if(laststate) {
+      const double threshold = 0.1 ;
+      npar = (laststate->covariance()(4,4) / kalfit->seedCovariance()(4,4) < threshold ? 5 : 4) ;
+      dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult())->setNTrackParameters( npar ) ;
+    }
   }
-  track.setChi2AndDoF( std::min(chisq,chisqbw), ndof );
+  
+  LHCb::ChiSquare chisqfw = nodes.front()->totalChi2(LHCb::FitNode::Backward) ;
+  LHCb::ChiSquare chisqbw = nodes.back()->totalChi2(LHCb::FitNode::Forward) ;
+  int ndof = chisqfw.nDoF() - (npar - kalfit->nTrackParameters() ) ;
+  // FIXME: why don't we take the maximum, like in KalmanFitResult?
+  track.setChi2AndDoF( std::min(chisqfw.chi2(),chisqbw.chi2()), ndof );
+  
   return sc ;
 }

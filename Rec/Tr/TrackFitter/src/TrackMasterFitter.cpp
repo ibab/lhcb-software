@@ -407,35 +407,50 @@ LHCb::Node* TrackMasterFitter::outlierRemoved( Track& track ) const
   static HitType hittypemap[11] = { Unknown, VeloR, VeloPhi, VeloR, VeloPhi, TT, T, T, Muon, TT, T } ;
   const size_t minNumHits[5] = { m_minNumVeloRHits, m_minNumVeloPhiHits, m_minNumTTHits, m_minNumTHits, m_minNumMuonHits } ;
   size_t numHits[5]          = {0,0,0,0,0} ;
-  std::vector<Node*>& nodes = track.fitResult()->nodes();
-  for( LHCb::TrackFitResult::NodeContainer::const_iterator inode =  nodes.begin() ;
-       inode != nodes.end() ; ++inode) 
+  
+  const LHCb::KalmanFitResult* fr = dynamic_cast<const LHCb::KalmanFitResult*>(track.fitResult()) ;
+  LHCb::KalmanFitResult::ConstFitNodeRange nodes = fr->fitNodes() ;
+  for( LHCb::KalmanFitResult::ConstFitNodeRange::const_iterator inode = nodes.begin() ;
+       inode != nodes.end(); ++inode)
     if( (*inode)->type() == LHCb::Node::HitOnTrack ) 
       ++(numHits[hittypemap[int((*inode)->measurement().type())]]) ;
   
   // loop over the nodes and find the one with the highest chi2 >
   // m_chi2Outliers, provided there is enough hits of this type left.
-  std::vector<Node*>::iterator iNode;
-  std::vector<Node*>::iterator iWorstNode = nodes.end();
+  LHCb::KalmanFitResult::ConstFitNodeRange::const_iterator iWorstNode = nodes.end();
   double worstChi2 = m_chi2Outliers;
-  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode )
+  const double totalchi2  = std::max( nodes.front()->totalChi2(LHCb::FitNode::Backward).chi2(),
+				      nodes.back()->totalChi2(LHCb::FitNode::Forward).chi2() ) ;
+  for ( LHCb::KalmanFitResult::ConstFitNodeRange::const_iterator iNode = nodes.begin(); 
+	iNode != nodes.end(); ++iNode )
     if ( (*iNode)->hasMeasurement() &&
 	 (*iNode)->type() == LHCb::Node::HitOnTrack ) {
-      // Computing the chi2 will triggerthe smoothing. That's why it
-      // is slow. We haven;t yet found a good alternative.
-      const double chi2 = (*iNode)->chi2();
-      
       HitType hittype = hittypemap[int((*iNode)->measurement().type())] ;
-      if ( chi2 > worstChi2 &&
-	   numHits[hittype] > minNumHits[hittype] ) {
-	worstChi2 = chi2;
-	iWorstNode = iNode;
+      if( numHits[hittype] > minNumHits[hittype] ) {
+	// Computing the chi2 will trigger the smoothing. One way to
+	// save some time is to first test a number of which we know
+	// that it is either equal to or bigger than the chi2
+	// contribution of the hit, namely the chi2 sum of the match
+	// and the hit at this node:
+	double chi2MatchAndHit = totalchi2 ;
+	for(int dir=0; dir<2; ++dir) {
+	  const LHCb::FitNode* tmpnode =  (*iNode)->prevNode(dir) ;
+	  if(tmpnode) chi2MatchAndHit -= tmpnode->totalChi2(dir).chi2() ;
+	}
+	if( chi2MatchAndHit > worstChi2 ) {
+	  // the following line triggers the 'slow' smoothing
+	  const double chi2 = (*iNode)->chi2();
+	  if ( chi2 > worstChi2 ) {
+	    worstChi2 = chi2;
+	    iWorstNode = iNode;
+	  }
+	}
       }
     }
   
   // if a node is found: remove its measurement from the track
   if ( iWorstNode != nodes.end() ) {
-    outlier = *iWorstNode ;
+    outlier = const_cast<LHCb::FitNode*>(*iWorstNode) ;
 
     if (m_debugLevel)
       debug() << "Measurement " << iWorstNode-nodes.begin() 
@@ -752,6 +767,10 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
 {
   if( m_debugLevel ) 
     debug() << "TrackMasterFitter::updateTransport" << endmsg ;
+
+  // FIXME: This is probably the right place to set the number of
+  // track parameters in the fitresult: simply check that the
+  // propagation does not depend on momentum
 
   // sets the propagation between the previous node and this. node that the reference 
   // of the previous node is used.

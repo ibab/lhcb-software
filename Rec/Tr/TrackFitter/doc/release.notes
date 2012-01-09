@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2012-01-09 - Wouter Hulsbergen
+ - use new functionality in FitNode to call the smoother less often in outlier rejection
+
 !========================= TrackFitter v4r2 2011-02-28 =========================
 ! 2011-02-08 - Victor Coco
  - setback the ForceBiDirectionnal in KalmanFilter to True and reduce info priniting
