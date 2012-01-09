@@ -141,6 +141,8 @@ StatusCode UpdateManagerSvc::initialize(){
     std::string name;
     Condition *cond = new Condition();
     if (ConditionParser(*co,name,*cond)) {
+      // Special update mode
+      cond->setUpdateMode(ValidDataObject::OVERRIDE);
 
       // Remove TS root name from the path
       if ( name[0] == '/'
@@ -329,7 +331,7 @@ void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *
     log << MSG::VERBOSE << "registering object at " << std::hex << obj << std::dec
         << " for object of type " << System::typeinfoName(mf->type()) << " at " << std::hex << mf->castToVoid() << endmsg;
   }
-  
+
   // find the "condition"
   Item *cond_item = findItem(obj);
   if (!cond_item){ // Error!!!

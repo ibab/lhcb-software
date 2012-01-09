@@ -4,6 +4,10 @@
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+! 2012-01-09 - Marco Clemencic
+ - Modified UpdateMgrSvc to use the special "update mode" OVERRIDE for the
+   conditions used to override existing ones (property ConditionsOverride).
+
 !========================= DetDescSvc v3r4 2011-11-07 =========================
 ! 2011-10-03 - Marco Clemencic
  - Fixed bug #87392: Event time not set correctly on first event
