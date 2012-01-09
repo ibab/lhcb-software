@@ -3,6 +3,7 @@
 
 // local
 #include "Event/FitNode.h"
+#include "Event/KalmanFitResult.h"
 #include "TriangularInverter.h"
 
 using namespace Gaudi;
@@ -115,6 +116,8 @@ namespace LHCb {
   /// Destructor
   FitNode::~FitNode()
   {
+    if( m_prevNode && m_prevNode->m_nextNode==this) m_prevNode->m_nextNode=0 ;
+    if( m_nextNode && m_nextNode->m_prevNode==this) m_nextNode->m_prevNode=0 ;
   }
   
   // Clone the node
@@ -125,7 +128,29 @@ namespace LHCb {
     return rc ;
   }
   
-  
+  /// retrieve the state, overloading the inline function in Node
+  const LHCb::State& FitNode::state() const
+  { 
+    if(m_parent->biDirectionnalSmoother()) return biSmoothedState() ;
+    else return classicalSmoothedState();
+  }
+
+  /// retrieve the residual, overloading the function in Node
+  double FitNode::residual() const
+  { 
+    if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
+    else classicalSmoothedState();
+    return m_residual ; 
+  }
+
+  /// retrieve the residual, overloading the function in Node
+  double FitNode::errResidual() const
+  { 
+    if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
+    else classicalSmoothedState();
+    return m_errResidual ; 
+  }
+    
   /// Calculate an unbiased state
   LHCb::State FitNode::unbiasedState() const
   {
@@ -186,6 +211,8 @@ namespace LHCb {
       // they will be reset to initialized. we need to check this
       // carefully
       resetFilterStatus( Predicted ) ;
+      // make sure the KalmanFitResult knows something has changed
+      if(m_parent) m_parent->resetCache() ;
     }
   }
 
@@ -203,7 +230,7 @@ namespace LHCb {
 	// if the backward filter is in 'Smoothed' state, it needs to be
 	// reset to filtered, because the bi-directional smoother relies
 	// on both filtered states
-	if( m_filterStatus[ Backward ] == Smoothed )
+	if( m_filterStatus[ Backward ] == Smoothed ) // Note: Backward=Smoothed means 'bi-directional smoother'
 	  m_filterStatus[ Backward ] = Filtered ;
 	
 	// reset the status of any node that depends on this one. now
@@ -221,7 +248,7 @@ namespace LHCb {
 	// smoothed status
 	const FitNode* prev = prevNode(Forward) ;
 	if(prev && prev->m_filterStatus[Forward] == Smoothed &&
-	   prev->nextNode(Forward)==this )
+	   prev->nextNode(Forward)==this ) // Note: Forward=Smoothed means 'classical smoother'
 	  const_cast<FitNode*>(prev)->resetFilterStatus(Forward,Filtered ) ;
       }
     }
@@ -301,6 +328,8 @@ namespace LHCb {
     // copy the predicted state
     state = predictedState(direction) ;
     
+    const LHCb::FitNode* pn = prevNode(direction) ;
+    m_totalChi2[direction] = pn ? pn->totalChi2(direction) : LHCb::ChiSquare(0,-m_parent->nTrackParameters()) ;
     m_deltaChi2[direction] = 0 ;
     
     // apply the filter if needed
@@ -344,6 +373,7 @@ namespace LHCb {
       
       // set the chisquare contribution
       m_deltaChi2[direction] = res*res / errorRes2 ;
+      m_totalChi2[direction] += LHCb::ChiSquare(m_deltaChi2[direction],1)  ;
     }
     m_filterStatus[direction] = Filtered ;
     

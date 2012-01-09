@@ -4,7 +4,7 @@
 // from TrackEvent
 #include "Event/Node.h"
 #include "Event/Measurement.h"
-#include "Event/KalmanFitResult.h"
+#include "Event/ChiSquare.h"
 #include "LHCbMath/ValueWithError.h"
 
 #include "GaudiKernel/boost_allocator.h"
@@ -141,63 +141,24 @@ namespace LHCb
     /// retrieve state filtered by the kalman filter step
     const State& filteredStateBackward() const { return filteredState(Backward) ; }
 
-
     /// retrieve the state, overloading the inline function in Node
-    virtual const State& state() const { 
-      if(m_parent->biDirectionnalSmoother()) return biSmoothedState() ;
-      else return classicalSmoothedState();
-    }
-
-    /// retrieve the state, overloading the inline function in Node
-    // virtual State& state() { assert(0) ; static LHCb::State s ; return s ; }
-    
-    /// retrieve the residual, overloading the function in Node
-    virtual double residual() const { 
-      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
-      else classicalSmoothedState();
-      return m_residual ; 
-    }
+    virtual const State& state() const ;
 
     /// retrieve the residual, overloading the function in Node
-    virtual double errResidual() const { 
-      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
-      else classicalSmoothedState();
-      return m_errResidual ; 
-    }
+    virtual double residual() const ;
+
+    /// retrieve the residual, overloading the function in Node
+    virtual double errResidual() const ;
     
     /// retrieve unbiased residual
     double unbiasedResidual() const { 
-      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
-      else classicalSmoothedState();
-      return type()==HitOnTrack ? m_residual * errMeasure2()/(m_errResidual*m_errResidual) : m_residual ; }
-
+      double r = residual() ; // this will trigger the computation
+      return type()==HitOnTrack ? r * errMeasure2()/(m_errResidual*m_errResidual) : r ; }
+    
     /// retrieve error on unbiased residual
     double errUnbiasedResidual() const {
-      if(m_parent->biDirectionnalSmoother()) biSmoothedState() ;
-      else classicalSmoothedState();
-      return type()==HitOnTrack ? errMeasure2()/m_errResidual : m_errResidual ; }
-    
-    /*  /// retrieve the state, overloading the inline function in Node
-    virtual const State& state() const { return biSmoothedState() ; }
-
-    /// retrieve the state, overloading the inline function in Node
-    // virtual State& state() { assert(0) ; static LHCb::State s ; return s ; }
-    
-    /// retrieve the residual, overloading the function in Node
-    virtual double residual() const {  biSmoothedState() ; return m_residual ; }
-
-    /// retrieve the residual, overloading the function in Node
-    virtual double errResidual() const { biSmoothedState() ; return m_errResidual ; }
-    
-    /// retrieve unbiased residual
-    double unbiasedResidual() const { 
-      biSmoothedState() ;
-      return type()==HitOnTrack ? m_residual * errMeasure2()/(m_errResidual*m_errResidual) : m_residual ; }
-
-    /// retrieve error on unbiased residual
-    double errUnbiasedResidual() const {
-      biSmoothedState() ;
-      return type()==HitOnTrack ? errMeasure2()/m_errResidual : m_errResidual ; }*/
+      double errRes = errResidual() ;  // this will trigger the computation
+      return type()==HitOnTrack ? errMeasure2()/errRes : errRes ; }
     
     /// retrieve the unbiased smoothed state at this position
     State unbiasedState() const ;
@@ -207,6 +168,9 @@ namespace LHCb
 
     /// retrieve chisq contribution in downstream filter
     double deltaChi2Backward() const { filteredStateBackward(); return m_deltaChi2[Backward] ; }
+
+    /// retrieve the total chi2 of the filter including this node
+    const LHCb::ChiSquare& totalChi2(int direction) const { filteredState(direction) ; return m_totalChi2[direction%2] ; }
 
     /// set the residual of the reference
     void setRefResidual( double res ) { m_refResidual = res ; }
@@ -369,6 +333,7 @@ namespace LHCb
     State                 m_filteredState[2];      ///< filtered state of forward filter
     LHCb::State           m_classicalSmoothedState ;
     double                m_deltaChi2[2];          ///< chisq contribution in forward filter
+    LHCb::ChiSquare       m_totalChi2[2];          ///< total chi2 after this filterstep 
     Gaudi::TrackMatrix    m_smootherGainMatrix ;   ///< smoother gain matrix (smoothedfit only)
     Gaudi::XYZVector      m_pocaVector ;           ///< unit vector perpendicular to state and measurement
     double                m_doca ;                 ///< signed doca (of ref-traj). for ST/velo this is equal to minus (ref)residual 

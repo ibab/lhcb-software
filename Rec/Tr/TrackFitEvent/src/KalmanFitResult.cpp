@@ -11,7 +11,7 @@ namespace LHCb
   // copy constructor
   KalmanFitResult::KalmanFitResult(const KalmanFitResult& rhs) 
     : TrackFitResult(rhs), m_seedCovariance(rhs.m_seedCovariance),m_nTrackParameters(rhs.m_nTrackParameters)
-    , m_chi2(rhs.m_chi2),m_chi2Velo(rhs.m_chi2Velo),m_chi2VeloTT(rhs.m_chi2VeloTT)
+    , m_chi2Velo(rhs.m_chi2Velo),m_chi2VeloTT(rhs.m_chi2VeloTT)
     , m_chi2VeloTTT(rhs.m_chi2VeloTTT),m_chi2MuonT(rhs.m_chi2MuonT),m_chi2Muon(rhs.m_chi2Muon)
     , m_chi2CacheValid(rhs.m_chi2CacheValid),m_errorFlag(rhs.m_errorFlag)
     ,m_bidirectionalSmoother(rhs.m_bidirectionalSmoother)
@@ -44,12 +44,12 @@ namespace LHCb
 
   // check the global error status of the node
   bool KalmanFitResult::inError() const {
-    if ( m_errorFlag == 0 ) return false;
-    else return true;
+    return m_errorFlag != 0 ;
   }
 
   // get the error description
   std::string KalmanFitResult::getError() const {
+    if( m_errorFlag==0 ) return std::string("No error") ;
     unsigned short direction = ( m_errorFlag & dirMask ) >> dirBits ;
     unsigned short algnum = ( m_errorFlag & algMask ) >> algBits ;
     unsigned short errnum = ( m_errorFlag & typeMask ) ;
@@ -101,6 +101,17 @@ namespace LHCb
     return errMsg.str();
   }
 
+  LHCb::ChiSquare KalmanFitResult::chi2() const
+  {
+    LHCb::ChiSquare rc ;
+    if( !nodes().empty() ) {
+      const LHCb::ChiSquare& chi2A = static_cast<const LHCb::FitNode*>(nodes().front())->totalChi2(LHCb::FitNode::Backward) ;
+      const LHCb::ChiSquare& chi2B = static_cast<const LHCb::FitNode*>(nodes().back())->totalChi2(LHCb::FitNode::Forward) ;
+      rc = chi2A.chi2() > chi2B.chi2() ? chi2A : chi2B ;
+    }
+    return rc ;
+  }
+
   // return (chisq,dof) out of the differnet contribution
   void KalmanFitResult::computeChiSquares() const 
   {
@@ -122,46 +133,43 @@ namespace LHCb
     // for now this only works for tracks without muon hits.
     
     // first reset everything
-    m_chi2Muon = m_chi2MuonT = m_chi2Velo =  m_chi2VeloTT = m_chi2VeloTTT = m_chi2 = ChiSquare() ;
-
+    m_chi2Muon = m_chi2MuonT = m_chi2Velo =  m_chi2VeloTT = m_chi2VeloTTT = ChiSquare() ;
+    
     if( !nodes().empty() ) {
-
-      // Compute the chisquare integrals for forward and backward
-      double chisqMuon[2] = {0,0} ;
-      double chisqT[2]    = {0,0} ;
-      double chisqTT[2]   = {0,0} ;
-      double chisqVelo[2] = {0,0} ;
-      int    nhitsMuon(0), nhitsT(0), nhitsTT(0), nhitsVelo(0) ; 
-      BOOST_FOREACH( const LHCb::Node* node, nodes() ) {
-	if( node->type() == LHCb::Node::HitOnTrack ) {
-	  const LHCb::FitNode* fitnode = static_cast<const LHCb::FitNode*>(node) ;
-	  
-	  switch( node->measurement().type() ) {
+      ConstFitNodeRange fitnodes = fitNodes() ;
+      ConstFitNodeRange::const_iterator firstVelo = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator firstTT = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator firstT = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator firstMuon = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator lastVelo = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator lastTT = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator lastT = fitnodes.end() ;
+      ConstFitNodeRange::const_iterator lastMuon = fitnodes.end() ;
+      for( ConstFitNodeRange::const_iterator it = fitnodes.begin() ;
+	   it != fitnodes.end(); ++it ) {
+	if( (*it)->type() == LHCb::Node::HitOnTrack ) {
+	  switch( (*it)->measurement().type() ) {
 	  case Measurement::VeloR:
 	  case Measurement::VeloPhi:
 	  case Measurement::VeloLiteR:
 	  case Measurement::VeloLitePhi:
-	    chisqVelo[0] += fitnode->deltaChi2Forward() ;
-	    chisqVelo[1] += fitnode->deltaChi2Backward() ;
-	    ++nhitsVelo ;
+	    if( firstVelo==fitnodes.end()) firstVelo = it ;
+	    lastVelo = it ;
 	    break;
 	  case Measurement::TT:
 	  case Measurement::TTLite:
-	    chisqTT[0] += fitnode->deltaChi2Forward() ;
-	    chisqTT[1] += fitnode->deltaChi2Backward() ;
-	    ++nhitsTT ;
+	    if( firstTT==fitnodes.end()) firstTT = it ;
+	    lastTT = it ;
 	    break;
 	  case Measurement::OT:
 	  case Measurement::IT:
 	  case Measurement::ITLite:
-	    chisqT[0] += fitnode->deltaChi2Forward() ;
-	    chisqT[1] += fitnode->deltaChi2Backward() ;
-	    ++nhitsT ;
+	    if( firstT==fitnodes.end()) firstT = it ;
+	    lastT = it ;
 	    break;
 	  case Measurement::Muon:
-	    chisqMuon[0] += fitnode->deltaChi2Forward() ;
-	    chisqMuon[1] += fitnode->deltaChi2Backward() ;
-	    ++nhitsMuon ;
+	    if( firstMuon==fitnodes.end()) firstMuon = it ;
+	    lastMuon = it ;
 	    break;
 	  case Measurement::Unknown:
 	  case Measurement::Calo:
@@ -172,67 +180,61 @@ namespace LHCb
       }
       
       bool upstream =  nodes().front()->z() > nodes().back()->z() ;
-      int nPar = nTrackParameters() ;
+      if( firstMuon != fitnodes.end() )
+	m_chi2Muon = upstream ? (**lastMuon).totalChi2(FitNode::Forward) : (**firstMuon).totalChi2(FitNode::Backward) ;
       
-      if( nhitsMuon > 0 )
-	m_chi2Muon  = ChiSquare(upstream ? chisqMuon[0] : chisqMuon[1],nhitsMuon - nPar) ;
+      if( firstT != fitnodes.end() ) 
+	m_chi2MuonT = upstream ? (**lastT).totalChi2(FitNode::Forward) : (**firstT).totalChi2(FitNode::Backward) ;
+      else
+	m_chi2MuonT = m_chi2Muon ;
 
-      if( nhitsT + nhitsMuon > 0 ) 
-	m_chi2MuonT  = ChiSquare(upstream ? (chisqT[0]+ chisqMuon[0]) : (chisqT[1] +chisqMuon[0]),nhitsT + nhitsMuon - nPar) ;
-
-      if( nhitsVelo > 0 ) 
-	m_chi2Velo   =  ChiSquare(upstream ? chisqVelo[1] : chisqVelo[0],nhitsVelo - nPar) ;
-
-      if( nhitsVelo + nhitsTT >0 )
-	m_chi2VeloTT = ChiSquare(upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0],nhitsVelo + nhitsTT - nPar ) ;
+      if( firstVelo != fitnodes.end())
+	m_chi2Velo = upstream ? (**firstVelo).totalChi2(FitNode::Backward) : (**lastVelo).totalChi2(FitNode::Forward) ;
       
-      if( nhitsVelo + nhitsTT + nhitsT >0 )
-	m_chi2VeloTTT = ChiSquare(upstream ? chisqVelo[1] + chisqTT[1] + chisqT[1] : chisqVelo[0] + chisqTT[0] + chisqT[0],
-				  nhitsVelo + nhitsTT + nhitsT - nPar )  ;
+      if( firstTT != fitnodes.end() ) 
+	m_chi2VeloTT = upstream ? (**firstTT).totalChi2(FitNode::Backward) : (**lastTT).totalChi2(FitNode::Forward) ;
+      else
+	m_chi2VeloTT = m_chi2Velo ;
       
-      if( nhitsMuon + nhitsT + nhitsVelo + nhitsTT > 0 )
-	m_chi2 = ChiSquare( std::max( chisqMuon[0] + chisqT[0]+chisqTT[0]+chisqVelo[0], chisqMuon[1]+chisqT[1]+chisqTT[1]+chisqVelo[1] ),
-			    nhitsMuon+ nhitsT + nhitsVelo + nhitsTT - nPar) ;
+      if( firstT != fitnodes.end() ) 
+	m_chi2VeloTTT = upstream ? (**firstT).totalChi2(FitNode::Backward) : (**lastT).totalChi2(FitNode::Forward) ;
+      else
+	m_chi2VeloTTT = m_chi2VeloTT ;
     }
-    
     m_chi2CacheValid = true ;
   } 
-
-  // return (chisq,dof) for the forward direction fit
-  ChiSquare KalmanFitResult::computeChiSquareForwardFit() const 
-  {
-    const LHCb::FitNode* lastnode(0) ;
-    double chisq(0) ; int ndof(0) ;
-    BOOST_FOREACH( LHCb::Node* node, nodes()) {
-      if( node->type()==LHCb::Node::HitOnTrack ) {
-	const LHCb::FitNode* fitnode = static_cast<const FitNode*>(node) ;
-	chisq   += fitnode->deltaChi2Forward() ;
-	lastnode = fitnode ;
-	++ndof ;
-      }
-    }
-    // Count the number of active track parameters. For now, just look at the momentum.
-    if(lastnode) {
-      const double threshold = 0.1 ;
-      size_t npar = (lastnode->filteredState(LHCb::FitNode::Forward).covariance()(4,4) 
-		     / m_seedCovariance(4,4) < threshold ? 5 : 4) ;
-      //setNTrackParameters( npar ) ;
-      ndof -= npar ;
-    }
-    return ChiSquare( chisq, ndof ) ;
-  }
-  
+   
   /// setup the link to previous/next fitnode
   void KalmanFitResult::establishNodeLinks() 
   {
     LHCb::FitNode* prev(0) ;
     for( NodeContainer::const_iterator it = nodes().begin() ;
 	 it != nodes().end(); ++it ) {
-      LHCb::FitNode* fitnode = static_cast<FitNode*>(*it) ;
+      LHCb::FitNode* fitnode = static_cast<LHCb::FitNode*>(*it) ;
       fitnode->setPreviousNode( prev ) ;
       fitnode->setParent(this) ;
       prev = fitnode ;
     }
   }
-    
+
+  KalmanFitResult::ConstFitNodeRange KalmanFitResult::fitNodes() const
+  {
+    typedef ConstFitNodeRange::const_iterator iterator ;
+    //const NodeContainer& n=nodes() ;
+    NodeContainer::const_iterator _begin(nodes().begin());
+    NodeContainer::const_iterator _end(nodes().end());
+    iterator* begin = reinterpret_cast<iterator*>(&_begin);
+    iterator* end   = reinterpret_cast<iterator*>(&_end);
+    return ConstFitNodeRange(*begin,*end) ;
+  }
+  
+  KalmanFitResult::FitNodeRange KalmanFitResult::fitNodes() 
+  {
+    typedef FitNodeRange::iterator iterator ;
+    NodeContainer::iterator _begin(nodes().begin());
+    NodeContainer::iterator _end(nodes().end());
+    iterator* begin = reinterpret_cast<iterator*>(&_begin);
+    iterator* end   = reinterpret_cast<iterator*>(&_end);
+    return FitNodeRange(*begin,*end) ;
+  }
 }

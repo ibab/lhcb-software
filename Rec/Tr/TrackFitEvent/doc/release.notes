@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-01-09 - Wouter Hulsbergen
+ - make sure chi2 cache of trackfitresult is invalidated if a measurement is deactivated
+ - add total accumulated chi2 of filter to node. use this in kalmanfitresult
+ - add ranges to fitnodes in kalmanfitresult
+
 !========================= TrackFitEvent v5r12 2011-11-08 =========================
 ! 2011-10-17 - Victor Coco
  - FitNode.h: protect against NULL pointer in computeClassicalSmoothedState

@@ -4,12 +4,17 @@
 #include "Event/TrackFitResult.h"
 #include "Event/TrackTypes.h"
 #include "Event/ChiSquare.h"
+#include "GaudiKernel/Range.h"
 
 namespace LHCb 
 {
+  class FitNode ;
+
   class KalmanFitResult : public TrackFitResult
   {
   public:
+    typedef Gaudi::Range_<std::vector<const FitNode*> > ConstFitNodeRange ;
+    typedef Gaudi::Range_<std::vector<FitNode*> > FitNodeRange ;
     enum algoType{ Predict,
 		   Filter,
 		   Smooth,
@@ -47,6 +52,11 @@ namespace LHCb
     // reset the kalman filter in all the nodes to 'initialized'
     void resetFilterStatus() ;
 
+    // reset the cache
+    void resetCache() {
+      m_chi2CacheValid = false ;
+    }
+
     // get the seed covariance
     const Gaudi::TrackSymMatrix& seedCovariance() const {
       return m_seedCovariance ;
@@ -65,11 +75,8 @@ namespace LHCb
       m_nTrackParameters = n ; 
       m_chi2CacheValid = false ; }
     
-    // return (chisq,dof) for the velo part of this track
-    const ChiSquare& chi2() const {
-      if( !m_chi2CacheValid ) computeChiSquares() ;
-      return m_chi2 ;
-    }
+    // return (chisq,dof) for this track
+    ChiSquare chi2() const ;
     
     // return (chisq,dof) for the velo part of this track
     const ChiSquare& chi2Velo() const {
@@ -92,7 +99,7 @@ namespace LHCb
     // return (chisq,dof) for upstream versus downstream segment
     ChiSquare chi2Match() const {
       if( !m_chi2CacheValid ) computeChiSquares() ;
-      return m_chi2 - m_chi2VeloTT - m_chi2MuonT ;
+      return chi2() - m_chi2VeloTT - m_chi2MuonT ;
     }
     
     // return (chisq,dof) for the velo-TT-T segment, so everything excluding muon
@@ -110,11 +117,8 @@ namespace LHCb
     // return (chisq,dof) for the muon - T match
     ChiSquare chi2MuonTMatch() const {
       if( !m_chi2CacheValid ) computeChiSquares() ;
-      return m_chi2 - m_chi2VeloTTT - m_chi2Muon ;
+      return chi2() - m_chi2VeloTTT - m_chi2Muon ;
     }
-
-    // return (chisq,dof) for the forward direction fit
-    ChiSquare computeChiSquareForwardFit() const ;
 
     // set the error flag
     void setErrorFlag(unsigned short extrainfo ,unsigned short algnum , unsigned short errnum);
@@ -131,6 +135,11 @@ namespace LHCb
     // set the type of fit: bidirectionnal or classical(false)
     void setBiDirectionnalSmoother( bool bidir ){ m_bidirectionalSmoother=bidir;};
 
+    // return fitnode range
+    ConstFitNodeRange fitNodes() const ;
+
+    // return fitnode range
+    FitNodeRange fitNodes() ;
 
   private:
     void computeChiSquares() const ;
@@ -151,7 +160,6 @@ namespace LHCb
   private:
     Gaudi::TrackSymMatrix m_seedCovariance ;
     int m_nTrackParameters ;
-    mutable ChiSquare m_chi2 ;
     mutable ChiSquare m_chi2Velo ;
     mutable ChiSquare m_chi2VeloTT ;
     mutable ChiSquare m_chi2VeloTTT ;
