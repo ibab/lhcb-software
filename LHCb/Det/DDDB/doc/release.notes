@@ -4,6 +4,15 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2012-01-09 - Marco Cattaneo
+ - Add support for 2012 DataType
+ - For each DataType, in case of real data, set initial time
+   (used for CondDB initialisation before first event)
+   to the last meaningful time of the corresponding year:
+   . End of year for 2008, 2009
+   . End of last fill for 2010, 2011
+   . Current time for 2012, if before end of 2012
+
 !========================= DDDB v1r49 2011-12-14 =========================
 ! 2011-12-10 - Marco Cattaneo
  - Removed use of Gaudi ParticlePropertySvc (obsolete) from DDDBConf.
