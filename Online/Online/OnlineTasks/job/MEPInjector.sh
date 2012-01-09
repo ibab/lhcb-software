@@ -19,7 +19,7 @@ path=${0%/*}
 cd $path
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
-
+export DEBUGGING=1
 . ./setupOnline.sh $1
 
 #export LD_LIBRARY_PATH=/sw/lib/lcg/external/gcc/4.3.2/x86_64-slc5/lib64/:$LD_LIBRARY_PATH

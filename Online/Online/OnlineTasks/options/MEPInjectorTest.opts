@@ -18,10 +18,11 @@ MessageSvc.OutputLevel= 3;
 ///////////////////////////////////////////////////////////////////////////////
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
-Injector.HLTNodes = {"192.128.1.5"};//@OnlineEnv.Injector_Nodes;
-Injector.Tell1Boards =@OnlineEnv.Tell1Boards;
-Injector.OdinIf = "192.128.1.11";//@OnlineEnv.Injector_odinIF_Name;  //inj01-d2
-Injector.HLTIf = "192.128.1.11";//@OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+Injector.HLTNodes = {"192.168.133.129"};//@OnlineEnv.Injector_Nodes;
+//Injector.Tell1Boards =@OnlineEnv.Tell1Boards;
+Injector.Tell1Boards ={"192.169.11.1", "vetella01-d1", ""};
+Injector.OdinIf = "127.0.0.1";//@OnlineEnv.Injector_odinIF_Name;  //inj01-d2
+Injector.HLTIf = "192.169.19.2";//@OnlineEnv.Injector_farmIF_Name;   //inj01-d1
 Injector.OdinIPAddr = "192.128.1.5";//@OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
 //OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one
 //OnlineEnv.Injector_odinIF_IP not used for same reason
@@ -33,11 +34,11 @@ Injector.PartitionID=@OnlineEnv.PartitionID;
 Injector.TimeOut = 1000;  //milliseconds
 
 Injector.AutoMode = true;
-Injector.HLTIPAddrTo = "192.128.1.5"; //Still used in Automode
+Injector.HLTIPAddrTo = "192.168.133.129"; //Still used in Automode
 
 Injector.ARPME = false;
 
-Injector.BufferNames = @OnlineEnv.Injector_Readers;
+Injector.BufferNames ={"TRG7"};//@OnlineEnv.Injector_Readers;
 
 Injector.BufferOptions = {
  "-s=10000", 

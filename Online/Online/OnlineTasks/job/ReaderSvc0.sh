@@ -20,7 +20,7 @@ cd $path
 
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
-
+export DEBUGGING=1
 . ./setupOnline.sh $1
 
 

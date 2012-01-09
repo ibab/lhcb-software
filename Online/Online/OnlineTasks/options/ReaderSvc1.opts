@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: ReaderSvc1.opts,v 1.2 2009-04-07 16:30:33 garnierj Exp $
+// $Id: ReaderSvc1.opts,v 1.2 2009/04/07 16:30:33 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -15,6 +15,7 @@ ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 
 ApplicationMgr.OutputLevel = 5;
 Reader1.OutputLevel = 3;
+Reader1.IgnoreLumi=true;
 MessageSvc.OutputLevel= 3;
 Reader1.InputFiles= @OnlineEnv.Reader1_Files;
 Reader1.Loop= @OnlineEnv.Injector_LoopFiles;

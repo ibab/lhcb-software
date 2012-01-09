@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: ReaderSvcTest.opts,v 1.1 2010-04-01 11:51:53 garnierj Exp $
+// $Id: ReaderSvcTest.opts,v 1.1 2010/04/01 11:51:53 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -15,10 +15,12 @@ ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 
 ApplicationMgr.OutputLevel = 5;
 Reader0.OutputLevel = 3;
+Reader0.IgnoreLumi=true;
 MessageSvc.OutputLevel= 3;
 Reader0.InputFiles= {
-    "/daqarea/lhcb/data/INFEST_0609_MB_UZ/00004834_00000007_1.mdf"
-//    "/daqarea/lhcb/data/INFEST_COLL2010/069246_0000000001.raw"
+"/group/online/jc/inputevents.raw"
+//"/group/online/jc/070080_0000000001.raw"
+//"/group/online/jc/100kBevents.raw"
 };//;@OnlineEnv.Reader0_Files;
 Reader0.Loop= true;
 Reader0.BufferName= "TRG7";//@OnlineEnv.Reader0_Name;
