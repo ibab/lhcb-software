@@ -51,9 +51,15 @@ void ParamValidDataObject::update( ValidDataObject& obj ){
   // call the
   ValidDataObject::update(obj);
 
-  // default to 'replace'
-  m_paramList = pvdo->m_paramList;
-  m_comments = pvdo->m_comments;
+  if (obj.updateMode() != OVERRIDE) {
+    // default to 'replace'
+    m_paramList = pvdo->m_paramList;
+    m_comments = pvdo->m_comments;
+  } else {
+    // mode used by UpdateManagerSvc for conditions overrides
+    m_paramList += pvdo->m_paramList;
+    m_comments.insert(pvdo->m_comments.begin(), pvdo->m_comments.end());
+  }
 }
 
 //----------------------------------------------------------------------------

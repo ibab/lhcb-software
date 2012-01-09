@@ -1,9 +1,9 @@
 //$Id: ValidDataObject.cpp,v 1.10 2007-11-09 17:10:07 marcocle Exp $
-#include <string> 
+#include <string>
 
 #include "DetDesc/ValidDataObject.h"
 
-#include "GaudiKernel/Time.h" 
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
@@ -13,7 +13,7 @@
 static Gaudi::Time local_time_epoch = Gaudi::Time::epoch();
 static Gaudi::Time local_time_max   = Gaudi::Time::max();
 
-/// Default constructor 
+/// Default constructor
 ValidDataObject::ValidDataObject()
   : IValidity()
   , DataObject()
@@ -28,7 +28,7 @@ ValidDataObject::ValidDataObject()
 ValidDataObject::ValidDataObject( const ValidDataObject& obj )
   : IValidity()
   , DataObject( obj )
-  , m_validSince (obj.validSince()) 
+  , m_validSince (obj.validSince())
   , m_validUntil (obj.validTill())
   , m_updateMode (obj.updateMode())
 {}
@@ -43,7 +43,7 @@ std::ostream& ValidDataObject::fillStream( std::ostream& s ) const {
 
 //---------------------------------------------------------------------------
 
-/// Update using another instance of this class: deep copy all 
+/// Update using another instance of this class: deep copy all
 /// contents, except for the properties of a generic DataObject
 void ValidDataObject::update ( ValidDataObject& obj )
 {
@@ -52,16 +52,15 @@ void ValidDataObject::update ( ValidDataObject& obj )
   m_validUntil = obj.validTill();
 
   // reset the update mode if needed
-  if ( updateMode() == FORCE_UPDATE){
+  if (updateMode() == FORCE_UPDATE){
     setUpdateMode(DEFAULT);
   }
-
 }
 
 //---------------------------------------------------------------------------
 
 /// Destructor
-ValidDataObject::~ValidDataObject() 
+ValidDataObject::~ValidDataObject()
 {
 }
 
@@ -77,7 +76,9 @@ bool ValidDataObject::isValid ( ) const {
 /// Check if the data object is valid at the specified time
 bool ValidDataObject::isValid ( const Gaudi::Time& t ) const {
   switch(m_updateMode){
-  case DEFAULT: 
+  case OVERRIDE:
+    // no break
+  case DEFAULT:
     return validSince() <= t &&  t < validTill();
   case ALWAYS_VALID:
     return true;
@@ -94,7 +95,7 @@ bool ValidDataObject::isValid ( const Gaudi::Time& t ) const {
 const Gaudi::Time& ValidDataObject::validSince() const {
   if (m_updateMode == ALWAYS_VALID)
     return local_time_epoch;
-  return m_validSince; 
+  return m_validSince;
 }
 
 //---------------------------------------------------------------------------
@@ -118,7 +119,7 @@ void ValidDataObject::setValidity( const Gaudi::Time& since, const Gaudi::Time& 
 //---------------------------------------------------------------------------
 
 /// Set start of validity
-void ValidDataObject::setValiditySince( const Gaudi::Time& since ) 
+void ValidDataObject::setValiditySince( const Gaudi::Time& since )
 {
   m_validSince = since;
 }
@@ -126,7 +127,7 @@ void ValidDataObject::setValiditySince( const Gaudi::Time& since )
 //---------------------------------------------------------------------------
 
 /// Set end of validity
-void ValidDataObject::setValidityTill( const Gaudi::Time& till ) 
+void ValidDataObject::setValidityTill( const Gaudi::Time& till )
 {
   m_validUntil = till;
 }

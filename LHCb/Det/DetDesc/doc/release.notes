@@ -3,6 +3,14 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+! 2012-01-09 - Marco Clemencic
+ - Added a special "update mode" to ValidDataObject to be able to change the
+   semantic of the update method.
+   If the argument passed to "update" has the update mode set to OVERRIDE, the
+   behavior is to replace existing parameters and to not remove missing ones,
+   i.e. restore the old semantic.
+   (required by UpdateMgrSvc condition overrides)
+
 ! 2012-01-06 - Marco Clemencic
  - Changed the semantic of ParamValidDataObject::update() (Condition) to
    replace the old content instead of just merge the new values in.
