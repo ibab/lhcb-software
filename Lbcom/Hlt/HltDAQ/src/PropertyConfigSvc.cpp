@@ -336,7 +336,7 @@ PropertyConfigSvc::resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) co
     m_aliases.insert(make_pair( alias,ref ));
     // add to ConfigTreeNode cache now that we got it anyway...
     if (m_nodes.find(ref)==m_nodes.end()) {
-        pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.insert( make_pair( ref, *node) );
+        m_nodes.insert( make_pair( ref, *node) );
     }
     info() << " resolved " << alias << " to " << ref << endmsg;
     return ref;
