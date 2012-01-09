@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-09 - Patrick Koppenburg
+ - StrippingB2JpsiXforBeta_s.py: Added B->J/psiPi0 stripping line for
+   Stripping17b
+
 ! 2011-08-19 - Fred Blanc
  - StrippingB2CharmlessQuasi2Body.py
  - combine two lines (4pi1n and 4pi2n) into a single line

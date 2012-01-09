@@ -23,6 +23,7 @@ from StandardParticles import StdAllLoosePions
 from StandardParticles import StdAllNoPIDsKaons
 from StandardParticles import StdAllLooseKaons
 from StandardParticles import StdLooseResolvedEta
+from StandardParticles import StdLooseResolvedPi0
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -40,6 +41,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         			,       'Bd2JpsiKsPrescale'
         			,       'Bs2JpsiPhiPrescale'
         			,       'Bs2JpsiEtaPrescale'
+        			,       'Bd2JpsiPi0Prescale'
                               )
 
     def __init__(self, name, config) :
@@ -112,6 +114,11 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                 			Cuts = "(PT > 1500.*MeV)"\
                 			"& (MINTREE('gamma'==ABSID, PT) > 500.*MeV)")
 
+        self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
+                			InputList = StdLooseResolvedPi0,
+                			Cuts = "(PT > 1500.*MeV)"\
+                			"& (MINTREE('gamma'==ABSID, PT) > 500.*MeV)")
+
         self.makeInclJpsi    ()
         self.makeBu2JpsiK    ()
         self.makeBu2JpsiH    () 
@@ -122,6 +129,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
         self.makeBs2JpsiEta  ()  
+        self.makeBd2JpsiPi0  ()  
 
 
     def createSubSel( self, OutputList, InputList, Cuts ) :
@@ -349,4 +357,22 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.registerLine(Bs2JpsiEtaPrescaledLine)
         self.registerLine(Bs2JpsiEtaDetachedLine)
         #self.registerLine(Bs2JpsiEtaUnbiasedLine)
+
+    def makeBd2JpsiPi0( self ):
+        Bd2JpsiPi0 = self.createCombinationSel( OutputList = "Bd2JpsiPi0" + self.name,
+                                  DecayDescriptor = "B0 -> J/psi(1S) pi0",
+                                  DaughterLists  = [ self.JpsiList, self.Pi0List ],
+                                  PreVertexCuts = "in_range(5000,AM,5650)",
+                                  PostVertexCuts = "in_range(5200,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  )
+
+        Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , prescale = self.config['Bd2JpsiPi0Prescale'])
+        Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
+                                            algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
+                                                                         OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
+                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
+
+        self.registerLine(Bd2JpsiPi0PrescaledLine)
+        self.registerLine(Bd2JpsiPi0DetachedLine)
+        
 
