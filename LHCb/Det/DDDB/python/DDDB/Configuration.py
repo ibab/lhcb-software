@@ -8,6 +8,7 @@ from Configurables import ( CondDBEntityResolver,
                             XmlCnvSvc,
                             XmlParserSvc )
 from DetCond.Configuration import CondDB
+from datetime import datetime, timedelta
 
 __all__ = ["DDDBConf"]
 
@@ -109,6 +110,24 @@ class DDDBConf(ConfigurableUser):
                 cdb.Tags[p] = tag
                 log.warning("Default tag requested for partition %s (using %s)", p, tag )
 
+    def __set_init_time__(self, utcDatetime):
+        """
+        Configure the initialization time using the lower between the proposed time and
+        the current time,
+        """
+        utcDatetime = min(datetime.utcnow(), utcDatetime)
+        from Configurables import EventClockSvc
+        ecs = EventClockSvc()
+        # do not overwrite already set values
+        if not ecs.isPropertySet("InitialTime"):
+            dt = utcDatetime - datetime(1970, 1, 1, 0)
+            ns = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000000000
+            ecs.InitialTime = ns
+        else:
+            t = datetime(1970, 1, 1, 0) + timedelta(seconds=ecs.InitialTime/1000000000)
+            log.warning("EventClockSvc().InitialTime already set to %s UTC (requested %s UTC)",
+                        t.isoformat(), utcDatetime.isoformat())
+
     def __2012_conf__(self):
         """
         Default configuration for 2012 data (and MonteCarlo for DDDB)
@@ -118,14 +137,8 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["LHCBCOND"], "head-20111111")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
-            from Configurables import EventClockSvc
-            import time
-            t = time.time() * 100000000
-            eoy_time = 1356987600000000000 # 31/12/2012 21:00
-            if t < eoy_time:
-                EventClockSvc( InitialTime = t )
-            else:
-                EventClockSvc( InitialTime = eoy_time )
+            # set initialization time to a safe default
+            self.__set_init_time__(datetime(2012, 12, 31, 21, 0))
 
     def __2011_conf__(self):
         """
@@ -136,8 +149,7 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["LHCBCOND"], "head-20111111")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
-            from Configurables import EventClockSvc
-            EventClockSvc( InitialTime = 1319991087000000000 ) # End of fill 2267
+            self.__set_init_time__(datetime.utcfromtimestamp(1319991087)) # End of fill 2267
 
     def __2010_conf__(self):
         """
@@ -148,8 +160,7 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["LHCBCOND"], "head-20110614")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
-            from Configurables import EventClockSvc
-            EventClockSvc( InitialTime = 1288505611000000000 ) # End of fill 1459
+            self.__set_init_time__(datetime.utcfromtimestamp(1288505611)) # End of fill 1459
 
     def __2009_conf__(self):
         """
@@ -161,8 +172,7 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["SIMCOND"], "MC-20101026-vc15mm-md100")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
-            from Configurables import EventClockSvc
-            EventClockSvc( InitialTime = 1262293200000000000 ) # 31/12/2009 21:00
+            self.__set_init_time__(datetime(2009, 12, 31, 21, 0)) # 31/12/2009 21:00
 
     def __2008_conf__(self):
         """
@@ -174,8 +184,7 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["SIMCOND"], "sim-20090212")
         self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
-            from Configurables import EventClockSvc
-            EventClockSvc( InitialTime = 1230757200000000000 ) # 31/12/2008 21:00
+            self.__set_init_time__(datetime(2008, 12, 31, 21, 0)) # 31/12/2008 21:00
 
     def __MC09_conf__(self):
         """
