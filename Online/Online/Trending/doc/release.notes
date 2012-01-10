@@ -6,12 +6,14 @@
 
 !============================== 2011-11-09 v2r1 ==============================
 ! 2011-11-09 - Beat Jost
-changes to SimpleTrendWriter.cpp
-moved the retrieval of the TrendingTool from initialize to setPartitionAndName, creating a new instance of the TrendingTool
-for each file name, so that several trend writers can be used in the same program.
+ - Changes to SimpleTrendWriter.cpp
+	 moved the retrieval of the TrendingTool from initialize to setPartitionAndName, 
+ 	 creating a new instance of the TrendingTool for each file name, so that several
+	 trend writers can be used in the same program.
 
-This implies that any other call to the SimpleTrendWriter must be made AFTER setPartitionAndName, especially to
-setAverageTime and setMaxTimeNoWrite, otherwise an segmentation fault will result
+	 This implies that any other call to the SimpleTrendWriter must be made AFTER 
+   setPartitionAndName, especially to setAverageTime and setMaxTimeNoWrite, 
+   otherwise an segmentation fault will result
 
 ! 2011-09-16 - Olivier Callot
  - New function setMaxTimeNoWrite( unsigned int seconds) to define a maximum time
