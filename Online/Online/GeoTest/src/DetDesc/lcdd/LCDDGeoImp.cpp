@@ -1,0 +1,226 @@
+#define _USE_MATH_DEFINES
+#include "LCDDGeoImp.h"
+#include "DetDesc/compact/Conversions.h"
+#include "DetDesc/Internals.h"
+#include "XML/DocumentHandler.h"
+
+#include "xercesc/framework/LocalFileFormatTarget.hpp"
+#include "xercesc/framework/StdOutFormatTarget.hpp"
+
+#include "xercesc/framework/MemBufInputSource.hpp"
+#include "xercesc/sax/SAXParseException.hpp"
+#include "xercesc/sax/EntityResolver.hpp"
+#include "xercesc/sax/InputSource.hpp"
+#include "xercesc/parsers/XercesDOMParser.hpp"
+#include "xercesc/util/PlatformUtils.hpp"
+#include "xercesc/util/XercesDefs.hpp"
+#include "xercesc/util/XMLUni.hpp"
+#include "xercesc/util/XMLURL.hpp"
+#include "xercesc/util/XMLString.hpp"
+#include "xercesc/dom/DOM.hpp"
+#include "xercesc/sax/ErrorHandler.hpp"
+
+// C+_+ include files
+#include <cmath>
+#include <iostream>
+#include <stdexcept>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#include "XML/Evaluator.h"
+#include "TGeoManager.h"
+#include "TGeoMatrix.h"
+
+using namespace std;
+using namespace DetDesc;
+using namespace DetDesc::Geometry;
+namespace DetDesc  { XmlTools::Evaluator& evaluator();  }
+namespace DetDesc  { namespace XML {    void tags_init(); }}
+
+
+LCDDImp::LCDDImp() : m_worldVol(0), m_trackingVol(0), m_reflect(0), m_identity(0)  {
+  evaluator();
+  XML::tags_init();
+}
+
+Volume LCDDImp::pickMotherVolume(const Subdetector& sd) const  {     // throw if not existing
+  return m_worldVol;
+}
+
+Handle_t LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
+  HandleMap::const_iterator i = e.find(name);
+  if ( i != e.end() )  {
+    return (*i).second;
+  }
+  if ( do_throw )  {
+    throw runtime_error("Cannot find a child with the reference name:"+name);
+  }
+  return RefElement(0);
+}
+
+template<class T> LCDD& 
+LCDDImp::__add(const RefElement& x, ObjectHandleMap& m,Int_t (TGeoManager::*func)(T*))  {
+  T* obj = dynamic_cast<T*>(x.handle().ptr());
+  if ( obj )  {
+    TGeoManager *mgr = document();
+    if ( mgr )  {
+      m.append(x);
+      if ( func ) (mgr->*func)(obj);
+      return *this;
+    }
+    throw InvalidObjectError("Attempt to add object to invalid TGeoManager instance.");
+  }
+  throw InvalidObjectError("Attempt to add an object, which is of the wrong type.");
+}
+
+LCDD& LCDDImp::addVolume(const RefElement& x)    {
+  return __add(x,m_structure,&TGeoManager::AddVolume);
+}
+#include "TGeoPcon.h"
+#include "TGeoCompositeShape.h"
+LCDD& LCDDImp::addSolid(const RefElement& x)     {
+  TGeoShape *o, *obj = dynamic_cast<TGeoShape*>(x.handle().ptr());
+  if ( (o=dynamic_cast<TGeoPcon*>(obj)) )  {
+    m_structure.append<TGeoShape>(x);
+  }
+  else if ( (o=dynamic_cast<TGeoCompositeShape*>(obj)) )  {
+    m_structure.append<TGeoShape>(x);
+  }
+  else  {
+    __add(x,m_structure,&TGeoManager::AddShape);
+  }
+#if 0
+  cout << obj->GetName() << " " << (void*)obj
+    << " Index:" << document()->GetListOfShapes()->IndexOf(obj) << endl;
+#endif
+  return *this;
+}
+
+LCDD& LCDDImp::addRotation(const RefElement& x)  {
+  return __add(x,m_rotations,&TGeoManager::AddTransformation);
+}
+
+LCDD& LCDDImp::addPosition(const RefElement& x)  {
+  return __add(x,m_positions,&TGeoManager::AddTransformation);
+}
+
+void LCDDImp::endDocument()  {
+  Document doc  = document(); 
+  Volume world  = volume("world_volume");
+  Volume trkVol = volume("tracking_volume");
+  Material  air = material("Air");
+
+  world.setMaterial(air);
+  trkVol.setMaterial(air);
+
+  Region trackingRegion(doc,"TrackingRegion");
+  trackingRegion.setThreshold(1);
+  trackingRegion.setStoreSecondaries(true);
+  add(trackingRegion);
+  trkVol.setRegion(trackingRegion);
+    
+  // Set the world volume to invisible.
+  VisAttr worldVis(document(),"WorldVis");
+  worldVis.setVisible(false);
+  world.setVisAttributes(worldVis);
+  add(worldVis);
+  
+  // Set the tracking volume to invisible.
+  VisAttr trackingVis(document(),"TrackingVis");
+  trackingVis.setVisible(false);               
+  trkVol.setVisAttributes(trackingVis);
+  add(trackingVis); 
+}
+
+void LCDDImp::convertMaterials(const string& fname)  {
+  convertMaterials(XML::DocumentHandler().load(fname).root());
+}
+
+void LCDDImp::convertMaterials(XML::Handle_t materials)  {
+  Converter<Materials>(*this)(materials);
+}
+
+void LCDDImp::addStdMaterials()   {
+  convertMaterials("file:../cmt/elements.xml");
+  convertMaterials("file:../cmt/materials.xml");
+}
+
+void LCDDImp::fromCompact(const string& fname)  {
+  fromCompact(XML::DocumentHandler().load(fname).root());
+}
+
+Document LCDDImp::create()  {
+  Document doc(new TGeoManager());
+  m_doc  = doc;
+  return doc;
+}
+
+Document LCDDImp::init()  {
+  Document doc = m_doc;
+#if 0
+  m_root.append(m_header    = Header(doc));
+  m_root.append(m_idDict    = Element(doc,"iddict"));
+  m_root.append(m_detectors = Element(doc,"sensitive_detectors"));
+  m_root.append(m_limits    = Element(doc,"limits"));
+  m_root.append(m_regions   = Element(doc,"regions"));
+  m_root.append(m_display   = Element(doc,"display"));
+  m_root.append(m_gdml      = Element(doc,"gdml"));
+  m_root.append(m_fields    = Element(doc,"fields"));
+
+  m_gdml.append(m_define    = Element(doc,"define"));
+  m_gdml.append(m_materials = Element(doc,"materials"));
+  m_gdml.append(m_solids    = Element(doc,"solids"));
+  m_gdml.append(m_structure = Element(doc,"structure"));
+  m_gdml.append(m_setup     = Element(doc,"setup"));
+#endif
+  m_identity = Matrix(doc,"identity","identity");
+  Box worldSolid(doc,"world_box","world_x","world_y","world_z");
+  add(worldSolid);
+
+  add(Rotation(doc,"identity_rot"));
+  add(m_reflect = Rotation(doc,"reflect_rot",M_PI,0.,0.));
+  add(Position(doc,"identity_pos"));
+
+  Material air = material("Air");
+  Volume world(doc,"world_volume",worldSolid,air);
+  add(world);
+
+  Tube trackingSolid(doc,"tracking_cylinder",0.,"tracking_region_radius","2*tracking_region_zmax",M_PI);
+  add(trackingSolid);
+
+  Volume tracking(doc,"tracking_volume",trackingSolid,air);
+  add(tracking);
+//  world.addPhysVol(PhysVol(doc,tracking,"tracking_volume"));
+
+  //RefElement ref_world(doc,"world",world.refName());
+  //m_setup.append(ref_world);
+  m_worldVol    = world;
+  m_trackingVol = tracking;
+  doc->SetTopVolume(value<TGeoVolume>(m_worldVol));
+  return doc;
+}
+
+void LCDDImp::fromCompact(XML::Handle_t compact)   {
+  try {
+    Converter<Compact>(*this)(compact);
+  }
+  catch(const exception& e)  {
+    cout << "Exception:" << e.what() << endl;
+  }
+  catch(xercesc::DOMException& e)  {
+    cout << "XML-DOM Exception:" << XML::_toString(e.msg) << endl;
+  } 
+  catch(...)  {
+    cout << "UNKNOWN Exception" << endl;
+  }
+}
+void LCDDImp::dump() const  {
+  m_doc->CloseGeometry();
+      
+  m_doc->SetVisLevel(4);
+  m_doc->SetVisOption(1);
+  value<TGeoVolume>(m_worldVol)->Draw("ogl");
+
+  Printer<const LCDD*>(*this,cout)(this);
+}
+

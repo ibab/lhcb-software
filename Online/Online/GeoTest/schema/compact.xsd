@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  xs:schema >
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="unqualified"
+           version="1.0"
+           xmlns:compact="http://www.lcsim.org/schemas/compact/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="info">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required" />
+            <xs:attribute name="title" type="xs:string" use="optional" />
+            <xs:attribute name="author" type="xs:string" use="optional" />
+            <xs:attribute name="url" type="xs:anyURI" use="optional"/>
+            <xs:attribute name="version" type="xs:string" use="optional" />
+            <xs:attribute name="status" default="development">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="deprecated" />
+                        <xs:enumeration value="production" />
+                        <xs:enumeration value="development" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="define">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="constant" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="limits">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="limitset" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="limit" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="name" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="step_length_max" />
+                                                <xs:enumeration value="track_length_max" />
+                                                <xs:enumeration value="time_max" />
+                                                <xs:enumeration value="ekin_min" />
+                                                <xs:enumeration value="range_min" />
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="particles" type="xs:string"/>
+                                    <xs:attribute name="value" type="xs:double"/>
+                                    <xs:attribute name="unit" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="regions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="region" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="store_secondaries" type="xs:boolean" default="false"/>
+                        <xs:attribute name="cut" type="xs:double" default="1.0" />
+                        <xs:attribute name="lunit" type="xs:string" default="mm"/>
+                        <xs:attribute name="threshold" type="xs:double" default="0.0"/>
+                        <xs:attribute name="eunit" type="xs:string" default="MeV"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="materials">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="material" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="D" minOccurs="1" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:attribute name="type" type="xs:string" default="density"/>
+                                    <xs:attribute name="unit" type="xs:string" default="g/cm3" />
+                                    <xs:attribute name="value" type="xs:double" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:choice>
+                                <xs:element name="fraction" minOccurs="1" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:attribute name="n" type="xs:double" use="required"/>
+                                        <xs:attribute name="ref" type="xs:string" use="required"/>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="composite" minOccurs="1" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:attribute name="n" type="xs:integer" use="required"/>
+                                        <xs:attribute name="ref" type="xs:string" use="required"/>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="display">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="vis" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+
+                        <xs:attribute name="name" type="xs:string" use="required" />
+
+                        <xs:attribute name="r" type=" xs:double " default="1.0" />
+                        <xs:attribute name="g" type=" xs:double " default="1.0" />
+                        <xs:attribute name="b" type=" xs:double " default="1.0" />
+                        <xs:attribute name="alpha" type=" xs:double " default="1.0" />
+
+                        <xs:attribute name="visible" type="xs:boolean" default="true"/>
+
+                        <xs:attribute name="showDaughters" type="xs:boolean" default="true"/>
+
+                        <xs:attribute name="lineStyle" default="unbroken">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="unbroken"/>
+                                    <xs:enumeration value="dashed"/>
+                                    <xs:enumeration value="dotted"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+
+                        <xs:attribute name="drawingStyle" default="wireframe">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="wireframe"/>
+                                    <xs:enumeration value="solid"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="detectors">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="comment" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+                <xs:element name="detector" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="dimensions" minOccurs="0" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:anyAttribute processContents="lax" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="layer" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="slice" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="material" type="xs:string" use="required"/>
+                                                <xs:attribute name="thickness" type="xs:string" use="required"/>
+                                                <xs:attribute name="sensitive" default="no">
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                            <xs:enumeration value="yes" />
+                                                            <xs:enumeration value="no" />
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="region" type="xs:string" use="optional"/>
+                                                <xs:attribute name="limits" type="xs:string" use="optional"/>
+                                                <xs:attribute name="vis" type="xs:string" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+                                    </xs:sequence>
+                                    <xs:anyAttribute processContents="lax"/> <!-- layer -->
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                        <xs:attribute name="id" type="xs:integer" use="optional" default="0"/>
+                        <xs:attribute name="readout" type="xs:string" use="optional" />
+                        <xs:attribute name="insideTrackingVolume" type="xs:boolean" use="optional" />
+                        <xs:attribute name="reflect" type="xs:boolean" use="optional"/>
+                        <xs:attribute name="combineHits" type="xs:boolean" use="optional"/>
+                        <xs:anyAttribute processContents="lax"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="readouts">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="readout" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="segmentation" minOccurs="0" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string"/>
+                                    <xs:anyAttribute processContents="lax" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1" />
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="fields">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                        <xs:anyAttribute processContents="lax"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="includes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="gdmlFile" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>   
+                        <xs:attribute name="ref" type="xs:anyURI" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="lccdd">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="info" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="define" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="materials" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="limits" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="regions" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="display" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="detectors" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="readouts" minOccurs="1" maxOccurs="1"/>
+                <xs:element ref="fields" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="includes" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute fixed="1.0.0" name="version" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xs:schema >
+
+<xs:schema attributeFormDefault="unqualified"
+	   elementFormDefault="unqualified"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/">
+
+  <!--XS timestamp format: CCYY-MM-DDTHH:mm:SS-->
+
+  <xs:complexType name="HeaderType">
+    <xs:annotation>
+      <xs:documentation>
+	Header element for LCDD file.
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:all>
+      <xs:element name="detector" type="DetectorType" minOccurs="1" maxOccurs="1" />
+      <xs:element name="author" type="AuthorType" minOccurs="0" maxOccurs="1" />
+      <xs:element name="generator" type="GeneratorType" minOccurs="0" maxOccurs="1" />
+      <xs:element name="comment" type="xs:string" minOccurs="0" maxOccurs="1" />
+    </xs:all>
+
+  </xs:complexType>
+
+  <xs:complexType name="DetectorType">
+    <xs:annotation>
+      <xs:documentation>
+	Detector header element.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="version" type="xs:string" default="1.0" />
+    <xs:attribute name="url" type="xs:anyURI" default="http://www.example.com"/>
+  </xs:complexType>
+
+  <xs:complexType name="AuthorType">
+    <xs:annotation>
+      <xs:documentation>
+	Info on author of this file.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="email" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="GeneratorType">
+    <xs:annotation>
+      <xs:documentation>
+        Info on script or compact generator of this file.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" default="NONE" />
+    <xs:attribute name="version" type="xs:string" default="1.0" />
+    <xs:attribute name="file" type="xs:string" default="NONE" />
+    <xs:attribute name="checksum" type="xs:unsignedInt" default="0" />
+  </xs:complexType>
+
+  <xs:element name="header" type="HeaderType" />
+
+</xs:schema>

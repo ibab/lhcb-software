@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xs:schema >
+
+<xs:schema attributeFormDefault="unqualified"
+	   elementFormDefault="unqualified"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/">
+
+  <xs:complexType name="LimitParamType">
+    <xs:annotation>
+      <xs:documentation>
+	A single Geant4 user limit parameter such as max track length.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:double" use="required" />
+    <xs:attribute name="unit" type="xs:string" use="required" />
+    <xs:attribute name="particles" type="xs:string" default="*"/>
+  </xs:complexType>
+
+  <xs:element name="limit" type="LimitParamType" />
+
+  <xs:complexType name="LimitSetType">
+    <xs:annotation>
+      <xs:documentation>
+	A named set of Geant4 user limit parameters.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="limit" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:ID" />
+  </xs:complexType>
+
+  <xs:element name="limitset" type="LimitSetType" />
+
+  <xs:complexType name="UserLimitsType">
+    <xs:annotation>
+      <xs:documentation>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="limitset" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="limits" type="UserLimitsType" />
+
+</xs:schema>

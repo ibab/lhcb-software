@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xs:schema >
+
+<xs:schema attributeFormDefault="unqualified"
+	   elementFormDefault="unqualified"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/">
+
+  <xs:include schemaLocation="lcdd_limits.xsd" />
+
+  <xs:complexType name="RegionsType">
+    <xs:annotation>
+      <xs:documentation>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="region" minOccurs="0" maxOccurs="unbounded" type="RegionType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="regions" type="RegionsType">
+  </xs:element>
+
+  <xs:complexType name="RegionType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="limitsetref" type="ReferenceType" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:ID" use="required"/>
+    <xs:attribute name="store_secondaries" default="false" type="xs:boolean" />
+    <xs:attribute name="cut" default="1.0" type="xs:double"/>
+    <xs:attribute name="lunit" default="mm" type="xs:string"/>
+    <xs:attribute name="threshold" default="1.0" type="xs:double" />
+    <xs:attribute name="eunit" default="MeV" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:element name="region" type="RegionType">
+  </xs:element>
+
+</xs:schema>

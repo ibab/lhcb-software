@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xs:schema >
+
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/">
+
+    <xs:complexType name="SensitiveDetectorType">
+        <xs:annotation>
+            <xs:documentation>
+                Sensitive detector type with a name id, hits collection name
+                and a list of sensitive volumes
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:choice>
+            <xs:element minOccurs="0" maxOccurs="1" name="idspecref" type="ReferenceType" />
+        </xs:choice>
+
+        <xs:attribute name="name"               type="xs:ID" use="required" />
+        <xs:attribute name="hits_collection"    type="xs:string" use="required" />
+        <xs:attribute name="endcap_flag"        type="xs:boolean" default="false" />
+        <xs:attribute name="ecut"               type="xs:double" default="0.0" />
+        <xs:attribute name="eunit"              type="xs:string" default="MeV" />
+        <xs:attribute name="verbose">
+            <xs:simpleType>
+                <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="2"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+    </xs:complexType>
+
+    <xs:element abstract="true" name="sd" type="SensitiveDetectorType">
+        <xs:annotation>
+            <xs:documentation>
+                Abstract sensitive detector element for group substitution
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="SensitiveDetectorsType">
+        <xs:annotation>
+            <xs:documentation>
+                Sensitive detector container type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="sd" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="sensitive_detectors" type="SensitiveDetectorsType">
+        <xs:annotation>
+            <xs:documentation>
+                Sensitive detector container element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="CalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Calorimeter sensitive detector type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SensitiveDetectorType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" ref="segmentation"/>
+                </xs:sequence>
+                <xs:attribute name="hit_aggregation" default="id">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="id" />
+                            <xs:enumeration value="position" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="OpticalCalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Optical calorimeter sensitive detector type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="CalorimeterType"/>
+        </xs:complexContent>    
+    </xs:complexType>
+
+    <xs:complexType name="UnsegmentedCalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Optical calorimeter sensitive detector type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="CalorimeterType"/>
+        </xs:complexContent>    
+    </xs:complexType>
+
+    <xs:element name="calorimeter" substitutionGroup="sd" type="CalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Calorimeter sensitive detector element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="optical_calorimeter" substitutionGroup="sd" type="OpticalCalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Optical calorimeter sensitive detector element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="unsegmented_calorimeter" substitutionGroup="sd" type="UnsegmentedCalorimeterType">
+        <xs:annotation>
+            <xs:documentation>
+                Optical calorimeter sensitive detector element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="TrackerType">
+        <xs:annotation>
+            <xs:documentation>
+                Tracker sensitive detector type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SensitiveDetectorType">
+                <xs:attribute name="combine_hits" type="xs:boolean" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="tracker" substitutionGroup="sd" type="TrackerType">
+        <xs:annotation>
+            <xs:documentation>
+                Tracker element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="ScorerType">
+        <xs:annotation>
+            <xs:documentation>
+                Scoring plane sensitive detector type.
+                Assigned LV should be thin, e.g. a few micron, and close to Vacuum.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexContent>
+            <xs:extension base="SensitiveDetectorType">
+                <xs:annotation>
+                    <xs:documentation>
+                        This type of SD ignore the ecut attribute, because this will often be 0 in a vacuum.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="scorer" substitutionGroup="sd" type="ScorerType">
+        <xs:annotation>
+            <xs:documentation>
+                Scoring plane element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="SegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Base segmentation type
+            </xs:documentation>
+        </xs:annotation>
+    </xs:complexType>
+
+    <xs:element abstract="true" name="segmentation" type="SegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Abstract segmentation
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="NonprojectiveSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                NP segmentation type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SegmentationType">
+                <xs:attribute name="grid_size_x" type="xs:double" use="required"/>
+                <xs:attribute name="grid_size_y" type="xs:double" use="required"/>
+                <xs:attribute name="grid_size_z" type="xs:double" use="required"/>
+                <xs:attribute default="mm"  name="lunit"  type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NonprojectiveCylinderSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                NP segmentation type for cylinders.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SegmentationType">
+                <xs:attribute name="grid_size_z" type="xs:double" use="required"/>
+                <xs:attribute name="grid_size_phi" type="xs:double" use="required"/>
+                <xs:attribute default="mm"  name="lunit"  type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="grid_xyz" substitutionGroup="segmentation" type="NonprojectiveSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                NP segmentation element for polygons such as boxes and trapezoids.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="GlobalGridXYSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Type for global grid in XY.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SegmentationType">
+                <xs:attribute name="grid_size_x" type="xs:double" use="required"/>
+                <xs:attribute name="grid_size_y" type="xs:double" use="required"/>
+                <xs:attribute default="mm"  name="lunit"  type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="global_grid_xy" substitutionGroup="segmentation" type="GlobalGridXYSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Element for global grid in XY.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="nonprojective_cylinder" substitutionGroup="segmentation" type="NonprojectiveCylinderSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                NP cylinder segmentation element for cylinders.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="ProjectiveCylinderSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Prj segmentation type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SegmentationType">
+                <xs:attribute name="ntheta" type="xs:int" use="required" />
+                <xs:attribute name="nphi"   type="xs:int" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="projective_cylinder" substitutionGroup="segmentation" type="ProjectiveCylinderSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Prj segmentation element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="ProjectiveZPlaneSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Prj ZPlane segmentation type
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SegmentationType">
+                <xs:attribute name="ntheta" type="xs:int" use="required" />
+                <xs:attribute name="nphi"   type="xs:int" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="projective_zplane" substitutionGroup="segmentation" type="ProjectiveZPlaneSegmentationType">
+        <xs:annotation>
+            <xs:documentation>
+                Prj ZPlane segmentation element
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+</xs:schema>

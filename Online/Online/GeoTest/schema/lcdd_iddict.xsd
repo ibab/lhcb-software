@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE xs:schema >
+
+<xs:schema attributeFormDefault="unqualified"
+	   elementFormDefault="unqualified"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/">
+
+  <xs:complexType name="IdSpecType">
+    <xs:annotation>
+      <xs:documentation>
+	Id specification for a full cell id.
+      </xs:documentation>
+    </xs:annotation>   
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" ref="idfield"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:ID" use="required"/>
+    <xs:attribute name="length" type="xs:double" use="required"/>
+  </xs:complexType>
+
+  <xs:element abstract="false" name="idspec" type="IdSpecType"/>
+
+  <xs:complexType name="IdFieldType">
+    <xs:annotation>
+      <xs:documentation>
+	Id field for one logical portion of an id, interprettable as a single int.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="label" type="xs:string" use="required"/>
+    <xs:attribute name="start" type="xs:int" use="required"/>
+    <xs:attribute name="length" type="xs:int" use="required"/>
+    <xs:attribute name="signed" type="xs:boolean" default="false"/>
+  </xs:complexType>
+
+  <xs:element abstract="false" name="idfield" type="IdFieldType" />
+
+  <xs:complexType name="IdDictType">
+    <xs:annotation>
+      <xs:documentation>
+	Id Dictionary for this detector containg specifications for cell ids.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="idspec"/>
+    </xs:sequence>    
+  </xs:complexType>
+
+  <xs:element name="iddict" type="IdDictType"/>
+  
+</xs:schema>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  xs:schema >
+<xs:schema attributeFormDefault="unqualified"
+	   elementFormDefault="unqualified"
+	   version="1.0"
+	   xmlns:lcdd="http://www.lcsim.org/schemas/lcdd/1.0/"
+	   xmlns:gdml="http://cern.ch/2001/Schemas/GDML"
+	   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:include schemaLocation="lcdd_header.xsd"/>
+  <xs:include schemaLocation="lcdd_sensitive_detectors.xsd"/>
+  <xs:include schemaLocation="lcdd_iddict.xsd"/>
+  <xs:include schemaLocation="lcdd_fields.xsd"/>
+  <xs:include schemaLocation="lcdd_limits.xsd"/>
+  <xs:include schemaLocation="lcdd_regions.xsd"/>
+  <xs:include schemaLocation="lcdd_display.xsd"/>
+
+  <xs:redefine schemaLocation="http://www.lcsim.org/schemas/gdml/1.0/gdml.xsd">
+
+    <xs:annotation>
+      <xs:documentation>
+	Extend volume element to include field, SD and region references.
+	Extend physvol element to include a volume id.
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType name="VolumeType">
+      <xs:complexContent>
+	<xs:extension base="VolumeType">
+	  <xs:sequence>
+	    <xs:element minOccurs="0" maxOccurs="1" name="sdref" type="ReferenceType"/>
+	    <xs:element minOccurs="0" maxOccurs="1" name="regionref" type="ReferenceType"/>
+	    <xs:element minOccurs="0" maxOccurs="1" name="limitsetref" type="ReferenceType"/>
+	    <xs:element minOccurs="0" maxOccurs="1" name="visref" type="ReferenceType" />
+	  </xs:sequence>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SinglePlacementType">
+      <xs:complexContent>
+	<xs:extension base="SinglePlacementType">
+	  <xs:sequence>
+	    <xs:element minOccurs="0" maxOccurs="unbounded" name="physvolid" type="PhysVolIdType"/>
+	  </xs:sequence>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:redefine>
+
+  <xs:complexType name="PhysVolIdType">
+    <xs:annotation>
+      <xs:documentation>
+	Assign an int ID to a physical volume.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="field_name" type="xs:string" use="optional" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:element name="lcdd">
+    <xs:annotation>
+      <xs:documentation>
+	lcdd is the top-level element including the
+	gdml element plus a container element for
+	fields, SDs, regions and components.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element ref="header" minOccurs="1"></xs:element>
+	<xs:element ref="iddict" minOccurs="0"></xs:element>
+	<xs:element ref="sensitive_detectors" minOccurs="0"></xs:element>
+	<xs:element ref="limits" minOccurs="0"></xs:element>
+	<xs:element ref="regions" minOccurs="0"></xs:element>
+	<xs:element ref="display" minOccurs="0"></xs:element>
+	<xs:element ref="gdml" minOccurs="1"></xs:element>
+	<xs:element ref="fields" minOccurs="0"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

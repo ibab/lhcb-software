@@ -1,0 +1,45 @@
+package GeomConverter
+version v1r4
+
+branches  cmt doc src
+use GaudiPolicy v*
+use ROOT    v* LCG_Interfaces
+use XercesC v* LCG_Interfaces
+
+include_dirs $(GEOMCONVERTERROOT) $(GEOMCONVERTERROOT)/src 
+
+apply_pattern install_more_includes more=DetDesc
+apply_pattern install_more_includes more=XML
+
+apply_pattern ld_library_path
+
+application  GeomConverterApp ../main/main.cpp  \
+             XML/*.cpp               \
+             XML/lcdd/*.cpp          \
+             XML/compact/*.cpp       \
+             DetDesc/*.cpp           \
+             DetDesc/lcdd/*.cpp      \
+             DetDesc/compact/*.cpp   \
+             Evaluator/*.cpp 
+##macro_append GeomConverterApplinkopts      " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
+##macro_append GeomConverterApp_dependencies " GeomConverter "
+
+library      GeomConverterLib ../main/lib.cpp \
+             XML/*.cpp               \
+             XML/lcdd/*.cpp          \
+             XML/compact/*.cpp       \
+             DetDesc/*.cpp           \
+             DetDesc/lcdd/*.cpp      \
+             DetDesc/compact/*.cpp   \
+             Evaluator/*.cpp 
+##macro_append GeomConverterLib_shlibflags   " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
+##macro_append GeomConverterLib_dependencies " GeomConverter "
+apply_pattern linker_library library=GeomConverterLib
+
+private
+macro_append ROOT_linkopts ' -lGeom ' WIN32 ' libGeom.lib '
+macro_append cppflags " -ansi -pedantic -Wall -Woverloaded-virtual -Wno-long-long "      WIN32 ""
+macro_append cppflags " -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wunused "    WIN32 ""
+macro_append cppflags " -Wreturn-type -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro_append cppflags "" \
+	target-gcc " -W -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend -Wimplicit "
