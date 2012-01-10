@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes in Brunel v42r0 output:
   . Fixes to primitive types that can be saved in Tuples::TupleObj
+  . Fix to updates of cached geometry for Upstream tracking 
 
 - Changes to configuration
   . Remove GaudiPoolDb dependency
