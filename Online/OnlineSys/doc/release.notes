@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v4r58>???????? OnlineSys v4r58</A></H1>
+<H1><A NAME=v4r58>2012-01-10 OnlineSys v4r58</A></H1>
 <PRE>
    Based in Gaudi v22r5, 
    Updated packages are:
@@ -24,6 +24,10 @@
      GaudiRootCnvTests   v1r5     Online
      OnlineTasks         v1r42    Online
      RootCnv             v1r11    Online
+     DailyReport         v1r2     Online
+     FarmMonitor         v2r9     Online
+     Presenter           v3r2     Online
+     Trending            v2r1     Online
 </PRE>
 
 <H1><A NAME=v4r57>2011-09-01 OnlineSys v4r57</A></H1>
