@@ -20,7 +20,7 @@
 #include "Event/State.h"
 #include "Event/Track.h"
 #include "Event/Measurement.h"
-#include "Event/Node.h"
+#include "Event/TrackFitResult.h"
 #include "Event/FitNode.h"
 #include "PatKernel/PatForwardHit.h"
 #include "PatKernel/PatTTHit.h"
@@ -493,7 +493,7 @@ void TrackHitCollector::updateWithProperResiduals(
     const LHCb::TrackFitResult* fr = tr.fitResult() ;
     if( !fr || fr->nodes().empty()) return ;
     typedef LHCb::TrackFitResult::NodeContainer Nodes ;
-    const Nodes& nodes(fr->nodes());
+    Nodes nodes = fr->nodes();
     if (nodes.begin() == nodes.end()) return;
     BOOST_FOREACH(IDWithResidual& idwr, ids) {
 	/// check if we have a node for given LHCbID
@@ -509,7 +509,7 @@ void TrackHitCollector::updateWithProperResiduals(
 	if (nit == nend) continue;
 	const LHCb::Node* np = *nit;
 	if (np->type() == LHCb::Node::HitOnTrack) {
-	    const LHCb::FitNode* fnp = reinterpret_cast<const LHCb::FitNode*>(np);
+	    const LHCb::FitNode* fnp = static_cast<const LHCb::FitNode*>(np);
 	    idwr.m_res = fnp->unbiasedResidual();
 	    idwr.m_reserr = fnp->errUnbiasedResidual();
 	} else {

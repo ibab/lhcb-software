@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-01-10 - Wouter Hulsbergen
+ - added missing include to TrackHitCollector
+
 !========================= TrackTools v4r10 2011-12-15 =======================
 ! 2011-12-14 - Wouter Hulsbergen
  - remove use of Track::nodes
