@@ -5,6 +5,10 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2011-11-25 - Marcin Kucharczyk
+  - Add Hlt2HighPtJetsLines to Configuration.py and Hlt2.py with 
+    routing bit (88)
+
 ! 2011-10-14 - Roel Aaij
  - Add monitoring of number of IT and VELO hits vs SPD multiplicity to the
    HltEndSequence.
