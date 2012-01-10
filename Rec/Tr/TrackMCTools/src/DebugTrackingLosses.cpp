@@ -6,6 +6,7 @@
 #include "Event/MCParticle.h"
 #include "Event/MCTrackInfo.h"
 #include "Event/VeloCluster.h"
+#include "Event/VeloPixCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/CaloDigit.h"
@@ -35,6 +36,7 @@ DebugTrackingLosses::DebugTrackingLosses( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "Velo",        m_velo        = false );
+  declareProperty( "VeloPix",     m_veloPix     = false );
   declareProperty( "Forward",     m_forward     = false );
   declareProperty( "Ghost",       m_ghost       = false );
   declareProperty( "Clone",       m_clone       = false );
@@ -68,7 +70,7 @@ StatusCode DebugTrackingLosses::initialize() {
 StatusCode DebugTrackingLosses::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  if ( !m_velo && !m_forward ) return StatusCode::SUCCESS;
+  if ( !m_velo && !m_veloPix && !m_forward ) return StatusCode::SUCCESS;
 
   ++m_eventNumber;
 
@@ -81,8 +83,9 @@ StatusCode DebugTrackingLosses::execute() {
     return StatusCode::SUCCESS;
   }
 
-  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), LHCb::TrackLocation::Velo    );
-  LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
+  std::string veloTrack = LHCb::TrackLocation::Velo;
+  if ( m_veloPix ) veloTrack = LHCb::TrackLocation::VeloPix;
+  LinkedFrom<LHCb::Track,LHCb::MCParticle> veloLinker   ( evtSvc(), msgSvc(), veloTrack    );
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
 
@@ -112,11 +115,16 @@ StatusCode DebugTrackingLosses::execute() {
     LHCb::Track* veloTr = veloLinker.first(part);
     bool hasVelo = veloTr != NULL;
 
-    if ( m_velo && !hasVelo ) {
+    if ( (m_velo || m_veloPix ) && !hasVelo && !m_clone ) {
       info() << "Missed Velo for MCParticle " << part->key() << " ";
       printMCParticle( part );
+    } else if ( (m_velo || m_veloPix ) && m_clone && veloLinker.next() != NULL ) {
+      info() << "Velo clone for particle " << part->key() << " ";
+      printMCParticle( part );
     }
+    
     if ( m_forward && hasVelo ) {
+      LinkedFrom<LHCb::Track,LHCb::MCParticle> forwardLinker( evtSvc(), msgSvc(), LHCb::TrackLocation::Forward );
       if ( forwardLinker.first(part) == NULL && !m_clone && !m_ghost ) {
         info() << "Missed Forward (Velo " << veloTr->key() <<") for MCParticle " << part->key() << " ";
         printMCParticle( part );
@@ -135,14 +143,15 @@ StatusCode DebugTrackingLosses::execute() {
   }
 
   if ( m_ghost ) {
-    LinkedTo<LHCb::MCParticle>     vTrLink( evtSvc(), msgSvc(), LHCb::TrackLocation::Velo );
+    LinkedTo<LHCb::MCParticle>     vTrLink( evtSvc(), msgSvc(), veloTrack );
     LinkedTo<LHCb::MCParticle>       vLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
+    LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VeloPixClusterLocation::VeloPixClusterLocation );
     LinkedTo<LHCb::MCParticle>      ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters);
     LinkedTo<LHCb::MCParticle>      itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::ITClusters);
     LinkedTo<LHCb::MCParticle>      otLink( evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);
 
     std::string   location = LHCb::TrackLocation::Forward;
-    if ( m_velo ) location = LHCb::TrackLocation::Velo;
+    if ( m_velo || m_veloPix ) location = veloTrack;
     LinkedTo<LHCb::MCParticle> trackLinker( evtSvc(), msgSvc(), location );
 
     LHCb::Tracks* tracks = get<LHCb::Tracks>( location );
@@ -173,6 +182,16 @@ StatusCode DebugTrackingLosses::execute() {
             LHCb::VeloChannelID idV = (*itId).veloID();
             info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
             LHCb::MCParticle* part = vLink.first( idV );
+            while ( 0 != part ) {
+              info() << " " << part->key();
+              listKeys[part] += 1;
+              part = vLink.next();
+            }
+            info() << endmsg;
+          } else if ( (*itId).isVeloPix() ) {
+            LHCb::VeloPixChannelID idV = (*itId).velopixID();
+            info() << format( "   Velo Sensor %3d chip%3d pixel %4d ", idV.sensor(), idV.chip(), idV.pixel() );
+            LHCb::MCParticle* part = pxLink.first( idV );
             while ( 0 != part ) {
               info() << " " << part->key();
               listKeys[part] += 1;

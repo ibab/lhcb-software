@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-01-10 - Olivier Callot
+ - New tool PatPixelDebugTool to debug the Velo Pixel tracking (upgrade)
+ - Modifications in DebugTrackingLosses to debug VElo Pixel tracking losses
+
 !========================= TrackMCTools v3r1 2011-11-08 =========================
 ! 2011-10-03 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc
