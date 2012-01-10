@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-10 - Chris Jones
+ - Improved MC11a tunings. Use same MC11aTuneV1 tag as not used in production 
+   yet.
+
 !------------------------------- v1r2 ----------------------------------------
 
 ! 2011-12-20 - Chris Jones
