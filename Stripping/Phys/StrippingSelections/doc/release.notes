@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-10 - Patrick Koppenburg
+ - Widen mass window for B->J/psiPi0
+
 ! 2012-01-09 - Patrick Koppenburg
  - StrippingB2JpsiXforBeta_s.py: Added B->J/psiPi0 stripping line for
    Stripping17b

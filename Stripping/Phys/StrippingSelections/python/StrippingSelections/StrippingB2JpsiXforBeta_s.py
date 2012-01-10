@@ -42,6 +42,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         			,       'Bs2JpsiPhiPrescale'
         			,       'Bs2JpsiEtaPrescale'
         			,       'Bd2JpsiPi0Prescale'
+        			,       'Bd2JpsiPi0LoMass'
+        			,       'Bd2JpsiPi0HiMass'
                               )
 
     def __init__(self, name, config) :
@@ -362,8 +364,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bd2JpsiPi0 = self.createCombinationSel( OutputList = "Bd2JpsiPi0" + self.name,
                                   DecayDescriptor = "B0 -> J/psi(1S) pi0",
                                   DaughterLists  = [ self.JpsiList, self.Pi0List ],
-                                  PreVertexCuts = "in_range(5000,AM,5650)",
-                                  PostVertexCuts = "in_range(5200,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  PreVertexCuts = "in_range(4500,AM,6000)",
+                                  PostVertexCuts = "in_range(%(Bd2JpsiPi0LoMass)s,M,%(Bd2JpsiPi0HiMass)s) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
         Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , prescale = self.config['Bd2JpsiPi0Prescale'])
