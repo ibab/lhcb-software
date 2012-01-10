@@ -1,5 +1,5 @@
-package GeomConverter
-version v1r4
+package GeoTest
+version v0r1
 
 branches  cmt doc src
 use GaudiPolicy v*
