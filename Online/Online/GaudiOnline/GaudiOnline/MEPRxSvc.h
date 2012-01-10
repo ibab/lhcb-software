@@ -90,7 +90,6 @@ namespace LHCb  {
     int                         m_mepSock;  /* Raw socket to send MEP requests.*/
     EvtBuilderState             m_ebState;
     bool                        m_forceStop;
-    bool                        m_RTTCCompat;
     bool                        m_dynamicMEPRequest;
     bool                        m_dropIncompleteEvents;	
     bool                        m_checkPartitionID;
@@ -99,6 +98,7 @@ namespace LHCb  {
     bool                        m_createODINMEP; // fake ODIN MEP for timepix testbeam only!
     bool                        m_resetCounterOnRunChange;
     bool                        m_alwaysSendMEPReq; // send a MEP request for every event (complete or not)
+    bool			m_overflow;
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 
@@ -107,7 +107,7 @@ namespace LHCb  {
     int                         m_IPProtoIn;
     int                         m_refCount;
     int                         m_nCrh;
-    int                         m_MEPBufSize;
+    int                         m_MEPBufSize;     
     int                         m_ethInterface;
     int                         m_initialMEPReq;	/* Number of initial MEPReqs to send.*/
     int                         m_MEPsPerMEPReq; /* Number of MEPs requested per MEPReq.*/
@@ -120,6 +120,9 @@ namespace LHCb  {
     std::string                 m_rxIPAddr;
     std::string                 m_IPNameOdin;
     std::string                 m_bufName;
+    std::string                 m_overflowPath;        // the path to the overflow directory in the local FS
+    int                         m_quotaCheckInterval;  // after how many events the quota is re-checked  
+    int                         m_nAllocMEPBuf;        // how many times m_MEPBufSize is allocated from the BM (default = 1)
     std::vector<std::string>    m_IPSrc;
     float                       m_maxBadPktRatio;
     std::map<u_int32_t,int>     m_srcAddr;
@@ -218,6 +221,7 @@ namespace LHCb  {
     int getSrcID(u_int32_t);
     StatusCode checkProperties();
     StatusCode error(const std::string& msg);
+    StatusCode info(const std::string &msg);	
     StatusCode allocRx();
     StatusCode releaseRx();
     int openSocket(int protocol);

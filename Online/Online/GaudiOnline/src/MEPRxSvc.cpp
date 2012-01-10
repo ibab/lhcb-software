@@ -32,7 +32,6 @@
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/OnlineRunInfo.h"
-
 #include "MDF/MEPEvent.h" 
 #include "Event/RawBank.h"
 
@@ -574,8 +573,8 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_ebState(NOT_READY), m_incidentSvc(0)
 {
   declareProperty("LocalTest",        m_LocalTest = false);
-  declareProperty("DestTestPort",         m_DestTestPort = 45199);
-  declareProperty("SrcTestPort",         m_SrcTestPort = 45198);
+  declareProperty("DestTestPort",     m_DestTestPort = 45199);
+  declareProperty("SrcTestPort",      m_SrcTestPort = 45198);
   declareProperty("MEPBuffers",       m_MEPBuffers = 3);
   declareProperty("ethInterface",     m_ethInterface = -1);
   declareProperty("IPNameOdin",       m_IPNameOdin = "");
@@ -589,15 +588,17 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("bufName",          m_bufName = "MEPRX");
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
-  declareProperty("InitialMEPReqs",    m_initialMEPReq = 1);
-  declareProperty("MEPsPerMEPReq",     m_MEPsPerMEPReq = 1);
+  declareProperty("InitialMEPReqs",   m_initialMEPReq = 1);
+  declareProperty("MEPsPerMEPReq",    m_MEPsPerMEPReq = 1);
   declareProperty("MEPRecvTimeout",   m_MEPRecvTimeout = 10);   // s (!)  
   declareProperty("maxEventAge",      m_maxEventAge = 1000000); // us
-  declareProperty("nCrh", m_nCrh = 10);
+  declareProperty("nCrh",             m_nCrh = 10);
   declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
-  declareProperty("createODINMEP", m_createODINMEP = false);
+  declareProperty("createODINMEP",    m_createODINMEP = false);
   declareProperty("resetCountersOnRunChange", m_resetCounterOnRunChange = true);
   declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = false);
+  declareProperty("overflowPath",     m_overflowPath = "/localdisk/overflow");
+  declareProperty("overflow",         m_overflow = false);	
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
   m_expectOdin = false;
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
@@ -915,6 +916,12 @@ StatusCode MEPRxSvc::error(const std::string& msg) {
   log << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
+
+StatusCode MEPRxSvc::info(const std::string& msg) {
+  MsgStream log(msgSvc(), "MEPRx");
+  log << MSG::INFO << msg << endmsg;
+  return StatusCode::SUCCESS;
+} 
 
 void MEPRxSvc::srcSwap(int i, int j) {
   string name, addr; int flags;
@@ -1242,10 +1249,13 @@ StatusCode MEPRxSvc::initialize()  {
     if (setupCounters()) {
       return error("Failed to setup counters");
     }
-  }
-  else {
+  } else {
     return error("Failed to access monitor service.");
   }
+  if (lib_rtl_access(m_overflowPath.c_str(), 0x6) != 1) {
+    info(std::string("Cannot write to ") + m_overflowPath + std::string(" - disabling overflow"));
+    m_overflow = false;
+  }	
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
