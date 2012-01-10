@@ -4,6 +4,10 @@
 ! Purpose     : Monitor the tasks in the online farm
 !-----------------------------------------------------------------------------
 
+!============================== 2012-01-10 v2r9 ==============================
+! 2012-01-10 - Olivier Callot
+ - Use the "SLIMOS Shutdown" as shift leadr if no SL.
+
 ! 2011-09-23 - Olivier Callot
  - Compress reconstructions tasks per node if needed.
 

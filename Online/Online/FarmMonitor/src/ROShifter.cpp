@@ -145,6 +145,15 @@ std::string ROShifter::getProduction( ) {
   return getShifter( "Production" ) ;
 }
 
+
+//=============================================================================
+// Name of production manager on shift
+//=============================================================================
+std::string ROShifter::getSLIMOS( ) {
+
+  return getShifter( "SLIMOS Shutdown" ) ;
+}
+
 //=========================================================================
 //  Has the time slot changed for shift ?
 //=========================================================================
@@ -164,6 +173,15 @@ bool ROShifter::hasChanged ( ) {
   } else if ( hour < 15 ) slot = 0 ;
   else if ( hour < 23 ) slot = 1 ;
   else slot = 2 ;
+
+  //== Special if no shift leader...
+  if ( getShiftLeader() == "" ) {
+    slot = 1;
+    if ( hour < 14 ) slot = 0;
+    if ( now.time_of_day().hours() < 8 ||
+         now.time_of_day().hours() > 19 ) slot = 2;  // no crew...
+  }
+  
 
   if ( nowDay == m_lastDay && slot == m_lastSlot ) return false;
   

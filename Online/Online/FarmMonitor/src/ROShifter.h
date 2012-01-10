@@ -33,6 +33,9 @@ class ROShifter {
   /// Name of the Production manager on shift now
   std::string getProduction() ;
 
+  /// Name of the SLIMOS in shutdownon shift now
+  std::string getSLIMOS() ;
+
   /// Return true if the shift crew has changed
   bool hasChanged();
 

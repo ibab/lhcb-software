@@ -85,6 +85,7 @@ void ROFarmMonitor::initialize ( ) {
   strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
   strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
   strcpy( m_production,  m_shifter->getProduction().c_str() );
+  if ( "" == m_shifter->getShiftLeader() ) strcpy( m_shiftLeader, m_shifter->getSLIMOS().c_str() );
 
   std::cout << "Leader '" << m_shiftLeader 
             << "' DM '" << m_dataManager
@@ -315,6 +316,7 @@ void ROFarmMonitor::update( )   {
     strcpy( m_shiftLeader, m_shifter->getShiftLeader().c_str() );
     strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
     strcpy( m_production,  m_shifter->getProduction().c_str() );
+    if ( "" == m_shifter->getShiftLeader() ) strcpy( m_shiftLeader, m_shifter->getSLIMOS().c_str() );
     std::cout << "Leader '" << m_shiftLeader 
               << "' DM '" << m_dataManager
               << "' Production '" << m_production << "'" << std::endl;
