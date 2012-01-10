@@ -8,7 +8,7 @@ __version__ = '$Revision: 2.4 $'
 
 __all__ = ( 'B2Quasi2BodyConf',
             'makeDiTrackList',
-            'makeB2Q2B4pi1',
+            'makeB2Q2B4pi',
             'makeB2Q2B3pi' )
 
 config_params = {'Q2BPrescale'     : 1.,
