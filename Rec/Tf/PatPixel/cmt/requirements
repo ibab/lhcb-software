@@ -1,0 +1,30 @@
+#============================================================================
+# Created    : 2011-12-16
+# Maintainer : Olivier Callot
+#============================================================================
+package           PatPixel
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use     VeloPixDet      v*      Det
+use     DigiEvent       v*      Event
+use     TrackEvent      v*      Event
+use     GaudiAlg        v*
+use     GaudiKernel     v*
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PatPixel    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PatPixel

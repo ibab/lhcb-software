@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : Tf/PatPixel
+! Responsible : Olivier Callot
+! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
+!-----------------------------------------------------------------------------
+
+! 2012-01-10 - Olivier Callot
+ - First version. The overall structure is taken form FastVelo.
+   New logic to make the search: Find enough hits in a seed region before 
+   extrapolating. This seed region can extend acroos the half detector boundary.
+
+   Initial performance is great:  <2% ghosts, >99.5% efficiency for long > 5 GeV,
+                                  <0.5% clones, and only < 1.5 ms per event. 
+      This is obtained on a limited sample.
