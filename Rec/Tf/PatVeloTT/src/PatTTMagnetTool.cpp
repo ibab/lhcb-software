@@ -62,30 +62,6 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   // == Get the ST Detector Element
   m_STDet = getDet<DeSTDetector>( DeSTDetLocation::TT );
 
-  // m_zCenterTT is a normalization plane which should be close to middle of TT.
-  // It is used to normalize dx deflection at different TT layers.
-  // No need to update with small TT movement up to +- 5 cm. 
-  m_zCenterTT = 2484.6;
-
-  double zCenterTT = 0.;
-  
-  m_zLayers.clear();
-  for ( std::vector<DeSTLayer*>::const_iterator itL = m_STDet->layers().begin();
-          m_STDet->layers().end() != itL; ++itL ) {
-     double zlay = (*(*itL)->sectors().begin())->globalCentre().Z(); 
-     m_zLayers.push_back(zlay); 
-     zCenterTT += zlay;
-  }   
-
-  zCenterTT /= m_zLayers.size();
-  if (fabs( m_zCenterTT - zCenterTT ) > 50. ) {
-    warning() << "Calculated center of TT station far away from nominal value: " 
-              << zCenterTT << " wrt nominal " << m_zCenterTT << endmsg;
-    warning() << " Calculated value taken: " << zCenterTT << endmsg;    
-    m_zCenterTT = zCenterTT;
-  }
-  // warning layers not in order of increasing z
-  std::sort(m_zLayers.begin(),m_zLayers.end());
   
   // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
   IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
@@ -165,6 +141,31 @@ void PatTTMagnetTool::prepareBdlTables() {
 
   // WDH: I do not understand why these tables are stored as
   // tools. what is wrong with just owning the objects?
+  // m_zCenterTT is a normalization plane which should be close to middle of TT.
+  // It is used to normalize dx deflection at different TT layers.
+  // No need to update with small TT movement up to +- 5 cm. 
+
+  m_zCenterTT = 2484.6;
+  double zCenterTT = 0.;
+  
+  m_zLayers.clear();
+  for ( std::vector<DeSTLayer*>::const_iterator itL = m_STDet->layers().begin();
+          m_STDet->layers().end() != itL; ++itL ) {
+     double zlay = (*(*itL)->sectors().begin())->globalCentre().Z(); 
+     m_zLayers.push_back(zlay); 
+     zCenterTT += zlay;
+  }   
+
+  zCenterTT /= m_zLayers.size();
+  if (fabs( m_zCenterTT - zCenterTT ) > 50. ) {
+    warning() << "Calculated center of TT station far away from nominal value: " 
+              << zCenterTT << " wrt nominal " << m_zCenterTT << endmsg;
+    warning() << " Calculated value taken: " << zCenterTT << endmsg;    
+    m_zCenterTT = zCenterTT;
+  }
+  // warning layers not in order of increasing z
+  std::sort(m_zLayers.begin(),m_zLayers.end());
+
   m_lutBdl       = tool<PatTableForFunction>("PatTableForFunction/table1",this);
   m_lutZHalfBdl  = tool<PatTableForFunction>("PatTableForFunction/table2",this);
   m_lutBdl->clear() ;

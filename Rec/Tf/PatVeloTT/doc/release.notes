@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-10 - Marco Cattaneo
+ - Fix handling of CondDB updates in PatTTMagnetTool: Z layer positions were
+   not being updated
+
 !========================= PatVeloTT v3r16 2011-12-15 ========================
 ! 2011-11-22 - Marco Cattaneo
  - Fix gcc46 warning (unused variable in PatVeloTTTool)
