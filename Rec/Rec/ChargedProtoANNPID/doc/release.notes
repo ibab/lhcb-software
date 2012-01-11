@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-11 - Chris Jones
+ - Reinstate the MC11aV1 tunings, as they have been updated with new network
+   tunings, that appear to have removed the spurious printouts ...
+
 ! 2011-12-21 - Chris Jones
  - Add default net tunings for DataTypes MC09 and 2008 
  - Temporarily switch back to MC10TuneV1 for 2012 and 2011, as the new tunings 

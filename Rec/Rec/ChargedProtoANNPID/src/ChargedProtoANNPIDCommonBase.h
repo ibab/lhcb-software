@@ -97,14 +97,16 @@ namespace ANNGlobalPID
     /// Mapping between string and int IDs
     const StringToInt & stringToIntMap() const;
 
+    /// Convert variable names string to ID numbers
+    IntInputs variableIDs( const StringInputs & names ) const;
+
+  public:
+
     /// Convert a variable name string to ID number
     int variableID( const std::string & name ) const;
 
     /// Convert a variable name string to ID number
     std::string stringID( const int id ) const;
-
-    /// Convert variable names string to ID numbers
-    IntInputs variableIDs( const StringInputs & names ) const;
 
   public:
 

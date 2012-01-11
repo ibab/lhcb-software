@@ -16,13 +16,13 @@ from LHCbKernel.Configuration import *
 #  @date   03/12/2010
 class ChargedProtoANNPIDConf(LHCbConfigurableUser):
 
-        ## Options
-    __slots__ = { "Context":    "Offline"   # The context within which to run
+    ## Options
+    __slots__ = { "Context":    "Offline"    # The context within which to run
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  ,"NetworkVersions" : { "2012" : "MC10TuneV1", # MC11aTuneV1 gives rogue messages
-                                         "2011" : "MC10TuneV1", # MC11aTuneV1 gives rogue messages
+                  ,"NetworkVersions" : { "2012" : "MC11aTuneV1", 
+                                         "2011" : "MC11aTuneV1", 
                                          "2010" : "MC10TuneV1",
                                          "2009" : "MC10TuneV1",
                                          "2008" : "MC10TuneV1",

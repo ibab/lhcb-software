@@ -136,12 +136,12 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 
     // Set options for owned TrackSelector
     const std::string trSelName = "TrackSelector";
-    DoubleProperty       pProp    ( "MinPCut",    minP  );
-    DoubleProperty      ptProp    ( "MinPtCut",   minPt );
-    DoubleProperty      chiProp   ( "MaxChi2Cut", maxChiSq );
-    DoubleProperty      likProp   ( "MinLikelihoodCut", minLikelihood );
-    DoubleProperty      ghostProp ( "MaxGhostProbCut", maxGhostProb );
-    StringArrayProperty tkProp    ( "TrackTypes", boost::assign::list_of(trackType) );
+    const DoubleProperty      pProp     ( "MinPCut",          minP          );
+    const DoubleProperty      ptProp    ( "MinPtCut",         minPt         );
+    const DoubleProperty      chiProp   ( "MaxChi2Cut",       maxChiSq      );
+    const DoubleProperty      likProp   ( "MinLikelihoodCut", minLikelihood );
+    const DoubleProperty      ghostProp ( "MaxGhostProbCut",  maxGhostProb  );
+    const StringArrayProperty tkProp    ( "TrackTypes", boost::assign::list_of(trackType) );
     IJobOptionsSvc * joSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, pProp     );
     sc = sc && joSvc->addPropertyToCatalogue( name()+"."+trSelName, ptProp    );
@@ -161,10 +161,11 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       debug() << "Particle type    = " << particleType << endmsg
               << "Track Selection  = " << trackType << " " << m_trackPreSel << endmsg
               << "Network type     = " << annType << endmsg
+              << "ConfigFile       = " << configFile << endmsg
               << "ParamFile        = " << paramFileName << endmsg
               << "ANN inputs (" << inputs.size() << ")  = " << inputs
               << endmsg;
-    
+
   }
   else
   {
@@ -277,7 +278,8 @@ ChargedProtoANNPIDAlg::trackPreSel( const LHCb::ProtoParticle * proto ) const
 //=============================================================================
 #ifdef __GNUC__
 double
-ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto ) const
+ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto ) 
+  const
 {
   // Fill the array of network inputs
   unsigned int input = 0;
@@ -286,16 +288,15 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
- 
+
   // FPE Guard for NB call
   FPE::Guard guard(true);
 
-  // get the NN output
-  //m_parent->verbose() << "Calling NB" << endmsg;
-  const double nnOut = m_expert->nb_expert(m_inArray);
+  // get the NN output, rescaled to the range 0 to 1
+  const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
 
-  // return final output, rescaled to the range 0 to 1
-  return ( 1.0 + nnOut ) * 0.5;
+  // return final output
+  return nnOut;
 }
 #endif
 

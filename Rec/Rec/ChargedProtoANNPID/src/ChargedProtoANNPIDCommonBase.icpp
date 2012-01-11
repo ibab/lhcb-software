@@ -247,6 +247,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::getInput( const LHCb::ProtoPa
   else if ( (int)LHCb::ProtoParticle::LastGlobal+29 == input )
   {
     var = proto->track()->info(LHCb::Track::CloneDist,-999);
+    if ( var < 0 ) var = -999;
   }
   else if ( (int)LHCb::ProtoParticle::LastGlobal+31 == input )
   {
