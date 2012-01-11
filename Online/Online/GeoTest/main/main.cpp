@@ -34,7 +34,7 @@ int run_interpreter(int argc, char **argv)
    // Create an interactive ROOT application
    TRint *theApp = new TRint("Rint", &argc, argv);
 
-   Geometry::LCDDImp *lcdd = compact2geo();
+   /* Geometry::LCDDImp *lcdd = */ compact2geo();
    //delete lcdd->document().operator->();
 
    // and enter the event loop...

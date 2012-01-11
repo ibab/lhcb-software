@@ -7,8 +7,8 @@ using namespace std;
 using namespace DetDesc::Geometry;
 
 Subdetector::Object::Object()  
-: Attr_id(0), Attr_combine_hits(0), Attr_readout(0), Attr_envelope(0),
-  Attr_visualization(0), Attr_volume(0), Attr_material(0)
+: Attr_id(0), Attr_combine_hits(0), Attr_envelope(0),
+  Attr_volume(0), Attr_material(0), Attr_visualization(0), Attr_readout(0)
 {
 }
 

@@ -7,15 +7,19 @@ namespace DetDesc  {
   class IDDescriptor;
   namespace Geometry  {
     typedef DetDesc::IDDescriptor IDDescriptor;
-    template<typename Q, class P> struct Value : public Q, public P  {};
-    template <class T, class Q> typename T* first_value(const Q& e)  {
-      return e.handle()._ptr<Value<T,Q::Object> >();
+    template <typename Q, typename P> struct Value : public Q, public P  {
+    };
+    template <typename T, typename Q> T* first_value(const Q& e)  {
+      return (Value<T,typename Q::Object>*)e.handle().ptr();
+      //return e.handle()._ptr<V>();
     }
     template <typename T, typename Q> typename Q::Object* second_value(const Q& e)  {
-      return e.handle()._ptr<Value<T,Q::Object> >();
+      return (Value<T,typename Q::Object>*)e.handle().ptr();
+      //return e.handle()._ptr<Value<T,typename Q::Object> >();
     }
-    template <typename T, typename Q> typename T* value(const Q& e)  {
-      return e.handle()._ptr<T>();
+    template <typename T, typename Q> T* value(const Q& e)  {
+      return (T*)e.handle().ptr();
+      //return e.handle()._ptr<T>();
     }
   }
 }

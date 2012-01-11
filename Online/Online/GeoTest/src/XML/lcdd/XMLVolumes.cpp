@@ -20,6 +20,10 @@ Volume::Volume(const Document& document, const XMLCh* name, const Solid& s, cons
 Volume::Volume(Handle_t e) : RefElement(e)  {
 }
 
+/// Constructor to be used when reading the already parsed DOM tree
+Volume::Volume(const RefElement& e) : RefElement(e) {
+}
+
 Attribute Volume::setMaterial(const Material& m)  const  {
   return setRef(Tag_materialref,m.refName()); 
 }

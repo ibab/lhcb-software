@@ -21,7 +21,9 @@ namespace DetDesc {
 
     struct Volume : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Volume(Handle_t e);
+      Volume(Handle_t e = Handle_t(0));
+      /// Constructor to be used when reading the already parsed DOM tree
+      Volume(const RefElement& e);
       /// Constructor to be used when creating a new DOM tree
       Volume(const Document& document, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree. Also sets materuial and solid attributes

@@ -22,6 +22,7 @@ namespace DetDesc {
     struct Dimension : public Element  {
       Dimension() : Element(Handle_t(0)) {}
       Dimension(Handle_t e) : Element(e) {}
+      Dimension(const Element& e) : Element(e) {}
       // Box:
       double x() const;
       double y() const;
@@ -58,6 +59,7 @@ namespace DetDesc {
     struct Subdetector : public Element  {
       struct Component : public Dimension {
         Component(Handle_t e) : Dimension(e) {}
+        Component(const Element& e) : Dimension(e) {}
         int    id() const;
         int    repeat()  const;
         double thickness() const;

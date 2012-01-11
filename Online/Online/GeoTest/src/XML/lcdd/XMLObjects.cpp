@@ -165,7 +165,7 @@ void Limit::setValue(double value)   {
 }
 
 void Limit::setUnit(const XMLCh* unit)   {
-  setAttr(Attr_unit,Attr_unit);
+  setAttr(Attr_unit,unit);
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -221,7 +221,6 @@ IDSpec::IDSpec(const Document& doc, const XMLCh* name, const IDDescriptor& dsc)
   const IDDescriptor::FieldMap& m = dsc.fields();
   setAttr(Attr_length, dsc.maxBit());
   for(IDDescriptor::FieldIDs::const_iterator i=f.begin(); i!=f.end();++i)  {
-    int ident = (*i).first;
     const string& nam = (*i).second;
     const pair<int,int>& fld = m.find(nam)->second;
     addField(nam,fld);

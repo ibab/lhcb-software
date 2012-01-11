@@ -23,7 +23,6 @@ namespace DetDesc {
     public:
       struct InvalidObjectError : public std::runtime_error {
         InvalidObjectError(const std::string& msg) : std::runtime_error(msg) {}
-        ~InvalidObjectError() {}
       };
 
       struct ObjectHandleMap : public std::map<std::string,Handle_t>  {
@@ -31,13 +30,13 @@ namespace DetDesc {
         void append_noCheck(const RefElement& e) { 
           if ( e != 0 )  {
             std::string n = e.name();
-            this->insert(std::make_pair(n,e));
+            this->insert(std::make_pair(n,e.ptr()));
           }
         }
         void append(const RefElement& e) { 
           if ( e != 0 )  {
             std::string n = e.name();
-            this->insert(std::make_pair(n,e));
+            this->insert(std::make_pair(n,e.ptr()));
             return;
           }
           throw InvalidObjectError("Attempt to add an invalid object object");

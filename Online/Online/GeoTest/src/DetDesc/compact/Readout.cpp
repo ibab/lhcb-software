@@ -14,13 +14,13 @@ Readout::Readout(const Document& doc, const string& nam) : RefElement(doc,"reado
 }
 
 /// Access IDDescription structure
-Handle_t Readout::idSpec() const   {
-  return Handle_t(second_value<TNamed>(*this)->id);
+RefElement Readout::idSpec() const   {
+  return second_value<TNamed>(*this)->id;
 }
 
 /// Access segmentation structure
-Handle_t Readout::segmentation() const  {
-  return Handle_t(second_value<TNamed>(*this)->segmentation);
+Element Readout::segmentation() const  {
+  return second_value<TNamed>(*this)->segmentation;
 }
 
 /// Assign IDDescription to readout structure

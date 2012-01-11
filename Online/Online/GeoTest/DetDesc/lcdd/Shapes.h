@@ -51,7 +51,7 @@ namespace DetDesc {
       /// Constructor to be used when creating a new object
       Solid(const Document& doc, const std::string& type, const std::string& name) : RefElement(doc,type,name) {}
       /// Access to the shape pointer
-      TGeoShape& Solid::shape()  const;
+      TGeoShape& shape()  const;
       /// Set dimensions and update bounding box
       void setDimensions(double values[]);
     };

@@ -1,12 +1,13 @@
 #include "DetDesc/IDDescriptor.h"
 #include <stdexcept>
+#include <cstdlib>
+#include <cmath>
 using namespace std;
 using namespace DetDesc;
 
 
 void DetDesc::split(const string& str, char delim, vector<string>& result)  {
   string t, s, d = str;
-  size_t idx=d.find(delim);
   while( !d.empty() )  {
     size_t idx = d.find(delim);
     s = d.substr(0,idx);
@@ -43,7 +44,7 @@ void IDDescriptor::construct(const std::string& dsc)   {
       throw runtime_error("Invalid field descriptor:"+dsc);
     field.first  = f.size() == 3 ? ::atoi(f[1].c_str()) : pos;
     field.second = f.size() == 3 ? ::atoi(f[2].c_str()) : ::atoi(f[1].c_str());
-    pos = field.first + abs(field.second);
+    pos = field.first + ::abs(field.second);
     if ( pos>m_maxBit ) m_maxBit = pos;
     m_fieldIDs.insert(make_pair(m_fieldMap.size(),f[0]));
     m_fieldMap.insert(make_pair(f[0],field));

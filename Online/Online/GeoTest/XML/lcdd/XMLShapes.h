@@ -34,14 +34,14 @@ namespace DetDesc {
 
     struct Solid : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Solid(Handle_t e) : RefElement(e) {}
+      Solid(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
       Solid(const Document& doc, const XMLCh* type, const XMLCh* name) : RefElement(doc,type,name) {}
     };
 
     struct Box : public Solid  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Box(Handle_t e) : Solid(e) {}
+      Box(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       Box(const Document& doc, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree
@@ -52,7 +52,7 @@ namespace DetDesc {
 
     struct Polycone : public Solid {
       /// Constructor to be used when reading the already parsed DOM tree
-      Polycone(Handle_t e) : Solid(e) {}
+      Polycone(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       Polycone(const Document& doc, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree
@@ -63,7 +63,7 @@ namespace DetDesc {
 
     struct Tube : public Solid  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Tube(Handle_t e) : Solid(e) {}
+      Tube(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       Tube(const Document& doc, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree with attribute initialization
@@ -75,7 +75,7 @@ namespace DetDesc {
 
     struct Cone : public Solid  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Cone(Handle_t e) : Solid(e) {}
+      Cone(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       Cone(const Document& doc, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree with attribute initialization
@@ -99,7 +99,7 @@ namespace DetDesc {
 
     struct Trap : public Solid   {
       /// Constructor to be used when reading the already parsed DOM tree
-      Trap( Handle_t e) : Solid(e) {}
+      Trap(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree with attribute initialization
       Trap( const Document& doc, const XMLCh* name,
             double z,
@@ -128,7 +128,7 @@ namespace DetDesc {
 
     struct Trapezoid : public Solid {
       /// Constructor to be used when reading the already parsed DOM tree
-      Trapezoid(Handle_t e) : Solid(e) {}
+      Trapezoid(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       Trapezoid(const Document& doc, const XMLCh* name);
       /// Constructor to be used when creating a new DOM tree with attribute initialization
@@ -147,7 +147,7 @@ namespace DetDesc {
 
     struct PolyhedraRegular : public Solid {
       /// Constructor to be used when reading the already parsed DOM tree
-      PolyhedraRegular(Handle_t e) : Solid(e) {}
+      PolyhedraRegular(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new DOM tree
       PolyhedraRegular(const Document& doc, const XMLCh* name, int nsides, double rmin, double rmax, double zlen);
     };

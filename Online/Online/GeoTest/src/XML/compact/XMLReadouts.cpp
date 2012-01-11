@@ -9,6 +9,10 @@ using namespace DetDesc::XML;
 Readout::Readout(Handle_t e) : RefElement(e) {
 }
 
+/// Constructor to be used when reading the already parsed DOM tree
+Readout::Readout(const RefElement& e) : RefElement(e) {
+}
+
 /// Initializing constructor
 Readout::Readout(const Document& doc, Handle_t h) : RefElement(doc,Tag_readout,Tag_empty)
 {
@@ -46,10 +50,12 @@ void Readout::setupIDDescriptor(Handle_t h)  const   {
   }
 }
 
-void Readout::setSegmentation(const Handle_t h)   const  {
+void Readout::setSegmentation(Handle_t h)   const  {
   Handle_t seg = m_element.child(Tag_segmentation,false);
   if ( h )  {
-    seg ? m_element->replaceChild(seg,clone(h,true)) : m_element.append(clone(h,true));
+    Handle_t c = clone(h,true);
+    if ( seg ) m_element->replaceChild(seg,c);
+    else m_element.append(c);
     return;
   }
   throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");

@@ -309,7 +309,8 @@ void SensitiveDetector::setHitsCollection(const RefElement& spec)  {
 void SensitiveDetector::setSegmentation(Element seg)   {
   if ( seg )  {
     Handle_t h = m_element.child(seg.tagName(),false);
-    h ? m_element->replaceChild(h,seg) : m_element.append(seg);
+    if ( h ) m_element->replaceChild(h,seg);
+    else m_element.append(seg);
     return;
   }
   throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");

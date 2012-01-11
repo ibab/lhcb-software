@@ -390,7 +390,7 @@ Document Element::document() const   {
   return Document(m_element ? m_element->getOwnerDocument() : 0);
 }
 
-Handle_t Element::clone(Handle_t h, bool deep) const  {
+Handle_t Element::clone(Handle_t h, bool /* deep */) const  {
   if ( m_element && h )  {    
     return h.clone(m_element->getOwnerDocument(),true);
   }
@@ -415,7 +415,7 @@ Handle_t Element::addChild(const XMLCh* tag)  const  {
   return e;
 }
 
-Handle_t Element::child(const Strng_t& tag, bool throw_exception) const  {
+Handle_t Element::child(const Strng_t& tag, bool /* throw_exception */) const  {
   DOMNodeList* l=m_element->getElementsByTagName(tag);
   if ( l && l->getLength() > 0 ) return Handle_t((DOMElement*)l->item(0));
   throw runtime_error("Cannot find the required child node!");
@@ -437,6 +437,11 @@ RefElement::RefElement(const Handle_t& e)
 : Element(e) 
 {
   m_name = m_element ? getAttr(Attr_name) : 0;
+}
+
+RefElement::RefElement(const RefElement& e)  
+: Element(e), m_name(e.m_name)
+{
 }
 
 const XMLCh* RefElement::name() const  {
@@ -479,8 +484,8 @@ size_t Collection_t::size()  const  {
 
 void Collection_t::operator++()  const  {
   while(m_node)  {
-    int t1 = m_node->getNodeType();
-    int t2 = DOMNode::ELEMENT_NODE;
+    //int t1 = m_node->getNodeType();
+    //int t2 = DOMNode::ELEMENT_NODE;
     m_node = (DOMElement*)m_children->item(++m_index);
     if ( m_node && m_node->getNodeType() == DOMNode::ELEMENT_NODE ) {
       return;

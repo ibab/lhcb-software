@@ -136,6 +136,8 @@ Element_t* Document::createElt(const std::string& tag)  const {
     object = new TGeoTranslation();
   else if ( tag == "identity" )
     object = new TGeoIdentity();
+  else if ( tag == "constant" )
+    object = new TNamed();
   else if ( tag == "volume" )
     object = new Value<TGeoVolume,Volume::Object>();
   else if ( tag == "physvol" )
@@ -190,7 +192,7 @@ RefElement::RefElement(const Document& document, const std::string& type, const 
 
 RefElement::RefElement(const Handle_t& e) : Element(e)
 {
-  TNamed *p = m_element._ptr<TNamed>();
+  //TNamed *p = m_element._ptr<TNamed>();
 }
 
 const char* RefElement::name() const  {

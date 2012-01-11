@@ -10,6 +10,11 @@ Segmentation::Segmentation(Handle_t e) : Element(e)
 {
 }
 
+/// Constructor to be used when reading the already parsed object
+Segmentation::Segmentation(const Element& e) : Element(e)  
+{
+}
+
 Segmentation::Segmentation(const Document& doc, const string& type)
 : Element(doc,type)
 {
@@ -70,7 +75,7 @@ void NonProjectiveCylinder::setPhiBinSize(double value)   {
 }
 
 /// Constructor to be used when reading the already parsed DOM tree
-ProjectiveZPlane::ProjectiveZPlane(Handle_t e) : Segmentation(e)  
+ProjectiveZPlane::ProjectiveZPlane(const Element& e) : Segmentation(e)  
 {
 }
 

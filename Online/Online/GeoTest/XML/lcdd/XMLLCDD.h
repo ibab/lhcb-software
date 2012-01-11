@@ -35,6 +35,9 @@ namespace DetDesc {
     };
 
     struct LCDD {
+
+      virtual ~LCDD() {}
+
       virtual Document document() const = 0;
       virtual Document create() = 0;
       virtual void endDocument() = 0;
@@ -44,8 +47,8 @@ namespace DetDesc {
       virtual Handle_t structure()  const = 0;
       virtual Handle_t solids()  const = 0;
       virtual Handle_t materials()  const = 0;
-      virtual Handle_t worldVolume() const = 0;
-      virtual Handle_t trackingVolume() const = 0;
+      virtual RefElement worldVolume() const = 0;
+      virtual RefElement trackingVolume() const = 0;
       
       virtual RefElement region(const XMLCh* name)  const = 0;
       virtual RefElement visAttributes(const XMLCh* name) const = 0;

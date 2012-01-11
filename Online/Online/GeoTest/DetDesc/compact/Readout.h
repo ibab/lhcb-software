@@ -30,9 +30,9 @@ namespace DetDesc {
       /// Initializing constructor
       Readout(const Document& doc, const std::string& name);
       /// Access IDDescription structure
-      Handle_t idSpec() const;
+      RefElement idSpec() const;
       /// Access segmentation structure
-      Handle_t segmentation()  const;
+      Element segmentation()  const;
       /// Assign IDDescription to readout structure
       void setIDDescriptor(Handle_t spec)   const;
       /// Assign segmentation structure to readout

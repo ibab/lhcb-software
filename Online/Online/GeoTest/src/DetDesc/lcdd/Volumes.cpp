@@ -12,6 +12,7 @@
 #include "TGeoManager.h"
 
 // C/C++ include files
+#include <climits>
 #include <stdexcept>
 #include <iostream>
 
@@ -104,13 +105,10 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
   TGeoVolume* vol = first_value<TGeoVolume>(*this);
   Object*     val = second_value<TGeoVolume>(*this);
   if ( attr )  {
-    TNamed* named = first_value<TNamed>(attr);
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
     vol->SetFillColor(bright);
-    //cout << "Volume:" << name() << " Attr:" << named->GetName() << " Color:" << hex << bright << dec 
-    //  << " Visibility:" << (vis->visible ? "true" : "false") << endl;
     vol->SetLineColor(dark);
     vol->SetLineStyle(vis->lineStyle);
     vol->SetLineWidth(10);

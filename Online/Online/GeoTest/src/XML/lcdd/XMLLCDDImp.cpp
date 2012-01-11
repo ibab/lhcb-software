@@ -28,7 +28,7 @@ using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::XML;
 
-LCDDImp::LCDDImp() : DocumentHandler()  {
+LCDDImp::LCDDImp() : DocumentHandler(), m_worldVol(0), m_trackingVol(0)  {
   m_root    = 0;
   m_idDict  = 0;
   m_limits  = 0;
@@ -75,7 +75,7 @@ RefElement LCDDImp::getRefChild(Handle_t e, const XMLCh* tag, const XMLCh* name,
 }
 
 
-RefElement LCDDImp::pickMotherVolume(const Subdetector& sd) const  {     // throw if not existing
+RefElement LCDDImp::pickMotherVolume(const Subdetector& /* sd */) const  {     // throw if not existing
   return RefElement(m_worldVol);
 }
 

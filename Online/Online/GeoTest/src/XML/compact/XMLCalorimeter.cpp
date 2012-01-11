@@ -167,7 +167,7 @@ Subdetector& PolyhedraBarrelCalorimeter2::fromCompact(LCDD& lcdd, const Sensitiv
   int         numSides    = dim.numsides();
   double      detZ        = dim.z();
   double      rmin        = dim.rmin();
-  double      r           = rmin;
+  //double      r           = rmin;
   double      zrot        = M_PI/numSides;
   Rotation    rot(doc,det_name+"_rotation");
 
@@ -230,7 +230,7 @@ Subdetector& PolyhedraBarrelCalorimeter2::fromCompact(LCDD& lcdd, const Sensitiv
     for (int j = 0; j < repeat; j++)    {                
       Tag_t layer_name = det_name + _toString(layer_number,"_stave_layer%d");
       double layer_thickness = layer->thickness();              
-      int nslices = layer_element.numChildren(Tag_slices);
+      //int nslices = layer_element.numChildren(Tag_slices);
 
       // Layer position in Z within the stave.
       layer_position_z += layer_thickness / 2;
@@ -357,9 +357,9 @@ void PolyhedraBarrelCalorimeter2::placeStaves(LCDD& lcdd,
   }
 }
 
-Subdetector& PolyhedraEndcapCalorimeter2::fromCompact(LCDD& lcdd, const SensitiveDetector& sens)  {
+Subdetector& PolyhedraEndcapCalorimeter2::fromCompact(LCDD& /* lcdd */, const SensitiveDetector& /* sens */)  {
   return *this;
 }
-Subdetector& EcalBarrel::fromCompact(LCDD& lcdd, const SensitiveDetector& sens)  {
+Subdetector& EcalBarrel::fromCompact(LCDD& /* lcdd */, const SensitiveDetector& /* sens */)  {
   return *this;
 }

@@ -40,6 +40,8 @@ namespace DetDesc {
     struct LCDD {
       typedef std::map<std::string,Handle_t> HandleMap;
 
+      virtual ~LCDD() {}
+
       virtual Document document() const = 0;
       virtual Document create() = 0;
       virtual Document init() = 0;

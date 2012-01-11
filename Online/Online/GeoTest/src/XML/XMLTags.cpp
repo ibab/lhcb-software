@@ -93,7 +93,6 @@ namespace DetDesc   { namespace XML  {
 
   ATTR(InvisibleNoDaughters);
   ATTR(InvisibleWithDaughters);
-  ATTR(Z);
 
   ATTR(1);
   ATTR(alpha);
@@ -105,7 +104,6 @@ namespace DetDesc   { namespace XML  {
   ATTR(deltaphi);
   ATTR(dimensions);
   ATTR(ecut);
-  ATTR(eunit);
   ATTR(false);
   ATTR(field_name);
   ATTR(g);
@@ -116,7 +114,6 @@ namespace DetDesc   { namespace XML  {
   ATTR(hits_collection);
   TAG(identity_rot);
   TAG(identity_pos);
-  ATTR(incoming_r);
   ATTR(inner_r);
   ATTR(inner_z);
   ATTR(layer);
@@ -128,7 +125,6 @@ namespace DetDesc   { namespace XML  {
   ATTR(ntheta);
   ATTR(outer_r);
   ATTR(outer_z);
-  ATTR(outgoing_r);
   ATTR(position);
   ATTR(r);
   ATTR(rbg);
@@ -191,7 +187,6 @@ namespace DetDesc   { namespace XML  {
   TAG(world_box);
   TAG(world_volume);
   TAG(calorimeter);
-  TAG(cartesian_grid_xy);
   TAG(tracking_cylinder);
   TAG(tracking_volume);
 
@@ -281,7 +276,6 @@ namespace DetDesc   { namespace XML  {
   ATTR(file);
   ATTR(checksum);
 
-  ATTR(crossing_angle);
   ATTR(incoming_r);
   ATTR(outgoing_r);
 

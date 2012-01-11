@@ -46,6 +46,8 @@ namespace DetDesc {
       };
       /// Constructor to be used when reading the already parsed object
       Segmentation(Handle_t e);
+      /// Constructor to be used when reading the already parsed object
+      Segmentation(const Element& e);
       /// Constructor to create a new segmentation object (to be called by super class only)
       Segmentation(const Document& doc, const std::string& type);
       bool useForHitPosition() const;
@@ -54,7 +56,7 @@ namespace DetDesc {
 
     struct ProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      ProjectiveCylinder(Handle_t e) : Segmentation(e) {}
+      ProjectiveCylinder(const Element& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       ProjectiveCylinder(const Document& doc);
       /// Accessors: get number of bins in theta
@@ -69,7 +71,7 @@ namespace DetDesc {
 
     struct NonProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      NonProjectiveCylinder(Handle_t e) : Segmentation(e) {}
+      NonProjectiveCylinder(const Element& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       NonProjectiveCylinder(const Document& doc);
       /// Accessors: get size of bins in Z
@@ -84,7 +86,7 @@ namespace DetDesc {
 
     struct ProjectiveZPlane : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      ProjectiveZPlane(Handle_t e);
+      ProjectiveZPlane(const Element& e);
       /// Constructor to create a new segmentation object
       ProjectiveZPlane(const Document& doc);
       /// Accessors: get number of bins in theta
@@ -99,7 +101,7 @@ namespace DetDesc {
 
     struct GridXY : public Segmentation   {
       /// Constructor to be used when reading the already parsed object
-      GridXY(Handle_t h) : Segmentation(h) {}
+      GridXY(const Element& h) : Segmentation(h) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GridXY(const Document& doc, const std::string& tag);
       /// Constructor to be used when creating a new object.
@@ -112,7 +114,7 @@ namespace DetDesc {
 
     struct GridXYZ : public GridXY  {
       /// Constructor to be used when reading the already parsed object
-      GridXYZ(Handle_t h) : GridXY(h) {}
+      GridXYZ(const Element& h) : GridXY(h) {}
       /// Constructor to be used when creating a new object.
       GridXYZ(const Document& doc);
       /// Constructor to be used when creating a new object.
@@ -123,14 +125,14 @@ namespace DetDesc {
 
     struct CartesianGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      CartesianGridXY(Handle_t element) : GridXY(element) {}
+      CartesianGridXY(const Element& element) : GridXY(element) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       CartesianGridXY(const Document& doc) : GridXY(doc,"cartesian_grid_xy") {}
     };
 
     struct GlobalGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      GlobalGridXY(Handle_t element) : GridXY(element) {}
+      GlobalGridXY(const Element& element) : GridXY(element) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GlobalGridXY(const Document& doc) : GridXY(doc,"global_grid_xy") {}
     };

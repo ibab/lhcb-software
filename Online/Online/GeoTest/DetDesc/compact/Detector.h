@@ -41,6 +41,7 @@ namespace DetDesc {
       };
       SensitiveDetector() : RefElement(Handle_t(0)) {}
       SensitiveDetector(Handle_t e) : RefElement(e) {}
+      SensitiveDetector(const RefElement& e) : RefElement(e) {}
       SensitiveDetector(const Document& doc, const std::string& type, const std::string& name);
       /// Access the type of the sensitive detector
       std::string type() const;

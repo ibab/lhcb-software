@@ -8,7 +8,7 @@ using namespace std;
 using namespace DetDesc::XML;
 
 
-Subdetector& PolyconeSupport::fromCompact(LCDD& lcdd, const Handle_t& sens)  {
+Subdetector& PolyconeSupport::fromCompact(LCDD& lcdd, const Handle_t& /* sens */)  {
   Document   doc     = lcdd.document();
   Handle_t   compact = handle();
   Tag_t      support = name();
@@ -25,7 +25,7 @@ Subdetector& PolyconeSupport::fromCompact(LCDD& lcdd, const Handle_t& sens)  {
   return *this;
 }
 
-Subdetector& TubeSegment::fromCompact(LCDD& lcdd, const Handle_t& sens)   {
+Subdetector& TubeSegment::fromCompact(LCDD& lcdd, const Handle_t& /* sens */)   {
   Document   doc     = lcdd.document();
   Handle_t   compact = handle();
   Tag_t      support = name();

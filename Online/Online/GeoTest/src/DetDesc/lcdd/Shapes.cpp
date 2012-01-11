@@ -320,7 +320,7 @@ SubtractionSolid::SubtractionSolid(const Document& doc, const std::string& name,
   string combi2 = name+"_combitrans_first";
   TGeoTranslation* t = value<TGeoTranslation>(pos);
   TGeoRotation*    r = value<TGeoRotation>(rot);
-  const double*    v = t->GetTranslation();
+  //const double*    v = t->GetTranslation();
 
   TGeoTranslation* firstPos = new TGeoTranslation(0,0,0);
   TGeoRotation* firstRot = new TGeoRotation();

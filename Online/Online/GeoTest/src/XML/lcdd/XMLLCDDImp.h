@@ -42,8 +42,8 @@ namespace DetDesc {
       Handle_t      m_solids;
 
 
-      Handle_t      m_worldVol;
-      Handle_t      m_trackingVol;
+      RefElement    m_worldVol;
+      RefElement    m_trackingVol;
       Handle_t      m_setup;
 
       void convertMaterials(const std::string& uri);
@@ -93,8 +93,8 @@ namespace DetDesc {
       virtual Handle_t limitset()  const               { return m_limits;               }
       virtual Handle_t regions() const                 { return m_regions;              }
       virtual Handle_t materials()  const              { return m_materials;            }
-      virtual Handle_t worldVolume() const             { return m_worldVol;             }
-      virtual Handle_t trackingVolume() const          { return m_trackingVol;          }
+      virtual RefElement worldVolume() const           { return m_worldVol;             }
+      virtual RefElement trackingVolume() const        { return m_trackingVol;          }
 #define __R  return *this
       virtual LCDD& add(const Constant& constant)      { constants().append(constant);__R;}
       virtual LCDD& add(const Solid& solid)            { solids().append(solid);      __R;}

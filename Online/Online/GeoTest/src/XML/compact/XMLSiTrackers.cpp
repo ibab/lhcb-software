@@ -25,9 +25,11 @@ Subdetector& SiTrackerBarrel::fromCompact(LCDD& lcdd, const SensitiveDetector& s
   Volume      motherVol = lcdd.pickMotherVolume(*this);
   int         id = this->id();
 
-  map<string, Handle_t> modules;
-  for(Collection_t c(compact,Tag_module); c; ++c)
-    modules.insert(make_pair(_toString(RefElement(c).name()),buildModule(lcdd,compact,c,sens)));
+  map<string, Volume> modules;
+  for(Collection_t c(compact,Tag_module); c; ++c) {
+    Volume vol(buildModule(lcdd,compact,c,sens));
+    modules.insert(make_pair(_toString(RefElement(c).name()),vol));
+  }
 
   for(Collection_t c(compact,Tag_layer); c; ++c)  {
     Component layer        = c;
@@ -41,7 +43,7 @@ Subdetector& SiTrackerBarrel::fromCompact(LCDD& lcdd, const SensitiveDetector& s
     Element   rphi_layout(layer.child(_X(rphi_layout)));
     Element   z_layout = layer.child(_X(z_layout));
     double    ir       = barrel_env.inner_r();
-    double    or       = barrel_env.outer_r();
+    double    var_or   = barrel_env.outer_r();
     double    oz       = barrel_env.z_length();
     int       nphi     = rphi_layout.attr<int>(_X(nphi));
     double    phi0     = rphi_layout.attr<double>(_X(phi0));
@@ -57,7 +59,7 @@ Subdetector& SiTrackerBarrel::fromCompact(LCDD& lcdd, const SensitiveDetector& s
     double    module_z = -z0;
     int       module   = 0;
 
-    layer_tube.setDimensions(ir,or,oz);
+    layer_tube.setDimensions(ir,var_or,oz);
     lcdd.add(layer_tube);
     for(int ii=0; ii<nphi; ++ii)  {
       double dx = z_dr * cos(phic + phi_tilt);
@@ -109,7 +111,7 @@ Volume SiTrackerBarrel::buildModule(LCDD& lcdd,
   Material       air = lcdd.material(Tag_Air);
   Tag_t     det_name = detector.name();
   string module_name = _toString(node.name());
-  Volume mod_vol(0);
+  Volume mod_vol;
   int sensor_number = 0;
   for(Collection_t i(detector,_X(module)); i; ++i)  {
     Component mod_element = i;
@@ -179,7 +181,7 @@ Subdetector& SiTrackerEndcap::fromCompact(LCDD& lcdd, const SensitiveDetector& s
   for(Collection_t i(compact,Tag_module); i; ++i)
     m_modParams.insert(make_pair(Component(i).name(),Dimension(i)));
   for(Collection_t i(compact,Tag_layer); i; ++i)  {
-    Component layer = 0;
+    Component layer(0);
     int      l_id     = layer.id();
     int      nwedges  = layer.attr<int>(_X(nwedges));
     Tag_t    l_name   = layer.name();
@@ -529,9 +531,9 @@ void SiTrackerEndcap::makeTrapModule(LCDD& lcdd, const SensitiveDetector& sens, 
 Subdetector& SiTrackerEndcap2::fromCompact(LCDD& lcdd, const SensitiveDetector& sens)   {
   Document    doc      = lcdd.document();
   Component   compact  = handle();
-  int         sysID    = compact.id();
+  //int         sysID    = compact.id();
   Tag_t       det_name = compact.name();
-  bool        reflect  = compact.reflect();
+  //bool        reflect  = compact.reflect();
   Material    air      = lcdd.material(Tag_Air);
   Material    vacuum   = lcdd.material(Tag_Vacuum);
   int         m_id=0, c_id=0, n_sensor=0;

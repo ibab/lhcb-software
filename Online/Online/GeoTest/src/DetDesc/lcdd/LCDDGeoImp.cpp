@@ -43,7 +43,7 @@ LCDDImp::LCDDImp() : m_worldVol(0), m_trackingVol(0), m_reflect(0), m_identity(0
   XML::tags_init();
 }
 
-Volume LCDDImp::pickMotherVolume(const Subdetector& sd) const  {     // throw if not existing
+Volume LCDDImp::pickMotherVolume(const Subdetector& /* sd */) const  {     // throw if not existing
   return m_worldVol;
 }
 

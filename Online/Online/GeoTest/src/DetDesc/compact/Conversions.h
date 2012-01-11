@@ -47,7 +47,7 @@ namespace DetDesc {
       *  @version  1.0
       */
     template <typename T> struct Converter : public LCDDActor {
-      typedef typename T to_type;
+      typedef T to_type;
       Converter(LCDD& lcdd) : LCDDActor(lcdd) {}
       void operator()(const XML::Handle_t& xml) const;
     };
@@ -64,7 +64,7 @@ namespace DetDesc {
       std::ostream& os;
       std::string   text;
       std::map<std::string,Handle_t> cont;
-      PrintMap(const LCDD& l, std::ostream& stream, const std::map<std::string,Handle_t>& c, const std::string& t="") : lcdd(l), os(stream), cont(c), text(t)  {}
+      PrintMap(const LCDD& l, std::ostream& stream, const std::map<std::string,Handle_t>& c, const std::string& t="") : lcdd(l), os(stream), text(t), cont(c)  {}
       void operator()() const;
     };
     template <typename T> struct Printer  {

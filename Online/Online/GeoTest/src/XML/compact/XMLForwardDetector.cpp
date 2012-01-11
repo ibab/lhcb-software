@@ -34,7 +34,7 @@ Subdetector& ForwardDetector::fromCompact(LCDD& lcdd, const SensitiveDetector& s
   double      xangleHalf = xangle / 2;
   double      thickness  = Layering(compact).totalThickness();
   double      zpos       = zinner + (thickness / 2);
-  double      zouter     = zinner + thickness;
+  //double      zouter     = zinner + thickness;
   // Beampipe position in envelope.
   double beamPosX        = tan(xangleHalf) * zpos;
 

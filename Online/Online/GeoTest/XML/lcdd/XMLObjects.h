@@ -62,6 +62,8 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed DOM tree
       Position(Handle_t e) : XYZ_element(e) {}
       /// Constructor to be used when creating a new DOM tree
+      Position(const RefElement& e) : XYZ_element(e) {}
+      /// Constructor to be used when creating a new DOM tree
       Position(const Document& doc, const XMLCh* name) 
         : XYZ_element(doc,Tag_position,name) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
@@ -75,6 +77,8 @@ namespace DetDesc {
     struct Rotation : public XYZ_element  {
       /// Constructor to be used when reading the already parsed DOM tree
       Rotation(Handle_t e) : XYZ_element(e) {}
+      /// Constructor to be used when creating a new DOM tree
+      Rotation(const RefElement& e) : XYZ_element(e) {}
       /// Constructor to be used when creating a new DOM tree
       Rotation(const Document& doc, const XMLCh* name) 
         : XYZ_element(doc,Tag_rotation,name) {}
@@ -95,7 +99,9 @@ namespace DetDesc {
 
     struct Material : public RefElement  {
       /// Constructor to be used when creating a new DOM tree
-      Material(Handle_t e) : RefElement(e) {}
+      Material(const Handle_t& e) : RefElement(e) {}
+      /// Constructor to be used when creating a new DOM tree
+      Material(const RefElement& e) : RefElement(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
       Material(const Document& doc, const XMLCh* name);
     };
@@ -103,6 +109,8 @@ namespace DetDesc {
     struct VisAttr : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
       VisAttr(Handle_t e) : RefElement(e) {}
+      /// Constructor to be used when reading the already parsed DOM tree
+      VisAttr(const RefElement& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
       VisAttr(const Document& doc, const XMLCh* name);
       void setVisible(bool value);

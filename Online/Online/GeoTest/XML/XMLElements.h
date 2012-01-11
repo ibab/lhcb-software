@@ -8,10 +8,6 @@
 #include "xercesc/dom/DOMDocument.hpp"
 #include "xercesc/dom/DOMNodeList.hpp"
 
-namespace xercesc {
-  class DOMNodeList;
-}
-
 /*
  *   Gaudi namespace declaration
  */
@@ -231,6 +227,7 @@ namespace DetDesc {
     struct RefElement : public Element  {
       Attribute  m_name;
       RefElement(const Handle_t& e);
+      RefElement(const RefElement& e);
       RefElement(const Document& d, const XMLCh* type, const XMLCh* name);
       const XMLCh* name() const;
       const XMLCh* refName() const;

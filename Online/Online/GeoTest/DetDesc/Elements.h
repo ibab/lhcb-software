@@ -67,7 +67,7 @@ namespace DetDesc {
 
     struct Element  {
       Handle_t m_element;
-      Element(const Handle_t& e) : m_element(e) {                 }
+      Element(const Handle_t&  e) : m_element(e) {                 }
       Element(const Document& document, const std::string& type);
       bool operator!() const                  {  return 0 == m_element.ptr(); }
       operator Handle_t () const              {  return m_element; }

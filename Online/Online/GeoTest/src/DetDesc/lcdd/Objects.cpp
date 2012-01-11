@@ -34,6 +34,8 @@ Header& Header::fromCompact(Document doc, Handle_t element, const string& fname)
 Constant::Constant(const Document& doc, const string& name, const string& val)
 : RefElement(doc, "constant", name)
 {
+  TNamed* obj = value<TNamed>(*this);
+  obj->SetTitle(val.c_str());
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -103,8 +105,8 @@ void VisAttr::setDrawingStyle(DrawingStyle value)   {
 }
 
 /// Set alpha value
-void VisAttr::setAlpha(float value)   {
-  TNamed* obj = first_value<TNamed>(*this);
+void VisAttr::setAlpha(float /* value */)   {
+  //TNamed* obj = first_value<TNamed>(*this);
   //obj->SetAlpha(value);
 }
 

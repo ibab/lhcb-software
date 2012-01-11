@@ -17,6 +17,8 @@ namespace DetDesc {
     struct Readout : public RefElement {
       /// Constructor to be used when reading the already parsed DOM tree
       Readout(Handle_t e);
+      /// Constructor to be used when reading the already parsed DOM tree
+      Readout(const RefElement& e);
       /// Initializing constructor
       Readout(const Document& doc, Handle_t h);
       const XMLCh* name() const;
