@@ -5,7 +5,7 @@
 
 package           ChargedProtoANNPIDParam
 
-version           v1r2
+version           v1r3
 
 branches          cmt doc data
 
