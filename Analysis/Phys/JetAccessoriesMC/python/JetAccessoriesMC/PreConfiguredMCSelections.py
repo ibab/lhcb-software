@@ -19,7 +19,7 @@ from Configurables import  LoKi__ParticleMaker,LoKi__HepMCParticleMaker
 PartonConfZJets = { 
     'From': ['b','c','d','s','u','g'],
     'UseSelector' : True , 
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'PartonicMode' : True ,
     'OutputTable'  : 'Relations/Phys/StdHepMCParton2HepMCZ',
     'Particles' : ['b','c','d','s','u','g'] }
@@ -27,7 +27,7 @@ PartonConfZJets = {
 PartonConfAll = { 
     'From': ['b','c','d','s','u','g'],
     'UseSelector' : False , 
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'PartonicMode' : True ,
     'OutputTable'  : 'Relations/Phys/StdHepMCParton2HepMC',
     'Particles' : ['b','c','d','s','u','g'] }
@@ -35,7 +35,7 @@ PartonConfAll = {
 HepMCAllConfZJets = {
     'From': ['b','c','d','s','u','g'],  
     'UseSelector' : True , 
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'OutputTable'  : 'Relations/Phys/StdHepMC2HepMCAllZ', 
     'InAcceptance': False, 'PartonicMode' : False,
     'Particles' : ["gamma","e+","mu+","pi+","K+","nu_e","p+","nu_mu","nu_tau","n0", "KL0"] }
@@ -43,7 +43,7 @@ HepMCAllConfZJets = {
 HepMCAllConfAll = {
     'From': ['b','c','d','s','u','g'],  
     'UseSelector' : False , 
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'OutputTable'  : 'Relations/Phys/StdHepMC2HepMCAll', 
     'InAcceptance': False, 
     'PartonicMode' : False,
@@ -52,7 +52,7 @@ HepMCAllConfAll = {
 HepMCConfVisibleZJets = { 
     'From': ['b','c','d','s','u','g'], 
     'UseSelector' : True,
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'OutputTable'  : 'Relations/Phys/StdHepMC2HepMCZ',
     'InAcceptance': False, 
     'PartonicMode' : False,
@@ -61,8 +61,16 @@ HepMCConfVisibleZJets = {
 HepMCConfVisible = { 
     'From': ['b','c','d','s','u','g'], 
     'UseSelector' : False,
-    'MotherSelectorName' : 'ZPlusJetHepMCSelector' ,
+    'MotherSelectorName' : 'WZPlusJetHepMCSelector' ,
     'OutputTable'  : 'Relations/Phys/StdHepMC2HepMC',
     'InAcceptance': False, 
     'PartonicMode' : False,
     'Particles' : ["gamma","e+","mu+","pi+","K+","p+"] }
+
+HepMCMuonsFromZ = { 
+    'From': ['Z0'], 
+    'InAcceptance': False, 
+    'PartonicMode' : False,
+    'OutputTable'  : 'Relations/Phys/StdHepMCMuons2HepMC',
+    'Particles':['mu+']
+    }

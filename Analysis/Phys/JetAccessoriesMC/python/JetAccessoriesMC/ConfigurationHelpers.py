@@ -28,7 +28,7 @@ def jetMakerConfig( name , Inputs  , R ):
     tool.RParameter = R
     tool.Recombination = 0
     return algo
-
+from GaudiKernel.Constants import DEBUG,VERBOSE
 def jetMatcherConfig( name , toolName, jetALocation,jetBLocation,outputTable ):
     """
     to ease jet association config
@@ -49,6 +49,12 @@ def jetMatcherConfig( name , toolName, jetALocation,jetBLocation,outputTable ):
         algo.addTool ( LoKi__HepMCJets2HepMCJets )
     if toolName ==  "LoKi__HepMCJets2Jets":
         algo.addTool ( LoKi__HepMCJets2Jets )
+
+        #removed to try with MCMatchObjP2MCRelator
+        #from Configurables import DaVinciSmartAssociator
+        #algo.LoKi__HepMCJets2Jets.addTool(DaVinciSmartAssociator)
+        #algo.LoKi__HepMCJets2Jets.DaVinciSmartAssociator.OutputLevel = VERBOSE
+        
     if toolName ==  "LoKi__HepMCJets2JetsDeltaR":
         algo.addTool ( LoKi__HepMCJets2JetsDeltaR )
     if toolName ==  "LoKi__PartonicJets2HepMCJets":
@@ -57,6 +63,8 @@ def jetMatcherConfig( name , toolName, jetALocation,jetBLocation,outputTable ):
     algo.JetsALocation =jetALocation
     algo.JetsBLocation =jetBLocation
     algo.OutputTable = outputTable
+#    algo.OutputLevel = DEBUG
+
     return algo
     
 def addRelationTuple(iDecayTreeTuple,iJets2JetsAlg,InvertTable,ReverseMatching,extraName = ''):
@@ -94,11 +102,11 @@ def ConfigureDoD(RValue = 0.5):
     import JetAccessoriesMC.PreConfiguredMCSelections 
     StdHepMCPartons = StdHepMCParticlesConf ("StdHepMCPartons",JetAccessoriesMC.PreConfiguredMCSelections.PartonConfAll)
     
-    ### create all hepMC particles
-    StdHepMCParticlesAll = StdHepMCParticlesConf ("StdHepMCParticlesAll",JetAccessoriesMC.PreConfiguredMCSelections.HepMCAllConfAll)
+    ### create all hepMC particles from Z interaction
+    StdHepMCParticlesAll = StdHepMCParticlesConf ("StdHepMCParticlesAll",JetAccessoriesMC.PreConfiguredMCSelections.HepMCAllConfZJets)
     
-    ### create measurable hepMC particles
-    StdHepMCParticles = StdHepMCParticlesConf("StdHepMCParticles",JetAccessoriesMC.PreConfiguredMCSelections.HepMCConfVisible)
+    ### create measurable hepMC particles from Z interaction
+    StdHepMCParticles = StdHepMCParticlesConf("StdHepMCParticles",JetAccessoriesMC.PreConfiguredMCSelections.HepMCConfVisibleZJets)
 
     for alg in  [StdHepMCPartons.Alg, StdHepMCParticlesAll.Alg, StdHepMCParticles.Alg]:
         dod.AlgMap ['Phys/'+alg.getName()+'/Particles'] = alg.getFullName() 
@@ -113,8 +121,8 @@ def ConfigureDoD(RValue = 0.5):
     SelectedRecoParticles = JetAccessories.RecoParticles.SelectedTracks
     
     #Particle Flow
-    import JetAccessories.ParticleFlow
-    SelectedPFParticles = JetAccessories.ParticleFlow.ParticleFlow
+#    import JetAccessories.ParticleFlow #fixme
+#    SelectedPFParticles = JetAccessories.ParticleFlow.ParticleFlow
 
     #jets
     from JetAccessoriesMC.ConfigurationHelpers import jetMakerConfig
@@ -128,14 +136,17 @@ def ConfigureDoD(RValue = 0.5):
     StdHepMCJets    = jetMakerConfig("StdHepMCJets",   ["Phys/FilteredStableParticles/Particles"],RValue)
 
     ### create reco jets
-    StdJets = jetMakerConfig("StdJets",   [  "Phys/FilteredPions/Particles",
-                                             "Phys/StdLoosePhotons/Particles"]
+    StdJets = jetMakerConfig("StdJets",   [  #"Phys/FilteredPions/Particles",
+            "Phys/StdNoPIDsDownPions/Particles",
+            "Phys/StdAllNoPIDsPions/Particles",
+            "Phys/StdLoosePhotons/Particles"]
                              ,RValue)
     ### create ParticleFlow jets
-    StdPFJets = jetMakerConfig("StdPFJets",   [ SelectedPFParticles.PFOutputLocation] ,RValue)
+#    StdPFJets = jetMakerConfig("StdPFJets",   [ SelectedPFParticles.PFOutputLocation] ,RValue)
 
-    for alg in  [StdPartonicJets,StdHepMCAllJets,StdHepMCJets,StdJets,StdPFJets,
-                 MCPartFilter,SelectedRecoParticles,SelectedPFParticles]:
+    for alg in  [StdPartonicJets,StdHepMCAllJets,StdHepMCJets,StdJets,#StdPFJets,
+                 MCPartFilter,SelectedRecoParticles#,SelectedPFParticles
+                 ]:
         dod.AlgMap ['Phys/'+alg.getName()+'/Particles'] = alg.getFullName() 
 
     #matching tables
@@ -172,9 +183,9 @@ def ConfigureDoD(RValue = 0.5):
                                            'Phys/'+name+'/Particles','Phys/'+name2+'/Particles',
                                            'Relations/Phys/'+name+'2'+name2+'MCtrue')
             if name == 'StdHepMCAllJets':
-                HepMC2RecMC.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCAll'
+                HepMC2RecMC.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCAllZ'
             if name == 'StdHepMCJets':
-                HepMC2RecMC.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMC'
+                HepMC2RecMC.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCZ'
             HepMC2RecMC.LoKi__HepMCJets2Jets.MatchingMethod = 'MCtrue'
             matchers[name+'2'+name2+"MCtrue"] = HepMC2RecMC
 
@@ -183,9 +194,9 @@ def ConfigureDoD(RValue = 0.5):
                                      'Phys/'+name+'/Particles','Phys/'+name2+'/Particles',
                                      'Relations/Phys/'+name+'2'+name2+'Measured')
             if name == 'StdHepMCAllJets':
-                HepMC2RecM.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCAll'
+                HepMC2RecM.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCAllZ'
             if name == 'StdHepMCJets':
-                HepMC2RecM.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMC'
+                HepMC2RecM.LoKi__HepMCJets2Jets.StdHepMC2HepMCTable = 'Relations/Phys/StdHepMC2HepMCZ'
             HepMC2RecM.LoKi__HepMCJets2Jets.MatchingMethod = 'measured'
             matchers[name+'2'+name2+"measured"] = HepMC2RecM
 

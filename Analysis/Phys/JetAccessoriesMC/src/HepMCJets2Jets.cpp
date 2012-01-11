@@ -129,12 +129,38 @@ void LoKi::HepMCJets2Jets::makeRelation( const IJets2Jets::Jets& StdPrimaryJets
 	      debug()<< "Matching reco particle to MC thruth." << endmsg;
 	      Assert( m_p2mcAssoc, "The DaVinci smart associator hasn't been initialized!");
 	      for(Parts::iterator idaug_primjet = daug_primjet.begin() ; daug_primjet.end()!= idaug_primjet  ; idaug_primjet++ )
-		if  ( m_p2mcAssoc->relatedMCP(*idaug_secjet)->momentum().E()/(*idaug_primjet)->momentum().E()>	m_matchingP&&
-		      m_p2mcAssoc->relatedMCP(*idaug_secjet)->momentum().E()/(*idaug_primjet)->momentum().E()<(1.0/	m_matchingP))
-		  {
-		    weight_jetsec_jetprim += m_p2mcAssoc->relatedMCP(*idaug_secjet)->momentum().E()/E(*primjet);
-		    break; 
-		  }
+		{ 
+		  if (msgLevel(MSG::DEBUG)) 
+		    {
+		      debug () << "Matching Rec Particle:";
+		      debug () << (*idaug_primjet);
+		      debug () << (*idaug_primjet)->momentum();
+		      debug () << (*idaug_primjet)->momentum().E()<< endmsg;
+		      
+		    }
+		  const LHCb::MCParticle* AssocMPC  = m_p2mcAssoc->relatedMCP(*idaug_secjet);
+		  if (AssocMPC)
+		    {
+		      if (msgLevel(MSG::DEBUG)) 
+			{ 
+			  debug () << "Associated MC Particle";
+			  debug () << AssocMPC << endmsg;
+			  debug () << AssocMPC->momentum() << endmsg;
+			  debug () << AssocMPC->momentum().E() << endmsg;
+			  debug() << "Associated MCParticle found for truth matched rec Particle " << *idaug_primjet << " of type " << (*idaug_primjet)->particleID()  << endmsg;
+			  
+			}
+		      if  ( AssocMPC->momentum().E()/(*idaug_primjet)->momentum().E()>	m_matchingP&&
+			    AssocMPC->momentum().E()/(*idaug_primjet)->momentum().E()<(1.0/	m_matchingP))
+			{
+			  weight_jetsec_jetprim += m_p2mcAssoc->relatedMCP(*idaug_secjet)->momentum().E()/E(*primjet);
+			  break; 
+			}
+		    }
+		  else 
+		    error() << "No Associated MCParticle found for truth matched rec Particle " << *idaug_primjet << " of type " << (*idaug_primjet)->particleID()  << endmsg;
+		   
+		}
 	    }
 	  }
         

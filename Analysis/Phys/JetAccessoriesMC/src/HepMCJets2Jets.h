@@ -81,8 +81,9 @@ namespace LoKi
       , m_matcher(0)
       , m_MatchingMethod(uninitialised)	
       , m_p2mcAssoc(0)
-      , m_p2mcAssocType("DaVinciSmartAssociator")
-      , m_matchingP(0.999)
+      //      , m_p2mcAssocType("DaVinciSmartAssociator")
+      , m_p2mcAssocType("MCMatchObjP2MCRelator")
+    , m_matchingP(0.999)
   
     {
       //
