@@ -588,7 +588,7 @@ int ScpBinning::NEntires()
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
  
-  return fabs(a.scp()) < fabs(b.scp());
+  return a.scp() < b.scp();
 }
 
 bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{

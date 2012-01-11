@@ -1818,6 +1818,16 @@ DecayTree* dk=0;
   if(dbThis) cout << "third decay: " << *dk << endl;
   delete dk;
 
+//  //Dbar0 -> rho(770)rho(770), rho(770)->pi+pi-  [S-WAVE]
+//
+//  dk = new DecayTree(-421);
+//  dk->addDgtr(113)->addDgtr(211, -211);
+//  dk->addDgtr(113)->addDgtr(211, -211);
+//  add(*dk);
+//  if(dbThis) cout << "third decay: " << *dk << endl;
+//  delete dk;
+
+
 //D0 -> rho(770)rho(770), rho(770)->pi+pi-  [P-WAVE]
   dk = new DecayTree(421);
   dk->addDgtr(113)->addDgtr(211, -211);
