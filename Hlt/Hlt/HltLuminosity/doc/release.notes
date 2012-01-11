@@ -6,6 +6,11 @@
 
 !========================== HltLuminosity v2r18 2011-03-07 ===================
 ! 2011-03-06 - Vladik Balagura
+ - added LumiCountVeloWithZRCuts.{cpp,h}: counting of Tracks & Vertexes in
+the limited region around IP (without displaced parasitic collisions)
+
+!========================== HltLuminosity v2r18 2011-03-07 ===================
+! 2011-03-06 - Vladik Balagura
  - added LumiCountMuons.{cpp,h}
 
 !========================== HltLuminosity v2r17 2010-05-27 ===================
