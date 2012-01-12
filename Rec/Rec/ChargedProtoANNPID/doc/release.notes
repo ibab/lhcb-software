@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-12 - Chris Jones
+ - Make the network tuning MC11aTuneV1 the default for all data types, as the 
+   improvements will help in all cases.
+
 ! 2012-01-11 - Chris Jones
  - Reinstate the MC11aV1 tunings, as they have been updated with new network
    tunings, that appear to have removed the spurious printouts ...

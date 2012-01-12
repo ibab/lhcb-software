@@ -23,10 +23,10 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"ProtoParticlesLocation" : None
                   ,"NetworkVersions" : { "2012" : "MC11aTuneV1", 
                                          "2011" : "MC11aTuneV1", 
-                                         "2010" : "MC10TuneV1",
-                                         "2009" : "MC10TuneV1",
-                                         "2008" : "MC10TuneV1",
-                                         "MC09" : "MC10TuneV1" }
+                                         "2010" : "MC11aTuneV1",
+                                         "2009" : "MC11aTuneV1",
+                                         "2008" : "MC11aTuneV1",
+                                         "MC09" : "MC11aTuneV1" }
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
