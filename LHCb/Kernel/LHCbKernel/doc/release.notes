@@ -3,7 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
-
+! 2012-01-12 - Sajan Easo
+ - declared  new RICH radiators CO2 and PMTQuartz in RichRadiatorType.h
 ! 2011-12-20 - Marco Cattaneo
  - Fix trivial icc remark
 
