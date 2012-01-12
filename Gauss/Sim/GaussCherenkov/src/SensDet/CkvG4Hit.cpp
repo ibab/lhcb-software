@@ -282,7 +282,8 @@ Rich::RadiatorType CkvG4Hit::radiatorType() const
             ( aRMIdValues-> RichFilterD263CkvRadiatorNum())    == GetRadiatorNumber() )   { rad = Rich::AerogelFilter; }
   else if ( ( aRMIdValues-> Rich1NitrogenCkvRadiatorNum()) == GetRadiatorNumber() ||
             ( aRMIdValues-> Rich2NitrogenCkvRadiatorNum()) == GetRadiatorNumber() )       { rad = Rich::Nitrogen; }
-  else if  (aRMIdValues-> RichPmtQuartzWindowCkvRadiatorNum()== GetRadiatorNumber() ) { rad = Rich::HPDQuartzWin;} // to be changed.
+  else if ( ( aRMIdValues-> RichCO2CkvRadiatorNum()) == GetRadiatorNumber() ) { rad = Rich::CO2;}
+  else if  (aRMIdValues-> RichPmtQuartzWindowCkvRadiatorNum()== GetRadiatorNumber() ) { rad = Rich::PMTQuartzWin;} 
   
   
 
