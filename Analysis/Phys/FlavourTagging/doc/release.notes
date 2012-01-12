@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v12r7 2012-01-12 =========================
+
 ! 2011-12-23 - Marc Grabalosa
  - OS and SS optimized for Strip17
  - OS calibration Strip17
