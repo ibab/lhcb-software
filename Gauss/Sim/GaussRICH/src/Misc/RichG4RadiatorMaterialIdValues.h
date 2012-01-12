@@ -52,6 +52,7 @@ public:
   G4int Rich1AgelTile15CkvRadiatorNum() {return m_Rich1AgelTile15CkvRadiatorNum;}
   G4int Rich1NitrogenCkvRadiatorNum() {return m_Rich1NitrogenCkvRadiatorNum;}
   G4int Rich2NitrogenCkvRadiatorNum() {return m_Rich2NitrogenCkvRadiatorNum;}
+  G4int RichCO2CkvRadiatorNum()  {  return m_RichCO2CkvRadiatorNum;}
   G4int NumRich1AgelSubTileRadiatorNum() {return m_NumRich1AgelSubTileRadiator;}
   G4int NumRich1AgelNominalTileRadiatorNum() {return m_NumRich1AgelNominalTileRadiator;}
   G4int Rich1AgelSubTileCkvRadiatorNumValue(int ast){  return m_Rich1AgelSubTileCkvRadiatorNum[ast];}
@@ -114,6 +115,7 @@ G4int m_Rich1AgelTile14CkvRadiatorNum;
 G4int m_Rich1AgelTile15CkvRadiatorNum;
 G4int m_Rich1NitrogenCkvRadiatorNum;
 G4int m_Rich2NitrogenCkvRadiatorNum;
+G4int m_RichCO2CkvRadiatorNum;
 G4int m_NumRich1AgelSubTileRadiator;
 G4int m_NumRich1AgelNominalTileRadiator;
 G4int m_RichPmtQuartzWindowCkvRadiatorNum;

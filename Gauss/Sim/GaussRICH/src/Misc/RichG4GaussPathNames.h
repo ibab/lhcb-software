@@ -43,6 +43,7 @@ static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/R
 static const G4String RichHpdQuartzWindowMaterialName="/dd/Materials/RichMaterials/HpdWindowQuartz";
 static const G4String Rich1NitrogenMaterialName="/dd/Materials/RichMaterials/Rich1Nitrogen";
 static const G4String Rich2NitrogenMaterialName="/dd/Materials/RichMaterials/Rich2Nitrogen";
+static const G4String RichCO2MaterialName="/dd/Materials/RichMaterials/RichCO2" ;
 static const G4String RichHpdQeffMatTabPropPath="/dd/Materials/RichMaterialTabProperties/NominalHpdQuantumEff";
 static const G4String RichHpdQWRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdWindowQuartzRIndexPT";
 static const G4String RichHpdPCRIMatTabPropPath="/dd/Materials/RichMaterialTabProperties/HpdS20PhCathodeRIndexPT";
@@ -150,5 +151,5 @@ static const G4String Rich2DeStructurePathName = DeRichLocations::Rich2 ;
 static const G4String RichHpdQwDeSubPathName="/Rich1FirstHpdQW";
 static const G4String RichHpdPaCathDeSubPathname="/Rich1FirstHpdPhCathode";
 static const G4String RichHpdSiDetSensDetNamePrefix="HpdSiliconSensDet";
-static const G4String RichPmtQWindowMaterialName="/dd/Materials/RichMaterials/RichPMTQuartzMateral";
+static const G4String RichPmtQWindowMaterialName="/dd/Materials/RichMaterials/RichPMTQuartzMaterial";
 #endif // MISC_RICHG4GAUSSPATHNAMES_H

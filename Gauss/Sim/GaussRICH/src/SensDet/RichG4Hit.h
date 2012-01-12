@@ -69,6 +69,7 @@ private:
                                // c4f10 =1, cf4=2. aerogelFullTile =10-25,Gasqw=6-7(rich1,rich2)
                                // , hpdqw=8, filtergeneric=4,
                                // filterd263=5, nitrogen=30-31(rich1,rich2).
+                               // CO2=33  
                                // aerogelSubTiles = 1000->1299
   G4ThreeVector m_PhotEmisPt;   ///< emiss pt coord of the photon.
   G4double m_PhotEnergyAtProd;  ///< Photon energy in MeV at Ckv Production.

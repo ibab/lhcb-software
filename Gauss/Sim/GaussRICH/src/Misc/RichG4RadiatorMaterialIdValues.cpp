@@ -46,6 +46,7 @@ RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValues(  )
    m_Rich1AgelTile15CkvRadiatorNum(25),
    m_Rich1NitrogenCkvRadiatorNum(30),
    m_Rich2NitrogenCkvRadiatorNum(31),
+   m_RichCO2CkvRadiatorNum(33),
    m_NumRich1AgelSubTileRadiator(300),
    m_NumRich1AgelNominalTileRadiator(16),
    m_RichPmtQuartzWindowCkvRadiatorNum(32),

@@ -155,7 +155,11 @@ RichG4RadiatorMaterialIdValues* aRMIdValues=
      }else if (curMatName == Rich2NitrogenMaterialName ) {
       n_mat++;
       m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->Rich2NitrogenCkvRadiatorNum();    
-  
+
+      }else if (curMatName == RichCO2MaterialName ) {
+      n_mat++;
+      m_RichG4MatIndexRadNum[curMatIndex] = aRMIdValues->RichCO2CkvRadiatorNum();    
+ 
     }else if (curMatName.find(AgelSubTileMaterialNamePrefix) != std::string::npos   ){
       
       //const std::string::size_type aSubTilePos = 

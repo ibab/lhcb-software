@@ -273,6 +273,8 @@ Rich::RadiatorType RichG4Hit::radiatorType() const
             ( aRMIdValues-> RichFilterD263CkvRadiatorNum())    == GetRadiatorNumber() )   { rad = Rich::AerogelFilter; }
   else if ( ( aRMIdValues-> Rich1NitrogenCkvRadiatorNum()) == GetRadiatorNumber() ||
             ( aRMIdValues-> Rich2NitrogenCkvRadiatorNum()) == GetRadiatorNumber() )       { rad = Rich::Nitrogen; }
+  else if ( ( aRMIdValues-> RichCO2CkvRadiatorNum()) == GetRadiatorNumber() ) { rad = Rich::CO2;}
+  
   // return final type
   return rad;
 }
