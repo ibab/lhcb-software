@@ -43,7 +43,9 @@ namespace Rich
       GasQuartzWin    = 3,  ///< Quartz windows to the gas radiator volumes
       HPDQuartzWin    = 4,  ///< HPD Quartz windows
       Nitrogen        = 5,  ///< Nitrogen volume
-      AerogelFilter   = 6   ///< Aerogel filter material
+      AerogelFilter   = 6,   ///< Aerogel filter material
+      CO2             = 7,   ///< Carbon dioxide
+      PMTQuartzWin    = 8    ///< MAPMT Quartz windows
     };
 
   /** Text conversion for RadiatorType enumeration
