@@ -184,8 +184,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);
     debug() << " Elec pn="<< pn <<" w="<<1-pn<<endmsg;
-    if( pn < 0 ) pn = 0;
-    if( pn > 1 ) pn = 1;
+    if( pn < 0 || pn > 1 ) return tele;
     if( pn < m_ProbMin_ele ) return tele;
 
   }

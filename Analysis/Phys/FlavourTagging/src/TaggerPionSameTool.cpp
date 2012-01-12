@@ -202,8 +202,8 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);
     
     debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
-    if( pn < 0 ) pn = 0;
-    if( pn > 1 ) pn = 1;
+
+    if( pn < 0 || pn > 1 ) return tpionS;    
     if( pn < m_PionProbMin ) return tpionS;
   }
 

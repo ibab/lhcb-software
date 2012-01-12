@@ -199,8 +199,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     pn = 1 - m_P0_Cal_kaonS - m_P1_Cal_kaonS * ( (1-pn)-m_Eta_Cal_kaonS);
     debug() << " SS Kaon pn="<< pn <<" w="<<1-pn<<endmsg;
 
-    if( pn < 0 ) pn = 0;
-    if( pn > 1 ) pn = 1;
+    if( pn < 0 || pn > 1 ) return tkaonS;
     if( pn < m_ProbMin_kaonS ) return tkaonS;
 
   }

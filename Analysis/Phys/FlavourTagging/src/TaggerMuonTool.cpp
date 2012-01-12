@@ -165,8 +165,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_muon - m_P1_Cal_muon * ( (1-pn)-m_Eta_Cal_muon);
     debug() << " Muon pn="<< pn <<" w="<<1-pn<<endmsg;
-    if( pn < 0 ) pn = 0;
-    if( pn > 1 ) pn = 1;
+    if( pn < 0 || pn > 1 ) return tmu;
     if( pn < m_ProbMin_muon ) return tmu;
 
   }

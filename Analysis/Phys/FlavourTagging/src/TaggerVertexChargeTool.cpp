@@ -192,9 +192,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
   debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
-  if( omega < 0 ) omega = 0;
-  if( omega > 1 ) omega = 1;
-  
+
+  if( omega < 0 || omega > 1 ) return tVch;  
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   if(   omega > m_ProbMin_vtx ) return tVch;
 
