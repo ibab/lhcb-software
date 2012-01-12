@@ -1,12 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
-! Responsible : Juan Palacios
+! Responsible : Chris Jones
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 !
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================= DaVinci v29r3p1 2012-01-12 =======================
+
+! 2012-01-12 - Chris Jones
+ - Temporarily use Phys/FlavourTagging v12r7 for patch release
 
 ! 2011-12-17 - Chris Jones
  - Remove use of GaudiPoolDB
