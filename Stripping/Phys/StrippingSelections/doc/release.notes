@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2012-01-12 - Evelina Gersabeck
+ - Add separate stripping line builder python/StrippingSelections/StrippingBu2K1MuMu for Bu-> K1 mu mu events;
+ - Modify the stripping line python/StrippingSelections/StrippingB2XMuMu by incliding a line for Bu-> K1 mu mu events 
+
 ! 2012-01-10 - Patrick Koppenburg
  - Widen mass window for B->J/psiPi0
 
