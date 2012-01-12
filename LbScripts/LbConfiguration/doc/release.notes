@@ -1,6 +1,7 @@
 2012-01-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: removed the reference to GaudiPoolDb (deprecated)
+	Added the --profile option to print some statistics on the execution time.
 
 2011-12-17  Rob Lambert
 

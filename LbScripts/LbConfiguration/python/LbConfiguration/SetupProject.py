@@ -1205,6 +1205,9 @@ class SetupProject:
         parser.add_option("--ignore-not-ready", action="store_true",
                           help = "Ignore the presence of the NOT_READY file in a project.")
 
+        parser.add_option("--profile", action="store_true",
+                          help="Print some profile informations about the execution.")
+
         parser.set_defaults(output=None,
                             mktemp=False,
                             append=False,
@@ -1479,11 +1482,6 @@ class SetupProject:
         Collect all the informations needed to set up the environment, like
         project name and version, paths, etc.
         """
-        if args is None:
-            args = sys.argv[1:]
-        # Process commmand line options
-        self.parse_args(args = args)
-
         # If the option --silent is specified, --quiet is implied
         if self.opts.silent:
             self.opts.quiet = True
@@ -1649,12 +1647,52 @@ class SetupProject:
         return 0
 
     def main(self, args = None):
-        if args is None:
-            args = sys.argv[1:]
+        """
+        Main entry point to SetupProject script.
+
+        Calls parse_args, then the 'run' method, profiling it if requested.
+        """
         # initialize the logger (print on standard error)
         log_handler = logging.StreamHandler(sys.stderr)
         log_handler.setFormatter(logging.Formatter("%(message)s"))
         logging.getLogger().addHandler(log_handler)
+
+        if args is None:
+            args = sys.argv[1:]
+        # Process commmand line options
+        self.parse_args(args=args)
+
+        # Prepare the profiler instance
+        profiler = None
+        if self.opts.profile:
+            try:
+                import cProfile
+                profiler = cProfile.Profile()
+            except ImportError:
+                try:
+                    import profile
+                    profiler = profile.Profile()
+                except ImportError:
+                    self._warning("Cannot import cProfile or profile: ignoring --profile")
+        # if we managed to get the profiler instance, collect profiling stats,
+        # and print them on stderr
+        if profiler:
+            rc = profiler.runcall(self.run)
+            # adapted from Python standard profiler.py
+            import pstats
+            if sys.version_info < (2, 5):
+                # hack to be able to print the statistics on stderr on older Python
+                stats = pstats.Stats(profiler)
+                sys.stdout = sys.stderr
+            else:
+                stats = pstats.Stats(profiler, stream=sys.stderr)
+            stats.strip_dirs().sort_stats('cumulative').print_stats(10)
+        else:
+            rc = self.run()
+
+        return rc
+
+    def run(self, args = None):
         # Initialization from arguments
         rc = self.prepare(args)
         if rc or self.list_versions: # No need to go on if --list-versions or error
