@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-12 - David Hutchcroft
+ - Added simulation of intra-sensor crosstalk seen in R sensors in 2011 data
+   Requires the new conditions DB to work and updates to DeVelo (also submitted)
+
 ! 2011-12-20 - Marco Cattaneo
  - Fix trivial icc remarks
 

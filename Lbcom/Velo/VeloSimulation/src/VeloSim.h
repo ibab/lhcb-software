@@ -131,8 +131,13 @@ private:
   /// compared to an in time main bunch hit
   double chargeTimeFactor(double TOF, double bunchOffset, double z);
 
-  // check conditions Data Base
+  /// check conditions Data Base
   bool checkConditions(LHCb::MCHit* aHit);
+
+  /// fraction of charge lost to 2nd metal layer on on R, and which strip
+  double metal2Loss(const DeVeloSensor* sens, const Gaudi::XYZPoint& point, 
+                    LHCb::VeloChannelID &chM2);
+
   // data members
   std::vector<std::string> m_inputContainers; ///< Name of input containers
   std::vector<double> m_inputTimeOffsets; ///< delta T0 of the input containers
@@ -201,7 +206,17 @@ private:
   double m_noiseScale;          ///< Scale factor to apply to noise from db
   /// Scale factor to apply to Gaussian flucuations in charge at points
   double m_scaleFluctuations;   
-  
+
+  /// Simulate intrasensor crosstalk to 2nd metal routing lines
+  bool m_intraSensorCrossTalk;
+  /// distance scale for charge to leak to metal 2 lines in R sensor
+  double m_m2ChargeFracWidth;
+  /// max fraction of charge to leak to metal 2 lines in R sensor
+  double m_m2ChargeFracMax;
+  /// effective size of mask caused by 1st metal layer
+  double m_m2MaskWidth;
+  /// simulate the metal2 coupling for the mid point or all points
+  bool m_m2SinglePoint;
 
   std::string m_SiTimeToolType; ///< normally "SiAmpliferResponse" from STTools
   ISiAmplifierResponse* m_SiTimeTool;

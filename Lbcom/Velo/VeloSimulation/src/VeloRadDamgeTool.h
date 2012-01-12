@@ -43,6 +43,21 @@ public:
   * @return fraction of charge after rad damage
   */
   virtual double chargeFrac(const LHCb::MCHit & hit) const;
+
+  /** fraction of charge seen due to radiation damage
+  * @param point : position (global frame) of hit 
+  * @param sens : DeVeloSensor of the point
+  * @param chM2 : the channel of the inner strip
+  * @param fracInner : fraction of charge to inner strip
+  * @param fracMain : fraction of charge from main strip
+  * @return Success if coupled to inner strip
+  */
+  virtual StatusCode m2CouplingFrac(const Gaudi::XYZPoint &point,
+                                    const DeVeloSensor *sens,
+                                    LHCb::VeloChannelID &chM2,
+                                    double &fracInner, 
+                                    double &fracMain) const;
+
   
 protected:
 
@@ -61,8 +76,11 @@ protected:
       constantFrac(1.),
       useConst(false),
       responseMin(0.),
-      responseMax(0.){};
-
+      responseMax(0.),
+      chargeFracWidth(0.),
+      chargeFracMax(0.),
+      stripDistScale(0.),
+      fracOuter(0.){};
 
     /// The fitted spline to the radius
     GaudiMath::SimpleSpline* responseSpline; 
@@ -75,6 +93,11 @@ protected:
     
     double responseMin; ///< to return if r < rMin
     double responseMax; ///< to return if r > rMax
+
+    double chargeFracWidth; ///< Coupling to metal 2 width
+    double chargeFracMax; ///< coupling to metal 2 max fraction
+    double stripDistScale; ///< size of mask caused by 1st metal layer
+    double fracOuter; ///< fraction of inner charge to remove from outer
   };
 
   /// dump the tool response to the log

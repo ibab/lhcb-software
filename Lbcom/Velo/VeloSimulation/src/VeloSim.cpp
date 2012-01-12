@@ -10,6 +10,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from LHCbKernel
 #include "LHCbMath/LHCbMath.h"
@@ -39,7 +40,7 @@
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSim )
+DECLARE_ALGORITHM_FACTORY( VeloSim );
 
 
 //===========================================================================
@@ -103,6 +104,8 @@ VeloSim::VeloSim( const std::string& name,
 
   declareProperty("RadDamageToolName", m_radToolType="VeloRadDamageTool" );
 
+  declareProperty("IntraSensorCrossTalk",m_intraSensorCrossTalk=true);
+  declareProperty("M2SinglePoint",m_m2SinglePoint=true);
 
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -111,7 +114,7 @@ VeloSim::VeloSim( const std::string& name,
 //===========================================================================
 // Destructor
 //===========================================================================
-VeloSim::~VeloSim() {}
+VeloSim::~VeloSim() {};
 //===========================================================================
 // Initialisation. Check parameters
 //===========================================================================
@@ -177,7 +180,7 @@ StatusCode VeloSim::initialize() {
     tool<IRadDamageTool>(m_radToolType,"RadDamage",this);
 
   return StatusCode::SUCCESS;
-}
+};
 //===========================================================================
 // Main execution
 //===========================================================================
@@ -365,6 +368,25 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
   if(m_isVerbose) verbose() << "Charge after time correction of " 
 			    << timeOffset << " is " << charge << endmsg;
 
+  if(m_intraSensorCrossTalk && 
+     m_m2SinglePoint){ // do correction for midpoint only
+    LHCb::VeloChannelID chM2;
+    const DeVeloSensor* sens=m_veloDet->sensor(hit->sensDetID());
+    double fracM2Loss =0., fracMain = 1.;
+    StatusCode sc = m_radTool->m2CouplingFrac(hit->midPoint(), sens, 
+					      chM2, fracM2Loss, fracMain);
+    if(sc && fracM2Loss > 0.01 ){ // less than 1% do not bother
+      if( m_isVerbose ) {
+        verbose() << "Add "  << fracM2Loss << " of charge to M2 line "
+                  << chM2 
+		  << " remove " << fracMain << " from main strip" << endreq;
+      }
+      LHCb::MCVeloFE* myFE = findOrInsertFE(chM2); // no MC link for coupling
+      fillFE(myFE,charge*fracM2Loss); // update an unlinked FE
+      charge *= (1.-fracMain); // remove charge from main hit point
+    }
+  }
+
   // charge to divide equally
   double chargeEqual;
   if(m_inhomogeneousCharge){
@@ -506,6 +528,25 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
     if(m_isVerbose) verbose()<< "chan " << entryChan.strip() << " fraction "
 			     << fraction << " pitch " << pitch << " valid "
 			     << valid <<endmsg;
+
+    if(m_intraSensorCrossTalk && 
+       !m_m2SinglePoint){ // do correction for every point
+      LHCb::VeloChannelID chM2;
+      double fracM2Loss =0., fracMain = 1.;
+      StatusCode sc = m_radTool->m2CouplingFrac(hit->midPoint(), sens, 
+                                                chM2, fracM2Loss, fracMain);
+      if(sc && fracM2Loss > 0.01 ){ // less than 1% do not bother
+        if( m_isVerbose ) {
+          verbose() << "Add "  << fracM2Loss << " of charge to M2 line "
+                    << chM2 
+                    << " remove " << fracMain << " from main strip" << endreq;
+        }
+        LHCb::MCVeloFE* myFE = findOrInsertFE(chM2); // no MC link for coupling
+        fillFE(myFE,(*iPoint)*fracM2Loss); // update an unlinked FE
+        (*iPoint) *= (1.-fracMain); // remove charge from main hit point
+      }
+    }
+
     //
     const int neighbs=1; // only consider +/- this many neighbours
     double chargeFraction[2*neighbs+1];

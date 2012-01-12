@@ -97,6 +97,7 @@ StatusCode VeloRadDamageTool::i_loadCondtion(){
 
     unsigned int sNum = (*iSens)->sensorNumber();
     
+    if(msgLevel( MSG::DEBUG )) debug() << "For sensor " << sNum << endmsg;
     // param is the current parameter (created if not existing already)
     RadParam &param = m_radParamMap[sNum];
 
@@ -107,37 +108,32 @@ StatusCode VeloRadDamageTool::i_loadCondtion(){
     if( param.useConst ) {
       param.constantFrac =
         m_radConditionMap[sNum]->param<double>("ConstFrac");
-      // fully set param so copy and finish this sensor
-      m_radParamMap[sNum] = param;
-      continue; // next sensor
-    }
-    // so need spline
-    std::vector<double> radii =
-      m_radConditionMap[sNum]->param<std::vector<double> >("Radii");
-    std::vector<double> chargeFrac =
-      m_radConditionMap[sNum]->param<std::vector<double> >("ChargeFrac");
+      // no spline for const output
+      if(msgLevel( MSG::DEBUG )) debug() << "Constant charge fraction " << param.constantFrac 
+                                         << endmsg;    
+    }else{
+      // so need spline
+      std::vector<double> radii =
+        m_radConditionMap[sNum]->param<std::vector<double> >("Radii");
+      std::vector<double> chargeFrac =
+        m_radConditionMap[sNum]->param<std::vector<double> >("ChargeFrac");
+      
+      if(radii.size() == 0 ||
+         ( radii.size() != chargeFrac.size() ) )
+        return Error(format("radii and chargeFrac not consistent for sensor %i",sNum),
+                     StatusCode::FAILURE);
+      
+      // outside range make a constant at the extremal value
+      param.rMin = radii.front();
+      param.rMax = radii.back();
+      param.responseMin = chargeFrac.front();
+      param.responseMax = chargeFrac.back();
+      
+      param.responseSpline =
+        new GaudiMath::SimpleSpline( radii, chargeFrac,
+                                     GaudiMath::Interpolation::Linear );
 
-    if(radii.size() == 0 ||
-       ( radii.size() != chargeFrac.size() ) )
-      return Error(format("radii and chargeFrac not consistent for sensor %i",sNum),
-                   StatusCode::FAILURE);
-
-    // outside range make a constant at the extremal value
-    param.rMin = radii.front();
-    param.rMax = radii.back();
-    param.responseMin = chargeFrac.front();
-    param.responseMax = chargeFrac.back();
-
-    param.responseSpline =
-      new GaudiMath::SimpleSpline( radii, chargeFrac,
-                                   GaudiMath::Interpolation::Linear );
-
-    // if debug/verbose dump parameters to the screen
-    if(msgLevel( MSG::DEBUG )){
-      debug() << "For sensor " << sNum << endmsg;
-      if( param.useConst ){
-        debug() << "Constant charge fraction " << param.constantFrac << endmsg;
-      }else{
+      if(msgLevel( MSG::DEBUG )){
         debug() << "Spline parameters: pointer" << param.responseSpline << endmsg;
         debug() << "radius      ChargeFraction" <<endmsg;
         for ( unsigned int i = 0 ; i < radii.size() ; ++i ){
@@ -148,8 +144,37 @@ StatusCode VeloRadDamageTool::i_loadCondtion(){
       }
       if(msgLevel( MSG::VERBOSE )) dumpResponse(*iSens);
     }
-  }
 
+    if( !(*iSens)->isR()  ){
+      param.chargeFracWidth = 1.;
+      param.chargeFracMax = 0.;
+      param.stripDistScale = 1.;
+      param.fracOuter = 0.;
+    }else{
+      // stuff for the M2 coupling (applies only to R sensors)
+      try{
+        param.chargeFracWidth = m_radConditionMap[sNum]->param<double>("ChargeFracWidth");
+        param.chargeFracMax = m_radConditionMap[sNum]->param<double>("ChargeFracMax");
+        param.stripDistScale = m_radConditionMap[sNum]->param<double>("StripDistScale");
+        param.fracOuter = m_radConditionMap[sNum]->param<double>("FractionFromOuter");
+      }catch( ParamException &e ){
+        // in case code runs on old conditions
+        param.chargeFracWidth = 1.;
+        param.chargeFracMax = 0.;
+        param.stripDistScale = 1.;
+        param.fracOuter = 0.;
+        Warning("Missing M2 coupling conditions using default values",StatusCode::SUCCESS,1).ignore();
+      }
+    }
+
+    // if debug/verbose dump parameters to the screen
+    if(msgLevel( MSG::DEBUG )){
+      debug() << "M2 max " << param.chargeFracMax 
+              << " width " << param.chargeFracWidth
+              << " 1st mask " << param.stripDistScale 
+              << " from outer " << param.fracOuter<< endmsg;
+    }
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -178,4 +203,35 @@ double VeloRadDamageTool::chargeFrac(const LHCb::MCHit & hit) const {
   if( localR > param.rMax ) return param.responseMax; // more than spline range
   
   return param.responseSpline->eval(localR); // actually use the spline
+}
+
+StatusCode VeloRadDamageTool::m2CouplingFrac(const Gaudi::XYZPoint &point,
+                                             const DeVeloSensor *sens,
+                                             LHCb::VeloChannelID &chM2,
+                                             double &fracInner,
+                                             double &fracOuter) const{
+  // if the hit in an R sensor and close enough to a routing line 
+  // then charge is lost to the inner strip through the line
+  RadParam const &param = m_radParamMap.find(sens->sensorNumber())->second;
+  const DeVeloRType* sensR = dynamic_cast<const DeVeloRType*>(sens);  
+  if( !sensR ) return StatusCode::FAILURE; // phi hit, no effect simulated presently
+  double distM2(0.), distStrip(0.);
+  StatusCode sc = sensR->distToM2Line(point,chM2,distM2,distStrip);
+  if(!sc) return sc; // no coupling to M2 or hit out of active area
+  double toStripFrac = 1.;
+  if ( (distStrip/param.stripDistScale)<1. ) {
+    toStripFrac = distStrip/param.stripDistScale;
+  }
+  fracInner = param.chargeFracMax*toStripFrac* 
+    exp((-1.*distM2*distM2) /(2.*param.chargeFracWidth*param.chargeFracWidth));
+  fracOuter = fracInner * param.fracOuter;
+  if(msgLevel( MSG::VERBOSE )){ 
+    verbose() << "global pos " << format("(%6.3f, %6.3f, %8.3f)",point.x(),point.y(),point.z())
+              << " dStrip " << distStrip
+              << " dM2 " << distM2
+              << " innerF " << fracInner
+              << " outerF " << fracOuter
+              << endmsg;
+  }
+  return StatusCode::SUCCESS;
 }
