@@ -1,9 +1,7 @@
 <lccdd xmlns:compact="http://www.lcsim.org/schemas/compact/1.0" 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
-<!--
-    xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/compact/1.0/compact.xsd">
-    -->
+
     <info name="clic_sid_cdr"
         title="CLIC Silicon Detector CDR"
         author="Christian Grefe"
