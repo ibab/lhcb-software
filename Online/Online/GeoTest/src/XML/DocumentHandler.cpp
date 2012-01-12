@@ -86,7 +86,7 @@ namespace {
     cout << "Fatal Error at file \"" << sys
       << "\", line " << e.getLineNumber() << ", column " << e.getColumnNumber() << endl
       << "Message: " << m << endl;
-    throw runtime_error( "Standard pool exception : Fatal Error on the DOM Parser" );
+    //throw runtime_error( "Standard pool exception : Fatal Error on the DOM Parser" );
   }
 }
 
@@ -121,8 +121,24 @@ XercesDOMParser* DocumentHandler::makeParser(xercesc::ErrorHandler* err_handler)
 Document DocumentHandler::load(const string& fname)  const  {
   XMLURL xerurl = (const XMLCh*)Strng_t(fname);
   string path   = _toString(xerurl.getPath());
+  string proto  = _toString(xerurl.getProtocolName());
   auto_ptr<XercesDOMParser> parser(makeParser());
-  parser->parse(path.c_str());
+  cout << "Loading document :" << path  << endl
+       << "         protocol:" << proto << endl
+       << "              URI:" << fname << endl;
+  try {
+    parser->parse(path.c_str());
+  }
+  catch(std::exception& e) {
+    cout << "parse(path):" << e.what() << endl;
+    try {
+      parser->parse(fname.c_str());
+    }
+    catch(std::exception& ex) {
+      cout << "parse(URI):" << ex.what() << endl;      
+    }
+  }
+  cout << "Document succesfully parsed....." << endl;
   return parser->adoptDocument();
 }
 
