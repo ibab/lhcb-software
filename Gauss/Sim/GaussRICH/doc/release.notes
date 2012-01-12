@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+2012-01-12 - Sajan Easo
+- Addedd the modifications to use the new aerogel structure, essentially the paths to CO2 surrounding aerogel.
 !2011-11-20 - Sajan Easo
  - Couple of adaptations to be compatible new RichDet in RichHpdProperties and GetMCRichHitsAlg
 !2011-11-11 - Sajan Easo
