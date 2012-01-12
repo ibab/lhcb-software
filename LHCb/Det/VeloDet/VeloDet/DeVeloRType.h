@@ -224,8 +224,29 @@ public:
   /// Set the phi sensor on the other side of the VELO.  This should only be called by DeVelo::initialize()
   inline void setOtherSidePhiSensor(const DeVeloPhiType* ps) { m_otherSidePhiSensor = ps; }
 
+  /** get the distance of a 3D point (global frame) to the closest M2
+      line in mm and dist to nearest strip in mm. vID is the channel
+      of the line connected to the second metal routing line (not
+      channel under hit)
+      @param point : 3D (global frame) position considered
+      @param vID : VeloChannelID of inner strip of M2 line (if any)
+      @param distToM2Line : distance of this point to M2 line (if <200microns only) in mm
+      @param distToStrip : distance to the closest strip (the one under this point) in mm
+      @return : Success if there was an M2 line near point, Failure if not 
+  */
+  StatusCode distToM2Line(const Gaudi::XYZPoint& point, 
+                          LHCb::VeloChannelID &vID, 
+                          double & distToM2Line,
+                          double & distToStrip) const;
 
 private:
+  /** get the distance of x,y in the local frame to the closest M2
+      line and strip of that line returns false if nothing matches,
+      strip is the routing line strip number and dist is the distance
+      from the point to the line in mm */
+  bool distToM2Line(double const & x, double const & y, 
+		   LHCb::VeloChannelID &vID, double & dist) const;
+
   /// Store the local radius for each strip in the sensor
   void calcStripLimits();
 
@@ -313,8 +334,42 @@ private:
   std::vector<double>& m_phiMax;
   std::vector< std::pair<double,double> >& m_stripPhiLimits;//Min/Max phi of strips
 
+  // stuff to hold the M2 lines has to be public for the static 
+public:
+  /// small struct to hold a set of x,y points defining a connected line
+  struct PolyLine{    
+    std::vector<double> m_x;
+    std::vector<double> m_y;
+    double m_maxPhi;
+    PolyLine(std::vector<double> x, std::vector<double> y): m_x(x), m_y(y),
+                                                            m_maxPhi(-999.){
+      for( unsigned int i = 0 ; i < m_x.size() ; ++i ){
+        double phi = atan2(m_y[i],m_x[i]);
+        if( phi > m_maxPhi ) m_maxPhi = phi;
+      }
+    };
+    double minPhi() const{
+      double minPhi(999.);
+      for( unsigned int i = 0 ; i < m_x.size() ; ++i ){
+        double phi = atan2(m_y[i],m_x[i]);
+        if( phi < minPhi ) minPhi = phi;
+      }
+      return minPhi;
+    }    
+  };
+private:
+  /// The lines defining the 2nd metal routing on the sensor 
+  /// the index is the readout strip number [0 to 2047]
+  /// actually refers to a static 
+  std::vector<DeVeloRType::PolyLine>& m_M2RoutingLines;
+  /// minPhi of the strips sorted by phi: actually refs a static
+  std::vector<std::pair<double,unsigned int> >& m_M2RLMinPhi;
+
   // used to control initialization NEVER ACCESS THIS IN AN INLINED METHOD!
   static bool m_staticDataInvalid;
+
+  /// load the 2nd metal routing line map from the conditions
+  void loadM2RoutingLines();
 
   /// Build up map of strip to routing line conversions
   void BuildRoutingLineMap();

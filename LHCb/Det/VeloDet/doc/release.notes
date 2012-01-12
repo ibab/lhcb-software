@@ -2,6 +2,12 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2012-01-12 - David Hutchcroft
+ - Added a new function to DeVeloRType to map the 2nd metal layer to the hits
+   to simulate the effects of the intra-sensor cross-talk seen in 2011 data,
+   will produce a warning unless run with new DDDB update describing the M2 
+   layout
+
 ! 2012-01-09 - Marco Clemencic
  - Minor change to the test velodet.veloaligncond.updates to absorb the change
    in Condition::update().

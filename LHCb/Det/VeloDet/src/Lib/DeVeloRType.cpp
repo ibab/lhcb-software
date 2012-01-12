@@ -101,6 +101,29 @@ namespace VeloDet {
     static std::vector<std::pair<double, double> > s_stripPhiLimits;
     return s_stripPhiLimits;
   }
+
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  @see DeVeloRType
+   */
+  static std::vector<DeVeloRType::PolyLine>& deVeloRTypeStaticM2RoutingLines()
+  {
+    static std::vector<DeVeloRType::PolyLine> s_M2RoutingLines;
+    return s_M2RoutingLines;
+  }
+
+  /** This function simply provides access to a local static
+   *  data which is used to initialize references in each instance
+   *  of DeVeloRType.
+   *  @see DeVeloRType
+   */
+  static std::vector<std::pair<double,unsigned int> >& deVeloRTypeStaticM2RLMinPhi()
+  {
+    static std::vector<std::pair<double,unsigned int> > s_M2RLMinPhi;
+    return s_M2RLMinPhi;
+  }
+
 }
 
 // used to control initialization
@@ -131,6 +154,8 @@ DeVeloRType::DeVeloRType(const std::string& name) :
   m_phiMin(VeloDet::deVeloRTypeStaticPhiMin()),
   m_phiMax(VeloDet::deVeloRTypeStaticPhiMax()),
   m_stripPhiLimits(VeloDet::deVeloRTypeStaticStripPhiLimits()),
+  m_M2RoutingLines(VeloDet::deVeloRTypeStaticM2RoutingLines()),
+  m_M2RLMinPhi(VeloDet::deVeloRTypeStaticM2RLMinPhi()),
   m_msgStream(NULL)
 {
 }
@@ -467,6 +492,9 @@ void DeVeloRType::calcStripLimits()
         m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
       }
     }
+    // load Metal 2 routing line map for intra-sensor cross talk simulation
+    loadM2RoutingLines();
+
     m_staticDataInvalid = false;  // these are valid now for all instances
   } else { // statics are valid, initialize base class member only
 
@@ -826,3 +854,123 @@ StatusCode DeVeloRType::updateGeometryCache()
 
   return StatusCode::SUCCESS;
 }
+
+StatusCode DeVeloRType::distToM2Line(const Gaudi::XYZPoint& point, 
+                                     LHCb::VeloChannelID &vID, 
+                                     double & distToM2,
+                                     double & distToStrip) const{
+  if( m_M2RoutingLines.size() != m_numberOfStrips ){
+    // routing lines not loaded: have to fail
+    return StatusCode::FAILURE;
+  }
+    
+  Gaudi::XYZPoint lPoint = globalToLocal(point);
+  // Check boundaries...
+  StatusCode sc = isInActiveArea(lPoint);
+  if(!sc.isSuccess()) return sc; 
+
+  // work out closet channel....
+  double radius=lPoint.Rho();
+  double logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) /
+    m_innerPitch;
+  double strip = log(logarithm)/m_pitchSlope;
+  unsigned int closestStrip = LHCb::Math::round(strip);
+  distToStrip = fabs(strip - closestStrip)*rPitch(closestStrip);
+
+  bool OKM2 = distToM2Line(lPoint.x(), lPoint.y(), vID, distToM2);
+  if(!OKM2) return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
+}
+
+bool DeVeloRType::distToM2Line(double const & x, double const & y,
+			       LHCb::VeloChannelID &vID, double & dist) const{
+  double dist2 = 1.e9; 
+  unsigned int strip = 1e9;
+
+  // find range of strips covering this phi point
+  // a crude optimisation by skipping paths not covering this phi
+  double phi = atan2(y,x);
+  unsigned int zone = zoneOfPhi(phi); // no overlap between zones
+  // start at begining of zone
+  std::vector<std::pair<double,unsigned int> >::const_iterator iLineMin = 
+    m_M2RLMinPhi.begin() + (zone*m_stripsInZone);
+  // skip all strips with a minPhi > this phi
+  std::vector<std::pair<double,unsigned int> >::const_iterator iLineMax = 
+    lower_bound(m_M2RLMinPhi.begin() + (zone*m_stripsInZone),
+                m_M2RLMinPhi.begin() + ((zone+1)*m_stripsInZone),
+                std::pair<double,unsigned int>(phi,0));
+  for ( ; iLineMin != iLineMax; ++iLineMin ){
+    unsigned int iL = iLineMin->second;
+    // as ranges are complicated in phi need to keep going even if 
+    // this strip can be ignored
+    if( m_M2RoutingLines[iL].m_maxPhi < phi ) continue;
+    std::vector<double> const & xP = m_M2RoutingLines[iL].m_x;
+    std::vector<double> const & yP = m_M2RoutingLines[iL].m_y;
+    for ( unsigned int i = 0 ; i < (xP.size()-1) ; ++i ){
+      // solve point of closest approach on line (x1,y1) to (x2,y2) to (x,y)
+      // defined as (xp,yp) below
+      double x1 = xP[i];
+      double x2 = xP[i+1];
+      double y1 = yP[i];
+      double y2 = yP[i+1];
+      double dx = x1-x2;
+      double dy = y1-y2;
+      double xp = ( x*dx*dx + (x2*(y1-y) + x1*(y-y2))*dy ) / (dx*dx + dy*dy);
+      double yp = y1 + (xp-x1)*dy/dx;
+      // order of x1<x2 or x2>x1 and for y is not defined so try both
+      bool checkLimits = ( ( (x1<xp && xp<x2) || (x2<xp && xp<x1) ) && 
+			   ( (y1<yp && yp<y2) || (y2<yp && yp<y1) ) );
+      // check (xp,yp) is in the extent of the original line
+      if( !checkLimits )continue;
+      // use distance^2 to avoid too many sqrt calls
+      double lDist2 = (xp-x)*(xp-x) + (yp-y)*(yp-y);
+      // cap distance to consider at 200 microns 
+      if( lDist2 < dist2 && lDist2 < 0.04 ) { 
+        dist2 = lDist2;
+        strip = iL; // lines in strip order
+      }
+    }
+  }
+
+  if(strip < 3000) { // check we found a valid routing line match
+    // set VeloChannelID....
+    vID.setSensor(this->sensorNumber());
+    vID.setStrip(strip);
+    if(isR()) {
+      vID.setType(LHCb::VeloChannelID::RType);
+    } else if( isPileUp() ) {
+      vID.setType(LHCb::VeloChannelID::PileUpType);
+    }
+    dist = sqrt(dist2);
+    return true;
+  }
+  return false;
+}        
+
+void DeVeloRType::loadM2RoutingLines(){
+  m_M2RoutingLines.clear();  
+  for( unsigned int strip = 0 ; strip < 2048 ; ++strip ){
+    std::string param_X = format("Routing-R-X-Strip%04i",strip);
+    std::string param_Y = format("Routing-R-Y-Strip%04i",strip);
+    if( !exists(param_X) || !exists(param_Y) ){
+      msg() << MSG::WARNING 
+	    << "VELO R sensor M2 routing lines not in conditions DB cond: " 
+            << param_X << " and " << param_Y
+            <<endmsg;
+      return;
+    }
+    std::vector<double> x = param<std::vector<double> >(param_X);
+    std::vector<double> y = param<std::vector<double> >(param_Y);
+    m_M2RoutingLines.push_back(DeVeloRType::PolyLine(x,y));
+  }
+  m_M2RLMinPhi.clear();
+  std::vector<DeVeloRType::PolyLine>::const_iterator iLine = 
+    m_M2RoutingLines.begin();
+  for( ; iLine != m_M2RoutingLines.end() ; ++iLine ){
+    m_M2RLMinPhi.push_back(std::pair<double,unsigned int>
+                           (iLine->minPhi(),iLine-m_M2RoutingLines.begin()));
+  }
+  sort(m_M2RLMinPhi.begin(),m_M2RLMinPhi.end());
+  return;
+}
+      
