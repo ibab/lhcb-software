@@ -159,7 +159,13 @@ StatusCode FilterFillingScheme::i_cacheMagnetData() {
 
   debug() << "callback Magnet:" << endmsg;
  
-  m_parMagnetState = (std::string) m_condMagnet->param<std::string>("State");
+  if(m_condMagnet->exists("State")) {
+    m_parMagnetState = (std::string) m_condMagnet->param<std::string>("State");
+  }
+  else {
+    warning() << "Magnet State condition not implemented for these data" << endmsg;
+    m_parMagnetState = "OFF";
+  }
   return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-01-12 - Marco Cattaneo
+ - Protect FilterFillingScheme for missing Magnet State condition (in 2008)
+
 ! 2011-12-14 - Marco Cattaneo
  - Prepare migration to Gaudi v23:
    . Remove GaudiPoolDb run time dependency, replace it with RELAX
