@@ -1508,11 +1508,6 @@ class SetupProject:
         else:
             self.project_name = FixProjectCase(self.args.pop(0))
 
-
-        # Force the use of GaudiPoolDb in LHCb to simplify the merging of datasets
-        if self.project_name == "LHCb":
-            self.opts.use.append("GaudiPoolDb")
-
         #------------- sanity check: the shell type has to be specified
         if not self.shell:
             self._error("Internal error: shell type not specified")
