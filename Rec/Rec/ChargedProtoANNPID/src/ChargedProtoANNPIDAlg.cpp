@@ -22,11 +22,11 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
-  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-    m_trSel                   ( NULL               ),
-    m_netHelper               ( NULL               )
+  ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
+                                                ISvcLocator* pSvcLocator )
+    : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
+      m_trSel                   ( NULL               ),
+      m_netHelper               ( NULL               )
 {
   // JOs
   declareProperty( "Configuration",     m_configFile );
@@ -122,7 +122,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
       }
     }
 
-    // Load the network   
+    // Load the network
     if ( "NeuroBayes" == annType )
     {
       // FPE Guard for NB call
@@ -278,7 +278,7 @@ ChargedProtoANNPIDAlg::trackPreSel( const LHCb::ProtoParticle * proto ) const
 //=============================================================================
 #ifdef __GNUC__
 double
-ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto ) 
+ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
   const
 {
   // Fill the array of network inputs
