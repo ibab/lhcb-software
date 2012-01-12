@@ -1,10 +1,13 @@
 package DaVinciSys
-version v29r3
+version v29r3p1
 
 branches doc cmt
 
-use  DaVinci             v29r3   Phys
+use  DaVinci             v29r3p1 Phys
 use  DaVinciTests        v2r11
+
+# Temporary
+use  FlavourTagging      v12r7   Phys
 
 # Declare this as a container package
 apply_pattern container_package
