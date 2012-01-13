@@ -54,7 +54,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, ChargedProtoParticle
 from StrippingConf.StrippingLine import StrippingLine
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StrippingUtils.Utils import LineBuilder, checkConfig
-from StandardParticles import StdLooseKaons, StdLooseMuons 
+from StandardParticles import StdLooseKaons, StdLooseMuons, StdAllLooseMuons 
 
 
 from Configurables import (MuonCombRec, 
@@ -212,8 +212,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelMuonTTPParts = selMuonTTPParts(name, muonTTTrackMaker = self.SelMakeMuonTT )
         self.SelMuonTTParts = selMuonTTParts(name, protoParticlesMaker = self.SelMuonTTPParts )
 
-        self.SelFilterLongPartsMuJpsi = selFilterLongPartsMu(name+'Jpsi', IPcut = config['JpsiLongMuonMinIP'])
-        self.SelFilterLongPartsMuUpsilonZ  = selFilterLongPartsMu(name+'UpsilonZ', IPcut = 0)
+        self.SelFilterLongPartsMuJpsi = selFilterLongPartsMu(name+'Jpsi')
+        self.SelFilterLongPartsMuUpsilonZ  = selFilterLongPartsMuUpsilonZ(name+'UpsilonZ')
         # ####################################
         # J/psis
         self.SelHlt1JpsiMinus = selHlt1Jpsi(name+'JpsiMinus', longPartsFilter = self.SelFilterLongPartsMuJpsi, triggers = config['JpsiHlt1Triggers'])
@@ -505,16 +505,26 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
 # ########################################################################################
 # The long track preparation, including hard coded cuts
 # ########################################################################################
-def selFilterLongPartsMu(name, IPcut):
+def selFilterLongPartsMu(name):
     """
-    Get Muons from StdLooseMuons
+    Get Muons from StdLooseMuons for detached Jpsi
     """
     Filter = FilterDesktop()
     FilterLongPartsMu = Filter.configurable(name+"FilterLongPartsMu")
-    FilterLongPartsMu.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 1300*MeV) & (MIPDV(PRIMARY) > 0.5) & (TRCHI2DOF < 2.0) & (MIPCHI2DV(PRIMARY) > 200)" %locals()
+    FilterLongPartsMu.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 1300*MeV) & (MIPDV(PRIMARY) > 0.5) & (TRCHI2DOF < 2.0) & (MIPCHI2DV(PRIMARY) > 200)" 
     # These cuts are now tighter than the trigger that follows
 
     return Selection(name+"_SelFilterLongPartsMu", Algorithm = FilterLongPartsMu, RequiredSelections = [StdLooseMuons])
+# ########################################################################################
+def selFilterLongPartsMuUpsilonZ(name):
+    """
+    Get Muons from StdAllLooseMuons for Upsilon and Z
+    """
+    Filter = FilterDesktop()
+    FilterLongPartsMuUpsilonZ = Filter.configurable(name+"FilterLongPartsMuUpsilonZ")
+    FilterLongPartsMuUpsilonZ.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 3000*MeV) & (TRCHI2DOF < 2.0)"
+
+    return Selection(name+"_SelFilterLongPartsMuUpsilonZ", Algorithm = FilterLongPartsMuUpsilonZ, RequiredSelections = [StdAllLooseMuons])
 # ########################################################################################
 def selFilterLongPartsK(name):
     """
