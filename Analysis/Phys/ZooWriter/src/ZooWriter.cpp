@@ -227,8 +227,6 @@ ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
     m_T->SetAutoSave(1 << 24);
     // branch ref for per-job tree as well
     m_TperJob->BranchRef();
-    m_TperJob->SetBasketSize("*", 1 << 16);
-    m_TperJob->SetAutoSave(1 << 24);
     // a pool for Track objects
     boost::shared_ptr<boost::object_pool<LHCb::Track> > trackpool(
 	    new boost::object_pool<LHCb::Track>());
@@ -290,6 +288,8 @@ void ZooWriter::ZooWriterContext::beginEvent()
 	    m_TperJob->Branch(it->first.c_str(), it->second, 1 << 16, 99);
 	}
 	// fill the per-job object tree
+	m_TperJob->SetBasketSize("*", 1 << 16);
+	m_TperJob->SetAutoSave(1 << 24);
 	m_TperJob->Fill();
 	m_TperJob->OptimizeBaskets();
     } else {

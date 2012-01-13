@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-01-13 - Paul Seyfert
+ - Fixed error message about unknown branch name "*" in per Job Tree.
+
 ! 2012-01-03 - Paul Seyfert
  - make writeMCtrees meaningfull for ZooMCP* which are not written due to a
    listing in the MCList (and not because beeing the association to a ZooP*).
