@@ -6,6 +6,9 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes in Brunel v42r0 output:
   . Fixes to primitive types that can be saved in Tuples::TupleObj
   . Fix to updates of cached geometry for Upstream tracking 
+  . Changes to track fit: fewer smooth operations to improve timing,
+    smarter use of OT times in OTTrackProjector leading to better Chi2 and 
+    therefore more ProtoParticles
 
 - Changes to configuration
   . Remove GaudiPoolDb dependency
@@ -36,6 +39,7 @@ Development version to pick up LHCb v33r2 software stack.
   . Add RegexpReplacer expression to BrunelExclusions.py, to take into account
     different printout format from RichHotPixels and RichRawDataDBCheck when
     running in debug mode
+  . Bug fix in CaloUtils
   . brunel2010magup test now writes SDST in MDF format, was RDST
 
 </PRE><H1><A NAME=v41r2>2011-11-11 Brunel v41r2</A></H1><PRE>
