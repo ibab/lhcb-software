@@ -14,15 +14,15 @@ import GaudiKernel.SystemOfUnits as units
 class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {            
-           'MinWeightSeedCut' : 5
+           'MinWeightSeedCut' : 6
         ,  'ConeExtFactorCut' : 4.0
-        ,  'MaxDeltaPhiCut'   : 8.0
-        ,  'MaxDeltaEtaCut'   : 0.5
-        ,  'Min1stJetPtCut'   : 7.0
+        ,  'MaxDeltaPhiCut'   : 6.5
+        ,  'MaxDeltaEtaCut'   : 0.35
+        ,  'Min1stJetPtCut'   : 10.0
         ,  'Min2ndJetPtCut'   : 0.0
         ,  'JetMultCut'       : 1
-        ,  'NrPVsCut'         : 5
-        ,  'MinSumEtCut'      : 15.0
+        ,  'NrPVsCut'         : 4
+        ,  'MinSumEtCut'      : 17.0
         ,  'PostScale'        : 1.0
     }
                 
