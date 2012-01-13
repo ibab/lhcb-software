@@ -3,6 +3,131 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2012-01-13 - Marco Cattaneo
+ - Fix version number in requirements
+
+!========================= OTMonitor v3r3 2011-09-07 =========================
+! 2011-09-02 - Alexandr Kozlinskiy
+ - Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
+   assuming that NextNext is stored in PrevPrev.
+
+!==================== OTMonitor v3r2p1 2010-02-03 ==========================
+! 2010-01-29 - Marco Cattaneo
+ - Remove obsolete OTTimeCreator from Boole.opts (see task 12764)
+
+!==================== OTMonitor v3r2 2010-01-21 ============================
+! 2010-01-12 - Alexandr Kozlinskiy
+ - Update OTTimeChecker and OTTimeClassification to use OTLiteTime's
+
+!==================== OTMonitor v3r1 2009-11-25 ============================
+! 2009-11-25 - Marco Cattaneo
+ - Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
+   OTTimeMonitor (was crashing anyway...) 
+ - Remove unused variables in OTTimeMonitor following previous changes
+ - Remove obsolete file OTMonitor_dll.cpp
+
+!==================== OTMonitor v3r0 2009-11-22 ============================
+! 2009-11-21 - Wouter Hulsbergen
+ - Modified OTTimeMonitor to work with LiteTimes
+
+!==================== OTMonitor v2r11 2009-05-08 ===========================
+! 2009-04-27 - Jan Amoraal
+ - Added monitoring algorithm for MCOTTimes.
+
+!==================== OTMonitor v2r10 2009-04-01 ===========================
+! 2009-04-01 - Marco Cattaneo
+ - Protect divides by zero in MCOTDepositMonitor in case of empty events
+
+!==================== OTMonitor v2r9 2009-02-20 ============================
+! 2009-02-16 - Jan Amoraal
+ - Add more monitoring to MCOTDeposit
+  o Keep track of deposits and their fractions as well as spills.
+ - Needs MCEvent > v2r11
+
+! 2009-01-27 - Jan Amoraal
+ - Start cleaning up and some more monitoring
+
+!==================== OTMonitor v2r8p1 2009-01-12 =====================
+! 2008-12-10 - Marco Cattaneo
+ - Fix gcc 4.3 compilation warning
+
+!==================== OTMonitor v2r8 2008-04-04 =====================
+! 2008-03-31 Jan Amoraal
+ - Added OTTime to expert moni
+ 
+! 2007-07-02 Jan Amoraal
+ - Minor changes to reflect changes in OTAssociators. Note code is still
+   compatible with DC06 data since the MC information is retrieved via the
+   channelIDs(keys).
+ 
+!==================== OTMonitor v2r7 2007-06-11 =====================
+! 2007-05-29 M Needham
+ - Add time spectrum histogram to OTTimeChecker
+
+!==================== OTMonitor v2r6 2007-05-15 =====================
+! 2007-05-15 - Jan Amoraal
+ - Added OTTime classification tool provided by M. Needham
+ - Added expert check options	for Boole
+
+!==================== OTMonitor v2r5 2006-04-10 =====================
+! 2007-04-08 - Jan Amoraal
+ - Fix unchecked status codes
+
+!==================== OTMonitor v2r4 2006-03-05 =====================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete OTMonitor_load.cpp file
+ - Remove an LHCbDefinitions include
+ - Fix a doxygen warning
+
+!==================== OTMonitor v2r3 2006-07-24 =====================
+! 2006-07-21 - Jan Amoraal
+ - Minor cleanups
+ - Normalise occupancy histograms per event
+
+!==================== OTMonitor v2r2 2006-03-31 =====================
+! 2006-04-11 - Jan Amoraal
+ - Adapt to GaudiHistoAlg
+
+!==================== OTMonitor v2r1 2006-03-31 =====================
+! 2006-03-30 - Jan Amoraal
+ - Minor changes due to new OTDet
+
+!==================== OTMonitor v2r0 2006-02-15 =====================
+! 2006-02-15 - Marco Cattaneo
+ - in requirements, migrate to DigiEvent
+
+! 2006-02-08 - Marco Cattaneo
+ - Fix path of Linker table
+
+! 2006-01-31 - Marco Cattaneo
+ - Fixes to requirements
+
+! 2006-01-20 - Jan Amoraal
+ - Migrated to LHCb v20r0
+
+! 2005-11-09 - Jacopo Nardulli
+ - MCOTDepositMonitor correted for modifications related to MCOTDeposit.h
+
+!==================== OTMonitor v1r1 2004-12-06 =====================
+! 2004-12-06 - Jacopo Nardulli
+- Complete move to new base classes
+
+! 2004-11-09 - Jacopo Nardulli     
+- Move to the New Gaudi Base Classes
+
+!==================== OTMonitor v1r0 2004-09-10 =====================
+! 2004-08-30 - Jacopo Nardulli
+- The package OTMonitor consists of 3 algorithms:
+   OTTimeChecker - Checking the efficiencies with respect to MCHits.
+   OTTimeMonitor - Monitoring the OTTime 
+   MCOTDepositMonitor - Monitoring the MCOTDeposit    
+- Base class: 
+   OTMonitorAlgorithm 
+!---------------------------------------------------------------------------
+! Package         : OTMonitor
+! Package manager : Wouter Hulsbergen
+!---------------------------------------------------------------------------
+
 !========================= OTMonitor v3r3 2011-09-07 =========================
 ! 2011-09-02 - Alexandr Kozlinskiy
  - Monitor PrevPrev and NextNext directly in MCOTDepositMonitor instead of
