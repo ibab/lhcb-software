@@ -83,6 +83,12 @@ Analysis::Models::BreitWigner::BreitWigner
 // ============================================================================
 Analysis::Models::BreitWigner::~BreitWigner(){}
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::BreitWigner*
+Analysis::Models::BreitWigner::clone( const char* name ) const 
+{ return new Analysis::Models::BreitWigner(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::BreitWigner::evaluate() const 
@@ -126,9 +132,14 @@ Analysis::Models::Rho0::Rho0
 {}
 // ============================================================================
 // destructor
+// ============================================================================
 Analysis::Models::Rho0::~Rho0(){}
 // ============================================================================
-                                    
+// clone 
+// ============================================================================
+Analysis::Models::Rho0*
+Analysis::Models::Rho0::clone( const char* name ) const 
+{ return new Analysis::Models::Rho0(*this,name) ; }
 
 // ============================================================================
 // constructor from all parameters 
@@ -174,6 +185,12 @@ Analysis::Models::Flatte::Flatte
 // destructor 
 // ============================================================================
 Analysis::Models::Flatte::~Flatte (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Flatte*
+Analysis::Models::Flatte::clone( const char* name ) const 
+{ return new Analysis::Models::Flatte(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
@@ -224,6 +241,12 @@ Analysis::Models::Flatte2::Flatte2
 // destructor 
 // ============================================================================
 Analysis::Models::Flatte2::~Flatte2 (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Flatte2*
+Analysis::Models::Flatte2::clone( const char* name ) const 
+{ return new Analysis::Models::Flatte2(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
@@ -279,6 +302,12 @@ Analysis::Models::PhaseSpaceNL::PhaseSpaceNL
 // destructor 
 // ============================================================================
 Analysis::Models::PhaseSpaceNL::~PhaseSpaceNL(){}
+// ===========================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpaceNL*
+Analysis::Models::PhaseSpaceNL::clone( const char* name ) const 
+{ return new Analysis::Models::PhaseSpaceNL(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
@@ -349,6 +378,12 @@ Analysis::Models::CrystalBallDS::CrystalBallDS
 // ============================================================================
 Analysis::Models::CrystalBallDS::~CrystalBallDS(){}
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::CrystalBallDS*
+Analysis::Models::CrystalBallDS::clone( const char* name ) const 
+{ return new Analysis::Models::CrystalBallDS(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::CrystalBallDS::evaluate() const 
@@ -399,6 +434,12 @@ Analysis::Models::PhaseSpace2::PhaseSpace2
 // ============================================================================
 Analysis::Models::PhaseSpace2::~PhaseSpace2(){}
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpace2*
+Analysis::Models::PhaseSpace2::clone( const char* name ) const 
+{ return new Analysis::Models::PhaseSpace2(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::PhaseSpace2::evaluate() const 
@@ -441,6 +482,12 @@ Analysis::Models::PhaseSpaceLeft::PhaseSpaceLeft
 // destructor 
 // ============================================================================
 Analysis::Models::PhaseSpaceLeft::~PhaseSpaceLeft(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpaceLeft*
+Analysis::Models::PhaseSpaceLeft::clone( const char* name ) const 
+{ return new Analysis::Models::PhaseSpaceLeft(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
@@ -490,6 +537,12 @@ Analysis::Models::PhaseSpaceRight::PhaseSpaceRight
 // destructor 
 // ============================================================================
 Analysis::Models::PhaseSpaceRight::~PhaseSpaceRight(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpaceRight*
+Analysis::Models::PhaseSpaceRight::clone( const char* name ) const 
+{ return new Analysis::Models::PhaseSpaceRight(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
@@ -662,6 +715,12 @@ Analysis::Models::PolyPositive::PolyPositive
 // ============================================================================
 Analysis::Models::PolyPositive::~PolyPositive() { delete m_iterator ; }
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PolyPositive*
+Analysis::Models::PolyPositive::clone( const char* name ) const 
+{ return new Analysis::Models::PolyPositive(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::PolyPositive::evaluate() const 
@@ -736,6 +795,12 @@ Analysis::Models::GramCharlierA::GramCharlierA
 // ============================================================================
 Analysis::Models::GramCharlierA::~GramCharlierA(){}
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::GramCharlierA*
+Analysis::Models::GramCharlierA::clone( const char* name ) const 
+{ return new Analysis::Models::GramCharlierA(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::GramCharlierA::evaluate() const 
@@ -806,6 +871,12 @@ Analysis::Models::Bukin::Bukin
 // ============================================================================
 Analysis::Models::Bukin::~Bukin(){}
 // ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Bukin*
+Analysis::Models::Bukin::clone( const char* name ) const 
+{ return new Analysis::Models::Bukin(*this,name) ; }
+// ============================================================================
 // the actual evaluation of function 
 // ============================================================================
 Double_t Analysis::Models::Bukin::evaluate() const 
@@ -871,6 +942,12 @@ Analysis::Models::Voigt::Voigt
 // destructor 
 // ============================================================================
 Analysis::Models::Voigt::~Voigt(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Voigt*
+Analysis::Models::Voigt::clone( const char* name ) const 
+{ return new Analysis::Models::Voigt(*this,name) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================

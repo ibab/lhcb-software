@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-01-15 - Vanya Belyaev
+
+ - add cloners 
+
 ! 2011-12-17 - Vanya Belyaev
 
  - fix for gcc46 compiler.

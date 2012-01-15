@@ -1,4 +1,4 @@
- // $Id: $
+// $Id: $
 // ============================================================================
 #ifndef ANALYSIS_MODELS_H 
 #define ANALYSIS_MODELS_H 1
@@ -75,6 +75,8 @@ namespace Analysis
       BreitWigner ( const BreitWigner& , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~BreitWigner() ;
+      /// clone 
+      virtual BreitWigner* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -125,6 +127,8 @@ namespace Analysis
       Rho0 ( const Rho0& , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~Rho0 () ;
+      /// clone 
+      virtual Rho0* clone ( const char* name ) const ; 
       // ======================================================================
     } ;
     // ========================================================================
@@ -162,6 +166,8 @@ namespace Analysis
       Flatte ( const Flatte& , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~Flatte () ;
+      /// clone 
+      virtual Flatte* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -216,6 +222,8 @@ namespace Analysis
       Flatte2 ( const Flatte2& , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~Flatte2 () ;
+      /// clone 
+      virtual Flatte2* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -247,6 +255,8 @@ namespace Analysis
       PhaseSpace2 ( const PhaseSpace2& right , const char* name )  ;
       /// destructor 
       virtual ~PhaseSpace2() ;
+      /// clone 
+      virtual PhaseSpace2* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
@@ -285,6 +295,8 @@ namespace Analysis
       PhaseSpaceLeft ( const PhaseSpaceLeft& right , const char* name )  ;
       /// destructor 
       virtual ~PhaseSpaceLeft() ;
+      /// clone 
+      virtual PhaseSpaceLeft* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
@@ -325,6 +337,8 @@ namespace Analysis
       PhaseSpaceRight ( const PhaseSpaceRight& right , const char* name )  ;
       /// destructor 
       virtual ~PhaseSpaceRight () ;
+      /// clone 
+      virtual PhaseSpaceRight* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
@@ -367,6 +381,8 @@ namespace Analysis
       PhaseSpaceNL ( const PhaseSpaceNL& , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~PhaseSpaceNL () ;
+      /// clone 
+      virtual PhaseSpaceNL* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -412,6 +428,8 @@ namespace Analysis
       CrystalBallDS ( const CrystalBallDS& right , const char* name = 0 ) ;
       /// virtual destructor 
       virtual ~CrystalBallDS() ;
+      /// clone 
+      virtual  CrystalBallDS* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -506,6 +524,8 @@ namespace Analysis
         const char*          name = 0  ) ;
       /// destructor 
       virtual ~PolyPositive() ;
+      /// clone 
+      virtual  PolyPositive* clone ( const char* name ) const ; 
       // ======================================================================
     protected :
       // ======================================================================
@@ -552,6 +572,8 @@ namespace Analysis
       GramCharlierA ( const GramCharlierA& right , const char* name = 0  ) ;
       /// virtual destructor  
       virtual ~GramCharlierA () ;
+      /// clone 
+      virtual  GramCharlierA* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -600,6 +622,8 @@ namespace Analysis
       Bukin ( const Bukin& right , const char* name = 0  ) ;
       /// virtual destructor  
       virtual ~Bukin () ;
+      /// clone 
+      virtual  Bukin* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
@@ -641,6 +665,8 @@ namespace Analysis
       Voigt ( const Voigt& right , const char* name = 0  ) ;
       /// virtual destructor  
       virtual ~Voigt () ;
+      /// clone 
+      virtual  Voigt* clone ( const char* name ) const ; 
       // ======================================================================
     protected:
       // ======================================================================
