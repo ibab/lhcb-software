@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-01-15 - Sam Gregson
+ - Updated Hlt2B2JpsiXLines.py lines to use KsLLTF (instead of defunct KsLL)
+
 ! 2011-12-13 - Marcin Kucharczyk
  - Improve tuning of Hlt2HighPtJets line
 

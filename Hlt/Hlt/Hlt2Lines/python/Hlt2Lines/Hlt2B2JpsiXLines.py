@@ -627,7 +627,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
-        from Hlt2SharedParticles.Ks import KsLL
+        from Hlt2SharedParticles.Ks import KsLLTF
         from Configurables import CombineParticles, FilterDesktop
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLBiasedDecision" : 50320 } )
         
@@ -641,7 +641,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = "VFASPF(VCHI2PDOF)<16 "
-                               , Inputs = [ KsLL ]
+                               , Inputs = [ KsLLTF ]
                                )
 
         combineB = Hlt2Member( CombineParticles # type
@@ -656,7 +656,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 		        , prescale = self.prescale
                    	, postscale = self.postscale	
                         , algos = [  PV3D(),  Jpsi2MuMu, filterJpsi
-                                       , KsLL,      filterKS
+                                       , KsLLTF,      filterKS
                                        , combineB
                                        ]
                         )
@@ -671,7 +671,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
-        from Hlt2SharedParticles.Ks import KsLL
+        from Hlt2SharedParticles.Ks import KsLLTF
         from Configurables import CombineParticles, FilterDesktop
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLUnbiasedDecision" : 50340 } )
         
@@ -684,7 +684,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         filterKS = Hlt2Member( FilterDesktop # type
                                , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
                                , Code = "(PT > 1.0*GeV)"
-                               , Inputs = [ KsLL ]
+                               , Inputs = [ KsLLTF ]
                                )
         
         combineB = Hlt2Member( CombineParticles # type
@@ -699,7 +699,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                    	, postscale = self.postscale
 			,  algos = [   Jpsi2MuMu , filterJpsi
-                                       , KsLL,       filterKS
+                                       , KsLLTF,       filterKS
                                        , combineB
                                        ]
                         )
