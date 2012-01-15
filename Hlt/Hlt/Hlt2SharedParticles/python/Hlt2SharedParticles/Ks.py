@@ -11,7 +11,7 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPion
 from Configurables import CombineParticles
 from HltLine.HltLine import bindMembers, Hlt2Member
 
-__all__ = ( 'KsLL', 'KsDD' )
+__all__ = ( 'KsLLTF', 'KsDD' )
 
 
 # The LL K shorts, track fitted
