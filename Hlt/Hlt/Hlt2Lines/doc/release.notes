@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2011-12-16 - Marcin Kucharczyk
+ - Put the cut on nr of PV's = 1 in Hlt2HighPtJets line
+
 ! 2012-01-15 - Sam Gregson
  - Updated Hlt2B2JpsiXLines.py lines to use KsLLTF (instead of defunct KsLL)
 

@@ -21,7 +21,7 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
         ,  'Min1stJetPtCut'   : 10.0
         ,  'Min2ndJetPtCut'   : 0.0
         ,  'JetMultCut'       : 1
-        ,  'NrPVsCut'         : 4
+        ,  'NrPVsCut'         : 1
         ,  'MinSumEtCut'      : 17.0
         ,  'PostScale'        : 1.0
     }
