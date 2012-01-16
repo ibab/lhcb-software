@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-16 - Chris Jones
+ - Do not abort processing in the Checkers, if missing data locations are found
+   (Happens with Particles in stripped DSTs).
+
 !========================= EventPacker v2r10 2011-07-25 =========================
 ! 2011-07-25 - Olivier Callot
  - Fix the UnpackTrack problem: An overprotection made in some cases the offset in case
