@@ -72,7 +72,6 @@ private:
     }     
     return temp;
   }
-  double   m_pedShift;
   CaloVector<LHCb::CaloAdc>    m_adcs;
   CaloVector<LHCb::CaloDigit> m_digits;
   unsigned int m_tell1s;

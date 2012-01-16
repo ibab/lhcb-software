@@ -50,7 +50,6 @@ private:
   int         m_zsupNeighbor      ; ///< zsup (ADC) for neighbors for 2D method
   bool m_adcOnTES;
   bool m_digitOnTES;
-  double m_pedShift;
   std::string m_outputType;
   std::string m_extension;
   

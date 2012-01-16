@@ -43,7 +43,6 @@ protected:
   bool getDigits ();
 
 private:
-  double   m_pedShift;
   std::vector<LHCb::CaloAdc>    m_pinData;
   std::vector<LHCb::CaloAdc>    m_data;
   std::vector<LHCb::CaloDigit>  m_digits;

@@ -20,7 +20,6 @@ CaloDataProvider::CaloDataProvider( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : CaloReadoutTool ( type, name , parent )
-    ,m_pedShift(0.0)
     ,m_adcs()
     ,m_digits()
     ,m_tell1s(0)
@@ -77,7 +76,6 @@ StatusCode CaloDataProvider::initialize ( ) {
     return StatusCode::FAILURE;
   }
   
-  m_pedShift = m_calo->pedestalShift();
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
   m_adcs.reserve( nCells + nPins  );
@@ -148,10 +146,11 @@ const CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(std::vector<int> sources
   return m_adcs;
 }
 void CaloDataProvider::adc2digit(){
+  double pedShift = m_calo->pedestalShift();
   for(CaloVector<LHCb::CaloAdc>::iterator iadc = m_adcs.begin();iadc!=m_adcs.end();++iadc){
     int temp = (*iadc).adc();
     LHCb::CaloCellID id = (*iadc).cellID() ;
-    double e = ( double(temp) - m_pedShift ) * m_calo->cellGain( id );
+    double e = ( double(temp) - pedShift ) * m_calo->cellGain( id );
     LHCb::CaloDigit dig(id,e);
     m_digits.addEntry( dig , id);
   }
@@ -172,11 +171,12 @@ const CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source,bool clea
 //  Get data
 //==========
 double CaloDataProvider::digit (LHCb::CaloCellID id,double def){
+  double pedShift = m_calo->pedestalShift();
   if( m_getRaw )getBanks();
   if( 0 >  m_digits.index(id) ){
     int temp = adc(id,-256);
     if( -256 == temp && 0 >  m_adcs.index(id) ) return def; // 0-suppressed data or non-valid CellID
-    double e = ( double(temp) - m_pedShift ) * m_calo->cellGain( id );
+    double e = ( double(temp) - pedShift ) * m_calo->cellGain( id );
     LHCb::CaloDigit dig(id,e);
     m_digits.addEntry( dig , id);
     return e;

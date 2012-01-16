@@ -1,6 +1,5 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/RndmGenerators.h"
 
 // local
 #include "CaloZSupAlg.h"
@@ -101,7 +100,6 @@ StatusCode CaloZSupAlg::initialize() {
   // Retrieve the calorimeter we are working with.
   m_calo = getDet<DeCalorimeter>( m_detectorName );  
   m_numberOfCells = m_calo->numberOfCells();
-  m_pedShift      = m_calo->pedestalShift();
   
   //*** A few check of the parameters
   if ( "NO" != m_zsupMethod && 
@@ -141,11 +139,13 @@ StatusCode CaloZSupAlg::execute() {
   
   //*** some trivial printout
 
-  if ( isDebug && m_adcOnTES) debug() << "Perform zero suppression - return CaloAdcs on TES at "
-                                      << rootInTES() + m_outputADCData + m_extension << endmsg;
-  if ( isDebug && m_digitOnTES) debug() << "Perform zero suppression - return CaloDigits on TES at "
-                                      << rootInTES() + m_outputDigitData  + m_extension << endmsg;
-
+  if ( isDebug ) {
+    if (m_adcOnTES) debug() << "Perform zero suppression - return CaloAdcs on TES at "
+                            << rootInTES() + m_outputADCData + m_extension << endmsg;
+    if ( m_digitOnTES) debug() << "Perform zero suppression - return CaloDigits on TES at "
+                               << rootInTES() + m_outputDigitData  + m_extension << endmsg;
+  }
+  
 
   //*** get the input data
 
@@ -157,14 +157,11 @@ StatusCode CaloZSupAlg::execute() {
   if(m_adcOnTES){
     newAdcs = new LHCb::CaloAdcs();
     put( newAdcs, m_outputADCData + m_extension );
-  }else delete newAdcs;
+  }
   if(m_digitOnTES) {
     newDigits = new LHCb::CaloDigits();
     put( newDigits, m_outputDigitData + m_extension );
-  }else delete newDigits;
-
-
-
+  }
   
   if ( isDebug ) debug() << "Processing " << adcs.size() 
                          << " Digits." << endmsg;
@@ -210,6 +207,7 @@ StatusCode CaloZSupAlg::execute() {
 
   //** write tagged data as CaloAdc or CaloDigits according to m_digitsOutput
   
+  double pedShift = m_calo->pedestalShift();
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
     LHCb::CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
@@ -235,7 +233,7 @@ StatusCode CaloZSupAlg::execute() {
     }
 
     if(m_digitOnTES){
-      double e = ( double( (*anAdc).adc() ) - m_pedShift ) * m_calo->cellGain( id );
+      double e = ( double( (*anAdc).adc() ) - pedShift ) * m_calo->cellGain( id );
       LHCb::CaloDigit* digit = new LHCb::CaloDigit(id,e);
       try{
         newDigits->insert( digit ) ;
@@ -262,13 +260,12 @@ StatusCode CaloZSupAlg::execute() {
       }
     }    
   }
-  if(m_adcOnTES){
-    if(isDebug)debug() << format( "Have stored %5d CaloAdcs.", newAdcs->size() ) 
-            << endmsg;
-  }
-  if(m_digitOnTES){
-    if(isDebug)debug() << format( "Have stored %5d CaloDigits.", newDigits->size() ) 
-            << endmsg;
+
+  if(isDebug) {
+    if(m_adcOnTES)
+      debug() << format("Have stored %5d CaloAdcs.", newAdcs->size()) << endmsg;
+    if(m_digitOnTES)
+      debug() << format("Have stored %5d CaloDigits.", newDigits->size()) << endmsg;
   }
 
   if(m_statusOnTES)m_adcTool->putStatusOnTES();

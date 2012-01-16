@@ -19,7 +19,7 @@ DECLARE_TOOL_FACTORY( CaloEnergyFromRaw )
 CaloEnergyFromRaw::CaloEnergyFromRaw( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : CaloReadoutTool ( type, name , parent ), m_pedShift(0.0)
+  : CaloReadoutTool ( type, name , parent )
 {
   declareInterface<ICaloEnergyFromRaw>(this);
   
@@ -69,7 +69,6 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     return StatusCode::FAILURE;
   }
   
-  m_pedShift = m_calo->pedestalShift();
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
   m_pinData.reserve( nPins );
@@ -489,11 +488,12 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 bool CaloEnergyFromRaw::getDigits ( ) {
   m_digits.clear();
   if( 0 == m_data.size() )return true;
+  double pedShift = m_calo->pedestalShift();
   for ( std::vector<LHCb::CaloAdc>::const_iterator itAdc = m_data.begin();
         m_data.end() != itAdc; ++itAdc ) {
     LHCb::CaloCellID id = (*itAdc).cellID();
     int adc = (*itAdc).adc();
-    double e = ( double(adc) - m_pedShift ) * m_calo->cellGain( id );
+    double e = ( double(adc) - pedShift ) * m_calo->cellGain( id );
     LHCb::CaloDigit dig( id, e );
     m_digits.push_back( dig );
   }

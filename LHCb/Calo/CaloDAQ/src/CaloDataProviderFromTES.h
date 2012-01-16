@@ -1,4 +1,3 @@
-// $Id: CaloDataProviderFromTES.h,v 1.8 2010-03-22 17:01:24 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H  
 #define CALODATAPROVIDERFROMTES_H 1 
 
@@ -91,8 +90,6 @@ private:
   }
   
 
-
-  double   m_pedShift;
   CaloVector<LHCb::CaloAdc>    m_adcs;
   CaloVector<LHCb::CaloDigit> m_digits;
   DeCalorimeter*   m_calo;

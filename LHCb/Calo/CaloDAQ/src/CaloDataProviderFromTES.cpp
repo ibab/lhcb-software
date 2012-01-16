@@ -107,7 +107,6 @@ StatusCode CaloDataProviderFromTES::initialize ( ) {
     }    
   }
   
-  m_pedShift = m_calo->pedestalShift();
   long nCells = m_calo->numberOfCells();
   long nPins  = m_calo->numberOfPins();
   m_adcs.reserve( nCells + nPins  );
@@ -176,6 +175,7 @@ void CaloDataProviderFromTES::cleanData(int feb ) {
 }
 //---------
 double CaloDataProviderFromTES::digit (LHCb::CaloCellID id, double def){
+  double pedShift = m_calo->pedestalShift();
   if(m_getRaw)getBanks();
   if( fromDigit() ){
     if( NULL == m_digCont )return def ;
@@ -186,18 +186,19 @@ double CaloDataProviderFromTES::digit (LHCb::CaloCellID id, double def){
     if( NULL == m_adcCont )return def ;
     LHCb::CaloAdc* adc = m_adcCont->object( id );
     if( NULL == adc )return def;
-    return ( (double) adc->adc() - m_pedShift ) * m_calo->cellGain( id );
+    return ( (double) adc->adc() - pedShift ) * m_calo->cellGain( id );
   }
   return def;
 }
 //---------
 int CaloDataProviderFromTES::adc (LHCb::CaloCellID id,int def){
+  double pedShift = m_calo->pedestalShift();
   if(m_getRaw)getBanks();
   if( fromDigit() ){
     if( NULL == m_digCont )return def ;
     LHCb::CaloDigit* digit = m_digCont->object( id );
     if( NULL == digit )return def;
-    return (int) (digit->e() / m_calo->cellGain( id ) + m_pedShift);
+    return (int) (digit->e() / m_calo->cellGain( id ) + pedShift);
   }else if(  fromAdc() ){
     if( NULL == m_adcCont )return def ;
     LHCb::CaloAdc* adc = m_adcCont->object( id );
