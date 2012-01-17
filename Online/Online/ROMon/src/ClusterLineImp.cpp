@@ -15,6 +15,7 @@
 
 // Framework include files
 #include "ROMon/ClusterLine.h"
+#include "CPP/Interactor.h"
 
 // C++ include files
 #include <set>
@@ -40,7 +41,9 @@ namespace ROMon {
     int               m_totMoore;
     int               m_totSent;
     int               m_numUpdate;
+    /// Flag to indicate probles with entity
     bool              m_hasProblems;
+    /// Flag to indicate if the cluster is in use
     bool              m_inUse;
     /// Timestamp with last update
     time_t            m_lastUpdate;
@@ -53,6 +56,40 @@ namespace ROMon {
     void display();
   };
 
+  /**@class HltDeferLine ROMon.h GaudiOnline/FarmDisplay.h
+   *
+   *   Display summarizing one single subfarm. Showed as an array on the
+   *   main display.
+   *
+   *   @author M.Frank
+   */
+  class HltDeferLine : public ClusterLine, public Interactor  {
+    typedef std::set<std::string> StrSet;
+    int                 m_numFiles;
+    int                 m_numRuns;
+    int                 m_numUpdate;
+    /// Flag to indicate probles with entity
+    bool                m_hasProblems;
+    /// Timestamp with last update
+    time_t              m_lastUpdate;
+    /// Service ID for excluded nodes
+    int                 m_exclID;
+    /// Set of excluded nodes
+    StrSet              m_excluded;
+
+    /// DIM command service callback
+    static void excludedHandler(void* tag, void* address, int* size);
+  public:
+    /// Initializing constructor
+    HltDeferLine(FarmLineDisplay* p, int pos, const std::string& n);
+    /// Default destructor
+    virtual ~HltDeferLine();
+    /// Display function drawing on pasteboard of current display
+    void display();
+    /// Interactor overload: Display callback handler
+    void handle(const Event& ev);
+  };
+
   /**@class MonitoringClusterLine ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   @author M.Frank
@@ -63,9 +100,13 @@ namespace ROMon {
     int               m_totRelay;
     int               m_totWorker;
     int               m_numUpdate;
+    /// Flag to indicate probles with entity
     bool              m_hasProblems;
+    /// Flag to indicate if the cluster is in use
     bool              m_inUse;
+    /// Partition name
     std::string       m_partition;
+    /// Name of the relay node withing storage cluster
     std::string       m_relayNode;
     /// Timestamp with last update
     time_t            m_lastUpdate;
@@ -88,10 +129,12 @@ namespace ROMon {
     int               m_totRecv;
     int               m_totSent;
     int               m_numUpdate;
+    /// Flag to indicate probles with entity
     bool              m_hasProblems;
+    /// Flag to indicate if the cluster is in use
     bool              m_inUse;
+    /// Partition name
     std::string       m_partition;
-    std::string       m_relayNode;
     /// Timestamp with last update
     time_t            m_lastUpdate;
   public:
@@ -164,6 +207,7 @@ typedef vector<string>               StringV;
 #define CLUSTERLINE_START      2
 #define COL_WARNING         (RED|BOLD)
 #define COL_ALARM           (RED|BOLD|INVERSE)
+#define COL_OK              (GREEN|INVERSE)
 #define INT_max  numeric_limits<int>::max()
 #define FLT_max  numeric_limits<float>::max()
 namespace ROMon {
@@ -177,6 +221,7 @@ namespace {
   ClusterLineFactory<StorageClusterLine>    s_storageLineFactory("Storage");
   ClusterLineFactory<CtrlFarmClusterLine>   s_ctrlFarmLineFactory("CtrlFarm");
   ClusterLineFactory<FarmClusterLine>       s_farmLineFactory("Farm");
+  ClusterLineFactory<HltDeferLine>          s_hltDeferFactory("HLT");
 
   const char* _procNam(const char* nam) {
     const char* p;
@@ -830,6 +875,124 @@ void FarmClusterLine::display() {
   else
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+47+CLUSTERLINE_START,0);
+  end_update();
+}
+
+#include "ROMon/CPUMon.h"
+
+HltDeferLine::HltDeferLine(FarmLineDisplay* p, int pos, const std::string& n)
+: ClusterLine(p,pos,n)
+{
+  m_numUpdate   = 0;
+  m_numFiles    = 0;
+  m_numRuns     = 0;
+  m_lastUpdate  = time(0);
+  m_hasProblems = false;
+  connect(strlower(m_name)+"/ROpublish/HLTDefer");
+  string svc = "HLT/ExcludedNodes/"+strupper(m_name);
+  m_exclID   = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
+}
+
+HltDeferLine::~HltDeferLine() {
+  if ( m_exclID ) ::dic_release_service(m_exclID);
+  m_exclID = 0;
+}
+
+/// Interactor overload: Display callback handler
+void HltDeferLine::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case IocEvent:
+    switch(ev.type) {
+    case CMD_EXCLUDE:
+      m_excluded = *auto_ptr<StrSet>(ev.iocPtr<StrSet>()).get();
+      if ( 0 == m_numUpdate ) {
+	RTL::Lock lock(InternalDisplay::screenLock());
+	begin_update("          -- No Subfarm information retrieved yet --");
+	end_update();
+      }
+      return;
+    default:
+      break;
+    }
+    break;
+  default:
+    break;
+  }
+}
+
+/// DIM command service callback
+void HltDeferLine::excludedHandler(void* tag, void* address, int* size) {
+  if ( tag ) {
+    HltDeferLine* l = *(HltDeferLine**)tag;
+    set<string> nodes;
+    if ( address && *size > 0 ) {
+      char *p = (char*)address, *end = p+*size;
+      while(p<end) {
+	nodes.insert(strlower(p));
+	p += (::strlen(p)+1);
+      }
+    }
+    IocSensor::instance().send(l,CMD_EXCLUDE,new set<string>(nodes));
+  }
+}
+
+void HltDeferLine::display() {
+  typedef DeferredHLTSubfarmStats HLTStats;
+  typedef HLTStats::Nodes Nodes;
+  typedef HLTStats::Runs Runs;
+  char txt[256];
+  size_t pos = 66, numNodes = 0, numRuns = 0, numFiles = 0;
+  Display*       dis = m_parent->display();
+  const HLTStats*  s = data<HLTStats>();
+  const Runs&   runs = s->runs;
+  const Nodes* nodes = s->nodes();
+  int col = NORMAL, line = position();
+  string val;
+
+  ++m_numUpdate;
+  for (Runs::const_iterator ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
+    numFiles += (*ri).second;
+    ++numRuns;
+  }
+  for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
+    ++numNodes;
+  }
+
+  RTL::Lock lock(InternalDisplay::screenLock());
+  time_t t1 = numNodes == 0 ? time(0) : s->firstUpdate().first;
+  ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
+  ::sprintf(txt+strlen(txt),"%6ld %6ld %6ld ",numNodes, numRuns, numFiles);
+  begin_update(txt);
+
+  if ( numNodes != 0 ) m_lastUpdate = t1;
+
+  if ( numRuns>0 )
+    ::scrc_put_chars(dis,"  Processing HLT  ",COL_WARNING,line,46,0);
+  else
+    ::scrc_put_chars(dis,"       DONE       ",COL_OK,line,46,0);
+  val = " "+string(s->name)+" ";
+  ::scrc_put_chars(dis,val.c_str(),numRuns>0 ? COL_WARNING : COL_OK,line,pos,0);
+  pos += val.length();
+  ::scrc_put_chars(dis,"  ",NORMAL,line,pos,0);
+  pos += 2;
+  if ( nodes->size() > 0 ) {
+    for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
+      const DeferredHLTStats& n = *ni;
+      string nn = n.name;
+      if ( nn.length() > 0 && nn != s->name ) {
+	const Runs& nr = n.runs;
+	bool excl = m_excluded.find(nn) != m_excluded.end();
+	col = nr.size()==0 ? COL_OK : COL_WARNING;
+	if ( excl )  {
+	  col = INVERSE|(col==COL_WARNING ? MAGENTA : BLUE);
+	}
+	val = " "+nn.substr(nn.length()-2);
+	::scrc_put_chars(dis,val.c_str(),col,line,pos,0);
+	pos += val.length();
+      }
+    }
+  }
+  ::scrc_put_chars(dis," ",COL_OK,line,pos,1);
   end_update();
 }
 

@@ -46,7 +46,6 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   RTL::CLI cli(argc, argv, NodeStatsCollector::help);
   std::string svc, nam;
   check_dbg(cli);
-  bool has_hlt = true;//cli.getopt("hlt",3) != 0;
   cli.getopt("publish",   2, svc);
   cli.getopt("statSize",  5, m_statSize);
   cli.getopt("mbmSize",   4, m_mbmSize);
@@ -72,13 +71,12 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   if ( !svc.empty() )  {
     std::string dns = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "None";
     bool has_mbm = RTL::nodeNameShort() != dns;
-    has_hlt &= RTL::nodeNameShort() != dns && RTL::nodeNameShort().substr(0,3)=="hlt";
     nam = svc + "/Statistics";
     m_statSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedStats,(long)this);
     nam = svc + "/Readout";
     if ( has_mbm ) m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
     nam = svc + "/HltDefer";
-    if ( has_hlt ) m_hltSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT,(long)this);
+    if ( has_mbm ) m_hltSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;
@@ -283,15 +281,23 @@ int NodeStatsCollector::monitor() {
     }
     if ( 0 != m_mbmSvc ) {
       if ( (nclients=::dis_update_service(m_mbmSvc)) == 0 ) {
-	log() << "No client was listening to my MBM information......" << std::endl;
+	if ( m_print )   {
+	  log() << "No client was listening to my MBM information......" << std::endl;
+	}
       }
     }
     if ( stat_delay<=0 ) {
       if ( (nclients=::dis_update_service(m_statSvc)) == 0 ) {
-	log() << "No client was listening to my node statistics information." << std::endl;
+	if ( m_print )   {
+	  log() << "No client was listening to my node statistics information." << std::endl;
+	}
       }
-      if ( (nclients=::dis_update_service(m_hltSvc)) == 0 ) {
-	//log() << "No client was listening to the deferred HLT information." << std::endl;
+      if ( 0 != m_hltSvc ) {
+	if ( (nclients=::dis_update_service(m_hltSvc)) == 0 ) {
+	  if ( m_print )  {
+	    log() << "No client was listening to the deferred HLT information." << std::endl;
+	  }
+	}
       }
       stat_delay = m_statDelay;
     }

@@ -141,6 +141,7 @@ ClusterListener::ClusterListener(bool verbose, const string& sf, const string& p
   addService(svc0+"/CPU");
   addService(svc0+"/Tasks");
   addService(svc0+"/ROTasks");
+  addService(svc0+"/HLTDefer");
   svc0 = "/" + strupper(sf) + "/TaskSupervisor";
   addService(svc0+"/Summary");
   addService(svc0+"/Status");
@@ -207,7 +208,7 @@ ROMonBridge::ROMonBridge(int argc, char** argv) : m_print(LIB_RTL_WARNING)  {
   ::lib_rtl_install_printer(ro_rtl_print,(void*)m_print);
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
-  PartitionListener p(this,"Subfarms",true);
+  PartitionListener p(this,"Subfarms","*",true);
   ::dis_start_serving((char*)m_name.c_str());
 }
 

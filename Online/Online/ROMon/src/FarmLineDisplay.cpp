@@ -80,9 +80,10 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   m_reverse = 0 != cli.getopt("reverse",3);
   m_mode = HLT_MODE;
   if ( cli.getopt("reconstruction",3) ) m_mode = RECO_MODE;
-  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
+  if ( cli.getopt("taskmonitor",2)    != 0 ) m_mode = CTRL_MODE;
   if ( cli.getopt("torrentmonitor",2) != 0 ) m_mode = TORRENT_MODE;
-  if ( cli.getopt("anchor",2,anchor) != 0 ) {
+  if ( cli.getopt("deferred",2)       != 0 ) m_mode = HLTDEFER_MODE;
+  if ( cli.getopt("anchor",2,anchor)  != 0 ) {
     int x, y;
     if ( 2 == ::sscanf(anchor.c_str(),"+%d+%d",&x,&y) ) {
       m_anchorX = x;
@@ -113,6 +114,8 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::sprintf(txt," Task Control farm display of partition %s ",m_name.c_str());
   else if ( m_mode == TORRENT_MODE )
     ::sprintf(txt," Torrent status display of partition %s ",m_name.c_str());
+  else if ( m_mode == HLTDEFER_MODE )
+    ::sprintf(txt," HLT work display of partition %s match='%s'",m_name.c_str(),m_match.c_str());
   else if ( m_match == "*" && all )
     ::sprintf(txt," HLT Farm display of all known subfarms ");
   else if ( all )
@@ -133,18 +136,37 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
     ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
     ::scrc_put_chars(m_display,": OK",NORMAL,1,82,0);
-    ::scrc_put_chars(m_display,"nn",RED|INVERSE,1,90,0);
+    ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,1,90,0);
     ::scrc_put_chars(m_display,": Not OK",NORMAL,1,92,0);
     ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,1,110,0);
     ::scrc_put_chars(m_display,": OK/Excluded",NORMAL,1,112,0);
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
     ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
-    ::sprintf(txt," %-10s %-8s%-7s %-6s %-6s    %s",
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s    %s",
 	      "","Last","No.of","No.of","No.of","< -------- Subfarm Information ------- >");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %7s %5s  %-19s           %s",
 	      "","Update","Nodes", "Tasks","Conn.","Status","PVSS","Summary",
 	      "Controls PC and worker node status");
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
+  }
+  else if ( m_mode == HLTDEFER_MODE ) {
+    ::scrc_put_chars(m_display,txt,NORMAL|BOLD,1,2,0);
+    ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL|BOLD,2,40,0);
+    ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
+    ::scrc_put_chars(m_display,": Done,ready",NORMAL,1,82,0);
+    ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,1,110,0);
+    ::scrc_put_chars(m_display,": Files to be process",NORMAL,1,112,0);
+    ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,2,80,0);
+    ::scrc_put_chars(m_display,": Done/Excluded",NORMAL,2,82,0);
+    ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,2,110,0);
+    ::scrc_put_chars(m_display,": Files to be process/Excluded",NORMAL,2,112,1);
+    ::sprintf(txt," %-10s %-8s %6s %6s %6s         %s",
+	      "","Last","No.of","No.of","No.of","Subfarm");
+    ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
+    ::sprintf(txt," %-10s %-8s %6s %6s %6s       %7s    %-19s  %s",
+	      "","Update","Nodes", "Runs","Files","Status","",
+	      "<--------------- Individual worker node status --------------->");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else if ( m_mode == TORRENT_MODE ) {
@@ -188,13 +210,13 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   MouseSensor::instance().start(pasteboard());
   MouseSensor::instance().add(this,m_display);
   if ( xml ) {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,xml));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match,xml));
   }
   else if ( all ) {
     m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match));
   }
 }
 
@@ -368,8 +390,8 @@ void FarmLineDisplay::update(const void* address) {
         getServiceNode(p,svc,node);
         idx = svc.find("/ROpublish");
         idq = svc.find("/hlt");
-        if ( idq == string::npos ) idq = svc.find("/mona");
-        if ( idq == string::npos ) idq = svc.find("/store");
+	if ( idq == string::npos ) idq = svc.find("/mona");
+	if ( idq == string::npos ) idq = svc.find("/store");
         if ( idx != string::npos && idq == 0 ) {
           string f = svc.substr(1,idx-1);
           if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
@@ -387,7 +409,11 @@ void FarmLineDisplay::update(const void* address) {
 
 /// Handle keyboard interrupts
 int FarmLineDisplay::handleKeyboard(int key)    {
-  if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
+  if ( m_mode == HLTDEFER_MODE && (key == 'S' || key=='s') ) {
+    // Invoke here run processing summary!
+    showHelpWindow();
+  }
+  else if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
     return WT_SUCCESS;
   }
   try {
@@ -517,7 +543,7 @@ void FarmLineDisplay::handle(const Event& ev) {
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
     case CMD_ADD:
-      if ( (i=find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>())) == m_farms.end() ) {
+      if ( (i=find(m_farms.begin(),m_farms.end(),*ev.iocPtr<string>())) == m_farms.end() )  {
         m_farms.push_back(*ev.iocPtr<string>());
         connect(m_farms);
       }
@@ -571,6 +597,8 @@ void FarmLineDisplay::connect(const vector<string>& vfarms) {
 	copy.insert(make_pair(*i,createClusterLine("RecFarm",this,pos,*i)));
       else if ( m_mode == CTRL_MODE )
 	copy.insert(make_pair(*i,createClusterLine("CtrlFarm",this,pos,*i)));
+      else if ( m_mode == HLTDEFER_MODE )
+	copy.insert(make_pair(*i,createClusterLine("HLT",this,pos,*i)));
       else if ( m_mode == TORRENT_MODE )
 	copy.insert(make_pair(*i,createClusterLine("TorrentFarm",this,pos,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )

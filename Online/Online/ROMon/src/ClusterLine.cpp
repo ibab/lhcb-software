@@ -40,9 +40,10 @@ namespace {
 
 /// Factory method: create a cluster line according to a given type
 ClusterLine* ROMon::createClusterLine(const std::string& type, 
-			       FarmLineDisplay* parent, 
-			       int pos, 
-			       const std::string& title) {
+				      FarmLineDisplay* parent, 
+				      int pos, 
+				      const std::string& title) 
+{
   map<string,ClusterLineCreator_t>::const_iterator i=creators().find(type);
   if ( i != creators().end() )  {
     ClusterLineCreator_t func = (*i).second;

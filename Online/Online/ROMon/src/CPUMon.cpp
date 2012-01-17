@@ -301,13 +301,14 @@ DeferredHLTStats* DeferredHLTStats::reset() {
 
 /// Access to the buffer part of the node structure
 DeferredHLTSubfarmStats::Nodes* DeferredHLTSubfarmStats::nodes()  const {
-  return (Nodes*)(&runs + runs.length());
+  return (Nodes*)(((char*)&runs) + runs.length());
 }
 
 /// Fix the lengths before sending. This is the last statement after filling
 void DeferredHLTSubfarmStats::fixup() {
   type = TYPE;
-  totalSize = runs.length() + nodes()->length() + sizeof(DeferredHLTStats);
+  runsSize  = runs.length();
+  totalSize = runs.data_length() + nodes()->length() + sizeof(DeferredHLTSubfarmStats);
 }
 
 /// Reset node structure to allow re-filling

@@ -202,13 +202,13 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
   if ( xml ) {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,xml));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match,xml));
   }
   else if ( all ) {
     m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match));
   }
 }
 

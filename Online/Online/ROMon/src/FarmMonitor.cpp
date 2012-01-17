@@ -431,9 +431,9 @@ FarmMonitor::FarmMonitor(int argc, char** argv)
   m_title = txt;
   log("INFO") << txt << endl;
   if ( xml )
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,xml));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match,xml));
   else if ( !all )
-    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name,m_match));
   else
     m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
 

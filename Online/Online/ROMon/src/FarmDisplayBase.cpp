@@ -44,6 +44,7 @@ namespace ROMon {
   InternalDisplay* createFarmStatsDisplay(InternalDisplay* parent, const string& title);
 
   ClusterDisplay*  createSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+  ClusterDisplay*  createHltSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createRecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createCtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
   ClusterDisplay*  createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv);
@@ -187,6 +188,11 @@ int FarmDisplayBase::showSubfarm()    {
       svc = "-servicename=/"+strupper(dnam)+"/TorrentInfo";
       const char* argv[] = {"",svc.c_str(), node.c_str(), "-delay=300"};
       m_subfarmDisplay = BitTorrent::createTorrentDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
+    }
+    else if ( m_mode == HLTDEFER_MODE ) {
+      svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
+      const char* argv[] = {"", svc.c_str(), "-delay=300" };
+      m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
@@ -511,8 +517,9 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
     showCtrlWindow();
     return true;
   case CMD_SHOWMBM:
-    (m_mode == CTRL_MODE) ? showCtrlWindow() : showMbmWindow();
-      return true;
+    if (m_mode == CTRL_MODE) showCtrlWindow();
+    else if ( m_mode != HLTDEFER_MODE ) showMbmWindow();
+    return true;
   case CMD_SHOWPROCS:
     showProcessWindow(0);
     return true;

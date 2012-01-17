@@ -61,8 +61,8 @@ void CtrlSubfarmDisplay::init(int argc, char** argv)   {
   int hdr_height;
   cli.getopt("headerheight",  1, hdr_height    =   5);
   cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "/HLTE01/TaskSupervisor/Status");
-  cli.getopt("node",          1, node          = "HLTE01");
+  cli.getopt("servicename",   1, m_svcName     = "/HLTA01/TaskSupervisor/Status");
+  cli.getopt("node",          1, node          = "HLTA01");
   m_readAlways = true;
 
   if ( !node.empty() ) {

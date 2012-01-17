@@ -460,7 +460,7 @@ namespace ROMon {
   public:
     enum { TYPE = 11 };
     typedef std::pair<int,int> RunItem;
-    typedef FixItems<RunItem> Runs;
+    typedef FixItems<RunItem>  Runs;
     /// First word: Data type descriptor (MUST always be 9)
     int          type;
     /// Node name
@@ -491,9 +491,10 @@ namespace ROMon {
    */
   PACK_DATA(class) DeferredHLTSubfarmStats {
   public:
-    typedef DeferredHLTStats::Runs Runs;
-    typedef DeferredHLTStats::RunItem RunItem;
-    typedef VarItems<DeferredHLTStats> Nodes;
+    typedef DeferredHLTStats Node;
+    typedef Node::Runs       Runs;
+    typedef Node::RunItem    RunItem;
+    typedef VarItems<Node>   Nodes;
     enum { TYPE = 12 };
     /// First word: Data type descriptor (MUST always be 4)
     int    type;
@@ -514,7 +515,7 @@ namespace ROMon {
     /// Length of the object in bytes
     int length()  const {  return totalSize; }
     /// Variable size array of node items
-    Nodes*  nodes() const;
+    VarItems<DeferredHLTStats>*  nodes() const;
     /// Retrieve timestamp of earliest updated node
     TimeStamp firstUpdate() const;
     /// Retrieve timestamp of most recent updated node

@@ -49,6 +49,7 @@ namespace {
       : id(0), flag(flg), buffLen(l), buff(0), name(nam), info(i) {
       buffLen *= (1024*8); // *8 for 64 node farms
       buff = new char[buffLen];
+      ::memset(buff,0,buffLen);
       ((T*)buff)->reset();
     }
     virtual ~_Svc() {
@@ -158,7 +159,7 @@ namespace {
     for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
       DSC* d = (*ic).second->data<DSC>();
       if ( d->data ) {
-        if ( ((char*)it) > buff+buffLen ) return 2;
+        if ( ((char*)it)+d->actual > buff+buffLen ) return 2;
         ::memcpy(it,d->data,d->actual);
         it = nodes.add(it);
       }
@@ -189,20 +190,31 @@ namespace {
 	}
       }
     }
+    //#if 0
     for(i=files.begin(), ir=runs.reset(); i!=files.end(); ++i) {
       *ir = *i;
       ir = runs.add(ir);
     }
+    //#endif
     HLTStats::Nodes* nodes = n->nodes();
     DeferredHLTStats* curr = nodes->reset();
     for(ic = cl.begin(); ic != cl.end(); ++ic)   {
+      DSC* d = (*ic).second->data<DSC>();
+      if ( d->data ) {
+        if ( ((char*)curr)+d->actual > buff+buffLen ) return 2;
+        ::memcpy(curr,d->data,d->actual);
+        curr = nodes->add(curr);
+      }
+#if 0
       DeferredHLTStats* stats = (DeferredHLTStats*)(*ic).second->data<DSC>()->data;
       if ( stats ) {
         if ( ((char*)nodes+stats->length()) > buff+buffLen ) return 2;
         ::memcpy(curr,stats,stats->length());
         curr = nodes->add(curr);
       }
+#endif
     }
+    n->fixup();
     return 1;
   }
 }
@@ -218,24 +230,29 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   cli.getopt("from", 3, from);
   cli.getopt("match",3, match);
   cli.getopt("publish",   2, svc);
+  cli.getopt("mbmDelay",  4, m_mbmDelay);
+  cli.getopt("statDelay", 5, m_statDelay);
   m_print   = cli.getopt("print",2) != 0;
   m_verbose = cli.getopt("verbose",1) != 0;
-  cli.getopt("statDelay", 5, m_statDelay);
-  cli.getopt("mbmDelay",  4, m_mbmDelay);
 
   ::dic_set_dns_node((char*)from.c_str());
   ::dis_set_dns_node((char*)to.c_str());
+  ::memset(m_service,0,sizeof(m_service));
   m_service[0] = new _Svc<Nodeset> (m_mbm, 128,svc);
   m_service[1] = new _Svc<CPUfarm> (m_stat, 32,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
   m_service[3] = new _Svc<ProcFarm>(m_stat, 64,svc + "/ROTasks",1);
-  m_service[1] = new _Svc<HLTStats>(m_stat,32,svc + "/HLTDefer");
+  m_service[4] = new _Svc<HLTStats>(m_hlt, 512,svc + "/HLTDefer");
 
   if ( svc.empty() )  {
     log() << "Unknown data type -- cannot be published." << std::endl;
     throw std::runtime_error("Unknown data type and unknwon service name -- cannot be published.");
   }
 
+  m_hlt.setMatch(match);
+  m_hlt.setItem("HltDefer");
+  m_hlt.setVerbose(m_verbose);
+  m_hlt.setUpdateHandler(this);
   m_stat.setMatch(match);
   m_stat.setItem("Statistics");
   m_stat.setVerbose(m_verbose);
@@ -244,6 +261,7 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_mbm.setItem("Readout");
   m_mbm.setVerbose(m_verbose);
   m_mbm.setUpdateHandler(this);
+  m_hlt.start();
   m_mbm.start();
   m_stat.start();
   for(size_t i=0; i<sizeof(m_service)/sizeof(m_service[0]); ++i)
@@ -277,14 +295,14 @@ int NodeStatsPublisher::monitor() {
     dim_lock();
     m_service[0]->load();
     for(size_t i=1; stat_delay < 0 && i<sizeof(m_service)/sizeof(m_service[0]); ++i)
-      m_service[i]->load();
+      if ( m_service[i] ) m_service[i]->load();
     dim_unlock();
     m_service[0]->update();
     for(size_t i=1; stat_delay < 0 && i<sizeof(m_service)/sizeof(m_service[0]); ++i)
-      m_service[i]->update();
+      if ( m_service[i] ) m_service[i]->update();
     if ( m_print ) m_service[0]->print();
     for(size_t i=1; m_print && stat_delay < 0 && i<sizeof(m_service)/sizeof(m_service[0]); ++i)
-      m_service[i]->print();
+      if ( m_service[i] ) m_service[i]->print();
     if ( stat_delay<=0 ) stat_delay = m_statDelay;
     ::lib_rtl_sleep(m_mbmDelay);
   }

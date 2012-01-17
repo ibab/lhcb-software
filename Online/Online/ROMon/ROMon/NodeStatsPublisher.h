@@ -44,6 +44,7 @@ namespace ROMon {
   protected:
     FMCMonListener m_stat;
     FMCMonListener m_mbm;
+    FMCMonListener m_hlt;
     int            m_print;
     bool           m_verbose;
     _BaseSvc*      m_service[5];

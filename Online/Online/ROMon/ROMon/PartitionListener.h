@@ -38,14 +38,15 @@ namespace ROMon {
   protected:
     Interactor* m_parent;
     std::string m_name;
+    std::string m_match;
     int         m_subFarmDP;
     int         m_partIdDP;
     int         m_runStateDP;
   public:
     /// Standard constructor with object setup through parameters
-    PartitionListener(Interactor* parent,const std::string& name);
+    PartitionListener(Interactor* parent,const std::string& name,const std::string& match);
     /// Standard constructor with object setup through parameters
-    PartitionListener(Interactor* parent,const std::string& name,bool files_only);
+    PartitionListener(Interactor* parent,const std::string& name,const std::string& match, bool files_only);
     /// Standard destructor
     virtual ~PartitionListener();
     /// DIM command service callback to retrieve HLT subfarms
