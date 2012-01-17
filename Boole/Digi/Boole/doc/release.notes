@@ -14,6 +14,9 @@ Purpose: LHCb Digitization program
      existing DDDB tags it generates a warning, since corresponding conditions
      are missing 
 
+ - Changes to Digi/Boole/python/Boole/Configuration.py
+   . Added configuration for OTDoublePulse.root file which provides a look-up-table
+
 </PRE><H1><A NAME=v23r2>2011-12-19 Boole v23r2</A></H1><PRE>
 This version uses projects LCGCMT 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2
  and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
