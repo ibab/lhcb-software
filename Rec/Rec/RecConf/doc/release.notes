@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2012-01-12 - Chris Jones
+ - Add a ANN PID monitor algorithm to the PROTO Monitoring sequence
+
 ! 2011-12-20 - Chris Jones
  - Propagate the DataType to the GlobalReco Configurable
 

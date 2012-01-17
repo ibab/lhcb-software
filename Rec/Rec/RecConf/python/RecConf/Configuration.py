@@ -355,11 +355,14 @@ class RecMoniConf(LHCbConfigurableUser):
             ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
 
         if "PROTO" in moniSeq :
-            from Configurables import ChargedProtoParticleMoni, GaudiSequencer
-            GaudiSequencer( "MoniPROTOSeq" ).Members += [ChargedProtoParticleMoni("ChargedProtoPMoni")]
+            from Configurables import ( ChargedProtoParticleMoni, GaudiSequencer,
+                                        ANNGlobalPID__ChargedProtoANNPIDMoni )
+            seq = GaudiSequencer( "MoniPROTOSeq" )
+            seq.Members += [ ChargedProtoParticleMoni("ChargedProtoPMoni"),
+                             ANNGlobalPID__ChargedProtoANNPIDMoni("ChargedProtoANNPIDMoni") ]
             if self.expertHistos():
                 exSeq = GaudiSequencer("ExpertProtoMoni")
-                GaudiSequencer( "MoniPROTOSeq" ).Members += [exSeq]
+                seq.Members += [exSeq]
                 GlobalRecoChecks().Sequencer = exSeq
 
         # If checking is enabled, all Rich histograms are booked in check sequence
