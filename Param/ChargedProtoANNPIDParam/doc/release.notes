@@ -4,6 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Chris Jones
+ - Provide two sets of MC11a tunings :-
+  - MC11aTuneV1 - Best possible efficiency versus purity curves for each case.
+                  In this case, the ANN output distributions may not be 
+                  completely smooth.
+  - MC11aTuneV2 - Only use the '621' NB tunings, that provide smooth output
+                  distributions. Performance in terms on efficiency versus
+                  purity may not be quite as good as with MC11aTuneV1
+
 !------------------------------- v1r3 ----------------------------------------
 
 ! 2012-01-10 - Chris Jones
