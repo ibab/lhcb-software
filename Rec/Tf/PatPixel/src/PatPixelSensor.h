@@ -39,11 +39,11 @@ public:
 
   virtual ~PatPixelSensor( ) {}; ///< Destructor
 
-  unsigned int number()    const { return m_number; }
-  int previous()           const { return m_previous;  }
-  bool isRight()           const { return m_isRight; }
-  double z()               const { return m_z; }
-  PatPixelHits&  hits( )         { return m_hits; }
+  unsigned int number()     const { return m_number; }
+  int previous()            const { return m_previous;  }
+  bool isRight()            const { return m_isRight; }
+  double z()                const { return m_z; }
+  PatPixelHits&  hits( )          { return m_hits; }
 
   void setPrevious( int prev ) { m_previous = prev; }
 

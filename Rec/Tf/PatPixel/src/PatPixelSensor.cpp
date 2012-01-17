@@ -20,7 +20,7 @@ PatPixelSensor::PatPixelSensor( DeVeloPixSensor* sensor ) :
   m_number  = sensor->sensorNumber();
   m_isRight = sensor->isRight();
   DeVeloPixSquareType* sqDet = static_cast<const DeVeloPixSquareType*>( sensor );
-  for ( unsigned int chipNum = 0 ; 64 > chipNum ; ++chipNum ) {
+  for ( unsigned int chipNum = 0 ; 12 > chipNum ; ++chipNum ) {
     if ( 0 > sqDet->WhichLadder(chipNum ) ) break;
     LHCb::VeloPixChannelID id0( m_number, chipNum,   1,   1 );
     LHCb::VeloPixChannelID idl( m_number, chipNum, 101,   1 );

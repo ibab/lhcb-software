@@ -16,15 +16,25 @@
 class PatPixelTrack {
 public: 
   /// Standard constructor
-  PatPixelTrack( ); 
+  PatPixelTrack(  ); 
 
   virtual ~PatPixelTrack( ){}; ///< Destructor
+
+  void set( PatPixelHit* h1, PatPixelHit* h2 ); 
 
   void setBackward( bool flag )           { m_backward = flag; }  
   inline bool backward()            const { return m_backward; }
 
   inline PatPixelHits& hits()             { return m_hits; }
   void addHit( PatPixelHit* hit );
+  void removeHit( PatPixelHit* hit );
+  void solve();
+  void add( PatPixelHits& hits ) {
+    for ( PatPixelHits::const_iterator itH = hits.begin();
+          hits.end() != itH; ++itH ) {
+      addHit( *itH );
+    }
+  }
 
   double chi2() {
     double ch = 0.;
@@ -50,11 +60,25 @@ public:
     return nn;
   }
 
+  bool all3SensorsAreDifferent() {
+    if ( m_hits[0]->sensor() == m_hits[1]->sensor() ) return false;
+    if ( m_hits[0]->sensor() == m_hits[2]->sensor() ) return false;
+    if ( m_hits[1]->sensor() == m_hits[2]->sensor() ) return false;
+    return true;
+  }
+
   double distance( PatPixelHit* hit ) { return hit->distance( xAtHit( hit ), yAtHit( hit ) ); } 
   double chi2( PatPixelHit* hit )     { return hit->chi2    ( xAtHit( hit ), yAtHit( hit ) ); }
 
   double xAtHit( PatPixelHit* hit )   { return m_x0 + m_tx * hit->z(); }
   double yAtHit( PatPixelHit* hit )   { return m_y0 + m_ty * hit->z(); }
+  double xAtZ( double z )             { return m_x0 + m_tx * z; }
+  double r2AtZ( double z ) {
+    double xx = m_x0 + z * m_tx;
+    double yy = m_y0 + z * m_ty;
+    return xx*xx + yy * yy;
+  }
+  
 
   LHCb::StateVector state( double z ) {
     LHCb::StateVector temp;

@@ -4,6 +4,13 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Olivier Callot
+ - Re-implementation of the algorithm, based on finding a pair of consecutive hits
+   and extrapolating in both directions.
+   Tested on 900 events: 0.9% ghosts, 99.7% efficient, 0.5% clones, 1.35 ms/event
+   Improvements are possible, but a better clustering is probably the most 
+   important one
+
 ! 2012-01-10 - Olivier Callot
  - First version. The overall structure is taken form FastVelo.
    New logic to make the search: Find enough hits in a seed region before 
