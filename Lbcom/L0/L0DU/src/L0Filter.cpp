@@ -1,4 +1,3 @@
-// $Id: L0Filter.cpp,v 1.13 2010-05-26 10:46:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -125,7 +124,7 @@ StatusCode L0Filter::initialize() {
   }
 
   std::string def = ( m_revert ) ? "REJECT" : "ACCEPT" ;
-  info() << "---- > TO " << def << " THE EVENT" << endreq;
+  info() << "---- > TO " << def << " THE EVENT" << endmsg;
 
   return StatusCode::SUCCESS;
 } 

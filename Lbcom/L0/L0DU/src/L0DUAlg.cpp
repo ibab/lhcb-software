@@ -1,4 +1,3 @@
-// $Id: L0DUAlg.cpp,v 1.14 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +28,9 @@ DECLARE_ALGORITHM_FACTORY( L0DUAlg )
 L0DUAlg::L0DUAlg( const std::string& name,
             ISvcLocator* pSvcLocator)
   : L0AlgBase ( name , pSvcLocator ) 
+  , m_config(0)
+  , m_confTool(0)
+  , m_emulator(0)
 {    
   declareProperty( "ProcessorDataLocations"  , m_dataLocations   );
   m_dataLocations.push_back(LHCb::L0ProcessorDataLocation::Calo);

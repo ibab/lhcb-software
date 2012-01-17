@@ -1,4 +1,3 @@
-// $Id: L0Pattern.cpp,v 1.5 2010-02-12 23:40:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,6 +25,10 @@ DECLARE_ALGORITHM_FACTORY( L0Pattern )
 L0Pattern::L0Pattern( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ) 
+    , m_config(0)
+    , m_emulator(0)
+    , m_fromRaw(0)
+    , m_datas(0)
     , m_bcid(0)
 {
   declareProperty( "L0DUEmulatorTool"  , m_emulatorTool= "L0DUEmulatorTool");

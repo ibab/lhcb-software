@@ -1,4 +1,3 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.10 2010-01-20 21:13:34 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( L0DUFromRawAlg )
 L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : L0FromRawBase ( name , pSvcLocator )
+  , m_fromRaw(0)
 {
   declareProperty( "L0DUReportLocation"   , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "ProcessorDataLocation", m_procDataLocation   =  LHCb::L0ProcessorDataLocation::L0DU );
