@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Marco Cattaneo
+ - Fix UNINIT_CTOR Coverity warning
+ - Fix hidden variable Coverity warning
+ - Replace endreq by endmsg
+
 ! 2012-01-12 - David Hutchcroft
  - Added simulation of intra-sensor crosstalk seen in R sensors in 2011 data
    Requires the new conditions DB to work and updates to DeVelo (also submitted)

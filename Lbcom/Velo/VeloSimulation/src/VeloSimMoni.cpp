@@ -30,7 +30,9 @@ DECLARE_ALGORITHM_FACTORY( VeloSimMoni )
 VeloSimMoni::VeloSimMoni( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
+    m_mcVFEsCont(0),
     m_veloDet(0),
+    m_feTypeTool(0),
     m_nMCVeloFE(0),
     m_nMCVeloFE2(0.),
     m_nMCVeloFEs(0),

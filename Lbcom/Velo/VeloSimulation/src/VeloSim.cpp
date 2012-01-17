@@ -195,7 +195,7 @@ StatusCode VeloSim::execute() {
 			    << " m_MCHitContainerToLink " 
 			    << m_MCHitContainerToLink
 			    << " " << m_MCHitContainerToLink->name() 
-			    << endreq;
+			    << endmsg;
 
   m_FEs = new LHCb::MCVeloFEs();
 
@@ -379,7 +379,7 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
       if( m_isVerbose ) {
         verbose() << "Add "  << fracM2Loss << " of charge to M2 line "
                   << chM2 
-		  << " remove " << fracMain << " from main strip" << endreq;
+		  << " remove " << fracMain << " from main strip" << endmsg;
       }
       LHCb::MCVeloFE* myFE = findOrInsertFE(chM2); // no MC link for coupling
       fillFE(myFE,charge*fracM2Loss); // update an unlinked FE
@@ -474,15 +474,15 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // E(r)=1/r, where r is uniform in range 1/Tmin < r < 1/Tmax
     // but Tmax bounded by energy left to allocate, so following is
     // not truly correct
-    double charge=ran_inv_E2(Tmin,Tmax);
+    double deltaCharge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
     int ipt=int(LHCb::Math::round(m_uniformDist()*(Spoints.size()-1)));
     //
     if(m_isVerbose) verbose()<< " delta ray charge added to point " << ipt
 			     << "/" << Spoints.size() <<endmsg;
     //
-    Spoints[ipt]+=charge;
-    Tmax-=charge;
+    Spoints[ipt]+=deltaCharge;
+    Tmax-=deltaCharge;
   }
   return;
 }
@@ -539,7 +539,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
         if( m_isVerbose ) {
           verbose() << "Add "  << fracM2Loss << " of charge to M2 line "
                     << chM2 
-                    << " remove " << fracMain << " from main strip" << endreq;
+                    << " remove " << fracMain << " from main strip" << endmsg;
         }
         LHCb::MCVeloFE* myFE = findOrInsertFE(chM2); // no MC link for coupling
         fillFE(myFE,(*iPoint)*fracM2Loss); // update an unlinked FE
@@ -609,10 +609,10 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
 	if (valid){
 	  LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
 	  if( hit->parent() == m_MCHitContainerToLink ){
-	    if( m_isVerbose ) verbose() << "MCHit to link"  << endreq;
+	    if( m_isVerbose ) verbose() << "MCHit to link"  << endmsg;
 	    fillFE(myFE,hit,charge); // update and add MC link
 	  }else{
-	    if( m_isVerbose ) verbose() << "Non-linked MCHit"  << endreq;
+	    if( m_isVerbose ) verbose() << "Non-linked MCHit"  << endmsg;
             fillFE(myFE,charge); // update an unlinked FE
           }
 	}
