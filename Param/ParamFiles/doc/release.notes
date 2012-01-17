@@ -6,6 +6,9 @@
                 this package is not backed up in CVS
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Alexander Bien
+- added new OTDoublePulse.root file which provides a look-up-table
+
 !======================= ParamFiles v8r5 2011-09-18 ==========================
 ! 2011-08-23 - Mike Williams
 - add Beauty2Charm_BDTParms_v1r0.txt for use in the Beauty2Charm stripping
