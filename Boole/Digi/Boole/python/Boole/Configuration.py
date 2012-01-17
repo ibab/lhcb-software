@@ -386,6 +386,8 @@ class Boole(LHCbConfigurableUser):
         seq.Members += [ MCOTDepositCreator("MCOTDepositCreator%s"%tae) ]
         mcOTTimeCreator = MCOTTimeCreator("MCOTTimeCreator%s"%tae)
         seq.Members += [ mcOTTimeCreator ]
+        hsvc = HistogramSvc ( 'HistogramDataSvc' )
+        hsvc.Input += [ "OTDoublePulse DATAFILE='$PARAMFILESROOT/data/OTDoublePulse.root' TYP='ROOT'" ]       
         if self.getProp("DataType") == "Upgrade" :
             # 3=75ns (default) 2=50ns 
             mcOTTimeCreator.numberOfBX = 2
