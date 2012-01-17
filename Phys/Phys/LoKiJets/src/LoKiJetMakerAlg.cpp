@@ -134,22 +134,34 @@ StatusCode LoKi::JetMaker::analyse   ()
 
   if ( m_associate2Vertex ){
     
+    // A cut to get the x position of the bestPV of input particles (would be better to code a VKEY functor)
     LoKi::Types::Fun bestVertexKey = BPV(VX);
+
+    // A cut to check that a jet contains information able to link it to a PV
+    LoKi::Types::Cut withPVPointingInfo = NINTREE(( ABSID == 310 || ABSID == 3122 )
+                                                  || ( HASTRACK && LHCb::Track::Downstream != TRTYPE ))>0 ;
 
     Range part = select("part",PALL);
     
+    // Loop over PV list and make jets out of appropriate inputs related to the PVs
     const LHCb::RecVertex::Range pvs = this->primaryVertices () ;
     for ( LHCb::RecVertex::Range::const_iterator i_pv = pvs.begin() ; pvs.end() != i_pv ; i_pv++ )
     {
       IJetMaker::Input inputs;
       for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
+        // Neutral inputs
         if (Q(*i_p) == 0 ){
+          // Take all neutrals exept V0s
           if ( ABSID(*i_p) != 310 && ABSID(*i_p) != 3122 ) inputs.push_back(*i_p) ;
+          // Keep only the V0s that match to the vertex
           else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
           else continue ;
         }
+        // Charged inputs
         else{
+          // Take all downstream tracks
           if ( LHCb::Track::Downstream == TRTYPE(*i_p) ) inputs.push_back(*i_p) ;
+          // Keep only the tracks with velo segment that match to the vertex
           else if ( bestVertexKey(*i_p) == VX( *i_pv) ) inputs.push_back(*i_p) ;
           else continue ;
         }
@@ -160,6 +172,7 @@ StatusCode LoKi::JetMaker::analyse   ()
       
       if ( 0 == m_maker ) 
       { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+
       // make the jets 
       StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
       
@@ -170,7 +183,18 @@ StatusCode LoKi::JetMaker::analyse   ()
       {
         LHCb::Particle* jet = jets.back() ;
         if(m_runJetID) this->appendJetIDInfo(jet);
-        this->relate ( jet , *i_pv );
+        // If the jet contain info on PV, assign a PV and update the P2PV relation table
+        if ( withPVPointingInfo(jet) ){
+          jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
+          LHCb::Vertex  vJet;
+          vJet.setPosition((*i_pv)->position());
+          vJet.setCovMatrix((*i_pv)->covMatrix());
+          vJet.setChi2((*i_pv)->chi2());
+          vJet.setNDoF((*i_pv)->nDoF());
+          vJet.setOutgoingParticles(jet->daughters());
+          jet->setEndVertex(vJet.clone());
+          this->relate ( jet , *i_pv );
+        }
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;
         delete jet ;
