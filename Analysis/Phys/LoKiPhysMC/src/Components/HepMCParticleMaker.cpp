@@ -45,7 +45,9 @@
 // DaVinciMCKernel
 // ============================================================================
 #include "Kernel/MCParticleMakerBase.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+//#include "GaudiKernel/IParticlePropertySvc.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // ============================================================================
 namespace LoKi 
@@ -241,7 +243,7 @@ namespace LoKi
 
     bool                m_partonicmode            ;
 
-    IParticlePropertySvc* m_ppSvc;
+    LHCb::IParticlePropertySvc* m_ppSvc;
     IHepMCParticleSelector*     m_motherSelectorTool;
     //
     // ========================================================================
@@ -258,8 +260,8 @@ StatusCode LoKi::HepMCParticleMaker::initialize()
   //
   StatusCode sc = MCParticleMakerBase::initialize() ;
 
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-
+  //m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ("LHCb::ParticlePropertySvc" , true ) ;
   if ( sc.isFailure() ) { return sc ; }
 
   // locate LoKi service (needed for some functions) 

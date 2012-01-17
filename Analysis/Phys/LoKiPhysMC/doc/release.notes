@@ -5,6 +5,9 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-01-17 - Albert Bursche
+- adapted HepMCParticleMaker for  https://savannah.cern.ch/task/?20125
+  (changed ParticlePropertySvc)
 !========================= LoKiPhysMC v9r4 2011-11-10 =========================
 
 ! 2011-11-06 - Cédric Potterat
