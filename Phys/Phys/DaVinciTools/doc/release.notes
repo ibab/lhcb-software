@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-01-17 - Vanya Belyaev
+ - fix Doxygen comments 
+
 ! 2012-01-06 - Vanya Belyaev
  - Pi0Veto:
     fix typo in default name of photon container 

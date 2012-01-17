@@ -17,15 +17,16 @@
 // ============================================================================
 #include "FilterDesktop.h"
 // ============================================================================
-/** @namespace Pi0Veto Pi0Veto.h
- *  The useful namesapce for  Davinci components, 
+/** @namespace Pi0Veto
+ *
+ *  The useful namespace for  DaVinci components, 
  *  used for pi0-veto
  *
  *  @see Pi0Veto::Filter 
  *  @see Pi0Veto::Tagger
  *  @see Pi0Veto::Tagger2g
  *
- *  All components are base on 
+ *  All components are based on 
  *  @see LoKi::Photons::pi0Veto 
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -63,6 +64,7 @@ namespace Pi0Veto
    */
   class Filter :  public FilterDesktop 
   {
+    // ========================================================================
     /// the friend factory for instantiation 
     friend class AlgFactory<Pi0Veto::Filter> ;
     // ========================================================================
@@ -155,6 +157,7 @@ namespace Pi0Veto
    */
   class Tagger : public Filter 
   { 
+    // ========================================================================
     /// the friend factory for instantiation 
     friend class AlgFactory<Pi0Veto::Tagger> ;
     // ========================================================================
@@ -253,6 +256,7 @@ namespace Pi0Veto
    */
   class Tagger2g : public Tagger
   { 
+    // ========================================================================
     /// the friend factory for instantiation 
     friend class AlgFactory<Pi0Veto::Tagger2g> ;
     // ========================================================================
@@ -270,8 +274,8 @@ namespace Pi0Veto
   protected:
     // ========================================================================
     /// standard constructor
-    Tagger2g  ( const std::string& name , 
-              ISvcLocator*       pSvc ) ;
+    Tagger2g ( const std::string& name , 
+               ISvcLocator*       pSvc ) ;
     /// virtual and protected destructor
     virtual ~Tagger2g () ;
     // ========================================================================
@@ -280,7 +284,7 @@ namespace Pi0Veto
     /// the default constructor is disabled 
     Tagger2g  () ;                        // the default consructor is disabled
     /// copy constructor is disabled 
-    Tagger2g  ( const Tagger& ) ;               // copy constructor is disabled 
+    Tagger2g  ( const Tagger2g& ) ;             // copy constructor is disabled 
     /// assignement operator is disabled 
     Tagger2g & operator=( const Tagger2g& ) ;                 // no assignement
     // ========================================================================
