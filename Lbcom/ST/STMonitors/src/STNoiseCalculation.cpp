@@ -26,6 +26,7 @@ namespace ST{
 ST::STNoiseCalculation::STNoiseCalculation( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_noiseTool(0)
 {
   /// Noise calculation tool
   declareProperty("NoiseToolType",m_noiseToolType="ST::STNoiseCalculationTool");

@@ -43,6 +43,8 @@ namespace ST {
 ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : ST::HistoAlgBase ( name , pSvcLocator )
+  , m_prof_clustersVsSample(0)
+  , m_2d_ADCsVsSample(0)
 {
   // Ordered list of cluster locations
   m_clusterLocations =
