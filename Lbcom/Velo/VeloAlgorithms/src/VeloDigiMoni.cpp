@@ -1,4 +1,3 @@
-// $Id: VeloDigiMoni.cpp,v 1.8 2006-10-24 18:59:16 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +27,7 @@ VeloDigiMoni::VeloDigiMoni( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_digitContainer ( LHCb::VeloDigitLocation::Default ),
+    m_veloDigits ( 0 ),
     m_numberOfEvents ( 0. ),
     m_nVeloDigits ( 0. ),
     m_nVeloDigits2 ( 0. )

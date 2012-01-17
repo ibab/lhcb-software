@@ -1,8 +1,7 @@
-// $Id: VeloSimTell1Algorithm.cpp,v 1.4 2010-03-04 18:29:54 dhcroft Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "VeloSimTell1Algorithm.h"

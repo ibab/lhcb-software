@@ -30,7 +30,10 @@ DECLARE_ALGORITHM_FACTORY( VeloClusterMaker );
 VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm ( name , pSvcLocator ),
+    m_digits ( 0 ),
     m_sensor ( 0 ),
+    m_clusters ( 0 ),
+    m_velo ( 0 ),
     m_isDebug ( false ),
     m_isVerbose ( false )
 {
@@ -58,7 +61,7 @@ StatusCode VeloClusterMaker::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   //
-  debug() << "==> Initialise" << endreq;
+  debug() << "==> Initialise" << endmsg;
   
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
@@ -72,11 +75,11 @@ StatusCode VeloClusterMaker::initialize() {
 //=========================================================================
 StatusCode VeloClusterMaker::execute() {
   // make clusters from VeloDigits
-  if(m_isDebug) debug() << "==> Execute" << endreq;
+  if(m_isDebug) debug() << "==> Execute" << endmsg;
   //
   makeClusters();
   //
-  if(m_isDebug) debug() << " All clusters made" << endreq;
+  if(m_isDebug) debug() << " All clusters made" << endmsg;
   StatusCode sc=storeClusters();
   return sc;
 }
@@ -85,7 +88,7 @@ void VeloClusterMaker::makeClusters(){
   //
   if(m_isDebug) debug()<< " ==> VeloClusterMaker::makeClusters() " <<endmsg;
   // Creates a new set of clusters for the event.
-  if(m_isDebug) debug() << "====> making clusters of event" << endreq;
+  if(m_isDebug) debug() << "====> making clusters of event" << endmsg;
   // make a container that will get stored on the TDS of the clusters
   // even if zero clusters made - the empty container must 
   // still be made and stored
@@ -101,7 +104,7 @@ void VeloClusterMaker::makeClusters(){
     // set all channels not used
     m_sensor=(*iSens)->sensorNumber();;
     if(m_isDebug) debug() << "makeClusters:DetectorNumber " << detIndex 
-                          << " Sensor " << m_sensor<< endreq;
+                          << " Sensor " << m_sensor<< endmsg;
     m_channelUsed.clear();
     m_channelUsed.insert( m_channelUsed.begin(), 
                           (*iSens)->numberOfStrips(), false); 
@@ -130,7 +133,7 @@ void VeloClusterMaker::makeClusters(){
       if(!currentCluster) continue; // did not make a cluster
       if(m_isVerbose) verbose()<< " made cluster from digit S/N = " 
 			       << currentClusterSTN
-			       << endreq;
+			       << endmsg;
       double adcTotal = 0.;
       for ( int iS = 0 ; iS < currentCluster->size() ; ++iS ){
 	adcTotal += currentCluster->adcValue(iS);
@@ -217,7 +220,7 @@ VeloClusterMaker::makeClusterFromDigit(LHCb::VeloDigit* currentDigit,
     OK = TryToAddChannel(currentCluster, currentClusterSTN, currentDigit,+2); 
     // Strip:  | | | | |4|  (offset +2)
     if(m_isDebug) debug()<< "cluster +2 channel" 
-			 << (OK ? " added ":" rejected") << endreq;
+			 << (OK ? " added ":" rejected") << endmsg;
   }
   //	
   currentCluster->setSensorID(LHCb::VeloChannelID(m_sensor,0));
@@ -357,7 +360,7 @@ bool VeloClusterMaker::TryToAddChannel(LHCb::InternalVeloCluster * currentCluste
   addDigit(currentCluster,currentClusterSTN,nearbyDigit,offset); 
   if(m_isVerbose) verbose() << " stripID" << nearbyStripId.strip() << " ADC " 
 			    << nearbyDigit->adcValue()
-			    << " STN " << currentClusterSTN << endreq;
+			    << " STN " << currentClusterSTN << endmsg;
   // All done OK
   return true;
 }

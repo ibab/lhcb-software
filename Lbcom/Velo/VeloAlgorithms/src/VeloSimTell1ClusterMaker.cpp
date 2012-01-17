@@ -1,8 +1,7 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.6 2010-03-07 14:28:52 dhcroft Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "Event/RawEvent.h"
 
 // stl

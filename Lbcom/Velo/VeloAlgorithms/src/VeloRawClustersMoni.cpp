@@ -1,9 +1,7 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.11 2010-03-04 18:29:54 dhcroft Exp $
-
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "Kernel/IMCVeloFEType.h"
 
 // local
@@ -30,6 +28,10 @@ VeloRawClustersMoni::VeloRawClustersMoni( const std::string& name,
     m_clusterCont ( LHCb::VeloClusterLocation::Default ),
     m_VeloFECont ( LHCb::MCVeloFELocation::Default ),
     m_numberOfEvents ( 0 ),
+    m_rawClusters ( 0 ),
+    m_VeloFEs ( 0 ),
+    m_feTypeTool ( 0 ),
+    m_veloDet ( 0 ),
     m_nRawClusters ( 0. ),
     m_nRawClusters2 ( 0. ),
     m_nOneStr ( 0. ),

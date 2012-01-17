@@ -1,4 +1,3 @@
-// $Id: VeloClusterMoni.cpp,v 1.12 2008-05-19 13:46:39 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +28,9 @@ VeloClusterMoni::VeloClusterMoni( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_clusterCont ( LHCb::InternalVeloClusterLocation::Default ),
     m_feCont ( LHCb::MCVeloFELocation::Default ),
+    m_veloClusters ( 0 ),
+    m_veloFEs ( 0 ),
+    m_feTypeTool ( 0 ),
     m_nVeloClusters ( 0. ),
     m_nVeloClusters2 ( 0. ),
     m_nVeloClustersS ( 0. ),

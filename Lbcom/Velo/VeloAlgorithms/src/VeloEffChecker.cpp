@@ -1,4 +1,3 @@
-// $Id: VeloEffChecker.cpp,v 1.3 2009-10-04 10:32:16 ibelyaev Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -32,6 +31,8 @@ DECLARE_ALGORITHM_FACTORY( VeloEffChecker );
 VeloEffChecker::VeloEffChecker(const std::string& name,
                        ISvcLocator* pSvcLocator):
   GaudiHistoAlg(name, pSvcLocator),
+  m_table(0),
+  m_tracker(0),
   m_effOffset(1000),
   m_inEffOffset(2000)
 {

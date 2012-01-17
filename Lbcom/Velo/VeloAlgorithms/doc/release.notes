@@ -3,7 +3,11 @@
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
 
-!========================= VeloAlgorithms v5r5 2011-07-27 =========================
+! 2012-01-17 - Marco Cattaneo
+ - Fix trivial Coverity UNINIT_CTOR warnings
+ - Replace obsolete DeclareFactoryEntries.h include
+
+!========================= VeloAlgorithms v5r5 2011-07-27 =================
 ! 2011-06-30 - Eduardo Rodrigues
  - VeloClusterContainerCopy: tool made private
 
@@ -12,7 +16,7 @@
    input container onto a new one applying a selection on the input clusters
    (copied largely from STClusterContainerCopy)
 
-!========================= VeloAlgorithms v5r4 2011-06-15 =========================
+!========================= VeloAlgorithms v5r4 2011-06-15 =================
 ! 2011-04-27 - Tomasz Szumlak
  - fixed uninitialized fields signalled by the coverity tool
  
