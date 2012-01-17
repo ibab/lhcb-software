@@ -13,6 +13,6 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":12, "ERROR":0})
+countErrorLines({"FATAL":0, "WARNING":13, "ERROR":0})
 </text></argument>
 </extension>
