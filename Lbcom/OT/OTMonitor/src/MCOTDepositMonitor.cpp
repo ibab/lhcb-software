@@ -1,5 +1,3 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.15 2009-04-01 15:29:49 cattanem Exp $
-
 // from STD
 #include <algorithm>
 
@@ -50,29 +48,30 @@ namespace MonitorHelpers {
     const ObjectContainerBase* parentCont = aHit->parent();
     const IRegistry*                  reg = parentCont->registry();
     return ( reg->identifier() );
-  };
+  }
 
   bool isSpill( const std::string& spill, const LHCb::MCHit* aHit ) {
     return ( findSpill( aHit ) == "/Event" + spill + LHCb::MCHitLocation::OT );
-  };
+  }
 
   bool isSpillOver( const LHCb::MCOTDeposit* aDeposit ) {
     const LHCb::MCHit* aHit = aDeposit->mcHit();
     return aHit ? ( !isSpill( "/", aHit ) && aDeposit->isSignal() ): false ;
-  };
+  }
 
   bool isCurrent( const LHCb::MCOTDeposit* aDeposit ) {
     const LHCb::MCHit* aHit = aDeposit->mcHit();
     return aHit ? ( isSpill( "/", aHit ) && aDeposit->isSignal() ) : false ;
   }
-};
+}
 
 
 /// Declaration of algorithm factory
-DECLARE_ALGORITHM_FACTORY( MCOTDepositMonitor );
+DECLARE_ALGORITHM_FACTORY( MCOTDepositMonitor )
 
-MCOTDepositMonitor::MCOTDepositMonitor( const std::string& name, ISvcLocator* pSvcLocator ) :
-GaudiHistoAlg(name, pSvcLocator)
+MCOTDepositMonitor::MCOTDepositMonitor( const std::string& name, ISvcLocator* pSvcLocator )
+  : GaudiHistoAlg(name, pSvcLocator)
+  , m_det(0)
 {
   // constructor
 }

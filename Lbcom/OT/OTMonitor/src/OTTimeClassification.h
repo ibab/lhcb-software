@@ -1,4 +1,3 @@
-// $Id $
 #ifndef OTMONITOR_OTTIMECLASSIFICATION_H
 #define OTMONITOR_OTTIMECLASSIFICATION_H 1
 
@@ -17,7 +16,7 @@
 namespace LHCb
 {
  class MCHit;
-};
+}
 
 class DeOTDetector;
 

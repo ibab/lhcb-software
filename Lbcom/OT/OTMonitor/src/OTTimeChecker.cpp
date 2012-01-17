@@ -38,10 +38,23 @@ using namespace boost;
  *  @date   22-06-2004
  */
 
-DECLARE_ALGORITHM_FACTORY( OTTimeChecker );
+DECLARE_ALGORITHM_FACTORY( OTTimeChecker )
 
-OTTimeChecker::OTTimeChecker(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator),
-  m_decoder("OTRawBankDecoder")
+OTTimeChecker::OTTimeChecker(const std::string& name, ISvcLocator* pSvcLocator)
+  : GaudiHistoAlg(name, pSvcLocator)
+  , m_decoder("OTRawBankDecoder")
+  , m_tracker(0)
+  , m_effHisto(0)
+  , m_eff1Histo(0)
+  , m_eff2Histo(0)
+  , m_eff3Histo(0)
+  , m_ghostRateHisto(0)
+  , m_hitMultHisto(0)
+  , m_resHisto(0)
+  , m_pdgCodeHisto(0)
+  , m_momentumHisto(0)
+  , m_nParticlesHisto(0)
+  , m_partMultHisto(0)
 {
   // constructor
   declareProperty("doMomentumCut", m_doMomentumCut = false);

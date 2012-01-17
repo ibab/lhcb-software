@@ -1,5 +1,3 @@
-// $Id: OTTimeMonitor.cpp,v 1.13 2009-11-25 15:41:12 cattanem Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -34,7 +32,7 @@ using namespace boost::lambda;
 using boost::lexical_cast;
 
 /// Declaration of algorithm factory
-DECLARE_ALGORITHM_FACTORY( OTTimeMonitor );
+DECLARE_ALGORITHM_FACTORY( OTTimeMonitor )
 
 OTTimeMonitor::OTTimeMonitor(const std::string& name, 
 			     ISvcLocator* pSvcLocator) :

@@ -1,4 +1,3 @@
-// $Id: MCOTTimeMonitor.cpp,v 1.1 2009-04-27 16:58:56 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCOTTimeMonitor );
+DECLARE_ALGORITHM_FACTORY( MCOTTimeMonitor )
 
 MCOTTimeMonitor::MCOTTimeMonitor( const std::string& name,
                                   ISvcLocator* pSvcLocator)

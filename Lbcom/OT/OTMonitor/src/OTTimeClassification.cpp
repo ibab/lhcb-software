@@ -39,10 +39,13 @@ using namespace boost::assign;
  */
 
 /// Declaration of algorithm factory
-DECLARE_ALGORITHM_FACTORY( OTTimeClassification );
+DECLARE_ALGORITHM_FACTORY( OTTimeClassification )
 
-OTTimeClassification::OTTimeClassification(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator),
-  m_decoder("OTRawBankDecoder")
+OTTimeClassification::OTTimeClassification(const std::string& name, ISvcLocator* pSvcLocator)
+  : GaudiHistoAlg(name, pSvcLocator)
+  , m_decoder("OTRawBankDecoder")
+  , m_tracker(0)
+
 {
   // constructor
   m_spillVector += "/PrevPrev/", "/Prev/", "/", "/Next/", "/NextNext/";

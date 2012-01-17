@@ -3,8 +3,9 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
-! 2012-01-13 - Marco Cattaneo
- - Fix version number in requirements
+! 2012-01-17 - Marco Cattaneo
+ - Fix UNINIT_CTOR warnings
+ - Fix trivial icc remarks
 
 !========================= OTMonitor v3r3 2011-09-07 =========================
 ! 2011-09-02 - Alexandr Kozlinskiy
