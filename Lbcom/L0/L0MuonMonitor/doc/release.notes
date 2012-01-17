@@ -4,6 +4,12 @@
 ! Purpose     : Monitoring of the L0Muon
 !----------------------------------------------------------------------------
 
+! 2012-01-17 - Marco Cattaneo
+ - Fix trivial UNINIT_CTOR warnings
+ - Fix trivial icc remarks
+ - In L0MuonOnlineMonitor.h, remove obsolete _ERROR_V2_ ifdef
+ - Replace endreq by endmsg
+
 ! 2011-12-19 - Marco Cattaneo
  - Remove unnecessary build dependency on L0Muon, fixes annoying warning from
    SetupProject when working with LbcomSys against the nightlies

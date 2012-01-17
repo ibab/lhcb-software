@@ -1,4 +1,3 @@
-// $Id: L0MuonMuonComp.cpp,v 1.8 2010-06-10 17:34:37 cattanem Exp $
 // Include files 
 
 #include <math.h>
@@ -26,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMuonComp );
+DECLARE_ALGORITHM_FACTORY( L0MuonMuonComp )
 
 
 //=============================================================================
@@ -35,6 +34,22 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMuonComp );
 L0MuonMuonComp::L0MuonMuonComp( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : L0MuonMonitorBase ( name , pSvcLocator )
+  , m_h_mismatch(0)
+  , m_h_not_aligned(0)
+  , m_h_not_centered(0)
+  , m_h_missing_in_muon(0)
+  , m_h_missing_in_l0muon(0)
+  , m_h_present(0)
+  , m_channelHist_l0muon(0)
+  , m_channelHist_muon(0)
+  , m_channelHist_l0muononly(0)
+  , m_channelHist_muononly(0)
+  , m_channelHist_mismatch(0)
+  , m_optlinkHist_mismatch(0)
+  , m_optlinkHist_error(0)
+  , m_padHist_addCand(0)
+  , m_optlinkHist_addCand(0)
+  , m_muonBuffer(0)
 {
   declareProperty( "MuonZS"  , m_muonZS = true);
   declareProperty( "OutputFileName"  , m_outputFileName = "");

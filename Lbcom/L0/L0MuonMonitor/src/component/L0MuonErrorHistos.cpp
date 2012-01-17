@@ -1,4 +1,3 @@
-// $Id: L0MuonErrorHistos.cpp,v 1.5 2008-09-21 21:46:23 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonErrorHistos );
+DECLARE_TOOL_FACTORY( L0MuonErrorHistos )
 
 
 //=============================================================================

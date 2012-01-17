@@ -1,4 +1,3 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.18 2010-03-08 15:09:52 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonOnlineMonitor );
+DECLARE_ALGORITHM_FACTORY( L0MuonOnlineMonitor )
 
 
 //=============================================================================
@@ -32,6 +31,12 @@ DECLARE_ALGORITHM_FACTORY( L0MuonOnlineMonitor );
 L0MuonOnlineMonitor::L0MuonOnlineMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : L0MuonMonitorBase ( name , pSvcLocator )
+  , m_padsHistos(0)
+  , m_channelsHistos(0)
+  , m_info(0)
+  , m_error(0)
+  , m_candHistosFinal(0)
+  , m_candHistosPU(0)
 {
   declareProperty( "FullMonitoring"  , m_fullMonitoring  = false ) ;
 }

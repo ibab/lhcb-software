@@ -1,4 +1,3 @@
-// $Id: L0MuonPadsHistos.cpp,v 1.5 2009-11-24 13:25:37 jucogan Exp $
 // Include files 
 
 #include  <math.h>
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonPadsHistos );
+DECLARE_TOOL_FACTORY( L0MuonPadsHistos )
 
 
 //=============================================================================
@@ -87,7 +86,7 @@ void L0MuonPadsHistos::bookHistos(int sta,bool shortname) {
     
     int f=2*(1<<reg);
     hname = L0Muon::MonUtilities::hname_pads_map_reg(sta,reg,toolname);
-    AIDA::IHistogram2D * h2D=book2D(hname,hname,-xgrid*f,xgrid*f,4*xgrid,-ygrid*f,ygrid*f,4*ygrid);
+    h2D=book2D(hname,hname,-xgrid*f,xgrid*f,4*xgrid,-ygrid*f,ygrid*f,4*ygrid);
     m_hmap_region[sta][reg]= h2D;
 
   }

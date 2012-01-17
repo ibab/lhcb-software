@@ -1,4 +1,3 @@
-// $Id: L0MuonOptLinksHistos.cpp,v 1.3 2010-06-10 17:34:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonOptLinksHistos );
+DECLARE_TOOL_FACTORY( L0MuonOptLinksHistos )
 
 
 //=============================================================================

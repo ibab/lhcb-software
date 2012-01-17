@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitorProcessing.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMonitorProcessing );
+DECLARE_ALGORITHM_FACTORY( L0MuonMonitorProcessing )
 
 
 //=============================================================================
@@ -30,6 +29,7 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMonitorProcessing );
 L0MuonMonitorProcessing::L0MuonMonitorProcessing( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_summary(0)
 {
   declareProperty( "EnableTAE" , m_enableTAE = false  );
   declareProperty( "L0Context1", m_l0Context1 = "");

@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitorData.cpp,v 1.3 2010-03-10 08:58:18 jucogan Exp $
 // Include files 
 #include <sstream>
 
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMonitorData );
+DECLARE_ALGORITHM_FACTORY( L0MuonMonitorData )
 
 
 //=============================================================================
@@ -33,6 +32,7 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMonitorData );
 L0MuonMonitorData::L0MuonMonitorData( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_inputTool(0)
 {
   declareProperty( "L0Context" , m_l0Context = ""  );
   declareProperty( "EnableTAE" , m_enableTAE = false  );

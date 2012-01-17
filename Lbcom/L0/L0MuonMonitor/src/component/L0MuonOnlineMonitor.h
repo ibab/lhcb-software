@@ -1,5 +1,3 @@
-#define _ERROR_V2_ 1
-// $Id: L0MuonOnlineMonitor.h,v 1.6 2009-02-18 13:39:32 jucogan Exp $
 #ifndef COMPONENT_L0MUONONLINEMONITOR_H 
 #define COMPONENT_L0MUONONLINEMONITOR_H 1
 
@@ -39,13 +37,7 @@ private:
   L0MuonPadsHistos*     m_padsHistos;
   L0MuonChannelsHistos* m_channelsHistos;
   L0MuonInfoHistos *    m_info;
-#if _ERROR_V2_
   L0MuonErrorHistos *   m_error;
-#else  
-  // ---- TMP ---- WILL NOT BE USED WITH BANK V2
-  AIDA::IHistogram1D* m_decoding_status[4][3];
-  // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
-#endif
   L0MuonCandHistos*     m_candHistosFinal;
   L0MuonCandHistos*     m_candHistosPU;
 

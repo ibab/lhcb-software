@@ -1,4 +1,3 @@
-// $Id: L0MuonCandHistos.cpp,v 1.7 2009-05-28 13:51:51 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( L0MuonCandHistos );
+DECLARE_TOOL_FACTORY( L0MuonCandHistos )
 
 
 //=============================================================================

@@ -1,4 +1,3 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.8 2010-03-08 15:04:10 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -21,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonAlgComparison );
+DECLARE_ALGORITHM_FACTORY( L0MuonAlgComparison )
 
 
 //=============================================================================
@@ -30,6 +29,8 @@ DECLARE_ALGORITHM_FACTORY( L0MuonAlgComparison );
 L0MuonAlgComparison::L0MuonAlgComparison( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : L0MuonMonitorBase ( name , pSvcLocator )
+  , m_candHistosPU0(0)
+  , m_candHistosPU1(0)
 {
   declareProperty("Extension0"     , m_extension_0 = ""  );
   declareProperty("Extension1"     , m_extension_1 = ""  );

@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitorInput.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 #include <fstream>
 
@@ -23,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMonitorInput );
+DECLARE_ALGORITHM_FACTORY( L0MuonMonitorInput )
 
 
 //================================================================================================================================
@@ -32,6 +31,10 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMonitorInput );
 L0MuonMonitorInput::L0MuonMonitorInput( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_summary(0)
+  , m_muonBuffer(0)
+  , m_inputTool(0)
+  , m_olerrorTool(0)
 {
   declareProperty( "EnableTAE" , m_enableTAE = true  );
   declareProperty( "UseNZS",     m_useNZS    = false );

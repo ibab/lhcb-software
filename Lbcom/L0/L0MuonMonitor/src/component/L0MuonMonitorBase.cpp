@@ -25,16 +25,13 @@
 // 2008-04-08 : 
 //-----------------------------------------------------------------------------
 
-// // Declaration of the Algorithm Factory
-// DECLARE_ALGORITHM_FACTORY( L0MuonMonitorBase );
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 L0MuonMonitorBase::L0MuonMonitorBase( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_h_online(0)
 {
   std::vector<int> time_slots;
   //for (int i=-7;i<=7;++i) time_slots.push_back(i);
@@ -288,7 +285,7 @@ StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0m
       if (ols.size()>0) {
         for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
           if (!itol->isValid()){
-            info()<<"PU "<<mkey.toString()<<" tile is not valid : "<<itol->toString()<<endreq;
+            info()<<"PU "<<mkey.toString()<<" tile is not valid : "<<itol->toString()<<endmsg;
           }
 
           if (!quarterInUse(itol->quarter())) continue;
@@ -328,7 +325,7 @@ StatusCode L0MuonMonitorBase::getL0MuonPads(std::vector<LHCb::MuonTileID> & l0mu
         std::vector<LHCb::MuonTileID> tiles;
         for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
           if (!itol->isValid()){
-            info()<<"PU "<<mkey.toString()<<" tile is not valid : "<<itol->toString()<<endreq;
+            info()<<"PU "<<mkey.toString()<<" tile is not valid : "<<itol->toString()<<endmsg;
           }
 
           if (!quarterInUse(itol->quarter())) continue;
@@ -339,7 +336,7 @@ StatusCode L0MuonMonitorBase::getL0MuonPads(std::vector<LHCb::MuonTileID> & l0mu
         }
         std::vector<LHCb::MuonTileID> pads;
         L0Muon::MonUtilities::makePads(tiles,pads);
-        debug()<<"PU "<<mkey.toString()<<" # of tiles "<<tiles.size()<<"# of pads "<<pads.size()<<endreq;
+        debug()<<"PU "<<mkey.toString()<<" # of tiles "<<tiles.size()<<"# of pads "<<pads.size()<<endmsg;
         for (std::vector<LHCb::MuonTileID>::iterator itpads=pads.begin(); itpads<pads.end(); ++itpads) {
           l0muonpads.push_back(*itpads);
         }

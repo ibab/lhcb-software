@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitor.cpp,v 1.15 2010-03-09 09:25:41 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -35,7 +34,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMonitor );
+DECLARE_ALGORITHM_FACTORY( L0MuonMonitor )
 
 
 //=============================================================================
@@ -44,6 +43,12 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMonitor );
 L0MuonMonitor::L0MuonMonitor( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : L0MuonMonitorBase ( name , pSvcLocator )
+  , m_channelHist_l0muon(0)
+  , m_channelHist_muon(0)
+#if _USE_MUONMONREC_TOOL_
+  , m_recTool(0)
+#endif
+  , m_muonBuffer(0)
 {
   declareProperty( "MuonZS"  , m_muonZS = true);
 }
@@ -68,7 +73,7 @@ StatusCode L0MuonMonitor::initialize() {
 #if _USE_MUONMONREC_TOOL_
   m_recTool = tool<IMuonMonRec>("MuonMonRec");
   if(!m_recTool){
-    error()<<"error retrieving the muon mon. rec. tool "<<endreq;
+    error()<<"error retrieving the muon mon. rec. tool "<<endmsg;
     return StatusCode::FAILURE;
   }
 #endif
@@ -235,7 +240,7 @@ StatusCode L0MuonMonitor::execute() {
     if (m_muonBuffer) { // If muon raw buffer tool
       IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
       if( prop ) {
-        StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
+        sc = prop->setProperty( "RootInTES", rootInTES() );
         if( sc.isFailure() )
           return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
       } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
@@ -390,7 +395,7 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
     if (m_muonBuffer) { // If muon raw buffer tool
       IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
       if( prop ) {
-        StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
+        sc = prop->setProperty( "RootInTES", rootInTES() );
         if( sc.isFailure() )
           return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
       } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );

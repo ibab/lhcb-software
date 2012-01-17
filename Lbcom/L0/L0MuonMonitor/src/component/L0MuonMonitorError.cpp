@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitorError.cpp,v 1.2 2010-03-09 16:31:34 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( L0MuonMonitorError );
+DECLARE_ALGORITHM_FACTORY( L0MuonMonitorError )
 
 
 //=============================================================================
@@ -33,6 +32,9 @@ DECLARE_ALGORITHM_FACTORY( L0MuonMonitorError );
 L0MuonMonitorError::L0MuonMonitorError( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_summary(0)
+  , m_sync_ctrl_src(0)
+  , m_decoding_src(0)
 {
   declareProperty( "L0Context" , m_l0Context = ""  );
   declareProperty( "EnableTAE" , m_enableTAE = false  );
