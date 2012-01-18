@@ -4,6 +4,11 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-01-18 - Giampiero Mancinelli
+ - Added IParticleIsolation.h Interface for tools returning the degree of 
+   isolation of a set of tracks (optionally from a given decay/mother), under 
+   some criteria (changed DaVinciInterfaces.cpp as well)
+
 !========================= DaVinciInterfaces v2r11 2011-12-15 =========================
 
 ! 2011-12-07 - Patrick Koppenburg
