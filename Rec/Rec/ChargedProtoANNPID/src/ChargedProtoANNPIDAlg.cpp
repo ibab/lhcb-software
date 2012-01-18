@@ -169,7 +169,7 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
   }
   else
   {
-    return Error( "Failed to open configuration file '"+paramRoot+m_configFile+"'" );
+    return Error( "Failed to open configuration file '"+configFile+"'" );
   }
 
   // Close the config file
