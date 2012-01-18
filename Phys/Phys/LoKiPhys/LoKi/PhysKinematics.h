@@ -250,6 +250,20 @@ namespace LoKi
     ( const LHCb::Particle* p1 , 
       const LHCb::Particle* p2 ) ;
     // ========================================================================
+    /** trivial function to calculate "overlap" ( in terms of fraction 
+     *   of common hits)
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @see LHCb::HashIDs::overlap 
+     *  @return teh fraction of common hits
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double overlap
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
   } //                                    end of namespace LoKi::PhysKinematics
   // ==========================================================================
   namespace Kinematics 

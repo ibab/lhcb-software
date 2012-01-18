@@ -12,6 +12,10 @@
 #include "Event/Particle.h"
 #include "Event/Track.h"
 // ============================================================================
+// DaVinciTypes 
+// ============================================================================
+#include "Kernel/HashIDs.h"
+// ============================================================================
 // LoKiCore
 // ============================================================================
 #include "LoKi/Constants.h"
@@ -520,6 +524,30 @@ double LoKi::PhysKinematics::kullback
       p2 -> momentum     () , 
       p2 -> momCovMatrix () ) ;
 }
+// ============================================================================
+/*  trivial function to calculate "overlap" ( in terms of fraction 
+ *   of common hits)
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @see LHCb::HashIDs::overlap 
+ *  @return teh fraction of common hits
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::overlap
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 ) 
+{
+  //
+  std::pair<double,double> res = LHCb::HashIDs::overlap ( p1 , p2 ) ;
+  //
+  return std::max ( res.first , res.second ) ;
+}
+// ============================================================================
+
+
+
 // ============================================================================
 // The END 
 // ============================================================================
