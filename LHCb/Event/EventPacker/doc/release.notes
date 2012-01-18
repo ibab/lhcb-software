@@ -4,6 +4,12 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-17 - Marco Clemencic
+ - Added a tool to dynamically configure the DataOnDemandSvc using rules (regex)
+   to map the destination (requested) path to a source location, and a map of
+   source class IDs to conversion algorithms.
+   See comments in ConversionDODMapper.h
+
 ! 2012-01-16 - Chris Jones
  - Do not abort processing in the Checkers, if missing data locations are found
    (Happens with Particles in stripped DSTs).
@@ -39,7 +45,7 @@
 !============================ EventPacker v2r5 2010-09-27 ====================
 ! 2010-09-23 - Marco Cattaneo
  - Fix PackedWeightsVector classID in WritePackedDst and ReadPackedDst
- - Change info() printed by PackerBaseAlg::initialize() and 
+ - Change info() printed by PackerBaseAlg::initialize() and
    UnpackerBaseAlg::initialize() to debug()
 
 ! 2010-09-22 - Chris Jones
@@ -49,7 +55,7 @@
 
 !============================ EventPacker v2r4 2010-08-25 ====================
 ! 2010-08-24 - Pere Mato
- - Added explicit [missing] dependency to DAQ/MDF package. Only needed for the CMake tests. 
+ - Added explicit [missing] dependency to DAQ/MDF package. Only needed for the CMake tests.
 
 ! 2010-07-21 - Chris Jones
  - Adapt ReadPackedDst to new ProcStatus interface
@@ -57,7 +63,7 @@
 !============================ EventPacker v2r3 2010-07-19 ====================
 ! 2010-06-22 - Olivier Callot
  - Modify UnpackTrack.cpp to create ancestors of Muon tracks from Best.
-   This is controlled by options 'AncestorFor' (name of the packed container, 
+   This is controlled by options 'AncestorFor' (name of the packed container,
    default pRec/Track/Muon) and 'AncestorSource' (name of the ancestor container
    default Rec/Track/Best ), ancestor has the same key.
 
@@ -81,7 +87,7 @@
  - Fix CompareTrack to not report saturated q/p error for poorely measured tracks
 
 ! 2009-11-10 - Chris Jones
- - Add some debug to ProtoParticle packers and unpackers + remove need for 
+ - Add some debug to ProtoParticle packers and unpackers + remove need for
    temporary packed object during packing
 
 ! 2009-11-10 - Olivier Callot
@@ -96,7 +102,7 @@
 
 ! 2009-11-04 - Christopher Rob Jones
  - Add packers for RichPIDs and MuonPIDs
- - Protect packers and unpackers from missing input data and also already 
+ - Protect packers and unpackers from missing input data and also already
    existing output data
 
 ! 2009-11-03 - Christopher Rob Jones
@@ -169,7 +175,7 @@
 
 ! 2009-01-26 - Olivier Callot
  - New algorithms to pack, unpack and compare TwoProngVertex.
- - New algorithms ReadPackedDst adn WritePackedDsr to write in a RawEvent the 
+ - New algorithms ReadPackedDst adn WritePackedDsr to write in a RawEvent the
    RDST content. Thsi allows writing a RDST in MDF format.
 
 !============================ EventPacker v1r2 2009-01-21 ====================
@@ -188,5 +194,5 @@
 ! 2008-11-19 - Olivier Callot
  - Import the Pack/Unpack/Compare algorithms for MCVertex and MCParticle
    that were in Sim/SimComponents
- - New packer for DST content, i.e. Track, CaloHypo, ProtoParticle and 
+ - New packer for DST content, i.e. Track, CaloHypo, ProtoParticle and
    RecVertex
