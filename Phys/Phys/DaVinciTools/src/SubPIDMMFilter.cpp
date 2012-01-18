@@ -120,14 +120,16 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which){
     int index = 0;
     BOOST_FOREACH(const LHCb::Particle* daughter, daughters ) {
       LHCb::Particle *d = const_cast<LHCb::Particle*>(daughter);
-      d->setParticleID(m_pids[which][index]);
-      double newMass = m_masses[which][index];
-      oldMom = d->momentum();
-      newMom = Gaudi::LorentzVector();
-      newMom.SetXYZT(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
-                     ::sqrt(oldMom.P2() + newMass*newMass)) ;
-      d->setMomentum(newMom) ;
-      d->setMeasuredMass(newMass);
+      if(d->particleID() != m_pids[which][index]){
+	d->setParticleID(m_pids[which][index]);
+	double newMass = m_masses[which][index];
+	oldMom = d->momentum();
+	newMom = Gaudi::LorentzVector();
+	newMom.SetXYZT(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
+		       ::sqrt(oldMom.P2() + newMass*newMass)) ;
+	d->setMomentum(newMom) ;
+	d->setMeasuredMass(newMass);
+      }
       energySum += d->momentum().E() ;
       pxSum += d->momentum().Px();
       pySum += d->momentum().Py();
