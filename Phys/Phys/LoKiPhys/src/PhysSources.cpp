@@ -23,9 +23,23 @@
 #include "LoKi/Services.h"
 #include "LoKi/select.h"
 #include "LoKi/Algs.h"
+#include "LoKi/PhysExtract.h"
 // ============================================================================
 /** @file 
  *  Implementation file for various sources
+ *
+ *  This file is a part of LoKi project -
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *   By usage of this code one clearly states the disagreement 
+ *    with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ * 
  *  @author Vanya BELYAEV ibelyav@physics.syr.edu
  *  @date 2006-12-07
  */
@@ -741,6 +755,56 @@ LoKi::Vertices::TESCounter::fillStream ( std::ostream& o ) const
            << Gaudi::Utils::toString( m_source.paths() )
            << "," << m_source.cut() << ")" ; }
 // ============================================================================
+
+// ============================================================================
+// constructor from the optional cuts 
+// ============================================================================
+LoKi::Particles::Flatten::Flatten
+( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ) 
+  :  LoKi::BasicFunctors<const LHCb::Particle*>::Pipe () 
+  ,  m_cut ( cut ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::Flatten::~Flatten(){}
+// ============================================================================
+// MANDATORY: clone method("virtual constructor")
+// ============================================================================
+LoKi::Particles::Flatten*
+LoKi::Particles::Flatten::clone() const 
+{ return new LoKi::Particles::Flatten ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::Flatten::result_type
+LoKi::Particles::Flatten::operator() 
+  ( LoKi::Particles::Flatten::argument a ) const 
+{
+  //
+  result_type flatten ;
+  if ( a.empty() ) { return flatten ; }  // RETURN 
+  //
+  flatten.reserve ( 6 * a.size() ) ;
+  //
+  LoKi::Extract::getParticles ( a.begin ()                     , 
+                                a.end   ()                     , 
+                                std::back_inserter ( flatten ) ,
+                                m_cut                          ) ;
+  //
+  return flatten ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout
+// ============================================================================
+std::ostream& 
+LoKi::Particles::Flatten::fillStream ( std::ostream& o ) const 
+{ return o << " FLATTEN(" << m_cut << ") " ; }
+// ============================================================================
+
+
+
+ 
 
 
 

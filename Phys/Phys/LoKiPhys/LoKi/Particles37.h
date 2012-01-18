@@ -35,6 +35,10 @@
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *   By usage of this code one clearly states the disagreement 
+ *    with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ * 
  *  @author Roel Aaij roel.aaij@cern.ch
  *  @date 2010-06-18
  */
@@ -71,11 +75,11 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from a vertex
-      DecayLengthSignificance( const LHCb::VertexBase* vertex );
+      DecayLengthSignificance ( const LHCb::VertexBase* vertex );
       /// constructor from a point
-      DecayLengthSignificance( const LoKi::Point3D& vertex );
+      DecayLengthSignificance ( const LoKi::Point3D& vertex );
       /// copy constructor
-      DecayLengthSignificance( const LoKi::Vertices::VertexHolder& base );
+      DecayLengthSignificance ( const LoKi::Vertices::VertexHolder& base );
       /// MANDATORY: virtual destructor
       virtual ~DecayLengthSignificance();
       /// MANDATORY: clone method ("virtual constructor")

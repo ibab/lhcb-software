@@ -397,6 +397,130 @@ double LoKi::PhysKinematics::mass
   return _mass ( tracks.begin () , tracks.end() , masses ) ;
 }
 // ============================================================================
+/*  trivial function to calculate \f$ \Delta R^2 \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return dr2 
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::deltaR2
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 )
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidDistance ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::deltaR2  ( p1 -> momentum () , 
+                                      p2 -> momentum () ) ;
+}
+// ============================================================================
+/*  trivial function to calculate \f$ \Delta \eta \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return delta-eta 
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::deltaEta
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 )
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidDistance ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::deltaEta ( p1 -> momentum () , 
+                                      p2 -> momentum () ) ;
+}
+// ===========================================================================
+/*  trivial function to calculate \f$ \Delta \phi \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return delta-phi 
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::PhysKinematics::deltaPhi
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 )
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidAngle ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::deltaPhi ( p1 -> momentum () , 
+                                      p2 -> momentum () ) ;
+}
+// ========================================================================
+/*  trivial function to calculate \f$ \Delta \alpha \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return delta-alpha 
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ========================================================================
+double LoKi::PhysKinematics::deltaAlpha
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 ) 
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidAngle ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::deltaAlpha ( p1 -> momentum () , 
+                                        p2 -> momentum () ) ;
+}  
+// ==============================================================================
+/*  trivial function to calculate "mass-distance"
+ *  \f$ m^2_{12} - m^2_1 - m^2_2\f$
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return delta-alpha 
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ==============================================================================
+double LoKi::PhysKinematics::deltaM2
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 ) 
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidDistance ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::deltaM2 ( p1 -> momentum () , 
+                                     p2 -> momentum () ) ;
+}
+// ===========================================================================
+/*  trivial function to calculate Kullback-Liebler divergency 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return kullback-leibler divergency
+ *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+ *  @date 2012-01-17
+ */ 
+// ===========================================================================
+double LoKi::PhysKinematics::kullback
+( const LHCb::Particle* p1 , 
+  const LHCb::Particle* p2 ) 
+{
+  //
+  if ( 0  == p1 || 0 == p2 ) { return LoKi::Constants::InvalidDistance ; }
+  if ( p1 == p2            ) { return 0 ; }
+  //
+  return LoKi::Kinematics::kullback 
+    ( p1 -> momentum     () , 
+      p1 -> momCovMatrix () , 
+      p2 -> momentum     () , 
+      p2 -> momCovMatrix () ) ;
+}
+// ============================================================================
 // The END 
 // ============================================================================
 

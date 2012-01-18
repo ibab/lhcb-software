@@ -14,8 +14,13 @@
  *  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
  *  ``C++ ToolKit for Smart and Friendly Physics Analysis''
  *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
  *   By usage of this code one clearly states the disagreement 
- *    with the campain of Dr.O.Callot et al.: 
+ *   with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  * 
  *  Last modification $Date$
@@ -326,7 +331,6 @@ std::ostream&
 LoKi::Particles::MCorrectedWithBestVertex::fillStream ( std::ostream& s ) const 
 { return s << "BPVCORRM" ; }
 // ============================================================================
-
 
 
 // ============================================================================

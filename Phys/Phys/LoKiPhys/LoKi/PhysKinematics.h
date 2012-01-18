@@ -29,7 +29,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -176,6 +176,79 @@ namespace LoKi
     double mass 
     ( const SmartRefVector<LHCb::Track>& tracks , 
       const std::vector<double>&         masses ) ;
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta R^2 \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return dr2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaR2
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta \phi \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return delta-phi
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaPhi
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta \eta \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return delta-eta 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaEta
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta \alpha \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return delta-alpha 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaAlpha
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate "mass-distance"
+     *  \f$ ( m^2_{12} - m^2_1 - m^2_2 ) / m^2_{12}\f$
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return "mass-distance"
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaM2
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate Kullback-Liebler divergency 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return kullback-leibler divergency
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double kullback
+    ( const LHCb::Particle* p1 , 
+      const LHCb::Particle* p2 ) ;
     // ========================================================================
   } //                                    end of namespace LoKi::PhysKinematics
   // ==========================================================================

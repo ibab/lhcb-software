@@ -5,6 +5,18 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-01-18 - Vanya Belyaev
+
+ - add few "distance" functors
+
+    MINDR2  (for Albert Bursche and Cedric Potterat)
+    MAXDR2
+    MINKL 
+    MINANGLE 
+    MAXIDS 
+    MINM2 
+
+
 !========================= LoKiPhys v10r5 2011-12-15 =========================
 
 ! 2011-11-23 - Vanya Belyaev

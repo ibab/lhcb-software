@@ -44,7 +44,7 @@
   <function name = "LoKi::Child::children"    />
   <function name = "LoKi::Child::descendants" />
 
-  <function pattern = "LoKi::Kinematics::*"              />
+  <function pattern = "LoKi::PhysKinematics::*"          />
   <function pattern = "LoKi::PrintPhys::*"               />
   
   <class name = "LoKi::SelectVertex"  />
@@ -128,7 +128,8 @@
     
   <exclusion>
     
-    <class name="LoKi::Particles::InvariantMass::Indices" /> 
+    <class name="LoKi::Particles::InvariantMass::Indices"    /> 
+    <class name="LoKi::Particles::MinMaxDistance::dist_func" /> 
     
     <class pattern="LoKi::Dicts::*">
       <method name="=" />
@@ -215,6 +216,11 @@
     <class name ="LoKi::Vertices::BeamSpot">
       <method name="=" />
       <field  name="m_condition" />
+    </class>
+
+    <class name ="LoKi::Vertices::MinMaxDistance">
+      <method name="=" />
+      <field  name="m_distance" />
     </class>
     
   </exclusion>

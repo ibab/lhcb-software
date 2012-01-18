@@ -391,6 +391,8 @@ PDGMASS  = LoKi.Particles.NominalMass ()
 PPHASINFO= LoKi.Particles.ProtoHasInfo
 ## @see LoKi::Cuts::PPINFO
 PPINFO   = LoKi.Particles.ProtoInfo
+## @see LoKi::Cuts::PINFO
+PINFO    = LoKi.Particles.Info
 ## @see LoKi::Cuts::PIDe
 PIDe     = PPINFO( LHCb.ProtoParticle.CombDLLe  , 0 , -1000 )
 ## @see LoKi::Cuts::DLLe 
@@ -1026,6 +1028,8 @@ RV_SINKTES     = LoKi.Vertices.SinkTES
 NUMBER         = LoKi.Particles.TESCounter
 VNUMBER        = LoKi.Vertices.TESCounter
 
+FLATTEN        = LoKi.Particles.Flatten
+
 
 ## adapters
 ## @see LoKi::Cuts::PCUTA 
@@ -1045,6 +1049,19 @@ TRFUN   = LoKi.Particles.TrackFun
 ## @see LoKi::Cuts::TRCUT
 TRCUT   = LoKi.Particles.TrackCut
 
+
+## @see LoKi::Cuts::MINDR2 
+MINDR2    = LoKi.Particles.MinDR2
+## @see LoKi::Cuts::MAXDR2 
+MAXDR2    = LoKi.Particles.MaxDR2
+## @see LoKi::Cuts::MAXIDS
+MAXIDS    = LoKi.Particles.MaxIDs
+## @see LoKi::Cuts::MINKL 
+MINKL     = LoKi.Particles.MinKL
+## @see LoKi::Cuts::MINM2
+MINM2     = LoKi.Particles.MinM2
+## @see LoKi::Cuts::MINANGLE
+MINANGLE  = LoKi.Particles.MinAngle
 
 
 ## Legacy stuff

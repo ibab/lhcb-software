@@ -25,6 +25,28 @@
 // ============================================================================
 class DVAlgorithm ;
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2001-01-23 
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -201,9 +223,9 @@ namespace LoKi
     private:
       // ======================================================================
       /// data provder service 
-      mutable LoKi::Interface<IDVAlgorithm>  m_desktop ;
+      mutable LoKi::Interface<IDVAlgorithm>  m_desktop ; // data provder service 
       /// 'on-flight' filter
-      LoKi::PhysTypes::Cut m_cut ;
+      LoKi::PhysTypes::Cut m_cut ; // 'on-flight' filter
       // ======================================================================
     } ;    
     // ========================================================================
@@ -238,7 +260,37 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      SourceTES m_source ;
+      /// the source 
+      SourceTES m_source ; // the source 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Flatten
+     *  @see LoKi::Cuts::FLATTEN
+     *  simple functor to flatten the decay trees into plain list 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-18
+     */
+    class Flatten : public LoKi::BasicFunctors<const LHCb::Particle*>::Pipe
+    {
+    public :
+      // ======================================================================
+      /// constructor form the optional cuts 
+      Flatten ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut = 
+                LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( true ) ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Flatten() ;
+      /// MANDATORY: clone method("virtual constructor")
+      virtual  Flatten* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& o ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// 'on-flight' filter
+      LoKi::PhysTypes::Cut m_cut ;// 'on-flight' filter
       // ======================================================================
     } ;
     // ========================================================================
@@ -536,6 +588,13 @@ namespace LoKi
      */
     typedef LoKi::Particles::SourceDesktop                          SOURCEDV ;
     // ========================================================================
+    /** @typedef FLATTEN 
+     *  Flatten the decay trees into plain list (with optional selection)
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-01-18
+     */
+    typedef LoKi::Particles::Flatten                                 FLATTEN ;
+    // ========================================================================
     /** @typedef VSOURCE 
      *  simple "source"-functor to get the vertices from TES
      * 
@@ -610,9 +669,9 @@ namespace LoKi
      */
     typedef LoKi::Vertices::SourceDesktop                          VSOURCEDV ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
+  } //                                              end of namespace LoKi::Cuts 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
