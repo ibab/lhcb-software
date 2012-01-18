@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2012-01-18 - Nikolai Nikitin
+ - Added new models for B -> K_1(1270) Mu Mu and B -> K_1 (1400) Mu Mu decays
+
 !======================= EvtGenExtras v3r1 2011-11-11 ========================
 ! 2011-10-04 - Nikolai Nikitn
  - Added a new decay Bd->Omega Mu Mu
