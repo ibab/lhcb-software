@@ -7,7 +7,9 @@
 ! 2012-01-17 - Marco Clemencic
  - Added a tool to dynamically configure the DataOnDemandSvc using rules (regex)
    to map the destination (requested) path to a source location, and a map of
-   source class IDs to conversion algorithms.
+   source class IDs to conversion algorithms. If a path is recognized as a
+   candidate for conversion (e.g. intermediate paths) and the corresponding
+   source path points to a plain DataObject, the corresponding node is created.
    See comments in ConversionDODMapper.h
 
 ! 2012-01-16 - Chris Jones

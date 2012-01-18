@@ -5,7 +5,8 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // Implemented interfaces
-#include "GaudiKernel/IDODAlgMapper.h" // GaudiKernel/IDODAlgMapper.h
+#include "GaudiKernel/IDODAlgMapper.h"
+#include "GaudiKernel/IDODNodeMapper.h"
 
 #include <boost/regex.hpp>
 
@@ -36,7 +37,7 @@ class IJobOptionsSvc;
  * @author Marco Clemencic
  * @date 17/01/2012
  */
-class ConversionDODMapper: public extends1<GaudiTool, IDODAlgMapper> {
+class ConversionDODMapper: public extends2<GaudiTool, IDODAlgMapper, IDODNodeMapper> {
 public:
   /// Standard constructor
   ConversionDODMapper(const std::string& type, const std::string& name, const IInterface* parent);
@@ -48,8 +49,28 @@ public:
   /// Initialize the tool instance.
   virtual StatusCode finalize();
 
+  /// Return the algorithm type/name to produce the requested entry.
+  ///
+  /// For the given path in the transient store, try to transform it to a source
+  /// location and, if it is possible, load the source object to find the type
+  /// of the conversion algorithm.
+  /// A unique name for the algorithm instance is chosen and the JobOptionsSvc
+  /// is fed with the InputName and OutputName properties for that instance.
+  ///
+  /// Then the TypeNameString of the algorithm instance is returned.
+  ///
   /// @see IDODAlgMapper
   virtual Gaudi::Utils::TypeNameString algorithmForPath(const std::string &path);
+
+  /// Instruct the DataOnDemandSvc to create the DataObjects for the
+  /// intermediate levels of a path we can handle.
+  ///
+  /// If the requested path can be transformed via the known rules and the
+  /// source object is a trivial DataObject, we tell the DataOnDemandSvc to
+  /// create the node.
+  ///
+  /// @see IDODNodeMapper
+  virtual std::string nodeTypeForPath(const std::string &path);
 
   /// Convert a string using the configured mapping rules.
   /// All the rules are tried until one matches. If there is no match an empty
@@ -58,6 +79,9 @@ public:
 
 protected:
 private:
+  /// Helper function to get the source candidate.
+  DataObject *candidate(const std::string &path) const;
+
   /// @{
   /// Data members corresponding to properties
   typedef std::vector<std::pair<std::string, std::string> > RulesMapProp;

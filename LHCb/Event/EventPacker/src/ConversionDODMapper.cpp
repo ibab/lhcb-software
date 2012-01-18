@@ -24,6 +24,11 @@ namespace Gaudi {
 // ----------------------------------------------------------------------------
 DECLARE_TOOL_FACTORY(ConversionDODMapper)
 
+#define ON_VERBOSE if (UNLIKELY(msgLevel(MSG::VERBOSE)))
+#define ON_DEBUG   if (UNLIKELY(msgLevel(MSG::DEBUG)))
+#define LOG_VERBOSE ON_VERBOSE verbose()
+#define LOG_DEBUG   ON_DEBUG debug()
+
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
@@ -68,16 +73,30 @@ StatusCode ConversionDODMapper::initialize()
   return sc;
 }
 
+DataObject *ConversionDODMapper::candidate(const std::string &path) const {
+  if (!path.empty()) {
+    if (exist<DataObject>(path)) {
+      // ... get the source object...
+      DataObject *obj = get<DataObject>(path);
+      LOG_VERBOSE
+        << "found object of type "<< System::typeinfoName(typeid(*obj))
+        << ", classID " << obj->clID() << endmsg;
+      return obj;
+    } else {
+      LOG_VERBOSE << "no source object found" << endmsg;
+    }
+  }
+  return 0;
+}
+
 Gaudi::Utils::TypeNameString ConversionDODMapper::algorithmForPath(const std::string & path)
 {
   // source path in the transient store
-  std::string src = transform(path);
-  if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-    verbose() << "Dest: '" << path << "' -> Src: '" << src << "'" << endmsg;
-  if (!src.empty()) {
-    // Look for the source object...
-    DataObject *obj = get<DataObject>(src);
-    // ... to choose the correct converter based on the ClassID.
+  const std::string src = transform(path);
+  // If we have a source path and it points to an actual object get the source object...
+  const DataObject *obj = candidate(src);
+  if (obj) {
+    // ... and choose the correct converter based on the ClassID.
     AlgForTypeMap::iterator item = m_algTypes.find(obj->clID());
     if (item != m_algTypes.end()) {
       const std::string &algType = item->second;
@@ -108,6 +127,22 @@ Gaudi::Utils::TypeNameString ConversionDODMapper::algorithmForPath(const std::st
   return "";
 }
 
+std::string ConversionDODMapper::nodeTypeForPath(const std::string &path)
+{
+  // If we have a source path and it points to an actual object...
+  // source path in the transient store
+  const std::string src = transform(path);
+  // If we have a source path and it points to an actual object get the source object...
+  const DataObject *obj = candidate(src);
+  if (obj) {
+    /// handle only plain DataObject instances here
+    if (obj->clID() == DataObject::classID()) {
+      return "DataObject";
+    }
+  }
+  return "";
+}
+
 StatusCode ConversionDODMapper::finalize()
 {
   m_jos.reset(); // release JobOptionsSvc
@@ -116,10 +151,17 @@ StatusCode ConversionDODMapper::finalize()
 
 std::string ConversionDODMapper::transform(const std::string & input) const
 {
+  LOG_VERBOSE << "destination path '" << input << "'" << endmsg;
   std::string result;
   // try each mapping rule on the input, stopping on the first non-empty result.
   for(RulesList::const_iterator r = m_rules.begin(); r != m_rules.end() && result.empty(); ++r) {
     result = r->apply(input);
+  }
+  ON_VERBOSE {
+    if (result.empty())
+      verbose() << "no source candidate" << endmsg;
+    else
+      verbose() << "source candidate '" << result << "'" << endmsg;
   }
   // either is empty because of no match or not because of early exit.
   return result;
