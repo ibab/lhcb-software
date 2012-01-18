@@ -8,10 +8,11 @@
  - Provide two sets of MC11a tunings :-
   - MC11aTuneV1 - Best possible efficiency versus purity curves for each case.
                   In this case, the ANN output distributions may not be 
-                  completely smooth.
+                  completely smooth (Same tunings as in v1r3).
   - MC11aTuneV2 - Only use the '621' NB tunings, that provide smooth output
                   distributions. Performance in terms on efficiency versus
-                  purity may not be quite as good as with MC11aTuneV1
+                  purity may not be quite as good as with MC11aTuneV1.
+                  This tuning is the main recommended one.
 
 !------------------------------- v1r3 ----------------------------------------
 
