@@ -39,6 +39,8 @@ class PlainScript:
         self.log = logging.getLogger()
         self.options = None
         self.args = None
+        # Add the default options for profiling
+        self.addProfileOpts()
         self.defineOpts()
     def defineOpts(self):
         """ User options -- has to be overridden """
@@ -53,7 +55,69 @@ class PlainScript:
     def run(self, args=sys.argv[1:]):
         """ main function to be called by the user """
         self.parseOpts(args)
-        return self.main()
+        # Prepare the profiler instance if needed
+        profiler = None
+        if self.options.profile:
+            try:
+                # Check first if (faster) cProfile is available
+                import cProfile
+                profiler = cProfile.Profile()
+            except ImportError:
+                try:
+                    # Otherwise use the default  profiling library
+                    import profile
+                    profiler = profile.Profile()
+                except ImportError:
+                    self.log.warning("Cannot import cProfile or profile: ignoring --profile")
+        # if we managed to get the profiler instance, collect profiling stats,
+        # and print them in a specially created StringIO buffer
+        if profiler:
+            # Actually running and profiling the call
+            rc = profiler.runcall(self.main)
+            # Using stringIO to print the profile results to a buffer instead of stdout/stderr
+            import StringIO
+            output = StringIO.StringIO()
+
+            # adapted from Python standard profiler.py
+            import pstats
+            stdoutSwapped = False
+            if sys.version_info < (2, 5):
+                # hack to be able to print the statistics in the StringIO buffer on older Python
+                # This should be ok, as at this point the profiled script has finished running
+                stats = pstats.Stats(profiler)
+                sys.stdout = output
+                stdoutSwapped = True
+            else:
+                stats = pstats.Stats(profiler, stream=output)
+
+            if self.options.profdump != None:
+                # Dump the statistics to a file
+                stats.dump_stats(self.options.profdump)
+            else:
+                # print the stats to the StringIO buffer
+                stats.strip_dirs().sort_stats(self.options.profsortby).print_stats(self.options.profmaxlines)
+                # Log the actual statistics
+                self.log.warning(output.getvalue())
+
+            # Now resetting stdout if it was swapped (on older version of python)
+            if stdoutSwapped:
+                sys.stdout = sys.__stdout__
+
+        else:
+            rc = self.main()
+
+        return rc
+    def addProfileOpts(self):
+        """ Define the common profiling options """
+        parser = self.parser
+        parser.add_option("--profile", action="store_true", dest="profile", help="Enable profiling of the script")
+        parser.add_option("--prof-maxlines", type="int", dest="profmaxlines", default=100,
+                          help="Set the maximum lines of profiling to print out")
+        parser.add_option("--prof-sortby", type="choice", choices=["stdname", "calls", "time", "cumulative"],
+                          dest="profsortby", default="cumulative",
+                          help="Specify the sort order for the statitics. Possibilities are: stdname, calls, time, cumulative")
+        parser.add_option("--prof-dump", type="string", dest="profdump",
+                          help="Dumps the statistics to the file file specified instead of displaying them")
 
 class ConfigScript(PlainScript):
     _version = "$Id$".replace("$","").replace("Id:","").strip()
