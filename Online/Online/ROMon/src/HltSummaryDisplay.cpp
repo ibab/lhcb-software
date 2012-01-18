@@ -131,13 +131,15 @@ void HltSummaryDisplay::update(const void* ptr) {
     ::scrc_put_chars(m_display,"+---------------------------------------------+",INVERSE|BOLD|RED,++line,2,1);
   }
 
-  ::sprintf(text,"%8s %6s %5s %-90s %s","Run","No.of","No.of","","No.of nodes");
-  ::scrc_put_chars(m_display,text,MAGENTA|BOLD,++line,2,1);
-  ::sprintf(text,"%8s %6s %5s %-90s %s","Number","Files","Nodes","Nodes where files exist","not shown");
-  ::scrc_put_chars(m_display,text,MAGENTA|BOLD,++line,2,1);
-  ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
-
-  int tot_runs = 0, tot_files = 0, tot_nodes = 0;
+  if ( !run_files.empty() ) {
+    ::sprintf(text,"%8s %6s %5s %-90s %s","Run","No.of","No.of","","No.of nodes");
+    ::scrc_put_chars(m_display,text,MAGENTA|BOLD,++line,2,1);
+    ::sprintf(text,"%8s %6s %5s %-90s %s","Number","Files","Nodes","Nodes where files exist","not shown");
+    ::scrc_put_chars(m_display,text,MAGENTA|BOLD,++line,2,1);
+    ::scrc_put_chars(m_display,"",MAGENTA|BOLD,++line,2,1);
+  }
+  set<string> tot_nodes;
+  int tot_runs = 0, tot_files = 0;
   for(map<int,int>::const_iterator i=run_files.begin(); i!= run_files.end(); ++i) {
     int run = (*i).first;
     int num_files = (*i).second;
@@ -149,10 +151,10 @@ void HltSummaryDisplay::update(const void* ptr) {
       string nodes;
       int exc_nodes=0;
       num_nodes = (*j).second.size();
-      tot_nodes += num_nodes;
       for(set<string>::const_iterator k=(*j).second.begin(); k!=(*j).second.end();++k) {
 	if ( nodes.length()<80 ) nodes += (*k)+" ";
 	else ++exc_nodes;
+	tot_nodes.insert(*k);
       }
       ::sprintf(text,"%6d %5d %-90s %3d",num_files,num_nodes,nodes.c_str(),exc_nodes);
     }
@@ -164,8 +166,8 @@ void HltSummaryDisplay::update(const void* ptr) {
     ::scrc_put_chars(m_display,text,BLUE|BOLD,line,2,0);
   }
   ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
-  ::sprintf(text,"  Grand Total Statistics:  %8d runs %6d files on %5d nodes still to be processed",
-	    tot_runs,tot_files,tot_nodes);
+  ::sprintf(text,"  Grand Total Statistics:  %8d runs with %6d files on %5ld nodes still to be processed",
+	    tot_runs,tot_files,tot_nodes.size());
   col = tot_files>0 ? RED : BOLD|GREEN;
   ::scrc_put_chars(m_display,"",col,++line,2,1);
   ::scrc_put_chars(m_display,text,col,++line,2,1);    
@@ -173,7 +175,7 @@ void HltSummaryDisplay::update(const void* ptr) {
 
   ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
-  ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>",NORMAL,++line,2,1);
+  ::scrc_put_chars(m_display,"<CTRL-H for Help>, <CTRL-E to exit>, 'S' or 's' to close the display.",NORMAL,++line,2,1);
   while (line+3 < m_display->height ) 
     ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
 }
