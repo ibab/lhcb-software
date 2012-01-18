@@ -94,8 +94,8 @@ void HltSubfarmDisplay::showNodes()  {
 	    "------------------------------->",
 	    "displayed");
 
-  disp->draw_line_reverse(" Node       No.of No.of %95s Runs not","");
-  disp->draw_line_bold(   text);
+  disp->draw_line_bold(" Node       No.of No.of %95s Runs not","");
+  disp->draw_line_bold(text);
   int tot_files = 0, exc_runs = 0, exc_files = 0;
   map<int,int> tot_runs;
   for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
@@ -123,6 +123,10 @@ void HltSubfarmDisplay::showNodes()  {
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(fmt, "Total:", tot_runs.size(), tot_files, "", "");
+  disp->draw_line_normal("");
+  disp->draw_line_normal("");
+  disp->draw_line_normal("");
+  disp->draw_line_normal("<Mouse-left double-click> to close window");
 }
 
 /// Update header information
@@ -134,7 +138,7 @@ void HltSubfarmDisplay::showHeader()   {
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
-  draw_line_reverse("         HLT monitoring on %s   [%s]", stats->name, ::lib_rtl_timestr());    
+  draw_line_bold   ("         HLT monitoring on %s   [%s]", stats->name, ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
 

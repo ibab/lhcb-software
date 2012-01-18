@@ -59,7 +59,7 @@ void ROMon::_registerCreator(const char* name,ClusterLineCreator_t func) {
 
 /// Standard constructor
 ClusterLine::ClusterLine(FarmLineDisplay* p, int pos, const std::string& n)
-  : m_name(n), m_svc(0), m_position(pos), m_parent(p), m_ptr(0)
+  : m_name(n), m_svc(0), m_position(pos), m_parent(p), m_data(0), m_ptr(0)
 {
 }
 
@@ -134,7 +134,6 @@ void ClusterLine::end_update() {
   ::scrc_end_pasteboard_update(pb);
   if ( sfdis && sfdis->clusterName() == c->name )  {
     IocSensor::instance().send(m_parent,CMD_CHECK,this);
-    //sfdis->updateDisplay(*c);
   }
 }
 

@@ -36,8 +36,10 @@ namespace ROMon {
     typedef std::vector<std::string> Farms;
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
+    std::auto_ptr<InternalDisplay>   m_summaryDisplay;
     std::string                      m_partition;
     std::string                      m_match;
+    
     /// vector with all farm displays
     Farms                            m_farms;
     int                              m_height;
@@ -99,6 +101,9 @@ public:
     virtual void update(const void* data);
     /// Update display content
     virtual void update(const void* data, size_t len)  { this->InternalDisplay::update(data,len); }
+
+    /// Show the run processing summary window
+    int showDeferredSummaryWindow();
 
     /// DIM command service callback
     static void dnsDataHandler(void* tag, void* address, int* size);

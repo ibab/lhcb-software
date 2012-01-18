@@ -15,6 +15,7 @@
 
 // Framework include files
 #include "ROMon/FarmLineDisplay.h"
+#include "ROMon/HltSummaryDisplay.h"
 #include "ROMon/ClusterLine.h"
 #include "SCR/MouseSensor.h"
 #include "CPP/TimeSensor.h"
@@ -97,6 +98,11 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
+  if ( cli.getopt("debug",5) != 0 ) {
+    ::printf("\n\ngdb --pid %d\n\n",::lib_rtl_pid());
+    ::lib_rtl_sleep(10000);
+  }
+
   if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
   if ( m_reverse       ) InternalDisplay::setCreateFlags(INVERSE);
   s_fd = this;
@@ -156,17 +162,17 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,"nn",GREEN|INVERSE,1,80,0);
     ::scrc_put_chars(m_display,": Done,ready",NORMAL,1,82,0);
     ::scrc_put_chars(m_display,"nn",RED|INVERSE|BOLD,1,110,0);
-    ::scrc_put_chars(m_display,": Files to be process",NORMAL,1,112,0);
+    ::scrc_put_chars(m_display,": Files to be processed",NORMAL,1,112,0);
     ::scrc_put_chars(m_display,"nn",BLUE|INVERSE,2,80,0);
     ::scrc_put_chars(m_display,": Done/Excluded",NORMAL,2,82,0);
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,2,110,0);
-    ::scrc_put_chars(m_display,": Files to be process/Excluded",NORMAL,2,112,1);
+    ::scrc_put_chars(m_display,": Files to be processed/Excluded",NORMAL,2,112,1);
     ::sprintf(txt," %-10s %-8s %6s %6s %6s         %s",
 	      "","Last","No.of","No.of","No.of","Subfarm");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
-    ::sprintf(txt," %-10s %-8s %6s %6s %6s       %7s    %-19s  %s",
+    ::sprintf(txt," %-10s %-8s %6s %6s %6s        %7s   %-15s  %s",
 	      "","Update","Nodes", "Runs","Files","Status","",
-	      "<--------------- Individual worker node status --------------->");
+	      "<----------------------- Individual worker node status ----------------------->");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else if ( m_mode == TORRENT_MODE ) {
@@ -229,6 +235,7 @@ FarmLineDisplay::~FarmLineDisplay()  {
   ::scrc_begin_pasteboard_update(m_pasteboard);
   m_ctrlDisplay = auto_ptr<CtrlNodeDisplay>(0);
   m_mbmDisplay = auto_ptr<BufferDisplay>(0);
+  m_summaryDisplay = auto_ptr<HltSummaryDisplay>(0);
   if ( m_nodeSelector ) {
     MouseSensor::instance().remove(m_nodeSelector->display());
     m_nodeSelector = 0;
@@ -407,11 +414,28 @@ void FarmLineDisplay::update(const void* address) {
   }
 }
 
+/// Show the run processing summary window
+int FarmLineDisplay::showDeferredSummaryWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_summaryDisplay.get() ) {
+    MouseSensor::instance().remove(this,m_summaryDisplay->display());
+    m_summaryDisplay = auto_ptr<HltSummaryDisplay>(0);
+  }
+  else    {
+    m_summaryDisplay = auto_ptr<HltSummaryDisplay>(new HltSummaryDisplay(this));
+  }
+  if ( m_summaryDisplay.get() ) {
+    m_summaryDisplay->show(m_anchorY,m_anchorX);
+    MouseSensor::instance().add(this,m_summaryDisplay->display());
+  }
+  return WT_SUCCESS;
+}
+
 /// Handle keyboard interrupts
 int FarmLineDisplay::handleKeyboard(int key)    {
   if ( m_mode == HLTDEFER_MODE && (key == 'S' || key=='s') ) {
     // Invoke here run processing summary!
-    showHelpWindow();
+    return showDeferredSummaryWindow();
   }
   else if ( FarmDisplayBase::handleKeyboard(key) == WT_SUCCESS ) {
     return WT_SUCCESS;
@@ -512,6 +536,11 @@ void FarmLineDisplay::handle(const Event& ev) {
         }
       }
       break;
+    case CMD_SHOWDEFERREDRUNS:
+      if ( m_summaryDisplay.get() )   {
+        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_farmDisplays);
+      }
+      break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay )   {
         IocSensor::instance().send(m_subfarmDisplay,  ROMonDisplay::CMD_UPDATEDISPLAY,this);
@@ -524,6 +553,9 @@ void FarmLineDisplay::handle(const Event& ev) {
       }
       if ( m_torrentDisplay.get() )   {
         IocSensor::instance().send(m_torrentDisplay.get(),ROMonDisplay::CMD_UPDATEDISPLAY,this);
+      }
+      if ( m_summaryDisplay.get() )   {
+        IocSensor::instance().send(m_summaryDisplay.get(),CMD_UPDATE,&m_farmDisplays);
       }
       if ( m_mbmDisplay.get() )  {
         const void* data = m_subfarmDisplay->data().pointer;

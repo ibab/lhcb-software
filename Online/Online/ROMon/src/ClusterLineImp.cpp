@@ -994,5 +994,6 @@ void HltDeferLine::display() {
   }
   ::scrc_put_chars(dis," ",COL_OK,line,pos,1);
   end_update();
+  IocSensor::instance().send(m_parent,CMD_SHOWDEFERREDRUNS,this);
 }
 
