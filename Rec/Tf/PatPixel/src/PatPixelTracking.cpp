@@ -30,7 +30,6 @@ DECLARE_ALGORITHM_FACTORY( PatPixelTracking )
   declareProperty( "MaxYSlope",             m_maxYSlope         = 0.300 );
   declareProperty( "MaxZForRBeamCut",       m_maxZForRBeamCut   = 200.* Gaudi::Units::mm );
   declareProperty( "MaxR2Beam",             m_maxR2Beam         = 1. * Gaudi::Units::mm2 );
-  declareProperty( "SeedTolerance",         m_seedTolerance     = 0.080 * Gaudi::Units::mm );
   declareProperty( "ExtraTol",              m_extraTol          = 0.150 * Gaudi::Units::mm );
   declareProperty( "MaxChi2ToAdd",          m_maxChi2ToAdd      = 100.  );
   declareProperty( "MaxChi2SameSensor",     m_maxChi2SameSensor = 16.   );
@@ -206,20 +205,6 @@ void PatPixelTracking::searchByPair( ) {
           }
         }
 
-        //== Add compatible hits in sens0 and sens1.
-        if ( itH0+1 != sensor0->hits().end() ) {
-          if ( m_track.chi2( *(itH0+1) ) < m_maxChi2SameSensor ) {
-            ++itH0;
-            m_track.addHit( *itH0 );
-          }
-        }
-        if ( itH1+1 != sensor1->hits().end() ) {
-          if ( m_track.chi2( *(itH1+1) ) < m_maxChi2SameSensor ) {
-            ++itH1;
-            m_track.addHit( *itH1 );
-          }
-        }
-
         //== Extend downstream, on both sides of the detector as soon as one hit is missed
         int extraStep = 2;
         int extraSens = sens1-extraStep;
@@ -265,6 +250,20 @@ void PatPixelTracking::searchByPair( ) {
 
         removeWorstHit( m_maxChi2PerHit );
         if ( m_track.hits().size() < 3 ) continue;
+
+        //== Add compatible hits in sens0 and sens1.
+        if ( itH0+1 != sensor0->hits().end() ) {
+          if ( m_track.chi2( *(itH0+1) ) < m_maxChi2SameSensor ) {
+            ++itH0;
+            m_track.addHit( *itH0 );
+          }
+        }
+        if ( itH1+1 != sensor1->hits().end() ) {
+          if ( m_track.chi2( *(itH1+1) ) < m_maxChi2SameSensor ) {
+            ++itH1;
+            m_track.addHit( *itH1 );
+          }
+        }
 
         //== Final check: if only 3 hits, all should be unused and chi2 good.
         if ( m_track.hits().size() == 3 ) {

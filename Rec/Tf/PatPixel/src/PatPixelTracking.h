@@ -57,7 +57,6 @@ private:
   double m_maxYSlope;
   double m_maxZForRBeamCut;
   double m_maxR2Beam;
-  double m_seedTolerance;
   double m_extraTol;
   double m_maxChi2ToAdd;
   double m_maxChi2SameSensor;
