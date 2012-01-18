@@ -5,6 +5,10 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2012-01-18 - Vanya Belyaev
+
+ - move class  LHCb::HashIDs from DavinciKernel
+
 !========================= DaVinciTypes v2r5 2011-04-29 =========================
 ! 2011-04-20 - Marco Cattaneo
  - Fix unused variable compilation warnings when NDEBUG is set

@@ -27,5 +27,9 @@
       <method name="cloneMap"/>
     </class>
   </exclusion>
+
+  <class name = "LHCb::HashIDs" />
   
 </lcgdict>
+
+
