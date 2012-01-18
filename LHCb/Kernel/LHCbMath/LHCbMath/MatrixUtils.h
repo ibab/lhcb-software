@@ -29,9 +29,11 @@
  *     - minimal&maximal elements of matrices and vectors
  *     - indices of the minimal&maximal elements of matrices and vectors 
  *     - minima&maximal by absolute value elements of matrices and vectors 
- *     - indices of minima&maximal by absolute value elements of matrices and vectors 
+ *     - indices of minima&maximal by absolute value elements of 
+ *       matrices and vectors 
  *     - the trace of the square matrices
- *     - find the minimal/maximal/abs.minimal&abs.maximal diagonal elements of square matrices
+ *     - find the minimal/maximal/abs.minimal&abs.maximal 
+ *       diagonal elements of square matrices
  *     - count number of elements which satisfy some criteria
  *     - count number of diagonal elements which satisfy some criteria
  *     - check the presence of elements which satisfy some criteria
@@ -44,6 +46,7 @@
 // ============================================================================
 namespace Gaudi
 {
+  // ==========================================================================
   namespace Math 
   {
     // ========================================================================
@@ -625,7 +628,7 @@ namespace Gaudi
     template <class B, class T, unsigned int D, class R>
     inline T 
     trace 
-    ( ROOT::Math::Expr<B,T,D,D,R>& m ) 
+    ( const ROOT::Math::Expr<B,T,D,D,R>& m ) 
     {
       T result = m(0,0) ;
       for ( unsigned int i = 1 ; i < D ; ++i ) { result += m(i,i) ; }
@@ -1072,9 +1075,7 @@ namespace Gaudi
       const ROOT::Math::SMatrix<T,D1,D2,R>& m2 , P pred )
     { return std::equal ( m1.begin() , m1.end() , m2.begin() , pred ) ; } 
     // ========================================================================
-
-
-
+    // UPDATE
     // =========================================================================
     /** update the symmetric matrix according to the rule m +=  s*v*v^T
      *
@@ -1200,9 +1201,9 @@ namespace Gaudi
       }
     }
     // ========================================================================
-  } // end of namespace Math  
-} // end of namespace Gaudi
-
+  } //                                                    end of namespace Math
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
 // ============================================================================
 // The END 
 // ============================================================================
