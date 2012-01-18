@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
 
+! 2012-01-18 - Kurt Rinnert
+ - fixed warnings in ZS processing by commenting out definitions of unused
+   parameters 'loop_cnt' and 'boundary_strip'.
+
 ! 2012-01-17 - Marco Cattaneo
  - Fix trivial Coverity UNINIT_CTOR warnings
  - Replace obsolete DeclareFactoryEntries.h include

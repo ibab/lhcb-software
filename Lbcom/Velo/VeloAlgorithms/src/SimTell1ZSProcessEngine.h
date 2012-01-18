@@ -32,8 +32,11 @@ class SimTell1ZSProcessEngine: public SimTell1Engine{
         VeloTELL1::u_int8_t *adc_list,
         unsigned int *pp_clus_cnt, int *pp_adc_cnt,
         VeloTELL1::u_int32_t pp_max_clusters,
-        VeloTELL1::u_int8_t sum, VeloTELL1::u_int16_t strip_start,
-        int boundary_strip);
+        VeloTELL1::u_int8_t sum, VeloTELL1::u_int16_t strip_start);
+      // NOTE:  parameter 'boundary_strip' is not needed, see comment
+      // on 'loop_cnt' in .cpp implementation file.
+      //
+      //  int boundary_strip);
     void setHitThresholds(const VeloTELL1::ThresholdsVec& inVec);
     void setLowThresholds(const VeloTELL1::ThresholdsVec& inVec);
     void setSumThresholds(const VeloTELL1::SumThresholdsVec& inVec);
