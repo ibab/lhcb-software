@@ -73,6 +73,7 @@ typedef DetDesc::XML::Dimension       xml_dim_t;
 typedef DetDesc::Geometry::Handle_t   geo_h;
 typedef DetDesc::Geometry::LCDD       lcdd_t;
 typedef DetDesc::Geometry::RefElement Ref_t;
+typedef DetDesc::Geometry::Element    Elt_t;
 typedef DetDesc::Geometry::Document   Doc_t;
 
 using namespace std;
@@ -82,9 +83,9 @@ using XML::Tag_t;
 
 namespace DetDesc { namespace Geometry {
 
-  template <> Ref_t toObject<SensitiveDetector,xml_h>(lcdd_t& lcdd, const xml_h& e);
+  template <> Ref_t toRefObject<SensitiveDetector,xml_h>(lcdd_t& lcdd, const xml_h& e);
 
-  template <> Ref_t toObject<PolyconeSupport,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
+  template <> Ref_t toRefObject<PolyconeSupport,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
     Document    doc     = lcdd.document();
     xml_det_t   x_det   = e;
     string      name    = x_det.nameStr();
@@ -115,7 +116,7 @@ namespace DetDesc { namespace Geometry {
     return sdet;
   }
 
-  template <> Ref_t toObject<TubeSegment,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
+  template <> Ref_t toRefObject<TubeSegment,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
     xml_det_t   x_det   (e);
     xml_comp_t  x_tube  (x_det.child(_X(tubs)));
     xml_dim_t   x_pos   (x_det.child(_X(position)));
@@ -140,7 +141,7 @@ namespace DetDesc { namespace Geometry {
     return sdet;
   }
 
-  template <> Ref_t toObject<MultiLayerTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<MultiLayerTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t   x_det    = e;
     Document    doc      = lcdd.document();
     string      det_name = x_det.nameStr();
@@ -204,7 +205,7 @@ namespace DetDesc { namespace Geometry {
     return sdet;
   }
 
-  template <> Ref_t toObject<DiskTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<DiskTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t   x_det     = e;
     Document    doc       = lcdd.document();
     Material    air       = lcdd.material(_X(Air));
@@ -280,7 +281,7 @@ namespace DetDesc { namespace Geometry {
     return sdet;
   }
 
-  template <> Ref_t toObject<CylindricalBarrelCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<CylindricalBarrelCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
     xml_det_t   x_det     = e;
     xml_dim_t   dim       = x_det.dimensions();
@@ -362,7 +363,7 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
-  template <> Ref_t toObject<CylindricalEndcapCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<CylindricalEndcapCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
     xml_det_t   x_det     = e;
     xml_dim_t   dim       = x_det.dimensions();
@@ -462,14 +463,14 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
-  template <> Ref_t toObject<EcalBarrel,xml_h>(lcdd_t& /* lcdd */, const xml_h& /*e*/, SensitiveDetector& /* sens */)  {
+  template <> Ref_t toRefObject<EcalBarrel,xml_h>(lcdd_t& /* lcdd */, const xml_h& /*e*/, SensitiveDetector& /* sens */)  {
     return Ref_t(0);
   }
-  template <> Ref_t toObject<PolyhedraEndcapCalorimeter2,xml_h>(lcdd_t& /* lcdd */, const xml_h& /*e*/, SensitiveDetector& /* sens */)  {
+  template <> Ref_t toRefObject<PolyhedraEndcapCalorimeter2,xml_h>(lcdd_t& /* lcdd */, const xml_h& /*e*/, SensitiveDetector& /* sens */)  {
     return Ref_t(0);
   }
 
-  template <> Ref_t toObject<PolyhedraBarrelCalorimeter2,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<PolyhedraBarrelCalorimeter2,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
     xml_det_t   x_det     = e;
     xml_comp_t  staves    = x_det.child(_X(staves));
@@ -573,7 +574,8 @@ namespace DetDesc { namespace Geometry {
 	  // Slice box. 
 	  Box slice_box(doc,slice_name + "_box",layer_dim_x,detZ,slice_thickness);
 
-	  lcdd.add(slice_position).add(slice_box);
+	  lcdd.add(slice_position);
+	  lcdd.add(slice_box);
 
 	  // Slice volume.
 	  Volume slice_volume(doc,slice_name,slice_box,slice_material);
@@ -641,7 +643,7 @@ namespace DetDesc { namespace Geometry {
     envelopePhysVol.addPhysVolID(_X(system), sdet.id());
     envelopePhysVol.addPhysVolID(_X(barrel), 0);
     motherVol.addPhysVol(envelopePhysVol,pos_identity);
-
+#if 0
     cout << "+++ Staves inner:" << endl;
     staveInnerVol.volume()->PrintNodes();
 
@@ -650,7 +652,7 @@ namespace DetDesc { namespace Geometry {
 
     cout << "+++ Envelope:" << endl;
     envelopeVol.volume()->PrintNodes();
-
+#endif
     return sdet;
 
 #else
@@ -674,11 +676,11 @@ namespace DetDesc { namespace Geometry {
     double rotY = -offsetRotation;
     double rotX = M_PI / 2e0;
     double posX = -sectCenterRadius * sin(rotY);
-    double posY = sectCenterRadius * cos(rotY);
+    double posY = sectCenterRadius  * cos(rotY);
     string nam = sectVolume.name();
     for (int module = 0; module < numsides; ++module)  {
-      Position position(doc, detName + _toString(module,"_stave0_module%d_position"),posX,posY,0);
-      Rotation rotation(doc, detName + _toString(module,"_stave0_module%d_rotation"),rotX,rotY,0);
+      Position position(doc, detName + _toString(module,"_stave_module%d_position"),posX,posY,0);
+      Rotation rotation(doc, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0);
       lcdd.add(position).add(rotation);
 
       PhysVol sectPhysVol(doc,sectVolume,nam+_toString(module,"_module%d"));
@@ -692,7 +694,7 @@ namespace DetDesc { namespace Geometry {
     }
   }
 
-  template <> Ref_t toObject<ForwardDetector,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<ForwardDetector,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
     xml_det_t   x_det      = e;
     xml_dim_t   dim        = x_det.dimensions();
@@ -899,15 +901,15 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
-  template <> Ref_t toObject<SiTrackerBarrel,xml_h>(lcdd_t& , const xml_h& , SensitiveDetector& )  {
+  template <> Ref_t toRefObject<SiTrackerBarrel,xml_h>(lcdd_t& , const xml_h& , SensitiveDetector& )  {
     return Ref_t(0);
   }
 
-  template <> Ref_t toObject<SiTrackerEndcap,xml_h>(lcdd_t& , const xml_h& , SensitiveDetector& )  {
+  template <> Ref_t toRefObject<SiTrackerEndcap,xml_h>(lcdd_t& , const xml_h& , SensitiveDetector& )  {
     return Ref_t(0);
   }
 
-  template <> Ref_t toObject<SiTrackerEndcap2,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
+  template <> Ref_t toRefObject<SiTrackerEndcap2,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
     xml_det_t   x_det     = e;
     Document    doc       = lcdd.document();
@@ -991,38 +993,38 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
-  template <> Ref_t toObject<Subdetector,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<Subdetector,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
     Subdetector      det(0);
     string           type = e.attr<string>(_A(type));
     string           name = e.attr<string>(_A(name));
-    SensitiveDetector  sd = toObject<SensitiveDetector>(lcdd,e);
+    SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,e);
 
     if ( type == "PolyconeSupport" )
-      det = toObject<PolyconeSupport>(lcdd,e,sd);
+      det = toRefObject<PolyconeSupport>(lcdd,e,sd);
     else if ( type == "TubeSegment" )
-      det = toObject<TubeSegment>(lcdd,e,sd);
+      det = toRefObject<TubeSegment>(lcdd,e,sd);
     else if ( type == "MultiLayerTracker" )
-      det = toObject<MultiLayerTracker>(lcdd,e,sd);
+      det = toRefObject<MultiLayerTracker>(lcdd,e,sd);
     else if ( type == "DiskTracker" )
-      det = toObject<DiskTracker>(lcdd,e,sd);
+      det = toRefObject<DiskTracker>(lcdd,e,sd);
     else if ( type == "SiTrackerBarrel" )
-      det = toObject<SiTrackerBarrel>(lcdd,e,sd);
+      det = toRefObject<SiTrackerBarrel>(lcdd,e,sd);
     else if ( type == "SiTrackerEndcap" )
-      det = toObject<SiTrackerBarrel>(lcdd,e,sd);
+      det = toRefObject<SiTrackerBarrel>(lcdd,e,sd);
     else if ( type == "SiTrackerEndcap2" )
-      det = toObject<SiTrackerEndcap2>(lcdd,e,sd);
+      det = toRefObject<SiTrackerEndcap2>(lcdd,e,sd);
     else if ( type == "CylindricalBarrelCalorimeter" )
-      det = toObject<CylindricalBarrelCalorimeter>(lcdd,e,sd);
+      det = toRefObject<CylindricalBarrelCalorimeter>(lcdd,e,sd);
     else if ( type == "CylindricalEndcapCalorimeter" )
-      det = toObject<CylindricalEndcapCalorimeter>(lcdd,e,sd);
+      det = toRefObject<CylindricalEndcapCalorimeter>(lcdd,e,sd);
     else if ( type == "EcalBarrel" )
-      det = toObject<EcalBarrel>(lcdd,e,sd);
+      det = toRefObject<EcalBarrel>(lcdd,e,sd);
     else if ( type == "PolyhedraEndcapCalorimeter2" )
-      det = toObject<PolyhedraEndcapCalorimeter2>(lcdd,e,sd);
+      det = toRefObject<PolyhedraEndcapCalorimeter2>(lcdd,e,sd);
     else if ( type == "PolyhedraBarrelCalorimeter2" )
-      det = toObject<PolyhedraBarrelCalorimeter2>(lcdd,e,sd);
+      det = toRefObject<PolyhedraBarrelCalorimeter2>(lcdd,e,sd);
     else if ( type == "ForwardDetector" )
-      det = toObject<ForwardDetector>(lcdd,e,sd);
+      det = toRefObject<ForwardDetector>(lcdd,e,sd);
     else  {
       string err = "UNKNOWN detector:" + name + " of type " + type;
       cout << err << endl;
@@ -1031,18 +1033,18 @@ namespace DetDesc { namespace Geometry {
     /*
       if ( type == "ForwardDetector" )
       //det = Subdetector(0);
-      det = toObject<ForwardDetector>(lcdd,e,sd);
+      det = toRefObject<ForwardDetector>(lcdd,e,sd);
       else  {
       string err = "UNKNOWN detector:" + name + " of type " + type;
       cout << err << endl;
       //throw runtime_error(err);
       }
     */
-    if ( det && e.hasAttr(_A(readout)) )  {
+    if ( det.isValid() && e.hasAttr(_A(readout)) )  {
       string rdo = e.attr<string>(_A(readout));
       det.setReadout(lcdd.readout(rdo));
     }
-    if ( det )
+    if ( det.isValid() )
       cout << "Converted subdetector:" << name << " of type " << type << endl;
     else
       cout << "FAILED    subdetector:" << name << " of type " << type << endl;

@@ -55,12 +55,12 @@ Handle_t LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool 
   if ( do_throw )  {
     throw runtime_error("Cannot find a child with the reference name:"+name);
   }
-  return RefElement(0);
+  return 0;
 }
 
 template<class T> LCDD& 
 LCDDImp::__add(const RefElement& x, ObjectHandleMap& m,Int_t (TGeoManager::*func)(T*))  {
-  T* obj = dynamic_cast<T*>(x.handle().ptr());
+  T* obj = dynamic_cast<T*>(x.ptr());
   if ( obj )  {
     TGeoManager *mgr = document();
     if ( mgr )  {
@@ -79,7 +79,7 @@ LCDD& LCDDImp::addVolume(const RefElement& x)    {
 #include "TGeoPcon.h"
 #include "TGeoCompositeShape.h"
 LCDD& LCDDImp::addSolid(const RefElement& x)     {
-  TGeoShape *o, *obj = dynamic_cast<TGeoShape*>(x.handle().ptr());
+  TGeoShape *o, *obj = dynamic_cast<TGeoShape*>(x.ptr());
   if ( (o=dynamic_cast<TGeoPcon*>(obj)) )  {
     m_structure.append<TGeoShape>(x);
   }
@@ -97,10 +97,29 @@ LCDD& LCDDImp::addSolid(const RefElement& x)     {
 }
 
 LCDD& LCDDImp::addRotation(const RefElement& x)  {
+  TGeoMatrix* obj = dynamic_cast<TGeoMatrix*>(x.ptr());
+  if ( 0 == obj ) {
+    cout << "+++ Attempt to store invalid matrix object:" << typeid(*x.ptr()).name() << endl;
+  }
+  if ( obj->IsRegistered() ) {
+    cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
+  }
+  cout << "+++ Register Rotation[" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
+
   return __add(x,m_rotations,&TGeoManager::AddTransformation);
+  //m_rotations.append<TGeoMatrix>(x);
+  //return *this;
 }
 
 LCDD& LCDDImp::addPosition(const RefElement& x)  {
+  TGeoMatrix* obj = dynamic_cast<TGeoMatrix*>(x.ptr());
+  if ( 0 == obj ) {
+    cout << "+++ Attempt to store invalid matrix object:" << typeid(*x.ptr()).name() << endl;
+  }
+  if ( obj->IsRegistered() ) {
+    cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
+  }
+  cout << "+++ Register Position [" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
   return __add(x,m_positions,&TGeoManager::AddTransformation);
 }
 

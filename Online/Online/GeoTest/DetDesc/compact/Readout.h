@@ -34,9 +34,9 @@ namespace DetDesc {
       /// Access segmentation structure
       Element segmentation()  const;
       /// Assign IDDescription to readout structure
-      void setIDDescriptor(Handle_t spec)   const;
+      void setIDDescriptor(RefElement spec)   const;
       /// Assign segmentation structure to readout
-      void setSegmentation(Handle_t source) const;
+      void setSegmentation(Element segment) const;
     };
   }       /* End namespace Geometry               */
 }         /* End namespace DetDesc                */

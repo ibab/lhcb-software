@@ -73,10 +73,10 @@ namespace DetDesc { namespace Geometry {
     if ( obj )  {
       char text[256];
       const Subdetector& sd = val;
-      bool vis = sd.visAttr() != 0;
-      bool rdo = sd.readout() != 0;
-      bool env = sd.envelope()!= 0;
-      bool mat = sd.material()!= 0;
+      bool vis = sd.visAttr().isValid();
+      bool rdo = sd.readout().isValid();
+      bool env = sd.envelope().isValid();
+      bool mat = sd.material().isValid();
       ::sprintf(text,"ID:%-3d Combine Hits:%3s Readout:%s Material:%s Envelope:%s VisAttr:%s",
 		sd.id(), yes_no(sd.combineHits()), 
 		rdo ? sd.readout().name()  : yes_no(rdo),
@@ -97,12 +97,12 @@ namespace DetDesc { namespace Geometry {
 		  v->showDaughters ? "YES" : "NO", v->visible ? "YES" : "NO");
 	os << prefix << "|               VisAttr:  " << setw(32) << left << attr.name() << text << endl;
       }
-      Volume vol = sd.volume();
-      if ( vol != 0 )  {
+      if ( sd.volume().isValid() )  {
+	Volume vol = sd.volume();
 	Solid    s = vol.solid();
 	Material m = vol.material();
 	::sprintf(text,"Volume:%s Shape:%s Material:%s",
-		  vol.name(), s ? s.name() : "Unknonw", m ? m.name() : "Unknown"
+		  vol.name(), s.isValid() ? s.name() : "Unknonw", m.isValid() ? m.name() : "Unknown"
 		  );
 	os << prefix << "+-------------  " << text << endl;
       }

@@ -45,7 +45,7 @@ Volume::Volume(Handle_t e) : RefElement(e)  {
 }
 
 void Volume::setMaterial(const Material& m)  const  {
-  if ( m )   {
+  if ( m.isValid() )   {
     TGeoMedium* medium = value<TGeoMedium>(m);
     if ( medium )  {
       TGeoVolume* vol = first_value<TGeoVolume>(*this);
@@ -104,7 +104,7 @@ void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
 void Volume::setVisAttributes(const VisAttr& attr) const   {
   TGeoVolume* vol = first_value<TGeoVolume>(*this);
   Object*     val = second_value<TGeoVolume>(*this);
-  if ( attr )  {
+  if ( attr.isValid() )  {
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
@@ -169,7 +169,7 @@ PhysVol::PhysVol(const Document& document, const Volume& volume, const string& n
   // Copy vis attrs from volume prototype
   VisAttr attr = second_value<TGeoVolume>(volume)->Attr_vis;
 
-  if ( attr )  {
+  if ( attr.isValid() )  {
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
@@ -204,7 +204,7 @@ PhysVol::PhysVol(const Document& document, const Volume& volume)
   phys_vol->SetTitle(phys_vol->GetName());
   // Copy vis attrs from volume prototype
   VisAttr attr = second_value<TGeoVolume>(volume)->Attr_vis;
-  if ( attr )  {
+  if ( attr.isValid() )  {
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);

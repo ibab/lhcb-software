@@ -28,13 +28,13 @@ namespace DetDesc {
       struct ObjectHandleMap : public std::map<std::string,Handle_t>  {
         ObjectHandleMap() {}
         void append_noCheck(const RefElement& e) { 
-          if ( e != 0 )  {
+          if ( e.isValid() )  {
             std::string n = e.name();
             this->insert(std::make_pair(n,e.ptr()));
           }
         }
         void append(const RefElement& e) { 
-          if ( e != 0 )  {
+          if ( e.isValid() )  {
             std::string n = e.name();
             this->insert(std::make_pair(n,e.ptr()));
             return;

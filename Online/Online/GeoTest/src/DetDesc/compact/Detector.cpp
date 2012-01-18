@@ -160,9 +160,9 @@ Subdetector& Subdetector::setCombineHits(bool value, SensitiveDetector& sens)   
 }
 
 bool Subdetector::isTracker() const   {
-  if ( m_element )  {
+  if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Tracker") != string::npos && getAttr(Attr_readout) )   {
+    if ( typ.find("Tracker") != string::npos && getAttr(Attr_readout).isValid() )   {
       return true;
     }
   }
@@ -170,9 +170,9 @@ bool Subdetector::isTracker() const   {
 }
 
 bool Subdetector::isCalorimeter() const   {
-  if ( m_element )  {
+  if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Calorimeter") != string::npos && getAttr(Attr_readout) ) {
+    if ( typ.find("Calorimeter") != string::npos && getAttr(Attr_readout.isValid()) ) {
       return true;
     }
   }
@@ -181,7 +181,7 @@ bool Subdetector::isCalorimeter() const   {
 
 #if 0
 bool Subdetector::isInsideTrackingVolume() const  {
-  if ( m_element && hasAttr(Attr_insideTrackingVolume) )
+  if ( isValid() && hasAttr(Attr_insideTrackingVolume) )
     return attr<bool>(Attr_insideTrackingVolume);
   else if ( isTracker() )
     return true;
@@ -231,7 +231,7 @@ SensitiveDetector& SensitiveDetector::setCombineHits(bool value)  {
 
 /// Assign the readout segmentation reference
 SensitiveDetector& SensitiveDetector::setSegmentation(Element segmentation)   {
-  if ( segmentation )  {
+  if ( segmentation.isValid() )  {
     setAttr(Attr_segmentation,segmentation);
     return *this;
   }

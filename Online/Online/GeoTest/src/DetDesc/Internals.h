@@ -8,17 +8,18 @@ namespace DetDesc  {
   namespace Geometry  {
     typedef DetDesc::IDDescriptor IDDescriptor;
     template <typename Q, typename P> struct Value : public Q, public P  {
+      virtual ~Value() {}
     };
     template <typename T, typename Q> T* first_value(const Q& e)  {
-      return (Value<T,typename Q::Object>*)e.handle().ptr();
+      return (Value<T,typename Q::Object>*)e.ptr();
       //return e.handle()._ptr<V>();
     }
     template <typename T, typename Q> typename Q::Object* second_value(const Q& e)  {
-      return (Value<T,typename Q::Object>*)e.handle().ptr();
+      return (Value<T,typename Q::Object>*)e.ptr();
       //return e.handle()._ptr<Value<T,typename Q::Object> >();
     }
     template <typename T, typename Q> T* value(const Q& e)  {
-      return (T*)e.handle().ptr();
+      return (T*)e.ptr();
       //return e.handle()._ptr<T>();
     }
   }

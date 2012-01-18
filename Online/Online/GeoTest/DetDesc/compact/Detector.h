@@ -70,7 +70,7 @@ namespace DetDesc {
       void check(bool condition, const std::string& msg) const;
 
       Subdetector(Handle_t e) : RefElement(e)  {}
-      Subdetector(const RefElement& e) : RefElement(e.handle())  {}
+      Subdetector(const RefElement& e) : RefElement(e)  {}
       /// Constructor for a new subdetector element
       Subdetector(const Document& doc, const std::string& name, const std::string& type, int id);
       Subdetector& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);

@@ -146,7 +146,7 @@ LimitSet::LimitSet(const Document& doc, const string& name)
 }
 
 void LimitSet::addLimit(const RefElement& limit)   {
-  TObject* obj = limit.handle();
+  TObject* obj = limit.ptr();
   TMap* m = dynamic_cast<TMap*>(m_element.ptr());
   m->Add(obj,obj);
 }

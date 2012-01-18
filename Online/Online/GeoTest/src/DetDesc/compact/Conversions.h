@@ -23,12 +23,14 @@ namespace DetDesc {
     // Forward declarations
     struct LCDD;
     struct Handle_t;
+    struct Element;
     struct RefElement;
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions
-    template <typename T, typename Q> RefElement toObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> RefElement toObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
+    template <typename T, typename Q> Element toObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
 
 
     /** @class LCDDActor Conversions.h  DetDesc/compact/Conversions.h
