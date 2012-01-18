@@ -10,7 +10,7 @@
 #include "LoKi/IReporter.h"
 #include "LoKi/Interface.h"
 // ============================================================================
-/** @file
+/** @file LoKi/Base.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -20,13 +20,18 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *   By usage of this code one clearly states the disagreement 
+ *    with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ * 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-10
  */
 // ============================================================================
 namespace LoKi 
 { 
-  /** @class Base Base.h LoKi/Base.h
+  // ===========================================================================
+  /** @class Base 
    *  
    *  the base class for complex LoKi objects 
    *
@@ -36,6 +41,7 @@ namespace LoKi
   class Base 
   {
   public: 
+    // ========================================================================
     /// get the name of base object 
     inline  const std::string& name     () const { return m_name ; }
     /// get the type of the base object 
@@ -45,8 +51,10 @@ namespace LoKi
     {
       if ( m_typeName.empty() ) { m_typeName = type() + "/" + name() ; } 
       return m_typeName ;
-    } ;
+    } 
+    // ========================================================================
   protected:
+    // ========================================================================
     /// Standard constructor
     Base 
     ( const std::string& name     = "<Anonymous>" , 
@@ -57,7 +65,9 @@ namespace LoKi
     virtual ~Base() ; ///< Destructor
     /// assignement 
     Base& operator=( const Base& ) ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /** Print the error message and return with the given StatusCode.
      *
      *  Also performs statistical analysis of the error messages and
@@ -187,24 +197,29 @@ namespace LoKi
     void Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode::FAILURE ) const ;
+    // ========================================================================
   public:
     /// get the currect reference counter 
     long refCount   () const { return   m_refCount ; }
     /// increment the reference counter 
     long addRef     ()       { return ++m_refCount ; }
     /// decreemnt the reference counter 
-    long release    ()   ; ///< ATTENTION! object is deleted if refCount==0
+    long release    ()   ; // ATTENTION! object is deleted if refCount==0
+    // ========================================================================
   private:
+    // ========================================================================
     // object name 
-    std::string                      m_name     ; ///<  object name 
+    std::string                      m_name     ; //  object name 
     // "type/name" pair 
-    mutable std::string              m_typeName ; ///< "type/name" pair 
+    mutable std::string              m_typeName ; // "type/name" pair 
     // own problem reported 
-    LoKi::Interface<LoKi::IReporter> m_reporter ; ///< own problem reported 
+    LoKi::Interface<LoKi::IReporter> m_reporter ; // own problem reported 
     // reference counter 
-    long                             m_refCount ; ///< reference counter 
+    long                             m_refCount ; // reference counter 
+    // ========================================================================
   } ;
-}  // end of namespace LoKi
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

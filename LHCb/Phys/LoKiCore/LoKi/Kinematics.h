@@ -26,7 +26,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -965,6 +965,113 @@ namespace LoKi
       const LoKi::LorentzVector& d2 , 
       const LoKi::LorentzVector& h1 , 
       const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta \phi \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return delta-phi
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaPhi
+    ( const LoKi::LorentzVector& p1 , 
+      const LoKi::LorentzVector& p2 );
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta \eta \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return dr2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaEta 
+    ( const LoKi::LorentzVector& p1 , 
+      const LoKi::LorentzVector& p2 );
+    // ========================================================================
+    /** trivial function to calculate \f$ \Delta R^2 \f$ for two particles 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return dr2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaR2
+    ( const LoKi::LorentzVector& p1 , 
+      const LoKi::LorentzVector& p2 );
+    // ========================================================================
+    /** trivial function to calculate Kullback-Liebler divergency 
+     *  @param p1 the first  particle 
+     *  @param c1 the first  covariance matrix 
+     *  @param p2 the second particle 
+     *  @param c2 the second covariance matrix 
+     *  @return Kullback-Liebler divergency
+     *  @thanks The code is provided by Matt Needham
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double kullback
+    ( const LoKi::LorentzVector& p1 , 
+      const Gaudi::SymMatrix4x4& c1 ,
+      const LoKi::LorentzVector& p2 , 
+      const Gaudi::SymMatrix4x4& c2 ) ;
+    // ========================================================================
+    /** trivial function to calculate the mass-distance 
+     *  \f$ (m^2_{12} - m^2_1 - m^2_2 ) / m^2_{12}\f$
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return mass-difference
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaM2 
+    ( const LoKi::LorentzVector& p1 , 
+      const LoKi::LorentzVector& p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate the delta-angle 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return the angle between vectors 
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaAlpha
+    ( const LoKi::LorentzVector& p1 , 
+      const LoKi::LorentzVector& p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate the delta-angle 
+     *  @param p1 the first  particle 
+     *  @param p2 the second particle 
+     *  @return the angle between vectors 
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double deltaAlpha
+    ( const LoKi::Vector3D& p1 , 
+      const LoKi::Vector3D& p2 ) ;
+    // ========================================================================
+    /** trivial function to calculate Kullback-Liebler divergency 
+     *  @param p1 the first  particle 
+     *  @param c1 the first  covariance matrix 
+     *  @param p2 the second particle 
+     *  @param c2 the second covariance matrix 
+     *  @return Kullback-Liebler divergency
+     *  @thanks The code is provided by Matt Needham
+     *  @author Vanya BELYAEV Ivan.Belyaev@ite.ru
+     *  @date 2012-01-17
+     */ 
+    GAUDI_API
+    double kullback
+    ( const LoKi::Vector3D&      p1 , 
+      const Gaudi::SymMatrix3x3& c1 ,
+      const LoKi::Vector3D&      p2 ,
+      const Gaudi::SymMatrix3x3& c2 ) ;
     // ========================================================================
   } //                                        end of namespace LoKi::Kinematics  
   // ==========================================================================

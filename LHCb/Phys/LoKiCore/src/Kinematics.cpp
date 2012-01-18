@@ -4,12 +4,18 @@
 // ============================================================================
 // STD & STL 
 // ============================================================================
+#include <cmath>
 #include <climits>
 #include <limits.h>
 // ============================================================================
-// GaudiKrrnel
+// GaudiKernel
 // ============================================================================
 #include "GaudiKernel/GenericVectorTypes.h"
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+#include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -691,6 +697,185 @@ double LoKi::Kinematics::anglePhiTr
   //
   return ::atan2 ( sinChi , cosChi ) ;
 }
+// ============================================================================
+namespace
+{
+  // ==========================================================================
+  inline double adjust_phi ( double angle )
+  {
+    static const double s_180 = 180 * Gaudi::Units::degree ;
+    static const double s_360 = 360 * Gaudi::Units::degree ;
+    //
+    while ( angle >      s_180 ) { angle -= s_360 ; }
+    while ( angle < -1 * s_180 ) { angle += s_360 ; }
+    //
+    return angle ; 
+  }
+  // ==========================================================================  
+}
+// ============================================================================
+/*  trivial function to calculate \f$ \Delta \eta \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return dr2 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::deltaEta 
+( const LoKi::LorentzVector& p1 , 
+  const LoKi::LorentzVector& p2 ) { return p1.Eta() - p2.Eta() ; }
+// =============================================================================
+/*  trivial function to calculate \f$ \Delta \phi \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return delta-phi
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// =============================================================================
+GAUDI_API
+double LoKi::Kinematics::deltaPhi
+( const LoKi::LorentzVector& p1 , 
+  const LoKi::LorentzVector& p2 )
+{
+  const double phi1 = std::atan2 ( p1.Py () , p1.Px () ) ;
+  const double phi2 = std::atan2 ( p2.Py () , p2.Px () ) ;
+  //
+  return adjust_phi ( phi1 - phi2 ) ;
+}
+// ============================================================================
+/*  trivial function to calculate \f$ \Delta R^2 \f$ for two particles 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return dr2 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::deltaR2 
+( const LoKi::LorentzVector& p1 , 
+  const LoKi::LorentzVector& p2 )
+{
+  //
+  const double dphi = deltaPhi ( p1 , p2 ) ;
+  const double deta = deltaEta ( p1 , p2 ) ;
+  //
+  return dphi * dphi + deta * deta ;
+}
+// ============================================================================
+/*  trivial function to calculate Kullback-Liebler divergency 
+ *  @param p1 the first  particle 
+ *  @param c1 the first  covariance matrix 
+ *  @param p2 the second particle 
+ *  @param c2 the second covariance matrix 
+ *  @return Kullback-Liebler divergency
+ *  @thanks The code is provided by Matt Needham
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::kullback
+( const LoKi::LorentzVector& p1 , 
+  const Gaudi::SymMatrix4x4& c1 ,
+  const LoKi::LorentzVector& p2 , 
+  const Gaudi::SymMatrix4x4& c2 ) 
+{
+  return kullback 
+    ( p1.Vect()                             , 
+      c1.Sub<Gaudi::SymMatrix3x3> ( 0 , 0 ) , 
+      p2.Vect()                             , 
+      c2.Sub<Gaudi::SymMatrix3x3> ( 0 , 0 ) ) ;    
+}
+// ============================================================================
+/*  trivial function to calculate Kullback-Liebler divergency 
+ *  @param p1 the first  particle 
+ *  @param c1 the first  covariance matrix 
+ *  @param p2 the second particle 
+ *  @param c2 the second covariance matrix 
+ *  @return Kullback-Liebler divergency
+ *  @thanks The code is provided by Matt Needham
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::kullback
+( const LoKi::Vector3D&      p1 , 
+  const Gaudi::SymMatrix3x3& c1 ,
+  const LoKi::Vector3D&      p2 ,
+  const Gaudi::SymMatrix3x3& c2 ) 
+{
+  //
+  if ( ( &p1 == &p2 || p1 == p2 ) && 
+       ( &c1 == &c2 || c1 == c2 ) ) { return 0 ; } // the same ?  
+  //
+  Gaudi::SymMatrix3x3 c_1 ( c1 ) ;
+  Gaudi::SymMatrix3x3 c_2 ( c2 ) ;
+  //
+  c_1.Invert() ;
+  c_2.Invert() ;
+  //
+  const Gaudi::SymMatrix3x3    diff ( c1  - c2  ) ;
+  const Gaudi::SymMatrix3x3 invDiff ( c_2 - c_1 ) ;
+  const Gaudi::SymMatrix3x3 invSum  ( c_2 + c_1 ) ;
+  //
+  return 
+    Gaudi::Math::trace      (   diff * invDiff ) + 
+    Gaudi::Math::Similarity ( invSum , p1 - p2 ) ;
+}
+// ============================================================================
+/*  trivial function to calculate the "mass-distance"
+ *  \f$ ( m^2_{12} - m^2_1 - m^2_2 ) / m^2_{12}\f$
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return mass-differened 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::deltaM2 
+( const LoKi::LorentzVector& p1 , 
+  const LoKi::LorentzVector& p2 ) 
+{ 
+  //
+  const double m2 =  ( p1 + p2 ).M2() ;
+  //
+  return ( m2 - 2 * p1.M2() - 2 * p2.M2() ) / m2 ; 
+}
+// ============================================================================
+/*  trivial function to calculate the delta-angle 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return the angle between vectors 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::deltaAlpha
+( const LoKi::Vector3D& p1 , 
+  const LoKi::Vector3D& p2 ) 
+{
+  const double val = p1.Unit().Dot( p2.Unit() ) ;
+  return std::acos ( val ) ;
+}
+// ============================================================================
+/*  trivial function to calculate the delta-angle 
+ *  @param p1 the first  particle 
+ *  @param p2 the second particle 
+ *  @return the angle between vectors 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2012-01-17
+ */ 
+// ============================================================================
+double LoKi::Kinematics::deltaAlpha
+( const LoKi::LorentzVector& p1 , 
+  const LoKi::LorentzVector& p2 )
+{
+  return deltaAlpha ( p1.Vect() , p2.Vect() ) ;
+}
+
+
+
 // ============================================================================
 // The END 
 // ============================================================================
