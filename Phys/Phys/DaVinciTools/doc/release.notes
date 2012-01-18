@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-01-18 - Giampiero Mancinelli
+ - Implementation for a "Particle Isolation" tool for particles from twobody 
+   decays. Currently it returns the numbers of non-isolating particles 
+   associated with each of the input particles.
+
 ! 2012-01-17 - Vanya Belyaev
  - fix Doxygen comments 
 
