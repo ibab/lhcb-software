@@ -37,7 +37,7 @@ config = {
     },
     "KS0" : { # Cuts made on all K shorts
     'PT_MIN'        : '250*MeV',
-    'MIPCHI2DV_MIN' : 4,
+    'BPVVDCHI2_MIN' : 36,
     'MM_MIN'        : '467.*MeV',
     'MM_MAX'        : '527.*MeV'
     },

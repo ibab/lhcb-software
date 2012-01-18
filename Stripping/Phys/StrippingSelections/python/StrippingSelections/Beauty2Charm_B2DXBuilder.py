@@ -505,7 +505,7 @@ class B2DXBuilder(object):
     def _makeB2D0DKS(self,ks):
         '''Makes B+ -> D+ D0 KS + c.c.'''
         decays = {'B2D0DKS'+ks: ["B+ -> D0 D+ KS0","B- -> D0 D- KS0"]}
-        inputs = {'B2D0DKS'+ks: self.d.hhh_cf_pid+self.d.hh_pid+self.topoKaons}
+        inputs = {'B2D0DKS'+ks: self.d.hhh_cf_pid+self.d.hh_pid+self.ks[ks]}
         b2d0dks = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0dks,1.0))
 

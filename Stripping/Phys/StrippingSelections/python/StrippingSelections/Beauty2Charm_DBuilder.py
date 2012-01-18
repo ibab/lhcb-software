@@ -284,7 +284,7 @@ class DBuilder(object):
         psel = subPIDSels(decays,'D2HHHHWSPlus','',min,max,[psel])
         msel = self._makeD2X('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],wm,
                              self.config)
-        msel = subPIDSels(decays,'D2HHHHWSMinus','',min,max,[msel])
+        msel = subPIDSels(getCCs(decays),'D2HHHHWSMinus','',min,max,[msel])
         return [MergedSelection('D2HHHHWSBeauty2Charm',
                                 RequiredSelections=[psel,msel])]
 
