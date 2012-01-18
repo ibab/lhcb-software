@@ -10,6 +10,5 @@
 <function pattern = "DaVinci::Transporter::*" />
 <!--<function pattern = "DaVinci::StringUtils::*" />-->
 
-<class name = "LHCb::HashIDs" />
 
 </lcgdict>
