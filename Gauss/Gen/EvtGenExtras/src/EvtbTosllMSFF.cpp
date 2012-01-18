@@ -20,6 +20,8 @@
 //  N.Nikitin (nnikit@mail.cern.ch)  April 26, 2008   add \bar Bs -> K*  transition ff
 //  N.Nikitin (nnikit@mail.cern.ch)  April 27, 2008   add \bar B -> \bar rho transition ff
 //  N.Nikitin (nnikit@mail.cern.ch)  Nvmbr 04, 2011   add \bar B -> omega transition ff
+//  N.Nikitin (nnikit@mail.cern.ch)  Dec   16, 2011   add \bar B -> \bar K_1(1270) transition ff (from H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008))
+//  N.Nikitin (nnikit@mail.cern.ch)  Dec   16, 2011   add \bar B -> \bar K_1(1400) transition ff (from H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008))
 //
 //------------------------------------------------------------------------
 
@@ -402,6 +404,132 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
 
 //     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
 //     << "\n barBs -> K* transition form factors"
+//     << std::endl;     
+  }
+
+
+  // \bar B -> \bar K_1(1270) transition form factors
+  // See the paper: H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008)
+  if((parent == EvtPDL::getId(std::string("B+"))&&
+      daught == EvtPDL::getId(std::string("K_1+")))||
+     (parent == EvtPDL::getId(std::string("B-"))&&
+      daught == EvtPDL::getId(std::string("K_1-")))||
+     (parent == EvtPDL::getId(std::string("B0"))&&
+      daught == EvtPDL::getId(std::string("K_10")))||
+     (parent == EvtPDL::getId(std::string("anti-B0"))&&
+      daught == EvtPDL::getId(std::string("anti-K_10")))){
+     double ff0A[]   ={0.450, 0.340, 0.41, 0.22, 0.31, 0.310, 0.28};
+     double sigma1A[]={1.600, 0.635, 1.51, 2.40, 2.01, 0.629, 1.36};
+     double sigma2A[]={0.974, 0.211, 1.18, 1.78, 1.50, 0.387, 0.72};
+     double ff0B[]   ={-0.37, -0.29, -0.17, -0.45, -0.25, -0.250, -0.11};
+     double sigma1B[]={ 1.72, 0.729, 0.919,  1.34,  1.59,  0.378, -1.61};
+     double sigma2B[]={0.912, 0.074, 0.855,  0.69,  0.79, -0.755,  10.2};
+     int    eq_num[]={  10,   10,   10,   10,   10,   10,   10};
+
+     double MM2 =5.279*5.279; // GeV^2
+     double MB  =5.279; // GeV
+     double MK1 =1.272; // GeV
+     double MK1A=1.31;  // GeV
+     double MK1B=1.34;  // GeV
+
+     double sinK=0.559; // sin(34^o)
+     double cosK=0.829; // cos(34^o)
+     
+     double a, v0, v1, v2;
+   
+     a =  sinK*equation9_10(ff0A[0], MM2, t, sigma1A[0], sigma2A[0], eq_num[0])*(MB+MK1)/(MB+MK1A);
+     a =a+cosK*equation9_10(ff0B[0], MM2, t, sigma1B[0], sigma2B[0], eq_num[0])*(MB+MK1)/(MB+MK1B);
+
+     v0=   sinK*equation9_10(ff0A[1], MM2, t, sigma1A[1], sigma2A[1], eq_num[1])*MK1A/MK1;
+     v0=v0+cosK*equation9_10(ff0B[1], MM2, t, sigma1B[1], sigma2B[1], eq_num[1])*MK1B/MK1;
+
+     v1=   sinK*equation9_10(ff0A[2], MM2, t, sigma1A[2], sigma2A[2], eq_num[2])*(MB+MK1A)/(MB+MK1);
+     v1=v1+cosK*equation9_10(ff0B[2], MM2, t, sigma1B[2], sigma2B[2], eq_num[2])*(MB+MK1B)/(MB+MK1);
+
+     v2=   sinK*equation9_10(ff0A[3], MM2, t, sigma1A[3], sigma2A[3], eq_num[3])*(MB+MK1)/(MB+MK1A);
+     v2=v2+cosK*equation9_10(ff0B[3], MM2, t, sigma1B[3], sigma2B[3], eq_num[3])*(MB+MK1)/(MB+MK1B);
+
+     v =a;
+     a0=v0;
+     a1=v1;
+     a2=v2;
+    
+     t1=   sinK*equation9_10(ff0A[4], MM2, t, sigma1A[4], sigma2A[4], eq_num[4]);
+     t1=t1+cosK*equation9_10(ff0B[4], MM2, t, sigma1B[4], sigma2B[4], eq_num[4]);
+
+     t2=   sinK*equation9_10(ff0A[5], MM2, t, sigma1A[5], sigma2A[5], eq_num[5])*(MB*MB-MK1A*MK1A)/(MB*MB-MK1*MK1);
+     t2=t2+cosK*equation9_10(ff0B[5], MM2, t, sigma1B[5], sigma2B[5], eq_num[5])*(MB*MB-MK1B*MK1B)/(MB*MB-MK1*MK1);
+
+     t3=   sinK*equation9_10(ff0A[6], MM2, t, sigma1A[6], sigma2A[6], eq_num[6]);
+     t3=t3+cosK*equation9_10(ff0B[6], MM2, t, sigma1B[6], sigma2B[6], eq_num[6]);
+
+     models_counter=models_counter+1;
+
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barB -> bar K_1(1270) transition form factors"
+//     << std::endl;     
+  }
+
+
+  // \bar B -> \bar K_1(1400) transition form factors
+  // See the paper: H.Hatanaka and Kwei-Chou Yang, PRD78, 074007 (2008)
+  if((parent == EvtPDL::getId(std::string("B+"))&&
+      daught == EvtPDL::getId(std::string("K'_1+")))||
+     (parent == EvtPDL::getId(std::string("B-"))&&
+      daught == EvtPDL::getId(std::string("K'_1-")))||
+     (parent == EvtPDL::getId(std::string("B0"))&&
+      daught == EvtPDL::getId(std::string("K'_10")))||
+     (parent == EvtPDL::getId(std::string("anti-B0"))&&
+      daught == EvtPDL::getId(std::string("anti-K'_10")))){
+     double ff0A[]   ={0.450, 0.340, 0.41, 0.22, 0.31, 0.310, 0.28};
+     double sigma1A[]={1.600, 0.635, 1.51, 2.40, 2.01, 0.629, 1.36};
+     double sigma2A[]={0.974, 0.211, 1.18, 1.78, 1.50, 0.387, 0.72};
+     double ff0B[]   ={-0.37, -0.29, -0.17, -0.45, -0.25, -0.250, -0.11};
+     double sigma1B[]={ 1.72, 0.729, 0.919,  1.34,  1.59,  0.378, -1.61};
+     double sigma2B[]={0.912, 0.074, 0.855,  0.69,  0.79, -0.755,  10.2};
+     int    eq_num[]={  10,   10,   10,   10,   10,   10,   10};
+
+     double MM2 =5.279*5.279; // GeV^2
+     double MB  =5.279; // GeV
+     double MK1 =1.403; // GeV
+     double MK1A=1.31;  // GeV
+     double MK1B=1.34;  // GeV
+
+     double sinK=0.559; // sin(34^o)
+     double cosK=0.829; // cos(34^o)
+     
+     double a, v0, v1, v2;
+   
+     a =  cosK*equation9_10(ff0A[0], MM2, t, sigma1A[0], sigma2A[0], eq_num[0])*(MB+MK1)/(MB+MK1A);
+     a =a-sinK*equation9_10(ff0B[0], MM2, t, sigma1B[0], sigma2B[0], eq_num[0])*(MB+MK1)/(MB+MK1B);
+
+     v0=   cosK*equation9_10(ff0A[1], MM2, t, sigma1A[1], sigma2A[1], eq_num[1])*MK1A/MK1;
+     v0=v0-sinK*equation9_10(ff0B[1], MM2, t, sigma1B[1], sigma2B[1], eq_num[1])*MK1B/MK1;
+
+     v1=   cosK*equation9_10(ff0A[2], MM2, t, sigma1A[2], sigma2A[2], eq_num[2])*(MB+MK1A)/(MB+MK1);
+     v1=v1-sinK*equation9_10(ff0B[2], MM2, t, sigma1B[2], sigma2B[2], eq_num[2])*(MB+MK1B)/(MB+MK1);
+
+     v2=   cosK*equation9_10(ff0A[3], MM2, t, sigma1A[3], sigma2A[3], eq_num[3])*(MB+MK1)/(MB+MK1A);
+     v2=v2-sinK*equation9_10(ff0B[3], MM2, t, sigma1B[3], sigma2B[3], eq_num[3])*(MB+MK1)/(MB+MK1B);
+
+     v =a;
+     a0=v0;
+     a1=v1;
+     a2=v2;
+    
+     t1=   cosK*equation9_10(ff0A[4], MM2, t, sigma1A[4], sigma2A[4], eq_num[4]);
+     t1=t1-sinK*equation9_10(ff0B[4], MM2, t, sigma1B[4], sigma2B[4], eq_num[4]);
+
+     t2=   cosK*equation9_10(ff0A[5], MM2, t, sigma1A[5], sigma2A[5], eq_num[5])*(MB*MB-MK1A*MK1A)/(MB*MB-MK1*MK1);
+     t2=t2-sinK*equation9_10(ff0B[5], MM2, t, sigma1B[5], sigma2B[5], eq_num[5])*(MB*MB-MK1B*MK1B)/(MB*MB-MK1*MK1);
+
+     t3=   cosK*equation9_10(ff0A[6], MM2, t, sigma1A[6], sigma2A[6], eq_num[6]);
+     t3=t3-sinK*equation9_10(ff0B[6], MM2, t, sigma1B[6], sigma2B[6], eq_num[6]);
+
+     models_counter=models_counter+1;
+
+//     report(NOTICE,"EvtGen") <<"\n The function  EvtbTosllMSFF::getVectorFF(...) passed."
+//     << "\n barB -> bar K_1(1270) transition form factors"
 //     << std::endl;     
   }
 

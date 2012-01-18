@@ -129,7 +129,23 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
      (idparent == EvtPDL::getId(std::string("B_s0"))&&
       iddaught == EvtPDL::getId(std::string("phi")))||
      (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&
-      iddaught == EvtPDL::getId(std::string("phi")))){
+      iddaught == EvtPDL::getId(std::string("phi")))||
+     (idparent == EvtPDL::getId(std::string("B+"))&&
+      iddaught == EvtPDL::getId(std::string("K_1+")))||
+     (idparent == EvtPDL::getId(std::string("B-"))&&
+      iddaught == EvtPDL::getId(std::string("K_1-")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("K_10")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("anti-K_10")))||
+     (idparent == EvtPDL::getId(std::string("B+"))&&
+      iddaught == EvtPDL::getId(std::string("K'_1+")))||
+     (idparent == EvtPDL::getId(std::string("B-"))&&
+      iddaught == EvtPDL::getId(std::string("K'_1-")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("K'_10")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("anti-K'_10")))){
      ms = formFactors->getQuarkMass(3); // m_s mass from the dispersion QM
      // V_{ts}
      Vtq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)) + 
