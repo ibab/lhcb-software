@@ -53,7 +53,13 @@ default_config = { 'DaugPtMin': 800.,
            'TaggedWSLinePostscale': 1.,
            'TaggedSCSLinePrescale': 1.,
            'TaggedSCSLinePostscale': 1.,
+           'TaggedRSSSLinePrescale': 1.,
+           'TaggedRSSSLinePostscale': 1.,
+           'TaggedSCSSSLinePrescale': 1.,
+           'TaggedSCSSSLinePostscale': 1.,
 	   'UntaggedKpiOnly': False,
+	   'AddSameSign': True,
+	   'SameSignOnly': False,
 	   'UseTOSFilter': False,
 	   'AddPartialD': True,
 	   'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
@@ -121,7 +127,13 @@ class D2hhConf(LineBuilder) :
                               'TaggedWSLinePostscale',
                               'TaggedSCSLinePrescale',
                               'TaggedSCSLinePostscale',
+                              'TaggedRSSSLinePrescale',
+                              'TaggedRSSSLinePostscale',
+                              'TaggedSCSSSLinePrescale',
+                              'TaggedSCSSSLinePostscale',
 			      'UntaggedKpiOnly',
+			      'AddSameSign',
+			      'SameSignOnly',
 			      'UseTOSFilter',
 			      'AddPartialD',
 	                      'Hlt2TOSKPi',
@@ -196,6 +208,42 @@ class D2hhConf(LineBuilder) :
 				  Hlt2TOS = config['Hlt2TOSPiPi']
 			         )
 
+        self.selD2KpiSS = makeD2hhAsymm(d2kpi_name+'SS',  
+			         config,
+ 				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
+				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				 Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KPiMassWindowWidthLow)s* MeV)',
+				 Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KPiMassWindowWidthHigh)s* MeV)',
+				 CombPIDK_string = '',
+				 DecayDescriptor = '[D0 -> K- pi-]cc',
+			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
+				 Hlt2TOS = config['Hlt2TOSKPi']
+			        )
+
+        self.selD0KKSS = makeD2hhAsymm(d2kk_name+'SS',  
+			        config,
+ 				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
+				PiPIDK_string = '',
+				Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KKMassWindowWidthLow)s* MeV)',
+				Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KKMassWindowWidthHigh)s* MeV)',
+				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
+				DecayDescriptor = 'D0 -> K- K-',
+			        inputSel = [stdNoPIDsKaons],
+				Hlt2TOS = config['Hlt2TOSKK']
+			       )
+
+        self.selD0PiPiSS = makeD2hhAsymm(d2pipi_name+'SS',  
+			          config,
+ 				  KPIDK_string = '',
+				  PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				  Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0PiPiMassWindowWidthLow)s* MeV)',
+				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
+				  CombPIDK_string = '',
+				  DecayDescriptor = 'D0 -> pi- pi-',
+			          inputSel = [stdNoPIDsPions], 
+				  Hlt2TOS = config['Hlt2TOSPiPi']
+			         )
+
         from Configurables import ConjugateNeutralPID
         from PhysSelPython.Wrappers import Selection
         _localConj_KPi = ConjugateNeutralPID('Conjugate'+d0WS_name)
@@ -204,6 +252,11 @@ class D2hhConf(LineBuilder) :
         self.selD0WS = Selection(d0WS_name, Algorithm=_localConj_KPi, RequiredSelections=[self.selD2Kpi])
         self.selD0ConjKK = Selection('SelConjugate'+d2kk_name, Algorithm = _localConj_KK, RequiredSelections = [self.selD0KK])
         self.selD0ConjPiPi = Selection('SelConjugate'+d2pipi_name, Algorithm = _localConj_PiPi, RequiredSelections = [self.selD0PiPi])
+
+        _localConj_KKSS = ConjugateNeutralPID('Conjugate'+d2kk_name+'SS')
+        _localConj_PiPiSS = ConjugateNeutralPID('Conjugate'+d2pipi_name+'SS')
+        self.selD0ConjKKSS = Selection('SelConjugate'+d2kk_name+'SS', Algorithm = _localConj_KKSS, RequiredSelections = [self.selD0KKSS])
+        self.selD0ConjPiPiSS = Selection('SelConjugate'+d2pipi_name+'SS', Algorithm = _localConj_PiPiSS, RequiredSelections = [self.selD0PiPiSS])
 
         # Dstar -> D0 pi selections
 	self.selDstRS = makeDstar2D0Pi( dst2DRS_name
@@ -228,6 +281,24 @@ class D2hhConf(LineBuilder) :
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
                                    , inputSel = [self.selD0PiPi, self.selD0ConjPiPi, stdNoPIDsPions]
+                                 )
+
+	self.selDstRSSS = makeDstar2D0Pi( dst2DRS_name+'SS'
+				   , config
+                                   , '[D*(2010)+ -> D0 pi+]cc'
+                                   , inputSel = [self.selD2KpiSS, stdNoPIDsPions]
+                                 )
+
+	self.selDstKKSS = makeDstar2D0Pi( dst2DKK_name+'SS'
+				   , config
+                                   , '[D*(2010)+ -> D0 pi+]cc'
+                                   , inputSel = [self.selD0KKSS, self.selD0ConjKKSS, stdNoPIDsPions]
+                                 )
+
+	self.selDstPiPiSS = makeDstar2D0Pi( dst2DPiPi_name+'SS'
+				   , config
+                                   , '[D*(2010)+ -> D0 pi+]cc'
+                                   , inputSel = [self.selD0PiPiSS, self.selD0ConjPiPiSS, stdNoPIDsPions]
                                  )
 
         self.selDPartial = makeDPartial( dPartial_name
@@ -292,6 +363,24 @@ class D2hhConf(LineBuilder) :
                                         selection = self.selDstPiPi
                                        )
 
+        self.dstRSSS_line = StrippingLine(dst2DRS_name+"SSLine",
+                                        prescale = config['TaggedRSLinePrescale'],
+                                        postscale = config['TaggedRSLinePostscale'],
+                                        selection = self.selDstRSSS
+                                       )
+
+        self.dstKKSS_line = StrippingLine(dst2DKK_name+"SSLine",
+                                        prescale = config['TaggedSCSLinePrescale'],
+                                        postscale = config['TaggedSCSLinePostscale'],
+                                        selection = self.selDstKKSS
+                                       )
+
+        self.dstPiPiSS_line = StrippingLine(dst2DPiPi_name+"SSLine",
+                                        prescale = config['TaggedSCSLinePrescale'],
+                                        postscale = config['TaggedSCSLinePostscale'],
+                                        selection = self.selDstPiPiSS
+                                       )
+
 	# Pseudo Psi line
         self.pseudoPsi_line = StrippingLine(pseudoPsi_name+"Line",
                                         prescale = 1.,
@@ -300,17 +389,23 @@ class D2hhConf(LineBuilder) :
                                        )
 
         # register lines
-        self.registerLine(self.d2kpi_line)
-	if not config['UntaggedKpiOnly']:
-          self.registerLine(self.d2kk_line)
-          self.registerLine(self.d2pipi_line)
+	if config['SameSignOnly'] or config['AddSameSign']:
+	  self.registerLine(self.dstRSSS_line)
+	  self.registerLine(self.dstKKSS_line)
+	  self.registerLine(self.dstPiPiSS_line)
 
-          self.registerLine(self.dstRS_line)
-          self.registerLine(self.dstWS_line)
-          self.registerLine(self.dstKK_line)
-          self.registerLine(self.dstPiPi_line)
-	  if config['AddPartialD']:
-            self.registerLine(self.pseudoPsi_line)
+	if not config['SameSignOnly']:
+          self.registerLine(self.d2kpi_line)
+	  if not config['UntaggedKpiOnly']:
+            self.registerLine(self.d2kk_line)
+            self.registerLine(self.d2pipi_line)
+
+            self.registerLine(self.dstRS_line)
+            self.registerLine(self.dstWS_line)
+            self.registerLine(self.dstKK_line)
+            self.registerLine(self.dstPiPi_line)
+	    if config['AddPartialD']:
+              self.registerLine(self.pseudoPsi_line)
 
 def makeD2hh(name,
              config,

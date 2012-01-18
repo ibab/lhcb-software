@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-18 - Marco Gersabeck
+ - Added same sign selections to StrippingD2hh (use exclusively for 17b: SameSignOnly = True).
+
 ! 2012-01-17 - Marcin Chrzaszcz
  - Added new Stripping line B-> Kphiphi.
 
