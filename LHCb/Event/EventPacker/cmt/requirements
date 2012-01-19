@@ -6,7 +6,7 @@ package           EventPacker
 version           v2r10
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src
 #============================================================================
@@ -16,7 +16,7 @@ branches          cmt doc src
 include_path      none
 
 #============================================================================
-# Used packages. 
+# Used packages.
 #============================================================================
 use   GaudiKernel  v*
 use   GaudiAlg     v*
@@ -37,3 +37,7 @@ library          EventPacker    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=EventPacker
+
+private
+macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
+end_private
