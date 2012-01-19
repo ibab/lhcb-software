@@ -14,7 +14,8 @@ __all__ = ('Tau23MuLinesConf',
            'makeTau23Mu',
            'makeDs23PiTIS',
            'makeDs23Pi',
-           'makeDsPhiPi'
+           'makeDsPhiPi',
+           'makeTau25Mu'
            )
 
 from Gaudi.Configuration import *
@@ -39,8 +40,11 @@ class Tau23MuLinesConf(LineBuilder) :
                                   'Ds23PiPrescale',
                                   'Ds23PiPostscale',
                                   'Ds2PhiPiPrescale',
-                                  'Ds2PhiPiPostscale'
+                                  'Ds2PhiPiPostscale',
+                                  'Tau25Prescale',
+                                  'Tau25Postscale',
                                   )
+
     
     #### This is the dictionary of all tunable cuts ########
     config_default={
@@ -51,7 +55,9 @@ class Tau23MuLinesConf(LineBuilder) :
         'Ds23PiPrescale'      :0.01,
         'Ds23PiPostscale'     :1,
         'Ds2PhiPiPrescale'    :1,
-        'Ds2PhiPiPostscale'   :1,        
+        'Ds2PhiPiPostscale'   :1,  
+        'Tau25Prescale'         :1,
+        'Tau25Postscale'        :1,      
         }                
     
     
@@ -66,11 +72,13 @@ class Tau23MuLinesConf(LineBuilder) :
         ds23PiTIS_name = name+'Ds23PiTIS'
         ds23Pi_name=name+'Ds23Pi'
         ds2PhiPi_name=name+'Ds2PhiPi'
+        tau25_name=name+'Tau25Mu'
 
         self.selTau23Mu = makeTau23Mu(tau_name)
         self.selDs23PiTIS = makeDs23PiTIS(self,ds23PiTIS_name)
         self.selDs23Pi = makeDs23Pi(ds23Pi_name)
         self.selDs2PhiPi = makeDs2PhiPi(ds2PhiPi_name)
+        self.selTau25Mu = makeTau25Mu(tau25_name)
 
         self.tau23MuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
@@ -96,12 +104,18 @@ class Tau23MuLinesConf(LineBuilder) :
                                       algos = [ self.selDs2PhiPi ]
                                       )
 
+        self.tau25MuLine = StrippingLine(tau25_name+"Line",
+                                     prescale = config['Tau25Prescale'],
+                                     postscale = config['Tau25Postscale'],
+                                     algos = [ self.selTau25Mu ]
+                                     )
        
         self.registerLine(self.tau23MuLine)
         self.registerLine(self.ds23PiTISLine)
         self.registerLine(self.ds23PiLine)
         self.registerLine(self.ds2PhiPiLine)
-       
+        self.registerLine(self.tau25MuLine)
+
 
 def makeTau23Mu(name):
     """
@@ -218,3 +232,30 @@ def makeDs2PhiPi(name):
     return Selection (name,
                       Algorithm = Ds2PhiPi,
                       RequiredSelections = [ _stdLooseMuons, _stdLoosePions ])
+
+
+
+def makeTau25Mu(name):
+    """
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    Tau2MuMuMuMuMu = CombineParticles("Comine"+name)
+    Tau2MuMuMuMuMu.DecayDescriptor = " [ tau+ -> mu+ mu+ mu+ mu- mu-]cc"
+    Tau2MuMuMuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
+    Tau2MuMuMuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
+
+    Tau2MuMuMuMuMu.MotherCut = """
+            ( VFASPF(VCHI2) < 15 ) &
+            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
+            ( BPVIPCHI2() < 225 )
+            """ 
+                             
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = Tau2MuMuMuMuMu,
+                      RequiredSelections = [ _stdLooseMuons ])

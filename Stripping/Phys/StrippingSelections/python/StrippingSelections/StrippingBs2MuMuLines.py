@@ -129,9 +129,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
         bu_name=name+'Bu2JPsiK'
         bs_name=name+'Bs2JPsiPhi'
         bd_name=name+'Bd2JPsiKst'
- #       jPsi_name=name+'DetachedJPsi'
- #       jPsiLoose_name=name+'DetachedJPsiLoose'
- #       jPsiPrompt_name=name+'DetachedJPsi_noDetached'
 
         self.selDefault = makeDefault(default_name)
 
@@ -150,12 +147,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
         self.selBd = makeBd(bd_name)
 
-#        self.selJPsi = makeDetachedJPsi(jPsi_name)
-
-#        self.selJPsiLoose = makeDetachedJPsiLoose(jPsiLoose_name)
-
-#        self.selJPsiPrompt = makePromptJPsi( jPsiPrompt_name )
-        
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['DefaultLinePrescale'],
                                             postscale = config['DefaultLinePostscale'],
@@ -193,36 +184,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     )
 
 
-        '''
-        self.jPsiLine = StrippingLine( jPsi_name+"Line",
-                                       prescale = config['JPsiLinePrescale'],
-                                       postscale = config['JPsiLinePostscale'],
-                                       algos = [ self.selJPsi ]
-                                       )
-
-        self.jPsiLooseLine = StrippingLine( jPsiLoose_name+"Line",
-                                       prescale = config['JPsiLooseLinePrescale'],
-                                       postscale = config['JPsiLooseLinePostscale'],
-                                       algos = [ self.selJPsiLoose ]
-                                       )
-
-        self.jPsiPromptLine = StrippingLine( jPsiPrompt_name+"Line",
-                                             prescale = config['JPsiPromptLinePrescale'],
-                                             postscale = config['JPsiPromptLinePostscale'],
-                                             algos = [ self.selJPsiPrompt ]
-                                             )
-        '''
-
-
         self.registerLine(self.defaultLine)
         self.registerLine(self.wideLine)
         self.registerLine(self.looseLine)
         self.registerLine(self.buLine)
         self.registerLine(self.bsLine)
         self.registerLine(self.bdLine)
-#        self.registerLine(self.jPsiLine)
-#        self.registerLine(self.jPsiLooseLine)
-#        self.registerLine(self.jPsiPromptLine)
 
 
 def makeDefault(name) :
@@ -440,7 +407,7 @@ def makeBd(name) :
     makeKstar.DecayDescriptor =  "[K*(892)0 -> K+ pi-]cc"
     makeKstar.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)",
                                "pi-":"(ISLONG) & (TRCHI2DOF < 5 ) & (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
-    makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<600*MeV)"
+    makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<2000*MeV)"#huge, to allow to study JPsi K1 etc
     makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
 
     _pions = DataOnDemand(Location='Phys/StdNoPIDsPions/Particles')
