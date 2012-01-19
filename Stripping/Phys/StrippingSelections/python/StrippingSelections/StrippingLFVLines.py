@@ -121,11 +121,12 @@ def makeTau2PhiMu(name):
 
     makePhi = CombineParticles(name+"makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
-    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 4 ) & ( BPVIPCHI2 () >  9 ) & (PT>300*MeV)"}
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 4 ) & ( BPVIPCHI2 () >  9 ) "\
+                                 "& (PT>300*MeV) & (PIDK > 5)"}
     
     _kaons = DataOnDemand(Location='Phys/StdLooseKaons/Particles')
     
-    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<30*MeV)"
+    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<20*MeV)"
     makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
     
     SelPhi = Selection( name+"SelPhi",                       Algorithm= makePhi,
@@ -133,7 +134,7 @@ def makeTau2PhiMu(name):
 
 
     Tau2PhiMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
-    Tau2PhiMu.CombinationCut = "(ADAMASS('tau+')<300*MeV)"
+    Tau2PhiMu.CombinationCut = "(ADAMASS('tau+')<150*MeV)"
 
     Tau2PhiMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
@@ -158,8 +159,9 @@ def makeTau2eMuMu(name):
     from Configurables import OfflineVertexFitter
     Tau2eMuMu = CombineParticles("Comine"+name)
     Tau2eMuMu.DecayDescriptors = [" [ tau+ -> e+ mu+ mu- ]cc"," [ tau+ -> mu+ mu+ e- ]cc"]
-    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
-    Tau2eMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
+    Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " ,
+                                "e+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 4  ) & ( BPVIPCHI2 () >  9 ) " }
+    Tau2eMuMu.CombinationCut = "(ADAMASS('tau+')<200*MeV)"
 
     Tau2eMuMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &

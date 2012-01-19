@@ -132,7 +132,7 @@ def makeTau23Mu(name):
 
     Tau2MuMuMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
+            ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
                              
@@ -157,7 +157,7 @@ def makeDs23Pi(name):
 
     Ds2PiPiPi.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
+            ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
                              
@@ -222,7 +222,7 @@ def makeDs2PhiPi(name):
 
     Ds2PhiPi.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   >100 * micrometer ) &
+            ( (BPVLTIME () * c_light)   >100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
                              
@@ -249,8 +249,8 @@ def makeTau25Mu(name):
     Tau2MuMuMuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
 
     Tau2MuMuMuMuMu.MotherCut = """
-            ( VFASPF(VCHI2) < 15 ) &
-            ( (BPVLTIME ( 225 ) * c_light)   > 100 * micrometer ) &
+            ( VFASPF(VCHI2) < 30 ) &
+            ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
                              
