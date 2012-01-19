@@ -32,7 +32,7 @@ StdVeryLooseKsLL.DecayDescriptor = "KS0 -> pi+ pi-"
 
 StdVeryLooseKsLL.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (P < 100.*GeV) & (BPVIPCHI2() > 9.)" } 
 StdVeryLooseKsLL.CombinationCut = "(ADAMASS('KS0') < 35.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
-StdVeryLooseKsLL.MotherCut = "(ADMASS('KS0') < 20.*MeV) & (VFASPF(VCHI2/VDOF) < 16.) & (BPVVDCHI2 > 4.) "
+StdVeryLooseKsLL.MotherCut = "(ADMASS('KS0') < 30.*MeV) & (VFASPF(VCHI2/VDOF) < 16.) & (BPVVDCHI2 > 4.) "
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( StdVeryLooseKsLL )
@@ -49,7 +49,7 @@ StdVeryLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-"
 
 StdVeryLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (P < 100.*GeV) & (BPVIPCHI2() > 6.25)  & ((-PIDK) > 0.)" } 
 StdVeryLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
-StdVeryLooseKsDD.MotherCut = "(ADMASS('KS0') < 28.*MeV) & (VFASPF(VCHI2/VDOF) < 16.) & (BPVVDCHI2 > 4.)"
+StdVeryLooseKsDD.MotherCut = "(ADMASS('KS0') < 42.*MeV) & (VFASPF(VCHI2/VDOF) < 16.) & (BPVVDCHI2 > 4.)"
 
 ## configure Data-On-Demand service 
 locations.update( updateDoD ( StdVeryLooseKsDD ))
