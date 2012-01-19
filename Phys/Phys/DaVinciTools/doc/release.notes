@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-01-19 - Chris Jones
+ - Temporarily remove the last commit, for IsolationTwoBody, as it has 
+   compilation issues.
+
 ! 2012-01-18 - Giampiero Mancinelli
  - Implementation for a "Particle Isolation" tool for particles from twobody 
    decays. Currently it returns the numbers of non-isolating particles 
