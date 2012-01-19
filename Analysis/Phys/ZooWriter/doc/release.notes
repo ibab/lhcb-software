@@ -4,6 +4,15 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+
+! 2012-01-19 - Manuel Tobias Schiller
+ - modularise the ZooTuplePlayer python class to allow user-configurable
+   per-accepted-candidate/per-accepted-ZooMCP/per-accepted-event actions when
+   reading a tuple this fits in neatly with the current DrawZooP/DrawZooMCP
+   functionality and allows for future extension towards an automatic python
+   driven utility which allows to strip Zoo tuples conveniently
+   (no user-visible changes in behaviour)
+
 ! 2012-01-13 - Paul Seyfert
  - Fixed error message about unknown branch name "*" in per Job Tree.
 
