@@ -8,11 +8,12 @@ PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
 
 
-def start() :
+def start(NbOfSlaves) :
     from Moore.Configuration import Moore
     import OnlineEnv 
 
     Moore().RunOnline = True
+    Moore().NbOfSlaves = NbOfSlaves
 
     ### default database setup -- require an explit tag when running in the LHCb or FEST partitions...
     Moore().Simulation = False

@@ -32,6 +32,7 @@ class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
+	, "NbOfSlaves":        0
         , "Simulation":        True # True implies use SimCond
         , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
@@ -176,13 +177,14 @@ class Moore(LHCbConfigurableUser):
         from Configurables import LHCb__CheckpointSvc
         numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
         host = socket.gethostname().split('.')[0].upper()
-        if host[:3]=='HLT':
-          if host[3]=='F': numChildren=23
-          if host[3]!='F':
-            if len(host)==8:
-              id = int(host[6:])
-              if id < 12: numChildren=9
-              if id > 11: numChildren=23
+        #if host[:3]=='HLT':
+        #  if host[3]=='F': numChildren=23
+        #  if host[3]!='F':
+        #    if len(host)==8:
+        #      id = int(host[6:])
+        #      if id < 12: numChildren=9
+        #      if id > 11: numChildren=23
+	if self.getProp("NbOfSlaves") > 0 : numChildren = self.getProp("NbOfSlaves")
 
         forker = LHCb__CheckpointSvc("CheckpointSvc")
         forker.NumberOfInstances   = numChildren
@@ -548,8 +550,6 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
-	# raw event location for L0 decoding
-	L0Conf().RawEventLocations = ['DAQ/RawEvent']
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv 
