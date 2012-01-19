@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-19 - Mika Vesterinen
+- Added many new lines to StrippingB2DMuNuX for charm from SL B decays
+- D0 -> KsHH, D0 -> HHpi0, D+ -> KsH, D+ -> HMuMu, Lc+ -> L0 H, Lc+ -> pHH.
+
 ! 2012-01-19 - Susan Haines
 - Loosened mass windows for D in StrippingBu2D0h_D02KShh_NoPID and StrippingBu2D0h_D02KShh_NoPID_WS, LL and DD lines.
 
