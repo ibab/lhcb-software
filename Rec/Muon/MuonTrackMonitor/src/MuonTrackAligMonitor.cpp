@@ -93,6 +93,7 @@ StatusCode MuonTrackAligMonitor::initialize() {
   GaudiAlg::HistoID  name;
   std::string title;
   m_notOnline = (m_histoLevel != "Online");
+  m_expertMode = (m_histoLevel == "Expert");
 
   m_muonDet = getDet<DeMuonDetector>(DeMuonLocation::Default); 
   if(!m_muonDet){
@@ -108,11 +109,13 @@ StatusCode MuonTrackAligMonitor::initialize() {
     name = "p";
     m_h_p = book1D( name, name, 0, 100, 100);
     
-    name = "x_vs_y";
-    m_h_xy = book2D( name, name, -4000, 4000, 80, -4000, 4000, 80);
-  
-    name = "tx_vs_ty";
-    m_h_txty = book2D( name, name, ulow, uhigh, 100, ulow, uhigh, 100);
+    if(m_expertMode) {
+      name = "x_vs_y";
+      m_h_xy = book2D( name, name, -4000, 4000, 80, -4000, 4000, 80);
+      
+      name = "tx_vs_ty";
+      m_h_txty = book2D( name, name, ulow, uhigh, 100, ulow, uhigh, 100);
+    }
   }
 
   if(m_LongToMuonMatch) {
@@ -296,8 +299,10 @@ StatusCode MuonTrackAligMonitor::execute() {
       double chi2;
       if(m_notOnline) {
         m_h_p->fill( longState.p()/GeV );
-        m_h_xy->fill( longState.x(), longState.y() );
-        m_h_txty->fill( longState.tx(), longState.ty() );
+        if(m_expertMode) {
+          m_h_xy->fill( longState.x(), longState.y() );
+          m_h_txty->fill( longState.tx(), longState.ty() );
+        }
       }
       sc = m_chi2Calculator->calculateChi2( longState.stateVector(), longState.covariance(), 
                                             muState.stateVector(), muState.covariance(),

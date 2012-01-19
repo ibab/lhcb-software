@@ -47,7 +47,7 @@ private:
 
   std::string m_extrapolatorName, m_Chi2CalculatorName;
   bool m_notOnline;
-
+  bool m_expertMode;
 
 };
 #endif // MUONTRACKALIGMONITOR_H
