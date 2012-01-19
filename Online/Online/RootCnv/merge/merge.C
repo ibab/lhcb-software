@@ -41,6 +41,12 @@ namespace Gaudi {
     TFile*             m_output;
     bool               m_treeSections;
 
+    union uuid_data {
+      unsigned char  buf[16];
+      unsigned short sbuf[8];
+      unsigned int   ibuf[4];
+    };
+
   public:
     /// Standard constructor
     RootDatabaseMerger();
@@ -174,18 +180,14 @@ MergeStatus RootDatabaseMerger::createFID() {
   if ( m_output ) {
     TTree* t = (TTree*)m_output->Get("Refs");
     if ( t ) {
+      uuid_data d;
       char text[256];
-      unsigned char buf[16];
       TUUID uuid;
       TBranch* b = t->GetBranch("Params");
       if ( b ) {
-	uuid.GetUUID(buf);
-	sprintf(text,fmt,
-		*(int*)buf,*(short*)(buf+4),*(short*)(buf+6),
-		*(buf+8),*(buf+8),
-		*(buf+10),*(buf+11),
-		*(buf+12),*(buf+13),
-		*(buf+14),*(buf+15));
+	uuid.GetUUID(d.buf);
+	sprintf(text,fmt,d.ibuf[0],d.sbuf[2],d.sbuf[3],d.buf[8],d.buf[9],
+		d.buf[10],d.buf[11],d.buf[12],d.buf[13],d.buf[14],d.buf[15]);
 	b->SetAddress(text);
 	b->Fill();
 	t->Write();
