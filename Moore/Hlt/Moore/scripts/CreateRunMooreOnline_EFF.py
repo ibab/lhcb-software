@@ -78,6 +78,11 @@ file.write( """#!/bin/sh
 #!/bin/sh
 export PARENT=$1
 export PARTNAME=$2
+if test -n "$3" ;
+   then export NBOFSLAVES=$3
+   else export NBOFSLAVES=0
+fi
+   
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
 # pick up 'our' setup... 
@@ -158,7 +163,7 @@ ${gaudi_exe} ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so \\
     -msgsvc=LHCb::FmcMessageSvc \\
     -tasktype=LHCb::Class1Task  \\
     -main=/group/online/dataflow/templates/options/Main.opts \\
-    -opt=command="import Moore.runOnline; Moore.runOnline.start()" \\
+    -opt=command="import Moore.runOnline; Moore.runOnline.start("${NBOFSLAVES}")" \\
  ${APP_STARTUP_OPTS};
 
 """%({'setup': setup,'moore':moore}) )
