@@ -520,8 +520,9 @@ int lib_rtl_diskspace(const char* name,
   struct statvfs disk;
   if ( 0 == ::statvfs(name,&disk) ) {
     *blk_size = disk.f_bsize;
-    *total_blk = disk.f_blocks;
-    *availible_blk = disk.f_bavail;
+    *total_blk = long(float(disk.f_blocks)*float(disk.f_frsize)/float(disk.f_bsize));
+    //*total_blk = disk.f_blocks;
+    *availible_blk = disk.f_bfree;
     return 1;
   }
 #endif
