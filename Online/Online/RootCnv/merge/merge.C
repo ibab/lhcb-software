@@ -181,7 +181,7 @@ MergeStatus RootDatabaseMerger::createFID() {
       if ( b ) {
 	uuid.GetUUID(buf);
 	sprintf(text,fmt,
-		(*(int*)buf),*(short*)(buf+4),*(short*)(buf+6),
+		*(int*)buf,*(short*)(buf+4),*(short*)(buf+6),
 		*(buf+8),*(buf+8),
 		*(buf+10),*(buf+11),
 		*(buf+12),*(buf+13),
