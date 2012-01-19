@@ -78,6 +78,7 @@ HltSubfarmDisplay::~HltSubfarmDisplay()  {
   delete m_nodes;
   end_update();
 }
+#define GByte (1024.f*1024.f*1024.f)
 
 /// Display the node information
 void HltSubfarmDisplay::showNodes()  {
@@ -88,19 +89,20 @@ void HltSubfarmDisplay::showNodes()  {
   char text[512];
   string val;
 
-  ::sprintf(text," Name       Runs  Files  %32s %25s %32s    %s ",
+  disp->draw_line_normal("");
+  disp->draw_line_bold(" Node       No.of No.of  %37s %15s %37s %9s  %s",
+		       "","Run statistics","","Runs not","Disk statistics [GB]");
+  disp->draw_line_bold(" Name       Runs  Files  %37s %15s %37s %9s  %s",
 	  // 123456789012345678901234567890     123456789012345678901234567890
-	    "<-------------------------------",  "Run statistics: Run/Files",
-	    "------------------------------->",
-	    "displayed");
-
-  disp->draw_line_bold(" Node       No.of No.of %95s Runs not","");
-  disp->draw_line_bold(text);
+	    "<------------------------------------",  "   Run/Files   ",
+	    "------------------------------------>",
+		       "displayed","<-Free Total   Used-->");
   int tot_files = 0, exc_runs = 0, exc_files = 0;
   map<int,int> tot_runs;
   for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-    int numFiles = 0;
     const _R& runs = (*n).runs;
+    const Diskspace& disk = (*n).localdisk;
+    int numFiles = 0;
     val = "";
     exc_runs = exc_files = 0;
     for (_R::const_iterator ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
@@ -118,15 +120,19 @@ void HltSubfarmDisplay::showNodes()  {
       }
     }
     tot_files += numFiles;
-    ::sprintf(text,"%7d/%-3d",exc_runs,exc_files);
-    disp->draw_line_normal(fmt, (*n).name, runs.size(), numFiles, val.c_str(), text);
+    float gb  = float(disk.blockSize)/GByte;
+    float fr  = gb*(disk.freeBlocks>0 ? disk.freeBlocks : 1);
+    float tot = gb*disk.numBlocks;
+    ::sprintf(text,"%7d/%-3d   %5.0f %5.0f  %5.1f %%", 
+	      exc_runs, exc_files, fr, tot,100.f*(1.f-fr/tot));
+    disp->draw_line_normal(fmt,(*n).name, runs.size(), numFiles, val.c_str(), text);
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(fmt, "Total:", tot_runs.size(), tot_files, "", "");
   disp->draw_line_normal("");
   disp->draw_line_normal("");
   disp->draw_line_normal("");
-  disp->draw_line_normal("<Mouse-left double-click> to close window");
+  disp->draw_line_normal("<Mouse-left double-click> or <ENTER> to close window");
 }
 
 /// Update header information

@@ -192,7 +192,7 @@ int FarmDisplayBase::showSubfarm()    {
     else if ( m_mode == HLTDEFER_MODE ) {
       svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
       const char* argv[] = {"", svc.c_str(), "-delay=300" };
-      m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( strncasecmp(dnam.c_str(),"storectl01",10)==0 && m_name != "ALL" ) {
       const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};

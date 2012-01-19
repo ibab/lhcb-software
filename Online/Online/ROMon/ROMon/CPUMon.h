@@ -92,9 +92,9 @@ namespace ROMon {
     /// Empty constructor
     Diskspace();
     /// Reset data content
-    Diskspace*          reset();
+    Diskspace* reset();
     /// Size of the object
-    long   sizeOf() const {  return sizeof(Diskspace); }
+    long sizeOf() const {  return sizeof(Diskspace); }
   };
 
   PACK_DATA(class) CPU {
