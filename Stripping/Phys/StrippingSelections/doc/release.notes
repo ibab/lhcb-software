@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-19 - Thomas Blake
+ - Added StrippingLFVLines to __init__.py
+
 ! 2012-01-19 Johannes Albrecht
  - slight cut adjustment in Bs2MuMuLines
  - add tau25mu in Tau23MuLines

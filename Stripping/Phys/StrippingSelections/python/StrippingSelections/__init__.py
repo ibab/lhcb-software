@@ -145,6 +145,8 @@ import StrippingVeryDetachedJPsiLines
 import StrippingInflaton2MuMuLine
 import StrippingTau23MuLines
 
+import StrippingLFVLines
+
 from sys import modules as _modules
 _this = _modules[__name__]
 
