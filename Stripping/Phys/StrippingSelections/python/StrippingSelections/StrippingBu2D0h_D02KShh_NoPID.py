@@ -155,8 +155,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
        # self.KSLL_CombCut = "(ADAMASS('KS0') < 25.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<1.5)"
        # self.KSLL_MotherCut = "(ADMASS('KS0') < 20.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_LL)s) & (BPVVDCHI2 > %(KSFlightCHI2_LL)s)"%config
         self.D_LL_DaughterCut = "(P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(DdaughterIPCHI2_LL)s) "%config
-        self.D_LL_CombCut = "(ADAMASS('D0') < 38.*MeV) & (ADOCACUT(1.8, 'LoKi::TrgDistanceCalculator'))"
-        self.D_LL_MotherCut = "(ADMASS('D0') < 33.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"%config
+        self.D_LL_CombCut = "(ADAMASS('D0') < 55.*MeV) & (ADOCACUT(1.8, 'LoKi::TrgDistanceCalculator'))"#55
+        self.D_LL_MotherCut = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_LL)s)"%config#50
         self.B_LL_BachCut = "(PT > %(BachPt_LL)s *GeV ) & (P > 2.*GeV) & (P < 100.*GeV) &  (TRCHI2DOF<5.) & (BPVIPCHI2() > %(BachIPCHI2_LL)s )"%config
         self.B_LL_CombCut = "(ADAMASS('B+') < 505.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.5)"
         self.B_LL_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF)<%(BVertexCHI2_LL)s) & (BPVIPCHI2() < %(BIPCHI2_LL)s) & (BPVVDCHI2 > %(BFlightCHI2_LL)s) & (BPVDIRA > %(BDIRA_LL)s)"%config
@@ -167,8 +167,8 @@ class StrippingBu2D0h_D02KShh_NoPIDConf(LineBuilder):
        # self.KSDD_CombCut = "(ADAMASS('KS0') < 50.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<22.)"
        # self.KSDD_MotherCut = "(ADMASS('KS0') < 28.*MeV) & (VFASPF(VCHI2/VDOF) < %(KSVertexCHI2_DD)s) & (BPVVDCHI2 > %(KSFlightCHI2_DD)s)" %config
         self.D_DD_DaughterCut = " (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(DdaughterIPCHI2_DD)s)"%config
-        self.D_DD_CombCut = "(ADAMASS('D0') < 45.*MeV) & (ADOCACUT(9.2, 'LoKi::TrgDistanceCalculator'))"
-        self.D_DD_MotherCut = "(ADMASS('D0') < 40.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"%config
+        self.D_DD_CombCut = "(ADAMASS('D0') < 65.*MeV) & (ADOCACUT(9.2, 'LoKi::TrgDistanceCalculator'))"#65
+        self.D_DD_MotherCut = "(ADMASS('D0') < 60.*MeV) & (VFASPF(VCHI2/VDOF) < %(DVertexCHI2_DD)s)"%config#60
         self.B_DD_BachCut = "(PT > %(BachPt_DD)s *GeV) & (P > 2.*GeV) & (P < 100.*GeV) & (TRCHI2DOF<5.) & (BPVIPCHI2() > %(BachIPCHI2_DD)s)"%config 
         self.B_DD_CombCut = "(ADAMASS('B+') < 505.*MeV) & (AMINDOCA('LoKi::TrgDistanceCalculator')<0.5)"
         self.B_DD_MotherCut = "(ADMASS('B+') < 500.*MeV)  & (VFASPF(VCHI2/VDOF) < %(BVertexCHI2_DD)s) & (BPVIPCHI2() < %(BIPCHI2_DD)s) & (BPVVDCHI2 > %(BFlightCHI2_DD)s)& (BPVDIRA > %(BDIRA_DD)s)"%config
