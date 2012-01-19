@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-19 - Michel De Cian
+ - Added  new lines for (light) inflaton stripping in StrippingInflaton2MuMuLine
+
 ! 2012-01-18 - Marco Gersabeck
  - Added same sign selections to StrippingD2hh (use exclusively for 17b: SameSignOnly = True).
 
