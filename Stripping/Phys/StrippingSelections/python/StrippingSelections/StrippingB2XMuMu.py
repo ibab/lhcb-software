@@ -46,16 +46,16 @@ defaultConfig = {
     , 'LambdaWINDOW'       : 30.0          # MeV    
     , 'LongLivedPT'        : 500.0          # MeV  
     , 'LongLivedTau'        : 2          # ps
-    , 'UseNoPIDsHadrons'          : True,
+    #    , 'UseNoPIDsHadrons'          : True,
     
     # K1 cuts
-    'K1_Comb_MassLow'  :  720.0,
-    'K1_Comb_MassHigh' : 2450.0,
-    'K1_MassLow'       :  750.0,
-    'K1_MassHigh'      : 2400.0,
-    'K1_MinIPCHI2'     :    4.0,
-    'K1_FlightChi2'    :   25.0,
-    'K1_Dau_MaxIPCHI2' : 9.0,
+    , 'K1_Comb_MassLow'  :  720.0
+    , 'K1_Comb_MassHigh' : 2450.0
+    , 'K1_MassLow'       :  750.0
+    , 'K1_MassHigh'      : 2400.0
+    , 'K1_MinIPCHI2'     :    4.0
+    , 'K1_FlightChi2'    :   25.0
+    , 'K1_Dau_MaxIPCHI2' : 9.0
     
     }
 
@@ -92,16 +92,17 @@ class B2XMuMuConf(LineBuilder) :
         , 'LambdaWINDOW'
         , 'LongLivedPT'
         , 'LongLivedTau'
-        , 'UseNoPIDsHadrons',
+
+        #, 'UseNoPIDsHadrons',
         
         # K1 cuts
-        'K1_Comb_MassLow',
-        'K1_Comb_MassHigh',
-        'K1_MassLow',
-        'K1_MassHigh',
-        'K1_MinIPCHI2',
-        'K1_FlightChi2',
-        'K1_Dau_MaxIPCHI2',
+        , 'K1_Comb_MassLow'
+        , 'K1_Comb_MassHigh'
+        , 'K1_MassLow'
+        , 'K1_MassHigh'
+        , 'K1_MinIPCHI2'
+        , 'K1_FlightChi2'
+        , 'K1_Dau_MaxIPCHI2'
 
        )
     
@@ -311,10 +312,10 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Kshort__(self, conf):
         """
-        Filter kshort from StdLooseKshort
+        Filter kshort from StdVeryLooseKshort
         """  
-        _ksdd = AutomaticData(Location = 'Phys/StdLooseKsDD/Particles')
-        _ksll = AutomaticData(Location = 'Phys/StdLooseKsLL/Particles')
+        _ksdd = AutomaticData(Location = 'Phys/StdVeryLooseKsDD/Particles')
+        _ksll = AutomaticData(Location = 'Phys/StdVeryLooseKsLL/Particles')
         _filter_ksdd = FilterDesktop(Code = self.__KsCuts__(conf))
         _filter_ksll = FilterDesktop(Code = self.__KsCuts__(conf))        
         _selksdd = Selection("Selection_"+self.name+"_Ksdd",
@@ -341,10 +342,10 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Lambda__(self, conf):
         """
-        Filter Lambda from StdLooseLambda
+        Filter Lambda from StdLooseLambda and StdVeryLooseLambda
         """  
         _lambdadd = AutomaticData(Location = 'Phys/StdLooseLambdaDD/Particles')
-        _lambdall = AutomaticData(Location = 'Phys/StdLooseLambdaLL/Particles')
+        _lambdall = AutomaticData(Location = 'Phys/StdVeryLooseLambdaLL/Particles')
         _filter_lambdadd = FilterDesktop(Code = self.__LambdaCuts__(conf))
         _filter_lambdall = FilterDesktop(Code = self.__LambdaCuts__(conf))        
         _sellambdadd = Selection("Selection_"+self.name+"_Lambdadd",

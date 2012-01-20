@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-20 - Thomas Blake
+ - Added StrippingBu2K1MuMu to __init__.py
+ - Change to B2XMuMu cut dictionary  
+
 ! 2012-01-20 - Christian Elsasser
 - Changed cuts and bug fix for Z->tau+ tau- prong lines
 - Added A_1 -> mu+ mu- lines
