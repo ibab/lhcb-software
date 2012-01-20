@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
   . Changes to track fit: fewer smooth operations to improve timing,
     smarter use of OT times in OTTrackProjector leading to better Chi2 and 
     therefore more ProtoParticles
+  . Add monitor for ANN PID variables
+  . Move 2D histograms to expert mode (MuonTrackAlign)
 
 - Changes to configuration
   . Remove GaudiPoolDb dependency
