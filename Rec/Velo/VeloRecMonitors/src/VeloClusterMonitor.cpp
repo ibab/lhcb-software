@@ -87,9 +87,6 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   char nCluTitle[100];
   sprintf( nCluTitle, "Number of VELO clusters per event (%s)", m_tae.c_str() );
   m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 4000., 400 );
-  m_hNCluEvtHiMul = book1D( "# VELO clusters 2",
-                        "Number of VELO clusters per event (high multiplicity)",
-                        0., 20000., 100 );
   m_hCluSize = book1D( "Cluster size", "Number of strips per cluster",
                        -0.5, 5.5, 6 );
   m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster",
@@ -211,12 +208,6 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     m_hNCluEvt->fill(nclus);
   else if ( nclus > 0 )
     m_hNCluEvt->fill(4000);
-  
-  // Number of clusters again, with different axis
-  if ( nclus > 0 && nclus < 20000 )
-    m_hNCluEvtHiMul->fill(nclus);
-  else if ( nclus > 0 )
-    m_hNCluEvtHiMul->fill(20000);
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;

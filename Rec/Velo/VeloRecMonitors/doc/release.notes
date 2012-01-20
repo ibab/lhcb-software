@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2011-01-20 - Marius Bjoernstad
+ - Removed the "# VELO clusters 2" histogram. It has been superseded by the 
+   algorithm HighMultiplicityMonitor in Velo/VeloDataMonitor.
+
 !========================= VeloRecMonitors v2r16 2011-12-15 ==================
 ! 2011-12-14 - Manuel Tobias Schiller
  - work on VeloOccupancyMonitor to have code to monitor dead/noisy channels
