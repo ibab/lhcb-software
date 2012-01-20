@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-20 - Christian Elsasser
+- Changed cuts and bug fix for Z->tau+ tau- prong lines
+- Added A_1 -> mu+ mu- lines
+
 ! 2012-01-19 - Mika Vesterinen
 - Added many new lines to StrippingB2DMuNuX for charm from SL B decays
 - D0 -> KsHH, D0 -> HHpi0, D+ -> KsH, D+ -> HMuMu, Lc+ -> L0 H, Lc+ -> pHH.
