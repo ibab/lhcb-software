@@ -17,16 +17,16 @@
 using namespace ANNGlobalPID;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg )
+DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
-    : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-      m_trSel                   ( NULL               ),
-      m_netHelper               ( NULL               )
+ChargedProtoANNPIDAlg::ChargedProtoANNPIDAlg( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
+  : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
+    m_trSel                   ( NULL               ),
+    m_netHelper               ( NULL               )
 {
   // JOs
   declareProperty( "Configuration",     m_configFile );
@@ -288,13 +288,24 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   {
     m_inArray[input] = static_cast<float>(m_parent->getInput(proto,*iIn));
   }
-
+  
   // FPE Guard for NB call
   FPE::Guard guard(true);
+
+  // NeuroBayes seems to sporadically send mysterious stderr messages
+  // which we cannot control... So forcibly incept them all here and send to /dev/null
+  const int original_stderr = dup(fileno(stderr));
+  fflush(stderr);
+  freopen("/dev/null","w",stderr);
 
   // get the NN output, rescaled to the range 0 to 1
   const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
 
+  // put stderr back to normal
+  fflush(stderr);
+  dup2(original_stderr,fileno(stderr));
+  close(original_stderr);
+  
   // return final output
   return nnOut;
 }
