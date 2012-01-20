@@ -92,6 +92,7 @@ import StrippingMiniBias
 
 import StrippingNoPIDDstarWithD02RSKPi
 
+import StrippingCharmForVub
 import StrippingDstarD02KMuNu
 import StrippingD02MuMu
 import StrippingPromptCharm
