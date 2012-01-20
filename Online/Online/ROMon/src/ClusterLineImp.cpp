@@ -961,7 +961,7 @@ void HltDeferLine::display() {
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t t1 = numNodes == 0 ? time(0) : s->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
-  ::sprintf(txt+strlen(txt),"%6ld %6ld %6ld ",numNodes, numRuns, numFiles);
+  ::sprintf(txt+strlen(txt),"%6ld %6ld %6ld ",long(numNodes),long(numRuns),long(numFiles));
   begin_update(txt);
 
   if ( numNodes != 0 ) m_lastUpdate = t1;

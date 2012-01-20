@@ -167,7 +167,7 @@ void HltSummaryDisplay::update(const void* ptr) {
   }
   ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
   ::sprintf(text,"  Grand Total Statistics:  %8d runs with %6d files on %5ld nodes still to be processed",
-	    tot_runs,tot_files,tot_nodes.size());
+	    tot_runs,tot_files,long(tot_nodes.size()));
   col = tot_files>0 ? RED : BOLD|GREEN;
   ::scrc_put_chars(m_display,"",col,++line,2,1);
   ::scrc_put_chars(m_display,text,col,++line,2,1);    

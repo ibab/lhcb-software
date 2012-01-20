@@ -182,14 +182,16 @@ void ClusterListener::update(void* param) {
 }
 
 /// Feed data to DIS when updating data
-void ClusterListener::feed(void* tag, void** buff, int* size, int* first) {
+void ClusterListener::feed(void* tag, void** buff, int* size, int* ) {
   static const char* data = "";
-  if ( !(*first) )  {
-    Item* it = *(Item**)tag;
+  Item* it = *(Item**)tag;
+  if ( it ) {
     Descriptor* d = it->data<Descriptor>();
-    *buff = (void*)(d->data ? d->data : data);
-    *size = d->actual;
-    return;
+    if ( d  && d->data ) {
+      *buff = (void*)(d->data ? d->data : data);
+      *size = d->actual;
+      return;
+    }
   }
   *buff = (void*)data;
   *size = 0;

@@ -105,17 +105,39 @@ void NodeStatsCollector::help() {
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first) {
+void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* ) {
   static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  if ( !(*first) ) {
+  if ( h ) {
     if ( h->m_sys ) {
       CPUMonData cpu(h->m_statBuffer);
-      *buf = h->m_statBuffer;
-      *size  = cpu.node->length();
+      if ( h->m_statBuffer && cpu.node ) {
+	*buf = h->m_statBuffer;
+	*size  = cpu.node->length();
+	if ( h->m_verbose ) {
+	  log() << "[NodeStatsCollector] Published " << *size 
+		<< " Bytes of Stat data @" << *buf << std::endl;
+	}
+	return;
+      }
+    }
+  }
+  *size = 0;
+  *buf = (void*)empty;
+}
+
+/// Feed data to DIS when updating data
+void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* ) {
+  static const char* empty = "";
+  NodeStatsCollector* h = *(NodeStatsCollector**)tag;
+  if ( h && h->m_mbmBuffer ) {
+    ROMonData ro(h->m_mbmBuffer);
+    if ( ro.node ) {
+      *buf = h->m_mbmBuffer;
+      *size  = ro.node->length();
       if ( h->m_verbose ) {
-        log() << "[NodeStatsCollector] Published " << *size 
-              << " Bytes of Stat data @" << *buf << std::endl;
+	log() << "[NodeStatsCollector] Published " << *size 
+	      << " Bytes of data MBM @" << *buf << std::endl;
       }
       return;
     }
@@ -125,36 +147,20 @@ void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first)
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* first) {
+void NodeStatsCollector::feedHLT(void* tag, void** buf, int* size, int* ) {
   static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  if ( !(*first) ) {
-    ROMonData ro(h->m_mbmBuffer);
-    *buf = h->m_mbmBuffer;
-    *size  = ro.node->length();
-    if ( h->m_verbose ) {
-      log() << "[NodeStatsCollector] Published " << *size 
-            << " Bytes of data MBM @" << *buf << std::endl;
-    }
-    return;
-  }
-  *size = 0;
-  *buf = (void*)empty;
-}
-
-/// Feed data to DIS when updating data
-void NodeStatsCollector::feedHLT(void* tag, void** buf, int* size, int* first) {
-  static const char* empty = "";
-  NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  if ( !(*first) ) {
+  if ( h && h->m_hltBuffer ) {
     CPUMonData hlt(h->m_hltBuffer);
-    *buf = h->m_hltBuffer;
-    *size  = hlt.hlt->length();
-    if ( h->m_verbose ) {
-      log() << "[NodeStatsCollector] Published " << *size 
-            << " Bytes of data HLTMon @" << *buf << std::endl;
+    if ( hlt.hlt ) {
+      *buf = h->m_hltBuffer;
+      *size  = hlt.hlt->length();
+      if ( h->m_verbose ) {
+	log() << "[NodeStatsCollector] Published " << *size 
+	      << " Bytes of data HLTMon @" << *buf << std::endl;
+      }
+      return;
     }
-    return;
   }
   *size = 0;
   *buf = (void*)empty;

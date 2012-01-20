@@ -39,7 +39,7 @@ namespace ROMon {
     /// Update handler
     virtual void update(void* param);
     /// Feed data to DIS when updating data
-    static void feed(void* tag, void** buf, int* size, int* first);
+    //static void feed(void* tag, void** buf, int* size, int* first);
   };
 
   /**@class HltSummarySrv HltSummarySrv.h GaudiOnline/HltSummarySrv.h
@@ -155,26 +155,30 @@ HltSummaryListener::~HltSummaryListener()  {
 void HltSummaryListener::update(void* /* param */)   {
   //IocSensor::instance().send(m_parent,CMD_UPDATE,param);
 }
-
+#if 0
 /// Feed data to DIS when updating data
-void HltSummaryListener::feed(void* tag, void** buff, int* size, int* first) {
+void HltSummaryListener::feed(void* tag, void** buff, int* size, int* /* first */) {
   static const char* data = "";
-  if ( !(*first) )  {
-    Item* it = *(Item**)tag;
+  Item* it = *(Item**)tag;
+  if ( it ) {
     Descriptor* d = it->data<Descriptor>();
-    *buff = (void*)(d->data ? d->data : data);
-    *size = d->actual;
-    return;
+    if ( d ) {
+      if ( d->data ) {
+	*buff = (void*)(d->data ? d->data : data);
+	*size = d->actual;
+	return;
+      }
+    }
   }
   *buff = (void*)data;
   *size = 0;
 }
-
+#endif
 /// Feed data to DIS when updating data
-static void feed(void* tag, void** buff, int* size, int* first) {
+static void feed(void* tag, void** buff, int* size, int* /* first */) {
   static const char* data = "";
-  if ( !(*first) )  {
-    string* s = *(string**)tag;
+  string* s = *(string**)tag;
+  if ( !s->empty() )  {
     *buff = (void*)s->c_str();
     *size = s->length()+1;
     return;
@@ -262,7 +266,8 @@ void HltSummarySrv::collectData() {
     m_run_result += string(txt)+"|";
   }
   if ( tot_runs.size()>0 ) m_run_result = m_run_result.substr(0,m_run_result.length()-1);
-  ::sprintf(txt,"%ld|%ld|%ld|%lld|%lld",tot_nodes,tot_runs.size(),tot_files,tot_blocks,free_blocks);
+  ::sprintf(txt,"%ld|%ld|%ld|%lld|%lld",tot_nodes,long(tot_runs.size()),
+	    tot_files,tot_blocks,free_blocks);
   m_summary_result = txt;
 }
 

@@ -77,14 +77,14 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   cli.getopt("sdh",         2, m_subDisplayHeight);
   cli.getopt("node-height", 7, m_subDisplayHeight);
 
-  m_dense = 0 != cli.getopt("dense",2);
+  m_dense = 0 != cli.getopt("dense",3);
   m_reverse = 0 != cli.getopt("reverse",3);
   m_mode = HLT_MODE;
   if ( cli.getopt("reconstruction",3) ) m_mode = RECO_MODE;
-  if ( cli.getopt("taskmonitor",2)    != 0 ) m_mode = CTRL_MODE;
-  if ( cli.getopt("torrentmonitor",2) != 0 ) m_mode = TORRENT_MODE;
-  if ( cli.getopt("deferred",2)       != 0 ) m_mode = HLTDEFER_MODE;
-  if ( cli.getopt("anchor",2,anchor)  != 0 ) {
+  if ( cli.getopt("taskmonitor",3)    != 0 ) m_mode = CTRL_MODE;
+  if ( cli.getopt("torrentmonitor",3) != 0 ) m_mode = TORRENT_MODE;
+  if ( cli.getopt("deferred",3)       != 0 ) m_mode = HLTDEFER_MODE;
+  if ( cli.getopt("anchor",3,anchor)  != 0 ) {
     int x, y;
     if ( 2 == ::sscanf(anchor.c_str(),"+%d+%d",&x,&y) ) {
       m_anchorX = x;
