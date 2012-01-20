@@ -111,6 +111,18 @@ double Dimension::crossing_angle() const  {
   return m_element.attr<double>(Attr_crossing_angle);
 }
 
+double Dimension::radius() const {
+  return m_element.attr<double>(Attr_radius);
+}
+
+double Dimension::offset() const {
+  return m_element.attr<double>(Attr_offset);
+}
+
+int Dimension::number() const {
+  return m_element.attr<int>(Attr_number);
+}
+
 int Subdetector::Component::id()  const  {
   return m_element.attr<int>(Attr_id);
 }

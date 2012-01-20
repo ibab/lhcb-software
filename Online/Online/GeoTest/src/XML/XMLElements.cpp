@@ -4,6 +4,7 @@
 #include "xercesc/dom/DOM.hpp"
 
 #include <cmath>
+#include <iostream>
 #include <stdexcept>
 
 using namespace std;
@@ -62,8 +63,10 @@ int DetDesc::XML::_toInt(const XMLCh* value)  {
         s.erase(idx,5);
       while(s[0]==' ')s.erase(0,1);
       double result = eval.evaluate(s.c_str());
-      if (eval.status() != XmlTools::Evaluator::OK)
-        eval.print_error();
+      if (eval.status() != XmlTools::Evaluator::OK) {
+	cerr << s << ": ";
+	eval.print_error();
+      }
       return (int)result;
     //}
     //return val;
@@ -83,8 +86,11 @@ float DetDesc::XML::_toFloat(const XMLCh* value)   {
   if ( value )  {
     string s = _toString(value);
     double result = eval.evaluate(s.c_str());
-    if (eval.status() != XmlTools::Evaluator::OK)
+
+    if (eval.status() != XmlTools::Evaluator::OK) {
+      cerr << s << ": ";
       eval.print_error();
+    }
     return (float)result;
   }
   return 0.0;
@@ -94,8 +100,10 @@ double DetDesc::XML::_toDouble(const XMLCh* value)   {
   if ( value )  {
     string s = _toString(value);
     double result = eval.evaluate(s.c_str());
-    if (eval.status() != XmlTools::Evaluator::OK) 
+    if (eval.status() != XmlTools::Evaluator::OK) {
+      cerr << s << ": ";
       eval.print_error();
+    }
     return result;
   }
   return 0.0;
@@ -117,8 +125,10 @@ void DetDesc::XML::_toDictionary(const XMLCh* name, const XMLCh* value)  {
     v.erase(idx,5);
   while(v[0]==' ')v.erase(0,1);
   double result = eval.evaluate(v.c_str());
-  if (eval.status() != XmlTools::Evaluator::OK)
+  if (eval.status() != XmlTools::Evaluator::OK) {
+    cerr << v << ": ";
     eval.print_error();
+  }
   eval.setVariable(n.c_str(),result);
 }
 

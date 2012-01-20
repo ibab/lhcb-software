@@ -288,6 +288,12 @@ namespace DetDesc   { namespace XML  {
   ATTR(rmax1);
   ATTR(rmax2);
 
+  TAG(ladder);
+  TAG(support);
+  ATTR(number);
+  ATTR(offset);
+  ATTR(radius);
+
   void tags_init() {static __Init i; }
 
 }}

@@ -137,6 +137,7 @@ namespace DetDesc { namespace Geometry {
 
     PhysVol     physvol (doc,vol,name);
     physvol.addPhysVolID(_A(id),x_det.id());
+    cout << "TubeSegment [" << name << "] Mother volume:" << mother.name() << endl;
     mother.addPhysVol(physvol,pos,rot);
     return sdet;
   }
@@ -993,6 +994,130 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
+  struct ILDExTPC : public Subdetector {
+    RefElement outerWall;
+    RefElement innerWall;
+    RefElement gas;
+
+    ILDExTPC(const Document& doc, const std::string& name, const std::string& type, int id)
+      : Subdetector(doc,name,type,id) {}
+  };
+
+
+  template <> Ref_t toRefObject<ILDExTPC,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
+    Document    doc     = lcdd.document();
+    xml_det_t   x_det   = e;
+    string      name    = x_det.nameStr();
+    xml_comp_t  x_tube  (x_det.child(_X(tubs)));
+    Material    mat     (lcdd.material(x_det.materialStr()));
+    ILDExTPC    tpc     (doc,name,x_det.typeStr(),x_det.id());
+    Tube        tpc_tube    (doc,name+"_envelope",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
+    Volume      tpc_vol  (doc,name+"_envelope_volume", tpc_tube, mat);
+
+    lcdd.add(tpc_tube).add(tpc_vol);
+    tpc.setEnvelope(tpc_tube).setVolume(tpc_vol);
+
+    for(xml_coll_t c(e,_X(detector)); c; ++c)  {
+      xml_det_t   px_det   (c);
+      xml_comp_t  px_tube  (px_det.child(_X(tubs)));
+      xml_dim_t   px_pos   (px_det.child(_X(position)));
+      xml_dim_t   px_rot   (px_det.child(_X(rotation)));
+      string      part_name(px_det.nameStr());
+      Material    part_mat (lcdd.material(px_det.materialStr()));
+      Subdetector part_det (doc,part_name,px_det.typeStr(),px_det.id());
+      Tube        part_tube(doc,part_name+"_tube",px_tube.rmin(),px_tube.rmax(),px_tube.zhalf());
+      Position    part_pos (doc,part_name+"_position",px_pos.x(),px_pos.y(),px_pos.z());
+      Rotation    part_rot (doc,part_name+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());
+      Volume      part_vol (doc,part_name,part_tube,part_mat);
+
+      part_det.setVolume(part_vol).setEnvelope(part_tube);
+      lcdd.add(part_tube).add(part_pos).add(part_rot).add(part_vol);
+      part_det.setVisAttributes(lcdd,px_det.visStr(), part_vol);
+
+      PhysVol     part_physvol (doc,part_vol,part_name);
+      part_physvol.addPhysVolID(_A(id),px_det.id());
+      tpc_vol.addPhysVol(part_physvol,part_pos,part_rot);
+
+      switch(part_det.id()) {
+      case 0:	tpc.innerWall = part_det;  break;
+      case 1:	tpc.outerWall = part_det;  break;
+      case 2:	tpc.gas = part_det;        break;
+      }
+      tpc.add(part_det);
+    }
+    tpc.setVisAttributes(lcdd, x_det.visStr(), tpc_vol);
+    lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(doc,tpc_vol,name),lcdd.identity());
+    return tpc;
+  }
+
+  struct ILDExVXD : public Subdetector {
+
+    ILDExVXD(const Document& doc, const std::string& name, const std::string& type, int id)
+      : Subdetector(doc,name,type,id) {}
+  };
+
+
+  template <> Ref_t toRefObject<ILDExVXD,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
+    Document    doc     = lcdd.document();
+    xml_det_t   x_det   = e;
+    string      name    = x_det.nameStr();
+    ILDExVXD    vxd     (doc,name,x_det.typeStr(),x_det.id());
+    Volume      mother  = lcdd.pickMotherVolume(vxd);
+
+    for(xml_coll_t c(e,_X(layer)); c; ++c)  {
+      xml_det_t   x_layer  (c);
+      int         layer_id  = x_layer.id();
+      xml_comp_t  x_support(x_layer.child(_X(support)));
+      xml_comp_t  x_ladder (x_layer.child(_X(ladder)));
+      string      layername = name+_toString(layer_id,"_layer%d");
+      int         nLadders   = x_ladder.number();
+      double      dphi       = 2.*M_PI/double(nLadders);
+      double      zhalf      = x_ladder.zhalf();
+      double      offset     = x_ladder.offset();
+      double      sens_radius= x_ladder.radius();
+      double      sens_thick = x_ladder.thickness();
+      double      supp_thick = x_support.thickness();
+      //double      supp_radius= sens_radius + sens_thick/2. + supp_thick/2.;
+      double      width      = 2.*tan(dphi/2.)*(sens_radius-sens_thick/2.);
+      Material    sens_mat   = lcdd.material(x_ladder.materialStr());
+      Material    supp_mat   = lcdd.material(x_support.materialStr());
+      Box         ladderbox (doc,layername+"_ladder_solid",  (sens_thick+supp_thick)/2.,width/2.,zhalf);
+      Volume      laddervol (doc,layername+"_ladder_volume",  ladderbox,sens_mat);
+      Box         sensbox   (doc,layername+"_sens_solid",     sens_thick/2.,width/2.,zhalf);
+      Volume      sensvol   (doc,layername+"_sens_volume",    sensbox,sens_mat);
+      Position    senspos   (doc,layername+"_sens_position",-(sens_thick+supp_thick)/2.+sens_thick/2.,0,0);
+      Box         suppbox   (doc,layername+"_supp_solid",     supp_thick/2.,width/2.,zhalf);
+      Volume      suppvol   (doc,layername+"_supp_volume",    suppbox,supp_mat);
+      Position    supppos   (doc,layername+"_supp_position",-(sens_thick+supp_thick)/2.+sens_thick/2.+supp_thick/2.,0,0);
+
+      lcdd.add(ladderbox).add(sensbox).add(senspos).add(suppbox).add(supppos);
+      lcdd.add(laddervol).add(sensvol).add(suppvol);
+
+      laddervol.setVisAttributes(lcdd.visAttributes(x_layer.visStr()));
+      // Cannot set the lower ones seperately
+      //suppvol.setVisAttributes(lcdd.visAttributes(x_layer.visStr()));
+      //sensvol.setVisAttributes(lcdd.visAttributes(x_support.visStr()));
+
+      laddervol.addPhysVol(PhysVol(doc,sensvol,layername+"_sensor"),senspos);
+      laddervol.addPhysVol(PhysVol(doc,suppvol,layername+"_support"),supppos);
+
+      for(int j=0; j<nLadders; ++j) {
+	string laddername = layername + _toString(j,"_ladder%d");
+	double radius = sens_radius + ((sens_thick+supp_thick)/2. - sens_thick/2.);
+	Rotation rot(doc,laddername+"_rotation",0,0,j*dphi);
+	Position pos(doc,laddername+"_position",
+		     radius*cos(j*dphi) - offset*sin(j*dphi),
+		     radius*sin(j*dphi) - offset*cos(j*dphi),0.);
+
+	lcdd.add(rot).add(pos);
+	PhysVol     ladder_physvol(doc,laddervol,laddername+"_physvol");
+	mother.addPhysVol(ladder_physvol,pos,rot);
+      }
+      vxd.setVisAttributes(lcdd, x_det.visStr(),laddervol);
+    }
+    return vxd;
+  }
+
   template <> Ref_t toRefObject<Subdetector,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
     Subdetector      det(0);
     string           type = e.attr<string>(_A(type));
@@ -1025,6 +1150,10 @@ namespace DetDesc { namespace Geometry {
       det = toRefObject<PolyhedraBarrelCalorimeter2>(lcdd,e,sd);
     else if ( type == "ForwardDetector" )
       det = toRefObject<ForwardDetector>(lcdd,e,sd);
+    else if ( type == "ILDExTPC" )
+      det = toRefObject<ILDExTPC>(lcdd,e,sd);
+    else if ( type == "ILDExVXD" )
+      det = toRefObject<ILDExVXD>(lcdd,e,sd);
     else  {
       string err = "UNKNOWN detector:" + name + " of type " + type;
       cout << err << endl;

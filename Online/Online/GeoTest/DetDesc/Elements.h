@@ -45,18 +45,15 @@ namespace DetDesc {
     template<class T> inline void deletePtr(T*& p) { if(p) delete p; p=0; }
 
     struct Handle_t  {
-      mutable Element_t* m_node;
+      Element_t* m_node;
       Handle_t(const Handle_t& c) : m_node(c.m_node) {}
-      Handle_t(Element_t* e=0) : m_node(e)        { /* if ( e ) e->addref();            */      }
-      ~Handle_t()                                 { /* if ( m_node ) m_node->release(); */      }
-      //Element_t* operator->() const               { return m_node;                              }
-      //operator Element_t* () const                { return m_node;                              }
-      bool isValid() const                        { return 0 != m_node; }
-      Element_t* ptr() const                      { return m_node;                              }
-      template <typename T> T* _ptr() const       { return (T*)m_node;                          }
-      //std::string tag() const;
-      //std::string text() const;
-      //std::string value() const;
+      Handle_t(Element_t* e=0) : m_node(e)        {                                        }
+      ~Handle_t()                                 {                                        }
+      //Element_t* operator->() const               { return m_node;                         }
+      //operator Element_t* () const                { return m_node;                         }
+      bool isValid() const                        { return 0 != m_node;                    }
+      Element_t* ptr() const                      { return m_node;                         }
+      template <typename T> T* _ptr() const       { return (T*)m_node;                     }
     };
 
     struct Document  {
@@ -69,20 +66,13 @@ namespace DetDesc {
 
     struct Element  {
       Handle_t m_element;
-      Element(const Handle_t&  e) : m_element(e) {                       }
+      Element(const Handle_t&  e) : m_element(e) {                            }
       Element(const Document& document, const std::string& type);
-      bool operator!() const                  {  return 0 == m_element.ptr(); }
-      //operator Handle_t () const              {  return m_element;       }
+      Element_t* ptr() const                  {  return m_element.ptr();      }
       bool isValid() const                    {  return 0 != m_element.ptr(); }
-      //operator Element_t*() const             {  return m_element;     }
-      //Handle_t handle() const                 {  return m_element;       }
-      Element_t* ptr() const                  {  return m_element.ptr(); }
-      Document document() const;
-      //std::string tagName() const             { return m_element.tag();              }
-      Handle_t clone(Handle_t h, bool deep) const;
-      Handle_t addChild(const char* tag)  const;
-      Handle_t setChild(const char* tag)  const;
-      Handle_t child(const std::string& tag, bool throw_exception=true) const;
+      bool operator!() const                  {  return 0 == m_element.ptr(); }
+      //operator Handle_t () const              {  return m_element;            }
+      //operator Element_t*() const             {  return m_element;            }
     };
 
     struct RefElement : public Element  {

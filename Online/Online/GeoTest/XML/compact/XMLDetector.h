@@ -53,6 +53,10 @@ namespace DetDesc {
       double incoming_r() const;
       double crossing_angle() const;
 
+      double radius() const;
+      double offset() const;
+      int    number() const;
+
       int numsides() const;
     };
 

@@ -387,5 +387,12 @@ namespace DetDesc   { namespace XML  {
   extern const Tag_t Attr_grid_size_y;
   extern const Tag_t Attr_grid_size_z;
 
+  // ILCEx
+  extern const Tag_t Tag_support;
+  extern const Tag_t Tag_ladder;
+  extern const Tag_t Attr_number;
+  extern const Tag_t Attr_offset;
+  extern const Tag_t Attr_radius;
+
 }}
 #endif // DETDESC_XML_TAGS_H

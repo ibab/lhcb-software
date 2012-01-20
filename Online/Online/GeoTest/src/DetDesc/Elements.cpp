@@ -2,6 +2,7 @@
 #include "DetDesc/Internals.h"
 #include "TGeoManager.h"
 #include "TNamed.h"
+#include <iostream>
 #include <stdexcept>
 
 #include "TMap.h"
@@ -40,8 +41,10 @@ int DetDesc::Geometry::_toInt(const string& value)  {
     s.erase(idx,5);
   while(s[0]==' ')s.erase(0,1);
   double result = eval.evaluate(s.c_str());
-  if (eval.status() != XmlTools::Evaluator::OK)
+  if (eval.status() != XmlTools::Evaluator::OK) {
+    cerr << value << ": ";
     eval.print_error();
+  }
   return (int)result;
 }
 
@@ -51,15 +54,19 @@ bool   DetDesc::Geometry::_toBool(const string& value)   {
 
 float DetDesc::Geometry::_toFloat(const string& value)   {
   double result = eval.evaluate(value.c_str());
-  if (eval.status() != XmlTools::Evaluator::OK)
+  if (eval.status() != XmlTools::Evaluator::OK) {
+    cerr << value << ": ";
     eval.print_error();
+  }
   return (float)result;
 }
 
 double DetDesc::Geometry::_toDouble(const string& value)   {
   double result = eval.evaluate(value.c_str());
-  if (eval.status() != XmlTools::Evaluator::OK) 
+  if (eval.status() != XmlTools::Evaluator::OK) {
+    cerr << value << ": ";
     eval.print_error();
+  }
   return result;
 }
 
@@ -73,8 +80,10 @@ void DetDesc::Geometry::_toDictionary(const string& name, const string& value)  
     v.erase(idx,7);
   while(v[0]==' ')v.erase(0,1);
   double result = eval.evaluate(v.c_str());
-  if (eval.status() != XmlTools::Evaluator::OK)
+  if (eval.status() != XmlTools::Evaluator::OK) {
+    cerr << value << ": ";
     eval.print_error();
+  }
   eval.setVariable(n.c_str(),result);
 }
 
@@ -179,10 +188,6 @@ Element_t* Document::createElt(const std::string& tag)  const {
 Element::Element(const Document& document, const std::string& type) 
 : m_element(document.createElt(type))
 { }
-
-Document Element::document() const   {
-  return Document(0); //(m_element ? m_element->getOwnerDocument() : 0);
-}
 
 RefElement::RefElement(const Document& document, const std::string& type, const std::string& name)  
 : Element(document, type)
