@@ -93,18 +93,19 @@ class Z02TauTauProngConf(LineBuilder) :
         
         
         
+        
         #self.__PVOutputLocation__                  = "Rec/Vertex/Primary" 
         
         ### DEFINE HADRONS
         selHad         = {name                  : self._createHadProng(    name   = "Hadron_"+self.name,
-                                                                       config = config),
+                                                                       config = config)
         }
         
         ### DEFINE TAUS
         selTau         = {name                  : self._createTauProng(    name   = "Tau_"+self.name,
                                                                        hadSel = selHad[self.name],
                                                                        config = config),
-            name+"_SameSignTau"   : self._createTauProng_SameSign(    name   = "Tau_"+self.name+"_SameSignTau",
+                name+"_SameSignTau"   : self._createTauProng_SameSign(    name   = "Tau_"+self.name+"_SameSignTau",
                                                                   hadSel = selHad[self.name],
                                                                   config = config),
             }

@@ -8,15 +8,30 @@ from StrippingConf.Configuration import StrippingConf
 # Now build the stream
 from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
+#
+#from StrippingSelections.StrippingBuToKX3872 import StrippingBu2KX3872Conf as dummy_builder
+#from StrippingSelections.StrippingBuToKX3872 import Stripping_BuToKX3872_TestDictonary
+#
+#from StrippingSelections.StrippingZ02TauTauProng import Z02TauTauProngConf as builder
+#from StrippingSelections.StrippingZ02TauTauProng import config_params
+#
+#lb  = builder('Z02TauTauProng',config_params)
+#dlb = dummy_builder('Bu2KX3872',Stripping_BuToKX3872_TestDictonary)
+#stream.appendLines( dlb.lines() )
+#stream.appendLines( lb.lines() )
 
-from StrippingSelections.StrippingB2SameChargeMuon import StrippingB2SameChargeMuonConf as builder
-config_params =  {
-    'LinePrescale'        : 1.0
-    , 'LinePostscale'            : 1.0
-}
-lb = builder('B2SameChargeMuon',config_params)
 
+from StrippingSelections.StrippingDiMuonNew import DiMuonConf as dummy_builder
+from StrippingSelections.StrippingDiMuonNew import config_default
+
+from StrippingSelections.StrippingLowMassHiggs import A1MuMuConf as builder
+from StrippingSelections.StrippingLowMassHiggs import config_params
+
+lb  = builder('A1MuMu',config_params)
+dlb = dummy_builder('DiMuon',config_default)
+stream.appendLines( dlb.lines() )
 stream.appendLines( lb.lines() )
+
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
