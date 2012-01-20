@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-20 - Patrick Koppenburg
+ - Widen mass windows of B->J/psiKs and J/psiPhi to catch Cabibbo-suppressed decays.
+
 ! 2012-Jan-20 - Ricardo Vazquez 
  - New stripping for radiative decays
    . This new Radiative stripping is based on the Beauty2Charm stripping. It shares the Beauty2Charm_LokiUtils module
