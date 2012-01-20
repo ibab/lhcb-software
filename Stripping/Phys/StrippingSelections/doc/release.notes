@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-Jan-20 - Ricardo Vazquez 
+ - New stripping for radiative decays
+   . This new Radiative stripping is based on the Beauty2Charm stripping. It shares the Beauty2Charm_LokiUtils module
+   . Added new lines of Bd,Bs,Bu and Lambda_b. Now there are ~20 lines 
+     
+
 ! 2012-Jan-20 - Patrick Owen 
  - Added StrippingCharmForVub.py
    . Added new line for determination of Vub
