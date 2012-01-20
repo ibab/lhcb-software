@@ -50,7 +50,8 @@ class LoKiCuts(object):
                 'BPVVDRHO'  : 'BPVVDRHO',
                 'BPVVDZ'    : 'BPVVDZ',
                 'DOCAMAX'   : 'DOCAMAX',
-                'AM'        : 'AM'
+                'AM'        : 'AM',
+                'CL'        : 'CL'
                 }
                 
     def __init__(self,cuts,config):
