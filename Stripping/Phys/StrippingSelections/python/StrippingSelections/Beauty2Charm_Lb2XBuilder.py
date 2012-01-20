@@ -19,6 +19,7 @@ class LcBuilder(object):
         self.config = config
         self.pkpi = [self._makeLc2pKpi()]
         self.pkpi_pid = [filterPID('Lc2pKPiPID',self.pkpi,config_pid)]
+        self.xic_pkpi = [self._makeXic2pKpi()]
         
     def _makeLc2pKpi(self):
         '''Makes Lc -> p K pi + cc'''
@@ -37,6 +38,24 @@ class LcBuilder(object):
         return Selection('Lc2PKPiBeauty2Charm',Algorithm=cp,
                          RequiredSelections=[self.pions,self.kaons,
                                              self.protons])
+    
+    def _makeXic2pKpi(self):
+        '''Makes Xic -> p K pi + cc'''
+        dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
+        comboCuts = [LoKiCuts(['ASUMPT'],self.config).code(),
+                     "(ADAMASS('Xi_c+') < %s*%s) " % (dm+10,units),
+                     hasTopoChild()]
+        comboCuts.append(LoKiCuts(['AMAXDOCA'],self.config).code())
+        comboCuts = LoKiCuts.combine(comboCuts)
+        momCuts = ["(ADMASS('Xi_c+') < %s*%s) " % (dm,units),
+                   LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],
+                            self.config).code()]
+        momCuts = LoKiCuts.combine(momCuts)
+        cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
+                              DecayDescriptors=["[Xi_c+ -> p+ K- pi+]cc"])
+        return Selection('Xic2PKPiBeauty2Charm',Algorithm=cp,
+                         RequiredSelections=[self.pions,self.kaons,
+                                             self.protons])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -46,6 +65,7 @@ class Lb2XBuilder(object):
     def __init__(self,lc,d,hh,topoPions,topoKaons,protons,hhh,config):
         self.lc = lc.pkpi
         self.lc_pid = lc.pkpi_pid
+        self.xic = lc.xic_pkpi
         self.d = d
         self.d0 = d.hh
         self.hh = hh
@@ -58,6 +78,8 @@ class Lb2XBuilder(object):
         self.lines = []
         # Lb -> Lc+- H-+ (+WS)
         self._makeLb2LcH()
+        # Lb -> Xic+- H-+ (+WS)
+        self._makeLb2XicH()
         # Sb+- -> D0(HH) p+-
         self._makeSb2D0P()
         # Sb -> D-+(HHH) p+-
@@ -89,6 +111,21 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
         self.lines.append(ProtoLine(noip,1.0))
         self.lines.append(ProtoLine(noip_ws,0.1))
+
+    def _makeLb2XicH(self):
+        '''Make RS and WS Lb -> Xi_c H (H=pi,K) + cc.'''
+        pions = self.topoPions
+        kaons = self.topoKaons
+        decays = {'Lb2XicPi': ["[Lambda_b0 -> Xi_c+ pi-]cc"],
+                  'Lb2XicK' : ["[Lambda_b0 -> Xi_c+ K-]cc"]}
+        inputs = {'Lb2XicPi': self.xic+pions, 'Lb2XicK': self.xic+kaons}
+        rs = makeB2XSels(decays,'Xic2PKPi',inputs,self.config)
+        decays = {'Lb2XicPiWS': ["[Lambda_b0 -> Xi_c+ pi+]cc"],
+                  'Lb2XicKWS' : ["[Lambda_b0 -> Xi_c+ K+]cc"]}
+        inputs = {'Lb2XicPiWS':self.xic+pions, 'Lb2XicKWS':self.xic+kaons}
+        ws = makeB2XSels(decays,'Xic2PKPi',inputs,self.config)
+        self.lines.append(ProtoLine(rs,1.0))
+        self.lines.append(ProtoLine(ws,0.1))
 
     def _makeLb2LcHHH(self):
         '''Make RS and WS Lb -> Lc HHH (H=pi,K) + cc.'''

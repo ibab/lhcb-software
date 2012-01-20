@@ -37,6 +37,7 @@ class B2DXBuilder(object):
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
         self._makeB02DH('D2HHHCFPID',self.d.hhh_cf_pid,False) # No IP line!
+        self._makeB02DH('Ds2HHHPID',self.d.ds_hhh_pid,False) # No IP line!
         self._makeB02DHH('D2HHH',self.d.hhh_cf_pid)# B0 -> D+- H-+ H0 (+WS)
         self._makeB2DHH('D2HHHCFPID',self.d.hhh_cf_pid)#B+- ->D+-(HHH)H+H-(+WS)
         self._makeB2DKS('D2HHH',self.d.hhh,'DD') # B+-  -> D+-(HHH)  KS
