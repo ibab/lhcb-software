@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-Jan-21 - Patrick Spradlin
+ - Updated StrippingLambdac2PKPiForXSec.py 
+   . Add additional decay modes: Lambda_c+ -> p K K, p pi pi, p K+ pi-.
+   . Added optional TisTosTagger to lines.
+
 ! 2012-01-20 - Patrick Koppenburg
  - Widen mass windows of B->J/psiKs and J/psiPhi to catch Cabibbo-suppressed decays.
 
