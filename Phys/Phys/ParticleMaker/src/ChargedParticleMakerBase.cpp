@@ -29,8 +29,11 @@ ChargedParticleMakerBase::ChargedParticleMakerBase( const std::string& name,
 //=========================================================================
 //
 //=========================================================================
-StatusCode ChargedParticleMakerBase::initialize ( ) {
+StatusCode ChargedParticleMakerBase::initialize ( )
+{
   StatusCode sc = ParticleMakerBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
   m_p2s = tool<IParticle2State>("Particle2State"); // not private
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
@@ -66,9 +69,9 @@ StatusCode ChargedParticleMakerBase::initialize ( ) {
   m_pid  = m_pp  -> particle () ;
   m_apid = m_app -> particle () ;
 
-  info() << " Particle/AntiParticle to be created : \t "
+  info() << "Particle/AntiParticle to be created : "
          << "'"   << m_pid << "'/'" << m_apid << "'" << endmsg ;
-
+  
   return sc;
 }
 // ============================================================================
@@ -76,13 +79,13 @@ StatusCode ChargedParticleMakerBase::initialize ( ) {
 // ============================================================================
 StatusCode ChargedParticleMakerBase::setPPs( const std::string& pid )
 {
-  if ( 0 == ppSvc() ) { return StatusCode ( 110 ) ; }
+  if ( ! ppSvc() ) { return StatusCode ( 110 ) ; }
   // get the properties of the particle
   m_pp = ppSvc  () -> find( pid ) ;
-  if ( 0 == m_pp    ) { return StatusCode ( 111 ) ; }
+  if ( ! m_pp    ) { return StatusCode ( 111 ) ; }
   // get the the antiparticle
   m_app = m_pp -> antiParticle () ;
-  if ( 0 == m_app   ) { return StatusCode ( 112 ) ; }
+  if ( ! m_app   ) { return StatusCode ( 112 ) ; }
   m_apid = m_app -> particle () ;
   return StatusCode::SUCCESS ;
 }
@@ -90,18 +93,19 @@ StatusCode ChargedParticleMakerBase::setPPs( const std::string& pid )
 /// Select the appropriate state
 // ============================================================================
 const LHCb::State* ChargedParticleMakerBase::usedState( const LHCb::Track* track) const{
-  if ( 0==track) Exception("NULL track");
+  if (!track) Exception("NULL track");
   const LHCb::State* uState = 0 ;
   if (msgLevel(MSG::VERBOSE))
   { verbose() << "ChargedParticleMakerBase::usedState :: Looking for State" << endmsg ; }
   // default: closest to the beam:
-  if ( 0 == uState ) { uState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
+  if ( ! uState ) { uState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
   // if not availabel: first measurementr
-  if ( 0 == uState ) { uState = track->stateAt( LHCb::State::FirstMeasurement ) ; }
+  if ( ! uState ) { uState = track->stateAt( LHCb::State::FirstMeasurement ) ; }
   // backup
-  if ( 0 == uState )
+  if ( ! uState )
   {
-    Warning("No state closest to beam or at first measurement for track. Using first state instead",10,StatusCode::SUCCESS) ;
+    Warning("No state closest to beam or at first measurement for track. Using first state instead",
+            10,StatusCode::SUCCESS).ignore() ;
     uState = &track->firstState() ;
   }
   if (msgLevel(MSG::VERBOSE))

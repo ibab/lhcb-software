@@ -53,7 +53,6 @@ StatusCode CombinedParticleMaker::initialize()
   const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize base class" );
   
-
   // get tooltype
   std::string toolType = "";
   std::string name = "";
@@ -78,7 +77,7 @@ StatusCode CombinedParticleMaker::initialize()
 
   // Get particle properties
   m_partProp = ppSvc()->find( m_pid );
-  if (0==m_partProp) return Error("Unknown Particle Property for "+m_pid);
+  if (!m_partProp) return Error("Unknown Particle Property for "+m_pid);
 
   // load tool into map
   if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
