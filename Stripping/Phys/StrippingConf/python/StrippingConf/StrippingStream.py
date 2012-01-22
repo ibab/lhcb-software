@@ -27,7 +27,8 @@ class StrippingStream ( object ) :
                    AcceptBadEvents = None,                         # If None, will be overridden 
                                                                    # in StrippingConf
 		   MaxCandidates = "Override", 
-		   MaxCombinations = "Override"
+		   MaxCombinations = "Override", 
+		   TESPrefix = None
                  ) :
         self.lines = copy(Lines)
         for line in Lines : 
@@ -42,7 +43,7 @@ class StrippingStream ( object ) :
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
-        self.TESPrefix = 'Strip'                 # Prefix for DecReports location, configured when appending to StrippingConf
+	self.TESPrefix = TESPrefix               # Prefix for DecReports location, configured when appending stream
         self.HDRLocation = 'Phys/DecReports'     # DecReports location, configured when appending to StrippingConf
 
     def name(self) :
@@ -61,24 +62,21 @@ class StrippingStream ( object ) :
 	    line.declareAppended()
 	    
 
-    def createConfigurables(self, TES = None) :
+    def createConfigurables(self) :
         from Configurables import StrippingCheck
 
         # Create configurables
-        
-        if TES == True : 
-    	    raise Exception("\nTES=True option in StrippingStream is not supported. Use TupleToolStripping. ")
-	elif TES == False : 
-	    print "WARNING: TES option in StrippingStream is not supported. "
-        
+
+	if self.TESPrefix == None : self.TESPrefix = self._name
+
 	for line in self.lines : 
 	    if line.MaxCandidates == "Override" : 
 	    	line.MaxCandidates = self.MaxCandidates
 	    if line.MaxCombinations == "Override" : 
 	    	line.MaxCombinations = self.MaxCombinations
 	    	    
-	    line.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
-            print "ADDING not TES", line.configurable(), "name ", line.configurable().name(), "to StrippingStream.lines" 
+	    line.createConfigurable( self.TESPrefix, self.HDRLocation )
+            log.info("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
             self.algs.append(line.configurable())
 
         # Make the line for stream decision (OR of all stream lines)
@@ -91,7 +89,7 @@ class StrippingStream ( object ) :
 	from StrippingLine import StrippingLine
 
 	self.streamLine = StrippingLine("Stream"+self.name(), checkPV = False, algos = [ linesSeq ] )
-	self.streamLine.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
+	self.streamLine.createConfigurable( self.TESPrefix, self.HDRLocation )
 	self.streamLine.declareAppended()
 
         # If the BadEventsSelection was not given neither in StrippingConf nor in StrippingStream
@@ -104,7 +102,7 @@ class StrippingStream ( object ) :
 	if self.BadEventSelection != None : 
 	    self.eventSelectionLine = StrippingLine("Stream"+self.name()+"BadEvent", 
 	                                      checkPV = False, algos = [ self.BadEventSelection ] )
-	    self.eventSelectionLine.createConfigurable( self.TESPrefix + "/" + self.HDRLocation )
+	    self.eventSelectionLine.createConfigurable( self.TESPrefix, self.HDRLocation )
 	    self.eventSelectionLine.declareAppended()
 
 

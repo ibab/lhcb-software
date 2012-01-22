@@ -5,6 +5,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-01-22 - Anton Poluektov 
+  - Remove lots of printout (move to debug stream)
+  - Store DecReports to /Event/<StreamName>/Phys/DecReports by default. 
+    Can be modified by TESPrefix option in StrippingConf, StrippingStream or StrippingLine
+
 !========================= StrippingConf v4r2p1 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert
  - Move to OfflineDeterministicPrescaler

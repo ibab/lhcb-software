@@ -138,7 +138,7 @@ class bindMembers (object) :
 
     def _handle_Configurable( self, line, alg ) :
         if isinstance(line, str) and line.find("Stream") != 0 :
-            print 'WARNING: line', line, 'uses plain Gaudi configurable', alg.name(), '. Consider using Selection instead!'
+            log.warning('line' + line + ' uses plain Gaudi configurable ' + alg.name() + '. Consider using Selection instead!')
         # if not known, blindly copy -- not much else we can do
         self._members += [ alg ]
         # try to guess where the output goes...
@@ -318,6 +318,7 @@ class StrippingLine(object):
                    postscale = 1    ,   # postscale factor
                    MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
                    MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
+                   HDRLocation = None,  # if None, defined by stream name
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -348,6 +349,7 @@ class StrippingLine(object):
         self._HLT       = HLT
         self._FILTER    = FILTER
         self._checkPV   = checkPV
+        self._HDRLocation = HDRLocation
         
         if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
@@ -365,6 +367,8 @@ class StrippingLine(object):
         self._members = []
 
         self._selection = None
+        
+        self.fullHDRLocation = None
         
         # if needed, check Primary Vertex before running all algos
         
@@ -419,9 +423,14 @@ class StrippingLine(object):
     def isAppended( self ) : 
 	return self._appended
 
-    def createConfigurable( self, HDRLocation = 'Strip/Phys/DecReports' ) : 
-        # check for forbidden attributes
+    def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) : 
         
+        if self._HDRLocation == None : 
+    	    self.fullHDRLocation = TESPrefix + "/" + HDRLocation
+    	else : 
+    	    self.fullHDRLocation = self._HDRLocation
+        
+        # check for forbidden attributes
         args    = self._args
 
         mdict = {} 
@@ -465,7 +474,7 @@ class StrippingLine(object):
 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members ) })
             
-        mdict.update( { 'HltDecReportsLocation' : HDRLocation } )
+        mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
         if (self.outputLocation()) : 
     	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
 #        mdict.update( { 'ANNSvc' : 'StripANNSvc' } )
@@ -481,8 +490,8 @@ class StrippingLine(object):
                             MaxCandidates = self.MaxCandidates, 
                             MaxCombinations = self.MaxCombinations ) 
 
-        print '# created StrippingAlg configurable for', self._name, '\n'
-        print self._configurable
+        log.debug(' created StrippingAlg configurable for' +  self._name)
+        log.debug( self._configurable )
 
         return self._configurable
 
@@ -501,8 +510,8 @@ class StrippingLine(object):
 	    _members = _flattenedMembers
 	    if not _foundSequencer : break
 	    
-	print "FilterMembers for line %s : " % self.name()
-	print _members
+	log.info( "FilterMembers for line %s : " % self.name() )
+	log.info( _members )
 	    
 	return _members
 
@@ -527,6 +536,9 @@ class StrippingLine(object):
     #  @endcode    
     def configurable ( self ) :
         return self._configurable
+
+    def decReportLocation ( self ) :
+	return self.fullHDRLocation
 
     def outputLocation ( self ) :
         """

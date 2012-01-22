@@ -19,8 +19,7 @@ class StrippingConf ( object ) :
 
     def __init__( self,
                   name = "",
-                  TES = None,
-                  TESPrefix = 'Strip', 
+                  TESPrefix = None, 
                   HDRLocation = 'Phys/DecReports', 
                   Streams = [], 
                   BadEventSelection = None, 
@@ -34,16 +33,11 @@ class StrippingConf ( object ) :
         else :
             self._name = name
 
-        if TES == True : 
-    	    raise Exception("\nTES=True option in StrippingConf is not supported. Use TupleToolStripping. ")
-	elif TES == False : 
-	    print "WARNING: TES option in StrippingConf is not supported. "
-
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
-        self._hdrLocation = HDRLocation
         self._tesPrefix = TESPrefix
+        self._hdrLocation = HDRLocation
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
@@ -137,8 +131,9 @@ class StrippingConf ( object ) :
         """
         log.info(self._name+ " appending stream "+ stream.name())
         
-        stream.TESPrefix = self._tesPrefix
-        stream.HDRLocation = self._hdrLocation
+        if stream.TESPrefix == None : 
+	    stream.TESPrefix = self._tesPrefix
+	stream.HDRLocation = self._hdrLocation
         if stream.BadEventSelection == "Override" : 
             stream.BadEventSelection = self.BadEventSelection
         if stream.AcceptBadEvents == None : 
@@ -157,7 +152,14 @@ class StrippingConf ( object ) :
         self._streamSequencers.append(stream.sequence())
 
 
+    def decReportLocations(self) : 
+	locs = []
+	for stream in self._streams : 
+	    for line in stream.lines : 
+		loc = line.decReportLocation()
+		if loc != None and loc not in locs : locs.append(loc)
 
+	return locs
 
 # =============================================================================
 # Some useful decorations 
