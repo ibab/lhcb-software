@@ -4,6 +4,11 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-01-23 - Chris Jones
+ - Some improvements to TrackToDST
+  + Fully support stripping of Muon Tracks
+  + Strip Track::Velo tracks in the same way as Track::VeloR
+
 ! 2011-12-19 - Wouter Hulsbergen
  - remove use of Track::nodes() in TrackV0Finder
 
