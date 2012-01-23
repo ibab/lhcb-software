@@ -1,0 +1,8 @@
+#pragma print off
+#include "$ONLINETASKSROOT/options/Main.opts"
+ApplicationMgr.ExtSvc   = { "LHCb::MEPManager/MEPInit" };
+MEPInit.InitFlags        = "-s=70000 -e=100 -u=33 -b=15 -f -i=Events -c -s=5000 -e=100 -u=32 -f -i=Send  -c ";
+MessageSvc.OutputLevel   = 1;  // Minimum is Error
+Runable.Dll              = "OnlineKernel";
+Runable.Call             = "tan_nameserver";
+Runable.InitFlags        = "-a -tcp -n -d";

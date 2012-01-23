@@ -4,7 +4,7 @@
 // $Id: MEPRxSvc.opts,v 1.8 2010-11-02 15:47:18 niko Exp $
 // Sample options for the eventbuilder service MEPRxSvc as of v4r57
 // niko.neufeld@cern.ch
-#include "$HLTOPTS/OnlineEnvironment.opts"
+#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
@@ -14,7 +14,7 @@ ApplicationMgr.SvcOptMapping         = { "LHCb::OnlineRunable/EmptyEventLoop" , 
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		    += { "MonitorSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
-MEPManager.Buffers                   = { "MEP" };
+MEPManager.Buffers                   = { "Events" };
 //MEPManager.MapUnusedBuffers          = false;
 // Specific options for MEPRxSvc - options not listed here may not exist - please check the code(!) 
 Runable.MEPBuffers        = 3;           // concurrently built events
@@ -31,8 +31,8 @@ Runable.createDAQErrorMEP = false;       // do not create a summary bank about e
 Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only for pixel testbeam)
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
 Runable.outputLevel       = 1;
-Runable.nameMEPBuf        = "MEP";       
+Runable.nameMEPBuf        = "Events";       
 Runable.overflow          = false;       // do not use overflow (yet)
-#include "$HLTOPTS/EBSetup.opts"
+#include "$ONLINETASKSROOT/options/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval = 5;
