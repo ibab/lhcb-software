@@ -53,6 +53,7 @@ DECLARE_ALGORITHM_FACTORY( HPDFlashMoni )
 
   declareProperty( "DumpEvents",      m_dumpEvents = false );
   declareProperty( "MaxDumpedEvents", m_maxDumpedEvents = 100 );
+  declareProperty( "StopSequence"   , m_stopSequence = true );
 }
 
 // Destructor
@@ -250,6 +251,10 @@ StatusCode HPDFlashMoni::execute()
 
   // keep track of good/bad events
   m_goodBadEvents->fill(goodEvent);
+  if ( goodEvent == 0 && m_stopSequence )
+    setFilterPassed(false);
+  else
+    setFilterPassed(true);
 
   return StatusCode::SUCCESS;
 }

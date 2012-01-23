@@ -89,12 +89,14 @@ namespace Rich
       double m_relThreshold;    //< relative threshold
       double m_secondThreshold; //< lower threshold relative to higher
 
-      int m_events;             //< keep track of events
-      int m_skipEvents;         //< events to skip
+      int m_events;           //< keep track of events
+      int m_skipEvents;       //< events to skip
 
-      bool m_dumpEvents;        //< dump events in histograms
-      int m_dumpedEvents;       //< dumped events counter
-      int m_maxDumpedEvents;    //< max number of dumped events
+      bool m_dumpEvents;      //< dump events in histograms
+      int m_dumpedEvents;     //< dumped events counter
+      int m_maxDumpedEvents;  //< max number of dumped events
+
+      bool m_stopSequence;    //< control sequence filter (only bad events pass)
 
     };
   }
