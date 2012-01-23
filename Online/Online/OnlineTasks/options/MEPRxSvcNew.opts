@@ -15,6 +15,7 @@ ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		    += { "MonitorSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "Events" };
+MEPRxSvc.Outputlevel = 0;
 //MEPManager.MapUnusedBuffers          = false;
 // Specific options for MEPRxSvc - options not listed here may not exist - please check the code(!) 
 Runable.MEPBuffers        = 3;           // concurrently built events
@@ -30,9 +31,10 @@ Runable.alwaysSendMEPReq  = true;        // always send a MEPReq for any incompl
 Runable.createDAQErrorMEP = false;       // do not create a summary bank about event-building errors
 Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only for pixel testbeam)
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
-Runable.outputLevel       = 1;
-Runable.nameMEPBuf        = "Events";       
-Runable.overflow          = false;       // do not use overflow (yet)
+Runable.outputLevel       = 0;
+Runable.nameLiveBuf        = "Events";     
+Runable.nameOverflowBuf    = "Overflow";
+Runable.overflow          = true;       // do not use overflow (yet)
 #include "$ONLINETASKSROOT/options/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval = 5;

@@ -31,8 +31,7 @@ Runable.createDAQErrorMEP = false;       // do not create a summary bank about e
 Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only for pixel testbeam)
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
 Runable.outputLevel       = 1;
-Runable.nameMEPBuf        = "MEP";       
-Runable.overflow          = false;       // do not use overflow (yet)
+Runable.nameMEPBuf        = "MEP";
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
 MonitorSvc.CounterUpdateInterval = 5;

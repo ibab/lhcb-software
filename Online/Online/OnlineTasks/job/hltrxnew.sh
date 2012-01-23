@@ -18,7 +18,7 @@ mkdbgscr () {
 cat > ${ONLINETASKSROOT}/job/meprxgdb.x <<EOF
 file ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe
 b 'LHCb::MEPRxSvc::initialize()'
-run libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto -opt=$ONLINETASKSROOT/options/MEPRxSvc.opts -main=$GAUDIONLINEROOT/options/Main.opts
+run libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto -opt=$ONLINETASKSROOT/options/MEPRxSvcNew.opts -main=$GAUDIONLINEROOT/options/Main.opts
 EOF
 #	file ${GAUDIONLNEROOT}/${CMTCONFIG}/Gaudi.exe
 #	b LHCb::MEPRxSvc::initialize
@@ -83,7 +83,7 @@ sleep 1
 #[ -z $pid ] && $WIDETERM MEPRx@${HOST} -e "/opt/FMC/bin/logViewer | grep -i meprx" &
 #$WIDETERM MEPRx@${HOST} -e "export UTGID=${HOST}/MEPRx ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/MEPRxSvc.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 sleep 1
-export UTGID=MEPRX
+export UTGID=${HOST}/MEPRX
 if [[ ! -z $DBG ]]; then
 	mkdbgscr
 	gdb -x ${ONLINETASKSROOT}/job/meprxgdb.x
