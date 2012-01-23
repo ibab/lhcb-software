@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2012-01-23 - Manuel Tobias Schiller
+ - implement python based Zoo tuple stripping in the ZooTuplePlayer class; the
+   interface is similar to the ZooDrawP/ZooDrawMCP methods which have been
+   available for some time with ZooTuplePlayer, see
+   examples/Bs2DshStrippingExample.py for an example
+
 ! 2012-01-19 - Manuel Tobias Schiller
  - modularise the ZooTuplePlayer python class to allow user-configurable
    per-accepted-candidate/per-accepted-ZooMCP/per-accepted-event actions when
