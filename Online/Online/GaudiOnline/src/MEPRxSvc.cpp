@@ -29,12 +29,13 @@
 #include "GaudiOnline/MEPRxSys.h"
 #include "NET/IPHeader.h"
 #include "MBM/MepProducer.h"
+#include "MBM/Producer.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/OnlineRunInfo.h"
 #include "MDF/MEPEvent.h" 
 #include "Event/RawBank.h"
-
+ 
 
 typedef unsigned int uint;
 
@@ -92,7 +93,15 @@ using std::string;
 using std::hex;
 
 namespace LHCb  {
-  struct MEPRx  : public MEP::Producer {
+  struct MEPBuf : public MBM::Producer {
+    static void cancelReq(MEPBuf *p) {
+      if (p) ::mbm_cancel_request(p->m_bmid);
+    }
+    MEPBuf(const std::string &nam, const std::string &bufnam, int partitionID);
+    virtual ~MEPBuf();
+  }; 
+  
+  struct MEPRx {
     MEPRxSvc*       m_parent;
     // parameters
     int             m_refCount;
@@ -104,7 +113,7 @@ namespace LHCb  {
     u_int32_t       m_runNumber;
     u_int32_t       m_l0ID;
     u_int32_t       m_prevL0ID;
-    u_int32_t       m_partID;	
+    u_int32_t       m_partID; 
     u_int32_t       m_brx; 
     u_int16_t       m_pf;
     u_int64_t       m_hdrtsc; // tsc after reception of MEP header
@@ -121,66 +130,18 @@ namespace LHCb  {
     u_int32_t       m_daqError;
     RawBank *m_rawBufHdr, *m_MDFBankHdr, *m_DAQBankHdr, *m_ODINBank;  
     u_int8_t        *m_odinMEP;
-  public:
+    struct MEPBuf   *m_buf, *m_ovflBuf, *m_liveBuf;
     MEPRx(const std::string &nam, MEPRxSvc *parent);
     virtual ~MEPRx();
-    static void release(MEPRx* p)               {      delete p;              }
-    static void cancelReq(MEPRx* p)             {      if ( p ) ::mbm_cancel_request(p->m_bmid);  }
+    static void release(MEPRx* p){      
+       delete p;              
+    }
+    static void cancelReq(MEPRx* p) {
+      if (p) p->m_buf->cancelReq(p->m_buf);
+    }
     static bool cmpL0ID(MEPRx *r, u_int32_t id) {  
-        return r->m_l0ID < id;   
+      return r->m_l0ID < id;   
     }
-    static int spaceTimeOut(void *p) {
-      MEPRx *self = (MEPRx *) p;
-      if (self->m_spaceRC != -100) return 0;
-      mbm_cancel_request(self->m_bmid);
-      return 1;
-    }
-#define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
-#define HOSTNAME(id) m_parent->m_srcName[id]
-
-    void updateNoshow() {
-      for (int i = 0; i < m_nSrc; ++i)
-	m_parent->m_noShow[i] = m_seen[i];
-    }
-
-    int spaceRearm(int) {
-      m_eventType = EVENT_TYPE_MEP;
-      m_brx = m_nrx = 0; 
-      memset(m_seen, 0, m_nSrc * sizeof(int));
-      m_spaceRC = MEP::Producer::spaceRearm(m_spaceSize);
-      return m_spaceRC;
-    }
-    // Run the application in synchonous mode
-    int runSynchronous() {
-      int status = spaceRearm(0);      
-      m_log << MSG::ERROR << "useless call from the framework" << endmsg;
-      return (status == MBM_NORMAL) ? spaceAction() : status;
-    }
-    void multipleSrc(int srcid ) {
-      m_eventType = EVENT_TYPE_ERROR;
-      m_log << MSG::ERROR << "Multiple event from " << 
-      m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
-      << ")" << endmsg;
-      m_parent->m_multipleEvt[srcid]++;
-    } 
-    void badPkt(DAQErrorType type , int srcid ) {
-      m_eventType = EVENT_TYPE_ERROR;
-      m_daqError |= type;
-      m_log << MSG::ERROR << "Bad packet from " <<
-	HOSTNAME(srcid) << " [";
-      switch (type) {
-      case EmptyMEP: m_parent->m_truncPkt[srcid]++; 
-	m_log << "empty MEP"; break;
-      case WrongPackingFactor: m_parent->m_badPckFktPkt[srcid]++;
-	m_log << "mismatch in packing factor"; break;
-      case ShortPkt: m_parent->m_badLenPkt[srcid]++;
-	m_log << "mismatch between length on wire and in MEP header"; break;
-      default: m_log << "Mysterious error: " << type;
-      }
-      m_log << "]" << endmsg;
-      (m_parent->m_totBadMEP)++;
-    }
-    /// We create a MEP fragment with the required error bank
     int createDAQErrorBankEntries();
     int setupDAQErrorBankHdr();
     int createDAQErrorMEP(u_int8_t *buf, uint nEvt);
@@ -188,68 +149,129 @@ namespace LHCb  {
     void setupMDFBank(u_int32_t, u_int32_t, u_int32_t);
     void setupODINBank(int n, u_int32_t); 
     int createMDFMEP(u_int8_t *buf, int nEvt);
-    int createODINMEP(u_int8_t *buf, int nEvt);	
+    int createODINMEP(u_int8_t *buf, int nEvt); 
     void incompleteEvent();
     int spaceAction();
+    int spaceRearm(int);
+    void updateNoshow(void);
+    void badPkt(DAQErrorType, int);
+    void multipleSrc(int);
     int addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc, 
-      u_int64_t rxtim);
+        u_int64_t rxtim);
     int analyzeMEP(MEPHdr *mep, uint &nfrag);  
   };
-
 }
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 
 using namespace LHCb;
 
-MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent) 
-: MEP::Producer(nam, parent->partitionID()), m_parent(parent),  
+#define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
+#define HOSTNAME(id) m_parent->m_srcName[id]
+
+MEPBuf::MEPBuf(const std::string &bufnam, const std::string &nam, int partitionID): MBM::Producer(bufnam, nam, partitionID) {
+}
+MEPBuf::~MEPBuf() {
+}
+  
+MEPRx::MEPRx(const string &nam, MEPRxSvc *parent) 
+: m_parent(parent),  
   m_refCount(parent->mepRefcount()), 
   m_spaceSize(parent->spaceSize()),
   m_nSrc(parent->numberOfSources()), 
-  m_log(parent->msgSvc(),nam)
+  m_log(parent->msgSvc(), nam)
 {
-  m_flags = USE_MEP_BUFFER;
-  include(); 
-  m_bmid = m_mepID->mepBuffer;
+  m_liveBuf = new MEPBuf(parent->m_nameLiveBuf, nam, parent->partitionID());
+  if (parent->m_overflow) m_ovflBuf = new MEPBuf(parent->m_nameOverflowBuf, nam, parent->partitionID());
+  m_buf = m_liveBuf;
+  //m_bmid = m_mepID->mepBuffer;
   m_log << MSG::DEBUG << std::hex << std::showbase 
-    << "MEP    buffer start: " << m_mepID->mepStart << endmsg
+    //<< "MEP    buffer start: " << m_mepID->mepStart << endmsg
     << "Buffer space:        " << m_spaceSize << " bytes" << endmsg;
   m_eventType  = EVENT_TYPE_MEP;
   m_rawBufHdr  = (class RawBank*)new u_int8_t[sizeof(RawBank)+16];
   size_t  len  =  sizeof(RawBank) + MDFHeader::sizeOf(1);
-#if 0
-  m_MDFBankHdr = (class RawBank*) new u_int8_t[len];
-  m_MDFBankHdr->setType(RawBank::DAQ);
-  m_MDFBankHdr->setSize(MDFHeader::sizeOf(1));
-  m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
-  m_MDFBankHdr->setSourceID(1024);
-  m_MDFBankHdr->setMagic();
-#endif // if 0
   m_MDFBankHdr = (class RawBank*) new u_int8_t[len];
   m_MDFBankHdr->setType(RawBank::DAQ);
   m_MDFBankHdr->setSize(MDFHeader::sizeOf(1));
   m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
   m_MDFBankHdr->setSourceID(1025);
   m_MDFBankHdr->setMagic();
-
   len = sizeof(RawBank) + sizeof(OnlineRunInfo);
   m_ODINBank = (class RawBank *) new u_int8_t[len];
   m_ODINBank->setType(RawBank::ODIN);
   m_ODINBank->setSize(sizeof(OnlineRunInfo));
   m_ODINBank->setVersion(6);    // as seen on the wire 26/05/11 
-  m_ODINBank->setSourceID(16);  // as seen on the wire 26/05/11	
-  m_ODINBank->setMagic();		
-  m_prevL0ID=0; //XXX JC
- 
+  m_ODINBank->setSourceID(16);  // as seen on the wire 26/05/11 
+  m_ODINBank->setMagic();   
+  m_prevL0ID = 0; 
   m_wasIncomplete = false;
 }
 
 MEPRx::~MEPRx() {
   delete[] (u_int8_t *) m_rawBufHdr;
   delete[] (u_int8_t *) m_MDFBankHdr;
-  exclude();
+  delete m_liveBuf;
+  if (m_ovflBuf) delete m_ovflBuf;
 }    
+
+int MEPRx::spaceRearm(int) {
+  int sc;
+
+  m_eventType = EVENT_TYPE_MEP;
+  m_brx = m_nrx = 0; 
+  memset(m_seen, 0, m_nSrc * sizeof(int));
+  m_parent->m_overflowActive = false;
+  if (m_parent->m_overflow) {
+    sc = m_liveBuf->getSpaceTry(m_spaceSize);
+    if (sc == MBM_REQ_CANCEL) return sc;
+    if (sc == MBM_NORMAL) {
+      m_buf = m_liveBuf;
+      return sc;
+    }
+    if (sc == MBM_NO_ROOM) {
+      sc = m_ovflBuf->getSpace(m_spaceSize);
+      m_buf = m_ovflBuf;
+      m_parent->m_overflowActive = true;
+      return sc;
+    }
+    // something went wrong
+    return sc;
+  }  
+  m_buf = m_liveBuf;
+return m_buf->getSpace(m_spaceSize);
+}
+
+void MEPRx::updateNoshow() {
+  for (int i = 0; i < m_nSrc; ++i)
+        m_parent->m_noShow[i] = m_seen[i];
+} 
+
+void MEPRx::multipleSrc(int srcid) {
+  m_eventType = EVENT_TYPE_ERROR;
+  m_log << MSG::ERROR << "Multiple event from " << 
+    m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
+    << ")" << endmsg;
+  m_parent->m_multipleEvt[srcid]++;
+} 
+
+void MEPRx::badPkt(DAQErrorType type ,int srcid) {
+  m_eventType = EVENT_TYPE_ERROR;
+  m_daqError |= type;
+  m_log << MSG::ERROR << "Bad packet from " <<
+    HOSTNAME(srcid) << " [";
+  switch (type) {
+    case EmptyMEP: m_parent->m_truncPkt[srcid]++; 
+                   m_log << "empty MEP"; break;
+    case WrongPackingFactor: m_parent->m_badPckFktPkt[srcid]++;
+                             m_log << "mismatch in packing factor"; break;
+    case ShortPkt: m_parent->m_badLenPkt[srcid]++;
+                   m_log << "mismatch between length on wire and in MEP header"; break;
+    default: m_log << "Mysterious error: " << type;
+  }
+  m_log << "]" << endmsg;
+  (m_parent->m_totBadMEP)++;
+}
 
 int MEPRx::createDAQErrorBankEntries() {
   int j = 0;
@@ -298,39 +320,36 @@ int MEPRx::analyzeMEP(MEPHdr *mep, uint &nfrag){
     // warn about bad MEP
     err |= 2;
   }
- return err;
+  return err;
 }
 
-void MEPRx::incompleteEvent() {
-  int i, nmiss = 0;
-  MEPEVENT* e = (MEPEVENT*)event().data;
+  void MEPRx::incompleteEvent() {
+    int i, nmiss = 0;
+
   m_parent->addIncompleteEvent();
   for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
   if (nmiss <= m_nSrc/2) {
-    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << (unsigned int) e->evID 
-	  << "  No packet from: ";
+    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
+    << "  No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (!m_seen[i]) { 
-	m_log << HOSTNAME(i) << " "; 
-	m_parent->m_misPkt[i]++;
+        m_log << HOSTNAME(i) << " "; 
+        m_parent->m_misPkt[i]++;
       }
   } else  {
-    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << (unsigned int) e->evID 
-	  << "  Only packets from: ";
+    m_log << MSG::ERROR << "Run # " << m_runNumber << " - Incomplete Event #" << m_l0ID 
+    << "  Only packets from: ";
     for (int i = 0; i < m_nSrc; ++i) 
       if (m_seen[i]) { 
-	m_log << HOSTNAME(i) << " "; 
-	m_parent->m_misPkt[i]++;
+        m_log << HOSTNAME(i) << " "; 
+        m_parent->m_misPkt[i]++;
       }
   } 
   m_log << endmsg;
   m_eventType = EVENT_TYPE_ERROR;
   m_daqError |= MissingSrc;
   m_wasIncomplete = true;
-  if (m_parent->m_createDAQErrorMEP) {
-    u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
-    m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
-  }
+
   return;
 }
 
@@ -353,9 +372,9 @@ void MEPRx::setupMDFBank(u_int32_t run, u_int32_t orbit, u_int32_t bunchID) {
 }
 
 void MEPRx::setupODINBank(int n, u_int32_t orbit_or_timestamp) {
-	OnlineRunInfo *bank = (OnlineRunInfo *) m_ODINBank->data();
-	bank->L0ID = m_l0ID + n;
-	bank->Orbit = orbit_or_timestamp;
+  OnlineRunInfo *bank = (OnlineRunInfo *) m_ODINBank->data();
+  bank->L0ID = m_l0ID + n;
+  bank->Orbit = orbit_or_timestamp;
 }
 
 void MEPRx::addODINInfo(int n) {
@@ -363,10 +382,10 @@ void MEPRx::addODINInfo(int n) {
     setupMDFBank(0, 0, 0);
   else {
     LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) + 
-					     MEPHDRSIZ + MEPFHDRSIZ + 
-					     n * (RAWBHDRSIZ + 
-						  sizeof(LHCb::OnlineRunInfo) +
-						  MEPFHDRSIZ));
+               MEPHDRSIZ + MEPFHDRSIZ + 
+               n * (RAWBHDRSIZ + 
+              sizeof(LHCb::OnlineRunInfo) +
+              MEPFHDRSIZ));
     LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
     setupMDFBank(odin->Run, odin->Orbit, odin->bunchID);
   }
@@ -379,7 +398,7 @@ int MEPRx::createODINMEP(u_int8_t *buf, int nEvt) {
   meph->m_totLen  = MEPHDRSIZ +  nEvt * (MEPFHDRSIZ + banksize);
   meph->m_nEvt    = nEvt;
   buf += MEPHDRSIZ;
-  for(int i = 0; i < nEvt; ++i) {
+  for (int i = 0; i < nEvt; ++i) {
     struct MEPFrgHdr *frgh = (struct MEPFrgHdr *) buf;
     frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
     frgh->m_len = banksize;
@@ -398,7 +417,7 @@ int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
   meph->m_totLen  = MEPHDRSIZ +  nEvt * (MEPFHDRSIZ + banksize);
   meph->m_nEvt    = nEvt;
   buf += MEPHDRSIZ;
-  for(int i = 0; i < nEvt; ++i) {
+  for (int i = 0; i < nEvt; ++i) {
     struct MEPFrgHdr *frgh = (struct MEPFrgHdr *) buf;
     frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
     frgh->m_len = banksize;
@@ -431,20 +450,19 @@ int MEPRx::createDAQErrorMEP(u_int8_t *buf , uint  nEvt) {
 } 
 
 int MEPRx::spaceAction() { 
-  static  int id = -1; 
-  MBM::EventDesc& dsc = event();
-  MEPEVENT* e = (MEPEVENT*)dsc.data;
-  MEPEvent* m = (MEPEvent*)e->data;
+  static int id = -1; 
+  MBM::EventDesc& dsc = m_buf->event();
+  MEPEVENT* e = (MEPEVENT *) dsc.data;
+  MEPEvent* m = (MEPEvent* ) e->data;
   
-  //m_log << MSG::ERROR << m_nrx <<  m_nSrc << endmsg;
   if (m_nrx != m_nSrc) incompleteEvent();
   /// Add MDF bank
   u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createMDFMEP(buf, m_pf) + IP_HEADER_LEN;
   if (m_parent->m_createODINMEP) {
     buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN;
-	m_brx += createODINMEP(buf, m_pf) + IP_HEADER_LEN;
-  } 	
+    m_brx += createODINMEP(buf, m_pf) + IP_HEADER_LEN;
+  }   
   e->evID     = ++id;
   dsc.len     = m_brx + sizeof(MEPEVENT);
   dsc.mask[0] = dsc.mask[1] = dsc.mask[2] = dsc.mask[3] = 0xffffffff;
@@ -452,33 +470,36 @@ int MEPRx::spaceAction() {
       m_eventType = EVENT_TYPE_ERROR;
       m_daqError |= MissingOdin;
   }
-  dsc.type    = m_eventType; 
   if (m_eventType == EVENT_TYPE_ERROR) {
     dsc.mask[3] = m_daqError;
+    if (m_parent->m_createDAQErrorMEP) {
+      u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
+      m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
+    }
   }
   dsc.type = m_eventType;
   m->setSize(m_brx);
-  declareEvent();
-  int sc = sendSpace();
-  // m_parent->m_complTimeTSC->fill(1.0 * (m_hdrtsc - m_firsthdrtsc), 1.0);
+  m_buf->declareEvent();
+  int sc = m_buf->sendSpace();
   m_parent->m_complTimeSock->fill(1.0 * (m_age), 1.0);
-  m_parent->m_L0IDDiff->fill(1.0 * m_l0ID - m_prevL0ID, 1.0); //XXX JC
-  m_parent->m_tLastComp = m_parent->m_tLastAdded; // us
-  m_prevL0ID=m_l0ID;
+  m_parent->m_L0IDDiff->fill(1.0 * m_l0ID - m_prevL0ID, 1.0); 
+  m_parent->m_tLastComp = m_parent->m_tLastAdded; 
+  m_prevL0ID = m_l0ID;
   return sc;
 }
 
 int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
-		  u_int64_t rxtim) {
-  MEPEVENT *e = (MEPEVENT *)event().data;
+      u_int64_t rxtim) {
+  MEPEVENT *e = (MEPEVENT *) m_buf->event().data;
   if (m_seen[srcid]) multipleSrc(srcid);
   m_seen[srcid] = 1;       
   if (m_nrx == 0) {
     e->refCount    = m_refCount;
     e->evID        = hdr->m_l0ID;
-    e->begin       = long(long(e) - m_mepID->mepStart);
+//    e->begin       = long(long(e) - m_mepID->mepStart);
+    e->begin       = long(long(e) - (long) m_buf->bufferAddress());
     e->packing     = -1;
-    e->valid       = 1;
+    e->valid       =  1;
     e->magic       = mep_magic_pattern();
     ::memset(e->events, 0, sizeof(e->events));
     m_brx          = 0;
@@ -491,10 +512,14 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
   }
   m_hdrtsc = tsc;
   u_int64_t bodytsc; 
-  std::string errstr;
+  string errstr;
 
-  int len = MEPRxSys::recv_msg(sockfd, (u_int8_t*)e->data + m_brx + 4, 
-			       MAX_R_PACKET, 0, &bodytsc, &m_tCurFrag, errstr);
+  if (abs(m_brx + 4 + MAX_R_PACKET) > abs(m_spaceSize)) {
+    m_log << MSG::ERROR << "Buffer too small - event truncated!" << endmsg;
+    return MEP_ADD_ERROR;
+  }
+  int len = MEPRxSys::recv_msg(sockfd, (u_int8_t *)e->data + m_brx + 4, 
+             MAX_R_PACKET, 0, &bodytsc, &m_tCurFrag, errstr);
   if (len < 0) {
     ERRMSG(m_log,"failed to receive message");
     return MEP_ADD_ERROR;
@@ -519,15 +544,14 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
       LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP) +
                                                  MEPHDRSIZ + MEPFHDRSIZ);
       if (bank->magic() != RawBank::MagicPattern) {
-	m_log << MSG::ERROR << "Foul! ODIN magic pattern is " <<  hex << bank->magic() << endmsg;
+        m_log << MSG::ERROR << "Foul! ODIN magic pattern is " <<  hex << bank->magic() << endmsg;
       }
       if (bank->type() != RawBank::ODIN) {
-	m_log << MSG::ERROR << "Foul! ODIN bank type is " <<  bank->type() << endmsg;
+        m_log << MSG::ERROR << "Foul! ODIN bank type is " <<  bank->type() << endmsg;
       } 
       LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo>(); // raetselhaft
       m_runNumber = odin->Run; 
   }
-
   m_parent->m_rxEvt[srcid] += m_pf;
   m_parent->m_totRxEvt += m_pf;
   m_parent->m_rxMEP[srcid]++;
@@ -539,15 +563,22 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
-void UpMonCommand::commandHandler(void) {
+// DIM commands & services
+void SetOverflowCmd::commandHandler(void) {
+  MsgStream log(m_msgSvc,getName());
+  int what = getInt();
+  if (what) m_mepRxObj->m_overflow = true;
+  else m_mepRxObj->m_overflow = false;
+  log << MSG::INFO << (what ? "en"  : "dis") << "abled overflow buffer" << endmsg;
+}
+
+void UpMonCommand::commandHandler(void) { 
   MsgStream log(m_msgSvc,getName());
   log << MSG::INFO << "Received command, updating counters and histograms" << endmsg; 
-
   SmartIF<IUpdateableIF> upda(m_mepRxObj->getMonSvc());
-  if ( upda ) {
-      upda->update(0).ignore();
+  if (upda) {
+    upda->update(0).ignore();
   }
-
 }
 
 void ClearMonCommand::commandHandler(void) {
@@ -555,7 +586,6 @@ void ClearMonCommand::commandHandler(void) {
   log << MSG::INFO << "Received command, clearing counters and histograms." << endmsg;
   m_mepRxObj->clearCounters();
 }
-
 
 void MEPRQCommand::commandHandler(void) {
   MsgStream log(m_msgSvc,getName());
@@ -568,6 +598,19 @@ void MEPRQCommand::commandHandler(void) {
     log << MSG::INFO << "FAILED." << endmsg;
 }
 
+void OverflowStatSvc::serviceHandler() {
+  if (!m_mepRxObj->m_overflow) {
+    setData(const_cast<char *>("Overflow disabled"));  
+    return;
+  }
+  if (m_mepRxObj->m_overflowActive) {
+    setData(const_cast<char *>("Overflow active"));
+    return;
+  }
+  setData(const_cast<char *>("Overflow enabled"));
+}
+      
+  
 // Standard Constructor
 MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 : Service(nam, svc), m_ebState(NOT_READY), m_incidentSvc(0)
@@ -575,7 +618,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("LocalTest",        m_LocalTest = false);
   declareProperty("DestTestPort",     m_DestTestPort = 45199);
   declareProperty("SrcTestPort",      m_SrcTestPort = 45198);
-  declareProperty("MEPBuffers",       m_MEPBuffers = 3);
+  declareProperty("MEPBuffers",       m_MEPBuffers = 2);
   declareProperty("ethInterface",     m_ethInterface = -1);
   declareProperty("IPNameOdin",       m_IPNameOdin = "");
   declareProperty("maxMsForGetSpace", m_maxMsForGetSpace = 100);
@@ -584,8 +627,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("sockBuf",          m_sockBuf = 0x100000);
   declareProperty("partitionID",      m_partitionID);
   declareProperty("refCount",         m_refCount = 2);
-  declareProperty("MEPBufSize",       m_MEPBufSize = -1);
-  declareProperty("bufName",          m_bufName = "MEPRX");
+  declareProperty("MEPBufSize",       m_MEPBufSize = 0x400000); // 4 MB
   declareProperty("ownAddress",       m_ownAddress = 0xFFFFFFFF);
   declareProperty("RxIPAddr",         m_rxIPAddr = "0.0.0.0");
   declareProperty("InitialMEPReqs",   m_initialMEPReq = 1);
@@ -598,12 +640,17 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("resetCountersOnRunChange", m_resetCounterOnRunChange = true);
   declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = false);
   declareProperty("overflowPath",     m_overflowPath = "/localdisk/overflow");
-  declareProperty("overflow",         m_overflow = false);	
+  declareProperty("overflow",         m_overflow = false);  
+  declareProperty("nameLiveBuf",      m_nameLiveBuf = "Events");
+  declareProperty("nameOverflowBuf",  m_nameOverflowBuf = "Overflow");
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
   m_expectOdin = false;
+  m_overflowActive = false;
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
   m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
   m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
+  m_overflowStatSvc = new OverflowStatSvc(this, msgSvc(), RTL::processName());
+  m_setOverflowCmd = new SetOverflowCmd(this, msgSvc(), RTL::processName());
   m_runNumber = 0; // when this becomes a problem I have hopefully something more interesting to do...
   m_tLastAdded = 0; // us
   m_tLastRx = 0;  // us
@@ -628,7 +675,7 @@ void MEPRxSvc::removePkt()   {
   u_int64_t tsc, rxtim;
   std::string errstr;
   int len = MEPRxSys::recv_msg(m_dataSock, m_trashCan,MAX_R_PACKET, 0, &tsc, 
-			       &rxtim, errstr);
+             &rxtim, errstr);
   if (len < 0) {
     if (!MEPRxSys::rx_would_block())   {
       MsgStream log(msgSvc(),"MEPRx");
@@ -655,7 +702,7 @@ StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName) {
   if (odinName.empty()) {
     m_dynamicMEPRequest = false;
     log << MSG::INFO << "No address for ODIN. Dynamic MEP requests disabled!" 
-	<< endmsg;
+  << endmsg;
     return StatusCode::SUCCESS;
   }
   if (MEPRxSys::parse_addr(odinName,add) && 
@@ -673,7 +720,7 @@ StatusCode MEPRxSvc::sendMEPReq(int m) {
   if ( m_dynamicMEPRequest )   {
     mepreq.nmep = m;
     int n = MEPRxSys::send_msg(m_mepSock, m_odinIPAddr, MEP_REQ_TOS, 
-			       &mepreq, MEP_REQ_LEN, 0);
+             &mepreq, MEP_REQ_LEN, 0);
     if (n == MEP_REQ_LEN)   {
       m_totMEPReq += m;
       m_totMEPReqPkt++;
@@ -696,15 +743,15 @@ void MEPRxSvc::freeRx() {
     int rc = rx->spaceRearm(0);  
     if (rc == MBM_NORMAL) {
       if (rx->m_wasIncomplete) {
-	rx->updateNoshow();
-	rx->m_wasIncomplete = false;
-	// send mep requests only if the incomplete event contains the odin mep or
+  rx->updateNoshow();
+  rx->m_wasIncomplete = false;
+  // send mep requests only if the incomplete event contains the odin mep or
         // we are instructed to always re-charge
         if (!(rx->m_daqError & MissingOdin) || m_alwaysSendMEPReq) {
           sendMEPReq(m_MEPsPerMEPReq);  
         } 
       } else {
-	resetCounters(m_noShow, m_nSrc);
+  resetCounters(m_noShow, m_nSrc);
         sendMEPReq(m_MEPsPerMEPReq);  
       }
       m_freeDsc.push_back(rx);
@@ -728,7 +775,7 @@ void MEPRxSvc::forceEvent(RXIT &dsc, ForceReason reason) {
     log << MSG::ERROR << "Flush oldest event " << (*dsc)->m_l0ID << " started at " << 
       (*dsc)->m_tFirstFrag - m_tzero <<
       " last fragment received " <<  m_tLastRx - m_tzero << " age "  <<  (m_tLastRx - (*dsc)->m_tFirstFrag) 
-	<< " us " << endmsg; 
+  << " us " << endmsg; 
     break;
   case END_OF_RUN:
     log << MSG::ERROR << "Flush remaining events because of end of run" << endmsg;
@@ -753,20 +800,20 @@ StatusCode MEPRxSvc::run() {
   // we are ready - wait for start
   while (m_ebState != RUNNING) {
     switch(m_ebState) {
-    case STOPPED:
-    case NOT_READY:
-      log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
-      return StatusCode::SUCCESS;
-    case READY: 
-      MEPRxSys::microsleep(100000); // 100 ms
-      break;
-    default: continue;
+      case STOPPED:
+      case NOT_READY:
+        log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
+        return StatusCode::SUCCESS;
+      case READY: 
+        MEPRxSys::microsleep(100000); // 100 ms
+        break;
+      default: continue;
     }
   }
   // we got a START command - send a few MEP requests
   if (!sendMEPReq(m_initialMEPReq).isSuccess()) {
     log << MSG::WARNING << "Could not send " << m_initialMEPReq
-        << " initial MEP requests." << endmsg;
+      << " initial MEP requests." << endmsg;
   }
   for (;;) {
     int n = 0;
@@ -784,45 +831,45 @@ StatusCode MEPRxSvc::run() {
     }
     if (n == 0) {
       /* We haven't received a MEP for quite some time. Update counter.
-       */
+      */
       m_numMEPRecvTimeouts++;
-      
+
       static int ncrh = 1;
       if (m_ebState != RUNNING) {
-	SmartIF<IUpdateableIF> upda(m_monSvc);
-	if ( upda ) {
-	  upda->update(0).ignore();
-	}
-	for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
+        SmartIF<IUpdateableIF> upda(m_monSvc);
+        if ( upda ) {
+          upda->update(0).ignore();
+        }
+        for(RXIT w=m_workDsc.begin(); w != m_workDsc.end(); ++w) {
           forceEvent(w, END_OF_RUN);
-	}
+        }
         log << MSG::DEBUG << "Exiting from receive loop" << endmsg;
         return StatusCode::SUCCESS;
       }
       // we had a timeout - all events go up by the select timeoutvalue (which is in seconds!)
       //for (RXIT w = m_workDsc.begin(); w != m_workDsc.end(); ++w) 
-      //	(*w)->m_age += 1000000 * m_MEPRecvTimeout;
+      //  (*w)->m_age += 1000000 * m_MEPRecvTimeout;
       m_tLastRx += 1000000 * m_MEPRecvTimeout;
       checkTimeOut();
       if (--ncrh == 0) {
         log << MSG::DEBUG << "crhhh..." << m_freeDsc.size() << 
-	  " free buffers. ";
-	log << MSG::DEBUG << endmsg;
+          " free buffers. ";
+        log << MSG::DEBUG << endmsg;
         for(size_t i = 0; i < m_workDsc.size(); ++i) {
-	  log << MSG::DEBUG << "Run # " << m_workDsc[i]->m_runNumber << " - Event L0ID# " << m_workDsc[i]->m_l0ID << 
-	    " is missing ";
+          log << MSG::DEBUG << "Run # " << m_workDsc[i]->m_runNumber << " - Event L0ID# " << m_workDsc[i]->m_l0ID << 
+            " is missing ";
           log << MSG::DEBUG << printnum(m_workDsc[i]->m_nSrc - 
-					m_workDsc[i]->m_nrx," MEP");
-	}
-	log << endmsg;
-	ncrh = m_nCrh;
+              m_workDsc[i]->m_nrx," MEP");
+        }
+        log << endmsg;
+        ncrh = m_nCrh;
       }
       continue;
     }
     u_int64_t tsc, _tmp;
     std::string errstr;
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK, &tsc, 
-				 &_tmp, errstr);
+        &_tmp, errstr);
     if (m_tzero == 0) m_tzero = _tmp;
     if (_tmp > m_tLastRx) m_tLastRx = _tmp;
     if (len < 0) {
@@ -832,7 +879,7 @@ StatusCode MEPRxSvc::run() {
     }
     if (m_tLastRx == 0) 
       ERRMSG(log, errstr);    
-    
+
     m_totRxPkt++; 
     // Don't have sourceID yet, count per source later...
     m_numMEPRecvTimeouts = 0;
@@ -841,36 +888,36 @@ StatusCode MEPRxSvc::run() {
       truncatedPkt(iphdr);
       removePkt();
       continue;
-    }	
+    } 
     if ((srcid = getSrcID(iphdr->saddr)) == - 1) {
       // we do not expect nor want this 
       removePkt();
       continue;
     }
-     if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
+    if (!m_workDsc.empty() && mephdr->m_l0ID == m_workDsc.back()->m_l0ID) {
       rxit = --m_workDsc.end();
     } else {
       rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(), 
-			 mephdr->m_l0ID, MEPRx::cmpL0ID);
+          mephdr->m_l0ID, MEPRx::cmpL0ID);
       if (rxit == m_workDsc.end() || (*rxit)->m_l0ID != mephdr->m_l0ID) {
-	
+
         // not found - get a new descriptor
         RXIT oldest = oldestRx();
-	// how long since we completed the last event?
-	m_idleTimeSock->fill(double(m_tLastRx - m_tLastComp), 1.0);
+        // how long since we completed the last event?
+        m_idleTimeSock->fill(double(m_tLastRx - m_tLastComp), 1.0);
         try {
           if (m_freeDsc.empty()) {
             forceEvent(oldest, NO_BUFFER);
-            freeRx(); // only if not in separate thread	    
+            freeRx(); // only if not in separate thread     
           }
           rx = m_freeDsc.back();
           m_freeDsc.pop_back();
           rx->m_l0ID = mephdr->m_l0ID;
-          RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),
-			       mephdr->m_l0ID,MEPRx::cmpL0ID);
+          RXIT j = lower_bound(m_workDsc.begin(), m_workDsc.end(),
+              mephdr->m_l0ID,MEPRx::cmpL0ID);
           m_workDsc.insert(j, rx);
-          rxit = lower_bound(m_workDsc.begin(),m_workDsc.end(),
-			     mephdr->m_l0ID,MEPRx::cmpL0ID);
+          rxit = lower_bound(m_workDsc.begin(), m_workDsc.end(),
+              mephdr->m_l0ID,MEPRx::cmpL0ID);
         }
         catch(std::exception& e) {
           error(std::string("Exception ") + e.what());
@@ -897,7 +944,7 @@ StatusCode MEPRxSvc::run() {
 // IInterface implementation: Query interface
 StatusCode 
 MEPRxSvc::queryInterface(const InterfaceID& riid,void** ppvInterface) {
-  if ( IRunable::interfaceID().versionMatch(riid) )   {
+  if (IRunable::interfaceID().versionMatch(riid))   {
     *ppvInterface = (IRunable*)this;
   }
   else if ( IIncidentListener::interfaceID().versionMatch(riid) )   {
@@ -930,15 +977,14 @@ void MEPRxSvc::srcSwap(int i, int j) {
   flags = m_srcFlags[i]; m_srcFlags[i] = m_srcFlags[j]; m_srcFlags[j] = flags;
 }
 
-
 int MEPRxSvc::srcFindMedianIndex(int left, int right, int shift) {
   int i, groups = (right - left)/shift + 1, k = left + groups/2*shift;
   for (i = left; i <= k; i+= shift) {
     int minIndex = i; string minValue = m_srcName[minIndex]; int j;
     for (j = i; j <= right; j += shift) 
       if (m_srcName[j] < minValue) {
-	minIndex = j;
-	minValue = m_srcName[minIndex];
+        minIndex = j;
+        minValue = m_srcName[minIndex];
       }
     srcSwap(i, minIndex);
   }
@@ -946,7 +992,6 @@ int MEPRxSvc::srcFindMedianIndex(int left, int right, int shift) {
 }
 
 int MEPRxSvc::srcFindMedianOfMedians(int left, int right) {
-  
   if (left == right) return left;
   int i, shift = 1;
   while (shift <= (right - left)) {
@@ -1026,7 +1071,7 @@ StatusCode MEPRxSvc::checkProperties() {
     if (m_IPSrc[i + 2] == "DOUBLE_ZERO_BUG") 
       m_srcFlags[i/3] |= DOUBLE_ZERO_BUG;
     if (m_IPSrc[i + 2] == "ODIN") {
-      m_srcFlags[i/3] |= IS_ODIN;	
+      m_srcFlags[i/3] |= IS_ODIN; 
       m_expectOdin = true;
     }
     m_srcDottedAddr.push_back(MEPRxSys::dotted_addr(addr));
@@ -1055,7 +1100,7 @@ StatusCode MEPRxSvc::allocRx() {
   m_workDsc.clear();
   log << MSG::DEBUG << std::dec 
       << printnum(m_MEPBuffers, " receive-buffer") << " created." << endmsg;  
-  return StatusCode::SUCCESS;
+   return StatusCode::SUCCESS;
 }
 
 StatusCode MEPRxSvc::releaseRx() {
@@ -1123,8 +1168,8 @@ void MEPRxSvc::publishCounters()
 {
   PUB64CNT(totRxOct,           "Total received bytes");
   PUB64CNT(totRxPkt,           "Total received packets");
-  PUB64CNT(totRxEvt,	       "Total received events");
-  PUB64CNT(totRxMEP,	       "Total received MEPs");
+  PUB64CNT(totRxEvt,         "Total received events");
+  PUB64CNT(totRxMEP,         "Total received MEPs");
   PUB64CNT(incEvt,             "Incomplete events");
   PUB64CNT(totBadMEP,          "Total bad MEPs");
   PUB64CNT(totMEPReq,          "Total requested MEPs");
@@ -1136,10 +1181,10 @@ void MEPRxSvc::publishCounters()
   PUBARRAYCNT(badPckFktPkt,    "MEPs with wrong packing (MEP) factor");
   PUBARRAYCNT(truncPkt,        "Truncated (empty) MEPs");
   PUBARRAYCNT(multipleEvt,     "Duplicate Events");
-  PUBARRAYCNT(rxOct,	       "Received bytes");
+  PUBARRAYCNT(rxOct,         "Received bytes");
   PUBARRAYCNT(rxPkt,           "Received packets");
   PUBARRAYCNT(rxEvt,           "Received events");
-  PUBARRAYCNT(rxMEP,	       "Received MEPs");
+  PUBARRAYCNT(rxMEP,         "Received MEPs");
 }
 
 void MEPRxSvc::clearCounters() {
@@ -1159,8 +1204,8 @@ void MEPRxSvc::clearCounters() {
   m_notReqPkt          = 0;
   m_totRxOct           = 0;
   m_totRxPkt           = 0;
-  m_totRxEvt	       = 0;
-  m_totRxMEP	       = 0;
+  m_totRxEvt         = 0;
+  m_totRxMEP         = 0;
   m_incEvt             = 0;
   m_totMEPReqPkt       = 0;
   m_numMEPRecvTimeouts = 0;
@@ -1175,15 +1220,14 @@ int MEPRxSvc::setupCounters() {
   MsgStream log(msgSvc(),"MEPRx");
 
   m_complTimeSock = m_histSvc->book("complTimeSock", 
-				   "dt(last - first MEP for given L0ID) us",
-				   500 , 0., 100000.);
+           "dt(last - first MEP for given L0ID) us",
+           500 , 0., 100000.);
   m_idleTimeSock = m_histSvc->book("idleTimeSock", 
-				  "dt(prev MEP current MEP) us", 100, 0., 1000000);
+          "dt(prev MEP current MEP) us", 100, 0., 1000000);
   m_L0IDDiff = m_histSvc->book("L0IDDiff", 
                                   "L0ID difference between 2 consecutive events", 50, -30000., 30000.); 
 
   publishHists();
-
   if (m_complTimeSock == NULL || m_idleTimeSock == NULL) {
     log << MSG::ERROR << "hist pointers were not booked !!!" << endmsg;
     // if(m_complTimeTSC == NULL) log << MSG::ERROR << "complTimeTSC" << endmsg; 
@@ -1193,11 +1237,8 @@ int MEPRxSvc::setupCounters() {
     if(m_L0IDDiff == NULL) log << MSG::ERROR << "L0IDDiff" << endmsg; 
     return 1;
   }
-
   clearCounters();
   publishCounters();
-
-
   // create cstring for source names
   std::string all_names = "";
   if (m_srcName.size()>0) all_names = m_srcName[0];
@@ -1205,7 +1246,6 @@ int MEPRxSvc::setupCounters() {
   if (!(m_allNames = new char[all_names.size()+1]))
     return 1;
   ::memcpy(m_allNames, (const char *) all_names.data(), all_names.size() +1);
-  
   m_monSvc->declareInfo("srcName", "C", m_allNames, all_names.size()+1, "Source IP names", this);
   log << MSG::INFO << all_names << all_names.size() << endmsg;
   return 0;
@@ -1252,17 +1292,18 @@ StatusCode MEPRxSvc::initialize()  {
   } else {
     return error("Failed to access monitor service.");
   }
+  
   if (lib_rtl_access(m_overflowPath.c_str(), 0x6) != 1) {
+    error("brrh");
     info(std::string("Cannot write to ") + m_overflowPath + std::string(" - disabling overflow"));
     m_overflow = false;
-  }	
+  }
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
 
 StatusCode MEPRxSvc::finalize()  {
   MsgStream log(msgSvc(),"MEPRx");
-
   log << MSG::INFO << "Entering finalize....." << endmsg;
   releaseRx();
   if (m_incidentSvc) {
