@@ -5,6 +5,10 @@ $Id$
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles 2012-01-23 ===================
+! 2012-01-23 Sam Gregson
+ - Updated Hlt2 Shared Ks cuts 
+
 !========================== Hlt2SharedParticles 2012-01-15 ===================
 ! 2012-01-15 Sam Gregson
  - Updated Shared KsLLTF - small syntax error
