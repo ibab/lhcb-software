@@ -357,7 +357,7 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
                  RequiredSelections = [],
                  OutputBranch="Rec",
                  Extension="ProtoParticles",
-                 InputDataSetter="InputTrackLocation",
+                 InputDataSetter="Inputs",
                  PIDElements= []) :
 
         checkName(name)
@@ -371,7 +371,7 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
                                              leaf      = Extension)
 
         _ppMaker = Configurables.ChargedProtoParticleMaker(name+'PPMaker')
-        _ppMaker.OutputProtoParticleLocation=_outputLocation
+        _ppMaker.Output = _outputLocation
         _inputs =  [sel.outputLocation() for sel in RequiredSelections]
         _ppMaker.__setattr__(InputDataSetter, _inputs)
 
