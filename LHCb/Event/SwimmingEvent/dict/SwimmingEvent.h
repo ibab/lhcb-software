@@ -69,6 +69,10 @@ namespace {
       std::pair<std::string, bool> _p20;
       std::pair<map_sb::iterator, bool> _p21;
 
+      typedef std::map<const std::string, double> map_sd;
+      map_sd::iterator _i30;
+      std::pair<map_sd::iterator, bool> _p30;
+
 #ifndef WIN32
       // Windows somehow doesn't like the first item of a pair to be const.
       map_ulb::const_iterator _i01;
@@ -83,6 +87,10 @@ namespace {
       map_sinfo::const_iterator _i11;
 
       std::pair<const size_t,bool> _p01;
+      
+      typedef std::map<const std::string, double> map_csd;
+      map_sd::iterator _i31;
+      std::pair<map_csd::iterator, bool> _p31;
 #endif
       // end instantiations
    };

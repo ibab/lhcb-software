@@ -40,7 +40,7 @@
   <class pattern = "std::pair<*,bool>" />
   <class pattern = "std::map<*,bool>" />
   <class pattern = "std::map<*,bool>*iterator" />
-  <class pattern = "std::map<std::string,bool>*iterator" />
+  <class pattern = "std::map<*,double>*iterator" />
   <class pattern = "std::map<*,std::map*>" />
   <class pattern = "std::map<*,std::map*>*iterator" />
   <class pattern = "std::pair<std::string,std::map*>" />
