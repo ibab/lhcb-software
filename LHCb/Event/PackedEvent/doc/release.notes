@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-01-23 - Olivier Callot
+ - New class PackedDecReport for packing the stripping report.
+ - Modified PackedEventChecks.h to test the relative change for matrices.
+
 !========================= PackedEvent v4r5 2011-02-22 =========================
 ! 2011-02-12 - Chris Jones
  - Initialise all data members of packed structs in default constructors. 

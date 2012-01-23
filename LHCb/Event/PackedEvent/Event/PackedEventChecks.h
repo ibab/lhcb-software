@@ -55,7 +55,9 @@ namespace DataPacking
         {
           std::ostringstream text;
           text << name << ":" << n << m;
-          ok &= compareDoubles( text.str(), a(n,m), b(n,m), tol );
+          double tolRel = tol * fabs( a(n,m) );
+          if ( tolRel < tol ) tolRel = tol;
+          ok &= compareDoubles( text.str(), a(n,m), b(n,m), tolRel );
         }
       }
       return ok;
