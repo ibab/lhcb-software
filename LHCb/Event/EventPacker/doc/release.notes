@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-23 - Olivier Callot
+ - New algorithms PackDecReport and UnpackDecReport to unpack/pack the stripping
+   decisions. By default lines having not fired are removed. This can be changed 
+   by setting the option PackDecReport().Filter = False
+
 ! 2012-01-17 - Marco Clemencic
  - Added a tool to dynamically configure the DataOnDemandSvc using rules (regex)
    to map the destination (requested) path to a source location, and a map of
