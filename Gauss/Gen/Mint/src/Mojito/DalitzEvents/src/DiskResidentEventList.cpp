@@ -125,8 +125,8 @@ DiskResidentEventList::DiskResidentEventList(const IDalitzEventList& otherList
   , _opt(opt)
   , _f(0)//new TFile(newFname.c_str(), opt.c_str()))
     //  , _counted_ntp(0)
-  , _scaleData(1)
   , _ntp(0)
+  , _scaleData(1)
   , _cName("DalitzEventList")
   , _ntpName("DalitzEventList")
 {

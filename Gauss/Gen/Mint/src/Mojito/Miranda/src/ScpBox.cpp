@@ -36,7 +36,7 @@ ScpBox::ScpBox(const ScpBox& other)
 {}
 
 void ScpBox::enclosePhaseSpace(double safetyFactor){
-  bool dbThis=true;
+  bool dbThis=false;
   if(dbThis) cout << "box: setting limits to phase space area" << endl;
   _area.setAllLimitsToPhaseSpaceArea(safetyFactor);
   if(dbThis) cout << "result: " << _area << endl;
@@ -177,7 +177,22 @@ bool ScpBox::subtractMC(const IDalitzEvent* evt, double weight){
   return true;
 }
 
+double ScpBox::scp(double normFactorPassed) const{
 
+  int n_data =  this->nData();
+  double n_dataCC = this->nMC();
+  double scp;
+  double alpha = (normFactorPassed);
+  if (n_data == 0 || n_dataCC == 0 )
+  {
+	  scp = 0;
+  }
+  else{
+	  scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
+  }
+  return scp;
+
+}
 
 void ScpBox::print(std::ostream& os) const{
   os << "box: with area " << _area;

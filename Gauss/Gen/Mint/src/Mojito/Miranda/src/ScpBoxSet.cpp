@@ -217,10 +217,15 @@ double ScpBoxSet::scp(double normFactorPassed) const{
   int n_data =  this->nData();
   double n_dataCC = this->nMC();
 
-  if (n_data < 10 || n_dataCC< 10)
+  bool db = false;
+
+  if (db == true)
   {
-	  std::cout << "WARNING: BOX with " << n_data << " data entries " << std::endl;
-	  std::cout << "WARNING: BOX with " << n_dataCC << " dataCC entries " << std::endl;
+	  if (n_data < 10 || n_dataCC< 10)
+	  {
+		  std::cout << "WARNING: BOX with " << n_data << " data entries " << std::endl;
+		  std::cout << "WARNING: BOX with " << n_dataCC << " dataCC entries " << std::endl;
+	  }
   }
 
   double alpha = (normFactorPassed);

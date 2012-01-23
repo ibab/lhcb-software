@@ -38,6 +38,7 @@ class ScpBox{
   bool subtractMC(const IDalitzEvent& evt, double weight);
   bool subtractMC(const IDalitzEvent* evt, double weight);
 
+  double scp(double normFactorPassed=1) const;
 
   int nData() const;
 

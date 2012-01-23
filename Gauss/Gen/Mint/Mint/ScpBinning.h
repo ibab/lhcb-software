@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 class ScpBinning {
   std::vector<ScpBoxSet> _boxSets;
@@ -45,6 +46,8 @@ class ScpBinning {
 
  public:
   ScpBinning();
+
+//  bool myfunction (const ScpBox&, const ScpBox&)const;
 
   void resetEventCounts();
   void fillData(IDalitzEventList* data);
@@ -100,15 +103,43 @@ class ScpBinning {
 
   int NEntires();
 
+  friend class lessByScpBoxData;
+  friend class lessByScpBoxScp;
+  friend class lessByScpBoxSetScp;
+
 };
 
 class lessByScpBoxData{
+ private:
+	double m_norm;
  public:
+	void SetNorm(double norm)
+		{
+			m_norm = norm;
+		}
+  bool operator()(const ScpBox& a, const ScpBox& b) const;
+};
+
+class lessByScpBoxScp{
+	private:
+	double m_norm;
+
+ public:
+	void SetNorm(double norm)
+			{
+				m_norm = norm;
+			}
   bool operator()(const ScpBox& a, const ScpBox& b) const;
 };
 
 class lessByScpBoxSetScp{
+ private:
+	double m_norm;
  public:
+	void SetNorm(double norm)
+		{
+			m_norm = norm;
+		}
   bool operator()(const ScpBoxSet& a, const ScpBoxSet& b) const;
 };
 

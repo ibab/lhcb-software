@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 23-01-2012 - Matt Coombes
+- Added ReadNTuple.h gives capability to read in any NTuple
+  and save as DiskResidentEventList
+
 ! 28-12-2011 - Matt Coombes
  - Removed some unnecessary print statements.
  

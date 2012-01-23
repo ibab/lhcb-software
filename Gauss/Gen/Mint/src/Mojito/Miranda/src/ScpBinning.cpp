@@ -87,7 +87,7 @@ ScpBinning::ScpBinning()
   : _nData(0)
   , _nDataCC(0)
   , _totalMCWeight(0)
-  , m_norm(10)
+  , m_norm(1.0)
 {
 }
 int ScpBinning::createBinning(IDalitzEventList* events
@@ -102,24 +102,59 @@ int ScpBinning::createBinning(IDalitzEventList* events
 
   ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
+  double norm = this->normFactor();
+  lessByScpBoxScp sorter;
+  sorter.SetNorm(norm);
+  sort(boxes.begin(), boxes.end(), sorter);
+
+//  ScpBoxSet boxes_SCP_Plus;
+//  ScpBoxSet boxes_SCP_Minus;
+//
+//  for(unsigned int i=0; i < boxes.size(); i++){
+//	  if (boxes[i].scp(norm) < 0)
+//	  {
+//		  boxes_SCP_Minus.add(boxes[i]);
+//	  }
+//	  else
+//	  {
+//		  boxes_SCP_Plus.add(boxes[i]);
+//	  }
+//  }
+//    mergeBoxes(boxes_SCP_Plus, minPerBin);
+//    mergeBoxes(boxes_SCP_Minus, minPerBin);
+
+
+
+
   mergeBoxes(boxes, minPerBin);
 
   return numBins();
+
 }
 
+
+
 int ScpBinning::mergeBoxes(ScpBoxSet& boxes, int minPerBin){
-  lessByScpBoxData sorter;
-  sort(boxes.begin(), boxes.end(), sorter);
+   lessByScpBoxData sorter;
+   sort(boxes.begin(), boxes.end(), sorter);
+   double norm = this->normFactor();
+
+
+//   lessByScpBoxScp sorter;
+//   sorter.SetNorm(norm);
+//   sort(boxes.begin(), boxes.end(), sorter);
+
   // this way, the smalles boxes come first 
   // makes sure no empty box is left over at the end.
 
+  double SCP = 0;
   ScpBoxSet boxSet;
   for(unsigned int i=0; i < boxes.size(); i++){
-    boxSet.add(boxes[i]);
-    if(boxSet.nData() >= minPerBin){
-      _boxSets.push_back(boxSet);
-      boxSet.clear();
-    }
+		boxSet.add(boxes[i]);
+		if(boxSet.nData() >= minPerBin){
+		  _boxSets.push_back(boxSet);
+		  boxSet.clear();
+		}
   }
   
   return _boxSets.size();
@@ -193,6 +228,13 @@ void ScpBinning::fillData(IDalitzEventList* data){
     bool foundBox=false;
     for(unsigned int i=0; i < _boxSets.size(); i++){
       if(_boxSets[i].addData(data->getEvent())){
+//    	  data->getEvent()->print();
+//    	  TLorentzVector vec = data->getEvent()->p(1);
+//    	  double Px = vec.Px();
+//    	  double Py = vec.Py();
+//    	  double Pz = vec.Pz();
+
+//    	  std::cout << "Px: " << Px << " Py: " << Py << " Pz: " << Pz << std::endl;
     	  foundBox=true;
     	  _nData++;
     	  break;
@@ -229,6 +271,7 @@ void ScpBinning::fillDataCC(IDalitzEventList* data){
 
 void ScpBinning::sortByScp(){
   lessByScpBoxSetScp sorter;
+  sorter.SetNorm(m_norm);
   stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
 }
 
@@ -263,7 +306,7 @@ double ScpBinning::setEvents(IDalitzEventList* data
 }
 
 void ScpBinning::setFas(IFastAmplitudeIntegrable* fas){
-  bool dbThis=true;
+  bool dbThis=false;
 
   const_counted_ptr<IIntegrationCalculator> 
     ic = fas->makeIntegrationCalculator();
@@ -402,9 +445,12 @@ void ScpBinning::setHistoColours(){
   minScp = -5.0;
   if (getMaxScp()>maxScp){
 	  maxScp = getMaxScp();
+	  minScp = -maxScp;
+
   }
   if (getMinScp()<minScp){
 	  minScp = getMinScp();
+	  maxScp = -minScp;
   }
 
   for(unsigned int i=0; i < _boxSets.size(); i++){
@@ -428,9 +474,12 @@ DalitzHistoStackSet ScpBinning::getDataHistoStack(){
   min = -5.0;
   if (getMaxScp()>mx){
 	  mx = getMaxScp();
+	  min = -mx;
   }
   if (getMinScp()<min){
 	  min = getMinScp();
+	  mx = -min;
+
   }
   if(mx > 20) mx=20;
 
@@ -463,9 +512,11 @@ counted_ptr<TH1D> ScpBinning::getScpDistribution() const{
   double from=-5.0, to=5.0;
   if (getMaxScp()>to){
 	  to = getMaxScp();
+	  from = -to;
   }
   if (getMinScp()<from){
 	  from = getMinScp();
+	  to = -from;
   }
 
   //  double from=-2, to=2;
@@ -587,13 +638,16 @@ int ScpBinning::NEntires()
 
 
 bool lessByScpBoxSetScp::operator()(const ScpBoxSet& a, const ScpBoxSet& b) const{
- 
-  return a.scp() < b.scp();
+  return (a.scp(m_norm)) < (b.scp(m_norm));
 }
 
 bool lessByScpBoxData::operator()(const ScpBox& a, const ScpBox& b) const{
 
   return a.nData() < b.nData();
+}
+
+bool lessByScpBoxScp::operator()(const ScpBox& a, const ScpBox& b) const{
+  return a.scp(m_norm) < b.scp(m_norm);
 }
 
 
