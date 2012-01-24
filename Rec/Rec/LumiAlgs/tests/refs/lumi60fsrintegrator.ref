@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
@@ -12,7 +12,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xffd1f40>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x14f3f600>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
@@ -33,7 +33,7 @@
 # applying configuration of LumiIntegratorConf
 # /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
 # |-TupleFile     = ''
-# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0xffd31c0>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x14f409a0>  (default: None)
 # |-InputType     = 'DST'
 # |-UseOnline     = False  (default: True)
 # \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
@@ -71,8 +71,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Mon Sep  5 11:30:06 2011
+                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
+                                          running on lxbuild163.cern.ch on Tue Jan 24 17:04:55 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -82,7 +82,7 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
 IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
 IntegrateBeamCr...   INFO Add      BXType NoBeam
@@ -94,13 +94,13 @@ DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/s
 DDDB                 INFO Using TAG "head-20101206"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "head-20110407"
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout0.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
 IntegrateBeamCr...   INFO run: [81430] RandomFrequencyBB 697.9 CollidingBunches 344
 IntegrateBeamCr...   INFO Luminosity scale used: 1.692e-11 relative uncertainty 0.035
@@ -110,18 +110,17 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.84 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.003 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.001 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
-ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.001 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiSeq                       |     0.002 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.001 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.002 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.000 |     0.001 |    0.001       0.0 |    1000 |     0.001 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK
 CounterSummarySvc    INFO Wrote xml file summary.xml
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
-RootCnvSvc           INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C[testFSRout0.dst]
+RootCnvSvc           INFO Disconnected data IO:80F7B06F-18D2-DF11-92B1-003048D2BD0C [testFSRout0.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

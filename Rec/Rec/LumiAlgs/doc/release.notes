@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-01-24 - Marco Cattaneo
+ - Follow changes in RootCnv v1r12
+
 ! 2012-01-12 - Marco Cattaneo
  - Protect FilterFillingScheme for missing Magnet State condition (in 2008)
 
