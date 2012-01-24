@@ -24,7 +24,7 @@
 #
 # @code
 #
-#    check-trg the_line line file1 [ file2 [ file3 [ file4 ....'
+#    CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
 #
 # 
 #  @endcode 
@@ -56,7 +56,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 Usage:
 
-    check-trg [options] line file1 [ file2 [ file3 [ file4 ....'
+    CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
 
 """
 # =============================================================================
@@ -64,7 +64,7 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
-__usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
+__usage__   = 'CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 import ROOT 
 
@@ -189,7 +189,7 @@ if '__main__' == __name__ :
     if not 0 < Line.rfind ('/Particles') :
         Line = Line + '/Particles'
         
-    if 0 >= options.Nevents and -1 != nEvents : nEvents = 1000
+    if 0 >= options.Nevents and -1 != options.Nevents : options.Nevents = 1000
     #
     ## data type for MC 
     #
