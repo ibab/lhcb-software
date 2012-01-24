@@ -4,6 +4,11 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+!========================= RootCnv v1r12 2012-01-24 ========================
+! 2012-01-20 - Markus Frank
+ - Fix gcc46 compile warning in merge.C 
+
+!========================= RootCnv v1r11 2012-01-11 ========================
 ! 2011-11-11 - Markus Frank
  - Remove RootOutputStream component. It's not used.
 
