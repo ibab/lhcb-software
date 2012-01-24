@@ -116,14 +116,16 @@ string DetDesc::Geometry::_toString(double value)   {
 #include "DetDesc/compact/Readout.h"
 #include "DetDesc/compact/Detector.h"
 #include "DetDesc/compact/Segmentations.h"
-Element_t* Document::createElt(const std::string& tag)  const {
+Element_t* Document::createElt(const string& tag)  const {
   TNamed* object = 0;
   if ( tag == "box" )
     object = new TGeoBBox();
   else if ( tag == "polycone" )
     object = new TGeoPcon();
+#if 0
   else if ( tag == "tube" )
     object = new TGeoTubeSeg();
+#endif
   else if ( tag == "cone" )
     object = new TGeoCone();
   else if ( tag == "trap" )
@@ -147,10 +149,12 @@ Element_t* Document::createElt(const std::string& tag)  const {
     object = new TGeoIdentity();
   else if ( tag == "constant" )
     object = new TNamed();
+#if 0
   else if ( tag == "volume" )
     object = new Value<TGeoVolume,Volume::Object>();
   else if ( tag == "physvol" )
     object = new Value<TGeoVolume,PhysVol::Object>();
+#endif
   else if ( tag == "limitset" )
     object = new Value<TNamed,TMap>();
   else if ( tag == "limit" )

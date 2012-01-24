@@ -1,5 +1,6 @@
 #include "XML/lcdd/XMLLCDDImp.h"
 #include "DetDesc/lcdd/LCDDGeoImp.h"
+#include "TGDMLWrite.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -57,9 +58,14 @@ int run_interpreter(int argc, char **argv)   {
   // Create an interactive ROOT application
   TRint *theApp = new TRint("Rint", &argc, argv);
   
-  /* Geometry::LCDDImp *lcdd = */ compact2geo((int)args.size(),&args[0]);
-  //delete lcdd->document().operator->();
-  
+  Geometry::LCDDImp *lcdd = compact2geo((int)args.size(),&args[0]);
+  if ( lcdd ) {
+    Geometry::Document doc = lcdd->document();
+    TGeoManager* mgr = doc;
+    TGDMLWrite wr;
+    wr.WriteGDMLfile(mgr,"ILCEx.gdml","");
+    mgr->Export("ILCEx.root");
+  }
   // and enter the event loop...
   theApp->Run();
   delete theApp;

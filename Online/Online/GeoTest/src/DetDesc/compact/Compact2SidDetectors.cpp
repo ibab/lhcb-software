@@ -112,7 +112,8 @@ namespace DetDesc { namespace Geometry {
     lcdd.add(cone).add(volume);
     sdet.setEnvelope(cone).setVolume(volume);
     sdet.setVisAttributes(lcdd, x_det.visStr(), volume);
-    lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(doc,volume,name),lcdd.identity());
+    //lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(doc,volume,name),lcdd.identity());
+    lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(volume),lcdd.identity());
     return sdet;
   }
 
@@ -135,7 +136,8 @@ namespace DetDesc { namespace Geometry {
     lcdd.add(tube).add(pos).add(rot).add(vol);
     sdet.setVisAttributes(lcdd, x_det.visStr(), vol);
 
-    PhysVol     physvol (doc,vol,name);
+    //PhysVol     physvol (doc,vol,name);
+    PhysVol     physvol (vol);
     physvol.addPhysVolID(_A(id),x_det.id());
     cout << "TubeSegment [" << name << "] Mother volume:" << mother.name() << endl;
     mother.addPhysVol(physvol,pos,rot);
@@ -186,7 +188,8 @@ namespace DetDesc { namespace Geometry {
 	// Set vis attributes of slice
 	slice.setVisAttributes(lcdd, x_slice.visStr(), slice_vol);
 
-	PhysVol spv(doc,slice_vol,slice_name);
+	//PhysVol spv(doc,slice_vol,slice_name);
+	PhysVol spv(slice_vol);
 	spv.addPhysVolID(_X(layer),n);
 	layer_vol.addPhysVol(spv,lcdd.identity());
 	layer.add(slice);
@@ -194,7 +197,8 @@ namespace DetDesc { namespace Geometry {
       layer_tub.setDimensions(rmin,r,2.*z,2.*M_PI);
       sdet.setVisAttributes(lcdd, x_layer.visStr(), layer_vol);
 
-      PhysVol lpv(doc,layer_vol,layer_name);
+      //PhysVol lpv(doc,layer_vol,layer_name);
+      PhysVol lpv(layer_vol);
       lpv.addPhysVolID(_X(system),sdet.id())
 	.addPhysVolID(_X(barrel),0);
       motherVol.addPhysVol(lpv,lcdd.identity());
@@ -257,19 +261,22 @@ namespace DetDesc { namespace Geometry {
 	// Set vis attributes of slice
 	slice.setVisAttributes(lcdd, x_slice.visStr(), slice_vol);
 
-	PhysVol spv(doc,slice_vol,slice_name);
+	//PhysVol spv(doc,slice_vol,slice_name);
+	PhysVol spv(slice_vol);
 	spv.addPhysVolID(_X(layer),n);
 	layer_vol.addPhysVol(spv,Position(doc,slice_name+"_pos",0.,0.,z-zmin-layerWidth/2. + w/2.));
 	layer.add(slice);
       }
       layer.setVisAttributes(lcdd, x_layer.visStr(), layer_vol);
       layer_tub.setDimensions(rmin,rmax,2.*z,2.*M_PI);
-      PhysVol lpv(doc,layer_vol,layer_name);
+      //PhysVol lpv(doc,layer_vol,layer_name);
+      PhysVol lpv(layer_vol);
       lpv.addPhysVolID(_X(system),sdet.id());
       lpv.addPhysVolID(_X(barrel),1);
       motherVol.addPhysVol(lpv,Position(doc,layer_name+"_pos",0,0,zmin+layerWidth/2.));
       if ( reflect )  {
-	PhysVol lpvR(doc,layer_vol,layer_name+"_reflect");
+	//PhysVol lpvR(doc,layer_vol,layer_name+"_reflect");
+	PhysVol lpvR(layer_vol);
 	lpvR.addPhysVolID(_X(system),sdet.id());
 	lpvR.addPhysVolID(_X(barrel),2);
 	motherVol.addPhysVol(lpvR,Position(doc,layer_name+"_pos_reflect",0.,0.,-zmin-layerWidth/2.),refl_rot);
@@ -331,13 +338,15 @@ namespace DetDesc { namespace Geometry {
 	  // Set vis attributes of slice
 	  slice.setVisAttributes(lcdd,x_slice.visStr(),slice_vol);
 	  // Instantiate physical volume
-	  layer_vol.addPhysVol(PhysVol(doc,slice_vol,slice_name),lcdd.identity());
+	  //layer_vol.addPhysVol(PhysVol(doc,slice_vol,slice_name),lcdd.identity());
+	  layer_vol.addPhysVol(PhysVol(slice_vol),lcdd.identity());
 	  layer.add(slice);
 	}
 	layer.setVisAttributes(lcdd,x_layer.visStr(),layer_vol);
 	layer_tub.setDimensions(rlayer,r,z * 2);
 
-	PhysVol layer_physvol(doc,layer_vol,layer_name);
+	//PhysVol layer_physvol(doc,layer_vol,layer_name);
+	PhysVol layer_physvol(layer_vol);
 	layer_physvol.addPhysVolID(_A(layer),n);
 	envelopeVol.addPhysVol(layer_physvol,lcdd.identity());
 	lcdd.add(layer_vol).add(layer_tub);
@@ -353,7 +362,8 @@ namespace DetDesc { namespace Geometry {
     // Set vis attributes of slice
     sdet.setVisAttributes(lcdd,x_det.visStr(),envelopeVol);
 
-    PhysVol physvol(doc,envelopeVol,det_name);
+    //PhysVol physvol(doc,envelopeVol,det_name);
+    PhysVol physvol(envelopeVol);
     physvol.addPhysVolID(_A(system),sdet.id())
       .addPhysVolID(_A(barrel),0);
     envelopeVol.addPhysVol(physvol,lcdd.identity());
@@ -417,7 +427,8 @@ namespace DetDesc { namespace Geometry {
 			      x_slice.attr<string>(_A(limits)),
 			      x_slice.visStr());
 
-	  PhysVol  slice_physvol(doc,slice_vol,slice_name);
+	  //PhysVol  slice_physvol(doc,slice_vol,slice_name);
+	  PhysVol  slice_physvol(slice_vol);
 	  Position slice_pos(doc,slice_name+"_pos",0.,0.,z-zlayer-layerWidth/2.+w/2.);
 	  layer_vol.addPhysVol(slice_physvol,slice_pos);
 	  z += w;
@@ -426,7 +437,8 @@ namespace DetDesc { namespace Geometry {
 	layer.setVisAttributes(lcdd,x_layer.visStr(),layer_vol);
 	layer_tub.setDimensions(rmin,rmax,layerWidth);
 
-	PhysVol  layer_phys(doc,layer_vol,layer_name);
+	//PhysVol  layer_phys(doc,layer_vol,layer_name);
+	PhysVol  layer_phys(layer_vol);
 	Position layer_pos(doc,layer_name+"_pos",0.,0.,zlayer-zmin-totWidth/2.+layerWidth/2.);
 	layer_phys.addPhysVolID("layer",n);
 	envelopeVol.addPhysVol(layer_phys,layer_pos);
@@ -443,7 +455,8 @@ namespace DetDesc { namespace Geometry {
 		       x_det.attr<string>(_A(limits)),
 		       x_det.visStr());
 
-    PhysVol  det_physvol(doc,envelopeVol,det_name);
+    //PhysVol  det_physvol(doc,envelopeVol,det_name);
+    PhysVol  det_physvol(envelopeVol);
     Position det_pos(doc,det_name+"_pos",0.,0.,zmin+totWidth/2.);
     det_physvol.addPhysVolID(_A(system),sdet.id());
     det_physvol.addPhysVolID(_A(barrel),1);
@@ -452,7 +465,8 @@ namespace DetDesc { namespace Geometry {
     if ( reflect )   {
       Rotation rot = lcdd.rotation("reflect_rot");
       Position r_pos(doc,det_name+"_pos",0.,0.,-zmin-totWidth/2.);
-      PhysVol  r_det_physvol(doc,envelopeVol,det_name+"_reflect");
+      //PhysVol  r_det_physvol(doc,envelopeVol,det_name+"_reflect");
+      PhysVol  r_det_physvol(envelopeVol);
       r_det_physvol.addPhysVolID(_A(system),sdet.id());
       r_det_physvol.addPhysVolID(_A(barrel),2);
       motherVol.addPhysVol(r_det_physvol,r_pos,rot);
@@ -537,11 +551,11 @@ namespace DetDesc { namespace Geometry {
     double layer_dim_x = innerFaceLen - gap * 2;
     int layer_number = 0;
 
+#if 0
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t   x_layer_element = c;
       int          repeat = x_layer_element.repeat();     // Get number of times to repeat this layer.
       const Layer* lay    = layering.layer(layer_number); // Get the layer from the layering engine.
-
       // Loop over repeats for this layer.
       for (int j = 0; j < repeat; j++)    {                
 	string layer_name = det_name+_toString(layer_number,"_stave_layer%d");
@@ -586,7 +600,8 @@ namespace DetDesc { namespace Geometry {
 	  slice.setAttributes(lcdd, slice_volume,
 			      x_slice.attr<string>(_A(region)),x_slice.attr<string>(_A(limits)),x_slice.visStr());
 	  // slice PhysVol
-	  PhysVol slice_physvol(doc,slice_volume);
+	  //PhysVol slice_physvol(doc,slice_volume);
+	  PhysVol slice_physvol(slice_volume);
 	  slice_physvol.addPhysVolID(_X(slice),slice_number);
 	  layer_volume.addPhysVol(slice_physvol,slice_position);
 
@@ -604,7 +619,8 @@ namespace DetDesc { namespace Geometry {
 			    x_layer_element.visStr());
 
 	// Layer physical volume.
-	PhysVol layer_physvol(doc,layer_volume);
+	//PhysVol layer_physvol(doc,layer_volume);
+	PhysVol layer_physvol(layer_volume);
 	layer_physvol.addPhysVolID(_X(layer), layer_number);
 	staveInnerVol.addPhysVol(layer_physvol,layer_position);
 
@@ -618,9 +634,10 @@ namespace DetDesc { namespace Geometry {
 	++layer_number;         
       }
     }
-
+#endif
     // Make stave inner physical volume.
-    PhysVol staveInnerPhysVol(doc,staveInnerVol);
+    //PhysVol staveInnerPhysVol(doc,staveInnerVol);
+    PhysVol staveInnerPhysVol(staveInnerVol);
     // Add stave inner physical volume to outer stave volume.
     staveOuterVol.addPhysVol(staveInnerPhysVol,pos_identity);
 
@@ -631,8 +648,9 @@ namespace DetDesc { namespace Geometry {
 		       x_det.visStr());
 
     // Make stave inner physical volume.
-    PhysVol staveOuterPhysVol(doc,staveOuterVol,det_name+"_staves");
-    envelopeVol.addPhysVol(staveOuterPhysVol,pos_identity);
+    //PhysVol staveOuterPhysVol(doc,staveOuterVol,det_name+"_staves");
+    //PhysVol staveOuterPhysVol(staveOuterVol);
+    //envelopeVol.addPhysVol(staveOuterPhysVol,pos_identity);
 
     // Place the staves.
     sdet.placeStaves(lcdd,det_name,rmin,numSides,totalThickness,envelopeVol,innerAngle,staveOuterVol);
@@ -640,7 +658,8 @@ namespace DetDesc { namespace Geometry {
     // Set the vis attributes of the outer stave section.
     sdet.setVisAttributes(lcdd,staves.visStr(),staveOuterVol);
 
-    PhysVol envelopePhysVol(doc,envelopeVol);
+    //PhysVol envelopePhysVol(doc,envelopeVol);
+    PhysVol envelopePhysVol(envelopeVol);
     envelopePhysVol.addPhysVolID(_X(system), sdet.id());
     envelopePhysVol.addPhysVolID(_X(barrel), 0);
     motherVol.addPhysVol(envelopePhysVol,pos_identity);
@@ -671,27 +690,33 @@ namespace DetDesc { namespace Geometry {
 						Volume sectVolume)
   {
     Document doc = lcdd.document();
-    double innerRotation = innerAngle;
-    double offsetRotation= -innerRotation / 2e0;
+    double innerRotation    = innerAngle;
+    double offsetRotation   = -innerRotation / 2e0;
     double sectCenterRadius = rmin + total_thickness / 2e0;
-    double rotY = -offsetRotation;
-    double rotX = M_PI / 2e0;
-    double posX = -sectCenterRadius * sin(rotY);
-    double posY = sectCenterRadius  * cos(rotY);
-    string nam = sectVolume.name();
+    double rotX = -offsetRotation;
+    double rotY =  M_PI / 2e0;
+    double posX = -sectCenterRadius  * sin(rotY);
+    double posY =  sectCenterRadius  * cos(rotY);
+    string nam =   sectVolume.name();
+    numsides=2;
+
     for (int module = 0; module < numsides; ++module)  {
       Position position(doc, detName + _toString(module,"_stave_module%d_position"),posX,posY,0);
-      Rotation rotation(doc, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0);
+      //Position position(doc, detName + _toString(module,"_stave_module%d_position"),0,0,0);
+      Rotation rotation(doc, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0.);
+      //Rotation rotation(doc, detName + _toString(module,"_stave_module%d_rotation"),M_PI/2.,M_PI/2.,0.);
       lcdd.add(position).add(rotation);
+      cout << position.name() << ": " << posX << " " << posY << endl;
 
-      PhysVol sectPhysVol(doc,sectVolume,nam+_toString(module,"_module%d"));
+      //PhysVol sectPhysVol(doc,sectVolume,nam+_toString(module,"_module%d"));
+      PhysVol sectPhysVol(sectVolume);
       envelopeVolume.addPhysVol(sectPhysVol,position,rotation);
       sectPhysVol.addPhysVolID(_X(stave), 0);
       sectPhysVol.addPhysVolID(_X(module), module);
 
-      rotY -= innerRotation;
+      rotY -=  innerRotation;
       posX  = -sectCenterRadius * sin(rotY);
-      posY  = sectCenterRadius * cos(rotY);            
+      posY  =  sectCenterRadius * cos(rotY);
     }
   }
 
@@ -851,7 +876,7 @@ namespace DetDesc { namespace Geometry {
 
 	  lcdd.add(sliceVol);
 	  // Slice PV.
-	  PhysVol slicePV(doc,sliceVol);
+	  PhysVol slicePV(sliceVol);
 	  layerVol.addPhysVol(slicePV,Position(doc,slice_nam+"_pos",0,0,slicePosZ));
 	  layer.add(slice);
 
@@ -869,7 +894,7 @@ namespace DetDesc { namespace Geometry {
 	lcdd.add(layerVol);
 
 	// Layer PV.
-	PhysVol layerPV(doc,layerVol);
+	PhysVol layerPV(layerVol);
 	layerPV.addPhysVolID(_X(layer), i);
 	envelopeVol.addPhysVol(layerPV,Position(doc,layer_nam+"_pos",0,0,layerPosZ));
 	sdet.add(layer);
@@ -882,7 +907,7 @@ namespace DetDesc { namespace Geometry {
     sdet.setVisAttributes(lcdd, x_det.visStr(), envelopeVol);
   
     lcdd.add(envelopeVol);                // Add envelope LV.
-    PhysVol envelopePV(doc,envelopeVol);  // Add envelope PV.
+    PhysVol envelopePV(envelopeVol);  // Add envelope PV.
     envelopePV.addPhysVolID(_X(system), id);
     envelopePV.addPhysVolID(_X(barrel), 1);
     motherVol.addPhysVol(envelopePV,Position(doc,det_name+"_pos",0,0,zpos));
@@ -890,7 +915,7 @@ namespace DetDesc { namespace Geometry {
     // Reflect it.
     if ( reflect )  {
       Rotation reflectRot(lcdd.rotation(_X(reflect_rot)));
-      PhysVol envelopePV2(doc,envelopeVol);
+      PhysVol envelopePV2(envelopeVol);
       envelopePV2.addPhysVolID(_X(system), id);
       envelopePV2.addPhysVolID(_X(barrel), 2);
       motherVol.addPhysVol(envelopePV2,Position(doc,det_name+"_pos_reflect",0,0,-zpos),reflectRot);
@@ -973,7 +998,8 @@ namespace DetDesc { namespace Geometry {
 
 	vol.setVisAttributes(lcdd.visAttributes(c.visStr()));
 
-	PhysVol   phv(doc, vol, c_name);
+	//PhysVol   phv(doc, vol, c_name);
+	PhysVol   phv(vol);
 	phv.addPhysVolID(_X(component),c_id);
 	vol.addPhysVol(phv,pos, rot);
 	if ( c.isSensitive() ) {
@@ -1005,38 +1031,42 @@ namespace DetDesc { namespace Geometry {
 
 
   template <> Ref_t toRefObject<ILDExTPC,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
-    Document    doc     = lcdd.document();
-    xml_det_t   x_det   = e;
-    string      name    = x_det.nameStr();
-    xml_comp_t  x_tube  (x_det.child(_X(tubs)));
-    Material    mat     (lcdd.material(x_det.materialStr()));
-    ILDExTPC    tpc     (doc,name,x_det.typeStr(),x_det.id());
-    Tube        tpc_tube    (doc,name+"_envelope",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
-    Volume      tpc_vol  (doc,name+"_envelope_volume", tpc_tube, mat);
+    Document    doc   = lcdd.document();
+    xml_det_t   x_det = e;
+    string      name  = x_det.nameStr();
+    xml_comp_t  x_tube (x_det.child(_X(tubs)));
+    Material    mat    (lcdd.material(x_det.materialStr()));
+    ILDExTPC    tpc    (doc,name,x_det.typeStr(),x_det.id());
+    Tube        tpc_tub(doc,name+"_envelope",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
+    Volume      tpc_vol(doc,name+"_envelope_volume", tpc_tub, mat);
 
-    lcdd.add(tpc_tube).add(tpc_vol);
-    tpc.setEnvelope(tpc_tube).setVolume(tpc_vol);
+    lcdd.add(tpc_tub).add(tpc_vol);
+    tpc.setEnvelope(tpc_tub).setVolume(tpc_vol);
+    lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(tpc_vol),lcdd.identity());
 
     for(xml_coll_t c(e,_X(detector)); c; ++c)  {
-      xml_det_t   px_det   (c);
-      xml_comp_t  px_tube  (px_det.child(_X(tubs)));
-      xml_dim_t   px_pos   (px_det.child(_X(position)));
-      xml_dim_t   px_rot   (px_det.child(_X(rotation)));
-      string      part_name(px_det.nameStr());
-      Material    part_mat (lcdd.material(px_det.materialStr()));
-      Subdetector part_det (doc,part_name,px_det.typeStr(),px_det.id());
-      Tube        part_tube(doc,part_name+"_tube",px_tube.rmin(),px_tube.rmax(),px_tube.zhalf());
-      Position    part_pos (doc,part_name+"_position",px_pos.x(),px_pos.y(),px_pos.z());
-      Rotation    part_rot (doc,part_name+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());
-      Volume      part_vol (doc,part_name,part_tube,part_mat);
+      xml_det_t   px_det  (c);
+      xml_comp_t  px_tube (px_det.child(_X(tubs)));
+      xml_dim_t   px_pos  (px_det.child(_X(position)));
+      xml_dim_t   px_rot  (px_det.child(_X(rotation)));
+      string      part_nam(px_det.nameStr());
+      Material    part_mat(lcdd.material(px_det.materialStr()));
+      Subdetector part_det(doc,part_nam,px_det.typeStr(),px_det.id());
+      Tube        part_tub(doc,part_nam+"_tube",px_tube.rmin(),px_tube.rmax(),px_tube.zhalf());
+      Position    part_pos(doc,part_nam+"_position",px_pos.x(),px_pos.y(),px_pos.z());
+      Rotation    part_rot(doc,part_nam+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());
+      Volume      part_vol(doc,part_nam,part_tub,part_mat);
 
-      part_det.setVolume(part_vol).setEnvelope(part_tube);
-      lcdd.add(part_tube).add(part_pos).add(part_rot).add(part_vol);
-      part_det.setVisAttributes(lcdd,px_det.visStr(), part_vol);
+      lcdd.add(part_tub).add(part_vol).add(part_pos).add(part_rot);
 
-      PhysVol     part_physvol (doc,part_vol,part_name);
+      part_det.setVolume(part_vol).setEnvelope(part_tub);
+      part_det.setVisAttributes(lcdd,px_det.visStr(),part_vol);
+
+      //PhysVol     part_physvol (doc,part_vol,part_nam);
+      PhysVol     part_physvol (part_vol);
       part_physvol.addPhysVolID(_A(id),px_det.id());
       tpc_vol.addPhysVol(part_physvol,part_pos,part_rot);
+      //tpc_vol.addPhysVol(part_vol,part_pos,part_rot);
 
       switch(part_det.id()) {
       case 0:	tpc.innerWall = part_det;  break;
@@ -1046,7 +1076,9 @@ namespace DetDesc { namespace Geometry {
       tpc.add(part_det);
     }
     tpc.setVisAttributes(lcdd, x_det.visStr(), tpc_vol);
-    lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(doc,tpc_vol,name),lcdd.identity());
+    //lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(doc,tpc_vol,name),lcdd.identity());
+    //lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(tpc_vol),lcdd.identity());
+    //lcdd.pickMotherVolume(tpc).addPhysVol(tpc_vol,lcdd.identity());
     return tpc;
   }
 
@@ -1058,19 +1090,19 @@ namespace DetDesc { namespace Geometry {
 
 
   template <> Ref_t toRefObject<ILDExVXD,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
-    Document    doc     = lcdd.document();
-    xml_det_t   x_det   = e;
-    string      name    = x_det.nameStr();
-    ILDExVXD    vxd     (doc,name,x_det.typeStr(),x_det.id());
-    Volume      mother  = lcdd.pickMotherVolume(vxd);
+    Document    doc   = lcdd.document();
+    xml_det_t   x_det = e;
+    string      name  = x_det.nameStr();
+    ILDExVXD    vxd    (doc,name,x_det.typeStr(),x_det.id());
+    Volume      mother= lcdd.pickMotherVolume(vxd);
 
     for(xml_coll_t c(e,_X(layer)); c; ++c)  {
       xml_det_t   x_layer  (c);
-      int         layer_id  = x_layer.id();
-      xml_comp_t  x_support(x_layer.child(_X(support)));
-      xml_comp_t  x_ladder (x_layer.child(_X(ladder)));
-      string      layername = name+_toString(layer_id,"_layer%d");
+      xml_comp_t  x_support (x_layer.child(_X(support)));
+      xml_comp_t  x_ladder  (x_layer.child(_X(ladder)));
+      int         layer_id   = x_layer.id();
       int         nLadders   = x_ladder.number();
+      string      layername  = name+_toString(layer_id,"_layer%d");
       double      dphi       = 2.*M_PI/double(nLadders);
       double      zhalf      = x_ladder.zhalf();
       double      offset     = x_ladder.offset();
@@ -1098,8 +1130,11 @@ namespace DetDesc { namespace Geometry {
       //suppvol.setVisAttributes(lcdd.visAttributes(x_layer.visStr()));
       //sensvol.setVisAttributes(lcdd.visAttributes(x_support.visStr()));
 
-      laddervol.addPhysVol(PhysVol(doc,sensvol,layername+"_sensor"),senspos);
-      laddervol.addPhysVol(PhysVol(doc,suppvol,layername+"_support"),supppos);
+      //laddervol.addPhysVol(PhysVol(doc,sensvol,layername+"_sensor"),senspos);
+      //laddervol.addPhysVol(PhysVol(doc,suppvol,layername+"_support"),supppos);
+
+      laddervol.addPhysVol(sensvol,senspos);
+      laddervol.addPhysVol(suppvol,supppos);
 
       for(int j=0; j<nLadders; ++j) {
 	string laddername = layername + _toString(j,"_ladder%d");
@@ -1110,8 +1145,9 @@ namespace DetDesc { namespace Geometry {
 		     radius*sin(j*dphi) - offset*cos(j*dphi),0.);
 
 	lcdd.add(rot).add(pos);
-	PhysVol     ladder_physvol(doc,laddervol,laddername+"_physvol");
-	mother.addPhysVol(ladder_physvol,pos,rot);
+	//PhysVol     ladder_physvol(doc,laddervol,laddername+"_physvol");
+	//mother.addPhysVol(ladder_physvol,pos,rot);
+	mother.addPhysVol(laddervol,pos,rot);
       }
       vxd.setVisAttributes(lcdd, x_det.visStr(),laddervol);
     }

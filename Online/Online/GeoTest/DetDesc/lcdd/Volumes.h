@@ -47,6 +47,8 @@ namespace DetDesc {
       };
       /// Constructor to be used when reading the already parsed DOM tree
       Volume(Handle_t e);
+      /// Copy from RefElement
+      Volume(const RefElement& v) : RefElement(v) {}
       /// Copy from handle
       Volume(const Volume& v) : RefElement(v) {}
       /// Constructor to be used when creating a new geometry tree.
@@ -58,6 +60,8 @@ namespace DetDesc {
       //No. not for WIN32!! void addPhysVol(const PhysVol& vol)  const;
       void addPhysVol(const PhysVol& vol, const Matrix& pos)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos, const Rotation& rot)  const;
+      //void addPhysVol(const Volume& vol, const Matrix& pos)  const;
+      //void addPhysVol(const Volume& vol, const Position& pos, const Rotation& rot)  const;
       void setRegion(const Region& obj)  const;
       void setLimitSet(const LimitSet& obj)  const;
       void setSensitiveDetector(const SensitiveDetector& obj) const;
@@ -69,7 +73,7 @@ namespace DetDesc {
       Region region() const;
       const TGeoVolume* volume() const;
     };
-
+#if 0
     struct PhysVol : RefElement {
       struct Object  {
         std::map<std::string,int> Attr_ids;
@@ -86,7 +90,12 @@ namespace DetDesc {
       Volume logVolume() const;
       TGeoVolume* volume() const;
     };
-
+#endif
+    struct PhysVol : RefElement {
+      /// Constructor to be used when reading the already parsed DOM tree
+      PhysVol(const RefElement& e) : RefElement(e) {}
+      PhysVol& addPhysVolID(const std::string& name, int value);
+    };
   }       /* End namespace Geometry           */
 }         /* End namespace DetDesc            */
 #endif    /* DETDESC_GEOMETRY_VOLUMES_H       */

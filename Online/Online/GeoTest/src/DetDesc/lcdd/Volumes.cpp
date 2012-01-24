@@ -19,14 +19,28 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
+static UInt_t unique_physvol_id = INT_MAX-1;
+
+namespace DetDesc  { namespace Geometry  {
+  template <> struct Value<TGeoVolume,Volume::Object> 
+    : public TGeoVolume, public Volume::Object  
+  {
+    Value(const char* name, TGeoShape* s=0, TGeoMedium* m=0) 
+      : TGeoVolume(name,s,m) {}
+    virtual ~Value() {}
+  };
+}}
+
 Volume::Volume(const Document& document, const string& name)
-: RefElement(document, "volume", name)
+  : RefElement(0)
 {
+  m_element.m_node = new Value<TGeoVolume,Volume::Object>(name.c_str());
 }
 
 Volume::Volume(const Document& document, const string& name, const Solid& s, const Material& m)   
-: RefElement(document, "volume", name)
+  : RefElement(0)
 {
+  m_element.m_node = new Value<TGeoVolume,Volume::Object>(name.c_str());
   setSolid(s);
   setMaterial(m);
   //s.shape().ComputeBBox();
@@ -63,6 +77,33 @@ void Volume::setSolid(const Solid& solid)  const  {
 }
 
 void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotation& rot)  const  {
+  Volume vol(volume);
+  TGeoVolume* phys_vol = first_value<TGeoVolume>(vol);
+  TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
+  if ( phys_vol )   {
+    TGeoTranslation* t = value<TGeoTranslation>(pos);
+    TGeoRotation*    r = value<TGeoRotation>(rot);
+    TGeoCombiTrans*  c = new TGeoCombiTrans(*t,*r);
+    log_vol->AddNode(phys_vol, --unique_physvol_id, c);
+    return;
+  }
+  throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
+}
+
+void Volume::addPhysVol(const PhysVol& volume, const Matrix& matrix)  const  {
+  Volume vol(volume);
+  TGeoVolume* phys_vol = first_value<TGeoVolume>(vol);
+  TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
+  if ( phys_vol )   {
+    TGeoMatrix* m = value<TGeoMatrix>(matrix);
+    log_vol->AddNode(phys_vol, --unique_physvol_id, m);
+    return;
+  }
+  throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
+}
+
+#if 0
+void Volume::addPhysVol(const Volume& volume, const Position& pos, const Rotation& rot)  const  {
   TGeoVolume* phys_vol = first_value<TGeoVolume>(volume);
   TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
   if ( phys_vol )   {
@@ -74,8 +115,7 @@ void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotati
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
-
-void Volume::addPhysVol(const PhysVol& volume, const Matrix& matrix)  const  {
+void Volume::addPhysVol(const Volume& volume, const Matrix& matrix)  const  {
   TGeoVolume* phys_vol = first_value<TGeoVolume>(volume);
   TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
   if ( phys_vol )   {
@@ -85,6 +125,7 @@ void Volume::addPhysVol(const PhysVol& volume, const Matrix& matrix)  const  {
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
+#endif
 
 void Volume::setRegion(const Region& obj)  const   {
   Object* val = second_value<TGeoVolume>(*this);
@@ -152,23 +193,28 @@ const TGeoVolume* Volume::volume() const  {
   return first_value<TGeoVolume>(*this);
 }
 
-static UInt_t unique_physvol_id = INT_MAX-1;
+PhysVol& PhysVol::addPhysVolID(const std::string& /* name */, int /* value */) {
+  return *this;
+}
+
+#if 0
 
 /// Constructor to be used when creating a new DOM tree
 PhysVol::PhysVol(const Document& document, const Volume& volume, const string& name) 
-: RefElement(document,"physvol",name) 
+: RefElement(document,"physvol",name)
 {
   TGeoVolume* log_vol  = first_value<TGeoVolume>(volume);
   TGeoVolume* phys_vol = first_value<TGeoVolume>(*this);
   Object* obj = second_value<TGeoVolume>(*this);
   phys_vol->SetUniqueID(--unique_physvol_id);
+  phys_vol->SetMedium(log_vol->GetMedium());
   phys_vol->SetShape(log_vol->GetShape());
   phys_vol->SetName(name.c_str());
   obj->Attr_volume = volume;
   phys_vol->SetTitle(phys_vol->GetName());
+
   // Copy vis attrs from volume prototype
   VisAttr attr = second_value<TGeoVolume>(volume)->Attr_vis;
-
   if ( attr.isValid() )  {
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
@@ -198,6 +244,7 @@ PhysVol::PhysVol(const Document& document, const Volume& volume)
   TGeoVolume* phys_vol = first_value<TGeoVolume>(*this);
   Object* obj = second_value<TGeoVolume>(*this);
   phys_vol->SetUniqueID(--unique_physvol_id);
+  phys_vol->SetMedium(log_vol->GetMedium());
   phys_vol->SetShape(log_vol->GetShape());
   phys_vol->SetName(name.c_str());
   obj->Attr_volume = volume;
@@ -237,3 +284,5 @@ Volume PhysVol::logVolume() const  {
 TGeoVolume* PhysVol::volume() const  {
   return first_value<TGeoVolume>(*this);
 }
+
+#endif

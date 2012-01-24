@@ -9,6 +9,7 @@
 // ROOT includes
 #include "TGeoShape.h"
 #include "TGeoPcon.h"
+#include "TGeoTube.h"
 #include "TGeoTrd2.h"
 #include "TGeoBoolNode.h"
 #include "TGeoCompositeShape.h"
@@ -135,15 +136,17 @@ void Polycone::addZPlanes(const vector<double>& rmin, const vector<double>& rmax
 }
 
 /// Constructor to be used when creating a new DOM tree
-Tube::Tube(const Document& doc, const string& name) : Solid(doc,"tube",name) {
-  setDimensions(0.,0.,0.,0.);
+Tube::Tube(const Document& doc, const string& name) : Solid(doc,"tube",name) 
+{
+  m_element.m_node = new TGeoTubeSeg(name.c_str(),0.,0.,0.,0.,0.);
 }
 
 /// Constructor to be used when creating a new DOM tree with attribute initialization
 Tube::Tube(const Document& doc, const string& name, double rmin, double rmax, double z, double deltaPhi)
 : Solid(doc,"tube",name)
 {
-  setDimensions(rmin,rmax,z,RAD_2_DEGREE * deltaPhi);
+  m_element.m_node = new TGeoTubeSeg(name.c_str(),0.,0.,0.,0.,0.);
+  setDimensions(rmin,rmax,z,deltaPhi);
 }
 
 /// Set the tube dimensions

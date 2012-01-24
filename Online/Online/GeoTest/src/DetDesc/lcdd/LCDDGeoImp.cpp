@@ -43,11 +43,7 @@ LCDDImp::LCDDImp() : m_worldVol(0), m_trackingVol(0), m_reflect(0), m_identity(0
   XML::tags_init();
 }
 
-Volume LCDDImp::pickMotherVolume(const Subdetector& sd) const  {     // throw if not existing
-  string name = sd.name();
-  cout << "pickMotherVolume: " << name << endl;
-  if ( name.find("TPC_") != string::npos )
-    return volume("TPC");
+Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if not existing
   return m_worldVol;
 }
 
@@ -78,8 +74,11 @@ LCDDImp::__add(const RefElement& x, ObjectHandleMap& m,Int_t (TGeoManager::*func
 }
 
 LCDD& LCDDImp::addVolume(const RefElement& x)    {
-  return __add(x,m_structure,&TGeoManager::AddVolume);
+  //return __add(x,m_structure,&TGeoManager::AddVolume);
+  m_structure.append(x);
+  return *this;
 }
+#include "TGeoTube.h"
 #include "TGeoPcon.h"
 #include "TGeoCompositeShape.h"
 LCDD& LCDDImp::addSolid(const RefElement& x)     {
@@ -87,11 +86,15 @@ LCDD& LCDDImp::addSolid(const RefElement& x)     {
   if ( (o=dynamic_cast<TGeoPcon*>(obj)) )  {
     m_structure.append<TGeoShape>(x);
   }
+  else if ( (o=dynamic_cast<TGeoTube*>(obj)) )  {
+    m_structure.append<TGeoShape>(x);
+  }
   else if ( (o=dynamic_cast<TGeoCompositeShape*>(obj)) )  {
     m_structure.append<TGeoShape>(x);
   }
   else  {
-    __add(x,m_structure,&TGeoManager::AddShape);
+    m_structure.append<TGeoShape>(x);
+    //__add(x,m_structure,&TGeoManager::AddShape);
   }
 #if 0
   cout << obj->GetName() << " " << (void*)obj
@@ -108,7 +111,7 @@ LCDD& LCDDImp::addRotation(const RefElement& x)  {
   if ( obj->IsRegistered() ) {
     cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
   }
-  cout << "+++ Register Rotation[" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
+  // cout << "+++ Register Rotation[" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
 
   return __add(x,m_rotations,&TGeoManager::AddTransformation);
   //m_rotations.append<TGeoMatrix>(x);
@@ -123,7 +126,7 @@ LCDD& LCDDImp::addPosition(const RefElement& x)  {
   if ( obj->IsRegistered() ) {
     cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
   }
-  cout << "+++ Register Position [" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
+  /// cout << "+++ Register Position [" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
   return __add(x,m_positions,&TGeoManager::AddTransformation);
 }
 
@@ -208,7 +211,10 @@ Document LCDDImp::init()  {
   Volume world(doc,"world_volume",worldSolid,air);
   add(world);
 
-  Tube trackingSolid(doc,"tracking_cylinder",0.,"tracking_region_radius","2*tracking_region_zmax",M_PI);
+  Tube trackingSolid(doc,"tracking_cylinder",
+		     0.,
+		     _toDouble("tracking_region_radius"),
+		     _toDouble("2*tracking_region_zmax"),M_PI);
   add(trackingSolid);
 
   Volume tracking(doc,"tracking_volume",trackingSolid,air);

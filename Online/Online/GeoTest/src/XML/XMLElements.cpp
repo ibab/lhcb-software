@@ -455,10 +455,12 @@ RefElement::RefElement(const RefElement& e)
 }
 
 const XMLCh* RefElement::name() const  {
+  if ( 0 == m_name ) cout << "Error:tag=" << m_element.tag() << endl;
   return m_name->getValue();
 }
 
 const XMLCh* RefElement::refName() const  {
+  if ( 0 == m_name ) cout << "Error:tag=" << m_element.tag() << endl;
   return m_name->getValue();
 }
 
@@ -466,25 +468,29 @@ void RefElement::setName(const XMLCh* new_name)  {
   setAttr(Attr_name,new_name);
 }
 
-Collection_t::Collection_t(DOMElement* n, const XMLCh* tag) : m_index(0) {
+Collection_t::Collection_t(DOMElement* n, const XMLCh* tag) : m_index(-1), m_element(n) {
   m_children = n->getElementsByTagName(tag);
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_children->item(m_index));
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);//m_children->item(m_index));
+  ++(*this);
 }
 
-Collection_t::Collection_t(DOMElement* n, const char* tag) : m_index(0) {
+Collection_t::Collection_t(DOMElement* n, const char* tag) : m_index(-1), m_element(n) {
   m_children = n->getElementsByTagName(Tag_t(tag));
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_children->item(m_index));
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);//m_children->item(m_index));
+  ++(*this);
 }
 
-Collection_t::Collection_t(DOMNodeList* n) : m_index(0), m_children(n) {
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_children->item(m_index));
-  if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+Collection_t::Collection_t(DOMElement* n, DOMNodeList* c) : m_index(-1), m_element(n), m_children(c) {
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);//m_children->item(m_index));
+  //if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+  ++(*this);
 }
 
 Collection_t& Collection_t::reset()  {
-  m_index = 0;
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_children->item(m_index));
-  if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+  m_index = -1;
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_element);//m_children->item(m_index));
+  //if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+  ++(*this);
   return *this;
 }
 
@@ -498,7 +504,8 @@ void Collection_t::operator++()  const  {
     //int t2 = DOMNode::ELEMENT_NODE;
     m_node = (DOMElement*)m_children->item(++m_index);
     if ( m_node && m_node->getNodeType() == DOMNode::ELEMENT_NODE ) {
-      return;
+      if ( m_node->getParentNode() == m_element )
+	return;
     }
   }
 }

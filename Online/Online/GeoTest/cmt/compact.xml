@@ -296,6 +296,9 @@
         
         <vis name="SupportVis" r="0.5" g="0.1" b="0.99" showDaughters="false" visible="true"/>
         <vis name="LumiCalVis" showDaughters="false" visible="true"/>
+        <vis name="GreenVis" r="0.0" g="1.0" b="0.0" showDaughters="true" visible="true"/>
+        <vis name="RedVis" r="1.0" g="0.0" b="0.0" showDaughters="true" visible="true"/>
+        <vis name="BlueVis" r="0.0" g="0.0" b="1.0" showDaughters="true" visible="true"/>
     </display>
     <detectors>
         <comment>Trackers</comment> 
@@ -1078,13 +1081,18 @@
         </detector>
         <detector name="VertexReadout" type="DiskTracker" reflect="true" vis="CableVis">
             <comment>Readout and Cabling</comment>
-            <layer id="1" inner_r = "VertexBarrel_r1" outer_r = "VertexBarrel_r1 + 0.02*cm"  inner_z= "VertexBarrel_zmax + 0.1*cm">
+            <layer id="1" inner_r = "VertexBarrel_r1" outer_r =
+"VertexBarrel_r1 + 0.02*cm"  inner_z= "VertexBarrel_zmax + 0.1*cm" vis="GreenVis">
                 <slice material = "G10" thickness ="0.5*cm"/>
             </layer>
-            <layer id="2" inner_r = "VertexBarrel_r2" outer_r = "VertexBarrel_r2 + 0.02*cm"  inner_z= "VertexBarrel_zmax + 0.1*cm">
+            <layer id="2" inner_r = "VertexBarrel_r2" outer_r =
+                "VertexBarrel_r2 + 0.02*cm"  inner_z=
+                "VertexBarrel_zmax + 0.1*cm" vis = "BlueVis">
                 <slice material = "G10" thickness ="0.5*cm"/>
             </layer>
-            <layer id="3" inner_r = "VertexBarrel_r3" outer_r = "VertexBarrel_r3 + 0.02*cm"  inner_z= "VertexBarrel_zmax + 0.1*cm">
+            <layer id="3" inner_r = "VertexBarrel_r3" outer_r =
+                "VertexBarrel_r3 + 0.02*cm"  inner_z=
+                "VertexBarrel_zmax + 0.1*cm" vis="RedVis">
                 <slice material = "G10" thickness ="0.5*cm"/>
             </layer>
             <layer id="4" inner_r = "VertexBarrel_r4" outer_r = "VertexBarrel_r4 + 0.02*cm"  inner_z= "VertexBarrel_zmax + 0.1*cm">
@@ -1400,7 +1408,7 @@
             <zplane rmin="206.234" rmax="211.970" z="-1635.890-0.001" />
             <zplane rmin="206.234" rmax="206.234" z="-1636.392-0.001" />
         </detector>        
-        <detector name="TrackerReadout" type="DiskTracker" reflect="true">
+        <detector name="TrackerReadout" type="DiskTracker" reflect="true" vis="GreenVis">
             <comment>Readouts</comment>
             <layer id="1" inner_r="25.7*cm" inner_z="590.402" outer_r="45.6*cm">
                 <slice material="G10" thickness="0.057*cm" />

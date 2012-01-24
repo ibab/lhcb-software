@@ -37,7 +37,7 @@ application  GeomConverterApp ../main/main.cpp  \
 #apply_pattern linker_library library=GeomConverterLib
 
 private
-macro_append ROOT_linkopts ' -lGeom -lRint ' WIN32 ' libGeom.lib libRint.lib '
+macro_append ROOT_linkopts ' -lGeom -lRint -lXMLIO ' WIN32 ' libGeom.lib libRint.lib '
 macro_append cppflags " -Wall -Woverloaded-virtual -Wno-long-long "      WIN32 ""
 macro_append cppflags " -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wunused "    WIN32 ""
 macro_append cppflags " -Wreturn-type -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""

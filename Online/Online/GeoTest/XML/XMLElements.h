@@ -151,11 +151,12 @@ namespace DetDesc {
 
     struct Collection_t : public Handle_t {
       mutable XMLSize_t     m_index;
+      xercesc::DOMElement*  m_element;
       xercesc::DOMNodeList* m_children;
 
-      Collection_t(xercesc::DOMElement* n, const XMLCh* tag);
-      Collection_t(xercesc::DOMElement* n, const char* tag);
-      Collection_t(xercesc::DOMNodeList* n);
+      Collection_t(xercesc::DOMElement* node, const XMLCh* tag);
+      Collection_t(xercesc::DOMElement* node, const char* tag);
+      Collection_t(xercesc::DOMElement* node, xercesc::DOMNodeList* children);
       Collection_t& reset();
       size_t size()  const;
       void operator++()  const;

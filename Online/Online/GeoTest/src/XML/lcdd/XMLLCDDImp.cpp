@@ -48,7 +48,7 @@ LCDD& LCDDImp::addReadout(const RefElement& readout) {
 
 RefElement LCDDImp::getRefChild(Handle_t e, const XMLCh* name, bool do_throw)  const  {
   string nam = _toString(name);
-  for(Collection_t c(e->getChildNodes()); c; ++c)   {
+  for(Collection_t c(e,e->getChildNodes()); c; ++c)   {
     string tag = c.attr<string>(Attr_name);
     if ( tag == nam )  {
      return RefElement(c.current());

@@ -95,12 +95,14 @@ namespace DetDesc {
       /// Constructor to be used when creating a new tube object with attribute initialization
       Tube(const Document& doc, const std::string& name, double rmin, double rmax, double z, double deltaPhi=2*M_PI);
       /// Constructor to be used when creating a new tube object with attribute initialization
+#if 0
       template<class RMIN, class RMAX, class Z, class DELTAPHI>
       Tube(const Document& doc, const std::string& name, const RMIN& rmin, const RMAX& rmax, const Z& z, const DELTAPHI& deltaPhi)  
       : Solid(doc,"tube",name)
       {
         setDimensions(_toDouble(rmin),_toDouble(rmax),_toDouble(z),_toDouble(deltaPhi));
       }
+#endif
       /// Set the box dimensions
       Tube& setDimensions(double rmin, double rmax, double z, double deltaPhi=2*M_PI);
     };

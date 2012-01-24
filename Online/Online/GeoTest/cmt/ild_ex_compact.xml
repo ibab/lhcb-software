@@ -12,22 +12,21 @@
     </info>
     
     <define>
-        <constant name="world_side" value="30000"/>
-        <constant name="world_x" value="world_side"/>
-        <constant name="world_y" value="world_side"/>
-        <constant name="world_z" value="world_side"/>
+        <constant name="world_side"             value="30000"/>
+        <constant name="world_x"                value="world_side"/>
+        <constant name="world_y"                value="world_side"/>
+        <constant name="world_z"                value="world_side"/>        
+        <constant name="CrossingAngle"          value="0.020"/>
         
-        <constant name="CrossingAngle" value="0.020"/>
-        
-        <constant name="TPC_zhalf" value="2500*mm"/>
-        <constant name="TPC_outer_radius" value="1800*mm"/>
-        <constant name="TPC_inner_radius" value="350*mm"/>
-        <constant name="TPC_inner_thickness" value="2*mm"/>
-        <constant name="TPC_outer_thickness" value="3*mm"/>
-        <constant name="TPC_endcap_thickness" value="3*mm"/>
+        <constant name="TPC_zhalf"              value="2500*mm"/>
+        <constant name="TPC_outer_radius"       value="1800*mm"/>
+        <constant name="TPC_inner_radius"       value="350*mm"/>
+        <constant name="TPC_inner_thickness"    value="2*mm"/>
+        <constant name="TPC_outer_thickness"    value="3*mm"/>
+        <constant name="TPC_endcap_thickness"   value="3*mm"/>
 
         <constant name="tracking_region_radius" value="TPC_outer_radius + 1.0"/>
-        <constant name="tracking_region_zmax" value="TPC_zhalf + 1.0"/>
+        <constant name="tracking_region_zmax"   value="TPC_zhalf + 1.0"/>
         
     </define>
     <materials>
@@ -43,11 +42,11 @@
     </limits>
 
     <display>
-      <vis name="TPCVis"        alpha="1.0" r="1.0" g="1.0" b="1.0" showDaughters="true"  visible="false"/>
-      <vis name="TPCSupportVis" alpha="1.0" r="0.3" g="0.3" b="0.7" showDaughters="false" visible="true"/>
-      <vis name="TPCGasVis"     alpha="1.0" r="0.7" g="0.3" b="0.3" showDaughters="false" visible="true"/>
-      <vis name="VXDLayerVis"   alpha="1.0" r="0.3" g="0.9" b="0.0" showDaughters="true"  visible="true"/>
-      <vis name="VXDSupportVis" alpha="1.0" r="1.0" g="0.4" b="0.4" showDaughters="true"  visible="true"/>
+      <vis name="TPCVis"        alpha="1.0" r="0"   g="1.0" b="0.7" showDaughters="true"  visible="false"/>
+      <vis name="TPCSupportVis" alpha="1.0" r="0"   g="0"   b="0.7" showDaughters="false" visible="true"/>
+      <vis name="TPCGasVis"     alpha="1.0" r="0.7" g="0"   b="0"   showDaughters="false" visible="true"/>
+      <vis name="VXDLayerVis"   alpha="1.0" r="0.0" g="1.0" b="0.0" showDaughters="true"  visible="true"/>
+      <vis name="VXDSupportVis" alpha="1.0" r="0.0" g="1.0" b="0.0" showDaughters="true"  visible="true"/>
 
       <vis name="SupportVis" r="0.5" g="0.1" b="0.99" showDaughters="false" visible="true"/>
       <vis name="LumiCalVis" showDaughters="false" visible="true"/>
@@ -55,7 +54,7 @@
 
     <detectors>
         <comment>Trackers</comment>
-
+<!--
         <detector name="VXD" type="ILDExVXD" vis="VXDVis" id="1">
           <layer id="1"  vis="VXDLayerVis">
             <support thickness="0.01*mm" material="Carbon" vis="VXDSupportVis"/>
@@ -79,6 +78,8 @@
           </layer>
         </detector>
 
+
+-->
 
         <detector name="TPC" type="ILDExTPC" vis="TPCVis" id="2">
            <tubs rmin="TPC_inner_radius" rmax="TPC_outer_radius" zhalf="TPC_zhalf"/>
