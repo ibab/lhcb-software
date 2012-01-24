@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-01-24 - Marco Cattaneo
+ - Adapt references to RootCnv v1r12 and Gaudi v23
+
 ! 2011-12-13 - Marco Cattaneo
  - Add some missing run time dependencies to run tests with cmt run
  - Remove tests that write POOL files. Remaining tests reading POOL files

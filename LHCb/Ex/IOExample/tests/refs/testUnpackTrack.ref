@@ -2,16 +2,16 @@
 # <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Thu Sep 15 08:44:20 2011
+                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
+                                          running on lxbuild163.cern.ch on Tue Jan 24 16:25:05 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/00011652_00000001_1-evt-18641to18650.sdst?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
 DumpTracks           INFO There are 326 tracks in Rec/Track/Best
 DumpTracks           INFO There are 322 tracks in Rec/Track/Best
