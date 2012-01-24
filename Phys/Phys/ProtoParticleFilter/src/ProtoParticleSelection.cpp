@@ -94,9 +94,10 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
 
   if ( requirement() == MustHave )
   {
-    if ( (detector() == RICH && !hasRichDLL(proto)) ||
+    if ( (detector() == RICH && !hasRichDLL(proto))  ||
          (detector() == MUON && !hasMuonInfo(proto)) ||
-         (detector() == CALO && !hasCaloDLL(proto)) ||
+         (detector() == CALO && !hasCaloDLL(proto))  ||
+         (detector() == RICHORCALO && !( hasRichDLL(proto) || hasCaloDLL(proto) ) ) ||
          (detector() == RICH_AEROGEL  && !hasRichAerogel(proto)) ||
          (detector() == RICH_RICH1GAS && !hasRich1Gas(proto))    ||
          (detector() == RICH_RICH2GAS && !hasRich2Gas(proto))    ||
@@ -181,6 +182,8 @@ ProtoParticleSelection::DetectorRequirements::detector( const std::string & det 
     ( "RICH"          == det ? DetectorRequirements::RICH :
       "CALO"          == det ? DetectorRequirements::CALO :
       "MUON"          == det ? DetectorRequirements::MUON :
+      "RICHORCALO"    == det ? DetectorRequirements::RICHORCALO :
+      "CALOORRICH"    == det ? DetectorRequirements::RICHORCALO :
       "RICH_AEROGEL"  == det ? DetectorRequirements::RICH_AEROGEL  :
       "RICH_RICH1GAS" == det ? DetectorRequirements::RICH_RICH1GAS :
       "RICH_RICH2GAS" == det ? DetectorRequirements::RICH_RICH2GAS :

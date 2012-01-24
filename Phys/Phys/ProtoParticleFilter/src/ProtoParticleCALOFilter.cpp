@@ -71,7 +71,8 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
 
   // automatic setting for ANY possible calo tag
   bool ok = false;
-  for(int i=300; i < 400 ; ++i){ // select the CALO range
+  for ( int i = 300; i < 400; ++i ) // select the CALO range
+  { 
     std::ostringstream var("");
     var << (LHCb::ProtoParticle::additionalInfo) i;
     if( std::string::npos != var.str().find("ERROR") )continue;
@@ -80,26 +81,29 @@ ProtoParticleCALOFilter::createCut( const std::string & tag,
     std::transform( tag.begin() , tag.end() , uTag.begin () , ::toupper ) ;
     std::string v = var.str();
     std::transform( v.begin() , v.end() , uVar.begin () , ::toupper ) ;
-    if( uTag == uVar){
+    if( uTag == uVar)
+    {
       ok = true;
       dllcut->setVariable( (LHCb::ProtoParticle::additionalInfo) i );
       break;
     }
   }
 
-
-  if ( !ok ){
-    debug() << "Unknown tag " << tag << endreq;
-    counter("Unknwon ProtoPFilter tag") += 1;
+  if ( !ok )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Unknown tag " << tag << endreq;
+    ++counter("Unknown ProtoParticleFilter tag "+tag);
     delete dllcut;
     dllcut = NULL;
   }
-
-  if ( msgLevel(MSG::DEBUG) && dllcut ){
+  
+  if ( msgLevel(MSG::DEBUG) && dllcut )
+  {
     debug() << "  -> Created new DLLCut : "
             << tag << " " << delim << " " << dllcut->cutValue() << endreq;
   }
-
+  
   return dllcut;
 }
 

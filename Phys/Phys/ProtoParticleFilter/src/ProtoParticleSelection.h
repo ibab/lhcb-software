@@ -327,9 +327,10 @@ public: // Helper classes
       {
         UndefinedDet=-1, ///< Undefined detector type
         // General DLL information flags
-        RICH,            ///< Requires RICH DLL information
-        CALO,            ///< Requires CALO DLL information
-        MUON,            ///< Requires MUON DLL information
+        RICH,            ///< Requires RICH information
+        CALO,            ///< Requires CALO information
+        MUON,            ///< Requires MUON information
+        RICHORCALO,      ///< Requires RICH or CALO information
         // Rich detector flags
         RICH_AEROGEL,    ///< Must have RICH1 aerogel information
         RICH_RICH1GAS,   ///< Must have RICH1 gas information

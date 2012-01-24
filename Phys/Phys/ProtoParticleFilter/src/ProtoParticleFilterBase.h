@@ -92,10 +92,12 @@ protected:
    *   @retval non-Null Cut information was successfully decoded.
    *   @retval NULL     Cut information was not successfully decoded.
    */
-  virtual const ProtoParticleSelection::Cut * createCut( const std::string & tag,
-                                                         const std::string & delim,
-                                                         const std::string & value ) const = 0;
-
+  virtual 
+  const ProtoParticleSelection::Cut * 
+  createCut( const std::string & tag,
+             const std::string & delim,
+             const std::string & value ) const = 0;
+  
   /** @brief Create a DetectorRequirements object
    *   @param tag   The detector type
    *   @param value The detector requirement
@@ -103,8 +105,10 @@ protected:
    *   @retval non-NULL Requirement information was successfully decoded.
    *   @retval NULL     Requirement information was not successfully decoded.
    */
-  virtual const ProtoParticleSelection::DetectorRequirements * createDetReq( const std::string & tag,
-                                                                             const std::string & value ) const = 0;
+  virtual 
+  const ProtoParticleSelection::DetectorRequirements * 
+  createDetReq( const std::string & tag,
+                const std::string & value ) const = 0;
 
   /// Read access to ProtoParticleSelection::Vector
   inline const ProtoParticleSelection::Vector & protoSels() const { return m_protoSels; }
