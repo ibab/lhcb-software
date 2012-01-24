@@ -162,7 +162,7 @@ namespace
   {
     //
     std::size_t _size = ids.size() ;
-    for ( ; begin != end ; ++end ) { insert ( ids , *begin ) ; }
+    for ( ; begin != end ; ++begin ) { insert ( ids , *begin ) ; }
     //
     return ids.size() - _size ;
   }
@@ -251,7 +251,7 @@ namespace
     _LHCbIDs _ids2 ;
     //
     insert ( _ids1 , obj1 ) ;
-    insert ( _ids1 , obj1 ) ;
+    insert ( _ids2 , obj2 ) ;
     //
     //     LHCb::HashIDs::LHCbIDs ids ;
     //     ids.reserve ( std::min ( _ids1 . size  () , _ids2 . size () ) ) ;
@@ -263,7 +263,7 @@ namespace
     std::size_t _c =
       std::set_intersection 
       (  _ids1 . begin () , _ids1 . end () ,
-         _ids1 . begin () , _ids1 . end () , 
+         _ids2 . begin () , _ids2 . end () , 
          count_iterator<LHCb::LHCbID>() ).count() ;
     //
     return std::make_pair ( _frac ( _c , _ids1 . size () ) , 
