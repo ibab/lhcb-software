@@ -13,7 +13,7 @@
 		<file GUID="" name="PFN:RootDst.root" status="full">0</file>
 	</output>
 	<counters>
-		<counter name="CounterSummarySvc/handled">4</counter>
+		<counter name="CounterSummarySvc/handled">5</counter>
 		<statEntity format="Flag Entries Flag2" max="0.0" min="0.0" name="TestCounter/efficiency">0.0 0.0 0.0</statEntity>
 	</counters>
 	<lumiCounters />

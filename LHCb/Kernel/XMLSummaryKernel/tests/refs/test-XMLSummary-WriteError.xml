@@ -14,7 +14,7 @@
 		<file GUID="" name="PFN:/SomeFileYouCannotWriteTo.root" status="fail">0</file>
 	</output>
 	<counters>
-		<counter name="CounterSummarySvc/handled">6</counter>
+		<counter name="CounterSummarySvc/handled">7</counter>
 		<statEntity format="Flag Entries Flag2" max="1.0" min="0.0" name="TestCounter/efficiency">1.0 1.0 1.0</statEntity>
 	</counters>
 	<lumiCounters />

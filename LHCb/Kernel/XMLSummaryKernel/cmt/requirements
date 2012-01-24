@@ -16,15 +16,9 @@ use GaudiKernel        v*
 use GaudiConf          v*
 use GaudiUtils         v*
 use Boost              v* LCG_Interfaces
+use Python             v* LCG_Interfaces -no_auto_imports
 
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
-
-# Packages needed to resolve external dependencies at run time
-private
-  use Python             v*    LCG_Interfaces -no_auto_imports
-end_private
-
-
 library XMLSummaryKernel *.cpp -import=Python
 
 # define link options
@@ -34,3 +28,15 @@ library XMLSummaryKernel *.cpp -import=Python
 apply_pattern component_library library=XMLSummaryKernel
 apply_pattern install_python_modules
 apply_pattern QMTest
+
+# Packages needed for tests
+private
+macro XMLSummaryKernel_use_Python "" QMTest "Python v* LCG_Interfaces"
+use $(XMLSummaryKernel_use_Python)
+
+macro XMLSummaryKernel_use_RELAX "" QMTest "RELAX v* LCG_Interfaces"
+use $(XMLSummaryKernel_use_RELAX)
+
+macro XMLSummaryKernel_use_HepMC "" QMTest "HepMC v* LCG_Interfaces"
+use $(XMLSummaryKernel_use_HepMC)
+end_private

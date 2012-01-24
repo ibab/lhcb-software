@@ -4,6 +4,11 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2012-01-24 - Marco Cattaneo
+ - Adapt readerror and writeerror references to new Incident thrown on error
+   by RootCnv v1r12
+ - Add QMTest dependencies to requirements, to allow to run QMTests with cmt run
+
 ! 2011-12-20 - Rob Lambert
  - Migrate tests to Gaudi v23r0, no POOL, and different exit codes.
  - Tests now depend on IOHelper, and tehrefore GaudiConf, 
