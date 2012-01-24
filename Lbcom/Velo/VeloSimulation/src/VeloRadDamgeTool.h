@@ -77,9 +77,9 @@ protected:
       useConst(false),
       responseMin(0.),
       responseMax(0.),
-      chargeFracWidth(0.),
+      chargeFracWidth(1.),
       chargeFracMax(0.),
-      stripDistScale(0.),
+      stripDistScale(1.),
       fracOuter(0.){};
 
     /// The fitted spline to the radius

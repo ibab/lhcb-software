@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-01-24 - David Hutchcroft
+ - Fix case where no rad damge in DB at all (2010 tests) causing (harmless)
+   FPEs by changing defaults in the constructor for "RadParam"
+
 ! 2012-01-17 - Marco Cattaneo
  - Fix UNINIT_CTOR Coverity warning
  - Fix hidden variable Coverity warning
