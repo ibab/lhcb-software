@@ -5,6 +5,11 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+! 24-01-2012 - Matt Coombes
+- Added Capability to Save and open Miranda binning.
+  Bins are saved in NTuple format saving the max and min in each projection
+  Functions can be found in SCPBinning class. SetBinning(const char* filename) 
+  and Save(const char* filename).
 
 ! 23-01-2012 - Matt Coombes
 - Added ReadNTuple.h gives capability to read in any NTuple

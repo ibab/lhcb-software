@@ -76,6 +76,8 @@ class ScpBoxSet : public std::vector<ScpBox>{
   const DalitzHistoSet& histoMC()const;
 
   double scp(double normFactorPassed=1) const;
+
+  void save();
 };
 
 std::ostream& operator<<(std::ostream& os, const ScpBoxSet& c2bs);

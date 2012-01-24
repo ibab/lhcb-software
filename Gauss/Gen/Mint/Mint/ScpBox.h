@@ -64,6 +64,9 @@ class ScpBox{
   double t40Max() const{return _area._t40.max();}
 
   void print(std::ostream& os = std::cout) const;
+
+  DalitzArea area();
+
 };
 
 std::ostream& operator<<(std::ostream& os, const ScpBox& box);

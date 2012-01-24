@@ -103,6 +103,10 @@ class ScpBinning {
 
   int NEntires();
 
+  int SetBinning(const char*);
+
+  void save(const char*);
+
   friend class lessByScpBoxData;
   friend class lessByScpBoxScp;
   friend class lessByScpBoxSetScp;

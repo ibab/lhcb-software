@@ -231,10 +231,13 @@ double ScpBoxSet::scp(double normFactorPassed) const{
   double alpha = (normFactorPassed);
 
 //  alpha = normFactorPassed;
-
   double scp = (n_data-(alpha*n_dataCC))/sqrt(n_data+(alpha*alpha*n_dataCC));
-//
 
+
+  if (n_data == 0 || n_dataCC == 0)
+  {
+	  scp = -9999;
+  }
   return scp;
 }
 
@@ -276,7 +279,49 @@ bool ScpBoxSet::subtractMC(IDalitzEvent* evt, double weight){
   return false;
 }
 
+void ScpBoxSet::save(){
+	//get points
 
+//	 double t01min, s12min, s23min, s34min, t40min;
+//	 double t01max, s12max, s23max, s34max, t40max;
+//
+//	 TFile* out_Boxfile = new TFile("OutputBinning.root","RECREATE");
+//	 TTree *out_BoxTree = new TTree("SCPBox","SCPBox");
+//
+//	 out_BoxTree->Branch( "t01min",&t01min, "t01min");
+//	 out_BoxTree->Branch( "t01max",&t01max, "t01max");
+//	 out_BoxTree->Branch( "s12min",&s12min, "s12min");
+//	 out_BoxTree->Branch( "s12max",&s12max, "s12max");
+//	 out_BoxTree->Branch( "s23min",&s23min, "s23min");
+//	 out_BoxTree->Branch( "s23max",&s23max, "s23max");
+//	 out_BoxTree->Branch( "s34min",&s34min, "s34min");
+//	 out_BoxTree->Branch( "s34max",&s34max, "s34max");
+//	 out_BoxTree->Branch( "t40min",&t40min, "t40min");
+//	 out_BoxTree->Branch( "t40max",&t40max, "t40max");
+//
+//	 for (int i = 0; i< (*this).size(); i++)
+//	 {
+////		 (*this)[i].print();
+//		  t01min = (*this)[i].area()._t01.min();
+//		  t01max = (*this)[i].area()._t01.max();
+//
+//		  s12min = (*this)[i].area()._s12.min();
+//		  s12max = (*this)[i].area()._s12.max();
+//
+//		  s23min = (*this)[i].area()._s23.min();
+//		  s23max = (*this)[i].area()._s23.max();
+//
+//		  s34min = (*this)[i].area()._s34.min();
+//		  s34max = (*this)[i].area()._s34.max();
+//
+//		  t40min = (*this)[i].area()._t40.min();
+//		  t40max = (*this)[i].area()._t40.max();
+//		  out_BoxTree->Fill();
+//	 }
+//	 out_Boxfile->Write();
+//	 out_Boxfile->Close();
+
+}
 
 //
 //double ScpBoxSet::scpErr(double normFactorPassed) const{

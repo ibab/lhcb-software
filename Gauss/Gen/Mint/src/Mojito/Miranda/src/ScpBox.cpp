@@ -194,8 +194,30 @@ double ScpBox::scp(double normFactorPassed) const{
 
 }
 
+DalitzArea ScpBox::area()
+{
+	return _area;
+}
+
+
 void ScpBox::print(std::ostream& os) const{
+
+//  std::map<DalitzCoordKey, DalitzCoordinate*>::iterator it;
+//  std::map<DalitzCoordKey, DalitzCoordinate*> Coord = _area._coords;
+//  std::vector<int>::iterator vecit;
+//
   os << "box: with area " << _area;
+//  os << "box: with cordinates " << _area._t01;
+//  _area._t01.print();
+//  _area._t01.nameFileSave();
+//  for (it = Coord.begin(); it != Coord.end(); it++)
+//  {
+//	  std::vector<int> vec = (*it).first;
+//	  for (vecit = vec.begin(); vecit != vec.end(); vecit++)
+//	  {
+//		  os << "Corodinates" << (*vecit) << " " << *((*it).second);
+//	  }
+//  }
 }
 
 std::ostream& operator<<(std::ostream& os, const ScpBox& box){

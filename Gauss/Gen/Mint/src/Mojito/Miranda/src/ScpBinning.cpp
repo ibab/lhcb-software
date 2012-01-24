@@ -90,6 +90,8 @@ ScpBinning::ScpBinning()
   , m_norm(1.0)
 {
 }
+
+
 int ScpBinning::createBinning(IDalitzEventList* events
 			       , int minPerBin
 			       , int maxPerBin
@@ -103,9 +105,13 @@ int ScpBinning::createBinning(IDalitzEventList* events
   ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
   double norm = this->normFactor();
-  lessByScpBoxScp sorter;
-  sorter.SetNorm(norm);
+//  lessByScpBoxScp sorter;
+//  sorter.SetNorm(norm);
+//  sort(boxes.begin(), boxes.end(), sorter);
+
+  lessByScpBoxData sorter;
   sort(boxes.begin(), boxes.end(), sorter);
+
 
 //  ScpBoxSet boxes_SCP_Plus;
 //  ScpBoxSet boxes_SCP_Minus;
@@ -122,8 +128,6 @@ int ScpBinning::createBinning(IDalitzEventList* events
 //  }
 //    mergeBoxes(boxes_SCP_Plus, minPerBin);
 //    mergeBoxes(boxes_SCP_Minus, minPerBin);
-
-
 
 
   mergeBoxes(boxes, minPerBin);
@@ -329,8 +333,10 @@ void ScpBinning::print(std::ostream& os) const{
   double scpsum=0;
   double sumVarData =0;
   double sumVarMC   =0;
+  int nBoxes = 0;
   for(unsigned int i=0; i < _boxSets.size(); i++){
     int n_data =  _boxSets[i].nData();
+    nBoxes = nBoxes + _boxSets[i].size();
     nDataCheck += n_data;
     double weight_mc = _boxSets[i].weightedMC() * normFactor();
     nMCCheck += weight_mc;
@@ -353,6 +359,8 @@ void ScpBinning::print(std::ostream& os) const{
   os << "\n=========================================================="<< endl;
   os << "scp / nbins = " << scpsum << " / " << numBins()
      << " = " << scpsum/numBins() << endl;
+  os <<	" Number of Boxes "<<  nBoxes
+     << " Number of Sets " << _boxSets.size() << endl;
   os << "===========================================================" << endl;
   os << " total data weight: " << nDataCheck
      << " .. _nData = " << _nData
@@ -368,6 +376,8 @@ void ScpBinning::print(std::ostream& os) const{
        << endl;
   }  
 }
+
+
 
 double ScpBinning::normFactor() const{
 //  return ((double)_nData)/_totalMCWeight;
@@ -633,6 +643,162 @@ double ScpBinning::setBackgroundEvents(IDalitzEventList* data
 int ScpBinning::NEntires()
 {
 	return _nData + _nDataCC;
+}
+
+
+int ScpBinning::SetBinning(const char* binningFileName)
+{
+	 bool dbThis = false;
+	 TFile* in_Boxfile = new TFile(binningFileName,"READ");
+	 TTree* Binning_tree;
+	 Binning_tree=dynamic_cast<TTree*>(in_Boxfile->Get("SCPBinning"));
+
+	 double s_12_min, s_23_min, s_34_min, s_123_min, s_234_min;
+
+	 Binning_tree->SetBranchAddress( "s_12_min",&s_12_min);
+	 Binning_tree->SetBranchAddress( "s_23_min",&s_23_min);
+	 Binning_tree->SetBranchAddress( "s_34_min",&s_34_min);
+	 Binning_tree->SetBranchAddress( "s_123_min",&s_123_min);
+	 Binning_tree->SetBranchAddress( "s_234_min",&s_234_min);
+
+	 double s_12_max, s_23_max, s_34_max, s_123_max, s_234_max;
+
+	 Binning_tree->SetBranchAddress( "s_12_max",&s_12_max);
+	 Binning_tree->SetBranchAddress( "s_23_max",&s_23_max);
+	 Binning_tree->SetBranchAddress( "s_34_max",&s_34_max);
+	 Binning_tree->SetBranchAddress( "s_123_max",&s_123_max);
+	 Binning_tree->SetBranchAddress( "s_234_max",&s_234_max);
+
+	 int BoxSetNum;
+	 Binning_tree->SetBranchAddress( "BoxSetNum",&BoxSetNum);
+
+	 NamedParameter<int> EventPattern("Event Pattern", 421, -211, 211, 211, -211);
+	 DalitzEventPattern pdg(EventPattern.getVector());
+
+
+	 int boxes = Binning_tree->GetEntries();
+
+	 std::vector<pair<ScpBox*, int> > BoxAndSetNumber;
+
+	 int NumBoxSets = -999;
+
+	 for (int entry = 0; entry < boxes; entry++)
+	 {
+		 Binning_tree->GetEntry(entry);
+		 pair<ScpBox*, int> BoxNumPair;
+
+		 if (dbThis)
+		 {
+			 std::cout << "BoxSet " <<  (int)BoxSetNum << std::endl;
+			 std::cout << "min s_12 " <<  s_12_min << std::endl;
+			 std::cout << "max s_23 " <<  s_23_max << std::endl;
+			 std::cout << "min s_123 " <<  s_123_min << std::endl;
+		 }
+
+//		 //Dalitz Coordinates
+		 DalitzCoordinate* d_12 = new DalitzCoordinate(1,2);
+		 DalitzCoordinate* d_23 = new DalitzCoordinate(2,3);
+		 DalitzCoordinate* d_34 = new DalitzCoordinate(3,4);
+		 DalitzCoordinate* d_123 = new DalitzCoordinate(1,2,3);
+		 DalitzCoordinate* d_234 = new DalitzCoordinate(2,3,4);
+
+		 d_12->setMinMax(s_12_min,s_12_max);
+		 d_23->setMinMax(s_23_min,s_23_max);
+		 d_34->setMinMax(s_34_min,s_34_max);
+		 d_123->setMinMax(s_123_min,s_123_max);
+		 d_234->setMinMax(s_234_min,s_234_max);
+
+		 if (dbThis)
+		 {
+			 std::cout << *d_12 << std::endl;
+			 std::cout << *d_23 << std::endl;
+		 }
+
+		 // Dalitz Area
+		 DalitzArea area(pdg);
+
+		 // Set bins
+
+		 area._s12.setMinMax(s_12_min,s_12_max );
+		 area._s23.setMinMax(s_23_min,s_23_max );
+		 area._t01.setMinMax(s_123_min,s_123_max );
+		 area._s34.setMinMax(s_34_min,s_34_max );
+		 area._t40.setMinMax(s_234_min,s_234_max );
+
+		 ScpBox* box = new ScpBox(area);
+
+		 if ((int)BoxSetNum > NumBoxSets)
+		 {
+			 NumBoxSets = (int)BoxSetNum;
+			 ScpBoxSet boxSet;
+			 _boxSets.push_back(boxSet);
+		 }
+		 _boxSets[(int)BoxSetNum].add(*box);
+
+	 }
+	 if (dbThis)
+	 {
+		 std::cout << "Size: " << NumBoxSets << "+1 = " << _boxSets.size() << std::endl;
+	 }
+
+	 in_Boxfile->Close();
+	 return 1;
+}
+
+void ScpBinning::save(const char* binningFileName)
+{
+		 TFile* out_Boxfile = new TFile(binningFileName,"RECREATE");
+		 TTree *out_BoxTree = new TTree("SCPBinning","SCPBinning");
+
+		 double s_12_min, s_23_min, s_34_min, s_123_min, s_234_min;
+
+		 out_BoxTree->Branch( "s_12_min",&s_12_min);
+		 out_BoxTree->Branch( "s_23_min",&s_23_min);
+		 out_BoxTree->Branch( "s_34_min",&s_34_min);
+		 out_BoxTree->Branch( "s_123_min",&s_123_min);
+		 out_BoxTree->Branch( "s_234_min",&s_234_min);
+
+		 double s_12_max, s_23_max, s_34_max, s_123_max, s_234_max;
+
+		 out_BoxTree->Branch( "s_12_max",&s_12_max);
+		 out_BoxTree->Branch( "s_23_max",&s_23_max);
+		 out_BoxTree->Branch( "s_34_max",&s_34_max);
+		 out_BoxTree->Branch( "s_123_max",&s_123_max);
+		 out_BoxTree->Branch( "s_234_max",&s_234_max);
+
+		 int BoxSetNum;
+		 out_BoxTree->Branch( "BoxSetNum",&BoxSetNum);
+
+		 int size = (int)(_boxSets).size();
+
+		 for (int i = 0; i< size; i++)
+		 {
+
+			 int boxsetSize = (_boxSets[i]).size();
+
+			 BoxSetNum = i;
+
+			 for (int j = 0; j< boxsetSize; j++)
+			 {
+			  s_123_min = (_boxSets)[i][j].area()._t01.min();
+			  s_123_max = (_boxSets)[i][j].area()._t01.max();
+
+			  s_12_min = (_boxSets)[i][j].area()._s12.min();
+			  s_12_max = (_boxSets)[i][j].area()._s12.max();
+
+			  s_23_min = (_boxSets)[i][j].area()._s23.min();
+			  s_23_max = (_boxSets)[i][j].area()._s23.max();
+
+			  s_34_min = (_boxSets)[i][j].area()._s34.min();
+			  s_34_max = (_boxSets)[i][j].area()._s34.max();
+
+			  s_234_min = (_boxSets)[i][j].area()._t40.min();
+			  s_234_max = (_boxSets)[i][j].area()._t40.max();
+			  out_BoxTree->Fill();
+			 }
+		 }
+		 out_Boxfile->Write();
+		 out_Boxfile->Close();
 }
 
 
