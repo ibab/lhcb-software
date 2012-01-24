@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-01-24 - Patrick Koppenburg
+ - Fix bug https://savannah.cern.ch/bugs/index.php?90742 in SubstitutePID
+
 ! 2012-01-19 - Chris Jones
  - Temporarily remove the last commit, for IsolationTwoBody, as it has 
    compilation issues.

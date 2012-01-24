@@ -217,20 +217,34 @@ StatusCode SubstitutePID::filter
   // refit if needed, store in TES
   for ( LHCb::Particle::ConstVector::const_iterator ip = 
           substituted.begin() ; substituted.end() != ip ; ++ip ) 
-  {
+ {
     const LHCb::Particle* p = *ip ;
     if ( 0 == p ) { continue ; }
     //
-    LHCb::DecayTree tree = reFitted ( p ) ;
+    // clone the whole decay tree 
+    LHCb::DecayTree tree ( *p ) ;
     //
-    if ( !tree ) { continue ; }
+    // refit the tree ?
+    if ( 0 < chi2cut()  ) 
+    {
+      LHCb::DecayTree nTree = reFitted ( tree.head() ) ;
+      if ( !nTree ) { continue ; }
+      //
+      // mark & store new decay tree 
+      markNewTree       ( nTree.head()     ) ; // mark & store new decay tree 
+      //
+      output.push_back  ( nTree.release () ) ;
+    }
+    else
+    {
+      // mark & store new decay tree 
+      markNewTree       ( tree.head()     ) ; // mark & store new decay tree 
+      //
+      output.push_back  ( tree.release () ) ;
+    }
     //
-    output.push_back ( tree.release() ) ;
-  }
-  // mark & store output particles in DVAlgorithm local container
-  markNewTrees ( output ) ;
-  
 
+  }
   //
   return StatusCode::SUCCESS ;
 }
