@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
     therefore more ProtoParticles
   . Add monitor for ANN PID variables
   . Move 2D histograms to expert mode (MuonTrackAlign)
+  . Remove a Velo clusters histogram (VeloRecMonitors)
 
 - Changes to configuration
   . Remove GaudiPoolDb dependency
