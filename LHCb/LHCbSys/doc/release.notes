@@ -5,6 +5,11 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2012-01-25 - Marco Cattaneo
+ - Remove RootCnv. RootCnv v1r12 is released as part of Gaudi v23r0. Model is
+   now that HEAD is maintained in ONLINE project. New releases can be included
+   here again if necessary, before being imported into future Gaudi releases
+
 ! 2012-01-05 - Marco Cattaneo
  - Adapt Configurables test to Gaudi v23, compatible with Gaudi v22r5
 

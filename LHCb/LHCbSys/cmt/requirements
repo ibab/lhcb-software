@@ -104,7 +104,7 @@ use MuonDAQ               v4r12   Muon    # Alessia Satta
 use MuonInterfaces        v1r2p2  Muon    # Alessia Satta
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 
-use RootCnv               v1r10   Online  # Markus Frank (also in ONLINE project)
+#use RootCnv               v1r10   Online  # (also in GAUDI and ONLINE projects)
 
 use OTDAQ                 v7r11   OT      # Wouter Hulsbergen
 
