@@ -29,7 +29,7 @@ use   DAQEvent     v*    Event
 use   HltEvent     v*    Event
 use   MDF          v*    DAQ
 use   Boost        v*    LCG_Interfaces
-
+use   Relations    v*    Kernel
 #============================================================================
 # Component library building rule
 #============================================================================

@@ -4,6 +4,16 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-25 - Olivier Callot
+ - New algorithms PackParticlesAndVertices and Unpack... to pack in a single
+   container all particles in a tree, all vertices and all relations between them.
+   Options: InputStream, e.g. "/Event/Bhadron" to describe which part of the TES
+   should be compacted. The resulting containers are directly in this location.
+   The Pack algoruthm has an option 'ForceReading' to read all containers from file
+   if needed.
+   The Unpack algorithm has an option PostFix to append this string to the container
+   name, for tests.
+
 ! 2012-01-23 - Olivier Callot
  - New algorithms PackDecReport and UnpackDecReport to unpack/pack the stripping
    decisions. By default lines having not fired are removed. This can be changed 
