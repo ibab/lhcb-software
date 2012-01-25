@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================= HltCommon v8r3 2012-01-25 =========================
 ! 2011-12-09 - Marco Cattaneo
  - Add explicit Boost_linkopts for compatibility with Gaudi v23
 
