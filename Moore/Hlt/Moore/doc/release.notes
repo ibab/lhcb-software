@@ -1,13 +1,14 @@
 Package     : Hlt/Moore
-Package Coordinator : Gerhard Raven
+Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
-! 2012-01-20 - Eric van Herwijnene
+!========================= Moore v12r10 2012-01-25 =========================
+! 2012-01-20 - Eric van Herwijnen
  - Modified Moore/python/Configuration.py, Moore/python/runOnline.py 
    and Moore/scripts/CreateRunMooreOnline_EFF.py to take the number
    of forking slaves as an argument
 
-! 2011-12-09 - Eric van Herwijnene
+! 2011-12-09 - Eric van Herwijnen
  - Modified Moore/python/Configuration.py 
    - added the TES RawEventLocation for L0 decoding
 
