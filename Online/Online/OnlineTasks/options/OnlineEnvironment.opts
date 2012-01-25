@@ -3,5 +3,5 @@ OnlineEnv.PartitionID   = 333;
 ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 ApplicationMgr.Dlls     += { "Gaucho" };
-MessageSvc.OutputLevel      = 4;
+MessageSvc.OutputLevel      = 1;
 //MessageSvc.LoggerOnly  = false;
