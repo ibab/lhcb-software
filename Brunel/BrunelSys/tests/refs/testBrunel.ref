@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/user/c/cattanem/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/afs/cern.ch/user/c/cattanem/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-Persistency        = None
@@ -77,8 +77,8 @@
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v41r2
-                                          running on lxbuild163.cern.ch on Tue Nov 15 17:38:48 2011
+                                                   Welcome to Brunel version v41r3
+                                          running on lxbuild163.cern.ch on Wed Jan 25 14:10:17 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -87,7 +87,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.80 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -100,8 +100,8 @@ BrunelInit        SUCCESS Requested to process 0 events
 BrunelInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: Brunel-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/PhotonPdf.root as CaloNeutralPIDs
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r5/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r6/data/CaloPIDs_DC09_v1.root as CaloPIDs
 LumiSeq              INFO OR Member list: GaudiSequencer/LumiCounters, HltRoutingBitsFilter/LumiFilter, HltRoutingBitsFilter/PhysFilter, with context 'Offline'
 LumiCounters         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount, with context 'Offline'
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam, with context 'Offline'
@@ -148,6 +148,7 @@ RemoveHcalPacke...SUCCESS bankKiller : all banks of type 'HcalPacked' will be re
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
 DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo clusters
+DeVeloRType       WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
 RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
@@ -156,11 +157,11 @@ RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.down.cdf
-MagneticFieldSvc     INFO Map scaled by factor 7.62611e-07 with polarity internally used: -1 signed relative current: -7.62611e-07
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.up.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.up.cdf
+MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: 1 signed relative current: 1
 TrackSeedPatSeq      INFO Member list: PatSeeding, with context 'Offline'
 TrackMatchPatSeq     INFO Member list: PatMatch, with context 'Offline'
 TrackDownstream...   INFO Member list: PatDownstream, with context 'Offline'
@@ -180,12 +181,10 @@ PatDownstream        INFO ========================================
 PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
 PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT, with context 'Offline'
-MagneticFieldSvc     INFO Map scaled by factor 7.62611e-07 with polarity internally used: -1 signed relative current: -7.62611e-07
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.PatTTMa...   INFO  No B field detected.
 ToolSvc.VeloClu...   INFO  --> Tool configured using the Cond DB
 ToolSvc.STOffli...   INFO APE set to 0.197
 ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208
@@ -482,7 +481,7 @@ MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonit
 MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVertexMonitor, TrackV0Monitor, TrackFitMatchMonitor, TrackAlignMonitor, TrackITOverlapMonitor, TrackVeloOverlapMonitor, TTTrackMonitor, ITTrackMonitor, TrackPV2HalfAlignMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, TrackMuonMatchMonitor, with context 'Offline'
 MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEfficiencyMonitor, with context 'Offline'
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor, with context 'Offline'
-MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, with context 'Offline'
+MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, ANNGlobalPID::ChargedProtoANNPIDMoni/ChargedProtoANNPIDMoni, with context 'Offline'
 MoniHltSeq           INFO Member list: HltDecReportsDecoder, HltRateMonitor, HltCompositionMonitor, MuMonitor, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
 OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST, with context 'Offline'
@@ -623,8 +622,8 @@ MuonTrackFitter      INFO   Fitting performance   :     0.00 %
 MuonTrackFitter   SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-MuonTrackAligMo...SUCCESS Booked 64 Histogram(s) : 1D=42 2D=2 1DProf=20
-VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
+MuonTrackAligMo...SUCCESS Booked 62 Histogram(s) : 1D=42 1DProf=20
+VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
 TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
@@ -648,7 +647,7 @@ ChargedProtoPMoni    INFO ======================================================
 MuMonitor         SUCCESS Booked 4 Histogram(s) : 1D=3 1DProf=1
 DstWriter            INFO Events output: 0
 FSROutputStream...   INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset Brunel.dst by its file ID:DC6E5484-A80F-E111-97DF-003048C9CD62
+IODataManager        INFO Referring to dataset Brunel.dst by its file ID:668F5011-5647-E111-8649-003048C9CD62
 FSROutputStream...   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
@@ -658,7 +657,7 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
-FileRecordCnvSvc     INFO Disconnected data IO:DC6E5484-A80F-E111-97DF-003048C9CD62 [Brunel.dst]
+FileRecordCnvSvc     INFO Disconnected data IO:668F5011-5647-E111-8649-003048C9CD62 [Brunel.dst]
 XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ToolSvc              INFO Removing all tools created by ToolSvc
 SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronLCorrection') for SingleElectronRec.LCorrection
@@ -677,7 +676,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.80 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.81 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1028,6 +1027,7 @@ TimingAuditor.T...   INFO      TTClusterMonitor         |     0.000 |     0.000 
 TimingAuditor.T...   INFO      ITClusterMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniPROTOSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      ChargedProtoPMoni        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      ChargedProtoANNPIDMoni   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     MoniHltSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      HltRateMonitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      HltCompositionMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
