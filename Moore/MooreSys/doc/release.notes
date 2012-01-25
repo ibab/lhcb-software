@@ -1,7 +1,11 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : G.Raven
+Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v12r10>2012-01-25 Moore v12r10</A></H1><PRE>
+based on HLT_v13r11. Intermediate version for testing deferred
+triggering in the pit.
 
 </PRE><H1><A NAME=v12r9p1>2011-08-29 Moore v12r9p1</A></H1><PRE>
 based on HLT_v13r10p1
