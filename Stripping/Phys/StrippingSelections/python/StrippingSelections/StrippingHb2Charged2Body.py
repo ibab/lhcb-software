@@ -167,7 +167,7 @@ def makeBs2KK_NoIPCutOnB( name, pidk,trChi2,minPT,minIP,minIPChi2,
                         bPT,bTAU,massLow,massHigh ) : 
                         
     _daughters_cuts = "(PIDK > %(pidk)s) & (TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & ( (MIPDV(PRIMARY) > %(minIP)s ) | ( MIPCHI2DV(PRIMARY) > %(minIPChi2)s  ) )" %locals()    
-    _combination_cuts = "(AMAXCHILD(MAXTREE('pi+'==ABSID,PT)) > %(maxPT)s ) & ( (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPDV(PRIMARY))) > %(maxIP)s) | (AMAXCHILD(MAXTREE('pi+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s ) ) & (AMAXDOCA('') < %(doca)s ) & (AM > %(combMassLow)s * MeV) & (AM < %(combMassHigh)s * MeV)" %locals()    
+    _combination_cuts = "(AMAXCHILD(MAXTREE('K+'==ABSID,PT)) > %(maxPT)s ) & ( (AMAXCHILD(MAXTREE('K+'==ABSID,MIPDV(PRIMARY))) > %(maxIP)s) | (AMAXCHILD(MAXTREE('K+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s ) ) & (AMAXDOCA('') < %(doca)s ) & (AM > %(combMassLow)s * MeV) & (AM < %(combMassHigh)s * MeV)" %locals()    
     _mother_cuts = "(PT > %(bPT)s * MeV) & (M > %(massLow)s * MeV) & (M < %(massHigh)s * MeV) & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(bTAU)s )" %locals()    
     CombineHb2Charged2Body = CombineParticles( DecayDescriptor = 'B0 -> K+ K-',
                                                DaughtersCuts = { "K+" : _daughters_cuts },
