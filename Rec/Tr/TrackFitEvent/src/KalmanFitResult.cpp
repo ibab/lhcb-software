@@ -221,20 +221,24 @@ namespace LHCb
   {
     typedef ConstFitNodeRange::const_iterator iterator ;
     //const NodeContainer& n=nodes() ;
-    NodeContainer::const_iterator _begin(nodes().begin());
-    NodeContainer::const_iterator _end(nodes().end());
-    iterator* begin = reinterpret_cast<iterator*>(&_begin);
-    iterator* end   = reinterpret_cast<iterator*>(&_end);
+    static NodeContainer::const_iterator _begin, _end ;
+    static iterator *begin, *end ;
+    _begin = nodes().begin() ;
+    _end = nodes().end() ;
+    begin = reinterpret_cast<iterator*>(&_begin);
+    end   = reinterpret_cast<iterator*>(&_end);
     return ConstFitNodeRange(*begin,*end) ;
   }
   
   KalmanFitResult::FitNodeRange KalmanFitResult::fitNodes() 
   {
     typedef FitNodeRange::iterator iterator ;
-    NodeContainer::iterator _begin(nodes().begin());
-    NodeContainer::iterator _end(nodes().end());
-    iterator* begin = reinterpret_cast<iterator*>(&_begin);
-    iterator* end   = reinterpret_cast<iterator*>(&_end);
+    static NodeContainer::iterator _begin, _end ;
+    static iterator *begin, *end ;
+    _begin = nodes().begin() ;
+    _end = nodes().end() ;
+    begin = reinterpret_cast<iterator*>(&_begin);
+    end   = reinterpret_cast<iterator*>(&_end);
     return FitNodeRange(*begin,*end) ;
   }
 }
