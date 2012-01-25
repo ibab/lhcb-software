@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2012-01-25 - Wouter Hulsbergen
+ - add TrackOTLRSignTool which compute LR signs by looking at hit patterns
+ - adapt TrajOTProjector to make use of this
+
 ! 2012-01-09 - Wouter Hulsbergen
  - introduced 'dynamic' use of OT drifttimes (Pieter David)
 

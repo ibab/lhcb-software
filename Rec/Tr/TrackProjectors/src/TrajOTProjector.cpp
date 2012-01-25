@@ -49,8 +49,11 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   // Is this a 'prefit'?
   bool prefit = m_prefitStrategy!=NoPrefit && meas.ambiguity() == 0 ;
   
-  // set the ambiguity "on the fly"
-  if( m_updateAmbiguity )
+  // is the ambiguity set by the LR sign tool?
+  bool ambiguityIsFixed = std::abs( meas.ambiguity() == 2 ) ;
+
+  // if not, set the ambiguity "on the fly"
+  if( !ambiguityIsFixed && m_updateAmbiguity )
     nonconstmeas.setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
   
   // check that the drifttime is not out of range
@@ -71,18 +74,9 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
       m_errMeasure = std::sqrt( radiusWithError.val * radiusWithError.val +
 				radiusWithError.err * radiusWithError.err ) ;
       }
-    } else {
-      // now, there are two problems. first, we have hits assigned to
-      // tracks that are just far away: so we will not use drifttimes
-      // if the penalty of the chi2 would be too large. we'll choose
-      // '3mm' as the maximum distance. (cell radius is 2.5mm) these
-      // hits should neverbe on the track, and they would also be 
-      // removed by outlier removal but that's quite
-      // expensive. instead, we'll just ignore the drifttime. (need to
-      // think more.)
-      //
-      // second, we have a large fraction of hits with very poor
-      // drifttime measurements. if they are more than 3 sigma of the
+    } else if(meas.ambiguity()!=0) {
+      // we have a large fraction of hits with very poor drifttime
+      // measurements. if they are more than 3 sigma of the
       // prediction, we'll not use driftttime.
 
       if( m_maxDriftTimePull>0 ) {
@@ -92,17 +86,18 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
       }
       
       if(gooddrifttime ) {
+	int lrsign =  meas.ambiguity() > 0 ? 1 : -1 ;
 	if(m_fitDriftTime) {
 	  double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
 	  OTDet::DriftTimeWithError predictedtime = rtr.drifttimeWithError( radius ) ;
 	  double dtdr                             = rtr.dtdr( radius ) ;
 	  m_residual   = measureddrifttime - predictedtime.val ;
 	  m_errMeasure = predictedtime.err ;
-	  m_H          *= ( meas.ambiguity() * dtdr ) ;
+	  m_H          *= ( lrsign * dtdr ) ;
 	  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitTime ) ;
 	} else {
 	  OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
-	  m_residual = -m_doca + meas.ambiguity() * radiusWithError.val ;
+	  m_residual = -m_doca + lrsign * radiusWithError.val ;
 	  m_errMeasure = radiusWithError.err ;
 	  nonconstmeas.setDriftTimeStrategy( LHCb::OTMeasurement::FitDistance ) ;
 	}
