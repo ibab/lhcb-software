@@ -1,4 +1,4 @@
-#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+ #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 '''
 B->DX, Lb -> LcX, etc.
 
@@ -10,6 +10,7 @@ moduleName = 'Beauty2Charm'
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
+import re
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
@@ -104,10 +105,21 @@ config = {
     'K'  : {'PIDK_MIN' : -10}
     },
     "Prescales" : { # Prescales for individual lines
+    'RUN_BY_DEFAULT' : False, # False = lines off by default
+    'RUN_RE'         : ['.*KS.*','.*Lb2LcD.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
-    #'B2DDKBeauty2CharmLine' : 0.1,
-    #'B02D0DKBeauty2CharmLine' : 0.1
+    'B02D0PiPiD2HHBeauty2CharmLine'      : 1.0,
+    'B02DHHWSD2HHBeauty2CharmLine'       : 0.1,
+    'B2DPiPiD2HHHCFPIDBeauty2CharmLine'  : 1.0,
+    'B2DHHOSD2HHHCFPIDBeauty2CharmLine'  : 1.0,
+    'B02DPiNoIPDs2HHHPIDBeauty2CharmLine': 1.0,
+    'Lb2XicPiXic2PKPiBeauty2CharmLine' 	 : 1.0,
+    'Lb2XicKXic2PKPiBeauty2CharmLine' 	 : 1.0,
+    'Lb2XicPiWSXic2PKPiBeauty2CharmLine' : 0.1,
+    'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
+    'X2LcLcBeauty2CharmLine'    : 1.0,
+    'X2LcLcWSBeauty2CharmLine'  : 0.1
     },
     'GECNTrkMax'   : 500
     }
@@ -167,13 +179,24 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,
+        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,dst,
                            config['B2X'])
         self._makeLines(lb2x.lines,config)
         
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'
+        default = config['Prescales']['RUN_BY_DEFAULT']
+        run_re = config['Prescales']['RUN_RE']
+        prescale_keys = config['Prescales'].keys()
         for line in protoLine.selections:
+            name = line.name().replace(tag,'')+'Line'
+            match = False
+            for r in run_re:
+                if re.match(r,name):
+                    match = True
+                    break
+            if (not default) and (not match) and (not (name in prescale_keys)):
+                continue
             tmpSel = Selection(line.name()+'FilterALL',
                                Algorithm=FilterDesktop(Code='ALL'),
                                RequiredSelections=[line])
@@ -185,9 +208,8 @@ class Beauty2CharmConf(LineBuilder):
                                       'from LoKiCore.functions    import *' ]
                       }
             hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
-                  "(HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision') | "\
+                  "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
                   "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
-            name = line.name().replace(tag,'')+'Line'
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt)

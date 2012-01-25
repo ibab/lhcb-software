@@ -66,8 +66,8 @@ def has1TrackChild():
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
 def makeTISTOSFilter(name):
-    specs = {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
-             'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
+    specs = {'Hlt2Topo.*Decision%TOS':0,
+             'Hlt2Topo.*Decision%TIS':0,
              'Hlt2IncPhi.*Decision%TOS':0,'Hlt2IncPhi.*Decision%TIS':0}
     from Configurables import TisTosParticleTagger
     tisTosFilter = TisTosParticleTagger(name+'TISTOSFilter')
