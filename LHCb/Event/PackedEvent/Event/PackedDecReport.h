@@ -15,7 +15,7 @@ namespace LHCb {
    *  @author Olivier Callot
    *  @date   2012-01-20
    */
-  static const CLID CLID_PackedDecReport = 1710;
+  static const CLID CLID_PackedDecReport = 1559;
 
   // Namespace for locations in TDS
   namespace PackedDecReportLocation {

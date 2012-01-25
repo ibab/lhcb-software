@@ -31,7 +31,8 @@ namespace LHCb
   {
     /// Default constructor
     PackedParticle()
-      : particleID(0),
+      : key(0),
+        particleID(0),
         measMass(0), measMassErr(0),
         lv_px(0),lv_py(0),lv_pz(0),lv_mass(0),
         refx(0),refy(0),refz(0),
@@ -53,7 +54,7 @@ namespace LHCb
     {}
 
     // packed data members
-
+    int key;               ///< referenceLong to the original container + key of the particle
     int particleID;        ///< PID Code
     int measMass;          ///< Measured mass
     int measMassErr;       ///< Error on the measured mass

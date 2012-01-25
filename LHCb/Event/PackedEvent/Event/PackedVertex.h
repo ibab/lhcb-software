@@ -31,10 +31,13 @@ namespace LHCb
   {
     /// Default constructor
     PackedVertex()
-      : technique(0),
+      : key(0),
+        technique(0),
         firstOutgoingPart(0), lastOutgoingPart(0)
     {}
     
+    int key; ///< Key and possibly container index.
+
     // packed data members
     int technique;
 
