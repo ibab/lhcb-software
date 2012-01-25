@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================= HltLuminosity v2r19 2012-01-25 =========================
+
+
 !========================== HltLuminosity v2r18 2011-03-07 ===================
 ! 2011-03-06 - Vladik Balagura
  - added LumiCountVeloWithZRCuts.{cpp,h}: counting of Tracks & Vertexes in
