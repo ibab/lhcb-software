@@ -1,13 +1,13 @@
 """
 Stripping options for (pre-)selecting B -> hh', B -> p pbar
 and Bs -> mu mu events.
-Authors: Angelo Carboni, Stefano Perazzini, Eduardo Rodrigues
+Authors: Angelo Carboni, Lars Eklumd, Vava Gligorov, Stefano Perazzini, Eduardo Rodrigues
 """
 
 ########################################################################
-__author__ = ['Stefano Perazzini','Angelo Carbone','Eduardo Rodrigues']
-__date__ = '18/02/2011'
-__version__ = '$Revision: 1.1 $'
+__author__ = ['Stefano Perazzini','Angelo Carbone','Eduardo Rodrigues', 'Lars Eklund', 'Vava Gligorov']
+__date__ = '25/01/2012'
+__version__ = '$Revision: 1.5 $'
 
 __all__ = ('Hb2Charged2BodyLines',
            'makeB2Charged2Body',
@@ -21,6 +21,26 @@ from StandardParticles                     import StdNoPIDsPions, StdLooseProton
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
+from Configurables               import SubstitutePID, FilterDesktop
+
+## Change decay descriptor and re-fit decay tree
+def subPID(name, input, mother, plusD, minusD):
+    ddChangeAlg = SubstitutePID( name+"SubPIDAlg",
+                                 Code = "DECTREE('B0 -> pi+ pi-')",
+                                 Substitutions = { ' Beauty -> ^pi+  X- ' : plusD,
+                                                   ' Beauty ->  X+  ^pi-' : minusD,
+                                                   ' Beauty ->  X+   X- ' : mother},
+                                 MaxChi2PerDoF = 100 )
+    
+    newDDescr =  Selection( name+"SubPIDSel",
+                            Algorithm = ddChangeAlg,
+                            RequiredSelections = [input])
+
+    return Selection(name+"pickDecay",
+                     Algorithm = FilterDesktop( name+"decayFltr",
+                                                Code = "DECTREE('%s -> %s %s')" %(mother, plusD, minusD) ),
+                     RequiredSelections = [newDDescr])
+
 
 class Hb2Charged2BodyLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""
@@ -52,8 +72,15 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         
         LineBuilder.__init__(self, name, config)
         
-        B2Charged2BodyName = name+"B2Charged2Body"
-        B2PPbarName = name+"B2PPbar"
+        B2Charged2BodyName   = name + "B2Charged2Body"
+        B2KPlusPiMinusName   = name + "B2KPlusPiMinus"
+        B2PiPlusKMinusName   = name + "B2PiPlusKMinus"
+        Bs2KPlusKMinusName   = name + "Bs2KPlusKMinus"
+        Lb2PPlusPiMinusName  = name + "Lb2PPlusPiMinus"
+        Lb2PiPlusPMinusName  = name + "Lb2PiPlusPMinus"
+        Lb2PPlusKMinusName   = name + "Lb2PPlusKMinus"
+        Lb2KPlusPMinusName   = name + "Lb2KPlusPMinus"
+        B2PPbarName          = name + "B2PPbar"
         Bs2KK_NoIPCutOnBName = name + "Bs2KK_NoIPCutOnB"
         
         # make the various stripping selections
@@ -76,6 +103,27 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                   config['MassHigh']
                                                 )
                                                   
+        self.B2KPlusPiMinus  = subPID(B2KPlusPiMinusName, self.B2Charged2Body,
+                                      "B0", "K+", "pi-" )
+
+        self.B2PiPlusKMinus  = subPID(B2PiPlusKMinusName, self.B2Charged2Body,
+                                      "B0", "pi+", "K-" )
+
+        self.Bs2KPlusKMinus  = subPID(Bs2KPlusKMinusName, self.B2Charged2Body,
+                                      "B_s0", "K+", "K-" )
+
+        self.Lb2PPlusPiMinus = subPID(Lb2PPlusPiMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "p+", "pi-" )
+        
+        self.Lb2PiPlusPMinus = subPID(Lb2PiPlusPMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "pi+", "p~-" )
+
+        self.Lb2PPlusKMinus  = subPID(Lb2PPlusKMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "p+", "K-" )
+        
+        self.Lb2KPlusPMinus  = subPID(Lb2KPlusPMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "K+", "p~-" )
+
         self.B2PPbar = makeB2PPbar( B2PPbarName,
                                     config['MinPTB2PPbar'],
                                     config['TrChi2'],
@@ -112,6 +160,34 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                  prescale  = config['PrescaleB2Charged2Body'],
                                                  selection = self.B2Charged2Body )
         
+        self.lineB2KPlusPiMinus  = StrippingLine( B2KPlusPiMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.B2KPlusPiMinus )
+        
+        self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.B2PiPlusKMinus )
+        
+        self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Bs2KPlusKMinus )
+        
+        self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PPlusPiMinus )
+        
+        self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PiPlusPMinus )
+        
+        self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PPlusKMinus )
+        
+        self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2KPlusPMinus )
+        
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
                                           prescale = config['PrescaleB2PPbar'],
                                           selection = self.B2PPbar )
@@ -122,6 +198,13 @@ class Hb2Charged2BodyLines( LineBuilder ) :
  
         self.registerLine(self.lineB2PPbar)    
         self.registerLine(self.lineB2Charged2Body)
+        self.registerLine(self.lineB2KPlusPiMinus)
+        self.registerLine(self.lineB2PiPlusKMinus)
+        self.registerLine(self.lineBs2KPlusKMinus)
+        self.registerLine(self.lineLb2PPlusPiMinus)
+        self.registerLine(self.lineLb2PiPlusPMinus)
+        self.registerLine(self.lineLb2PPlusKMinus)
+        self.registerLine(self.lineLb2KPlusPMinus)
         self.registerLine(self.lineBs2KK_NoIPCutOnB)
 
 def makeB2Charged2Body( name, 
