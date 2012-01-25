@@ -1,9 +1,9 @@
-# $Id$
+#============================================================================
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
 package           Hlt2SharedParticles
-version           v6r3p1
+version           v6r4
 
 # ============================================================================
 # ======= the structure ======================================================
@@ -12,8 +12,8 @@ include_path      none
 
 # ============================================================================
 # ======= the actual dependencies ============================================
-use       GaudiPolicy v*                             
-use       Python      v* LCG_Interfaces 
+use       GaudiPolicy v*
+use       Python      v* LCG_Interfaces
 use       HltLine     v*  Hlt
 
 # ============================================================================

@@ -1,10 +1,10 @@
-$Id$
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v6r4 2012-01-25 =========================
 !========================== Hlt2SharedParticles 2012-01-23 ===================
 ! 2012-01-23 Sam Gregson
  - Updated Hlt2 Shared Ks cuts 
@@ -118,7 +118,7 @@ $Id$
  - fix warnings from electrons about missing PV container
  - fix warnings from DiElectron about missing PV container
 
-!2010-05-09 - Olivier Deschamps for Régis Lefevre
+!2010-05-09 - Olivier Deschamps for RÃ©gis Lefevre
  - python/Hl2SharedParticles/Pi0.py : fix  pi0 production
 
 ! 2010-05-07 - Jibo He
