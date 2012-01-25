@@ -4,6 +4,19 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - Lars Eklund
+ - I added seven new lines that use SubstitutePID at the output of the
+   normal Hb2Charged2Body line, which uses the B->pi+pi- decay
+   descriptor. SustitutePID changes this to the following decays and
+   re-fits the decay vertices
+   o B -> K+ pi-
+   o B -> K- pi+
+   o B_s0 -> K+ K-
+   o Lambda_b0 -> p pi-
+   o Lambda_b0 -> p~ pi+
+   o Lambda_b0 -> p K-
+   o Lambda_b0 -> p~ K+
+
 ! 2010-01-25 - V. Gligorov
  - Add a line without IP cuts on the B to StrippingHb2Charged2Body.py  
 
