@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v6r13 2012-01-25 =========================
 ! 2011-11-23 - V. Gligorov
  - Fix bug in 1Track lines which meant the track chi2 cut could only take integer
    values
