@@ -30,3 +30,6 @@ importOptions( "$DAVINCIMONITORSROOT/options/RichCalib.py" )
 #importOptions( "$DAVINCIMONITORSROOT/options/MuonPidLaCalib.py" ) 
 importOptions( "$DAVINCIMONITORSROOT/options/MuIDMonitor.py" )
 importOptions( "$DAVINCIMONITORSROOT/options/MuEffMonitor.py" )
+
+from DaVinciMonitors.TosMonitor import tosMonitors
+DaVinci().MoniSequence += tosMonitors() 

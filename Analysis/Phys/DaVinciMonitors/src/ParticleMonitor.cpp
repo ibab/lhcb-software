@@ -36,9 +36,9 @@ DECLARE_ALGORITHM_FACTORY( ParticleMonitor )
   //      "The cut to be applied to final state particle before plotting (default all)." )  ;
   declareProperty( "PeakCut", m_peakCut = "ALL",
                    "Selection of mass peak (default all)." )  ;
-  declareProperty( "SideBandCut", m_sidebandCut = "False",
+  declareProperty( "SideBandCut", m_sidebandCut = "NONE",
                    "Selection of sidebands (default none)." )  ;
-  m_plotToolNames.push_back("PidPlotTool"); // default
+  m_plotToolNames.push_back("MomentumPlotTool"); // default
   declareProperty( "PlotTools" , m_plotToolNames, "Names of plot tools");
 }
 

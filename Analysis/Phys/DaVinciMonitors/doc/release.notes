@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-01-25 - Patrick Koppenburg
+ - ParticleMonitor : Fix default properties so that it configures properly
+ - python/DaVinciMonitors/TosMonitor.py : monitors some L0 and Hlt1 lines
+ - options/DaVinciMonitoring.py : add TosMonitor
+
 !========================= DaVinciMonitors v1r16 2011-12-15 =========================
 
 ! 2011-11-24 - Chris Jones

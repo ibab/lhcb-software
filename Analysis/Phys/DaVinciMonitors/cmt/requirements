@@ -34,3 +34,5 @@ library          DaVinciMonitors    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=DaVinciMonitors
+# ======= the patterns ========================================================
+apply_pattern install_python_modules
