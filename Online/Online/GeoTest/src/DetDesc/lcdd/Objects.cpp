@@ -1,6 +1,6 @@
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/IDDescriptor.h"
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 #include "TMap.h"
 #include "TColor.h"
 #include "TGeoMatrix.h"

@@ -1,5 +1,5 @@
 #include "DetDesc/compact/Segmentations.h"
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 #include <iostream>
 
 using namespace std;

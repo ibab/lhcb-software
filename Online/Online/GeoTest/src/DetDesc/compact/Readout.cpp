@@ -1,5 +1,5 @@
 #include "DetDesc/compact/Readout.h"
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 
 using namespace std;
 using namespace DetDesc::Geometry;

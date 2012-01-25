@@ -98,6 +98,10 @@ namespace DetDesc {
       virtual LCDD& addRegion(const RefElement& region) = 0;
       virtual LCDD& addReadout(const RefElement& readout) = 0;
       virtual LCDD& addDetector(const RefElement& detector) = 0;
+      //---Factory method-------
+      static LCDD& getInstance(void);
+      virtual void dump() const = 0;
+      
     };
   }       /* End namespace Geometry  */
 }         /* End namespace DetDesc   */

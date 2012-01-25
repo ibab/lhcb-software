@@ -1,5 +1,5 @@
 #include "DetDesc/Elements.h"
-#include "DetDesc/Internals.h"
+#include "Internals.h"
 #include "TGeoManager.h"
 #include "TNamed.h"
 #include <iostream>

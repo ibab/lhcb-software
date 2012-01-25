@@ -1,4 +1,4 @@
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 #include "DetDesc/IDDescriptor.h"
 #include "DetDesc/compact/Detector.h"
 #include "DetDesc/lcdd/LCDD.h"
@@ -179,15 +179,15 @@ bool Subdetector::isCalorimeter() const   {
   return false;
 }
 
-#if 0
+//#if 0
 bool Subdetector::isInsideTrackingVolume() const  {
-  if ( isValid() && hasAttr(Attr_insideTrackingVolume) )
-    return attr<bool>(Attr_insideTrackingVolume);
-  else if ( isTracker() )
-    return true;
+  //if ( isValid() && hasAttr(Attr_insideTrackingVolume) )
+  //  return attr<bool>(Attr_insideTrackingVolume);
+  //else if ( isTracker() )
+  //  return true;
   return false;
 }
-#endif
+//#endif
 
 SensitiveDetector::SensitiveDetector(const Document& doc, const std::string& type, const std::string& name) 
 : RefElement(doc, "sensitive_detector", name)

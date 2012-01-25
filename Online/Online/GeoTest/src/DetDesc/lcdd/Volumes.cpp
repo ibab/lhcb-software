@@ -1,4 +1,4 @@
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 #include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/compact/Detector.h"

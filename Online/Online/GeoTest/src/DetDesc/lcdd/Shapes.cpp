@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Objects.h"
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 
 // C/C++ include files
 #include <stdexcept>

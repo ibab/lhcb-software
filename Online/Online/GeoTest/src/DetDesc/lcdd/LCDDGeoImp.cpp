@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "LCDDGeoImp.h"
-#include "DetDesc/compact/Conversions.h"
-#include "DetDesc/Internals.h"
+#include "../compact/Conversions.h"
+#include "../Internals.h"
 #include "XML/DocumentHandler.h"
 
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
@@ -37,6 +37,10 @@ using namespace DetDesc::Geometry;
 namespace DetDesc  { XmlTools::Evaluator& evaluator();  }
 namespace DetDesc  { namespace XML {    void tags_init(); }}
 
+LCDD& LCDD::getInstance() {
+  static LCDD* s_lcdd = new LCDDImp();
+  return *s_lcdd; 
+}
 
 LCDDImp::LCDDImp() : m_worldVol(0), m_trackingVol(0), m_reflect(0), m_identity(0)  {
   evaluator();

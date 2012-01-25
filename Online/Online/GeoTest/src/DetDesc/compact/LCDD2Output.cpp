@@ -1,8 +1,8 @@
-#include "DetDesc/compact/Conversions.h"
+#include "Conversions.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/IDDescriptor.h"
-#include "DetDesc/Internals.h"
+#include "../Internals.h"
 
 #include "TMap.h"
 #include "TROOT.h"

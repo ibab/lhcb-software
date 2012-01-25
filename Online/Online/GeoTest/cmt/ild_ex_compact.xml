@@ -54,7 +54,7 @@
 
     <detectors>
         <comment>Trackers</comment>
-<!--
+      
         <detector name="VXD" type="ILDExVXD" vis="VXDVis" id="1">
           <layer id="1"  vis="VXDLayerVis">
             <support thickness="0.01*mm" material="Carbon" vis="VXDSupportVis"/>
@@ -78,8 +78,6 @@
           </layer>
         </detector>
 
-
--->
 
         <detector name="TPC" type="ILDExTPC" vis="TPCVis" id="2">
            <tubs rmin="TPC_inner_radius" rmax="TPC_outer_radius" zhalf="TPC_zhalf"/>

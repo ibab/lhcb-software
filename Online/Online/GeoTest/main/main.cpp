@@ -1,5 +1,5 @@
-#include "XML/lcdd/XMLLCDDImp.h"
-#include "DetDesc/lcdd/LCDDGeoImp.h"
+#include "../src/XML/lcdd/XMLLCDDImp.h"
+#include "../src/DetDesc/lcdd/LCDDGeoImp.h"
 #include "TGDMLWrite.h"
 #include <iostream>
 #include <vector>

@@ -81,7 +81,7 @@ namespace DetDesc {
         Object() : Attr_volume(0) {}
       };
       /// Constructor to be used when reading the already parsed DOM tree
-      PhysVol(Handle_t e);
+      //PhysVol(Handle_t e);
       /// Constructor to be used when creating a new DOM tree
       PhysVol(const Document& document, const Volume& vol, const std::string& name);
       /// Constructor to be used when creating a new DOM tree

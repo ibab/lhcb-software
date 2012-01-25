@@ -1,7 +1,7 @@
 #include "XML/lcdd/XMLLCDD.h"
 #include "XML/compact/XMLDetector.h"
 #include "XML/XMLTags.h"
-#include "DetDesc/compact/Conversions.h"
+#include "Conversions.h"
 #include "DetDesc/compact/Segmentations.h"
 #include "DetDesc/compact/Detector.h"
 #include "DetDesc/lcdd/Objects.h"
