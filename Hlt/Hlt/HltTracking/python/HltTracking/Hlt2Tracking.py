@@ -1193,28 +1193,29 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #recoForward.addTool(ConfiguredPR( "Forward" ))
 
         #        PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
-
+        from HltTracking.HltReco import CommonForwardTrackingOptions
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForward.PatForwardTool.SecondLoop = False
-        recoForward.PatForwardTool.MaxChi2 = 40
-        recoForward.PatForwardTool.MaxChi2Track = 40
-        recoForward.PatForwardTool.MinHits = 12
-        recoForward.PatForwardTool.MinOTHits = 14
+        recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
+        recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
+        recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
+        recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForward.PatForwardTool.MinMomentum = 5000
         recoForward.PatForwardTool.MinPt = 500
      
         if self.getProp("EarlyDataTracking") :
+            from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
             # configure pattern reco with early data flags
             # first forward algorithm
-            recoForward.PatForwardTool.MinXPlanes = 4
-            recoForward.PatForwardTool.MinPlanes = 8
-            recoForward.PatForwardTool.MaxSpreadX = 1.5
-            recoForward.PatForwardTool.MaxSpreadY = 3.0
-            recoForward.PatForwardTool.MaxChi2 = 40
-            recoForward.PatForwardTool.MaxChi2Track = 40
-            recoForward.PatForwardTool.MinHits = 12
-            recoForward.PatForwardTool.MinOTHits = 14
+            recoForward.PatForwardTool.MinXPlanes = CommonForwardTrackingOptions_EarlyData["MinXPlanes"]
+            recoForward.PatForwardTool.MinPlanes = CommonForwardTrackingOptions_EarlyData["MinPlanes"]
+            recoForward.PatForwardTool.MaxSpreadX = CommonForwardTrackingOptions_EarlyData["MaxSpreadX"]
+            recoForward.PatForwardTool.MaxSpreadY = CommonForwardTrackingOptions_EarlyData["MaxSpreadY"]
+            recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions_EarlyData["MaxChi2"]
+            recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions_EarlyData["MaxChi2Track"]
+            recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
+            recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
 
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
@@ -1249,13 +1250,14 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
             recoForwardSecondLoop.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
 
+        from HltTracking.HltReco import CommonForwardTrackingOptions
         recoForwardSecondLoop.addTool(PatForwardTool, name='PatForwardTool')
         recoForwardSecondLoop.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForwardSecondLoop.PatForwardTool.SecondLoop = True
-        recoForwardSecondLoop.PatForwardTool.MaxChi2 = 40
-        recoForwardSecondLoop.PatForwardTool.MaxChi2Track = 40
-        recoForwardSecondLoop.PatForwardTool.MinHits = 12
-        recoForwardSecondLoop.PatForwardTool.MinOTHits = 14
+        recoForwardSecondLoop.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
+        recoForwardSecondLoop.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
+        recoForwardSecondLoop.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
+        recoForwardSecondLoop.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForwardSecondLoop.PatForwardTool.MinMomentum = 3000
         recoForwardSecondLoop.PatForwardTool.MinPt = 300
 
@@ -1303,15 +1305,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
  
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            recoSeeding.PatSeedingTool.OTNHitsLowThresh=12
-            recoSeeding.PatSeedingTool.MinTotalPlanes = 7
-            recoSeeding.PatSeedingTool.MaxMisses = 2
-            recoSeeding.PatSeedingTool.MaxTrackChi2LowMult=10
-            recoSeeding.PatSeedingTool.MaxFinalTrackChi2=20
-            recoSeeding.PatSeedingTool.MaxFinalChi2=30
-            recoSeeding.PatSeedingTool.MaxTrackChi2=40
-            recoSeeding.PatSeedingTool.MaxChi2HitIT=10
-            recoSeeding.PatSeedingTool.MaxChi2HitOT=30
+            from HltTracking.HltReco import CommonSeedingTrackingOptions_EarlyData
+            recoSeeding.PatSeedingTool.OTNHitsLowThresh = CommonSeedingTrackingOptions_EarlyData["OTNHitsLowThresh"]
+            recoSeeding.PatSeedingTool.MinTotalPlanes = CommonSeedingTrackingOptions_EarlyData["MinTotalPlanes"]
+            recoSeeding.PatSeedingTool.MaxMisses = CommonSeedingTrackingOptions_EarlyData["MaxMisses"]
+            recoSeeding.PatSeedingTool.MaxTrackChi2LowMult = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2LowMult"]
+            recoSeeding.PatSeedingTool.MaxFinalTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalTrackChi2"]
+            recoSeeding.PatSeedingTool.MaxFinalChi2 = CommonSeedingTrackingOptions_EarlyData["MaxFinalChi2"]
+            recoSeeding.PatSeedingTool.MaxTrackChi2 = CommonSeedingTrackingOptions_EarlyData["MaxTrackChi2"]
+            recoSeeding.PatSeedingTool.MaxChi2HitIT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitIT"]
+            recoSeeding.PatSeedingTool.MaxChi2HitOT = CommonSeedingTrackingOptions_EarlyData["MaxChi2HitOT"]
          
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"SeedTracking" 
@@ -1373,15 +1376,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            PatDownstream.xPredTol2 = 20.0
-            PatDownstream.TolMatch = 1.5
-            PatDownstream.TolUV = 2.0
-            PatDownstream.maxWindowSize = 10.0
-            PatDownstream.MaxChisq  = 20.0
-            PatDownstream.MaxDistance = 0.3
-            PatDownstream.deltaP = 2.0
-            PatDownstream.errorZMagnet = 30.0
-
+            from HltTracking.HltReco import CommonDownstreamTrackingOptions_EarlyData 
+            PatDownstream.xPredTol2 = CommonDownstreamTrackingOptions_EarlyData["xPredTol2"]
+            PatDownstream.TolMatch = CommonDownstreamTrackingOptions_EarlyData["TolMatch"]
+            PatDownstream.TolUV = CommonDownstreamTrackingOptions_EarlyData["TolUV"]
+            PatDownstream.maxWindowSize = CommonDownstreamTrackingOptions_EarlyData["maxWindowSize"]
+            PatDownstream.MaxChisq  = CommonDownstreamTrackingOptions_EarlyData["MaxChisq"]
+            PatDownstream.MaxDistance = CommonDownstreamTrackingOptions_EarlyData["MaxDistance"]
+            PatDownstream.deltaP = CommonDownstreamTrackingOptions_EarlyData["deltaP"]
+            PatDownstream.errorZMagnet = CommonDownstreamTrackingOptions_EarlyData["errorZMagnet"]
  
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"DownstreamTracking" 

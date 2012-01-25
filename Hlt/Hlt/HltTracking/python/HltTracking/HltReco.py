@@ -37,7 +37,42 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'VeloCandidates'
           , 'MaxOTHits'
           )
+
 MaxOTHits = 15000
+
+CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10,
+                              "XWindow" : 200,
+                              "YWindow" : 200  }
+CommonForwardTrackingOptions = { "MaxChi2" : 40,
+                                 "MaxChi2Track" : 40,
+                                 "MinHits" : 12,  
+                                 "MinOTHits" : 14 } 
+CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40, 
+                                 "MaxChi2Track" : 40, 
+                                 "MinHits" : 12,  
+                                 "MinOTHits" : 14,
+                                 "MinXPlanes" : 4,
+                                 "MinPlanes" : 8,
+                                 "MaxSpreadX" : 1.5,
+                                 "MaxSpreadY" : 3.0  }
+CommonSeedingTrackingOptions_EarlyData = { "OTNHitsLowThresh" : 12,
+                                           "MinTotalPlanes" : 7,
+                                           "MaxMisses" : 2,
+                                           "MaxTrackChi2LowMult" : 10,
+                                           "MaxFinalTrackChi2" : 20,
+                                           "MaxFinalChi2" : 30,
+                                           "MaxTrackChi2" : 40,
+                                           "MaxChi2HitIT" : 10,
+                                           "MaxChi2HitOT" : 30}    
+CommonDownstreamTrackingOptions_EarlyData = { "xPredTol2" : 20.0,
+                                              "TolMatch" : 1.5,
+                                              "TolUV" : 2.0,
+                                              "maxWindowSize" : 10.0,
+                                              "MaxChisq" : 20.0,
+                                              "MaxDistance" : 0.3,
+                                              "deltaP" : 2.0,
+                                              "errorZMagnet" : 30.0 }      
+
 ############################################################################################
 # Option to decide which pattern to use
 ############################################################################################

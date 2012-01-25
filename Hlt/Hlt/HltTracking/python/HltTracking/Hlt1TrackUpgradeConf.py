@@ -32,13 +32,14 @@ _minPt =  800  #### MOVE TO 800 (used to be 500 )
 _minP  = 8000 #### MOVE TO 8000 (used to be 5000 )
 def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt ) :
     if name == None: name = PatForwardTool.__name__
+    from HltTracking.HltReco import CommonForwardTrackingOptions 
     return Hlt1Tool( PatForwardTool
                      , name
                      , SecondLoop = True
-                     , MaxChi2 = 40
-                     , MaxChi2Track = 40
-                     , MinHits = 12
-                     , MinOTHits = 14
+                     , MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
+                     , MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
+                     , MinHits = CommonForwardTrackingOptions["MinHits"]
+                     , MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
                      , MinPt = minPt
                      , MinMomentum = minP ).createConfigurable( parent )
             
@@ -56,11 +57,12 @@ def ConfiguredFastKalman( parent = None, name = None ) :
 
 def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
     if name == None: name = MatchVeloMuon.__name__
+    from HltTracking.HltReco import CommonMatchVeloMuonOptions
     return Hlt1Tool( MatchVeloMuon
                      , name
-                     , MaxChi2DoFX = 10
-                     , XWindow = 200
-                     , YWindow = 200
+                     , MaxChi2DoFX = CommonMatchVeloMuonOptions["MaxChi2DoFX"]
+                     , XWindow = CommonMatchVeloMuonOptions["XWindow"]
+                     , YWindow = CommonMatchVeloMuonOptions["YWindow"]
                      ## Set this according to PatForward
                      , MinMomentum = minP ).createConfigurable( parent )
 
