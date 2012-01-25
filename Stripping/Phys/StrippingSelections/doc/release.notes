@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2010-01-25 - V. Gligorov
+ - Add a line without IP cuts on the B to StrippingHb2Charged2Body.py  
+
 ! 2012-Jan-21 - Patrick Spradlin
  - Updated StrippingLambdac2PKPiForXSec.py 
    . Add additional decay modes: Lambda_c+ -> p K K, p pi pi, p K+ pi-.
