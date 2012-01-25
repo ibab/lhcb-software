@@ -5,6 +5,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v9r12 2012-01-25 =========================
 ! 2011-11-25 - Marcin Kucharczyk
   - Add Hlt2HighPtJetsLines to Configuration.py and Hlt2.py with 
     routing bit (88)
