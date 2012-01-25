@@ -5,6 +5,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2011-01-25 - V. Gligorov
+  - Move tracking options for forward, downstream, seeding to HltReco for
+    consistency; Hlt2Tracking and Hlt1TrackUpgradeConf now import dictionaries
+    of options from HltReco.
+
 !========================== HltTracking v9r9p2 2011-08-03 ===================
 
 ! 2011-11-25 - Marcin Kucharczyk
