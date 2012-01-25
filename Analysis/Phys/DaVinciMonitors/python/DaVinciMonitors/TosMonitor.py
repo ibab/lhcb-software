@@ -20,6 +20,9 @@ def oneTosMonitor(name="None",input=None,calo=False):
     tools = [ "MomentumPlotTool" ]
     if ('Muon' in name) : tools += [  "MuonPlotTool" ]
     plotter = ParticleMonitor(name+"TosMoni" , PlotTools = tools )
+    # Make things a bit faster
+    if ('L0Hadron' in name): plotter.MotherCut = "PT>1*GeV"
+    else : plotter.MotherCut = "PT>0.5*GeV"
     s2 = Selection("TOSSel"+name,
                    Algorithm = plotter,
                    RequiredSelections = [ s1 ] )
