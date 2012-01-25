@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================= HltBase v12r3 2012-01-25 =========================
 ! 2011-10-23 - Roel Aaij
  - Remove histoguard wrapper classed causing gcc warning. It was only used
    in a single place.
