@@ -31,6 +31,12 @@ namespace {
   } ;
 } ;
 
+/******************************************************************************/
+// Tool to resolve subset of LR signs by exploiting the shape of a
+// cluster. Sets the value of ambiguity to +/-2. The absolute value
+// '2' signals to the projector that the ambiguity is fixed.
+/******************************************************************************/
+
 class TrackOTLRSignTool: public GaudiTool, virtual public ITrackManipulator
 {
 public:
@@ -207,6 +213,9 @@ StatusCode TrackOTLRSignTool::execute(LHCb::Track& track) const
 	othit.meas = meas ;
 	othit.otid = otid ;
 	nodesByLayer[ uniquelayer ].push_back( othit ) ;
+	// make sure to 'release' any ambiguity that was already set
+	if( std::abs( meas->ambiguity() ) > 1 )
+	  const_cast<LHCb::OTMeasurement*>(meas)->setAmbiguity( meas->ambiguity() >0 ? 1 : -1 ) ;
       }
     }
     
