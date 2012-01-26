@@ -1,0 +1,28 @@
+# ============================================================================
+# Created : 2012-01-25
+# Maintainer : Illya Shapoval
+# ============================================================================
+package    GaudiMTTools
+version    v1r0
+
+# ============================================================================
+# Structure, i.e. directories to process.
+# ============================================================================
+branches doc src cmt
+# ============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#   Put as many lines as needed, with all packages, without the '#'
+# ============================================================================
+use GaudiAlg v*
+
+include_path    none
+# ============================================================================
+# Component library building rule
+# ============================================================================
+library GaudiMTTools -no_static *.cpp
+
+# ============================================================================
+# define component library link options
+# ============================================================================
+apply_pattern component_library library=GaudiMTTools
+

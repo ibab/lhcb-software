@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : GaudiMTTools
+! Responsible : Illya SHAPOVAL
+! Purpose     : The package for Gaudi multithreading tools and machinery
+!-----------------------------------------------------------------------------
+
+!======================= GaudiMTTools v1r0 2012-01-26 ============================
+! 2012-01-26 - Illya Shapoval
+ - GaudiParallelizer prototype is created. This is an algorithm manager similar
+   to GaudiSequencer with the difference in that it runs algorithms in parallel
+   for each event. Algorithms being executed in parallel have to be independent
+   at this moment (i.e. no input/output data dependencies). Internally
+   GaudiParallelizer uses Threadpool 0.2.5 library based on Boost to manage
+   thread and task pools.
