@@ -67,8 +67,8 @@ apply_pattern linker_library   	   library=Mint
 
 private
 # -- Need more things from ROOT
-macro_append     Mint_use_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad" \
-                 target-winxp " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib libMathCore.lib libCore.lib libGpad.lib"
+macro_append     Mint_use_linkopts " -lHist -lMinuit2 -lMinuit -lMatrix -lPhysics -lMathCore -lCore -lGpad -lGraf" \
+                 target-winxp " libHist.lib libMinuit2.lib libMinuit.lib libMatrix.lib libPhysics.lib  libMathCore.lib libCore.lib libGpad.lib libGraf.lib"
 end_private
 
 apply_pattern disable_package_on platform=target-winxp                 

@@ -8,6 +8,7 @@
 
 #include "TTree.h"
 #include "TFile.h"
+#include "TLegend.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -357,11 +358,12 @@ bool DalitzHistoSet::drawWithFitAndEachAmps(
     std::cout << it->first << endl;
 
     TLegend* leg = new TLegend(0.5 //xmin
-       					   	,0.5	//y-min
-       					   	,0.98	//x-max
-       					   	,0.935); //y-max //coordinates are fractions
+       				,0.5	//y-min
+       				,0.98	//x-max
+       			        ,0.935
+				,""); //y-max //coordinates are fractions
 
-//    leg->SetTextSize(0.05);
+    leg->SetTextSize(0.05);
     if ((it->first).name() == "sij(2,3,4)" ||
     	(it->first).name() == "sij(1,3,4)" ||
     	(it->first).name() == "sij(1,2,4)" ||
