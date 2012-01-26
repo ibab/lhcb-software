@@ -9,7 +9,8 @@ ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
-ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPRxSvc/Runable" };
+ApplicationMgr.SvcOptMapping         = { "LHCb::OnlineRunable/EmptyEventLoop" , 
+                                         "LHCb::MEPRxSvc/Runable" };
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 MEPManager.PartitionID               = 333;

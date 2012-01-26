@@ -7,16 +7,17 @@
 #include "$HLTOPTS/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
-ApplicationMgr.SvcOptMapping         = { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPRxSvc/Runable" };
+ApplicationMgr.SvcOptMapping         = { "LHCb::OnlineRunable/EmptyEventLoop" , 
+					 "LHCb::MEPRxSvc/Runable" 
+				       };
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		    += { "MonitorSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
-MEPManager.Buffers                   = { "MEP" };
-//MEPManager.MapUnusedBuffers          = false;
-// Specific options for MEPRxSvc - options not listed here may not exist - please check the code(!) 
+MEPManager.Buffers                   = { "Events" };
+
+Runable.OutputLevel       = 1;
 Runable.MEPBuffers        = 3;           // concurrently built events
 Runable.InitialMEPReqs    = 3;           // how many MEPs to send initially 
 Runable.maxMsForGetSpace  = 100;         // milliseconds to wait to get buffer memory from BM
@@ -30,8 +31,9 @@ Runable.alwaysSendMEPReq  = true;        // always send a MEPReq for any incompl
 Runable.createDAQErrorMEP = false;       // do not create a summary bank about event-building errors
 Runable.createODINMEP     = false;       // do not create a fake ODIN MEP (only for pixel testbeam)
 Runable.resetCountersOnRunChange = true; // reset all counters and histograms when a run-change is seen
-Runable.outputLevel       = 1;
-Runable.nameMEPBuf        = "MEP";
+Runable.nameLiveBuf       = "Events";
+Runable.nameOverflowBuf   = "Overflow";
+Runable.overflow          = true;        // do not use overflow (yet)
 #include "$HLTOPTS/EBSetup.opts"
 HistogramPersistencySvc.OutputLevel  = 5;
-MonitorSvc.CounterUpdateInterval = 5;
+MonitorSvc.CounterUpdateInterval     = 5;
