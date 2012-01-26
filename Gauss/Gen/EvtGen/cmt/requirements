@@ -3,7 +3,7 @@
 # Maintainer : Patrick Robbe, John Back
 #============================================================================
 package     EvtGen
-version     v12r2
+version     v13r0
  
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,11 +19,11 @@ use         photos++     v*  LCG_GeneratorsInterfaces
 use         tauola++     v*  LCG_GeneratorsInterfaces
 use         pythia8      v*  LCG_GeneratorsInterfaces
 
-macro photos++_native_version 3.0
+macro photos++_native_version 3.3
 macro tauola++_native_version 1.0.5.p1
-macro pythia8_native_version 153
+#macro pythia8_native_version 153
 
-set PYTHIA8DATA $(pythia8_home)/xmldoc
+#set PYTHIA8DATA $(pythia8_home)/xmldoc
 
 include_dirs  $(EVTGENROOT) 
 
