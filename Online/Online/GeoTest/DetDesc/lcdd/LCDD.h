@@ -66,17 +66,18 @@ namespace DetDesc {
       virtual const HandleMap& visAttributes() const = 0;
       virtual const HandleMap& limitsets()  const = 0;
 
-      virtual Region     region(const std::string& name)  const = 0;
-      virtual VisAttr    visAttributes(const std::string& name) const = 0;
-      virtual LimitSet   limitSet(const std::string& name)  const = 0;
-      virtual Material   material(const std::string& name)  const = 0;
-      virtual Readout    readout(const std::string& name)  const = 0;
-      virtual RefElement idSpec(const std::string& name)  const = 0;
-      virtual Volume     pickMotherVolume(const Subdetector& sd) const = 0;
-      virtual Constant   constant(const std::string& name) const = 0;
-      virtual Position   position(const std::string& name) const = 0;
-      virtual Rotation   rotation(const std::string& name) const = 0;
-      virtual Solid      solid(const std::string& name) const = 0;
+      virtual Region      region(const std::string& name)  const = 0;
+      virtual VisAttr     visAttributes(const std::string& name) const = 0;
+      virtual LimitSet    limitSet(const std::string& name)  const = 0;
+      virtual Material    material(const std::string& name)  const = 0;
+      virtual Readout     readout(const std::string& name)  const = 0;
+      virtual RefElement  idSpec(const std::string& name)  const = 0;
+      virtual Volume      pickMotherVolume(const Subdetector& sd) const = 0;
+      virtual Constant    constant(const std::string& name) const = 0;
+      virtual Position    position(const std::string& name) const = 0;
+      virtual Rotation    rotation(const std::string& name) const = 0;
+      virtual Solid       solid(const std::string& name) const = 0;
+      virtual Subdetector detector(const std::string& name) const = 0;
 
       virtual LCDD& add(const Constant& constant) = 0;
       virtual LCDD& add(const Solid& solid) = 0;

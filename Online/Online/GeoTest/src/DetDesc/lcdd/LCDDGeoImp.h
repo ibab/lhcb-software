@@ -106,26 +106,28 @@ namespace DetDesc {
 
       virtual LimitSet limitSet(const std::string& name)  const
       {  return getRefChild(m_limits,name);                                         }  
-      virtual VisAttr visAttributes(const std::string& name) const
+      virtual VisAttr     visAttributes(const std::string& name) const
       {  return getRefChild(m_display,name,false);                                  }  
-      virtual Material material(const std::string& name)  const
+      virtual Material    material(const std::string& name)  const
       {  return getRefChild(m_materials,name);                                      }
-      virtual Region region(const std::string& name)  const
+      virtual Region      region(const std::string& name)  const
       {  return getRefChild(m_regions,name);                                        }
-      virtual RefElement idSpec(const std::string& name)  const
+      virtual RefElement  idSpec(const std::string& name)  const
       {  return getRefChild(m_idDict,name);                                         }
-      virtual Volume volume(const std::string& name)  const
+      virtual Volume      volume(const std::string& name)  const
       {  return getRefChild(m_structure,name);                                      }
-      virtual Rotation rotation(const std::string& name) const 
+      virtual Rotation    rotation(const std::string& name) const 
       {  return getRefChild(m_rotations,name);                                      }
-      virtual Position position(const std::string& name) const 
+      virtual Position    position(const std::string& name) const 
       {  return getRefChild(m_positions,name);                                      }
-      virtual Solid solid(const std::string& name) const 
+      virtual Solid       solid(const std::string& name) const 
       {  return getRefChild(solids(),name);                                         }
-      virtual Constant constant(const std::string& name) const 
+      virtual Constant    constant(const std::string& name) const 
       {  return getRefChild(m_define,name);                                         }
-      virtual Readout readout(const std::string& name)  const
+      virtual Readout     readout(const std::string& name)  const
       {  return getRefChild(m_readouts,name);                                       }
+      virtual Subdetector detector(const std::string& name)  const
+      {  return getRefChild(m_detectors,name);                                      }
 
       virtual Document document() const               { return Document(m_doc);     }
       virtual const HandleMap& header()  const        { return m_header;            }

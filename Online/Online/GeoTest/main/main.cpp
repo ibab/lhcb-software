@@ -26,7 +26,7 @@ int compact2lcdd()  {
   return 0x1;
 }
 
-Geometry::LCDDImp* compact2geo(int argc, char **argv)  {
+Geometry::LCDD& compact2geo(int argc, char **argv)  {
   string input;
 #ifdef _WIN32
   input = "file:../cmt/compact.xml";
@@ -45,9 +45,12 @@ Geometry::LCDDImp* compact2geo(int argc, char **argv)  {
   cout << argc << " Input file : " << input << endl;
   lcdd->fromCompact(input);
   lcdd->dump();
-  return lcdd;
+  return *lcdd;
 }
 #include "TRint.h"
+#include "DetDesc/detector/ILDExTPC.h"
+#include "DetDesc/detector/MarkusTPC.h"
+#include "DetDesc/compact/Detector.h"
 
 //______________________________________________________________________________
 int run_interpreter(int argc, char **argv)   {
@@ -58,14 +61,25 @@ int run_interpreter(int argc, char **argv)   {
   // Create an interactive ROOT application
   TRint *theApp = new TRint("Rint", &argc, argv);
   
-  Geometry::LCDDImp *lcdd = compact2geo((int)args.size(),&args[0]);
-  if ( lcdd ) {
-    Geometry::Document doc = lcdd->document();
-    TGeoManager* mgr = doc;
-    TGDMLWrite wr;
-    wr.WriteGDMLfile(mgr,"ILCEx.gdml","");
-    mgr->Export("ILCEx.root");
-  }
+  Geometry::LCDD& lcdd = compact2geo((int)args.size(),&args[0]);
+  Geometry::Document doc = lcdd.document();
+  TGeoManager* mgr = doc;
+  TGDMLWrite wr;
+  wr.WriteGDMLfile(mgr,"ILCEx.gdml","");
+  mgr->Export("ILCEx.root");
+
+  /// Print statement with inner radius.
+  Geometry::Subdetector sd = lcdd.detector("TPC");
+  cout << "-----> Bugger's properties:" << sd.name() << " " << sd.type() << endl;
+
+  /// Another way to play around:
+  ILDExTPC tpc = lcdd.detector("TPC");
+  cout << "-----> Weight:" << tpc.getWeight() << " Volume:" << tpc.getVolume() << endl;
+
+
+  MarkusTPC mtpc = tpc;
+  cout << "----> MyFeature:" << mtpc.feature() << endl;
+
   // and enter the event loop...
   theApp->Run();
   delete theApp;

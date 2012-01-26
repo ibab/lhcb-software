@@ -7,6 +7,7 @@ namespace DetDesc  {
   class IDDescriptor;
   namespace Geometry  {
     typedef DetDesc::IDDescriptor IDDescriptor;
+
     template <typename Q, typename P> struct Value : public Q, public P  {
       virtual ~Value() {}
     };

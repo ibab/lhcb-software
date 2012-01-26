@@ -54,7 +54,7 @@
 
     <detectors>
         <comment>Trackers</comment>
-      
+
         <detector name="VXD" type="ILDExVXD" vis="VXDVis" id="1">
           <layer id="1"  vis="VXDLayerVis">
             <support thickness="0.01*mm" material="Carbon" vis="VXDSupportVis"/>
@@ -77,7 +77,6 @@
             <ladder  zhalf="125*mm" radius="60*mm" offset="-2*mm" thickness="0.01*mm" material="Silicon" number="17"/>
           </layer>
         </detector>
-
 
         <detector name="TPC" type="ILDExTPC" vis="TPCVis" id="2">
            <tubs rmin="TPC_inner_radius" rmax="TPC_outer_radius" zhalf="TPC_zhalf"/>
@@ -113,7 +112,7 @@
 
            <detector name="TPC_GasVolume" type="TubeSegment" reflect="true" vis="TPCGasVis" id="5">
              <material name="Argon"/>
-             <tubs rmin="TPC_inner_radius+TPC_inner_thickness" rmax="TPC_outer_radius-TPC_outer_thickness" zhalf="TPC_zhalf"/>
+             <tubs rmin="TPC_inner_radius+TPC_inner_thickness" rmax="TPC_outer_radius-TPC_outer_thickness" zhalf="TPC_zhalf-TPC_endcap_thickness"/>
              <position x="0" y="0" z="0"/>
              <rotation x="0" y="0" z="0"/>
           </detector>

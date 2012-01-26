@@ -470,7 +470,7 @@ void RefElement::setName(const XMLCh* new_name)  {
 
 Collection_t::Collection_t(DOMElement* n, const XMLCh* tag) : m_index(-1), m_element(n) {
   m_children = n->getElementsByTagName(tag);
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);//m_children->item(m_index));
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);
   ++(*this);
 }
 
@@ -481,15 +481,13 @@ Collection_t::Collection_t(DOMElement* n, const char* tag) : m_index(-1), m_elem
 }
 
 Collection_t::Collection_t(DOMElement* n, DOMNodeList* c) : m_index(-1), m_element(n), m_children(c) {
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);//m_children->item(m_index));
-  //if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : n);
   ++(*this);
 }
 
 Collection_t& Collection_t::reset()  {
   m_index = -1;
-  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_element);//m_children->item(m_index));
-  //if ( m_node && m_node->getNodeType() != DOMNode::ELEMENT_NODE) ++(*this);
+  m_node = (DOMElement*)(m_children->getLength() == 0 ? 0 : m_element);
   ++(*this);
   return *this;
 }

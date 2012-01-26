@@ -20,6 +20,7 @@ application  GeomConverterApp ../main/main.cpp  \
              DetDesc/*.cpp           \
              DetDesc/lcdd/*.cpp      \
              DetDesc/compact/*.cpp   \
+             DetDesc/detector/*.cpp  \
              Evaluator/*.cpp 
 ##macro_append GeomConverterApplinkopts      " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
 ##macro_append GeomConverterApp_dependencies " GeomConverter "
