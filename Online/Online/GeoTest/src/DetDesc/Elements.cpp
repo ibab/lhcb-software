@@ -189,11 +189,20 @@ Element_t* Document::createElt(const string& tag)  const {
   return 0;//m_doc->createElement(tag);
 }
 
-Element::Element(const Document& document, const std::string& type) 
+Element::Element(const Document& document, const string& type) 
 : m_element(document.createElt(type))
 { }
 
-RefElement::RefElement(const Document& document, const std::string& type, const std::string& name)  
+void Element::bad_assignment(const type_info& from, const type_info& to) {
+  string msg = "Wrong assingment from ";
+  msg += from.name();
+  msg += " to ";
+  msg += to.name();
+  msg += " not possible!!";
+  throw std::runtime_error(msg);
+}
+
+RefElement::RefElement(const Document& document, const string& type, const string& name)  
 : Element(document, type)
 {
   setName(name);
@@ -214,7 +223,7 @@ const char* RefElement::refName() const  {
   return p ? p->GetName() : "";
 }
 
-void RefElement::setName(const std::string& new_name)  {
+void RefElement::setName(const string& new_name)  {
   TNamed *p = m_element._ptr<TNamed>();
   if ( p ) p->SetName(new_name.c_str());
 }

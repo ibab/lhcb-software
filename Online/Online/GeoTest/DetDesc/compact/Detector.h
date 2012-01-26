@@ -73,6 +73,7 @@ namespace DetDesc {
       Subdetector(const RefElement& e) : RefElement(e)  {}
       /// Constructor for a new subdetector element
       Subdetector(const Document& doc, const std::string& name, const std::string& type, int id);
+
       Subdetector& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
       Subdetector& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
       Subdetector& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);

@@ -2,6 +2,7 @@
 #define DETDESC_ELEMENTS_H
 
 #include <string>
+#include <typeinfo>
 #include <stdexcept>
 
 class TObject;
@@ -71,6 +72,12 @@ namespace DetDesc {
       Element_t* ptr() const                  {  return m_element.ptr();      }
       bool isValid() const                    {  return 0 != m_element.ptr(); }
       bool operator!() const                  {  return 0 == m_element.ptr(); }
+      template<class T> void verifyObject() const  {
+	if ( dynamic_cast<T*>(ptr()) == 0 )  {
+	  bad_assignment(ptr() ? typeid(*ptr()) : typeid(void),typeid(T));
+	}
+      }
+      static void bad_assignment(const std::type_info& from, const std::type_info& to);
       //operator Handle_t () const              {  return m_element;            }
       //operator Element_t*() const             {  return m_element;            }
     };
