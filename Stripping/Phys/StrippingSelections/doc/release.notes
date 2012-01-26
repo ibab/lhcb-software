@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-26 - Marco Gersabeck
+ - Added TIS selections to StrippingD2hh.
+
 ! 2010-01-25 - Lars Eklund
  - I added seven new lines that use SubstitutePID at the output of the
    normal Hb2Charged2Body line, which uses the B->pi+pi- decay

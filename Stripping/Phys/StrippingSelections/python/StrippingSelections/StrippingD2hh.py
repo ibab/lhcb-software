@@ -57,11 +57,15 @@ default_config = { 'DaugPtMin': 800.,
            'TaggedRSSSLinePostscale': 1.,
            'TaggedSCSSSLinePrescale': 1.,
            'TaggedSCSSSLinePostscale': 1.,
+           'UntaggedTISLinePrescale': 1.,
+           'UntaggedTISLinePostscale': 1.,
 	   'UntaggedKpiOnly': False,
-	   'AddSameSign': True,
-	   'SameSignOnly': False,
+	   'RunSameSign': True,
+	   'RunTISLines': True,
+	   'RunDefault': True,
 	   'UseTOSFilter': False,
 	   'AddPartialD': True,
+	   'Hlt1TOS': { 'Hlt1TrackAllL0Decision%TOS' : 0 },
 	   'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
 	   'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
 	   'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
@@ -131,11 +135,15 @@ class D2hhConf(LineBuilder) :
                               'TaggedRSSSLinePostscale',
                               'TaggedSCSSSLinePrescale',
                               'TaggedSCSSSLinePostscale',
+                              'UntaggedTISLinePrescale',
+                              'UntaggedTISLinePostscale',
 			      'UntaggedKpiOnly',
-			      'AddSameSign',
-			      'SameSignOnly',
+			      'RunSameSign',
+			      'RunTISLines',
+			      'RunDefault',
 			      'UseTOSFilter',
 			      'AddPartialD',
+			      'Hlt1TOS',
 	                      'Hlt2TOSKPi',
 	                      'Hlt2TOSKK',
 	                      'Hlt2TOSPiPi'
@@ -162,15 +170,6 @@ class D2hhConf(LineBuilder) :
 	pseudoPsi_name = name+'PromptD0D0FromDstarPartial'
 
         # D0 -> hh' selections
-        #self.selD2Kpi = makeD2hh(d2kpi_name,  
-			         #config,
- 				 #KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
-				 #PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
-				 #CombPIDK_string = '',
-				 #DecayDescriptor = '[D0 -> K- pi+]cc',
-			         #inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
-				 #Hlt2TOS = config['Hlt2TOSKPi']
-			        #)
 
         self.selD2Kpi = makeD2hhAsymm(d2kpi_name,  
 			         config,
@@ -181,6 +180,8 @@ class D2hhConf(LineBuilder) :
 				 CombPIDK_string = '',
 				 DecayDescriptor = '[D0 -> K- pi+]cc',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
+				 useTOS = config['UseTOSFilter'],
+				 Hlt1TOS = config['Hlt1TOS'],
 				 Hlt2TOS = config['Hlt2TOSKPi']
 			        )
 
@@ -193,6 +194,8 @@ class D2hhConf(LineBuilder) :
 				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
 				DecayDescriptor = 'D0 -> K+ K-',
 			        inputSel = [stdNoPIDsKaons],
+				useTOS = config['UseTOSFilter'],
+				Hlt1TOS = config['Hlt1TOS'],
 				Hlt2TOS = config['Hlt2TOSKK']
 			       )
 
@@ -205,6 +208,8 @@ class D2hhConf(LineBuilder) :
 				  CombPIDK_string = '',
 				  DecayDescriptor = 'D0 -> pi+ pi-',
 			          inputSel = [stdNoPIDsPions], 
+				  useTOS = config['UseTOSFilter'],
+				  Hlt1TOS = config['Hlt1TOS'],
 				  Hlt2TOS = config['Hlt2TOSPiPi']
 			         )
 
@@ -217,6 +222,8 @@ class D2hhConf(LineBuilder) :
 				 CombPIDK_string = '',
 				 DecayDescriptor = '[D0 -> K- pi-]cc',
 			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
+				 useTOS = False,
+				 Hlt1TOS = config['Hlt1TOS'],
 				 Hlt2TOS = config['Hlt2TOSKPi']
 			        )
 
@@ -229,6 +236,8 @@ class D2hhConf(LineBuilder) :
 				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
 				DecayDescriptor = 'D0 -> K- K-',
 			        inputSel = [stdNoPIDsKaons],
+				useTOS = False,
+				Hlt1TOS = config['Hlt1TOS'],
 				Hlt2TOS = config['Hlt2TOSKK']
 			       )
 
@@ -241,7 +250,51 @@ class D2hhConf(LineBuilder) :
 				  CombPIDK_string = '',
 				  DecayDescriptor = 'D0 -> pi- pi-',
 			          inputSel = [stdNoPIDsPions], 
+				  useTOS = False,
+				  Hlt1TOS = config['Hlt1TOS'],
 				  Hlt2TOS = config['Hlt2TOSPiPi']
+			         )
+
+        self.selD2KpiTIS = makeD2hhAsymm(d2kpi_name+'TIS',  
+			         config,
+ 				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
+				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				 Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KPiMassWindowWidthLow)s* MeV)',
+				 Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KPiMassWindowWidthHigh)s* MeV)',
+				 CombPIDK_string = '',
+				 DecayDescriptor = '[D0 -> K- pi+]cc',
+			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
+				 useTOS = True,
+				 Hlt1TOS = { 'Hlt1Global%TIS' : 0 },
+				 Hlt2TOS = { 'Hlt2Global%TIS' : 0 }
+			        )
+
+        self.selD0KKTIS = makeD2hhAsymm(d2kk_name+'TIS',  
+			        config,
+ 				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
+				PiPIDK_string = '',
+				Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KKMassWindowWidthLow)s* MeV)',
+				Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KKMassWindowWidthHigh)s* MeV)',
+				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
+				DecayDescriptor = 'D0 -> K+ K-',
+			        inputSel = [stdNoPIDsKaons],
+				useTOS = True,
+				Hlt1TOS = { 'Hlt1Global%TIS' : 0 },
+				Hlt2TOS = { 'Hlt2Global%TIS' : 0 }
+			       )
+
+        self.selD0PiPiTIS = makeD2hhAsymm(d2pipi_name+'TIS',  
+			          config,
+ 				  KPIDK_string = '',
+				  PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				  Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0PiPiMassWindowWidthLow)s* MeV)',
+				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
+				  CombPIDK_string = '',
+				  DecayDescriptor = 'D0 -> pi+ pi-',
+			          inputSel = [stdNoPIDsPions], 
+				  useTOS = True,
+				  Hlt1TOS = { 'Hlt1Global%TIS' : 0 },
+				  Hlt2TOS = { 'Hlt2Global%TIS' : 0 }
 			         )
 
         from Configurables import ConjugateNeutralPID
@@ -338,6 +391,25 @@ class D2hhConf(LineBuilder) :
                                         selection = self.selD0PiPi
                                        )
 
+        # Untagged TIS lines
+        self.d2kpiTIS_line = StrippingLine(d2kpi_name+"TISLine",
+                                        prescale = config['UntaggedTISLinePrescale'],
+                                        postscale = config['UntaggedTISLinePostscale'],
+                                        selection = self.selD2KpiTIS
+                                       )
+
+        self.d2kkTIS_line = StrippingLine(d2kk_name+"TISLine",
+                                        prescale = config['UntaggedTISLinePrescale'],
+                                        postscale = config['UntaggedTISLinePostscale'],
+                                        selection = self.selD0KKTIS
+                                       )
+
+        self.d2pipiTIS_line = StrippingLine(d2pipi_name+"TISLine",
+                                        prescale = config['UntaggedTISLinePrescale'],
+                                        postscale = config['UntaggedTISLinePostscale'],
+                                        selection = self.selD0PiPiTIS
+                                       )
+
         # Tagged lines
         self.dstRS_line = StrippingLine(dst2DRS_name+"Line",
                                         prescale = config['TaggedRSLinePrescale'],
@@ -363,6 +435,7 @@ class D2hhConf(LineBuilder) :
                                         selection = self.selDstPiPi
                                        )
 
+        # Tagged same sign lines
         self.dstRSSS_line = StrippingLine(dst2DRS_name+"SSLine",
                                         prescale = config['TaggedRSLinePrescale'],
                                         postscale = config['TaggedRSLinePostscale'],
@@ -389,12 +462,17 @@ class D2hhConf(LineBuilder) :
                                        )
 
         # register lines
-	if config['SameSignOnly'] or config['AddSameSign']:
+	if config['RunSameSign']:
 	  self.registerLine(self.dstRSSS_line)
 	  self.registerLine(self.dstKKSS_line)
 	  self.registerLine(self.dstPiPiSS_line)
 
-	if not config['SameSignOnly']:
+	if config['RunTISLines']:
+	  self.registerLine(self.d2kpiTIS_line)
+	  self.registerLine(self.d2kkTIS_line)
+	  self.registerLine(self.d2pipiTIS_line)
+
+	if config['RunDefault']:
           self.registerLine(self.d2kpi_line)
 	  if not config['UntaggedKpiOnly']:
             self.registerLine(self.d2kk_line)
@@ -407,85 +485,6 @@ class D2hhConf(LineBuilder) :
 	    if config['AddPartialD']:
               self.registerLine(self.pseudoPsi_line)
 
-def makeD2hh(name,
-             config,
-	     KPIDK_string,
-	     PiPIDK_string,
-	     CombPIDK_string,
-	     DecayDescriptor,
-             inputSel,
-             Hlt2Line
-            ) :
-    """
-    Create and return a D0 -> hh' Selection object.
-    Arguments:
-    name        : name of the Selection.
-    config      : dictionary of cut values.
-    ..._string  : cut implementation for PIDK cuts.
-    DecayDescriptor: DecayDescriptor.
-    inputSel    : input selections
-    """
-
-    def makeTISTOS( name, _input, _trigger, _level ) :
-            from Configurables import TisTosParticleTagger
-            _tisTosFilter = TisTosParticleTagger( name + "Tagger" )
-	    if 1 == _level:
-              _tisTosFilter.TisTosSpecs = { _trigger + 'Decision%TOS' : 0 }
-	    else:
-              _tisTosFilter.TisTosSpecs = { _trigger + 'Decision%TOS' : 0, _trigger + 'WideMassDecision%TOS' : 0 }
-            return Selection( name
-                              , Algorithm = _tisTosFilter
-                              , RequiredSelections = [ _input ]
-                              )        
-
-
-    _Kcuts1  = "~ISMUON & (PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
-    _KcutsPIDK  = KPIDK_string % locals()['config']
-    _Kcuts2  = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
-    _Kcuts = _Kcuts1 + _KcutsPIDK + _Kcuts2
-    _Picuts1 = "~ISMUON & (PT > %(DaugPtMin)s* MeV) & (MIPCHI2DV(PRIMARY) > %(DaugIPChi2)s)" % locals()['config']
-    _PicutsPIDK  = PiPIDK_string % locals()['config']
-    _Picuts2 = " & (ISLONG) & (P > %(DaugP)s* MeV) & (TRCHI2DOF < %(DaugTrkChi2)s)" % locals()['config']
-    _Picuts = _Picuts1 + _PicutsPIDK + _Picuts2
-    _dauCuts = { 'K+': _Kcuts, 'pi+': _Picuts }
-
-    _combCuts1 = "(APT > %(D0Pt)s* MeV)" \
-		"& (AHASCHILD( PT > %(DaugPtMax)s* MeV ) )" \
-    		"& (ADOCA(1,2)< %(D0DOCA)s* mm)" \
-                "& (ADAMASS(%(D0MassWindowCentre)s* MeV) < %(D0MassWindowWidth)s* MeV)" \
-                "& (AP > %(D0P)s* MeV)" % locals()['config']
-    _combCutsPIDK = CombPIDK_string % locals()['config']
-    _combCuts = _combCuts1 + _combCutsPIDK
-
-    _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
-                  "& (BPVVDCHI2 > %(D0FDChi2)s)" \
-                  "& (BPVDIRA > %(D0BPVDira)s)" % locals()['config']
-
-    _D0 = CombineParticles( DecayDescriptor = DecayDescriptor,
-                            MotherCut = _motherCuts,
-                            CombinationCut = _combCuts,
-                            DaughtersCuts = _dauCuts)
-
-    _sel = Selection ( name+'Sel',
-                       Algorithm = _D0,
-                       RequiredSelections = inputSel )
-
-    if not config['UseTOSFilter']:
-      return _sel
-
-    _selD2hhHlt1TOS = makeTISTOS( name + "D2hhHlt1TOS"
-                                    , _sel
-                                    , "Hlt1TrackAllL0"
-				    , 1
-                                            )
-    _selD2hhHlt2TOS = makeTISTOS( name + "D2hhHlt2TOS"
-                                            , _selD2hhHlt1TOS
-                                            , Hlt2Line
-					    , 2
-                                            )
-       
-    return _selD2hhHlt2TOS
-
 def makeD2hhAsymm(name,
              config,
 	     KPIDK_string,
@@ -495,6 +494,8 @@ def makeD2hhAsymm(name,
 	     CombPIDK_string,
 	     DecayDescriptor,
              inputSel,
+	     useTOS,
+             Hlt1TOS,
              Hlt2TOS
             ) :
     """
@@ -548,12 +549,12 @@ def makeD2hhAsymm(name,
                        Algorithm = _D0,
                        RequiredSelections = inputSel )
 
-    if not config['UseTOSFilter']:
+    if not useTOS:
       return _sel
 
     _selD2hhHlt1TOS = makeTISTOS( name + "D2hhHlt1TOS"
                                     , _sel
-                                    , { 'Hlt1TrackAllL0Decision%TOS' : 0 }
+                                    , Hlt1TOS
                                             )
     _selD2hhHlt2TOS = makeTISTOS( name + "D2hhHlt2TOS"
                                             , _selD2hhHlt1TOS
