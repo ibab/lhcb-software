@@ -124,6 +124,14 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
     p=strchr(m_hostName,'.');
     if(p)*p='\0';
   }
+
+  if ( fifo_name.length()>0 && fifo_name[0]=='$' )  {
+    std::string fn = fifo_name.substr(1);
+    if ( ::getenv(fn.c_str()) ) {
+      fifo_name = ::getenv(fn.c_str());
+    }
+  }
+
   /*-------------------------------------------------------------------------*/
   errU=L_STD|L_SYS;
   /* If the logger is a secondary logger, try to open also the default       */

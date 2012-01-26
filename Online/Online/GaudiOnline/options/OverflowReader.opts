@@ -1,0 +1,16 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += { "LHCb::MEPManager/MEPManager" };
+ApplicationMgr.Runable               = "LHCb::HltBufferedIOReader/Runable";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.EvtSel                = "NONE";
+
+//Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+Runable.Buffer                       = "Events";
+Runable.Directory                    = "./data";
+
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.Buffers                   = { "Events" };
+MEPManager.ConnectWhen               = "initialize";
+
+EmptyEventLoop.Wait                  = 1;

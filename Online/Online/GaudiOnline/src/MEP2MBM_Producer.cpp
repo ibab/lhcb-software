@@ -40,8 +40,8 @@ namespace {
     string m_fname;
     int m_spaceSize, m_refCount, m_evtCount, m_etyp;
     long mepStart;
-    MEPProducer(const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool /* unused */, int etyp) 
-      : MBM::Producer("Mep", nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
+    MEPProducer(const string& buff, const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool /* unused */, int etyp) 
+      : MBM::Producer(buff, nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
     //: MEP::Producer(nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
@@ -145,13 +145,14 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   int refCount = 2;
   int evtCount = -1;
   int etyp = EVENT_TYPE_MEP;
-  string name = "producer";
+  string name = "producer", buff="Events";
   string fname = "../cmt/mepData_0.dat";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
   bool unused = cli.getopt("mapunused",1) != 0;
   cli.getopt("etype",1,etyp);
   cli.getopt("name",1,name);
+  cli.getopt("input",1,buff);
   cli.getopt("file",1,fname);
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
@@ -160,7 +161,7 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s Type:%d\n",
 	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount,fname.c_str(),etyp);
-  MEPProducer p(name, partID, fname, refCount, space, evtCount, unused, etyp);
+  MEPProducer p(buff, name, partID, fname, refCount, space, evtCount, unused, etyp);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

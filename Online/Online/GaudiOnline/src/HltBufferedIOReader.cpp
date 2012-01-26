@@ -135,7 +135,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   StatusCode sc;
   if ( !(sc=OnlineService::initialize()).isSuccess() )
     return error("Failed to initialize service base class.");
-  else if ( !(sc=service("MEPManager/MEPManager",m_mepMgr)).isSuccess() )
+  else if ( !(sc=service("MEPManager",m_mepMgr)).isSuccess() )
     return error("Failed to access MEP manager service.");
   m_producer = m_mepMgr->createProducer(m_buffer,RTL::processName());
   if ( 0 == m_producer ) {
@@ -152,7 +152,9 @@ StatusCode HltBufferedIOReader::initialize()   {
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::finalize()     {
   if ( m_producer ) {
-    m_producer->exclude();
+    if ( m_mepMgr->FSMState() != Gaudi::StateMachine::OFFLINE ) {
+      m_producer->exclude();
+    }
     delete m_producer;
     m_producer = 0;
   }

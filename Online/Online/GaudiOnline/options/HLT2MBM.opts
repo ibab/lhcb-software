@@ -1,0 +1,23 @@
+#include "$INFOOPTIONS"
+//
+ApplicationMgr.SvcOptMapping += { "Gaudi::IODataManager/IODataManager"  };
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog" };
+ApplicationMgr.ExtSvc        += { "MonitorSvc/MonitorSvc" };
+ApplicationMgr.Dlls          += { "Gaucho" };
+HistogramPersistencySvc.Warnings = 0;
+///#include "$HLTOPTS/OnlineEnvironment.opts"
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.ExtSvc               += { "MonitorSvc/MonitorSvc" };
+ApplicationMgr.Dlls                 += { "Gaucho" };
+ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MBM" };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+MBM.MapUnusedBuffers                 = false;
+MBM.PartitionBuffers                 = false;
+MBM.PartitionID                      = @OnlineEnv.PartitionID;
+MBM.InitFlags        = "-s=7000 -e=100 -u=36 -b=12 -f -i=Events -c -s=3000 -e=100 -u=4 -f -i=Overflow -c -s=5000 -e=100 -u=36 -f -i=Send -c";
+Runable.Wait                         = 1;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 5;  // Minimum is Error
+IncidentSvc.OutputLevel              = 4;
