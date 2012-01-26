@@ -39,7 +39,7 @@ class LoKiCuts(object):
                 'VCHI2DOF'  : "VFASPF(VCHI2/VDOF)",
                 'BPVVDCHI2' : 'BPVVDCHI2',
                 'BPVDIRA'   : 'BPVDIRA',
-                'SUMPT'     : "ASUM(SUMTREE(PT,ISBASIC,0.0))",
+                'SUMPT'     : "ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))",
                 'BPVIPCHI2' : 'BPVIPCHI2()',
                 'BPVLTIME'  : 'BPVLTIME()',
                 'MM'        : 'MM',

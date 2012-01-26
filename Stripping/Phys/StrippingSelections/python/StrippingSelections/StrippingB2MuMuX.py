@@ -1,6 +1,6 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 '''
-B->mumugamma,mumumumu,v0mu ...
+B->mumugamma,mumumumu,v0mu 
 
 Author: M. Williams
 '''
@@ -28,76 +28,101 @@ from Configurables import OfflineVertexFitter
 # Default configuration dictionary
 config = {
     'MuonsLoose': {
-    'ISMUON' : True,
-    'TRCHI2DOF_MAX' : 5,
-    'MIPCHI2DV_MIN' : 4,
-    'InAccMuon'  : True
-    },
+        'ISMUON' : True,
+        'TRCHI2DOF_MAX' : 5,
+        'MIPCHI2DV_MIN' : 4,
+        'InAccMuon'  : True
+        },
     'MuonsNoPid': {
-    'ISMUON' : False,
-    'TRCHI2DOF_MAX' : 5,
-    'MIPCHI2DV_MIN' : 4,
-    'InAccMuon'  : True
-    },
+        'ISMUON' : False,
+        'TRCHI2DOF_MAX' : 5,
+        'MIPCHI2DV_MIN' : 4,
+        'InAccMuon'  : True
+        },
     'DiMuons': {
-    'AMAXDOCA_MAX'  : '0.5*mm',
-    'ASUMPT_MIN'    : '1000*MeV',
-    'VCHI2DOF_MAX'  : 16,
-    'BPVVDCHI2_MIN' : 16,
-    'BPVDIRA_MIN'   : 0.0
-    },
+        'AMAXDOCA_MAX'  : '0.5*mm',
+        'ASUMPT_MIN'    : '1000*MeV',
+        'VCHI2DOF_MAX'  : 16,
+        'BPVVDCHI2_MIN' : 16,
+        'BPVDIRA_MIN'   : 0.0
+        },
+    'DiMuonsLowM': {
+        'AMAXDOCA_MAX'  : '0.5*mm',
+        'ASUMPT_MIN'    : '1000*MeV',
+        'VCHI2DOF_MAX'  : 16,
+        'BPVVDCHI2_MIN' : 16,
+        'BPVDIRA_MIN'   : 0.0
+        },
+    'DiMuonsHighM': {
+        'AMAXDOCA_MAX'  : '0.5*mm',
+        'ASUMPT_MIN'    : '1000*MeV',
+        'VCHI2DOF_MAX'  : 16,
+        'BPVVDCHI2_MIN' : 0,
+        'BPVDIRA_MIN'   : 0
+        },
     'DiMuonsCorrM': {
-    'AMAXDOCA_MAX'  : '0.5*mm',
-    'ASUMPT_MIN'    : '1000*MeV',
-    'VCHI2DOF_MAX'  : 8,
-    'BPVVDCHI2_MIN' : 125,
-    'BPVDIRA_MIN'   : 0.0
-    },
+        'AMAXDOCA_MAX'  : '0.3*mm',
+        'ASUMPT_MIN'    : '2000*MeV',
+        'VCHI2DOF_MAX'  : 8,
+        'BPVVDCHI2_MIN' : 225,
+        'BPVIPCHI2_MAX' : 25,
+        'BPVDIRA_MIN'   : 0.4,
+        'CORRM_MIN'     : '4600*MeV',
+        'CORRM_MAX'     : '6000*MeV',
+        'PTMU'          : '700*MeV'
+        },
     'Photons': {
-    'PT_MIN' : '1500*MeV'
-    },    
+        'PT_MIN' : '1300*MeV'
+        },    
     "V0s": { # Cuts for rho, K*, phi
-    'MASS_MIN'      : {'KST':'700*MeV','RHO':'600*MeV','PHI':'900*MeV'},
-    'MASS_MAX'      : {'KST':'1100*MeV','RHO':'1000*MeV','PHI':'1100*MeV'},
-    'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV',
-                       'MIPCHI2DV_MIN' : 4, 'TRCHI2DOF_MAX' : 4},
-    'AMAXDOCA_MAX'  : '0.5*mm',
-    'VCHI2DOF_MAX'  : 16,
-    'BPVVDCHI2_MIN' : 16, 
-    'BPVDIRA_MIN'   : 0,
-    'ASUMPT_MIN'    : '1000*MeV'
-    },    
+        'MASS_MIN'      : {'KST':'700*MeV','RHO':'600*MeV','PHI':'900*MeV'},
+        'MASS_MAX'      : {'KST':'1100*MeV','RHO':'1000*MeV','PHI':'1100*MeV'},
+        'DAUGHTERS'     : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV',
+                           'MIPCHI2DV_MIN' : 4, 'TRCHI2DOF_MAX' : 4},
+        'AMAXDOCA_MAX'  : '0.5*mm',
+        'VCHI2DOF_MAX'  : 16,
+        'BPVVDCHI2_MIN' : 16, 
+        'BPVDIRA_MIN'   : 0,
+        'ASUMPT_MIN'    : '1000*MeV'
+        },    
     "B2X3BODY" : { 
-    'SUMPT_MIN'     : '4500*MeV',
-    'VCHI2DOF_MAX'  : 10,
-    'BPVIPCHI2_MAX' : 25,
-    'BPVVDCHI2_MIN' : 25,
-    'BPVDIRA_MIN'   : 0.4, #0.0
-    'MASS_MIN'      : {'B':'4200*MeV','Y':'8500*MeV'},
-    'MASS_MAX'      : {'B':'6500*MeV','Y':'10500*MeV'},
-    
-    #only used in CORRM lines
-    'FORCORRM'      : {'B':{'CORRM_MIN': '4800*MeV',
-                            'CORRM_MAX': '5800*MeV',
-                            'PTMU' : '500*MeV'},
-                       'Y':{'CORRM_MIN': '8500*MeV',
-                            'CORRM_MAX': '10500*MeV',
-                            'PTMU' : '500*MeV'}
-                       }
-    },
+        'SUMPT_MIN'     : '4800*MeV',
+        'VCHI2DOF_MAX'  : 10,
+        'BPVIPCHI2_MAX' : 25,
+        'BPVVDCHI2_MIN' : 25,
+        'BPVDIRA_MIN'   : 0.4, #0.0
+        'MASS_MIN'      : {'B':'4300*MeV'},
+        'MASS_MAX'      : {'B':'6400*MeV'},
+        },
+    "B2X3BODYLOWM" : { 
+        'SUMPT_MIN'     : '3900*MeV',
+        'VCHI2DOF_MAX'  : 10,
+        'BPVIPCHI2_MAX' : 25,
+        'BPVVDCHI2_MIN' : 25,
+        'BPVDIRA_MIN'   : 0.4, #0.0
+        'MASS_MIN'      : {'J':'2600*MeV'},
+        'MASS_MAX'      : {'J':'3600*MeV'},
+        },
+    "B2X3BODYHIGHM" : { 
+        'SUMPT_MIN'     : '4800*MeV',
+        'VCHI2DOF_MAX'  : 10,
+        'BPVDIRA_MIN'   : 0.0,
+        'MASS_MIN'      : {'Y':'9000*MeV'},
+        'MASS_MAX'      : {'Y':'10000*MeV'},
+        },
     "B2X4BODY" : { 
-    'SUMPT_MIN'     : '5000*MeV',
-    'VCHI2DOF_MAX'  : 10,
-    'BPVIPCHI2_MAX' : 25,
-    'BPVVDCHI2_MIN' : 25,
-    'BPVDIRA_MIN'   : 0.0,
-    'MASS_MIN'      : {'B':'4300*MeV','Y':'9999999*MeV'},
-    'MASS_MAX'      : {'B':'6300*MeV','Y':'-999999*MeV'}
-    },
+        'SUMPT_MIN'     : '5000*MeV',
+        'VCHI2DOF_MAX'  : 10,
+        'BPVIPCHI2_MAX' : 25,
+        'BPVVDCHI2_MIN' : 25,
+        'BPVDIRA_MIN'   : 0.0,
+        'MASS_MIN'      : {'B':'4300*MeV'},
+        'MASS_MAX'      : {'B':'6300*MeV'}
+        },
     "Prescales" : {
-    'OS'            : 1.0,
-    'SS'            : 3.0
-    },
+        'OS'            : 1.0,
+        'SS'            : 0.5
+        },
     'GECNTrkMax'   : 500
     }
 
@@ -122,9 +147,14 @@ def diMuonBuilder(muons,config,decay,tag,oneLooseMuInDimu):
     if oneLooseMuInDimu:
         #comboCuts+='& ( ACHILDCUT(ISMUON, 1) | ACHILDCUT(ISMUON, 2) )'
         comboCuts+='& ( (ANUM(ISMUON))>0 )'
-    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+    momCuts = ''
+    if config['BPVVDCHI2_MIN']:
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+    else :
+        momCuts = LoKiCuts(['VCHI2DOF','BPVDIRA'],config).code()
     cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                           DecayDescriptors=[decay])
+    
     return  Selection('B2MuMuXDiMuonBuilder'+tag,Algorithm=cp,
                       RequiredSelections=[muons])
 
@@ -137,28 +167,6 @@ def filterPhotons(photons,config):
                      RequiredSelections=[photons])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
-
-#def makeV0s(pions,config):
-#    ''' Makes all V0 -> X+X- selections.'''
-#    dauCuts = {'pi+' : LoKiCuts(['P','PT','TRCHI2DOF','MIPCHI2DV'],config['DAUGHTERS']).code()}
-#    wm = ['in_range(%s,AM,%s)' % (config['MASS_MIN']['RHO'],
-#                                  config['MASS_MAX']['RHO']),
-#          "in_range(%s,AWM('K+','pi-'),%s)" % (config['MASS_MIN']['KST'],
-#                                               config['MASS_MAX']['KST']),
-#          "in_range(%s,AWM('pi+','K-'),%s)" % (config['MASS_MIN']['KST'],
-#                                               config['MASS_MAX']['KST']),
-#          "in_range(%s,AWM('K+','K-'),%s)" % (config['MASS_MIN']['PHI'],
-#                                              config['MASS_MAX']['PHI'])]
-#    wm = '('+('|'.join(wm))+')'
-#    comboCuts = [LoKiCuts(['ASUMPT'],config).code(),wm]
-#    comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
-#    comboCuts = LoKiCuts.combine(comboCuts)
-#    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
-#    cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
-#                          DecayDescriptors=['rho(770)0 -> pi+ pi-'])
-#    return  Selection('Rho2PiPiB2MuMuX',Algorithm=cp,
-#                      RequiredSelections=[pions])                                                       
-#
 
 def makeV0s(name,particles,decay,config):  
     ''' Makes all V0 -> X+X- selections.'''
@@ -195,7 +203,7 @@ def makeB2X(name,decay,inputs,config,vertex=True):
     wm = '('+('|'.join(wm))+')'
     comboCuts = [LoKiCuts(['SUMPT'],config).code(),wm]
     comboCuts = LoKiCuts.combine(comboCuts)
-    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'],
+    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'], 
                        config).code()
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
@@ -216,8 +224,7 @@ def makeY2X(name,decay,inputs,config,vertex=True):
     wm = '('+('|'.join(wm))+')'
     comboCuts = [LoKiCuts(['SUMPT'],config).code(),wm]
     comboCuts = LoKiCuts.combine(comboCuts)
-    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'],
-                       config).code()
+    momCuts = LoKiCuts(['VCHI2DOF','BPVDIRA'],config).code()
     y2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
     if not vertex:
@@ -229,19 +236,39 @@ def makeY2X(name,decay,inputs,config,vertex=True):
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
+
+def makeJ2X(name,decay,inputs,config,vertex=True):
+    wm = ['in_range(%s,AM,%s)' % (config['MASS_MIN']['J'],
+                                  config['MASS_MAX']['J'])]
+
+    wm = '('+('|'.join(wm))+')'
+    comboCuts = [LoKiCuts(['SUMPT'],config).code(),wm]
+    comboCuts = LoKiCuts.combine(comboCuts)
+    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'],
+                       config).code()
+    j2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
+                           MotherCut=momCuts)
+    if not vertex:
+        j2x = j2x.configurable(name+'B2MuMuXVertexFitter')
+        j2x.addTool(OfflineVertexFitter)
+        j2x.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+        j2x.OfflineVertexFitter.useResonanceVertex = False
+    return Selection(name,Algorithm=j2x,RequiredSelections=inputs)
+
+#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+
 def makeB2MuMuGammaCORRM(name,input,config):
     code  = '(BPVCORRM > %s) & (BPVCORRM < %s)' % (config['CORRM_MIN'],config['CORRM_MAX'])
     code += '& (NINGENERATION(PT<%s,1)==0)' % (config['PTMU'])
-
-
     return Selection(name+'CORRMFilter',Algorithm=FilterDesktop(Code=code),
                      RequiredSelections=[input])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class B2MuMuXConf(LineBuilder):
-    __configuration_keys__ = ('MuonsLoose','MuonsNoPid','DiMuons','DiMuonsCorrM','Photons',
-                              'B2X3BODY','B2X4BODY','Prescales','V0s','GECNTrkMax')
+    __configuration_keys__ = ('MuonsLoose','MuonsNoPid','DiMuons','DiMuonsLowM','DiMuonsHighM',
+                              'DiMuonsCorrM','Photons','B2X3BODY','B2X3BODYLOWM','B2X3BODYHIGHM',
+                              'B2X4BODY','Prescales','V0s','GECNTrkMax')
 
     def __init__(self, moduleName, config) :
         
@@ -255,8 +282,14 @@ class B2MuMuXConf(LineBuilder):
         dimuons_nofly_loose = diMuonBuilder(muons_loose,config['DiMuons'],
                                             'J/psi(1S) -> mu+ mu-','NoFly_loose',
                                             oneLooseMuInDiMu)
+        dimuons_nofly_loose_lowm = diMuonBuilder(muons_loose,config['DiMuonsLowM'],
+                                                 'J/psi(1S) -> mu+ mu-','NoFly_loose_LowM',
+                                                 oneLooseMuInDiMu)
+        dimuons_nofly_loose_highm = diMuonBuilder(muons_loose,config['DiMuonsHighM'],
+                                                  'J/psi(1S) -> mu+ mu-','NoFly_loose_HighM',
+                                                  oneLooseMuInDiMu)
         dimuons_nofly_loose_corrm = diMuonBuilder(muons_loose,config['DiMuonsCorrM'],
-                                                  'J/psi(1S) -> mu+ mu-','NoFly_loose_CoorM',
+                                                  'J/psi(1S) -> mu+ mu-','NoFly_loose_CorrM',
                                                   oneLooseMuInDiMu)
         dimuons_fly_loose = diMuonBuilder(muons_loose,config['DiMuons'],
                                           'KS0 -> mu+ mu-','Fly_loose',
@@ -292,10 +325,16 @@ class B2MuMuXConf(LineBuilder):
                           config['B2X3BODY'],False)
         self._makeLine(b2mumug,config)
 
+        # Jpsi (from B) to Mu Mu Gamma
+        j2mumug = makeJ2X('B2MuMuGammaLowMass',['B0 -> J/psi(1S) gamma'],
+                          [dimuons_nofly_loose_lowm,photons],
+                          config['B2X3BODYLOWM'],False)
+        self._makeLine(j2mumug,config)
+
         # Y to Mu Mu Gamma
         y2mumug = makeY2X('B2MuMuGammaHighMass',['B0 -> J/psi(1S) gamma'],
-                          [dimuons_nofly_loose,photons],
-                          config['B2X3BODY'],False)
+                          [dimuons_nofly_loose_highm,photons],
+                          config['B2X3BODYHIGHM'],False)
         self._makeLine(y2mumug,config)
 
 
@@ -344,16 +383,11 @@ class B2MuMuXConf(LineBuilder):
                            config['B2X4BODY'])
         self._makeLine(b2phimumu_ss,config)
         
-        
         # Corrected mass stripping lines
         # B to Mu Mu Gamma
-        b2mumug_mcor = makeB2MuMuGammaCORRM('B2MuMuGamma',dimuons_nofly_loose,
-                                           config['B2X3BODY']['FORCORRM']['B'])
+        b2mumug_mcor = makeB2MuMuGammaCORRM('B2MuMuGamma',dimuons_nofly_loose_corrm,
+                                            config['DiMuonsCorrM'])
         self._makeLine(b2mumug_mcor,config)
-        # Y to Mu Mu Gamma
-        y2mumug_mcor = makeB2MuMuGammaCORRM('B2MuMuGammaHighMass',dimuons_nofly_loose,
-                                           config['B2X3BODY']['FORCORRM']['Y'])
-        self._makeLine(y2mumug_mcor,config)
     
 
         
@@ -380,10 +414,8 @@ class B2MuMuXConf(LineBuilder):
             hlt = "HLT_PASS_RE('Hlt2.*Topo.*Decision')"\
                   "| HLT_PASS_RE('Hlt2IncPhi.*Decision')"
 
-        print ":::::::::::::::::::::::::::::::::::::::::::::::::::::::",hlt
-              
         presc = config['Prescales']['OS']
-        if "ss" in name:
+        if "_ss" in name:
             presc = config['Prescales']['SS']
 
 

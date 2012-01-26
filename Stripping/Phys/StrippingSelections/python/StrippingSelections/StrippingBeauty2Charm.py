@@ -105,7 +105,7 @@ config = {
     'K'  : {'PIDK_MIN' : -10}
     },
     "Prescales" : { # Prescales for individual lines
-    'RUN_BY_DEFAULT' : False, # False = lines off by default
+    'RUN_BY_DEFAULT' : True, # False = lines off by default
     'RUN_RE'         : ['.*KS.*','.*Lb2LcD.*'],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
