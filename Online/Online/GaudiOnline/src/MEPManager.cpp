@@ -13,6 +13,7 @@
 #include "RTL/rtl.h"
 #include "MBM/bmdef.h"
 #include "MBM/Producer.h"
+#include "MBM/Consumer.h"
 #include <stdexcept>
 #include <cctype>
 #include <cstdio>
@@ -272,6 +273,45 @@ MBM::Producer* MEPManager::createProducer(const string& buffer,const string& ins
   if ( i != m_buffMap.end() ) {
     BMID bmid = (*i).second;
     return new MBM::Producer(bmid,instance,partitionID());
+  }
+  return 0;
+}
+
+/// Create consumer attached to a specified buffer
+MBM::Consumer* MEPManager::createConsumer(const string& buffer,const string& instance) {
+  map<string,BMID>::iterator i=m_buffMap.find(buffer);
+  if ( i == m_buffMap.end() ) {
+    string bm_name = buffer;
+    if ( m_mepID != MEP_INV_DESC )  {
+      if ( bm_name == "EVENT" ) {
+	BMID bmid = m_mepID->evtBuffer;
+	return new MBM::Consumer(bmid,instance,partitionID());
+      }
+      else if ( bm_name == "RESULT" ) {
+	BMID bmid = m_mepID->resBuffer;
+	return new MBM::Consumer(bmid,instance,partitionID());
+      }
+      else if ( bm_name == "MEP" ) {
+	BMID bmid = m_mepID->mepBuffer;
+	return new MBM::Consumer(bmid,instance,partitionID());
+      }
+    }
+
+    bm_name += "_";
+    if ( m_partitionName.empty() ) {
+      char txt[32];
+      bm_name += _itoa(m_partitionID,txt,16);
+      i=m_buffMap.find(buffer);
+    }
+    else  {
+      bm_name += m_partitionName;
+      i=m_buffMap.find(buffer);
+    }
+  }
+
+  if ( i != m_buffMap.end() ) {
+    BMID bmid = (*i).second;
+    return new MBM::Consumer(bmid,instance,partitionID());
   }
   return 0;
 }

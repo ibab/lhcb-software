@@ -19,7 +19,6 @@
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "Event/ODIN.h"
-#include "MBM/Producer.h"
 #include "MBM/Consumer.h"
 #include "MBM/Requirement.h"
 #include "MDF/MDFHeader.h"
@@ -91,7 +90,7 @@ void MEPOverflowWriterSvc::handle(const Incident& inc)
   if (inc.type() == "DAQ_CANCEL")
   {
     m_receiveEvts = false;
-    m_mepMgr->cancel();
+    m_consumer->cancel();
   }
   else if (inc.type() == "DAQ_ENABLE")
   {
@@ -111,10 +110,7 @@ StatusCode MEPOverflowWriterSvc::initialize()
     {
       try
       {
-        int partID = m_mepMgr->partitionID();
-        const string& proc = m_mepMgr->processName();
-        MEPID id = m_mepMgr->mepID();
-        m_consumer = new Consumer(id->mepBuffer, proc, partID);
+        m_consumer = m_mepMgr->createConsumer("Overflow",m_mepMgr->processName());
         for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)
         {
           Requirement r;

@@ -18,6 +18,7 @@
 
 namespace MBM {
   class Producer;
+  class Consumer;
 }
 
 // Declaration of the interface ID. 
@@ -76,6 +77,9 @@ namespace LHCb    {
 
     /// Create producer
     MBM::Producer* createProducer(const std::string& buffer,const std::string& instance);
+
+    /// Create consumer attached to a specified buffer
+    MBM::Consumer* createConsumer(const std::string& buffer,const std::string& instance);
 
     /// Access to MEP identifier structure
     MEPID  mepID() const                               { return m_mepID;    }
