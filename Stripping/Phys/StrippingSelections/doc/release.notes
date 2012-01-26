@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-26 Mika Vesterinen
+ - Added D0->3KPi, D0->2K2Pi, D0->4Pi to StrippingB2DMuNuX
+
 ! 2012-01-26 - Marco Gersabeck
  - Added TIS selections to StrippingD2hh.
 
