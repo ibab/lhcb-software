@@ -84,4 +84,10 @@
   <class name="std::vector<LHCb::PackedWeights>" />
   <class name="LHCb::PackedWeightsVector" id="00000613-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedDecReport" id="00000617-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedRelation" />
+  <class name="std::vector<LHCb::PackedRelation>" />
+  <class name="LHCb::PackedRelations" id="00000618-0000-0000-0000-000000000000" />
+
 </lcgdict>

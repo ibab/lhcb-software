@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-01-26 - Chris Jones
+ - Add missing entries in dict/PackedEventDict.h and dict/PackedEventDict.xml
+   for the PackedDecReport and PackedRelation classes, needed for persistency
+
 ! 2012-01-25 - Olivier Callot
  - New class PackedRelation to store the Particle2Vertex relations.
 
