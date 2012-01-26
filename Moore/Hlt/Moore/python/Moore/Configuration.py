@@ -332,7 +332,7 @@ class Moore(LHCbConfigurableUser):
     def getRelease(self):
         import re,fileinput
         #  do not pick up the pz in vxrypz
-        version = re.compile('^version (v\d+r\d+)(p\d+)?')
+        version = re.compile('^version\s*(v\d+r\d+)(p\d+)?')
         for line in fileinput.input(os.environ.get('MOOREROOT')+'/cmt/requirements') :
             match = version.match(line)
             if not match: continue
