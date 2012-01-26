@@ -77,7 +77,10 @@ namespace Rich
     inline const SmartIDVector & smartIDs() const { return m_ids; }
 
     /// The primary (seed) channel ID
-    inline LHCb::RichSmartID primaryID() const { return smartIDs().front(); }
+    inline LHCb::RichSmartID primaryID() const 
+    {
+      return ( !smartIDs().empty() ? smartIDs().front() : LHCb::RichSmartID() ); 
+    }
 
     /// The RICH detector for this cluster
     inline Rich::DetectorType rich() const { return primaryID().rich(); }

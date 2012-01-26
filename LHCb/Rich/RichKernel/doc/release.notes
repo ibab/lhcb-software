@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+! 2012-01-26 - Chris Jones
+ - Add some protection against calling primary() an empty 
+   HPDPixelCluster object.
+
 ! 2012-01-04 - Chris Jones
  - Add an option to the RichTools Configurable to use the new detailed 
    track segment creator that uses the tracking State provider tool, 
