@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-01-26 - Chris Jones
+ - Remove hack in TupleToolEventInfo to save event number and GPS time as 
+   doubles. Gaudi v23r0 supports saving these natively as ulonglong.
+
 ! 2011-12-23 - Rob Lambert
  - Switch to TrackStateProvider in TupleToolTrackPosition
 

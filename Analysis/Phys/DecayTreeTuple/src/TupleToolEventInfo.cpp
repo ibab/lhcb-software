@@ -46,6 +46,7 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
                   "PV location to be used. If empty, take default");
   declareProperty("Mu", m_mu);
 }
+
 //=============================================================================
 StatusCode TupleToolEventInfo::initialize( )
 {
@@ -123,13 +124,13 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   if (!m_mu.empty()) test &= tuple->column( prefix+"Mu", m_mu[odin->runNumber()] );
 
   test &= tuple->column( prefix+"runNumber",    odin->runNumber() );
-  test &= tuple->column( prefix+"eventNumber",  (double)odin->eventNumber() ); // CRJ : Cast to double until Gaudi v23r0
+  test &= tuple->column( prefix+"eventNumber",  odin->eventNumber() );
   test &= tuple->column( prefix+"BCID",         odin->bunchId() );
   test &= tuple->column( prefix+"BCType",       odin->bunchCrossingType() );
   test &= tuple->column( prefix+"OdinTCK",      odin->triggerConfigurationKey() );
   test &= tuple->column( prefix+"L0DUTCK",      report ? report->tck() : 0 );
   test &= tuple->column( prefix+"HLTTCK",       decreport ? decreport->configuredTCK() : 0 );
-  test &= tuple->column( prefix+"GpsTime",      (double)odin->gpsTime() ); // CRJ : Cast to double until Gaudi v23r0
+  test &= tuple->column( prefix+"GpsTime",      odin->gpsTime() );
   if ( isVerbose() )
   {
     const Gaudi::Time gtime = odin->eventTime();
@@ -142,19 +143,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
     test &= tuple->column( prefix+"TriggerType", odin->triggerType() );
   }
   test &= tuple->column( prefix+"Primaries", nPVs );
-  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (m_magSvc->isDown()?-1:1) );
-
-  // CRJ. Temporary hack, until Gaudi supports ulonglong directly (v23r0)
-  //---------------------------------------------------------------------
-  union Jack { ulonglong i; int b[2]; };
-  Jack convertEventN,convertGpsTime;
-  convertEventN.i  = odin->eventNumber();
-  convertGpsTime.i = odin->gpsTime();
-  test &= tuple->column( prefix+"eventNumberP1", convertEventN.b[0] );
-  test &= tuple->column( prefix+"eventNumberP2", convertEventN.b[1] );
-  test &= tuple->column( prefix+"GpsTimeP1", convertGpsTime.b[0] );
-  test &= tuple->column( prefix+"GpsTimeP2", convertGpsTime.b[1] );
-  //---------------------------------------------------------------------
+  if (m_magSvc) test &= tuple->column( prefix+"Polarity", (short)(m_magSvc->isDown()?-1:1) );
 
   if( msgLevel( MSG::VERBOSE ) ) verbose() << "Returns " << test << endreq;
   return StatusCode(test);

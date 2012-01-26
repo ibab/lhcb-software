@@ -39,7 +39,7 @@ StatusCode TupleToolTrackInfo::fill( const LHCb::Particle*
                                      , const std::string& head
                                      , Tuples::Tuple& tuple )
 {
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
 
   bool test = true;
   if( !P ) return StatusCode::FAILURE;
