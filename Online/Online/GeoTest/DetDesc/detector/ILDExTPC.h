@@ -6,6 +6,7 @@ namespace DetDesc {
     Geometry::RefElement outerWall;
     Geometry::RefElement innerWall;
     Geometry::RefElement gas;
+    double pressure;
   };
 
   struct ILDExTPC : public Geometry::Subdetector {

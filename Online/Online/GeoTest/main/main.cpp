@@ -50,6 +50,7 @@ Geometry::LCDD& compact2geo(int argc, char **argv)  {
 #include "TRint.h"
 #include "DetDesc/detector/ILDExTPC.h"
 #include "DetDesc/detector/MarkusTPC.h"
+#include "DetDesc/detector/GearTPC.h"
 #include "DetDesc/compact/Detector.h"
 
 //______________________________________________________________________________
@@ -78,7 +79,12 @@ int run_interpreter(int argc, char **argv)   {
 
 
   MarkusTPC mtpc = tpc;
-  cout << "----> MyFeature:" << mtpc.feature() << endl;
+  cout << "-----> MyFeature:" << mtpc.feature() << endl;
+
+  GearTPC   gear = tpc;
+  cout << "-----> Gear: Inner:" << gear.innerRadius() << " Outer:" << gear.outerRadius() << endl;
+  cout << "-----> Gear: Press:" << gear.pressure() << endl;
+
 
   // and enter the event loop...
   theApp->Run();

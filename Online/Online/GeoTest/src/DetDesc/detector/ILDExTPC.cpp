@@ -14,6 +14,8 @@ namespace DetDesc {
     Value<TNamed,Object>* p = (Value<TNamed,Object>*)m_element.ptr();
     p->SetName(name.c_str());
     p->SetTitle(type.c_str());
+    p->pressure = 12345.0;
+
     setAttr(Attr_id,id);
   }
 
