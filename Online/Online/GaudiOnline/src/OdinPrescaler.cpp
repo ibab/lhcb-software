@@ -41,7 +41,7 @@ namespace LHCb {
       : Algorithm(nam,svc)
     {
       ::srand((unsigned int)::time(0));
-      declareProperty("PercentPass", m_percent=100.0,
+      declareProperty("AcceptRate", m_rate=1.0,
 		      "Fraction of the events allowed to pass the filter");
       declareProperty("TriggerType", m_trgType=0, 
 		      "Required ODIN trigger type; if 0 -> ignored");
@@ -64,9 +64,9 @@ namespace LHCb {
     /// Algorithm overload: Event execution routine
     virtual StatusCode execute() {
       DataObject* pDO = 0;
-      double frac = 1.0 + (100.0 * (double(rand()) / (double(RAND_MAX)+1.0)));
+      double frac = double(rand()) / double(RAND_MAX);
       if ( m_trgType == 0 ) {
-	if ( frac < m_percent ) {
+	if ( frac < m_rate ) {
 	  setFilterPassed( false );
 	}
 	return StatusCode::SUCCESS;
@@ -85,7 +85,7 @@ namespace LHCb {
 	  int eventType   = info->EventType;
 #endif
 	  if ( (triggerType&m_trgType) != 0 ) {
-	    if ( frac < m_percent ) {
+	    if ( frac < m_rate ) {
 	      setFilterPassed( false );
 	      return StatusCode::SUCCESS;
 	    }
@@ -100,7 +100,7 @@ namespace LHCb {
     /// Raw bank location
     std::string m_bankLocation;
     /// Percentage of events that should be passed
-    double m_percent;
+    double m_rate;
     /// Odin event type to be filtered
     int m_trgType;
   };
