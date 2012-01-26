@@ -81,23 +81,52 @@ BusySvc::~BusySvc()
 void BusySvc::getBogus(double &bogus)
 {
   char line[256];
+  char bogoline[256];
+  char modelnameline[256];
   float bogo;
-  FILE *g = fopen("/proc/cpuinfo","r");
+  int model;
+  int proc = 0;
+  FILE *g = fopen("/proc/cpuinfo", "r");
   char *stat = line;
   while (stat != 0)
   {
-    stat = fgets(line,sizeof(line),g);
-    if (stat == 0) break;
-    if (strstr(line,"bogomips")!=0)
-    {
-      dyn_string *l = Strsplit(line,":");
-      sscanf(l->at(1).c_str(), "%f",&bogo);
+    stat = fgets(line, sizeof(line), g);
+    if (stat == 0)
       break;
+    if (strstr(line, "processor") != 0)
+    {
+      strcpy(modelnameline, line);
+      dyn_string *l = Strsplit(line, ":");
+      sscanf(l->at(1).c_str(), "%d", &proc);
+      if (proc == 1)
+        break;
+      continue;
+    }
+    else if (strstr(line, "bogomips") != 0)
+    {
+      strcpy(bogoline, line);
+      dyn_string *l = Strsplit(line, ":");
+      sscanf(l->at(1).c_str(), "%f", &bogo);
+      continue;
+    }
+    else if (strstr(line, "model  ") != 0)
+    {
+      strcpy(modelnameline, line);
+      dyn_string *l = Strsplit(line, ":");
+      sscanf(l->at(1).c_str(), "%d", &model);
+      continue;
     }
   }
   fclose(g);
-  bogus = bogo;
-//  printf ("Bogomips %f %f\n",bogo,bogus);
+  if (model == 23)
+  {
+    bogus = 270.0;
+  }
+  else if (model == 44)
+  {
+    bogus = 960.0;
+  }
+  //  printf ("Bogomips %f %f\n",bogo,bogus);
   return;
 }
 void BusySvc::calcIdle()
