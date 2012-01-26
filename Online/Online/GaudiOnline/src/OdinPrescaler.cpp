@@ -9,6 +9,7 @@
 // $Id: $
 // Framework include files
 #include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/MsgStream.h"
 #include "MDF/OnlineRunInfo.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
@@ -63,11 +64,14 @@ namespace LHCb {
 
     /// Algorithm overload: Event execution routine
     virtual StatusCode execute() {
+      MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
       double frac = double(rand()) / double(RAND_MAX);
+      log << MSG::DEBUG << "Trg type:" << m_trgType << " Fraction:" << frac
+	  << " Rate:" << m_rate << endmsg;
       if ( m_trgType == 0 ) {
-	if ( frac < m_rate ) {
-	  setFilterPassed( false );
+	if ( frac > m_rate ) {
+	  setFilterPassed(false);
 	}
 	return StatusCode::SUCCESS;
       }
@@ -85,7 +89,7 @@ namespace LHCb {
 	  int eventType   = info->EventType;
 #endif
 	  if ( (triggerType&m_trgType) != 0 ) {
-	    if ( frac < m_rate ) {
+	    if ( frac > m_rate ) {
 	      setFilterPassed( false );
 	      return StatusCode::SUCCESS;
 	    }
