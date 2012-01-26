@@ -319,6 +319,9 @@ StatusCode CheckpointSvc::initialize() {
     log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
     m_fsm = (ITaskFSM*)func();
     log << " Interactor: " << (unsigned long) m_fsm << endmsg;
+    if ( m_numInstances < 0 ) {
+      m_numInstances = ::atol(::getenv("NBOFSLAVES"));
+    }
     if ( !m_checkPoint.empty() || m_numInstances != 0 ) {
       CHKPT* chkpt =  CHKPT_get();
       chkpt->setPrint(m_printLvl);
