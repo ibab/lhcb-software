@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v9r2p1
+version v10r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -40,8 +40,9 @@ macro alpgen_native_version "2.1.3d"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "153"
+macro pythia8_native_version "160"
 macro_append pythia8_linkopts " -lhepmcinterface "
+#set PYTHIA8DATA $(pythia8_home)/share/xmldoc
 
 
 #-- Pythia 6
@@ -92,11 +93,11 @@ macro_append hijingforgauss_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_hom
 macro_append GENSER_linkopts " $(hijing_linkopts) "
 macro_append hijing_linkopts " -lpythia_hijing "
 
-macro_prepend tauola++_linkopts "-Wl,--no-as-needed "
-macro_append tauola++_linkopts "-Wl,--as-needed "
+#macro_prepend tauola++_linkopts "-Wl,--no-as-needed "
+#macro_append tauola++_linkopts "-Wl,--as-needed "
 
-macro_prepend photos++_linkopts "-Wl,--no-as-needed "
-macro_append photos++_linkopts "-Wl,--as-needed "
+#macro_prepend photos++_linkopts "-Wl,--no-as-needed "
+#macro_append photos++_linkopts "-Wl,--as-needed "
 
 
 private

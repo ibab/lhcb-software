@@ -4,6 +4,10 @@ xs!-----------------------------------------------------------------------------
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2012-01-26 - Gloria Corti
+ - Take the latest version of pythia8 160
+ - Remove temporary patch to link photos++ and tauola++ with missing links
+
 !========================= GENSER v9r2p1 2011-10-14 ==========================
 ! 2011-10-14 - Gloria Corti
  - Remove definitions of macros but for version for AlpGen as an interface 
