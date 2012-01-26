@@ -5,6 +5,10 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2012-01-26 - Illya Shapoval
+ - GaudiMTTools v1r0 package added: collection of Gaudi multithreading tools.
+   Currently includes only GaudiParallelizer algorithm.
+
 ! 2012-01-25 - Marco Cattaneo
  - Remove RootCnv. RootCnv v1r12 is released as part of Gaudi v23r0. Model is
    now that HEAD is maintained in ONLINE project. New releases can be included

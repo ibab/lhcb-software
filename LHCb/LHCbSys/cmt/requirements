@@ -76,6 +76,9 @@ use GaudiConf             v15r5
 # Maintainer ??
 use GaudiConfUtils        v1r0
 
+# Maintainer I.Shapoval
+use GaudiMTTools          v1r0
+
 # Maintainer S.Roiser
 use GaudiObjDesc          v11r12
 
