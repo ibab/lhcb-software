@@ -8,9 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Patrick Koppenburg
+ - Added LD Ks for studies
+
 ! 2012-01-20 - Thomas Blake
  - Added StdVeryLooseLambda using AllNoPIDs particles
-
 
 ! 2012-01-19 - Susan Haines
 - Updated (looser) StdVeryLooseKs.py Kshort mass windows, both LL and DD.

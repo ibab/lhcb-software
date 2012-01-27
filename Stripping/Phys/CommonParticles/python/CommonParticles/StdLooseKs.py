@@ -16,11 +16,12 @@ __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5
 __all__ = (
     'StdLooseKsLL' ,
     'StdLooseKsDD' ,
+    'StdLooseKsLD' ,
     'locations'
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles
+from Configurables       import CombineParticles, FilterDesktop
 from CommonParticles.Utils import *
 
 ## ============================================================================
@@ -43,16 +44,44 @@ locations = updateDoD ( StdLooseKsLL )
 #  @date 2009-04-27
 # ============================================================================= 
 StdLooseKsDD = CombineParticles ( 'StdLooseKsDD' )
-
+DDPionCuts = "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)"
 StdLooseKsDD.Inputs = [ "Phys/StdNoPIDsDownPions/Particles" ]
 StdLooseKsDD.DecayDescriptor = "KS0 -> pi+ pi-" 
 
-StdLooseKsDD.DaughtersCuts = { "pi+" : "(P > 2.*GeV) & (MIPCHI2DV(PRIMARY) > 4.)" } 
+StdLooseKsDD.DaughtersCuts = { "pi+" : DDPionCuts } 
 StdLooseKsDD.CombinationCut = "(ADAMASS('KS0') < 80.*MeV) & (ADOCACHI2CUT(25, ''))"
 StdLooseKsDD.MotherCut = "(ADMASS('KS0') < 64.*MeV) & (VFASPF(VCHI2) < 25.)"
 
 ## configure Data-On-Demand service 
 locations.update( updateDoD ( StdLooseKsDD ))
+
+## ============================================================================
+#  configuration file for 'Standard Loose Long-Downstream '
+#  Please be aware that this is mostly background
+#  @author Patrick Koppenburg
+#  @date 2012-01-26
+# =============================================================================
+# The one with a long pi+
+StdLooseKsLD_PosLong = StdLooseKsDD.clone( 'StdLooseKsLD_PosLong' )
+
+StdLooseKsLD_PosLong.Inputs = [ "Phys/StdNoPIDsDownPions/Particles",
+                                "Phys/StdLoosePions/Particles" ]
+StdLooseKsLD_PosLong.DaughtersCuts = { "pi+" : "(ISLONG) & "+DDPionCuts,
+                                       "pi-" : "(ISDOWN) & "+DDPionCuts } 
+
+# The one with a long pi-
+StdLooseKsLD_NegLong = StdLooseKsLD_PosLong.clone( 'StdLooseKsLD_NegLong')
+StdLooseKsLD_NegLong.DaughtersCuts = { "pi-" : "(ISLONG) & "+DDPionCuts,
+                                       "pi+" : "(ISDOWN) & "+DDPionCuts } 
+# The combination of them
+StdLooseKsLD = FilterDesktop("StdLooseKsLD", Code = "ALL")
+StdLooseKsLD.Inputs = [ "Phys/StdLooseKsLD_PosLong/Particles",
+                        "Phys/StdLooseKsLD_NegLong/Particles" ]
+
+## configure Data-On-Demand service 
+locations.update( updateDoD ( StdLooseKsLD_PosLong ))
+locations.update( updateDoD ( StdLooseKsLD_NegLong ))
+locations.update( updateDoD ( StdLooseKsLD ))
 
 ## ============================================================================
 if '__main__' == __name__ :
