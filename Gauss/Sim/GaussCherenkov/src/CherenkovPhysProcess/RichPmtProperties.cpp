@@ -32,7 +32,7 @@ RichPmtProperties::RichPmtProperties( )
     m_RichPmtPSFList(2,std::vector<RichPmtPSF*>(200)),
     m_PmtVerboseLevel(0),m_PmtActivateOverRideMaxQEFromDB(false),
     m_PmtDBOverRideMaxQEValue(0.60),
-    m_CurQEMatPathname(RichPmtBorosilicateQeffMatTabPropPath ),
+    m_CurQEMatPathname(RichPmtQeffMatTabPropPath ),
     m_CurQETableSourceOption(0) 
 { }
 //    m_RichPmtDeMagList(2,std::vector<RichPmtDeMag*>(200)),
@@ -371,9 +371,23 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 		  //     <<"Using Old QE default table for this PMT!"<<endreq;
 
     if(m_CurQETableSourceOption != 0 ) {
-      if( m_CurQETableSourceOption == 1 ) { m_CurQEMatPathname=  RichPmtQeffMatTabPropPath;
-      }else if (m_CurQETableSourceOption == 2)  {m_CurQEMatPathname=RichHpdQeffMatTabPropPath;}    
+      if( m_CurQETableSourceOption == 1 ) { m_CurQEMatPathname= RichPmtCBABorosilicateQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 2)  {m_CurQEMatPathname=RichHpdQeffMatTabPropPath;    
+      }else if (m_CurQETableSourceOption == 3)  {m_CurQEMatPathname=RichPmtCBAUVGlassQeffMatTabPropPath;    
+      }else if (m_CurQETableSourceOption == 4)  {m_CurQEMatPathname=RichPmtUBABorosilicateQeffMatTabPropPath;    
+      }else if (m_CurQETableSourceOption == 5)  {m_CurQEMatPathname=RichPmtUBAUVGlassQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 6)  {m_CurQEMatPathname=RichPmtSBABorosilicateQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 7)  {m_CurQEMatPathname=RichPmtSBAUVGlassQeffMatTabPropPath;
+      }
+      
     }
+    
+      
+    
+
+
+
+
 
      SmartDataPtr<TabulatedProperty> tabQE(detSvc, m_CurQEMatPathname );
      RichPmtPropLogQE<<MSG::INFO<<" Now getting the QE from "<<m_CurQEMatPathname<<endreq;
@@ -447,6 +461,8 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     
     
 }
+
+
 
 
 
