@@ -4,7 +4,10 @@
 ! Purpose     : The package for Gaudi multithreading tools and machinery
 !-----------------------------------------------------------------------------
 
-!======================= GaudiMTTools v1r0 2012-01-26 ============================
+!======================= GaudiMTTools v1r0 2012-01-27 ============================
+! 2012-01-27 - Illya Shapoval
+ - Requirements file is fixed: explicit Boost dependecy and linking option is added.
+
 ! 2012-01-26 - Illya Shapoval
  - GaudiParallelizer prototype is created. This is an algorithm manager similar
    to GaudiSequencer with the difference in that it runs algorithms in parallel

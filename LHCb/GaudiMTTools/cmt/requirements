@@ -14,15 +14,20 @@ branches doc src cmt
 #   Put as many lines as needed, with all packages, without the '#'
 # ============================================================================
 use GaudiAlg v*
+use Boost v* LCG_Interfaces -no_auto_imports
 
 include_path    none
 # ============================================================================
 # Component library building rule
 # ============================================================================
-library GaudiMTTools -no_static *.cpp
+library GaudiMTTools -import=Boost -no_static *.cpp
 
 # ============================================================================
 # define component library link options
 # ============================================================================
 apply_pattern component_library library=GaudiMTTools
+
+private
+macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
+end_private
 
