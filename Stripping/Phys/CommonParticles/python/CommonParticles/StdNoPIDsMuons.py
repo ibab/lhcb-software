@@ -8,7 +8,7 @@
 #  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard NoPIDs Muons wioth loose cuts'
+Configuration file for 'Standard NoPIDs Muons with loose cuts'
 """
 __author__  = "Patrick Koppenburg "
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"

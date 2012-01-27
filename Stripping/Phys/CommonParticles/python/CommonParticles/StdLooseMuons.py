@@ -20,8 +20,6 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import FilterDesktop
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 

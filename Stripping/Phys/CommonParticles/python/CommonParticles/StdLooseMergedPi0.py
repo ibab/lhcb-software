@@ -20,11 +20,8 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import MergedPi0Maker 
-
 from GaudiKernel.SystemOfUnits import MeV
-
 from CommonParticles.Utils import *
-
 
 ## create the algorithm 
 algorithm =  MergedPi0Maker ( 'StdLooseMergedPi0'         ,

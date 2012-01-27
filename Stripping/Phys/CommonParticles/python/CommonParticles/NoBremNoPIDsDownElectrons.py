@@ -20,12 +20,12 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration   import *
 from Configurables         import NoPIDsParticleMaker 
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'NoBremNoPIDsDownElectrons'         ,
-                                   DecayDescriptor = 'Electron' , Particle = 'electron'  )
+algorithm =  NoPIDsParticleMaker ( 'NoBremNoPIDsDownElectrons'  ,
+                                   DecayDescriptor = 'Electron' ,
+                                   Particle = 'electron'  )
 
 algorithm.AddBremPhotonTo = [] 
 

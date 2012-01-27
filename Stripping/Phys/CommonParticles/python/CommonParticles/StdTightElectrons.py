@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightElectrons.py,v 1.5 2010-06-01 09:41:12 odescham Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdTightElectrons.py
 #  configuration file for 'Standard Loose Electrons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl

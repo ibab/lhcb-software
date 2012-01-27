@@ -28,12 +28,32 @@ _locations.update ( locations )
 from CommonParticles.StdAllLooseProtons  import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllLooseANNProtons  import *
+_locations.update ( locations )
+
 from CommonParticles.StdLooseProtons  import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNProtons  import *
 _locations.update ( locations )
 
 from CommonParticles.StdTightProtons  import *
 _locations.update ( locations )
 
+from CommonParticles.StdTightANNProtons  import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNDownProtons  import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNDownProtons  import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNUpProtons  import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNUpProtons  import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations

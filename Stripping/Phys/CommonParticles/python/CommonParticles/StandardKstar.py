@@ -18,8 +18,10 @@ _locations = {}
 
 from CommonParticles.StdLooseKstar import *
 _locations.update ( locations )
+
 from CommonParticles.StdVeryLooseDetachedKstar import *
 _locations.update ( locations )
+
 from CommonParticles.StdLooseDetachedKstar import *
 _locations.update ( locations )
 

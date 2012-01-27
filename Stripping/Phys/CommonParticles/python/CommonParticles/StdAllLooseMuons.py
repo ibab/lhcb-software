@@ -21,8 +21,6 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleMUONFilter
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 

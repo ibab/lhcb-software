@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLoosePions.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdLooseElectrons.py
 #  configuration file for 'Standard Loose Electrons' 
 #  @author Patrick Koppenburg 
 #  @date 2011-07-18
 # =============================================================================
 """
-Configuration file for 'Standard Loose Electrons wioth loose cuts'
+Configuration file for 'Standard Loose Electrons with loose tracking cuts'
 """
 __author__  = "Patrick Koppenburg "
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
@@ -20,21 +18,18 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import FilterDesktop
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  FilterDesktop( 'StdLooseElectrons',
-                            Inputs = ["Phys/StdAllLooseElectrons/Particles"],
-                            Code = defaultCuts() )
+algorithm = FilterDesktop( 'StdLooseElectrons',
+                           Inputs = ["Phys/StdAllLooseElectrons/Particles"],
+                           Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdLooseElectrons = algorithm 
-
 
 ## ============================================================================
 if '__main__' == __name__ :

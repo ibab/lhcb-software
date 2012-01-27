@@ -3,7 +3,7 @@
 # $Id: StdVeryLooseMuons.py,v 1.1 2009-10-08 12:37:06 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdAllVeryLooseMuons.py
-#  configuration file for 'Standard AllVery Loose Muons' 
+#  configuration file for 'Standard All Very Loose Muons' 
 #  @author Patrick Koppenburg patrick.koppenburg@cern.ch
 #  @date 2009-10-08
 # =============================================================================
@@ -21,8 +21,6 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleMUONFilter
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 

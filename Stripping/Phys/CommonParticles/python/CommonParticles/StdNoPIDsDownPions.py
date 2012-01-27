@@ -24,12 +24,14 @@ from Configurables         import NoPIDsParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownPions'          ,
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownPions'  ,
                                 DecayDescriptor = 'Pion' ,
                                 Particle = 'pion' )
 
 # configure the track selector
-selector = trackSelector ( algorithm, trackTypes = ['Downstream'], cuts = { "Chi2Cut" : [0,10] } )
+selector = trackSelector ( algorithm,
+                           trackTypes = ['Downstream'],
+                           cuts = { "Chi2Cut" : [0,10] } )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

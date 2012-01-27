@@ -8,7 +8,7 @@
 #  @date 2010-06-03
 # =============================================================================
 """
-Configuration file for 'Standard Loose  Downstream Kaons'
+Configuration file for 'Standard Loose Downstream Kaons'
 """
 __author__  = "Yasmine Amhis <yasmine.amhis@epfl.ch> "
 __version__ = ""
@@ -27,7 +27,7 @@ from CommonParticles.Utils import *
 algorithm = CombinedParticleMaker('StdLooseDownKaons',  Particle = 'kaon' )
 
 # configure the track selector
-selector = trackSelector ( algorithm ,  trackTypes = ['Downstream']) 
+selector = trackSelector ( algorithm , trackTypes = ['Downstream'] ) 
 
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Kaon' )

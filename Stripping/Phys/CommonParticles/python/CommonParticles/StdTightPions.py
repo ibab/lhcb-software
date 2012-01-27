@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightPions.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdTightPions.py
 #  configuration file for 'Standard Tight Pions' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -25,8 +23,8 @@ from Configurables       import ProtoParticleCALOFilter
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdTightPions',
-                                     Particle =  'pion'  )
+algorithm = CombinedParticleMaker ( 'StdTightPions',
+                                    Particle = 'pion' )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

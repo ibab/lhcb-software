@@ -24,8 +24,9 @@ from Configurables         import NoPIDsParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'NoBremNoPIDsTtrackElectrons'         ,
-                                DecayDescriptor = 'Electron' , Particle = 'electron'  )
+algorithm =  NoPIDsParticleMaker ( 'NoBremNoPIDsTtrackElectrons',
+                                   DecayDescriptor = 'Electron' ,
+                                   Particle = 'electron'  )
 
 algorithm.AddBremPhotonTo = [] 
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightKaons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdTightKaons.py
 #  configuration file for 'Standard Tight Kaons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -20,8 +18,6 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import ProtoParticleCALOFilter, CombinedParticleMaker
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
@@ -40,7 +36,6 @@ locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdTightKaons = algorithm 
-
 
 ## ============================================================================
 if '__main__' == __name__ :

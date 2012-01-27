@@ -3,7 +3,7 @@
 # $Id: StdVeryLooseKs.py,v 1.5 2009-05-26 13:48:13 shaines Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseVeryKs.py
-#  configuration file for 'Standard Very Loose ' 
+#  configuration file for 'Standard Very Loose Ks' 
 #  @author Susan Haines
 #  @date 2011-08-27
 # =============================================================================

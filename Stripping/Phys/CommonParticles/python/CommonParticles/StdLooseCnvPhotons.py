@@ -27,7 +27,7 @@ from GaudiKernel.SystemOfUnits import MeV
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  PhotonMakerAlg ( 'StdLooseCnvPhotons'         ,
+algorithm =  PhotonMakerAlg ( 'StdLooseCnvPhotons',
                               DecayDescriptor = 'Gamma' )
 
 # configure desktop&particle maker: 

@@ -3,7 +3,7 @@
 # $Id: StdLoosePhotons.py,v 1.2 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLoosePhotons.py
-#  configuration file for 'Standard Loose Pions' 
+#  configuration file for 'Standard Loose Photons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-01-14
 # =============================================================================
@@ -21,11 +21,8 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import PhotonMakerAlg
 from Configurables       import PhotonMaker
-
 from GaudiKernel.SystemOfUnits import MeV
-
 from CommonParticles.Utils import *
-
 
 ## create the algorithm 
 algorithm =  PhotonMakerAlg ( 'StdLoosePhotons'         ,

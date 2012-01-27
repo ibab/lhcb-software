@@ -3,7 +3,7 @@
 # $Id: StdLooseResolvedPi0.py,v 1.3 2009-04-22 14:17:39 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseResolvedPi0.py
-#  configuration file for 'Standard Loose Pions' 
+#  configuration file for 'Standard Loose Resolved Pi0s' 
 #  @author Patrick Koppenburg
 #  @date 2009-02-18
 # =============================================================================

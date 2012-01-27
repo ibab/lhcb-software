@@ -22,12 +22,11 @@ from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleMUONFilter
 
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdTightMuons' ,
-                                     Particle =  'muon'  )
+algorithm = CombinedParticleMaker ( 'StdTightMuons'   ,
+                                    Particle = 'muon' )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

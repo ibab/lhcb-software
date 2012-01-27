@@ -20,21 +20,18 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import FilterDesktop
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  FilterDesktop( 'StdLoosePions',
-                            Inputs = ["Phys/StdAllLoosePions/Particles"],
-                            Code = defaultCuts() )
+algorithm = FilterDesktop( 'StdLoosePions',
+                           Inputs = ["Phys/StdAllLoosePions/Particles"],
+                           Code = defaultCuts() )
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdLoosePions = algorithm 
-
 
 ## ============================================================================
 if '__main__' == __name__ :

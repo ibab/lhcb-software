@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Chris Jones
+ - Add new Standard Particles using cuts the ANN PID variables.
+   The cuts have been tuned to give, more or less, the same efficiency (on MC11)
+   as their Combined DLL counterparts, but with better mis-ID rates !
+ - Various minor fixes to typos in comments here and there.
+
 ! 2012-01-27 - Patrick Koppenburg
  - Added LD Ks for studies
 
@@ -18,15 +24,19 @@
 - Updated (looser) StdVeryLooseKs.py Kshort mass windows, both LL and DD.
 
 !========================= CommonParticles v8r5 2011-09-15 =========================
-! 2011-09-14 - Ulrichh Kerzel
-- Add NoBremNoPIDs*Electrons for all types: Track as electron, no PID requirement, no Bremsstrahlung correction
+! 2011-09-14 - Ulrich Kerzel
+- Add NoBremNoPIDs*Electrons for all types: Track as electron, no PID requirement, 
+  no Bremsstrahlung correction
 
 ! 2011-08-27 - Susan Haines
- - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID and WS lines.
+ - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for 
+   daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID 
+   and WS lines.
  - Added StdVeryLooseKs to StandardV0.py
 	
 ! 2011-08-26 Carla Gobel & Sandra Amato
- - Added StdTightDplus.py to be used in KKPos stripping line and included in StandardDplus.py
+ - Added StdTightDplus.py to be used in KKPos stripping line and included in 
+   StandardDplus.py
 
 ! 2011-08-25 - Greig Cowan
  - Added muon PT > 0.5*GeV cut to StdMassConstrainedJpsi
@@ -36,14 +46,16 @@
   . Added PT>500 MeV for electron to speed up. 
 
 !2011-08-19 Hamish Gordon
- - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping selection to keep the timing down
+ - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping 
+   selection to keep the timing down
 
 !========================= CommonParticles v8r4 2011-08-04 =========================
 ! 2011-08-03 - Rob Lambert
  - Add in ADOCACHI2 to all two body decays, add EOL native everywhere
 
 ! 2011-08-03 - Rob Lambert
- - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing by a lot.
+ - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing 
+   by a lot.
 
 !========================= CommonParticles v8r3 2011-07-22 =========================
 ! 2011-07-21 - Patrick Koppenburg

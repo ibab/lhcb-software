@@ -3,7 +3,7 @@
 # $Id: StdLoosePhi.py,v 1.6 2009-06-29 09:16:49 gcowan Exp $
 # =============================================================================
 ## @file  CommonParticles/StdLoosePhi2KK.py
-#  configuration file for 'Standard Loose '
+#  configuration file for 'Standard Loose Phi -> KK'
 #  @author Greig Cowan
 #  @date 2009-06-23
 # =============================================================================

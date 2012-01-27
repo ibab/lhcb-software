@@ -20,12 +20,12 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration   import *
 from Configurables         import NoPIDsParticleMaker 
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdAllNoPIDsElectrons'         ,
-                                DecayDescriptor = 'Electron' , Particle = 'electron'  )
+algorithm =  NoPIDsParticleMaker ( 'StdAllNoPIDsElectrons'      ,
+                                   DecayDescriptor = 'Electron' ,
+                                   Particle = 'electron'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

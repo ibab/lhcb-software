@@ -25,7 +25,13 @@ _locations.update ( locations )
 from CommonParticles.StdAllLooseKaons import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllLooseANNKaons import *
+_locations.update ( locations )
+
 from CommonParticles.StdLooseKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNKaons import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseDownKaons import *
@@ -34,6 +40,20 @@ _locations.update ( locations )
 from CommonParticles.StdTightKaons import *
 _locations.update ( locations )
 
+from CommonParticles.StdTightANNKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNDownKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNDownKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNUpKaons import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNUpKaons import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations

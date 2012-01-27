@@ -3,7 +3,7 @@
 # $Id: StdLooseResolvedEta.py,v 1.1 2010-01-06 11:04:12 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StdLooseResolvedEta.py
-#  configuration file for 'Standard Loose Pions' 
+#  configuration file for 'Standard Loose Resolved Etas' 
 #  @author Patrick Koppenburg
 #  @date 2009-02-18
 # =============================================================================

@@ -19,7 +19,6 @@ _locations = {}
 from CommonParticles.StdLooseResolvedEta import *
 _locations.update ( locations )
 
-
 # redefine the locations 
 locations = _locations
 

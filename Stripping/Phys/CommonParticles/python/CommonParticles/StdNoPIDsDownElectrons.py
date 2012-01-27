@@ -24,8 +24,9 @@ from Configurables         import NoPIDsParticleMaker
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownElectrons'         ,
-                                DecayDescriptor = 'Electron' , Particle = 'electron'  )
+algorithm =  NoPIDsParticleMaker ( 'StdNoPIDsDownElectrons'  ,
+                                   DecayDescriptor = 'Electron' ,
+                                   Particle = 'electron'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm , trackTypes = [ "Downstream" ]) 

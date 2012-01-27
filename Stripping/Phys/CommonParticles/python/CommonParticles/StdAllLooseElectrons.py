@@ -14,20 +14,18 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
-    'StdAllLooseElectrons' ,
+    'StdAllLooseElectrons',
     'locations'
     )
 # =============================================================================
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
-from Configurables       import BremAdder
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdAllLooseElectrons' ,
-                                     Particle =  'electron'  )
+algorithm = CombinedParticleMaker ( 'StdAllLooseElectrons' ,
+                                    Particle =  'electron'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm )
@@ -41,11 +39,6 @@ locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdAllLooseElectrons = algorithm 
-
-## temporary:
-#algorithm.addTool ( BremAdder )
-#brem = algorithm.BremAdder
-#brem.BremCor = 1.0
 
 ## ============================================================================
 if '__main__' == __name__ :

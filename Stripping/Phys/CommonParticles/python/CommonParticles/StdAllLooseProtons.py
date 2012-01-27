@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdLooseProtons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdLooseProtons.py
 #  configuration file for 'Standard Loose Protons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -21,13 +19,11 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdAllLooseProtons',
-                                     Particle =  'proton'  )
+algorithm = CombinedParticleMaker ( 'StdAllLooseProtons',
+                                    Particle =  'proton'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

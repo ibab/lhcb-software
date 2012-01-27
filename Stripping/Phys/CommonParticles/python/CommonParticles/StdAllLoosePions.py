@@ -21,13 +21,11 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdAllLoosePions'  ,
-                                     Particle =  'pion'  )
+algorithm =  CombinedParticleMaker ( 'StdAllLoosePions' ,
+                                     Particle = 'pion'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 

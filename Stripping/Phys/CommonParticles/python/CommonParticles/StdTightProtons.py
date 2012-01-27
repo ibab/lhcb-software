@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdTightProtons.py,v 1.4 2009-07-01 18:42:29 jonrob Exp $ 
-# =============================================================================
 ## @file  CommonParticles/StdTightProtons.py
 #  configuration file for 'Standard Tight Protons' 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -21,12 +19,10 @@ __all__ = (
 from Gaudi.Configuration import *
 from Configurables       import CombinedParticleMaker 
 from Configurables       import ProtoParticleCALOFilter
-
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm =  CombinedParticleMaker ( 'StdTightProtons', Particle =  'proton'  )
+algorithm =  CombinedParticleMaker ( 'StdTightProtons', Particle = 'proton'  )
 
 # configure the track selector
 selector = trackSelector ( algorithm ) 
@@ -40,7 +36,6 @@ locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
 StdTightProtons = algorithm 
-
 
 ## ============================================================================
 if '__main__' == __name__ :

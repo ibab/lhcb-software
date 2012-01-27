@@ -1,5 +1,5 @@
 """
-Configuration file for Standard Loose DiMuon, very loose for penguins
+Configuration file for Standard Loose DiMuon, very loose for penguins (and other small animals).
 """
 
 __author__ = 'Rob Lambert'

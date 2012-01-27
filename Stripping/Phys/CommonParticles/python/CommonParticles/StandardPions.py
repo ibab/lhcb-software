@@ -37,6 +37,26 @@ _locations.update ( locations )
 from CommonParticles.StdTightPions import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllLooseANNPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNDownPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNDownPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNUpPions import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNUpPions import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations

@@ -28,9 +28,29 @@ _locations.update ( locations )
 from CommonParticles.StdLooseElectrons import *
 _locations.update ( locations )
 
+from CommonParticles.StdAllLooseANNElectrons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNElectrons import *
+_locations.update ( locations )
+
 from CommonParticles.StdTightElectrons import *
 _locations.update ( locations )
 
+from CommonParticles.StdTightANNElectrons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNDownElectrons import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNDownElectrons import *
+_locations.update ( locations )
+
+from CommonParticles.StdLooseANNUpElectrons import *
+_locations.update ( locations )
+
+from CommonParticles.StdTightANNUpElectrons import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations
