@@ -36,20 +36,9 @@ Volume::Volume(LCDD& lcdd, const string& name)    {
 
 Volume::Volume(LCDD& lcdd, const string& name, const Solid& s, const Material& m)   
 {
-  m_element = new Value<TGeoVolume,Volume::Object>(name.c_str());
-  setSolid(s);
+  m_element = new Value<TGeoVolume,Volume::Object>(name.c_str(),s._ptr<TGeoShape>());
   setMaterial(m);
   lcdd.addVolume(RefElement(m_element));
-#if 0
-  // hack !!!
-  TGeoVolume* vol = first_value<TGeoVolume>(*this);
-  // debug only
-  vol->SetVisibility(kTRUE);
-  vol->SetVisDaughters(kTRUE);
-  vol->SetVisLeaves(kTRUE);
-  vol->SetVisContainers(kTRUE);
-  vol->SetTransparency(70);
-#endif
 }
 
 void Volume::setMaterial(const Material& m)  const  {
@@ -121,12 +110,12 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     vol->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
   //#if 0
-  // debug only
+  // debug only, but if removed, does not plot nicely anymore....
   vol->SetVisibility(kTRUE);
   vol->SetVisDaughters(kTRUE);
   vol->SetVisLeaves(kTRUE);
   vol->SetVisContainers(kTRUE);
-  vol->SetTransparency(70);
+  vol->SetTransparency(30);
   //#endif
   val->Attr_vis = attr;
 }

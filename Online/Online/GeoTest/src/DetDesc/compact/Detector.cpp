@@ -94,16 +94,15 @@ Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name,
     volume.setVisAttributes(attr);
   }
   else  {
+    /*
     string nam = this->name();
     TGeoVolume* vol = volume;
     vol->SetVisibility(kTRUE);
     vol->SetVisDaughters(kTRUE);
     vol->SetVisLeaves(kTRUE);
     vol->SetVisContainers(kTRUE);
-    vol->SetTransparency(70);
+    vol->SetTransparency(50);
 
-
-    /*
     string tag = node.tag();
     if ( tag == Tag_slice.str() )  // Slices turned off by default
       volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleNoDaughters));
