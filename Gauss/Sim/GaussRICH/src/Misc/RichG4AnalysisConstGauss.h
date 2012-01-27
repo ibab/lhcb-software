@@ -6,9 +6,9 @@
 static const G4double ZUpsRich1Analysis =975.0*mm; 
 static const G4double ZDnsRich1Analysis =2200.0*mm;
 static const G4double AgelZBeginAnalysis=1110.0*mm;
-static const G4double AgelZEndAnalysis=AgelZBeginAnalysis+50.0*mm;
+static const G4double AgelZEndAnalysis=AgelZBeginAnalysis+52.1*mm;
 static const G4double C4F10AllZBeginAnalysis=990.0*mm;
-static const G4double C4F10ZBeginAnalysis=AgelZEndAnalysis;
+static const G4double C4F10ZBeginAnalysis=AgelZEndAnalysis+2.0*mm;
 static const G4double C4F10ZEndAnalysis=2065.0*mm;
 static const G4double AgelXBeginAnalysis=-398.0*mm;
 static const G4double AgelXEndAnalysis=398.0*mm;
