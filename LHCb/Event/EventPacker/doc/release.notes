@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Chris Jones
+ - Add some protection to PackCaloHypo in case of invalid SmartRefs ..
+
 ! 2012-01-25 - Olivier Callot
  - New algorithms PackParticlesAndVertices and Unpack... to pack in a single
    container all particles in a tree, all vertices and all relations between them.
