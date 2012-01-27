@@ -83,7 +83,11 @@ namespace LoKi
       declareProperty 
         ( "JetID"  , 
           m_runJetID , 
-          "Append Jet ID information to the jet") ; 
+          "Append Jet ID information to the jet") ;  
+      declareProperty 
+        ( "ApplyJetID"  , 
+          m_applyJetID = false, 
+          "Apply jet ID cuts") ; 
       declareProperty("ApplyJEC"  ,  m_applyJEC = false );
       
       declareProperty("HistoPath"  , m_histo_path = "JEC"     );
@@ -126,6 +130,8 @@ namespace LoKi
     bool m_runJetID              ; // append jet ID info
     /// apply JEC
     bool m_applyJEC              ;
+    /// apply JEC
+    bool m_applyJetID              ;
     /// histograms for JEC
     std::vector<TH2D*> m_histosJEC ;
     /// histo path
@@ -213,6 +219,9 @@ StatusCode LoKi::JetMaker::analyse   ()
       // input container of "particles"
       IJetMaker::Jets jets ;
       
+      LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+      LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
+      LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
       if ( 0 == m_maker ) 
       { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
 
@@ -239,6 +248,11 @@ StatusCode LoKi::JetMaker::analyse   ()
           jet->setEndVertex(vJet.clone());
           this->relate ( jet , *i_pv );
         }
+        if (m_applyJetID && m_runJetID &&( mtf(jet)>0.8 || n90(jet)<5 || nPVInfo(jet)<4 )){
+          jets.pop_back() ;
+          delete jet ;
+          continue;
+        }
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;
         delete jet ;
@@ -260,12 +274,20 @@ StatusCode LoKi::JetMaker::analyse   ()
     
     if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
     
+    LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+    LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
+    LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     
     // save all jets
     while ( !jets.empty() ) 
     {
       LHCb::Particle* jet = jets.back() ;
       if(m_runJetID) this->appendJetIDInfo(jet);
+      if (m_applyJetID && m_runJetID && ( mtf(jet)>0.8 || n90(jet)<4 || nPVInfo(jet)<3 )){
+          jets.pop_back() ;
+          delete jet ;
+          continue;
+      }
       save ( "jets" , jet ).ignore() ;
       jets.pop_back() ;
       delete jet ;
