@@ -57,18 +57,16 @@ namespace DetDesc {
 
     struct Solid : public RefElement  {
     protected:
-      /// Assign pointrs and register solid to geometry
-      void assignSolid(LCDD& lcdd, TNamed* n, const std::string& nam, const std::string& tit);
+    void _setDimensions(double* param);
+    /// Assign pointrs and register solid to geometry
+    void _assign(LCDD& lcdd, TGeoShape* n, const std::string& nam, const std::string& tit, bool cbbox=true);
+      
 
     public:
       /// Default constructor for uninitialized object
       Solid() : RefElement() {}
       /// Constructor to be used when reading the already parsed object
       Solid(const Element& e) : RefElement(e) {}
-      /// Access to the shape pointer
-      TGeoShape& shape()  const;
-      /// Set dimensions and update bounding box
-      void setDimensions(double values[]);
     };
 
     struct Box : public Solid  {

@@ -39,7 +39,8 @@ Volume::Volume(LCDD& lcdd, const string& name, const Solid& s, const Material& m
   m_element = new Value<TGeoVolume,Volume::Object>(name.c_str());
   setSolid(s);
   setMaterial(m);
-
+  lcdd.addVolume(RefElement(m_element));
+#if 0
   // hack !!!
   TGeoVolume* vol = first_value<TGeoVolume>(*this);
   // debug only
@@ -48,15 +49,14 @@ Volume::Volume(LCDD& lcdd, const string& name, const Solid& s, const Material& m
   vol->SetVisLeaves(kTRUE);
   vol->SetVisContainers(kTRUE);
   vol->SetTransparency(70);
-  lcdd.addVolume(RefElement(m_element));
+#endif
 }
 
 void Volume::setMaterial(const Material& m)  const  {
   if ( m.isValid() )   {
-    TGeoMedium* medium = value<TGeoMedium>(m);
+    TGeoMedium* medium = m._ptr<TGeoMedium>();
     if ( medium )  {
-      TGeoVolume* vol = first_value<TGeoVolume>(*this);
-      vol->SetMedium(medium);
+      (*this)->SetMedium(medium);
       return;
     }
     throw runtime_error("Volume: Medium "+string(m.name())+" is not registered with geometry manager.");
@@ -65,17 +65,16 @@ void Volume::setMaterial(const Material& m)  const  {
 }
 
 void Volume::setSolid(const Solid& solid)  const  {
-  TGeoVolume* val = first_value<TGeoVolume>(*this);
-  val->SetShape(&solid.shape());
+  _ptr<TGeoVolume>()->SetShape(solid._ptr<TGeoShape>());
 }
 
 void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotation& rot)  const  {
   Volume vol(volume);
-  TGeoVolume* phys_vol = first_value<TGeoVolume>(vol);
-  TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
+  TGeoVolume* phys_vol = vol;
+  TGeoVolume* log_vol  = _ptr<TGeoVolume>();
   if ( phys_vol )   {
-    TGeoTranslation* t = value<TGeoTranslation>(pos);
-    TGeoRotation*    r = value<TGeoRotation>(rot);
+    TGeoTranslation* t = pos._ptr<TGeoTranslation>();
+    TGeoRotation*    r = rot._ptr<TGeoRotation>();
     TGeoCombiTrans*  c = new TGeoCombiTrans(*t,*r);
     log_vol->AddNode(phys_vol, --unique_physvol_id, c);
     return;
@@ -85,8 +84,8 @@ void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotati
 
 void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  const  {
   Volume vol(volume);
-  TGeoVolume* phys_vol = first_value<TGeoVolume>(vol);
-  TGeoVolume* log_vol  = first_value<TGeoVolume>(*this);
+  TGeoVolume* phys_vol = vol;
+  TGeoVolume* log_vol  = _ptr<TGeoVolume>();
   if ( phys_vol )   {
     TGeoMatrix* m = value<TGeoMatrix>(matrix);
     log_vol->AddNode(phys_vol, --unique_physvol_id, m);
@@ -96,23 +95,20 @@ void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  co
 }
 
 void Volume::setRegion(const Region& obj)  const   {
-  Object* val = second_value<TGeoVolume>(*this);
-  val->Attr_region = obj;
+  data<TGeoVolume,Object>()->Attr_region = obj;
 }
 
 void Volume::setLimitSet(const LimitSet& obj)  const   {
-  Object* val = second_value<TGeoVolume>(*this);
-  val->Attr_limits = obj;
+  data<TGeoVolume,Object>()->Attr_limits = obj;
 }
 
 void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
-  Object* val = second_value<TGeoVolume>(*this);
-  val->Attr_sens_det = obj;
+  data<TGeoVolume,Object>()->Attr_sens_det = obj;
 }
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
-  TGeoVolume* vol = first_value<TGeoVolume>(*this);
-  Object*     val = second_value<TGeoVolume>(*this);
+  TGeoVolume* vol = *this;
+  Object*     val = data<TGeoVolume,Object>();
   if ( attr.isValid() )  {
     VisAttr::Object* vis = second_value<TNamed>(attr);
     Color_t bright = TColor::GetColorBright(vis->color);
@@ -124,15 +120,23 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     vol->SetVisibility(vis->visible ? kTRUE : kFALSE);
     vol->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
+  //#if 0
+  // debug only
+  vol->SetVisibility(kTRUE);
+  vol->SetVisDaughters(kTRUE);
+  vol->SetVisLeaves(kTRUE);
+  vol->SetVisContainers(kTRUE);
+  vol->SetTransparency(70);
+  //#endif
   val->Attr_vis = attr;
 }
 
 Solid Volume::solid() const   {
-  return Solid(first_value<TGeoVolume>(*this)->GetShape());
+  return Solid((*this)->GetShape());
 }
 
 Material Volume::material() const   {
-  return Material(first_value<TGeoVolume>(*this)->GetMaterial());
+  return Material((*this)->GetMaterial());
 }
 
 VisAttr Volume::visAttributes() const   {
@@ -148,10 +152,6 @@ RefElement Volume::sensitiveDetector() const    {
 Region Volume::region() const   {
   Object* val = second_value<TGeoVolume>(*this);
   return val->Attr_region;
-}
-
-const TGeoVolume* Volume::volume() const  {
-  return first_value<TGeoVolume>(*this);
 }
 
 PhysVol& PhysVol::addPhysVolID(const std::string& /* name */, int /* value */) {

@@ -95,13 +95,13 @@ Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name,
   }
   else  {
     string nam = this->name();
-    //string vol = volume.name();
-    //string what = nam+":"+vol;
-    TGeoVolume* vol = (TGeoVolume*)volume.volume();
+    TGeoVolume* vol = volume;
     vol->SetVisibility(kTRUE);
     vol->SetVisDaughters(kTRUE);
     vol->SetVisLeaves(kTRUE);
     vol->SetVisContainers(kTRUE);
+    vol->SetTransparency(70);
+
 
     /*
     string tag = node.tag();

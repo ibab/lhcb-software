@@ -44,6 +44,10 @@ namespace DetDesc {
 
     template<class T> inline void deletePtr(T*& p) { if(p) delete p; p=0; }
 
+    template <typename Q, typename P> struct Value : public Q, public P  {
+      virtual ~Value() {}
+    };
+
     struct Element  {
       Element_t* m_element;
       Element(Element_t* e) : m_element(e) {                            }
@@ -52,16 +56,15 @@ namespace DetDesc {
       template <typename T> T* _ptr() const   {  return (T*)m_element;  }
       bool isValid() const                    {  return 0 != m_element; }
       bool operator!() const                  {  return 0 == m_element; }
+      template <typename T, typename Q> Q* data() const  {
+	return (Value<T,Q>*)m_element;
+      }
       template<class T> void verifyObject() const {
 	if ( dynamic_cast<T*>(ptr()) == 0 )  {
 	  bad_assignment(ptr() ? typeid(*ptr()) : typeid(void),typeid(T));
 	}
       }
       static void bad_assignment(const std::type_info& from, const std::type_info& to);
-    };
-
-    template <typename Q, typename P> struct Value : public Q, public P  {
-      virtual ~Value() {}
     };
 
     struct RefElement : public Element  {

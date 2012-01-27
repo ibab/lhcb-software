@@ -16,13 +16,13 @@ namespace DetDesc {
 
   double GearTPC::innerRadius() const {
     Subdetector gas   = getAttr(gas);
-    TGeoTube&   tube  = (TGeoTube&)gas.volume().solid().shape();
-    return tube.GetRmin();
+    TGeoTube*   tube  = gas.volume().solid()._ptr<TGeoTube>();
+    return tube->GetRmin();
   }
   double GearTPC::outerRadius() const {
     Subdetector gas   = getAttr(gas);
-    TGeoTube&   tube  = (TGeoTube&)gas.volume().solid().shape();
-    return tube.GetRmax();
+    TGeoTube*   tube  = gas.volume().solid()._ptr<TGeoTube>();
+    return tube->GetRmax();
   }
   double GearTPC::pressure() const {
     return getAttr(pressure);

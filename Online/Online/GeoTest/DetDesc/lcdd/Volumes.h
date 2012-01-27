@@ -67,7 +67,10 @@ namespace DetDesc {
       VisAttr  visAttributes() const;
       RefElement sensitiveDetector() const;
       Region region() const;
-      const TGeoVolume* volume() const;
+      /// Auto conversion to underlying ROOT object
+      operator TGeoVolume*() const     { return _ptr<TGeoVolume>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoVolume* operator->() const   { return _ptr<TGeoVolume>(); }
     };
 
     struct PhysVol : RefElement {

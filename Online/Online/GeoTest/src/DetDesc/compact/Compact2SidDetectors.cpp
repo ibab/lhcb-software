@@ -113,7 +113,6 @@ namespace DetDesc { namespace Geometry {
     cone.addZPlanes(rmin,rmax,z);
     sdet.setEnvelope(cone).setVolume(volume);
     sdet.setVisAttributes(lcdd, x_det.visStr(), volume);
-    //lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(lcdd,volume,name),lcdd.identity());
     lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(volume),lcdd.identity());
     return sdet;
   }
@@ -123,9 +122,9 @@ namespace DetDesc { namespace Geometry {
     xml_comp_t  x_tube (x_det.child(_X(tubs)));
     xml_dim_t   x_pos  (x_det.child(_X(position)));
     xml_dim_t   x_rot  (x_det.child(_X(rotation)));
-    string      name    = x_det.attr<string>(_A(name));
-    Material    mat     = lcdd.material(x_det.materialStr());
-    Volume      mother  = x_det.isInsideTrackingVolume() ? lcdd.trackingVolume() : lcdd.worldVolume();
+    string      name   = x_det.attr<string>(_A(name));
+    Material    mat    = lcdd.material(x_det.materialStr());
+    Volume      mother = x_det.isInsideTrackingVolume() ? lcdd.trackingVolume() : lcdd.worldVolume();
     Subdetector sdet   (lcdd,name,x_det.typeStr(),x_det.id());
     Tube        tub    (lcdd,name+"_tube",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
     Position    pos    (lcdd,name+"_position",x_pos.x(),x_pos.y(),x_pos.z());
@@ -135,11 +134,10 @@ namespace DetDesc { namespace Geometry {
     sdet.setVolume(vol).setEnvelope(tub);
     lcdd.add(pos).add(rot);
     sdet.setVisAttributes(lcdd, x_det.visStr(), vol);
+    //sdet.setVisAttributes(lcdd, "GreenVis", vol);
 
-    //PhysVol     physvol (lcdd,vol,name);
-    PhysVol     physvol (vol);
+    PhysVol physvol(vol);
     physvol.addPhysVolID(_A(id),x_det.id());
-    cout << "TubeSegment [" << name << "] Mother volume:" << mother.name() << endl;
     mother.addPhysVol(physvol,pos,rot);
     return sdet;
   }
@@ -671,8 +669,8 @@ namespace DetDesc { namespace Geometry {
     double posX = -sectCenterRadius  * sin(rotY);
     double posY =  sectCenterRadius  * cos(rotY);
     string nam =   sectVolume.name();
-    numsides=2;
-
+    numsides=0;
+    cout << "Placing staves is DISABLED!!!!" << endl;
     for (int module = 0; module < numsides; ++module)  {
       Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),posX,posY,0);
       //Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),0,0,0);
