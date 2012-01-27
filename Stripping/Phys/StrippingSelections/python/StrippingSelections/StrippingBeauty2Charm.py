@@ -25,6 +25,7 @@ from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
 from Beauty2Charm_Lb2XBuilder import *
+from Beauty2Charm_LTUnbiased import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -119,7 +120,8 @@ config = {
     'Lb2XicPiWSXic2PKPiBeauty2CharmLine' : 0.1,
     'Lb2XicKWSXic2PKPiBeauty2CharmLine'  : 0.1,
     'X2LcLcBeauty2CharmLine'    : 1.0,
-    'X2LcLcWSBeauty2CharmLine'  : 0.1
+    'X2LcLcWSBeauty2CharmLine'  : 0.1,
+    'B02DKLTUBBeauty2CharmLine' : 0.04
     },
     'GECNTrkMax'   : 500
     }
@@ -182,6 +184,10 @@ class Beauty2CharmConf(LineBuilder):
         lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,dst,
                            config['B2X'])
         self._makeLines(lb2x.lines,config)
+
+        # Unbiased lines
+        ltub = LTUnbiasedBuilder(d,config['B2X'])
+        self._makeLines(ltub.lines,config)
         
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'
@@ -210,6 +216,7 @@ class Beauty2CharmConf(LineBuilder):
             hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
                   "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
                   "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
+            print 'MYCHECK', name, protoLine.prescale(line,name,config)
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt)
