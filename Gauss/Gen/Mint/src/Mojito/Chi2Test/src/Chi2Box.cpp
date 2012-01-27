@@ -119,6 +119,11 @@ double Chi2Box::weightedMC2() const{
   return _weightMC_Squared;
 }
 double Chi2Box::rmsMC(int Ntotal) const{
+  bool dbThis=false;
+  if(dbThis){
+    cout << Ntotal
+	 << endl;
+  }
   return weightedMC2();
   /*
   bool dbThis=false;
