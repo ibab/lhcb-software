@@ -59,9 +59,9 @@ namespace DetDesc {
 
     struct Document  {
       Document_t* m_doc;
-      Document(Document_t* d) : m_doc(d) {}
-      operator Document_t*() const   {  return m_doc; }
-      Document_t* operator->() const {  return m_doc; }
+      Document(Document_t* d) : m_doc(d) {               }
+      operator Document_t*() const       { return m_doc; }
+      Document_t* operator->() const     { return m_doc; }
       Element_t*  createElt(const std::string& tag) const;
     };
 
