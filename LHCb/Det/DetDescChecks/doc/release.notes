@@ -5,6 +5,10 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2012-01-27 - Marco Clemencic
+ - Ensure that the event time used by LoadDDDB is the one defined in the
+   configuration of EventClockSvc (from DDDBConf.DataType).
+
 ! 2012-01-26 - Illya Shapoval
  -  Added tests 'loaddddb2012.qmt','loaddddb-sim-2012.qmt' and 'loaddddb-sim-mc11.qmt'
 

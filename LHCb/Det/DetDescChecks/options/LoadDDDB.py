@@ -22,3 +22,12 @@ ApplicationMgr().TopAlg  = [ GaudiSequencer(Members = [ LoadDDDB() ],
 
 # ---------- option to select only a subtree
 #LoadDDDB().Node = "/dd/Geometry*"
+
+# Ensure that the first event time is the one used at initialize
+# (based on the datatype).
+def bindFakeEventTime():
+    from Configurables import EventClockSvc, FakeEventTime
+    ecs = EventClockSvc()
+    ecs.addTool(FakeEventTime, "FakeEventTime")
+    ecs.FakeEventTime.StartTime = ecs.InitialTime
+appendPostConfigAction(bindFakeEventTime)
