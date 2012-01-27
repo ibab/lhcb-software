@@ -19,7 +19,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -27,7 +26,7 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputStream",        m_inputStream    = "/Event" );
+  declareProperty( "InputStream",        m_inputStream  = "/Event" );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput = false     );
   declareProperty( "ForceReading",       m_forceReading = false     );
 }
@@ -50,7 +49,7 @@ StatusCode PackParticlesAndVertices::execute() {
 
   selectContainers( root, names, "/Particles" );
   LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
-  put( pparts, m_inputStream + "/PackedParticles" );
+  put( pparts, m_inputStream + "/pPhys/Particles" );
   
   
   if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Particle containers :" << endmsg;
@@ -65,7 +64,7 @@ StatusCode PackParticlesAndVertices::execute() {
   names.clear();
   selectContainers( root, names, "/decayVertices" );
   LHCb::PackedVertices* pverts = new LHCb::PackedVertices();
-  put( pverts, m_inputStream + "/PackedVertices" );
+  put( pverts, m_inputStream + "/pPhys/Vertices" );
 
   if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Vertex containers :" << endmsg;
   for ( itS = names.begin(); names.end() != itS; ++itS ) {
@@ -79,7 +78,7 @@ StatusCode PackParticlesAndVertices::execute() {
   names.clear();
   selectContainers( root, names, "/Particle2VertexRelations" );
   LHCb::PackedRelations* prels = new LHCb::PackedRelations();
-  put( prels, m_inputStream + "/PackedRelations" );
+  put( prels, m_inputStream + "/pPhys/Relations" );
 
   if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Relation containers :" << endmsg;
   for ( itS = names.begin(); names.end() != itS; ++itS ) {
@@ -98,7 +97,7 @@ StatusCode PackParticlesAndVertices::execute() {
 // Select iteratively the containers ending with 'Prefix'
 //=========================================================================
 void PackParticlesAndVertices::selectContainers ( DataObject* obj, std::vector<std::string>& names, 
-                                          std::string postFix, bool forceRead ) {
+                                                  std::string postFix, bool forceRead ) {
   SmartIF<IDataManagerSvc> mgr( eventSvc() );
   typedef std::vector<IRegistry*> Leaves;
   unsigned int postSize = postFix.size();
@@ -276,7 +275,7 @@ void PackParticlesAndVertices::packAVertexContainer ( LHCb::Vertices* verts,
 //  Pack a container of vertices in the PackedVertices object
 //=========================================================================
 void PackParticlesAndVertices::packARelationContainer ( RELATION* rels, 
-                                                LHCb::PackedRelations& prels ) {
+                                                        LHCb::PackedRelations& prels ) {
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();

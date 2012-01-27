@@ -19,7 +19,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PackDecReport )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -30,7 +29,8 @@ PackDecReport::PackDecReport( const std::string& name,
   declareProperty( "InputName" ,         m_inputName    = "Strip/Phys/DecReports" );
   declareProperty( "OutputName",         m_outputName   = LHCb::PackedDecReportLocation::Default );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput = false     );
-  declareProperty( "Filter",             m_filter       = true  );
+  declareProperty( "Filter",             m_filter       = true      );
+  declareProperty( "DeleteInput",        m_deleteInput  = false     );
 }
 //=============================================================================
 // Destructor
@@ -81,9 +81,19 @@ StatusCode PackDecReport::execute() {
               << " name " << (*itR).first << endmsg;
     }
   }
+
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << "from " << reports->size() << " reports, stored " << out->reports().size() << " entries." << endmsg;
   }
+
+  // If requested, remove the input data from the TES and delete
+  if ( m_deleteInput )
+  {
+    evtSvc()->unregisterObject( reports );
+    delete reports; 
+    reports = NULL;
+  }
+
   return StatusCode::SUCCESS;
 }
 

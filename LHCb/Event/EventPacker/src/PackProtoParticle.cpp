@@ -29,6 +29,7 @@ PackProtoParticle::PackProtoParticle( const std::string& name,
   declareProperty( "InputName"  , m_inputName  = LHCb::ProtoParticleLocation::Charged );
   declareProperty( "OutputName" , m_outputName = LHCb::PackedProtoParticleLocation::Charged ); 
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
 //=============================================================================
 // Destructor
@@ -85,7 +86,8 @@ StatusCode PackProtoParticle::execute() {
     //== Store the CaloHypos
     newPart.firstHypo = out->refs().size();
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = part->calo().begin();
-          part->calo().end() != itO; ++itO ) {
+          part->calo().end() != itO; ++itO )
+    {
       int myRef = pack.reference( out, (*itO)->parent(), (*itO)->key() );
       out->refs().push_back( myRef );
     }
@@ -94,7 +96,8 @@ StatusCode PackProtoParticle::execute() {
     //== Handles the ExtraInfo
     newPart.firstExtra = out->extras().size();
     for ( GaudiUtils::VectorMap<int,double>::iterator itE = part->extraInfo().begin();
-          part->extraInfo().end() != itE; ++itE ) {
+          part->extraInfo().end() != itE; ++itE ) 
+    {
       out->extras().push_back( std::pair<int,int>((*itE).first, pack.fltPacked((*itE).second)) );
     }
     newPart.lastExtra = out->extras().size();
@@ -104,9 +107,19 @@ StatusCode PackProtoParticle::execute() {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Created " << out->protos().size() << " PackedProtoParticles at '" 
             << m_outputName << "'" << endmsg;
-  
-  // Clear the registry address of the unpacked container, to prevent reloading
-  parts->registry()->setAddress( 0 );
+
+  // If requested, remove the input data from the TES and delete
+  if ( m_deleteInput )
+  {
+    evtSvc()->unregisterObject( parts );
+    delete parts; 
+    parts = NULL;
+  }
+  else
+  { 
+    // Clear the registry address of the unpacked container, to prevent reloading
+    parts->registry()->setAddress( 0 );
+  }
 
   return StatusCode::SUCCESS;
 }
