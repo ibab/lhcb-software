@@ -316,15 +316,21 @@ void Velo::VeloClusterMonitor::fillHighMultiplicity(unsigned int nClustersDefaul
   }
   else {
     // Check if there was a processing error
-    LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ); 
-    if( ( procStat != 0 ) && procStat->aborted() ) {
-      // Processing was indeed aborted. Decode raw banks
-      m_hNClustersHM->fill(getNClustersFromRaw());
-    }
+    if (exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) ) { 
+      LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );  
+      if( ( procStat != 0 ) && procStat->aborted() ) { 
+        // Processing was indeed aborted. Decode raw banks
+        m_hNClustersHM->fill(getNClustersFromRaw());
+      }   
+      else {
+        // Event was failed because of something else
+        m_hNClustersHM->fill(0);
+      }   
+    }   
     else {
       // Just an ordinary event with 0 clusters
       m_hNClustersHM->fill(0);
-    }
+    }   
   }
 }
 

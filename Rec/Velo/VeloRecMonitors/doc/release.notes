@@ -8,6 +8,7 @@
  - Added new plot for "high multiplicity, # clusters", with logic to get 
    cluster multiplicity from raw event
  - Increased upper bin limit on the default "# VELO clusters" plot to 6000
+ - fixed high-multiplicity code
 
 ! 2012-01-20 - Marius Bjoernstad
  - Removed the "# VELO clusters 2" histogram. It has been superseded by the 
