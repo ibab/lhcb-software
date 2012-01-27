@@ -42,6 +42,21 @@ DECLARE_ALGORITHM_FACTORY( TrackToDST )
     ("Muon",State::Muon)
     ("V0Vertex",State::V0Vertex);
 
+  // CRJ : Orignal list
+//   m_veloStrings = list_of("ClosestToBeam");
+//   m_longStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich1")("BegRich2")("V0Vertex");
+//   m_tStrings = list_of("FirstMeasurement")( "BegRich2");
+//   m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2")("V0Vertex");
+//   m_upstreamStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich1");
+//   m_muonStrings     = list_of("ClosestToBeam")("BegRich1")("BegRich2")("Muon");
+
+  // (Slightly) reduced list
+  m_veloStrings = list_of("ClosestToBeam");
+  m_longStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich2")("V0Vertex");
+  m_tStrings    = list_of("FirstMeasurement")( "BegRich2");
+  m_downstreamStrings = list_of("FirstMeasurement")("BegRich2")("V0Vertex");
+  m_upstreamStrings   = list_of("ClosestToBeam")("FirstMeasurement");
+  m_muonStrings       = list_of("FirstMeasurement");
 
   declareProperty("veloStates", m_veloStrings);
   declareProperty("longStates", m_longStrings);
@@ -49,13 +64,6 @@ DECLARE_ALGORITHM_FACTORY( TrackToDST )
   declareProperty("downstreamStates", m_downstreamStrings);
   declareProperty("upstreamStates", m_upstreamStrings);
   declareProperty("muonStates", m_muonStrings);
-
-  m_veloStrings = list_of("ClosestToBeam");
-  m_longStrings =  list_of("ClosestToBeam")("FirstMeasurement")("BegRich1")("BegRich2")("V0Vertex");
-  m_tStrings = list_of("FirstMeasurement")( "BegRich2");
-  m_downstreamStrings = list_of("BegRich1")("FirstMeasurement")("BegRich2")("V0Vertex");
-  m_upstreamStrings = list_of("ClosestToBeam")("FirstMeasurement")("BegRich1");
-  m_muonStrings     = list_of("ClosestToBeam")("BegRich1")("BegRich2")("Muon");
 
 }
 
@@ -182,13 +190,16 @@ void TrackToDST::stringToLoc(const Strings& sCont, SLocations& loc) const
 {
   loc.reserve(sCont.size());
 
-  Strings::const_iterator iterS = sCont.begin();
-  for (; iterS != sCont.end(); ++iterS){
+  for ( Strings::const_iterator iterS = sCont.begin(); 
+        iterS != sCont.end(); ++iterS )
+  {
     StateMap::const_iterator mIter = m_theMap.find(*iterS);
-    if (mIter != m_theMap.end()){
+    if ( mIter != m_theMap.end() )
+    {
       loc.push_back(mIter->second);
     }
-    else {
+    else
+    {
       error() << "attempt to convert unknown state" << endmsg;
     }
   } // iter

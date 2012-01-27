@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Chris Jones
+ - Update the default list of track states to keep in TrackToDST
+
 ! 2012-01-23 - Chris Jones
  - Some improvements to TrackToDST
   + Fully support stripping of Muon Tracks
