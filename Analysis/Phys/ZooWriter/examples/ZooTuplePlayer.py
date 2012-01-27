@@ -10,7 +10,6 @@ stripping utility
 
 @author Manuel Schiller <manuel.schiller@nikhef.nl>
 @date 2011-09-27
-
 """
 
 import ZooPy
@@ -42,6 +41,122 @@ class ZooTuplePlayer:
 	self.ncand = 0
 	self.nacceptcand = 0
 	self.nacceptevt = 0
+	self.nbytes = 0
+	# activate the read-ahead cache of the tree (64 M)
+	self.tree.SetCacheSize(64 << 20)
+	self.tree.AddBranchToCache('*')
+	# limit amount of in-core memory used by tree (128 M)
+	self.tree.SetMaxVirtualSize(128 << 20)
+	# set default compression level and algorithm
+	if ROOT.gROOT.GetVersion() >= '5.30':
+	    # from version 5.30 onwards, we have LZMA compression available;
+	    # is compresses better, but needs more time
+	    # fortunately, the fast setting of LZMA is comparable in speed to
+	    # what was available in old ROOT versions at the best setting, but
+	    # results in smaller files
+	    self.compressionLevel = 1
+	    self.compressionAlg = ROOT.kLZMA
+	else:
+	    self.compressionLevel = 9
+	    self.compressionAlg = ROOT.kZLIB
+	# default basket size
+	self.basketsize = 1 << 16
+
+    def _runOverZoo(self, collection, cuts, maxevts, startevt,
+	    candaction = None, evtaction = None,
+	    candalwaysaction = None, evtalwaysaction = None):
+	"""
+	implements runOverZooP/runOverZooMCP
+
+	parameters and return values are like runOverZooP, except that
+	collection may be None, in which case it runs over ZooMCPs instead of
+	taking the specified collection of ZooPs
+	"""
+	# prepare needed branches
+	tree = self.tree
+	zooev = ROOT.ZooEv()
+	tree.SetBranchAddress("Event", ROOT.AddressOf(zooev))
+	if None != collection:
+	    zoops = ROOT.ZooObjRefArray(ROOT.ZooP)()
+	    tree.SetBranchAddress(collection, ROOT.AddressOf(zoops))
+	tree.SetCacheLearnEntries(128)
+	# zero counters
+	nevt = 0
+	ncand = 0
+	nacceptcand = 0
+	nacceptevt = 0
+	nbytes = 0
+	self.nevt = nevt
+	self.ncand = ncand
+	self.nacceptcand = nacceptcand
+	self.nacceptevt = nacceptevt
+	self.nbytes = nbytes
+	# prepare to loop over events in Zoo tuple
+	nevents = tree.GetEntries()
+	if startevt >= nevents:
+	    print '_runOverZooP: no events left!'
+	    return None
+	if maxevts > 0 and startevt + maxevts < nevents:
+	    nevents = startevt + maxevts
+	# prepare the per-event/per-candidate action(s) so we do not have to
+	# check for None in the loop
+	nullaction = lambda x, y, z = None: None
+	if None == candaction: candaction = nullaction
+	if None == candalwaysaction: candalwaysaction = nullaction
+	if None == evtaction: evtaction = nullaction
+	if None == evtalwaysaction: evtalwaysaction = nullaction
+	# body of loop over candidates in collection
+	def candloopbody(zp, zooev):
+	    candalwaysaction(self, zp, zooev)
+	    # does candidate pass cuts
+	    for c in cuts:
+		if not c(zp, zooev): return 0
+	    # perform per candidate action
+	    candaction(self, zp, zooev)
+	    return 1
+	# loop over events
+	for i in xrange(startevt, nevents):
+	    # read next event
+	    tree.LoadTree(i)
+	    read = tree.GetEntry(i)
+	    if read <= 0:
+		print '_runOverZoo: trouble reading entry %d from tree, aborting!' % i
+		break
+	    nbytes += read
+	    # prepare multiplexing for ZooP/ZooMCP case - for the latter, we
+	    # need to get the list of MCPs from zooev in every new event
+	    if None == collection:
+		zoops = zooev.GetMCP()
+	    if 0 == (i - startevt) & 0x3ff:
+		print '\r\t% 9d/% 9d events read (%9.3f GBytes uncompressed)' % \
+			( nevt, nevents, nbytes / (0. + (1 << 30)) ),
+		sys.stdout.flush()
+	    # execute loop over candidates and check for accepted ones
+	    ncand += zoops.size()
+	    nacc = sum(candloopbody(zoops[j], zooev)
+		    for j in xrange(0, zoops.size()))
+	    acceptevt = 0 < nacc
+	    nacceptcand += nacc
+	    nevt += 1
+	    evtalwaysaction(self, zooev)
+	    # if at least one candidate in the event was accepted, perform the
+	    # per-event action
+	    if acceptevt:
+		nacceptevt += 1
+		evtaction(self, zooev)
+	# free branches
+	if None != collection:
+	    tree.SetBranchAddress(collection, ROOT.MakeNullPointer())
+	tree.SetBranchAddress("Event", ROOT.MakeNullPointer())
+	self.nevt = nevt
+	self.ncand = ncand
+	self.nacceptcand = nacceptcand
+	self.nacceptevt = nacceptevt
+	self.nbytes = nbytes
+	print '\r\t% 9d/% 9d events read (%9.3f GBytes uncompressed)' % \
+		( nevt, nevents, nbytes / (0. + (1 << 30)) )
+	sys.stdout.flush()
+	return nevt
 
     def runOverZooP(self, collection, cuts, maxevts, startevt,
 	    candaction = None, evtaction = None,
@@ -87,70 +202,11 @@ class ZooTuplePlayer:
 	DrawZooP method, see the documentation there to get an idea of how
 	this is supposed to work.
 	"""
-	zoops = ROOT.ZooObjRefArray(ROOT.ZooP)()
-	zooev = ROOT.ZooEv()
-	self.tree.SetBranchAddress(collection, ROOT.AddressOf(zoops))
-	self.tree.SetBranchAddress("Event", ROOT.AddressOf(zooev))
-	self.nevt = 0
-	self.ncand = 0
-	self.nacceptcand = 0
-	self.nacceptevt = 0
-	# prepare to loop over events in Zoo tuple
-	nevents = self.tree.GetEntries()
-	if startevt >= nevents:
-	    print 'runOverZooP: no events left!'
-	    return None
-	if maxevts > 0 and startevt + maxevts < nevents:
-	    nevents = startevt + maxevts
-	self.tree.SetCacheLearnEntries(1000)
-	nbytes = 0
-	for i in range(startevt, nevents):
-	    # read next event
-	    self.tree.LoadTree(i)
-	    nbytes += self.tree.GetEntry(i)
-	    acceptevt = False
-	    # loop over candidates in collection
-	    for j in range(0, zoops.size()):
-		zp = zoops[j]
-		self.ncand = self.ncand + 1
-		if None != candalwaysaction:
-		    candalwaysaction(self, zp, zev)
-		# work out if the candidate satisfies the cuts
-		accept = True
-		for cut in cuts:
-		    if not cut(zp, zooev):
-			accept = False
-			break
-		if not accept:
-		    continue
-		# candidate accepted, event accepted
-		acceptevt = True
-		self.nacceptcand = self.nacceptcand + 1
-		# perform per candidate action
-		if candaction != None:
-		    candaction(self, zp, zooev)
-	    if (i - startevt) % 1024 == 0:
-		print ("\r% 9d/% 9d events read (%9.3f GBytes)" % \
-			tuple([ (i - startevt), nevents, nbytes / 1024. / 1024. / 1024. ]) ),
-		sys.stdout.flush()
-	    self.nevt = self.nevt + 1
-	    if None != evtalwaysaction:
-		evtalwaysaction(self, zooev)
-	    # if at least one candidate in the event was accepted, perform the
-	    # per-event action
-	    if acceptevt:
-		self.nacceptevt = self.nacceptevt + 1
-		if None != evtaction:
-		    evtaction(self, zooev)
-	# free branches
-	self.tree.SetBranchAddress(collection, ROOT.MakeNullPointer())
-	self.tree.SetBranchAddress("Event", ROOT.MakeNullPointer())
-	print ("\r% 9d/% 9d events read (%9.3f GBytes)" % \
-		tuple([ nevents, nevents, nbytes / 1024. / 1024. / 1024. ]) )
-	return nevents
+	return self._runOverZoo(collection, cuts, maxevts, startevt,
+		candaction, evtaction, candalwaysaction, evtalwaysaction)
 
     def runOverZooMCP(self, cuts, maxevts, startevt,
-	    mcpaction = None, evtaction = None,
+	    candaction = None, evtaction = None,
 	    candalwaysaction = None, evtalwaysaction = None):
 	"""
 	runOverZooP runs over all MC particles of a ZooTuple, applying the
@@ -165,7 +221,7 @@ class ZooTuplePlayer:
     			evaluate to True
     	maxevents       maximum number of events to process
     	startevt	event from which to start plotting
-	mcpaction	function or lambda expression to execute in case of an
+	candaction	function or lambda expression to execute in case of an
 			accepted MC particle, or None if no action is to be
 			executed for an accepted MC particle
 			(default: None)
@@ -192,85 +248,41 @@ class ZooTuplePlayer:
 	DrawZooP method, see the documentation there to get an idea of how
 	this is supposed to work.
 	"""
-	# initialise branches
-	zooev = ROOT.ZooEv()
-	self.tree.SetBranchAddress("Event", ROOT.AddressOf(zooev))
-	# prepare to loop over events in Zoo tuple
-	self.nevt = 0
-	self.ncand = 0
-	self.nacceptcand = 0
-	self.nacceptevt = 0
-	nevents = self.tree.GetEntries()
-	if startevt >= nevents:
-	    print 'runOverZooMCP: no events left!'
-	    return None
-	if maxevts > 0 and startevt + maxevts < nevents:
-	    nevents = startevt + maxevts
-	self.tree.SetCacheLearnEntries(1000)
-	nbytes = 0
-	for i in range(startevt, nevents):
-	    # read next event
-	    self.tree.LoadTree(i)
-	    nbytes += self.tree.GetEntry(i)
-	    # loop over list of ZooMCPs
-	    zoomcps = zooev.GetMCP()
-	    acceptevt = False
-	    for j in range(0, zoomcps.size()):
-		zmcp = zoomcps[j]
-		self.ncand = self.ncand + 1
-		if None != candalwaysaction:
-		    candalwaysaction(self, zp, zev)
-		# work out if the candidate satisfies the cuts
-		accept = True
-                for cut in cuts:
-                    if not cut(zmcp, zooev):
-                        accept = False
-                        break
-                if not accept:
-                    continue
-		# MC particle accepted
-		acceptevt = True
-		self.nacceptcand = self.nacceptcand + 1
-		if None != mcpaction:
-		    mcpaction(self, zmcp, zooev)
-	    if (i - startevt) % 1024 == 0:
-		print ("\r% 9d/% 9d events read (%9.3f GBytes)" % \
-			tuple([ (i - startevt), nevents, nbytes / 1024. / 1024. / 1024. ]) ),
-		sys.stdout.flush()
-	    self.nevt = self.nevt + 1
-	    if None != evtalwaysaction:
-		evtalwaysaction(self, zooev)
-	    if acceptevt:
-		self.nacceptevt = self.nacceptevt + 1
-		if None != evtaction:
-		    evtaction(self, zooev)
-	print ("\r% 9d/% 9d events read (%9.3f GBytes)" % \
-		tuple([ nevents, nevents, nbytes / 1024. / 1024. / 1024. ]) )
-        # free branches
-        self.tree.SetBranchAddress("Event", ROOT.MakeNullPointer())
-	return nevents
+	return self._runOverZoo(None, cuts, maxevts, startevt,
+		candaction, evtaction, candalwaysaction, evtalwaysaction)
 
-    def __allocHisto(self, ndim, pfx, collection, title):
+    def _allocHisto(self, ndim, pfx, collection, title):
 	"""
 	allocate histogram and do sanity checks for DrawZooP/DrawZooMCP
 	"""
 	if ndim < 1 or ndim > 3:
-	    print '__allocHisto: plots have to have between one and three dimensions!'
+	    print '_allocHisto: plots have to have between one and three dimensions!'
 	    return None
 	# book histogram
 	if None != self.histo:
 	    self.histo = None
 	if "" != collection:
-	    collection = "_" + collection
+	    collection = '_'.join(collection)
+	pfx.join(collection)
 	if 1 == ndim:
 	    self.histo = \
-		    ROOT.TH1D(pfx + collection, title, 100, 0, 0)
+		    ROOT.TH1D(pfx, title, 100, 0, 0)
 	if 2 == ndim:
 	    self.histo = \
-		    ROOT.TH2D(pfx + collection, title, 100, 0, 0, 100, 0, 0)
+		    ROOT.TH2D(pfx, title, 100, 0, 0, 100, 0, 0)
 	if 3 == ndim:
 	    self.histo = \
-		    ROOT.TH3D(pfx + collection, title, 100, 0, 0, 100, 0, 0, 100, 0, 0)
+		    ROOT.TH3D(pfx, title, 100, 0, 0, 100, 0, 0, 100, 0, 0)
+
+    def _printStats(self, pfx):
+	"""
+	print some statistics about the last run (# events / #candidates
+	accepted)
+	"""
+	print '%s: cuts selected % 9d out of %9d events (%6.2f%% efficiency)' % \
+		( pfx, self.nacceptevt, self.nevt, 100. * self.nacceptevt / self.nevt )
+	print '%s: cuts selected % 9d out of %9d candidates (%6.2f%% efficiency)' % \
+		( pfx, self.nacceptcand, self.ncand, 100. * self.nacceptcand / self.ncand )
 
     def DrawZooP(self, collection, title, variables = [], cuts = [],
 	    weight = lambda zp, zev: 1.0, maxevts = -1, startevent = 0,
@@ -326,25 +338,23 @@ class ZooTuplePlayer:
 	for quick experiments, though.
         """
 	# check dimensionality of plot - is it something we can handle
-	ndim =  len(variables)
-	self.__allocHisto(ndim, 'DrawZooP', collection, title)
+	self._allocHisto(len(variables), 'DrawZooP', collection, title)
 	# append weight to variable array
 	variables.append(weight)
 	# use the runOverZooP method to do all the tedious cut evaluation work
 	# for us, passing a per-candidate action which fills the histogram
 	# with the required variables for an accepted candidate
 	retVal = self.runOverZooP(collection, cuts, maxevts, startevent,
-		lambda zootupleplayer, zp, zev:
-			self.histo.Fill(*[ f(zp, zev) for f in variables ]))
+		lambda ztp, zp, zev:
+			ztp.histo.Fill(*(f(zp, zev) for f in variables)))
 	if None == retVal:
 	    return None
-	## initialise branche	# draw histogram
+	self._printStats('DrawZooP')
+	# draw histogram
 	self.histo.Draw(drawopts)
 	# return histogram
 	return self.histo
 
-    # FIXME: it should be possible to combine much of StripByZooP and
-    # StripByZooMCP to avoid code duplication
     def DrawZooMCP(self, title, variables = [], cuts = [], 
 	    weight = lambda zp, zev: 1.0, maxevts = -1, startevent = 0,
 	    drawopts = ''):
@@ -398,41 +408,43 @@ class ZooTuplePlayer:
 	for quick experiments, though.
         """
 	# check dimensionality of plot - is it something we can handle
-	ndim =  len(variables)
-	self.__allocHisto(ndim, 'DrawZooMCP', '', title)
+	self._allocHisto(len(variables), 'DrawZooMCP', '', title)
 	# append weight to variable array
 	variables.append(weight)
 	# use the runOverZooMCP method to do all the tedious cut evaluation
 	# work for us, passing a per-MC particle action which fills the
 	# histogram with the required variables for an accepted MC particle
 	retVal = self.runOverZooMCP(cuts, maxevts, startevent,
-		lambda zootupleplayer, zp, zev:
-			self.histo.Fill(*[ f(zp, zev) for f in variables ]))
+		lambda ztp, zp, zev:
+			ztp.histo.Fill(*(f(zp, zev) for f in variables)))
 	if None == retVal:
 	    return None
+	self._printStats('DrawZooMCP')
         # draw histogram
         self.histo.Draw(drawopts)
         # return histogram
         return self.histo
 
-    def __getPerJobTree(self):
+    def _getPerJobTree(self):
 	"""
 	return the per-job tree associated with the opened Zoo tuple
 	"""
-	print '__getPerJobTree: getting per-job tree for current set of Zoo tuples'
+	print '_getPerJobTree: getting per-job tree for current set of Zoo tuples'
+	perjobtreename = '%s%s' % (self.tree.GetName(), '_Shrubbery')
 	if self.tree.Class().GetName() == 'TChain':
 	    # if self.tree is a chain, we need to construct the equivalent
 	    # chain for the per-job tree
-	    perjobtree = ROOT.TChain(self.tree.GetName() + '_Shrubbery')
-	    for tmp in self.tree.GetListOfFiles():
-	        perjobtree.AddFile(tmp.GetTitle())
+	    perjobtree = ROOT.TChain(perjobtreename)
+	    reduce(lambda x, y: perjobtree.AddFile(y),
+		    map(lambda x: x.GetTitle(), self.tree.GetListOfFiles()),
+		    [])
 	else:
 	    # self.tree is a TTree, we can just ask self.tree for the per-job
 	    # tree
-	    perjobtree = self.tree.GetFriend(self.tree.GetName() + '_Shrubbery')
+	    perjobtree = self.tree.GetFriend(perjobtreename)
 	return perjobtree
     
-    def __copyPerJobTree(self, outfile, perjobtree):
+    def _copyPerJobTree(self, outfile, perjobtree):
 	"""
 	copy the per job tree of a Zoo tuple from the opened Zoo tuple to the
 	given outfile
@@ -442,25 +454,25 @@ class ZooTuplePlayer:
 	# set up tree structure for per job info tree
 	strippedperjobtree = perjobtree.CloneTree(0)
 	strippedperjobtree.SetDirectory(outfile)
-	strippedperjobtree.SetBasketSize('*', 1 << 16)
+	strippedperjobtree.SetBasketSize('*', self.basketsize)
 	strippedperjobtree.SetAutoSave(1 << 24)
 	# pre-copy the per job tree (we need all of it since it'll become
 	# too hard to figure out how this goes together with the main Zoo tree
 	# otherwise - fortunately, the per-job tree is small)
 	nentriesperjob = perjobtree.GetEntries()
-	for i in range(0, nentriesperjob):
+	for i in xrange(0, nentriesperjob):
 	    perjobtree.LoadTree(i)
 	    perjobtree.GetEntry(i)
 	    strippedperjobtree.Fill()
-	    if i % 16 == 0:
-		print '\r__copyPerJobTree: copying per job tree entry % 4d/% 4d' % \
-			tuple([ i, nentriesperjob ]),
+	    if 0 == i & 0xf:
+		print '\r_copyPerJobTree: copying per job tree entry % 4d/% 4d' % \
+			( i, nentriesperjob ),
 		sys.stdout.flush()
-	print '\r__copyPerJobTree: copying per job tree entry % 4d/% 4d' % \
-		tuple([ nentriesperjob, nentriesperjob ])
+	print '\r_copyPerJobTree: copying per job tree entry % 4d/% 4d' % \
+		( nentriesperjob, nentriesperjob )
 	return strippedperjobtree
 
-    def __stripZoo(self, outfilename, maxevts, startevent, strippingaction):
+    def _stripZoo(self, outfilename, maxevts, startevent, strippingaction):
 	"""
 	do the actual stripping:
 	    - getting per-job tree/chain
@@ -470,56 +482,62 @@ class ZooTuplePlayer:
 
 	returns the number of accepted events on success, None on failure
 	"""
-	print '__stripZoo: Zoo tree at ' + str(self.tree)
-	perjobtree = self.__getPerJobTree()
-	print '__stripZoo: per-job tree at ' + str(perjobtree)
-	print '__stripZoo: opening destination file ' + outfilename
+	print '_stripZoo: Zoo tree at %s' % str(self.tree)
+	perjobtree = self._getPerJobTree()
+	print '_stripZoo: per-job tree at %s' % str(perjobtree)
+	print '_stripZoo: opening destination file %s' % outfilename
 	# open ROOT file for writing
-	outfile = ROOT.TFile(outfilename, 'RECREATE', '', 9)
+	if ROOT.gROOT.GetVersion() >= "5.30":
+	    outfile = ROOT.TFile(outfilename, 'RECREATE', '',
+		    ROOT.CompressionSettings(
+			self.compressionAlg, self.compressionLevel))
+        else:
+	    outfile = ROOT.TFile(outfilename, 'RECREATE', '', self.compressionLevel)
 	if outfile.IsZombie():
-	    print '__stripZoo(): unable to open output file ' + outfilename
+	    print '_stripZoo(): unable to open output file %s' % outfilename
 	    return None
-	print '__stripZoo: cloning tree structure'
+	print '_stripZoo: cloning tree structure'
 	# set up tree structure for Zoo tree
 	strippedtree = self.tree.CloneTree(0)
 	strippedtree.SetDirectory(outfile)
-	strippedtree.SetBasketSize('*', 1 << 16)
+	strippedtree.SetBasketSize('*', self.basketsize)
 	strippedtree.SetAutoSave(1 << 24)
 	# copy the per-job tree
-	strippedperjobtree = self.__copyPerJobTree(outfile, perjobtree)
-	strippedtree.AddFriend(strippedperjobtree)
-	print '__stripZoo: looping over events to copy accepted events:'
+	strippedperjobtree = self._copyPerJobTree(outfile, perjobtree)
+	print '_stripZoo: looping over events to copy accepted events:'
 	# we need a little helper function for the per-event tree(s)
 	# use runOverZooP to do the actual work
 	def writeAcceptedEvent(ztp, zev):
 	    strippedtree.Fill()
 	    if (ztp.nacceptevt == 4096):
-		strippedtree.OptimizeBaskets(1 << 16)
+		strippedtree.OptimizeBaskets(self.basketsize)
+		# do some magic: modify writeAcceptedEvent after we optimized
+		# baskets to get rid of the if statement
+		self._stripZoo.writeAcceptedEvent = lambda : strippedtree.Fill()
 	# do the actual work
 	retVal = strippingaction(writeAcceptedEvent)
 	if None == retVal:
-	    print '__stripZoo: reading/writing events failed for some reason!'
-	    print '__stripZoo: attempting to save what we have so far.'
+	    print '_stripZoo: reading/writing events failed for some reason!'
+	    print '_stripZoo: attempting to save what we have so far.'
 	    strippedperjobtree.Write()
 	    strippedtree.Write()
-	    print '__stripZoo: attempting to close destination file ' + outfilename
+	    print '_stripZoo: attempting to close destination file %s' % outfilename
 	    outfile.Close()
 	    return retVal
 	# only write trees if we have selected events
 	if 0 < self.nacceptevt:
 	    # Optimize baskets before writing
 	    if self.nacceptevt < 4096:
-		strippedtree.OptimizeBaskets(1 << 16)
-	print '__stripZoo: writing trees to destination file ' + outfilename
+		strippedtree.OptimizeBaskets(self.basketsize)
+	print '_stripZoo: writing trees to destination file %s' % outfilename
 	strippedperjobtree.Write()
 	strippedtree.Write()
-	print '__stripZoo: closing destination file ' + outfilename
+	strippedperjobtree.Print()
+	strippedtree.Print()
+	print '_stripZoo: closing destination file %s' % outfilename
 	outfile.Close()
-	print '__stripZoo: all done'
-	print '__stripZoo: cuts selected % 9d out of %9d events (%6.2f%% efficiency)' % \
-		tuple([ self.nacceptevt, retVal, 100. * self.nacceptevt / retVal ])
-	print '__stripZoo: cuts selected % 9d out of %9d candidates (%6.2f%% efficiency)' % \
-		tuple([ self.nacceptcand, self.ncand, 100. * self.nacceptcand / self.ncand ])
+	print '_stripZoo: all done'
+	self._printStats('_stripZoo')
 	return self.nacceptevt
 
     def StripByZooP(self, outfilename, collection, cuts = [],
@@ -545,15 +563,13 @@ class ZooTuplePlayer:
         StripByZooP returns the number of events written to the output file on
 	success, None on failure.
 	"""
-	return self.__stripZoo(outfilename, maxevts, startevent,
+	return self._stripZoo(outfilename, maxevts, startevent,
 		lambda evtact: self.runOverZooP(collection, cuts, maxevts, startevent,
 		    # nothing to do per candidate if it passes the cuts
 		    None,
 		    # fill events which pass cuts into the stripped Zoo tree
 		    evtact))
 
-    # FIXME: it should be possible to combine much of StripByZooP and
-    # StripByZooMCP to avoid code duplication
     def StripByZooMCP(self, outfilename, cuts = [],
 	    maxevts = -1, startevent = 0):
 	"""
@@ -575,7 +591,7 @@ class ZooTuplePlayer:
 	StripByZooMCP returns the number of events written to the output file
 	on success, None on failure.
 	"""
-	return self.__stripZoo(outfilename, maxevts, startevent,
+	return self._stripZoo(outfilename, maxevts, startevent,
 		lambda evtact: self.runOverZooP(cuts, maxevts, startevent,
 		    # nothing to do per candidate if it passes the cuts
 		    None,

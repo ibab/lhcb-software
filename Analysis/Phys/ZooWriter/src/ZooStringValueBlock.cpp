@@ -4,6 +4,8 @@
  * @date 2011-11-06
  */
 
+#include <cstdio>
+#include <cstdarg>
 #include "ZooStringValueBlock.h"
 
 ZooStringValueBlock::ZooStringValueBlock(const ZooStringToUIDTable& uidtbl) :

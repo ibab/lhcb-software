@@ -4,6 +4,27 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Manuel Tobias Schiller
+ - replace range(0, N) by xrange(0, N) in python code to gain speed
+ - further modularise ZooTuplePlayer to avoid code duplication
+ - ZooTuplePlayer takes advantage of LZMA compression in recent ROOT versions
+   to obtain smaller files when stripping (settings are comparable to old
+   default when it comes to compression speed)
+ - further 'pythonise' the code in ZooTuplePlayer and Bs2DshStrippingExample:
+   - use generator expressions where appropriate (generator expressions as in
+     (f(e.method()) for e in list)), advantage is less memory allocation and
+     decallocation since generator expressions are evaluated lazily (the old
+     [ f(e.method()) for e in list ] will actually build the list)
+   - use sum/reduce/map and friends where possible instead of python for
+     loops, since these constructs have their loops coded in C instead of
+     python
+ - fix a bug in ZooTuplePlayer based stripping: the stripped Zoo tree had the
+   per-job tree as friend twice, causing wasted memory when reading in a
+   stripped tuple
+ - Rules.mk: more aggressive compiler optimisation flags, support for
+   different compilers
+ - some fixes to headers to support other compilers (missing include files
+   which happened to work fine with gcc)
 
 ! 2012-01-23 - Manuel Tobias Schiller
  - implement python based Zoo tuple stripping in the ZooTuplePlayer class; the

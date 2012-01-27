@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <cstdarg>
 
 #include "ZooStringToUIDTable.h"
 

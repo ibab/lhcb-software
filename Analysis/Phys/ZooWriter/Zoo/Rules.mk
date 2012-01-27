@@ -18,6 +18,15 @@
 # 	change some make variables from recursively expanded to simple
 # 	expanded to avoid reevaluation of functions and calls to the
 # 	shell (saves quite a bit of time)
+# v0.6 2012-01-27 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	optimise more agressively for the processor the library is
+# 	built on (e.g. check /proc/cpuinfo for instruction setting
+# 	extensions)
+# 	some more work towards supporting multiple compilers (building
+# 	with Gnu, Open64, Intel compilers works, the rest is work in
+# 	progress, either because it does not like root's headers (Sun
+# 	compiler) or the version installed on my system is too ancient
+# 	(clang))
 #######################################################################
 
 #######################################################################
@@ -103,6 +112,9 @@ TRUE ?= true
 FALSE ?= false
 TOUCH ?= touch
 UNAME ?= uname
+HEAD ?= head
+TAIL ?= tail
+GREP ?= grep
 
 # get compiler version(s) used to compile ROOT
 CC ?= $(shell $(ROOTCONFIG) --cc)
@@ -132,12 +144,6 @@ LD ?= ld
 CPP ?= cpp
 FC ?= f77
 
-# tune for native processor, but generate generic code (works different in
-# different versions of gcc/g++)
-TUNEFLAG ?= $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
-	    i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
-	    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
-	    "-mtune=native"; }; } END { print tunefl; }')
 
 # assemble ROOT libraries
 ROOTLIBDIR ?= $(shell $(ROOTCONFIG) --libdir)
@@ -188,6 +194,9 @@ TRUE := $(TRUE)
 FALSE := $(FALSE)
 TOUCH := $(TOUCH)
 UNAME := $(UNAME)
+HEAD := $(HEAD)
+TAIL := $(TAIL)
+GREP := $(GREP)
 TUNEFLAG := $(TUNEFLAG)
 ROOTLIBDIR := $(ROOTLIBDIR)
 ROOTLIBS := $(ROOTLIBS)
@@ -216,19 +225,19 @@ SHFLAGS ?= -shared
 # flags needed to produce dependency files
 CPPDEPFLAGS ?= -MM
 # produce nicer warning messages
-WARNFLAGS ?= -Wall -Wextra -fmessage-length=78
+WARNFLAGS ?= -Wall -fmessage-length=78
 # produce position independent code
 PICFLAGS ?= -fPIC
 # standard optimization level, no debugging code
-STDOPTFLAGS ?= -Os # -DBOOST_DISABLE_ASSERTS -DNDEBUG
+STDOPTFLAGS ?= -O3 # -DBOOST_DISABLE_ASSERTS -DNDEBUG
 # standard debugging flags: write symbol information
 STDDEBUGFLAGS ?= -g
 # use pipes instead of temp files
 PIPEFLAG ?= -pipe
 # set language standard(s) - should encourage users to write clean code
-CSTD ?= -std=c9x -pedantic
+CSTD ?= -std=c9x
 CXXSTD ?= -std=gnu++98
-FSTD ?= -std=legacy -pedantic
+FSTD ?= -std=legacy
 
 #######################################################################
 # OS/compiler specific flags
@@ -237,7 +246,21 @@ FSTD ?= -std=legacy -pedantic
 # if you use some special OS/compiler (and not Linux/gcc/g++)
 #######################################################################
 # guess OS
+ifndef UNAME_SYS
 UNAME_SYS := $(shell $(UNAME) -s)
+endif
+# guess CC CXX implementation
+ifndef CC_FLAVOUR
+FLAVOURDET1:='__GNUC__ __clang__ __OPENCC__ __PATHCC__ __INTEL_COMPILER __SUNPRO_C'
+FLAVOURDET2:='/^[^\#]/ { if ("__SUNPRO_C" != $$6) { print "SunPro"; } else { \
+    if ("__INTEL_COMPILER" != $$5) { print "Intel"; } else { \
+    if ("__PATHCC__" != $$4) { print "PathScale"; } else { \
+    if ("__OPENCC__" != $$3) { print "Open64"; } else { \
+    if ("__clang__" != $$2) { print "Clang"; } else { \
+    if ("__GNUC__" != $$1) { print "GNU"; } else print "Unknown" } } } } } }'
+CC_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CC) -E - | $(AWK) $(FLAVOURDET2))
+CXX_FLAVOUR:=$(shell $(ECHO) $(FLAVOURDET1) | $(CXX) -E - | $(AWK) $(FLAVOURDET2))
+endif
 # on Linux, we know how to optimize at link time, and we have a nice
 # and well-behaved /bin/echo
 ifeq ($(UNAME_SYS),Linux)
@@ -247,6 +270,60 @@ ECHOMSG := $(ECHO) -e
 ifeq ($(filter $(TMPLINKOPT),$(LDFLAGS)),)
 LDFLAGS += $(TMPLINKOPT)
 endif
+# get whatever floating point speedups are available on the CPU
+ifneq ($(CC_FLAVOUR),SunPro)
+ifneq ($(CC_FLAVOUR),Unknown)
+ifneq ($(CC_FLAVOUR),Open64)
+ifneq ($(CC_FLAVOUR),PathScale)
+ifneq ($(CXX_FLAVOUR),SunPro)
+ifneq ($(CXX_FLAVOUR),Unknown)
+ifneq ($(CXX_FLAVOUR),Open64)
+ifneq ($(CXX_FLAVOUR),PathScale)
+ifneq ($(CC_FLAVOUR),Intel)
+ifneq ($(CXX_FLAVOUR),Intel)
+# tune for native processor, but generate generic code (works different in
+# different versions of gcc/g++)
+TUNEFLAG += $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
+	    i <= NF; ++i) if ($$i ~ /[0-9]*\.[0-9]*\.[0-9]*$$/) { \
+	    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
+	    "-mtune=native"; }; } END { print tunefl; }')
+TUNEFLAG += $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
+	    $(SED) -e 's/ mmx/ -mmmx/g' -e 's/ sse/ -msse/g' \
+	           -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
+		   -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
+	    $(GREP) -- '-m')
+TUNEFLAG += -ffast-math
+CSTD += -pedantic
+FSTD += -pedantic
+endif
+endif
+WARNFLAGS += -Wextra
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+ifeq ($(CC_FLAVOUR),PathScale)
+ifeq ($(CXX_FLAVOUR),PathScale)
+TUNEFLAG += -OPT:Ofast -OPT:ro=3 −fno−math−errno −ffast−math
+endif
+endif
+ifeq ($(CC_FLAVOUR),Open64)
+ifeq ($(CXX_FLAVOUR),Open64)
+TUNEFLAG += -OPT:Ofast -OPT:ro=3 −fno−math−errno −ffast−math
+endif
+endif
+endif
+ifeq ($(CC_FLAVOUR),SunPro)
+PIPEFLAG=
+WARNFLAGS=
+endif
+ifeq ($(CXX_FLAVOUR),SunPro)
+PIPEFLAG=
+WARNFLAGS=
 endif
 # echo on Darwin/MacOS X works a bit differently
 ifeq ($(UNAME_SYS),Darwin)
@@ -285,9 +362,10 @@ export CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
 # ROOT libs, compiler flags etc
 export ROOTCONFIG ROOTLIBS ROOTLIBDIR ROOTINCLUDES ROOTCFLAGS LIBGENVECTOR
 # *nix like tools for text processing, copying/moving files etc.
-export AWK SED CPP CP MV MKDIR RMDIR TEST ECHO TRUE FALSE TOUCH UNAME
+export AWK SED CPP CP MV MKDIR RMDIR TEST ECHO TRUE FALSE TOUCH UNAME \
+    HEAD TAIL GREP
 # communicate make(1) related options to subprocesses
-export MAKEFLAGS COLORMAKE UNAME_SYS
+export MAKEFLAGS COLORMAKE UNAME_SYS CC_FLAVOUR CXX_FLAVOUR
 
 #######################################################################
 # collect source files in current directory

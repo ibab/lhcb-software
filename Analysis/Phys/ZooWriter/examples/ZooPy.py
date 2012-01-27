@@ -46,7 +46,6 @@ if not ZooPyInitialised:
 	    re.sub('^\\./', os.getcwd() + '/', os.environ['ZOOWRITERROOT'])
     os.environ['ZOOWRITERROOT'] = \
 	    re.sub('^\\.$', os.getcwd(), os.environ['ZOOWRITERROOT'])
-    print 'ZOOWRITERROOT is ' + os.environ['ZOOWRITERROOT']
     if not 'LD_LIBRARY_PATH' in os.environ or \
 	    '' == os.environ['LD_LIBRARY_PATH']:
         os.environ['LD_LIBRARY_PATH'] = os.environ['ZOOWRITERROOT'] + '/Zoo'
@@ -54,20 +53,34 @@ if not ZooPyInitialised:
         os.environ['LD_LIBRARY_PATH'] = \
             os.environ['ZOOWRITERROOT'] + '/Zoo:' + \
             os.environ['LD_LIBRARY_PATH']
-    print 'LD_LIBRARY_PATH is ' + os.environ['LD_LIBRARY_PATH']
     # ok, use root-config to get ROOT library path and set up python search
     # paths accordingly (on most installations, python does not know about
     # ROOT)
     tmp = os.popen('root-config --libdir')
     sys.path.append(re.sub('(\n|\r)+$', '', tmp.readline()))
     tmp.close()
-    print 'sys.path is ' + str(sys.path)
+    # flag showing if loading went ok
+    lddok = True
     # get ROOT stuff
-    import ROOT
-    from ROOT import *
-    # load Zoo library (including needed dictionaries)
-    ROOT.gSystem.Load('libZooROOT.so')
-    ZooPyInitialised = True
+    try:
+	import ROOT
+    except:
+	lddok = False
+    if lddok:
+	# be a little stricter about memory ownership
+	ROOT.SetMemoryPolicy(ROOT.kMemoryStrict)
+	# these are often needed, so get them just in case
+	lddok = lddok and ROOT.gSystem.Load('libSmatrix.so', '', True) >= 0
+	lddok = lddok and ROOT.gSystem.Load('libGenVector.so', '', True) >= 0
+	# load Zoo library (including needed dictionaries)
+	lddok = lddok and ROOT.gSystem.Load('libZooROOT.so', '', True) >= 0
+    if not lddok:
+	print 'ZOOWRITERROOT is ' + os.environ['ZOOWRITERROOT']
+	print 'LD_LIBRARY_PATH is ' + os.environ['LD_LIBRARY_PATH']
+	print 'sys.path is ' + str(sys.path)
+	print 'ZooPy: Unable to find shared libraries!'
+	os.exit(1)
+    ZooPyInitialised = lddok
 #############################################################################
 # END setup phase
 #############################################################################

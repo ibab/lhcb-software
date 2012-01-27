@@ -10,6 +10,9 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 
+#include <cstdio>
+#include <cstdarg>
+
 #include "ZooKeyValueBlock.h"
 
 ZooKeyValueBlock::~ZooKeyValueBlock() { }

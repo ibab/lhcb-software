@@ -40,32 +40,32 @@ KDLLKPi = TH1D("KDLLKPi", "Kaon DLL(K-#pi);DLL(K-#pi);entries", 100, -100., 100.
 
 nevents = c.GetEntries()
 nTrueBs = 0
-for i in range(0, nevents):
+for i in xrange(0, nevents):
     # read next event
     c.GetEntry(i)
     if 0 == (i % 1000):
 	print 'Event ' + str(i) + '/' + str(nevents)
     # loop over MCPs and count true Bs
-    for j in range(0, zev.NMCP()):
+    for j in xrange(0, zev.NMCP()):
 	zmcp = zev.MCP(j)
 	if 531 == abs(zmcp.pid()):
 	    nTrueBs = nTrueBs + 1
     # loop over Bs
-    for j in range(0, myBs.size()):
+    for j in xrange(0, myBs.size()):
 	bs = myBs[j]
 	mBs.Fill(bs.measuredMass())
 	p = bs.momentum()
 	pBs.Fill(p.P() / 1e3)
 	ptBs.Fill(p.Pt() / 1e3)
     # loop over Ds
-    for j in range(0, myDs.size()):
+    for j in xrange(0, myDs.size()):
 	ds = myDs[j]
 	mDs.Fill(ds.measuredMass())
 	p = ds.momentum()
 	pDs.Fill(p.P() / 1e3)
 	ptDs.Fill(p.Pt() / 1e3)
     # loop over Kaons for DLL plots
-    for j in range(0, myKaons.size()):
+    for j in xrange(0, myKaons.size()):
 	k = myKaons[j]
 	dll = k.DLL()
 	if None == dll:
