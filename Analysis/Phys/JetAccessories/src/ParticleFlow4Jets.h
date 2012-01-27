@@ -67,7 +67,9 @@ private:
 
   void relate2Vertex(const LHCb::Particle* p , Particle2Vertex::WTable& table);
   
-
+  int numberOfSaturatedCells( const LHCb::CaloCluster* cluster , const DeCalorimeter* calo);
+  
+  
 
   
 private:
@@ -170,6 +172,8 @@ private:
 
   typedef std::map< std::string , std::pair< const IProtoParticleFilter* , const LHCb::ParticleProperty * > > ProtoMap;
   ProtoMap m_protoMap;
+
+  
 
   //-----------------------------------------
 

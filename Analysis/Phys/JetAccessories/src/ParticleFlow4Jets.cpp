@@ -64,7 +64,11 @@ ParticleFlow4Jets::ParticleFlow4Jets( const std::string& name,
 
   declareProperty( "TrackSelectorType", m_trSelType = "" 
                    , "TrackSelector for choice of track inputs");
-
+  declareProperty( "PFProtoParticlesOutputLocation", m_protoPF 
+                   , "Location for the protoparticles created in PF");
+  declareProperty( "PFCaloHypoOutputLocation", m_calohypoPF
+                   , "Location for the calohypo created in PF");
+  
   // Track related cuts
   declareProperty( "UsePIDInfo" , m_usePIDInfo  = false ,
                    "Use PID information to apply mass hypothwesis to tracks");
@@ -365,7 +369,9 @@ StatusCode ParticleFlow4Jets::execute() {
   }
   
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The loops for electromagnetic neutral components  ~~~~~~~~~~~~~~~~~~~~~~
-  
+
+  const DeCalorimeter* ecal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Ecal" );
+
   // Loop over Merged Pi0, if clusters are not tagged yet, use and tag
   verbose()<<"Start merged pi0 Loop..."<<endreq;
   if (m_particleContainers.count("MergedPi0") > 0.5 ){
@@ -398,8 +404,11 @@ StatusCode ParticleFlow4Jets::execute() {
       tmpPair.first = MergedPi0 ;
       tmpPair.second =  MPi0->key() ;
       BannedECALClusters[hypoClusters[0].target()->seed().all()] = tmpPair ;
+      // Add number of saturated ECAL cells
+      LHCb::Particle* newP = MPi0->clone();
+      newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),ecal));
       // Save the particle
-      PFParticles->insert(MPi0->clone());
+      PFParticles->insert(newP);
     }
   }
   
@@ -413,6 +422,7 @@ StatusCode ParticleFlow4Jets::execute() {
       double maxPhotonID = -1000.;
       bool skip = false;
       std::vector< int > caloCells;
+      int Nsat(0);
       // Loop over daughters
       for  (LHCb::Particle::ConstVector::const_iterator i_daug = daugs. begin()  ; daugs.end() != i_daug ; ++i_daug ){
         const LHCb::ProtoParticle* n_pp = (*i_daug)->proto();
@@ -437,6 +447,8 @@ StatusCode ParticleFlow4Jets::execute() {
           skip = true;
           continue;
         }
+        Nsat +=numberOfSaturatedCells(hypoClusters[0].target(),ecal);
+
         // Use Ttrack banning?
         /*if ( m_banFromTTrack ){
           std::pair< double , int > tmpPair;
@@ -455,8 +467,12 @@ StatusCode ParticleFlow4Jets::execute() {
       }
       // If both daugther have correct ID and are not used, save the particle and ban
       if ( minPhotonID > m_photonIDMin4ResolvedPi0 && maxPhotonID > m_photonIDMax4ResolvedPi0 && !skip ){
+        // Add number of saturated ECAL cells
+        LHCb::Particle* newP = RPi0->clone();
+        newP->addInfo(955,Nsat);
         // Save the particle
-        PFParticles->insert(RPi0->clone());
+        PFParticles->insert(newP);
+
         // ban the corresponding clusters
         for (unsigned int iclu = 0 ; iclu < caloCells.size(); iclu++){ 
           std::pair< double , int > tmpPair;
@@ -524,7 +540,7 @@ StatusCode ParticleFlow4Jets::execute() {
           newP->addInfo(952, m_tableTrECAL->relations( hypoClusters[0].target() ).front().weight());
           newP->addInfo(953, m_tableTrECAL->relations( hypoClusters[0].target() ).front().to()->type());
         }
-        
+        newP->addInfo(955,numberOfSaturatedCells(hypoClusters[0].target(),ecal));
         PFParticles->insert( newP );
       }
     }
@@ -535,6 +551,7 @@ StatusCode ParticleFlow4Jets::execute() {
   verbose()<<"m_useHCAL "<<m_useHCAL<<endreq;
   
   if(m_useHCAL){
+    const DeCalorimeter* hcal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Hcal" );
     verbose()<<"Start HCAL Loop..."<<endreq;
     LHCb::ProtoParticles* PFProtoParticles = new LHCb::ProtoParticles();
     put( PFProtoParticles , m_protoPF );
@@ -580,7 +597,7 @@ StatusCode ParticleFlow4Jets::execute() {
         NewProto->addInfo(325,cluen);//NeutralEcalE ???
         NewProto->addInfo(332,cluen);//EcalE ???
         //NewProto->addInfo(310,m_tableTrHCAL->relations ( cluster ).front().weight());
-        
+
         // make a new Particle
         
         LHCb::Particle p = LHCb::Particle();
@@ -590,6 +607,7 @@ StatusCode ParticleFlow4Jets::execute() {
           p.addInfo(953, m_tableTrHCAL->relations ( cluster ).front().to()->type());
         }
         
+        p.addInfo(955,numberOfSaturatedCells(cluster,hcal));
         p.setParticleID( LHCb::ParticleID(-22) );
         p.setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
         p.setMomentum( Gaudi::XYZTVector(px,py,pz,cluen) ) ;
@@ -911,4 +929,18 @@ void ParticleFlow4Jets::relate2Vertex( const LHCb::Particle* p , Particle2Vertex
                                                           m_vertices.end()));
   const Particle2Vertex::LightWTable::Range range = bestPVTable.relations();
   table.merge(range);
+}
+//=============================================================================
+// Count the number of saturated cells in a calo cluster
+//=============================================================================
+int ParticleFlow4Jets::numberOfSaturatedCells( const LHCb::CaloCluster* cluster , const DeCalorimeter* calo){
+  int nbSatCells = 0 ;
+  const std::vector< LHCb::CaloClusterEntry > & entries = cluster->entries();
+  for (std::vector< LHCb::CaloClusterEntry >::const_iterator i_entry = entries.begin(); entries.end()!= i_entry ; i_entry++ ){
+    const LHCb::CaloDigit* digit = (*i_entry).digit();
+    if( digit->e()/calo->cellGain(digit->cellID())+calo->pedestalShift() > calo->adcMax()-256-0.5 ){
+      nbSatCells++;
+    }
+  }
+  return nbSatCells;
 }
