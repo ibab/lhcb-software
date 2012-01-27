@@ -459,23 +459,27 @@ class Brunel(LHCbConfigurableUser):
                                                   'L0PU'
                                                   ]
                 trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members +=[trigRawBankCopy]
+                GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
                 
                 #then the Muon Raw Event
                 muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
                 muonRawBankCopy.RawBanksToCopy =[ 'Muon' ]
                 muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members +=[muonRawBankCopy]
-                
-                
+                GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
+                  
             from Configurables import TrackToDST
-            # Filter Track States to be written
-            trackFilter = TrackToDST()
-                
+            
+            # Filter Best Track States to be written
+            trackFilter = TrackToDST("FilterBestTrackStates")
+
+            # Filter Muon Track States
+            muonTrackFilter = TrackToDST("FilterMuonTrackStates")
+            muonTrackFilter.TracksInContainer = "/Event/Rec/Track/Muon"
+
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
-            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
-
+            GaudiSequencer("OutputDSTSeq").Members += [ trackFilter, muonTrackFilter ]
+            
             if packType != "NONE":
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
