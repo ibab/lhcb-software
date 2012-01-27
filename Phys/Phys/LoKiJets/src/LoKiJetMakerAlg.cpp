@@ -22,6 +22,16 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
+
+
+#include "GaudiKernel/IHistogramSvc.h"
+#include <GaudiUtils/Aida2ROOT.h>
+#include "AIDA/IHistogram2D.h"
+#include "boost/lexical_cast.hpp"
+
+#include "TH2D.h"
+
+class TH2D;
 // ============================================================================
 namespace LoKi 
 {
@@ -73,7 +83,10 @@ namespace LoKi
       declareProperty 
         ( "JetID"  , 
           m_runJetID , 
-          "Append Jet ID information to the jet") ;  
+          "Append Jet ID information to the jet") ; 
+      declareProperty("ApplyJEC"  ,  m_applyJEC = false );
+      
+      declareProperty("HistoPath"  , m_histo_path = "JEC"     );
       //
     }
     /// destructor
@@ -85,9 +98,12 @@ namespace LoKi
      *  @see LoKi::Algo 
      *  @return status code 
      */
+    virtual StatusCode initialize   () ;
     virtual StatusCode analyse   () ;
 
-    StatusCode appendJetIDInfo   ( LHCb::Particle * jet ) ;
+    StatusCode appendJetIDInfo   ( LHCb::Particle * jet ) ; 
+    StatusCode JEC               ( LHCb::Particle* jet )  ;
+
     // ========================================================================    
   private:
     // ========================================================================    
@@ -108,6 +124,14 @@ namespace LoKi
     bool m_associate2Vertex      ; // make jet per vertex
     /// append jet ID info
     bool m_runJetID              ; // append jet ID info
+    /// apply JEC
+    bool m_applyJEC              ;
+    /// histograms for JEC
+    std::vector<TH2D*> m_histosJEC ;
+    /// histo path
+    std::string m_histo_path ;
+    
+    
     
     
     // ========================================================================    
@@ -126,6 +150,25 @@ namespace LoKi
  *  @return status code 
  */
 // ===========================================================================
+StatusCode LoKi::JetMaker::initialize () 
+{
+  StatusCode sc = LoKi::Algo::initialize() ; 
+  if ( sc.isFailure() ) { return sc ; }
+  // Read in the histograms:
+  if ( m_applyJEC ){ 
+    for( int i = 1; i < 4; ++i ) {
+      std::string histoname = "JEC_PV"+boost::lexical_cast<std::string>(i);
+      AIDA::IHistogram2D *aida =  get<AIDA::IHistogram2D> (histoSvc(), m_histo_path + histoname);
+      if( 0==aida ) warning()<<"Could not find AIDA::IHistogram2D* "
+                             << m_histo_path + histoname<<"."<<endmsg;
+      m_histosJEC.push_back( Gaudi::Utils::Aida2ROOT::aida2root(aida) );
+    }
+  }
+  //
+  return StatusCode::SUCCESS ;
+}
+
+
 StatusCode LoKi::JetMaker::analyse   () 
 {
   using namespace LoKi        ;
@@ -182,6 +225,7 @@ StatusCode LoKi::JetMaker::analyse   ()
       while ( !jets.empty() ) 
       {
         LHCb::Particle* jet = jets.back() ;
+        if(m_applyJEC)this->JEC(jet);  
         if(m_runJetID) this->appendJetIDInfo(jet);
         // If the jet contain info on PV, assign a PV and update the P2PV relation table
         if ( withPVPointingInfo(jet) ){
@@ -265,12 +309,42 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
   float auxptsum = 0; n90=0;
   for(int ii=0; ii<iitems; ii++) {auxptsum+=itemspt[ii]; n90++; if(auxptsum/sumpt>0.9) break; } 
 
+  LoKi::Types::Fun NsatCells = LoKi::Cuts::SUMTREE(LoKi::Cuts::INFO(955,0.),LoKi::Cuts::Q==0, 0.);
+  LoKi::Types::Fun N_HasPVInfo = LoKi::Cuts::NINTREE(( LoKi::Cuts::ABSID == 310 ||LoKi::Cuts::ABSID == 3122 ) || 
+                                                     ( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE ));
+  
+
   jet->addInfo ( 9001 , ntrk );
   jet->addInfo ( 9002 , n90 );
   jet->addInfo ( 9003 , mtf );
+  jet->addInfo ( 9004 , NsatCells(jet) );
+  jet->addInfo ( 9005 , N_HasPVInfo(jet) );
   
   return SUCCESS;
 }
+
+
+StatusCode LoKi::JetMaker::JEC( LHCb::Particle* jet )
+{
+  int PV = this->primaryVertices().size();
+  int usePV = PV;
+  if (PV > 3)usePV = 3;
+  TH2D* histo = m_histosJEC[usePV-1];
+  int xbin = histo->GetXaxis()->FindBin(LoKi::Cuts::PT(jet)/1000.);
+  int ybin = histo->GetYaxis()->FindBin(LoKi::Cuts::ETA(jet));
+  double cor = histo->GetBinContent(xbin,ybin);
+  // Store the uncorrected kinematics
+
+  jet->addInfo ( 9100 , cor );
+  jet->addInfo ( 9101 , PV);
+
+  Gaudi::LorentzVector newMom(cor*LoKi::Cuts::PX(jet),cor*LoKi::Cuts::PY(jet),cor*LoKi::Cuts::PZ(jet),cor*LoKi::Cuts::E(jet));
+  jet->setMomentum(newMom);
+  
+  return SUCCESS;
+  
+}
+
 
 // ===========================================================================
 /// The factory

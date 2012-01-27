@@ -7,7 +7,7 @@ package           LoKiJets
 version           v6r2
 
 # =============== structure ===================================================
-branches          cmt doc python src
+branches          cmt doc python src histo
 
 # =============== dependencies ================================================
 use               LoKiAlgo         v* Phys 

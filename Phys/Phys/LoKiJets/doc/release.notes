@@ -7,6 +7,12 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-01-27 - Victor Coco
+ - Add some jet ID variable in LoKiJetMakerAlg
+ - Clean LoKiFastJetMaker from outdated options
+ - Add JEC reference histogram in histo/jec.root
+ - Add JEC correction in LoKiJetMakerAlg
+
 ! 2012-01-17 - Victor Coco
  - Add some protection against jets made of daughter with no PV info + update
    refernece point and endVertex of the jets that have associated PV 

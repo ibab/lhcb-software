@@ -48,7 +48,7 @@ class JetMaker_Configuration(LHCbConfigurableUser):
                   ,'RParameter' : 0.75
                   ,'Areas'      : False
                   ,'OutputContainer'  : 'StdJets'
-                  ,'JetEnergyScale'   : None
+                  ,'JetEnergyCorrection' : False
                   ,'JetCalibration'   : None
                   ,'InputLocation'    : None
                   ,'ToolConf'         : ''
@@ -122,7 +122,7 @@ class JetMaker_Configuration(LHCbConfigurableUser):
         else : 
             raise RuntimeError("ERROR : the "+jetmaker+" jet algorithm is not available yet")
         setattr(tool,'RParameter',self.getProp('RParameter'))
-        
+
         
     ## Apply the configuration to the given sequence
     def applyConf(self):
