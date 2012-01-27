@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2012-01-27 - Chris Jones
+ - Add a filter for the States on Muon Tracks
+
 - Changes to references to reflect changes in Brunel v42r0 output:
   . Fixes to primitive types that can be saved in Tuples::TupleObj
   . Fix to updates of cached geometry for Upstream tracking 
