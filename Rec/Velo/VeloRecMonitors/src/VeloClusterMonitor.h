@@ -50,6 +50,12 @@ namespace Velo
     // Monitor the VeloClusters
     void monitorClusters();
 
+    // Fill the high-multiplicity histogram
+    void fillHighMultiplicity(unsigned int nClustersDecoded);
+
+    // Get number of clusters from raw event
+    unsigned int getNClustersFromRaw();
+
   private:
     // Data members
     std::string m_tae;
@@ -59,6 +65,7 @@ namespace Velo
     
     // Histograms
     AIDA::IHistogram1D* m_hNCluEvt;
+    AIDA::IHistogram1D* m_hNClustersHM;
     AIDA::IHistogram1D* m_hCluSize;
     AIDA::IHistogram2D* m_hCluSizeSens;
     AIDA::IHistogram1D* m_hCluADC;
@@ -78,6 +85,7 @@ namespace Velo
     // Job options
     std::string m_clusterCont;
     bool        m_perSensorPlots;
+    bool        m_highMultiplicityPlot;
   };
 }
 

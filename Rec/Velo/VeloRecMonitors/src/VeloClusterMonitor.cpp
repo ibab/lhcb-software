@@ -12,11 +12,17 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// from LHCb
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
+#include "Event/ProcStatus.h"
+
 // from VeloDet
 #include "VeloDet/DeVeloSensor.h"
 
 // local
 #include "VeloClusterMonitor.h"
+#include "RawClusterDecoding.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMonitor
@@ -46,6 +52,7 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
   declareProperty( "VeloClusterLocation",
                    m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "PerSensorPlots", m_perSensorPlots = false );
+  declareProperty( "HighMultiplicityPlot", m_highMultiplicityPlot  = false );
 }
 
 //=============================================================================
@@ -86,7 +93,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   
   char nCluTitle[100];
   sprintf( nCluTitle, "Number of VELO clusters per event (%s)", m_tae.c_str() );
-  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 4000., 400 );
+  m_hNCluEvt = book1D( "# VELO clusters", nCluTitle, 0., 6000., 600 );
   m_hCluSize = book1D( "Cluster size", "Number of strips per cluster",
                        -0.5, 5.5, 6 );
   m_hCluADC = book1D( "Cluster ADC value", "ADC value per cluster",
@@ -136,6 +143,11 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
         const std::string hName = fmtEvt.str() ;
         m_hNCluSens[s] = book1D( hName, hName, -0.5, 200.5, 201 );
     }
+  }
+
+  if ( m_highMultiplicityPlot ) {
+    m_hNClustersHM = book1D("n_clusters_highmult", "Number of VELO clusters (extended)",
+                      0.0, 2.5e4, 1000);
   }
   
   return StatusCode::SUCCESS;
@@ -204,10 +216,11 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   // ----------------------------
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
-  if ( nclus > 0 && nclus < 4000 )
+  if ( nclus > 0 )
     m_hNCluEvt->fill(nclus);
-  else if ( nclus > 0 )
-    m_hNCluEvt->fill(4000);
+
+  if ( m_highMultiplicityPlot )
+    fillHighMultiplicity(nclus);
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
@@ -290,5 +303,61 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   }
 
 } 
+
+//=============================================================================
+// Monitoring for large events with possibly >10k clusters
+//  - nClustersDefault is the number of clusters found by the default decoding
+//=============================================================================
+void Velo::VeloClusterMonitor::fillHighMultiplicity(unsigned int nClustersDefault) {
+
+  if ( nClustersDefault > 0 ) {
+    // Use the default decoding without checking anything if non-zero
+    m_hNClustersHM->fill(nClustersDefault);
+  }
+  else {
+    // Check if there was a processing error
+    LHCb::ProcStatus* procStat = get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ); 
+    if( ( procStat != 0 ) && procStat->aborted() ) {
+      // Processing was indeed aborted. Decode raw banks
+      m_hNClustersHM->fill(getNClustersFromRaw());
+    }
+    else {
+      // Just an ordinary event with 0 clusters
+      m_hNClustersHM->fill(0);
+    }
+  }
+}
+
+
+//=============================================================================
+// Number of clusters from RAW banks
+//=============================================================================
+unsigned int Velo::VeloClusterMonitor::getNClustersFromRaw() {
+
+  unsigned int nclusters = 0;
+
+  // Fetch raw VELO banks
+  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default) ) {
+    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+    const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::Velo);
+  
+    std::vector<LHCb::RawBank*>::const_iterator bi;
+    for (bi = banks.begin(); bi != banks.end(); ++bi) {
+      const LHCb::RawBank* rb = *bi;
+      if (rb->magic() == LHCb::RawBank::MagicPattern && rb->version() == BANK_VERSION_v3) {
+
+        const SiDAQ::buffer_word* rawBank = static_cast<const SiDAQ::buffer_word*>(rb->data());
+        VeloRawBankDecoder decoder(rawBank);
+        if ( !decoder.hasError() ) {
+          nclusters += decoder.nClusters();
+        }
+      }
+    }
+    // End of loop: if there was no error, nclusters will contain the number of
+    // VELO (+PU) clusters
+  }
+  return nclusters;
+}
+
 
 //=============================================================================
