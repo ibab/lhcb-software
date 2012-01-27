@@ -7,7 +7,7 @@ ApplicationMgr.EvtSel                = "NONE";
 
 //Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 Runable.Buffer                       = "Events";
-Runable.Directory                    = "./data";
+Runable.Directory                    = "/localdisk/overflow";
 
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "Events" };

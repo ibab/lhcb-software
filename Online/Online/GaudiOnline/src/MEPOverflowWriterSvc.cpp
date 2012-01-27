@@ -196,7 +196,7 @@ StatusCode MEPOverflowWriterSvc::run()
     RunDesc *r = m_RunList[m_RunNumber];
     m_FileDesc = r->m_CurrentFileDescr;
     ssize_t status;
-    status = write(m_FileDesc->m_Handle, me, me->m_size);
+    status = write(m_FileDesc->m_Handle, me, me->size()+me->sizeOf());
     if (status == -1)
     {
       if (errno == EIO || errno == ENOSPC)
@@ -205,7 +205,7 @@ StatusCode MEPOverflowWriterSvc::run()
       }
       else if (errno == EINTR)
       {
-        status = write(m_FileDesc->m_Handle, me, me->m_size);
+        status = write(m_FileDesc->m_Handle, me, me->size()+me->sizeOf());
         if (status == -1)
         {
           if (errno == EIO || errno == ENOSPC)
@@ -232,8 +232,10 @@ StatusCode MEPOverflowWriterSvc::run()
       m_BytesOut += me->m_size;
       r->m_MEPs++;
       m_mepOut++;
-      m_FileDesc->m_BytesWritten+=me->m_size;
-      r->m_BytesWritten += me->m_size;
+      m_FileDesc->m_BytesWritten += me->size();
+      m_FileDesc->m_BytesWritten += me->sizeOf();
+      r->m_BytesWritten += me->size();
+      r->m_BytesWritten += me->sizeOf();
       if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
       {
         close(m_FileDesc->m_Handle);
