@@ -39,7 +39,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         			,       'Bu2JpsiKPrescale'
         			,       'Bd2JpsiKstarPrescale'
         			,       'Bd2JpsiKsPrescale'
-        			,       'Bs2JpsiPhiPrescale'
+                                ,       'Bs2JpsiPhiPrescale'
         			,       'Bs2JpsiEtaPrescale'
         			,       'Bd2JpsiPi0Prescale'
         			,       'Bd2JpsiPi0LoMass'
@@ -83,9 +83,21 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                 RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
                                                     DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
 
+
         self.KsList = self.createSubSel(OutputList = "KsForBetaS" + self.name,
                                     InputList = self.KsListLoose,
                                     Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
+
+
+
+        self.KsLDList = self.createSubSel( OutputList =  "KsLDForBetaS" + self.name,
+                                          InputList = DataOnDemand(Location = "Phys/StdLooseKsLD/Particles"),
+                                          Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
+        
+                                         
+           
+        ## should add the new KsList here
+        
 
         self.DetachedKstarList = self.createSubSel(OutputList = "DetachedKstarListForBetaS" + self.name,
                                                  InputList = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi/Particles"),
@@ -126,7 +138,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.makeBu2JpsiH    () 
         self.makeBs2JpsiPhi  () 
         self.makeBd2JpsiKstar()  
-        self.makeBd2JpsiKs   ()  
+        self.makeBd2JpsiKs   ()
+        self.makeBd2JpsiKsLD ()
         self.makeBs2Jpsif0   ()
         self.makeBs2JpsiKstar()
         self.makeLambdab2JpsiLambda() 
@@ -300,6 +313,26 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.registerLine(Bd2JpsiKsPrescaledLine)
         self.registerLine(Bd2JpsiKsDetachedLine)
         #self.registerLine(Bd2JpsiKsUnbiasedLine)
+
+    def makeBd2JpsiKsLD( self ):
+        Bd2JpsiKsLD = self.createCombinationSel( OutputList = "Bd2JpsiKSLD" + self.name,
+                                  DecayDescriptor = "B0 -> J/psi(1S) KS0",
+                                  DaughterLists  = [ self.JpsiList, self.KsLDList ],
+                                  PreVertexCuts = "in_range(5000,AM,5650)",
+                                  PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
+                                  )
+        
+
+        Bd2JpsiKsLDDetached = self.createSubSel( InputList = Bd2JpsiKsLD,
+                                    OutputList = Bd2JpsiKsLD.name() + "Detached" + self.name,
+                                                 Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
+        Bd2JpsiKsLDDetachedLine = StrippingLine( self.name + "Bd2JpsiKsLDDetachedLine",
+                                                 algos = [ Bd2JpsiKsLDDetached ] )
+
+
+        
+        self.registerLine(Bd2JpsiKsLDDetachedLine)
+       
 
     def makeBs2Jpsif0( self ):
         '''Note: the input list is already heavily lifetime biased'''
