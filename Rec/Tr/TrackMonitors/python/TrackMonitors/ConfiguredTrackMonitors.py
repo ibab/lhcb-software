@@ -14,13 +14,13 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq = GaudiSequencer(Name)
     seq.Members.append( TrackMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( TrackVertexMonitor(HistoPrint=HistoPrint) )
 
     from Configurables import TrackSys
     if TrackSys().timing():
       seq.Members.append( TrackTimingMonitor(HistoPrint=HistoPrint) )
 
     if not RecMoniConf().getProp("Histograms") is "Online":
-        seq.Members.append( TrackVertexMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackV0Monitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackAlignMonitor(HistoPrint=HistoPrint) )

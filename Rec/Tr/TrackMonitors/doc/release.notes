@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2012-01-27 - Patrick Koppenburg
+ - Also do TrackVertexMonitors in online mode, to get PV position in online Brunel
+
 !========================= TrackMonitors v1r35 2011-11-08 =========================
 ! 2011-10-17 - Marco Cattaneo
  - Fix icc remarks
