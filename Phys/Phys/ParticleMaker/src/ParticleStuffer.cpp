@@ -6,8 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "ParticleStuffer.h"
@@ -47,7 +47,7 @@ StatusCode ParticleStuffer::initialize() {
   
   // This tool needs to use internally the ParticlePropertySvc to retrieve the
   // mass to be used
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true);
   m_pTransporter = tool<IParticleTransporter>(m_transporterType, this);
 
   return sc;

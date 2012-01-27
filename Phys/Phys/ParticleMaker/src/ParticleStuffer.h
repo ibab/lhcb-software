@@ -51,7 +51,7 @@ public:
                            LHCb::Particle&);
 
 private:
-  IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
+  LHCb::IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
   IToolSvc* m_pToolSvc;
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   std::string m_transporterType;        ///< Type of transporter to use
