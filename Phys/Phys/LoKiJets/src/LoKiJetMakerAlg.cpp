@@ -248,7 +248,7 @@ StatusCode LoKi::JetMaker::analyse   ()
           jet->setEndVertex(vJet.clone());
           this->relate ( jet , *i_pv );
         }
-        if (m_applyJetID && m_runJetID &&( mtf(jet)>0.8 || n90(jet)<5 || nPVInfo(jet)<4 )){
+        if (m_applyJetID && m_runJetID &&( mtf(jet)>0.8 || n90(jet)<4 || nPVInfo(jet)<3 )){
           jets.pop_back() ;
           delete jet ;
           continue;
