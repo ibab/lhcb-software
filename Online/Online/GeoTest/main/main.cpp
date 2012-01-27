@@ -22,7 +22,7 @@ static int read_compact(int, char**)  {
 int compact2lcdd()  {
   XML::LCDDImp lcdd;
   lcdd.fromCompact("file:../cmt/compact.xml");
-  dumpTree(lcdd.document());
+  // dumpTree(lcdd.document());
   return 0x1;
 }
 
@@ -47,6 +47,7 @@ Geometry::LCDD& compact2geo(int argc, char **argv)  {
   lcdd->dump();
   return *lcdd;
 }
+
 #include "TRint.h"
 #include "DetDesc/detector/ILDExTPC.h"
 #include "DetDesc/detector/MarkusTPC.h"
@@ -63,11 +64,10 @@ int run_interpreter(int argc, char **argv)   {
   TRint *theApp = new TRint("Rint", &argc, argv);
   
   Geometry::LCDD& lcdd = compact2geo((int)args.size(),&args[0]);
-  Geometry::Document doc = lcdd.document();
-  TGeoManager* mgr = doc;
   TGDMLWrite wr;
-  wr.WriteGDMLfile(mgr,"ILCEx.gdml","");
-  mgr->Export("ILCEx.root");
+  wr.WriteGDMLfile(gGeoManager,"ILCEx.gdml","");
+#if 0
+  gGeoManager->Export("ILCEx.root");
 
   /// Print statement with inner radius.
   Geometry::Subdetector sd = lcdd.detector("TPC");
@@ -84,7 +84,7 @@ int run_interpreter(int argc, char **argv)   {
   GearTPC   gear = tpc;
   cout << "-----> Gear: Inner:" << gear.innerRadius() << " Outer:" << gear.outerRadius() << endl;
   cout << "-----> Gear: Press:" << gear.pressure() << endl;
-
+#endif
 
   // and enter the event loop...
   theApp->Run();

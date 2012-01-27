@@ -4,13 +4,10 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
-/// Constructor to be used when reading the already parsed object
-Readout::Readout(Handle_t e) : RefElement(e) {
-}
-
 /// Initializing constructor to create a new object
-Readout::Readout(const Document& doc, const string& nam) : RefElement(doc,"readout",nam) 
+Readout::Readout(const LCDD& /* lcdd */, const string& nam)
 {
+  assign(new Value<TNamed,Object>(),nam,"readout");
 }
 
 /// Access IDDescription structure

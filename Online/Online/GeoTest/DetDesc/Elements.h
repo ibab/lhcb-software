@@ -4,6 +4,7 @@
 #include <string>
 #include <typeinfo>
 #include <stdexcept>
+#include <TNamed.h>
 
 class TObject;
 class TObjArray;
@@ -18,8 +19,6 @@ namespace DetDesc {
     struct  LCDD;
     struct  Element;
     struct  RefElement;
-    struct  Document;
-    struct  Handle_t;
     struct  Collection_t;
 
     typedef TObject     Element_t;
@@ -45,50 +44,33 @@ namespace DetDesc {
 
     template<class T> inline void deletePtr(T*& p) { if(p) delete p; p=0; }
 
-    struct Handle_t  {
-      Element_t* m_node;
-      Handle_t(const Handle_t& c) : m_node(c.m_node) {}
-      Handle_t(Element_t* e=0) : m_node(e)        {                                        }
-      ~Handle_t()                                 {                                        }
-      //Element_t* operator->() const               { return m_node;                         }
-      //operator Element_t* () const                { return m_node;                         }
-      bool isValid() const                        { return 0 != m_node;                    }
-      Element_t* ptr() const                      { return m_node;                         }
-      template <typename T> T* _ptr() const       { return (T*)m_node;                     }
-    };
-
-    struct Document  {
-      Document_t* m_doc;
-      Document(Document_t* d) : m_doc(d) {               }
-      operator Document_t*() const       { return m_doc; }
-      Document_t* operator->() const     { return m_doc; }
-      Element_t*  createElt(const std::string& tag) const;
-    };
-
     struct Element  {
-      Handle_t m_element;
-      Element(const Handle_t&  e) : m_element(e) {                            }
-      Element(const Document& document, const std::string& type);
-      Element_t* ptr() const                  {  return m_element.ptr();      }
-      bool isValid() const                    {  return 0 != m_element.ptr(); }
-      bool operator!() const                  {  return 0 == m_element.ptr(); }
-      template<class T> void verifyObject() const  {
+      Element_t* m_element;
+      Element(Element_t* e) : m_element(e) {                            }
+      Element(const Element& e) : m_element(e.m_element) {              }
+      Element_t* ptr() const                  {  return m_element;      }
+      template <typename T> T* _ptr() const   {  return (T*)m_element;  }
+      bool isValid() const                    {  return 0 != m_element; }
+      bool operator!() const                  {  return 0 == m_element; }
+      template<class T> void verifyObject() const {
 	if ( dynamic_cast<T*>(ptr()) == 0 )  {
 	  bad_assignment(ptr() ? typeid(*ptr()) : typeid(void),typeid(T));
 	}
       }
       static void bad_assignment(const std::type_info& from, const std::type_info& to);
-      //operator Handle_t () const              {  return m_element;            }
-      //operator Element_t*() const             {  return m_element;            }
+    };
+
+    template <typename Q, typename P> struct Value : public Q, public P  {
+      virtual ~Value() {}
     };
 
     struct RefElement : public Element  {
       RefElement() : Element(0) {}
-      RefElement(const Handle_t& e);
-      RefElement(const Document& d, const std::string& type, const std::string& name);
+      RefElement(const Element& e) : Element(e) {}
       const char* name() const;
       const char* refName() const;
       void setName(const std::string& new_name);
+      void assign(TNamed* n, const std::string& nam, const std::string& title);
     };
 
   }       /* End namespace Geometry  */

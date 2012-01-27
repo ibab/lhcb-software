@@ -14,7 +14,14 @@
 
 // Forward declarations
 class TGeoShape;
-
+class TGeoBBox;
+class TGeoPcon;
+class TGeoPgon;
+class TGeoCone;
+class TGeoTrd2;
+class TGeoTrap;
+class TGeoTubeSeg;
+class TGeoCompositeShape;
 /*
  *   DetDesc namespace declaration
  */
@@ -49,10 +56,15 @@ namespace DetDesc {
     };
 
     struct Solid : public RefElement  {
+    protected:
+      /// Assign pointrs and register solid to geometry
+      void assignSolid(LCDD& lcdd, TNamed* n, const std::string& nam, const std::string& tit);
+
+    public:
+      /// Default constructor for uninitialized object
+      Solid() : RefElement() {}
       /// Constructor to be used when reading the already parsed object
-      Solid(Handle_t e) : RefElement(e) {}
-      /// Constructor to be used when creating a new object
-      Solid(const Document& doc, const std::string& type, const std::string& name) : RefElement(doc,type,name) {}
+      Solid(const Element& e) : RefElement(e) {}
       /// Access to the shape pointer
       TGeoShape& shape()  const;
       /// Set dimensions and update bounding box
@@ -60,83 +72,105 @@ namespace DetDesc {
     };
 
     struct Box : public Solid  {
+      protected:
+      void make(LCDD& lcdd, const std::string& name, double x, double y, double z);
+      public:
       /// Constructor to be used when reading the already parsed box object
-      Box(Handle_t e) : Solid(e) {}
+      Box(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new box object
-      Box(const Document& doc, const std::string& name);
+      Box(LCDD& lcdd, const std::string& name) 
+      {  make(lcdd, name, 0, 0, 0); }
       /// Constructor to be used when creating a new box object
-      Box(const Document& doc, const std::string& name, double x, double y, double z);
+      Box(LCDD& lcdd, const std::string& name, double x, double y, double z)
+      {  make(lcdd, name, x, y, z); }
       /// Constructor to be used when creating a new box object
       template<class X, class Y, class Z>
-      Box(const Document& doc, const std::string& name, const X& x, const Y& y, const Z& z)
-      : Solid(doc,"box",name)
-      {
-        setDimensions(_toDouble(x),_toDouble(y),_toDouble(z));
-      }
+      Box(LCDD& lcdd, const std::string& name, const X& x, const Y& y, const Z& z)
+      {  make(lcdd, name, _toDouble(x),_toDouble(y),_toDouble(z)); }
       /// Set the box dimensions
       Box& setDimensions(double x, double y, double z);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoBBox*() const     { return _ptr<TGeoBBox>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoBBox* operator->() const   { return _ptr<TGeoBBox>(); }
     };
 
     struct Polycone : public Solid {
       /// Constructor to be used when reading the already parsed polycone object
-      Polycone(Handle_t e) : Solid(e) {}
+      Polycone(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new polycone object
-      Polycone(const Document& doc, const std::string& name);
+      Polycone(LCDD& lcdd, const std::string& name);
       /// Constructor to be used when creating a new polycone object
-      Polycone(const Document& doc, const std::string& name, double start, double delta);
+      Polycone(LCDD& lcdd, const std::string& name, double start, double delta);
       /// Constructor to be used when creating a new polycone object. Add at the same time all Z planes
-      Polycone(const Document& doc, const std::string& name, double start, double delta, const std::vector<double>& rmin, const std::vector<double>& rmax, const std::vector<double>& z);
+      Polycone(LCDD& lcdd, const std::string& name, double start, double delta, const std::vector<double>& rmin, const std::vector<double>& rmax, const std::vector<double>& z);
       /// Add Z-planes to the Polycone
       void addZPlanes(const std::vector<double>& rmin, const std::vector<double>& rmax, const std::vector<double>& z);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoPcon*() const     { return _ptr<TGeoPcon>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoPcon* operator->() const   { return _ptr<TGeoPcon>(); }
     };
 
     struct Tube : public Solid  {
+      protected:
+      void make(LCDD& lcdd, const std::string& name,double rmin,double rmax,double z,double deltaPhi);
+      public:
       /// Constructor to be used when reading the already parsed object
-      Tube(Handle_t e) : Solid(e) {}
+      Tube(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new tube object
-      Tube(const Document& doc, const std::string& name);
+      Tube(LCDD& lcdd, const std::string& name)
+      { make(lcdd,name,0, 0, 0, 0); }
       /// Constructor to be used when creating a new tube object with attribute initialization
-      Tube(const Document& doc, const std::string& name, double rmin, double rmax, double z, double deltaPhi=2*M_PI);
+      Tube(LCDD& lcdd, const std::string& name, double rmin, double rmax, double z, double deltaPhi=2*M_PI)
+      { make(lcdd,name,rmin, rmax, z, deltaPhi); }
       /// Constructor to be used when creating a new tube object with attribute initialization
-#if 0
       template<class RMIN, class RMAX, class Z, class DELTAPHI>
-      Tube(const Document& doc, const std::string& name, const RMIN& rmin, const RMAX& rmax, const Z& z, const DELTAPHI& deltaPhi)  
-      : Solid(doc,"tube",name)
+      Tube(LCDD& lcdd, const std::string& name, const RMIN& rmin, const RMAX& rmax, const Z& z, const DELTAPHI& deltaPhi)  
       {
-        setDimensions(_toDouble(rmin),_toDouble(rmax),_toDouble(z),_toDouble(deltaPhi));
+        make(lcdd,name,_toDouble(rmin),_toDouble(rmax),_toDouble(z),_toDouble(deltaPhi));
       }
-#endif
       /// Set the box dimensions
       Tube& setDimensions(double rmin, double rmax, double z, double deltaPhi=2*M_PI);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoTubeSeg*() const     { return _ptr<TGeoTubeSeg>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoTubeSeg* operator->() const   { return _ptr<TGeoTubeSeg>(); }
     };
 
     struct Cone : public Solid  {
+      protected:
+      void make(LCDD& lcdd, const std::string& name,double z,double rmin1,double rmax1,double rmin2,double rmax2);
+      public:
       /// Constructor to be used when reading the already parsed object
-      Cone(Handle_t e) : Solid(e) {}
+      Cone(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new object
-      Cone(const Document& doc, const std::string& name);
+      Cone(LCDD& lcdd, const std::string& name)
+      { make(lcdd,name,0, 0, 0, 0, 0); }
       /// Constructor to be used when creating a new object with attribute initialization
-      Cone(const Document& doc, const std::string& name,
+      Cone(LCDD& lcdd, const std::string& name,
            double z,
            double rmin1,
            double rmax1,
            double rmin2,
-           double rmax2);
+           double rmax2)
+      { make(lcdd,name,z,rmin1,rmax1,rmin2,rmax2); }
       template<typename Z, typename RMIN1, typename RMAX1, typename RMIN2, typename RMAX2>
-      Cone(const Document& doc, const std::string& name, const Z& z, const RMIN1& rmin1, const RMAX1& rmax1, const RMIN2& rmin2, const RMAX2& rmax2)
-      : Solid(doc,"Cone",name)
-      {
-        setDimensions(_toDouble(z),_toDouble(rmin1),_toDouble(rmax1),_toDouble(rmin2),_toDouble(rmax2));
-      }
+      Cone(LCDD& lcdd, const std::string& name, const Z& z, const RMIN1& rmin1, const RMAX1& rmax1, const RMIN2& rmin2, const RMAX2& rmax2)
+      { make(lcdd,name,_toDouble(z),_toDouble(rmin1),_toDouble(rmax1),_toDouble(rmin2),_toDouble(rmax2)); }
       /// Set the box dimensions
       Cone& setDimensions(double z,double rmin1,double rmax1,double rmin2,double rmax2);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoCone*() const     { return _ptr<TGeoCone>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoCone* operator->() const   { return _ptr<TGeoCone>(); }
     };
 
     struct Trap : public Solid   {
       /// Constructor to be used when reading the already parsed object
-      Trap( Handle_t e) : Solid(e) {}
+      Trap( const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new object with attribute initialization
-      Trap( const Document& doc, const std::string& name,
+      Trap( LCDD& lcdd, const std::string& name,
             double z,
             double theta,
             double phi,
@@ -152,15 +186,19 @@ namespace DetDesc {
       Trap& setDimensions(double z,double theta,double phi,
                           double y1,double x1,double x2,double alpha1,
                           double y2,double x3,double x4,double alpha2);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoTrap*() const     { return _ptr<TGeoTrap>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoTrap* operator->() const   { return _ptr<TGeoTrap>(); }
     };
 
     struct Trapezoid : public Solid {
       /// Constructor to be used when reading the already parsed object
-      Trapezoid(Handle_t e) : Solid(e) {}
+      Trapezoid(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new object
-      Trapezoid(const Document& doc, const std::string& name);
+      Trapezoid(LCDD& lcdd, const std::string& name);
       /// Constructor to be used when creating a new object with attribute initialization
-      Trapezoid(const Document& doc, const std::string& name, double x1, double x2, double y1, double y2, double z);
+      Trapezoid(LCDD& lcdd, const std::string& name, double x1, double x2, double y1, double y2, double z);
       /// Set the Trapezoid dimensions
       Trapezoid& setDimensions(double x1, double x2, double y1, double y2, double z);
       Trapezoid& setX1(double value);
@@ -173,34 +211,45 @@ namespace DetDesc {
       double y1() const;
       double y2() const;
       double z() const;
+      /// Auto conversion to underlying ROOT object
+      operator TGeoTrd2*() const     { return _ptr<TGeoTrd2>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoTrd2* operator->() const   { return _ptr<TGeoTrd2>(); }
     };
 
     struct PolyhedraRegular : public Solid {
       /// Constructor to be used when reading the already parsed object
-      PolyhedraRegular(Handle_t e) : Solid(e) {}
+      PolyhedraRegular(const Element& e) : Solid(e) {}
       /// Constructor to be used when creating a new object
-      PolyhedraRegular(const Document& doc, const std::string& name, int nsides, double rmin, double rmax, double zlen);
+      PolyhedraRegular(LCDD& lcdd, const std::string& name, int nsides, double rmin, double rmax, double zlen);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoPgon*() const     { return _ptr<TGeoPgon>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoPgon* operator->() const   { return _ptr<TGeoPgon>(); }
     };
 
     struct BooleanSolid : public Solid  {
       /// Constructor to be used when reading the already parsed object
-      BooleanSolid(Handle_t e) : Solid(e) {}
+      BooleanSolid() : Solid() {}
+      /// Constructor to be used when reading the already parsed object
+      BooleanSolid(const RefElement& e) : Solid(e) {}
       /// Constructor to be used when creating a new object
-      BooleanSolid(const Document& doc, const std::string& type, const std::string& name);
-      //BooleanSolid& setSolids(const Solid& s1, const Solid& s2);
-      //BooleanSolid& setPosition(const Position& pos);
-      //BooleanSolid& setRotation(const Rotation& rot);
+      BooleanSolid(LCDD& lcdd, const std::string& type, const std::string& name, const std::string& expr);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoCompositeShape*() const     { return _ptr<TGeoCompositeShape>(); }
+      /// Overloaded operator -> to access underlying object
+      TGeoCompositeShape* operator->() const   { return _ptr<TGeoCompositeShape>(); }
     };
 
     struct SubtractionSolid : public BooleanSolid  {
       /// Constructor to be used when reading the already parsed object
-      SubtractionSolid(Handle_t e) : BooleanSolid(e) {}
+      SubtractionSolid(const Element& e) : BooleanSolid(e) {}
       /// Constructor to be used when creating a new object
-      SubtractionSolid(const Document& doc, const std::string& name, const std::string& expr);
+      SubtractionSolid(LCDD& lcdd, const std::string& name, const std::string& expr);
       /// Constructor to be used when creating a new object
-      SubtractionSolid(const Document& doc, const std::string& name, const Solid& shape1, const Solid& shape2);
+      SubtractionSolid(LCDD& lcdd, const std::string& name, const Solid& shape1, const Solid& shape2);
       /// Constructor to be used when creating a new object
-      SubtractionSolid(const Document& doc, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot);
+      SubtractionSolid(LCDD& lcdd, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot);
     };
 
   }       /* End namespace Geometry           */

@@ -23,13 +23,13 @@ namespace DetDesc {
 
     struct Subdetector;
     struct Readout;
-    struct Document;
     struct Solid;
     struct Constant;
     struct Volume;
     struct Region;
     struct Material;
     struct Materials;
+    struct Transformation;
     struct Position;
     struct Rotation;
     struct LimitSet;
@@ -38,20 +38,20 @@ namespace DetDesc {
     struct LCDD;
 
     struct LCDD {
-      typedef std::map<std::string,Handle_t> HandleMap;
+      typedef std::map<std::string,Element> HandleMap;
 
       virtual ~LCDD() {}
 
-      virtual Document document() const = 0;
-      virtual Document create() = 0;
-      virtual Document init() = 0;
+      //virtual Document document() const = 0;
+      virtual void create() = 0;
+      virtual void init() = 0;
       virtual void endDocument() = 0;
       virtual void addStdMaterials() = 0;
 
       virtual Volume   worldVolume() const = 0;
       virtual Volume   trackingVolume() const = 0;
       virtual Rotation reflection() const = 0;
-      virtual Matrix   identity() const = 0;
+      virtual Transformation identity() const = 0;
 
       virtual const HandleMap& header()  const = 0;
       virtual const HandleMap& constants()  const = 0;
@@ -80,9 +80,9 @@ namespace DetDesc {
       virtual Subdetector detector(const std::string& name) const = 0;
 
       virtual LCDD& add(const Constant& constant) = 0;
-      virtual LCDD& add(const Solid& solid) = 0;
+      //virtual LCDD& add(const Solid& solid) = 0;
       virtual LCDD& add(const Region& region) = 0;
-      virtual LCDD& add(const Volume& vol) = 0;
+      //virtual LCDD& add(const Volume& vol) = 0;
       virtual LCDD& add(const Material& mat) = 0;
       virtual LCDD& add(const VisAttr& attr) = 0;
       virtual LCDD& add(const Position& pos) = 0;
@@ -99,6 +99,9 @@ namespace DetDesc {
       virtual LCDD& addRegion(const RefElement& region) = 0;
       virtual LCDD& addReadout(const RefElement& readout) = 0;
       virtual LCDD& addDetector(const RefElement& detector) = 0;
+      virtual LCDD& addSolid(const RefElement& detector) = 0;
+      virtual LCDD& addVolume(const RefElement& detector) = 0;
+
       //---Factory method-------
       static LCDD& getInstance(void);
       virtual void dump() const = 0;

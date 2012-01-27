@@ -1,6 +1,5 @@
 #define _USE_MATH_DEFINES
-#include "DetDesc/lcdd/Shapes.h"
-#include "DetDesc/lcdd/Objects.h"
+#include "DetDesc/lcdd/LCDD.h"
 #include "../Internals.h"
 
 // C/C++ include files
@@ -8,9 +7,13 @@
 
 // ROOT includes
 #include "TGeoShape.h"
+#include "TGeoCone.h"
 #include "TGeoPcon.h"
+#include "TGeoPgon.h"
 #include "TGeoTube.h"
 #include "TGeoTrd2.h"
+#include "TGeoArb8.h"
+#include "TGeoMatrix.h"
 #include "TGeoBoolNode.h"
 #include "TGeoCompositeShape.h"
 
@@ -37,10 +40,15 @@ ZPlane& ZPlane::setZ(double value)  {
   return *this;
 }
 
+/// Assign pointrs and register solid to geometry
+void Solid::assignSolid(LCDD& lcdd, TNamed* n, const std::string& nam, const std::string& tit) {
+  assign(n,nam,tit);
+  lcdd.addSolid(RefElement(m_element));
+}
+
 /// Access to the shape pointer
 TGeoShape& Solid::shape()  const  {
-  TObject* o = m_element.ptr();
-  TGeoShape* s = dynamic_cast<TGeoShape*>(o);
+  TGeoShape* s = dynamic_cast<TGeoShape*>(m_element);
   if ( s ) return *s;
   throw std::runtime_error("Invalid cast to TGeoshape");
 }
@@ -52,18 +60,8 @@ void Solid::setDimensions(double params[])   {
   s.ComputeBBox();
 }
 
-/// Constructor to be used when creating a new DOM tree
-Box::Box(const Document& document, const string& name)
-: Solid(document,"box",name)
-{
-  setDimensions(0.,0.,0.);
-}
-
-/// Constructor to be used when creating a new DOM tree
-Box::Box(const Document& document, const string& name, double x, double y, double z)
-: Solid(document,"box", name)
-{
-  setDimensions(x,y,z);
+void Box::make(LCDD& lcdd, const std::string& name, double x, double y, double z)  {
+  assignSolid(lcdd,new TGeoBBox(x,y,z),name,"box");
 }
 
 /// Set the box dimensions
@@ -74,27 +72,17 @@ Box& Box::setDimensions(double x, double y, double z)   {
 }
 
 /// Constructor to be used when creating a new DOM tree
-Polycone::Polycone(const Document& document, const string& name)
-: Solid(document, "polycone", name)
-{
-  TGeoPcon* s = (TGeoPcon*)m_element.ptr();
-  s->Phi1() = 0.;
-  s->Dphi() = RAD_2_DEGREE * (2.*M_PI);
+Polycone::Polycone(LCDD& lcdd, const string& name)   {
+  assignSolid(lcdd,new TGeoPcon(0,RAD_2_DEGREE * (2.*M_PI),0),name,"polycone");
 }
 
 /// Constructor to be used when creating a new DOM tree
-Polycone::Polycone(const Document& document, const string& name, double start, double delta)  
-: Solid(document, "polycone", name)
-{
-  TGeoPcon* s = new TGeoPcon();//(TGeoPcon*)m_element.ptr();
-  m_element = s;
-  s->Phi1() = RAD_2_DEGREE * start;
-  s->Dphi() = RAD_2_DEGREE * delta;
+Polycone::Polycone(LCDD& lcdd, const string& name, double start, double delta)   {
+  assignSolid(lcdd,new TGeoPcon(RAD_2_DEGREE*start,RAD_2_DEGREE*delta,0),name,"polycone");
 }
 
 /// Constructor to be used when creating a new polycone object. Add at the same time all Z planes
-Polycone::Polycone(const Document& document, const std::string& name, double start, double delta, const vector<double>& rmin, const vector<double>& rmax, const vector<double>& z)
-: Solid(document, "polycone", name)
+Polycone::Polycone(LCDD& lcdd, const std::string& name, double start, double delta, const vector<double>& rmin, const vector<double>& rmax, const vector<double>& z)
 {
   vector<double> params;
   params.push_back(RAD_2_DEGREE * start);
@@ -105,7 +93,7 @@ Polycone::Polycone(const Document& document, const std::string& name, double sta
     params.push_back(rmin[i]);
     params.push_back(rmax[i]);
   }
-  this->Solid::setDimensions(&params[0]);
+  assignSolid(lcdd, new TGeoPcon(&params[0]),name,"polycone");
   if ( rmin.size() < 2 )  {
     throw runtime_error("PolyCone::addZPlanes> Not enough Z planes. minimum is 2!");
   }
@@ -135,18 +123,10 @@ void Polycone::addZPlanes(const vector<double>& rmin, const vector<double>& rmax
   this->Solid::setDimensions(&params[0]);
 }
 
-/// Constructor to be used when creating a new DOM tree
-Tube::Tube(const Document& doc, const string& name) : Solid(doc,"tube",name) 
-{
-  m_element.m_node = new TGeoTubeSeg(name.c_str(),0.,0.,0.,0.,0.);
-}
-
 /// Constructor to be used when creating a new DOM tree with attribute initialization
-Tube::Tube(const Document& doc, const string& name, double rmin, double rmax, double z, double deltaPhi)
-: Solid(doc,"tube",name)
+void Tube::make(LCDD& lcdd, const string& name, double rmin, double rmax, double z, double deltaPhi)
 {
-  m_element.m_node = new TGeoTubeSeg(name.c_str(),0.,0.,0.,0.,0.);
-  setDimensions(rmin,rmax,z,deltaPhi);
+  assignSolid(lcdd,new TGeoTubeSeg(rmin,rmax,z,0.,RAD_2_DEGREE*deltaPhi),name,"tube");
 }
 
 /// Set the tube dimensions
@@ -157,23 +137,15 @@ Tube& Tube::setDimensions(double rmin, double rmax, double z, double deltaPhi)
   return *this;
 }
 
-/// Constructor to be used when creating a new DOM tree
-Cone::Cone(const Document& doc, const string& name)
-: Solid(doc, "cone", name)
-{
-  setDimensions(0.,0.,0.,0.,0.);
-}
-
 /// Constructor to be used when creating a new DOM tree with attribute initialization
-Cone::Cone(const Document& doc, const string& name,
-           double z,
-           double rmin1,
-           double rmax1,
-           double rmin2,
-           double rmax2)
-: Solid(doc, "cone", name)
+void Cone::make(LCDD&  lcdd, const string& name,
+		double z,
+		double rmin1,
+		double rmax1,
+		double rmin2,
+		double rmax2)
 {
-  setDimensions(z,rmin1,rmax1,rmin2,rmax2);
+  assignSolid(lcdd,new TGeoCone(z,rmin1,rmax1,rmin2,rmax2),name,"cone");
 }
 
 Cone& Cone::setDimensions(double z,double rmin1,double rmax1,double rmin2,double rmax2)  {
@@ -183,17 +155,13 @@ Cone& Cone::setDimensions(double z,double rmin1,double rmax1,double rmin2,double
 }
 
 /// Constructor to be used when creating a new DOM tree
-Trapezoid::Trapezoid(const Document& doc, const string& name)
-: Solid(doc,"trd",name) 
-{
-  setDimensions(0.,0.,0.,0.,0.);
+Trapezoid::Trapezoid(LCDD& lcdd, const string& name)  {
+  assignSolid(lcdd,new TGeoTrd2(0,0,0,0,0),name,"trd2");
 }
 
 /// Constructor to be used when creating a new DOM tree with attribute initialization
-Trapezoid::Trapezoid(const Document& doc, const string& name, double x1, double x2, double y1, double y2, double z)
-: Solid(doc,"trd2",name)
-{
-  setDimensions(x1,x2,y1,y2,z);
+Trapezoid::Trapezoid(LCDD& lcdd, const string& name, double x1, double x2, double y1, double y2, double z)  {
+  assignSolid(lcdd,new TGeoTrd2(x1,x2,y1,y2,z),name,"trd2");
 }
 
 /// Set the Trapezoid dimensions
@@ -240,7 +208,7 @@ Trapezoid& Trapezoid::setZ(double value)  {
 }
 
 
-Trap::Trap( const Document& doc, const string& name,
+Trap::Trap( LCDD&  lcdd, const string& name,
             double z,
             double theta,
             double phi,
@@ -252,9 +220,8 @@ Trap::Trap( const Document& doc, const string& name,
             double x3,
             double x4,
             double alpha2)
-: Solid(doc,"trap", name)
 {
-  setDimensions(z,theta,phi,y1,x1,x2,alpha1,y2,x3,x4,alpha2);
+  assignSolid(lcdd,new TGeoTrap(z,RAD_2_DEGREE*theta,RAD_2_DEGREE*phi,y1,x1,x2,alpha1,y2,x3,x4,alpha2),name,"trap");
 }
 
 /// Set the trap dimensions
@@ -267,14 +234,13 @@ Trap& Trap::setDimensions(double z,double theta,double phi,
 }
 
 /// Constructor to be used when creating a new DOM tree
-PolyhedraRegular::PolyhedraRegular(const Document& doc, const string& name, int nsides, double rmin, double rmax, double zlen)  
-: Solid(doc, "polyhedra", name)
+PolyhedraRegular::PolyhedraRegular(LCDD& lcdd, const string& name, int nsides, double rmin, double rmax, double zlen)  
 {
   if ( rmin<0e0 || rmin>rmax )
     throw runtime_error("PolyhedraRegular: Illegal argument rmin:<"+_toString(rmin)+"> is invalid!");
   else if ( rmax<0e0 )
     throw runtime_error("PolyhedraRegular: Illegal argument rmax:<"+_toString(rmax)+"> is invalid!");
-
+  assignSolid(lcdd,new TGeoPgon(),name,"polyhedra");
   double params[] = {
     RAD_2_DEGREE * 2e0 * M_PI,
     RAD_2_DEGREE * 2e0 * M_PI,
@@ -287,71 +253,45 @@ PolyhedraRegular::PolyhedraRegular(const Document& doc, const string& name, int 
 }
 
 /// Constructor to be used when creating a new DOM tree
-BooleanSolid::BooleanSolid(const Document& doc, const string& type, const string& name)
-: Solid(doc, type, name)
+BooleanSolid::BooleanSolid(LCDD& lcdd, const string& name, const string& type, const string& expr)
 {
+  assignSolid(lcdd,new TGeoCompositeShape(expr.c_str()),name,type);
 }
 
 /// Constructor to be used when creating a new object
-SubtractionSolid::SubtractionSolid(const Document& doc, const std::string& name, const std::string& expr)
-: BooleanSolid(doc, "subtraction", name)
+SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const std::string& expr)
+  : BooleanSolid(lcdd, name, "subtraction", expr)
 {
-  //TGeoShape& s1 = shape1.shape();
-  //TGeoShape& s2 = shape2.shape();
-  m_element = new TGeoCompositeShape(name.c_str(),expr.c_str());
 }
 
 
 /// Constructor to be used when creating a new DOM tree
-SubtractionSolid::SubtractionSolid(const Document& doc, const string& name, const Solid& shape1, const Solid& shape2)
-: BooleanSolid(doc, "subtraction", name)
+SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& shape1, const Solid& shape2)
+  : BooleanSolid(lcdd, name, "subtraction", shape1.name()+string("-")+shape2.name())
 {
-  //TGeoShape& s1 = shape1.shape();
-  //TGeoShape& s2 = shape2.shape();
-  shape1.shape().ComputeBBox();
-  shape2.shape().ComputeBBox();
-  string expr = shape1.name()+string("-")+shape2.name();
-  m_element = new TGeoCompositeShape(name.c_str(),expr.c_str());
 }
-#include "TGeoMatrix.h"
 
 /// Constructor to be used when creating a new object
-SubtractionSolid::SubtractionSolid(const Document& doc, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
-: BooleanSolid(doc, "subtraction", name)
+SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
 {
   string combi1 = name+"_combitrans_first";
   string combi2 = name+"_combitrans_first";
   TGeoTranslation* t = value<TGeoTranslation>(pos);
   TGeoRotation*    r = value<TGeoRotation>(rot);
-  //const double*    v = t->GetTranslation();
+  //const double*  v = t->GetTranslation();
 
   TGeoTranslation* firstPos = new TGeoTranslation(0,0,0);
-  TGeoRotation* firstRot = new TGeoRotation();
+  TGeoRotation*    firstRot = new TGeoRotation();
   firstRot->RotateZ(0);
   firstRot->RotateY(0);
   firstRot->RotateX(0);
 
   TGeoMatrix* firstMatrix  = new TGeoCombiTrans(*firstPos,firstRot->Inverse());
   TGeoMatrix* secondMatrix = new TGeoCombiTrans(*t,r->Inverse());
-
   TGeoCompositeShape* composite = 
     new TGeoCompositeShape(name.c_str(),
                            new TGeoSubtraction(&shape1.shape(),&shape2.shape(),
                                                firstMatrix,secondMatrix));
   composite->ComputeBBox();
-  m_element = composite;
+  assignSolid(lcdd, composite, "", "subtraction");
 }
-#if 0
-
-   TGeoMatrix* firstMatrix = new TGeoCombiTrans(*firstPos,firstRot->Inverse());
-   TGeoMatrix* secondMatrix = new TGeoCombiTrans(*secondPos,secondRot->Inverse());
-
-   TGeoCompositeShape* boolean = 0;
-   if (!first || !second) {
-      Fatal("BooSolid", "Incomplete solid %s, missing shape components", name.Data());
-      return child;
-   }   
-   switch (num) {
-   case 1: boolean = new TGeoCompositeShape(NameShort(name),new TGeoSubtraction(first,second,firstMatrix,secondMatrix)); break;      // SUBTRACTION
-   case 2: boolean = new TGeoCompositeShape(NameShort(name),new TGeoIntersection(first,second,firstMatrix,secondMatrix)); break;     // INTERSECTION 
-#endif

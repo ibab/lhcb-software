@@ -12,7 +12,7 @@ namespace DetDesc {
   struct ILDExTPC : public Geometry::Subdetector {
     typedef TPCData Object;
     ILDExTPC(const Geometry::RefElement& e) : Geometry::Subdetector(e) {}
-    ILDExTPC(const Geometry::Document& doc, const std::string& name, const std::string& type, int id);
+    ILDExTPC(const Geometry::LCDD& lcdd, const std::string& name, const std::string& type, int id);
     void setInnerWall(Geometry::RefElement obj);
     void setOuterWall(Geometry::RefElement obj);
     void setGasVolume(Geometry::RefElement obj);

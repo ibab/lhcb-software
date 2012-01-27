@@ -25,11 +25,14 @@ namespace DetDesc {
         InvalidObjectError(const std::string& msg) : std::runtime_error(msg) {}
       };
 
-      struct ObjectHandleMap : public std::map<std::string,Handle_t>  {
+      struct ObjectHandleMap : public std::map<std::string,Element>  {
         ObjectHandleMap() {}
         void append_noCheck(const RefElement& e) { 
           if ( e.isValid() )  {
             std::string n = e.name();
+	    if ( this->find(n) != this->end() ) {
+	      throw InvalidObjectError("Object "+n+" is already present in map!");
+	    }
             this->insert(std::make_pair(n,e.ptr()));
           }
         }
@@ -52,9 +55,8 @@ namespace DetDesc {
       };
 
 
-      Document_t   *m_doc;
+      Document_t         *m_doc;
       ObjectHandleMap     m_readouts;
-      //HandleMap           m_root;
       ObjectHandleMap     m_header;
       ObjectHandleMap     m_idDict;
       ObjectHandleMap     m_limits;
@@ -77,7 +79,7 @@ namespace DetDesc {
       Volume              m_worldVol;
       Volume              m_trackingVol;
       Rotation            m_reflect;
-      Matrix              m_identity;
+      Transformation      m_identity;
 
       RefElement          m_setup;
 
@@ -90,19 +92,19 @@ namespace DetDesc {
       void fromCompact(XML::Handle_t doc_element);
       void fromCompact(const std::string& fname);
 
-      virtual Document create();
-      virtual Document init();
+      virtual void create();
+      virtual void init();
       virtual void addStdMaterials();
       virtual void endDocument();
 
       void dump() const;
 
-      virtual Handle_t getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
-      virtual Volume   pickMotherVolume(const Subdetector& sd) const;
-      virtual Volume   worldVolume() const            { return m_worldVol;          }
-      virtual Volume   trackingVolume() const         { return m_trackingVol;       }
-      virtual Rotation reflection() const             { return m_reflect;           }
-      virtual Matrix   identity() const               { return m_identity;          }
+      virtual Element  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
+      virtual Volume         pickMotherVolume(const Subdetector& sd) const;
+      virtual Volume         worldVolume() const      { return m_worldVol;          }
+      virtual Volume         trackingVolume() const   { return m_trackingVol;       }
+      virtual Rotation       reflection() const       { return m_reflect;           }
+      virtual Transformation identity() const         { return m_identity;          }
 
       virtual LimitSet limitSet(const std::string& name)  const
       {  return getRefChild(m_limits,name);                                         }  
@@ -129,7 +131,6 @@ namespace DetDesc {
       virtual Subdetector detector(const std::string& name)  const
       {  return getRefChild(m_detectors,name);                                      }
 
-      virtual Document document() const               { return Document(m_doc);     }
       virtual const HandleMap& header()  const        { return m_header;            }
       virtual const HandleMap& constants() const      { return m_define;            }
       virtual const HandleMap& visAttributes() const  { return m_display;           }

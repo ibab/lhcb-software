@@ -12,7 +12,7 @@ namespace DetDesc {
   */
   namespace Geometry  {
 
-    struct Segmentation : public Element   {
+    struct Segmentation : public RefElement   {
       struct Object  {
         unsigned char Attr_useForHitPosition;
         union {
@@ -45,11 +45,9 @@ namespace DetDesc {
         }
       };
       /// Constructor to be used when reading the already parsed object
-      Segmentation(Handle_t e);
-      /// Constructor to be used when reading the already parsed object
       Segmentation(const Element& e);
       /// Constructor to create a new segmentation object (to be called by super class only)
-      Segmentation(const Document& doc, const std::string& type);
+      Segmentation(LCDD& lcdd, const std::string& type);
       bool useForHitPosition() const;
       const std::string type() const;
     };
@@ -58,7 +56,7 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       ProjectiveCylinder(const Element& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
-      ProjectiveCylinder(const Document& doc);
+      ProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get number of bins in theta
       int thetaBins() const;
       /// Accessors: get number of bins in phi
@@ -73,7 +71,7 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       NonProjectiveCylinder(const Element& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
-      NonProjectiveCylinder(const Document& doc);
+      NonProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get size of bins in Z
       double gridSizeZ() const;
       /// Accessors: get size of bins in phi
@@ -88,7 +86,7 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       ProjectiveZPlane(const Element& e);
       /// Constructor to create a new segmentation object
-      ProjectiveZPlane(const Document& doc);
+      ProjectiveZPlane(LCDD& lcdd);
       /// Accessors: get number of bins in theta
       int thetaBins() const;
       /// Accessors: get number of bins in phi
@@ -103,9 +101,9 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       GridXY(const Element& h) : Segmentation(h) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
-      GridXY(const Document& doc, const std::string& tag);
+      GridXY(LCDD& lcdd, const std::string& tag);
       /// Constructor to be used when creating a new object.
-      GridXY(const Document& doc, const std::string& tag, double size_x, double size_y);
+      GridXY(LCDD& lcdd, const std::string& tag, double size_x, double size_y);
       /// Accessors: set grid size in X
       void setGridSizeX(double value);
       /// Accessors: set grid size in Y
@@ -116,9 +114,9 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       GridXYZ(const Element& h) : GridXY(h) {}
       /// Constructor to be used when creating a new object.
-      GridXYZ(const Document& doc);
+      GridXYZ(LCDD& lcdd);
       /// Constructor to be used when creating a new object.
-      GridXYZ(const Document& doc, double size_x, double size_y, double size_z);
+      GridXYZ(LCDD& lcdd, double size_x, double size_y, double size_z);
       /// Accessors: set grid size in Z
       void setGridSizeZ(double value);
     };
@@ -127,14 +125,14 @@ namespace DetDesc {
       /// Constructor to be used when reading the already parsed object
       CartesianGridXY(const Element& element) : GridXY(element) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
-      CartesianGridXY(const Document& doc) : GridXY(doc,"cartesian_grid_xy") {}
+      CartesianGridXY(LCDD& lcdd) : GridXY(lcdd,"cartesian_grid_xy") {}
     };
 
     struct GlobalGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
       GlobalGridXY(const Element& element) : GridXY(element) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
-      GlobalGridXY(const Document& doc) : GridXY(doc,"global_grid_xy") {}
+      GlobalGridXY(LCDD& lcdd) : GridXY(lcdd,"global_grid_xy") {}
     };
 
   }

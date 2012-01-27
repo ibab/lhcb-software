@@ -51,7 +51,7 @@ Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if no
   return m_worldVol;
 }
 
-Handle_t LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
+Element LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
   HandleMap::const_iterator i = e.find(name);
   if ( i != e.end() )  {
     return (*i).second;
@@ -66,13 +66,9 @@ template<class T> LCDD&
 LCDDImp::__add(const RefElement& x, ObjectHandleMap& m,Int_t (TGeoManager::*func)(T*))  {
   T* obj = dynamic_cast<T*>(x.ptr());
   if ( obj )  {
-    TGeoManager *mgr = document();
-    if ( mgr )  {
-      m.append(x);
-      if ( func ) (mgr->*func)(obj);
-      return *this;
-    }
-    throw InvalidObjectError("Attempt to add object to invalid TGeoManager instance.");
+    m.append(x);
+    if ( func ) (gGeoManager->*func)(obj);
+    return *this;
   }
   throw InvalidObjectError("Attempt to add an object, which is of the wrong type.");
 }
@@ -102,7 +98,7 @@ LCDD& LCDDImp::addSolid(const RefElement& x)     {
   }
 #if 0
   cout << obj->GetName() << " " << (void*)obj
-    << " Index:" << document()->GetListOfShapes()->IndexOf(obj) << endl;
+    << " Index:" << gGeoManager->GetListOfShapes()->IndexOf(obj) << endl;
 #endif
   return *this;
 }
@@ -135,7 +131,7 @@ LCDD& LCDDImp::addPosition(const RefElement& x)  {
 }
 
 void LCDDImp::endDocument()  {
-  Document doc  = document(); 
+  LCDD& lcdd = *this;
   Volume world  = volume("world_volume");
   Volume trkVol = volume("tracking_volume");
   Material  air = material("Air");
@@ -143,20 +139,20 @@ void LCDDImp::endDocument()  {
   world.setMaterial(air);
   trkVol.setMaterial(air);
 
-  Region trackingRegion(doc,"TrackingRegion");
+  Region trackingRegion(lcdd,"TrackingRegion");
   trackingRegion.setThreshold(1);
   trackingRegion.setStoreSecondaries(true);
   add(trackingRegion);
   trkVol.setRegion(trackingRegion);
     
   // Set the world volume to invisible.
-  VisAttr worldVis(document(),"WorldVis");
+  VisAttr worldVis(lcdd,"WorldVis");
   worldVis.setVisible(false);
   world.setVisAttributes(worldVis);
   add(worldVis);
   
   // Set the tracking volume to invisible.
-  VisAttr trackingVis(document(),"TrackingVis");
+  VisAttr trackingVis(lcdd,"TrackingVis");
   trackingVis.setVisible(false);               
   trkVol.setVisAttributes(trackingVis);
   add(trackingVis); 
@@ -179,14 +175,12 @@ void LCDDImp::fromCompact(const string& fname)  {
   fromCompact(XML::DocumentHandler().load(fname).root());
 }
 
-Document LCDDImp::create()  {
-  Document doc(new TGeoManager());
-  m_doc  = doc;
-  return doc;
+void LCDDImp::create()  {
+  gGeoManager = new TGeoManager();
 }
 
-Document LCDDImp::init()  {
-  Document doc = m_doc;
+void LCDDImp::init()  {
+  LCDD& lcdd = *this;
 #if 0
   m_root.append(m_header    = Header(doc));
   m_root.append(m_idDict    = Element(doc,"iddict"));
@@ -203,34 +197,34 @@ Document LCDDImp::init()  {
   m_gdml.append(m_structure = Element(doc,"structure"));
   m_gdml.append(m_setup     = Element(doc,"setup"));
 #endif
-  m_identity = Matrix(doc,"identity","identity");
-  Box worldSolid(doc,"world_box","world_x","world_y","world_z");
+
+  m_identity = Transformation(lcdd,"identity");
+  Box worldSolid(lcdd,"world_box","world_x","world_y","world_z");
   add(worldSolid);
 
-  add(Rotation(doc,"identity_rot"));
-  add(m_reflect = Rotation(doc,"reflect_rot",M_PI,0.,0.));
-  add(Position(doc,"identity_pos"));
+  add(Rotation(lcdd,"identity_rot",0,0,0));
+  add(m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.));
+  add(Position(lcdd,"identity_pos",0,0,0));
 
   Material air = material("Air");
-  Volume world(doc,"world_volume",worldSolid,air);
+  Volume world(lcdd,"world_volume",worldSolid,air);
   add(world);
 
-  Tube trackingSolid(doc,"tracking_cylinder",
+  Tube trackingSolid(lcdd,"tracking_cylinder",
 		     0.,
 		     _toDouble("tracking_region_radius"),
 		     _toDouble("2*tracking_region_zmax"),M_PI);
   add(trackingSolid);
 
-  Volume tracking(doc,"tracking_volume",trackingSolid,air);
+  Volume tracking(lcdd,"tracking_volume",trackingSolid,air);
   add(tracking);
-//  world.addPhysVol(PhysVol(doc,tracking,"tracking_volume"));
+//  world.addPhysVol(PhysVol(lcdd,tracking,"tracking_volume"));
 
-  //RefElement ref_world(doc,"world",world.refName());
+  //RefElement ref_world(lcdd,"world",world.refName());
   //m_setup.append(ref_world);
   m_worldVol    = world;
   m_trackingVol = tracking;
-  doc->SetTopVolume(value<TGeoVolume>(m_worldVol));
-  return doc;
+  gGeoManager->SetTopVolume(value<TGeoVolume>(m_worldVol));
 }
 
 void LCDDImp::fromCompact(XML::Handle_t compact)   {
@@ -248,12 +242,11 @@ void LCDDImp::fromCompact(XML::Handle_t compact)   {
   }
 }
 void LCDDImp::dump() const  {
-  m_doc->CloseGeometry();
-      
-  m_doc->SetVisLevel(4);
-  m_doc->SetVisOption(1);
+  TGeoManager* mgr = gGeoManager;
+  mgr->CloseGeometry();
+  mgr->SetVisLevel(4);
+  mgr->SetVisOption(1);
   value<TGeoVolume>(m_worldVol)->Draw("ogl");
-
   Printer<const LCDD*>(*this,cout)(this);
 }
 

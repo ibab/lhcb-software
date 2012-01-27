@@ -39,10 +39,9 @@ namespace DetDesc {
         RefElement  Attr_id;
         Object() : Attr_verbose(0), Attr_segmentation(0) {}
       };
-      SensitiveDetector() : RefElement(Handle_t(0)) {}
-      SensitiveDetector(Handle_t e) : RefElement(e) {}
+      SensitiveDetector() : RefElement() {}
       SensitiveDetector(const RefElement& e) : RefElement(e) {}
-      SensitiveDetector(const Document& doc, const std::string& type, const std::string& name);
+      SensitiveDetector(const LCDD& lcdd, const std::string& type, const std::string& name);
       /// Access the type of the sensitive detector
       std::string type() const;
       SensitiveDetector& setCombineHits(bool value);
@@ -69,10 +68,11 @@ namespace DetDesc {
       };
       void check(bool condition, const std::string& msg) const;
 
-      Subdetector(Handle_t e) : RefElement(e)  {}
+      Subdetector() : RefElement()  {}
+      Subdetector(const Element& e) : RefElement(e)  {}
       Subdetector(const RefElement& e) : RefElement(e)  {}
       /// Constructor for a new subdetector element
-      Subdetector(const Document& doc, const std::string& name, const std::string& type, int id);
+      Subdetector(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 
       Subdetector& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
       Subdetector& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);

@@ -13,10 +13,9 @@ Subdetector::Object::Object()
 }
 
 /// Constructor for a new subdetector element
-Subdetector::Subdetector(const Document& document, const string& name, const string& type, int id)
-: RefElement(document, "subdetector", name)
+Subdetector::Subdetector(const LCDD& /* lcdd */, const string& name, const string& type, int id)
 {
-  first_value<TNamed>(*this)->SetTitle(type.c_str());
+  assign(new Value<TNamed,Object>(),name,type);
   setAttr(Attr_id,id);
 }
 
@@ -189,8 +188,7 @@ bool Subdetector::isInsideTrackingVolume() const  {
 }
 //#endif
 
-SensitiveDetector::SensitiveDetector(const Document& doc, const std::string& type, const std::string& name) 
-: RefElement(doc, "sensitive_detector", name)
+SensitiveDetector::SensitiveDetector(const LCDD& /* lcdd */, const std::string& type, const std::string& name) 
 {
   /*
     <calorimeter ecut="0" eunit="MeV" hits_collection="EcalEndcapHits" name="EcalEndcap" verbose="0">
@@ -198,7 +196,7 @@ SensitiveDetector::SensitiveDetector(const Document& doc, const std::string& typ
       <idspecref ref="EcalEndcapHits"/>
     </calorimeter>
   */
-  first_value<TNamed>(*this)->SetTitle(type.c_str());
+  assign(new Value<TNamed,Object>(),name,type);
   setAttr(Attr_ecut,0e0);
   setAttr(Attr_eunit,"MeV");
   setAttr(Attr_verbose,0);

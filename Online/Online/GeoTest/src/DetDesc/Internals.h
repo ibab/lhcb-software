@@ -2,15 +2,13 @@
 #define DETDESC_ELEMENTINTERNALS_H
 #include <TNamed.h>
 #include <algorithm>
+#include "DetDesc/Elements.h"
 
 namespace DetDesc  {
   class IDDescriptor;
   namespace Geometry  {
     typedef DetDesc::IDDescriptor IDDescriptor;
 
-    template <typename Q, typename P> struct Value : public Q, public P  {
-      virtual ~Value() {}
-    };
     template <typename T, typename Q> T* first_value(const Q& e)  {
       return (Value<T,typename Q::Object>*)e.ptr();
       //return e.handle()._ptr<V>();
@@ -25,7 +23,7 @@ namespace DetDesc  {
     }
   }
 }
-#define getAttr(y)  m_element._ptr<Value<TNamed,Object> >()->y
+#define getAttr(y) _ptr<Value<TNamed,Object> >()->y
 #define setAttr(y,value) getAttr(y) = value
 
 // Conversion factor from radians to degree: 360/(2*PI)

@@ -19,74 +19,68 @@ namespace DetDesc {
   namespace Geometry  {
 
     // Forward declarations
-    struct Document;
+    struct LCDD;
 
     struct Author : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Author(Handle_t e) : RefElement(e)  {}
+      Author(const Element& e) : RefElement(e)  {}
       /// Constructor to be used when creating a new DOM tree
-      Author(const Document& doc) : RefElement(doc,"author","") {}
+      Author(LCDD& doc);
       //void setAuthorName(const char* nam)    {  setAttr("name",nam); }
       //void setAuthorEmail(const char* addr)  {  setAttr("email",addr); }
     };
 
-    struct Header : public Element  {
+    struct Header : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Header(Handle_t e=0) : Element(e)  {}
+      Header(const Element& e) : RefElement(e)  {}
       /// Constructor to be used when creating a new DOM tree
-      Header(const Document& doc) : Element(doc,"header") {}
-      //Header& fromCompact(Document doc, Handle_t element, const std::string& fname);
+      Header(LCDD& doc);
     };
 
     struct Constant : public RefElement  {
       /// Constructor to be used when reading the already parsed DOM tree
-      Constant(Handle_t e) : RefElement(e)  {}
+      Constant(const Element& e) : RefElement(e)  {}
       /// Constructor to be used when creating a new DOM tree
-      Constant(const Document& doc, const std::string& name);
+      Constant(LCDD& doc, const std::string& name);
       /// Constructor to be used when creating a new DOM tree
-      Constant(const Document& doc, const std::string& name, const std::string& val);
+      Constant(LCDD& doc, const std::string& name, const std::string& val);
     };
 
-    struct Matrix : public RefElement  {
-      /// Constructor to be used RefElement reading the already parsed DOM tree
-      Matrix(Handle_t e) : RefElement(e) {}
-      /// Constructor to be used when creating a new DOM tree
-      Matrix(const Document& doc, const std::string& type, const std::string& name) 
-        : RefElement(doc,type,name) {}
-    };
-
-    struct Position : public Matrix  {
+    struct Transformation : public RefElement {
       /// Constructor to be used when reading the already parsed DOM tree
-      Position(Handle_t e) : Matrix(e) {}
-      /// Constructor to be used when creating a new DOM tree
-      Position(const Document& doc, const std::string& name) 
-        : Matrix(doc,"position",name) {}
+      Transformation(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Position(const Document& doc, const std::string& name, double x, double y, double z);
+      Transformation(LCDD& doc, const std::string& name);
     };
 
-    struct Rotation : public Matrix  {
-      /// Constructor to be used RefElement reading the already parsed DOM tree
-      Rotation(Handle_t e) : Matrix(e) {}
-      /// Constructor to be used when creating a new DOM tree
-      Rotation(const Document& doc, const std::string& name) 
-        : Matrix(doc,"rotation",name) {}
+    struct Position : public RefElement  {
+      /// Constructor to be used when reading the already parsed DOM tree
+      Position(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Rotation(const Document& doc, const std::string& name, double x, double y, double z);
+      Position(LCDD& doc, const std::string& name, double x, double y, double z);
+    };
+
+    struct Rotation : public RefElement  {
+      /// Constructor to be used RefElement reading the already parsed DOM tree
+      Rotation(const Element& e) : RefElement(e) {}
+      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
+      Rotation(LCDD& doc, const std::string& name);
+      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
+      Rotation(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
     struct Atom : public RefElement  {
       /// Constructor to be used when creating a new DOM tree
-      Atom(Handle_t e) : RefElement(e) {}
+      Atom(const Element& e) : RefElement(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Atom(const Document& doc, const std::string& name);
+      Atom(LCDD& doc, const std::string& name, const std::string& formula, int Z, int N, double density);
     };
 
     struct Material : public RefElement  {
       /// Constructor to be used when creating a new DOM tree
-      Material(Handle_t e) : RefElement(e) {}
+      Material(const Element& e) : RefElement(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Material(const Document& doc, const std::string& name);
+      Material(LCDD& doc, const std::string& name);
     };
 
     struct VisAttr : public RefElement  {
@@ -105,9 +99,9 @@ namespace DetDesc {
         LAST_LINE_STYLE
       };
       /// Constructor to be used when reading the already parsed DOM tree
-      VisAttr(Handle_t e) : RefElement(e) {}
+      VisAttr(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
-      VisAttr(const Document& doc, const std::string& name);
+      VisAttr(LCDD& doc, const std::string& name);
       /// Set Flag to show/hide daughter elements
       void setShowDaughters(bool value);
       /// Set line style
@@ -126,7 +120,7 @@ namespace DetDesc {
       typedef std::pair<std::string,double> Object;
 
       /// Constructor to be used when creating a new DOM tree
-      Limit(const Document& doc, const std::string& name);
+      Limit(LCDD& doc, const std::string& name);
       void setParticles(const std::string& particleNames);
       void setValue(double value);
       void setUnit(const std::string& unit);
@@ -135,9 +129,9 @@ namespace DetDesc {
     struct LimitSet : public RefElement  {
       typedef TMap Object;
       /// Constructor to be used when reading the already parsed DOM tree
-      LimitSet(Handle_t h) : RefElement(h) {}
+      LimitSet(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
-      LimitSet(const Document& doc, const std::string& name);
+      LimitSet(LCDD& doc, const std::string& name);
       void addLimit(const RefElement& limit);
     };
 
@@ -149,9 +143,9 @@ namespace DetDesc {
         std::string Attr_lunit, Attr_eunit;
       };
       /// Constructor to be used when reading the already parsed DOM tree
-      Region(Handle_t h) : RefElement(h) {}
+      Region(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
-      Region(const Document& doc, const std::string& name);
+      Region(LCDD& doc, const std::string& name);
       Region& setStoreSecondaries(bool value);
       Region& setThreshold(double value);
       Region& setCut(double value);
@@ -161,9 +155,9 @@ namespace DetDesc {
 
     struct IDSpec : public RefElement   {
       /// Constructor to be used when reading the already parsed DOM tree
-      IDSpec(Handle_t h) : RefElement(h) {}
+      IDSpec(const Element& e) : RefElement(e) {}
       /// Constructor to be used when creating a new DOM tree
-      IDSpec(const Document& doc, const std::string& name, const IDDescriptor& dsc);
+      IDSpec(LCDD& doc, const std::string& name, const IDDescriptor& dsc);
       void addField(const std::string& name, const std::pair<int,int>& field);
     };
 

@@ -1,9 +1,14 @@
+#include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/IDDescriptor.h"
 #include "../Internals.h"
 #include "TMap.h"
 #include "TColor.h"
 #include "TGeoMatrix.h"
+#include "TGeoManager.h"
+#include "TGeoElement.h"
+#include "TGeoMaterial.h"
+
 #include <cmath>
 
 using namespace std;
@@ -31,52 +36,73 @@ Header& Header::fromCompact(Document doc, Handle_t element, const string& fname)
 #endif
 
 /// Constructor to be used when creating a new DOM tree
-Constant::Constant(const Document& doc, const string& name, const string& val)
-: RefElement(doc, "constant", name)
-{
-  TNamed* obj = value<TNamed>(*this);
-  obj->SetTitle(val.c_str());
+Author::Author(LCDD& /* lcdd */)  {
+  m_element = new TNamed("","author");
 }
 
 /// Constructor to be used when creating a new DOM tree
-Constant::Constant(const Document& doc, const string& name)
-: RefElement(doc, "constant", name)
+Header::Header(LCDD& /* lcdd */)   {
+  m_element = new TNamed("","header");
+}
+
+/// Constructor to be used when creating a new DOM tree
+Constant::Constant(LCDD& lcdd, const string& nam, const string& val)
 {
+  m_element = new TNamed(nam.c_str(),val.c_str());
+  lcdd.add(*this);
+}
+
+/// Constructor to be used when creating a new DOM tree
+Constant::Constant(LCDD& lcdd, const string& name)   {
+  m_element = new TNamed(name.c_str(),"");
+  lcdd.add(*this);
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Position::Position(const Document& doc, const std::string& name, double x, double y, double z)
-: Matrix(doc,"position",name) 
+Transformation::Transformation(LCDD& /*lcdd*/, const std::string& name)   
 {
-  TGeoTranslation* obj = value<TGeoTranslation>(*this);
-  obj->SetTranslation(x,y,z);
+  assign(new TGeoCombiTrans(0,0,0,0),name,"transformation");
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(const Document& doc, const std::string& name, double x, double y, double z)
-: Matrix(doc,"rotation",name) 
+Position::Position(LCDD& /* lcdd */, const std::string& name, double x, double y, double z)
 {
-  TGeoRotation* obj = value<TGeoRotation>(*this);
-  obj->SetAngles(x*RAD_2_DEGREE,y*RAD_2_DEGREE,z*RAD_2_DEGREE);
+  assign(new TGeoTranslation(x,y,z),name,"position");
+}
+
+/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
+Rotation::Rotation(LCDD& /* lcdd */, const std::string& name, double x, double y, double z)
+{
+  assign(new TGeoRotation(name.c_str(),x*RAD_2_DEGREE,y*RAD_2_DEGREE,z*RAD_2_DEGREE),"","rotation");
+}
+
+/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
+Rotation::Rotation(LCDD& /* lcdd */, const std::string& name)
+{
+  assign(new TGeoRotation(name.c_str(),0,0,0),"","rotation");
 }
 
 /// Constructor to be used when creating a new DOM tree
-Atom::Atom(const Document& doc, const string& name)  
-: RefElement(doc, "element", name)
-{
+Atom::Atom(LCDD& /* lcdd */, const string& name, const string& formula, int Z, int N, double density) {
+  TGeoElementTable* t = TGeoElement::GetElementTable();
+  TGeoElement* e = t->FindElement(name.c_str());
+  if ( !e ) {
+    t->AddElement(name.c_str(), formula.c_str(), Z, N, density);
+    e = t->FindElement(name.c_str());
+  }
+  m_element = e;
 }
 
 /// Constructor to be used when creating a new DOM tree
-Material::Material(const Document& doc, const string& name)  
-: RefElement(doc, "material", name)
-{
+Material::Material(LCDD& /* lcdd */, const string& name)   {
+  TGeoMaterial* mat = gGeoManager->GetMaterial(name.c_str());
+  m_element = mat;
 }
 
 /// Constructor to be used when creating a new DOM tree
-VisAttr::VisAttr(const Document& doc, const string& name) 
-: RefElement(doc,"vis",name) 
-{
-  Object* obj = second_value<TNamed>(*this);
+VisAttr::VisAttr(LCDD& /* lcdd */, const string& name)    {
+  Value<TNamed,Object>* obj = new Value<TNamed,Object>();
+  assign(obj, name, "vis");
   obj->color  = 2;
   setLineStyle(SOLID);
   setDrawingStyle(WIREFRAME);
@@ -117,12 +143,9 @@ void VisAttr::setColor(float red, float green, float blue)   {
 }
 
 /// Constructor to be used when creating a new DOM tree
-Limit::Limit(const Document& doc, const string& name)
-: RefElement(doc,"limit",name)
-{
-  Value<TNamed,Object>* obj = value<Value<TNamed,Object> >(*this);
-  obj->SetName(name.c_str());
-  obj->SetTitle("*");
+Limit::Limit(LCDD& /* lcdd */, const string& name)   {
+  Value<TNamed,Object>* obj = new Value<TNamed,Object>();
+  assign(obj,name,"*");
   obj->first  = "mm";
   obj->second = 1.0;
 }
@@ -140,21 +163,19 @@ void Limit::setUnit(const string& value)   {
 }
 
 /// Constructor to be used when creating a new DOM tree
-LimitSet::LimitSet(const Document& doc, const string& name) 
-: RefElement(doc,"limitset",name)
-{
+LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
+  assign(new Value<TNamed,TMap>(),name,"limitset");
 }
 
 void LimitSet::addLimit(const RefElement& limit)   {
   TObject* obj = limit.ptr();
-  TMap* m = dynamic_cast<TMap*>(m_element.ptr());
-  m->Add(obj,obj);
+  TMap*    map = dynamic_cast<TMap*>(m_element);
+  map->Add(obj,obj);
 }
 
 /// Constructor to be used when creating a new DOM tree
-Region::Region(const Document& doc, const string& name)  
-: RefElement(doc,"region",name)
-{
+Region::Region(LCDD& /* lcdd */, const string& name)   {
+  assign(new Value<TNamed,Object>(), name, "region");
   setAttr(Attr_store_secondaries,false);
   setAttr(Attr_threshold,10.0);
   setAttr(Attr_lunit,"mm");
@@ -189,7 +210,7 @@ Region& Region::setEnergyUnit(const string& unit)  {
 #undef setAttr
 
 #if 0
-IDSpec::IDSpec(const Document& doc, const string& name, const IDDescriptor& dsc) 
+IDSpec::IDSpec(LCDD& lcdd, const string& name, const IDDescriptor& dsc) 
 : RefElement(doc,Tag_idspec,name)
 {
   const IDDescriptor::FieldIDs& f = dsc.ids();

@@ -110,7 +110,7 @@ string DetDesc::Geometry::_toString(double value)   {
   ::sprintf(text,"%f",value);
   return text;
 }
-
+#if 0
 #include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/compact/Readout.h"
@@ -155,28 +155,7 @@ Element_t* Document::createElt(const string& tag)  const {
   else if ( tag == "physvol" )
     object = new Value<TGeoVolume,PhysVol::Object>();
 #endif
-  else if ( tag == "limitset" )
-    object = new Value<TNamed,TMap>();
-  else if ( tag == "limit" )
-    object = new Value<TNamed,Limit::Object>();
-  else if ( tag == "vis" )
-    object = new Value<TNamed,VisAttr::Object>();
   else if ( tag == "readout" )
-    object = new Value<TNamed,Readout::Object>();
-  else if ( tag == "region" )
-    object = new Value<TNamed,Region::Object>();
-  else if ( tag == "grid_xyz" )
-    object = new Value<TNamed,Segmentation::Object>();
-  else if ( tag == "global_grid_xy" )
-    object = new Value<TNamed,Segmentation::Object>();
-  else if ( tag == "cartesian_grid_xy" )
-    object = new Value<TNamed,Segmentation::Object>();
-  else if ( tag == "projective_cylinder" )
-    object = new Value<TNamed,Segmentation::Object>();
-  else if ( tag == "nonprojective_cylinder" )
-    object = new Value<TNamed,Segmentation::Object>();
-  else if ( tag == "projective_zplane" )
-    object = new Value<TNamed,Segmentation::Object>();
   else if ( tag == "subdetector" )
     object = new Value<TNamed,Subdetector::Object>();
   else if ( tag == "sensitive_detector" )
@@ -188,11 +167,7 @@ Element_t* Document::createElt(const string& tag)  const {
   }
   return 0;//m_doc->createElement(tag);
 }
-
-Element::Element(const Document& document, const string& type) 
-: m_element(document.createElt(type))
-{ }
-
+#endif
 void Element::bad_assignment(const type_info& from, const type_info& to) {
   string msg = "Wrong assingment from ";
   msg += from.name();
@@ -202,28 +177,24 @@ void Element::bad_assignment(const type_info& from, const type_info& to) {
   throw std::runtime_error(msg);
 }
 
-RefElement::RefElement(const Document& document, const string& type, const string& name)  
-: Element(document, type)
-{
-  setName(name);
-}
-
-RefElement::RefElement(const Handle_t& e) : Element(e)
-{
-  //TNamed *p = m_element._ptr<TNamed>();
-}
-
 const char* RefElement::name() const  {
-  TNamed *p = m_element._ptr<TNamed>();
+  TNamed *p = _ptr<TNamed>();
   return p ? p->GetName() : "";
 }
 
 const char* RefElement::refName() const  {
-  TNamed *p = m_element._ptr<TNamed>();
+  TNamed *p = _ptr<TNamed>();
   return p ? p->GetName() : "";
 }
 
 void RefElement::setName(const string& new_name)  {
-  TNamed *p = m_element._ptr<TNamed>();
+  TNamed *p = _ptr<TNamed>();
   if ( p ) p->SetName(new_name.c_str());
 }
+
+void RefElement::assign(TNamed* n, const std::string& nam, const std::string& tit) {
+  m_element = n;
+  if ( !nam.empty() ) n->SetName(nam.c_str());
+  if ( !tit.empty() ) n->SetTitle(tit.c_str());
+}
+

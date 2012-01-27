@@ -5,19 +5,14 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
-/// Constructor to be used when reading the already parsed DOM tree
-Segmentation::Segmentation(Handle_t e) : Element(e)  
-{
-}
-
 /// Constructor to be used when reading the already parsed object
-Segmentation::Segmentation(const Element& e) : Element(e)  
+Segmentation::Segmentation(const Element& e) : RefElement(e)  
 {
 }
 
-Segmentation::Segmentation(const Document& doc, const string& type)
-: Element(doc,type)
+Segmentation::Segmentation(LCDD& /* lcdd */, const string& type)
 {
+  assign(new Value<TNamed,Segmentation::Object>(),"segmentation",type);
 }
 
 bool Segmentation::useForHitPosition() const   {
@@ -28,8 +23,8 @@ const string Segmentation::type() const   {
   return first_value<TNamed>(*this)->GetTitle();
 }
 
-ProjectiveCylinder::ProjectiveCylinder(const Document& doc) 
-: Segmentation(doc,"projective_cylinder")   {}
+ProjectiveCylinder::ProjectiveCylinder(LCDD& lcdd) 
+: Segmentation(lcdd,"projective_cylinder")   {}
 
 /// Accessors: get number of bins in theta
 int ProjectiveCylinder::thetaBins() const  {
@@ -51,8 +46,8 @@ void ProjectiveCylinder::setPhiBins(int value)  {
   setAttr(data.cylindrical_binning.Attr_nphi,value);
 }
 
-NonProjectiveCylinder::NonProjectiveCylinder(const Document& doc)
-: Segmentation(doc, "nonprojective_cylinder")
+NonProjectiveCylinder::NonProjectiveCylinder(LCDD& lcdd)
+: Segmentation(lcdd, "nonprojective_cylinder")
 {
 }
 
@@ -80,8 +75,8 @@ ProjectiveZPlane::ProjectiveZPlane(const Element& e) : Segmentation(e)
 }
 
 /// Constructor to be used when creating a new DOM tree.
-ProjectiveZPlane::ProjectiveZPlane(const Document& doc) 
-: Segmentation(doc,"projective_zplane")
+ProjectiveZPlane::ProjectiveZPlane(LCDD& lcdd) 
+: Segmentation(lcdd,"projective_zplane")
 {
 }
 
@@ -106,14 +101,14 @@ void ProjectiveZPlane::setPhiBins(int value)  {
 }
 
 /// Constructor to be used when creating a new object. Data are taken from the input handle
-GridXY::GridXY(const Document& doc, const std::string& tag) 
-: Segmentation(doc,tag) 
+GridXY::GridXY(LCDD& lcdd, const std::string& tag) 
+: Segmentation(lcdd,tag) 
 {
 }
 
 /// Constructor to be used when creating a new object.
-GridXY::GridXY(const Document& doc, const std::string& tag, double size_x, double size_y)
-: Segmentation(doc,tag)
+GridXY::GridXY(LCDD& lcdd, const std::string& tag, double size_x, double size_y)
+: Segmentation(lcdd,tag)
 {
   setAttr(data.cartesian_grid.Attr_grid_size_x,size_x);
   setAttr(data.cartesian_grid.Attr_grid_size_y,size_y);
@@ -130,14 +125,14 @@ void GridXY::setGridSizeY(double value)  {
 }
 
 /// Constructor to be used when creating a new DOM tree.
-GridXYZ::GridXYZ(const Document& doc)   
-: GridXY(doc, "grid_xyz")
+GridXYZ::GridXYZ(LCDD& lcdd)   
+: GridXY(lcdd, "grid_xyz")
 {
 }
 
 /// Constructor to be used when creating a new object.
-GridXYZ::GridXYZ(const Document& doc, double size_x, double size_y, double size_z)
-: GridXY(doc, "grid_xyz", size_x, size_y)
+GridXYZ::GridXYZ(LCDD& lcdd, double size_x, double size_y, double size_z)
+: GridXY(lcdd, "grid_xyz", size_x, size_y)
 {
   setAttr(data.cartesian_grid.Attr_grid_size_z,size_z);
 }

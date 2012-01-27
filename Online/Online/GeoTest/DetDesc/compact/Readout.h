@@ -26,9 +26,9 @@ namespace DetDesc {
         Object() : segmentation(0) {}
       };
       /// Constructor to be used when reading the already parsed object
-      Readout(Handle_t e);
+      Readout(const Element& e) : RefElement(e) {}
       /// Initializing constructor
-      Readout(const Document& doc, const std::string& name);
+      Readout(const LCDD& doc, const std::string& name);
       /// Access IDDescription structure
       RefElement idSpec() const;
       /// Access segmentation structure

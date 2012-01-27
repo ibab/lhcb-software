@@ -8,14 +8,11 @@ namespace DetDesc {
 
   using namespace Geometry;
 
-  ILDExTPC::ILDExTPC(const Document&, const string& name, const string& type, int id)
-    : Subdetector(new Value<TNamed,Object>()) 
+  ILDExTPC::ILDExTPC(const LCDD&, const string& name, const string& type, int id)
   {
-    Value<TNamed,Object>* p = (Value<TNamed,Object>*)m_element.ptr();
-    p->SetName(name.c_str());
-    p->SetTitle(type.c_str());
+    Value<TNamed,Object>* p = new Value<TNamed,Object>();
+    assign(p,name, type);
     p->pressure = 12345.0;
-
     setAttr(Attr_id,id);
   }
 

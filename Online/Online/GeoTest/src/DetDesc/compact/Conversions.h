@@ -22,13 +22,12 @@ namespace DetDesc {
 
     // Forward declarations
     struct LCDD;
-    struct Handle_t;
     struct Element;
     struct RefElement;
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions
-    template <typename T, typename Q> Element toObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> Element    toObject(LCDD& lcdd, const Q& xml);
     template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml);
     template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
 
@@ -60,13 +59,13 @@ namespace DetDesc {
       *  @version  1.0
       */
     template <typename T> struct PrintMap  {
-      typedef typename std::map<std::string,Handle_t> container_type;
+      typedef typename std::map<std::string,Element> container_type;
       typedef T item_type;
       const LCDD&   lcdd;
       std::ostream& os;
       std::string   text;
-      std::map<std::string,Handle_t> cont;
-      PrintMap(const LCDD& l, std::ostream& stream, const std::map<std::string,Handle_t>& c, const std::string& t="") : lcdd(l), os(stream), text(t), cont(c)  {}
+      std::map<std::string,Element> cont;
+      PrintMap(const LCDD& l, std::ostream& stream, const std::map<std::string,Element>& c, const std::string& t="") : lcdd(l), os(stream), text(t), cont(c)  {}
       void operator()() const;
     };
     template <typename T> struct Printer  {
