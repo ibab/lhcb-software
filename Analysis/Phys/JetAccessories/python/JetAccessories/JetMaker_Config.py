@@ -19,12 +19,11 @@ class JetMakerConf:
          self.jetMakerType =  2
          self.algorithms = []
          self.setupJetMaker()
-         if self.JetID : self.setupJetID()
 
     def setupJetMaker(self):
         from Configurables         import LoKi__JetMaker, LoKi__FastJetMaker
         jetMakerName = self.name
-        if self.JetID : jetMakerName+= 'NoJetID'
+        #if self.JetID : jetMakerName+= 'NoJetID'
         algo =  LoKi__JetMaker ( jetMakerName )
         algo.JetMaker = self.jetMakerTool
         algo.Associate2Vertex = self.AssociateWithPV
@@ -38,11 +37,15 @@ class JetMakerConf:
         if self.JetEnergyCorrection:
             algo.ApplyJEC = True
             algo.HistoPath = 'JEC/'
+        if self.JetID :
+            algo.ApplyJetID = True
         self.algorithms.append(algo)
 
-    def setupJetID(self):
-        from Configurables      import FilterDesktop
-        filterPIDJets = FilterDesktop(self.name)
-        filterPIDJets.Inputs = [ self.algorithms[0].Output ]
-        filterPIDJets.Code="INFO(9002,-1.)>3 & INFO(9005,-1.)>2 & INFO(9003,1.)<0.8" 
-        self.algorithms.append(filterPIDJets)
+ ##    def setupJetID(self):
+##         from Configurables      import FilterDesktop
+##         filterPIDJets = FilterDesktop(self.name)
+##         filterPIDJets.Inputs = [ 'Phys/'+self.name+ 'NoJetID'+'/Particles' ]
+##         ##filterPIDJets.Preambul = [ 'n90 = INFO(9002,-1.)','mtf = INFO(9003,1.)','hasPVInfo = INFO(9005,-1.)' ]
+##         filterPIDJets.Code="PT>5500." 
+##         self.algorithms.append(filterPIDJets)
+
