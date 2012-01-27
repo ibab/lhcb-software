@@ -25,10 +25,9 @@ DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
-  : ChargedParticleMakerBase (  name , pSvcLocator )
+  CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
+    : ChargedParticleMakerBase (  name , pSvcLocator )
 {
-
   // ProtoParticle filters to use for each type
   declareProperty( "ElectronFilter", m_elProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "MuonFilter",     m_muProtoFilter = "ProtoParticleMUONFilter" );
@@ -36,10 +35,8 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocat
   declareProperty( "KaonFilter",     m_kaProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
-
   // Test PID info consistency
   declareProperty( "CheckPIDConsistency", m_testPIDinfo = true );
-
 }
 
 CombinedParticleMaker::~CombinedParticleMaker( ) { }
@@ -52,26 +49,37 @@ StatusCode CombinedParticleMaker::initialize()
   // intialize base class
   const StatusCode sc = ChargedParticleMakerBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize base class" );
-  
+
   // get tooltype
   std::string toolType = "";
   std::string name = "";
-  if      ( m_pid == "pi+" ){ 
+  if      ( m_pid == "pi+" )
+  {
     toolType = m_piProtoFilter ;
     name = "Pion" ;
-  } else if ( m_pid == "mu+" ){  
+  }
+  else if ( m_pid == "mu+" )
+  {
     toolType = m_muProtoFilter ;
-     name = "Muon" ;
-  }  else if ( m_pid == "K+" ){  
+    name = "Muon" ;
+  }
+  else if ( m_pid == "K+" )
+  {
     toolType = m_kaProtoFilter ;
-      name = "Kaon" ;
-  } else if ( m_pid == "p+" ){ 
+    name = "Kaon" ;
+  }
+  else if ( m_pid == "p+" )
+  {
     toolType = m_prProtoFilter ;
-      name = "Proton" ;
-  } else if ( m_pid == "e+" ){ 
+    name = "Proton" ;
+  }
+  else if ( m_pid == "e+" )
+  {
     toolType = m_elProtoFilter ;
     name = "Electron" ;
-  } else{
+  }
+  else
+  {
     return Error( "Unknown particle selection '" + m_pid + "'" );
   }
 
@@ -127,14 +135,14 @@ StatusCode CombinedParticleMaker::finalize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
+StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
+{
 
-  
   // Load the ProtoParticles
   const LHCb::ProtoParticle::ConstVector& pps = protos() ;
-  if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps.size() 
+  if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps.size()
                                     << " ProtoParticles at "<< m_input << endmsg;
-  
+
   // loop over ProtoParticles
   for ( LHCb::ProtoParticle::ConstVector::const_iterator iProto = pps.begin();
         pps.end() != iProto; ++iProto )
@@ -148,14 +156,16 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
 
     // Select tracks
     if (msgLevel(MSG::VERBOSE)) verbose() << "Trying Track " << track->key() << endmsg;
-    
-    if (track->states().empty()){
+
+    if (track->states().empty())
+    {
       Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979");
       continue ;
     }
     if ( !trSel()->accept(*track) ) continue;
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << " -> Track selected " << track->key()  
+    if (msgLevel(MSG::VERBOSE))
+    {
+      verbose() << " -> Track selected " << track->key()
                 << " " << track->firstState().momentum() << endmsg;
     }
     ++tally.selProtos;
@@ -163,31 +173,31 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts ){
     // Do PID checks ?
     if ( m_testPIDinfo ) checkPIDInfo(*iProto);
 
-      const bool selected = m_protoTool->isSatisfied( *iProto );
-      if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << m_partProp->particle()
-                                            << " selected=" << selected << endmsg;
-      if ( selected )
+    const bool selected = m_protoTool->isSatisfied( *iProto );
+    if (msgLevel(MSG::VERBOSE)) verbose() << " -> Particle type " << m_partProp->particle()
+                                          << " selected=" << selected << endmsg;
+    if ( selected )
+    {
+      // make a new Particle
+      Particle * part = new Particle();
+      // fill Parameters
+      const StatusCode sc = fillParticle( *iProto, m_partProp, part );
+      if ( sc.isFailure() )
       {
-        // make a new Particle
-        Particle * part = new Particle();
-        // fill Parameters
-        const StatusCode sc = fillParticle( *iProto, m_partProp, part );
-        if ( sc.isFailure() )
-        {
-          Warning( "Failed to fill Particle -> rejected" );
-          delete part;
-        }
-        else
-        {
-          // add to container
-          parts.push_back(part);
-          // increment tally
-          tally.addToType( m_partProp->particle() );
-        }
-      } // ProtoParticle selected
+        Warning( "Failed to fill Particle -> rejected" );
+        delete part;
+      }
+      else
+      {
+        // add to container
+        parts.push_back(part);
+        // increment tally
+        tally.addToType( m_partProp->particle() );
+      }
+    } // ProtoParticle selected
 
   } // end loop on ProtoParticles
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -202,7 +212,7 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
     const LHCb::RichPID * rpid = proto->richPID();
     if ( !rpid )
     {
-      Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ).ignore(); 
+      Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ).ignore();
     }
   }
   // test MUON links
@@ -211,7 +221,7 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
     const LHCb::MuonPID * mpid = proto->muonPID();
     if ( !mpid )
     {
-      Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ).ignore(); 
+      Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ).ignore();
     }
   }
 }
@@ -219,14 +229,14 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
 //=========================================================================
 // Fill particles parameters
 //=========================================================================
-StatusCode CombinedParticleMaker::fillParticle
-( const ProtoParticle* proto,
-  const LHCb::ParticleProperty* pprop,
-  Particle* particle ) const
+StatusCode 
+CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
+                                     const LHCb::ParticleProperty* pprop,
+                                     Particle* particle ) const
 {
   // Start filling particle with orgininating ProtoParticle
   particle->setProto(proto);
-  
+
   // ParticleID
   const int pID = pprop->particleID().pid() * (int)(proto->charge());
   particle->setParticleID( ParticleID( pID ) );
@@ -236,25 +246,19 @@ StatusCode CombinedParticleMaker::fillParticle
 
   // Mass and error
   particle->setMeasuredMass(pprop->mass());
-  particle->setMeasuredMassErr(0); 
+  particle->setMeasuredMassErr(0);
 
-  /*
-  for ( std::vector< LHCb::State*>::const_iterator s = proto->track()->states().begin() ;
-        s != proto->track()->states().end() ; ++s){
-    if (msgLevel(MSG::VERBOSE)) verbose() << " A   State is at " 
-    << (*s)->position() << " and has slopes " << (*s)->slopes() << endmsg  ;  
-  }
-  */
-  
   const LHCb::Track* track = proto->track() ;
   const LHCb::State* state = usedState( track );
-  
-  // finally, set Particle infor from State using tool
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
-                                        << state->momentum() << endmsg ;
-  StatusCode sc = p2s()->state2Particle( *state, *particle );
-  if (msgLevel(MSG::VERBOSE)) verbose() 
-    << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;  
+
+  // finally, set Particle information from State using tool
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "Making Particle " << pprop->particle() << " from Track with P= "
+              << state->momentum() << endmsg ;
+  const StatusCode sc = p2s()->state2Particle( *state, *particle );
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "Made   Particle " << pprop->particle()
+              << " with            P= " << particle->momentum() << endmsg ;
 
   return sc;
 }
@@ -271,22 +275,22 @@ void CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
   const double vmu = proto->info( ProtoParticle::CombDLLmu, -999.0 );
   const double vk  = proto->info( ProtoParticle::CombDLLk,  -999.0 );
   const double vp  = proto->info( ProtoParticle::CombDLLp,  -999.0 );
-  double confLevel = 1./(1.+ve+vmu+vk+vp); // conf level for pion
-  if( "e+" == pprop->particle() )
+  double confLevel = 1.0/(1.0+ve+vmu+vk+vp); // conf level for pion
+  if ( "e+" == pprop->particle() )
   {
-    confLevel = ve*confLevel;
+    confLevel *= ve;
   }
   else if ( "mu+" == pprop->particle() )
   {
-    confLevel = vmu*confLevel;
+    confLevel *= vmu;
   }
   else if ( "K+" == pprop->particle() )
   {
-    confLevel = vk*confLevel;
+    confLevel *= vk;
   }
   else if ( "p+" == pprop->particle() )
   {
-    confLevel = vp*confLevel;
+    confLevel *= vp;
   }
   particle->setConfLevel( confLevel );
 }
