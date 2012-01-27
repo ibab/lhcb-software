@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-27 - Alessandra Borgia
+ - Added Bs->(Ds->PhiPi)H line, to measure fakes for the Asl measurement. This line requires Hlt2PhiDecision in StrippingB2DMuNuX.py
+
+! 2012-01-27 - Alessandra Borgia
+ - in the file StrippingB2XuMuNu.py: removed Bd->PiMu line. Updated and fixed all cuts for Bs->KMuNu and Bs->KMuNu SS lines and have prescales of 0.5 and 0.25 respectively. Updated and fixed the Bs->KstarMuNu and Bs->KstarMuNu SS lines; Removed the Kstar->KS0 pi requirement and have the Bs->Ks0PiMu. Also added 2 new lines Bd->KS0MuNu, KS0->MuPi; one line for SS muon and one line for OS neutrino.
+
 ! 2012-01-27 Yasmine Amhis 
   - Added Bd2JpsiKsLD in StrippingB2JpsiXforbeta_s 
 ! 2012-01-26 Mika Vesterinen
