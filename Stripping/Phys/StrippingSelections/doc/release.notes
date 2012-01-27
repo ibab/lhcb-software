@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-27 Yasmine Amhis 
+  - Added Bd2JpsiKsLD in StrippingB2JpsiXforbeta_s 
 ! 2012-01-26 Mika Vesterinen
  - Added D0->3KPi, D0->2K2Pi, D0->4Pi to StrippingB2DMuNuX
 
