@@ -1,0 +1,18 @@
+if ( "$CMTCONFIG" == "x86_64-slc5-icc11-opt" || "$CMTCONFIG" == "x86_64-slc5-icc11-dbg" ) then
+  if ( $?loginsh ) then
+    echo "Setting up the 64 bits icc compiler"
+    unalias cd 
+    unalias cwdcmd
+    source ${HPX_HEPGROUP_DIR}/post/icc_setup.csh
+  endif
+endif 
+
+
+if ( "$CMTCONFIG" == "i686-slc5-icc11-opt" || "$CMTCONFIG" == "i686-slc5-icc11-dbg" ) then
+  if ( $?loginsh ) then
+    echo "Setting up the 32 bits icc compiler"
+    unalias cd 
+    unalias cwdcmd
+    source ${HPX_HEPGROUP_DIR}/post/icc_setup32.csh
+  endif
+endif 

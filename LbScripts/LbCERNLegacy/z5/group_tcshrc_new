@@ -1,0 +1,26 @@
+if ( ! -e ${HOME}/.nogrouplogin ) then
+
+if ( ! -e ${HOME}/.oldLHCBLoginscript ) then
+  set lbvers=prod
+  if ( -e ${HOME}/.prevLHCBLoginscript ) then
+    set lbvers=prev
+  endif
+  if ( -e ${HOME}/.devLHCBLoginscript ) then
+    set lbvers=dev
+  endif
+  if ( $?LBLOGIN_DONE ) then
+     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --silent >& /dev/null 
+  else
+     setenv LB_BANNER `mktemp -t LbLogin_banner.XXXXXXXX`
+     source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.csh --quiet >! ${LB_BANNER}
+  endif
+  unset lbvers
+endif 
+else
+  echo no group login
+  if (`uname -n` == 'lxplus437.cern.ch') then
+    setenv VO_LHCB_SW_DIR /opt/lhcb/
+    source $VO_LHCB_SW_DIR/lib/etc/LbLogin.csh
+  endif
+endif
+

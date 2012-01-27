@@ -1,0 +1,35 @@
+if ! [ -e ${HOME}/.nogrouplogin -o -e ${HOME}/.noLHCBLoginscript ] ; then
+
+  # Post setup, CMTCONFIG specific (compilers setup for example)
+  export LOGIN_POST_SCRIPT=${HPX_HEPGROUP_DIR}/post/login
+  # Post setup, site wide, does not depend on CMTCONFIG (X509 vars for example)
+  export LHCB_POST_SCRIPT=${HPX_HEPGROUP_DIR}/post/site
+
+if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
+  lbvers=prod
+  if [ -e ${HOME}/.prevLHCBLoginscript ]; then
+    lbvers=prev
+  fi
+  if [ -e ${HOME}/.devLHCBLoginscript ]; then
+    lbvers=dev
+  fi
+  if [ -n "$LBLOGIN_DONE" ]; then
+    . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --silent 2>&1 /dev/null
+  else
+    export LB_BANNER=`mktemp -t LbLogin_banner.XXXXXXXX`
+    . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --quiet >> ${LB_BANNER} 
+  fi
+  unset lbvers
+fi 
+
+if [ ! -n "$LHCB_POST_DONE" ]; then
+  if [ -n "$LHCB_POST_SCRIPT" ]; then
+    if [ -r $LHCB_POST_SCRIPT.sh ]; then
+      . $LHCB_POST_SCRIPT.sh
+      export LHCB_POST_DONE=yes
+    fi
+  fi
+fi
+
+fi
+

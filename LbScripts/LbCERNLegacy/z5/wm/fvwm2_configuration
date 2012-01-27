@@ -1,0 +1,61 @@
+# Trying to compile an old .fvwrc to the  new fvwm-2.0 Format
+# ---------------------------------------------------------------------------
+#                Group Menu - FVWM Configuration File
+# ---------------------------------------------------------------------------
+# 
+# CONTENTS:
+#   This file contains the template for the user root menu for FVWM.
+#
+# ACTIVATION:
+#   The menu defined in this file will be popped up when the user push the
+#   right-most button of the mouse (button 3) over the root window.
+#
+# USAGE:
+#   This file must be located in the ~/.hepix/fvwm directory with the name
+#   `fvwm_menu'. Initially this file is initialized with the same entries 
+#   as the System Menu attached to the left-most button of the mouse (button 
+#   1).
+#   
+#
+# SYNTAX:
+#   The contents must be enclosed between `Popup "UserMenu"' and `EndPopup'
+#   Each line becomes an entry in the menu. The most important types of 
+#   entries are the following:
+#
+#     o Title "<string>"
+#       <string> becomes the title (first entry) in the menu.
+#
+#     o Exec "<string>" exec <command>
+#       <string> becomes and entry that executes the command <command>.
+#
+#     o Popup "<popup_name>"
+#       This entry will create a sub-menu entry. The sub-menu should be 
+#       created with a Popup command in the same way as this "UserMenu" is
+#       created. This sub-menu can be created in this file before the 
+#       UserMenu. 
+#
+#     o Nop ""
+#       Creates a divisory line.
+#
+#   There are more types of entries described in the the BUILT IN FUNCTIONS
+#   section of the fvwm(n) manual page (issue the command "gman fvwm").
+#
+# DEPENDENCIES:
+#   This file will be merged with other FVWM configuration files to generate
+#   the definite FVWM configuration file upon entering your X session.
+#   
+# REFERENCES:
+#   See the section BUILT IN FUNCTIONS in the fvwm(n) manual page to get 
+#   further details about menu items.
+#
+# AUTHOR:
+#   UMTF-X11 Working Group:                      umtf-x11@listbox.cern.ch
+#----------------------------------------------------------------------------
+# GroupMenu:
+# ---------
+#   Menu activated when the right button of the mouse is pushed in the
+#   root window.
+AddToMenu "GroupMenu" 
++	       "LXPLUS" Exec exec xrsh lxplus
++	       "LXPLUS7" Exec exec xrsh lxplus7
+### END OF CONVERSION ###
