@@ -133,8 +133,14 @@ public:
   }
   void addPin(LHCb::CaloCellID id){ m_pins.push_back(id) ;}
   void addLed(int id){ m_leds.push_back(id) ;}
+  void resetPins(){ m_pins.clear() ;}
+  void resetLeds(){ m_leds.clear() ;}
+  
+    
+
 
   // Calibration & quality
+  void setQualityFlag   (int quality)           {m_quality = quality; }
   void addQualityFlag   (int quality)           {m_quality = m_quality | quality; }
   void setLedData       (double ledData, double ledDataRMS ){
     m_ledData    = ledData ; 

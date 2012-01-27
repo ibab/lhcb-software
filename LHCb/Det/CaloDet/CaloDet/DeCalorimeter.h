@@ -161,6 +161,13 @@ public:
   unsigned int   numberOfTell1s () { return  m_tell1Boards.size()  ; };
   unsigned int   numberOfPins   () { return  m_pins.size() ; };
   unsigned int   numberOfLeds   () { return  m_leds.size() ; };
+  unsigned int   numberOfInvalidCells  () { 
+    unsigned int count = 0;
+    for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
+      if( !ic->cellID().isPin() && !ic->valid() )count++;
+    }
+    return  count;
+  };
   unsigned int   pinArea        () { return m_pinArea; };
   ///  Cell Parameters
   inline bool   valid    ( const LHCb::CaloCellID& ) const ;
@@ -349,6 +356,7 @@ private:
   bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
 
   // cache
+  StatusCode resetCellParam(std::string m);
   StatusCode updHardware();
   StatusCode updGeometry();
   StatusCode updGain();
@@ -361,8 +369,9 @@ private:
   StatusCode updReco();
   StatusCode updNumGains();
   StatusCode updPileUp();
-} ;
+};
 
+  
 // ===========================================================================
 /** ouput operator for class DeCalorimeter
  *  @see DeCalorimeter 
