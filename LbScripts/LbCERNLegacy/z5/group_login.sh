@@ -56,7 +56,11 @@ else
      rm -f ${LB_BANNER}
      unset LB_BANNER
   else
-     . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --quiet 
+    if [[ -e ${HOME}/.devLHCBuseCVMFS && -e /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh ]]; then
+      . /cvmfs/lhcb.cern.ch/lib/lhcb/LBSCRIPTS/prod/InstallArea/scripts/LbLogin.sh --quiet
+    else
+      . /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/$lbvers/InstallArea/scripts/LbLogin.sh --quiet 
+    fi
   fi
   export LBLOGIN_DONE=yes
   unset lbvers
