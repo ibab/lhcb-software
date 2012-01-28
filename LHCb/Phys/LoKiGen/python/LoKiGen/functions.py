@@ -13,8 +13,16 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the smear campaign of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-12-01
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The full set of useful objects from LoKiGen library
@@ -26,11 +34,16 @@ The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
+
+By usage of this code one clearly states the disagreement 
+with the smear campaign of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
 __date__    = "2007-12-01"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = "$Revision$ "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -225,6 +238,12 @@ GY       = LoKi.GenParticles.Rapidity  ()
 ## @see LoKi::Cuts::GY0 
 GY0      = LoKi.GenParticles.Rapidity0 ()
 
+## @see LoKi::Cuts::GCOUNT
+GCOUNT    = LoKi.GenParticles.Count
+## @see LoKi::Cuts::GHAS
+GHAS      = LoKi.GenParticles.Has 
+
+
 ## @see LoKi::Cuts::GVTRUE
 GVTRUE     = LoKi.Constant( _GV , bool )(True)
 ## @see LoKi::Cuts::GVFALSE
@@ -268,6 +287,8 @@ GSINPHITR   = LoKi.GenParticles.SinPhiTr
 GCOSPHITR   = LoKi.GenParticles.CosPhiTr
 ## @see LoKi::Cuts::GANGLEPHITR 
 GANGLEPHITR = LoKi.GenParticles.AnglePhiTr
+
+
 
 
 ## functional part

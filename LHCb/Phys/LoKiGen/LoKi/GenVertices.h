@@ -219,7 +219,7 @@ namespace LoKi
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     private:
       // ======================================================================

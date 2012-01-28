@@ -13,6 +13,8 @@
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenPIDOperators.h"
 #include "LoKi/GenSources.h"
+#include "LoKi/GenParticles2.h"
+#include "LoKi/GenParticles3.h"
 // ============================================================================
 /** @file
  *

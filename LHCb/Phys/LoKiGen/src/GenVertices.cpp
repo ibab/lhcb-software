@@ -387,7 +387,7 @@ LoKi::GenVertices::SumIF::operator()
     const HepMC::GenParticle* p = *ip ;
     if ( 0 == p ) 
     {
-      Warning("HepMC::GenPArticle* points to 0; skip it") ;
+      Warning("HepMC::GenParticle* points to 0; skip it") ;
       continue ;
     }
     if ( m_cut ( p ) ) { result += m_fun ( p ) ; }

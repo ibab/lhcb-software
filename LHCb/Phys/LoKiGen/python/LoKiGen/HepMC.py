@@ -13,8 +13,16 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
+#  By usage of this code one clearly states the disagreement 
+#  with the smear campaign of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-#  @date 2007-08-11 
+#  @date 2007-08-11
+#
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Collection of utilities for useful 'decoration' of HepMC-objects
@@ -27,15 +35,32 @@ Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
 contributions and advices from G.Raven, J.van Tilburg, 
 A.Golutvin, P.Koppenburg have been used in the design.
 
+By usage of this code one clearly states the disagreement 
+with the smear campaign of Dr.O.Callot et al.: 
+``No Vanya's lines are allowed in LHCb/Gaudi software.''
+
+
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2007-08-11"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = "$Revision$ "
 # =============================================================================
 import LoKiCore.decorators as _LoKiCore
-from   LoKiGen.functions   import HepMC,LoKi, Gaudi, std, cpp 
+from   LoKiGen.functions   import HepMC, LoKi, Gaudi, std, cpp 
 from   LoKiCore.decorators import LHCb
+
+## namespace HepMC {
+##     /// type of iteration
+##     enum IteratorRange { parents, children, family, 
+##                          ancestors, descendants, relatives };
+## } // HepMC
+if not hasattr ( HepMC , 'parents'     ) : HepMC.parents     = 0
+if not hasattr ( HepMC , 'children'    ) : HepMC.children    = 1 
+if not hasattr ( HepMC , 'family'      ) : HepMC.family      = 2 
+if not hasattr ( HepMC , 'ancestors'   ) : HepMC.ancestors   = 3 
+if not hasattr ( HepMC , 'descendants' ) : HepMC.descendants = 4
+if not hasattr ( HepMC , 'relatives'   ) : HepMC.relatives   = 5
 
 # =============================================================================
 ## Get number of child particles :
