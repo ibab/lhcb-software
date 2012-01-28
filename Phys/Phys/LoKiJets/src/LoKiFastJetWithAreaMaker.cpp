@@ -198,8 +198,9 @@ namespace LoKi
 // ============================================================================
 // find the jets
 // ===========================================================================
-StatusCode LoKi::FastJetWithAreaMaker::makeJets
-( const IJetMaker::Input& input_ , const LHCb::RecVertex& vtx_ ,  IJetMaker::Jets& jets_ ) const
+StatusCode LoKi::FastJetWithAreaMaker::makeJets( const IJetMaker::Input& input_ , 
+                                                 const LHCb::RecVertex& /* vtx_ */,  
+                                                 IJetMaker::Jets& jets_ ) const
 {
   makeJets(input_, jets_);
   return StatusCode::SUCCESS ;

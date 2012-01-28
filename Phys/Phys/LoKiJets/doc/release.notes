@@ -7,6 +7,10 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2012-01-28 - Chris Jones
+ - Fix compilation warnings introduced with the last commit
+ - Remove obsolete file LoKiJets_dll.cpp
+
 ! 2012-01-27 - Victor Coco
  - Add some jet ID variable in LoKiJetMakerAlg
  - Clean LoKiFastJetMaker from outdated options

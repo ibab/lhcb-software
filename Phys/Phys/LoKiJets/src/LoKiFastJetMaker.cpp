@@ -97,8 +97,9 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
 // ===========================================================================
 // find the jets
 // ===========================================================================
-StatusCode LoKi::FastJetMaker::makeJets
-( const IJetMaker::Input& input_ , const LHCb::RecVertex& vtx_ ,  IJetMaker::Jets& jets_ ) const
+StatusCode LoKi::FastJetMaker::makeJets( const IJetMaker::Input& input_ , 
+                                         const LHCb::RecVertex& /* vtx_ */, 
+                                         IJetMaker::Jets& jets_ ) const
 {
   makeJets(input_, jets_);
   return StatusCode::SUCCESS ;
@@ -117,7 +118,8 @@ StatusCode LoKi::FastJetMaker::makeJets
  
   fastjet::JetDefinition jetDef = prepare ( input_ , inputs ) ;  
 
-  if (inputs.size() == 0){
+  if ( inputs.empty() )
+  {
     IJetMaker::Jets output;
     output.reserve( 0 ) ;
     jets_ = output ;
