@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2012-01-28 - Marco Clemencic
+ - Fixed a glitch in the changes in the configuration of the tests.
+
 ! 2012-01-27 - Marco Clemencic
  - Ensure that the event time used by LoadDDDB is the one defined in the
    configuration of EventClockSvc (from DDDBConf.DataType).

@@ -29,5 +29,5 @@ def bindFakeEventTime():
     from Configurables import EventClockSvc, FakeEventTime
     ecs = EventClockSvc()
     ecs.addTool(FakeEventTime, "FakeEventTime")
-    ecs.FakeEventTime.StartTime = ecs.InitialTime
+    ecs.FakeEventTime.StartTime = ecs.getProp("InitialTime")
 appendPostConfigAction(bindFakeEventTime)
