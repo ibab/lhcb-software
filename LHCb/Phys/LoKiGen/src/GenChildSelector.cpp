@@ -409,6 +409,63 @@ LoKi::GenChild::Selector::child ( const HepMC::GenParticle* head ) const
   return daughters[0] ;
 }
 // ============================================================================
+/* Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2012-01-26
+ */
+// ============================================================================
+const HepMC::GenParticle* 
+LoKi::GenChild::child 
+( const HepMC::GenParticle*        particle , 
+  const LoKi::GenChild::Selector& selector ) 
+{ 
+  if ( 0 == particle ) { return 0 ; }                               // RETURN
+  return selector.child ( particle )  ;  
+}
+// ===========================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @param  result   (OUTPUT) the container of found particles
+ *  @return number of found particles 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2012-01-26
+ */
+// ===========================================================================
+unsigned int LoKi::GenChild::children 
+( const HepMC::GenParticle*       particle  , 
+  const LoKi::GenChild::Selector& selector  , 
+  LoKi::GenTypes::ConstVector&    daughters ) 
+{
+  if ( 0 == particle ) { return 0 ; }                               // RETURN 
+  return selector.children ( particle , daughters ) ;
+}
+// ============================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LoKi::GenTypes::ConstVector
+LoKi::GenChild::children 
+( const HepMC::GenParticle*       particle , 
+  const LoKi::GenChild::Selector& selector ) 
+{
+  // 
+  LoKi::GenTypes::ConstVector result ; 
+  if ( 0 == particle ){ return result ; }
+  //
+  selector.children ( particle , result ) ;
+  //
+  return result ;
+}
+// ===========================================================================
+
 
 
 // ============================================================================

@@ -252,6 +252,22 @@ GVCOUNT    = LoKi.GenVertices.CountIF
 ## @see LoKi::Cuts::GVSUM
 GVSUM      = LoKi.GenVertices.SumIF 
 
+## @see LoKi::Cuts::GCOSPOL
+GCOSPOL     = LoKi.GenParticles.PolarizationAngle 
+## @see LoKi::Cuts::GSINCHI
+GSINCHI     = LoKi.GenParticles.SinChi
+## @see LoKi::Cuts::GCOSCHI
+GCOSCHI     = LoKi.GenParticles.CosChi
+## @see LoKi::Cuts::GANGLECHI
+GANGLECHI   = LoKi.GenParticles.AngleChi
+## @see LoKi::Cuts::GCOSTHETATR 
+GCOSTHETATR = LoKi.GenParticles.CosThetaTr
+## @see LoKi::Cuts::GSINPHITR 
+GSINPHITR   = LoKi.GenParticles.SinPhiTr
+## @see LoKi::Cuts::GCOSPHITR 
+GCOSPHITR   = LoKi.GenParticles.CosPhiTr
+## @see LoKi::Cuts::GANGLEPHITR 
+GANGLEPHITR = LoKi.GenParticles.AnglePhiTr
 
 
 ## functional part

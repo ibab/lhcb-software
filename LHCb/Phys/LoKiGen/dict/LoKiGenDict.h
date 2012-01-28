@@ -35,6 +35,7 @@
 #include "LoKi/GenDecayChain.h"
 #include "LoKi/GenDump.h"
 #include "LoKi/GenChildSelector.h"
+#include "LoKi/GenParticles2.h"
 // ============================================================================
 #include "LoKi/IGenDecay.h"
 #include "LoKi/FinderDict.h"

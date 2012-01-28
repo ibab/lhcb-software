@@ -13,6 +13,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-01-28 - Vanya Belyaev
+
+ - add various functors for polarizations 
+
+! 2012-01-26 - Vanya Belyaev
+
+ - add GCOSPOL functor 
+
 !========================= LoKiGen v10r4 2011-12-14 =========================
 ! 2011-12-13 - Vanya Belyaev
  - add GCHILD/GCHILDFUN and GCHILDCUT functors on Jibo's request
