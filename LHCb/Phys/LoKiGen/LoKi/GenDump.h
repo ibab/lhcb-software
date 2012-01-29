@@ -9,6 +9,7 @@
 // ============================================================================
 #include "LoKi/Filters.h"
 #include "LoKi/GenTypes.h"
+#include "LoKi/Dumper.h"
 // ============================================================================
 /** @file
  *
@@ -38,7 +39,7 @@ namespace LoKi
   namespace Functors 
   {
     // ========================================================================
-    /** template specialization of ``dumper''
+    /** template specialization of ``dumpers''
      *  @see LoKi::Functors::Dump_
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
      *  @date   2011-06-03
@@ -48,7 +49,27 @@ namespace LoKi
     Dump_<const HepMC::GenParticle*>::operator() 
       ( Dump_<const HepMC::GenParticle*>::argument a ) const ;
     // ========================================================================
-  } //                                          end of namesapce LoKi::Functors 
+    /** template specialization of ``dumpers''
+     *  @see LoKi::Functors::Dump1_
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2012-01-28
+     */  
+    template <>
+    Dump1_<const HepMC::GenParticle*,bool>::result_type 
+    Dump1_<const HepMC::GenParticle*,bool>::operator() 
+      ( Dump1_<const HepMC::GenParticle*,bool>::argument a ) const ;
+    // ========================================================================
+    /** template specialization of ``dumpers''
+     *  @see LoKi::Functors::Dump1_
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2012-01-28
+     */  
+    template <>
+    Dump1_<const HepMC::GenParticle*,double>::result_type 
+    Dump1_<const HepMC::GenParticle*,double>::operator() 
+      ( Dump1_<const HepMC::GenParticle*,double>::argument a ) const ;
+    // ========================================================================
+  } //                                          end of namesapce LoKi::Functors
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

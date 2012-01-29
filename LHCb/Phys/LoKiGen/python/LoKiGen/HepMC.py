@@ -49,6 +49,7 @@ __version__ = "$Revision$ "
 import LoKiCore.decorators as _LoKiCore
 from   LoKiGen.functions   import HepMC, LoKi, Gaudi, std, cpp 
 from   LoKiCore.decorators import LHCb
+import LHCbMath.Types 
 
 ## namespace HepMC {
 ##     /// type of iteration
@@ -62,6 +63,27 @@ if not hasattr ( HepMC , 'ancestors'   ) : HepMC.ancestors   = 3
 if not hasattr ( HepMC , 'descendants' ) : HepMC.descendants = 4
 if not hasattr ( HepMC , 'relatives'   ) : HepMC.relatives   = 5
 
+
+if not hasattr ( HepMC.GenParticle , '_orig_momentum_' ) :
+    _orig_momentum_                   = HepMC.GenParticle.momentum
+    HepMC.GenParticle._orig_momentum_ = _orig_momentum_ 
+    def _momentum_ ( p ) :
+        """
+        4-momenemtum of HepMC::GenParticle
+        
+        >>> p = ...
+        >>> v = p.momentum()
+        
+        """
+        m = p._orig_momentum_ ()
+        return Gaudi.LorentzVector ( m.px () ,
+                                     m.py () ,
+                                     m.pz () ,
+                                     m.e  () )
+    
+    HepMC.GenParticle.momentum = _momentum_ 
+    
+                                     
 # =============================================================================
 ## Get number of child particles :
 def nChildren ( p ) :

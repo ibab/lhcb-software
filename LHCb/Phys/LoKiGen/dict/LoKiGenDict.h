@@ -8,13 +8,15 @@
 // HepMC 
 // ============================================================================
 #ifdef __INTEL_COMPILER
-  #pragma warning (disable:1572) // floating-point equality and inequality comparisons are unreliable
-  #pragma warning(push)
+#pragma warning (disable:1572) // floating-point equality and inequality comparisons are unreliable
+#pragma warning(push)
 #endif
+// ============================================================================
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
+// ============================================================================
 #ifdef __INTEL_COMPILER
-  #pragma warning(pop)
+#pragma warning(pop)
 #endif
 // ============================================================================
 // LoKi
@@ -27,13 +29,13 @@
 #include "LoKi/Trees.h"
 #include "LoKi/TreeOps.h"
 // ============================================================================
+#include "LoKi/GenDump.h"
 #include "LoKi/Dicts.h"
 #include "LoKi/GenExtractDicts.h"
 #include "LoKi/GenAlgsDicts.h"
 #include "LoKi/GenMoniDicts.h"
 #include "LoKi/GenDecays.h"
 #include "LoKi/GenDecayChain.h"
-#include "LoKi/GenDump.h"
 #include "LoKi/GenChildSelector.h"
 #include "LoKi/GenParticles2.h"
 // ============================================================================
