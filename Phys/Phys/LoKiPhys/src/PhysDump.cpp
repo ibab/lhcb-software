@@ -62,5 +62,106 @@ LoKi::Functors::Dump_<const LHCb::Particle*>::operator()
   return a ;
 }
 // ============================================================================
+/*  template specialization of ``dumper''
+ *  @see LoKi::Fuctors::Dump_
+ *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+ *  @date   2011-06-03
+ */  
+// ============================================================================
+template <>
+LoKi::Functors::Dump1_<const LHCb::Particle*,bool>::result_type 
+LoKi::Functors::Dump1_<const LHCb::Particle*,bool>::operator() 
+  ( LoKi::Functors::Dump1_<const LHCb::Particle*,bool>::argument a ) const 
+{
+  //
+  if  ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    //
+    LoKi::DecayChain printer ;
+    printer.print
+      ( a                                   ,
+        m_stream                            , 
+        '\n'                                , 
+        LoKi::Objects::_VALID_              , 
+        LoKi::Objects::_NONE_               , 
+        " "                                 , 
+        0                                   ) ;
+    //
+    m_stream << m_dump.close () ;
+    //
+    return m_fun ( a ) ;
+  }
+  //
+  result_type result = m_fun ( a ) ;
+  //
+  m_stream << m_dump.open  () ;
+  //
+  LoKi::DecayChain printer ;
+  printer.print
+    ( a                                   ,
+      m_stream                            , 
+      '\n'                                , 
+      LoKi::Objects::_VALID_              , 
+      LoKi::Objects::_NONE_               , 
+      " "                                 , 
+      0                                   ) ;
+    //
+  m_stream << m_dump.close () ;
+  //
+  return result ;
+}
+// ============================================================================
+/*  template specialization of ``dumper''
+ *  @see LoKi::Fuctors::Dump_
+ *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+ *  @date   2011-06-03
+ */  
+// ============================================================================
+template <>
+LoKi::Functors::Dump1_<const LHCb::Particle*,double>::result_type 
+LoKi::Functors::Dump1_<const LHCb::Particle*,double>::operator() 
+  ( LoKi::Functors::Dump1_<const LHCb::Particle*,double>::argument a ) const 
+{
+  //
+  if  ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    //
+    LoKi::DecayChain printer ;
+    printer.print
+      ( a                                   ,
+        m_stream                            , 
+        '\n'                                , 
+        LoKi::Objects::_VALID_              , 
+        LoKi::Objects::_NONE_               , 
+        " "                                 , 
+        0                                   ) ;
+    //
+    m_stream << m_dump.close () ;
+    //
+    return m_fun ( a ) ;
+  }
+  //
+  result_type result = m_fun ( a ) ;
+  //
+  m_stream << m_dump.open  () ;
+  //
+  LoKi::DecayChain printer ;
+  printer.print
+    ( a                                   ,
+      m_stream                            , 
+      '\n'                                , 
+      LoKi::Objects::_VALID_              , 
+      LoKi::Objects::_NONE_               , 
+      " "                                 , 
+      0                                   ) ;
+  //
+  m_stream << m_dump.close () ;
+  //
+  return result ;
+}
+
+// ============================================================================
 // The END 
 // ============================================================================

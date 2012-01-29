@@ -9,6 +9,7 @@
 // ============================================================================
 #include "LoKi/Filters.h"
 #include "LoKi/PhysTypes.h"
+#include "LoKi/Dumper.h"
 // ============================================================================
 /** @file
  *
@@ -47,6 +48,26 @@ namespace LoKi
     Dump_<const LHCb::Particle*>::result_type 
     Dump_<const LHCb::Particle*>::operator() 
       ( Dump_<const LHCb::Particle*>::argument a ) const ;
+    // ========================================================================
+    /** template specialization of ``dumper''
+     *  @see LoKi::Fuctors::Dump1_
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2012-01-28
+     */  
+    template <>
+    Dump1_<const LHCb::Particle*,bool>::result_type 
+    Dump1_<const LHCb::Particle*,bool>::operator() 
+      ( Dump1_<const LHCb::Particle*,bool>::argument a ) const ;
+    // ========================================================================
+    /** template specialization of ``dumper''
+     *  @see LoKi::Fuctors::Dump1_
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2012-01-28
+     */  
+    template <>
+    Dump1_<const LHCb::Particle*,double>::result_type 
+    Dump1_<const LHCb::Particle*,double>::operator() 
+      ( Dump1_<const LHCb::Particle*,double>::argument a ) const ;
     // ========================================================================
   } //                                          end of namespace LoKi::Functors 
   // ==========================================================================

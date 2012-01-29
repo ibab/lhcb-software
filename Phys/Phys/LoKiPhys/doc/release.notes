@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2012-01-29 - Vanya Belyaev
+ - add dumping functors 
+
 ! 2012-01-18 - Vanya Belyaev
 
  - add few "distance" functors
