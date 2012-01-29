@@ -137,6 +137,7 @@ namespace LoKi
 } //                                                      end of namespace LoKi
 // ============================================================================
 #include "LoKi/Filters.h"
+#include "LoKi/Dumper.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -155,11 +156,24 @@ namespace LoKi
     std::ostream& 
     Size<const LHCb::Track*>::fillStream ( std::ostream& s ) const  ;
     // ========================================================================
+    template <>
+    Dump_<const LHCb::Track*>::result_type 
+    Dump_<const LHCb::Track*>::operator() 
+      ( Dump_<const LHCb::Track*>::argument a ) const ;
+    // ========================================================================
+    template <>
+    Dump1_<const LHCb::Track*,bool>::result_type 
+    Dump1_<const LHCb::Track*,bool>::operator() 
+      ( Dump1_<const LHCb::Track*,bool>::argument a ) const ;
+    // ========================================================================
+    template <>
+    Dump1_<const LHCb::Track*,double>::result_type 
+    Dump1_<const LHCb::Track*,double>::operator() 
+      ( Dump1_<const LHCb::Track*,double>::argument a ) const ;
+    // ========================================================================
   } //                                          end of namespace LoKi::Functors 
   // ==========================================================================
 } //                                                      end of namespace LoKi
-// ============================================================================
-
 // ============================================================================
 //                                                                      The END 
 // ============================================================================
