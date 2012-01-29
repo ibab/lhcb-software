@@ -877,6 +877,28 @@ def timer ( obj , *args ) :
     raise TypeErorr, "Invalid arguments "
 
 # =============================================================================
+## create the simple dump-1 meta-functor
+#
+#  @code
+#
+#    >>> fun   = ...
+#    >>> fun_t = dump1 ( fun )
+#
+#  @endcode     
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2012-01-28 
+def dump1 ( obj , *args ) :
+    """
+    Define the dump-1 functor
+
+    >>> fun   = ...
+    >>> fun_t = dump1 ( fun )
+    
+    """
+    return obj.__dump1__ ( *args ) 
+
+# =============================================================================
 ## create 'mean-over-stream' vector-functor:
 #
 #  @code

@@ -1721,9 +1721,11 @@ namespace LoKi
                                       std::vector<TYPE>  >
     {
     private: 
+      // ======================================================================
       typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >      Pipe_ ;
       typedef typename Pipe_::argument                              argument ;
       typedef typename Pipe_::result_type                        result_type ;
+      // ======================================================================
     public:
       // =====================================================================
       /// the constructor from the stopper 
@@ -1769,8 +1771,10 @@ namespace LoKi
     class Cause : public LoKi::Functor<void,std::vector<TYPE> >
     {
     private: 
+      // ======================================================================
       typedef LoKi::Functor<void,std::vector<TYPE> >                 Source_ ;
       typedef typename Source_::result_type                      result_type ;
+      // ======================================================================
     public:
       // =====================================================================
       /// the constructor from the start & source 
@@ -1992,9 +1996,11 @@ namespace LoKi
                                        std::vector<TYPE> >
     {
     private: 
+      // ======================================================================
       typedef LoKi::Functor<std::vector<TYPE>,std::vector<TYPE> >      Pipe_ ;
       typedef typename Pipe_::argument                              argument ;
       typedef typename Pipe_::result_type                        result_type ;
+      // ======================================================================
     public:
       // =====================================================================
       /// the constructor 
@@ -2774,4 +2780,4 @@ LoKi::Functors::Reverse_<TYPE>::fillStream
 // The END 
 // ============================================================================     
 #endif // LOKI_FILTERS_H
-// ============================================================================     
+// ============================================================================

@@ -20,6 +20,7 @@
 #include  "LoKi/ExtraInfo.h"
 #include  "LoKi/Math.h"
 #include  "LoKi/Streamers.h"
+#include  "LoKi/Dumper.h"
 // ============================================================================
 /** @file
  *
@@ -408,6 +409,12 @@ namespace LoKi
                                const std::vector<unsigned int>& fun2 ) 
       { return fun == fun2 ; }
       // ======================================================================
+    public: // simple dumpers 
+      // ======================================================================
+      static Fun __dump1__  ( const Func&       fun                  ,
+                              const bool        right = true         ,
+                              const LoKi::Dump& dump  = LoKi::Dump() ) 
+      { return LoKi::dump1  ( fun  , right , dump ) ; }
     } ;
     // ========================================================================
     /** @class FuncOps
@@ -680,6 +687,13 @@ namespace LoKi
       static Cut __scale__ ( const Cuts&                     cuts , 
                              const LoKi::Functor<void,bool>& sf   ) 
       { return LoKi::scale ( cuts , sf ) ; }
+      // ======================================================================
+    public : // simple dumpers 
+      // ======================================================================
+      static Cut __dump1__  ( const Cuts&       fun                  ,
+                              const bool        right = true         ,
+                              const LoKi::Dump& dump  = LoKi::Dump() ) 
+      { return LoKi::dump1 ( fun  , right , dump ) ; }
       // ======================================================================
     } ;
     // ========================================================================

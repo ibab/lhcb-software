@@ -146,7 +146,6 @@ std::ostream& LoKi::Scalers::SkipperV::fillStream( std::ostream& s ) const
 { return s << " FSKIP ( " << m_skip << " ) " ; }
 // ===========================================================================
 
-
 // ===========================================================================
 /* constructor from probability and random service 
  *  @param prop accep probability 

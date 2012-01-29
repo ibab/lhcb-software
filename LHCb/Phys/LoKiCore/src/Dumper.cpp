@@ -1,17 +1,14 @@
-// $Id$
+// $Id: $
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
+// STD & STL 
 // ============================================================================
-#include "GaudiKernel/ToStream.h"
+#include <iostream>
 // ============================================================================
-// local
+// LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
-#include "LoKi/Primitives.h"
-#include "LoKi/Filters.h"
-#include "LoKi/Scalers.h"
 #include "LoKi/Dumper.h"
 // ============================================================================
 /** @file 
@@ -29,35 +26,56 @@
  *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
- *  @author Vanya Belyaev Ivan.BElyaev@cern.ch
- *  @date 2010-11-17 
+ *  @author Vanya Belyaev Ivan.BElyaev@itep.ru
+ *  @date 2012-01-28 
  *
- *                    $Revision$
- *  Last modification $Date$
- *                 by $Author$
+ *                    $Revision: 121023 $
+ *  Last modification $Date: 2011-03-29 20:09:53 +0200 (Tue, 29 Mar 2011) $
+ *                 by $Author: ibelyaev $
  */
 // ============================================================================
 template <>
-LoKi::Functors::Dump_<double>::result_type 
-LoKi::Functors::Dump_<double>::operator() 
-  ( LoKi::Functors::Dump_<double>::argument a ) const 
+LoKi::Functors::Dump1_<double,bool>::result_type 
+LoKi::Functors::Dump1_<double,bool>::operator() 
+  ( LoKi::Functors::Dump1_<double,bool>::argument a ) const 
 {
+  if ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    m_stream << a ;
+    m_stream << m_dump.close () ;
+    return m_fun.fun ( a ) ;
+  }
+  //
+  result_type result = m_fun.fun ( a ) ;
+  //
   m_stream << m_dump.open  () ;
-  //
-  if ( a.size() <= m_dump.nMax() ) 
-  {
-    Gaudi::Utils::toStream 
-      ( a.begin() , a.end() , m_stream , "[ " , " ]" , " , " ) ;
-  }
-  else 
-  {
-    Gaudi::Utils::toStream 
-      ( a.begin() , a.begin() + m_dump.nMax() , 
-        m_stream , "[ " , " , ... ]" , " , " ) ;
-  }
-  //
+  m_stream << a ;
   m_stream << m_dump.close () ;
-  return a ;
+  //
+  return result ;
+}
+// ============================================================================
+template <>
+LoKi::Functors::Dump1_<double,double>::result_type 
+LoKi::Functors::Dump1_<double,double>::operator() 
+  ( LoKi::Functors::Dump1_<double,double>::argument a ) const 
+{
+  if ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    m_stream << a ;
+    m_stream << m_dump.close () ;
+    return m_fun.fun ( a ) ;
+  }
+  //
+  result_type result = m_fun.fun ( a ) ;
+  //
+  m_stream << m_dump.open  () ;
+  m_stream << a ;
+  m_stream << m_dump.close () ;
+  //
+  return result ;
 }
 // ============================================================================
 // The END 
