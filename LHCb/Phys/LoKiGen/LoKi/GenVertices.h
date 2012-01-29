@@ -15,7 +15,7 @@
 #include "LoKi/Constants.h"
 #include "LoKi/GenTypes.h"
 // ============================================================================
-/** @file
+/** @file LoKi/GenVertices.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"

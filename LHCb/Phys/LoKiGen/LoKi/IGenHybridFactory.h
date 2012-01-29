@@ -18,7 +18,7 @@
 // ============================================================================
 #include "LoKi/GenTypes.h"
 // ============================================================================
-/** @file
+/** @file LoKi/IGenHybridFactory.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -29,7 +29,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
+ *  with the smear campaign of Dr.O.Callot et al.: 
  *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *                    $Revision$
@@ -44,7 +44,7 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-06-10
    */
-  class IGenHybridFactory : public virtual IAlgTool
+  class GAUDI_API IGenHybridFactory : public virtual IAlgTool
   {
   public: 
     // ========================================================================

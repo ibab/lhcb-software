@@ -17,7 +17,7 @@
 namespace HepMC { class GenParticle ; } 
 namespace HepMC { class GenVertex   ; } 
 // ============================================================================
-/** @file
+/** @file LoKi/GenTypes.h
  *
  *  Collection of useful function to extract the information from  HepMC 
  *

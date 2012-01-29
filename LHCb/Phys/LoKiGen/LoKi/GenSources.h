@@ -19,7 +19,7 @@
 #include "LoKi/Interface.h"
 #include "LoKi/GenTypes.h"
 // ============================================================================
-/** @file
+/** @file LoKi/GenSources.h
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"

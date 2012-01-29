@@ -14,9 +14,7 @@
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenVertices.h"
 // ============================================================================
-
-// ============================================================================
-/** @file
+/** @file LoKi/GenVertexCuts.h
  *
  *  Collection of useful functions/predicates to deal with 
  *  HepMC generator information
@@ -29,23 +27,31 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-08 
+ *   
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Cuts 
   {
-
+    // ========================================================================
     // Suppress Intel compiler warnings about missing default constructor
     // In this case the compiler generated constructor is fine, since there are
     // no member data to be intialised
-    #ifdef __INTEL_COMPILER
-      #pragma warning(disable:854) //
-      #pragma warning(push)
-    #endif
+#ifdef __INTEL_COMPILER
+#pragma warning(disable:854) //
+#pragma warning(push)
+#endif
     // ========================================================================
     /** @var GVTRUE
      *  trivial predicate which always returns "true"
@@ -253,15 +259,16 @@ namespace LoKi
      *  @date 2006-02-08
      */     
     typedef LoKi::GenVertices::SumIF                     GVSUM ;
-
-    #ifdef __INTEL_COMPILER
-      #pragma warning(pop) // End disable ICC warning #854
-    #endif
     // ========================================================================
-  } // end of namespace LoKi::Cuts
-} // end of namespace LoKi
+#ifdef __INTEL_COMPILER
+#pragma warning(pop) // End disable ICC warning #854
+#endif
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END
+//                                                                      The END
 // ============================================================================
 #endif // LOKI_GENVERTEXCUTS_H
 // ============================================================================
