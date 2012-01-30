@@ -49,7 +49,7 @@ LoKi::Constant<const LHCb::Track*,bool>::fillStream( std::ostream& s ) const
 template <>
 LoKi::Functors::Dump_<const LHCb::Track*>::result_type 
 LoKi::Functors::Dump_<const LHCb::Track*>::operator() 
-  ( LoKi::FunctorS::Dump_<const LHCb::Track*>::argument a ) const 
+  ( LoKi::Functors::Dump_<const LHCb::Track*>::argument a ) const 
 {
   const unsigned int mx = std::min ( m_dump.nMax() , a.size() ) ;
   //
@@ -72,7 +72,7 @@ LoKi::Functors::Dump_<const LHCb::Track*>::operator()
 template <>
 LoKi::Functors::Dump1_<const LHCb::Track*,bool>::result_type 
 LoKi::Functors::Dump1_<const LHCb::Track*,bool>::operator() 
-  ( LoKi::FunctorS::Dump1_<const LHCb::Track*,bool>::argument a ) const 
+  ( LoKi::Functors::Dump1_<const LHCb::Track*,bool>::argument a ) const 
 {
 
   if ( m_right ) 
@@ -101,7 +101,7 @@ LoKi::Functors::Dump1_<const LHCb::Track*,bool>::operator()
 template <>
 LoKi::Functors::Dump1_<const LHCb::Track*,double>::result_type 
 LoKi::Functors::Dump1_<const LHCb::Track*,double>::operator() 
-  ( LoKi::FunctorS::Dump1_<const LHCb::Track*,double>::argument a ) const 
+  ( LoKi::Functors::Dump1_<const LHCb::Track*,double>::argument a ) const 
 {
   
   if ( m_right ) 
