@@ -42,7 +42,7 @@ LCDD& LCDD::getInstance() {
   return *s_lcdd; 
 }
 
-LCDDImp::LCDDImp() : m_worldVol(0), m_trackingVol(0), m_reflect(0), m_identity(0)  {
+LCDDImp::LCDDImp() : m_worldVol(), m_trackingVol(), m_reflect(), m_identity()  {
   evaluator();
   XML::tags_init();
 }
@@ -200,7 +200,7 @@ void LCDDImp::init()  {
 
   m_identity = Transformation(lcdd,"identity");
   Box worldSolid(lcdd,"world_box","world_x","world_y","world_z");
-  add(worldSolid);
+  addSolid(worldSolid);
 
   add(Rotation(lcdd,"identity_rot",0,0,0));
   add(m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.));
@@ -214,7 +214,7 @@ void LCDDImp::init()  {
 		     0.,
 		     _toDouble("tracking_region_radius"),
 		     _toDouble("2*tracking_region_zmax"),M_PI);
-  add(trackingSolid);
+  addSolid(trackingSolid);
 
   Volume tracking(lcdd,"tracking_volume",trackingSolid,air);
   add(tracking);

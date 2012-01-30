@@ -4,6 +4,7 @@
 // C/C++ include files
 #include <map>
 #include <iostream>
+#include "DetDesc/Elements.h"
 
 /*
  *   DetDesc namespace declaration
@@ -22,8 +23,8 @@ namespace DetDesc {
 
     // Forward declarations
     struct LCDD;
-    struct Element;
-    struct RefElement;
+    //struct Element;
+    //struct RefElement;
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions

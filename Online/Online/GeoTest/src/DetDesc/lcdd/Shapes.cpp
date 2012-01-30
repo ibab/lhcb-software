@@ -40,16 +40,18 @@ ZPlane& ZPlane::setZ(double value)  {
   return *this;
 }
 
-void Solid::_setDimensions(double* param) {
-  _ptr<TGeoShape>()->SetDimensions(param);
-  _ptr<TGeoShape>()->ComputeBBox();
+template<typename T> 
+void Solid_type<T>::_setDimensions(double* param) {
+  this->ptr()->SetDimensions(param);
+  this->ptr()->ComputeBBox();
 }
 
 /// Assign pointrs and register solid to geometry
-void Solid::_assign(LCDD& lcdd, TGeoShape* n, const std::string& nam, const std::string& tit, bool cbbox) {
+template<typename T> 
+void Solid_type<T>::_assign(LCDD& lcdd, T* n, const std::string& nam, const std::string& tit, bool cbbox) {
   assign(n,nam,tit);
   if ( cbbox ) n->ComputeBBox();
-  lcdd.addSolid(RefElement(m_element));
+  lcdd.addSolid(Solid(this->ptr()));
 }
 
 void Box::make(LCDD& lcdd, const std::string& name, double x, double y, double z)  {
@@ -287,3 +289,20 @@ SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const So
   composite->ComputeBBox();
   _assign(lcdd, composite, "", "subtraction");
 }
+
+//  template class DetDesc::Geometry::Element_type<X>;
+//  template class DetDesc::Geometry::RefElement_type<X>;
+
+#define INSTANTIATE(X)  \
+  template class DetDesc::Geometry::Solid_type<X>
+
+INSTANTIATE(TGeoBBox);
+INSTANTIATE(TGeoPcon);
+INSTANTIATE(TGeoPgon);
+INSTANTIATE(TGeoTube);
+INSTANTIATE(TGeoTubeSeg);
+INSTANTIATE(TGeoTrap);
+INSTANTIATE(TGeoTrd2);
+INSTANTIATE(TGeoCone);
+INSTANTIATE(TGeoCompositeShape);
+

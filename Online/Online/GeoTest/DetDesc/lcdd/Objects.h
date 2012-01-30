@@ -4,6 +4,11 @@
 // Framework include files
 #include "DetDesc/Elements.h"
 class TMap;
+class TGeoElement;
+class TGeoMaterial;
+class TGeoMatrix;
+class TGeoRotation;
+class TGeoTranslation;
 
 /*
  *   DetDesc namespace declaration
@@ -21,69 +26,93 @@ namespace DetDesc {
     // Forward declarations
     struct LCDD;
 
-    struct Author : public RefElement  {
+    struct Author : public RefElement_type<TNamed>  {
+      /// Refault constructor
+      Author() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Author(const Element& e) : RefElement(e)  {}
+      template <typename Q> 
+      Author(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Author(LCDD& doc);
       //void setAuthorName(const char* nam)    {  setAttr("name",nam); }
       //void setAuthorEmail(const char* addr)  {  setAttr("email",addr); }
     };
 
-    struct Header : public RefElement  {
+    struct Header : public RefElement_type<TNamed>  {
+      /// Refault constructor
+      Header() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Header(const Element& e) : RefElement(e)  {}
+      template <typename Q> 
+      Header(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Header(LCDD& doc);
     };
 
-    struct Constant : public RefElement  {
+    struct Constant : public RefElement_type<TNamed>  {
+      /// Refault constructor
+      Constant() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Constant(const Element& e) : RefElement(e)  {}
+      template <typename Q> 
+      Constant(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Constant(LCDD& doc, const std::string& name);
       /// Constructor to be used when creating a new DOM tree
       Constant(LCDD& doc, const std::string& name, const std::string& val);
     };
 
-    struct Transformation : public RefElement {
+    struct Transformation : public RefElement_type<TGeoMatrix> {
+      /// Refault constructor
+      Transformation() : RefElement_type<TGeoMatrix>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Transformation(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Transformation(const Element_type<Q>& e) : RefElement_type<TGeoMatrix>(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
       Transformation(LCDD& doc, const std::string& name);
     };
 
-    struct Position : public RefElement  {
+    struct Position : public RefElement_type<TGeoTranslation>  {
+      /// Refault constructor
+      Position() : RefElement_type<TGeoTranslation>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Position(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Position(const Element_type<Q>& e) : RefElement_type<TGeoTranslation>(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
       Position(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
-    struct Rotation : public RefElement  {
+    struct Rotation : public RefElement_type<TGeoRotation>  {
+      /// Refault constructor
+      Rotation() : RefElement_type<TGeoRotation>() {}
       /// Constructor to be used RefElement reading the already parsed DOM tree
-      Rotation(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Rotation(const Element_type<Q>& e) : RefElement_type<TGeoRotation>(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
       Rotation(LCDD& doc, const std::string& name);
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
       Rotation(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
-    struct Atom : public RefElement  {
+    struct Atom : public RefElement_type<TGeoElement>  {
+      /// Refault constructor
+      Atom() : RefElement_type<TGeoElement>() {}
       /// Constructor to be used when creating a new DOM tree
-      Atom(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Atom(const Element_type<Q>& e) : RefElement_type<TGeoElement>(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
       Atom(LCDD& doc, const std::string& name, const std::string& formula, int Z, int N, double density);
     };
 
-    struct Material : public RefElement  {
+    struct Material : public RefElement_type<TGeoMaterial>  {
+      /// Refault constructor
+      Material() : RefElement_type<TGeoMaterial>() {}
       /// Constructor to be used when creating a new DOM tree
-      Material(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Material(const Element_type<Q>& e) : RefElement_type<TGeoMaterial>(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
       Material(LCDD& doc, const std::string& name);
     };
 
-    struct VisAttr : public RefElement  {
+    struct VisAttr : public RefElement_type<TNamed>  {
       struct Object  {
         int           color;
         unsigned char drawingStyle, lineStyle, showDaughters, visible;
@@ -98,8 +127,11 @@ namespace DetDesc {
         DASHED=0x2,
         LAST_LINE_STYLE
       };
+      /// Default constructor
+      VisAttr() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      VisAttr(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      VisAttr(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       VisAttr(LCDD& doc, const std::string& name);
       /// Set Flag to show/hide daughter elements
@@ -116,7 +148,7 @@ namespace DetDesc {
       void setColor(float red, float green, float blue);
     };
 
-    struct Limit : public RefElement  {
+    struct Limit : public RefElement_type<TNamed>  {
       typedef std::pair<std::string,double> Object;
 
       /// Constructor to be used when creating a new DOM tree
@@ -126,26 +158,33 @@ namespace DetDesc {
       void setUnit(const std::string& unit);
     };
 
-    struct LimitSet : public RefElement  {
+    struct LimitSet : public RefElement_type<TNamed>  {
       typedef TMap Object;
       /// Constructor to be used when reading the already parsed DOM tree
-      LimitSet(const Element& e) : RefElement(e) {}
+      LimitSet() : RefElement_type<TNamed>() {}
+      /// Constructor to be used when reading the already parsed DOM tree
+      template <typename Q> 
+      LimitSet(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       LimitSet(LCDD& doc, const std::string& name);
       void addLimit(const RefElement& limit);
     };
 
-    struct Region : public RefElement  {
+    struct Region : public RefElement_type<TNamed>  {
       struct Object  {
         double      Attr_threshold;
         double      Attr_cut;
         bool        Attr_store_secondaries;
         std::string Attr_lunit, Attr_eunit;
       };
+      /// Default constructor
+      Region() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
-      Region(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      Region(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       Region(LCDD& doc, const std::string& name);
+
       Region& setStoreSecondaries(bool value);
       Region& setThreshold(double value);
       Region& setCut(double value);
@@ -153,9 +192,10 @@ namespace DetDesc {
       Region& setEnergyUnit(const std::string& unit);
     };
 
-    struct IDSpec : public RefElement   {
+    struct IDSpec : public RefElement_type<TNamed>   {
       /// Constructor to be used when reading the already parsed DOM tree
-      IDSpec(const Element& e) : RefElement(e) {}
+      template <typename Q> 
+      IDSpec(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       IDSpec(LCDD& doc, const std::string& name, const IDDescriptor& dsc);
       void addField(const std::string& name, const std::pair<int,int>& field);

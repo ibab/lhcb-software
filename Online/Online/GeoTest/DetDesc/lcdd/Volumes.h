@@ -9,6 +9,7 @@
 // C/C++ include files
 #include <map>
 
+#include "TGeoShape.h"
 // Forward declarations
 class TGeoVolume;
 
@@ -26,7 +27,6 @@ namespace DetDesc {
 
     // Forward declarations
     struct LCDD;
-    struct Solid;
     struct Region;
     struct LimitSet;
     struct Material;
@@ -37,26 +37,35 @@ namespace DetDesc {
     struct VisAttr;
     struct SensitiveDetector;
   
-    struct Volume : public RefElement  {
+    struct Volume : public RefElement_type<TGeoVolume>  {
+      typedef RefElement_type<TGeoVolume> Base;
       struct Object  {
         Region            Attr_region;
         LimitSet          Attr_limits;
         VisAttr           Attr_vis;
         RefElement        Attr_sens_det;
-        Object() : Attr_region(0), Attr_limits(0), Attr_vis(0), Attr_sens_det(0) {}
+        Object() : Attr_region(), Attr_limits(), Attr_vis(), Attr_sens_det() {}
       };
-      /// Copy from RefElement
-      Volume(const Element& v) : RefElement(v) {}
+      /// Default constructor
+      Volume() : Base(0) {}
+
       /// Copy from handle
-      Volume(const Volume& v) : RefElement(v) {}
+      Volume(const Volume& v) : Base(v) {}
+
+      /// Copy from arbitrary Element
+      template <class T> Volume(const Element_type<T>& v) : Base(v) {}
+
       /// Constructor to be used when creating a new geometry tree.
       Volume(LCDD& lcdd, const std::string& name);
+
       /// Constructor to be used when creating a new geometry tree. Also sets materuial and solid attributes
       Volume(LCDD& lcddument, const std::string& name, const Solid& s, const Material& m);
+
       void setSolid(const Solid& s)  const;
       void setMaterial(const Material& m)  const;
       //No. not for WIN32!! void addPhysVol(const PhysVol& vol)  const;
       void addPhysVol(const PhysVol& vol, const Transformation& tr)  const;
+      void addPhysVol(const PhysVol& vol, const Position& pos)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos, const Rotation& rot)  const;
       void setRegion(const Region& obj)  const;
       void setLimitSet(const LimitSet& obj)  const;
@@ -68,14 +77,15 @@ namespace DetDesc {
       RefElement sensitiveDetector() const;
       Region region() const;
       /// Auto conversion to underlying ROOT object
-      operator TGeoVolume*() const     { return _ptr<TGeoVolume>(); }
+      operator TGeoVolume*() const     { return m_element; } //_ptr<TGeoVolume>(); }
       /// Overloaded operator -> to access underlying object
-      TGeoVolume* operator->() const   { return _ptr<TGeoVolume>(); }
+      TGeoVolume* operator->() const   { return m_element; } //_ptr<TGeoVolume>(); }
     };
 
-    struct PhysVol : RefElement {
+    struct PhysVol : RefElement_type<TGeoVolume> {
       /// Constructor to be used when reading the already parsed DOM tree
-      PhysVol(const RefElement& e) : RefElement(e) {}
+      template <class T> PhysVol(const Element_type<T>& e) : RefElement_type<TGeoVolume>(e) {}
+      
       PhysVol& addPhysVolID(const std::string& name, int value);
     };
   }       /* End namespace Geometry           */

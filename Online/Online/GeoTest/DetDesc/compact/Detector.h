@@ -23,12 +23,9 @@ namespace DetDesc {
 
     struct SensitiveDetector;
     struct Detector;
-    struct PhysVol;
-    struct Volume;
-    struct Solid;
     struct LCDD;
 
-    struct SensitiveDetector : public RefElement  {
+    struct SensitiveDetector : public RefElement_type<TNamed>  {
       struct Object  {
         int         Attr_verbose;
         int         Attr_combine_hits;
@@ -37,10 +34,11 @@ namespace DetDesc {
         std::string Attr_hits_collection;
         Element     Attr_segmentation;
         RefElement  Attr_id;
-        Object() : Attr_verbose(0), Attr_segmentation(0) {}
+        Object() : Attr_verbose(0), Attr_segmentation() {}
       };
-      SensitiveDetector() : RefElement() {}
-      SensitiveDetector(const RefElement& e) : RefElement(e) {}
+      SensitiveDetector() : RefElement_type<TNamed>() {}
+      template <typename Q>
+      SensitiveDetector(const RefElement_type<Q>& e) : RefElement_type<TNamed>(e) {}
       SensitiveDetector(const LCDD& lcdd, const std::string& type, const std::string& name);
       /// Access the type of the sensitive detector
       std::string type() const;
@@ -53,7 +51,7 @@ namespace DetDesc {
       SensitiveDetector& setSegmentation(Element seg);
     };
 
-    struct Subdetector : public RefElement  {
+    struct Subdetector : public RefElement_type<TNamed>   {
       typedef std::map<std::string,Subdetector> Children;
       struct Object  {
         int               Attr_id;
@@ -68,9 +66,9 @@ namespace DetDesc {
       };
       void check(bool condition, const std::string& msg) const;
 
-      Subdetector() : RefElement()  {}
-      Subdetector(const Element& e) : RefElement(e)  {}
-      Subdetector(const RefElement& e) : RefElement(e)  {}
+      Subdetector() : RefElement_type<TNamed>()  {}
+      template<typename Q>
+      Subdetector(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
       /// Constructor for a new subdetector element
       Subdetector(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 

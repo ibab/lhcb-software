@@ -5,6 +5,7 @@
 #include "DetDesc/Elements.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Shapes.h"
+#include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/compact/Readout.h"
 #include "DetDesc/compact/Detector.h"
 
@@ -23,9 +24,7 @@ namespace DetDesc {
 
     struct Subdetector;
     struct Readout;
-    struct Solid;
     struct Constant;
-    struct Volume;
     struct Region;
     struct Material;
     struct Materials;

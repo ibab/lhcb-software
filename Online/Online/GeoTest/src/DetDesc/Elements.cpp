@@ -1,24 +1,9 @@
 #include "DetDesc/Elements.h"
+#include "XML/Evaluator.h"
 #include "Internals.h"
-#include "TGeoManager.h"
 #include "TNamed.h"
 #include <iostream>
 #include <stdexcept>
-
-#include "TMap.h"
-#include "TColor.h"
-#include "TGeoBBox.h"
-#include "TGeoPcon.h"
-#include "TGeoPgon.h"
-#include "TGeoTube.h"
-#include "TGeoCone.h"
-#include "TGeoArb8.h"
-#include "TGeoTrd2.h"
-#include "TGeoBoolNode.h"
-#include "TGeoElement.h"
-#include "TGeoMatrix.h"
-#include "TGeoCompositeShape.h"
-#include "XML/Evaluator.h"
 
 #include "DetDesc/lcdd/LCDD.h"
 
@@ -110,91 +95,82 @@ string DetDesc::Geometry::_toString(double value)   {
   ::sprintf(text,"%f",value);
   return text;
 }
-#if 0
-#include "DetDesc/lcdd/Volumes.h"
-#include "DetDesc/lcdd/Objects.h"
-#include "DetDesc/compact/Readout.h"
-#include "DetDesc/compact/Detector.h"
-#include "DetDesc/compact/Segmentations.h"
-Element_t* Document::createElt(const string& tag)  const {
-  TNamed* object = 0;
-  if ( tag == "box" )
-    object = new TGeoBBox();
-  else if ( tag == "polycone" )
-    object = new TGeoPcon();
-#if 0
-  else if ( tag == "tube" )
-    object = new TGeoTubeSeg();
-#endif
-  else if ( tag == "cone" )
-    object = new TGeoCone();
-  else if ( tag == "trap" )
-    object = new TGeoTrap();
-  else if ( tag == "trd2" )
-    object = new TGeoTrd2();
-  else if ( tag == "polyhedra" )
-    object = new TGeoPgon();
-  else if ( tag == "subtraction" )
-    object = 0;
-    //object = new TGeoCompositeShape();
-  else if ( tag == "element" )
-    object = new TGeoElement();
-  else if ( tag == "material" )
-    object = new TGeoMedium();
-  else if ( tag == "rotation" )
-    object = new TGeoRotation();
-  else if ( tag == "position" )
-    object = new TGeoTranslation();
-  else if ( tag == "identity" )
-    object = new TGeoIdentity();
-  else if ( tag == "constant" )
-    object = new TNamed();
-#if 0
-  else if ( tag == "volume" )
-    object = new Value<TGeoVolume,Volume::Object>();
-  else if ( tag == "physvol" )
-    object = new Value<TGeoVolume,PhysVol::Object>();
-#endif
-  else if ( tag == "readout" )
-  else if ( tag == "subdetector" )
-    object = new Value<TNamed,Subdetector::Object>();
-  else if ( tag == "sensitive_detector" )
-    object = new Value<TNamed,SensitiveDetector::Object>();
+namespace DetDesc { namespace Geometry {
 
-  if ( object )  {
-    object->SetTitle(tag.c_str());
-    return object;
+  template <class T> void Element_type<T>::bad_assignment(const type_info& from, const type_info& to) {
+    string msg = "Wrong assingment from ";
+    msg += from.name();
+    msg += " to ";
+    msg += to.name();
+    msg += " not possible!!";
+    throw std::runtime_error(msg);
   }
-  return 0;//m_doc->createElement(tag);
-}
-#endif
-void Element::bad_assignment(const type_info& from, const type_info& to) {
-  string msg = "Wrong assingment from ";
-  msg += from.name();
-  msg += " to ";
-  msg += to.name();
-  msg += " not possible!!";
-  throw std::runtime_error(msg);
-}
 
-const char* RefElement::name() const  {
-  TNamed *p = _ptr<TNamed>();
-  return p ? p->GetName() : "";
-}
+  template <class T> const char* RefElement_type<T>::name() const  {
+    TNamed *p = (TNamed*)this->m_element;
+    return p ? p->GetName() : "";
+  }
 
-const char* RefElement::refName() const  {
-  TNamed *p = _ptr<TNamed>();
-  return p ? p->GetName() : "";
-}
+  template <class T> const char* RefElement_type<T>::refName() const  {
+    TNamed *p = (TNamed*)this->m_element;
+    return p ? p->GetName() : "";
+  }
 
-void RefElement::setName(const string& new_name)  {
-  TNamed *p = _ptr<TNamed>();
-  if ( p ) p->SetName(new_name.c_str());
-}
+  template <class T> void RefElement_type<T>::setName(const string& new_name)  {
+    TNamed *p = (TNamed*)this->m_element;
+    if ( p ) p->SetName(new_name.c_str());
+  }
 
-void RefElement::assign(TNamed* n, const std::string& nam, const std::string& tit) {
-  m_element = n;
-  if ( !nam.empty() ) n->SetName(nam.c_str());
-  if ( !tit.empty() ) n->SetTitle(tit.c_str());
-}
+  template <class T> void RefElement_type<T>::assign(T* n, const std::string& nam, const std::string& tit) {
+    this->m_element = n;
+    TNamed *p = (TNamed*)n;
+    if ( !nam.empty() ) p->SetName(nam.c_str());
+    if ( !tit.empty() ) p->SetTitle(tit.c_str());
+  }
+}}
+#include "TMap.h"
+#include "TColor.h"
 
+#define INSTANTIATE(X)  \
+  template class DetDesc::Geometry::Element_type<X>; \
+  template class DetDesc::Geometry::RefElement_type<X>
+
+
+
+INSTANTIATE(TObject);
+INSTANTIATE(TNamed);
+
+#include "TGeoMaterial.h"
+#include "TGeoElement.h"
+INSTANTIATE(TGeoElement);
+INSTANTIATE(TGeoMaterial);
+
+#include "TGeoMatrix.h"
+INSTANTIATE(TGeoMatrix);
+INSTANTIATE(TGeoRotation);
+INSTANTIATE(TGeoTranslation);
+INSTANTIATE(TGeoIdentity);
+INSTANTIATE(TGeoCombiTrans);
+INSTANTIATE(TGeoGenTrans);
+
+
+#include "TGeoBBox.h"
+#include "TGeoPcon.h"
+#include "TGeoPgon.h"
+#include "TGeoTube.h"
+#include "TGeoCone.h"
+#include "TGeoArb8.h"
+#include "TGeoTrd2.h"
+#include "TGeoBoolNode.h"
+#include "TGeoVolume.h"
+#include "TGeoCompositeShape.h"
+INSTANTIATE(TGeoVolume);
+INSTANTIATE(TGeoBBox);
+INSTANTIATE(TGeoPcon);
+INSTANTIATE(TGeoPgon);
+INSTANTIATE(TGeoTube);
+INSTANTIATE(TGeoTubeSeg);
+INSTANTIATE(TGeoTrap);
+INSTANTIATE(TGeoTrd2);
+INSTANTIATE(TGeoCone);
+INSTANTIATE(TGeoCompositeShape);
