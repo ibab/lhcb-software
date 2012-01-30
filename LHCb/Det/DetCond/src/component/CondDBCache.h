@@ -119,6 +119,10 @@ public:
   /// Check if the given path,time pair is present in the cache.
   bool hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const;
 
+  /// Return the list of IOVs known for the given path, IOV, channel.
+  /// @see ICondDBReader::getIOVs
+  ICondDBReader::IOVList getIOVs(const std::string &path, const ICondDBReader::IOV &iov, cool::ChannelId channel = 0);
+
   void dump();
 
   /// Set the flag to enable the check that the inserted IOVs are not compatible with the latest
@@ -222,9 +226,15 @@ private:
       const ItemListType &lst = (*const_cast<StorageType *>(&items))[channel];
       ItemListType::const_iterator i;
       for ( i = lst.begin(); i != lst.end() ; ++i ){
-        if ( ( i->iov.first >= since ? i->iov.first : since ) < ( i->iov.second <= until ? i->iov.second : until ) ) return i;
+        if ( std::max(i->iov.first, since) < std::min(i->iov.second, until) ) return i;
       }
       return i;
+    }
+    inline ItemListType::iterator end(const cool::ChannelId &channel = 0) {
+      return items[channel].end();
+    }
+    inline ItemListType::const_iterator end(const cool::ChannelId &channel = 0) const {
+      return (*const_cast<StorageType *>(&items))[channel].end();
     }
     inline void erase (const cool::ValidityKey &when, const cool::ChannelId &channel = 0) {
       items[channel].erase(find(when,channel));

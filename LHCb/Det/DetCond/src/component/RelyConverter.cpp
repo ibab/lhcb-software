@@ -351,6 +351,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     break;
   case UpdateObjectRefs:
     sc = m_detPersSvc->updateObjRefs ( tmpAddress, pObject );
+    break;
   }
 
   tmpAddress->release();

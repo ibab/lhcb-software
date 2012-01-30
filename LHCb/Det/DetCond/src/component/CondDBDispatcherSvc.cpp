@@ -105,6 +105,16 @@ StatusCode CondDBDispatcherSvc::finalize(){
   return base_class::finalize();
 }
 
+ICondDBReader::IOVList CondDBDispatcherSvc::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  return alternativeFor(path)->getIOVs(path, iov, channel);
+}
+
+ICondDBReader::IOVList CondDBDispatcherSvc::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  return alternativeFor(path)->getIOVs(path, iov, channel);
+}
+
 //=========================================================================
 //  find the appropriate alternative
 //=========================================================================

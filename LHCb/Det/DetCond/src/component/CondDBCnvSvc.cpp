@@ -175,6 +175,16 @@ bool CondDBCnvSvc::isFolderSet(const std::string &path) {
   return m_dbReader->isFolder(path);
 }
 
+ICondDBReader::IOVList CondDBCnvSvc::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  return m_dbReader->getIOVs(path, iov, channel);
+}
+
+ICondDBReader::IOVList CondDBCnvSvc::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  return m_dbReader->getIOVs(path, iov, channel);
+}
+
 void CondDBCnvSvc::defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const
 {
   tags.clear();

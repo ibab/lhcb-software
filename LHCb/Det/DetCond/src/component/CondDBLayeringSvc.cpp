@@ -17,6 +17,10 @@ DECLARE_SERVICE_FACTORY(CondDBLayeringSvc)
 // 2006-07-14 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
 
+// This is needed otherwise the implementation of std::map does
+// not find operator<(Gaudi::Time,Gaudi::Time).
+namespace Gaudi { using ::operator<; }
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -73,7 +77,7 @@ StatusCode CondDBLayeringSvc::finalize(){
   MsgStream log(msgSvc(), name() );
   if( UNLIKELY( log.level() <= MSG::DEBUG ) )
     log << MSG::DEBUG << "Finalize" << endmsg;
-  
+
   std::vector<ICondDBReader*>::iterator layer;
   for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
     if ( *layer ) (*layer)->release();
@@ -127,6 +131,59 @@ StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::T
     }
   }
   return sc;
+}
+
+template <typename Channel>
+ICondDBReader::IOVList CondDBLayeringSvc::i_getIOVs(const std::string & path, const IOV &iov, const Channel &channel)
+{
+  IOVList iovs;
+
+  IOVList missing; // IOVs not found
+  missing.push_back(iov);
+
+  std::vector<ICondDBReader*>::iterator layer;
+  // for each layer
+  for ( layer = m_layers.begin();
+        layer != m_layers.end() && !missing.empty();
+        ++layer ) {
+
+    IOVList layer_iovs;
+
+    // look for the missing IOVs in this layer
+    for ( IOVList::iterator m = missing.begin();
+          m != missing.end();
+          ++m ) {
+      IOVList missing_iovs = (*layer)->getIOVs(path, *m, channel);
+      // if we found something merge with the others in the layer
+      if (!missing_iovs.empty()) {
+        // ensure that the found IOVs do not overlap with the already available ones
+        missing_iovs.front().since = std::max(missing_iovs.front().since, m->since);
+        missing_iovs.back().until = std::min(missing_iovs.back().until, m->until);
+        layer_iovs.insert(layer_iovs.end(), missing_iovs.begin(), missing_iovs.end());
+      }
+      else continue;
+    }
+
+    // if we got IOVs in this layer, we add them to the results list
+    if (!layer_iovs.empty()) {
+      iovs.insert(iovs.end(), layer_iovs.begin(), layer_iovs.end());
+      std::sort(iovs.begin(), iovs.end());
+      // regenerate the list of holes
+      missing = iovs.find_holes(iov);
+    }
+  }
+
+  return iovs;
+}
+
+ICondDBReader::IOVList CondDBLayeringSvc::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  return i_getIOVs(path, iov, channel);
+}
+
+ICondDBReader::IOVList CondDBLayeringSvc::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  return i_getIOVs(path, iov, channel);
 }
 
 //=========================================================================

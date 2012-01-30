@@ -378,6 +378,30 @@ bool CondDBCache::hasTime(const std::string &path, const cool::ValidityKey &when
   }
   return false;
 }
+
+ICondDBReader::IOVList CondDBCache::getIOVs(const std::string & path, const ICondDBReader::IOV & iov, cool::ChannelId channel)
+{
+  ICondDBReader::IOVList result;
+  StorageType::const_iterator folder = m_cache.find(path);
+  if (folder != m_cache.end()) {
+    if (folder->second.spec) {
+      // find the first recorded interval which overlaps with requested IOV
+      ItemListType::const_iterator i = folder->second.conflict(iov.since.ns(), iov.until.ns(), channel);
+      // marker for the end of IOVs in the cache for the channel
+      const ItemListType::const_iterator end = folder->second.end(channel);
+      // we add all the IOVs in the cache starting from the one found until
+      // we are in the list and the IOV is in the requested range.
+      for(; i != end && (i->iov.first < iov.until.ns()); ++i) {
+        result.push_back(ICondDBReader::IOV(i->iov.first, i->iov.second));
+      }
+    } else {
+      // it's a FolderSet: IOV is infinite
+      result.push_back(ICondDBReader::IOV(Gaudi::Time::epoch(), Gaudi::Time::max()));
+    }
+  }
+  return result;
+}
+
 //=========================================================================
 //  Dump the content of the cache to the message service.
 //=========================================================================

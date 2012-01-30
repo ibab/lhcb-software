@@ -255,6 +255,45 @@ StatusCode CondDBTimeSwitchSvc::getObject (const std::string &path,
     if (sc.isSuccess()) ri->cutIOV(since,until);
   }
   return sc;
+
+}
+
+template <typename Channel>
+ICondDBReader::IOVList CondDBTimeSwitchSvc::i_getIOVs(const std::string & path, const IOV &iov, const Channel &channel)
+{
+  IOVList iovs;
+
+  IOV tmp;
+
+  // get the list of readers valid in the given time IOV
+  ReadersType::iterator r;
+  for(r = m_readers.begin(); r != m_readers.end(); ++r) {
+    if (r->second.until <= iov.since) continue; // ignore readers before...
+    if (r->second.since >= iov.until) break; // ...and after the request
+
+    tmp.since = std::max(iov.since, r->second.since);
+    tmp.until = std::min(iov.until, r->second.until);
+
+    IOVList new_iovs = r->second.reader(serviceLocator())->getIOVs(path, tmp, channel);
+    if (!new_iovs.empty()) {
+      // trim the IOVs found
+      new_iovs.front().since = std::max(tmp.since, new_iovs.front().since);
+      new_iovs.back().until = std::min(tmp.until, new_iovs.back().until);
+
+      iovs.insert(iovs.end(), new_iovs.begin(), new_iovs.end());
+    }
+  }
+  return iovs;
+}
+
+ICondDBReader::IOVList CondDBTimeSwitchSvc::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  return i_getIOVs(path, iov, channel);
+}
+
+ICondDBReader::IOVList CondDBTimeSwitchSvc::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  return i_getIOVs(path, iov, channel);
 }
 
 //=========================================================================

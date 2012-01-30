@@ -12,7 +12,7 @@ from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
 DDDBConf()
 
 ecs = EventClockSvc()
-ecs.addTool(FakeEventTime,"EventTimeDecoder")
+ecs.addTool(FakeEventTime, "EventTimeDecoder")
 ecs.EventTimeDecoder.StartTime = 5
 ecs.EventTimeDecoder.TimeStep = 10
 

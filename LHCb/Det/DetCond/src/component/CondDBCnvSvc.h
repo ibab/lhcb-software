@@ -72,6 +72,12 @@ public:
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
 
+  /// @{
+  /// @see ICondDBReader::getIOVs
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, cool::ChannelId channel = 0);
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, const std::string &channel);
+  /// @}
+
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 

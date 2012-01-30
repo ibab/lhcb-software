@@ -168,7 +168,7 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::DEBUG << "Using heart beat condition \"" << m_heartBeatCondition << '"' << endmsg;
     }
   }
-  
+
   return sc;
 }
 
@@ -209,7 +209,7 @@ StatusCode CondDBAccessSvc::i_initializeConnection(){
     MsgStream log(msgSvc(), name() );
     log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
   }
-  
+
   StatusCode sc = i_openConnection();
   if (!sc.isSuccess()) return sc;
 
@@ -594,7 +594,7 @@ StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::map
 
 cool::ValidityKey CondDBAccessSvc::timeToValKey(const Gaudi::Time &time) const {
   // ValidityKey is an uInt64 of which only 63 bits used (0 -> 9223372036854775807),
-  // while time.nd() is a positive signed Int64! (the same thing)
+  // while time.ns() is a positive signed Int64! (the same thing)
   return time.ns();
 }
 
@@ -776,6 +776,116 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
   return i_getObject(path, when, data, descr, since, until,
                      false, 0, channel);
 }
+/*
+namespace {
+  ICondDBReader::IOVList getHoles(const ICondDBReader::IOV& iov, const ICondDBReader::IOVList& data){
+    typedef ICondDBReader::IOVList IOVList;
+    typedef ICondDBReader::IOV IOV;
+    IOVList result;
+
+    Gaudi::Time last = iov.since; // keep track of the end of coverage
+    // loop over covering interval
+    for (IOVList::const_iterator covered = data.begin(); covered != data.end(); ++covered) {
+      if (covered->since > last) { // hole between the end of coverage and begin of next IOV
+        result.push_back(IOV(last, covered->since));
+      }
+      last = covered->until; // prepare to look for the next hole
+    }
+    if (last < iov.until) {
+      // we didn't get anything to cover until the end of the requested IOV
+      result.push_back(IOV(last, iov.until));
+    }
+
+    return result;
+  }
+}
+*/
+
+ICondDBReader::IOVList CondDBAccessSvc::i_getIOVsFromDB(const std::string & path, const IOV &iov, cool::ChannelId channel) {
+  ICondDBReader::IOVList result;
+  try {
+    DataBaseOperationLock dbLock(this);
+    // we want a folder, so go to the database to get it
+    cool::IFolderPtr folder = database()->getFolder(path);
+    cool::IObjectIteratorPtr objects;
+
+    // FIXME: we need to considered the query granularity
+    if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+        || tag().empty() || tag() == "HEAD" ){
+      objects = folder->browseObjects(iov.since.ns(), iov.until.ns(), channel);
+    } else {
+      objects = folder->browseObjects(iov.since.ns(), iov.until.ns(), channel, folder->resolveTag(tag()));
+    }
+
+    if (!objects->isEmpty()) {// check if we managed to find anything
+      while (objects->goToNext()) {
+        // add data to the cache while filling the list of IOVs
+        const cool::IObject &obj = objects->currentRef();
+        m_cache->insert(folder, obj, channel);
+        result.push_back(ICondDBReader::IOV(Gaudi::Time(obj.since()), Gaudi::Time(obj.until())));
+      }
+    }
+  } catch(cool::FolderNotFound &/*e*/) {
+    // ignore
+  } catch (cool::TagRelationNotFound &/*e*/) {
+    // ignore
+  } catch (cool::NodeRelationNotFound &) {
+    // to be ignored: it means that the tag exists, but it is not in the
+    // node '/'.
+  } catch (coral::AttributeException &) { // FIXME: COOL bug #38422
+    // to be ignored: it means that the tag exists, but it is not in the
+    // node '/'.
+  }
+  return result;
+}
+
+ICondDBReader::IOVList CondDBAccessSvc::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  typedef ICondDBReader::IOVList IOVList;
+  IOVList result;
+  if (m_useCache){
+    /// Look for holes in the timeline of the cache
+    result = m_cache->getIOVs(path, iov, channel);
+    IOVList holes = result.find_holes(iov);
+    for(IOVList::iterator hole = holes.begin(); hole != holes.end(); ++hole) {
+      const IOVList cover = i_getIOVsFromDB(path, *hole, channel);
+      result.insert(result.end(), cover.begin(), cover.end());
+    }
+    std::sort(result.begin(), result.end());
+  } else {
+    result = i_getIOVsFromDB(path, iov, channel);
+  }
+  return result;
+}
+
+ICondDBReader::IOVList CondDBAccessSvc::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  cool::ChannelId id;
+  if (m_useCache){
+    // Check if the cache knows about the path
+    if (m_cache->hasPath(path)) {
+      // the folder is in the cache
+      if (m_cache->getChannelId(path, channel, id)) {
+        return getIOVs(path, iov, id); // we know about the folder and the channel
+      } else {
+        return ICondDBReader::IOVList(); // we know about the folder, but not about the channel
+      }
+    }
+  }
+
+  // the folder is not in the cache or we do not use the cache, so we have to
+  // get the channel id from the DB
+  try {
+    DataBaseOperationLock dbLock(this);
+    cool::IFolderPtr folder = database()->getFolder(path);
+    id = folder->channelId(channel);
+  } catch(cool::FolderNotFound &/*e*/) {
+    return ICondDBReader::IOVList(); // unknown folder
+  } catch(cool::InvalidChannelName &/*e*/) {
+    return ICondDBReader::IOVList(); // unknown channel
+  }
+  return getIOVs(path, iov, id);
+}
 
 StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const cool::ValidityKey &when,
                                               DataPtr &data,
@@ -805,15 +915,13 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
       return StatusCode::SUCCESS;
     }
     else {
-      DataBaseOperationLock dbLock(this);
-      // we want a folder, so go to the database to get it
-      cool::IFolderPtr folder = database()->getFolder(path);
-      cool::IObjectIteratorPtr objects;
-      // Range used for the query
-      cool::ValidityKey sinceWhen = when, untilWhen = when;
+      // Special retrieval procedure if we use "query granularity" (make sense
+      // only when using the cache).
+      if (m_useCache && m_queryGranularity > 0){
+        // modify the range rounding it to the requested granularity (if needed)
+        // Range used for the query
+        cool::ValidityKey sinceWhen = when, untilWhen = when;
 
-      // modify the range rounding it to the requested granularity (if needed)
-      if (m_useCache && (m_queryGranularity > 0)) {
         sinceWhen -= when % m_queryGranularity;
         untilWhen = sinceWhen + m_queryGranularity;
 
@@ -822,38 +930,60 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
           log << MSG::DEBUG << "Retrieving conditions in range "
               << sinceWhen << " - " << untilWhen << endmsg;
         }
-      }
 
-      if ( !use_numeric_chid ) { // we need to convert from name to id
-        channel = folder->channelId(channelstr);
-      }
+        DataBaseOperationLock dbLock(this);
+        // we want a folder, so go to the database to get it
+        cool::IFolderPtr folder = database()->getFolder(path);
+        cool::IObjectIteratorPtr objects;
+        if ( !use_numeric_chid ) { // we need to convert from name to id
+          channel = folder->channelId(channelstr);
+        }
 
-      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
-          || tag().empty() || tag() == "HEAD" ){
-        objects = folder->browseObjects(sinceWhen, untilWhen, channel);
-      } else {
-        objects = folder->browseObjects(sinceWhen, untilWhen, channel, folder->resolveTag(tag()));
-      }
+        if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+            || tag().empty() || tag() == "HEAD" ){
+          objects = folder->browseObjects(sinceWhen, untilWhen, channel);
+        } else {
+          objects = folder->browseObjects(sinceWhen, untilWhen, channel, folder->resolveTag(tag()));
+        }
 
-      if (objects->isEmpty()) // check if we managed to find anything
-        return StatusCode::FAILURE;
+        if (objects->isEmpty()) // check if we managed to find anything
+          return StatusCode::FAILURE;
 
-      if (m_useCache){
         while (objects->goToNext()) {
           m_cache->insert(folder, objects->currentRef(), channel);
         }
         // now get the data from the cache
         m_cache->get(path, when, channel, since, until, descr, data);
-      } else {
-        objects->goToNext();
-        const cool::IObject &obj = objects->currentRef();
 
-        data = DataPtr(new cool::Record(obj.payload()));
-        descr = folder->description();
-        since = obj.since();
-        until = obj.until();
+      } else { // no-cache or no granularity are quite similar
+
+        DataBaseOperationLock dbLock(this);
+        // we want a folder, so go to the database to get it
+        cool::IFolderPtr folder = database()->getFolder(path);
+        cool::IObjectPtr object;
+        if ( !use_numeric_chid ) { // we need to convert from name to id
+          channel = folder->channelId(channelstr);
+        }
+
+        if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
+            || tag().empty() || tag() == "HEAD" ){
+          object = folder->findObject(when, channel);
+        } else {
+          object = folder->findObject(when, channel, folder->resolveTag(tag()));
+        }
+
+        if (m_useCache) {
+          // add the object to the cache
+          m_cache->insert(folder, *object, channel);
+          // and get the data back
+          m_cache->get(path, when, channel, since, until, descr, data);
+        } else {
+          data = DataPtr(new cool::Record(object->payload()));
+          descr = folder->description();
+          since = object->since();
+          until = object->until();
+        }
       }
-
     }
   } catch ( cool::FolderNotFound &/*e*/) {
     //log << MSG::ERROR << e << endmsg;
@@ -1065,7 +1195,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
           log << MSG::DEBUG << "got " << folders.size() << " sub folders" << endmsg;
           log << MSG::DEBUG << "got " << foldersets.size() << " sub foldersets" << endmsg;
         }
-        
+
       } else {
         // cannot get the sub-nodes of a folder!
         return StatusCode::FAILURE;

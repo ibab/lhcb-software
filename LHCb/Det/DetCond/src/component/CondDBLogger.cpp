@@ -137,6 +137,28 @@ StatusCode CondDBLogger::getObject (const std::string &path, const Gaudi::Time &
   return StatusCode::FAILURE;
 }
 
+ICondDBReader::IOVList CondDBLogger::getIOVs(const std::string & path, const IOV &iov, cool::ChannelId channel)
+{
+  if ( m_loggedReader ) {
+    (*m_logFile) << "IOV: " << Gaudi::Time::current().ns() << " "
+                            << path << " " << channel << " "
+                            << iov.since.ns() << " " << iov.until.ns() << std::endl;
+    return m_loggedReader->getIOVs(path, iov, channel);
+  }
+  return ICondDBReader::IOVList();
+}
+
+ICondDBReader::IOVList CondDBLogger::getIOVs(const std::string & path, const IOV &iov, const std::string & channel)
+{
+  if ( m_loggedReader ) {
+    (*m_logFile) << "ICN: " << Gaudi::Time::current().ns() << " "
+                            << path << " " << channel << " "
+                            << iov.since.ns() << " " << iov.until.ns() << std::endl;
+    return m_loggedReader->getIOVs(path, iov, channel);
+  }
+  return ICondDBReader::IOVList();
+}
+
 //=========================================================================
 //  get the list of child nodes of a folderset
 //=========================================================================

@@ -39,6 +39,12 @@ public:
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
 
+  /// @{
+  /// @see ICondDBReader::getIOVs
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, cool::ChannelId channel = 0);
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, const std::string &channel);
+  /// @}
+
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 
@@ -139,7 +145,7 @@ private:
 
   /// Get the the CondDBReader valid for a given point in time.
   /// Returns 0 if no service is available.
-  /// The boolean flsg is used to avoid messages (durin initialization).
+  /// The boolean flag is used to avoid messages (during initialization).
   ReaderInfo *readerFor(const Gaudi::Time &when, bool quiet = false);
 
   /// Get the the CondDBReader valid for a given point in time.
@@ -155,7 +161,7 @@ private:
 
   /// Property CondDBTimeSwitchSvc.Readers: list of ICondDBReaders to be used
   /// for given intervals of validity. The format is "'Reader': (since, until)",
-  /// where since and until are doubles definig the time in standard units.
+  /// where since and until are doubles defining the time in standard units.
   ReadersDeclatationsType m_readersDeclatations;
 
   /// Container for the alternatives. The ReaderInfo objects are indexed by
@@ -178,5 +184,8 @@ private:
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBTimeSwitchSvc>;
 
+  /// Internal implementation helper to generalize the channel type.
+  template <typename Channel>
+  IOVList i_getIOVs (const std::string &path, const IOV &iov, const Channel &channel);
 };
 #endif // COMPONENT_CONDDBDISPATCHERSVC_H

@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-01-30 - Marco Clemencic
+ - Added new methods to the ICondDBReader interface (getIOVs), to retrieve the
+   list of IOVs in a folder for an IOV.
+
 ! 2012-01-06 - Marco Clemencic
  - Modified LoadDDDB to trigger the initialization of the UpdateManagerSvc in
    the initialize (to avoid that is gets triggered in the middle of an event).

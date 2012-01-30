@@ -47,6 +47,10 @@ template <class TYPE> class SvcFactory;
  *      &lt;path&gt; &lt;channel&nbsp;name&gt; &lt;path&gt; &lt;evt.time&gt; &lt;status&gt;
  *  - "FIN:"
  *    - Finalization of the logger
+ *  - "IOV:"
+ *    - Request list of IOVs (using numeric channel)
+ *  - "ICN:"
+ *    - Request list of IOVs (using channel name)
  *
  *  @param LoggedReader
  *         Fully qualified name of the ICondDBReader to which the calls have to
@@ -79,6 +83,12 @@ public:
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel);
+
+  /// @{
+  /// @see ICondDBReader::getIOVs
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, cool::ChannelId channel = 0);
+  virtual IOVList getIOVs (const std::string &path, const IOV &iov, const std::string &channel);
+  /// @}
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
