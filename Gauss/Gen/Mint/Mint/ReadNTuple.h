@@ -72,6 +72,11 @@ public:
 	  void ApplyFiducalCuts();
 	  bool passFiducalCuts();
 
+	  bool AddFriend(std::string fname
+	  	      	  , std::string ntpName);
+
+	  bool getUpdatedTree();
+
 	  MINT::counted_ptr<DalitzEvent> readEntry(unsigned int entry);
 	  bool readit(DiskResidentEventList* listPtr, int nEvents=10);
 
@@ -123,12 +128,27 @@ std::string ReadNTuple::newFilename() const{
   return newFilename;
 }
 
+bool ReadNTuple::AddFriend(std::string fname
+	      	  	  	  	  , std::string ntpName)
+{
+	TFile* f = TFile::Open(fname.c_str(), "READ");
+	if(0 == f) return false;
+	TTree* friendTree = dynamic_cast<TTree*>(f->Get(ntpName.c_str()));
+	_oldTree->AddFriend(friendTree);
+	return (0 != _oldTree);
+
+}
 
 bool ReadNTuple::getTree(){
   TFile* f = TFile::Open(_fname.c_str(), "READ");
   if(0 == f) return false;
   _oldTree = dynamic_cast<TTree*>(f->Get(_ntpName.c_str()));
-  _oldTree->SetBranchStatus("*", 1);
+  return (0 != _oldTree);
+
+}
+
+bool ReadNTuple::getUpdatedTree()
+{
 
   TEntryList* elist=0;
 
@@ -243,11 +263,12 @@ bool ReadNTuple::SetMotherBranchAddress(const char* Px, const char* Py, const ch
 
 MINT::counted_ptr<DalitzEvent>
 ReadNTuple::readEntry(unsigned int entry){
+
   // we read the MC-truth 4-momenta as we want to re-weight
   // according to the trugh.
   // Things to cut on are read from reconstructed data.
 
-	bool dbThis = false;
+	bool dbThis = true;
   _oldTree->GetEntry(entry);
 
 
@@ -273,9 +294,9 @@ ReadNTuple::readEntry(unsigned int entry){
   {
 	  if (!(entry%1000))
 	  {
-		  cout << "PDG: " << m_pdg[0] << "Px: " << m_input_var[0][0] << std::endl;
-		  cout << "PDG: " << m_pdg[1] << "Px: " << m_input_var[0][1] << std::endl;
-		  cout << "PDG: " << m_pdg[2] << "Px: " << m_input_var[0][2] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[0] << "Px: " << m_input_var[0][0] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[1] << "Px: " << m_input_var[0][1] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[2] << "Px: " << m_input_var[0][2] << std::endl;
 		  cout << "PDG: " << m_pdg[3] << "Px: " << m_input_var[0][3] << std::endl;
 	  }
   }
@@ -374,6 +395,7 @@ ReadNTuple::readEntry(unsigned int entry){
 
 
 bool ReadNTuple::readit(DiskResidentEventList* listPtr, int maxEvents){
+  getUpdatedTree();
   if(0 == listPtr) return false;
   int numEvents = 0;
 
