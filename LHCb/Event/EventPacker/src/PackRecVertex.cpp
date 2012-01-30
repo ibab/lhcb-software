@@ -1,8 +1,8 @@
 // $Id: PackRecVertex.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
 #include "Kernel/StandardPacker.h"
@@ -21,18 +21,19 @@ DECLARE_ALGORITHM_FACTORY( PackRecVertex )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackRecVertex::PackRecVertex( const std::string& name,
-                              ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackRecVertex::PackRecVertex( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::RecVertexLocation::Primary );
   declareProperty( "OutputName", m_outputName = LHCb::PackedRecVertexLocation::Primary );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PackRecVertex::~PackRecVertex() {} 
+PackRecVertex::~PackRecVertex() {}
 
 //=============================================================================
 // Main execution
@@ -45,7 +46,7 @@ StatusCode PackRecVertex::execute() {
   if ( !m_alwaysOutput && !exist<LHCb::RecVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::RecVertices* verts = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
-  
+
   LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
   out->vertices().reserve(verts->size());
   put( out, m_outputName );
@@ -69,7 +70,7 @@ StatusCode PackRecVertex::execute() {
     double err0 = sqrt( vert->covMatrix()(0,0) );
     double err1 = sqrt( vert->covMatrix()(1,1) );
     double err2 = sqrt( vert->covMatrix()(2,2) );
-    
+
     pVert.cov00 = pack.position( err0 );
     pVert.cov11 = pack.position( err1 );
     pVert.cov22 = pack.position( err2 );
@@ -88,7 +89,7 @@ StatusCode PackRecVertex::execute() {
 
     //== Handles the ExtraInfo
     pVert.firstInfo = out->sizeExtra();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin(); 
+    for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert->extraInfo().begin();
           vert->extraInfo().end() != itE; ++itE ) {
       out->addExtra( (*itE).first, pack.fltPacked( (*itE).second ) );
     }
@@ -96,8 +97,18 @@ StatusCode PackRecVertex::execute() {
     out->addEntry( pVert );
   }
 
-  // Clear the registry address of the unpacked container, to prevent reloading
-  verts->registry()->setAddress( 0 );
+  // If requested, remove the input data from the TES and delete
+  if ( m_deleteInput )
+  {
+    evtSvc()->unregisterObject( verts );
+    delete verts;
+    verts = NULL;
+  }
+  else
+  {
+    // Clear the registry address of the unpacked container, to prevent reloading
+    verts->registry()->setAddress( 0 );
+  }
 
   return StatusCode::SUCCESS;
 }

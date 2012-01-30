@@ -1,8 +1,8 @@
 // $Id: PackCaloHypo.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/CaloHypo.h"
 #include "Event/PackedCaloHypo.h"
 #include "Kernel/StandardPacker.h"
@@ -21,18 +21,19 @@ DECLARE_ALGORITHM_FACTORY( PackCaloHypo )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackCaloHypo::PackCaloHypo( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackCaloHypo::PackCaloHypo( const std::string& name,
+                              ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::CaloHypoLocation::Electrons );
-  declareProperty( "OutputName", m_outputName = LHCb::PackedCaloHypoLocation::Electrons ); 
+  declareProperty( "OutputName", m_outputName = LHCb::PackedCaloHypoLocation::Electrons );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PackCaloHypo::~PackCaloHypo() {} 
+PackCaloHypo::~PackCaloHypo() {}
 
 //=============================================================================
 // Main execution
@@ -45,22 +46,22 @@ StatusCode PackCaloHypo::execute()
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::CaloHypos>(m_inputName) ) return StatusCode::SUCCESS;
 
-  const LHCb::CaloHypos* hypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>( m_inputName );
-  
+  LHCb::CaloHypos* hypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>( m_inputName );
+
   LHCb::PackedCaloHypos* out = new LHCb::PackedCaloHypos();
   out->hypos().reserve(hypo->size());
   put( out, m_outputName );
   out->setVersion( 1 );
 
   StandardPacker pack;
-  
-  for ( LHCb::CaloHypos::const_iterator itH = hypo->begin(); hypo->end() != itH; ++itH ) 
+
+  for ( LHCb::CaloHypos::const_iterator itH = hypo->begin(); hypo->end() != itH; ++itH )
   {
     LHCb::PackedCaloHypo pH;
     pH.key        = (*itH)->key();
     pH.hypothesis = (*itH)->hypothesis();
     pH.lh         = pack.fltPacked( (*itH)->lh() );
-    if ( 0 == (*itH)->position() ) 
+    if ( 0 == (*itH)->position() )
     {
       pH.z    = 0;
       pH.posX = 0;
@@ -78,7 +79,7 @@ StatusCode PackCaloHypo::execute()
       pH.cerr10 = 0;
       pH.cerr11 = 0;
     }
-    else 
+    else
     {
       LHCb::CaloPosition* pos = (*itH)->position();
       pH.z    = pack.position( pos->z() );
@@ -90,7 +91,7 @@ StatusCode PackCaloHypo::execute()
       double err0 = std::sqrt( pos->covariance()(0,0) );
       double err1 = std::sqrt( pos->covariance()(1,1) );
       double err2 = std::sqrt( pos->covariance()(2,2) );
-  
+
       pH.cov00 = pack.position( err0 );
       pH.cov11 = pack.position( err1 );
       pH.cov22 = pack.energy  ( err2 );
@@ -103,7 +104,7 @@ StatusCode PackCaloHypo::execute()
 
       err0 = std::sqrt( pos->spread()(0,0) );
       err1 = std::sqrt( pos->spread()(1,1) );
-      
+
       pH.cerr00 = pack.position( err0 );
       pH.cerr11 = pack.position( err1 );
       pH.cerr10 = pack.fraction( pos->spread()(1,0)/err1/err0 );
@@ -112,7 +113,7 @@ StatusCode PackCaloHypo::execute()
     //== Store the CaloDigits
     pH.firstDigit = out->sizeRef();
     for ( SmartRefVector<LHCb::CaloDigit>::const_iterator itD = (*itH)->digits().begin();
-          (*itH)->digits().end() != itD; ++itD ) 
+          (*itH)->digits().end() != itD; ++itD )
     {
       if ( *itD )
       {
@@ -129,7 +130,7 @@ StatusCode PackCaloHypo::execute()
     //== Store the CaloClusters
     pH.firstCluster = out->sizeRef();
     for ( SmartRefVector<LHCb::CaloCluster>::const_iterator itC = (*itH)->clusters().begin();
-          (*itH)->clusters().end() != itC; ++itC ) 
+          (*itH)->clusters().end() != itC; ++itC )
     {
       if ( *itC )
       {
@@ -146,7 +147,7 @@ StatusCode PackCaloHypo::execute()
     //== Store the CaloHypos
     pH.firstHypo = out->sizeRef();
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator itO = (*itH)->hypos().begin();
-          (*itH)->hypos().end() != itO; ++itO ) 
+          (*itH)->hypos().end() != itO; ++itO )
     {
       if ( *itO )
       {
@@ -162,10 +163,20 @@ StatusCode PackCaloHypo::execute()
 
     out->addEntry( pH );
   }
- 
-  // Clear the registry address of the unpacked container, to prevent reloading
-  hypo->registry()->setAddress( 0 );
-  
+
+  // If requested, remove the input data from the TES and delete
+  if ( m_deleteInput )
+  {
+    evtSvc()->unregisterObject( hypo );
+    delete hypo;
+    hypo = NULL;
+  }
+  else
+  {
+    // Clear the registry address of the unpacked container, to prevent reloading
+    hypo->registry()->setAddress( 0 );
+  }
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================

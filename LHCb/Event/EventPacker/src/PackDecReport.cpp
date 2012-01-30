@@ -82,7 +82,8 @@ StatusCode PackDecReport::execute() {
     }
   }
 
-  if ( msgLevel( MSG::DEBUG ) ) {
+  if ( msgLevel( MSG::DEBUG ) ) 
+  {
     debug() << "from " << reports->size() << " reports, stored " << out->reports().size() << " entries." << endmsg;
   }
 
@@ -92,6 +93,11 @@ StatusCode PackDecReport::execute() {
     evtSvc()->unregisterObject( reports );
     delete reports; 
     reports = NULL;
+  }
+  else
+  {
+    // Clear the registry address of the unpacked container, to prevent reloading
+    reports->registry()->setAddress( 0 );
   }
 
   return StatusCode::SUCCESS;

@@ -20,18 +20,19 @@ DECLARE_ALGORITHM_FACTORY( PackTrack )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PackTrack::PackTrack( const std::string& name,
-                      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  PackTrack::PackTrack( const std::string& name,
+                        ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::TrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedTrackLocation::Default );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
+  declareProperty( "DeleteInput",                m_deleteInput  = false     );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PackTrack::~PackTrack() {} 
+PackTrack::~PackTrack() {}
 
 //=============================================================================
 // Main execution
@@ -50,7 +51,7 @@ StatusCode PackTrack::execute() {
   out->setVersion( 3 );
 
   StandardPacker pack;
-  
+
   for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) {
     LHCb::PackedTrack newTrk;
     LHCb::Track* track = *itT;
@@ -61,15 +62,15 @@ StatusCode PackTrack::execute() {
     newTrk.flags      = track->flags();
     newTrk.likelihood = pack.fltPacked( track->likelihood() );
     newTrk.ghostProba = pack.fltPacked( track->ghostProbability() );
-    
-    //== Store the LHCbID as int 
+
+    //== Store the LHCbID as int
     newTrk.firstId    = out->sizeId();
     for ( std::vector<LHCb::LHCbID>::const_iterator itI = track->lhcbIDs().begin();
           track->lhcbIDs().end() != itI; ++itI ) {
       out->addId((*itI).lhcbID() );
     }
     newTrk.lastId    = out->sizeId();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Stored LHCbIDs from " << newTrk.firstId << " to " << newTrk.lastId << endmsg;
 
     //== Handle the states in the track
@@ -78,7 +79,7 @@ StatusCode PackTrack::execute() {
       convertState( *itS, out );
     }
     newTrk.lastState = out->sizeState();
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Stored states from " << newTrk.firstState << " to " << newTrk.lastState << endmsg;
 
     //== Handles the ExtraInfo
@@ -92,8 +93,18 @@ StatusCode PackTrack::execute() {
     out->addEntry( newTrk );
   }
 
-  // Clear the registry address of the unpacked container, to prevent reloading
-  tracks->registry()->setAddress( 0 );
+  // If requested, remove the input data from the TES and delete
+  if ( m_deleteInput )
+  {
+    evtSvc()->unregisterObject( tracks );
+    delete tracks;
+    tracks = NULL;
+  }
+  else
+  {
+    // Clear the registry address of the unpacked container, to prevent reloading
+    tracks->registry()->setAddress( 0 );
+  }
 
   // Summary of the size of the PackTracks container
   counter("# PackedTracks") += out->end() - out->begin();
@@ -104,7 +115,7 @@ StatusCode PackTrack::execute() {
 //  Convert a track state
 //=========================================================================
 void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out) {
-      
+
   LHCb::PackedState newState;
   StandardPacker pack;
 
@@ -119,7 +130,7 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   if ( 0 != state->qOverP() ) p = 1./ state->qOverP();
   newState.p    = pack.energy  ( p );
   p = pack.energy( newState.p );  //== Get the coded value in case of saturation, to code properly the error later
-  
+
   // convariance Matrix
   std::vector<double> err;
   err.push_back( sqrt( state->errX2() ) );
@@ -127,7 +138,7 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   err.push_back( sqrt( state->errTx2() ) );
   err.push_back( sqrt( state->errTy2() ) );
   err.push_back( sqrt( state->errQOverP2() ) );
-  
+
   newState.cov_00 = pack.position( err[0] );
   newState.cov_11 = pack.position( err[1] );
   newState.cov_22 = pack.slope   ( err[2] );
@@ -144,7 +155,7 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   newState.cov_41 = pack.fraction( state->covariance()(4,1)/err[4]/err[1] );
   newState.cov_42 = pack.fraction( state->covariance()(4,2)/err[4]/err[2] );
   newState.cov_43 = pack.fraction( state->covariance()(4,3)/err[4]/err[3] );
-  
+
   out->addState( newState );
 }
 

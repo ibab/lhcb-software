@@ -28,6 +28,7 @@ private:
   std::string m_inputName;
   std::string m_outputName; 
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+  bool m_deleteInput;       ///< Flag to turn on the removal of the input data after packing
 
 };
 #endif // PACKCALOHYPO_H

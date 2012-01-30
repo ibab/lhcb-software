@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-30 - Chris Jones
+ - Implement the option "DeleteInput" in the packers used in the stripping.
+   If True, the input data objects will be deleted after a successful packing.
+
 ! 2012-01-27 - Chris Jones
  - Add some protection to PackCaloHypo in case of invalid SmartRefs ..
 
