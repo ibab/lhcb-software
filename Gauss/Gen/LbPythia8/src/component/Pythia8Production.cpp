@@ -83,7 +83,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("Top:all = off" );
   m_defaultSettings.push_back("Process commands for Pythia8" );
   //Then, setting the different processes    
-  /*m_defaultSettings.push_back("HardQCD:qq2qq = on");
+  /* m_defaultSettings.push_back("HardQCD:qq2qq = on");
   m_defaultSettings.push_back("HardQCD:qqbar2ccbar = on");
   m_defaultSettings.push_back("HardQCD:qqbar2bbbar = on");
   m_defaultSettings.push_back("HardQCD:qqbar2qqbarNew = on");
@@ -104,11 +104,11 @@ Pythia8Production::Pythia8Production( const std::string& type,
   m_defaultSettings.push_back("Charmonium:gg2QQbar[1S0(8)]g = on");
   m_defaultSettings.push_back("Charmonium:gg2QQbar[3S1(1)]g = on");*/
   m_defaultSettings.push_back("SigmaProcess:alphaSorder = 2");
-  m_defaultSettings.push_back("MultipleInteractions:Kfactor = 3.0");
-  m_defaultSettings.push_back("MultipleInteractions:bProfile = 1");
-  m_defaultSettings.push_back("MultipleInteractions:pTmin = 4.28");
-  m_defaultSettings.push_back("MultipleInteractions:ecmRef = 14000");
-  m_defaultSettings.push_back("MultipleInteractions:ecmPow = 0.162");
+  m_defaultSettings.push_back("MultipartonInteractions:Kfactor = 3.0");
+  m_defaultSettings.push_back("MultipartonInteractions:bProfile = 1");
+  m_defaultSettings.push_back("MultipartonInteractions:pTmin = 4.28");
+  m_defaultSettings.push_back("MultipartonInteractions:ecmRef = 14000");
+  m_defaultSettings.push_back("MultipartonInteractions:ecmPow = 0.162");
   m_defaultSettings.push_back("StringFlav:mesonCL1S0J1 = 0.0405");
   m_defaultSettings.push_back("StringFlav:mesonCL1S1J0 = 0.0135");
   m_defaultSettings.push_back("StringFlav:mesonCL1S1J1 = 0.0405");
@@ -121,8 +121,7 @@ Pythia8Production::Pythia8Production( const std::string& type,
   //Settings for LHAPDF  
   m_defaultSettings.push_back("PDF:LHAPDFset = cteq6l.LHpdf");
   m_defaultSettings.push_back("PDF:LHAPDFmember = 1");
-  m_defaultSettings.push_back("PDF:extrapolateLHAPDF = off");
-    
+  m_defaultSettings.push_back("PDF:extrapolateLHAPDF = off");    
   m_defaultSettings.push_back("Output commands for Pythia8");
 }
 
@@ -285,8 +284,9 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   
   if (!success) sc = StatusCode::FAILURE;
 
+  info() << " will INIT" << endmsg;
   m_pythia->init(m_id1, m_id2, m_engCM) ;
-  
+  info() << " FINISHED INIT" << endmsg;
   return sc;
 }
 
