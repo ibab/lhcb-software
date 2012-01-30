@@ -279,7 +279,7 @@ namespace LHCb {
       : DimCommand(std::string(cmd_name + "/sendMEPRQ").c_str(), (char*)"I"),
       m_mepRxObj(mepRxObj),m_msgSvc(log) {
       }
-    ~MEPRQCommand() { }
+    virtual ~MEPRQCommand() { }
     virtual void commandHandler(void);
   };
   /**
@@ -293,7 +293,7 @@ namespace LHCb {
       : DimCommand(std::string(cmd_name + "/setOverflow").c_str(), (char *)"I"),
       m_mepRxObj(mepRxObj), m_msgSvc(log) {
       }
-    ~SetOverflowCmd() {}
+    virtual ~SetOverflowCmd() {}
     virtual void commandHandler(void);
   };
 
@@ -305,7 +305,7 @@ namespace LHCb {
       : DimService(std::string(svc_name + "/OverflowStatus").c_str(), (char *)"C"),
       m_mepRxObj(mepRxObj), m_msgSvc(log) {
      }
-    ~OverflowStatSvc() {}
+    virtual ~OverflowStatSvc() {}
     virtual void serviceHandler();
   };
 }      // End namespace LHCb

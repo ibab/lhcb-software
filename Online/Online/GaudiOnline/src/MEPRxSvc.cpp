@@ -638,7 +638,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
   declareProperty("createODINMEP",    m_createODINMEP = false);
   declareProperty("resetCountersOnRunChange", m_resetCounterOnRunChange = true);
-  declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = false);
+  declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = true);
   declareProperty("overflowPath",     m_overflowPath = "/localdisk/overflow");
   declareProperty("overflow",         m_overflow = false);  
   declareProperty("nameLiveBuf",      m_nameLiveBuf = "Events");
@@ -660,6 +660,10 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
 MEPRxSvc::~MEPRxSvc(){
   delete [] (u_int8_t*) m_trashCan;
   delete m_mepRQCommand;
+  delete m_clearMonCommand;
+  delete m_upMonCommand;
+  delete m_overflowStatSvc;
+  delete m_setOverflowCmd;
 }
 
 void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr) 
@@ -1294,7 +1298,6 @@ StatusCode MEPRxSvc::initialize()  {
   }
   
   if (lib_rtl_access(m_overflowPath.c_str(), 0x6) != 1) {
-    error("brrh");
     info(std::string("Cannot write to ") + m_overflowPath + std::string(" - disabling overflow"));
     m_overflow = false;
   }

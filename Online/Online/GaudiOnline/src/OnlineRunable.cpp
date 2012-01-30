@@ -26,6 +26,7 @@ LHCb::OnlineRunable::OnlineRunable(const std::string& nam, ISvcLocator* svc)
   declareProperty("Call",      m_call);
   declareProperty("Dll",       m_dll);
   declareProperty("Wait",      m_wait = 1);
+  declareProperty("Warnings",  m_warnings = false); // Dummy for compatibility
   ::wtc_init();
 }
 

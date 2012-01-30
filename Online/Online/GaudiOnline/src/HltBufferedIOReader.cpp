@@ -50,7 +50,10 @@ namespace LHCb  {
 
     /// Monitoring quantity: Number of events processed
     int                    m_evtCount;
+    /// Flag to indicate if files should be deleted
+    bool                   m_deleteFiles;
 
+    // Helper routines
     size_t                 scanFiles();
     int                    openFile();
     void                   safeRestOfFile(int file_handle);
@@ -110,8 +113,9 @@ using namespace std;
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)   
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_producer(0), m_evtCount(0)
 {
-  declareProperty("Directory",m_directory = "/localdisk");
-  declareProperty("Buffer",m_buffer = "Mep");
+  declareProperty("Buffer",     m_buffer = "Mep");
+  declareProperty("Directory",  m_directory = "/localdisk");
+  declareProperty("DeleteFiles",m_deleteFiles = true);
   ::lib_rtl_create_lock(0,&m_lock);
 }
 
@@ -255,10 +259,12 @@ int HltBufferedIOReader::openFile() {
     m_files.erase(i);
     int fd = ::open(fname.c_str(),O_RDONLY|O_BINARY,S_IREAD);
     if ( fd ) {
-      int sc = ::unlink(fname.c_str());
-      if ( sc != 0 ) {
-	error("CANNOT UNLINK file: "+fname+": "+RTL::errorString());
-	::exit(0);
+      if ( m_deleteFiles )   {
+	int sc = ::unlink(fname.c_str());
+	if ( sc != 0 ) {
+	  error("CANNOT UNLINK file: "+fname+": "+RTL::errorString());
+	  ::exit(0);
+	}
       }
       m_current = fname;
       info("Opened file: "+fname+" for deferred HLT processing");
@@ -356,9 +362,9 @@ StatusCode HltBufferedIOReader::run()   {
 	    dsc.len = sizeof(MEPEVENT)+me->sizeOf()+me->size();
 	    //cout << "Event length:" << dsc.len << endl;
 	    dsc.mask[0] = m_mepMgr->partitionID();
-	    dsc.mask[1] = 0;
-	    dsc.mask[2] = 0;
-	    dsc.mask[3] = 0;
+	    dsc.mask[1] = ~0x0;
+	    dsc.mask[2] = ~0x0;
+	    dsc.mask[3] = ~0x0;
 	    dsc.type    = EVENT_TYPE_MEP;
 	    m_producer->declareEvent();
 	    status =  m_producer->sendSpace();

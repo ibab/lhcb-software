@@ -37,6 +37,7 @@ namespace LHCb  {
     std::string m_dll;
     std::string m_initFlags;
     int         m_wait;
+    bool        m_warnings;
     StatusCode wait();
   public:
     /// Standard Constructor
