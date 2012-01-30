@@ -7,6 +7,7 @@
 #include "LoKi/Objects.h"
 #include "LoKi/PhysDump.h"
 #include "LoKi/DecayChain.h"
+#include "LoKi/ATypes.h"
 // ============================================================================
 /** @file
  *
@@ -161,6 +162,100 @@ LoKi::Functors::Dump1_<const LHCb::Particle*,double>::operator()
   //
   return result ;
 }
+// ============================================================================
+template <>
+LoKi::Functors::Dump1_<LoKi::ATypes::Combination,double>::result_type 
+LoKi::Functors::Dump1_<LoKi::ATypes::Combination,double>::operator() 
+  ( LoKi::Functors::Dump1_<LoKi::ATypes::Combination,double>::argument a ) const 
+{
+  //
+  if ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    //
+    LoKi::DecayChain printer ;
+    printer.print
+      ( a.begin ()                          , 
+        a.end   ()                          , 
+        m_stream                            , 
+        '\n'                                , 
+        LoKi::Objects::_VALID_              , 
+        LoKi::Objects::_NONE_               , 
+        " "                                 , 
+        0                                   ) ;
+    //
+    m_stream << m_dump.close () ;
+    //
+    return m_fun ( a ) ;
+  }
+  //  
+  result_type result = m_fun ( a ) ;
+  //
+  m_stream << m_dump.open  () ;
+  //
+  LoKi::DecayChain printer ;
+  printer.print
+    ( a.begin ()                          , 
+      a.end   ()                          , 
+      m_stream                            , 
+      '\n'                                , 
+      LoKi::Objects::_VALID_              , 
+      LoKi::Objects::_NONE_               , 
+      " "                                 , 
+        0                                   ) ;
+  //
+  m_stream << m_dump.close () ;
+  //
+  return result ;
+}
+// ============================================================================
+template <>
+LoKi::Functors::Dump1_<LoKi::ATypes::Combination,bool>::result_type 
+LoKi::Functors::Dump1_<LoKi::ATypes::Combination,bool>::operator() 
+  ( LoKi::Functors::Dump1_<LoKi::ATypes::Combination,bool>::argument a ) const 
+{
+  //
+  if ( m_right ) 
+  {
+    m_stream << m_dump.open  () ;
+    //
+    LoKi::DecayChain printer ;
+    printer.print
+      ( a.begin ()                          , 
+        a.end   ()                          , 
+        m_stream                            , 
+        '\n'                                , 
+        LoKi::Objects::_VALID_              , 
+        LoKi::Objects::_NONE_               , 
+        " "                                 , 
+        0                                   ) ;
+    //
+    m_stream << m_dump.close () ;
+    //
+    return m_fun ( a ) ;
+  }
+  //  
+  result_type result = m_fun ( a ) ;
+  //
+  m_stream << m_dump.open  () ;
+  //
+  LoKi::DecayChain printer ;
+  printer.print
+    ( a.begin ()                          , 
+      a.end   ()                          , 
+      m_stream                            , 
+      '\n'                                , 
+      LoKi::Objects::_VALID_              , 
+      LoKi::Objects::_NONE_               , 
+      " "                                 , 
+      0                                   ) ;
+  //
+  m_stream << m_dump.close () ;
+  //
+  return result ;
+}
+// ============================================================================
+
 
 // ============================================================================
 // The END 

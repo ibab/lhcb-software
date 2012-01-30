@@ -17,6 +17,7 @@
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/PhysTypes.h"
+#include "LoKi/Dumper.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -64,6 +65,21 @@ namespace LoKi
   inline std::ostream& 
   Constant<LoKi::ATypes::Combination,bool>::fillStream   ( std::ostream& s ) const 
   { return s << ( this->m_value ? "AALL" : "ANONE" ) ; }
+  // ==========================================================================
+  namespace Functors
+  {
+    // ========================================================================
+    template <>
+    Dump1_<LoKi::ATypes::Combination,double>::result_type 
+    Dump1_<LoKi::ATypes::Combination,double>::operator() 
+      ( Dump1_<LoKi::ATypes::Combination,double>::argument a ) const ;
+    // ========================================================================
+    template <>
+    Dump1_<LoKi::ATypes::Combination,bool>::result_type 
+    Dump1_<LoKi::ATypes::Combination,bool>::operator() 
+      ( Dump1_<LoKi::ATypes::Combination,bool>::argument a ) const ;
+    // ========================================================================
+  }
   // ==========================================================================
 }
 // ============================================================================
