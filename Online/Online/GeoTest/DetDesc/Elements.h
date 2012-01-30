@@ -25,6 +25,11 @@ namespace DetDesc {
     typedef TObjArray   NodeList_t;
     typedef TGeoManager Document_t;
 
+    std::string    _toString(bool value);
+    std::string    _toString(int value);
+    std::string    _toString(float value);
+    std::string    _toString(double value);
+
     bool           _toBool  (const std::string& value);
     int            _toInt   (const std::string& value);
     float          _toFloat (const std::string& value);
@@ -35,22 +40,19 @@ namespace DetDesc {
     inline float   _toFloat(float value)     {  return value; }
     inline double  _toDouble(double value)   {  return value; }
 
-    std::string    _toString(bool value);
-    std::string    _toString(int value);
-    std::string    _toString(float value);
-    std::string    _toString(double value);
-
     void _toDictionary(const std::string& name, const std::string& value);
 
     template<class T> inline void deletePtr(T*& p) { if(p) delete p; p=0; }
 
     template <typename Q, typename P> struct Value : public Q, public P  {
+      typedef  Q first_base;
+      typedef  P second_base;
       virtual ~Value() {}
     };
 
     struct Element  {
       Element_t* m_element;
-      Element(Element_t* e) : m_element(e) {                            }
+      Element(Element_t* e) : m_element(e)    {                         }
       Element(const Element& e) : m_element(e.m_element) {              }
       Element_t* ptr() const                  {  return m_element;      }
       template <typename T> T* _ptr() const   {  return (T*)m_element;  }
