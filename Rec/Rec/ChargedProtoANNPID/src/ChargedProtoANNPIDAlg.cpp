@@ -292,8 +292,11 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   // FPE Guard for NB call
   FPE::Guard guard(true);
 
-  // NeuroBayes seems to sporadically send mysterious stderr messages
+  // NeuroBayes seems to sporadically send mysterious std messages
   // which we cannot control... So forcibly incept them all here and send to /dev/null
+  const int original_stdout = dup(fileno(stdout));
+  fflush(stdout);
+  freopen("/dev/null","w",stdout);
   const int original_stderr = dup(fileno(stderr));
   fflush(stderr);
   freopen("/dev/null","w",stderr);
@@ -301,11 +304,14 @@ ChargedProtoANNPIDAlg::NeuroBayesANN::getOutput( const LHCb::ProtoParticle * pro
   // get the NN output, rescaled to the range 0 to 1
   const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
 
-  // put stderr back to normal
+  // put std back to normal
+  fflush(stdout);
+  dup2(original_stdout,fileno(stdout));
+  close(original_stdout);
   fflush(stderr);
   dup2(original_stderr,fileno(stderr));
   close(original_stderr);
-  
+
   // return final output
   return nnOut;
 }

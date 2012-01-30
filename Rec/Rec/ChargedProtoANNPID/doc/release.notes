@@ -6,8 +6,9 @@
 
 ! 2012-01-20 - Chris Jones
  - The annoying sporadic stderr messages from NeuroBayes seem to have returned.
-   So, until understood squash them entirely by redirecting stderr to /dev/null
-   *just* for the m_expert->nb_expert(m_inArray) call. Ugly, brutal, but works.
+   So, until understood squash them entirely by redirecting stderr and stdout
+   to /dev/null *just* for the m_expert->nb_expert(m_inArray) call. 
+   Ugly, brutal, but works.
 
 ! 2012-01-18 - Chris Jones
  - Update the default network tuning, for all DataTypes, to MC11aTuneV2
