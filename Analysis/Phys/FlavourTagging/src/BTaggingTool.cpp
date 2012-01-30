@@ -152,16 +152,21 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   //choose RecVert PV and pileup vertices taking into account refitting ///////
   RecVertex RefitRecVert(0);
   const RecVertex::ConstVector PileUpVtx= choosePrimary(AXB, verts, RecVert, RefitRecVert);
-
-  if( msgLevel(MSG::DEBUG) ) {
-    debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
-    if(m_UseReFitPV)
-      debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
-    for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
-        iv!=PileUpVtx.end(); iv++) {
-      debug()<<"--> PileUpPV at z="<<(*iv)->position().z()/mm<<endreq;
+  if(RecVert){    
+    if( msgLevel(MSG::DEBUG) ) {
+      debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
+      if(m_UseReFitPV)
+        debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
+      for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
+          iv!=PileUpVtx.end(); iv++) {
+        debug()<<"--> PileUpPV at z="<<(*iv)->position().z()/mm<<endreq;
+      }
     }
+  } else {
+    err() <<"No Vertex found! Skip. "<<endreq;
+    return StatusCode::FAILURE;
   }
+  
   
   ////////////////////////////////////////////////////////
   //loop over Particles, preselect candidates ///////////
@@ -285,8 +290,13 @@ BTaggingTool::choosePrimary(const Particle* AXB,
     }
   } else if (m_ChoosePV == "bestPV") { //choose bestPV according IRelatedPVFinder
     RecVert = (const RecVertex*) m_dva->bestPV(AXB);
-
-    debug()<<"Will use the bestPV criteria found z="<<RecVert->position().z()<<endreq;    
+    if(RecVert)
+      debug()<<"Will use the bestPV criteria found z="<<RecVert->position().z()<<endreq;    
+    else {      
+      err() <<"No bextPV vertex found! Skip. "<<endreq;
+      return PileUpVtx;
+    }
+    
     
     if(m_UseReFitPV) {  //----------------------------- Refit PV without B tracks
       RecVertex newPV(*RecVert);
