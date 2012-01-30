@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2012-01-30 - Marco Clemencic
+ - Added new interfaces for Data Quality filtering:
+   - IDQFilter
+   - IDQScanner
+
 ! 2012-01-25 - Olivier Callot
  - New functions in StandardPacker for long links
 
@@ -31,7 +36,7 @@
  - Fix trivial ICC remarks
 
 ! 2011-10-05 - Chris Jones
- - Rename NHPDPanelsPerRICH as NPDPanelsPerRICH and NTotalHPDPanels as 
+ - Rename NHPDPanelsPerRICH as NPDPanelsPerRICH and NTotalHPDPanels as
    NTotalPDPanels in RichSide.h, to be PD 'neutral'
 
 !====================== LHCbKernel v13r5 2011-09-06 =======================

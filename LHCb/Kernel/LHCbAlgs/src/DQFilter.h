@@ -11,6 +11,8 @@
 // Include files
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/ToolHandle.h"
+#include "Kernel/IDQFilter.h"
 
 class Condition;
 class IIncidentSvc;
@@ -50,15 +52,7 @@ private:
   /// incident or during the execute.
   bool m_beginEvent;
 
-  /// List of flag (names) to ignore during the filtering. The matching is
-  /// case-insensitive.
-  std::vector<std::string> m_ignoredFlagsProp;
-
-  /// Internal storage for ignored flags.
-  std::set<std::string> m_ignoredFlags;
-
-  /// Call-back function to update the internal storage of ignored flags.
-  void i_propUpdate(Property&);
+  ToolHandle<IDQFilter> m_filter;
 
   /// Call-back function passed to the UpdateManagerSvc to update the current
   /// filtering status (good or bad).

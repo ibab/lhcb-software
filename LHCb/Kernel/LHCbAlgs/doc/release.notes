@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-01-30 - Marco Clemencic
+ - Factored out from the DQFilter algorithm the code to accept/reject Data
+   Quality flags.
+   - The code has been moved to a new tool (BasicDQFilter), which implements
+     the IDQFilter interface.
+
 ! 2012-01-09 - Marco Clemencic
  - New test algorithm to retrieve a service during initialize, start or
    execute (LHCbAlgsTest::ServiceStarter).

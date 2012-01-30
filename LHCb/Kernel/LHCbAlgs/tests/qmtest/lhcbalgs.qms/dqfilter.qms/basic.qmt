@@ -17,7 +17,7 @@ ecs.EventTimeDecoder.StartTime = 5e9 # seconds
 ecs.EventTimeDecoder.TimeStep = 10e9
 
 dqf = DQFilter(OutputLevel = VERBOSE)
-#dqf.IgnoredFlags = ["OtherDET"]
+#dqf.Filter.IgnoredFlags = ["OtherDET"]
 
 testCond = TestCond("TestCond")
 testCond.Conditions = [ "Conditions/DQ/Flags" ]

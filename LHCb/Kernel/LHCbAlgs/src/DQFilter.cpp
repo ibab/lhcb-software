@@ -10,7 +10,7 @@
 using boost::algorithm::to_lower_copy;
 
 DQFilter::DQFilter(const std::string & name, ISvcLocator *pSvcLocator):
-  base_class(name, pSvcLocator), m_bad(false)
+  base_class(name, pSvcLocator), m_filter("BasicDQFilter", this), m_bad(false)
 {
   declareProperty("ConditionPath",
                   m_condPath = "Conditions/DQ/Flags",
@@ -20,10 +20,9 @@ DQFilter::DQFilter(const std::string & name, ISvcLocator *pSvcLocator):
                   m_beginEvent = true,
                   "If set to true, the filtering is done at the level of the "
                   "BeginEvent incident.");
-  declareProperty("IgnoredFlags",
-                  m_ignoredFlagsProp,
-                  "List of flags to ignore when filtering events")
-    ->declareUpdateHandler(&DQFilter::i_propUpdate, this);
+  declareProperty("Filter",
+                  m_filter,
+                  "IDQFilter Tool defining the acceptance rules.");
 }
 
 
@@ -44,17 +43,11 @@ StatusCode DQFilter::initialize()
     m_incSvc->addListener(this, IncidentType::BeginEvent);
   }
 
-  if (msgLevel() <= MSG::DEBUG) {
+  if (msgLevel(MSG::DEBUG)) {
     debug() << "DQFilter/" << name() << " initialized:" << endmsg;
     debug() << "  using condition at '" << m_condPath << "'" << endmsg;
     debug() << "  filtering on " << ((m_beginEvent) ? "BeginEvent" : "execute") << endmsg;
-    if (!m_ignoredFlagsProp.empty()) {
-      debug() << "  ignoring flags:" << endmsg;
-      BOOST_FOREACH(const std::string &s, m_ignoredFlagsProp)
-      {
-        debug() << "    " << s << endmsg;
-      }
-    }
+    debug() << "  using " << m_filter.typeAndName() << endmsg;
   }
   return sc;
 }
@@ -78,34 +71,17 @@ StatusCode DQFilter::finalize()
     m_incSvc->removeListener(this, IncidentType::BeginEvent);
     m_incSvc.reset();
   }
+  m_filter.release().ignore();
 
   return GaudiAlgorithm::finalize();
-}
-
-void DQFilter::i_propUpdate(Property&) {
-  m_ignoredFlags.clear();
-  BOOST_FOREACH(const std::string &s, m_ignoredFlagsProp)
-  {
-    m_ignoredFlags.insert(to_lower_copy(s));
-  }
 }
 
 StatusCode DQFilter::i_checkFlags()
 {
   if( UNLIKELY( msgLevel(MSG::VERBOSE) ) )
     verbose() << "Updating Data Quality flags" << endmsg;
-  m_bad = false;
-  typedef std::map<std::string, int> flags_t;
-  const flags_t &flags = m_flags->param<flags_t>("map");
-  for (flags_t::const_iterator f = flags.begin(); (!m_bad) && (f != flags.end()); ++f) {
-    // if the flag is not ignored
-    if (m_ignoredFlags.find(to_lower_copy(f->first)) == m_ignoredFlags.end())
-      m_bad = (f->second != 0); // no need to consider the previous value of m_bad because we do an early exit
-    else {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << "Ignoring flag: " << f->first << endmsg;
-    }
-  }
+  const IDQFilter::FlagsType& flags = m_flags->param<IDQFilter::FlagsType>("map");
+  m_bad = !m_filter->accept(flags);
   // we successfully updated the m_bad state
   return StatusCode::SUCCESS;
 }
