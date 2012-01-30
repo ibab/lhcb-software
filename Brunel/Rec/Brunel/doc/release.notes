@@ -3,8 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2012-01-27 - Chris Jones
- - Add a filter for the States on Muon Tracks
+- Changes to configuration
+  . Add a filter for the States on Best and Muon Tracks
+
+- Persistency changes
+  . Change to states saved by default on tracks written to output file:
+    Velo:       ("ClosestToBeam")
+    Long:       ("ClosestToBeam")("FirstMeasurement")("BegRich2")("V0Vertex")
+    T:          ("FirstMeasurement")( "BegRich2")
+    Downstream: ("FirstMeasurement")("BegRich2")("V0Vertex")
+    Upstream:   ("ClosestToBeam")("FirstMeasurement")
+    Muon        ("FirstMeasurement")
 
 - Changes to references to reflect changes in Brunel v42r0 output:
   . Fixes to primitive types that can be saved in Tuples::TupleObj
@@ -15,6 +24,7 @@ Purpose: LHCb reconstruction program
   . Add monitor for ANN PID variables
   . Move 2D histograms to expert mode (MuonTrackAlign)
   . Remove a Velo clusters histogram (VeloRecMonitors)
+  . Fix reinitialisation when condition is updated (CaloDet)
 
 - Changes to configuration
   . Remove GaudiPoolDb dependency
