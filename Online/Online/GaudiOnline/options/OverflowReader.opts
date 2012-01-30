@@ -1,4 +1,5 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+OnlineEnv.PartitionID                = 97773;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.SvcOptMapping        += { "LHCb::MEPManager/MEPManager" };
 ApplicationMgr.Runable               = "LHCb::HltBufferedIOReader/Runable";
