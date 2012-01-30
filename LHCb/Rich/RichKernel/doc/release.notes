@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------
 
 ! 2012-01-26 - Chris Jones
- - Add some protection against calling primary() an empty 
+ - Add some protection against calling primaryID() on an empty 
    HPDPixelCluster object.
 
 ! 2012-01-04 - Chris Jones
