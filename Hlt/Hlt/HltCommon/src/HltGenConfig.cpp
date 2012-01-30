@@ -30,12 +30,6 @@ using namespace std;
 using boost::assign::list_of;
 namespace bl = boost::lambda;
 
-namespace {
-    ostream& operator<<(std::ostream& os,const Gaudi::Utils::TypeNameString& x)  {
-            return x.haveType() ? (os << x.type() << '/' << x.name() )
-                                : (os << x.name() );
-    }
-}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGenConfig
