@@ -13,7 +13,7 @@ use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
 use           DetDesc           v*      Det
 
-# This one is for the interface ICondDBInfo
+# This one is for the interface ICondDBInfo and IDQScanner
 use           LHCbKernel        v*      Kernel
 
 macro_append Boost_linkopts " $(Boost_linkopts_system) "

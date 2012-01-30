@@ -1,10 +1,12 @@
 <lcgdict>
-  
+
   <class name="ICondDBReader"        />
+  <class name="ICondDBReader::IOV"   />
+  <class name="ICondDBReader::IOVList" />
   <class name="ICondDBEditor"        />
   <class name="ICondDBAccessSvc"     />
   <class name="ICOOLConfSvc"         />
-  
+
   <class name="coral::IReplicaSortingAlgorithm" />
   <class name="coral::IConnectionService" />
   <class name="coral::IConnectionServiceConfiguration" />

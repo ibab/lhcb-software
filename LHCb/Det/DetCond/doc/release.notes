@@ -7,6 +7,7 @@
 ! 2012-01-30 - Marco Clemencic
  - Added new methods to the ICondDBReader interface (getIOVs), to retrieve the
    list of IOVs in a folder for an IOV.
+ - Added a test for the implementation of getIOVs in CondDBAccessSvc, and fixes.
 
 ! 2012-01-06 - Marco Clemencic
  - Modified LoadDDDB to trigger the initialization of the UpdateManagerSvc in

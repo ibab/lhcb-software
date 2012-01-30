@@ -7,6 +7,7 @@
 // local
 #include "CondDBLayeringSvc.h"
 #include "CondDBCommon.h"
+#include "IOVListHelpers.h"
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBLayeringSvc)
@@ -169,7 +170,7 @@ ICondDBReader::IOVList CondDBLayeringSvc::i_getIOVs(const std::string & path, co
       iovs.insert(iovs.end(), layer_iovs.begin(), layer_iovs.end());
       std::sort(iovs.begin(), iovs.end());
       // regenerate the list of holes
-      missing = iovs.find_holes(iov);
+      missing = IOVListHelpers::find_holes(iovs, iov);
     }
   }
 

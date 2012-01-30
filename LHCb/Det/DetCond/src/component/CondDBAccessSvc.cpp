@@ -36,6 +36,7 @@
 #include "CondDBCache.h"
 
 #include "CondDBCommon.h"
+#include "IOVListHelpers.h"
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
@@ -810,11 +811,14 @@ ICondDBReader::IOVList CondDBAccessSvc::i_getIOVsFromDB(const std::string & path
     cool::IObjectIteratorPtr objects;
 
     // FIXME: we need to considered the query granularity
+    // Note: IFolder::browseObject returns the objects valid up to the 'until'
+    //       included, which means that asking for [1,10] will return also the
+    //       object starting at 10, so, to exclude it we need to ask for [1,9].
     if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION
         || tag().empty() || tag() == "HEAD" ){
-      objects = folder->browseObjects(iov.since.ns(), iov.until.ns(), channel);
+      objects = folder->browseObjects(iov.since.ns(), iov.until.ns() - 1, channel);
     } else {
-      objects = folder->browseObjects(iov.since.ns(), iov.until.ns(), channel, folder->resolveTag(tag()));
+      objects = folder->browseObjects(iov.since.ns(), iov.until.ns() - 1, channel, folder->resolveTag(tag()));
     }
 
     if (!objects->isEmpty()) {// check if we managed to find anything
@@ -846,7 +850,7 @@ ICondDBReader::IOVList CondDBAccessSvc::getIOVs(const std::string & path, const 
   if (m_useCache){
     /// Look for holes in the timeline of the cache
     result = m_cache->getIOVs(path, iov, channel);
-    IOVList holes = result.find_holes(iov);
+    IOVList holes = IOVListHelpers::find_holes(result, iov);
     for(IOVList::iterator hole = holes.begin(); hole != holes.end(); ++hole) {
       const IOVList cover = i_getIOVsFromDB(path, *hole, channel);
       result.insert(result.end(), cover.begin(), cover.end());

@@ -52,17 +52,8 @@ public:
     }
   };
 
-  // /// List of IOV instances.
-  // //typedef std::vector<IOV> IOVList;
   /// List of IOV instances.
-  /// Note: it is not recommended to inherit from a STL class because of the
-  /// absence of a virtual destructor, but in this case it is save because we do
-  /// not add data members.
-  class IOVList: public std::vector<IOV> {
-  public:
-    /// Find the intervals in passed interval that are not covered by this list.
-    inline IOVList find_holes(const IOV& iov) const;
-  };
+  typedef std::vector<IOV> IOVList;
 
   /// Retrieve data from the condition database.
   /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
@@ -105,24 +96,5 @@ protected:
 private:
 
 };
-
-ICondDBReader::IOVList ICondDBReader::IOVList::find_holes(const IOV& iov) const {
-  IOVList result;
-
-  Gaudi::Time last = iov.since; // keep track of the end of coverage
-  // loop over covering interval
-  for (const_iterator covered = begin(); covered != end(); ++covered) {
-    if (covered->since > last) { // hole between the end of coverage and begin of next IOV
-      result.push_back(IOV(last, covered->since));
-    }
-    last = covered->until; // prepare to look for the next hole
-  }
-  if (last < iov.until) {
-    // we didn't get anything to cover until the end of the requested IOV
-    result.push_back(IOV(last, iov.until));
-  }
-
-  return result;
-}
 
 #endif // DETCOND_ICONDDBREADER_H

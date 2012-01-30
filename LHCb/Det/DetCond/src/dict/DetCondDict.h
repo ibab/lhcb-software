@@ -27,6 +27,12 @@
 #include "RelationalAccess/IConnectionServiceConfiguration.h"
 #include "RelationalAccess/IReplicaSortingAlgorithm.h"
 // ============================================================================
+namespace _instantiations {
+  struct Instantiations {
+    ICondDBReader::IOVList _i1;
+  };
+}
+// ============================================================================
 #endif // DETCOND_DETCONDDICT_H
 // ============================================================================
 

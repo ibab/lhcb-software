@@ -75,7 +75,13 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObject &obj
   // for vectors
   //  f->second.items.push_back(CondItem(&f->second,obj));
   // for lists
-  f->second.items[channel].push_front(CondItem(&f->second, obj));
+  ItemListType &items = f->second.items[channel];
+  ItemListType::iterator pos = items.begin();
+  while (pos != items.end() &&  pos->iov.first < obj.since()) {
+    ++pos;
+  }
+  items.insert(pos, CondItem(&f->second, obj));
+
   ++m_level;
   return true;
 }
