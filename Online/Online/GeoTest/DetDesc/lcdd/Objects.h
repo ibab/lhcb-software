@@ -27,7 +27,7 @@ namespace DetDesc {
     struct LCDD;
 
     struct Author : public RefElement_type<TNamed>  {
-      /// Refault constructor
+      /// Default constructor
       Author() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
@@ -39,7 +39,7 @@ namespace DetDesc {
     };
 
     struct Header : public RefElement_type<TNamed>  {
-      /// Refault constructor
+      /// Default constructor
       Header() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
@@ -49,7 +49,7 @@ namespace DetDesc {
     };
 
     struct Constant : public RefElement_type<TNamed>  {
-      /// Refault constructor
+      /// Default constructor
       Constant() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
@@ -61,7 +61,7 @@ namespace DetDesc {
     };
 
     struct Transformation : public RefElement_type<TGeoMatrix> {
-      /// Refault constructor
+      /// Default constructor
       Transformation() : RefElement_type<TGeoMatrix>() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
@@ -71,7 +71,7 @@ namespace DetDesc {
     };
 
     struct Position : public RefElement_type<TGeoTranslation>  {
-      /// Refault constructor
+      /// Default constructor
       Position() : RefElement_type<TGeoTranslation>() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
@@ -81,7 +81,7 @@ namespace DetDesc {
     };
 
     struct Rotation : public RefElement_type<TGeoRotation>  {
-      /// Refault constructor
+      /// Default constructor
       Rotation() : RefElement_type<TGeoRotation>() {}
       /// Constructor to be used RefElement reading the already parsed DOM tree
       template <typename Q> 
@@ -93,7 +93,7 @@ namespace DetDesc {
     };
 
     struct Atom : public RefElement_type<TGeoElement>  {
-      /// Refault constructor
+      /// Default constructor
       Atom() : RefElement_type<TGeoElement>() {}
       /// Constructor to be used when creating a new DOM tree
       template <typename Q> 
@@ -103,7 +103,7 @@ namespace DetDesc {
     };
 
     struct Material : public RefElement_type<TGeoMaterial>  {
-      /// Refault constructor
+      /// Default constructor
       Material() : RefElement_type<TGeoMaterial>() {}
       /// Constructor to be used when creating a new DOM tree
       template <typename Q> 
