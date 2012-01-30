@@ -5,6 +5,8 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2012-01-30 - Stefania Vecchi
+ - added protection against null PV (caused by bestPV)
 
 ! 2012-01-12 - Stefania Vecchi
  - changes in root/src/Tagger*.cxx: set untagged events with pn<0 or >1

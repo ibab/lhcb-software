@@ -767,6 +767,11 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
   }//else bestPV
   debug()<<endreq;
   
+  if(!PV) {      
+    err() <<"PV vertex found! Skip. "<<endreq;
+    return PileUpVtx;
+  }
+  
   //-------------------------------------------------------
   // Refit PV without the B tracks
   if(m_ReFitPVs){  
