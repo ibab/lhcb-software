@@ -206,7 +206,7 @@ int NodeStatsCollector::monitorHLT() {
 	else ++((*i).second);
 	++count;
       }
-      else {
+      else if( ::strcmp(entry->d_name,".") || ::strcmp(entry->d_name,"..") ) {
 	log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
       }
     }
@@ -288,7 +288,7 @@ int NodeStatsCollector::monitor() {
     if ( 0 != m_mbmSvc ) {
       if ( (nclients=::dis_update_service(m_mbmSvc)) == 0 ) {
 	if ( m_print )   {
-	  log() << "No client was listening to my MBM information......" << std::endl;
+	  //log() << "No client was listening to my MBM information......" << std::endl;
 	}
       }
     }

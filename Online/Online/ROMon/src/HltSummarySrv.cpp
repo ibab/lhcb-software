@@ -155,25 +155,7 @@ HltSummaryListener::~HltSummaryListener()  {
 void HltSummaryListener::update(void* /* param */)   {
   //IocSensor::instance().send(m_parent,CMD_UPDATE,param);
 }
-#if 0
-/// Feed data to DIS when updating data
-void HltSummaryListener::feed(void* tag, void** buff, int* size, int* /* first */) {
-  static const char* data = "";
-  Item* it = *(Item**)tag;
-  if ( it ) {
-    Descriptor* d = it->data<Descriptor>();
-    if ( d ) {
-      if ( d->data ) {
-	*buff = (void*)(d->data ? d->data : data);
-	*size = d->actual;
-	return;
-      }
-    }
-  }
-  *buff = (void*)data;
-  *size = 0;
-}
-#endif
+
 /// Feed data to DIS when updating data
 static void feed(void* tag, void** buff, int* size, int* /* first */) {
   static const char* data = "";
@@ -184,7 +166,7 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
     return;
   }
   *buff = (void*)data;
-  *size = 0;
+  *size = 1;
 }
 
 /// Standard constructor

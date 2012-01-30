@@ -75,7 +75,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
     ::mbm_unmap_global_buffer_info(m_bm_all,false);
     return 1;
   }
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"Cannot map global MBM buffer information....\n");
+  //::lib_rtl_output(LIB_RTL_INFO,"Cannot map global MBM buffer information....\n");
   return 0;
 }
 

@@ -190,12 +190,10 @@ namespace {
 	}
       }
     }
-    //#if 0
     for(i=files.begin(), ir=runs.reset(); i!=files.end(); ++i) {
       *ir = *i;
       ir = runs.add(ir);
     }
-    //#endif
     HLTStats::Nodes* nodes = n->nodes();
     DeferredHLTStats* curr = nodes->reset();
     for(ic = cl.begin(); ic != cl.end(); ++ic)   {
@@ -205,14 +203,6 @@ namespace {
         ::memcpy(curr,d->data,d->actual);
         curr = nodes->add(curr);
       }
-#if 0
-      DeferredHLTStats* stats = (DeferredHLTStats*)(*ic).second->data<DSC>()->data;
-      if ( stats ) {
-        if ( ((char*)nodes+stats->length()) > buff+buffLen ) return 2;
-        ::memcpy(curr,stats,stats->length());
-        curr = nodes->add(curr);
-      }
-#endif
     }
     n->fixup();
     return 1;
