@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v2r14p1 2012-01-31 =========================
+! 2012-01-09 - A Mazurov
+ - Fix warning: variable ‘rv’ set but not used
+
 !========================= HltDAQ v2r14 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - Add explicit Boost_linkopts for compatibility with Gaudi v23
