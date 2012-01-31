@@ -77,7 +77,7 @@ def main():
     tests = [(datetime(2012,1,1,0),  datetime(2012,1,4,0),  dbData[0:3]),
              (datetime(2012,1,1,12), datetime(2012,1,3,12), dbData[0:3]),
              (datetime(2012,1,2,12), datetime(2012,1,5,12), dbData[1:4]),
-             (datetime(2012,1,4,12), datetime(2012,1,6,0),  dbData[3:4]),
+             (datetime(2012,1,4,12), datetime(2012,1,6,12), dbData[3:4]),
              ]
     print "\n=== Begin Tests ==="
     bad = 0

@@ -8,7 +8,8 @@
 // Implemented interfaces
 #include "Kernel/IDQScanner.h" // IDQScanner
 
-class ICondDBAccessSvc;
+class ICondDBReader;
+class IConverter;
 
 /** Basic implementation of an IDQScanner based on the Conditions Database.
  *
@@ -37,10 +38,18 @@ private:
 
   /// ICondDBReader implementation to use to access the Conditions Database.
   /// (property CondDBReader)
-  std::string m_condDBAccessSvcName;
+  std::string m_condDBReaderName;
+
+  /// IConverter implementation (e.g. the persistency service) to use to convert
+  /// the data to a Condition.
+  /// (property Converter)
+  std::string m_converterName;
 
   /// ICondDBReader instance.
-  SmartIF<ICondDBAccessSvc> m_condDB;
+  SmartIF<ICondDBReader> m_condDB;
+
+  /// ICondDBReader instance.
+  SmartIF<IConverter> m_converter;
 
 };
 

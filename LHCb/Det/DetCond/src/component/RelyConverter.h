@@ -120,6 +120,26 @@ public:
    */
   static long getStorageType(const std::string &path, const std::string &desc);
 
+  /** Generate a temporary IOpaqueAddress to be passed to a PersistencySvc for
+   *  the actual conversion.
+   *
+   *  @param src         originating URL (required by the XML format)
+   *  @param storageType storage type ID (@see getStorageType)
+   *  @param name        name of the object inside the storage container
+   *  @param data        data to embed in the address
+   *  @param log         MsgStream instance to report errors
+   *  @param creator     IAdressCreator to use
+   *
+   *  @return an IOpaqueAddress pointer in case of success, 0 in case of failure.
+   */
+  static IOpaqueAddress *createTmpAddress(const std::string &src,
+                                          long storageType,
+                                          const std::string &name,
+                                          const CLID &clId,
+                                          const std::string &data,
+                                          MsgStream &log,
+                                          SmartIF<IAddressCreator>& creator);
+
 private:
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;

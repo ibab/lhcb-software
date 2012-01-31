@@ -299,8 +299,6 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   if( UNLIKELY( log.level() <= MSG::DEBUG ) )
     log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
 
-  // Create temporary address for the relevant type and classID
-  IOpaqueAddress *tmpAddress;
   std::string xml_data;
   try {
     xml_data = (*data.get())[data_field_name].data<std::string>();
@@ -313,17 +311,15 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   std::ostringstream src_href;
   src_href <<  "conddb:" << pAddress->par()[0] << ":" << pAddress->ipar()[0];
 
-  const std::string par[3] = { xml_data,
-                               pAddress->par()[1],
-                               src_href.str() };
-  unsigned long ipar[2] = { 1,0 };
-  sc = conversionSvc()->addressCreator()
-    ->createAddress( storage_type,pAddress->clID() , par, ipar, tmpAddress );
-  if (sc.isFailure()){
-    log << MSG::ERROR
-        << "Persistency service could not create a new address" << endmsg;
-    return sc;
-  }
+  // Create temporary address for the relevant type and classID
+  IOpaqueAddress *tmpAddress = createTmpAddress(src_href.str(),
+                                                storage_type,
+                                                pAddress->par()[1],
+                                                pAddress->clID(),
+                                                xml_data,
+                                                log,
+                                                conversionSvc()->addressCreator());
+  if (!tmpAddress) return StatusCode::FAILURE;
 
   tmpAddress->addRef();
   if ( pAddress->registry() ){
@@ -449,4 +445,35 @@ long RelyConverter::getStorageType(const std::string &path, const std::string &d
   i >> st;
 
   return st;
+}
+
+IOpaqueAddress *RelyConverter::createTmpAddress(const std::string &src,
+                                                long storageType,
+                                                const std::string &name,
+                                                const CLID &clId,
+                                                const std::string &data,
+                                                MsgStream &log,
+                                                SmartIF<IAddressCreator>& creator) {
+
+  if (storageType <= 0) {
+    log << MSG::ERROR << "invalid storage type " << storageType << endmsg;
+    return 0;
+  }
+
+  // Create temporary address for the relevant type and classID
+  IOpaqueAddress *tmpAddress;
+
+  // for XML string temporary address, I need a way to know which is the originating href
+  const std::string par[3] = { data,
+                               name,
+                               src };
+  unsigned long ipar[2] = { 1,0 };
+  StatusCode sc = creator->createAddress(storageType, clId , par, ipar, tmpAddress);
+  if (sc.isFailure()){
+    log << MSG::ERROR
+        << "Persistency service could not create a new address" << endmsg;
+    return 0;
+  }
+
+  return tmpAddress;
 }

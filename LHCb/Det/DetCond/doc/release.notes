@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Marco Clemencic
+ - Implemented CondDBDQScanner: a tool to collect (merge) the DQ flags from the
+   Conditions Database in a given IOV.
+ - Added a test to validate the output of CondDBDQScanner.
+
 !========================= DetCond v12r23 2012-01-31 =========================
 ! 2012-01-31 - Marco Clemencic
  - Fixed a couple of compilation warnings.

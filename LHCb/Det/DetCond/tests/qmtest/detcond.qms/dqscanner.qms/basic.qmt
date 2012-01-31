@@ -1,0 +1,61 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import DetCondTest__DQScanTest as DQScanTest
+from Configurables import CondDBDQScanner, DDDBConf, CondDB, EventClockSvc, FakeEventTime
+
+from datetime import datetime, timedelta
+def toTimeStamp(dt):
+    if isinstance(dt, timedelta):
+        t = dt
+    else:
+        t = dt - datetime(1970, 1, 1, 0)
+    return (t.days * 60 * 60 * 24 + t.seconds) * 1000000000
+
+
+dddbConf = DDDBConf()
+
+cdb = CondDB()
+cdb.PartitionConnectionString["DQFLAGS"] = "sqlite_file:../data/DQFLAGS.db/DQFLAGS"
+cdb.Tags["DQFLAGS"] = ""
+
+ecs = EventClockSvc(InitialTime=toTimeStamp(datetime(2012,1,1,12)))
+ecs.addTool(FakeEventTime, "EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = ecs.InitialTime
+ecs.EventTimeDecoder.TimeStep = toTimeStamp(timedelta(days=1))
+
+alg = DQScanTest()
+alg.DQScanner = CondDBDQScanner()
+
+tests = [(datetime(2012,1,1,0),  datetime(2012,1,4,0)),
+	 (datetime(2012,1,1,12), datetime(2012,1,3,12)),
+         (datetime(2012,1,2,12), datetime(2012,1,5,12)),
+         (datetime(2012,1,4,12), datetime(2012,1,6,12)),
+         (datetime(2012,1,3,12), datetime(2012,1,4,12)),
+         ]
+
+alg.IOVs = [(toTimeStamp(a), toTimeStamp(b)) for a, b in tests]
+
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 1)
+MessageSvc(OutputLevel = WARNING)
+
+</text></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ApplicationMgr       INFO Application Manager Started successfully
+DetCondTest::DQ...SUCCESS Process IOV 1325376000.0 -> 1325635200.0
+DetCondTest::DQ...SUCCESS -> Flags: {DET1: 1, DET2: 1}
+DetCondTest::DQ...SUCCESS Process IOV 1325419200.0 -> 1325592000.0
+DetCondTest::DQ...SUCCESS -> Flags: {DET1: 1, DET2: 1}
+DetCondTest::DQ...SUCCESS Process IOV 1325505600.0 -> 1325764800.0
+DetCondTest::DQ...SUCCESS -> Flags: {DET2: 1, DET3: 1}
+DetCondTest::DQ...SUCCESS Process IOV 1325678400.0 -> 1325851200.0
+DetCondTest::DQ...SUCCESS -> Flags: {DET3: 1}
+DetCondTest::DQ...SUCCESS Process IOV 1325592000.0 -> 1325678400.0
+DetCondTest::DQ...SUCCESS -> Flags: {}
+ApplicationMgr       INFO Application Manager Stopped successfully
+""")
+</text></argument>
+</extension>
