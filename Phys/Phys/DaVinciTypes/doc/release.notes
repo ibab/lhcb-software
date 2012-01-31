@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Vanya Belyaev
+ - add muon pid hits into hash 
+
 ! 2012-01-24 - Vanya Belyaev
  - bug fix 
 

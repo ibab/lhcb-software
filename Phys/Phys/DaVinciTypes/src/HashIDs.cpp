@@ -137,8 +137,10 @@ namespace
     if ( 0 == p ) { return 0 ; }
     //
     const SmartRefVector<LHCb::CaloHypo>& calo = p -> calo () ;
+    //
     return
-      insert ( ids , p -> track() ) + 
+      insert ( ids , p -> track   () ) + 
+      insert ( ids , p -> muonPID () ) +  
       insert ( ids , calo . begin () , calo . end () ) ;
   }
   //
