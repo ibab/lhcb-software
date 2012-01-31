@@ -7,6 +7,11 @@
 // from LHCb
 #include "Kernel/IDQFilter.h"
 
+// Forward declaration
+namespace Gaudi {
+  class Time;
+}
+
 /** Interface for a tool extracting a summary of the Data Quality flags from the
  * conditions database in a given period of time.
  *

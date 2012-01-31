@@ -32,6 +32,8 @@
   <class name = "IBIntegrator"         />
   <class name = "ICheckTool"           />
   <class name = "ICondDBInfo"          />
+  <class name = "IDQFilter"            />
+  <class name = "IDQScanner"           />
   <class name = "IEventTupleTool"      />
   <class name = "IEvtTypeSvc"          />
   <class name = "IInAcceptance"        />
