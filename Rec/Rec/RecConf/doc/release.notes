@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r5 2012-01-31 =========================
 ! 2012-01-12 - Chris Jones
  - Add a ANN PID monitor algorithm to the PROTO Monitoring sequence
 
