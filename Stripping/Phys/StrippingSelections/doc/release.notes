@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-31 - Jibo He
+ - StrippingBd2eeKstar.py
+   Moved to Common Particles, conf dict updated as well
+ - StrippingBd2eeKstarBDT.py
+   New Stripping lines based on BDT, require Phys/TMVASelections package
+
 ! 2012-01-31 - Patrick Koppenburg
  - New Lambda_b -> J/psi p pi line, that also does Kpi
  - Removed mass configuration for J/psi Pi0 line

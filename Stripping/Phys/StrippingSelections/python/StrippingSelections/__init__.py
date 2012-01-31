@@ -56,7 +56,7 @@ import StrippingBs2MuMuLines
 import StrippingB2MuMuMuMuLines
 import StrippingBu2LLK
 import StrippingBd2eeKstar
-import StrippingBd2JpsieeKstar
+import StrippingBd2eeKstarBDT
 
 import StrippingDiMuonNew
 import StrippingBc2JpsiHNew
