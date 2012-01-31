@@ -2,7 +2,7 @@
 #include "LCDDGeoImp.h"
 #include "../compact/Conversions.h"
 #include "XML/DocumentHandler.h"
-
+#if 0
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
 #include "xercesc/framework/StdOutFormatTarget.hpp"
 
@@ -18,7 +18,7 @@
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/dom/DOM.hpp"
 #include "xercesc/sax/ErrorHandler.hpp"
-
+#endif
 // C+_+ include files
 #include <cmath>
 #include <iostream>
