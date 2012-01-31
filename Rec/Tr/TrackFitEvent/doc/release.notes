@@ -4,8 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r13 2012-01-31 =========================
 ! 2012-01-25 - Wouter Hulsbergen
- - fix problem in reinterprete_cast that only appears in optimization in kalmanfitresult
+ - fix problem in reinterpret_cast that only appears in optimization in kalmanfitresult
 
 ! 2012-01-09 - Wouter Hulsbergen
  - make sure chi2 cache of trackfitresult is invalidated if a measurement is deactivated

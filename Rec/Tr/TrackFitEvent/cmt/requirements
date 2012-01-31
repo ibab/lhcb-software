@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackFitEvent
-version           v5r12
+version           v5r13
 
 #============================================================================
 # Structure, i.e. directories to process. 
