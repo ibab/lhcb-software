@@ -106,6 +106,16 @@ public:
     return key + myLinkID;
   }
 
+  int reference( DataObject* out, std::string& targetName, const int key ) const {
+    LinkManager::Link* myLink = out->linkMgr()->link( targetName );
+    if ( NULL == myLink ) {
+      out->linkMgr()->addLink( targetName, 0 );
+      myLink = out->linkMgr()->link( targetName );
+    }
+    int myLinkID = myLink->ID() << 28;
+    return key + myLinkID;
+  }  
+
   void hintAndKey( const int data,
                    const DataObject* source,
                    DataObject* target,
