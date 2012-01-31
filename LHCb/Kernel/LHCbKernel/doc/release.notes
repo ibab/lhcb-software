@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!========================= LHCbKernel v13r8 2012-01-31 =========================
 ! 2012-01-31 - Marco Cattaneo
  - Add dictionary for new interfaces and fix compilation of IDQScanner.h
 
