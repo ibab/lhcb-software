@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r26 2012-01-31 =========================
 ! 2012-01-16 - Marco Cattaneo
  - Do not cache pedestalShift at initialize, get it from detector element 
    whenever it's needed, since it can change during the job.
