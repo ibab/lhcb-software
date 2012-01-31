@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r4 2012-01-31 ==================
 ! 2012-01-24 - Marco Cattaneo
  - Adapt readerror and writeerror references to new Incident thrown on error
    by RootCnv v1r12
