@@ -5,8 +5,128 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-! 2011-11-25 - Olivier Callot
- - add FastPV package
+</PRE><H1><A NAME=v13r0>2012-02-01 RecSys v13r0</A></H1><PRE>
+This version uses Gaudi v23r0 and LHCb v34r0
+
+- Development release in preparation for 2012 data taking
+
+- Packages updated: Muon/MuonTrackMonitor v2r5, Rec/ChargedProtoANNPID v1r6,
+    Rec/GlobalReco v6r40, Rec/LumiAlgs v7r3, Rec/RecConf v2r5,
+    Rich/RichRecTrackTools v1r33, Tf/PatAlgorithms v4r17, Tf/PatVeloTT v3r17,
+    Tr/TrackFitEvent v5r13, Tr/TrackFitter v4r3, Tr/TrackMonitors v1r36,
+    Tr/TrackProjectors v2r30, Tr/TrackTools v4r11, Tr/TrackUtils v1r44,
+    Tr/PatPV v3r21, Velo/VeloRecMonitors v2r17
+
+- In MuonTrackMonitor v2r5
+  . Move 2d histograms to expert mode
+
+- In ChargedProtoANNPID v1r6
+  . The annoying sporadic stderr messages from NeuroBayes seem to have returned.
+    So, until understood squash them entirely by redirecting stderr and stdout
+    to /dev/null *just* for the m_expert->nb_expert(m_inArray) call.
+  . Make the network tuning MC11aTuneV2 the default for all data types, as the
+    improvements will help in all cases.
+  . Add a monitor for the ANN PID variables.
+  . Extend the Configurable to allow different net tunings by year
+  . Remove truncation of P and Pt variables
+  . Add various GE variables from RecSummary
+  . Add a few more Tracking variables
+
+- In GlobalReco v6r40
+  . Try and fix the qmtests
+  . Add the slot DataType to the Configurable, and pass this on to the ANN PID
+    Configurable
+  . Remove obsolete properties for inputs and outputs from
+    ChargedProtoParticleMaker
+
+- In LumiAlgs v7r3
+  . Follow changes in RootCnv v1r12
+  . Protect FilterFillingScheme for missing Magnet State condition (in 2008)
+  . Prepare migration to Gaudi v23:
+    o Remove GaudiPoolDb run time dependency, replace it with RELAX
+    o Remove tests that require POOL:
+      lumialgs.framework.poolfsrwriter, lumialgs.framework.poolreadpoolfsr
+    o Put output file of former lumialgs.framework.poolfsrwriter test in SVN, to
+      continue testing with lumialgs.framework.rootreadpoolfsr (testPoolFsr.dst)
+
+- In RecConf v2r5
+  . Add a ANN PID monitor algorithm to the PROTO Monitoring sequence
+  . Propagate the DataType to the GlobalReco Configurable
+  . Adapt to change in TrackV0Finder
+
+- In RichRecTrackTools v1r33
+  . Add new implementation of the "detailed" track segment creator that uses
+    the tracking TrackStateProvider tool, instead of extrapolators.
+
+- In PatAlgorithms v4r17
+  . PatMatchTool: 
+    o Make sure we copy all three states in T to help the fast fit in HLT
+    o Clean up and streamline the code somewhat while we're at it;
+      one minor change in behaviour: if momentum estimate tool fails (as far as I
+      can see, the current implementation cannot fail), we don't touch the
+      momentum estimates of states on a newly created track, we rely on the
+      algorithms which supply these tracks to do something reasonable in that
+      case
+  . include somewhat more fine-grained timing measurements in PatSeedingTool for
+    the initial x search (not active by default)
+  . for trigger use, add the NDblOTHitsInXSearch property which cuts on the
+    number of double hits in the OT (i.e. hits in two monolayers of the same
+    layer) for the three layers which are used to form the initial search
+    parabola if that number is lower then NDblOTHitsInXSearch, the candidate is
+    abandoned early
+    The default value for the new property is 0, so the default behaviour does
+    not change, however, putting 2 there in the trigger saved O(20%) execution
+    time while only 0.5-1% of efficiency is lost (all momenta, for p > 5GeV, the
+    efficiency loss is on the order of 0.1-0.3%)
+
+- In PatVeloTT v3r17
+  . Fix handling of CondDB updates in PatTTMagnetTool: Z layer positions were
+    not being updated
+
+- In TrackFitEvent v5r13
+  . Fix problem in reinterpret_cast that only appears in optimization in 
+    kalmanfitresult
+  . Make sure chi2 cache of trackfitresult is invalidated if a measurement is
+    deactivated
+  . add total accumulated chi2 of filter to node. use this in kalmanfitresult
+  . add ranges to fitnodes in kalmanfitresult
+
+- In TrackFitter v4r3
+  . Use new functionality in FitNode to call the smoother less often in outlier
+    rejection
+
+- In TrackMonitors v1r36
+  . Also do TrackVertexMonitors in online mode, to get PV position in online
+    Brunel
+
+- In TrackProjectors v2r30
+  . add TrackOTLRSignTool which compute LR signs by looking at hit patterns
+  . adapt TrajOTProjector to make use of this
+  . introduced 'dynamic' use of OT drifttimes (Pieter David)
+
+- In TrackTools v4r11
+  . added missing include to TrackHitCollector
+
+- In TrackUtils v1r44
+  . Update the default list of track states to keep in TrackToDST
+  . Some improvements to TrackToDST
+    o Fully support stripping of Muon Tracks
+    o Strip Track::Velo tracks in the same way as Track::VeloR
+  . remove use of Track::nodes() in TrackV0Finder
+
+- In PatPV v3r21
+  . Introduce beamspot constraint into PVSeedTool to make PatPV3D faster which
+    gives a factor between 2 or 3 in exe time when switching from 3D PVSeed3DTool
+    to PVSeedTool, lower false PV rate and lower PV->SV mistakes, same
+    performance for other parameters like resolution and PV efficiency
+
+- In VeloRecMonitors v2r17
+  . Added new plot for "high multiplicity, # clusters", with logic to get
+    cluster multiplicity from raw event
+  . Increased upper bin limit on the default "# VELO clusters" plot to 6000
+  . fixed high-multiplicity code
+  . Removed the "# VELO clusters 2" histogram. It has been superseded by the
+    algorithm HighMultiplicityMonitor in Velo/VeloDataMonitor.
 
 </PRE><H1><A NAME=v12r2>2011-12-16 RecSys v12r2</A></H1><PRE>
 This version uses Gaudi v22r5 and LHCb v33r2
