@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= LHCbAlgs v2r47 2012-01-31 =========================
+! 2012-01-31 - Chris Jones
+ - Add new algorithm EmptyEventNodeCleaner that searches the TES for empty 
+   data nodes and removes them.
+
 ! 2012-01-30 - Marco Clemencic
  - Factored out from the DQFilter algorithm the code to accept/reject Data
    Quality flags.
