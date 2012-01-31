@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r9 2012-01-31 =========================
 ! 2012-01-06 - Chris Jones
  - Add some additional debug and verbose printouts to DeRichSystem
 
