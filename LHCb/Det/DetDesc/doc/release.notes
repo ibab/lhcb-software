@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic, Juan Palacios
 ! ============================================================================
 
+!========================= DetDesc v18r29 2012-01-31 =========================
 ! 2012-01-09 - Marco Clemencic
  - Added a special "update mode" to ValidDataObject to be able to change the
    semantic of the update method.
