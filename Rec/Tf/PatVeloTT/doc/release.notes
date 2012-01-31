@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatVeloTT v3r17 2012-01-31 =========================
 ! 2012-01-10 - Marco Cattaneo
  - Fix handling of CondDB updates in PatTTMagnetTool: Z layer positions were
    not being updated
