@@ -12,14 +12,11 @@
 using namespace LHCb;
 
 void ParticlePacker::pack( const DataVector & parts,
-                           PackedDataVector & pparts ) const
-{
+                           PackedDataVector & pparts ) const {
   pparts.data().reserve( parts.size() );
-  if ( 0 == pparts.packingVersion()  )
-  {
+  if ( 0 == pparts.packingVersion()  ) {
     for ( DataVector::const_iterator iD = parts.begin();
-          iD != parts.end(); ++iD )
-    {
+          iD != parts.end(); ++iD ) {
       const Data & part = **iD;
 
       // Make a new packed data object and save

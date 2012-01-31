@@ -54,6 +54,7 @@ namespace LHCb
   namespace PackedVertexLocation
   {
     static const std::string& User = "pPhys/User/Vertices";
+    static const std::string& InStream = "/pPhys/Vertices";
   }
 
   /** @class PackedVertices Event/PackedVertex.h

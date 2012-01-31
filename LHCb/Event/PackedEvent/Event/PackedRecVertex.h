@@ -67,6 +67,7 @@ namespace LHCb
   namespace PackedRecVertexLocation
   {
     static const std::string& Primary = "pRec/Vertex/Primary";
+    static const std::string& InStream = "/pPhys/RecVertices";
   }
 
   class PackedRecVertices : public DataObject 

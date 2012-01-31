@@ -101,6 +101,7 @@ namespace LHCb
   namespace PackedParticleLocation
   {
     static const std::string& User = "pPhys/User/Particles";
+    static const std::string& InStream = "/pPhys/Particles";
   }
 
   /** @class PackedParticles Event/PackedParticle.h
@@ -210,7 +211,6 @@ namespace LHCb
     ParticlePacker() {}
 
   public:
-
     /// Pack Particles
     void pack( const DataVector & parts,
                PackedDataVector & pparts ) const;

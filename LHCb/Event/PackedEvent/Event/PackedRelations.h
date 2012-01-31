@@ -28,6 +28,11 @@ namespace LHCb {
 
   static const CLID CLID_PackedRelations = 1560;
 
+  /// Namespace for locations in TDS
+  namespace PackedRelationsLocation {
+    static const std::string& InStream = "/pPhys/Relations";
+  }
+
   class PackedRelations : public DataObject {
   public:
     /// Standard constructor
@@ -39,7 +44,7 @@ namespace LHCb {
     static const CLID& classID() { return CLID_PackedRelations; }
 
     /// Class ID
-    virtual const CLID& clID() const { return PackedVertices::classID(); }
+    virtual const CLID& clID() const { return PackedRelations::classID(); }
     
     std::vector<PackedRelation>& relations() { return m_relations; }
     std::vector<int>& sources() { return m_source; }
