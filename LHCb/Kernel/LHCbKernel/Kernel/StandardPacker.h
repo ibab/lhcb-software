@@ -90,7 +90,9 @@ public:
    *  @arg  parent : Pointer to the parent container of the SmartRef, method ->parent()
    *  @arg  key    : returned by the method .linkID() of the SmartRef
    */
-  int reference( DataObject* out, const DataObject* parent, const int key ) const
+  int reference( DataObject* out, 
+                 const DataObject* parent, 
+                 const int key ) const
   {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
     if ( NULL == myLink )
@@ -106,7 +108,10 @@ public:
     return key + myLinkID;
   }
 
-  int reference( DataObject* out, std::string& targetName, const int key ) const {
+  int reference( DataObject* out, 
+                 const std::string& targetName, 
+                 const int key ) const
+  {
     LinkManager::Link* myLink = out->linkMgr()->link( targetName );
     if ( NULL == myLink ) {
       out->linkMgr()->addLink( targetName, 0 );
