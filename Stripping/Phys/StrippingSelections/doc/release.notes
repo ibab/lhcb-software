@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-01-31 - Jibo He
+ - StrippingBd2mumuKstarBDT.py
+   New Stripping lines based on BDT for Bd->MuMuKPi, with KPi mass up to 2.2 GeV.
+
+! 2012-01-31 - Jibo He
  - StrippingBd2eeKstar.py
    Moved to Common Particles, conf dict updated as well
  - StrippingBd2eeKstarBDT.py
