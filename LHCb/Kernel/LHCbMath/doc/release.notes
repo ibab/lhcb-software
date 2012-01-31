@@ -6,9 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r29 2012-01-31 =========================
 ! 2012-01-18 - Vanya Belyaev
  - minor fix in Gaudi::Math::trace function 
-
 
 !========================= LHCbMath v3r28 2011-12-14 =========================
 ! 2011-12-04 - Vanya Belyaev
