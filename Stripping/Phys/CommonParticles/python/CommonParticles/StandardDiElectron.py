@@ -23,6 +23,9 @@ _locations = {}
 from CommonParticles.StdLooseDiElectron import *
 _locations.update ( locations )
 
+from CommonParticles.StdLooseDetachedDiElectron import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 
