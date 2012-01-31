@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v4r3 2012-01-31 =========================
 ! 2012-01-09 - Wouter Hulsbergen
  - use new functionality in FitNode to call the smoother less often in outlier rejection
 

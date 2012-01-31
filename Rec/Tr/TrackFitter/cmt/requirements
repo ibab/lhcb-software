@@ -1,9 +1,8 @@
-# $Id: requirements,v 1.65 2010-04-26 14:15:36 wouter Exp $
 # Created    : 21/03/2002
 # Maintainer : Wouter Hulsbergen
 
 package           TrackFitter
-version           v4r2
+version           v4r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
