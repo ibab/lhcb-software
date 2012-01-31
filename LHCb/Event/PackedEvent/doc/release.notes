@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= PackedEvent v4r6 2012-01-31 =========================
+! 2012-01-31 - Chris Jones
+ - Update CLID for PackedParticle2Ints to 1591, to avoid a clash
+
 ! 2012-01-31 - Olivier Callot
  - Added class PackedParticle2Ints to pack the map between particle and LHCbIds
  - Added it to the dictionary

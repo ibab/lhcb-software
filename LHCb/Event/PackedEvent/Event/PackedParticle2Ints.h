@@ -22,7 +22,7 @@ namespace LHCb {
  *  @date   2012-01-30
  */
 
-  static const CLID CLID_PackedParticle2Ints = 1561;
+  static const CLID CLID_PackedParticle2Ints = 1591;
   
   /// Namespace for locations in TES
   namespace PackedParticle2IntsLocation {
