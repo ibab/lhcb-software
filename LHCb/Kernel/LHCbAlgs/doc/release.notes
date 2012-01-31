@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r47 2012-01-31 =========================
 ! 2012-01-30 - Marco Clemencic
  - Factored out from the DQFilter algorithm the code to accept/reject Data
    Quality flags.
