@@ -4,6 +4,16 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Manuel Tobias Schiller
+ - PatMatchTool: make sure we copy all three states in T to help the fast fit
+   in HLT
+ - PatMatchTool: clean up and streamline the code somewhat while we're at it;
+   one minor change in behaviour: if momentum estimate tool fails (as far as I
+   can see, the current implementation cannot fail), we don't touch the
+   momentum estimates of states on a newly created track, we rely on the
+   algorithms which supply these tracks to do something reasonable in that
+   case
+
 ! 2012-01-04 - Manuel Tobias Schiller
  - include somewhat more fine-grained timing measurements in PatSeedingTool for
    the initial x search (not active by default)
