@@ -1,7 +1,6 @@
 #define _USE_MATH_DEFINES
 #include "LCDDGeoImp.h"
 #include "../compact/Conversions.h"
-#include "../Internals.h"
 #include "XML/DocumentHandler.h"
 
 #include "xercesc/framework/LocalFileFormatTarget.hpp"
@@ -224,7 +223,7 @@ void LCDDImp::init()  {
   //m_setup.append(ref_world);
   m_worldVol    = world;
   m_trackingVol = tracking;
-  gGeoManager->SetTopVolume(value<TGeoVolume>(m_worldVol));
+  gGeoManager->SetTopVolume(m_worldVol.ptr());
 }
 
 void LCDDImp::fromCompact(XML::Handle_t compact)   {
@@ -241,12 +240,13 @@ void LCDDImp::fromCompact(XML::Handle_t compact)   {
     cout << "UNKNOWN Exception" << endl;
   }
 }
+
 void LCDDImp::dump() const  {
   TGeoManager* mgr = gGeoManager;
   mgr->CloseGeometry();
   mgr->SetVisLevel(4);
   mgr->SetVisOption(1);
-  value<TGeoVolume>(m_worldVol)->Draw("ogl");
+  m_worldVol->Draw("ogl");
   Printer<const LCDD*>(*this,cout)(this);
 }
 

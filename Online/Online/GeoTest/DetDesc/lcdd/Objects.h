@@ -19,13 +19,18 @@ namespace DetDesc {
   class IDDescriptor;
 
   /*
-  *   XML namespace declaration
-  */
+   *   XML namespace declaration
+   */
   namespace Geometry  {
 
     // Forward declarations
     struct LCDD;
 
+    /** @class Author Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Author : public RefElement_type<TNamed>  {
       /// Default constructor
       Author() : RefElement_type<TNamed>() {}
@@ -38,6 +43,11 @@ namespace DetDesc {
       //void setAuthorEmail(const char* addr)  {  setAttr("email",addr); }
     };
 
+    /** @class Header Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Header : public RefElement_type<TNamed>  {
       /// Default constructor
       Header() : RefElement_type<TNamed>() {}
@@ -48,6 +58,11 @@ namespace DetDesc {
       Header(LCDD& doc);
     };
 
+    /** @class Constant Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Constant : public RefElement_type<TNamed>  {
       /// Default constructor
       Constant() : RefElement_type<TNamed>() {}
@@ -60,6 +75,11 @@ namespace DetDesc {
       Constant(LCDD& doc, const std::string& name, const std::string& val);
     };
 
+    /** @class Transformation Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Transformation : public RefElement_type<TGeoMatrix> {
       /// Default constructor
       Transformation() : RefElement_type<TGeoMatrix>() {}
@@ -70,6 +90,11 @@ namespace DetDesc {
       Transformation(LCDD& doc, const std::string& name);
     };
 
+    /** @class Position Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Position : public RefElement_type<TGeoTranslation>  {
       /// Default constructor
       Position() : RefElement_type<TGeoTranslation>() {}
@@ -80,6 +105,11 @@ namespace DetDesc {
       Position(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
+    /** @class Rotation Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Rotation : public RefElement_type<TGeoRotation>  {
       /// Default constructor
       Rotation() : RefElement_type<TGeoRotation>() {}
@@ -92,6 +122,11 @@ namespace DetDesc {
       Rotation(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
+    /** @class Atom Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Atom : public RefElement_type<TGeoElement>  {
       /// Default constructor
       Atom() : RefElement_type<TGeoElement>() {}
@@ -102,6 +137,11 @@ namespace DetDesc {
       Atom(LCDD& doc, const std::string& name, const std::string& formula, int Z, int N, double density);
     };
 
+    /** @class Material Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Material : public RefElement_type<TGeoMaterial>  {
       /// Default constructor
       Material() : RefElement_type<TGeoMaterial>() {}
@@ -112,6 +152,11 @@ namespace DetDesc {
       Material(LCDD& doc, const std::string& name);
     };
 
+    /** @class VisAttr Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct VisAttr : public RefElement_type<TNamed>  {
       struct Object  {
         int           color;
@@ -148,6 +193,11 @@ namespace DetDesc {
       void setColor(float red, float green, float blue);
     };
 
+    /** @class Limit Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Limit : public RefElement_type<TNamed>  {
       typedef std::pair<std::string,double> Object;
 
@@ -158,6 +208,11 @@ namespace DetDesc {
       void setUnit(const std::string& unit);
     };
 
+    /** @class LimitSet Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct LimitSet : public RefElement_type<TNamed>  {
       typedef TMap Object;
       /// Constructor to be used when reading the already parsed DOM tree
@@ -170,6 +225,11 @@ namespace DetDesc {
       void addLimit(const RefElement& limit);
     };
 
+    /** @class Region Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Region : public RefElement_type<TNamed>  {
       struct Object  {
         double      Attr_threshold;
@@ -192,6 +252,11 @@ namespace DetDesc {
       Region& setEnergyUnit(const std::string& unit);
     };
 
+    /** @class IDSpec Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct IDSpec : public RefElement_type<TNamed>   {
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 

@@ -1,7 +1,6 @@
 #include "DetDesc/lcdd/LCDD.h"
-#include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/IDDescriptor.h"
-#include "../Internals.h"
+
 #include "TMap.h"
 #include "TColor.h"
 #include "TGeoMatrix.h"
@@ -112,22 +111,22 @@ VisAttr::VisAttr(LCDD& /* lcdd */, const string& name)    {
 
 /// Set Flag to show/hide daughter elements
 void VisAttr::setShowDaughters(bool value)   {
-  setAttr(showDaughters,value);
+  data<Object>()->showDaughters = value;
 }
 
 /// Set visibility flag
 void VisAttr::setVisible(bool value)   {
-  setAttr(visible,value);
+  data<Object>()->visible = value;
 }
 
 /// Set line style
 void VisAttr::setLineStyle(LineStyle value)  {
-  setAttr(lineStyle,value);
+  data<Object>()->lineStyle = value;
 }
 
 /// Set drawing style
 void VisAttr::setDrawingStyle(DrawingStyle value)   {
-  setAttr(drawingStyle,value);
+  data<Object>()->drawingStyle = value;
 }
 
 /// Set alpha value
@@ -138,8 +137,7 @@ void VisAttr::setAlpha(float /* value */)   {
 
 /// Set object color
 void VisAttr::setColor(float red, float green, float blue)   {
-  Object* obj = second_value<TNamed>(*this);
-  obj->color = TColor::GetColor(red,green,blue);
+  data<Object>()->color = TColor::GetColor(red,green,blue);
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -151,15 +149,15 @@ Limit::Limit(LCDD& /* lcdd */, const string& name)   {
 }
 
 void Limit::setParticles(const string& particleNames)   {
-  first_value<TNamed>(*this)->SetTitle(particleNames.c_str());
+  m_element->SetTitle(particleNames.c_str());
 }
 
 void Limit::setValue(double value)   {
-  setAttr(second,value);
+  data<Object>()->second = value;
 }
 
 void Limit::setUnit(const string& value)   {
-  setAttr(first,value);
+  data<Object>()->first = value;
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -176,35 +174,35 @@ void LimitSet::addLimit(const RefElement& limit)   {
 /// Constructor to be used when creating a new DOM tree
 Region::Region(LCDD& /* lcdd */, const string& name)   {
   assign(new Value<TNamed,Object>(), name, "region");
-  setAttr(Attr_store_secondaries,false);
-  setAttr(Attr_threshold,10.0);
-  setAttr(Attr_lunit,"mm");
-  setAttr(Attr_eunit,"MeV");
-  setAttr(Attr_cut,10.0);
+  data<Object>()->Attr_store_secondaries = false;
+  data<Object>()->Attr_threshold = 10.0;
+  data<Object>()->Attr_lunit = "mm";
+  data<Object>()->Attr_eunit = "MeV";
+  data<Object>()->Attr_cut = 10.0;
 }
 
 Region& Region::setStoreSecondaries(bool value)  {
-  setAttr(Attr_store_secondaries,value);
+  data<Object>()->Attr_store_secondaries = value;
   return *this;
 }
 
 Region& Region::setThreshold(double value)  {
-  setAttr(Attr_threshold,value);
+  data<Object>()->Attr_threshold = value;
   return *this;
 }
 
 Region& Region::setCut(double value)  {
-  setAttr(Attr_cut,value);
+  data<Object>()->Attr_cut = value;
   return *this;
 }
 
 Region& Region::setLengthUnit(const string& unit)  {
-  setAttr(Attr_lunit,unit);
+  data<Object>()->Attr_lunit = unit;
   return *this;
 }
 
 Region& Region::setEnergyUnit(const string& unit)  {
-  setAttr(Attr_eunit,unit);
+  data<Object>()->Attr_eunit = unit;
   return *this;
 }
 #undef setAttr
@@ -215,7 +213,7 @@ IDSpec::IDSpec(LCDD& lcdd, const string& name, const IDDescriptor& dsc)
 {
   const IDDescriptor::FieldIDs& f = dsc.ids();
   const IDDescriptor::FieldMap& m = dsc.fields();
-  setAttr(Attr_length, dsc.maxBit());
+  data<Object>()->Attr_length = dsc.maxBit();
   for(IDDescriptor::FieldIDs::const_iterator i=f.begin(); i!=f.end();++i)  {
     int ident = (*i).first;
     const string& nam = (*i).second;
@@ -230,10 +228,10 @@ void IDSpec::addField(const string& name, const pair<int,int>& field)  {
 
 void IDSpec::addField(const string& name, const pair<int,int>& field)  {
   Element e(document(),Tag_idfield);
-  e.setAttr(Attr_signed,field.second<0);
-  e.setAttr(Attr_label,name);
-  e.setAttr(Attr_start,field.first);
-  e.setAttr(Attr_length,abs(field.second));
+  e.data<Object>()->Attr_signed = field.second<0;
+  e.data<Object>()->Attr_label = name;
+  e.data<Object>()->Attr_start = field.first;
+  e.data<Object>()->Attr_length = abs(field.second);
   m_element.append(e);
 }
 #endif

@@ -2,7 +2,8 @@
 #define DETDESC_LCDDGEOIMP_H
 #include "DetDesc/lcdd/LCDD.h"
 #include "XML/XMLElements.h"
-#include "TGeoManager.h"
+
+class TGeoManager;
 
 // C++ include files
 #include <map>

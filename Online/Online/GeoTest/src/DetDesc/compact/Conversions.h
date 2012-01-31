@@ -23,8 +23,6 @@ namespace DetDesc {
 
     // Forward declarations
     struct LCDD;
-    //struct Element;
-    //struct RefElement;
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions
@@ -59,7 +57,7 @@ namespace DetDesc {
       *  @author   M.Frank
       *  @version  1.0
       */
-    template <typename T> struct PrintMap  {
+    template <typename T> struct PrintMap {
       typedef typename std::map<std::string,Element> container_type;
       typedef T item_type;
       const LCDD&   lcdd;
@@ -73,7 +71,8 @@ namespace DetDesc {
       const LCDD&   lcdd;
       std::ostream& os;
       std::string   prefix;
-      Printer(const LCDD& l, std::ostream& stream, const std::string& p="") : lcdd(l), os(stream), prefix(p) {}
+      Printer(const LCDD& l, std::ostream& stream, const std::string& p="") 
+	: lcdd(l), os(stream), prefix(p) {}
       void operator()(const T& value) const;
     };
     inline const char* yes_no(bool value) { return value ? "YES" : "NO "; }

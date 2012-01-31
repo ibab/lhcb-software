@@ -1,6 +1,4 @@
-#include "../Internals.h"
 #include "DetDesc/lcdd/LCDD.h"
-#include "DetDesc/lcdd/Volumes.h"
 
 // ROOT include files
 #include "TColor.h"
@@ -75,8 +73,7 @@ void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  co
   TGeoVolume* phys_vol = vol;
   TGeoVolume* log_vol  = _ptr<TGeoVolume>();
   if ( phys_vol )   {
-    TGeoMatrix* m = value<TGeoMatrix>(matrix);
-    log_vol->AddNode(phys_vol, --unique_physvol_id, m);
+    log_vol->AddNode(phys_vol, --unique_physvol_id, matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
@@ -87,30 +84,29 @@ void Volume::addPhysVol(const PhysVol& volume, const Position& matrix)  const  {
   TGeoVolume* phys_vol = vol;
   TGeoVolume* log_vol  = _ptr<TGeoVolume>();
   if ( phys_vol )   {
-    TGeoMatrix* m = value<TGeoMatrix>(matrix);
-    log_vol->AddNode(phys_vol, --unique_physvol_id, m);
+    log_vol->AddNode(phys_vol, --unique_physvol_id, matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
 void Volume::setRegion(const Region& obj)  const   {
-  data<TGeoVolume,Object>()->Attr_region = obj;
+  data<Object>()->Attr_region = obj;
 }
 
 void Volume::setLimitSet(const LimitSet& obj)  const   {
-  data<TGeoVolume,Object>()->Attr_limits = obj;
+  data<Object>()->Attr_limits = obj;
 }
 
 void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
-  data<TGeoVolume,Object>()->Attr_sens_det = obj;
+  data<Object>()->Attr_sens_det = obj;
 }
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
   TGeoVolume* vol = *this;
-  Object*     val = data<TGeoVolume,Object>();
+  Object*     val = data<Object>();
   if ( attr.isValid() )  {
-    VisAttr::Object* vis = second_value<TNamed>(attr);
+    VisAttr::Object* vis = attr.data<VisAttr::Object>();
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
     vol->SetFillColor(bright);
@@ -136,22 +132,19 @@ Solid Volume::solid() const   {
 }
 
 Material Volume::material() const   {
-  return Element_type<TGeoMaterial>((*this)->GetMaterial());
+  return Element_type<TGeoMaterial>(m_element->GetMaterial());
 }
 
 VisAttr Volume::visAttributes() const   {
-  Object* val = second_value<TGeoVolume>(*this);
-  return val->Attr_vis;
+  return data<Object>()->Attr_vis;
 }
 
 RefElement Volume::sensitiveDetector() const    {
-  Object* val = second_value<TGeoVolume>(*this);
-  return val->Attr_sens_det;
+  return data<Object>()->Attr_sens_det;
 }
 
 Region Volume::region() const   {
-  Object* val = second_value<TGeoVolume>(*this);
-  return val->Attr_region;
+  return data<Object>()->Attr_region;
 }
 
 PhysVol& PhysVol::addPhysVolID(const std::string& /* name */, int /* value */) {

@@ -1,13 +1,9 @@
 #include "XML/lcdd/XMLLCDD.h"
 #include "XML/XMLTags.h"
-#include "Conversions.h"
-#include "DetDesc/compact/Segmentations.h"
-#include "DetDesc/compact/Readout.h"
-#include "DetDesc/compact/Detector.h"
-#include "DetDesc/lcdd/Objects.h"
+
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/IDDescriptor.h"
-#include "../Internals.h"
+#include "Conversions.h"
 
 #include "TGeoManager.h"
 #include "TGeoElement.h"

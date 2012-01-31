@@ -1,20 +1,14 @@
 #include "XML/lcdd/XMLLCDD.h"
 #include "XML/compact/XMLDetector.h"
 #include "XML/XMLTags.h"
+
 #include "Conversions.h"
-#include "DetDesc/compact/Segmentations.h"
-#include "DetDesc/compact/Detector.h"
-#include "DetDesc/lcdd/Objects.h"
-#include "DetDesc/lcdd/Shapes.h"
-#include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/IDDescriptor.h"
 #include "DetDesc/Layering.h"
 #include <climits>
 #include <iostream>
 #include <set>
-
-#include "TGeoVolume.h"
 
 #define SHOW_ALL_DETECTORS 1
 

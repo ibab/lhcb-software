@@ -1,5 +1,4 @@
 #include "DetDesc/compact/Readout.h"
-#include "../Internals.h"
 
 using namespace std;
 using namespace DetDesc::Geometry;
@@ -12,17 +11,17 @@ Readout::Readout(const LCDD& /* lcdd */, const string& nam)
 
 /// Access IDDescription structure
 RefElement Readout::idSpec() const   {
-  return second_value<TNamed>(*this)->id;
+  return data<Object>()->id;
 }
 
 /// Access segmentation structure
 Element Readout::segmentation() const  {
-  return second_value<TNamed>(*this)->segmentation;
+  return data<Object>()->segmentation;
 }
 
 /// Assign IDDescription to readout structure
 void Readout::setIDDescriptor(RefElement new_descriptor)  const   {
-  Object* ro = second_value<TNamed>(*this);
+  Object* ro = data<Object>();
   if ( ro )  {                 // Remember: segmentation is NOT owned by readout structure!
     if ( new_descriptor.isValid() )  {   // Do NOT delete!
       ro->id = new_descriptor;
@@ -34,7 +33,7 @@ void Readout::setIDDescriptor(RefElement new_descriptor)  const   {
 
 /// Assign segmentation structure to readout
 void Readout::setSegmentation(Element seg)   const  {
-  Object* ro = second_value<TNamed>(*this);
+  Object* ro = data<Object>();
   if ( ro )  {
     Element_t* e = ro->segmentation.ptr();
     if ( e )  { // Remember: segmentation is owned by readout structure!

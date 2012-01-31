@@ -2,11 +2,11 @@
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/IDDescriptor.h"
-#include "../Internals.h"
 
 #include "TMap.h"
 #include "TROOT.h"
 #include "TColor.h"
+#include "TGeoMatrix.h"
 #include "TGeoManager.h"
 #include <iostream>
 #include <iomanip>
@@ -16,60 +16,54 @@ using namespace std;
 namespace DetDesc { namespace Geometry {
 
   template <> void Printer<Constant>::operator()(const Constant& val)  const  {
-    TNamed* obj = value<TNamed>(val);
-    os << "++ Constant: " << obj->GetName() << "  \"" << obj->GetTitle() << "\"  Value:" << _toDouble(obj->GetTitle()) << endl;
+    os << "++ Constant: " << val->GetName() << "  \"" << val->GetTitle() << "\"  Value:" << _toDouble(val->GetTitle()) << endl;
   }
 
-  template <> void Printer<Material>::operator()(const Material& val)  const  {
-    TGeoMedium* obj = value<TGeoMedium>(val);
-    os << "++ Medium:" << obj->GetName() << " " << obj->GetTitle() << " id:" << hex << obj->GetId() 
-       << " Pointer:" << obj->GetPointerName() << dec << endl;
-    TGeoMaterial* m = obj->GetMaterial();
-    if ( m )  {
-      os << "|  ";
-      m->Print();
-    }
+  template <> void Printer<Material>::operator()(const Material& mat)  const  {
+    RefElement_type<TGeoMedium>  val(mat);
+    os << "++ Medium:" << val->GetName() << " " << val->GetTitle() << " id:" << hex << val->GetId() 
+       << " Pointer:" << val->GetPointerName() << dec << endl;
+    os << "|  ";
+    val->Print();
   }
 
   template <> void Printer<VisAttr>::operator()(const VisAttr& val)  const  {
-    TNamed* named = first_value<TNamed>(val);
-    VisAttr::Object* obj = second_value<TNamed>(val);
+    VisAttr::Object* obj = val.data<VisAttr::Object>();
     TColor* col = gROOT->GetColor(obj->color);
     char text[256];
     ::sprintf(text," RGB:%-8s [%d] %7.2f  Style:%d %d ShowDaughters:%3s Visible:%3s",
 	      col->AsHexString(), obj->color, col->GetAlpha(), int(obj->drawingStyle), int(obj->lineStyle),
 	      obj->showDaughters ? "YES" : "NO", obj->visible ? "YES" : "NO");
-    os << "++ VisAttr:  " << setw(32) << left << named->GetName() << text << endl;
+    os << "++ VisAttr:  " << setw(32) << left << val->GetName() << text << endl;
   }
 
   template <> void Printer<Readout>::operator()(const Readout& val)  const  {
-    first_value<TNamed>(val)->Print();
+    val->Print();
   }
 
   template <> void Printer<Region>::operator()(const Region& val)  const  {
-    first_value<TNamed>(val)->Print();
+    val->Print();
   }
 
   template <> void Printer<Rotation>::operator()(const Rotation& val)  const  {
     os << "++ Rotation: ";
-    value<TNamed>(val)->Print();
+    val->Print();
   }
 
   template <> void Printer<Position>::operator()(const Position& val)  const  {
     os << "++ Position: ";
-    value<TNamed>(val)->Print();
+    val->Print();
   }
 
   template <> void Printer<LimitSet>::operator()(const LimitSet& val)  const  {
-    TNamed* o = dynamic_cast<TNamed*>(val.ptr());
     TMap*   m = dynamic_cast<TMap*>(val.ptr());
     os << "++ LimitSet: ";
-    o->TNamed::Print();
+    val->TNamed::Print();
     m->TMap::Print();
   }
 
   template <> void Printer<Subdetector>::operator()(const Subdetector& val)  const  {
-    Subdetector::Object* obj = second_value<TNamed>(val);
+    Subdetector::Object* obj = val.data<Subdetector::Object>();
     if ( obj )  {
       char text[256];
       const Subdetector& sd = val;
@@ -89,7 +83,7 @@ namespace DetDesc { namespace Geometry {
 
       if ( vis )   {
 	VisAttr attr  = sd.visAttr();
-	VisAttr::Object* v = second_value<TNamed>(attr);
+	VisAttr::Object* v = attr.data<VisAttr::Object>();
 	TColor* col = gROOT->GetColor(v->color);
 	char text[256];
 	::sprintf(text," RGB:%-8s [%d] %7.2f  Style:%d %d ShowDaughters:%3s Visible:%3s",

@@ -1,9 +1,6 @@
 #include "DetDesc/Elements.h"
 #include "XML/Evaluator.h"
-#include "Internals.h"
-#include "TNamed.h"
 #include <iostream>
-#include <stdexcept>
 
 #include "DetDesc/lcdd/LCDD.h"
 
@@ -97,7 +94,7 @@ string DetDesc::Geometry::_toString(double value)   {
 }
 namespace DetDesc { namespace Geometry {
 
-  template <class T> void Element_type<T>::bad_assignment(const type_info& from, const type_info& to) {
+  template <typename T> void Element_type<T>::bad_assignment(const type_info& from, const type_info& to) {
     string msg = "Wrong assingment from ";
     msg += from.name();
     msg += " to ";
@@ -106,44 +103,67 @@ namespace DetDesc { namespace Geometry {
     throw std::runtime_error(msg);
   }
 
-  template <class T> const char* RefElement_type<T>::name() const  {
+  template <typename T> const char* RefElement_type<T>::name() const  {
     TNamed *p = (TNamed*)this->m_element;
     return p ? p->GetName() : "";
   }
 
-  template <class T> const char* RefElement_type<T>::refName() const  {
+  template <typename T> const char* RefElement_type<T>::refName() const  {
     TNamed *p = (TNamed*)this->m_element;
     return p ? p->GetName() : "";
   }
 
-  template <class T> void RefElement_type<T>::setName(const string& new_name)  {
+  template <typename T> void RefElement_type<T>::setName(const string& new_name)  {
     TNamed *p = (TNamed*)this->m_element;
     if ( p ) p->SetName(new_name.c_str());
   }
 
-  template <class T> void RefElement_type<T>::assign(T* n, const std::string& nam, const std::string& tit) {
+  template <typename T> void RefElement_type<T>::assign(T* n, const std::string& nam, const std::string& tit) {
     this->m_element = n;
     TNamed *p = (TNamed*)n;
     if ( !nam.empty() ) p->SetName(nam.c_str());
     if ( !tit.empty() ) p->SetTitle(tit.c_str());
   }
+
+
+  template struct Element_type<TNamed>;
 }}
+
+const char* DetDesc::Geometry::RefElement_type<TNamed>::name() const  {
+  return m_element ? m_element->GetName() : "";
+}
+
+const char* DetDesc::Geometry::RefElement_type<TNamed>::refName() const  {
+  return m_element ? m_element->GetName() : "";
+}
+
+void DetDesc::Geometry::RefElement_type<TNamed>::setName(const string& new_name)  {
+  if ( m_element ) m_element->SetName(new_name.c_str());
+}
+
+void DetDesc::Geometry::RefElement_type<TNamed>::assign(TNamed* n, const std::string& nam, const std::string& tit) {
+  m_element = n;
+  if ( !nam.empty() ) m_element->SetName(nam.c_str());
+  if ( !tit.empty() ) m_element->SetTitle(tit.c_str());
+}
+
 #include "TMap.h"
 #include "TColor.h"
 
 #define INSTANTIATE(X)  \
-  template class DetDesc::Geometry::Element_type<X>; \
-  template class DetDesc::Geometry::RefElement_type<X>
+  template struct DetDesc::Geometry::Element_type<X>; \
+  template struct DetDesc::Geometry::RefElement_type<X>
 
 
 
 INSTANTIATE(TObject);
-INSTANTIATE(TNamed);
 
+#include "TGeoMedium.h"
 #include "TGeoMaterial.h"
 #include "TGeoElement.h"
 INSTANTIATE(TGeoElement);
 INSTANTIATE(TGeoMaterial);
+INSTANTIATE(TGeoMedium);
 
 #include "TGeoMatrix.h"
 INSTANTIATE(TGeoMatrix);

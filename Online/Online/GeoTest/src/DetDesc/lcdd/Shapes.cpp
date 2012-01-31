@@ -1,6 +1,5 @@
 #define _USE_MATH_DEFINES
 #include "DetDesc/lcdd/LCDD.h"
-#include "../Internals.h"
 
 // C/C++ include files
 #include <stdexcept>

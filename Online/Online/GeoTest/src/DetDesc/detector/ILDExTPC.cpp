@@ -1,5 +1,4 @@
 #include "DetDesc/detector/ILDExTPC.h"
-#include "DetDesc/Internals.h"
 #include <iostream>
 
 using namespace std;
@@ -13,7 +12,7 @@ namespace DetDesc {
     Value<TNamed,Object>* p = new Value<TNamed,Object>();
     assign(p,name, type);
     p->pressure = 12345.0;
-    setAttr(Attr_id,id);
+    p->Attr_id = id;
   }
 
   double ILDExTPC::getVolume() const {
@@ -24,15 +23,15 @@ namespace DetDesc {
   }
 
   void ILDExTPC::setInnerWall(RefElement obj) {
-    setAttr(outerWall,obj);
+    data<Object>()->outerWall = obj;
   }
 
   void ILDExTPC::setOuterWall(RefElement obj) {
-    setAttr(innerWall,obj);
+    data<Object>()->innerWall = obj;
   }
 
   void ILDExTPC::setGasVolume(RefElement obj) {
-    setAttr(gas,obj);
+    data<Object>()->gas = obj;
   }
 
 }

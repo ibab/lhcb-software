@@ -12,7 +12,7 @@ namespace DetDesc {
   */
   namespace Geometry  {
 
-    struct Segmentation : public RefElement   {
+    struct Segmentation : public RefElement_type<TNamed>   {
       struct Object  {
         unsigned char Attr_useForHitPosition;
         union {
@@ -45,7 +45,8 @@ namespace DetDesc {
         }
       };
       /// Constructor to be used when reading the already parsed object
-      Segmentation(const Element& e);
+      template <typename Q> Segmentation(const Element_type<Q>& e) 
+	: RefElement_type<Implementation>(e){}
       /// Constructor to create a new segmentation object (to be called by super class only)
       Segmentation(LCDD& lcdd, const std::string& type);
       bool useForHitPosition() const;
@@ -54,7 +55,7 @@ namespace DetDesc {
 
     struct ProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      ProjectiveCylinder(const Element& e) : Segmentation(e) {}
+      template <typename Q> ProjectiveCylinder(const Element_type<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       ProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get number of bins in theta
@@ -69,7 +70,7 @@ namespace DetDesc {
 
     struct NonProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      NonProjectiveCylinder(const Element& e) : Segmentation(e) {}
+      template <typename Q> NonProjectiveCylinder(const Element_type<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       NonProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get size of bins in Z
@@ -84,7 +85,7 @@ namespace DetDesc {
 
     struct ProjectiveZPlane : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      ProjectiveZPlane(const Element& e);
+      template <typename Q> ProjectiveZPlane(const Element_type<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       ProjectiveZPlane(LCDD& lcdd);
       /// Accessors: get number of bins in theta
@@ -99,7 +100,7 @@ namespace DetDesc {
 
     struct GridXY : public Segmentation   {
       /// Constructor to be used when reading the already parsed object
-      GridXY(const Element& h) : Segmentation(h) {}
+      template <typename Q> GridXY(const Element_type<Q>& e) : Segmentation(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GridXY(LCDD& lcdd, const std::string& tag);
       /// Constructor to be used when creating a new object.
@@ -112,7 +113,7 @@ namespace DetDesc {
 
     struct GridXYZ : public GridXY  {
       /// Constructor to be used when reading the already parsed object
-      GridXYZ(const Element& h) : GridXY(h) {}
+      template <typename Q> GridXYZ(const Element_type<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object.
       GridXYZ(LCDD& lcdd);
       /// Constructor to be used when creating a new object.
@@ -123,14 +124,14 @@ namespace DetDesc {
 
     struct CartesianGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      CartesianGridXY(const Element& element) : GridXY(element) {}
+      template <typename Q> CartesianGridXY(const Element_type<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       CartesianGridXY(LCDD& lcdd) : GridXY(lcdd,"cartesian_grid_xy") {}
     };
 
     struct GlobalGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      GlobalGridXY(const Element& element) : GridXY(element) {}
+      template <typename Q> GlobalGridXY(const Element_type<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GlobalGridXY(LCDD& lcdd) : GridXY(lcdd,"global_grid_xy") {}
     };

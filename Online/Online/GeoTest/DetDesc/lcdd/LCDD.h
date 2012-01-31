@@ -7,6 +7,7 @@
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/compact/Readout.h"
+#include "DetDesc/compact/Segmentations.h"
 #include "DetDesc/compact/Detector.h"
 
 // C/C++ include files

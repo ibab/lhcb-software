@@ -10,6 +10,9 @@ class TObject;
 class TObjArray;
 class TGeoManager;
 
+// Conversion factor from radians to degree: 360/(2*PI)
+#define RAD_2_DEGREE 57.295779513082320876798154814105
+
 /*
  *   Gaudi namespace declaration
  */
@@ -57,21 +60,22 @@ namespace DetDesc {
       Element_type(Implementation* e) : m_element(e) {}
       Element_type(const Element_type<Implementation>& e) : m_element(e.m_element) {}
 
-      template<typename Q> Element_type(Q* e) : m_element((T*)e) { verifyObject<T>(); }
+      template<typename Q> Element_type(Q* e)
+	: m_element((T*)e)           { verifyObject();                  }
 
       template<typename Q> Element_type(const Element_type<Q>& e) 
-	: m_element((T*)e.m_element) { verifyObject<T>(); }
+	: m_element((T*)e.m_element) { verifyObject();                  }
 
       T* ptr() const                          {  return m_element;      }
       template <typename Q> Q* _ptr() const   {  return (Q*)m_element;  }
       bool isValid() const                    {  return 0 != m_element; }
       bool operator!() const                  {  return 0 == m_element; }
-      template <typename P, typename Q> Q* data() const  {
-	return (Value<P,Q>*)m_element;
+      template <typename Q> Q* data() const  {
+	return (Value<Implementation,Q>*)m_element;
       }
-      template<typename Q> void verifyObject() const {
-	if ( dynamic_cast<Q*>(ptr()) == 0 )  {
-	  bad_assignment(ptr() ? typeid(*ptr()) : typeid(void),typeid(Q));
+      void verifyObject() const {
+	if ( m_element && dynamic_cast<T*>(m_element) == 0 )  {
+	  bad_assignment(typeid(*m_element),typeid(T));
 	}
       }
       static void bad_assignment(const std::type_info& from, const std::type_info& to);
@@ -89,10 +93,28 @@ namespace DetDesc {
       const char* refName() const;
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
-      operator RefElement_type<TNamed>() const { return RefElement_type<TNamed>(this->m_element); }
+      //operator RefElement_type<TNamed>() const { return RefElement_type<TNamed>(this->m_element); }
+      Implementation* operator->() const { return this->m_element; }
     };
 
-    typedef RefElement_type<TNamed> RefElement;
+    template <> struct RefElement_type<TNamed> : public Element_type<TNamed>  {
+      typedef TNamed Implementation;
+      RefElement_type() : Element_type<TNamed>() {}
+      RefElement_type(const Element_type<TNamed>& e) : Element_type<TNamed>(e) {}
+
+      template<typename Q> 
+      RefElement_type(const Element_type<Q>& e) : Element_type<TNamed>(e) {}
+      
+      TNamed*  operator->() const { return this->m_element; }
+      operator TNamed*() const    { return this->m_element; }
+      
+      const char* name() const;
+      const char* refName() const;
+      void setName(const std::string& new_name);
+      void assign(Implementation* n, const std::string& nam, const std::string& title);
+    };
+
+    typedef RefElement_type<TNamed>  RefElement;
     typedef Element_type<TObject>    Element;
 
   }       /* End namespace Geometry  */

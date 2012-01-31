@@ -1,6 +1,7 @@
 #include "../src/XML/lcdd/XMLLCDDImp.h"
 #include "../src/DetDesc/lcdd/LCDDGeoImp.h"
 #include "TGDMLWrite.h"
+#include "TGeoManager.h"
 #include <iostream>
 #include <vector>
 #include <string>
