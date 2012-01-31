@@ -25,6 +25,9 @@ _locations.update ( locations )
 from CommonParticles.StdLooseDetachedKstar import *
 _locations.update ( locations )
 
+from CommonParticles.StdDetachedKstar import *
+_locations.update ( locations )
+ 
 # redefine the locations 
 locations = _locations
 

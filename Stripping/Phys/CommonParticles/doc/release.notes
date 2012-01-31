@@ -9,6 +9,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-01-31 - Jibo He
+ - StdVeryLooseDetachedKstar
+   Commented out daughters cuts to save a little bit CPU, 
+   because tighter cuts IPCHI2>4 already applied on StdLoose{Kaons,Pions}
+ - StdDetachedKstar
+   New KSTAR particle with mass up to 2.2 GeV.
+
+! 2012-01-31 - Jibo He
  - Added StdLooseDetachedDiElectron, with cuts of PT>200 MeV, IPS>1 on both electrons, 
    and M(ee)>20 MeV.
 
