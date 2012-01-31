@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-01-31 - Patrick Koppenburg
+ - New Lambda_b -> J/psi p pi line, that also does Kpi
+ - Removed mass configuration for J/psi Pi0 line
+
 ! 2012-01-27 - Alessandra Borgia
  - Added Bs->(Ds->PhiPi)H line, to measure fakes for the Asl measurement. This line requires Hlt2PhiDecision in StrippingB2DMuNuX.py
 

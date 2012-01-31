@@ -102,7 +102,30 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                   config['MassLow'],
                                                   config['MassHigh']
                                                 )
-                                                  
+        
+        self.B2KPlusPiMinus  = subPID(B2KPlusPiMinusName, self.B2Charged2Body,
+                                      "B0", "K+", "pi-" )
+
+        self.B2PiPlusKMinus  = subPID(B2PiPlusKMinusName, self.B2Charged2Body,
+                                      "B0", "pi+", "K-" )
+
+        self.Bs2KPlusKMinus  = subPID(Bs2KPlusKMinusName, self.B2Charged2Body,
+                                      "B_s0", "K+", "K-" )
+
+        self.Lb2PPlusPiMinus = subPID(Lb2PPlusPiMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "p+", "pi-" )
+        
+        self.Lb2PiPlusPMinus = subPID(Lb2PiPlusPMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "pi+", "p~-" )
+
+        self.Lb2PPlusKMinus  = subPID(Lb2PPlusKMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "p+", "K-" )
+        
+        self.Lb2KPlusPMinus  = subPID(Lb2KPlusPMinusName, self.B2Charged2Body,
+                                      "Lambda_b0", "K+", "p~-" )
+
+
+        
         self.B2KPlusPiMinus  = subPID(B2KPlusPiMinusName, self.B2Charged2Body,
                                       "B0", "K+", "pi-" )
 
@@ -196,6 +219,34 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                    prescale = config['PrescaleBs2KK_NoIPCutOnB'],
                                                    selection = self.Bs2KK_NoIPCutOnB)      
  
+        self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.B2PiPlusKMinus )
+        
+        self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Bs2KPlusKMinus )
+        
+        self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PPlusPiMinus )
+        
+        self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PiPlusPMinus )
+        
+        self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2PPlusKMinus )
+        
+        self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
+                                                  prescale  = config['PrescaleB2Charged2Body'],
+                                                  selection = self.Lb2KPlusPMinus )
+        
+        self.lineB2PPbar         = StrippingLine( B2PPbarName+"Line",
+                                                  prescale = config['PrescaleB2PPbar'],
+                                                  selection = self.B2PPbar )
+        
         self.registerLine(self.lineB2PPbar)    
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)
