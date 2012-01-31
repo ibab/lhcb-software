@@ -15,7 +15,7 @@ Development version for 2012 data taking
     Gaudi releases
 - Packages added: GaudiMTTools v1r0 - Collection of Gaudi multithreading tools.
                            Currently includes only GaudiParallelizer algorithm. 
-- Packages modified: Calo/CaloDAQ v4r26, Calo/CaloUtils v9r3,
+- Packages modified: Calo/CaloDAQ v4r26, Calo/CaloUtils v9r3, DAQ/MDF v3r32,
     DAQ/Tell1Kernel v1r12p1, Det/CaloDet v10r13, Det/DDDB v1r50,
     Det/DetCond v12r23, Det/DetDesc v18r29, Det/DetDescChecks v5r7,
     Det/DetDescSvc v3r5, Det/MuonDet v9r8, Det/RichDet v16r9, Det/STDet v4r27,
@@ -32,10 +32,14 @@ Development version for 2012 data taking
 - In CaloUtils v9r3
   . Fix minor bug in CaloAlgUtils::StringMatcher
 
-- In Det/CaloDet v10r13
+- In CaloDet v10r13
   . DeCalorimeter & CellParam :  reset CellParam members to default value before
     updating condition (fix initialization problem depending on first loaded
     condition)
+
+- In MDF v3r32
+  . Add flag to MDFIO to suppress error messages if getDataSpace fails.
+    Default is current behaviour
 
 - In DDDB v1r50
   . Add support for 2012 DataType
