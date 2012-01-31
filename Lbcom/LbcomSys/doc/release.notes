@@ -11,9 +11,12 @@ This version uses Gaudi v23r0 and LHCb v34r0
 
 - Development release in preparation for 2012 data taking
 
-- Packages updated: L0/L0DU v10r17p1, L0/L0MuonMonitor v2r2p1,
+- Packages updated: Hlt/HltDAQ v2r14p1,L0/L0DU v10r17p1, L0/L0MuonMonitor v2r2p1,
     OT/OTMonitor v3r3p1, Rich/RichDAQ v3r36, ST/STCheckers v3r3p1,
     ST/STMonitors v3r7p2, Velo/VeloAlgorithms v5r6, Velo/VeloSimulation v3r12
+
+- In HltDAQ v2r14p1
+  . Fix warning: variable set but not used 
 
 - In L0DU v10r17p1, L0MuonMonitor v2r2p1, STMonitors v3r7p2
   . Remove unnecessary build dependency, fixes annoying warning from
