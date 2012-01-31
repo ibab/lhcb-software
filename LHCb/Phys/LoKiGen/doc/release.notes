@@ -13,15 +13,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r5 2012-01-31 =========================
 ! 2012-01-29 - Vanya Belyaev
  - add dumping functors 
 
 ! 2012-01-28 - Vanya Belyaev
-
  - add various functors for polarizations 
 
 ! 2012-01-26 - Vanya Belyaev
-
  - add GCOSPOL functor 
 
 !========================= LoKiGen v10r4 2011-12-14 =========================
