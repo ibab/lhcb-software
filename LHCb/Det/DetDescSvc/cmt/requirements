@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham, Marco Clemencic
 # ============================================================================
 package           DetDescSvc
-version           v3r4
+version           v3r5
 
 branches          cmt doc src
 
