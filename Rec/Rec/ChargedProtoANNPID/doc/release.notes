@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v1r6 2012-01-31 ================
 ! 2012-01-20 - Chris Jones
  - The annoying sporadic stderr messages from NeuroBayes seem to have returned.
    So, until understood squash them entirely by redirecting stderr and stdout
