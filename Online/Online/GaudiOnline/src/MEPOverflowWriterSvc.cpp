@@ -276,7 +276,7 @@ FileDescr *MEPOverflowWriterSvc::openFile(unsigned int runn)
   std::string ftim = FileTime();
   sprintf(fname,format.c_str(),runn,ftim.c_str());
   f->m_BytesWritten = 0;
-  f->m_Handle = open(fname,O_RDWR+O_CREAT);
+  f->m_Handle = open(fname,O_RDWR|O_CREAT,S_IRWXU|S_IRWXG|S_IRWXO);
   f->m_FileName = fname;
   f->state = C_OPEN;
   f->m_BytesWritten = 0;
