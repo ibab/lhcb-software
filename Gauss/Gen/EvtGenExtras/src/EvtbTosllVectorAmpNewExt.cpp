@@ -11,7 +11,7 @@
 // Module: EvtbTosllVectorAmpNewExt.cpp
 //
 // Description: Preparation of the decay amplitude for the process:
-//              B_{d,s}(p1,M1) -> V(p2,M2) ell^+(k1,m) ell^-(k2,m) 
+//              B_{d,s}(p1,M1) -> (V(p2,M2) or A(p2,M2)) ell^+(k1,m) ell^-(k2,m) 
 //              for the SM extensions.
 //
 //              1. The code of this module is based on the EvtbTosllVectorAmpNew.cpp
@@ -20,7 +20,8 @@
 // Modification history:
 //
 // N.Nikitin (nnikit@mail.cern.ch)   June 18,2011    Module created
-// N.Nikitin                         Nov  09,2011    Module retested
+// N.Nikitin (nnikit@mail.cern.ch)   Nov  09,2011    Module retested
+// N.Nikitin (nnikit@mail.cern.ch)   Jan  26,2012    Add B -> (K_1(1270), B -> K_1(1400)) ell^+ ell^- decya channels
 //
 //------------------------------------------------------------------------
 //
@@ -134,7 +135,23 @@ void EvtbTosllVectorAmpNewExt::CalcAmp( EvtParticle *parent,
      (idparent == EvtPDL::getId(std::string("B_s0"))&&
       iddaught == EvtPDL::getId(std::string("phi")))||
      (idparent == EvtPDL::getId(std::string("anti-B_s0"))&&
-      iddaught == EvtPDL::getId(std::string("phi")))){
+      iddaught == EvtPDL::getId(std::string("phi")))||
+     (idparent == EvtPDL::getId(std::string("B+"))&&
+      iddaught == EvtPDL::getId(std::string("K_1+")))||
+     (idparent == EvtPDL::getId(std::string("B-"))&&
+      iddaught == EvtPDL::getId(std::string("K_1-")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("K_10")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("anti-K_10")))||
+     (idparent == EvtPDL::getId(std::string("B+"))&&
+      iddaught == EvtPDL::getId(std::string("K'_1+")))||
+     (idparent == EvtPDL::getId(std::string("B-"))&&
+      iddaught == EvtPDL::getId(std::string("K'_1-")))||
+     (idparent == EvtPDL::getId(std::string("B0"))&&
+      iddaught == EvtPDL::getId(std::string("K'_10")))||
+     (idparent == EvtPDL::getId(std::string("anti-B0"))&&
+      iddaught == EvtPDL::getId(std::string("anti-K'_10")))){
      ms = formFactors->getQuarkMass(3); // m_s mass from the dispersion QM
      // V_{ts}
      Vtq = unit1*(1.0-0.5*pow(CKM_lambda,2.0)) + 
