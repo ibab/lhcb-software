@@ -5,17 +5,176 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2012-01-26 - Illya Shapoval
- - GaudiMTTools v1r0 package added: collection of Gaudi multithreading tools.
-   Currently includes only GaudiParallelizer algorithm.
+</PRE><H1><A NAME=v34r0>2012-01-31 LHCbSys v34r0</A></H1><PRE>
+This version uses Gaudi v23r0 and LCG_62a
+Development version for 2012 data taking
 
-! 2012-01-25 - Marco Cattaneo
- - Remove RootCnv. RootCnv v1r12 is released as part of Gaudi v23r0. Model is
-   now that HEAD is maintained in ONLINE project. New releases can be included
-   here again if necessary, before being imported into future Gaudi releases
+- Packages removed: Online/RootCnv. RootCnv v1r12 is released as part of Gaudi
+    v23r0. Model is now that HEAD is maintained in ONLINE project. New releases
+    can be included here again if necessary, before being imported into future
+    Gaudi releases
+- Packages added: GaudiMTTools v1r0 - Collection of Gaudi multithreading tools.
+                           Currently includes only GaudiParallelizer algorithm. 
+- Packages modified: Calo/CaloDAQ v4r26, Calo/CaloUtils v9r3,
+    DAQ/Tell1Kernel v1r12p1, Det/CaloDet v10r13, Det/DDDB v1r50,
+    Det/DetCond v12r23, Det/DetDesc v18r29, Det/DetDescChecks v5r7,
+    Det/DetDescSvc v3r5, Det/MuonDet v9r8, Det/RichDet v16r9, Det/STDet v4r27,
+    Det/VeloDet v13r18, Event/EventPacker v2r11, Event/PackedEvent v4r6,
+    Event/TrackEvent v5r14, Ex/IOExample v4r4, GaudiConf v15r6,
+    Kernel/LHCbAlgs v2r47, Kernel/LHCbKernel v13r8, Kernel/LHCbMath v3r29,
+    Kernel/XMLSummaryKernel v1r4, Phys/LoKiCore v11r6, Phys/LoKiGen v10r5,
+    Phys/LoKiMC v10r4, Rich/RichKernel v7r48
 
-! 2012-01-05 - Marco Cattaneo
- - Adapt Configurables test to Gaudi v23, compatible with Gaudi v22r5
+- In CaloDAQ v4r26
+  . Do not cache pedestalShift at initialize, get it from detector element
+    whenever it's needed, since it can change during the job.
+
+- In CaloUtils v9r3
+  . Fix minor bug in CaloAlgUtils::StringMatcher
+
+- In Det/CaloDet v10r13
+  . DeCalorimeter & CellParam :  reset CellParam members to default value before
+    updating condition (fix initialization problem depending on first loaded
+    condition)
+
+- In DDDB v1r50
+  . Add support for 2012 DataType
+  . For each DataType, in case of real data, set initial time
+    (used for CondDB initialisation before first event)
+    to the last meaningful time of the corresponding year:
+    o End of year for 2008, 2009
+    o End of last fill for 2010, 2011
+    o Current time for 2012, if before end of 2012
+
+- In DetCond v12r23
+  . Added new methods to the ICondDBReader interface (getIOVs), to retrieve the
+    list of IOVs in a folder for an IOV.
+  . Added a test for the implementation of getIOVs in CondDBAccessSvc, and fixes.
+  . Modified LoadDDDB to trigger the initialization of the UpdateManagerSvc in
+    the initialize (to avoid that is gets triggered in the middle of an event).
+  . Fixed ICC warning (Boost 1.48).
+
+- In DetDesc v18r29
+  . Added a special "update mode" to ValidDataObject to be able to change the
+    semantic of the update method. If the argument passed to "update" has the
+    update mode set to OVERRIDE, the behavior is to replace existing parameters
+    and to not remove missing ones, i.e. restore the old semantic.
+    (required by UpdateMgrSvc condition overrides)
+  . Changed the semantic of ParamValidDataObject::update() (Condition) to
+    replace the old content instead of just merge the new values in.
+
+- In DetDescChecks v5r7
+  . Ensure that the event time used by LoadDDDB is the one defined in the
+    configuration of EventClockSvc (from DDDBConf.DataType).
+  . Added tests loaddddb2012.qmt, loaddddb-sim-2012.qmt, loaddddb-sim-mc11.qmt
+
+- In DetDescSvc v3r5
+  . Modified UpdateMgrSvc to use the special "update mode" OVERRIDE for the
+    conditions used to override existing ones (property ConditionsOverride).
+
+- In MuonDet v9r8
+  . Fix coverity warnings in DeMuonChamber
+
+- In RichDet v16r9
+  . Add some additional debug and verbose printouts to DeRichSystem
+  . Fix a bug where a few maps where not cleared in
+    DeRichSystem::buildPDMappings() before being (re)filled.
+
+- In VeloDet v13r18
+  . Added a new function to DeVeloRType to map the 2nd metal layer to the hits
+    to simulate the effects of the intra-sensor cross-talk seen in 2011 data,
+    will produce a warning unless run with new DDDB update describing the M2
+    layout
+  . Minor change to the test velodet.veloaligncond.updates to absorb the change
+    in Condition::update().
+
+- In EventPacker v2r11
+  . Implement the option "DeleteInput" in the packers used in the stripping.
+    If True, the input data objects will be deleted after a successful packing.
+  . Packing of RecVertices (primary) and Particle2LHCbID map
+  . Add some protection to PackCaloHypo in case of invalid SmartRefs ..
+  . New algorithms PackParticlesAndVertices and Unpack... to pack in a single
+    container all particles in a tree, all vertices, all relations between them.
+  . New algorithms PackDecReport and UnpackDecReport to unpack/pack the stripping
+    decisions. By default lines having not fired are removed. This can be changed
+    by setting the option PackDecReport().Filter = False
+  . Added a tool to dynamically configure the DataOnDemandSvc using rules (regex)
+    to map the destination (requested) path to a source location, and a map of
+    source class IDs to conversion algorithms. If a path is recognized as a
+    candidate for conversion (e.g. intermediate paths) and the corresponding
+    source path points to a plain DataObject, the corresponding node is created.
+    See comments in ConversionDODMapper.h
+  . Do not abort processing in the Checkers, if missing data locations are found
+    (Happens with Particles in stripped DSTs).
+
+- In PackedEvent v4r6
+  . New class PackedParticle2Ints to pack the map between particle and LHCbIds
+  . New class PackedRelation to store the Particle2Vertex relations.
+  . New class PackedDecReport for packing the stripping report.
+  . Modified PackedEventChecks.h to test the relative change for matrices.
+  . Added dedicated locations of stripping names
+
+- In TrackEvent v5r14
+  . Replace volatile by static in Track::nodes() to get rid of segfault due to
+    gcc46 optimization
+
+- Ex/IOExample v4r4
+  . Adapt references to RootCnv v1r12 and Gaudi v23
+  . Add some missing run time dependencies to run tests with cmt run
+  . Remove tests that write POOL files. Remaining tests reading POOL files
+    copy to ROOT files and read them back, comparing outputs.
+
+- In GaudiConf v15r6
+  . Remove GaudiPoolDb from requirements ready for Gaudi v23r0
+  . Move tests around to cope with missing POOL services
+  . Fixed moved tests so that they keep their own references.
+
+- In LHCbAlgs v2r47
+  . Factored out from the DQFilter algorithm the code to accept/reject Data
+    Quality flags. The code has been moved to a new tool (BasicDQFilter), 
+    which implements the IDQFilter interface.
+  . New test algorithm to retrieve a service during initialize, start or
+    execute (LHCbAlgsTest::ServiceStarter).
+  . Modified test lhcbalgs.late_evt_clock after the change in the behavior of
+    LoadDDDB (using LHCbAlgsTest::ServiceStarter).
+  . Fix include recursion, Coverity defect 26577
+
+- In LHCbKernel v13r8
+  . New method in StandardPacker to pack a SmartRef
+  . New functions in StandardPacker for long links
+  . Added new interfaces for Data Quality filtering: IDQFilter, IDQScanner
+  . Declared  new RICH radiators CO2 and PMTQuartz in RichRadiatorType.h
+
+- In LHCbMath v3r29
+  . Minor fix in Gaudi::Math::trace function
+
+- In XMLSummaryKernel v1r4
+  . Adapt readerror and writeerror references to new Incident thrown on error
+    by RootCnv v1r12
+  . Add QMTest dependencies to requirements, to allow to run QMTests with cmt run
+  . Migrate tests to Gaudi v23r0, no POOL, and different exit codes.
+  . Tests now depend on IOHelper, and therefore GaudiConf
+
+- In LoKiCore v11r6, LoKiGen v10r5, LoKiMC v10r4
+  . Add dumping functors
+
+- In LoKiGen v10r5
+  . Add various functors for polarizations
+  . Add GCOSPOL functor
+
+- In RichKernel v7r48
+  . Add some protection against calling primaryID() on an empty
+    HPDPixelCluster object.
+  . Add an option to the RichTools Configurable to use the new detailed
+    track segment creator that uses the tracking State provider tool,
+    instead of the extrapolators.
+
+- In Tell1Kernel v1r12p1,  LHCbKernel v13r8
+  . Fix trivial icc remark
+
+- In STDet v4r27, LoKiCore v11r6
+  . Fix headers include recursions, Coverity defects 15534 to 15544, 15553
+
 
 </PRE><H1><A NAME=v33r2>2011-12-15 LHCbSys v33r2</A></H1><PRE>
 This version uses Gaudi v22r5 and LCG_61b
