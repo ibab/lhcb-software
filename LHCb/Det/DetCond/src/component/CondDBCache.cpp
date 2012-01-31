@@ -397,7 +397,7 @@ ICondDBReader::IOVList CondDBCache::getIOVs(const std::string & path, const ICon
       const ItemListType::const_iterator end = folder->second.end(channel);
       // we add all the IOVs in the cache starting from the one found until
       // we are in the list and the IOV is in the requested range.
-      for(; i != end && (i->iov.first < iov.until.ns()); ++i) {
+      for(; i != end && (i->iov.first < static_cast<cool::ValidityKey>(iov.until.ns())); ++i) {
         result.push_back(ICondDBReader::IOV(i->iov.first, i->iov.second));
       }
     } else {

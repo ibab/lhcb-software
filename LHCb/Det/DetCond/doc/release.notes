@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Marco Clemencic
+ - Fixed a couple of compilation warnings.
+
 ! 2012-01-30 - Marco Clemencic
  - Added new methods to the ICondDBReader interface (getIOVs), to retrieve the
    list of IOVs in a folder for an IOV.

@@ -37,10 +37,11 @@ CondDBDQScanner::CondDBDQScanner(const std::string& type, const std::string& nam
 
 CondDBDQScanner::~CondDBDQScanner() {}
 
-IDQFilter::FlagsType CondDBDQScanner::scan(const Gaudi::Time & since, const Gaudi::Time & until) const
+IDQFilter::FlagsType CondDBDQScanner::scan(const Gaudi::Time & /*since*/, const Gaudi::Time & /*until*/) const
 {
   IDQFilter::FlagsType flags;
 
+  Exception("Method CondDBDQScanner::scan not implemented");
 
   return flags;
 }
