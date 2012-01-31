@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!========================= GaudiConf v15r6 2012-01-31 =========================
 ! 2011-12-20 - Rob Lambert
  - Fixed moved tests so that they keep their own references.
 
