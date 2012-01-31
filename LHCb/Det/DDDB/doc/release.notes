@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r50 2012-01-31 =========================
 ! 2012-01-10 - Marco Clemencic
  - Fixed a bug in the initial event time used for 2012.
  - Modified the code setting the initial time to preserve the value in the
