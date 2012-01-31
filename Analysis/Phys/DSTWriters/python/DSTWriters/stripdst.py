@@ -11,13 +11,23 @@ from GaudiConf.Configuration import *
 from Configurables import InputCopyStream
 
 from streamconf import OutputStreamConf
-from microdstelements import CloneParticleTrees, ClonePVRelations
+from microdstelements import ( CloneParticleTrees, ClonePVRelations,
+                               PackStrippingReports, PackParticlesAndVertices,
+                               PackRecObjects, CleanEmptyEventNodes )
 
-def stripDSTElements() :
-    return[CloneParticleTrees(copyProtoParticles = False),
-           ClonePVRelations("Particle2VertexRelations",True)]
+def stripDSTElements(pack=False) :
+    elements = [ CloneParticleTrees(copyProtoParticles = False ),
+                  ClonePVRelations("Particle2VertexRelations",True),
+                  ]
+    if pack :
+        elements += [ PackStrippingReports(),
+                      PackParticlesAndVertices(),
+                      PackRecObjects(),
+                      CleanEmptyEventNodes() ]
+    return elements
 
 def stripDSTStreamConf() :
-    return OutputStreamConf(streamType = InputCopyStream,
-                            extraItems = ['/Event/DAQ/RawEvent#1',
-                                          '/Event/Strip/Phys/DecReports#1'])
+    return OutputStreamConf( streamType = InputCopyStream,
+                             extraItems = ['/Event/DAQ/RawEvent#1'] )
+##                             extraItems = ['/Event/DAQ/RawEvent#1',
+##                                           '/Event/Strip/Phys/DecReports#1'])

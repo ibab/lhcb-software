@@ -64,7 +64,8 @@ from Configurables import GaudiSequencer, InputCopyStream, OutputStream
 from dstwriters     import DSTWriterSelectionSequence
 from dstwriterutils import MicroDSTElementList
 from seldst         import selDSTStreamConf, selDSTElements
-from microdst       import microDSTStreamConf, microDSTElements, stripMicroDSTStreamConf, stripMicroDSTElements, stripCalibMicroDSTStreamConf
+from microdst       import ( microDSTStreamConf, microDSTElements, stripMicroDSTStreamConf,
+                             stripMicroDSTElements, stripCalibMicroDSTStreamConf )
 from stripdst       import stripDSTStreamConf, stripDSTElements
 
 from copy import copy

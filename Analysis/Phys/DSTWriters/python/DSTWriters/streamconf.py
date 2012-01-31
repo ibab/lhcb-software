@@ -14,7 +14,7 @@ class OutputStreamConf(object) :
                  extraItems = []) :
         self.streamType = streamType
         self.filePrefix = filePrefix
-        self.extension = fileExtension
+        self.extension  = fileExtension
         self.extraItems = copy(extraItems)
         self.name = ''    
 

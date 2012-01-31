@@ -15,7 +15,7 @@ from Configurables import OutputStream
 
 from streamconf import OutputStreamConf
 
-from microdstelements import  (CloneRecHeader,
+from microdstelements import ( CloneRecHeader,
                                CloneRecSummary,
                                CloneODIN,
                                GlobalEventCounters,
@@ -26,7 +26,11 @@ from microdstelements import  (CloneRecHeader,
                                CloneBTaggingInfo,
                                ReFitAndClonePVs,
                                CloneLHCbIDs,
-                               CloneRawBanks)
+                               CloneRawBanks,
+                               PackStrippingReports,
+                               PackParticlesAndVertices,
+                               PackRecObjects,
+                               CleanEmptyEventNodes )
 
 from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
 _gecConfig = CounterAlg(
@@ -60,33 +64,45 @@ _gecConfig = CounterAlg(
     }
     )
 
-def microDSTElements() :
-    return [CloneRecHeader(),
-            CloneRecSummary(),
-            CloneODIN(),
-            GlobalEventCounters(configGenerator=_gecConfig),
-            ClonePVs(),
-            CloneParticleTrees(copyProtoParticles = True),
-            ClonePVRelations("Particle2VertexRelations",True),
-            CloneRawBanks( banks = [ 'ODIN'] ) ]
+def microDSTElements(pack=False) :
+    elements = [ CloneRecHeader(),
+                 CloneRecSummary(),
+                 CloneODIN(),
+                 GlobalEventCounters(configGenerator=_gecConfig),
+                 ClonePVs(),
+                 CloneParticleTrees(copyProtoParticles = True),
+                 ClonePVRelations("Particle2VertexRelations",True),
+                 CloneRawBanks( banks = ['ODIN'] )
+                 ]
+    if pack :
+        elements += [ PackStrippingReports(),
+                      PackParticlesAndVertices(),
+                      PackRecObjects(),
+                      CleanEmptyEventNodes() ]
+    return elements
 
 def microDSTStreamConf() :
     return OutputStreamConf(streamType = OutputStream,
                             fileExtension = '.mdst',
                             extraItems = ['/Event/Rec/Header#1'])
 
-def stripMicroDSTElements() :
+def stripMicroDSTElements(pack=False) :
     '''
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
-    return [#GlobalEventCounters(configGenerator=_gecConfig), #not required any more
-            ClonePVs(),
-            CloneParticleTrees(copyProtoParticles = True),
-            ClonePVRelations("Particle2VertexRelations", True),
-            CloneLHCbIDs(fullDecayTree = True),
-            ReFitAndClonePVs()
-            ]
+    elements = [ ClonePVs(),
+                 CloneParticleTrees(copyProtoParticles = True),
+                 ClonePVRelations("Particle2VertexRelations", True),
+                 CloneLHCbIDs(fullDecayTree = True),
+                 ReFitAndClonePVs(),
+                 ]
+    if pack :
+        elements += [ PackStrippingReports(),
+                      PackParticlesAndVertices(),
+                      PackRecObjects(),
+                      CleanEmptyEventNodes() ]
+    return elements
 
 def stripMicroDSTStreamConf() :
     return OutputStreamConf(streamType = OutputStream,
@@ -94,7 +110,7 @@ def stripMicroDSTStreamConf() :
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
                                           '/Event/Rec/Summary#1',
-                                          '/Event/Strip/Phys/DecReports#1',
+                                          #'/Event/Strip/Phys/DecReports#1',
                                           '/Event/Trigger/RawEvent#1'
                                           ])
 
@@ -104,7 +120,7 @@ def stripCalibMicroDSTStreamConf() :
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
                                           '/Event/Rec/Summary#1',
-                                          '/Event/Strip/Phys/DecReports#1',
+                                          #'/Event/Strip/Phys/DecReports#1',
                                           "/Event/Trigger/RawEvent#1",
                                           "/Event/Muon/RawEvent#1"
                                           ])

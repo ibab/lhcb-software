@@ -50,7 +50,7 @@ def personaliseName(obj, name) :
     '''
     return name + "_" + obj.name()
 
-def dataLocations(selSequence, extension) :
+def dataLocations(selSequence,extension,deepSearch=False) :
     """
     Add an extension to each of the locations in selSequence.oupputLocations().
     Returns a new list of locations. Removes trailing '/' and '/Particles'
@@ -64,6 +64,7 @@ def dataLocations(selSequence, extension) :
         if location.endswith('/') :
             location = location[ : -1 ]
         loc += [location]
+    #if deepSearch :
     return loc
 
 class ConfigurableList(object) :
@@ -100,14 +101,16 @@ class MicroDSTElementList(object) :
     returning suitably ordered list of suitably configured Configurables.
     
     """
-    def __init__(self,
-                 branch = 'MicroDST',
-                 callables = [],
-                 rootInTES = '/Event/') :
+    def __init__( self,
+                  branch = 'MicroDST',
+                  callables = [],
+                  rootInTES = '/Event/' ) :
         self.callables = callables
         self.branch = branch
-        self.output = rootInTES + '/' + branch + '#99'
-        self.output = self.output.replace('//', '/')
+        self.output = [ ]
+        output = rootInTES + '/' + branch + '#99'
+        output = output.replace('//', '/')
+        self.output += [output]
         for c in self.callables :
             c.branch = self.branch
     def __getitem__(self, index) :

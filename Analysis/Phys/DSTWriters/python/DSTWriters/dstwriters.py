@@ -20,9 +20,9 @@ class DSTWriterSelectionSequence(object) :
     def __init__(self,
                  selSequence,
                  outputStreamConfiguration,
-                 writeFSR = True,
-                 extras = None,
-                 persistency=None) :
+                 writeFSR    = True,
+                 extras      = None,
+                 persistency = None) :
         
         from GaudiConf import IOHelper
         
@@ -63,35 +63,9 @@ class DSTWriterSelectionSequence(object) :
                 #event data stream
                 self.algos += [alg]
                 if extras is not None:
-                    alg.OptItemList += [extras.output]
-    
-    
+                    alg.OptItemList += extras.output
+        
     def sequence(self, sequencerType = GaudiSequencer) :
         if self.mainSeq == None :
             self.mainSeq = sequencerType(self.name, Members = copy(self.algos))
         return self.mainSeq
-
-#def outputStream(conf) :
-#    '''
-#    Create an output stream object based in a stream configuration input.
-#    '''
-#    
-#    stream = conf.streamType(conf.name+'_OStream')#,
-#    #                         Output = _poolFileName(conf.filePrefix + conf.name + conf.extension))
-#    stream.OptItemList += conf.extraItems
-#    return stream
-
-#def fsrStream(conf) :
-#    return RecordStream('FileRecordStream' + conf.name,
-#                        ItemList         = [ "/FileRecords#999" ],
-#                        EvtDataSvc       = "FileRecordDataSvc",
-#                        EvtConversionSvc = "FileRecordPersistencySvc",
-#                        Output           = _poolFileName(conf.filePrefix + conf.name + conf.extension)
-#                        )
-
-#def _poolFileName(name) :
-#    '''
-#    Add necessary elements to simple filename to make it a valid Pool output name.
-#    '''
-#    if name == "" : name = 'Output'
-#    return "DATAFILE='" + name + "' TYP='POOL_ROOTTREE' OPT='REC' "

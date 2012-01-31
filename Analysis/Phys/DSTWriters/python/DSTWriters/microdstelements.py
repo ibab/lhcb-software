@@ -5,6 +5,11 @@ responsible for copying some data to a MicroDST partition.
 
 '''
 
+from GaudiConf.Configuration import *
+from dstwriterutils import ( setCloneFilteredParticlesToTrue,
+                             ConfigurableList,
+                             MicroDSTElement )
+
 __author__  = 'Juan Palacios juan.palacios@nikhef.nl'
 
 __all__ = ( 'CloneRecHeader',
@@ -25,29 +30,26 @@ __all__ = ( 'CloneRecHeader',
             'CloneRawBanks',
             'CloneLHCbIDs',
             'CloneTisTosInfo',
-            'MoveObjects')
-
-from dstwriterutils import (setCloneFilteredParticlesToTrue,
-                            ConfigurableList,
-                            MicroDSTElement)
-
-from GaudiConf.Configuration import *
+            'MoveObjects' )
 
 class CloneRecHeader(MicroDSTElement) :
+
     def __call__(self, sel):
         from Configurables import CopyRecHeader
-        cloner = CopyRecHeader(self.personaliseName(sel, "CopyRecHeader"))
+        cloner = CopyRecHeader(self.personaliseName(sel,"CopyRecHeader"))
         self.setOutputPrefix(cloner)
         return [cloner]
 
 class CloneRecSummary(MicroDSTElement) :
+
     def __call__(self, sel):
         from Configurables import CopyRecSummary
-        cloner = CopyRecSummary(self.personaliseName(sel, "CopyRecSummary"))
+        cloner = CopyRecSummary(self.personaliseName(sel,"CopyRecSummary"))
         self.setOutputPrefix(cloner)
         return [cloner]
 
 class CloneODIN(MicroDSTElement) :
+
     def __call__(self, sel) :
         from Configurables import CopyODIN
         cloner = CopyODIN(self.personaliseName(sel,"CopyODIN"))
@@ -69,9 +71,11 @@ class GlobalEventCounters(MicroDSTElement) :
         return [cloner]
 
 class CloneSwimmingReports(MicroDSTElement):
+    
     def __init__(self, inputSwimmingReports = 'Swimming/Reports', branch='') :
         MicroDSTElement.__init__(self, branch)
         self._inputSwimmingReports = inputSwimmingReports
+        
     def __call__(self, sel) :
         from Configurables import CopySwimmingReports
         cloner=CopySwimmingReports(self.personaliseName(sel, 'CopySwimmingReports'))
@@ -81,32 +85,37 @@ class CloneSwimmingReports(MicroDSTElement):
 
 class CloneParticleTrees(MicroDSTElement) :
 
-    def __init__(self, branch='', copyProtoParticles = True) :
+    def __init__( self, branch='',
+                  copyProtoParticles = True ) :
         MicroDSTElement.__init__(self, branch)
         self.copyPP = copyProtoParticles
 
     def __call__(self, sel) :
-        from Configurables import (CopyParticles,
-                                   VertexCloner,
-                                   ParticleCloner,
-                                   ProtoParticleCloner)
+        
+        from Configurables import ( CopyParticles,
+                                    VertexCloner,
+                                    ParticleCloner,
+                                    ProtoParticleCloner )
+        
         cloner = CopyParticles(self.personaliseName(sel,
                                                     'CopyParticles'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
-        if self.copyPP == False :
+        if not self.copyPP :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
             cloner.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(cloner)
 
         confList = ConfigurableList(sel)
         setCloneFilteredParticlesToTrue( confList.flatList() )
-
+        
         return [cloner]
 
 class ClonePVs(MicroDSTElement) :
+    
     def __init__(self, branch='', copyTracks=False) :
         MicroDSTElement.__init__(self, branch)
         self._copyTracks = copyTracks
+        
     def __call__(self, sel) :
         from Configurables import CopyPrimaryVertices, CopyPVWeights
         clonePV=CopyPrimaryVertices(self.personaliseName(sel,
@@ -163,7 +172,6 @@ class CloneBTaggingInfo(MicroDSTElement) :
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
         self.setOutputPrefix(cloner)
         return [BTagAlgo, cloner]
-
 
 class ClonePVRelations(MicroDSTElement) :
     """
@@ -296,12 +304,12 @@ class CloneBackCat(MicroDSTElement) :
         from Configurables import ( Particle2BackgroundCategoryRelationsAlg,
                                     CopyParticle2BackgroundCategory )
         backCatAlg = Particle2BackgroundCategoryRelationsAlg(self.personaliseName(sel,'BackCatAlg'))
-        backCatAlg.Inputs = self.dataLocations(sel,"Particles")
+        backCatAlg.Inputs = self.dataLocations(sel,"Particles",True)
         backCatAlg.FullTree = True
         cloner = CopyParticle2BackgroundCategory(self.personaliseName(sel,'CopyP2BackCat'))
         cloner.InputLocations = self.dataLocations(sel,"P2BCRelations")
         self.setOutputPrefix(cloner)
-        return [backCatAlg, cloner]
+        return [backCatAlg,cloner]
 
 class CloneLHCbIDs(MicroDSTElement) :
     def __init__(self, branch='', fullDecayTree=False) :
@@ -319,8 +327,8 @@ class CloneLHCbIDs(MicroDSTElement) :
 class CloneTisTosInfo(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyParticle2TisTosDecisions
-        cloner =  CopyParticle2TisTosDecisions(self.personaliseName(sel,
-                                                            'CopyTisTos'))
+        cloner = CopyParticle2TisTosDecisions(self.personaliseName(sel,
+                                                                   'CopyTisTos'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
         self.setOutputPrefix(cloner)
         return [cloner]
@@ -339,7 +347,126 @@ class MoveObjects(MicroDSTElement) :
 
     def __call__(self, sel):
         from Configurables import MoveDataObject
-        cloner = MoveDataObject(self.personaliseName(sel, "MoveContainer"))
+        cloner = MoveDataObject(self.personaliseName(sel,"MoveContainer"))
         cloner.InputLocations = self.objects
         self.setOutputPrefix(cloner)
         return [cloner]
+
+class PackStrippingReports(MicroDSTElement) :
+    """
+    Configurable to pack Stripping reports
+    """
+    def __call__(self, sel):
+        from Configurables import PackDecReport
+        packer = PackDecReport(self.personaliseName(sel,"PackStripReps"))
+        packer.InputName   = self.branch + "/Phys/DecReports"
+        packer.OutputName  = self.branch + "/pPhys/DecReports"
+        packer.DeleteInput = True
+        return [packer]
+
+class PackParticlesAndVertices(MicroDSTElement) :
+    """
+    Configurable to pack Particles and Vertices into a single location
+    """
+    def __call__(self, sel):
+        from Configurables import PackParticlesAndVertices
+        packer = PackParticlesAndVertices(self.personaliseName(sel,"PackPsAndVs"))
+        packer.InputStream = self.branch
+        packer.DeleteInput = True
+        packer.VetoedContainers = [ "/Event/"+self.branch+"/Rec/Vertex/Primary" ]
+        return [packer]
+
+class PackRecObjects(MicroDSTElement) :
+    """
+    Configurable to pack Rec objects
+    """
+    def __call__(self, sel):
+
+        deleteInput = True
+
+        algs = [ ]
+
+        # NOTE : The order is important here. 
+
+        # ProtoParticles
+        from Configurables import PackProtoParticle
+        algs += [ PackProtoParticle( name = self.personaliseName(sel,"PackChargedProtos"),
+                                     AlwaysCreateOutput = False,
+                                     DeleteInput = deleteInput,
+                                     InputName          = self.branch + "/Rec/ProtoP/Charged",
+                                     OutputName         = self.branch + "/pRec/ProtoP/Charged" ),
+                  PackProtoParticle( name = self.personaliseName(sel,"PackNeutralProtos"),
+                                     AlwaysCreateOutput = False,
+                                     DeleteInput = deleteInput,
+                                     InputName          = self.branch + "/Rec/ProtoP/Neutrals",
+                                     OutputName         = self.branch + "/pRec/ProtoP/Neutrals" )
+                  ]
+
+        # CALO
+        from Configurables import PackCaloHypo
+        for hypo in [ 'Electrons','Photons','MergedPi0s','SplitPhotons' ] :
+            algs += [ PackCaloHypo( name = self.personaliseName(sel,"PackCalo"+hypo),
+                                    AlwaysCreateOutput = False,
+                                    DeleteInput = deleteInput,
+                                    InputName  = self.branch + "/Rec/Calo/"  + hypo,
+                                    OutputName = self.branch + "/pRec/Calo/" + hypo )
+                      ]
+            
+        # RICH PIDs
+        from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_ as PackRichPIDs
+        algs += [ PackRichPIDs( name = self.personaliseName(sel,"PackRichPIDs"),
+                                AlwaysCreateOutput = False,
+                                DeleteInput = deleteInput,
+                                InputName  = self.branch + "/Rec/Rich/PIDs",
+                                OutputName = self.branch + "/pRec/Rich/PIDs" )
+                  ]
+        
+        # MUON PIDs
+        from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_ as PackMuonPIDs
+        algs += [ PackMuonPIDs( name = self.personaliseName(sel,"PackMuonPIDs"),
+                                AlwaysCreateOutput = False,
+                                DeleteInput = deleteInput,
+                                InputName  = self.branch + "/Rec/Muon/MuonPID",
+                                OutputName = self.branch + "/pRec/Muon/MuonPID" )
+                  ]
+
+        # PVs
+        from Configurables import PackRecVertex
+        from Configurables import DataPacking__Pack_LHCb__WeightsVectorPacker_ as PackPVWeights
+        algs += [ PackRecVertex( name = self.personaliseName(sel,"PackPVs"),
+                                 AlwaysCreateOutput = False,
+                                 DeleteInput = deleteInput,
+                                 InputName  = self.branch + "/Rec/Vertex/Primary",
+                                 OutputName = self.branch + "/pRec/Vertex/Primary" ),
+                  PackPVWeights( name = self.personaliseName(sel,"PackPVWeights"),
+                                 AlwaysCreateOutput = False,
+                                 DeleteInput = deleteInput,
+                                 InputName  = self.branch + "/Rec/Vertex/Weights",
+                                 OutputName = self.branch + "/pRec/Vertex/Weights" )
+                  ]
+
+        # Tracks
+        from Configurables import PackTrack
+        algs += [ PackTrack( name = self.personaliseName(sel,"PackBestTracks"),
+                             AlwaysCreateOutput = False,
+                             DeleteInput = deleteInput,
+                             InputName  = self.branch + "/Rec/Track/Best",
+                             OutputName = self.branch + "/pRec/Track/Best" ),
+                  PackTrack( name = self.personaliseName(sel,"PackMuonTracks"),
+                             AlwaysCreateOutput = False,
+                             DeleteInput = deleteInput,
+                             InputName  = self.branch + "/Rec/Track/Muon",
+                             OutputName = self.branch + "/pRec/Track/Muon" )
+                  ]
+                
+        return algs
+
+class CleanEmptyEventNodes(MicroDSTElement) :
+    """
+    Configurable to pack Rec objects
+    """
+    def __call__(self, sel):
+        from Configurables import EmptyEventNodeCleaner
+        cleaner = EmptyEventNodeCleaner( name = self.personaliseName(sel,"EmptyNodeCleaner"),
+                                         InputStream = self.branch )
+        return [cleaner]

@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Chris Jones
+ - Add preliminary support (disabled by default) for full packing of the
+   data objects on stripping (m)DSTs.
+
 !========================= DSTWriters v4r2 2011-12-15 =========================
 
 ! 2011-12-04 - Chris Jones
