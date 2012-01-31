@@ -2,6 +2,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!========================= VeloDet v13r18 2012-01-31 =========================
 ! 2012-01-12 - David Hutchcroft
  - Added a new function to DeVeloRType to map the 2nd metal layer to the hits
    to simulate the effects of the intra-sensor cross-talk seen in 2011 data,
