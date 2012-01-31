@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r17p1 2012-01-31 =========================
 ! 2012-01-17 - Marco Cattaneo
  - Fix trivial UNINIT_CTOR warnings
  - Replace endreq by endmsg
