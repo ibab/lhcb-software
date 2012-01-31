@@ -169,12 +169,12 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
 }
 
 void LimitSet::addLimit(const RefElement& limit)   {
-  data<TMap>->Add(limit,limit);
+  data<TMap>()->Add(limit,limit);
 }
 
 /// Constructor to be used when creating a new DOM tree
 Region::Region(LCDD& /* lcdd */, const string& name)   {
-  Value<TNamed,Object>* p = Value<TNamed,Object>();
+  Value<TNamed,Object>* p = new Value<TNamed,Object>();
   assign(p, name, "region");
   p->Attr_store_secondaries = false;
   p->Attr_threshold = 10.0;

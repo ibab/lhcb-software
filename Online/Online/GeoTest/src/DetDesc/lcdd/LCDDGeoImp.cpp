@@ -180,50 +180,28 @@ void LCDDImp::create()  {
 
 void LCDDImp::init()  {
   LCDD& lcdd = *this;
-#if 0
-  m_root.append(m_header    = Header(doc));
-  m_root.append(m_idDict    = Element(doc,"iddict"));
-  m_root.append(m_detectors = Element(doc,"sensitive_detectors"));
-  m_root.append(m_limits    = Element(doc,"limits"));
-  m_root.append(m_regions   = Element(doc,"regions"));
-  m_root.append(m_display   = Element(doc,"display"));
-  m_root.append(m_gdml      = Element(doc,"gdml"));
-  m_root.append(m_fields    = Element(doc,"fields"));
-
-  m_gdml.append(m_define    = Element(doc,"define"));
-  m_gdml.append(m_materials = Element(doc,"materials"));
-  m_gdml.append(m_solids    = Element(doc,"solids"));
-  m_gdml.append(m_structure = Element(doc,"structure"));
-  m_gdml.append(m_setup     = Element(doc,"setup"));
-#endif
 
   m_identity = Transformation(lcdd,"identity");
   Box worldSolid(lcdd,"world_box","world_x","world_y","world_z");
-  addSolid(worldSolid);
-
-  add(Rotation(lcdd,"identity_rot",0,0,0));
-  add(m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.));
-  add(Position(lcdd,"identity_pos",0,0,0));
+  Rotation identity_rot(lcdd,"identity_rot",0,0,0);
+  Position identity_pos(lcdd,"identity_pos",0,0,0);
+  m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.);
 
   Material air = material("Air");
   Volume world(lcdd,"world_volume",worldSolid,air);
-  add(world);
 
   Tube trackingSolid(lcdd,"tracking_cylinder",
 		     0.,
 		     _toDouble("tracking_region_radius"),
 		     _toDouble("2*tracking_region_zmax"),M_PI);
-  addSolid(trackingSolid);
-
   Volume tracking(lcdd,"tracking_volume",trackingSolid,air);
-  add(tracking);
 //  world.addPhysVol(PhysVol(lcdd,tracking,"tracking_volume"));
 
   //RefElement ref_world(lcdd,"world",world.refName());
   //m_setup.append(ref_world);
   m_worldVol    = world;
   m_trackingVol = tracking;
-  gGeoManager->SetTopVolume(m_worldVol.ptr());
+  gGeoManager->SetTopVolume(m_worldVol);
 }
 
 void LCDDImp::fromCompact(XML::Handle_t compact)   {

@@ -14,7 +14,11 @@ Subdetector::Object::Object()
 Subdetector::Subdetector(const LCDD& /* lcdd */, const string& name, const string& type, int id)
 {
   assign(new Value<TNamed,Object>(),name,type);
-  data<Object>()->Attr_id = id;
+  _data().Attr_id = id;
+}
+
+Subdetector::Object& Subdetector::_data()   const {
+  return *(Value<TNamed,Object>*)m_element;
 }
 
 string Subdetector::type() const   {
@@ -22,32 +26,32 @@ string Subdetector::type() const   {
 }
 
 int Subdetector::id() const   {
-  return data<Object>()->Attr_id;
+  return _data().Attr_id;
 }
 
 Material Subdetector::material() const  {
-  return data<Object>()->Attr_material;
+  return _data().Attr_material;
 }
 
 bool Subdetector::combineHits() const   {
-  return data<Object>()->Attr_combine_hits != 0;
+  return _data().Attr_combine_hits != 0;
 }
 
 VisAttr Subdetector::visAttr() const  {
-  return data<Object>()->Attr_visualization;
+  return _data().Attr_visualization;
 }
 
 Readout Subdetector::readout() const   {
-  return data<Object>()->Attr_readout;
+  return _data().Attr_readout;
 }
 
 Subdetector& Subdetector::setReadout(const Readout& readout)   {
-  data<Object>()->Attr_readout = readout;
+  _data().Attr_readout = readout;
   return *this;
 }
 
 const Subdetector::Children& Subdetector::children() const   {
-  return data<Object>()->Attr_children;
+  return _data().Attr_children;
 }
 
 void Subdetector::check(bool condition, const string& msg) const  {
@@ -57,9 +61,8 @@ void Subdetector::check(bool condition, const string& msg) const  {
 }
 
 Subdetector& Subdetector::add(const Subdetector& sdet)  {
-  Object* o = data<Object>();
-  if ( o )  {
-    pair<Children::iterator,bool> r = o->Attr_children.insert(make_pair(sdet.name(),sdet));
+  if ( isValid() )  {
+    pair<Children::iterator,bool> r = _data().Attr_children.insert(make_pair(sdet.name(),sdet));
     if ( r.second ) return *this;
     throw runtime_error("Subdetector::add: Element "+string(sdet.name())+" is already present [Double-Insert]");
   }
@@ -67,28 +70,28 @@ Subdetector& Subdetector::add(const Subdetector& sdet)  {
 }
 
 Volume  Subdetector::volume() const    {
-  return data<Object>()->Attr_volume;
+  return _data().Attr_volume;
 }
 
 Subdetector& Subdetector::setVolume(const Volume& volume)  {
-  data<Object>()->Attr_volume = volume;
-  data<Object>()->Attr_material = volume.material();
+  _data().Attr_volume = volume;
+  _data().Attr_material = volume.material();
   return *this;
 }
 
 Solid  Subdetector::envelope() const    {
-  return data<Object>()->Attr_envelope;
+  return _data().Attr_envelope;
 }
 
 Subdetector& Subdetector::setEnvelope(const Solid& solid)   {
-  data<Object>()->Attr_envelope = solid;
+  _data().Attr_envelope = solid;
   return *this;
 }
 #include "TGeoVolume.h"
 Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {
   if ( !name.empty() )   {
     VisAttr attr = lcdd.visAttributes(name);
-    data<Object>()->Attr_visualization = attr;
+    _data().Attr_visualization = attr;
     volume.setVisAttributes(attr);
   }
   else  {
@@ -116,8 +119,7 @@ Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name,
 }
 
 Subdetector& Subdetector::setRegion(const LCDD& lcdd, const string& name, const Volume& volume)  {
-  Object* o = data<Object>();
-  if ( o )  {
+  if ( isValid() )  {
     if ( !name.empty() )  {
       volume.setRegion(lcdd.region(name));
     }
@@ -127,8 +129,7 @@ Subdetector& Subdetector::setRegion(const LCDD& lcdd, const string& name, const 
 }
 
 Subdetector& Subdetector::setLimitSet(const LCDD& lcdd, const string& name, const Volume& volume)  {
-  Object* o = data<Object>();
-  if ( o )  {
+  if ( isValid() )  {
     if ( !name.empty() )  {
       volume.setLimitSet(lcdd.limitSet(name));
     }
@@ -149,7 +150,7 @@ Subdetector& Subdetector::setAttributes(const LCDD& lcdd, const Volume& volume,
 
 Subdetector& Subdetector::setCombineHits(bool value, SensitiveDetector& sens)   {
   if ( isTracker() )  {
-    data<Object>()->Attr_combine_hits = value;
+    _data().Attr_combine_hits = value;
     sens.setCombineHits(value);
   }
   return *this;
@@ -158,7 +159,7 @@ Subdetector& Subdetector::setCombineHits(bool value, SensitiveDetector& sens)   
 bool Subdetector::isTracker() const   {
   if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Tracker") != string::npos && data<Object>()->Attr_readout.isValid() )   {
+    if ( typ.find("Tracker") != string::npos && _data().Attr_readout.isValid() )   {
       return true;
     }
   }
@@ -168,7 +169,7 @@ bool Subdetector::isTracker() const   {
 bool Subdetector::isCalorimeter() const   {
   if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Calorimeter") != string::npos && data<Object>()->Attr_readout.isValid() ) {
+    if ( typ.find("Calorimeter") != string::npos && _data().Attr_readout.isValid() ) {
       return true;
     }
   }
@@ -194,9 +195,13 @@ SensitiveDetector::SensitiveDetector(const LCDD& /* lcdd */, const std::string& 
     </calorimeter>
   */
   assign(new Value<TNamed,Object>(),name,type);
-  data<Object>()->Attr_ecut = 0e0;
-  data<Object>()->Attr_eunit = "MeV";
-  data<Object>()->Attr_verbose = 0;
+  _data().Attr_ecut = 0e0;
+  _data().Attr_eunit = "MeV";
+  _data().Attr_verbose = 0;
+}
+
+SensitiveDetector::Object& SensitiveDetector::_data()   const {
+  return *(Value<TNamed,Object>*)m_element;
 }
 
 /// Access the type of the sensitive detector
@@ -206,27 +211,27 @@ string SensitiveDetector::type() const  {
 
 /// Assign the IDDescriptor reference
 SensitiveDetector& SensitiveDetector::setIDSpec(const RefElement& spec)  {
-  data<Object>()->Attr_id = spec;
+  _data().Attr_id = spec;
   return *this;
 }
 
 /// Assign the name of the hits collection
 SensitiveDetector& SensitiveDetector::setHitsCollection(const string& collection)  {
-  data<Object>()->Attr_hits_collection = collection;
+  _data().Attr_hits_collection = collection;
   return *this;
 }
 
 /// Assign the name of the hits collection
 SensitiveDetector& SensitiveDetector::setCombineHits(bool value)  {
   int v = value ? 1 : 0;
-  data<Object>()->Attr_combine_hits = v;
+  _data().Attr_combine_hits = v;
   return *this;
 }
 
 /// Assign the readout segmentation reference
 SensitiveDetector& SensitiveDetector::setSegmentation(Element segmentation)   {
   if ( segmentation.isValid() )  {
-    data<Object>()->Attr_segmentation = segmentation;
+    _data().Attr_segmentation = segmentation;
     return *this;
   }
   throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");

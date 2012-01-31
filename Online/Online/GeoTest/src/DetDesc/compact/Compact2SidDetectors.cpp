@@ -754,10 +754,10 @@ namespace DetDesc { namespace Geometry {
 
 	// First layer subtraction solid.
 	Subdetector layer(lcdd,layer_nam,"ForwardDetector/Layer",sdet.id());
-	double layerGlobalZ = zinner + layerDisplZ;
-	double layerPosX    = tan(xangleHalf) * layerGlobalZ;
-	Position layerSubtraction1Pos(lcdd,layer_nam + "_subtraction1_pos", layerPosX,0,0);
-	Position layerSubtraction2Pos(lcdd,layer_nam + "_subtraction2_pos",-layerPosX,0,0);
+	double      layerGlobalZ = zinner + layerDisplZ;
+	double      layerPosX    = tan(xangleHalf) * layerGlobalZ;
+	Position    layerSubtraction1Pos(lcdd,layer_nam + "_subtraction1_pos", layerPosX,0,0);
+	Position    layerSubtraction2Pos(lcdd,layer_nam + "_subtraction2_pos",-layerPosX,0,0);
 
 	SubtractionSolid layerSubtraction1(lcdd,layer_nam + "_subtraction1",
 					   layerTube,beamInTube,layerSubtraction1Pos,beamInRot);

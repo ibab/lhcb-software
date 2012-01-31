@@ -26,6 +26,7 @@ namespace DetDesc {
     struct LCDD;
 
     struct SensitiveDetector : public RefElement_type<TNamed>  {
+      protected:
       struct Object  {
         int         Attr_verbose;
         int         Attr_combine_hits;
@@ -36,6 +37,9 @@ namespace DetDesc {
         RefElement  Attr_id;
         Object() : Attr_verbose(0), Attr_segmentation() {}
       };
+      Object& _data()   const;
+
+      public:
       SensitiveDetector() : RefElement_type<TNamed>() {}
       template <typename Q>
       SensitiveDetector(const RefElement_type<Q>& e) : RefElement_type<TNamed>(e) {}
@@ -49,6 +53,7 @@ namespace DetDesc {
       SensitiveDetector& setIDSpec(const RefElement& spec);
       /// Assign the readout segmentation reference
       SensitiveDetector& setSegmentation(Element seg);
+      
     };
 
     struct Subdetector : public RefElement_type<TNamed>   {
@@ -64,7 +69,9 @@ namespace DetDesc {
         Children          Attr_children;
         Object();
       };
+      Object& _data()   const;
       void check(bool condition, const std::string& msg) const;
+      public:
 
       Subdetector() : RefElement_type<TNamed>()  {}
       template<typename Q>
