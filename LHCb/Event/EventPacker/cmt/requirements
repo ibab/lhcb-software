@@ -30,6 +30,7 @@ use   HltEvent     v*    Event
 use   MDF          v*    DAQ
 use   Boost        v*    LCG_Interfaces
 use   Relations    v*    Kernel
+use   MicroDst     v*    Event
 #============================================================================
 # Component library building rule
 #============================================================================

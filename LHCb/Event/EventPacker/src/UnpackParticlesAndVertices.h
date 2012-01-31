@@ -12,6 +12,10 @@
 #include "Event/Vertex.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
+#include "Event/RecVertex.h"
+#include "Event/PackedRecVertex.h"
+#include "Kernel/Particle2LHCbIDs.h"
+#include "Event/PackedParticle2Ints.h"
 
 /** @class UnpackParticlesAndVertices UnpackParticlesAndVertices.h
  *   

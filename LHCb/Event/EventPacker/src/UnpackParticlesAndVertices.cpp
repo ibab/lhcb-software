@@ -43,7 +43,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
   
   int prevLink = -1;
   LHCb::Particles* parts = NULL;
-  LHCb::PackedParticles* pparts = get<LHCb::PackedParticles>( m_inputStream + "/PackedParticles" );
+  LHCb::PackedParticles* pparts = get<LHCb::PackedParticles>( m_inputStream + LHCb::PackedParticleLocation::InStream );
   for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
         pparts->data().end() != itP; ++itP ) {
     const LHCb::PackedParticle& ppart = *itP;
@@ -162,7 +162,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
   int nbVert = 0;
   prevLink = -1;
   LHCb::Vertices* verts = NULL;
-  LHCb::PackedVertices* pverts = get<LHCb::PackedVertices>( m_inputStream + "/PackedVertices" );
+  LHCb::PackedVertices* pverts = get<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream );
   for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
         pverts->data().end() != itV; ++itV ) {
     const LHCb::PackedVertex& pvert = *itV;
@@ -192,13 +192,74 @@ StatusCode UnpackParticlesAndVertices::execute() {
       vert->addToOutgoingParticles( ref );
     }
   }  
+
+  //=================================================================
+  //== Process the RecVertices
+  //=================================================================
+  int nbRecVertContainer = 0;
+  int nbRecVert = 0;
+  prevLink = -1;
+  LHCb::RecVertices* recVerts = NULL;
+  LHCb::PackedRecVertices* pRecVerts = get<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream );
+  for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
+        pRecVerts->vertices().end() != itV; ++itV ) {
+    const LHCb::PackedRecVertex& pRecVert = *itV;
+    int key    = pRecVert.key & 0x0000FFFF;
+    int linkID = pRecVert.key >> 16;
+    if ( linkID != prevLink ) {
+      prevLink = linkID;
+      std::string containerName = pRecVerts->linkMgr()->link( linkID )->path() + m_postFix;
+      recVerts = new LHCb::RecVertices();
+      put( recVerts, containerName );
+      nbRecVertContainer++;
+    }
+    //== Construct with RecVerticle ID and key.
+    LHCb::RecVertex* recVert = new LHCb::RecVertex( key );
+    recVerts->add( recVert );
+    nbRecVert++;
+    recVert->setTechnique( (LHCb::RecVertex::RecVertexType) pRecVert.technique );
+    recVert->setChi2AndDoF( m_pack.fltPacked( pRecVert.chi2), pRecVert.nDoF );
+    Gaudi::XYZPoint pos( m_pack.position( pRecVert.x ), m_pack.position( pRecVert.y ), 
+                         m_pack.position( pRecVert.z ) );
+    recVert->setPosition( pos );
+
+    // convariance Matrix
+    double err0 = m_pack.position( pRecVert.cov00 );
+    double err1 = m_pack.position( pRecVert.cov11 );
+    double err2 = m_pack.position( pRecVert.cov22 );
+    Gaudi::SymMatrix3x3  cov;
+    cov(0,0) = err0 * err0;
+    cov(1,0) = err1 * err0 * m_pack.fraction( pRecVert.cov10 );
+    cov(1,1) = err1 * err1;
+    cov(2,0) = err2 * err0 * m_pack.fraction( pRecVert.cov20 );
+    cov(2,1) = err2 * err1 * m_pack.fraction( pRecVert.cov21 );
+    cov(2,2) = err2 * err2;
+    recVert->setCovMatrix( cov );
+
+    //== Store the Tracks
+    int hintID;
+    int tKey;
+    for ( int kk = pRecVert.firstTrack; pRecVert.lastTrack > kk; ++kk ) {
+      const int trk = *(pRecVerts->beginRefs()+kk);
+      m_pack.hintAndKey( trk, pRecVerts, recVerts, hintID, tKey );
+      SmartRef<LHCb::Track> ref( recVerts, hintID, tKey );
+      recVert->addToTracks( ref );
+    }
+
+    //== Handles the ExtraInfo
+    for ( int kEx = pRecVert.firstInfo; pRecVert.lastInfo > kEx; ++kEx ) {
+      const std::pair<int,int>& info = *(pRecVerts->beginExtra()+kEx);
+      recVert->addInfo( info.first, m_pack.fltPacked( info.second ) );
+    }
+  }
+  
   //=================================================================
   //== Process the relations
   //=================================================================
   int nbRelContainer = 0;
   int nbRel = 0;
   RELATION* rels = NULL;
-  LHCb::PackedRelations* prels = get<LHCb::PackedRelations>( m_inputStream + "/PackedRelations" );
+  LHCb::PackedRelations* prels = get<LHCb::PackedRelations>( m_inputStream + LHCb::PackedRelationsLocation::InStream );
   for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
         prels->relations().end() != itR; ++itR ) {
     const LHCb::PackedRelation& prel = *itR;
@@ -238,10 +299,49 @@ StatusCode UnpackParticlesAndVertices::execute() {
       ++nbRel;
     }
   }
-  
+  //=================================================================
+  //== Process the Particle2LHCbID
+  //=================================================================
+  int nbPartIdContainer = 0;
+  int nbPartId = 0;
+  prevLink = -1;
+  DaVinci::Map::Particle2LHCbIDs* partIds = NULL;
+  LHCb::Particles* partContainer = NULL;
+  int prevPartLink = -1;
+  LHCb::PackedParticle2Ints* pPartIds = get<LHCb::PackedParticle2Ints>( m_inputStream + 
+                                                                        LHCb::PackedParticle2IntsLocation::InStream );
+  for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
+        pPartIds->relations().end() != itL; ++itL ) {
+    const LHCb::PackedParticle2Int& pPartId = *itL;
+    int linkID = pPartId.key >> 16;
+    if ( linkID != prevLink ) {
+      prevLink = linkID;
+      std::string containerName = pPartIds->linkMgr()->link( linkID )->path() + m_postFix;
+      partIds = new DaVinci::Map::Particle2LHCbIDs();
+      put( partIds, containerName );
+      nbPartIdContainer++;
+    }
+    nbPartId++;
+    int partLink = pPartId.container >> 16;
+    int partKey  = pPartId.container & 0xFFFF;
+    if ( partLink != prevPartLink ) {
+      prevPartLink = partLink;
+      std::string partName = pPartIds->linkMgr()->link( partLink )->path();
+      partContainer = get<LHCb::Particles>( partName );
+    }
+    LHCb::Particle* part = partContainer->object( partKey );
+    std::vector<LHCb::LHCbID> temp;
+    for ( int kk = pPartId.start; pPartId.end != kk; ++kk ) {
+      temp.push_back( LHCb::LHCbID( pPartIds->ints()[kk] ) );
+    }
+    partIds->insert( part, temp );
+  }  
+
   debug() << "== Retrieved " << nbPart << " Particles in " << nbContainer << " containers, "
-          << nbVert << " vertices in " << nbVertContainer << " containers and "
-          << nbRel << " relations in " << nbRelContainer << " containers."
+          << nbVert << " vertices in " << nbVertContainer << " containers, "
+          << nbRecVert << " RecVerticess in " << nbRecVertContainer << " containers,"
+          << nbRel << " relations in " << nbRelContainer << " containers, "
+          << nbPartId << " Part-LHCbID in " << nbPartIdContainer << " containers, "
           <<endmsg;
   return StatusCode::SUCCESS;
 }

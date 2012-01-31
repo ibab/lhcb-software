@@ -4,6 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Olivier Callot
+ - Implement the option "DeleteInput" in PackParticleAndVertices
+ - Selection of containers by class ID in PackParticleAndVertices
+ - Packing of RecVertices (primary) and Particle2LHCbID map
+ - Option "ListRemaining" to list the containers in the input stream after
+   execution of PackParticleAndVertices
+
 ! 2012-01-30 - Chris Jones
  - Implement the option "DeleteInput" in the packers used in the stripping.
    If True, the input data objects will be deleted after a successful packing.
