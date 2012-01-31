@@ -330,7 +330,9 @@ StatusCode HltBufferedIOReader::run()   {
 	  m_current = "";
 	  continue;
 	}
-	status = m_producer->spaceRearm(sizeof(MEPEVENT)+evt_size);
+	// Careful here: sizeof(int) MUST match me->sizeOf() !
+	// The problem is that we do not (yet) have a valid data pointer!
+	status = m_producer->spaceRearm(sizeof(MEPEVENT)+sizeof(int)+evt_size);
 	if ( status == MBM_NORMAL )  {
 	  static int id = -1;
 	  MBM::EventDesc& dsc = m_producer->event();

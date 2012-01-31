@@ -93,6 +93,9 @@ int GaudiTask::execRunable(void* arg)  {
     //::Py_Finalize();
     return ret;
   }
+  catch(const exception& e) {
+    cout << "Exception while running main thread:" << e.what() << endl;
+  }
   catch(...) {
     cout << "Exception while running main thread." << endl;
   }
