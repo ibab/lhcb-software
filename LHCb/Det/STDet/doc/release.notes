@@ -3,6 +3,7 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!========================= STDet v4r27 2012-01-31 ========================
 ! 2011-12-20 - Marco Cattaneo
  - Fix headers include recursions, Coverity defects 15534 to 15544
 
