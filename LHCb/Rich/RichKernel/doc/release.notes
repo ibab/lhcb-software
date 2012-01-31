@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!========================= RichKernel v7r48 2012-01-31 =========================
 ! 2012-01-26 - Chris Jones
  - Add some protection against calling primaryID() on an empty 
    HPDPixelCluster object.
