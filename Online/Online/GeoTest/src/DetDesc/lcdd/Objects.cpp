@@ -169,19 +169,18 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
 }
 
 void LimitSet::addLimit(const RefElement& limit)   {
-  TObject* obj = limit.ptr();
-  TMap*    map = dynamic_cast<TMap*>(m_element);
-  map->Add(obj,obj);
+  data<TMap>->Add(limit,limit);
 }
 
 /// Constructor to be used when creating a new DOM tree
 Region::Region(LCDD& /* lcdd */, const string& name)   {
-  assign(new Value<TNamed,Object>(), name, "region");
-  data<Object>()->Attr_store_secondaries = false;
-  data<Object>()->Attr_threshold = 10.0;
-  data<Object>()->Attr_lunit = "mm";
-  data<Object>()->Attr_eunit = "MeV";
-  data<Object>()->Attr_cut = 10.0;
+  Value<TNamed,Object>* p = Value<TNamed,Object>();
+  assign(p, name, "region");
+  p->Attr_store_secondaries = false;
+  p->Attr_threshold = 10.0;
+  p->Attr_lunit = "mm";
+  p->Attr_eunit = "MeV";
+  p->Attr_cut = 10.0;
 }
 
 Region& Region::setStoreSecondaries(bool value)  {

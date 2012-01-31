@@ -94,7 +94,8 @@ namespace DetDesc {
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
       //operator RefElement_type<TNamed>() const { return RefElement_type<TNamed>(this->m_element); }
-      Implementation* operator->() const { return this->m_element; }
+      Implementation* operator->() const { return this->m_element;    }
+      operator Implementation& ()  const { return *(this->m_element); }
     };
 
     template <> struct RefElement_type<TNamed> : public Element_type<TNamed>  {

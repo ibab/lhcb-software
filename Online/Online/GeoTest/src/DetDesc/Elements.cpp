@@ -181,6 +181,8 @@ INSTANTIATE(TGeoGenTrans);
 #include "TGeoCone.h"
 #include "TGeoArb8.h"
 #include "TGeoTrd2.h"
+#include "TGeoSphere.h"
+#include "TGeoTorus.h"
 #include "TGeoBoolNode.h"
 #include "TGeoVolume.h"
 #include "TGeoCompositeShape.h"
@@ -193,4 +195,7 @@ INSTANTIATE(TGeoTubeSeg);
 INSTANTIATE(TGeoTrap);
 INSTANTIATE(TGeoTrd2);
 INSTANTIATE(TGeoCone);
+INSTANTIATE(TGeoSphere);
+INSTANTIATE(TGeoTorus);
+INSTANTIATE(TGeoShape);
 INSTANTIATE(TGeoCompositeShape);

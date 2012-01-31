@@ -29,20 +29,20 @@ namespace DetDesc  { namespace Geometry  {
 
 Volume::Volume(LCDD& lcdd, const string& name)    {
   m_element = new Value<TGeoVolume,Volume::Object>(name.c_str());
-  lcdd.addVolume(RefElement(m_element));
+  lcdd.addVolume(*this);
 }
 
 Volume::Volume(LCDD& lcdd, const string& name, const Solid& s, const Material& m) {
   m_element = new Value<TGeoVolume,Volume::Object>(name.c_str(),s._ptr<TGeoShape>());
   setMaterial(m);
-  lcdd.addVolume(RefElement(m_element));
+  lcdd.addVolume(*this);
 }
 
 void Volume::setMaterial(const Material& m)  const  {
   if ( m.isValid() )   {
     TGeoMedium* medium = m._ptr<TGeoMedium>();
     if ( medium )  {
-      (*this)->SetMedium(medium);
+      m_element->SetMedium(medium);
       return;
     }
     throw runtime_error("Volume: Medium "+string(m.name())+" is not registered with geometry manager.");
@@ -51,40 +51,29 @@ void Volume::setMaterial(const Material& m)  const  {
 }
 
 void Volume::setSolid(const Solid& solid)  const  {
-  _ptr<TGeoVolume>()->SetShape(solid._ptr<TGeoShape>());
+  m_element->SetShape(solid);
 }
 
 void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotation& rot)  const  {
-  Volume vol(volume);
-  TGeoVolume* phys_vol = vol;
-  TGeoVolume* log_vol  = _ptr<TGeoVolume>();
-  if ( phys_vol )   {
-    TGeoTranslation* t = pos._ptr<TGeoTranslation>();
-    TGeoRotation*    r = rot._ptr<TGeoRotation>();
-    TGeoCombiTrans*  c = new TGeoCombiTrans(*t,*r);
-    log_vol->AddNode(phys_vol, --unique_physvol_id, c);
+  if ( volume.isValid() )   {
+    TGeoCombiTrans*  c = new TGeoCombiTrans(pos,rot);
+    m_element->AddNode(volume, --unique_physvol_id, c);
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
 void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  const  {
-  Volume vol(volume);
-  TGeoVolume* phys_vol = vol;
-  TGeoVolume* log_vol  = _ptr<TGeoVolume>();
-  if ( phys_vol )   {
-    log_vol->AddNode(phys_vol, --unique_physvol_id, matrix.ptr());
+  if ( volume.isValid() )   {
+    m_element->AddNode(volume.ptr(), --unique_physvol_id, matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
 void Volume::addPhysVol(const PhysVol& volume, const Position& matrix)  const  {
-  Volume vol(volume);
-  TGeoVolume* phys_vol = vol;
-  TGeoVolume* log_vol  = _ptr<TGeoVolume>();
-  if ( phys_vol )   {
-    log_vol->AddNode(phys_vol, --unique_physvol_id, matrix.ptr());
+  if ( volume.isValid() )   {
+    m_element->AddNode(volume.ptr(), --unique_physvol_id, matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
@@ -103,28 +92,26 @@ void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
 }
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
-  TGeoVolume* vol = *this;
-  Object*     val = data<Object>();
   if ( attr.isValid() )  {
     VisAttr::Object* vis = attr.data<VisAttr::Object>();
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
-    vol->SetFillColor(bright);
-    vol->SetLineColor(dark);
-    vol->SetLineStyle(vis->lineStyle);
-    vol->SetLineWidth(10);
-    vol->SetVisibility(vis->visible ? kTRUE : kFALSE);
-    vol->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
+    m_element->SetFillColor(bright);
+    m_element->SetLineColor(dark);
+    m_element->SetLineStyle(vis->lineStyle);
+    m_element->SetLineWidth(10);
+    m_element->SetVisibility(vis->visible ? kTRUE : kFALSE);
+    m_element->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
   //#if 0
   // debug only, but if removed, does not plot nicely anymore....
-  vol->SetVisibility(kTRUE);
-  vol->SetVisDaughters(kTRUE);
-  vol->SetVisLeaves(kTRUE);
-  vol->SetVisContainers(kTRUE);
-  vol->SetTransparency(30);
+  m_element->SetVisibility(kTRUE);
+  m_element->SetVisDaughters(kTRUE);
+  m_element->SetVisLeaves(kTRUE);
+  m_element->SetVisContainers(kTRUE);
+  m_element->SetTransparency(30);
   //#endif
-  val->Attr_vis = attr;
+  data<Object>()->Attr_vis = attr;
 }
 
 Solid Volume::solid() const   {

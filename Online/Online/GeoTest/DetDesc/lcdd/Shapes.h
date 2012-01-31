@@ -84,7 +84,7 @@ namespace DetDesc {
       /// Overloaded operator -> to access underlying object
       Implementation* operator->() const   { return this->m_element; }
     };
-    typedef Solid_type<TObject> Solid;
+    typedef Solid_type<TGeoShape> Solid;
 
 
     struct Box : public Solid_type<TGeoBBox>  {

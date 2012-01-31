@@ -77,16 +77,16 @@ namespace DetDesc {
       RefElement sensitiveDetector() const;
       Region region() const;
       /// Auto conversion to underlying ROOT object
-      operator TGeoVolume*() const     { return m_element; } //_ptr<TGeoVolume>(); }
-      /// Overloaded operator -> to access underlying object
-      TGeoVolume* operator->() const   { return m_element; } //_ptr<TGeoVolume>(); }
+      operator TGeoVolume*() const     { return m_element; }
     };
 
     struct PhysVol : RefElement_type<TGeoVolume> {
       /// Constructor to be used when reading the already parsed DOM tree
       template <class T> PhysVol(const Element_type<T>& e) : RefElement_type<TGeoVolume>(e) {}
-      
+      /// Add identifier
       PhysVol& addPhysVolID(const std::string& name, int value);
+      /// Auto conversion to underlying ROOT object
+      operator TGeoVolume*() const     { return m_element; }
     };
   }       /* End namespace Geometry           */
 }         /* End namespace DetDesc            */

@@ -166,35 +166,35 @@ Trapezoid& Trapezoid::setDimensions(double x1, double x2, double y1, double y2, 
 }
 
 Trapezoid& Trapezoid::setX1(double value)  {
-  TGeoTrd2* s = *this;
+  TGeoTrd2* s = m_element;
   double params[] = {value,s->GetDx2(),s->GetDy1(),s->GetDy2(),s->GetDz()};
   _setDimensions(params);
   return *this;
 }
 
 Trapezoid& Trapezoid::setX2(double value)  {
-  TGeoTrd2* s = *this;
+  TGeoTrd2* s = m_element;
   double params[] = {s->GetDx2(),value,s->GetDy1(),s->GetDy2(),s->GetDz()};
   _setDimensions(params);
   return *this;
 }
 
 Trapezoid& Trapezoid::setY1(double value)  {
-  TGeoTrd2* s = *this;
+  TGeoTrd2* s = m_element;
   double params[] = {s->GetDx1(),s->GetDx2(),value,s->GetDy2(),s->GetDz()};
   _setDimensions(params);
   return *this;
 }
 
 Trapezoid& Trapezoid::setY2(double value)  {
-  TGeoTrd2* s = *this;
+  TGeoTrd2* s = m_element;
   double params[] = {s->GetDx1(),s->GetDx2(),s->GetDy1(),value,s->GetDz()};
   _setDimensions(params);
   return *this;
 }
 
 Trapezoid& Trapezoid::setZ(double value)  {
-  TGeoTrd2* s = *this;
+  TGeoTrd2* s = m_element;
   double params[] = {s->GetDx1(),s->GetDx2(),s->GetDy1(),s->GetDy2(),value};
   _setDimensions(params);
   return *this;
@@ -266,35 +266,26 @@ SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& 
 /// Constructor to be used when creating a new object
 SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
 {
-  string combi1 = name+"_combitrans_first";
-  string combi2 = name+"_combitrans_first";
-  TGeoTranslation* t = pos._ptr<TGeoTranslation>();
-  TGeoRotation*    r = rot._ptr<TGeoRotation>();
-  //const double*  v = t->GetTranslation();
-
   TGeoTranslation* firstPos = new TGeoTranslation(0,0,0);
   TGeoRotation*    firstRot = new TGeoRotation();
   firstRot->RotateZ(0);
   firstRot->RotateY(0);
   firstRot->RotateX(0);
 
-  TGeoMatrix* firstMatrix  = new TGeoCombiTrans(*firstPos,firstRot->Inverse());
-  TGeoMatrix* secondMatrix = new TGeoCombiTrans(*t,r->Inverse());
-  TGeoCompositeShape* composite = 
-    new TGeoCompositeShape(name.c_str(),
-                           new TGeoSubtraction(shape1._ptr<TGeoShape>(),
-					       shape2._ptr<TGeoShape>(),
-                                               firstMatrix,secondMatrix));
+  TGeoMatrix* firstMat  = new TGeoCombiTrans(*firstPos,firstRot->Inverse());
+  TGeoMatrix* secondMat = new TGeoCombiTrans(pos,rot->Inverse());
+  TGeoSubtraction* sub = new TGeoSubtraction(shape1,shape2,firstMat,secondMat);
+  TGeoCompositeShape* composite = new TGeoCompositeShape(name.c_str(),sub);
   composite->ComputeBBox();
   _assign(lcdd, composite, "", "subtraction");
 }
 
-//  template class DetDesc::Geometry::Element_type<X>;
-//  template class DetDesc::Geometry::RefElement_type<X>;
-
 #define INSTANTIATE(X)  \
   template class DetDesc::Geometry::Solid_type<X>
 
+#include "TGeoSphere.h"
+#include "TGeoTorus.h"
+INSTANTIATE(TGeoShape);
 INSTANTIATE(TGeoBBox);
 INSTANTIATE(TGeoPcon);
 INSTANTIATE(TGeoPgon);
@@ -304,4 +295,6 @@ INSTANTIATE(TGeoTrap);
 INSTANTIATE(TGeoTrd2);
 INSTANTIATE(TGeoCone);
 INSTANTIATE(TGeoCompositeShape);
+INSTANTIATE(TGeoSphere);
+INSTANTIATE(TGeoTorus);
 
