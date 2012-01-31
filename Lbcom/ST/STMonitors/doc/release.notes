@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!========================= STMonitors v3r7p2 2012-01-31 =========================
 ! 2012-01-17 - Marco Cattaneo
  - Fix UNINIT_CTOR Coverity warnings
 
