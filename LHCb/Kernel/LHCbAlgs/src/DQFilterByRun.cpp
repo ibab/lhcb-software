@@ -1,17 +1,18 @@
-#include "DQFilter.h"
+#include "DQFilterByRun.h"
 
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "DetDesc/Condition.h"
 
-DQFilter::DQFilter(const std::string & name, ISvcLocator *pSvcLocator):
-  base_class(name, pSvcLocator), m_filter("BasicDQFilter", this), m_bad(false)
+DQFilterByRun::DQFilterByRun(const std::string & name, ISvcLocator *pSvcLocator):
+  base_class(name, pSvcLocator), m_filter("BasicDQFilter", this),
+  m_scanner("CondDBDQScanner", this), m_bad(false)
 {
   declareProperty("ConditionPath",
-                  m_condPath = "Conditions/DQ/Flags",
-                  "Path in the Detector Transient Store where to find the Data "
-                  "Quality condition.");
+                  m_condPath = "Conditions/Online/LHCb/RunParameters",
+                  "Path in the Detector Transient Store where to find the run "
+                  "condition.");
   declareProperty("UseBeginEvent",
                   m_beginEvent = true,
                   "If set to true, the filtering is done at the level of the "
@@ -19,15 +20,18 @@ DQFilter::DQFilter(const std::string & name, ISvcLocator *pSvcLocator):
   declareProperty("Filter",
                   m_filter,
                   "IDQFilter Tool defining the acceptance rules.");
+  declareProperty("Scanner",
+                  m_scanner,
+                  "IDQScanner Tool defining the acceptance rules.");
 }
 
 
-StatusCode DQFilter::initialize()
+StatusCode DQFilterByRun::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
 
-  registerCondition(m_condPath, m_flags, &DQFilter::i_checkFlags);
+  registerCondition(m_condPath, m_run, &DQFilterByRun::i_checkFlags);
 
   // We must register to the UMS *before* registering to IncidentSvc to
   // have the correct order of calls.
@@ -42,15 +46,16 @@ StatusCode DQFilter::initialize()
   }
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << "DQFilter/" << name() << " initialized:" << endmsg;
+    debug() << "DQFilterByRun/" << name() << " initialized:" << endmsg;
     debug() << "  using condition at '" << m_condPath << "'" << endmsg;
     debug() << "  filtering on " << ((m_beginEvent) ? "BeginEvent" : "execute") << endmsg;
     debug() << "  using " << m_filter.typeAndName() << endmsg;
+    debug() << "  on the results of " << m_scanner.typeAndName() << endmsg;
   }
   return sc;
 }
 
-StatusCode DQFilter::execute()
+StatusCode DQFilterByRun::execute()
 {
   // Print the message only if we do not use the BeginEvent incident
   // otherwise it gets printed twice for good events.
@@ -63,7 +68,7 @@ StatusCode DQFilter::execute()
 }
 
 
-StatusCode DQFilter::finalize()
+StatusCode DQFilterByRun::finalize()
 {
   if (m_incSvc) {
     m_incSvc->removeListener(this, IncidentType::BeginEvent);
@@ -74,21 +79,21 @@ StatusCode DQFilter::finalize()
   return GaudiAlgorithm::finalize();
 }
 
-StatusCode DQFilter::i_checkFlags()
+StatusCode DQFilterByRun::i_checkFlags()
 {
-  if(UNLIKELY(msgLevel(MSG::VERBOSE)))
-    verbose() << "Updating Data Quality flags" << endmsg;
-
-  const IDQFilter::FlagsType& flags = m_flags->param<IDQFilter::FlagsType>("map");
   if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-      verbose() << "-> " << flags << endmsg;
+    verbose() << "Updating Data Quality flags for run " << m_run->param<int>("RunNumber") << endmsg;
+
+  const IDQFilter::FlagsType& flags = m_scanner->scan(m_run->validSince(), m_run->validTill());
+  if (UNLIKELY(msgLevel(MSG::VERBOSE)))
+    verbose() << "-> " << flags << endmsg;
 
   m_bad = !m_filter->accept(flags);
   // we successfully updated the m_bad state
   return StatusCode::SUCCESS;
 }
 
-void DQFilter::handle(const Incident&) {
+void DQFilterByRun::handle(const Incident&) {
   if (msgLevel() <= MSG::VERBOSE) {
     verbose() << "Handling incident: "
               << ((m_bad) ? "bad" : "good") << " event" << endmsg;
@@ -100,4 +105,4 @@ void DQFilter::handle(const Incident&) {
 }
 
 #include "GaudiKernel/AlgFactory.h"
-DECLARE_ALGORITHM_FACTORY( DQFilter )
+DECLARE_ALGORITHM_FACTORY( DQFilterByRun )

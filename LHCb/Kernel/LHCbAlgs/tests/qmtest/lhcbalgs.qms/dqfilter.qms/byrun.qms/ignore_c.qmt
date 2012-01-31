@@ -1,0 +1,96 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           DQFilterByRun, EventCountAlg, GaudiSequencer)
+from Configurables import DetCondTest__TestConditionAlg as TestCond
+DDDBConf()
+
+conddb = CondDB()
+conddb.addAlternative(path = "/Conditions/DQ", dbFile = "../data/DQFLAGS.db")
+conddb.addAlternative(path = "/Conditions/Online/LHCb/RunParameters", dbFile = "../data/DQFLAGS.db")
+
+ecs = EventClockSvc()
+ecs.addTool(FakeEventTime, "EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = 4e9 # seconds
+ecs.EventTimeDecoder.TimeStep =  5e9
+
+dqf = DQFilterByRun(OutputLevel = VERBOSE)
+dqf.Filter.IgnoredFlags = ["MyDet", "otherdet"]
+#dqf.Scanner.OutputLevel = VERBOSE
+dqf.Scanner.ConditionPath = "/Conditions/DQ/Flags.xml" # path in the DB
+
+testCond = TestCond("TestCond")
+testCond.Conditions = [ "Conditions/DQ/Flags" ]
+
+app = ApplicationMgr()
+app.TopAlg = [ GaudiSequencer(Members = [dqf,
+		                         #testCond,
+		                         EventCountAlg()]) ]
+app.EvtSel = "NONE"
+app.EvtMax = 10
+
+#MessageSvc(OutputLevel = 1)
+</text></argument>
+<argument name="validator"><text>
+
+expected = {
+            "filtering on BeginEvent": 1,
+            "Updating Data Quality flags": 4,
+            "good event": 10,
+            "bad event": 0,
+            "Ignoring flag: OtherDet": 2,
+            "Ignoring flag: MyDet": 1,
+           }
+
+exp_eff = (10, 10)
+
+########
+
+import re, string
+from pprint import pformat
+
+def count(keys, lines):
+    """Helper function to count how many times a substring is found in a list of strings.
+    """
+    result = dict(zip(keys, [0] * len(keys)))
+    for l in lines:
+        for k in keys:
+            if k in l:
+                result[k] += 1
+                continue
+    return result
+
+## Check DQFilter messages
+dqf = re.compile(r"^DQFilter")
+lines = [ l.rstrip() for l in stdout.splitlines() if dqf.match(l) ]
+
+counts = count(expected.keys(), lines)
+
+result["GaudiTest.DQFilterOut.expected"] = result.Quote(pformat(expected))
+
+failed = cmpTreesDicts(expected, counts)
+if failed:
+    causes.append("DQFilter output")
+    result["GaudiTest.DQFilterOut.found"] = result.Quote(pformat(counts))
+    msg = "%s: %s != %s" % getCmpFailingValues(expected, counts, failed)
+    result["GaudiTest.DQFilterOut.failure_on"] = result.Quote(msg)
+
+## Check computed efficiency
+eff = None
+for l in stdout.splitlines():
+    if '"efficiency"' in l:
+        eff = filter(None, map(string.strip, l.split("|")))
+        eff = tuple(map(int,eff[1:3]))
+        break
+
+result["GaudiTest.efficiency.expected"] = result.Quote(pformat(exp_eff))
+
+if eff != exp_eff:
+    causes.append("efficiency")
+    result["GaudiTest.efficiency.found"] = result.Quote(pformat(eff))
+
+</text></argument>
+</extension>

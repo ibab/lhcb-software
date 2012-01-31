@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Marco Clemencic
+ - Added the algorithm DQFilterByRun. It is equivalent to DQFilter, but rejects
+   all the events belonging to a run with bad DQ Flags (use IDQFilter and
+   IDQScanner instances).
+ - Added tests for DQFilterByRun.
+
 !========================= LHCbAlgs v2r47 2012-01-31 =========================
 ! 2012-01-31 - Chris Jones
  - Add new algorithm EmptyEventNodeCleaner that searches the TES for empty 
