@@ -58,8 +58,6 @@ namespace DetDesc { namespace Geometry {
       Rotation    part_rot(lcdd,part_nam+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());
       Volume      part_vol(lcdd,part_nam,part_tub,part_mat);
 
-      lcdd.add(part_pos).add(part_rot);
-
       part_det.setVolume(part_vol).setEnvelope(part_tub);
       part_det.setVisAttributes(lcdd,px_det.visStr(),part_vol);
 

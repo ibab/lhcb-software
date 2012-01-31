@@ -64,21 +64,24 @@ Transformation::Transformation(LCDD& /*lcdd*/, const std::string& name)
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Position::Position(LCDD& /* lcdd */, const std::string& name, double x, double y, double z)
+Position::Position(LCDD& lcdd, const std::string& name, double x, double y, double z)
 {
   assign(new TGeoTranslation(x,y,z),name,"position");
+  lcdd.addPosition(*this);
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(LCDD& /* lcdd */, const std::string& name, double x, double y, double z)
+Rotation::Rotation(LCDD& lcdd, const std::string& name, double x, double y, double z)
 {
   assign(new TGeoRotation(name.c_str(),x*RAD_2_DEGREE,y*RAD_2_DEGREE,z*RAD_2_DEGREE),"","rotation");
+  lcdd.addRotation(*this);
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(LCDD& /* lcdd */, const std::string& name)
+Rotation::Rotation(LCDD& lcdd, const std::string& name)
 {
   assign(new TGeoRotation(name.c_str(),0,0,0),"","rotation");
+  lcdd.addRotation(*this);
 }
 
 /// Constructor to be used when creating a new DOM tree

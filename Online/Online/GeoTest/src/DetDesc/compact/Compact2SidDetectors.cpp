@@ -126,7 +126,6 @@ namespace DetDesc { namespace Geometry {
     Volume      vol    (lcdd,name,tub,mat);
 
     sdet.setVolume(vol).setEnvelope(tub);
-    lcdd.add(pos).add(rot);
     sdet.setVisAttributes(lcdd, x_det.visStr(), vol);
     //sdet.setVisAttributes(lcdd, "GreenVis", vol);
 
@@ -485,7 +484,6 @@ namespace DetDesc { namespace Geometry {
     PolyhedraBarrelCalorimeter2 sdet(lcdd,det_name,det_type,x_det.id());
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
 
-    lcdd.add(rot);
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t x_layer = c;
       int repeat = x_layer.repeat();
@@ -539,8 +537,6 @@ namespace DetDesc { namespace Geometry {
 	// Layer volume. 
 	Volume layer_volume(lcdd,layer_name,layer_box,air);
 
-	lcdd.add(layer_position);
-
 	// Create the slices (sublayers) within the layer.
 	double slice_position_z = -(layer_thickness / 2);
 	int slice_number = 0;
@@ -556,8 +552,6 @@ namespace DetDesc { namespace Geometry {
 	  Position slice_position(lcdd,slice_name+"_position",0,0,slice_position_z);
 	  // Slice box. 
 	  Box slice_box(lcdd,slice_name + "_box",layer_dim_x,detZ,slice_thickness);
-
-	  lcdd.add(slice_position);
 
 	  // Slice volume.
 	  Volume slice_volume(lcdd,slice_name,slice_box,slice_material);
@@ -670,7 +664,6 @@ namespace DetDesc { namespace Geometry {
       //Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),0,0,0);
       Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0.);
       //Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),M_PI/2.,M_PI/2.,0.);
-      lcdd.add(position).add(rotation);
       cout << position.name() << ": " << posX << " " << posY << endl;
 
       //PhysVol sectPhysVol(lcdd,sectVolume,nam+_toString(module,"_module%d"));
@@ -733,9 +726,6 @@ namespace DetDesc { namespace Geometry {
     // Rotation of outgoing beampipe.
     Rotation beamOutRot(lcdd,det_name + "_subtraction2_tube_rot",0,-xangleHalf,0);
 
-    lcdd.add(beamInPos).add(beamInRot);
-    lcdd.add(beamOutPos).add(beamOutRot);
-
     // First envelope bool subtraction of incoming beampipe.
     SubtractionSolid envelopeSubtraction1(lcdd,det_name+"_subtraction1_tube",
 					  envelopeTube,beamInTube,beamInPos,beamInRot);
@@ -769,8 +759,6 @@ namespace DetDesc { namespace Geometry {
 	Position layerSubtraction1Pos(lcdd,layer_nam + "_subtraction1_pos", layerPosX,0,0);
 	Position layerSubtraction2Pos(lcdd,layer_nam + "_subtraction2_pos",-layerPosX,0,0);
 
-	lcdd.add(layerSubtraction1Pos).add(layerSubtraction2Pos);
-
 	SubtractionSolid layerSubtraction1(lcdd,layer_nam + "_subtraction1",
 					   layerTube,beamInTube,layerSubtraction1Pos,beamInRot);
 	// Second layer subtraction solid.
@@ -801,8 +789,6 @@ namespace DetDesc { namespace Geometry {
 	  double slicePosX    = tan(xangleHalf) * sliceGlobalZ;
 	  Position sliceSubtraction1Pos(lcdd,slice_nam + "_subtraction1_pos",slicePosX,0,0);
 	  Position sliceSubtraction2Pos(lcdd,slice_nam + "_subtraction2_pos",-slicePosX,0,0);
-
-	  lcdd.add(sliceSubtraction1Pos).add(sliceSubtraction2Pos);
 
 	  // First slice subtraction solid.
 	  SubtractionSolid sliceSubtraction1(lcdd,slice_nam + "_subtraction1",
@@ -934,8 +920,6 @@ namespace DetDesc { namespace Geometry {
 	Rotation  rot(lcdd, c_name+"_rotation");
 
 	component.setVolume(vol).setEnvelope(trd);
-	lcdd.add(pos).add(rot);
-
 	vol.setVisAttributes(lcdd.visAttributes(c.visStr()));
 
 	PhysVol   phv(vol);
@@ -998,7 +982,6 @@ namespace DetDesc { namespace Geometry {
       Volume      suppvol   (lcdd,layername+"_supp_volume",    suppbox,supp_mat);
       Position    supppos   (lcdd,layername+"_supp_position",-(sens_thick+supp_thick)/2.+sens_thick/2.+supp_thick/2.,0,0);
 
-      lcdd.add(senspos).add(supppos);
       TGeoBBox* bbox = suppbox;
       laddervol.setVisAttributes(lcdd.visAttributes(x_layer.visStr()));
       // Cannot set the lower ones seperately
@@ -1018,10 +1001,6 @@ namespace DetDesc { namespace Geometry {
 	Position pos(lcdd,laddername+"_position",
 		     radius*cos(j*dphi) - offset*sin(j*dphi),
 		     radius*sin(j*dphi) - offset*cos(j*dphi),0.);
-
-	lcdd.add(rot).add(pos);
-	//PhysVol     ladder_physvol(lcdd,laddervol,laddername+"_physvol");
-	//mother.addPhysVol(ladder_physvol,pos,rot);
 	mother.addPhysVol(laddervol,pos,rot);
       }
       vxd.setVisAttributes(lcdd, x_det.visStr(),laddervol);

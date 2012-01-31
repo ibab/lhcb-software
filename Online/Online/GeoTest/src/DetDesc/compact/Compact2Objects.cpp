@@ -347,6 +347,7 @@ namespace DetDesc { namespace Geometry {
     lcdd.endDocument();
   }
 }}
+
 #ifdef _WIN32
 template Converter<Atom>;
 template Converter<Compact>;

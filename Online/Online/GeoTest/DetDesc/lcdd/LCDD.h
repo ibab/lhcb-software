@@ -85,11 +85,13 @@ namespace DetDesc {
       //virtual LCDD& add(const Volume& vol) = 0;
       virtual LCDD& add(const Material& mat) = 0;
       virtual LCDD& add(const VisAttr& attr) = 0;
-      virtual LCDD& add(const Position& pos) = 0;
-      virtual LCDD& add(const Rotation& rot) = 0;
+      //virtual LCDD& add(const Position& pos) = 0;
+      //virtual LCDD& add(const Rotation& rot) = 0;
       virtual LCDD& add(const LimitSet& limset) = 0;
       virtual LCDD& add(const Subdetector& detector) = 0;
 
+      virtual LCDD& addPosition(const RefElement& element) = 0;
+      virtual LCDD& addRotation(const RefElement& element) = 0;
       virtual LCDD& addIDSpec(const RefElement& element) = 0;
       virtual LCDD& addConstant(const RefElement& element) = 0;
       virtual LCDD& addMaterial(const RefElement& element) = 0;
