@@ -6,6 +6,51 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v12r0>2012-02-01 LbcomSys v12r0</A></H1><PRE>
+This version uses Gaudi v23r0 and LHCb v34r0
+
+- Development release in preparation for 2012 data taking
+
+- Packages updated: L0/L0DU v10r17p1, L0/L0MuonMonitor v2r2p1,
+    OT/OTMonitor v3r3p1, Rich/RichDAQ v3r36, ST/STCheckers v3r3p1,
+    ST/STMonitors v3r7p2, Velo/VeloAlgorithms v5r6, Velo/VeloSimulation v3r12
+
+- In L0DU v10r17p1, L0MuonMonitor v2r2p1, STMonitors v3r7p2
+  . Remove unnecessary build dependency, fixes annoying warning from
+    SetupProject when working with LbcomSys against the nightlies
+
+- In L0MuonMonitor v2r2p1
+  . L0MuonOnlineMonitor.h: remove obsolete _ERROR_V2_ ifdef
+
+- In RichDAQ v3r36
+  . Don't throw an exception if an NULL pointer to a RICH bank is retrieved
+    from the the RawEvent (should never happen). Instead print an error and
+    continue.
+
+- In STCheckers v3r3p1
+  . Add a missing include following cleanup of STDet headers
+  . Fix unprotected debug()
+
+- In VeloAlgorithms v5r6
+  . Fixed warnings in ZS processing by commenting out definitions of unused
+    parameters 'loop_cnt' and 'boundary_strip'.
+  . Replace obsolete DeclareFactoryEntries.h include
+
+- In VeloSimulation v3r12
+  . Added simulation of intra-sensor crosstalk seen in R sensors in 2011 data
+    Requires updates to DeVelo in VeloDet v13r18. Necessary simulation conditions
+    are defined as from SIMCOND+DDDB tag velo-20120120, ignored otherwise 
+
+- In L0DU v10r17p1, L0MuonMonitor v2r2p1, OTMonitor v3r3p1, STCheckers v3r3p1,
+     STMonitors v3r7p2, VeloAlgorithms v5r6, VeloSimulation v3r12
+  . Fix trivial UNINIT_CTOR warnings
+
+- In L0DU v10r17p1, L0MuonMonitor v2r2p1, STCheckers v3r3p1, VeloSimulation v3r12
+  . Replace endreq by endmsg
+
+- In L0MuonMonitor v2r2p1, OTMonitor v3r3p1, VeloSimulation v3r12
+  . Fix trivial icc remarks
+
 </PRE><H1><A NAME=v11r2>2011-12-15 LbcomSys v11r2</A></H1><PRE>
 This version uses Gaudi v22r5 and LHCb v33r2
 
