@@ -3,8 +3,10 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloDet v10r13 2012-01-31 ==========================
 ! 2012-01-27 - Olivier Deschamps
- - DeCalorimeter & CellParam :  reset CellParam members to default value before updating condition (fix initialization problem depending on first loaded condition)
+ - DeCalorimeter & CellParam :  reset CellParam members to default value before
+   updating condition (fix initialization problem depending on first loaded condition)
 
 !========================= CaloDet v10r12 2011-09-15 =========================
 ! 2011-09-04 - Olivier Deschamps
