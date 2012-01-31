@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 // local
 #include "UnpackParticlesAndVertices.h"
@@ -20,9 +20,9 @@ DECLARE_ALGORITHM_FACTORY( UnpackParticlesAndVertices )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-UnpackParticlesAndVertices::UnpackParticlesAndVertices( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  UnpackParticlesAndVertices::UnpackParticlesAndVertices( const std::string& name,
+                                                          ISvcLocator* pSvcLocator)
+    : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputStream", m_inputStream = "/Event" );
   declareProperty( "PostFix",     m_postFix     = "" );
@@ -30,7 +30,7 @@ UnpackParticlesAndVertices::UnpackParticlesAndVertices( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-UnpackParticlesAndVertices::~UnpackParticlesAndVertices() {} 
+UnpackParticlesAndVertices::~UnpackParticlesAndVertices() {}
 
 //=============================================================================
 // Main execution
@@ -40,7 +40,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   int nbContainer = 0;
   int nbPart = 0;
-  
+
   int prevLink = -1;
   LHCb::Particles* parts = NULL;
   LHCb::PackedParticles* pparts = get<LHCb::PackedParticles>( m_inputStream + LHCb::PackedParticleLocation::InStream );
@@ -60,24 +60,24 @@ StatusCode UnpackParticlesAndVertices::execute() {
     LHCb::Particle* part = new LHCb::Particle( LHCb::ParticleID(ppart.particleID), key );
     parts->add( part );
     nbPart++;
-    
+
     // Mass and error
     part->setMeasuredMass   ( m_pack.mass(ppart.measMass) );
     part->setMeasuredMassErr( m_pack.mass(ppart.measMassErr) );
-    
+
     // Lorentz momentum vector
     const double pz   = m_pack.energy( ppart.lv_pz );
     const double px   = m_pack.slope( ppart.lv_px ) * pz;
     const double py   = m_pack.slope( ppart.lv_py ) * pz;
     const double mass = ppart.lv_mass;
-    part->setMomentum( Gaudi::LorentzVector( px, py, pz, 
+    part->setMomentum( Gaudi::LorentzVector( px, py, pz,
                                              std::sqrt(px*px+py*py+pz*pz+mass*mass) ) );
-    
+
     // reference point
     part->setReferencePoint( Gaudi::XYZPoint( m_pack.position(ppart.refx),
                                               m_pack.position(ppart.refy),
                                               m_pack.position(ppart.refz) ) );
-    
+
     // Mom Cov
     Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part->momCovMatrix()));
     const double merr00 = m_pack.slope( ppart.momCov00 ) * px;
@@ -94,7 +94,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
     momCov(3,0) = merr33*merr00 * m_pack.fraction( ppart.momCov30 );
     momCov(3,1) = merr33*merr11 * m_pack.fraction( ppart.momCov31 );
     momCov(3,2) = merr33*merr22 * m_pack.fraction( ppart.momCov32 );
-    
+
     // Pos Cov
     Gaudi::SymMatrix3x3 & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&part->posCovMatrix()));
     const double perr00 = m_pack.position( ppart.posCov00 );
@@ -106,7 +106,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
     posCov(1,0) = perr11*perr00 * m_pack.fraction( ppart.posCov10 );
     posCov(2,0) = perr22*perr00 * m_pack.fraction( ppart.posCov20 );
     posCov(2,1) = perr22*perr11 * m_pack.fraction( ppart.posCov21 );
-    
+
     // Pos Mom Cov
     Gaudi::Matrix4x3 & pmCov = *(const_cast<Gaudi::Matrix4x3*>(&part->posMomCovMatrix()));
     pmCov(0,0) = m_pack.fltPacked( ppart.pmCov00 );
@@ -121,7 +121,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
     pmCov(3,0) = m_pack.fltPacked( ppart.pmCov30 );
     pmCov(3,1) = m_pack.fltPacked( ppart.pmCov31 );
     pmCov(3,2) = m_pack.fltPacked( ppart.pmCov32 );
-    
+
     // extra info
     for ( int iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE ) {
       const LHCb::PackedParticles::PackedExtraInfo& pInfo =  pparts->extra()[iE];
@@ -143,16 +143,16 @@ StatusCode UnpackParticlesAndVertices::execute() {
       SmartRef<LHCb::ProtoParticle> ref(parts,hintID,key);
       part->setProto( ref );
     }
-    
+
     // daughters
-    
+
     for ( unsigned short int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD ) {
       const int & iD1 = pparts->daughters()[iiD];
       int hintID(0), key(0);
       m_pack.hintAndKeyLong( iD1, pparts, parts, hintID, key );
       SmartRef<LHCb::Particle> ref(parts,hintID,key);
       part->addToDaughters( ref );
-    }    
+    }
   }
 
   //=================================================================
@@ -191,7 +191,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
       SmartRef<LHCb::Particle> ref(verts,hintID,key);
       vert->addToOutgoingParticles( ref );
     }
-  }  
+  }
 
   //=================================================================
   //== Process the RecVertices
@@ -219,7 +219,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
     nbRecVert++;
     recVert->setTechnique( (LHCb::RecVertex::RecVertexType) pRecVert.technique );
     recVert->setChi2AndDoF( m_pack.fltPacked( pRecVert.chi2), pRecVert.nDoF );
-    Gaudi::XYZPoint pos( m_pack.position( pRecVert.x ), m_pack.position( pRecVert.y ), 
+    Gaudi::XYZPoint pos( m_pack.position( pRecVert.x ), m_pack.position( pRecVert.y ),
                          m_pack.position( pRecVert.z ) );
     recVert->setPosition( pos );
 
@@ -252,7 +252,7 @@ StatusCode UnpackParticlesAndVertices::execute() {
       recVert->addInfo( info.first, m_pack.fltPacked( info.second ) );
     }
   }
-  
+
   //=================================================================
   //== Process the relations
   //=================================================================
@@ -292,8 +292,8 @@ StatusCode UnpackParticlesAndVertices::execute() {
       if ( 0 != dynamic_cast<LHCb::RecVertices*>(dstContainer) ) {
         to = (dynamic_cast<LHCb::RecVertices*>(dstContainer))->object( dstKey );
       }
-      if ( NULL == to ) info() << "Unknown objec: Container type " << (dstContainer->clID()>>16) 
-                               << "+" << (dstContainer->clID()&0xFFFF) 
+      if ( NULL == to ) info() << "Unknown objec: Container type " << (dstContainer->clID()>>16)
+                               << "+" << (dstContainer->clID()&0xFFFF)
                                << " key " << dstKey << endmsg;
       rels->relate( from, to );
       ++nbRel;
@@ -308,8 +308,9 @@ StatusCode UnpackParticlesAndVertices::execute() {
   DaVinci::Map::Particle2LHCbIDs* partIds = NULL;
   LHCb::Particles* partContainer = NULL;
   int prevPartLink = -1;
-  LHCb::PackedParticle2Ints* pPartIds = get<LHCb::PackedParticle2Ints>( m_inputStream + 
-                                                                        LHCb::PackedParticle2IntsLocation::InStream );
+  LHCb::PackedParticle2Ints* pPartIds = 
+    get<LHCb::PackedParticle2Ints>( m_inputStream +
+                                    LHCb::PackedParticle2IntsLocation::InStream );
   for ( std::vector<LHCb::PackedParticle2Int>::iterator itL = pPartIds->relations().begin();
         pPartIds->relations().end() != itL; ++itL ) {
     const LHCb::PackedParticle2Int& pPartId = *itL;
@@ -335,14 +336,16 @@ StatusCode UnpackParticlesAndVertices::execute() {
       temp.push_back( LHCb::LHCbID( pPartIds->ints()[kk] ) );
     }
     partIds->insert( part, temp );
-  }  
+  }
 
-  debug() << "== Retrieved " << nbPart << " Particles in " << nbContainer << " containers, "
-          << nbVert << " vertices in " << nbVertContainer << " containers, "
-          << nbRecVert << " RecVerticess in " << nbRecVertContainer << " containers,"
-          << nbRel << " relations in " << nbRelContainer << " containers, "
-          << nbPartId << " Part-LHCbID in " << nbPartIdContainer << " containers, "
-          <<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "== Retrieved " << nbPart << " Particles in " << nbContainer << " containers, "
+            << nbVert << " vertices in " << nbVertContainer << " containers, "
+            << nbRecVert << " RecVerticess in " << nbRecVertContainer << " containers,"
+            << nbRel << " relations in " << nbRelContainer << " containers, "
+            << nbPartId << " Part-LHCbID in " << nbPartIdContainer << " containers, "
+            <<endmsg;
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================

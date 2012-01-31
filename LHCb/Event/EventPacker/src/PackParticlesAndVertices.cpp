@@ -1,12 +1,6 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/SmartIF.h"
-#include "Kernel/LHCbID.h"
-
 // local
 #include "PackParticlesAndVertices.h"
 
@@ -31,12 +25,13 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
   declareProperty( "ForceReading",       m_forceReading  = false     );
   declareProperty( "DeleteInput",        m_deleteInput   = false     );
   declareProperty( "ListRemaining",      m_listRemaining = false     );
+  declareProperty( "VetoedContainers",   m_vetoedConts  );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 PackParticlesAndVertices::~PackParticlesAndVertices() {}
-
 
 //=========================================================================
 //  Initializer: Set the class ids for the various types to be packed
@@ -52,8 +47,10 @@ StatusCode PackParticlesAndVertices::initialize( ) {
   m_clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
   m_clIdPart2Vert   = 0xEA9168DC;   // One of Vanya's relation, Particle to Vertex
   m_clIdPart2Ints   = 880; // Defined in the .cpp of this class!!!!
-  return StatusCode::SUCCESS;
+
+  return sc;
 }
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -67,10 +64,12 @@ StatusCode PackParticlesAndVertices::execute() {
   std::vector<DataObject*> toBeDeleted;
   if ( m_forceReading ) selectContainers( root, names, 0, true );  // fake class ID to get no container, but load.
 
-  if ( m_listRemaining ) {
+  if ( m_listRemaining ) 
+  {
     info() << "Initial objects are:" << endmsg;
     selectContainers( root, names, 0xFFFFFFFF );
   }
+
   selectContainers( root, names, m_clIdParticles );
   LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
   put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );  
@@ -141,13 +140,16 @@ StatusCode PackParticlesAndVertices::execute() {
   if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pPartIds->relations().size() << " packed Particle2Ints" << endmsg;
 
   //== Remove the converted containers if requested  
-  if ( m_deleteInput ) {
+  if ( m_deleteInput ) 
+  {
     for ( std::vector<DataObject*>::iterator itO = toBeDeleted.begin();
-          toBeDeleted.end() != itO; ++itO ) {
+          toBeDeleted.end() != itO; ++itO ) 
+    {
       evtSvc()->unregisterObject( *itO );
       delete *itO;
     }
   }
+
   if ( m_listRemaining ) {
     info() << "Deleted " << toBeDeleted.size() << " containers. Remaining objects are:" << endmsg;
     selectContainers( root, names, 0xFFFFFFFF );
@@ -159,31 +161,58 @@ StatusCode PackParticlesAndVertices::execute() {
 //=========================================================================
 // Select iteratively the containers ending with 'Prefix'
 //=========================================================================
-void PackParticlesAndVertices::selectContainers ( DataObject* obj, std::vector<std::string>& names, 
-                                                  unsigned int classID, bool forceRead ) {
+void PackParticlesAndVertices::selectContainers ( DataObject* obj, 
+                                                  std::vector<std::string>& names, 
+                                                  unsigned int classID,
+                                                  bool forceRead )
+{
   SmartIF<IDataManagerSvc> mgr( eventSvc() );
   typedef std::vector<IRegistry*> Leaves;
   Leaves leaves;
   StatusCode sc = mgr->objectLeaves( obj, leaves );
-  if ( sc ) {
-    for ( Leaves::const_iterator iL = leaves.begin(); leaves.end() != iL; ++iL) {
-      const std::string id = (*iL)->identifier();
-      DataObject* tmp;
-      if ( forceRead ) {
+  if ( sc ) 
+  {
+    for ( Leaves::const_iterator iL = leaves.begin(); leaves.end() != iL; ++iL ) 
+    {
+      const std::string& id = (*iL)->identifier();
+      DataObject* tmp(NULL);
+      if ( forceRead ) 
+      {
         sc = eventSvc()->retrieveObject( id, tmp );
-      } else {
+      }
+      else 
+      {
         sc = eventSvc()->findObject( id, tmp );
       }
-      if ( sc && NULL != tmp ) {
-        if ( 0xFFFFFFFF == classID ) {
-          if ( tmp->clID() != CLID_DataObject ) {
+      if ( sc && NULL != tmp ) 
+      {
+        if ( 0xFFFFFFFF == classID ) 
+        {
+          if ( tmp->clID() != CLID_DataObject ) 
+          {
             info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF ) 
                    << id << endmsg;
           }
         }
-        if ( tmp->clID() == classID ) {
-          if( msgLevel(MSG::DEBUG) ) info() << "Found container " << id << endmsg;
-          names.push_back( id );
+        if ( tmp->clID() == classID )
+        {
+          if ( msgLevel(MSG::DEBUG) ) 
+            debug() << "Found container " << id << endmsg;
+          
+          std::vector<std::string>::const_iterator iV = std::find( m_vetoedConts.begin(),
+                                                                   m_vetoedConts.end(),
+                                                                   id );
+          if ( iV == m_vetoedConts.end() )
+          {
+            if ( msgLevel(MSG::DEBUG) ) 
+              debug() << " --> Selected ... " << id << endmsg;
+            names.push_back( id );
+          }
+          else
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " --> VETO'ed ... " << id << endmsg;
+          }
         }
         selectContainers( tmp, names, classID, forceRead );
       }
@@ -304,7 +333,7 @@ void PackParticlesAndVertices::packAParticleContainer ( LHCb::Particles* parts,
     }
     ppart.lastDaughter = pparts.daughters().size();
   }
-  parts->registry()->setAddress( 0 );
+  if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
 }
 //=========================================================================
 //  Pack a container of vertices in the PackedVertices object
@@ -336,7 +365,7 @@ void PackParticlesAndVertices::packAVertexContainer ( LHCb::Vertices* verts,
     }
     pvert.lastOutgoingPart = pverts.outgoingParticles().size();    
   }
-  verts->registry()->setAddress( 0 );
+  if ( !m_deleteInput ) verts->registry()->setAddress( 0 );
 }
 //=========================================================================
 //  Pack a container of vertices in the PackedVertices object
@@ -357,7 +386,7 @@ void PackParticlesAndVertices::packARelationContainer ( RELATION* rels,
     prels.dests().push_back( dst );
   }
   prel.end       = prels.sources().size();
-  rels->registry()->setAddress( 0 );
+  if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
 }
 
 //=========================================================================
@@ -383,9 +412,9 @@ void PackParticlesAndVertices::packARecVertexContainer( LHCb::RecVertices* rVert
     pRVert.z          = m_pack.position( rVert.position().z() );
 
     // convariance Matrix
-    double err0 = sqrt( rVert.covMatrix()(0,0) );
-    double err1 = sqrt( rVert.covMatrix()(1,1) );
-    double err2 = sqrt( rVert.covMatrix()(2,2) );
+    double err0 = std::sqrt( rVert.covMatrix()(0,0) );
+    double err1 = std::sqrt( rVert.covMatrix()(1,1) );
+    double err2 = std::sqrt( rVert.covMatrix()(2,2) );
     
     pRVert.cov00 = m_pack.position( err0 );
     pRVert.cov11 = m_pack.position( err1 );
@@ -401,7 +430,7 @@ void PackParticlesAndVertices::packARecVertexContainer( LHCb::RecVertices* rVert
       SmartRef<LHCb::Track> refTr = (*itT);
       LinkManager::Link* myLink =  rVerts->linkMgr()->link( refTr.hintID() );
       if ( NULL != myLink ) {
-        std::string containerName = myLink->path();
+        const std::string & containerName = myLink->path();
         int myRef = m_pack.reference( &pRVerts, containerName, refTr.linkID() );
         pRVerts.addRef( myRef );
       }
@@ -418,9 +447,9 @@ void PackParticlesAndVertices::packARecVertexContainer( LHCb::RecVertices* rVert
   }
 
   // Clear the registry address of the unpacked container, to prevent reloading
-  rVerts->registry()->setAddress( 0 );
-  
+  if ( !m_deleteInput ) rVerts->registry()->setAddress( 0 );  
 }
+
 //=========================================================================
 //  Pack a container of vertices in the PackedVertices object
 //=========================================================================
@@ -433,16 +462,16 @@ void PackParticlesAndVertices::packAParticleLHCbIDContainer ( DaVinci::Map::Part
     LHCb::PackedParticle2Int& pPartId = pPartIds.relations().back();
     pPartId.key = m_pack.referenceLong( &pPartIds, partIds, kk );
     const LHCb::Particle* part = partIds->key_at(kk);
-    std::vector<LHCb::LHCbID> ids = partIds->value_at(kk);
+    const std::vector<LHCb::LHCbID> & ids = partIds->value_at(kk);
     // reference to original container and key
     pPartId.container = m_pack.referenceLong( &pPartIds, part->parent(), part->key() );
     pPartId.start     = pPartIds.ints().size();
-    for ( std::vector<LHCb::LHCbID>::iterator itId = ids.begin(); ids.end() != itId; ++itId ) {
+    for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); ids.end() != itId; ++itId ) {
       pPartIds.ints().push_back( (*itId).lhcbID() );
     }
     pPartId.end       = pPartIds.ints().size();
   }
-  partIds->registry()->setAddress( 0 );
+  if ( !m_deleteInput ) partIds->registry()->setAddress( 0 );
 }
 
 //=============================================================================
