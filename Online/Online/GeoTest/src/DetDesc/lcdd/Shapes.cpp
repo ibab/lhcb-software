@@ -47,13 +47,13 @@ void Solid_type<T>::_setDimensions(double* param) {
 
 /// Assign pointrs and register solid to geometry
 template<typename T> 
-void Solid_type<T>::_assign(LCDD& lcdd, T* n, const std::string& nam, const std::string& tit, bool cbbox) {
+void Solid_type<T>::_assign(LCDD& lcdd, T* n, const string& nam, const string& tit, bool cbbox) {
   assign(n,nam,tit);
   if ( cbbox ) n->ComputeBBox();
   lcdd.addSolid(Solid(this->ptr()));
 }
 
-void Box::make(LCDD& lcdd, const std::string& name, double x, double y, double z)  {
+void Box::make(LCDD& lcdd, const string& name, double x, double y, double z)  {
   _assign(lcdd,new TGeoBBox(x,y,z),name,"box");
 }
 
@@ -75,7 +75,7 @@ Polycone::Polycone(LCDD& lcdd, const string& name, double start, double delta)  
 }
 
 /// Constructor to be used when creating a new polycone object. Add at the same time all Z planes
-Polycone::Polycone(LCDD& lcdd, const std::string& name, double start, double delta, const vector<double>& rmin, const vector<double>& rmax, const vector<double>& z)
+Polycone::Polycone(LCDD& lcdd, const string& name, double start, double delta, const vector<double>& rmin, const vector<double>& rmax, const vector<double>& z)
 {
   vector<double> params;
   if ( rmin.size() < 2 )  {
@@ -251,11 +251,10 @@ BooleanSolid::BooleanSolid(LCDD& lcdd, const string& name, const string& type, c
 }
 
 /// Constructor to be used when creating a new object
-SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const std::string& expr)
+SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const string& expr)
   : BooleanSolid(lcdd, name, "subtraction", expr)
 {
 }
-
 
 /// Constructor to be used when creating a new DOM tree
 SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& shape1, const Solid& shape2)
@@ -264,20 +263,19 @@ SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& 
 }
 
 /// Constructor to be used when creating a new object
-SubtractionSolid::SubtractionSolid(LCDD& lcdd, const std::string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
+SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
 {
-  TGeoTranslation* firstPos = new TGeoTranslation(0,0,0);
-  TGeoRotation*    firstRot = new TGeoRotation();
-  firstRot->RotateZ(0);
-  firstRot->RotateY(0);
-  firstRot->RotateX(0);
+  Rotation      inv  = lcdd.rotation("inverse_identity_rot");
+  TGeoMatrix* first  = new TGeoCombiTrans((name+"_first").c_str(),0,0,0,inv.ptr());
+  TGeoMatrix* second = new TGeoCombiTrans(pos,rot->Inverse());
+  second->SetName((name+"_secnd").c_str());
 
-  TGeoMatrix* firstMat  = new TGeoCombiTrans(*firstPos,firstRot->Inverse());
-  TGeoMatrix* secondMat = new TGeoCombiTrans(pos,rot->Inverse());
-  TGeoSubtraction* sub = new TGeoSubtraction(shape1,shape2,firstMat,secondMat);
-  TGeoCompositeShape* composite = new TGeoCompositeShape(name.c_str(),sub);
-  composite->ComputeBBox();
-  _assign(lcdd, composite, "", "subtraction");
+  lcdd.addTransform(Transform(first)).addTransform(Transform(second));
+
+  TGeoSubtraction*    sub  = new TGeoSubtraction(shape1,shape2,first,second);
+  TGeoCompositeShape* comp = new TGeoCompositeShape(name.c_str(),sub);
+  comp->ComputeBBox();
+  _assign(lcdd, comp, "", "subtraction");
 }
 
 #define INSTANTIATE(X)  \
@@ -297,4 +295,3 @@ INSTANTIATE(TGeoCone);
 INSTANTIATE(TGeoCompositeShape);
 INSTANTIATE(TGeoSphere);
 INSTANTIATE(TGeoTorus);
-

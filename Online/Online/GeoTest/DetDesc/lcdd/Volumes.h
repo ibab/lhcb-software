@@ -64,7 +64,7 @@ namespace DetDesc {
       void setSolid(const Solid& s)  const;
       void setMaterial(const Material& m)  const;
       //No. not for WIN32!! void addPhysVol(const PhysVol& vol)  const;
-      void addPhysVol(const PhysVol& vol, const Transformation& tr)  const;
+      void addPhysVol(const PhysVol& vol, const Transform& tr)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos, const Rotation& rot)  const;
       void setRegion(const Region& obj)  const;

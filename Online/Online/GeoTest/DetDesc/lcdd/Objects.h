@@ -80,14 +80,16 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Transformation : public RefElement_type<TGeoMatrix> {
+    struct Transform : public RefElement_type<TGeoMatrix> {
       /// Default constructor
-      Transformation() : RefElement_type<TGeoMatrix>() {}
+      Transform() : RefElement_type<TGeoMatrix>() {}
+      /// Default constructor
+      Transform(TGeoMatrix* m) : RefElement_type<TGeoMatrix>(m) {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      Transformation(const Element_type<Q>& e) : RefElement_type<TGeoMatrix>(e) {}
+      Transform(const Element_type<Q>& e) : RefElement_type<TGeoMatrix>(e) {}
       /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Transformation(LCDD& doc, const std::string& name);
+      Transform(LCDD& doc, const std::string& name);
     };
 
     /** @class Position Objects.h

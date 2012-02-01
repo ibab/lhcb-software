@@ -1,5 +1,5 @@
-#ifndef DETDESC_LCDDGEO_H
-#define DETDESC_LCDDGEO_H
+#ifndef DETDESC_LCDD_LCDD_H
+#define DETDESC_LCDD_LCDD_H
 
 // Framework includes
 #include "DetDesc/Elements.h"
@@ -17,25 +17,11 @@
  *   DetDesc namespace declaration
  */
 namespace DetDesc {
-
+  
   /*
-  *   XML namespace declaration
-  */
+   *   XML namespace declaration
+   */
   namespace Geometry  {
-
-    struct Subdetector;
-    struct Readout;
-    struct Constant;
-    struct Region;
-    struct Material;
-    struct Materials;
-    struct Transformation;
-    struct Position;
-    struct Rotation;
-    struct LimitSet;
-    struct VisAttr;
-    struct Compact;
-    struct LCDD;
 
     struct LCDD {
       typedef std::map<std::string,Element> HandleMap;
@@ -51,15 +37,14 @@ namespace DetDesc {
       virtual Volume   worldVolume() const = 0;
       virtual Volume   trackingVolume() const = 0;
       virtual Rotation reflection() const = 0;
-      virtual Transformation identity() const = 0;
+      virtual Transform identity() const = 0;
 
       virtual const HandleMap& header()  const = 0;
       virtual const HandleMap& constants()  const = 0;
       virtual const HandleMap& regions() const = 0;
       virtual const HandleMap& structure()  const = 0;
       virtual const HandleMap& solids()  const = 0;
-      virtual const HandleMap& positions() const = 0;
-      virtual const HandleMap& rotations() const = 0;
+      virtual const HandleMap& transformations() const = 0;
       virtual const HandleMap& materials()  const = 0;
       virtual const HandleMap& detectors()  const = 0;
       virtual const HandleMap& readouts() const = 0;
@@ -76,6 +61,7 @@ namespace DetDesc {
       virtual Constant    constant(const std::string& name) const = 0;
       virtual Position    position(const std::string& name) const = 0;
       virtual Rotation    rotation(const std::string& name) const = 0;
+      virtual Transform   transform(const std::string& name) const = 0;
       virtual Solid       solid(const std::string& name) const = 0;
       virtual Subdetector detector(const std::string& name) const = 0;
 
@@ -87,11 +73,11 @@ namespace DetDesc {
       virtual LCDD& add(const VisAttr& attr) = 0;
       //virtual LCDD& add(const Position& pos) = 0;
       //virtual LCDD& add(const Rotation& rot) = 0;
+      //virtual LCDD& add(const Transform& rot) = 0;
       virtual LCDD& add(const LimitSet& limset) = 0;
       virtual LCDD& add(const Subdetector& detector) = 0;
 
-      virtual LCDD& addPosition(const RefElement& element) = 0;
-      virtual LCDD& addRotation(const RefElement& element) = 0;
+      virtual LCDD& addTransform(const RefElement& element) = 0;
       virtual LCDD& addIDSpec(const RefElement& element) = 0;
       virtual LCDD& addConstant(const RefElement& element) = 0;
       virtual LCDD& addMaterial(const RefElement& element) = 0;
@@ -111,4 +97,4 @@ namespace DetDesc {
     };
   }       /* End namespace Geometry  */
 }         /* End namespace DetDesc   */
-#endif    /* DETDESC_LCDDGEO_H       */
+#endif    /* DETDESC_LCDD_LCDD_H     */

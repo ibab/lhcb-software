@@ -87,6 +87,7 @@ Subdetector& Subdetector::setEnvelope(const Solid& solid)   {
   _data().Attr_envelope = solid;
   return *this;
 }
+
 #include "TGeoVolume.h"
 Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {
   if ( !name.empty() )   {

@@ -36,6 +36,8 @@ namespace {
 }
 
 namespace DetDesc { namespace Geometry {
+  struct Compact;
+  struct Materials;
   typedef DetDesc::IDDescriptor IDDescriptor;
 
   template <> Ref_t toRefObject<Constant,xml_h>(lcdd_t& lcdd, const xml_h& e)  {

@@ -2,23 +2,7 @@
 #include "LCDDGeoImp.h"
 #include "../compact/Conversions.h"
 #include "XML/DocumentHandler.h"
-#if 0
-#include "xercesc/framework/LocalFileFormatTarget.hpp"
-#include "xercesc/framework/StdOutFormatTarget.hpp"
 
-#include "xercesc/framework/MemBufInputSource.hpp"
-#include "xercesc/sax/SAXParseException.hpp"
-#include "xercesc/sax/EntityResolver.hpp"
-#include "xercesc/sax/InputSource.hpp"
-#include "xercesc/parsers/XercesDOMParser.hpp"
-#include "xercesc/util/PlatformUtils.hpp"
-#include "xercesc/util/XercesDefs.hpp"
-#include "xercesc/util/XMLUni.hpp"
-#include "xercesc/util/XMLURL.hpp"
-#include "xercesc/util/XMLString.hpp"
-#include "xercesc/dom/DOM.hpp"
-#include "xercesc/sax/ErrorHandler.hpp"
-#endif
 // C+_+ include files
 #include <cmath>
 #include <iostream>
@@ -33,8 +17,9 @@
 using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
-namespace DetDesc  { XmlTools::Evaluator& evaluator();  }
+namespace DetDesc  { XmlTools::Evaluator& evaluator();     }
 namespace DetDesc  { namespace XML {    void tags_init(); }}
+namespace DetDesc  { namespace Geometry { struct Compact; }}
 
 LCDD& LCDD::getInstance() {
   static LCDD* s_lcdd = new LCDDImp();
@@ -61,72 +46,21 @@ Element LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool d
   return 0;
 }
 
-template<class T> LCDD& 
-LCDDImp::__add(const RefElement& x, ObjectHandleMap& m,Int_t (TGeoManager::*func)(T*))  {
-  T* obj = dynamic_cast<T*>(x.ptr());
-  if ( obj )  {
-    m.append(x);
-    if ( func ) (gGeoManager->*func)(obj);
-    return *this;
-  }
-  throw InvalidObjectError("Attempt to add an object, which is of the wrong type.");
-}
-
 LCDD& LCDDImp::addVolume(const RefElement& x)    {
-  //return __add(x,m_structure,&TGeoManager::AddVolume);
   m_structure.append(x);
   return *this;
 }
-#include "TGeoTube.h"
-#include "TGeoPcon.h"
-#include "TGeoCompositeShape.h"
-LCDD& LCDDImp::addSolid(const RefElement& x)     {
-  TGeoShape *o, *obj = dynamic_cast<TGeoShape*>(x.ptr());
-  if ( (o=dynamic_cast<TGeoPcon*>(obj)) )  {
-    m_structure.append<TGeoShape>(x);
-  }
-  else if ( (o=dynamic_cast<TGeoTube*>(obj)) )  {
-    m_structure.append<TGeoShape>(x);
-  }
-  else if ( (o=dynamic_cast<TGeoCompositeShape*>(obj)) )  {
-    m_structure.append<TGeoShape>(x);
-  }
-  else  {
-    m_structure.append<TGeoShape>(x);
-    //__add(x,m_structure,&TGeoManager::AddShape);
-  }
-#if 0
-  cout << obj->GetName() << " " << (void*)obj
-    << " Index:" << gGeoManager->GetListOfShapes()->IndexOf(obj) << endl;
-#endif
+
+LCDD& LCDDImp::addSolid(const RefElement& x)    {
+  m_structure.append<TGeoShape>(x);
   return *this;
 }
 
-LCDD& LCDDImp::addRotation(const RefElement& x)  {
-  TGeoMatrix* obj = dynamic_cast<TGeoMatrix*>(x.ptr());
-  if ( 0 == obj ) {
-    cout << "+++ Attempt to store invalid matrix object:" << typeid(*x.ptr()).name() << endl;
-  }
-  if ( obj->IsRegistered() ) {
-    cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
-  }
-  // cout << "+++ Register Rotation[" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
-
-  return __add(x,m_rotations,&TGeoManager::AddTransformation);
-  //m_rotations.append<TGeoMatrix>(x);
-  //return *this;
-}
-
-LCDD& LCDDImp::addPosition(const RefElement& x)  {
-  TGeoMatrix* obj = dynamic_cast<TGeoMatrix*>(x.ptr());
-  if ( 0 == obj ) {
-    cout << "+++ Attempt to store invalid matrix object:" << typeid(*x.ptr()).name() << endl;
-  }
-  if ( obj->IsRegistered() ) {
-    cout << "+++ Attempt to register already registered matrix:" << obj->GetName() << endl;
-  }
-  /// cout << "+++ Register Position [" << m_doc->GetListOfMatrices()->GetEntries() << "]:" << obj->GetName() << endl;
-  return __add(x,m_positions,&TGeoManager::AddTransformation);
+LCDD& LCDDImp::addTransform(const RefElement& x)  {
+  //int n = gGeoManager->GetListOfMatrices()->GetEntries();
+  //cout << "+++ Register Rotation[" << n << "]:" << x->GetName() << endl;
+  m_transforms.append<TGeoMatrix>(x);
+  return *this;
 }
 
 void LCDDImp::endDocument()  {
@@ -181,11 +115,14 @@ void LCDDImp::create()  {
 void LCDDImp::init()  {
   LCDD& lcdd = *this;
 
-  m_identity = Transformation(lcdd,"identity");
+  m_identity = Transform(lcdd,"identity");
   Box worldSolid(lcdd,"world_box","world_x","world_y","world_z");
   Rotation identity_rot(lcdd,"identity_rot",0,0,0);
+  Rotation identity_rot_rev(lcdd,"inverse_identity_rot",0,0,0);
   Position identity_pos(lcdd,"identity_pos",0,0,0);
   m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.);
+
+  *(identity_rot_rev.ptr()) = identity_rot_rev->Inverse();
 
   Material air = material("Air");
   Volume world(lcdd,"world_volume",worldSolid,air);

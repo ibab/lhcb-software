@@ -403,7 +403,6 @@ namespace DetDesc { namespace Geometry {
 			      x_slice.attr<string>(_A(limits)),
 			      x_slice.visStr());
 
-	  //PhysVol  slice_physvol(lcdd,slice_vol,slice_name);
 	  PhysVol  slice_physvol(slice_vol);
 	  Position slice_pos(lcdd,slice_name+"_pos",0.,0.,z-zlayer-layerWidth/2.+w/2.);
 	  layer_vol.addPhysVol(slice_physvol,slice_pos);

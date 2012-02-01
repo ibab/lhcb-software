@@ -33,7 +33,7 @@ Volume::Volume(LCDD& lcdd, const string& name)    {
 }
 
 Volume::Volume(LCDD& lcdd, const string& name, const Solid& s, const Material& m) {
-  m_element = new Value<TGeoVolume,Volume::Object>(name.c_str(),s._ptr<TGeoShape>());
+  m_element = new Value<TGeoVolume,Volume::Object>(name.c_str(),s);
   setMaterial(m);
   lcdd.addVolume(*this);
 }
@@ -57,15 +57,15 @@ void Volume::setSolid(const Solid& solid)  const  {
 void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotation& rot)  const  {
   if ( volume.isValid() )   {
     TGeoCombiTrans*  c = new TGeoCombiTrans(pos,rot);
-    m_element->AddNode(volume, --unique_physvol_id, c);
+    m_element->AddNode(volume,--unique_physvol_id,c);
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
-void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  const  {
+void Volume::addPhysVol(const PhysVol& volume, const Transform& matrix)  const  {
   if ( volume.isValid() )   {
-    m_element->AddNode(volume.ptr(), --unique_physvol_id, matrix.ptr());
+    m_element->AddNode(volume.ptr(),--unique_physvol_id,matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
@@ -73,7 +73,7 @@ void Volume::addPhysVol(const PhysVol& volume, const Transformation& matrix)  co
 
 void Volume::addPhysVol(const PhysVol& volume, const Position& matrix)  const  {
   if ( volume.isValid() )   {
-    m_element->AddNode(volume.ptr(), --unique_physvol_id, matrix.ptr());
+    m_element->AddNode(volume.ptr(),--unique_physvol_id,matrix.ptr());
     return;
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
