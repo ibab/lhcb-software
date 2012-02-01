@@ -54,7 +54,7 @@ namespace DetDesc {
           }
           throw InvalidObjectError("Attempt to add an invalid object object");
         }
-        template <class T> void append(const Ref_t& e) {
+        template <typename T> void append(const Ref_t& e) {
           T* obj = dynamic_cast<T*>(e.ptr());
           if ( obj )  {
             this->append(e);

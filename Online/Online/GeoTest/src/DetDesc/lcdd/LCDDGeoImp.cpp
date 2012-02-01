@@ -36,7 +36,7 @@ Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if no
 }
 
 LCDD& LCDDImp::addVolume(const Ref_t& x)    {
-  m_structure.append(x);
+  m_structure.append<TGeoVolume>(x);
   return *this;
 }
 
@@ -152,7 +152,7 @@ void LCDDImp::init()  {
   Position identity_pos(lcdd,"identity_pos",0,0,0);
   m_reflect = Rotation(lcdd,"reflect_rot",M_PI,0.,0.);
 
-  *(identity_rot_rev.ptr()) = identity_rot_rev->Inverse();
+  *identity_rot_rev = identity_rot_rev->Inverse();
 
   Material air = material("Air");
   Volume world(lcdd,"world_volume",worldSolid,air);

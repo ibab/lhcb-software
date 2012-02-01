@@ -178,7 +178,7 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
   assign(new Value<TNamed,TMap>(),name,"limitset");
 }
 
-void LimitSet::addLimit(const RefHandle<TNamed>& limit)   {
+void LimitSet::addLimit(const NamedHandle& limit)   {
   data<TMap>()->Add(limit,limit);
 }
 

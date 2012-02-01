@@ -19,7 +19,7 @@ Readout::Readout(const LCDD& /* lcdd */, const string& nam)
 }
 
 /// Access IDDescription structure
-RefHandle<TNamed> Readout::idSpec() const   {
+NamedHandle Readout::idSpec() const   {
   return _data().id;
 }
 
@@ -29,7 +29,7 @@ Segmentation Readout::segmentation() const  {
 }
 
 /// Assign IDDescription to readout structure
-void Readout::setIDDescriptor(const RefHandle<TNamed>& new_descriptor)  const   {
+void Readout::setIDDescriptor(const NamedHandle& new_descriptor)  const   {
   if ( isValid() )  {                    // Remember: segmentation is NOT owned by readout structure!
     if ( new_descriptor.isValid() )  {   // Do NOT delete!
       _data().id = new_descriptor;

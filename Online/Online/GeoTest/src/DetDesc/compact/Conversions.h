@@ -34,9 +34,9 @@ namespace DetDesc {
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions
-    template <typename T, typename Q> Handle<TObject>   toObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> RefHandle<TNamed> toRefObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> RefHandle<TNamed> toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
+    template <typename T, typename Q> Handle<>    toObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> NamedHandle toRefObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> NamedHandle toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
 
 
     /** @class LCDDActor Conversions.h  DetDesc/compact/Conversions.h

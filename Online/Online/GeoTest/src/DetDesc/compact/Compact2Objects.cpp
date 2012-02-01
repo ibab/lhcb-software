@@ -27,13 +27,13 @@
 #define _A(a) DetDesc::XML::Attr_##a
 
 // Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t    xml_coll_t;
-typedef DetDesc::XML::Handle_t        xml_h;
-typedef DetDesc::XML::RefElement      xml_ref_t;
-typedef DetDesc::XML::Element         xml_elem_t;
-typedef DetDesc::Geometry::LCDD       lcdd_t;
-typedef DetDesc::Geometry::Handle<TObject>   Elt_t;
-typedef DetDesc::Geometry::RefHandle<TNamed> Ref_t;
+typedef DetDesc::XML::Collection_t     xml_coll_t;
+typedef DetDesc::XML::Handle_t         xml_h;
+typedef DetDesc::XML::RefElement       xml_ref_t;
+typedef DetDesc::XML::Element          xml_elem_t;
+typedef DetDesc::Geometry::LCDD        lcdd_t;
+typedef DetDesc::Geometry::Handle<>    Elt_t;
+typedef DetDesc::Geometry::NamedHandle Ref_t;
 
 using namespace std;
 using namespace DetDesc;

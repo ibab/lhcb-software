@@ -212,7 +212,7 @@ string SensitiveDetector::type() const  {
 }
 
 /// Assign the IDDescriptor reference
-SensitiveDetector& SensitiveDetector::setIDSpec(const RefHandle<TNamed>& spec)  {
+SensitiveDetector& SensitiveDetector::setIDSpec(const NamedHandle& spec)  {
   _data().Attr_id = spec;
   return *this;
 }

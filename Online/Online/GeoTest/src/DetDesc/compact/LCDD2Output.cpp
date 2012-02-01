@@ -116,7 +116,7 @@ namespace DetDesc { namespace Geometry {
     }
   }
 
-  template <class T> void PrintMap<T>::operator()()  const {
+  template <typename T> void PrintMap<T>::operator()()  const {
     Printer<T> p(lcdd,os);
     os << "++" << endl << "++          " << text << endl << "++" << endl;
     for (LCDD::HandleMap::const_iterator i=cont.begin(); i != cont.end(); ++i) 

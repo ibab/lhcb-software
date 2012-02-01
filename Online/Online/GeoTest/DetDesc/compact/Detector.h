@@ -40,23 +40,23 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct SensitiveDetector : public RefHandle<TNamed>  {
+    struct SensitiveDetector : public NamedHandle  {
       struct Object  {
-        int           Attr_verbose;
-        int           Attr_combine_hits;
-        double        Attr_ecut;
-        std::string   Attr_eunit;
-        std::string   Attr_hits_collection;
-        Segmentation  Attr_segmentation;
-        RefHandle<TNamed>  Attr_id;
+        int          Attr_verbose;
+        int          Attr_combine_hits;
+        double       Attr_ecut;
+        std::string  Attr_eunit;
+        std::string  Attr_hits_collection;
+        Segmentation Attr_segmentation;
+        NamedHandle  Attr_id;
         Object() : Attr_verbose(0), Attr_segmentation() {}
       };
 
       /// Default constructor
-      SensitiveDetector() : RefHandle<TNamed>() {}
+      SensitiveDetector() : NamedHandle() {}
       /// Templated constructor for handle conversions
       template <typename Q>
-      SensitiveDetector(const RefHandle<Q>& e) : RefHandle<TNamed>(e) {}
+      SensitiveDetector(const RefHandle<Q>& e) : NamedHandle(e) {}
       /// Constructor for a new sensitive detector element
       SensitiveDetector(const LCDD& lcdd, const std::string& type, const std::string& name);
 
@@ -69,7 +69,7 @@ namespace DetDesc {
       /// Assign the name of the hits collection
       SensitiveDetector& setHitsCollection(const std::string& spec);
       /// Assign the IDDescriptor reference
-      SensitiveDetector& setIDSpec(const RefHandle<TNamed>& spec);
+      SensitiveDetector& setIDSpec(const NamedHandle& spec);
       /// Assign the readout segmentation reference
       SensitiveDetector& setSegmentation(const Segmentation& seg);
       
@@ -80,7 +80,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Subdetector : public RefHandle<TNamed>   {
+    struct Subdetector : public NamedHandle   {
       typedef std::map<std::string,Subdetector> Children;
       struct Object  {
         int               Attr_id;
@@ -97,9 +97,9 @@ namespace DetDesc {
       void check(bool condition, const std::string& msg) const;
 
       /// Default constructor
-      Subdetector() : RefHandle<TNamed>()  {}
+      Subdetector() : NamedHandle()  {}
       /// Templated constructor for handle conversions
-      template<typename Q> Subdetector(const Handle<Q>& e) : RefHandle<TNamed>(e)  {}
+      template<typename Q> Subdetector(const Handle<Q>& e) : NamedHandle(e)  {}
       /// Constructor for a new subdetector element
       Subdetector(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 

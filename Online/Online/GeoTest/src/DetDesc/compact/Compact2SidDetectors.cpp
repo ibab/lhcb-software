@@ -55,7 +55,7 @@ namespace DetDesc { namespace Geometry {
 
   std::string _toString(const XMLCh* value)  
   {  return XML::_toString(value); }
-  template <class T> std::string _toString(T value, const char* fmt)
+  template <typename T> std::string _toString(T value, const char* fmt)
   {  return XML::_toString(value, fmt); }
 
 }}
@@ -73,7 +73,7 @@ typedef DetDesc::XML::Subdetector            xml_det_t;
 typedef DetDesc::XML::Dimension              xml_dim_t;
 
 typedef DetDesc::Geometry::LCDD              lcdd_t;
-typedef DetDesc::Geometry::RefHandle<TNamed> Ref_t;
+typedef DetDesc::Geometry::NamedHandle       Ref_t;
 
 using namespace std;
 using namespace DetDesc;

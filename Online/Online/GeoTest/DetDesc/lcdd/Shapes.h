@@ -31,6 +31,7 @@ class TGeoTrd2;
 class TGeoTrap;
 class TGeoTubeSeg;
 class TGeoCompositeShape;
+
 /*
  *   DetDesc namespace declaration
  */
@@ -126,7 +127,7 @@ namespace DetDesc {
       {  make(lcdd, name, x, y, z); }
 
       /// Constructor to be used when creating a new box object
-      template<class X, class Y, class Z>
+      template<typename X, typename Y, typename Z>
       Box(LCDD& lcdd, const std::string& name, const X& x, const Y& y, const Z& z)
       {  make(lcdd, name, _toDouble(x),_toDouble(y),_toDouble(z)); }
 
@@ -178,7 +179,7 @@ namespace DetDesc {
       { make(lcdd,name,rmin, rmax, z, deltaPhi); }
 
       /// Constructor to be used when creating a new tube object with attribute initialization
-      template<class RMIN, class RMAX, class Z, class DELTAPHI>
+      template<typename RMIN, typename RMAX, typename Z, typename DELTAPHI>
       Tube(LCDD& lcdd, const std::string& name, const RMIN& rmin, const RMAX& rmax, const Z& z, const DELTAPHI& deltaPhi)  
       {
         make(lcdd,name,_toDouble(rmin),_toDouble(rmax),_toDouble(z),_toDouble(deltaPhi));
@@ -267,16 +268,6 @@ namespace DetDesc {
       Trapezoid(LCDD& lcdd, const std::string& name, double x1, double x2, double y1, double y2, double z);
       /// Set the Trapezoid dimensions
       Trapezoid& setDimensions(double x1, double x2, double y1, double y2, double z);
-      Trapezoid& setX1(double value);
-      Trapezoid& setX2(double value);
-      Trapezoid& setY1(double value);
-      Trapezoid& setY2(double value);
-      Trapezoid& setZ(double value);
-      double x1() const;
-      double x2() const;
-      double y1() const;
-      double y2() const;
-      double z() const;
     };
 
     /**@class PolyhedraRegular Shapes.h 
@@ -304,7 +295,7 @@ namespace DetDesc {
 
       public:
       /// Constructor to be used when reading the already parsed object
-      template <class Q> 
+      template <typename Q> 
       BooleanSolid(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new object

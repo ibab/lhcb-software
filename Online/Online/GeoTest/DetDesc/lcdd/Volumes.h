@@ -57,7 +57,7 @@ namespace DetDesc {
         Region            Attr_region;
         LimitSet          Attr_limits;
         VisAttr           Attr_vis;
-        RefHandle<TNamed>        Attr_sens_det;
+        NamedHandle       Attr_sens_det;
         Object() : Attr_region(), Attr_limits(), Attr_vis(), Attr_sens_det() {}
       };
       /// Default constructor
@@ -67,7 +67,7 @@ namespace DetDesc {
       Volume(const Volume& v) : Base(v) {}
 
       /// Copy from arbitrary Element
-      template <class T> Volume(const Handle<T>& v) : Base(v) {}
+      template <typename T> Volume(const Handle<T>& v) : Base(v) {}
 
       /// Constructor to be used when creating a new geometry tree.
       Volume(LCDD& lcdd, const std::string& name);
@@ -87,7 +87,7 @@ namespace DetDesc {
       Solid solid() const;
       Material material() const;
       VisAttr  visAttributes() const;
-      RefHandle<TNamed> sensitiveDetector() const;
+      NamedHandle sensitiveDetector() const;
       Region region() const;
       /// Auto conversion to underlying ROOT object
       operator TGeoVolume*() const     { return m_element; }
@@ -100,7 +100,7 @@ namespace DetDesc {
      */
     struct PhysVol : RefHandle<TGeoVolume> {
       /// Constructor to be used when reading the already parsed DOM tree
-      template <class T> PhysVol(const Handle<T>& e) : RefHandle<TGeoVolume>(e) {}
+      template <typename T> PhysVol(const Handle<T>& e) : RefHandle<TGeoVolume>(e) {}
       /// Add identifier
       PhysVol& addPhysVolID(const std::string& name, int value);
       /// Auto conversion to underlying ROOT object

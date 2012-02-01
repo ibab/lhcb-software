@@ -38,8 +38,8 @@ namespace DetDesc {
      *  @version 1.0
      */
     struct LCDD {
-      typedef std::map<std::string,Handle<TObject> > HandleMap;
-      typedef RefHandle<TNamed> Ref_t;
+      typedef NamedHandle Ref_t;
+      typedef std::map<std::string,Handle<> > HandleMap;
 
       virtual ~LCDD() {}
 

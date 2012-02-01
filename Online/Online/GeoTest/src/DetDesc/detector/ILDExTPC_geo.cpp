@@ -37,7 +37,7 @@ using namespace DetDesc::Geometry;
 
 namespace DetDesc { namespace Geometry {
   
-  template <class T, class Q> Ref_t toRefObject(LCDD& lcdd, const Q& e, SensitiveDetector&)  {
+  template <typename T, typename Q> Ref_t toRefObject(LCDD& lcdd, const Q& e, SensitiveDetector&)  {
     return Ref_t(0);
   }
   

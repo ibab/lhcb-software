@@ -86,6 +86,10 @@ namespace DetDesc {
       template <typename Q> Q* _ptr() const   {  return (Q*)m_element;  }
       bool isValid() const                    {  return 0 != m_element; }
       bool operator!() const                  {  return 0 == m_element; }
+      Implementation* operator->() const      { return  m_element;      }
+      operator Implementation& ()  const      { return *m_element;      }
+      Implementation& operator*()  const      { return *m_element;      }
+
       template <typename Q> Q* data() const  {
 	return (Value<Implementation,Q>*)m_element;
       }
@@ -104,16 +108,16 @@ namespace DetDesc {
      *  @version 1.0
      */
     template <typename T> struct RefHandle : public Handle<T>  {
+      typedef Handle<T>   Base;
       typedef T Implementation;
-      RefHandle() : Handle<T>() {}
-      RefHandle(const Handle<T>& e) : Handle<T>(e) {}
-      template<typename Q> RefHandle(const Handle<Q>& e) : Handle<T>(e) {}
+
+      RefHandle() : Base() {}
+      RefHandle(const Base& e) : Base(e) {}
+      template<typename Q> RefHandle(const Handle<Q>& e) : Base(e) {}
 
       const char* name() const;
       void  setName(const std::string& new_name);
       void  assign(Implementation* n, const std::string& nam, const std::string& title);
-      Implementation* operator->() const { return this->m_element;    }
-      operator Implementation& ()  const { return *(this->m_element); }
     };
 
     /** @class RefHandle<TNamed> Handle.h
@@ -128,14 +132,13 @@ namespace DetDesc {
       RefHandle() : Handle<TNamed>() {}
       RefHandle(const Handle<TNamed>& e) : Handle<TNamed>(e) {}
       template<typename Q> RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
-      
-      TNamed*  operator->() const { return this->m_element; }
       operator TNamed*() const    { return this->m_element; }
       
       const char* name() const;
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
     };
+    typedef RefHandle<TNamed> NamedHandle;
 
   }       /* End namespace Geometry  */
 }         /* End namespace DetDesc   */

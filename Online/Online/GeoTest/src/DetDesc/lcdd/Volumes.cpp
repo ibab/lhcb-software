@@ -135,7 +135,7 @@ VisAttr Volume::visAttributes() const   {
   return data<Object>()->Attr_vis;
 }
 
-RefHandle<TNamed> Volume::sensitiveDetector() const    {
+NamedHandle Volume::sensitiveDetector() const    {
   return data<Object>()->Attr_sens_det;
 }
 

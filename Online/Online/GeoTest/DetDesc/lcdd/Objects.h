@@ -40,12 +40,12 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Author : public RefHandle<TNamed>  {
+    struct Author : public NamedHandle  {
       /// Default constructor
-      Author() : RefHandle<TNamed>() {}
+      Author() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      Author(const Handle<Q>& e) : RefHandle<TNamed>(e)  {}
+      Author(const Handle<Q>& e) : NamedHandle(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Author(LCDD& doc);
       //void setAuthorName(const char* nam)    {  setAttr("name",nam); }
@@ -57,12 +57,12 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Header : public RefHandle<TNamed>  {
+    struct Header : public NamedHandle  {
       /// Default constructor
-      Header() : RefHandle<TNamed>() {}
+      Header() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      Header(const Handle<Q>& e) : RefHandle<TNamed>(e)  {}
+      Header(const Handle<Q>& e) : NamedHandle(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Header(LCDD& doc);
     };
@@ -72,12 +72,12 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Constant : public RefHandle<TNamed>  {
+    struct Constant : public NamedHandle  {
       /// Default constructor
-      Constant() : RefHandle<TNamed>() {}
+      Constant() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      Constant(const Handle<Q>& e) : RefHandle<TNamed>(e)  {}
+      Constant(const Handle<Q>& e) : NamedHandle(e)  {}
       /// Constructor to be used when creating a new DOM tree
       Constant(LCDD& doc, const std::string& name);
       /// Constructor to be used when creating a new DOM tree
@@ -168,7 +168,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct VisAttr : public RefHandle<TNamed>  {
+    struct VisAttr : public NamedHandle  {
       struct Object  {
         int           color;
         unsigned char drawingStyle, lineStyle, showDaughters, visible;
@@ -184,10 +184,10 @@ namespace DetDesc {
         LAST_LINE_STYLE
       };
       /// Default constructor
-      VisAttr() : RefHandle<TNamed>() {}
+      VisAttr() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      VisAttr(const Handle<Q>& e) : RefHandle<TNamed>(e) {}
+      VisAttr(const Handle<Q>& e) : NamedHandle(e) {}
       /// Constructor to be used when creating a new DOM tree
       VisAttr(LCDD& doc, const std::string& name);
       /// Additional data accessor
@@ -211,7 +211,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Limit : public RefHandle<TNamed>  {
+    struct Limit : public NamedHandle  {
       typedef std::pair<std::string,double> Object;
 
       /// Constructor to be used when creating a new DOM tree
@@ -228,16 +228,16 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct LimitSet : public RefHandle<TNamed>  {
+    struct LimitSet : public NamedHandle  {
       typedef TMap Object;
       /// Constructor to be used when reading the already parsed DOM tree
-      LimitSet() : RefHandle<TNamed>() {}
+      LimitSet() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      LimitSet(const Handle<Q>& e) : RefHandle<TNamed>(e) {}
+      LimitSet(const Handle<Q>& e) : NamedHandle(e) {}
       /// Constructor to be used when creating a new DOM tree
       LimitSet(LCDD& doc, const std::string& name);
-      void addLimit(const RefHandle<TNamed>& limit);
+      void addLimit(const NamedHandle& limit);
     };
 
     /** @class Region Objects.h
@@ -245,7 +245,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Region : public RefHandle<TNamed>  {
+    struct Region : public NamedHandle  {
       struct Object  {
         double      Attr_threshold;
         double      Attr_cut;
@@ -253,10 +253,10 @@ namespace DetDesc {
         std::string Attr_lunit, Attr_eunit;
       };
       /// Default constructor
-      Region() : RefHandle<TNamed>() {}
+      Region() : NamedHandle() {}
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      Region(const Handle<Q>& e) : RefHandle<TNamed>(e) {}
+      Region(const Handle<Q>& e) : NamedHandle(e) {}
       /// Constructor to be used when creating a new DOM tree
       Region(LCDD& doc, const std::string& name);
 
@@ -274,10 +274,10 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct IDSpec : public RefHandle<TNamed>   {
+    struct IDSpec : public NamedHandle   {
       /// Constructor to be used when reading the already parsed DOM tree
       template <typename Q> 
-      IDSpec(const Handle<Q>& e) : RefHandle<TNamed>(e) {}
+      IDSpec(const Handle<Q>& e) : NamedHandle(e) {}
       /// Constructor to be used when creating a new DOM tree
       IDSpec(LCDD& doc, const std::string& name, const IDDescriptor& dsc);
       void addField(const std::string& name, const std::pair<int,int>& field);

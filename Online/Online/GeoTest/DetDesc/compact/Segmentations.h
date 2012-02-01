@@ -28,7 +28,7 @@ namespace DetDesc {
      * @author  M.Frank
      * @version 1.0
      */
-    struct Segmentation : public RefHandle<TNamed>   {
+    struct Segmentation : public NamedHandle   {
       struct Object  {
         unsigned char Attr_useForHitPosition;
         union {
@@ -67,6 +67,7 @@ namespace DetDesc {
 	: RefHandle<Implementation>(e){}
       /// Constructor to create a new segmentation object (to be called by super class only)
       Segmentation(LCDD& lcdd, const std::string& type);
+      Object& _data() const {  return *data<Object>(); }
       bool useForHitPosition() const;
       const std::string type() const;
     };

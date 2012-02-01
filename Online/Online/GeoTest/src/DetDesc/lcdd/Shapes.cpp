@@ -174,41 +174,6 @@ Trapezoid& Trapezoid::setDimensions(double x1, double x2, double y1, double y2, 
   return *this;
 }
 
-Trapezoid& Trapezoid::setX1(double value)  {
-  TGeoTrd2* s = m_element;
-  double params[] = {value,s->GetDx2(),s->GetDy1(),s->GetDy2(),s->GetDz()};
-  _setDimensions(params);
-  return *this;
-}
-
-Trapezoid& Trapezoid::setX2(double value)  {
-  TGeoTrd2* s = m_element;
-  double params[] = {s->GetDx2(),value,s->GetDy1(),s->GetDy2(),s->GetDz()};
-  _setDimensions(params);
-  return *this;
-}
-
-Trapezoid& Trapezoid::setY1(double value)  {
-  TGeoTrd2* s = m_element;
-  double params[] = {s->GetDx1(),s->GetDx2(),value,s->GetDy2(),s->GetDz()};
-  _setDimensions(params);
-  return *this;
-}
-
-Trapezoid& Trapezoid::setY2(double value)  {
-  TGeoTrd2* s = m_element;
-  double params[] = {s->GetDx1(),s->GetDx2(),s->GetDy1(),value,s->GetDz()};
-  _setDimensions(params);
-  return *this;
-}
-
-Trapezoid& Trapezoid::setZ(double value)  {
-  TGeoTrd2* s = m_element;
-  double params[] = {s->GetDx1(),s->GetDx2(),s->GetDy1(),s->GetDy2(),value};
-  _setDimensions(params);
-  return *this;
-}
-
 Trap::Trap( LCDD&  lcdd, const string& name,
             double z,
             double theta,
@@ -287,8 +252,7 @@ SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& 
   _assign(lcdd, comp, "", "subtraction");
 }
 
-#define INSTANTIATE(X)  \
-  template class DetDesc::Geometry::Solid_type<X>
+#define INSTANTIATE(X) template class DetDesc::Geometry::Solid_type<X>
 
 #include "TGeoSphere.h"
 #include "TGeoTorus.h"
