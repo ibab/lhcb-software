@@ -35,8 +35,8 @@ namespace MicroDST
   struct BasicItemCloner
   {
     typedef T Type;
-    Type* operator () (const Type* item)    { return clone(item);   }
-    static Type* copy(const Type* item) { return clone(item); }
+    Type* operator () (const Type* item) { return clone(item);   }
+    static Type* copy(const Type* item)  { return clone(item); }
     static Type* clone(const Type* item) { return item ? item->clone() : NULL; }
   };
 
@@ -53,9 +53,9 @@ namespace MicroDST
   struct BasicCopy
   {
     typedef T Type;
-    Type* operator () (const Type* item)    { return copy(item);   }
-    static Type* copy(const Type* item) { return item ? new Type(*item) : NULL; }
-    static Type* clone(const Type* item) { return copy(item); }
+    Type* operator () (const Type* item)  { return copy(item);   }
+    static Type* copy(const Type* item)   { return item ? new Type(*item) : NULL; }
+    static Type* clone(const Type* item)  { return copy(item); }
   };
   //===========================================================================
 
