@@ -1,25 +1,18 @@
-#define _USE_MATH_DEFINES
 #include "LCDDGeoImp.h"
 #include "../compact/Conversions.h"
 #include "XML/DocumentHandler.h"
 
-// C+_+ include files
-#include <cmath>
+// C/C++ include files
 #include <iostream>
 #include <stdexcept>
-#include <sys/types.h>
-#include <sys/stat.h>
 
-#include "XML/Evaluator.h"
 #include "TGeoManager.h"
 #include "TGeoMatrix.h"
 
-using namespace std;
-using namespace DetDesc;
-using namespace DetDesc::Geometry;
-namespace DetDesc  { XmlTools::Evaluator& evaluator();     }
-namespace DetDesc  { namespace XML {    void tags_init(); }}
 namespace DetDesc  { namespace Geometry { struct Compact; }}
+using namespace DetDesc::Geometry;
+using namespace DetDesc;
+using namespace std;
 
 LCDD& LCDD::getInstance() {
   static LCDD* s_lcdd = new LCDDImp();
@@ -27,23 +20,10 @@ LCDD& LCDD::getInstance() {
 }
 
 LCDDImp::LCDDImp() : m_worldVol(), m_trackingVol(), m_reflect(), m_identity()  {
-  evaluator();
-  XML::tags_init();
 }
 
 Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if not existing
   return m_worldVol;
-}
-
-Element LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
-  HandleMap::const_iterator i = e.find(name);
-  if ( i != e.end() )  {
-    return (*i).second;
-  }
-  if ( do_throw )  {
-    throw runtime_error("Cannot find a child with the reference name:"+name);
-  }
-  return 0;
 }
 
 LCDD& LCDDImp::addVolume(const RefElement& x)    {
@@ -61,6 +41,34 @@ LCDD& LCDDImp::addTransform(const RefElement& x)  {
   //cout << "+++ Register Rotation[" << n << "]:" << x->GetName() << endl;
   m_transforms.append<TGeoMatrix>(x);
   return *this;
+}
+
+void LCDDImp::convertMaterials(const string& fname)  {
+  convertMaterials(XML::DocumentHandler().load(fname).root());
+}
+
+void LCDDImp::convertMaterials(XML::Handle_t materials)  {
+  Converter<Materials>(*this)(materials);
+}
+
+void LCDDImp::addStdMaterials()   {
+  convertMaterials("file:../cmt/elements.xml");
+  convertMaterials("file:../cmt/materials.xml");
+}
+
+void LCDDImp::fromCompact(const string& fname)  {
+  fromCompact(XML::DocumentHandler().load(fname).root());
+}
+
+Element LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
+  HandleMap::const_iterator i = e.find(name);
+  if ( i != e.end() )  {
+    return (*i).second;
+  }
+  if ( do_throw )  {
+    throw runtime_error("Cannot find a child with the reference name:"+name);
+  }
+  return 0;
 }
 
 void LCDDImp::endDocument()  {
@@ -89,23 +97,6 @@ void LCDDImp::endDocument()  {
   trackingVis.setVisible(false);               
   trkVol.setVisAttributes(trackingVis);
   add(trackingVis); 
-}
-
-void LCDDImp::convertMaterials(const string& fname)  {
-  convertMaterials(XML::DocumentHandler().load(fname).root());
-}
-
-void LCDDImp::convertMaterials(XML::Handle_t materials)  {
-  Converter<Materials>(*this)(materials);
-}
-
-void LCDDImp::addStdMaterials()   {
-  convertMaterials("file:../cmt/elements.xml");
-  convertMaterials("file:../cmt/materials.xml");
-}
-
-void LCDDImp::fromCompact(const string& fname)  {
-  fromCompact(XML::DocumentHandler().load(fname).root());
 }
 
 void LCDDImp::create()  {
