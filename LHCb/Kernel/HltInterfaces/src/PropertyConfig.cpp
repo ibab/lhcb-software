@@ -1,10 +1,12 @@
 #include <cstdlib>
+#include <memory>
 #include "Kernel/PropertyConfig.h"
 #include "boost/regex.hpp"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IProperty.h"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include <boost/algorithm/string/erase.hpp>
 
 using namespace std;
 using namespace boost;
@@ -12,11 +14,11 @@ using namespace boost::lambda;
 
 void PropertyConfig::initProperties(const IProperty& obj) {
     typedef vector<Property*> PropertyList;
-    PropertyList items = obj.getProperties();
+    const PropertyList& items = obj.getProperties();
     for (PropertyList::const_iterator i = items.begin(); i!=items.end();++i) {
-        m_properties.push_back(make_pair((*i)->name(),(*i)->toString()));
+        m_properties.push_back(make_pair((*i)->name(),boost::algorithm::erase_all_copy((*i)->toString(), "\n")));
         // verify that toString / fromString are each others inverse...
-        Property* clone = (*i)->clone();
+        std::auto_ptr<Property> clone( (*i)->clone() );
         if ( clone->fromString(m_properties.back().second).isFailure() ) {
             std::cerr << "Property::fromString fails to parse Property::toString" << std::endl;
             std::cerr << "component: " << m_kind << " / " << m_name << ", property type: " << (*i)->type()<< " : " << (*i)->name() << " -> " << (*i)->toString() << std::endl;
@@ -62,7 +64,7 @@ PropertyConfig PropertyConfig::copyAndModify(const std::string& keyAndValue) con
 }
 
 istream& PropertyConfig::read(istream& is) {
-    //TODO: switch to XML
+    //TODO: switch to XML/JSON
     bool parsing_properties = false;
     static boost::regex name("^Name: (.*)$"),
                         type("^Type: (.*)$"),
@@ -103,13 +105,14 @@ istream& PropertyConfig::read(istream& is) {
 }
 
 ostream& PropertyConfig::print(ostream& os) const {
-    //TODO: switch to XML
+    //TODO: switch to XML/JSON
+
     os << "Name: " << m_name << '\n'
        << "Kind: " << m_kind << '\n'
        << "Type: " << m_type << '\n'
        << "Properties: [\n";
     for (Properties::const_iterator i=m_properties.begin();i!=m_properties.end();++i ) 
-        os << " '"<< i->first << "':"<<i->second<<'\n';
+        os << " '"<< i->first << "':"<< boost::algorithm::erase_all_copy(i->second, "\n") <<'\n';
     return os << "]" << endl;
 }
 
