@@ -16,9 +16,9 @@ from microdstelements import ( CloneParticleTrees, ClonePVRelations,
                                PackRecObjects, CleanEmptyEventNodes )
 
 def stripDSTElements(pack=False) :
-    elements = [ CloneParticleTrees(copyProtoParticles = False ),
-                  ClonePVRelations("Particle2VertexRelations",True),
-                  ]
+    elements = [ CloneParticleTrees( ProtoParticleConer = "NONE" ),
+                 ClonePVRelations("Particle2VertexRelations",True),
+                 ]
     if pack :
         elements += [ PackStrippingReports(),
                       PackParticlesAndVertices(),

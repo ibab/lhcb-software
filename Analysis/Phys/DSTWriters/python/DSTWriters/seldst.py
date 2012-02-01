@@ -13,7 +13,7 @@ from streamconf import OutputStreamConf
 from microdstelements import CloneParticleTrees, ClonePVRelations
 
 def selDSTElements() :
-    return[CloneParticleTrees(copyProtoParticles = False),
+    return[CloneParticleTrees(ProtoParticleConer = "NONE"),
            ClonePVRelations("Particle2VertexRelations",True)]
 
 def selDSTStreamConf() :

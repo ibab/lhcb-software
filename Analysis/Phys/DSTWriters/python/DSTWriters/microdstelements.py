@@ -86,9 +86,9 @@ class CloneSwimmingReports(MicroDSTElement):
 class CloneParticleTrees(MicroDSTElement) :
 
     def __init__( self, branch='',
-                  copyProtoParticles = True ) :
+                  ProtoParticleConer = "ProtoParticleCloner" ) :
         MicroDSTElement.__init__(self, branch)
-        self.copyPP = copyProtoParticles
+        self.ppCloner = ProtoParticleConer
 
     def __call__(self, sel) :
         
@@ -100,9 +100,9 @@ class CloneParticleTrees(MicroDSTElement) :
         cloner = CopyParticles(self.personaliseName(sel,
                                                     'CopyParticles'))
         cloner.InputLocations = self.dataLocations(sel,"Particles")
-        if not self.copyPP :
-            cloner.addTool(ParticleCloner, name="ParticleCloner")
-            cloner.ParticleCloner.ICloneProtoParticle="NONE"
+        cloner.addTool(ParticleCloner, name="ParticleCloner")
+        cloner.ParticleCloner.ICloneProtoParticle=self.ppCloner
+        
         self.setOutputPrefix(cloner)
 
         confList = ConfigurableList(sel)
@@ -402,7 +402,7 @@ class PackRecObjects(MicroDSTElement) :
                                      OutputName         = self.branch + "/pRec/ProtoP/Neutrals" )
                   ]
 
-        # CALO
+        # CALO Hypos
         from Configurables import PackCaloHypo
         for hypo in [ 'Electrons','Photons','MergedPi0s','SplitPhotons' ] :
             algs += [ PackCaloHypo( name = self.personaliseName(sel,"PackCalo"+hypo),

@@ -70,7 +70,7 @@ def microDSTElements(pack=False) :
                  CloneODIN(),
                  GlobalEventCounters(configGenerator=_gecConfig),
                  ClonePVs(),
-                 CloneParticleTrees(copyProtoParticles = True),
+                 CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations("Particle2VertexRelations",True),
                  CloneRawBanks( banks = ['ODIN'] )
                  ]
@@ -92,7 +92,7 @@ def stripMicroDSTElements(pack=False) :
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
     elements = [ ClonePVs(),
-                 CloneParticleTrees(copyProtoParticles = True),
+                 CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations("Particle2VertexRelations", True),
                  CloneLHCbIDs(fullDecayTree = True),
                  ReFitAndClonePVs(),
