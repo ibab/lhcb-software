@@ -56,47 +56,67 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
   LHCb::CaloHypo* clone =
     cloneKeyedContainerItem<BasicCaloHypoCloner>(hypo);
 
-  if (!clone) return NULL;
+  if (!clone) return clone;
 
+  clone->clearHypos();
   const SmartRefVector<LHCb::CaloHypo> & hypos = hypo->hypos();
   if (!hypos.empty())
   {
-    //clone->clearHypos();
     SmartRefVector<LHCb::CaloHypo> clonedHypos;
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = hypos.begin();
           iCalo != hypos.end(); ++iCalo )
     {
-      clonedHypos.push_back((*this)(*iCalo));
-      //clone->addToHypos( (*this)(*iCalo));
+      if ( *iCalo )
+      {
+        LHCb::CaloHypo * _hypo = (*this)(*iCalo);
+        if ( _hypo ) { clonedHypos.push_back(_hypo); }
+      }
+      else
+      {
+        Warning( "CaloHypo has null hypo SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
+      }
     }
     clone->setHypos(clonedHypos);
   }
 
+  clone->clearDigits();
   const SmartRefVector<LHCb::CaloDigit> & digits = hypo->digits();
   if (!digits.empty())
   {
-    //    clone->clearDigits();
     SmartRefVector<LHCb::CaloDigit> clonedDigits;
     for ( SmartRefVector<LHCb::CaloDigit>::const_iterator iCalo = digits.begin();
           iCalo != digits.end(); ++iCalo )
     {
-      clonedDigits.push_back(cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo) );
-      //clone->addToDigits( cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo) );
+      if ( *iCalo )
+      {
+        LHCb::CaloDigit * _digit = cloneKeyedContainerItem<BasicCaloDigitCloner>(*iCalo);
+        if ( _digit ) { clonedDigits.push_back( _digit ); }
+      }
+      else
+      {
+        Warning( "CaloHypo has null digit SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
+      }
     }
     clone->setDigits(clonedDigits);
-
   }
 
+  clone->clearClusters();
   const SmartRefVector<LHCb::CaloCluster> & clusters = hypo->clusters();
   if (!clusters.empty())
   {
-    //clone->clearClusters();
     SmartRefVector<LHCb::CaloCluster> clonedClusters;
     for ( SmartRefVector<LHCb::CaloCluster>::const_iterator iCalo = clusters.begin();
           iCalo != clusters.end(); ++iCalo )
     {
-      clonedClusters.push_back((*m_caloClusterCloner)(*iCalo) );
-      //clone->addToClusters( (*m_caloClusterCloner)(*iCalo) );
+      if ( *iCalo )
+      {
+        LHCb::CaloCluster * _cluster = (*m_caloClusterCloner)(*iCalo);
+        if ( _cluster ) { clonedClusters.push_back( _cluster ); }
+      }
+      else
+      {
+        Warning( "CaloHypo has null cluster SmartRef -> skipping", StatusCode::SUCCESS ).ignore();
+      }
     }
     clone->setClusters(clonedClusters);
   }

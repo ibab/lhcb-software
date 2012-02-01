@@ -53,11 +53,9 @@ private:
 
   ICloneTrack* m_trackCloner;
   ICloneCaloHypo* m_caloHypoCloner;
-  ICloneMuonPID* m_muonPIDCloner;
 
   std::string m_trackClonerName;
   std::string m_caloHypoClonerName;
-  std::string m_muonPIDClonerName;
 
 };
 #endif // MICRODST_PROTOPARTICLECLONER_H

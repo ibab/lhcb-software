@@ -1,8 +1,8 @@
 // $Id: CaloClusterCloner.cpp,v 1.1 2010-08-13 14:33:57 jpalac Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // from LHCb
 #include "Event/CaloCluster.h"
@@ -37,16 +37,18 @@ LHCb::CaloCluster* CaloClusterCloner::operator() (const LHCb::CaloCluster* clust
 
 LHCb::CaloCluster* CaloClusterCloner::clone(const LHCb::CaloCluster* cluster)
 {
-  LHCb::CaloCluster* clone = 
+  LHCb::CaloCluster* clone =
     cloneKeyedContainerItem<BasicCaloClusterCloner>(cluster);
+
+  if ( !clone ) return clone;
 
   const std::vector<LHCb::CaloClusterEntry> & entries = cluster->entries();
 
-  if (!entries.empty()) 
+  if (!entries.empty())
   {
     std::vector<LHCb::CaloClusterEntry> clonedEntries;
     for ( std::vector<LHCb::CaloClusterEntry>::const_iterator iCalo = entries.begin();
-          iCalo != entries.end(); ++iCalo ) 
+          iCalo != entries.end(); ++iCalo )
     {
       const LHCb::CaloDigit* digitClone = cloneKeyedContainerItem<BasicCaloDigitCloner>((*iCalo).digit());
       LHCb::CaloClusterEntry entryClone = (*iCalo);
@@ -56,13 +58,13 @@ LHCb::CaloCluster* CaloClusterCloner::clone(const LHCb::CaloCluster* cluster)
     clone->setEntries( clonedEntries );
   }
 
-  return clone;  
+  return clone;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloClusterCloner::~CaloClusterCloner() {} 
+CaloClusterCloner::~CaloClusterCloner() {}
 
 //=============================================================================
 

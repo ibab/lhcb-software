@@ -48,7 +48,7 @@ ParticleCloner::~ParticleCloner() {}
 
 StatusCode ParticleCloner::initialize()
 {
-  StatusCode sc = base_class::initialize();
+  const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
   debug() << "Going to initialise ICloneProtoParticle and ICloneVertex" << endmsg;

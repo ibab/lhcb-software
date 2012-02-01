@@ -31,17 +31,14 @@ ProtoParticleDeepCloner::ProtoParticleDeepCloner( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
   :
-  base_class ( type, name , parent ),
-  m_trackCloner(0),
-  m_caloHypoCloner(0),
-  m_muonPIDCloner(0),
-  m_trackClonerName("TrackCloner"),
-  m_caloHypoClonerName("CaloHypoCloner"),
-  m_muonPIDClonerName("MuonPIDCloner")
+  base_class           ( type, name , parent ),
+  m_trackCloner        ( NULL ),
+  m_caloHypoCloner     ( NULL ),
+  m_trackClonerName    ( "TrackCloner"    ),
+  m_caloHypoClonerName ( "CaloHypoCloner" )
 {
   declareProperty("ICloneTrack", m_trackClonerName);
   declareProperty("ICloneCaloHypo", m_caloHypoClonerName);
-  declareProperty("ICloneMuonPID", m_muonPIDClonerName);
 }
 
 //=============================================================================
@@ -51,9 +48,8 @@ StatusCode ProtoParticleDeepCloner::initialize()
   const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_trackCloner = tool<ICloneTrack>(m_trackClonerName, this->parent() );
-  m_caloHypoCloner = tool<ICloneCaloHypo>(m_caloHypoClonerName, this->parent() );
-  m_muonPIDCloner = tool<ICloneMuonPID>(m_muonPIDClonerName, this->parent() );
+  m_trackCloner    = tool<ICloneTrack>    ( m_trackClonerName,    this->parent() );
+  m_caloHypoCloner = tool<ICloneCaloHypo> ( m_caloHypoClonerName, this->parent() );
 
   return sc;
 }
@@ -78,35 +74,45 @@ LHCb::ProtoParticle* ProtoParticleDeepCloner::clone(const LHCb::ProtoParticle* p
 
   if ( m_trackCloner )
   {
-    protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track() ) );
+    protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track()) );
   }
 
-  if ( m_muonPIDCloner ) 
-  {
-    protoParticleClone->setMuonPID( (*m_muonPIDCloner)(protoParticle->muonPID()) );
-  }
-
-  if ( m_caloHypoCloner ) 
-  {
-    const SmartRefVector<LHCb::CaloHypo> & caloHypos = protoParticle->calo();
-    if ( !caloHypos.empty() )
-    {
-      SmartRefVector<LHCb::CaloHypo> clonedHypos;
-      for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
-            iCalo != caloHypos.end(); ++iCalo) 
-      {
-        clonedHypos.push_back((*m_caloHypoCloner)(*iCalo));
-      }
-      protoParticleClone->setCalo(clonedHypos);
-    }
-  }
-
+  // Rich PID
   LHCb::RichPID* clonedRichPID =
     cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
-  if ( clonedRichPID ) 
+  if ( clonedRichPID )
   {
-    clonedRichPID->setTrack(protoParticleClone->track());
-    protoParticleClone->setRichPID(clonedRichPID);
+    // set the main track
+    clonedRichPID->setTrack( protoParticleClone->track() );
+  }
+  protoParticleClone->setRichPID(clonedRichPID);
+
+  // MUON PID
+  LHCb::MuonPID* clonedMuonPID =
+    cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
+  if ( clonedMuonPID )
+  {
+    // Set the main track
+    clonedMuonPID->setIDTrack( protoParticleClone->track() );
+
+    // Clone and set the Muon Track
+    clonedMuonPID->setMuonTrack( (*m_trackCloner)(protoParticle->muonPID()->muonTrack()) );
+  }
+  protoParticleClone->setMuonPID(clonedMuonPID);
+
+  // CALO
+  protoParticleClone->clearCalo();
+  const SmartRefVector<LHCb::CaloHypo> & caloHypos = protoParticle->calo();
+  if ( !caloHypos.empty() )
+  {
+    for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
+          iCalo != caloHypos.end(); ++iCalo)
+    {
+      // Deep cloning
+      LHCb::CaloHypo * hypoClone = (*m_caloHypoCloner)(*iCalo);
+      // save
+      if ( hypoClone ) protoParticleClone->addToCalo(hypoClone);
+    }
   }
 
   return protoParticleClone;

@@ -71,6 +71,7 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track()) );
   }
 
+  // Rich PID
   LHCb::RichPID* clonedRichPID =
     cloneKeyedContainerItem<RichPIDCloner>(protoParticle->richPID());
   if ( clonedRichPID )
@@ -78,10 +79,9 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     // set the main track
     clonedRichPID->setTrack( protoParticleClone->track() );
   }
-
-  // set the RichPID in the cloned ProtoParticle
   protoParticleClone->setRichPID(clonedRichPID);
 
+  // MUON PID
   LHCb::MuonPID* clonedMuonPID =
     cloneKeyedContainerItem<MuonPIDCloner>(protoParticle->muonPID());
   if ( clonedMuonPID )
@@ -92,19 +92,28 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     // Clone and set the Muon Track
     clonedMuonPID->setMuonTrack( (*m_trackCloner)(protoParticle->muonPID()->muonTrack()) );
   }
-
-  // Set the Muon PID in the cloned ProtoParticle
   protoParticleClone->setMuonPID(clonedMuonPID);
 
+  // CALO
+  protoParticleClone->clearCalo();
   const SmartRefVector<LHCb::CaloHypo> & caloHypos = protoParticle->calo();
   if ( !caloHypos.empty() )
   {
-    protoParticleClone->clearCalo();
     for ( SmartRefVector<LHCb::CaloHypo>::const_iterator iCalo = caloHypos.begin();
           iCalo != caloHypos.end(); ++iCalo )
     {
-      LHCb::CaloHypo* hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
-      if (hypoClone) protoParticleClone->addToCalo(hypoClone);
+      // Basic Cloner
+      LHCb::CaloHypo * hypoClone = cloneKeyedContainerItem<CaloHypoCloner>(*iCalo);
+      if ( hypoClone )
+      {
+        // For basic Cloner, set hypo, cluster and digit smartref vectors to empty
+        // as the basic cloning keeps them pointing to the originals
+        hypoClone->clearHypos();
+        hypoClone->clearDigits();
+        hypoClone->clearClusters();
+        // save
+        protoParticleClone->addToCalo(hypoClone);
+      }
     }
   }
 
