@@ -87,7 +87,7 @@ use GaudiObjDesc          v11r12
 
 # Kernel packages
 use HistoStrings          v1r3    Kernel  # Vanya Belyaev 
-use HltInterfaces         v4r4    Kernel  # Patrick Koppenburg
+use HltInterfaces         v4r5    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r47   Kernel  # Marco Cattaneo
 use LHCbKernel            v13r8   Kernel  # Marco Cattaneo

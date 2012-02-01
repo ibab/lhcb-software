@@ -21,9 +21,9 @@ Development version for 2012 data taking
     Det/DetDescSvc v3r5, Det/MuonDet v9r8, Det/RichDet v16r9, Det/STDet v4r27,
     Det/VeloDet v13r18, Event/EventPacker v2r11, Event/PackedEvent v4r6,
     Event/TrackEvent v5r14, Ex/IOExample v4r4, GaudiConf v15r6,
-    Kernel/LHCbAlgs v2r47, Kernel/LHCbKernel v13r8, Kernel/LHCbMath v3r29,
-    Kernel/XMLSummaryKernel v1r4, Phys/LoKiCore v11r6, Phys/LoKiGen v10r5,
-    Phys/LoKiMC v10r4, Rich/RichKernel v7r48
+    Kernel/HltInterfaces v4r5, Kernel/LHCbAlgs v2r47, Kernel/LHCbKernel v13r8,
+    Kernel/LHCbMath v3r29, Kernel/XMLSummaryKernel v1r4, Phys/LoKiCore v11r6,
+    Phys/LoKiGen v10r5, Phys/LoKiMC v10r4, Rich/RichKernel v7r48
 
 - In CaloDAQ v4r26
   . Do not cache pedestalShift at initialize, get it from detector element
@@ -135,6 +135,9 @@ Development version for 2012 data taking
   . Remove GaudiPoolDb from requirements ready for Gaudi v23r0
   . Move tests around to cope with missing POOL services
   . Fixed moved tests so that they keep their own references.
+
+- In HltInterfaces v4r5
+  . Fix to PropertyConfig to remove embedded newlines from properties
 
 - In LHCbAlgs v2r47
   . Added the algorithm DQFilterByRun. It is equivalent to DQFilter, but rejects
