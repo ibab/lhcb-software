@@ -98,7 +98,7 @@ class StrippingConf ( object ) :
         """
         if self._sequence == None :
             from Configurables import GaudiSequencer
-            log.info("Initialising GaudiSequencer/"+ self._name)
+            log.debug("Initialising GaudiSequencer/"+ self._name)
             self._sequence = GaudiSequencer(self._name,
                                             ModeOR = True, 
                                             ShortCircuit = False,

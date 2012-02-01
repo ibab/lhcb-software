@@ -76,7 +76,7 @@ class StrippingStream ( object ) :
 	    	line.MaxCombinations = self.MaxCombinations
 	    	    
 	    line.createConfigurable( self.TESPrefix, self.HDRLocation )
-            log.info("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
+            log.debug("ADDING configurable " + line.configurable().name() + "to stream " + self.name() )
             self.algs.append(line.configurable())
 
         # Make the line for stream decision (OR of all stream lines)
