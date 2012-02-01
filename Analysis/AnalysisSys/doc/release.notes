@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2012-02-01 - Jibo He
+ - Added Phys/TMVASelections package
+
 </PRE><H1><A NAME=v7r2>2011-11-10 Analysis v7r2 </A></H1><PRE>
 
 Based on Phys v13r2.

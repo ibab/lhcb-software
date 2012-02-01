@@ -60,6 +60,8 @@ use  MicroDSTExample            v2r14   Ex         # Juan Palacios
 
 use TrackSmearing               v1r1    Phys   # Alex Shires
 
+use TMVASelections              v*      Phys   # Stripping coordinators 
+
 # Declare this as a container package
 apply_pattern container_package
 
