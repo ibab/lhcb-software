@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2011-02-01 - Anton Poluektov
+ - StrippingReport: 
+   * Get rid of using DecReports. 
+
 !========================= StrippingAlgs v1r7 2011-06-21 =========================
 ! 2011-05-27 - Anton Poluektov 
  - StrippingReport: 

@@ -33,14 +33,14 @@ StrippingReport::StrippingReport( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
-  declareProperty("HDRLocation", m_hdrLocation = "Strip/Phys/DecReports");
+  declareProperty("HDRLocation", m_hdrLocation = "");
   declareProperty("Selections", m_selections);
   declareProperty("OnlyPositive", m_onlyPositive = true);
   declareProperty("EveryEvent", m_everyEvent = false);
   declareProperty("ReportFrequency", m_reportFreq = 100);
-  declareProperty("PrintNonResponding", m_printNonResponding = true);
-  declareProperty("PrintHot", m_printHot = true);
-  declareProperty("HotThreshold", m_hotThreshold = 0.5);
+  declareProperty("PrintNonResponding", m_printNonResponding = false);
+  declareProperty("PrintHot", m_printHot = false);
+  declareProperty("HotThreshold", m_hotThreshold = 0.0005);
   declareProperty("NormalizeByGoodEvents", m_normalizeByGoodEvents = true);
   declareProperty("Latex", m_latex = false);
 }
@@ -99,7 +99,7 @@ void StrippingReport::report(bool onlyPositive) {
 
   char str[128];
   
-  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|%7.7s|%7.7s|%7.7s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*","*Errs*","*Incds*","*Slow*");
+  sprintf(str," |%51.51s|%8.8s|%10.10s|%7.7s|%8.8s|", "*Decision name*", "*Rate,%*", "*Accepted*", "*Mult*","*ms/evt*");
 
   info() << "Event " << m_event << ", Good event " << m_goodEvent << "\n" << str << "\n";
 
@@ -120,11 +120,11 @@ void StrippingReport::report(bool onlyPositive) {
       if (i->decisions > 0) mult = (double)i->candidates/(double)i->decisions;
       if (i->decisions > 0 || !onlyPositive) {
         if (i->avgtime > 0) 
-          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|%8.3f|%7d|%7d|%7d|", outputName.data(), 
-                  rate, i->decisions, mult, i->avgtime, i->errors, i->incidents, i->slow_events);
+          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|%8.3f|", outputName.data(), 
+                  rate, i->decisions, mult, i->avgtime);
         else 
-          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|        |%7d|%7d|%7d|", outputName.data(), 
-                  rate, i->decisions, mult, i->errors, i->incidents, i->slow_events);
+          sprintf(str," |%-51.51s|%8.4f|%10.1d|%7.3f|        |", outputName.data(), 
+                  rate, i->decisions, mult);
         info() << str << "\n";
       }
     } else if (i->decisions > 0 || !onlyPositive) {
@@ -132,9 +132,9 @@ void StrippingReport::report(bool onlyPositive) {
 
       // Not a Selection::Line
       if (i->avgtime > 0) 
-        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |%8.3f|       |       |       |", outputName.data(), rate, i->decisions, i->avgtime);
+        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |%8.3f|", outputName.data(), rate, i->decisions, i->avgtime);
       else 
-        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |        |       |       |       |", outputName.data(), rate, i->decisions);
+        sprintf(str," |%-51.51s|%8.4f|%10.1d|       |        |", outputName.data(), rate, i->decisions);
       info() << str << "\n";
     }
       
@@ -210,8 +210,6 @@ StatusCode StrippingReport::execute() {
 
   char str[128];
 
-  LHCb::HltDecReports* reports = get<LHCb::HltDecReports>(m_hdrLocation);
-
   if (m_everyEvent) { 
     sprintf(str,"%-51.51s: %4s %5s", "Decision name", "Decn", "Cands");
  
@@ -226,21 +224,6 @@ StatusCode StrippingReport::execute() {
     
     i->avgtime = -1;
 
-    const LHCb::HltDecReport* report = 0;
-    if (reports) { 
-      report = reports->decReport(i->name + "Decision");
-      verbose() << "HDRs found at " << m_hdrLocation << endmsg;
-    }
-    
-    if (report) {
-      if (report->errorBits() & 0x01) i->errors++;
-      if (report->errorBits() & 0x02) i->incidents++;
-      if (report->errorBits() & 0x04) i->slow_events++;
-      verbose() << "HDR " << i->name << " found" << endmsg;
-    } else {
-      verbose() << "HDR " << i->name << " NOT found" << endmsg;    
-    }
-    
     IAlgorithm* myIAlg(0);
 
     StatusCode result = m_algMgr->getAlgorithm( i->name, myIAlg );
@@ -264,14 +247,13 @@ StatusCode StrippingReport::execute() {
         } 
     }
     
-    if (report) {
+    if (cand>=0) {
 
-      // The decision is valid only if the line has been run, i.e. if the corresponding HDR exists. 
-      // Otherwise, it was an event marked as "bad". 
       i->candidates += cand;
       i->decisions += passed;
 
-    } else if (cand < 0) {
+    } else 
+    if (cand < 0) {
 
       // It is a sequencer
       i->candidates = -1;
