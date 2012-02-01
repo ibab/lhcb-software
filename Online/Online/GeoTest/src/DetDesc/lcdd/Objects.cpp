@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/IDDescriptor.h"
 
@@ -169,7 +178,7 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
   assign(new Value<TNamed,TMap>(),name,"limitset");
 }
 
-void LimitSet::addLimit(const RefElement_type<TNamed>& limit)   {
+void LimitSet::addLimit(const RefHandle<TNamed>& limit)   {
   data<TMap>()->Add(limit,limit);
 }
 

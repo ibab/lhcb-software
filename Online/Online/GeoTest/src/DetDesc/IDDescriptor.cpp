@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/IDDescriptor.h"
 #include <stdexcept>
 #include <cstdlib>

@@ -1,8 +1,17 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/compact/Detector.h"
 
 namespace DetDesc {
 
-  typedef Geometry::RefElement_type<TNamed> Ref_t;
+  typedef Geometry::RefHandle<TNamed> Ref_t;
 
   struct TPCData : public Geometry::Subdetector::Object {
     Ref_t outerWall;

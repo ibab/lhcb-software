@@ -1,8 +1,17 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_LCDD_LCDD_H
 #define DETDESC_LCDD_LCDD_H
 
 // Framework includes
-#include "DetDesc/Elements.h"
+#include "DetDesc/Handle.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Volumes.h"
@@ -23,9 +32,14 @@ namespace DetDesc {
    */
   namespace Geometry  {
 
+    /** @class LCDD LCDD.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct LCDD {
-      typedef std::map<std::string,Element_type<TObject> > HandleMap;
-      typedef RefElement_type<TNamed> Ref_t;
+      typedef std::map<std::string,Handle<TObject> > HandleMap;
+      typedef RefHandle<TNamed> Ref_t;
 
       virtual ~LCDD() {}
 

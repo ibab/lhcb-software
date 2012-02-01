@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_IDDESCRIPTOR_H
 #define DETDESC_IDDESCRIPTOR_H
 

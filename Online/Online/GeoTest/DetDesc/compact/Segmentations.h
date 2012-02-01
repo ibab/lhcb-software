@@ -1,18 +1,34 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_GEOMETRY_SEGMENTATIONS_H
 #define DETDESC_GEOMETRY_SEGMENTATIONS_H
-#include "DetDesc/Elements.h"
+
+// Framework include files
+#include "DetDesc/Handle.h"
 
 /*
  *   DetDesc namespace declaration
  */
 namespace DetDesc {
-
+  
   /*
-  *   XML namespace declaration
-  */
+   *   XML namespace declaration
+   */
   namespace Geometry  {
 
-    struct Segmentation : public RefElement_type<TNamed>   {
+    /** @class Segmentation Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
+    struct Segmentation : public RefHandle<TNamed>   {
       struct Object  {
         unsigned char Attr_useForHitPosition;
         union {
@@ -45,19 +61,24 @@ namespace DetDesc {
         }
       };
       /// Default constructor
-      Segmentation() : RefElement_type<Implementation>() {}
+      Segmentation() : RefHandle<Implementation>() {}
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> Segmentation(const Element_type<Q>& e) 
-	: RefElement_type<Implementation>(e){}
+      template <typename Q> Segmentation(const Handle<Q>& e) 
+	: RefHandle<Implementation>(e){}
       /// Constructor to create a new segmentation object (to be called by super class only)
       Segmentation(LCDD& lcdd, const std::string& type);
       bool useForHitPosition() const;
       const std::string type() const;
     };
 
+    /** @class ProjectiveCylinder Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct ProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> ProjectiveCylinder(const Element_type<Q>& e) : Segmentation(e) {}
+      template <typename Q> ProjectiveCylinder(const Handle<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       ProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get number of bins in theta
@@ -70,9 +91,14 @@ namespace DetDesc {
       void setPhiBins(int value);
     };
 
+    /** @class NonProjectiveCylinder Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct NonProjectiveCylinder : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> NonProjectiveCylinder(const Element_type<Q>& e) : Segmentation(e) {}
+      template <typename Q> NonProjectiveCylinder(const Handle<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       NonProjectiveCylinder(LCDD& lcdd);
       /// Accessors: get size of bins in Z
@@ -85,9 +111,14 @@ namespace DetDesc {
       void setPhiBinSize(double value);
     };
 
+    /** @class ProjectiveZPlane Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct ProjectiveZPlane : public Segmentation  {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> ProjectiveZPlane(const Element_type<Q>& e) : Segmentation(e) {}
+      template <typename Q> ProjectiveZPlane(const Handle<Q>& e) : Segmentation(e) {}
       /// Constructor to create a new segmentation object
       ProjectiveZPlane(LCDD& lcdd);
       /// Accessors: get number of bins in theta
@@ -100,9 +131,14 @@ namespace DetDesc {
       void setPhiBins(int value);
     };
 
+    /** @class GridXY Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct GridXY : public Segmentation   {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> GridXY(const Element_type<Q>& e) : Segmentation(e) {}
+      template <typename Q> GridXY(const Handle<Q>& e) : Segmentation(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GridXY(LCDD& lcdd, const std::string& tag);
       /// Constructor to be used when creating a new object.
@@ -113,9 +149,14 @@ namespace DetDesc {
       void setGridSizeY(double value);
     };
 
+    /** @class GridXYZ Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct GridXYZ : public GridXY  {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> GridXYZ(const Element_type<Q>& e) : GridXY(e) {}
+      template <typename Q> GridXYZ(const Handle<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object.
       GridXYZ(LCDD& lcdd);
       /// Constructor to be used when creating a new object.
@@ -124,20 +165,30 @@ namespace DetDesc {
       void setGridSizeZ(double value);
     };
 
+    /** @class CartesianGridXY Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct CartesianGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> CartesianGridXY(const Element_type<Q>& e) : GridXY(e) {}
+      template <typename Q> CartesianGridXY(const Handle<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       CartesianGridXY(LCDD& lcdd) : GridXY(lcdd,"cartesian_grid_xy") {}
     };
 
+    /** @class GlobalGridXY Segmentations.h DetDesc/compact/Segmentations.h
+     *
+     * @author  M.Frank
+     * @version 1.0
+     */
     struct GlobalGridXY : public GridXY   {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> GlobalGridXY(const Element_type<Q>& e) : GridXY(e) {}
+      template <typename Q> GlobalGridXY(const Handle<Q>& e) : GridXY(e) {}
       /// Constructor to be used when creating a new object. Data are taken from the input handle
       GlobalGridXY(LCDD& lcdd) : GridXY(lcdd,"global_grid_xy") {}
     };
 
-  }
+  }       /* End namespace Geometry               */
 }         /* End namespace DetDesc                */
 #endif    /* DETDESC_GEOMETRY_SEGMENTATIONS_H     */

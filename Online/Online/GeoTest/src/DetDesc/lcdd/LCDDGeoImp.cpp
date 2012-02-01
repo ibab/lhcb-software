@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "LCDDGeoImp.h"
 #include "../compact/Conversions.h"
 #include "XML/DocumentHandler.h"
@@ -90,7 +99,7 @@ Transform LCDDImp::transform(const std::string& name) const {
   return tr;
 }
 
-Element_type<TObject> LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
+Handle<TObject> LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
   HandleMap::const_iterator i = e.find(name);
   if ( i != e.end() )  {
     return (*i).second;

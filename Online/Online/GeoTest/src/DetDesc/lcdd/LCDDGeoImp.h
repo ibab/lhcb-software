@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_LCDDGEOIMP_H
 #define DETDESC_LCDDGEOIMP_H
 #include "DetDesc/lcdd/LCDD.h"
@@ -95,7 +104,7 @@ namespace DetDesc {
 
       void dump() const;
 
-      virtual Element_type<TObject>  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
+      virtual Handle<TObject>  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
       virtual Volume         pickMotherVolume(const Subdetector& sd) const;
       virtual Volume         worldVolume() const      { return m_worldVol;          }
       virtual Volume         trackingVolume() const   { return m_trackingVol;       }

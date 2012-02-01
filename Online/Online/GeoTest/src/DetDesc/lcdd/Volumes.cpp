@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/lcdd/LCDD.h"
 
 // ROOT include files
@@ -119,14 +128,14 @@ Solid Volume::solid() const   {
 }
 
 Material Volume::material() const   {
-  return Element_type<TGeoMaterial>(m_element->GetMaterial());
+  return Handle<TGeoMaterial>(m_element->GetMaterial());
 }
 
 VisAttr Volume::visAttributes() const   {
   return data<Object>()->Attr_vis;
 }
 
-RefElement_type<TNamed> Volume::sensitiveDetector() const    {
+RefHandle<TNamed> Volume::sensitiveDetector() const    {
   return data<Object>()->Attr_sens_det;
 }
 

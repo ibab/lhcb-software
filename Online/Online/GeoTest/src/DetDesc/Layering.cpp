@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "XML/compact/XMLDetector.h"
 #include "DetDesc/Layering.h"
 #include <algorithm>

@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_ELEMENTS_H
 #define DETDESC_ELEMENTS_H
 
@@ -40,6 +49,11 @@ namespace DetDesc {
 
     template<typename T> inline void deletePtr(T*& p) { if(p) delete p; p=0; }
 
+    /** @class Value Handle.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     template <typename Q, typename P> struct Value : public Q, public P  {
       typedef  Q first_base;
       typedef  P second_base;
@@ -49,18 +63,23 @@ namespace DetDesc {
     long num_object_validations();
     void increment_object_validations();
 
-    template <typename T> struct Element_type  {
+    /** @class Handle Handle.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    template <typename T=TObject> struct Handle  {
       typedef T Implementation;
 
       Implementation* m_element;
-      Element_type() : m_element(0) {}
-      Element_type(Implementation* e) : m_element(e) {}
-      Element_type(const Element_type<Implementation>& e) : m_element(e.m_element) {}
+      Handle() : m_element(0) {}
+      Handle(Implementation* e) : m_element(e) {}
+      Handle(const Handle<Implementation>& e) : m_element(e.m_element) {}
 
-      template<typename Q> Element_type(Q* e)
+      template<typename Q> Handle(Q* e)
 	: m_element((T*)e)           { verifyObject();                  }
 
-      template<typename Q> Element_type(const Element_type<Q>& e) 
+      template<typename Q> Handle(const Handle<Q>& e) 
 	: m_element((T*)e.m_element) { verifyObject();                  }
 
       T* ptr() const                          {  return m_element;      }
@@ -79,13 +98,18 @@ namespace DetDesc {
       static void bad_assignment(const std::type_info& from, const std::type_info& to);
     };
 
-    template <typename T> struct RefElement_type : public Element_type<T>  {
+    /** @class RefHandle Handle.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    template <typename T> struct RefHandle : public Handle<T>  {
       typedef T Implementation;
-      RefElement_type() : Element_type<T>() {}
-      RefElement_type(const Element_type<T>& e) : Element_type<T>(e) {}
+      RefHandle() : Handle<T>() {}
+      RefHandle(const Handle<T>& e) : Handle<T>(e) {}
 
       template<typename Q> 
-      RefElement_type(const Element_type<Q>& e) : Element_type<T>(e) {}
+      RefHandle(const Handle<Q>& e) : Handle<T>(e) {}
 
       const char* name() const;
       const char* refName() const;
@@ -95,13 +119,20 @@ namespace DetDesc {
       operator Implementation& ()  const { return *(this->m_element); }
     };
 
-    template <> struct RefElement_type<TNamed> : public Element_type<TNamed>  {
+    /** @class RefHandle<TNamed> Handle.h
+     *  
+     *  Specialized implementation for the named reference handle
+     *
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    template <> struct RefHandle<TNamed> : public Handle<TNamed>  {
       typedef TNamed Implementation;
-      RefElement_type() : Element_type<TNamed>() {}
-      RefElement_type(const Element_type<TNamed>& e) : Element_type<TNamed>(e) {}
+      RefHandle() : Handle<TNamed>() {}
+      RefHandle(const Handle<TNamed>& e) : Handle<TNamed>(e) {}
 
       template<typename Q> 
-      RefElement_type(const Element_type<Q>& e) : Element_type<TNamed>(e) {}
+      RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
       
       TNamed*  operator->() const { return this->m_element; }
       operator TNamed*() const    { return this->m_element; }

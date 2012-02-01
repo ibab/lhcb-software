@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "Conversions.h"
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/lcdd/Objects.h"
@@ -20,7 +29,7 @@ namespace DetDesc { namespace Geometry {
   }
 
   template <> void Printer<Material>::operator()(const Material& mat)  const  {
-    RefElement_type<TGeoMedium>  val(mat);
+    RefHandle<TGeoMedium>  val(mat);
     os << "++ Medium:" << val->GetName() << " " << val->GetTitle() << " id:" << hex << val->GetId() 
        << " Pointer:" << val->GetPointerName() << dec << endl;
     os << "|  ";

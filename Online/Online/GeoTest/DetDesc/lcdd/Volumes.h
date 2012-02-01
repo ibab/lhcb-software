@@ -1,8 +1,17 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_GEOMETRY_VOLUMES_H
 #define DETDESC_GEOMETRY_VOLUMES_H
 
 // Framework include files
-#include "DetDesc/Elements.h"
+#include "DetDesc/Handle.h"
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Objects.h"
 
@@ -42,13 +51,13 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Volume : public RefElement_type<TGeoVolume>  {
-      typedef RefElement_type<TGeoVolume> Base;
+    struct Volume : public RefHandle<TGeoVolume>  {
+      typedef RefHandle<TGeoVolume> Base;
       struct Object  {
         Region            Attr_region;
         LimitSet          Attr_limits;
         VisAttr           Attr_vis;
-        RefElement_type<TNamed>        Attr_sens_det;
+        RefHandle<TNamed>        Attr_sens_det;
         Object() : Attr_region(), Attr_limits(), Attr_vis(), Attr_sens_det() {}
       };
       /// Default constructor
@@ -58,7 +67,7 @@ namespace DetDesc {
       Volume(const Volume& v) : Base(v) {}
 
       /// Copy from arbitrary Element
-      template <class T> Volume(const Element_type<T>& v) : Base(v) {}
+      template <class T> Volume(const Handle<T>& v) : Base(v) {}
 
       /// Constructor to be used when creating a new geometry tree.
       Volume(LCDD& lcdd, const std::string& name);
@@ -78,7 +87,7 @@ namespace DetDesc {
       Solid solid() const;
       Material material() const;
       VisAttr  visAttributes() const;
-      RefElement_type<TNamed> sensitiveDetector() const;
+      RefHandle<TNamed> sensitiveDetector() const;
       Region region() const;
       /// Auto conversion to underlying ROOT object
       operator TGeoVolume*() const     { return m_element; }
@@ -89,9 +98,9 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct PhysVol : RefElement_type<TGeoVolume> {
+    struct PhysVol : RefHandle<TGeoVolume> {
       /// Constructor to be used when reading the already parsed DOM tree
-      template <class T> PhysVol(const Element_type<T>& e) : RefElement_type<TGeoVolume>(e) {}
+      template <class T> PhysVol(const Handle<T>& e) : RefHandle<TGeoVolume>(e) {}
       /// Add identifier
       PhysVol& addPhysVolID(const std::string& name, int value);
       /// Auto conversion to underlying ROOT object

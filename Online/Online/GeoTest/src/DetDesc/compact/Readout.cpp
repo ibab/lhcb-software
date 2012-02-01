@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/compact/Readout.h"
 
 using namespace std;
@@ -10,7 +19,7 @@ Readout::Readout(const LCDD& /* lcdd */, const string& nam)
 }
 
 /// Access IDDescription structure
-RefElement_type<TNamed> Readout::idSpec() const   {
+RefHandle<TNamed> Readout::idSpec() const   {
   return _data().id;
 }
 
@@ -20,7 +29,7 @@ Segmentation Readout::segmentation() const  {
 }
 
 /// Assign IDDescription to readout structure
-void Readout::setIDDescriptor(const RefElement_type<TNamed>& new_descriptor)  const   {
+void Readout::setIDDescriptor(const RefHandle<TNamed>& new_descriptor)  const   {
   if ( isValid() )  {                    // Remember: segmentation is NOT owned by readout structure!
     if ( new_descriptor.isValid() )  {   // Do NOT delete!
       _data().id = new_descriptor;

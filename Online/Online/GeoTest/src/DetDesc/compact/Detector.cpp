@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "DetDesc/IDDescriptor.h"
 #include "DetDesc/lcdd/LCDD.h"
 
@@ -203,7 +212,7 @@ string SensitiveDetector::type() const  {
 }
 
 /// Assign the IDDescriptor reference
-SensitiveDetector& SensitiveDetector::setIDSpec(const RefElement_type<TNamed>& spec)  {
+SensitiveDetector& SensitiveDetector::setIDSpec(const RefHandle<TNamed>& spec)  {
   _data().Attr_id = spec;
   return *this;
 }

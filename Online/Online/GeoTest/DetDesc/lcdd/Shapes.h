@@ -1,8 +1,17 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #ifndef DETDESC_GEOMETRY_SOLIDS_H
 #define DETDESC_GEOMETRY_SOLIDS_H
 
 // Framework include files
-#include "DetDesc/Elements.h"
+#include "DetDesc/Handle.h"
 
 // C/C++ include files
 #define _USE_MATH_DEFINES
@@ -36,12 +45,12 @@ namespace DetDesc {
     struct Position;
     struct Rotation;
 
-    /**@class ZPlane
-    *  Not identifyable object - no RefElement
-    *
-    *   @author  M.Frank
-    *   @version 1.0
-    */
+    /**@class ZPlane Shapes.h 
+     *  Not identifyable object - no RefElement
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct ZPlane  {
       double m_rmin, m_rmax, m_z;
       /// Constructor to be used when creating a new object
@@ -55,7 +64,14 @@ namespace DetDesc {
       double z()    const { return m_z;    }
     };
 
-    template <typename T> struct Solid_type : public RefElement_type<T>  {
+    /**@class Solid_type Shapes.h 
+     *
+     *   Base class for Solid objects
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
+    template <typename T> struct Solid_type : public RefHandle<T>  {
       protected:
       typedef T Implementation;
       void _setDimensions(double* param);
@@ -66,17 +82,17 @@ namespace DetDesc {
       public:
 
       /// Default constructor for uninitialized object
-      Solid_type() : RefElement_type<Implementation>() {}
+      Solid_type() : RefHandle<Implementation>() {}
 
       /// Direct assignment using the implementation pointer 
-      Solid_type(Implementation* p) : RefElement_type<Implementation>(p) {}
+      Solid_type(Implementation* p) : RefHandle<Implementation>(p) {}
 
       /// Constructor to be used when reading the already parsed object
-      Solid_type(const Element_type<Implementation>& e) : RefElement_type<Implementation>(e) {}
+      Solid_type(const Handle<Implementation>& e) : RefHandle<Implementation>(e) {}
 
       /// Constructor to be used when reading the already parsed object: need to check pointers
       template <typename Q> 
-      Solid_type(const Element_type<Q>& e) : RefElement_type<T>(e) {}
+      Solid_type(const Handle<Q>& e) : RefHandle<T>(e) {}
 
       /// Auto conversion to underlying ROOT object
       operator Implementation*() const     { return this->m_element; }
@@ -87,6 +103,11 @@ namespace DetDesc {
     typedef Solid_type<TGeoShape> Solid;
 
 
+    /**@class Box Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Box : public Solid_type<TGeoBBox>  {
       protected:
       void make(LCDD& lcdd, const std::string& name, double x, double y, double z);
@@ -94,7 +115,7 @@ namespace DetDesc {
       public:
       /// Constructor to be used when reading the already parsed box object
       template <typename Q> 
-      Box(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      Box(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new box object
       Box(LCDD& lcdd, const std::string& name) 
@@ -113,9 +134,14 @@ namespace DetDesc {
       Box& setDimensions(double x, double y, double z);
     };
 
+    /**@class Polycone Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Polycone : public Solid_type<TGeoPcon>  {
       /// Constructor to be used when reading the already parsed polycone object
-      template <typename Q> Polycone(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      template <typename Q> Polycone(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new polycone object
       Polycone(LCDD& lcdd, const std::string& name);
@@ -130,13 +156,18 @@ namespace DetDesc {
       void addZPlanes(const std::vector<double>& rmin, const std::vector<double>& rmax, const std::vector<double>& z);
     };
 
+    /**@class Tube Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Tube : public Solid_type<TGeoTubeSeg>  {
       protected:
       void make(LCDD& lcdd, const std::string& name,double rmin,double rmax,double z,double deltaPhi);
 
       public:
       /// Constructor to assign an object
-      template <typename Q> Tube(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      template <typename Q> Tube(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new tube object
       Tube(LCDD& lcdd, const std::string& name)
@@ -157,6 +188,11 @@ namespace DetDesc {
       Tube& setDimensions(double rmin, double rmax, double z, double deltaPhi=2*M_PI);
     };
 
+    /**@class Cone Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Cone : public Solid_type<TGeoCone>  {
       protected:
       void make(LCDD& lcdd, const std::string& name,double z,double rmin1,double rmax1,double rmin2,double rmax2);
@@ -164,7 +200,7 @@ namespace DetDesc {
       public:
 
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> Cone(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      template <typename Q> Cone(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new object
       Cone(LCDD& lcdd, const std::string& name)
@@ -187,9 +223,14 @@ namespace DetDesc {
       Cone& setDimensions(double z,double rmin1,double rmax1,double rmin2,double rmax2);
     };
 
+    /**@class Trap Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Trap : public Solid_type<TGeoTrap>  {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> Trap( const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      template <typename Q> Trap( const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new object with attribute initialization
       Trap( LCDD& lcdd, const std::string& name,
@@ -211,9 +252,14 @@ namespace DetDesc {
                           double y2,double x3,double x4,double alpha2);
     };
 
+    /**@class Trapezoid Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct Trapezoid : public Solid_type<TGeoTrd2> {
       /// Constructor to be used when reading the already parsed object
-      template <typename Q> Trapezoid(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      template <typename Q> Trapezoid(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new object
       Trapezoid(LCDD& lcdd, const std::string& name);
@@ -233,14 +279,24 @@ namespace DetDesc {
       double z() const;
     };
 
+    /**@class PolyhedraRegular Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct PolyhedraRegular : public Solid_type<TGeoPgon>  {
       /// Constructor to be used when reading the already parsed object
       template <typename Q> 
-      PolyhedraRegular(const RefElement_type<Q>& e) : Solid_type<Implementation>(e) {}
+      PolyhedraRegular(const RefHandle<Q>& e) : Solid_type<Implementation>(e) {}
       /// Constructor to be used when creating a new object
       PolyhedraRegular(LCDD& lcdd, const std::string& name, int nsides, double rmin, double rmax, double zlen);
     };
 
+    /**@class BooleanSolid Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct BooleanSolid : public Solid_type<TGeoCompositeShape>  {
       protected:
       /// Constructor to be used when reading the already parsed object
@@ -249,15 +305,20 @@ namespace DetDesc {
       public:
       /// Constructor to be used when reading the already parsed object
       template <class Q> 
-      BooleanSolid(const Element_type<Q>& e) : Solid_type<Implementation>(e) {}
+      BooleanSolid(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
 
       /// Constructor to be used when creating a new object
       BooleanSolid(LCDD& lcdd, const std::string& type, const std::string& name, const std::string& expr);
     };
 
+    /**@class SubtractionSolid Shapes.h 
+     *
+     *   @author  M.Frank
+     *   @version 1.0
+     */
     struct SubtractionSolid : public BooleanSolid  {
       /// Constructor to be used when reading the already parsed object
-      template<typename Q> SubtractionSolid(const RefElement_type<Q>& e) : BooleanSolid(e) {}
+      template<typename Q> SubtractionSolid(const RefHandle<Q>& e) : BooleanSolid(e) {}
       /// Constructor to be used when creating a new object
       SubtractionSolid(LCDD& lcdd, const std::string& name, const std::string& expr);
       /// Constructor to be used when creating a new object

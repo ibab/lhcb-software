@@ -1,3 +1,12 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation for LCD
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
+
 #include "XML/lcdd/XMLLCDD.h"
 #include "XML/compact/XMLDetector.h"
 #include "XML/XMLTags.h"
@@ -63,8 +72,8 @@ typedef DetDesc::XML::Subdetector::Component xml_comp_t;
 typedef DetDesc::XML::Subdetector            xml_det_t;
 typedef DetDesc::XML::Dimension              xml_dim_t;
 
-typedef DetDesc::Geometry::LCDD                    lcdd_t;
-typedef DetDesc::Geometry::RefElement_type<TNamed> Ref_t;
+typedef DetDesc::Geometry::LCDD              lcdd_t;
+typedef DetDesc::Geometry::RefHandle<TNamed> Ref_t;
 
 using namespace std;
 using namespace DetDesc;
