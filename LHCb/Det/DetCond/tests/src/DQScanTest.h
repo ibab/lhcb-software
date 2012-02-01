@@ -19,6 +19,9 @@ namespace DetCondTest {
   */
 class DQScanTest: public GaudiAlgorithm {
 public:
+  typedef std::pair<unsigned int, unsigned int> IOVPropType;
+  typedef std::vector<IOVPropType> IOVListPropType;
+
   /// Standard constructor
   DQScanTest(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~DQScanTest(); ///< Destructor
@@ -33,8 +36,8 @@ private:
   /// (property DQScanner)
   std::string m_DQScannerName;
 
-  /// List of IOVs to try to retrieve (property).
-  std::vector<std::pair<unsigned long long, unsigned long long> > m_iovsProp;
+  /// List of IOVs (with time specified in seconds) to try to retrieve (property).
+  IOVListPropType m_iovsProp;
 
   /// List of IOVs to try to retrieve.
   ICondDBReader::IOVList m_iovs;

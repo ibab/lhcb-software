@@ -1,41 +1,33 @@
 // Local custom parsers must be defined very early in the file.
-#include "GaudiKernel/Parsers.h"
 #include "GaudiKernel/ParsersFactory.h"
-
-#include "DetCond/ICondDBReader.h"
-
-#include "boost/foreach.hpp"
 
 namespace Gaudi {
   namespace Parsers {
-    StatusCode parse(ICondDBReader::IOVList& result, const std::string& input) {
-      typedef std::pair<unsigned long long, unsigned long long> iov_t;
-      std::vector<iov_t> temp;
-      result.clear();
-      StatusCode sc = Gaudi::Parsers::parse_(temp, input);
-      if (sc.isSuccess()) {
-        BOOST_FOREACH(iov_t &iov, temp) {
-          result.push_back(ICondDBReader::IOV(Gaudi::Time(iov.first), Gaudi::Time(iov.second)));
-        }
-      }
-      return sc;
-    }
-    StatusCode parse(std::vector<std::pair<unsigned long long, unsigned long long> >& result, const std::string& input) {
+    // Note: to be kept in sync with the property in DetCondTest::DQScanTest
+    StatusCode parse(std::vector<std::pair<unsigned int, unsigned int> >& result, const std::string& input) {
       return Gaudi::Parsers::parse_(result, input);
     }
   }
 }
+
 // Include files
 
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+#include "DetCond/ICondDBReader.h"
+
 // local
 #include "DQScanTest.h"
+
+#include "boost/foreach.hpp"
 
 namespace {
   std::ostream &operator<<(std::ostream& s, const ICondDBReader::IOV& iov) {
     return s << iov.since << " -> " << iov.until;
+  }
+  inline long long s2ns(unsigned int s) {
+    return static_cast<long long>(s) * 1000000000;
   }
 }
 
@@ -58,7 +50,7 @@ DQScanTest::DQScanTest(const std::string& name, ISvcLocator* pSvcLocator)
                   "Type/name of the IDQScanner instance to use.");
   declareProperty("IOVs",
                   m_iovsProp,
-                  "List of IOVs to scan.");
+                  "List of IOVs (specified in seconds) to scan.");
 }
 
 // ============================================================================
@@ -77,10 +69,9 @@ StatusCode DQScanTest::initialize() {
 
   m_scanner = tool<IDQScanner>(m_DQScannerName);
 
-  typedef std::pair<unsigned long long, unsigned long long> iov_t;
   m_iovs.clear();
-  BOOST_FOREACH(iov_t &iov, m_iovsProp) {
-    m_iovs.push_back(ICondDBReader::IOV(Gaudi::Time(iov.first), Gaudi::Time(iov.second)));
+  BOOST_FOREACH(IOVPropType &iov, m_iovsProp) {
+    m_iovs.push_back(ICondDBReader::IOV(Gaudi::Time(s2ns(iov.first)), Gaudi::Time(s2ns(iov.second))));
   }
 
   return StatusCode::SUCCESS;

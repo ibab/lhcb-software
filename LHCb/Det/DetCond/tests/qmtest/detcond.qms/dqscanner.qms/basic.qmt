@@ -12,8 +12,10 @@ def toTimeStamp(dt):
         t = dt
     else:
         t = dt - datetime(1970, 1, 1, 0)
-    return (t.days * 60 * 60 * 24 + t.seconds) * 1000000000
+    return (t.days * 60 * 60 * 24 + t.seconds)
 
+def toTimeStampNS(dt):
+    return toTimeStamp(dt) * 1000000000
 
 dddbConf = DDDBConf()
 
@@ -21,10 +23,10 @@ cdb = CondDB()
 cdb.PartitionConnectionString["DQFLAGS"] = "sqlite_file:../data/DQFLAGS.db/DQFLAGS"
 cdb.Tags["DQFLAGS"] = ""
 
-ecs = EventClockSvc(InitialTime=toTimeStamp(datetime(2012,1,1,12)))
+ecs = EventClockSvc(InitialTime=toTimeStampNS(datetime(2012,1,1,12)))
 ecs.addTool(FakeEventTime, "EventTimeDecoder")
 ecs.EventTimeDecoder.StartTime = ecs.InitialTime
-ecs.EventTimeDecoder.TimeStep = toTimeStamp(timedelta(days=1))
+ecs.EventTimeDecoder.TimeStep = toTimeStampNS(timedelta(days=1))
 
 alg = DQScanTest()
 alg.DQScanner = CondDBDQScanner()
