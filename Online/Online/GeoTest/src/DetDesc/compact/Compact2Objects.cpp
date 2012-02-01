@@ -23,14 +23,14 @@ typedef DetDesc::XML::Handle_t        xml_h;
 typedef DetDesc::XML::RefElement      xml_ref_t;
 typedef DetDesc::XML::Element         xml_elem_t;
 typedef DetDesc::Geometry::LCDD       lcdd_t;
-typedef DetDesc::Geometry::Element    Elt_t;
-typedef DetDesc::Geometry::RefElement Ref_t;
+typedef DetDesc::Geometry::Element_type<TObject>   Elt_t;
+typedef DetDesc::Geometry::RefElement_type<TNamed> Ref_t;
 
 using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
 namespace {
-  template <typename Q> Element toRefObject(LCDD& lcdd, const xml_h& h) 
+  template <typename Q> Elt_t toRefObject(LCDD& lcdd, const xml_h& h) 
   {    return toRefObject<Q,xml_h>(lcdd,h);     }
   static UInt_t unique_mat_id = 0xAFFEFEED;
 }
@@ -271,7 +271,7 @@ namespace DetDesc { namespace Geometry {
   }
 
   namespace  {
-    template <typename T> static RefElement toRefObject(LCDD& lcdd, const xml_h& xml, SensitiveDetector& sens) 
+    template <typename T> static Ref_t toRefObject(LCDD& lcdd, const xml_h& xml, SensitiveDetector& sens) 
     {  return toRefObject<T,xml_h>(lcdd,xml,sens); }
   }
 

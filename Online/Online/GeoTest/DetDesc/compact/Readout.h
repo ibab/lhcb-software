@@ -4,6 +4,7 @@
 // Framework include files
 #include "DetDesc/Elements.h"
 #include "DetDesc/IDDescriptor.h"
+#include "DetDesc/compact/Segmentations.h"
 
 /*
  *   DetDesc namespace declaration
@@ -19,24 +20,27 @@ namespace DetDesc {
       * @author  M.Frank
       * @version 1.0
       */
-    struct Readout : public RefElement {
+    struct Readout : public RefElement_type<TNamed> {
       struct Object {
-        Element     segmentation;
-        RefElement  id;
-        Object() : segmentation(0) {}
+        Segmentation             segmentation;
+        RefElement_type<TNamed>  id;
       };
+      /// Default constructor
+      Readout() : RefElement_type<TNamed>() {}
       /// Constructor to be used when reading the already parsed object
-      Readout(const Element& e) : RefElement(e) {}
+      template <class Q> Readout(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Initializing constructor
       Readout(const LCDD& doc, const std::string& name);
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       /// Access IDDescription structure
-      RefElement idSpec() const;
+      RefElement_type<TNamed> idSpec() const;
       /// Access segmentation structure
-      Element segmentation()  const;
+      Segmentation segmentation()  const;
       /// Assign IDDescription to readout structure
-      void setIDDescriptor(RefElement spec)   const;
+      void setIDDescriptor(const RefElement_type<TNamed>& spec)   const;
       /// Assign segmentation structure to readout
-      void setSegmentation(Element segment) const;
+      void setSegmentation(const Segmentation& segment) const;
     };
   }       /* End namespace Geometry               */
 }         /* End namespace DetDesc                */

@@ -63,8 +63,8 @@ typedef DetDesc::XML::Subdetector::Component xml_comp_t;
 typedef DetDesc::XML::Subdetector            xml_det_t;
 typedef DetDesc::XML::Dimension              xml_dim_t;
 
-typedef DetDesc::Geometry::LCDD       lcdd_t;
-typedef DetDesc::Geometry::RefElement Ref_t;
+typedef DetDesc::Geometry::LCDD                    lcdd_t;
+typedef DetDesc::Geometry::RefElement_type<TNamed> Ref_t;
 
 using namespace std;
 using namespace DetDesc;
@@ -1069,21 +1069,3 @@ namespace DetDesc { namespace Geometry {
     return det;
   }
 }}
-#if 0
-struct TPC : RefElement {
-  double outerRadius() const   {
-    Tube env = volume().shape();
-    return env.outer_r();
-  }
-};
-
-Subdetector LCDD::detector(string&);
-
-void foo(Subdetector& det)   {
-  TPC tpc = lcdd.detector("TPC");
-  tpc.outerRadius();
-
-
-  tpc->outerRadius();
-}
-#endif

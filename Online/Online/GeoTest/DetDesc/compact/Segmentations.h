@@ -39,11 +39,13 @@ namespace DetDesc {
           } cylindrical_grid;        
         } data;
         Object() : Attr_useForHitPosition(0) {
-          data.cartesian_grid.Attr_grid_size_x = 0e0;
-          data.cartesian_grid.Attr_grid_size_y = 0e0;
-          data.cartesian_grid.Attr_grid_size_z = 0e0;
+          data.cartesian_grid.Attr_grid_size_x = 0;
+          data.cartesian_grid.Attr_grid_size_y = 0;
+          data.cartesian_grid.Attr_grid_size_z = 0;
         }
       };
+      /// Default constructor
+      Segmentation() : RefElement_type<Implementation>() {}
       /// Constructor to be used when reading the already parsed object
       template <typename Q> Segmentation(const Element_type<Q>& e) 
 	: RefElement_type<Implementation>(e){}

@@ -1,6 +1,6 @@
 #include "Conversions.h"
-#include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/LCDD.h"
+#include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/IDDescriptor.h"
 
 #include "TMap.h"
@@ -110,7 +110,7 @@ namespace DetDesc { namespace Geometry {
   template <class T> void PrintMap<T>::operator()()  const {
     Printer<T> p(lcdd,os);
     os << "++" << endl << "++          " << text << endl << "++" << endl;
-    for (container_type::const_iterator i=cont.begin(); i != cont.end(); ++i) 
+    for (LCDD::HandleMap::const_iterator i=cont.begin(); i != cont.end(); ++i) 
       p((*i).second);
   }
 

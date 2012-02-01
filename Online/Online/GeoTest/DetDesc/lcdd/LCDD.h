@@ -24,7 +24,8 @@ namespace DetDesc {
   namespace Geometry  {
 
     struct LCDD {
-      typedef std::map<std::string,Element> HandleMap;
+      typedef std::map<std::string,Element_type<TObject> > HandleMap;
+      typedef RefElement_type<TNamed> Ref_t;
 
       virtual ~LCDD() {}
 
@@ -56,7 +57,7 @@ namespace DetDesc {
       virtual LimitSet    limitSet(const std::string& name)  const = 0;
       virtual Material    material(const std::string& name)  const = 0;
       virtual Readout     readout(const std::string& name)  const = 0;
-      virtual RefElement  idSpec(const std::string& name)  const = 0;
+      virtual Ref_t       idSpec(const std::string& name)  const = 0;
       virtual Volume      pickMotherVolume(const Subdetector& sd) const = 0;
       virtual Constant    constant(const std::string& name) const = 0;
       virtual Position    position(const std::string& name) const = 0;
@@ -77,18 +78,18 @@ namespace DetDesc {
       virtual LCDD& add(const LimitSet& limset) = 0;
       virtual LCDD& add(const Subdetector& detector) = 0;
 
-      virtual LCDD& addTransform(const RefElement& element) = 0;
-      virtual LCDD& addIDSpec(const RefElement& element) = 0;
-      virtual LCDD& addConstant(const RefElement& element) = 0;
-      virtual LCDD& addMaterial(const RefElement& element) = 0;
-      virtual LCDD& addVisAttribute(const RefElement& element) = 0;
-      virtual LCDD& addSensitiveDetector(const RefElement& e) = 0;
-      virtual LCDD& addLimitSet(const RefElement& limset) = 0;
-      virtual LCDD& addRegion(const RefElement& region) = 0;
-      virtual LCDD& addReadout(const RefElement& readout) = 0;
-      virtual LCDD& addDetector(const RefElement& detector) = 0;
-      virtual LCDD& addSolid(const RefElement& detector) = 0;
-      virtual LCDD& addVolume(const RefElement& detector) = 0;
+      virtual LCDD& addTransform(const Ref_t& element) = 0;
+      virtual LCDD& addIDSpec(const Ref_t& element) = 0;
+      virtual LCDD& addConstant(const Ref_t& element) = 0;
+      virtual LCDD& addMaterial(const Ref_t& element) = 0;
+      virtual LCDD& addVisAttribute(const Ref_t& element) = 0;
+      virtual LCDD& addSensitiveDetector(const Ref_t& e) = 0;
+      virtual LCDD& addLimitSet(const Ref_t& limset) = 0;
+      virtual LCDD& addRegion(const Ref_t& region) = 0;
+      virtual LCDD& addReadout(const Ref_t& readout) = 0;
+      virtual LCDD& addDetector(const Ref_t& detector) = 0;
+      virtual LCDD& addSolid(const Ref_t& detector) = 0;
+      virtual LCDD& addVolume(const Ref_t& detector) = 0;
 
       //---Factory method-------
       static LCDD& getInstance(void);

@@ -6,7 +6,7 @@ namespace DetDesc {
 
   struct MarkusTPC : public Geometry::Subdetector {
     typedef TPCData Object;
-    MarkusTPC(const Geometry::RefElement& e) : Geometry::Subdetector(e) {}
+    MarkusTPC(const Geometry::RefElement_type<TNamed>& e) : Geometry::Subdetector(e) {}
     double feature() const;
   };
 }

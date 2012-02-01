@@ -13,27 +13,26 @@
 #define _A(a) DetDesc::XML::Attr_##a
 
 // Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t    xml_coll_t;
-typedef DetDesc::XML::Handle_t        xml_h;
+typedef DetDesc::XML::Collection_t           xml_coll_t;
+typedef DetDesc::XML::Handle_t               xml_h;
 typedef DetDesc::XML::Subdetector::Component xml_comp_t;
-typedef DetDesc::XML::Subdetector     xml_det_t;
-typedef DetDesc::XML::Dimension       xml_dim_t;
-typedef DetDesc::Geometry::LCDD       lcdd_t;
+typedef DetDesc::XML::Subdetector            xml_det_t;
+typedef DetDesc::XML::Dimension              xml_dim_t;
+typedef DetDesc::Geometry::LCDD              lcdd_t;
 
 using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
-using XML::Tag_t;
 
 #include "DetDesc/detector/ILDExTPC.h"
 
 namespace DetDesc { namespace Geometry {
   
-  template <class T, class Q> RefElement toRefObject(LCDD& lcdd, const Q& e, SensitiveDetector& /* sens */)  {
-    return RefElement(0);
+  template <class T, class Q> Ref_t toRefObject(LCDD& lcdd, const Q& e, SensitiveDetector&)  {
+    return Ref_t(0);
   }
-
-  template <> RefElement toRefObject<DetDesc::ILDExTPC,xml_h>(LCDD& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
+  
+  template <> Ref_t toRefObject<DetDesc::ILDExTPC,xml_h>(LCDD& lcdd, const xml_h& e, SensitiveDetector&)  {
     xml_det_t   x_det = e;
     string      name  = x_det.nameStr();
     xml_comp_t  x_tube (x_det.child(_X(tubs)));

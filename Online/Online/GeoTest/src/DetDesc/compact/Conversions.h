@@ -5,6 +5,7 @@
 #include <map>
 #include <iostream>
 #include "DetDesc/Elements.h"
+#include "DetDesc/lcdd/LCDD.h"
 
 /*
  *   DetDesc namespace declaration
@@ -26,9 +27,9 @@ namespace DetDesc {
     struct SensitiveDetector;
 
     // Function prototypes used for object conversions
-    template <typename T, typename Q> Element    toObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> RefElement toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
+    template <typename T, typename Q> Element_type<TObject>    toObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> RefElement_type<TNamed>  toRefObject(LCDD& lcdd, const Q& xml);
+    template <typename T, typename Q> RefElement_type<TNamed>  toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
 
 
     /** @class LCDDActor Conversions.h  DetDesc/compact/Conversions.h
@@ -58,13 +59,12 @@ namespace DetDesc {
       *  @version  1.0
       */
     template <typename T> struct PrintMap {
-      typedef typename std::map<std::string,Element> container_type;
       typedef T item_type;
       const LCDD&   lcdd;
       std::ostream& os;
       std::string   text;
-      std::map<std::string,Element> cont;
-      PrintMap(const LCDD& l, std::ostream& stream, const std::map<std::string,Element>& c, const std::string& t="") : lcdd(l), os(stream), text(t), cont(c)  {}
+      const LCDD::HandleMap& cont;
+      PrintMap(const LCDD& l, std::ostream& stream, const LCDD::HandleMap& c, const std::string& t="") : lcdd(l), os(stream), text(t), cont(c)  {}
       void operator()() const;
     };
     template <typename T> struct Printer  {

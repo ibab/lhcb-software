@@ -26,17 +26,17 @@ Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if no
   return m_worldVol;
 }
 
-LCDD& LCDDImp::addVolume(const RefElement& x)    {
+LCDD& LCDDImp::addVolume(const Ref_t& x)    {
   m_structure.append(x);
   return *this;
 }
 
-LCDD& LCDDImp::addSolid(const RefElement& x)    {
+LCDD& LCDDImp::addSolid(const Ref_t& x)    {
   m_structure.append<TGeoShape>(x);
   return *this;
 }
 
-LCDD& LCDDImp::addTransform(const RefElement& x)  {
+LCDD& LCDDImp::addTransform(const Ref_t& x)  {
   //int n = gGeoManager->GetListOfMatrices()->GetEntries();
   //cout << "+++ Register Rotation[" << n << "]:" << x->GetName() << endl;
   m_transforms.append<TGeoMatrix>(x);
@@ -60,7 +60,37 @@ void LCDDImp::fromCompact(const string& fname)  {
   fromCompact(XML::DocumentHandler().load(fname).root());
 }
 
-Element LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
+Rotation LCDDImp::rotation(const std::string& name) const {
+  Rotation rot = getRefChild(m_transforms,name,false);
+  if ( !rot.isValid() ) {
+    TObjArray*  arr = gGeoManager->GetListOfMatrices();
+    TGeoMatrix* mat = (TGeoMatrix*)arr->FindObject(name.c_str());
+    if ( mat ) return Rotation(Transform(mat));
+  }
+  return rot;
+}
+
+Position LCDDImp::position(const std::string& name) const {
+  Position pos = getRefChild(m_transforms,name,false);
+  if ( !pos.isValid() ) {
+    TObjArray*  arr = gGeoManager->GetListOfMatrices();
+    TGeoMatrix* mat = (TGeoMatrix*)arr->FindObject(name.c_str());
+    if ( mat ) return Position(Transform(mat));
+  }
+  return pos;
+}
+
+Transform LCDDImp::transform(const std::string& name) const {
+  Transform tr = getRefChild(m_transforms,name,false);
+  if ( !tr.isValid() ) {
+    TObjArray*  arr = gGeoManager->GetListOfMatrices();
+    TGeoMatrix* mat = (TGeoMatrix*)arr->FindObject(name.c_str());
+    if ( mat ) return Transform(mat);
+  }
+  return tr;
+}
+
+Element_type<TObject> LCDDImp::getRefChild(const HandleMap& e, const std::string& name, bool do_throw)  const  {
   HandleMap::const_iterator i = e.find(name);
   if ( i != e.end() )  {
     return (*i).second;
@@ -125,7 +155,7 @@ void LCDDImp::init()  {
   Volume tracking(lcdd,"tracking_volume",trackingSolid,air);
 //  world.addPhysVol(PhysVol(lcdd,tracking,"tracking_volume"));
 
-  //RefElement ref_world(lcdd,"world",world.refName());
+  //Ref_t ref_world(lcdd,"world",world.refName());
   //m_setup.append(ref_world);
   m_worldVol    = world;
   m_trackingVol = tracking;
@@ -153,6 +183,7 @@ void LCDDImp::dump() const  {
   mgr->SetVisLevel(4);
   mgr->SetVisOption(1);
   m_worldVol->Draw("ogl");
+  cout << "Total number of object verifications:" << num_object_validations() << endl;
   Printer<const LCDD*>(*this,cout)(this);
 }
 

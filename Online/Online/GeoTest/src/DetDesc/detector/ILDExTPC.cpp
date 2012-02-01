@@ -22,15 +22,15 @@ namespace DetDesc {
     return 888.;
   }
 
-  void ILDExTPC::setInnerWall(RefElement obj) {
+  void ILDExTPC::setInnerWall(Ref_t obj) {
     data<Object>()->outerWall = obj;
   }
 
-  void ILDExTPC::setOuterWall(RefElement obj) {
+  void ILDExTPC::setOuterWall(Ref_t obj) {
     data<Object>()->innerWall = obj;
   }
 
-  void ILDExTPC::setGasVolume(RefElement obj) {
+  void ILDExTPC::setGasVolume(Ref_t obj) {
     data<Object>()->gas = obj;
   }
 

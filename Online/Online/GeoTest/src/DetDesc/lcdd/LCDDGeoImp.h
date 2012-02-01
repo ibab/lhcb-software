@@ -26,9 +26,9 @@ namespace DetDesc {
         InvalidObjectError(const std::string& msg) : std::runtime_error(msg) {}
       };
 
-      struct ObjectHandleMap : public std::map<std::string,Element>  {
+      struct ObjectHandleMap : public HandleMap  {
         ObjectHandleMap() {}
-        void append_noCheck(const RefElement& e) { 
+        void append_noCheck(const Ref_t& e) { 
           if ( e.isValid() )  {
             std::string n = e.name();
 	    if ( this->find(n) != this->end() ) {
@@ -37,7 +37,7 @@ namespace DetDesc {
             this->insert(std::make_pair(n,e.ptr()));
           }
         }
-        void append(const RefElement& e) { 
+        void append(const Ref_t& e) { 
           if ( e.isValid() )  {
             std::string n = e.name();
             this->insert(std::make_pair(n,e.ptr()));
@@ -45,7 +45,7 @@ namespace DetDesc {
           }
           throw InvalidObjectError("Attempt to add an invalid object object");
         }
-        template <class T> void append(const RefElement& e) {
+        template <class T> void append(const Ref_t& e) {
           T* obj = dynamic_cast<T*>(e.ptr());
           if ( obj )  {
             this->append(e);
@@ -79,7 +79,7 @@ namespace DetDesc {
       Rotation            m_reflect;
       Transform           m_identity;
 
-      RefElement          m_setup;
+      Ref_t          m_setup;
 
       void convertMaterials(const std::string& uri);
       void convertMaterials(XML::Handle_t doc_element);
@@ -95,7 +95,7 @@ namespace DetDesc {
 
       void dump() const;
 
-      virtual Element  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
+      virtual Element_type<TObject>  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
       virtual Volume         pickMotherVolume(const Subdetector& sd) const;
       virtual Volume         worldVolume() const      { return m_worldVol;          }
       virtual Volume         trackingVolume() const   { return m_trackingVol;       }
@@ -110,16 +110,22 @@ namespace DetDesc {
       {  return getRefChild(m_materials,name);                                      }
       virtual Region      region(const std::string& name)  const
       {  return getRefChild(m_regions,name);                                        }
-      virtual RefElement  idSpec(const std::string& name)  const
+      virtual Ref_t  idSpec(const std::string& name)  const
       {  return getRefChild(m_idDict,name);                                         }
       virtual Volume      volume(const std::string& name)  const
       {  return getRefChild(m_structure,name);                                      }
+      /*
       virtual Rotation    rotation(const std::string& name) const 
       {  return getRefChild(m_transforms,name);                                     }
       virtual Position    position(const std::string& name) const 
       {  return getRefChild(m_transforms,name);                                     }
       virtual Transform   transform(const std::string& name) const 
       {  return getRefChild(m_transforms,name);                                     }
+      */
+      virtual Rotation    rotation(const std::string& name) const;
+      virtual Position    position(const std::string& name) const;
+      virtual Transform   transform(const std::string& name) const;
+
       virtual Solid       solid(const std::string& name) const 
       {  return getRefChild(solids(),name);                                         }
       virtual Constant    constant(const std::string& name) const 
@@ -156,20 +162,20 @@ namespace DetDesc {
 
 #define __R  return *this
       // These are manager by the TGeoManager
-      virtual LCDD& addSolid(const RefElement& x);       //  { m_solids.append(x);     __R;}
-      virtual LCDD& addVolume(const RefElement& x);      //  { m_structure.append(x);  __R;}
-      virtual LCDD& addTransform(const RefElement& x);   //  { m_rotations.append(x);  __R;}
+      virtual LCDD& addSolid(const Ref_t& x);       //  { m_solids.append(x);     __R;}
+      virtual LCDD& addVolume(const Ref_t& x);      //  { m_structure.append(x);  __R;}
+      virtual LCDD& addTransform(const Ref_t& x);   //  { m_rotations.append(x);  __R;}
 
       // These not:
-      virtual LCDD& addConstant(const RefElement& x)         { m_define.append(x);     __R;}
-      virtual LCDD& addMaterial(const RefElement& x)         { m_materials.append(x);  __R;}
-      virtual LCDD& addLimitSet(const RefElement& x)         { m_limits.append(x);     __R;}
-      virtual LCDD& addRegion(const RefElement& x)           { m_regions.append(x);    __R;}
-      virtual LCDD& addIDSpec(const RefElement& x)           { m_idDict.append(x);     __R;}
-      virtual LCDD& addReadout(const RefElement& x)          { m_readouts.append(x);   __R;}
-      virtual LCDD& addVisAttribute(const RefElement& x)     { m_display.append(x);    __R;}
-      virtual LCDD& addSensitiveDetector(const RefElement& x){ m_sensitive.append(x);  __R;}
-      virtual LCDD& addDetector(const RefElement& x)         { m_detectors.append_noCheck(x);  __R;}
+      virtual LCDD& addConstant(const Ref_t& x)         { m_define.append(x);     __R;}
+      virtual LCDD& addMaterial(const Ref_t& x)         { m_materials.append(x);  __R;}
+      virtual LCDD& addLimitSet(const Ref_t& x)         { m_limits.append(x);     __R;}
+      virtual LCDD& addRegion(const Ref_t& x)           { m_regions.append(x);    __R;}
+      virtual LCDD& addIDSpec(const Ref_t& x)           { m_idDict.append(x);     __R;}
+      virtual LCDD& addReadout(const Ref_t& x)          { m_readouts.append(x);   __R;}
+      virtual LCDD& addVisAttribute(const Ref_t& x)     { m_display.append(x);    __R;}
+      virtual LCDD& addSensitiveDetector(const Ref_t& x){ m_sensitive.append(x);  __R;}
+      virtual LCDD& addDetector(const Ref_t& x)         { m_detectors.append_noCheck(x);  __R;}
 #undef __R
 
     };

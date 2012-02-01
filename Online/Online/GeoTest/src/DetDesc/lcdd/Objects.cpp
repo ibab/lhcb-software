@@ -115,22 +115,22 @@ VisAttr::VisAttr(LCDD& /* lcdd */, const string& name)    {
 
 /// Set Flag to show/hide daughter elements
 void VisAttr::setShowDaughters(bool value)   {
-  data<Object>()->showDaughters = value;
+  _data().showDaughters = value;
 }
 
 /// Set visibility flag
 void VisAttr::setVisible(bool value)   {
-  data<Object>()->visible = value;
+  _data().visible = value;
 }
 
 /// Set line style
 void VisAttr::setLineStyle(LineStyle value)  {
-  data<Object>()->lineStyle = value;
+  _data().lineStyle = value;
 }
 
 /// Set drawing style
 void VisAttr::setDrawingStyle(DrawingStyle value)   {
-  data<Object>()->drawingStyle = value;
+  _data().drawingStyle = value;
 }
 
 /// Set alpha value
@@ -141,7 +141,7 @@ void VisAttr::setAlpha(float /* value */)   {
 
 /// Set object color
 void VisAttr::setColor(float red, float green, float blue)   {
-  data<Object>()->color = TColor::GetColor(red,green,blue);
+  _data().color = TColor::GetColor(red,green,blue);
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -157,11 +157,11 @@ void Limit::setParticles(const string& particleNames)   {
 }
 
 void Limit::setValue(double value)   {
-  data<Object>()->second = value;
+  _data().second = value;
 }
 
 void Limit::setUnit(const string& value)   {
-  data<Object>()->first = value;
+  _data().first = value;
 }
 
 /// Constructor to be used when creating a new DOM tree
@@ -169,7 +169,7 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
   assign(new Value<TNamed,TMap>(),name,"limitset");
 }
 
-void LimitSet::addLimit(const RefElement& limit)   {
+void LimitSet::addLimit(const RefElement_type<TNamed>& limit)   {
   data<TMap>()->Add(limit,limit);
 }
 
@@ -185,27 +185,27 @@ Region::Region(LCDD& /* lcdd */, const string& name)   {
 }
 
 Region& Region::setStoreSecondaries(bool value)  {
-  data<Object>()->Attr_store_secondaries = value;
+  _data().Attr_store_secondaries = value;
   return *this;
 }
 
 Region& Region::setThreshold(double value)  {
-  data<Object>()->Attr_threshold = value;
+  _data().Attr_threshold = value;
   return *this;
 }
 
 Region& Region::setCut(double value)  {
-  data<Object>()->Attr_cut = value;
+  _data().Attr_cut = value;
   return *this;
 }
 
 Region& Region::setLengthUnit(const string& unit)  {
-  data<Object>()->Attr_lunit = unit;
+  _data().Attr_lunit = unit;
   return *this;
 }
 
 Region& Region::setEnergyUnit(const string& unit)  {
-  data<Object>()->Attr_eunit = unit;
+  _data().Attr_eunit = unit;
   return *this;
 }
 #undef setAttr
@@ -216,7 +216,7 @@ IDSpec::IDSpec(LCDD& lcdd, const string& name, const IDDescriptor& dsc)
 {
   const IDDescriptor::FieldIDs& f = dsc.ids();
   const IDDescriptor::FieldMap& m = dsc.fields();
-  data<Object>()->Attr_length = dsc.maxBit();
+  _data().Attr_length = dsc.maxBit();
   for(IDDescriptor::FieldIDs::const_iterator i=f.begin(); i!=f.end();++i)  {
     int ident = (*i).first;
     const string& nam = (*i).second;
@@ -231,10 +231,10 @@ void IDSpec::addField(const string& name, const pair<int,int>& field)  {
 
 void IDSpec::addField(const string& name, const pair<int,int>& field)  {
   Element e(document(),Tag_idfield);
-  e.data<Object>()->Attr_signed = field.second<0;
-  e.data<Object>()->Attr_label = name;
-  e.data<Object>()->Attr_start = field.first;
-  e.data<Object>()->Attr_length = abs(field.second);
+  e._data().Attr_signed = field.second<0;
+  e._data().Attr_label = name;
+  e._data().Attr_start = field.first;
+  e._data().Attr_length = abs(field.second);
   m_element.append(e);
 }
 #endif

@@ -9,7 +9,7 @@ using namespace std;
 namespace DetDesc {
   using namespace Geometry;
 
-  GearTPC::GearTPC(const RefElement& e) : Geometry::Subdetector(e) {
+  GearTPC::GearTPC(const Ref_t& e) : Geometry::Subdetector(e) {
   }
 
   double GearTPC::innerRadius() const {

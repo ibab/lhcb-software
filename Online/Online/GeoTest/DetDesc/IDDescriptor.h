@@ -13,7 +13,7 @@ namespace DetDesc {
 
   void split(const std::string& str, char delim, std::vector<std::string>& result);
 
-  class IDDescriptor  {
+  class IDDescriptor   {
   public:
     typedef std::pair<int,int>          Field;
     typedef std::map<std::string,Field> FieldMap;

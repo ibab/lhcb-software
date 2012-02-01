@@ -6,6 +6,7 @@
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/compact/Readout.h"
+#include "DetDesc/compact/Segmentations.h"
 
 // C/C++ include files
 #include <map>
@@ -26,33 +27,37 @@ namespace DetDesc {
     struct LCDD;
 
     struct SensitiveDetector : public RefElement_type<TNamed>  {
-      protected:
       struct Object  {
-        int         Attr_verbose;
-        int         Attr_combine_hits;
-        double      Attr_ecut;
-        std::string Attr_eunit;
-        std::string Attr_hits_collection;
-        Element     Attr_segmentation;
-        RefElement  Attr_id;
+        int           Attr_verbose;
+        int           Attr_combine_hits;
+        double        Attr_ecut;
+        std::string   Attr_eunit;
+        std::string   Attr_hits_collection;
+        Segmentation  Attr_segmentation;
+        RefElement_type<TNamed>  Attr_id;
         Object() : Attr_verbose(0), Attr_segmentation() {}
       };
-      Object& _data()   const;
 
-      public:
+      /// Default constructor
       SensitiveDetector() : RefElement_type<TNamed>() {}
+      /// Templated constructor for handle conversions
       template <typename Q>
       SensitiveDetector(const RefElement_type<Q>& e) : RefElement_type<TNamed>(e) {}
+      /// Constructor for a new sensitive detector element
       SensitiveDetector(const LCDD& lcdd, const std::string& type, const std::string& name);
+
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       /// Access the type of the sensitive detector
       std::string type() const;
+      /// Set flag to handle hits collection
       SensitiveDetector& setCombineHits(bool value);
       /// Assign the name of the hits collection
       SensitiveDetector& setHitsCollection(const std::string& spec);
       /// Assign the IDDescriptor reference
-      SensitiveDetector& setIDSpec(const RefElement& spec);
+      SensitiveDetector& setIDSpec(const RefElement_type<TNamed>& spec);
       /// Assign the readout segmentation reference
-      SensitiveDetector& setSegmentation(Element seg);
+      SensitiveDetector& setSegmentation(const Segmentation& seg);
       
     };
 
@@ -69,16 +74,18 @@ namespace DetDesc {
         Children          Attr_children;
         Object();
       };
-      Object& _data()   const;
-      void check(bool condition, const std::string& msg) const;
-      public:
 
+      void check(bool condition, const std::string& msg) const;
+
+      /// Default constructor
       Subdetector() : RefElement_type<TNamed>()  {}
-      template<typename Q>
-      Subdetector(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
+      /// Templated constructor for handle conversions
+      template<typename Q> Subdetector(const Element_type<Q>& e) : RefElement_type<TNamed>(e)  {}
       /// Constructor for a new subdetector element
       Subdetector(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       Subdetector& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
       Subdetector& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
       Subdetector& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);

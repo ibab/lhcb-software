@@ -93,6 +93,15 @@ string DetDesc::Geometry::_toString(double value)   {
   return text;
 }
 namespace DetDesc { namespace Geometry {
+  static long s_numVerifies = 0;
+
+  long num_object_validations() {
+    return s_numVerifies;
+  }
+
+  void increment_object_validations() {
+    ++s_numVerifies;
+  }
 
   template <typename T> void Element_type<T>::bad_assignment(const type_info& from, const type_info& to) {
     string msg = "Wrong assingment from ";

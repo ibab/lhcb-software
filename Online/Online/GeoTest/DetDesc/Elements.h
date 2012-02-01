@@ -20,12 +20,6 @@ namespace DetDesc {
 
   namespace Geometry  {
     struct  LCDD;
-    //struct  Element;
-    //struct  RefElement;
-
-    typedef TObject     Element_t;
-    typedef TObjArray   NodeList_t;
-    typedef TGeoManager Document_t;
 
     std::string    _toString(bool value);
     std::string    _toString(int value);
@@ -52,6 +46,9 @@ namespace DetDesc {
       virtual ~Value() {}
     };
 
+    long num_object_validations();
+    void increment_object_validations();
+
     template <typename T> struct Element_type  {
       typedef T Implementation;
 
@@ -74,6 +71,7 @@ namespace DetDesc {
 	return (Value<Implementation,Q>*)m_element;
       }
       void verifyObject() const {
+	increment_object_validations();
 	if ( m_element && dynamic_cast<T*>(m_element) == 0 )  {
 	  bad_assignment(typeid(*m_element),typeid(T));
 	}
@@ -93,7 +91,6 @@ namespace DetDesc {
       const char* refName() const;
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
-      //operator RefElement_type<TNamed>() const { return RefElement_type<TNamed>(this->m_element); }
       Implementation* operator->() const { return this->m_element;    }
       operator Implementation& ()  const { return *(this->m_element); }
     };
@@ -114,9 +111,6 @@ namespace DetDesc {
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
     };
-
-    typedef RefElement_type<TNamed>  RefElement;
-    typedef Element_type<TObject>    Element;
 
   }       /* End namespace Geometry  */
 }         /* End namespace DetDesc   */

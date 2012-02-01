@@ -6,7 +6,7 @@ using namespace DetDesc::Geometry;
 
 Subdetector::Object::Object()  
 : Attr_id(0), Attr_combine_hits(0), Attr_envelope(),
-  Attr_volume(), Attr_material(), Attr_visualization(), Attr_readout(0)
+  Attr_volume(), Attr_material(), Attr_visualization(), Attr_readout()
 {
 }
 
@@ -15,10 +15,6 @@ Subdetector::Subdetector(const LCDD& /* lcdd */, const string& name, const strin
 {
   assign(new Value<TNamed,Object>(),name,type);
   _data().Attr_id = id;
-}
-
-Subdetector::Object& Subdetector::_data()   const {
-  return *(Value<TNamed,Object>*)m_element;
 }
 
 string Subdetector::type() const   {
@@ -201,17 +197,13 @@ SensitiveDetector::SensitiveDetector(const LCDD& /* lcdd */, const std::string& 
   _data().Attr_verbose = 0;
 }
 
-SensitiveDetector::Object& SensitiveDetector::_data()   const {
-  return *(Value<TNamed,Object>*)m_element;
-}
-
 /// Access the type of the sensitive detector
 string SensitiveDetector::type() const  {
   return m_element ? m_element->GetTitle() : "";
 }
 
 /// Assign the IDDescriptor reference
-SensitiveDetector& SensitiveDetector::setIDSpec(const RefElement& spec)  {
+SensitiveDetector& SensitiveDetector::setIDSpec(const RefElement_type<TNamed>& spec)  {
   _data().Attr_id = spec;
   return *this;
 }
@@ -230,7 +222,7 @@ SensitiveDetector& SensitiveDetector::setCombineHits(bool value)  {
 }
 
 /// Assign the readout segmentation reference
-SensitiveDetector& SensitiveDetector::setSegmentation(Element segmentation)   {
+SensitiveDetector& SensitiveDetector::setSegmentation(const Segmentation& segmentation)   {
   if ( segmentation.isValid() )  {
     _data().Attr_segmentation = segmentation;
     return *this;

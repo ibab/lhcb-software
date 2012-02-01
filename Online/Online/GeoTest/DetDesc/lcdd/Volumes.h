@@ -37,13 +37,18 @@ namespace DetDesc {
     struct VisAttr;
     struct SensitiveDetector;
   
+    /** @class Volume Volume.h  DetDesc/lcdd/Volume.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct Volume : public RefElement_type<TGeoVolume>  {
       typedef RefElement_type<TGeoVolume> Base;
       struct Object  {
         Region            Attr_region;
         LimitSet          Attr_limits;
         VisAttr           Attr_vis;
-        RefElement        Attr_sens_det;
+        RefElement_type<TNamed>        Attr_sens_det;
         Object() : Attr_region(), Attr_limits(), Attr_vis(), Attr_sens_det() {}
       };
       /// Default constructor
@@ -63,7 +68,6 @@ namespace DetDesc {
 
       void setSolid(const Solid& s)  const;
       void setMaterial(const Material& m)  const;
-      //No. not for WIN32!! void addPhysVol(const PhysVol& vol)  const;
       void addPhysVol(const PhysVol& vol, const Transform& tr)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos)  const;
       void addPhysVol(const PhysVol& vol, const Position& pos, const Rotation& rot)  const;
@@ -74,12 +78,17 @@ namespace DetDesc {
       Solid solid() const;
       Material material() const;
       VisAttr  visAttributes() const;
-      RefElement sensitiveDetector() const;
+      RefElement_type<TNamed> sensitiveDetector() const;
       Region region() const;
       /// Auto conversion to underlying ROOT object
       operator TGeoVolume*() const     { return m_element; }
     };
 
+    /** @class PhysVol Volume.h  DetDesc/lcdd/Volume.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
     struct PhysVol : RefElement_type<TGeoVolume> {
       /// Constructor to be used when reading the already parsed DOM tree
       template <class T> PhysVol(const Element_type<T>& e) : RefElement_type<TGeoVolume>(e) {}

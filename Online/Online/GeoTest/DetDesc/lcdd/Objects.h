@@ -181,6 +181,8 @@ namespace DetDesc {
       VisAttr(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       VisAttr(LCDD& doc, const std::string& name);
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       /// Set Flag to show/hide daughter elements
       void setShowDaughters(bool value);
       /// Set line style
@@ -205,6 +207,8 @@ namespace DetDesc {
 
       /// Constructor to be used when creating a new DOM tree
       Limit(LCDD& doc, const std::string& name);
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       void setParticles(const std::string& particleNames);
       void setValue(double value);
       void setUnit(const std::string& unit);
@@ -224,7 +228,7 @@ namespace DetDesc {
       LimitSet(const Element_type<Q>& e) : RefElement_type<TNamed>(e) {}
       /// Constructor to be used when creating a new DOM tree
       LimitSet(LCDD& doc, const std::string& name);
-      void addLimit(const RefElement& limit);
+      void addLimit(const RefElement_type<TNamed>& limit);
     };
 
     /** @class Region Objects.h
@@ -247,6 +251,8 @@ namespace DetDesc {
       /// Constructor to be used when creating a new DOM tree
       Region(LCDD& doc, const std::string& name);
 
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
       Region& setStoreSecondaries(bool value);
       Region& setThreshold(double value);
       Region& setCut(double value);
