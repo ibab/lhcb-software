@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/TMVASelections
+! Responsible : Stripping coordinators 
+! Purpose     : To accommodate all TMVA based selections used in stripping
+!-----------------------------------------------------------------------------
+
+! 2012-02-01 - Jibo He
+ - Created the package
+ - Added BDT selections for Bd->eeKstar
