@@ -51,6 +51,9 @@ Development version for 2012 data taking
     o Current time for 2012, if before end of 2012
 
 - In DetCond v12r23
+  . Implemented CondDBDQScanner: a tool to collect (merge) the DQ flags from the
+    Conditions Database in a given IOV.
+  . Added a test to validate the output of CondDBDQScanner.
   . Added new methods to the ICondDBReader interface (getIOVs), to retrieve the
     list of IOVs in a folder for an IOV.
   . Added a test for the implementation of getIOVs in CondDBAccessSvc, and fixes.
@@ -134,6 +137,11 @@ Development version for 2012 data taking
   . Fixed moved tests so that they keep their own references.
 
 - In LHCbAlgs v2r47
+  . Added the algorithm DQFilterByRun. It is equivalent to DQFilter, but rejects
+    all the events belonging to a run with bad DQ Flags
+  . Added tests for DQFilterByRun.
+  . Add new algorithm EmptyEventNodeCleaner that searches the TES for empty
+    data nodes and removes them.
   . Factored out from the DQFilter algorithm the code to accept/reject Data
     Quality flags. The code has been moved to a new tool (BasicDQFilter), 
     which implements the IDQFilter interface.
