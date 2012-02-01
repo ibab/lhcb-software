@@ -13,7 +13,7 @@
 // Framework include files
 #include "DetDesc/Handle.h"
 #include "DetDesc/IDDescriptor.h"
-#include "DetDesc/compact/Segmentations.h"
+#include "DetDesc/lcdd/Segmentations.h"
 
 /*
  *   DetDesc namespace declaration

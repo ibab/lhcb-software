@@ -7,11 +7,11 @@
 //
 //====================================================================
 
-#include "XML/lcdd/XMLLCDD.h"
-#include "XML/compact/XMLDetector.h"
 #include "XML/XMLTags.h"
-#include "DetDesc/compact/Segmentations.h"
-#include "DetDesc/compact/Detector.h"
+#include "XML/XMLElements.h"
+#include "XML/lcdd/XMLDetector.h"
+#include "DetDesc/lcdd/Segmentations.h"
+#include "DetDesc/lcdd/Detector.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Volumes.h"

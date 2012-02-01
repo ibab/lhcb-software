@@ -1,4 +1,4 @@
-#include "../src/XML/lcdd/XMLLCDDImp.h"
+//#include "../src/XML/lcdd/XMLLCDDImp.h"
 #include "../src/DetDesc/lcdd/LCDDGeoImp.h"
 #include "TGDMLWrite.h"
 #include "TGeoManager.h"
@@ -20,12 +20,14 @@ static int read_compact(int, char**)  {
 }
 #endif
 
+#if 0
 int compact2lcdd()  {
   XML::LCDDImp lcdd;
   lcdd.fromCompact("file:../cmt/compact.xml");
   // dumpTree(lcdd.document());
   return 0x1;
 }
+#endif
 
 Geometry::LCDD& compact2geo(int argc, char **argv)  {
   string input;
@@ -53,7 +55,7 @@ Geometry::LCDD& compact2geo(int argc, char **argv)  {
 #include "DetDesc/detector/ILDExTPC.h"
 #include "DetDesc/detector/MarkusTPC.h"
 #include "DetDesc/detector/GearTPC.h"
-#include "DetDesc/compact/Detector.h"
+#include "DetDesc/lcdd/Detector.h"
 
 //______________________________________________________________________________
 int run_interpreter(int argc, char **argv)   {

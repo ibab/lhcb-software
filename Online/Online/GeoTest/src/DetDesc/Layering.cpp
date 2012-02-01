@@ -7,7 +7,7 @@
 //
 //====================================================================
 
-#include "XML/compact/XMLDetector.h"
+#include "XML/lcdd/XMLDetector.h"
 #include "DetDesc/Layering.h"
 #include <algorithm>
 #include <stdexcept>

@@ -8,7 +8,7 @@
 //====================================================================
 
 #include "XML/lcdd/XMLLCDD.h"
-#include "XML/compact/XMLDetector.h"
+#include "XML/lcdd/XMLDetector.h"
 #include "XML/XMLTags.h"
 
 #include "Conversions.h"

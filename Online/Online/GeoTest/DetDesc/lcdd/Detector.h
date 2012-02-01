@@ -14,8 +14,8 @@
 #include "DetDesc/Handle.h"
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Volumes.h"
-#include "DetDesc/compact/Readout.h"
-#include "DetDesc/compact/Segmentations.h"
+#include "DetDesc/lcdd/Readout.h"
+#include "DetDesc/lcdd/Segmentations.h"
 
 // C/C++ include files
 #include <map>
@@ -35,7 +35,7 @@ namespace DetDesc {
     struct Detector;
     struct LCDD;
 
-    /** @class SensitiveDetector Detector.h DetDesc/compact/Detector.h
+    /** @class SensitiveDetector Detector.h DetDesc/lcdd/Detector.h
      *
      *  @author  M.Frank
      *  @version 1.0
@@ -75,7 +75,7 @@ namespace DetDesc {
       
     };
 
-    /** @class SubDetector Detector.h DetDesc/compact/Detector.h
+    /** @class SubDetector Detector.h DetDesc/lcdd/Detector.h
      *
      *  @author  M.Frank
      *  @version 1.0

@@ -23,7 +23,7 @@ namespace DetDesc {
    */
   namespace Geometry  {
 
-    /** @class Segmentation Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class Segmentation Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -72,7 +72,7 @@ namespace DetDesc {
       const std::string type() const;
     };
 
-    /** @class ProjectiveCylinder Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class ProjectiveCylinder Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -92,7 +92,7 @@ namespace DetDesc {
       void setPhiBins(int value);
     };
 
-    /** @class NonProjectiveCylinder Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class NonProjectiveCylinder Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -112,7 +112,7 @@ namespace DetDesc {
       void setPhiBinSize(double value);
     };
 
-    /** @class ProjectiveZPlane Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class ProjectiveZPlane Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -132,7 +132,7 @@ namespace DetDesc {
       void setPhiBins(int value);
     };
 
-    /** @class GridXY Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class GridXY Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -150,7 +150,7 @@ namespace DetDesc {
       void setGridSizeY(double value);
     };
 
-    /** @class GridXYZ Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class GridXYZ Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -166,7 +166,7 @@ namespace DetDesc {
       void setGridSizeZ(double value);
     };
 
-    /** @class CartesianGridXY Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class CartesianGridXY Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0
@@ -178,7 +178,7 @@ namespace DetDesc {
       CartesianGridXY(LCDD& lcdd) : GridXY(lcdd,"cartesian_grid_xy") {}
     };
 
-    /** @class GlobalGridXY Segmentations.h DetDesc/compact/Segmentations.h
+    /** @class GlobalGridXY Segmentations.h DetDesc/lcdd/Segmentations.h
      *
      * @author  M.Frank
      * @version 1.0

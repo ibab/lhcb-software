@@ -7,7 +7,7 @@
 //
 //====================================================================
 
-#include "DetDesc/compact/Detector.h"
+#include "DetDesc/lcdd/Detector.h"
 
 namespace DetDesc {
 

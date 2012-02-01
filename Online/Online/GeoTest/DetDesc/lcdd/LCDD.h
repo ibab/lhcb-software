@@ -15,9 +15,9 @@
 #include "DetDesc/lcdd/Objects.h"
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Volumes.h"
-#include "DetDesc/compact/Readout.h"
-#include "DetDesc/compact/Segmentations.h"
-#include "DetDesc/compact/Detector.h"
+#include "DetDesc/lcdd/Readout.h"
+#include "DetDesc/lcdd/Segmentations.h"
+#include "DetDesc/lcdd/Detector.h"
 
 // C/C++ include files
 #include <map>
