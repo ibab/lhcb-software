@@ -54,7 +54,7 @@ protected:
   void packAParticleLHCbIDContainer ( DaVinci::Map::Particle2LHCbIDs* partIds, LHCb::PackedParticle2Ints& pPartIds );
   
 private:
-  std::string m_inputStream;
+  std::string m_inputStream; ///< Input stream root
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
   bool m_forceReading;      ///< If true, read the containers from file. Else (def) take what is in TES
   bool m_deleteInput;       ///< delete the containers after packing if true.

@@ -4,7 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
-!========================= EventPacker v2r11 2012-01-31 ======================
+!========================= EventPacker v2r11 2012-02-01 ======================
+
+! 2012-02-01 - Chris Jones
+ - Patch PackParticleAndVertices to only create the packed output containers
+   when there is something to pack.
 
 ! 2012-01-31 - Chris Jones
  - Add a VetoedContainers option to PackParticleAndVertices, to allow some 

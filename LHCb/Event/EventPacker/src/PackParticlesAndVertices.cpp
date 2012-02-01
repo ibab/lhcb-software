@@ -20,7 +20,7 @@ DECLARE_ALGORITHM_FACTORY( PackParticlesAndVertices )
                                       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputStream",        m_inputStream   = "/Event" );
+  declareProperty( "InputStream",        m_inputStream   = "/Event"  );
   declareProperty( "AlwaysCreateOutput", m_alwaysOutput  = false     );
   declareProperty( "ForceReading",       m_forceReading  = false     );
   declareProperty( "DeleteInput",        m_deleteInput   = false     );
@@ -70,74 +70,95 @@ StatusCode PackParticlesAndVertices::execute() {
     selectContainers( root, names, 0xFFFFFFFF );
   }
 
+  names.clear();
   selectContainers( root, names, m_clIdParticles );
-  LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
-  put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );  
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Particle containers :" << endmsg;
-  for ( itS = names.begin(); names.end() != itS; ++itS ) {
-    LHCb::Particles* parts = get<LHCb::Particles>( *itS );
-    if ( m_deleteInput ) toBeDeleted.push_back( parts );
-    if ( parts->size() == 0 ) continue;
-    if ( msgLevel( MSG::DEBUG ) ) debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
-    packAParticleContainer( parts, *pparts );
+  if ( !names.empty() )
+  {
+    LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
+    put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );  
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Particle containers :" << endmsg;
+    for ( itS = names.begin(); names.end() != itS; ++itS ) 
+    {
+      LHCb::Particles* parts = get<LHCb::Particles>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( parts );
+      if ( parts->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) ) debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
+      packAParticleContainer( parts, *pparts );
+    }
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pparts->data().size() << " packed tracks" << endmsg;
   }
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pparts->data().size() << " packed tracks" << endmsg;
 
   names.clear();
   selectContainers( root, names, m_clIdVertices );
-  LHCb::PackedVertices* pverts = new LHCb::PackedVertices();
-  put( pverts, m_inputStream + LHCb::PackedVertexLocation::InStream );
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Vertex containers :" << endmsg;
-  for ( itS = names.begin(); names.end() != itS; ++itS ) {
-    LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
-    if ( m_deleteInput ) toBeDeleted.push_back( verts );
-    if ( verts->size() == 0 ) continue;
-    if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
-    packAVertexContainer( verts, *pverts );
+  if ( !names.empty() )
+  {
+    LHCb::PackedVertices* pverts = new LHCb::PackedVertices();
+    put( pverts, m_inputStream + LHCb::PackedVertexLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Vertex containers :" << endmsg;
+    for ( itS = names.begin(); names.end() != itS; ++itS ) 
+    {
+      LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( verts );
+      if ( verts->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
+      packAVertexContainer( verts, *pverts );
+    }
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pverts->data().size() << " packed vertices" << endmsg;
   }
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pverts->data().size() << " packed vertices" << endmsg;
 
   names.clear();
   selectContainers( root, names, m_clIdRecVertices );
-  LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
-  put( prverts, m_inputStream + LHCb::PackedRecVertexLocation::InStream );
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process RecVertices containers :" << endmsg;
-  for ( itS = names.begin(); names.end() != itS; ++itS ) {
-    LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
-    if ( m_deleteInput ) toBeDeleted.push_back( rverts );
-    if ( rverts->size() == 0 ) continue;
-    if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
-    packARecVertexContainer( rverts, *prverts );
+  if ( !names.empty() )
+  {
+    LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
+    put( prverts, m_inputStream + LHCb::PackedRecVertexLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process RecVertices containers :" << endmsg;
+    for ( itS = names.begin(); names.end() != itS; ++itS ) 
+    {
+      LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( rverts );
+      if ( rverts->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
+      packARecVertexContainer( rverts, *prverts );
+    }
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << prverts->vertices().size() << " packed RecVertices" << endmsg;
   }
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << prverts->vertices().size() << " packed RecVertices" << endmsg;
 
   names.clear();
   selectContainers( root, names, m_clIdPart2Vert );
-  LHCb::PackedRelations* prels = new LHCb::PackedRelations();
-  put( prels, m_inputStream + LHCb::PackedRelationsLocation::InStream );
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Relation containers :" << endmsg;
-  for ( itS = names.begin(); names.end() != itS; ++itS ) {
-    RELATION* rels = get<RELATION>( *itS );
-    if ( m_deleteInput ) toBeDeleted.push_back( rels );
-    if ( rels->relations().size() == 0 ) continue;
-    if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
-    packARelationContainer( rels, *prels );
+  if ( !names.empty() )
+  {
+    LHCb::PackedRelations* prels = new LHCb::PackedRelations();
+    put( prels, m_inputStream + LHCb::PackedRelationsLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Relation containers :" << endmsg;
+    for ( itS = names.begin(); names.end() != itS; ++itS ) 
+    {
+      RELATION* rels = get<RELATION>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( rels );
+      if ( rels->relations().empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
+      packARelationContainer( rels, *prels );
+    }
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << prels->relations().size() << " packed relation" << endmsg;
   }
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << prels->relations().size() << " packed relation" << endmsg;
 
   names.clear();
   selectContainers( root, names, m_clIdPart2Ints );
-  LHCb::PackedParticle2Ints* pPartIds = new LHCb::PackedParticle2Ints();
-  put( pPartIds, m_inputStream + LHCb::PackedParticle2IntsLocation::InStream );
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Particle2LHCbIDs containers :" << endmsg;
-  for ( itS = names.begin(); names.end() != itS; ++itS ) {
-    DaVinci::Map::Particle2LHCbIDs* partIds = get<DaVinci::Map::Particle2LHCbIDs>( *itS );
-    if ( m_deleteInput ) toBeDeleted.push_back( partIds );
-    if ( partIds->size() == 0 ) continue;
-    if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d particles2LHCbIDs in ", partIds->size() ) << *itS << endmsg;
-    packAParticleLHCbIDContainer( partIds, *pPartIds );
+  if ( !names.empty() )
+  {
+    LHCb::PackedParticle2Ints* pPartIds = new LHCb::PackedParticle2Ints();
+    put( pPartIds, m_inputStream + LHCb::PackedParticle2IntsLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "=== Process Particle2LHCbIDs containers :" << endmsg;
+    for ( itS = names.begin(); names.end() != itS; ++itS ) 
+    {
+      DaVinci::Map::Particle2LHCbIDs* partIds = get<DaVinci::Map::Particle2LHCbIDs>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( partIds );
+      if ( partIds->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) ) debug () << format( "%4d particles2LHCbIDs in ", partIds->size() ) << *itS << endmsg;
+      packAParticleLHCbIDContainer( partIds, *pPartIds );
+    }
+    if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pPartIds->relations().size() << " packed Particle2Ints" << endmsg;
   }
-  if ( msgLevel( MSG::DEBUG ) ) debug() << "Stored " << pPartIds->relations().size() << " packed Particle2Ints" << endmsg;
 
   //== Remove the converted containers if requested  
   if ( m_deleteInput ) 
@@ -150,7 +171,8 @@ StatusCode PackParticlesAndVertices::execute() {
     }
   }
 
-  if ( m_listRemaining ) {
+  if ( m_listRemaining )
+  {
     info() << "Deleted " << toBeDeleted.size() << " containers. Remaining objects are:" << endmsg;
     selectContainers( root, names, 0xFFFFFFFF );
   }

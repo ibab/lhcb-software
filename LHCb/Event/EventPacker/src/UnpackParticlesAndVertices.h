@@ -32,13 +32,16 @@ public:
 
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+private:
+
   typedef LHCb::Relation1D<LHCb::Particle, LHCb::VertexBase> RELATION;
 
-protected:
-
 private:
-  std::string m_inputStream;
+
+  std::string m_inputStream; ///< Input stream root
   std::string m_postFix;
   StandardPacker m_pack;
+
 };
+
 #endif // UNPACKPARTICLESANDVERTICES_H

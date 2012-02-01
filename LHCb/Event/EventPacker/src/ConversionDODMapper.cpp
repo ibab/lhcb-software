@@ -4,7 +4,7 @@
 namespace Gaudi {
   namespace Parsers {
     static StatusCode parse(std::vector<std::pair<std::string, std::string> >& result, const std::string& input) {
-        return parse_(result, input);
+      return parse_(result, input);
     }
   }
 }
@@ -32,13 +32,15 @@ DECLARE_TOOL_FACTORY(ConversionDODMapper)
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-ConversionDODMapper::ConversionDODMapper(const std::string& type, const std::string& name, const IInterface* parent)
-  : base_class(type, name, parent)
+  ConversionDODMapper::ConversionDODMapper(const std::string& type, 
+                                           const std::string& name, 
+                                           const IInterface* parent)
+    : base_class(type, name, parent)
 {
   declareProperty("Transformations", m_pathTransfRules,
-      "Dictionary string->string to define the transformation rules. "
-      "The key of each rule is a regular expression to match in the requested "
-      "path and the value is the format of the source path.");
+                  "Dictionary string->string to define the transformation rules. "
+                  "The key of each rule is a regular expression to match in the requested "
+                  "path and the value is the format of the source path.");
   declareProperty("Algorithms", m_algTypes,
                   "Dictionary ClassID -> AlgorithmType to be used to convert "
                   "sources in destinations");
