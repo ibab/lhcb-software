@@ -7,6 +7,8 @@
 ! 2012-02-01 - Chris Jones
  - Some small tweaks to how the ParticleTree cloner is configured, to more
    easily allow the deep ProtoParticle cloner to be used, if wanted.
+ - Suppress verbose "Set CloneFilteredParticles" printout during python
+   configuration of the stripping ...
 
 ! 2012-01-31 - Chris Jones
  - Add preliminary support (disabled by default) for full packing of the

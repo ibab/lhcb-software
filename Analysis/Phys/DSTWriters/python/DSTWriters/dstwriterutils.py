@@ -36,7 +36,6 @@ def setCloneFilteredParticlesToTrue(algs) :
     for alg in algs :
         try :
             alg.CloneFilteredParticles = True
-            print 'Set CloneFilteredParticles of', alg.name(), ' to True'
         except :
             try :
                 setCloneFilteredParticlesToTrue(alg.Members)
