@@ -3,7 +3,8 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
-- 2012-02-01 - Eric van Herwijnen (with help from Gerhard!)
+!========================= HltInterfaces v4r5 2012-02-01 =========================
+! 2012-02-01 - Eric van Herwijnen (with help from Gerhard!)
   - Fix to PropertyConfig to remove embedded newlines from properties 
 
 !========================= HltInterfaces v4r4 2011-11-08 =========================
