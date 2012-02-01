@@ -104,13 +104,8 @@ string DetDesc::Geometry::_toString(double value)   {
 namespace DetDesc { namespace Geometry {
   static long s_numVerifies = 0;
 
-  long num_object_validations() {
-    return s_numVerifies;
-  }
-
-  void increment_object_validations() {
-    ++s_numVerifies;
-  }
+  long num_object_validations()         {    return s_numVerifies;  }
+  void increment_object_validations()   {    ++s_numVerifies;       }
 
   template <typename T> void Handle<T>::bad_assignment(const type_info& from, const type_info& to) {
     string msg = "Wrong assingment from ";
@@ -121,49 +116,34 @@ namespace DetDesc { namespace Geometry {
     throw std::runtime_error(msg);
   }
 
-  template <typename T> const char* RefHandle<T>::name() const  {
-    TNamed *p = (TNamed*)this->m_element;
-    return p ? p->GetName() : "";
-  }
+  template <typename T> const char* RefHandle<T>::name() const  
+  { return this->m_element ? this->m_element->GetName() : "";   }
 
-  template <typename T> const char* RefHandle<T>::refName() const  {
-    TNamed *p = (TNamed*)this->m_element;
-    return p ? p->GetName() : "";
-  }
+  template <typename T> void RefHandle<T>::setName(const string& new_name)  
+  { if ( this->m_element ) this->m_element->SetName(new_name.c_str());  }
 
-  template <typename T> void RefHandle<T>::setName(const string& new_name)  {
-    TNamed *p = (TNamed*)this->m_element;
-    if ( p ) p->SetName(new_name.c_str());
-  }
-
-  template <typename T> void RefHandle<T>::assign(T* n, const std::string& nam, const std::string& tit) {
+  template <typename T> void RefHandle<T>::assign(T* n, const string& nam, const string& tit) {
     this->m_element = n;
-    TNamed *p = (TNamed*)n;
-    if ( !nam.empty() ) p->SetName(nam.c_str());
-    if ( !tit.empty() ) p->SetTitle(tit.c_str());
+    if ( !nam.empty() ) n->SetName(nam.c_str());
+    if ( !tit.empty() ) n->SetTitle(tit.c_str());
   }
 
 
   template struct Handle<TNamed>;
+
+  const char* RefHandle<TNamed>::name() const  
+  {  return m_element ? m_element->GetName() : "";  }
+  
+  void RefHandle<TNamed>::setName(const string& new_name)  
+  {  if ( m_element ) m_element->SetName(new_name.c_str());  }
+
+  void RefHandle<TNamed>::assign(TNamed* n, const string& nam, const string& tit) {
+    m_element = n;
+    if ( !nam.empty() ) m_element->SetName(nam.c_str());
+    if ( !tit.empty() ) m_element->SetTitle(tit.c_str());
+  }
+
 }}
-
-const char* DetDesc::Geometry::RefHandle<TNamed>::name() const  {
-  return m_element ? m_element->GetName() : "";
-}
-
-const char* DetDesc::Geometry::RefHandle<TNamed>::refName() const  {
-  return m_element ? m_element->GetName() : "";
-}
-
-void DetDesc::Geometry::RefHandle<TNamed>::setName(const string& new_name)  {
-  if ( m_element ) m_element->SetName(new_name.c_str());
-}
-
-void DetDesc::Geometry::RefHandle<TNamed>::assign(TNamed* n, const std::string& nam, const std::string& tit) {
-  m_element = n;
-  if ( !nam.empty() ) m_element->SetName(nam.c_str());
-  if ( !tit.empty() ) m_element->SetTitle(tit.c_str());
-}
 
 #include "TMap.h"
 #include "TColor.h"
@@ -172,9 +152,7 @@ void DetDesc::Geometry::RefHandle<TNamed>::assign(TNamed* n, const std::string& 
   template struct DetDesc::Geometry::Handle<X>; \
   template struct DetDesc::Geometry::RefHandle<X>
 
-
-
-INSTANTIATE(TObject);
+template struct DetDesc::Geometry::Handle<TObject>;
 
 #include "TGeoMedium.h"
 #include "TGeoMaterial.h"
@@ -190,7 +168,6 @@ INSTANTIATE(TGeoTranslation);
 INSTANTIATE(TGeoIdentity);
 INSTANTIATE(TGeoCombiTrans);
 INSTANTIATE(TGeoGenTrans);
-
 
 #include "TGeoBBox.h"
 #include "TGeoPcon.h"

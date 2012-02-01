@@ -107,14 +107,11 @@ namespace DetDesc {
       typedef T Implementation;
       RefHandle() : Handle<T>() {}
       RefHandle(const Handle<T>& e) : Handle<T>(e) {}
-
-      template<typename Q> 
-      RefHandle(const Handle<Q>& e) : Handle<T>(e) {}
+      template<typename Q> RefHandle(const Handle<Q>& e) : Handle<T>(e) {}
 
       const char* name() const;
-      const char* refName() const;
-      void setName(const std::string& new_name);
-      void assign(Implementation* n, const std::string& nam, const std::string& title);
+      void  setName(const std::string& new_name);
+      void  assign(Implementation* n, const std::string& nam, const std::string& title);
       Implementation* operator->() const { return this->m_element;    }
       operator Implementation& ()  const { return *(this->m_element); }
     };
@@ -130,15 +127,12 @@ namespace DetDesc {
       typedef TNamed Implementation;
       RefHandle() : Handle<TNamed>() {}
       RefHandle(const Handle<TNamed>& e) : Handle<TNamed>(e) {}
-
-      template<typename Q> 
-      RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
+      template<typename Q> RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
       
       TNamed*  operator->() const { return this->m_element; }
       operator TNamed*() const    { return this->m_element; }
       
       const char* name() const;
-      const char* refName() const;
       void setName(const std::string& new_name);
       void assign(Implementation* n, const std::string& nam, const std::string& title);
     };
