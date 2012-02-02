@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-02 - Matthew M Reid
+ - StrippingB2JpsiKShh.py
+   New Stripping line added
+
 ! 2012-01-31 - Jibo He
  - StrippingBd2mumuKstarBDT.py
    New Stripping lines based on BDT for Bd->MuMuKPi, with KPi mass up to 2.2 GeV.
