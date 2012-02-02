@@ -3,6 +3,74 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
+This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,
+ Rec v13r0 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Development version to pick up LHCb v34r0 software stack.
+
+- Supported platforms and libraries
+  . Added support for for gcc46 on slc5 (64-bit only) - not yet production
+    quality, some differences with gcc43 still to be fixed
+  . Migrated to Boost 1.48
+ 
+- Changes to configuration
+  . Add a filter for the States on Best and Muon Tracks
+  . (DDDB v1r50) For each DataType, in case of real data, set initial time
+    (used for CondDB initialisation before first event)
+    to the last meaningful time of the corresponding year:
+    o End of year for 2008, 2009
+    o End of last fill for 2010, 2011
+    o Current time for 2012, if before end of 2012
+
+- Persistency changes
+  . Removed support for POOL persistency
+  . Change to states saved by default on tracks written to output file:
+    Velo:       ("ClosestToBeam")
+    Long:       ("ClosestToBeam")("FirstMeasurement")("BegRich2")("V0Vertex")
+    T:          ("FirstMeasurement")( "BegRich2")
+    Downstream: ("FirstMeasurement")("BegRich2")("V0Vertex")
+    Upstream:   ("ClosestToBeam")("FirstMeasurement")
+    Muon        ("FirstMeasurement")
+
+- New functionality
+  . Added support for 2012 DataType, behaviour currently identical to 2011
+  . Added infrastructure for filtering on DQ flags, not yet usable
+    (DetCond v12r23, LHCbAlgs v2r47)
+
+- New tuning
+  . Make the network tuning MC11aTuneV2 the default for all data types, and
+    change some of the network variables (ChargedProtoANNPID v1r6)
+  . Introduce beamspot constraint into PVSeedTool to make PatPV3D faster which
+    gives a factor between 2 or 3 in exe time when switching from 3D PVSeed3DTool
+    to PVSeedTool, lower false PV rate and lower PV->SV mistakes, same
+    performance for other parameters like resolution and PV efficiency
+    (PatPV v3r21)
+  . Changes to track fit: fewer smooth operations to improve timing,
+    smarter use of OT times in OTTrackProjector leading to better Chi2 and 
+    therefore more ProtoParticles
+    (TrackFitEvent v5r13, TrackFitter v4r3, TrackProjectors v2r30)
+
+- Bug fixes
+  . Fixes to cached conditions updates: not all caches were correctly updated
+    when IOV changed between initialization and first event
+    (CaloDAQ v4r26, CaloDet v10r13, DetDesc v18r29, DetDescSvc v3r5, 
+     RichDet v16r9, LumiAlgs v7r3, PatVeloTT v3r17)
+  . Redirect sporadic stderr+stdout messages from NeuroBayes to /dev/null. 
+    Temporary measure, until we have access to a fixed version of NeuroBayes
+    (ChargedProtoANNPID v1r6)
+
+- Monitoring changes
+  . Fixes to primitive types that can be saved in Tuples::TupleObj (Gaudi v23r0)
+  . Move 2D histograms to expert mode (MuonTrackMonitor v2r5)
+  . Add monitor for ANN PID variables (ChargedProtoANNPID v1r6, RecConf v2r5)
+  . Add TrackVertexMonitors in online mode, to get PV position
+    (TrackMonitors v1r36)
+  . Remove a Velo clusters histogram (VeloRecMonitors v2r17)
+
+- Changes to tests
+  . Remove tests that write to POOL files, no longer supported
+
 </PRE><H1><A NAME=v41r3>2011-12-19 Brunel v41r3</A></H1><PRE>
 This version uses projects LCG 61b, Gaudi v22r5, LHCb v33r2, Lbcom v11r2,
  Rec v12r2 and SQLDDDB v6r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
