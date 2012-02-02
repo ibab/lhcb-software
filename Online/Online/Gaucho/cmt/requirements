@@ -25,6 +25,7 @@ apply_pattern linker_library library=GauchoLib
 library Gaucho components/*.cpp
 apply_pattern component_library library=Gaucho
 macro_append  Gaucho_dependencies  " GauchoLib "
+macro_append Gaucho_shlibflags " $(Boost_linkopts_regex) "
 
 # define component library link options
 #apply_pattern linker_library library="Gaucho"
