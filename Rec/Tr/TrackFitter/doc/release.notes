@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+ - small improvement in MasterFitter::outlierRemoved to call smoothing less often (only affects HLT)
+ - fix in TrackKalmanFilter to make profiling easier
+
 !========================= TrackFitter v4r3 2012-01-31 =========================
 ! 2012-01-09 - Wouter Hulsbergen
  - use new functionality in FitNode to call the smoother less often in outlier rejection
