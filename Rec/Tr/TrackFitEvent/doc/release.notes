@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2012-02-02 - Wouter Hulsbergen
+ - improve speed of FitNode::computeFilteredState
+
 !========================= TrackFitEvent v5r13 2012-01-31 =========================
 ! 2012-01-25 - Wouter Hulsbergen
  - fix problem in reinterpret_cast that only appears in optimization in kalmanfitresult

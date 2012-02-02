@@ -259,8 +259,6 @@ namespace LHCb {
   //=========================================================================
   void FitNode::computePredictedState(int direction)
   {
-    //std::cout << "Predicting node " << z() << " " << index() << " " << direction << std::endl ;
-    
     // get the filtered state from the previous node. if there wasn't
     // any, we will want to copy the reference vector and leave the
     // covariance the way it is
@@ -334,61 +332,70 @@ namespace LHCb {
     
     // apply the filter if needed
     if( type() == HitOnTrack ) {
-      //std::cout << "Filtering a hit on track." << std::endl ;
       // get reference to the state vector and cov
       TrackVector&    X = state.stateVector();
       TrackSymMatrix& C = state.covariance();
       
       // calculate the linearized residual of the prediction and its error
-      const TrackProjectionMatrix& H = this->projectionMatrix();
       const double errorMeas2 = this->errMeasure2();
-      double res        = this->refResidual() + ( H * (this->refVector().parameters() - X) ) (0) ;
-      double errorRes2  = errorMeas2 + Similarity(H,C)(0,0) ;  
+      const TrackProjectionMatrix& H = this->projectionMatrix();
       if( !( std::abs(H(0,0)) + std::abs(H(0,1))>0) ) {
-        KalmanFitResult* kfr = this->getParent();
+	KalmanFitResult* kfr = this->getParent();
         if (!kfr->inError())
           kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
-        //std::cout << "Error: projection is not set! " << index() << " " << H << std::endl ;
       }
-      // calculate gain matrix K
+      double res = this->refResidual() + ( H * (this->refVector().parameters() - X) ) (0) ;
+#ifdef SLOW_BUT_SAFE
       static SMatrix<double,5,1> CHT, K ;
       CHT = C * Transpose(H) ;
+      double errorRes2  = errorMeas2 + (H*CHT)(0,0) ;  
+      
+      // calculate gain matrix K
       K = CHT / errorRes2;
       
       // update the state vector
       X += K.Col(0) * res ;
       
-      // update the covariance matrix. The original expression is
-      //   static const TrackSymMatrix unit = TrackSymMatrix( SMatrixIdentity());
-      //   static SymMatrix1x1 V ;
-      //   V(0,0) = errorMeas2 ;
-      //   C = Similarity( unit - ( K*H ), C ) + Similarity(K,V) ;
-      // but the following expression is just as stable and less complex
-      // (see NIM.A552:566-575,2005).
-      static SymMatrix1x1 R ;
-      R(0,0) = errorRes2;
+      // update the covariance matrix
       static TrackSymMatrix tmp ;
-      ROOT::Math::AssignSym::Evaluate(tmp, -2 * K * Transpose(CHT) ) ;
-      C += tmp + Similarity(K,R) ;
-      
+      ROOT::Math::AssignSym::Evaluate(tmp, K * Transpose(CHT) ) ;
+      C -= tmp ;
+#else
+      // The ugly code below makes the filter step about 20% faster
+      // than SMatrix would do it.
+      double* Cp = &(C(0,0)) ;
+      double* Xp = &(X(0)) ;
+      const double* Hp = &(H(0,0)) ;
+      double CHTp[5] = {0,0,0,0,0} ;
+      CHTp[0] = Cp[ 0]*Hp[0] + Cp[ 1]*Hp[1] + Cp[ 3]*Hp[2] + Cp[ 6]*Hp[3] + Cp[10]*Hp[4] ;
+      CHTp[1] = Cp[ 1]*Hp[0] + Cp[ 2]*Hp[1] + Cp[ 4]*Hp[2] + Cp[ 7]*Hp[3] + Cp[11]*Hp[4] ;
+      CHTp[2] = Cp[ 3]*Hp[0] + Cp[ 4]*Hp[1] + Cp[ 5]*Hp[2] + Cp[ 8]*Hp[3] + Cp[12]*Hp[4] ;
+      CHTp[3] = Cp[ 6]*Hp[0] + Cp[ 7]*Hp[1] + Cp[ 8]*Hp[2] + Cp[ 9]*Hp[3] + Cp[13]*Hp[4] ;
+      CHTp[4] = Cp[10]*Hp[0] + Cp[11]*Hp[1] + Cp[12]*Hp[2] + Cp[13]*Hp[3] + Cp[14]*Hp[4] ;
+      double errorRes2  = errorMeas2 +
+	Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
+
+      // update the state vector and cov matrix
+      for(int i=0; i<5; ++i) {
+	Xp[i] += CHTp[i] / errorRes2 * res ;
+	for(int j=0; j<=i; ++j) 
+	  Cp[i*(i+1)/2+j] -= CHTp[i] * CHTp[j] / errorRes2;
+      }
+#endif  
+    
       // set the chisquare contribution
       m_deltaChi2[direction] = res*res / errorRes2 ;
       m_totalChi2[direction] += LHCb::ChiSquare(m_deltaChi2[direction],1)  ;
     }
     m_filterStatus[direction] = Filtered ;
     
-    if ( !(m_filteredState[direction].covariance()(0,0)>0)   ) {
+    if ( !(m_filteredState[direction].covariance()(0,0)>0 && 
+	   m_filteredState[direction].covariance()(1,1)>0)   ) {
       KalmanFitResult* kfr = this->getParent();
       if (!kfr->inError())
         kfr->setErrorFlag(direction,KalmanFitResult::Predict ,KalmanFitResult::AlgError ) ;
-      //       std::cout << "ERRRORRR: something goes wrong in the filter."
-      // 		<< m_filteredState[direction].covariance() << std::endl 
-      // 		<< predictedState(direction) << std::endl ;
     }
   }
-  
-
-    
   
   //=========================================================================
   // Bi-directional smoother
@@ -449,8 +456,6 @@ namespace LHCb {
     }
     updateResidual(state) ;
     m_filterStatus[Backward] = Smoothed ;
-
-    
   }
   
   //=========================================================================
@@ -589,8 +594,34 @@ namespace LHCb {
     for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
     return i == Gaudi::TrackSymMatrix::kRows ;
   }
-  
-  
+
+  /*
+  double FitNode::chi2LowerLimit() const
+  {
+    // get a lower limit by smoothing residuals in 1D.
+    double rc=0 ;
+    if( hasMeasurement() ) {
+      const TrackProjectionMatrix& H  = this->projectionMatrix();
+      const TrackVector& refX         = this->refVector().parameters() ;
+      //  average the predicted residuals. make sure to take
+      //  correlation in measurement into account, namely by averaging
+      //  before adding that error.
+      const LHCb::State& stateA = predictedState(Forward) ;
+      const LHCb::State& stateB = predictedState(Backward) ;
+      // actually, this just averages the predicted measurement
+      double rA   = refResidual() + (H*(refX - stateA.stateVector()))(0) ;
+      double HCHA =  Similarity( H, stateA.covariance() )(0,0);
+      double rB   = refResidual() + (H*(refX - stateB.stateVector()))(0) ;
+      double HCHB =  Similarity( H, stateB.covariance() )(0,0);
+      double HCH = 1/(1/HCHA + 1/HCHB) ;
+      double r   = HCH*(rA/HCHA + rB/HCHB) ;
+      double V   = errMeasure2();
+      rc = r*r/(HCH+V) ;
+    }
+    return rc ;
+  }
+  */  
+
   int FitNode::index() const
   {
     int rc = 0 ;
