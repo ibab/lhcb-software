@@ -212,8 +212,10 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes() ;
   if( nodes.empty() || m_makeNodes ) {
     sc = makeNodes( track,pid );
-    if ( sc.isFailure() )
+    if ( sc.isFailure() ) {
+      kalfitresult->clearNodes() ;
       return failure( "unable to make nodes from the measurements" );
+    }
   } else {
     sc = updateRefVectors( track, pid ) ;
     if ( sc.isFailure() )
@@ -393,6 +395,16 @@ StatusCode TrackMasterFitter::determineStates( Track& track ) const
   return sc;
 }
 
+namespace {
+  typedef std::pair<const FitNode*, double> NodeWithChi2 ;
+  struct DecreasingChi2
+  {
+    bool operator()(const NodeWithChi2& lhs, const NodeWithChi2& rhs) const {
+      return lhs.second > rhs.second ;
+    }
+  } ;
+}
+
 //=========================================================================
 //
 //=========================================================================
@@ -417,50 +429,59 @@ LHCb::Node* TrackMasterFitter::outlierRemoved( Track& track ) const
   
   // loop over the nodes and find the one with the highest chi2 >
   // m_chi2Outliers, provided there is enough hits of this type left.
-  LHCb::KalmanFitResult::ConstFitNodeRange::const_iterator iWorstNode = nodes.end();
-  double worstChi2 = m_chi2Outliers;
+
+  // Computing the chi2 will trigger the smoothing. Especially in the
+  // trigger, where we don't update the reference, this makes a big
+  // difference. One way to save some time is to first test a number
+  // of which we know that it is either equal to or bigger than the
+  // chi2 contribution of the hit, namely the chi2 sum of the match
+  // and the hit at this node. We then sort the hits in this number,
+  // and only compute chi2 if it can be bigger than the current worst
+  // one.
   const double totalchi2  = std::max( nodes.front()->totalChi2(LHCb::FitNode::Backward).chi2(),
 				      nodes.back()->totalChi2(LHCb::FitNode::Forward).chi2() ) ;
+  std::vector< NodeWithChi2 > nodesWithChi2UL ;
+  nodesWithChi2UL.reserve( nodes.size() ) ;
+  int numtried(0),numcalled(0) ;
   for ( LHCb::KalmanFitResult::ConstFitNodeRange::const_iterator iNode = nodes.begin(); 
 	iNode != nodes.end(); ++iNode )
     if ( (*iNode)->hasMeasurement() &&
 	 (*iNode)->type() == LHCb::Node::HitOnTrack ) {
       HitType hittype = hittypemap[int((*iNode)->measurement().type())] ;
       if( numHits[hittype] > minNumHits[hittype] ) {
-	// Computing the chi2 will trigger the smoothing. One way to
-	// save some time is to first test a number of which we know
-	// that it is either equal to or bigger than the chi2
-	// contribution of the hit, namely the chi2 sum of the match
-	// and the hit at this node:
+	++numtried ;
 	double chi2MatchAndHit = totalchi2 ;
 	for(int dir=0; dir<2; ++dir) {
 	  const LHCb::FitNode* tmpnode =  (*iNode)->prevNode(dir) ;
 	  if(tmpnode) chi2MatchAndHit -= tmpnode->totalChi2(dir).chi2() ;
 	}
-	if( chi2MatchAndHit > worstChi2 ) {
-	  // the following line triggers the 'slow' smoothing
-	  const double chi2 = (*iNode)->chi2();
-	  if ( chi2 > worstChi2 ) {
-	    worstChi2 = chi2;
-	    iWorstNode = iNode;
-	  }
+       	if( chi2MatchAndHit > m_chi2Outliers ) {
+	  nodesWithChi2UL.push_back( std::make_pair( *iNode, chi2MatchAndHit ) ) ;
 	}
       }
     }
   
-  // if a node is found: remove its measurement from the track
-  if ( iWorstNode != nodes.end() ) {
-    outlier = const_cast<LHCb::FitNode*>(*iWorstNode) ;
-
-    if (m_debugLevel)
-      debug() << "Measurement " << iWorstNode-nodes.begin() 
-              << " of type="
-              << (*iWorstNode) -> measurement().type()
-              << " LHCbID="
-              << (*iWorstNode) -> measurement().lhcbID().channelID()
-              << " at z=" << (*iWorstNode)->z() 
-              << " with chi2=" << (*iWorstNode) -> chi2() 
-              << " removed." << endmsg;
+  // now sort them
+  double worstChi2 = m_chi2Outliers;
+  std::sort( nodesWithChi2UL.begin(), nodesWithChi2UL.end(), DecreasingChi2()) ;
+  for(std::vector< NodeWithChi2 >::const_iterator
+	it = nodesWithChi2UL.begin(); it != nodesWithChi2UL.end(); ++it)
+    if( it->second > worstChi2 ) {
+      const double chi2 = it->first->chi2();
+      ++numcalled ;
+      if ( chi2 > worstChi2 ) {
+	worstChi2 = chi2;
+	outlier = const_cast<LHCb::FitNode*>(it->first) ;
+      }
+    }
+  if(outlier && m_debugLevel) {
+    debug() << "Measurement of type="
+	    << outlier -> measurement().type()
+	    << " LHCbID="
+	    << outlier -> measurement().lhcbID().channelID()
+	    << " at z=" << outlier->z() 
+	    << " with chi2=" << outlier->chi2() 
+	    << " removed." << endmsg;
   }
   
   return outlier ;
