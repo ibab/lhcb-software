@@ -215,10 +215,9 @@ class Beauty2CharmConf(LineBuilder):
                       'Preambulo' : [ "from LoKiTracks.decorators import *",
                                       'from LoKiCore.functions    import *' ]
                       }
-            hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
-                  "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
+            #hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
+            hlt = "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
                   "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
-            print 'MYCHECK', name, protoLine.prescale(line,name,config)
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt)
