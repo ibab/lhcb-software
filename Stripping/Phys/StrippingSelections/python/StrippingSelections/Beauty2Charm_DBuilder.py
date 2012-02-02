@@ -69,6 +69,7 @@ class DBuilder(object):
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
         self.k3pi = [filterSelection('D2K3PI',oneK,self.hhhh)]
+        self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]        
         self.pi0kpi_merged = [filterSelection('D2Pi0KPi_Merged',oneK,
                                               self.pi0hh_merged)]
         self.pi0kpi_resolved = [filterSelection('D2Pi0KPi_Resolved',oneK,
