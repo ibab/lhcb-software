@@ -150,8 +150,8 @@ public:
 DoubleTopoTool::DoubleTopoTool(const std::string& type,const std::string& name,
 			       const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
-  declareProperty("minAngle", m_minAngle = 0.0);
-  declareProperty("minMass", m_minMass = 0.0);
+  declareProperty("minAngle", m_minAngle = 2/57.);
+  declareProperty("minMass", m_minMass = 20000.0);
 }
 
 StatusCode DoubleTopoTool::initialize(){
