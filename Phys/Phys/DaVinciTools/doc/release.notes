@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2012-2-2 - Mike Williams
+- New DoubleTopoTool
+
 ! 2012-01-24 - Patrick Koppenburg
  - Fix bug https://savannah.cern.ch/bugs/index.php?90742 in SubstitutePID
 
