@@ -86,8 +86,8 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track ) const
     (*inode)->filteredState(LHCb::FitNode::Forward) ;
   }
   if(m_forceBidirectional){
-    for( LHCb::KalmanFitResult::FitNodeRange::iterator inode = nodes.begin() ;
-	 inode != nodes.end(); ++inode) {
+    for( LHCb::KalmanFitResult::FitNodeRange::reverse_iterator inode = nodes.rbegin() ;
+	 inode != nodes.rend(); ++inode) {
       (*inode)->predictedState(LHCb::FitNode::Backward) ;
       (*inode)->filteredState(LHCb::FitNode::Backward) ;
     }
