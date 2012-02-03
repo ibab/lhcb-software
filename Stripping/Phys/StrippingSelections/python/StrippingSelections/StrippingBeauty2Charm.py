@@ -194,11 +194,11 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(ltub.lines,config)
 
         # Double Topo line
-        alg = LoKi__VoidFilter('DoubleTopoFilter',
-                               Code="ACCEPT('DoubleTopoTool/DT')")
-        sel = EventSelection('DoubleTopo',Algorithm=alg)
         from Configurables import DoubleTopoTool as DT
-        dt = DT('DT')
+        code = "ACCEPT('DoubleTopoTool/DoubleTopoLine_DT')"
+        alg = LoKi__VoidFilter('DoubleTopoLineFilter',Code=code)
+        sel = EventSelection('DoubleTopoEventSel',Algorithm=alg)
+        dt = DT('DoubleTopoLine_DT')
         dt.minAngle = 2/57.
         dt.minMass = 19000
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
