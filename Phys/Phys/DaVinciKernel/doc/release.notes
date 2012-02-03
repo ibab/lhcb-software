@@ -4,9 +4,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
-! 2012-01-18 - Vanya Belyaev
+!========================= DaVinciKernel v10r4 2012-02-03 =========================
 
- - move Gaudi::HahsIDs into DaVinciTypes 
+! 2012-01-18 - Vanya Belyaev
+ - Move Gaudi::HashIDs into DaVinciTypes 
 
 !======================== DaVinciKernel v10r3 2011-11-10 ====================
 
