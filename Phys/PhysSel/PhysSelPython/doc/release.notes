@@ -5,6 +5,8 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!========================= PhysSelPython v9r3 2012-02-03 =========================
+
 ! 2012-01-23 - Chris Jones
  - Adapt to removal of obsolete properties in ChargedProtoParticleMaker
 
