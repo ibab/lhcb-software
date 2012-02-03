@@ -68,6 +68,7 @@ import StrippingSingleTrackTIS
 import StrippingDiElectronNew
 import StrippingElectronID
 import StrippingCcbar2PpbarNew
+import StrippingCcbar2PhiPhi
 import StrippingDForBSemi
 import StrippingD0ForBXX
 import StrippingJpsippForD0MuMu

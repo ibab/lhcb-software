@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-03 - Jibo He
+ - StrippingCcbar2PhiPhi.py
+   New Stripping lines for charmonium -> phi phi, both prompt or detached. 
+
+! 2012-02-03 - Jibo He
  - StrippingBd2mumuKstarBDT.py
    Switched to the renamed StdLooseDetachedKpi
 
