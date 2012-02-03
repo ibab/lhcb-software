@@ -3,11 +3,13 @@
 ! Responsible : Marcin Kucharczyk
 !-----------------------------------------------------------------------------
 
-!========================= HighPtJets v1r5 2011-11-10 =========================
+!========================= HighPtJets v1r6 2012-02-03 =========================
 
 ! 2012-02-01 - Marcin Kucharczyk
  - Add new algorithm bJetSeeds as an external algo for InclbJets stripping 
    line
+
+!========================= HighPtJets v1r5 2011-11-10 =========================
 
 ! 2011-10-17 - Marcin Kucharczyk
  - Add the cut on refined sum Et and adapt the package wrt the needs of Hlt2
