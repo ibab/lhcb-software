@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-03 - Jibo He
+ - StrippingBd2mumuKstarBDT.py
+   Switched to the renamed StdLooseDetachedKpi
+
 ! 2012-02-02 - Matthew M Reid
  - StrippingB2JpsiKShh.py
    New Stripping line added

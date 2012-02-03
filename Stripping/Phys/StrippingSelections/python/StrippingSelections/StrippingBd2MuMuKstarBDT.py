@@ -242,7 +242,7 @@ def makeKstar(name,
               KstarMassW
               ):
 
-    _StdDetachedKst2Kpi = DataOnDemand(Location = "Phys/StdDetachedKst2Kpi/Particles" )
+    _StdLooseDetachedKpi = DataOnDemand(Location = "Phys/StdLooseDetachedKpi/Particles" )
     
     KaonCut = "(INTREE( (ABSID=='K+') & (PT> %(KaonPT)s *MeV) & (P>%(KaonP)s *MeV) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (PIDK>%(KaonPIDKpi)s) ))" % locals()
     PionCut = "(INTREE( (ABSID=='pi+') &  (PT> %(PionPT)s *MeV) & (P>%(PionP)s *MeV) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (PIDK<%(PionPIDpiK)s) ))" % locals()
@@ -253,7 +253,7 @@ def makeKstar(name,
     
     return Selection( name,
                       Algorithm = _Kstar,
-                      RequiredSelections = [ _StdDetachedKst2Kpi ]
+                      RequiredSelections = [ _StdLooseDetachedKpi ]
                       )
 
 
