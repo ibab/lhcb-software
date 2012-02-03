@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r1 2012-02-03 =========================
+
 ! 2012-01-27 - Eric van Herwijnen
  - Use LHCb::ParticlePropertySvc in ParticleStuffer.
 
