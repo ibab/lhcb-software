@@ -3,7 +3,8 @@
 # Maintainer : Juan PALACIOS juan.palacios@cern.ch
 # =============================================================================
 package Phys/PhysDict
-version v4r2p1
+version v4r2p2
+
 # =============== structure ===================================================
 branches         cmt doc dict
 # =============== dependencies ================================================
