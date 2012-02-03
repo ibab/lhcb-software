@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-03 - Jibo He
+ - Added StdTightPhi, using StdTightKaons.
+
 ! 2012-02-01 - Jibo He
  - StdDetachedKstar
    Renamed as StdLooseDetachedKpi, to better reflect what's inside. 

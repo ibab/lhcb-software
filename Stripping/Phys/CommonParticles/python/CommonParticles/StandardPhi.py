@@ -20,6 +20,8 @@ from CommonParticles.StdLoosePhi import *
 _locations.update ( locations )
 from CommonParticles.StdLooseDetachedPhi import *
 _locations.update ( locations )
+from CommonParticles.StdTightPhi import *
+_locations.update ( locations )
 
 # redefine the locations 
 locations = _locations
