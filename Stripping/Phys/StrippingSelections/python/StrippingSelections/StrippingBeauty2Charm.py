@@ -194,14 +194,13 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(ltub.lines,config)
 
         # Double Topo line
-        code = "ACCEPT('DoubleTopoTool/DT')"
-        sel = EventSelection('DoubleTopo',
-                             Algorithm=LoKi__VoidFilter('DoubleTopoFilter',Code=code))
-        # This doesn't work for some reason ... FIX ME!!!!
+        alg = LoKi__VoidFilter('DoubleTopoFilter',
+                               Code="ACCEPT('DoubleTopoTool/DT')")
+        sel = EventSelection('DoubleTopo',Algorithm=alg)
         from Configurables import DoubleTopoTool as DT
-        dt = DT('DoubleTopo.DT')
-        dt.minAngle = 5/57.#config['B2CBBDT_MIN']
-        dt.minMass = 40000
+        dt = DT('DT')
+        dt.minAngle = 2/57.
+        dt.minMass = 19000
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
