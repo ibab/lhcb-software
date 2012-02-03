@@ -60,7 +60,7 @@ namespace DetDesc {
       int numsides() const;
     };
 
-    struct Subdetector : public Element  {
+    struct DetElement : public Element  {
       struct Component : public Dimension {
         Component(Handle_t e) : Dimension(e) {}
         Component(const Element& e) : Dimension(e) {}
@@ -77,7 +77,7 @@ namespace DetDesc {
         const  XMLCh* vis() const;
         std::string visStr() const;
       };
-      Subdetector(Handle_t e) : Element(e)  {}
+      DetElement(Handle_t e) : Element(e)  {}
       Handle_t handle()  const { return m_element; }
       void setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);
       void setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);

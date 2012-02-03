@@ -105,7 +105,7 @@ namespace DetDesc {
       void dump() const;
 
       virtual Handle<TObject>  getRefChild(const HandleMap& e, const std::string& name, bool throw_if_not=true)  const;
-      virtual Volume         pickMotherVolume(const Subdetector& sd) const;
+      virtual Volume         pickMotherVolume(const DetElement& sd) const;
       virtual Volume         worldVolume() const      { return m_worldVol;          }
       virtual Volume         trackingVolume() const   { return m_trackingVol;       }
       virtual Rotation       reflection() const       { return m_reflect;           }
@@ -141,7 +141,7 @@ namespace DetDesc {
       {  return getRefChild(m_define,name);                                         }
       virtual Readout     readout(const std::string& name)  const
       {  return getRefChild(m_readouts,name);                                       }
-      virtual Subdetector detector(const std::string& name)  const
+      virtual DetElement detector(const std::string& name)  const
       {  return getRefChild(m_detectors,name);                                      }
 
       virtual const HandleMap& header()  const        { return m_header;            }
@@ -167,7 +167,7 @@ namespace DetDesc {
       virtual LCDD& add(const Region& x)              { return addRegion(x);        }
       virtual LCDD& add(const VisAttr& x)             { return addVisAttribute(x);  }
       virtual LCDD& add(const Readout& x)             { return addReadout(x);       }
-      virtual LCDD& add(const Subdetector& x)         { return addDetector(x);      }
+      virtual LCDD& add(const DetElement& x)          { return addDetector(x);      }
 
 #define __R  return *this
       // These are manager by the TGeoManager

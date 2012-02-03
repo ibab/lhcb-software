@@ -123,88 +123,88 @@ int Dimension::number() const {
   return m_element.attr<int>(Attr_number);
 }
 
-int Subdetector::Component::id()  const  {
+int DetElement::Component::id()  const  {
   return m_element.attr<int>(Attr_id);
 }
 
-const XMLCh*  Subdetector::Component::name()  const  {
+const XMLCh*  DetElement::Component::name()  const  {
   return m_element.attr<cpXMLCh>(Attr_name);
 }
 
-string  Subdetector::Component::nameStr()  const  {
+string  DetElement::Component::nameStr()  const  {
   return m_element.attr<string>(Attr_name);
 }
 
-string Subdetector::Component::materialStr() const   {
+string DetElement::Component::materialStr() const   {
   return m_element.attr<string>(Attr_material);
 }
 
-const XMLCh* Subdetector::Component::module()  const  {
+const XMLCh* DetElement::Component::module()  const  {
   return m_element.attr<cpXMLCh>(Attr_module);
 }
 
-string  Subdetector::Component::moduleStr()  const  {
+string  DetElement::Component::moduleStr()  const  {
   return m_element.hasAttr(Attr_module) ? m_element.attr<string>(Attr_module) : string();
 }
 
-int Subdetector::Component::repeat()  const  {
+int DetElement::Component::repeat()  const  {
   return m_element.attr<int>(Attr_repeat);
 }
 
-double Subdetector::Component::thickness() const  {
+double DetElement::Component::thickness() const  {
   return m_element.attr<double>(Attr_thickness);
 }
 
-bool Subdetector::Component::isSensitive() const  {
+bool DetElement::Component::isSensitive() const  {
   return m_element.hasAttr(Attr_sensitive) && m_element.attr<bool>(Attr_sensitive);
 }
 
-const XMLCh* Subdetector::Component::material() const   {
+const XMLCh* DetElement::Component::material() const   {
   return m_element.attr<cpXMLCh>(Attr_material);
 }
 
-const  XMLCh* Subdetector::Component::vis() const   {
+const  XMLCh* DetElement::Component::vis() const   {
   return m_element.hasAttr(Attr_vis) ? m_element.attr<cpXMLCh>(Attr_vis) : 0;
 }
 
-string  Subdetector::Component::visStr()  const  {
+string  DetElement::Component::visStr()  const  {
   return m_element.hasAttr(Attr_vis) ? m_element.attr<string>(Attr_vis) : string();
 }
 
-int Subdetector::id() const   {
+int DetElement::id() const   {
   Attribute a = m_element.attr_nothrow(Attr_id);
   return a ? m_element.attr<int>(Attr_id) : -1;
 }
 
-const XMLCh* Subdetector::name() const   {
+const XMLCh* DetElement::name() const   {
   return m_element.attr<cpXMLCh>(Attr_name);
 }
 
-string Subdetector::nameStr() const   {
+string DetElement::nameStr() const   {
   return m_element.attr<string>(Attr_name);
 }
 
-const XMLCh*  Subdetector::type()  const  {
+const XMLCh*  DetElement::type()  const  {
   return m_element.attr<cpXMLCh>(Attr_type);
 }
 
-string  Subdetector::typeStr()  const  {
+string  DetElement::typeStr()  const  {
   return m_element.attr<string>(Attr_type);
 }
 
-const XMLCh*  Subdetector::vis()  const  {
+const XMLCh*  DetElement::vis()  const  {
   return m_element.attr<cpXMLCh>(Attr_vis);
 }
 
-string  Subdetector::visStr()  const  {
+string  DetElement::visStr()  const  {
   return m_element.attr<string>(Attr_vis);
 }
 
-Dimension Subdetector::dimensions()  const  {
+Dimension DetElement::dimensions()  const  {
   return Dimension(m_element.child(Tag_dimensions));
 }
 
-const XMLCh* Subdetector::material() const  {
+const XMLCh* DetElement::material() const  {
   Handle_t   h = m_element.child(Tag_material);
   if ( h && h.hasAttr(Attr_name) )  {
     return h.attr<cpXMLCh>(Attr_name);
@@ -212,7 +212,7 @@ const XMLCh* Subdetector::material() const  {
   return 0;
 }
 
-string Subdetector::materialStr() const  {
+string DetElement::materialStr() const  {
   Handle_t   h = m_element.child(Tag_material);
   if ( h && h.hasAttr(Attr_name) )  {
     return h.attr<string>(Attr_name);
@@ -220,19 +220,19 @@ string Subdetector::materialStr() const  {
   return "";
 }
 
-void Subdetector::check(bool condition, const string& msg) const  {
+void DetElement::check(bool condition, const string& msg) const  {
   if ( condition )  {
     throw runtime_error(msg);
   }
 }
 
-void Subdetector::setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
+void DetElement::setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
   setRegion(lcdd, node, volume);
   setLimitSet(lcdd, node, volume);
   setVisAttributes(lcdd, node, volume);
 }
 
-void Subdetector::setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
+void DetElement::setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
   Attribute attr = node.attr_nothrow(Attr_vis);
   if ( attr )   {
     volume.setVisAttributes(lcdd.visAttributes(attr->getValue()));
@@ -250,21 +250,21 @@ void Subdetector::setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume
   }
 }
 
-void Subdetector::setRegion(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
+void DetElement::setRegion(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
   Attribute attr = node.attr_nothrow(Attr_region);
   if ( attr )  {
     volume.setRegion(lcdd.region(attr->getValue()));
   }
 }
 
-void Subdetector::setLimitSet(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
+void DetElement::setLimitSet(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
   Attribute attr = node.attr_nothrow(Attr_limits);
   if ( attr )  {
     volume.setLimitSet(lcdd.limitSet(attr->getValue()));
   }
 }
 
-void Subdetector::setCombineHits(Handle_t node, const SensitiveDetector& sens)   {
+void DetElement::setCombineHits(Handle_t node, const SensitiveDetector& sens)   {
   if ( node.hasAttr(Attr_combineHits) )  {
     if ( isTracker() )  {
       sens.setAttr(Attr_combine_hits,node.attr<Attribute>(Attr_combineHits));
@@ -272,7 +272,7 @@ void Subdetector::setCombineHits(Handle_t node, const SensitiveDetector& sens)  
   }
 }
 
-bool Subdetector::isTracker() const   {
+bool DetElement::isTracker() const   {
   if ( m_element )  {
     string type = attr<string>(Attr_type);
     if ( type.find("Tracker") != string::npos && hasAttr(Attr_readout) ) {
@@ -282,7 +282,7 @@ bool Subdetector::isTracker() const   {
   return false;
 }
 
-bool Subdetector::isCalorimeter() const   {
+bool DetElement::isCalorimeter() const   {
   if ( m_element )  {
     string type = attr<string>(Attr_type);
     if ( type.find("Calorimeter") != string::npos && hasAttr(Attr_readout) ) {
@@ -292,7 +292,7 @@ bool Subdetector::isCalorimeter() const   {
   return false;
 }
 
-bool Subdetector::isInsideTrackingVolume() const  {
+bool DetElement::isInsideTrackingVolume() const  {
   if ( m_element && hasAttr(Attr_insideTrackingVolume) )
     return attr<bool>(Attr_insideTrackingVolume);
   else if ( isTracker() )

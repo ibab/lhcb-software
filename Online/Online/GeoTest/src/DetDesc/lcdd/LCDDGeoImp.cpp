@@ -31,7 +31,7 @@ LCDD& LCDD::getInstance() {
 LCDDImp::LCDDImp() : m_worldVol(), m_trackingVol(), m_reflect(), m_identity()  {
 }
 
-Volume LCDDImp::pickMotherVolume(const Subdetector&) const  {     // throw if not existing
+Volume LCDDImp::pickMotherVolume(const DetElement&) const  {     // throw if not existing
   return m_worldVol;
 }
 

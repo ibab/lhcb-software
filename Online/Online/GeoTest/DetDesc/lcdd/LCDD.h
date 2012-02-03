@@ -16,8 +16,8 @@
 #include "DetDesc/lcdd/Shapes.h"
 #include "DetDesc/lcdd/Volumes.h"
 #include "DetDesc/lcdd/Readout.h"
-#include "DetDesc/lcdd/Segmentations.h"
 #include "DetDesc/lcdd/Detector.h"
+#include "DetDesc/lcdd/Segmentations.h"
 
 // C/C++ include files
 #include <map>
@@ -72,13 +72,13 @@ namespace DetDesc {
       virtual Material    material(const std::string& name)  const = 0;
       virtual Readout     readout(const std::string& name)  const = 0;
       virtual Ref_t       idSpec(const std::string& name)  const = 0;
-      virtual Volume      pickMotherVolume(const Subdetector& sd) const = 0;
+      virtual Volume      pickMotherVolume(const DetElement& sd) const = 0;
       virtual Constant    constant(const std::string& name) const = 0;
       virtual Position    position(const std::string& name) const = 0;
       virtual Rotation    rotation(const std::string& name) const = 0;
       virtual Transform   transform(const std::string& name) const = 0;
       virtual Solid       solid(const std::string& name) const = 0;
-      virtual Subdetector detector(const std::string& name) const = 0;
+      virtual DetElement detector(const std::string& name) const = 0;
 
       virtual LCDD& add(const Constant& constant) = 0;
       //virtual LCDD& add(const Solid& solid) = 0;
@@ -90,7 +90,7 @@ namespace DetDesc {
       //virtual LCDD& add(const Rotation& rot) = 0;
       //virtual LCDD& add(const Transform& rot) = 0;
       virtual LCDD& add(const LimitSet& limset) = 0;
-      virtual LCDD& add(const Subdetector& detector) = 0;
+      virtual LCDD& add(const DetElement& detector) = 0;
 
       virtual LCDD& addTransform(const Ref_t& element) = 0;
       virtual LCDD& addIDSpec(const Ref_t& element) = 0;

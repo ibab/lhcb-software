@@ -334,7 +334,7 @@ namespace DetDesc { namespace Geometry {
   template <> void Converter<LimitSet>::operator()(const xml_h& element)  const {
     lcdd.addLimitSet(toRefObject<to_type>(lcdd,element));
   }
-  template <> void Converter<Subdetector>::operator()(const xml_h& element)  const {
+  template <> void Converter<DetElement>::operator()(const xml_h& element)  const {
     lcdd.addDetector(toRefObject<to_type>(lcdd,element));
   }
   template <> void Converter<Materials>::operator()(const xml_h& materials)  const  {
@@ -354,7 +354,7 @@ namespace DetDesc { namespace Geometry {
     xml_coll_t(compact,_X(limits)   ).for_each(_X(limitset),Converter<LimitSet>(lcdd));
     xml_coll_t(compact,_X(display)  ).for_each(_X(vis),     Converter<VisAttr>(lcdd));
     xml_coll_t(compact,_X(readouts) ).for_each(_X(readout), Converter<Readout>(lcdd));
-    xml_coll_t(compact,_X(detectors)).for_each(_X(detector),Converter<Subdetector>(lcdd));
+    xml_coll_t(compact,_X(detectors)).for_each(_X(detector),Converter<DetElement>(lcdd));
     lcdd.endDocument();
   }
 }}
@@ -368,5 +368,5 @@ template Converter<Constant>;
 template Converter<LimitSet>;
 template Converter<Material>;
 template Converter<Materials>;
-template Converter<Subdetector>;
+template Converter<DetElement>;
 #endif

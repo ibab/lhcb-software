@@ -13,88 +13,88 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
-Subdetector::Object::Object()  
+DetElement::Object::Object()  
 : Attr_id(0), Attr_combine_hits(0), Attr_envelope(),
   Attr_volume(), Attr_material(), Attr_visualization(), Attr_readout()
 {
 }
 
 /// Constructor for a new subdetector element
-Subdetector::Subdetector(const LCDD& /* lcdd */, const string& name, const string& type, int id)
+DetElement::DetElement(const LCDD& /* lcdd */, const string& name, const string& type, int id)
 {
   assign(new Value<TNamed,Object>(),name,type);
   _data().Attr_id = id;
 }
 
-string Subdetector::type() const   {
+string DetElement::type() const   {
   return m_element ? m_element->GetTitle() : "";
 }
 
-int Subdetector::id() const   {
+int DetElement::id() const   {
   return _data().Attr_id;
 }
 
-Material Subdetector::material() const  {
+Material DetElement::material() const  {
   return _data().Attr_material;
 }
 
-bool Subdetector::combineHits() const   {
+bool DetElement::combineHits() const   {
   return _data().Attr_combine_hits != 0;
 }
 
-VisAttr Subdetector::visAttr() const  {
+VisAttr DetElement::visAttr() const  {
   return _data().Attr_visualization;
 }
 
-Readout Subdetector::readout() const   {
+Readout DetElement::readout() const   {
   return _data().Attr_readout;
 }
 
-Subdetector& Subdetector::setReadout(const Readout& readout)   {
+DetElement& DetElement::setReadout(const Readout& readout)   {
   _data().Attr_readout = readout;
   return *this;
 }
 
-const Subdetector::Children& Subdetector::children() const   {
+const DetElement::Children& DetElement::children() const   {
   return _data().Attr_children;
 }
 
-void Subdetector::check(bool condition, const string& msg) const  {
+void DetElement::check(bool condition, const string& msg) const  {
   if ( condition )  {
     throw runtime_error(msg);
   }
 }
 
-Subdetector& Subdetector::add(const Subdetector& sdet)  {
+DetElement& DetElement::add(const DetElement& sdet)  {
   if ( isValid() )  {
     pair<Children::iterator,bool> r = _data().Attr_children.insert(make_pair(sdet.name(),sdet));
     if ( r.second ) return *this;
-    throw runtime_error("Subdetector::add: Element "+string(sdet.name())+" is already present [Double-Insert]");
+    throw runtime_error("DetElement::add: Element "+string(sdet.name())+" is already present [Double-Insert]");
   }
-  throw runtime_error("Subdetector::add: Self is not defined [Invalid Handle]");
+  throw runtime_error("DetElement::add: Self is not defined [Invalid Handle]");
 }
 
-Volume  Subdetector::volume() const    {
+Volume  DetElement::volume() const    {
   return _data().Attr_volume;
 }
 
-Subdetector& Subdetector::setVolume(const Volume& volume)  {
+DetElement& DetElement::setVolume(const Volume& volume)  {
   _data().Attr_volume = volume;
   _data().Attr_material = volume.material();
   return *this;
 }
 
-Solid  Subdetector::envelope() const    {
+Solid  DetElement::envelope() const    {
   return _data().Attr_envelope;
 }
 
-Subdetector& Subdetector::setEnvelope(const Solid& solid)   {
+DetElement& DetElement::setEnvelope(const Solid& solid)   {
   _data().Attr_envelope = solid;
   return *this;
 }
 
 #include "TGeoVolume.h"
-Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {
+DetElement& DetElement::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {
   if ( !name.empty() )   {
     VisAttr attr = lcdd.visAttributes(name);
     _data().Attr_visualization = attr;
@@ -124,27 +124,27 @@ Subdetector& Subdetector::setVisAttributes(const LCDD& lcdd, const string& name,
   return *this;
 }
 
-Subdetector& Subdetector::setRegion(const LCDD& lcdd, const string& name, const Volume& volume)  {
+DetElement& DetElement::setRegion(const LCDD& lcdd, const string& name, const Volume& volume)  {
   if ( isValid() )  {
     if ( !name.empty() )  {
       volume.setRegion(lcdd.region(name));
     }
     return *this;
   }
-  throw runtime_error("Subdetector::setRegion: Self is not defined [Invalid Handle]");
+  throw runtime_error("DetElement::setRegion: Self is not defined [Invalid Handle]");
 }
 
-Subdetector& Subdetector::setLimitSet(const LCDD& lcdd, const string& name, const Volume& volume)  {
+DetElement& DetElement::setLimitSet(const LCDD& lcdd, const string& name, const Volume& volume)  {
   if ( isValid() )  {
     if ( !name.empty() )  {
       volume.setLimitSet(lcdd.limitSet(name));
     }
     return *this;
   }
-  throw runtime_error("Subdetector::setLimitSet: Self is not defined [Invalid Handle]");
+  throw runtime_error("DetElement::setLimitSet: Self is not defined [Invalid Handle]");
 }
 
-Subdetector& Subdetector::setAttributes(const LCDD& lcdd, const Volume& volume,
+DetElement& DetElement::setAttributes(const LCDD& lcdd, const Volume& volume,
                                         const std::string& region, 
                                         const std::string& limits, 
                                         const std::string& vis)
@@ -154,7 +154,7 @@ Subdetector& Subdetector::setAttributes(const LCDD& lcdd, const Volume& volume,
   return setVisAttributes(lcdd,vis,volume);
 }
 
-Subdetector& Subdetector::setCombineHits(bool value, SensitiveDetector& sens)   {
+DetElement& DetElement::setCombineHits(bool value, SensitiveDetector& sens)   {
   if ( isTracker() )  {
     _data().Attr_combine_hits = value;
     sens.setCombineHits(value);
@@ -162,7 +162,7 @@ Subdetector& Subdetector::setCombineHits(bool value, SensitiveDetector& sens)   
   return *this;
 }
 
-bool Subdetector::isTracker() const   {
+bool DetElement::isTracker() const   {
   if ( isValid() )  {
     string typ = type();
     if ( typ.find("Tracker") != string::npos && _data().Attr_readout.isValid() )   {
@@ -172,7 +172,7 @@ bool Subdetector::isTracker() const   {
   return false;
 }
 
-bool Subdetector::isCalorimeter() const   {
+bool DetElement::isCalorimeter() const   {
   if ( isValid() )  {
     string typ = type();
     if ( typ.find("Calorimeter") != string::npos && _data().Attr_readout.isValid() ) {
@@ -183,7 +183,7 @@ bool Subdetector::isCalorimeter() const   {
 }
 
 //#if 0
-bool Subdetector::isInsideTrackingVolume() const  {
+bool DetElement::isInsideTrackingVolume() const  {
   //if ( isValid() && hasAttr(Attr_insideTrackingVolume) )
   //  return attr<bool>(Attr_insideTrackingVolume);
   //else if ( isTracker() )

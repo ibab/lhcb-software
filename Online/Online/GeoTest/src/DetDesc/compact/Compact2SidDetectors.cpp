@@ -35,12 +35,12 @@ namespace DetDesc { namespace Geometry {
   struct CylindricalBarrelCalorimeter;
   struct CylindricalEndcapCalorimeter;
   struct EcalBarrel;
-  struct PolyhedraEndcapCalorimeter2 : public Subdetector {
+  struct PolyhedraEndcapCalorimeter2 : public DetElement {
   };
-  struct PolyhedraBarrelCalorimeter2 : public Subdetector {
+  struct PolyhedraBarrelCalorimeter2 : public DetElement {
     /// Constructor for a new subdetector element
     PolyhedraBarrelCalorimeter2(const LCDD& lcdd, const std::string& name, const std::string& type, int id)
-      : Subdetector(lcdd,name,type,id) {}
+      : DetElement(lcdd,name,type,id) {}
     void placeStaves(LCDD& lcdd, 
 		     const std::string& detName, 
 		     double rmin, 
@@ -65,15 +65,15 @@ namespace DetDesc { namespace Geometry {
 #define _A(a) DetDesc::XML::Attr_##a
 
 // Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Handle_t               xml_h;
-typedef DetDesc::XML::Collection_t           xml_coll_t;
-typedef DetDesc::XML::RefElement             xml_ref_t;
-typedef DetDesc::XML::Subdetector::Component xml_comp_t;
-typedef DetDesc::XML::Subdetector            xml_det_t;
-typedef DetDesc::XML::Dimension              xml_dim_t;
+typedef DetDesc::XML::Handle_t              xml_h;
+typedef DetDesc::XML::Collection_t          xml_coll_t;
+typedef DetDesc::XML::RefElement            xml_ref_t;
+typedef DetDesc::XML::DetElement::Component xml_comp_t;
+typedef DetDesc::XML::DetElement            xml_det_t;
+typedef DetDesc::XML::Dimension             xml_dim_t;
 
-typedef DetDesc::Geometry::LCDD              lcdd_t;
-typedef DetDesc::Geometry::NamedHandle       Ref_t;
+typedef DetDesc::Geometry::LCDD             lcdd_t;
+typedef DetDesc::Geometry::NamedHandle      Ref_t;
 
 using namespace std;
 using namespace DetDesc;
@@ -92,12 +92,12 @@ namespace DetDesc { namespace Geometry {
   template <> Ref_t toRefObject<SensitiveDetector,xml_h>(lcdd_t& lcdd, const xml_h& e);
 
   template <> Ref_t toRefObject<PolyconeSupport,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
-    xml_det_t   x_det   = e;
-    string      name    = x_det.nameStr();
-    Subdetector sdet   (lcdd,name,x_det.typeStr(),x_det.id());
-    Polycone    cone   (lcdd,name+"_envelope_polycone");
-    Material    mat    (lcdd.material(x_det.materialStr()));
-    Volume      volume (lcdd,name+"_envelope_volume", cone, mat);
+    xml_det_t  x_det   = e;
+    string     name    = x_det.nameStr();
+    DetElement sdet   (lcdd,name,x_det.typeStr(),x_det.id());
+    Polycone   cone   (lcdd,name+"_envelope_polycone");
+    Material   mat    (lcdd.material(x_det.materialStr()));
+    Volume     volume (lcdd,name+"_envelope_volume", cone, mat);
 
     int num = 0;
     vector<double> rmin,rmax,z;
@@ -121,18 +121,18 @@ namespace DetDesc { namespace Geometry {
   }
 
   template <> Ref_t toRefObject<TubeSegment,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& /* sens */)  {
-    xml_det_t   x_det  (e);
-    xml_comp_t  x_tube (x_det.child(_X(tubs)));
-    xml_dim_t   x_pos  (x_det.child(_X(position)));
-    xml_dim_t   x_rot  (x_det.child(_X(rotation)));
-    string      name   = x_det.attr<string>(_A(name));
-    Material    mat    = lcdd.material(x_det.materialStr());
-    Volume      mother = x_det.isInsideTrackingVolume() ? lcdd.trackingVolume() : lcdd.worldVolume();
-    Subdetector sdet   (lcdd,name,x_det.typeStr(),x_det.id());
-    Tube        tub    (lcdd,name+"_tube",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
-    Position    pos    (lcdd,name+"_position",x_pos.x(),x_pos.y(),x_pos.z());
-    Rotation    rot    (lcdd,name+"_rotation",x_rot.x(),x_rot.y(),x_rot.z());
-    Volume      vol    (lcdd,name,tub,mat);
+    xml_det_t  x_det  (e);
+    xml_comp_t x_tube (x_det.child(_X(tubs)));
+    xml_dim_t  x_pos  (x_det.child(_X(position)));
+    xml_dim_t  x_rot  (x_det.child(_X(rotation)));
+    string     name   = x_det.attr<string>(_A(name));
+    Material   mat    = lcdd.material(x_det.materialStr());
+    Volume     mother = x_det.isInsideTrackingVolume() ? lcdd.trackingVolume() : lcdd.worldVolume();
+    DetElement sdet   (lcdd,name,x_det.typeStr(),x_det.id());
+    Tube       tub    (lcdd,name+"_tube",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
+    Position   pos    (lcdd,name+"_position",x_pos.x(),x_pos.y(),x_pos.z());
+    Rotation   rot    (lcdd,name+"_rotation",x_rot.x(),x_rot.y(),x_rot.z());
+    Volume     vol    (lcdd,name,tub,mat);
 
     sdet.setVolume(vol).setEnvelope(tub);
     sdet.setVisAttributes(lcdd, x_det.visStr(), vol);
@@ -145,18 +145,18 @@ namespace DetDesc { namespace Geometry {
   }
 
   template <> Ref_t toRefObject<MultiLayerTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
-    xml_det_t   x_det    = e;
-    string      det_name = x_det.nameStr();
-    string      det_type = x_det.typeStr();
-    Material    air      = lcdd.material(_X(Air));
-    Subdetector sdet    (lcdd,det_name,det_type,x_det.id());
-    Volume      motherVol= lcdd.pickMotherVolume(sdet);
+    xml_det_t  x_det    = e;
+    string     det_name = x_det.nameStr();
+    string     det_type = x_det.typeStr();
+    Material   air      = lcdd.material(_X(Air));
+    DetElement sdet    (lcdd,det_name,det_type,x_det.id());
+    Volume     motherVol= lcdd.pickMotherVolume(sdet);
     int n = 0;
 
     for(xml_coll_t i(x_det,_X(layer)); i; ++i, ++n)  {
       xml_comp_t x_layer = i;
       string  layer_name = det_name+_toString(n,"_layer%d");
-      Subdetector layer(lcdd,layer_name,"MultiLayerTracker/Layer",x_layer.id());
+      DetElement layer(lcdd,layer_name,"MultiLayerTracker/Layer",x_layer.id());
       Tube    layer_tub(lcdd,layer_name);
       Volume  layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
       double  z    = x_layer.outer_z();
@@ -168,11 +168,11 @@ namespace DetDesc { namespace Geometry {
       for(xml_coll_t j(x_layer,_X(slice)); j; ++j, ++m)  {
 	xml_comp_t x_slice = j;
 	Material mat = lcdd.material(_toString(x_slice.material()));
-	string slice_name = layer_name+_toString(m,"_slice%d");
+	string slice_name= layer_name+_toString(m,"_slice%d");
 	// Slices have no extra id. Take the ID of the layer!
-	Subdetector slice(lcdd, slice_name,det_type+"/Layer/Slice",layer.id());
-	Tube   slice_tub (lcdd,slice_name);
-	Volume slice_vol (lcdd,slice_name+"_volume", slice_tub, mat);
+	DetElement slice(lcdd, slice_name,det_type+"/Layer/Slice",layer.id());
+	Tube   slice_tub(lcdd,slice_name);
+	Volume slice_vol(lcdd,slice_name+"_volume", slice_tub, mat);
 
 	r += x_slice.thickness();
 	slice_tub.setDimensions(r,r,2.*z,2.*M_PI);
@@ -207,22 +207,22 @@ namespace DetDesc { namespace Geometry {
   }
 
   template <> Ref_t toRefObject<DiskTracker,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
-    xml_det_t   x_det     = e;
-    Material    air       = lcdd.material(_X(Air));
-    string      det_name  = x_det.nameStr();
-    string      det_type  = x_det.typeStr();
-    bool        reflect   = x_det.attr<bool>(_A(reflect));
-    Rotation    refl_rot  = lcdd.rotation(_X(reflect_rot));
-    Subdetector sdet        (lcdd,det_name,det_type,x_det.id());
-    Volume      motherVol = lcdd.pickMotherVolume(sdet);
+    xml_det_t  x_det     = e;
+    Material   air       = lcdd.material(_X(Air));
+    string     det_name  = x_det.nameStr();
+    string     det_type  = x_det.typeStr();
+    bool       reflect   = x_det.attr<bool>(_A(reflect));
+    Rotation   refl_rot  = lcdd.rotation(_X(reflect_rot));
+    DetElement sdet        (lcdd,det_name,det_type,x_det.id());
+    Volume     motherVol = lcdd.pickMotherVolume(sdet);
     int n = 0;
 
     for(xml_coll_t i(x_det,_X(layer)); i; ++i, ++n)  {
       xml_comp_t x_layer = i;
-      string  layer_name = det_name+_toString(n,"_layer%d");
-      Tube    layer_tub(lcdd,layer_name);
-      Volume  layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
-      Subdetector layer(lcdd,layer_name,det_type+"/Layer",x_layer.id());
+      string layer_name = det_name+_toString(n,"_layer%d");
+      Tube   layer_tub(lcdd,layer_name);
+      Volume layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
+      DetElement layer(lcdd,layer_name,det_type+"/Layer",x_layer.id());
       double  zmin = x_layer.inner_z();
       double  rmin = x_layer.inner_r();
       double  rmax = x_layer.outer_r();
@@ -242,7 +242,7 @@ namespace DetDesc { namespace Geometry {
 	Tube   slice_tub(lcdd,slice_name);
 	Volume slice_vol(lcdd,slice_name+"_volume", slice_tub, mat);
 	// Slices have no extra id. Take the ID of the layer!
-	Subdetector slice(lcdd,slice_name,det_type+"/Layer/Slice",layer.id());
+	DetElement slice(lcdd,slice_name,det_type+"/Layer/Slice",layer.id());
 
 	slice.setVolume(slice_vol).setEnvelope(slice_tub);
 	slice_tub.setDimensions(rmin,rmax,w,2.*M_PI);
@@ -282,18 +282,18 @@ namespace DetDesc { namespace Geometry {
 
   template <> Ref_t toRefObject<CylindricalBarrelCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
-    xml_det_t   x_det     = e;
-    xml_dim_t   dim       = x_det.dimensions();
-    Material    air       = lcdd.material(_X(Air));
-    string      det_name  = x_det.nameStr();
-    string      det_type  = x_det.typeStr();
-    Tube        envelope   (lcdd,det_name+"_envelope");
-    Volume      envelopeVol(lcdd,det_name+"_envelope_volume",envelope,air);
-    Subdetector sdet       (lcdd,det_name,det_type,x_det.id());
-    double      z    = dim.outer_z();
-    double      rmin = dim.inner_r();
-    double      r    = rmin;
-    int         n    = 0;
+    xml_det_t  x_det     = e;
+    xml_dim_t  dim       = x_det.dimensions();
+    Material   air       = lcdd.material(_X(Air));
+    string     det_name  = x_det.nameStr();
+    string     det_type  = x_det.typeStr();
+    Tube       envelope   (lcdd,det_name+"_envelope");
+    Volume     envelopeVol(lcdd,det_name+"_envelope_volume",envelope,air);
+    DetElement sdet       (lcdd,det_name,det_type,x_det.id());
+    double     z    = dim.outer_z();
+    double     rmin = dim.inner_r();
+    double     r    = rmin;
+    int        n    = 0;
 
     envelope.setDimensions(rmin,r,2.*z);
     sdet.setVolume(envelopeVol).setEnvelope(envelope);
@@ -303,18 +303,18 @@ namespace DetDesc { namespace Geometry {
 	string layer_name = det_name + _toString(n,"_layer%d");
 	Tube   layer_tub(lcdd,layer_name);
 	Volume layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
-	Subdetector layer(lcdd,layer_name,"CylindricalBarrelCalorimeter/Layer",sdet.id());
+	DetElement layer(lcdd,layer_name,"CylindricalBarrelCalorimeter/Layer",sdet.id());
 	double rlayer = r;
 
 	layer.setVolume(layer_vol).setEnvelope(layer_tub);
 	for(xml_coll_t l(x_layer,_X(slice)); l; ++l, ++m)  {
 	  xml_comp_t x_slice = l;
-	  Material    slice_mat  = lcdd.material(x_slice.materialStr());
-	  string      slice_name = layer_name + _toString(m,"slice%d");
-	  Tube        slice_tube(lcdd,slice_name);
-	  Volume      slice_vol (lcdd,slice_name+"_volume",slice_tube,slice_mat);
-	  Subdetector slice(lcdd,slice_name,"CylindricalBarrelCalorimeter/Layer/Slice",sdet.id());
-	  double      router = r + x_slice.thickness();
+	  Material   slice_mat  = lcdd.material(x_slice.materialStr());
+	  string     slice_name = layer_name + _toString(m,"slice%d");
+	  Tube       slice_tube(lcdd,slice_name);
+	  Volume     slice_vol (lcdd,slice_name+"_volume",slice_tube,slice_mat);
+	  DetElement slice(lcdd,slice_name,"CylindricalBarrelCalorimeter/Layer/Slice",sdet.id());
+	  double     router = r + x_slice.thickness();
 
 	  slice.setVolume(slice_vol).setEnvelope(slice_tube);
 	  if ( x_slice.isSensitive() ) slice_vol.setSensitiveDetector(sens);
@@ -363,22 +363,22 @@ namespace DetDesc { namespace Geometry {
 
   template <> Ref_t toRefObject<CylindricalEndcapCalorimeter,xml_h>(lcdd_t& lcdd, const xml_h& e, SensitiveDetector& sens)  {
 #if defined(SHOW_ALL_DETECTORS)
-    xml_det_t   x_det     = e;
-    xml_dim_t   dim       = x_det.dimensions();
-    Material    air       = lcdd.material(_X(Air));
-    string      det_name  = x_det.nameStr();
-    string      det_type  = x_det.typeStr();
-    Tube        envelope   (lcdd,det_name+"_envelope");
-    Volume      envelopeVol(lcdd,det_name+"_envelope_volume",envelope,air);
-    Subdetector sdet       (lcdd,det_name,det_type,x_det.id());
-    Volume      motherVol = lcdd.pickMotherVolume(sdet);
-    bool        reflect   = dim.reflect();
-    double      zmin      = dim.inner_z();
-    double      rmin      = dim.inner_r();
-    double      rmax      = dim.outer_r();
-    double      totWidth  = Layering(x_det).totalThickness();
-    double      z    = zmin;
-    int         n    = 0;
+    xml_det_t  x_det     = e;
+    xml_dim_t  dim       = x_det.dimensions();
+    Material   air       = lcdd.material(_X(Air));
+    string     det_name  = x_det.nameStr();
+    string     det_type  = x_det.typeStr();
+    Tube       envelope   (lcdd,det_name+"_envelope");
+    Volume     envelopeVol(lcdd,det_name+"_envelope_volume",envelope,air);
+    DetElement sdet       (lcdd,det_name,det_type,x_det.id());
+    Volume     motherVol = lcdd.pickMotherVolume(sdet);
+    bool       reflect   = dim.reflect();
+    double     zmin      = dim.inner_z();
+    double     rmin      = dim.inner_r();
+    double     rmax      = dim.outer_r();
+    double     totWidth  = Layering(x_det).totalThickness();
+    double     z    = zmin;
+    int        n    = 0;
 
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t x_layer = c;
@@ -387,20 +387,20 @@ namespace DetDesc { namespace Geometry {
 	layerWidth += xml_comp_t(l).thickness();
       for(int i=0, m=0, repeat=x_layer.repeat(); i<repeat; ++i, m=0)  {
 	double zlayer = z;
-	string  layer_name = det_name + _toString(n,"_layer%d");
-	Tube    layer_tub(lcdd,layer_name);
-	Volume  layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
-	Subdetector layer(lcdd,layer_name,"CylindricalEndcapCalorimeter/Layer",sdet.id());
+	string layer_name = det_name + _toString(n,"_layer%d");
+	Tube   layer_tub(lcdd,layer_name);
+	Volume layer_vol(lcdd,layer_name+"_volume",layer_tub,air);
+	DetElement layer(lcdd,layer_name,"CylindricalEndcapCalorimeter/Layer",sdet.id());
 
 	layer.setVolume(layer_vol).setEnvelope(layer_tub);
 	for(xml_coll_t l(x_layer,_X(slice)); l; ++l, ++m)  {
-	  xml_comp_t  x_slice = l;
-	  double      w = x_slice.thickness();
-	  string      slice_name = layer_name + _toString(m,"slice%d");
-	  Material    slice_mat  = lcdd.material(x_slice.materialStr());
-	  Tube        slice_tube(lcdd,slice_name);
-	  Volume      slice_vol (lcdd,slice_name+"_volume", slice_tube, slice_mat);
-	  Subdetector slice(lcdd,slice_name,"CylindricalEndcapCalorimeter/Layer/Slice",sdet.id());
+	  xml_comp_t x_slice = l;
+	  double     w = x_slice.thickness();
+	  string     slice_name = layer_name + _toString(m,"slice%d");
+	  Material   slice_mat  = lcdd.material(x_slice.materialStr());
+	  Tube       slice_tube(lcdd,slice_name);
+	  Volume     slice_vol (lcdd,slice_name+"_volume", slice_tube, slice_mat);
+	  DetElement slice(lcdd,slice_name,"CylindricalEndcapCalorimeter/Layer/Slice",sdet.id());
 
 	  slice.setVolume(slice_vol).setEnvelope(slice_tube);
 	  if ( x_slice.isSensitive() ) slice_vol.setSensitiveDetector(sens);
@@ -534,7 +534,7 @@ namespace DetDesc { namespace Geometry {
       for (int j = 0; j < repeat; j++)    {                
 	string layer_name = det_name+_toString(layer_number,"_stave_layer%d");
 	double layer_thickness = lay->thickness();
-	Subdetector  layer(lcdd,layer_name,det_name+"/Layer",x_det.id());
+	DetElement  layer(lcdd,layer_name,det_name+"/Layer",x_det.id());
 
 	// Layer position in Z within the stave.
 	layer_position_z += layer_thickness / 2;
@@ -553,7 +553,7 @@ namespace DetDesc { namespace Geometry {
 	  string   slice_name      = layer_name + _toString(slice_number,"_slice%d");
 	  double   slice_thickness = x_slice.thickness();
 	  Material slice_material  = lcdd.material(x_slice.materialStr());
-	  Subdetector  slice(lcdd,slice_name,det_name+"/Layer/Slice",x_det.id());
+	  DetElement slice(lcdd,slice_name,det_name+"/Layer/Slice",x_det.id());
 
 	  slice_position_z += slice_thickness / 2;
 	  // Slice Position.
@@ -698,7 +698,7 @@ namespace DetDesc { namespace Geometry {
     Layering    layering(x_det);
 
     Material    air        = lcdd.material(_X(Air));
-    Subdetector sdet       (lcdd,det_name,det_type,x_det.id());
+    DetElement  sdet       (lcdd,det_name,det_type,x_det.id());
 
     Volume      motherVol  = lcdd.pickMotherVolume(sdet);
 
@@ -761,7 +761,7 @@ namespace DetDesc { namespace Geometry {
 	layerPosZ   += layerThickness / 2;
 
 	// First layer subtraction solid.
-	Subdetector layer(lcdd,layer_nam,"ForwardDetector/Layer",sdet.id());
+	DetElement  layer(lcdd,layer_nam,"ForwardDetector/Layer",sdet.id());
 	double      layerGlobalZ = zinner + layerDisplZ;
 	double      layerPosX    = tan(xangleHalf) * layerGlobalZ;
 	Position    layerSubtraction1Pos(lcdd,layer_nam + "_subtraction1_pos", layerPosX,0,0);
@@ -792,7 +792,7 @@ namespace DetDesc { namespace Geometry {
 
 	  // Slice's basic tube.
 	  Tube sliceTube(lcdd, slice_nam + "_tube", rmin,rmax,sliceThickness);
-	  Subdetector slice(lcdd,slice_nam,"ForwardDetector/Layer/Slice",sdet.id());
+	  DetElement slice(lcdd,slice_nam,"ForwardDetector/Layer/Slice",sdet.id());
 	  double sliceGlobalZ = zinner + (layerDisplZ - layerThickness / 2) + sliceDisplZ;
 	  double slicePosX    = tan(xangleHalf) * sliceGlobalZ;
 	  Position sliceSubtraction1Pos(lcdd,slice_nam + "_subtraction1_pos",slicePosX,0,0);
@@ -881,7 +881,7 @@ namespace DetDesc { namespace Geometry {
     string      det_type  = x_det.typeStr();
     Tube        envelope   (lcdd,det_name+"_envelope");
     Volume      envelopeVol(lcdd,det_name+"_envelope_volume",envelope,air);
-    Subdetector sdet       (lcdd,det_name,det_type,sysID);
+    DetElement  sdet       (lcdd,det_name,det_type,sysID);
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
     int         m_id=0, c_id=0, n_sensor=0;
     double      posY;
@@ -897,7 +897,7 @@ namespace DetDesc { namespace Geometry {
       double     z       = trd.z();
       double     y1, y2, total_thickness=0.;
       xml_coll_t ci(x_mod,_X(module_component));
-      Subdetector module (lcdd,m_nam,det_type+"/Module",sysID);
+      DetElement module (lcdd,m_nam,det_type+"/Module",sysID);
 
       /* Analyse these entries:
 	 <module name="SiVertexEndcapModule3">
@@ -921,7 +921,7 @@ namespace DetDesc { namespace Geometry {
 	double     c_thick = c.thickness();
 	Material   c_mat   = lcdd.material(c.materialStr());
 	string     c_name  = m_nam + _toString(c_id,"_component%d");
-	Subdetector component(lcdd,c_name,det_type+"/Module/Component",sysID);
+	DetElement component(lcdd,c_name,det_type+"/Module/Component",sysID);
 	Trapezoid trd(lcdd, c_name+"_trd", x1, x2, c_thick/2e0, c_thick/2e0, z);
 	Volume    vol(lcdd, c_name, trd, c_mat);
 	Position  pos(lcdd, c_name+"_position", 0e0, posY + c_thick/2e0, 0e0);
@@ -951,10 +951,10 @@ namespace DetDesc { namespace Geometry {
 #endif
   }
 
-  struct ILDExVXD : public Subdetector {
+  struct ILDExVXD : public DetElement {
 
     ILDExVXD(const LCDD& lcdd, const std::string& name, const std::string& type, int id)
-      : Subdetector(lcdd,name,type,id) {}
+      : DetElement(lcdd,name,type,id) {}
   };
 
 
@@ -1016,8 +1016,8 @@ namespace DetDesc { namespace Geometry {
     return vxd;
   }
 
-  template <> Ref_t toRefObject<Subdetector,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
-    Subdetector      det;
+  template <> Ref_t toRefObject<DetElement,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+    DetElement       det;
     string           type = e.attr<string>(_A(type));
     string           name = e.attr<string>(_A(name));
     SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,e);
@@ -1059,7 +1059,7 @@ namespace DetDesc { namespace Geometry {
     }
     /*
       if ( type == "ForwardDetector" )
-      //det = Subdetector(0);
+      //det = DetElement(0);
       det = toRefObject<ForwardDetector>(lcdd,e,sd);
       else  {
       string err = "UNKNOWN detector:" + name + " of type " + type;

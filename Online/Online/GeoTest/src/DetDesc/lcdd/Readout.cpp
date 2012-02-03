@@ -54,3 +54,15 @@ void Readout::setSegmentation(const Segmentation& seg)   const  {
   }
   throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");
 }
+
+/// Initializing constructor to create a new object
+Alignment::Alignment(const LCDD& /* lcdd */, const string& nam)
+{
+  assign(new Value<TNamed,Object>(),nam,"alignment");
+}
+
+/// Initializing constructor to create a new object
+Conditions::Conditions(const LCDD& /* lcdd */, const string& nam)
+{
+  assign(new Value<TNamed,Object>(),nam,"conditions");
+}

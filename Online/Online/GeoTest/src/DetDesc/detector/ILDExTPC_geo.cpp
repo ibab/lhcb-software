@@ -22,12 +22,12 @@
 #define _A(a) DetDesc::XML::Attr_##a
 
 // Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t           xml_coll_t;
-typedef DetDesc::XML::Handle_t               xml_h;
-typedef DetDesc::XML::Subdetector::Component xml_comp_t;
-typedef DetDesc::XML::Subdetector            xml_det_t;
-typedef DetDesc::XML::Dimension              xml_dim_t;
-typedef DetDesc::Geometry::LCDD              lcdd_t;
+typedef DetDesc::XML::Collection_t          xml_coll_t;
+typedef DetDesc::XML::Handle_t              xml_h;
+typedef DetDesc::XML::DetElement::Component xml_comp_t;
+typedef DetDesc::XML::DetElement            xml_det_t;
+typedef DetDesc::XML::Dimension             xml_dim_t;
+typedef DetDesc::Geometry::LCDD             lcdd_t;
 
 using namespace std;
 using namespace DetDesc;
@@ -60,7 +60,7 @@ namespace DetDesc { namespace Geometry {
       xml_dim_t   px_rot  (px_det.child(_X(rotation)));
       string      part_nam(px_det.nameStr());
       Material    part_mat(lcdd.material(px_det.materialStr()));
-      Subdetector part_det(lcdd,part_nam,px_det.typeStr(),px_det.id());
+      DetElement  part_det(lcdd,part_nam,px_det.typeStr(),px_det.id());
       Tube        part_tub(lcdd,part_nam+"_tube",px_tube.rmin(),px_tube.rmax(),px_tube.zhalf());
       Position    part_pos(lcdd,part_nam+"_position",px_pos.x(),px_pos.y(),px_pos.z());
       Rotation    part_rot(lcdd,part_nam+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());

@@ -71,11 +71,11 @@ namespace DetDesc { namespace Geometry {
     m->TMap::Print();
   }
 
-  template <> void Printer<Subdetector>::operator()(const Subdetector& val)  const  {
-    Subdetector::Object* obj = val.data<Subdetector::Object>();
+  template <> void Printer<DetElement>::operator()(const DetElement& val)  const  {
+    DetElement::Object* obj = val.data<DetElement::Object>();
     if ( obj )  {
       char text[256];
-      const Subdetector& sd = val;
+      const DetElement& sd = val;
       bool vis = sd.visAttr().isValid();
       bool rdo = sd.readout().isValid();
       bool env = sd.envelope().isValid();
@@ -87,7 +87,7 @@ namespace DetDesc { namespace Geometry {
 		env ? sd.envelope().name() : yes_no(env),
 		yes_no(vis)
 		);
-      os << prefix << "+= Subdetector: " << val.name() << " " << val.type() << endl;
+      os << prefix << "+= DetElement: " << val.name() << " " << val.type() << endl;
       os << prefix << "|               " << text << endl;
 
       if ( vis )   {
@@ -109,9 +109,9 @@ namespace DetDesc { namespace Geometry {
 		  );
 	os << prefix << "+-------------  " << text << endl;
       }
-      const Subdetector::Children& ch = sd.children();
-      for(Subdetector::Children::const_iterator i=ch.begin(); i!=ch.end(); ++i)
-	Printer<Subdetector>(lcdd,os,prefix+"| ")((*i).second);
+      const DetElement::Children& ch = sd.children();
+      for(DetElement::Children::const_iterator i=ch.begin(); i!=ch.end(); ++i)
+	Printer<DetElement>(lcdd,os,prefix+"| ")((*i).second);
       return;
     }
   }
@@ -133,9 +133,9 @@ namespace DetDesc { namespace Geometry {
     PrintMap<Rotation  > (lcdd,os,lcdd.rotations(),    "List of Rotations")();
     PrintMap<LimitSet  > (lcdd,os,lcdd.readouts(),     "List of Readouts")();
     PrintMap<Region    > (lcdd,os,lcdd.regions(),      "List of Regions")();
-    PrintMap<Subdetector>(lcdd,os,lcdd.detectors(),    "List of Subdetectors")();
+    PrintMap<DetElement> (lcdd,os,lcdd.detectors(),    "List of DetElements")();
 #endif
-    //PrintMap<Subdetector>(lcdd,os,lcdd.detectors(),    "List of Subdetectors")();
+    //PrintMap<DetElement>(lcdd,os,lcdd.detectors(),   "List of DetElements")();
     PrintMap<VisAttr   > (lcdd,os,lcdd.visAttributes(),"List of Visualization attributes")();
   }
 

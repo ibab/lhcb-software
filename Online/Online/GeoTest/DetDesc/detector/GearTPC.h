@@ -13,7 +13,7 @@ namespace DetDesc {
 
   struct TPCData;
 
-  struct GearTPC : public Geometry::Subdetector {
+  struct GearTPC : public Geometry::DetElement {
     typedef TPCData Object;
     GearTPC(const Geometry::RefHandle<TNamed>& e);
     double innerRadius() const;

@@ -80,8 +80,8 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Subdetector : public NamedHandle   {
-      typedef std::map<std::string,Subdetector> Children;
+    struct DetElement : public NamedHandle   {
+      typedef std::map<std::string,DetElement> Children;
       struct Object  {
         int               Attr_id;
         int               Attr_combine_hits;
@@ -90,6 +90,8 @@ namespace DetDesc {
         Material          Attr_material;
         VisAttr           Attr_visualization;
         Readout           Attr_readout;
+	Alignment         Attr_alignment;
+	Conditions        Attr_conditions;
         Children          Attr_children;
         Object();
       };
@@ -97,22 +99,24 @@ namespace DetDesc {
       void check(bool condition, const std::string& msg) const;
 
       /// Default constructor
-      Subdetector() : NamedHandle()  {}
+      DetElement() : NamedHandle()  {}
       /// Templated constructor for handle conversions
-      template<typename Q> Subdetector(const Handle<Q>& e) : NamedHandle(e)  {}
+      template<typename Q> DetElement(const Handle<Q>& e) : NamedHandle(e)  {}
       /// Constructor for a new subdetector element
-      Subdetector(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
+      DetElement(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 
       /// Additional data accessor
       Object& _data()   const {  return *data<Object>();  }
-      Subdetector& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
-      Subdetector& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
-      Subdetector& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);
-      Subdetector& setAttributes(const LCDD& lcdd, const Volume& volume,
-        const std::string& region, const std::string& limits, const std::string& vis);
+      DetElement& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
+      DetElement& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      DetElement& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      DetElement& setAttributes(const LCDD& lcdd, const Volume& volume,
+				const std::string& region, 
+				const std::string& limits, 
+				const std::string& vis);
 
-      Subdetector& setCombineHits(bool value, SensitiveDetector& sens);
-      Subdetector& add(const Subdetector& sub_element);
+      DetElement&     setCombineHits(bool value, SensitiveDetector& sens);
+      DetElement&     add(const DetElement& sub_element);
       int             id() const;
       std::string     type() const;
       bool            isTracker() const;
@@ -122,11 +126,11 @@ namespace DetDesc {
       Material        material() const;
       VisAttr         visAttr() const;
       Readout         readout() const;
-      Subdetector&    setReadout(const Readout& readout);
+      DetElement&     setReadout(const Readout& readout);
       Volume          volume() const;
-      Subdetector&    setVolume(const Volume& volume);
+      DetElement&     setVolume(const Volume& volume);
       Solid           envelope() const;
-      Subdetector&    setEnvelope(const Solid& solid);
+      DetElement&     setEnvelope(const Solid& solid);
       const Children& children() const;
     };
 

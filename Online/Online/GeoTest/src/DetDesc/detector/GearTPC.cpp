@@ -18,17 +18,17 @@ using namespace std;
 namespace DetDesc {
   using namespace Geometry;
 
-  GearTPC::GearTPC(const Ref_t& e) : Geometry::Subdetector(e) {
+  GearTPC::GearTPC(const Ref_t& e) : Geometry::DetElement(e) {
   }
 
   double GearTPC::innerRadius() const {
-    Subdetector gas   = data<Object>()->gas;
-    Tube        tube  = gas.volume().solid();
+    DetElement gas   = data<Object>()->gas;
+    Tube       tube  = gas.volume().solid();
     return tube->GetRmin();
   }
   double GearTPC::outerRadius() const {
-    Subdetector gas   = data<Object>()->gas;
-    Tube        tube  = gas.volume().solid();
+    DetElement gas   = data<Object>()->gas;
+    Tube       tube  = gas.volume().solid();
     return tube->GetRmax();
   }
   double GearTPC::pressure() const {
