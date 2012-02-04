@@ -185,6 +185,9 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
         if ( (*it) -> generated_mass() > 
              m_ppSvc -> findByStdHepID( signalPid ) -> mass() )
           particleSet.insert( *it ) ;
+        // if signal is KS then decay also K0
+        else if ( ( signalPid == 310 ) && ( pid.abspid() == 311 ) )
+          particleSet.insert( *it ) ;
       }      
     }
     break ; 
