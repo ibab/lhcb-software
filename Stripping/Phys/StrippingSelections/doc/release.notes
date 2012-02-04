@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-04 - Jibo He
+ - Added to __init__.py 
+   . StrippingB2ChicK
+   . StrippingB2EtacKst
+   . StrippingB2MuMuX
+   . StrippingB2Kphiphi
+ - StrippingHb2Charged2Body.py 
+   Commented out two duplicated blocks. 
+
 ! 2012-02-03 - Jibo He
  - StrippingCcbar2PhiPhi.py
    New Stripping lines for charmonium -> phi phi, both prompt or detached. 

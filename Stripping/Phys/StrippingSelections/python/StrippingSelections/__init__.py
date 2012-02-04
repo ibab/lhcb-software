@@ -25,6 +25,7 @@ import StrippingChiCJPsiGammaConversion
 import StrippingB2nbody
 import StrippingTwoBody_prompt
 import StrippingHb2Charged2Body
+import StrippingB2Kphiphi
 import StrippingBd2DstarMuNu
 import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
@@ -32,9 +33,14 @@ import StrippingB2XuMuNu
 import StrippingB2DMuNuX
 import StrippingInclPhi
 import StrippingV0ForPID
+
+# B2CC
 import StrippingB2JpsiXforBeta_s
 import StrippingB2Psi2SX
 import StrippingB2Psi2SXMuMu
+import StrippingB2ChicK
+import StrippingB2EtacKst
+
 import StrippingBs2JpsieePhi
 import StrippingB2CharmlessQuasi2Body
 import StrippingBs2PhiPhi
@@ -46,6 +52,7 @@ import StrippingBs2ChicPhi_Chic2KKPiPi
 import StrippingBs2ChicPhi_Chic2PiPiPiPi
 import StrippingBs2Q2B
 
+
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
 import StrippingBd2KstarMuMu
@@ -54,6 +61,7 @@ import StrippingTriMuons
 import StrippingB2XGamma
 import StrippingBs2MuMuLines
 import StrippingB2MuMuMuMuLines
+import StrippingB2MuMuX
 import StrippingBu2LLK
 import StrippingBd2eeKstar
 import StrippingBd2eeKstarBDT
@@ -85,9 +93,9 @@ import StrippingDY2ee
 import StrippingMuMuSS
 import StrippingLowMult
 import StrippingDiPhotonDiMuon
+import StrippingA1MuMu
 
 import StrippingDisplVertices
-
 import StrippingHighPtJets
 
 import StrippingMiniBias

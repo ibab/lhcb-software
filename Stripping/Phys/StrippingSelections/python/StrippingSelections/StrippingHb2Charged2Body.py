@@ -125,7 +125,7 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                       "Lambda_b0", "K+", "p~-" )
 
 
-        
+        """
         self.B2KPlusPiMinus  = subPID(B2KPlusPiMinusName, self.B2Charged2Body,
                                       "B0", "K+", "pi-" )
 
@@ -146,6 +146,7 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         
         self.Lb2KPlusPMinus  = subPID(Lb2KPlusPMinusName, self.B2Charged2Body,
                                       "Lambda_b0", "K+", "p~-" )
+        """
 
         self.B2PPbar = makeB2PPbar( B2PPbarName,
                                     config['MinPTB2PPbar'],
@@ -214,11 +215,13 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
                                           prescale = config['PrescaleB2PPbar'],
                                           selection = self.B2PPbar )
-
+        
+        
         self.lineBs2KK_NoIPCutOnB = StrippingLine( Bs2KK_NoIPCutOnBName+"Line",
                                                    prescale = config['PrescaleBs2KK_NoIPCutOnB'],
                                                    selection = self.Bs2KK_NoIPCutOnB)      
  
+        """
         self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.B2PiPlusKMinus )
@@ -246,7 +249,8 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         self.lineB2PPbar         = StrippingLine( B2PPbarName+"Line",
                                                   prescale = config['PrescaleB2PPbar'],
                                                   selection = self.B2PPbar )
-        
+        """
+
         self.registerLine(self.lineB2PPbar)    
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)
