@@ -13,9 +13,13 @@
 #include "TMVA/Reader.h"
 #include "TString.h"
 
+#include "LoKi/LoKiPhys.h"
 #include "LoKi/Child.h"
 #include "LoKi/ParticleCuts.h"
 #include "LoKi/ParticleContextCuts.h"
+
+class IDistanceCalculator;
+class DVAlgorithm;
 
 /** @class Bd2eeKstarBDTSelection Bd2eeKstarBDTSelection.h
  *  
@@ -61,14 +65,20 @@ private:
   Bd2eeKstarBDTSelection& operator=(const Bd2eeKstarBDTSelection&);
   
   bool set(const LHCb::Particle* p) const;
-  
+
+  const IDistanceCalculator* m_dist;
+  DVAlgorithm *m_dva;
+  TMVA::Reader *m_BDTReader;
+
   unsigned int m_nVars;  
   float *m_values;
   
   double m_cut; // BDT cut value
-  std::string m_weightsFile; // weights file 
+  std::string m_weightsFile; // weights file
   
-  TMVA::Reader *m_BDTReader; 
+  const LoKi::Cuts::CHI2IP m_BPVIPCHI2;  
+  const LoKi::Cuts::VDCHI2 m_BPVVDCHI2;
+  const LoKi::Cuts::DIRA m_BPVDIRA;
 
 };
 #endif // BD2EEKSTARBDTSELECTION_H

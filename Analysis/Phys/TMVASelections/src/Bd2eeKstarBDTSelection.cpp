@@ -2,6 +2,9 @@
 // Include files
 #include "LoKi/IHybridFactory.h"
 
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
+
 // local
 #include "Bd2eeKstarBDTSelection.h"
 
@@ -21,8 +24,14 @@ Bd2eeKstarBDTSelection::Bd2eeKstarBDTSelection( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : base_class(type,name,parent),
+    m_dist(0),
+    m_dva(0),
+    m_BDTReader(0),
     m_nVars(18),
-    m_cut(-1.0)
+    m_cut(-1.0),
+    m_BPVIPCHI2(m_dist, 0),
+    m_BPVVDCHI2(0),
+    m_BPVDIRA(0)
 {
   m_values = new float[m_nVars];
   
@@ -43,6 +52,19 @@ StatusCode Bd2eeKstarBDTSelection::initialize() {
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc; 
+  
+  //====================================================================
+  // Initialize DVAlg, etc
+  //====================================================================
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
+                             StatusCode::FAILURE);
+  
+  m_dist = m_dva->distanceCalculator();
+  if( !m_dist ){
+    Error("Unable to retrieve the IDistanceCalculator tool");
+    return StatusCode::FAILURE;
+  }
 
   const char* m_variables[] = { "L1_IPCHI2_OWNPV", "L2_IPCHI2_OWNPV", "Jpsi_IPCHI2_OWNPV", "Kaon_IPCHI2_OWNPV", "Pion_IPCHI2_OWNPV", "Kstar_IPCHI2_OWNPV", "B_IPCHI2_OWNPV", "L1_PT", "L2_PT", "Jpsi_PT", "Kaon_PT", "Pion_PT", "Kstar_PT", "B_PT", "Jpsi_FDCHI2_OWNPV", "Kstar_FDCHI2_OWNPV", "B_FDCHI2_OWNPV", "B_DIRA_OWNPV" };
   
@@ -132,8 +154,12 @@ bool Bd2eeKstarBDTSelection::set (const LHCb::Particle* p) const{
                                    << endmsg;
 
   
-  // IPCHI2  
-  const LoKi::Cuts::BPVIPCHI2 m_BPVIPCHI2;
+  // BPV, just use the one of the mother for simplicity 
+  const LHCb::VertexBase* BPV = m_dva->bestPV(p);
+
+  // IPCHI2
+  m_BPVIPCHI2.setTool(m_dist);
+  m_BPVIPCHI2.setVertex(BPV);
 
   m_values[0] = m_BPVIPCHI2( pL1 );
   m_values[1] = m_BPVIPCHI2( pL2 );
@@ -154,12 +180,16 @@ bool Bd2eeKstarBDTSelection::set (const LHCb::Particle* p) const{
   m_values[13]= p->pt()/Gaudi::Units::MeV; 
   
   // FDCHI2
-  m_values[14] = LoKi::Cuts::BPVVDCHI2( pJpsi );
-  m_values[15] = LoKi::Cuts::BPVVDCHI2( pKstar );
-  m_values[16] = LoKi::Cuts::BPVVDCHI2( p );
+  m_BPVVDCHI2.setVertex( BPV );
+
+  m_values[14] = m_BPVVDCHI2( pJpsi );
+  m_values[15] = m_BPVVDCHI2( pKstar );
+  m_values[16] = m_BPVVDCHI2( p );
   
   // DIRA
-  m_values[17] = LoKi::Cuts::BPVDIRA( p );
+  m_BPVDIRA.setVertex( BPV );
+
+  m_values[17] = m_BPVDIRA( p );
 
   return true;
 }
