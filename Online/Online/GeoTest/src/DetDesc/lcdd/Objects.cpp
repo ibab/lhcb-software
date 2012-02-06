@@ -178,8 +178,8 @@ LimitSet::LimitSet(LCDD& /* lcdd */, const string& name)   {
   assign(new Value<TNamed,TMap>(),name,"limitset");
 }
 
-void LimitSet::addLimit(const NamedHandle& limit)   {
-  data<TMap>()->Add(limit,limit);
+void LimitSet::addLimit(const Ref_t& limit)   {
+  data<TMap>()->Add(limit.ptr(),limit.ptr());
 }
 
 /// Constructor to be used when creating a new DOM tree

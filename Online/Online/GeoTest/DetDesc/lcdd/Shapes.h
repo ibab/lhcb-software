@@ -72,7 +72,7 @@ namespace DetDesc {
      *   @author  M.Frank
      *   @version 1.0
      */
-    template <typename T> struct Solid_type : public RefHandle<T>  {
+    template <typename T> struct Solid_type : public Handle<T>  {
       protected:
       typedef T Implementation;
       void _setDimensions(double* param);
@@ -83,17 +83,20 @@ namespace DetDesc {
       public:
 
       /// Default constructor for uninitialized object
-      Solid_type() : RefHandle<Implementation>() {}
+      Solid_type() : Handle<Implementation>() {}
 
       /// Direct assignment using the implementation pointer 
-      Solid_type(Implementation* p) : RefHandle<Implementation>(p) {}
+      Solid_type(Implementation* p) : Handle<Implementation>(p) {}
 
       /// Constructor to be used when reading the already parsed object
-      Solid_type(const Handle<Implementation>& e) : RefHandle<Implementation>(e) {}
+      Solid_type(const Handle<Implementation>& e) : Handle<Implementation>(e) {}
 
       /// Constructor to be used when reading the already parsed object: need to check pointers
       template <typename Q> 
-      Solid_type(const Handle<Q>& e) : RefHandle<T>(e) {}
+      Solid_type(const Handle<Q>& e) : Handle<T>(e) {}
+
+      /// Access to shape name
+      const char* name() const;
 
       /// Auto conversion to underlying ROOT object
       operator Implementation*() const     { return this->m_element; }
@@ -278,7 +281,7 @@ namespace DetDesc {
     struct PolyhedraRegular : public Solid_type<TGeoPgon>  {
       /// Constructor to be used when reading the already parsed object
       template <typename Q> 
-      PolyhedraRegular(const RefHandle<Q>& e) : Solid_type<Implementation>(e) {}
+      PolyhedraRegular(const Handle<Q>& e) : Solid_type<Implementation>(e) {}
       /// Constructor to be used when creating a new object
       PolyhedraRegular(LCDD& lcdd, const std::string& name, int nsides, double rmin, double rmax, double zlen);
     };
@@ -309,7 +312,7 @@ namespace DetDesc {
      */
     struct SubtractionSolid : public BooleanSolid  {
       /// Constructor to be used when reading the already parsed object
-      template<typename Q> SubtractionSolid(const RefHandle<Q>& e) : BooleanSolid(e) {}
+      template<typename Q> SubtractionSolid(const Handle<Q>& e) : BooleanSolid(e) {}
       /// Constructor to be used when creating a new object
       SubtractionSolid(LCDD& lcdd, const std::string& name, const std::string& expr);
       /// Constructor to be used when creating a new object

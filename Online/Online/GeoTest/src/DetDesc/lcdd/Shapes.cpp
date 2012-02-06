@@ -62,6 +62,11 @@ void Solid_type<T>::_assign(LCDD& lcdd, T* n, const string& nam, const string& t
   lcdd.addSolid(Solid(this->ptr()));
 }
 
+/// Access to shape name
+template<typename T> const char* Solid_type<T>::name() const {
+  return this->ptr()->GetName();
+}
+
 void Box::make(LCDD& lcdd, const string& name, double x, double y, double z)  {
   _assign(lcdd,new TGeoBBox(x,y,z),name,"box");
 }

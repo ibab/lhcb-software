@@ -34,7 +34,7 @@ typedef DetDesc::XML::RefElement       xml_ref_t;
 typedef DetDesc::XML::Element          xml_elem_t;
 typedef DetDesc::Geometry::LCDD        lcdd_t;
 typedef DetDesc::Geometry::Handle<>    Elt_t;
-typedef DetDesc::Geometry::NamedHandle Ref_t;
+typedef DetDesc::Geometry::Ref_t Ref_t;
 
 using namespace std;
 using namespace DetDesc;
@@ -273,7 +273,7 @@ namespace DetDesc { namespace Geometry {
     }
     if ( (id=e.child(_X(id))) )  {
       Ref_t idSpec = toRefObject<IDDescriptor>(lcdd,id);
-      idSpec.setName(ro.name());
+      idSpec->SetName(ro.name());
       ro.setIDDescriptor(idSpec);
       lcdd.addIDSpec(idSpec);
     }

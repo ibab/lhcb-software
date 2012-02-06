@@ -15,7 +15,7 @@ namespace DetDesc {
 
   struct MarkusTPC : public Geometry::DetElement {
     typedef TPCData Object;
-    MarkusTPC(const Geometry::RefHandle<TNamed>& e) : Geometry::DetElement(e) {}
+    MarkusTPC(const Geometry::Handle<TNamed>& e) : Geometry::DetElement(e) {}
     double feature() const;
   };
 }

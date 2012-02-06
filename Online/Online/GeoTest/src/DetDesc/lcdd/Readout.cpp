@@ -19,7 +19,7 @@ Readout::Readout(const LCDD& /* lcdd */, const string& nam)
 }
 
 /// Access IDDescription structure
-NamedHandle Readout::idSpec() const   {
+Ref_t Readout::idSpec() const   {
   return _data().id;
 }
 
@@ -29,7 +29,7 @@ Segmentation Readout::segmentation() const  {
 }
 
 /// Assign IDDescription to readout structure
-void Readout::setIDDescriptor(const NamedHandle& new_descriptor)  const   {
+void Readout::setIDDescriptor(const Ref_t& new_descriptor)  const   {
   if ( isValid() )  {                    // Remember: segmentation is NOT owned by readout structure!
     if ( new_descriptor.isValid() )  {   // Do NOT delete!
       _data().id = new_descriptor;
@@ -43,7 +43,7 @@ void Readout::setIDDescriptor(const NamedHandle& new_descriptor)  const   {
 void Readout::setSegmentation(const Segmentation& seg)   const  {
   if ( isValid() )  {
     Object& ro = _data();
-    Segmentation::Implementation* e = ro.segmentation;
+    Segmentation::Implementation* e = ro.segmentation.ptr();
     if ( e )  { // Remember: segmentation is owned by readout structure!
       delete e; // Need to delete the segmentation object
     }

@@ -115,44 +115,34 @@ namespace DetDesc { namespace Geometry {
     msg += " not possible!!";
     throw std::runtime_error(msg);
   }
-
-  template <typename T> const char* RefHandle<T>::name() const  
-  { return this->m_element ? this->m_element->GetName() : "";   }
-
-  template <typename T> void RefHandle<T>::setName(const string& new_name)  
-  { if ( this->m_element ) this->m_element->SetName(new_name.c_str());  }
-
-  template <typename T> void RefHandle<T>::assign(T* n, const string& nam, const string& tit) {
+  template <typename T> void Handle<T>::assign(T* n, const string& nam, const string& tit) {
     this->m_element = n;
     if ( !nam.empty() ) n->SetName(nam.c_str());
     if ( !tit.empty() ) n->SetTitle(tit.c_str());
   }
 
+  template <typename T> const char* Handle<T>::name() const  
+  { return this->m_element ? this->m_element->GetName() : "";   }
 
-  template struct Handle<TNamed>;
+  template <> const char* Handle<TObject>::name() const  
+  { return "";   }
 
-  const char* RefHandle<TNamed>::name() const  
-  {  return m_element ? m_element->GetName() : "";  }
-  
-  void RefHandle<TNamed>::setName(const string& new_name)  
-  {  if ( m_element ) m_element->SetName(new_name.c_str());  }
-
-  void RefHandle<TNamed>::assign(TNamed* n, const string& nam, const string& tit) {
-    m_element = n;
-    if ( !nam.empty() ) m_element->SetName(nam.c_str());
-    if ( !tit.empty() ) m_element->SetTitle(tit.c_str());
+  template <> void Handle<TObject>::bad_assignment(const type_info& from, const type_info& to) {
+    string msg = "Wrong assingment from ";
+    msg += from.name();
+    msg += " to ";
+    msg += to.name();
+    msg += " not possible!!";
+    throw std::runtime_error(msg);
   }
-
 }}
 
 #include "TMap.h"
 #include "TColor.h"
 
-#define INSTANTIATE(X)  \
-  template struct DetDesc::Geometry::Handle<X>; \
-  template struct DetDesc::Geometry::RefHandle<X>
+#define INSTANTIATE(X)   template struct DetDesc::Geometry::Handle<X>
 
-template struct DetDesc::Geometry::Handle<TObject>;
+INSTANTIATE(TNamed);
 
 #include "TGeoMedium.h"
 #include "TGeoMaterial.h"

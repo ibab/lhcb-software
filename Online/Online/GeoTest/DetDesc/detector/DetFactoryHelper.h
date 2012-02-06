@@ -15,7 +15,7 @@ typedef DetDesc::XML::DetElement::Component xml_comp_t;
 typedef DetDesc::XML::DetElement            xml_det_t;
 typedef DetDesc::XML::Dimension             xml_dim_t;
 typedef DetDesc::Geometry::LCDD             lcdd_t;
-typedef DetDesc::Geometry::NamedHandle      Ref_t;
+typedef DetDesc::Geometry::Ref_t      Ref_t;
 
 
 namespace DetDesc { namespace Geometry {

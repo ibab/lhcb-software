@@ -68,19 +68,17 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    template <typename T=TObject> struct Handle  {
+    template <typename T=TNamed> struct Handle  {
       typedef T Implementation;
 
       Implementation* m_element;
-      Handle() : m_element(0) {}
-      Handle(Implementation* e) : m_element(e) {}
-      Handle(const Handle<Implementation>& e) : m_element(e.m_element) {}
-
+      Handle() : m_element(0)                 {                         }
+      Handle(Implementation* e) : m_element(e){                         }
+      Handle(const Handle<T>& e) : m_element(e.m_element) {             }
       template<typename Q> Handle(Q* e)
-	: m_element((T*)e)           { verifyObject();                  }
-
+	: m_element((T*)e)                    {  verifyObject();        }
       template<typename Q> Handle(const Handle<Q>& e) 
-	: m_element((T*)e.m_element) { verifyObject();                  }
+	: m_element((T*)e.m_element)          {  verifyObject();        }
 
       T* ptr() const                          {  return m_element;      }
       template <typename Q> Q* _ptr() const   {  return (Q*)m_element;  }
@@ -100,46 +98,10 @@ namespace DetDesc {
 	}
       }
       static void bad_assignment(const std::type_info& from, const std::type_info& to);
-    };
-
-    /** @class RefHandle Handle.h
-     *  
-     *  @author  M.Frank
-     *  @version 1.0
-     */
-    template <typename T> struct RefHandle : public Handle<T>  {
-      typedef Handle<T>   Base;
-      typedef T Implementation;
-
-      RefHandle() : Base() {}
-      RefHandle(const Base& e) : Base(e) {}
-      template<typename Q> RefHandle(const Handle<Q>& e) : Base(e) {}
-
       const char* name() const;
-      void  setName(const std::string& new_name);
       void  assign(Implementation* n, const std::string& nam, const std::string& title);
     };
-
-    /** @class RefHandle<TNamed> Handle.h
-     *  
-     *  Specialized implementation for the named reference handle
-     *
-     *  @author  M.Frank
-     *  @version 1.0
-     */
-    template <> struct RefHandle<TNamed> : public Handle<TNamed>  {
-      typedef TNamed Implementation;
-      RefHandle() : Handle<TNamed>() {}
-      RefHandle(TNamed* p) : Handle<TNamed>(p) {}
-      RefHandle(const Handle<TNamed>& e) : Handle<TNamed>(e) {}
-      template<typename Q> RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
-      operator TNamed*() const    { return this->m_element; }
-      
-      const char* name() const;
-      void setName(const std::string& new_name);
-      void assign(Implementation* n, const std::string& nam, const std::string& title);
-    };
-    typedef RefHandle<TNamed> NamedHandle;
+    typedef Handle<TNamed> Ref_t;
 
   }       /* End namespace Geometry  */
 }         /* End namespace DetDesc   */

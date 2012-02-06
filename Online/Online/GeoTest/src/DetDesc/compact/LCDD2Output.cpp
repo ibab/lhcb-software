@@ -29,7 +29,7 @@ namespace DetDesc { namespace Geometry {
   }
 
   template <> void Printer<Material>::operator()(const Material& mat)  const  {
-    RefHandle<TGeoMedium>  val(mat);
+    Handle<TGeoMedium>  val(mat);
     os << "++ Medium:" << val->GetName() << " " << val->GetTitle() << " id:" << hex << val->GetId() 
        << " Pointer:" << val->GetPointerName() << dec << endl;
     os << "|  ";
@@ -82,12 +82,12 @@ namespace DetDesc { namespace Geometry {
       bool mat = sd.material().isValid();
       ::sprintf(text,"ID:%-3d Combine Hits:%3s Readout:%s Material:%s Envelope:%s VisAttr:%s",
 		sd.id(), yes_no(sd.combineHits()), 
-		rdo ? sd.readout().name()  : yes_no(rdo),
-		mat ? sd.material().name() : yes_no(mat),
-		env ? sd.envelope().name() : yes_no(env),
+		rdo ? sd.readout()->GetName()  : yes_no(rdo),
+		mat ? sd.material()->GetName() : yes_no(mat),
+		env ? sd.envelope()->GetName() : yes_no(env),
 		yes_no(vis)
 		);
-      os << prefix << "+= DetElement: " << val.name() << " " << val.type() << endl;
+      os << prefix << "+= DetElement: " << val->GetName() << " " << val.type() << endl;
       os << prefix << "|               " << text << endl;
 
       if ( vis )   {
@@ -105,7 +105,7 @@ namespace DetDesc { namespace Geometry {
 	Solid    s = vol.solid();
 	Material m = vol.material();
 	::sprintf(text,"Volume:%s Shape:%s Material:%s",
-		  vol.name(), s.isValid() ? s.name() : "Unknonw", m.isValid() ? m.name() : "Unknown"
+		  vol->GetName(), s.isValid() ? s.name() : "Unknonw", m.isValid() ? m->GetName() : "Unknown"
 		  );
 	os << prefix << "+-------------  " << text << endl;
       }

@@ -19,7 +19,7 @@ namespace DetDesc {
 namespace DetDesc { namespace Geometry {
 template <typename T> class DetElementFactory  {
 public:
-  static DetDesc::Geometry::RefHandle<TNamed> create(DetDesc::Geometry::LCDD& lcdd, const DetDesc::XML::Handle_t& e, DetDesc::Geometry::SensitiveDetector& sens);
+  static DetDesc::Geometry::Handle<TNamed> create(DetDesc::Geometry::LCDD& lcdd, const DetDesc::XML::Handle_t& e, DetDesc::Geometry::SensitiveDetector& sens);
 };
   }  }
 
@@ -30,7 +30,7 @@ namespace {
       DetDesc::Geometry::LCDD* lcdd = (DetDesc::Geometry::LCDD*)arg[0];
       DetDesc::XML::Handle_t*  elt  = (DetDesc::XML::Handle_t*)arg[1];
       DetDesc::Geometry::SensitiveDetector* sens = (DetDesc::Geometry::SensitiveDetector*)arg[2];
-      DetDesc::Geometry::RefHandle<TNamed> handle = DetDesc::Geometry::DetElementFactory<P>::create(*lcdd,*elt,*sens);
+      DetDesc::Geometry::Handle<TNamed> handle = DetDesc::Geometry::DetElementFactory<P>::create(*lcdd,*elt,*sens);
       *(void**)retaddr = handle.ptr();
     }
   };

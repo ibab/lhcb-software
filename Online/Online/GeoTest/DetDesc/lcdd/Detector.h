@@ -40,7 +40,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct SensitiveDetector : public NamedHandle  {
+    struct SensitiveDetector : public Ref_t  {
       struct Object  {
         int          Attr_verbose;
         int          Attr_combine_hits;
@@ -48,15 +48,15 @@ namespace DetDesc {
         std::string  Attr_eunit;
         std::string  Attr_hits_collection;
         Segmentation Attr_segmentation;
-        NamedHandle  Attr_id;
+        Ref_t  Attr_id;
         Object() : Attr_verbose(0), Attr_segmentation() {}
       };
 
       /// Default constructor
-      SensitiveDetector() : NamedHandle() {}
+      SensitiveDetector() : Ref_t() {}
       /// Templated constructor for handle conversions
       template <typename Q>
-      SensitiveDetector(const RefHandle<Q>& e) : NamedHandle(e) {}
+      SensitiveDetector(const Handle<Q>& e) : Ref_t(e) {}
       /// Constructor for a new sensitive detector element
       SensitiveDetector(const LCDD& lcdd, const std::string& type, const std::string& name);
 
@@ -69,7 +69,7 @@ namespace DetDesc {
       /// Assign the name of the hits collection
       SensitiveDetector& setHitsCollection(const std::string& spec);
       /// Assign the IDDescriptor reference
-      SensitiveDetector& setIDSpec(const NamedHandle& spec);
+      SensitiveDetector& setIDSpec(const Ref_t& spec);
       /// Assign the readout segmentation reference
       SensitiveDetector& setSegmentation(const Segmentation& seg);
       
@@ -80,7 +80,7 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct DetElement : public NamedHandle   {
+    struct DetElement : public Ref_t   {
       typedef std::map<std::string,DetElement> Children;
       struct Object  {
         int               Attr_id;
@@ -99,9 +99,9 @@ namespace DetDesc {
       void check(bool condition, const std::string& msg) const;
 
       /// Default constructor
-      DetElement() : NamedHandle()  {}
+      DetElement() : Ref_t()  {}
       /// Templated constructor for handle conversions
-      template<typename Q> DetElement(const Handle<Q>& e) : NamedHandle(e)  {}
+      template<typename Q> DetElement(const Handle<Q>& e) : Ref_t(e)  {}
       /// Constructor for a new subdetector element
       DetElement(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 

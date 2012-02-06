@@ -15,7 +15,7 @@ namespace DetDesc {
 
   struct GearTPC : public Geometry::DetElement {
     typedef TPCData Object;
-    GearTPC(const Geometry::RefHandle<TNamed>& e);
+    GearTPC(const Geometry::Ref_t& e);
     double innerRadius() const;
     double outerRadius() const;
     double pressure() const;
