@@ -7,41 +7,15 @@
 //
 //====================================================================
 
-#include "XML/XMLTags.h"
-#include "XML/XMLElements.h"
-#include "XML/lcdd/XMLDetector.h"
-#include "DetDesc/lcdd/Segmentations.h"
-#include "DetDesc/lcdd/Detector.h"
-#include "DetDesc/lcdd/Objects.h"
-#include "DetDesc/lcdd/Shapes.h"
-#include "DetDesc/lcdd/Volumes.h"
-#include "DetDesc/lcdd/LCDD.h"
-
-// Helpers to access tags and attributes quickly without specifying explicitly namespaces
-#define _X(a) DetDesc::XML::Tag_##a
-#define _A(a) DetDesc::XML::Attr_##a
-
-// Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t          xml_coll_t;
-typedef DetDesc::XML::Handle_t              xml_h;
-typedef DetDesc::XML::DetElement::Component xml_comp_t;
-typedef DetDesc::XML::DetElement            xml_det_t;
-typedef DetDesc::XML::Dimension             xml_dim_t;
-typedef DetDesc::Geometry::LCDD             lcdd_t;
-
+#include "DetDesc/detector/DetFactoryHelper.h"
+#include "DetDesc/detector/ILDExTPC.h"
 using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
 
-#include "DetDesc/detector/ILDExTPC.h"
-
 namespace DetDesc { namespace Geometry {
   
-  template <typename T, typename Q> Ref_t toRefObject(LCDD& lcdd, const Q& e, SensitiveDetector&)  {
-    return Ref_t(0);
-  }
-  
-  template <> Ref_t toRefObject<DetDesc::ILDExTPC,xml_h>(LCDD& lcdd, const xml_h& e, SensitiveDetector&)  {
+  template <> Ref_t DetElementFactory<ILDExTPC>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector&)  {
     xml_det_t   x_det = e;
     string      name  = x_det.nameStr();
     xml_comp_t  x_tube (x_det.child(_X(tubs)));
@@ -84,3 +58,5 @@ namespace DetDesc { namespace Geometry {
     return tpc;
   }
 }}
+
+DECLARE_NAMESPACE_DETELEMENT_FACTORY(DetDesc,ILDExTPC);

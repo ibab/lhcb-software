@@ -4,6 +4,7 @@ version v0r1
 branches  cmt doc src
 use GaudiPolicy v*
 use ROOT    v* LCG_Interfaces
+use Reflex  v* LCG_Interfaces
 use XercesC v* LCG_Interfaces
 
 include_dirs $(GEOTESTROOT) $(GEOTESTROOT)/src 
@@ -13,29 +14,34 @@ apply_pattern install_more_includes more=XML
 
 apply_pattern ld_library_path
 
-application  GeomConverterApp ../main/main.cpp  \
+##macro_append GeomConverterApplinkopts      " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
+##macro_append GeomConverterApp_dependencies " GeomConverter "
+
+library      GeomConverterLib \
              XML/*.cpp               \
              XML/lcdd/*.cpp          \
              XML/compact/*.cpp       \
              DetDesc/*.cpp           \
              DetDesc/lcdd/*.cpp      \
+             DetDesc/detector/*.cpp      \
              DetDesc/compact/*.cpp   \
-             DetDesc/detector/*.cpp  \
              Evaluator/*.cpp 
-##macro_append GeomConverterApplinkopts      " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
-##macro_append GeomConverterApp_dependencies " GeomConverter "
 
-#library      GeomConverterLib ../main/lib.cpp \
+apply_pattern linker_library library=GeomConverterLib
+apply_pattern generate_rootmap library=GeomConverterLib
+
+application  GeomConverterApp ../main/main.cpp
+#  \
 #             XML/*.cpp               \
 #             XML/lcdd/*.cpp          \
 #             XML/compact/*.cpp       \
 #             DetDesc/*.cpp           \
 #             DetDesc/lcdd/*.cpp      \
 #             DetDesc/compact/*.cpp   \
+#             DetDesc/detector/*.cpp  \
 #             Evaluator/*.cpp 
-##macro_append GeomConverterLib_shlibflags   " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
-##macro_append GeomConverterLib_dependencies " GeomConverter "
-#apply_pattern linker_library library=GeomConverterLib
+
+macro_append GeomConverterApp_dependencies " GeomConverterLib "
 
 private
 macro_append ROOT_linkopts ' -lGeom -lRint -lXMLIO ' WIN32 ' libGeom.lib libRint.lib '

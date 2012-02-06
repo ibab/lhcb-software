@@ -86,9 +86,9 @@ namespace DetDesc {
       template <typename Q> Q* _ptr() const   {  return (Q*)m_element;  }
       bool isValid() const                    {  return 0 != m_element; }
       bool operator!() const                  {  return 0 == m_element; }
-      Implementation* operator->() const      { return  m_element;      }
-      operator Implementation& ()  const      { return *m_element;      }
-      Implementation& operator*()  const      { return *m_element;      }
+      Implementation* operator->() const      {  return  m_element;     }
+      operator Implementation& ()  const      {  return *m_element;     }
+      Implementation& operator*()  const      {  return *m_element;     }
 
       template <typename Q> Q* data() const  {
 	return (Value<Implementation,Q>*)m_element;
@@ -130,6 +130,7 @@ namespace DetDesc {
     template <> struct RefHandle<TNamed> : public Handle<TNamed>  {
       typedef TNamed Implementation;
       RefHandle() : Handle<TNamed>() {}
+      RefHandle(TNamed* p) : Handle<TNamed>(p) {}
       RefHandle(const Handle<TNamed>& e) : Handle<TNamed>(e) {}
       template<typename Q> RefHandle(const Handle<Q>& e) : Handle<TNamed>(e) {}
       operator TNamed*() const    { return this->m_element; }

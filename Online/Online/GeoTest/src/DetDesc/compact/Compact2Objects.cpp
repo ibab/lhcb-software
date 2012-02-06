@@ -17,6 +17,7 @@
 #include "TGeoManager.h"
 #include "TGeoElement.h"
 #include "TGeoMaterial.h"
+#include "Reflex/PluginService.h"
 
 #include <climits>
 #include <iostream>
@@ -335,7 +336,18 @@ namespace DetDesc { namespace Geometry {
     lcdd.addLimitSet(toRefObject<to_type>(lcdd,element));
   }
   template <> void Converter<DetElement>::operator()(const xml_h& element)  const {
-    lcdd.addDetector(toRefObject<to_type>(lcdd,element));
+    string           type = element.attr<string>(_A(type));
+    string           name = element.attr<string>(_A(name));
+    SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,element);
+    DetElement det(Handle<TNamed>(ROOT::Reflex::PluginService::Create<TNamed*>(type,&lcdd,&element,&sd)));
+
+    if ( det.isValid() && element.hasAttr(_A(readout)) )  {
+      string rdo = element.attr<string>(_A(readout));
+      det.setReadout(lcdd.readout(rdo));
+    }
+    cout << (det.isValid() ? "Converted" : "FAILED    ")
+	 << " subdetector:" << name << " of type " << type << endl;
+    lcdd.addDetector(det);
   }
   template <> void Converter<Materials>::operator()(const xml_h& materials)  const  {
     xml_coll_t(materials,_X(element) ).for_each(Converter<Atom>(lcdd));
