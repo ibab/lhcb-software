@@ -243,7 +243,7 @@ class DstConf(LHCbConfigurableUser):
         caloPackSeq = GaudiSequencer("CaloPacking")
         packDST.Members += [caloPackSeq]
 
-        caloPack = CaloDstPackConf ()
+        caloPack = CaloDstPackConf()
         if not caloPack.isPropertySet('Enable') :
             CaloDstPackConf ( Enable = True )
         caloPack.Sequence     = caloPackSeq
@@ -361,7 +361,7 @@ class DstConf(LHCbConfigurableUser):
 
     def _doUnpack( self ):
         """
-        Set up DataOnDemandSvc to unpack a packed (r)DST
+        Set up DataOnDemandSvc to unpack a packed (r,s,s)DST
         """
         from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
                                     UnpackRecVertex, UnpackTwoProngVertex,
@@ -391,11 +391,15 @@ class DstConf(LHCbConfigurableUser):
         # ProtoParticles
         self._unpackProtoParticles()
 
+        # Muon Tracks
         unpackMuons = UnpackTrack( name       = "UnpackMuonTracks",
                                    OutputName = "/Event/Rec/Track/Muon",
                                    InputName  = "/Event/pRec/Track/Muon",
                                    AncestorFor= "/Event/pRec/Track/Muon" )
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
+
+        # Stripping Data
+        self._unpackStripping()
 
     def _unpackMuonPIDs(self):
 
@@ -485,6 +489,33 @@ class DstConf(LHCbConfigurableUser):
             recalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
             # Combined DLLs
             recalib.Members += [ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL")]
+
+    def _unpackStripping(self):
+
+        from Configurables import ( ConversionDODMapper,
+                                    ParticlesAndVerticesMapper )
+                                    
+        mapper   = ConversionDODMapper()
+        pvmapper = ParticlesAndVerticesMapper()
+
+        # The input <-> output mappings
+        mapper.Transformations = [ ( '(.*)/Rec(.*)',  '$1/pRec$2'  ),
+                                   ( '(.*)/Phys(.*)', '$1/pPhys$2' ) ]
+
+        # algorithm types from source ClassIDs
+        mapper.Algorithms[1550] = "UnpackTrack"
+        mapper.Algorithms[1552] = "UnpackProtoParticle"
+        mapper.Algorithms[1551] = "UnpackCaloHypo"
+        mapper.Algorithms[1561] = "DataPacking::Unpack<LHCb::RichPIDPacker>"
+        mapper.Algorithms[1571] = "DataPacking::Unpack<LHCb::MuonPIDPacker>"
+        mapper.Algorithms[1553] = "UnpackRecVertex"
+        mapper.Algorithms[1555] = "DataPacking::Unpack<LHCb::WeightsVectorPacker>"
+        mapper.Algorithms[1581] = "UnpackParticlesAndVertices"
+        mapper.Algorithms[1559] = "UnpackDecReport"
+
+        # Add the tool to DOD
+        DataOnDemandSvc().NodeMappingTools = [pvmapper,mapper]
+        DataOnDemandSvc().AlgMappingTools  = [pvmapper,mapper]
 
     def __apply_configuration__(self):
 

@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2012-02-6 - Chris Jones
+ - Add unpacking options for striping (m)DST information
+
 ! 2012-02-03 - Marco Cattaneo
  - Remove LHCbApp configurable, to avoid circular dependency with XmlSummary.
    Moved to Kernel/LHCbAlgs
