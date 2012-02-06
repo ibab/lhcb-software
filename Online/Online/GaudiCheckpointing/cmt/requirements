@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiCheckpointing 
-version           v0r8
+version           v0r9
 #============================================================================
 branches          cmt doc src
 # dependency list
