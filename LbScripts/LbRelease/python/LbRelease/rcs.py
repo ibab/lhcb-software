@@ -1023,6 +1023,32 @@ class SubversionCmd(RevisionControlSystem):
                              srcUrl, versionUrl, stdout = None, stderr = None)
         return retcode
 
+    def branch(self, module, version, isProject=False, from_tag=None, from_branch=None):
+        """
+        Create a branch for the given module.
+        """
+        if self.repositoryVersion < (2,0):
+            raise RCSError("tag not implemented for Subversion repositories with "
+                           "version < 2.0 (current version %s)" % self.repositoryVersion)
+        self._assertModule(module, isProject)
+        if from_tag:
+            srcUrl = self.url(module, from_tag, isProject)
+        else:
+            branch = from_branch or "trunk"
+            srcUrl = self.url(module, branch, isProject, from_branch)
+        versionUrl = self.url(module, version, isProject, True)
+        msg = "Branching %s %s as %s" % ({True: "project",
+                                          False: "package"}[bool(isProject)],
+                                         module, version)
+        if isProject: # check if the
+            versdir = versionUrl.rsplit("/", 1)[0] # strip the trailing '/cmt'
+            if not self._exists(versdir):
+                _svn("mkdir", "--parents", "-m", msg, versdir)
+                # ignore errors
+        _, _, retcode = _svn("copy", "-m", msg,
+                             srcUrl, versionUrl, stdout = None, stderr = None)
+        return retcode
+
     def _updatePath(self, pth, root_dir):
         pthlist = []
         for p in pth.split("/") :
