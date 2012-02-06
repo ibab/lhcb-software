@@ -101,18 +101,19 @@ int ScpBinning::createBinning(IDalitzEventList* events
   if(0 == events->size()) return 0;
   const IDalitzEvent* evt0 = events->getREvent(0);
   if(0 == evt0) return 0;
+  if (minPerBin < 20) minPerBin = 20; // Saftey factor as method not valid for few entries
 
   ScpBoxSet boxes = splitBoxes(events, maxPerBin);
 
   double norm = this->normFactor();
-//  lessByScpBoxScp sorter;
-//  sorter.SetNorm(norm);
-//  sort(boxes.begin(), boxes.end(), sorter);
-
-  lessByScpBoxData sorter;
+  lessByScpBoxScp sorter;
+  sorter.SetNorm(norm);
   sort(boxes.begin(), boxes.end(), sorter);
 
+//  lessByScpBoxData sorter;
+//  sort(boxes.begin(), boxes.end(), sorter);
 
+//
 //  ScpBoxSet boxes_SCP_Plus;
 //  ScpBoxSet boxes_SCP_Minus;
 //
@@ -128,7 +129,7 @@ int ScpBinning::createBinning(IDalitzEventList* events
 //  }
 //    mergeBoxes(boxes_SCP_Plus, minPerBin);
 //    mergeBoxes(boxes_SCP_Minus, minPerBin);
-
+//
 
   mergeBoxes(boxes, minPerBin);
 
@@ -454,12 +455,12 @@ void ScpBinning::setHistoColours(){
   maxScp = 5.0;
   minScp = -5.0;
   if (getMaxScp()>maxScp){
-	  maxScp = getMaxScp();
+	  maxScp = getMaxScp()+0.5;
 	  minScp = -maxScp;
 
   }
   if (getMinScp()<minScp){
-	  minScp = getMinScp();
+	  minScp = getMinScp()-0.5;
 	  maxScp = -minScp;
   }
 
@@ -483,11 +484,11 @@ DalitzHistoStackSet ScpBinning::getDataHistoStack(){
   mx = 5.0;
   min = -5.0;
   if (getMaxScp()>mx){
-	  mx = getMaxScp();
+	  mx = getMaxScp()+0.5;
 	  min = -mx;
   }
   if (getMinScp()<min){
-	  min = getMinScp();
+	  min = getMinScp()-0.5;
 	  mx = -min;
 
   }
@@ -518,25 +519,26 @@ DalitzHistoStackSet ScpBinning::getMCHistoStack(){
 
 counted_ptr<TH1D> ScpBinning::getScpDistribution() const{
   int nbins=40;
+  std::cout << getMaxScp() << " Min: " << getMinScp() << std::endl;
 //  double from=-1*getMaxScp(), to=getMaxScp();
   double from=-5.0, to=5.0;
   if (getMaxScp()>to){
-	  to = getMaxScp();
+	  to = getMaxScp()+1;
 	  from = -to;
   }
   if (getMinScp()<from){
-	  from = getMinScp();
+	  from = getMinScp()-1;
 	  to = -from;
   }
 
   //  double from=-2, to=2;
 
-  cout << "from " << from << " to " << to << endl;
+//  cout << "from " << from << " to " << to << endl;
   counted_ptr<TH1D> h(new TH1D("Scp distribution", "Scp distribution"
 			       , nbins, from, to));
   h->SetDirectory(0);
   for(unsigned int i=0; i < _boxSets.size(); i++){
-    //cout << "filling chi2 " << _boxSets[i].chi2() << endl;
+//    cout << "filling scp " << i << " "<< _boxSets[i].scp() << endl;
     h->Fill(_boxSets[i].scp(m_norm));
   }
   return h;
@@ -800,6 +802,8 @@ void ScpBinning::save(const char* binningFileName)
 		 out_Boxfile->Write();
 		 out_Boxfile->Close();
 }
+
+
 
 
 

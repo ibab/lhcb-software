@@ -38,7 +38,7 @@ private:
 	  std::vector<int> m_pdg;
 	  std::vector<int> set_pat;
 	  std::vector<float> m_mother_var;
-	  double m_mother_pdg;
+	  int m_mother_pdg;
 
 	  int m_particle;
 	  const char* _cuts;
@@ -169,21 +169,20 @@ bool ReadNTuple::getUpdatedTree()
 	  std::cout << "No entries after cuts " << _cuts << std::endl;
   }
 
-
 //  attachit();
-  cout << "ReadNTuple::getTree(): Reading from " << _fname
-       << ", writing to: " << newFilename() << endl;
-  _file0 = TFile::Open(newFilename().c_str(), "RECREATE");
-  cout << "opened new file " << _file0 << endl;
-  if(0 == _file0) return false;
-  _file0->cd();
-  cout << "cd'ed to new file " << endl;
-//  _tree = _oldTree->CloneTree(0);
-  _tree = _oldTree->CopyTree("");
+//  cout << "ReadNTuple::getTree(): Reading from " << _fname
+//       << ", writing to: " << newFilename() << endl;
+//  _file0 = TFile::Open(newFilename().c_str(), "RECREATE");
+//  cout << "opened new file " << _file0 << endl;
+//  if(0 == _file0) return false;
+//  _file0->cd();
+//  cout << "cd'ed to new file " << endl;
+//  _tree = _oldTree->CloneTree(1000);
+  _tree = _oldTree->CopyTree(_cuts);
 
-  _tree->SetDirectory(_file0);
-  //_tree->CopyEntries(ot, _maxEvents);
-  cout << "cloned tree from old file" << endl;
+//  _tree->SetDirectory(_file0);
+//  //_tree->CopyEntries(ot, _maxEvents);
+//  cout << "cloned tree from old file" << endl;
   return (0 != _tree);
 }
 
@@ -269,7 +268,7 @@ ReadNTuple::readEntry(unsigned int entry){
   // Things to cut on are read from reconstructed data.
 
 	bool dbThis = true;
-  _oldTree->GetEntry(entry);
+	_tree->GetEntry(entry);
 
 
 //  OrderParticles();
@@ -294,10 +293,12 @@ ReadNTuple::readEntry(unsigned int entry){
   {
 	  if (!(entry%1000))
 	  {
-		  cout << "PDG: " << (int)m_pdg[0] << "Px: " << m_input_var[0][0] << std::endl;
-		  cout << "PDG: " << (int)m_pdg[1] << "Px: " << m_input_var[0][1] << std::endl;
-		  cout << "PDG: " << (int)m_pdg[2] << "Px: " << m_input_var[0][2] << std::endl;
-		  cout << "PDG: " << m_pdg[3] << "Px: " << m_input_var[0][3] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[0] << " Px: " << m_input_var[0][0] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[1] << " Px: " << m_input_var[0][1] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[2] << " Px: " << m_input_var[0][2] << std::endl;
+		  cout << "PDG: " << (int)m_pdg[3] << " Px: " << m_input_var[0][3] << std::endl;
+		  cout << "Mother PDG: " << m_mother_pdg << " Px: " << m_mother_var[0] << std::endl;
+
 	  }
   }
    vector<TLorentzVector> PArray(5);

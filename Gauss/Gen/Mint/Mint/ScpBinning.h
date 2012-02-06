@@ -23,6 +23,7 @@
 #include <algorithm>
 
 class ScpBinning {
+protected:
   std::vector<ScpBoxSet> _boxSets;
   int _nData;
   int _nDataCC;
@@ -47,25 +48,22 @@ class ScpBinning {
  public:
   ScpBinning();
 
-//  bool myfunction (const ScpBox&, const ScpBox&)const;
-
   void resetEventCounts();
-  void fillData(IDalitzEventList* data);
-  void fillDataCC(IDalitzEventList* data);
+  virtual void fillData(IDalitzEventList* data);
+  virtual void fillDataCC(IDalitzEventList* data);
   double normFactor() const;
   void setBoxesNormFactors();
-//  void sortByChi2();
   void sortByScp();
-  int createBinning(IDalitzEventList* events
+  virtual int createBinning(IDalitzEventList* events
 		    , int minPerBin = 10
 		    , int maxPerBin = 100
 		    );
 
-  double setEvents(IDalitzEventList* data
+  virtual double setEvents(IDalitzEventList* data
 			 , IDalitzEventList* mc
 			 );
 
-  double setBackgroundEvents(IDalitzEventList* data
+  virtual double setBackgroundEvents(IDalitzEventList* data
 			 , IDalitzEventList* mc
 			 );
 
