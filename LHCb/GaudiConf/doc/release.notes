@@ -3,6 +3,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2012-02-03 - Marco Cattaneo
+ - Remove LHCbApp configurable, to avoid circular dependency with XmlSummary.
+   Moved to Kernel/LHCbAlgs
+ - Move to LHCbAlgs also the tests fsr-only-file-root and fsr-small-files-root,
+   that use LHCbApp()
+ - Clean up dependencies accordingly
+
 !========================= GaudiConf v15r6 2012-01-31 =========================
 ! 2011-12-20 - Rob Lambert
  - Fixed moved tests so that they keep their own references.

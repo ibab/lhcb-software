@@ -5,9 +5,6 @@ branches doc cmt options python src tests
 include_path none
 
 use GaudiPolicy v*
-use LHCbKernel  v* Kernel # for LHCbConfigurableUser inheritance
-use DDDB        v* Det    # needed by configurable
-use XMLSummaryKernel   v* Kernel    # needed for inheritance
 
 ignore_pattern package_stamps
 
@@ -15,16 +12,13 @@ set STDOPTS    $(GaudiConf_root)/options
 
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
 
-macro GaudiConfConfUserModules "GaudiConf.Configuration GaudiConf.SimConf GaudiConf.DigiConf GaudiConf.CaloPackingConf GaudiConf.DstConf"
+macro GaudiConfConfUserModules "GaudiConf.SimConf GaudiConf.DigiConf GaudiConf.CaloPackingConf GaudiConf.DstConf"
 apply_pattern install_python_modules
 apply_pattern install_scripts
 
 #QM tests
 private
-# Uses only needed to set up run time environment of tests
-  macro HepMC_use "" QMTest "HepMC  v*  LCG_Interfaces"
-  macro RELAX_use "" QMTest "RELAX  v*  LCG_Interfaces"
-  use $(HepMC_use)
-  use $(RELAX_use)
+  macro MDF_use   "" QMTest "MDF   v*  DAQ      -no_auto_imports"
+  use $(MDF_use)
   apply_pattern QMTest
 end_private
