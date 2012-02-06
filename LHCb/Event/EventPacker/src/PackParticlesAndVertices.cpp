@@ -36,9 +36,10 @@ PackParticlesAndVertices::~PackParticlesAndVertices() {}
 //=========================================================================
 //  Initializer: Set the class ids for the various types to be packed
 //=========================================================================
-StatusCode PackParticlesAndVertices::initialize( ) {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode PackParticlesAndVertices::initialize( ) 
+{
+  const StatusCode sc = GaudiAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc;  
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 

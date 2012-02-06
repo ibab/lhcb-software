@@ -24,12 +24,16 @@
 
 /** @class PackParticlesAndVertices PackParticlesAndVertices.h
  *   
- *
+ *  Packs Particles and Vertices
+ *  
  *  @author Olivier Callot
  *  @date   2012-01-23
  */
-class PackParticlesAndVertices : public GaudiAlgorithm {
+class PackParticlesAndVertices : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   PackParticlesAndVertices( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -38,9 +42,12 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+private:
+
   typedef LHCb::Relation1D<LHCb::Particle, LHCb::VertexBase> RELATION;
 
 protected:
+
   void selectContainers ( DataObject* obj, std::vector<std::string>& names, unsigned int classID, bool forceRead=false );
   
   void packAParticleContainer ( LHCb::Particles* parts, LHCb::PackedParticles& pparts );

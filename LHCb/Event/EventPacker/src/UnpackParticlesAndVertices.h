@@ -19,17 +19,22 @@
 
 /** @class UnpackParticlesAndVertices UnpackParticlesAndVertices.h
  *   
+ *  Unpacks all Packed Particles and related objects
  *
  *  @author Olivier Callot
  *  @date   2012-01-23
  */
-class UnpackParticlesAndVertices : public GaudiAlgorithm {
+class UnpackParticlesAndVertices : public GaudiAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   UnpackParticlesAndVertices( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~UnpackParticlesAndVertices( ); ///< Destructor
 
+  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 private:
@@ -39,6 +44,7 @@ private:
 private:
 
   std::string m_inputStream; ///< Input stream root
+
   std::string m_postFix;
   StandardPacker m_pack;
 

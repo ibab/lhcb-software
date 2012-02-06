@@ -19,7 +19,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( UnpackDecReport )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -37,23 +36,13 @@ UnpackDecReport::UnpackDecReport( const std::string& name,
 UnpackDecReport::~UnpackDecReport() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode UnpackDecReport::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode UnpackDecReport::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "==> Execute" << endmsg;
+
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::PackedDecReport>(m_inputName) ) return StatusCode::SUCCESS;
   const LHCb::PackedDecReport* dst = getOrCreate<LHCb::PackedDecReport,LHCb::PackedDecReport>( m_inputName );
@@ -62,30 +51,25 @@ StatusCode UnpackDecReport::execute() {
 
   newReport->setConfiguredTCK( 0 );
   newReport->setTaskID( 0 );
-  for ( std::vector<unsigned int>::const_iterator itR = dst->reports().begin(); dst->reports().end() != itR; ++itR ) {
+  for ( std::vector<unsigned int>::const_iterator itR = dst->reports().begin(); 
+        dst->reports().end() != itR; ++itR ) 
+  {
     LHCb::HltDecReport tmp = (*itR);
     LinkManager::Link* myLink = dst->linkMgr()->link( tmp.intDecisionID()-1 );  // Was stored with +1.
-    if ( NULL == myLink ) {
+    if ( NULL == myLink )
+    {
       info() << "No link tabel entry for " << tmp.intDecisionID() << endmsg;
     } else {
-      std::string name = myLink->path();
+      const std::string & name = myLink->path();
       tmp.setIntDecisionID( 1 );
       newReport->insert( name, tmp );
-      debug() << format( "restored report %8.8x link ID %3d", tmp.decReport(), myLink->ID() ) 
-             << " name " << name << endmsg;     
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << format( "restored report %8.8x link ID %3d", tmp.decReport(), myLink->ID() ) 
+                << " name " << name << endmsg;     
     }
   }
+
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode UnpackDecReport::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

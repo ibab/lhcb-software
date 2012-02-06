@@ -38,18 +38,6 @@ PackDecReport::PackDecReport( const std::string& name,
 PackDecReport::~PackDecReport() {} 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode PackDecReport::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode PackDecReport::execute() {
@@ -101,16 +89,6 @@ StatusCode PackDecReport::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PackDecReport::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
