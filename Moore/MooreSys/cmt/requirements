@@ -6,7 +6,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore              v12r10  Hlt
+use  Moore              v13r0  Hlt
 use  IndependenceTests  v1r1    Hlt
 
 # Patches

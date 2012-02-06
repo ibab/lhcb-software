@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : E. van Herwijnen
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v13r0>2012-02-06 Moore v13r0</A></H1><PRE>
+based on HLT_v14r0 and Gaudi v23r0 stack.
+
 </PRE><H1><A NAME=v12r10>2012-01-25 Moore v12r10</A></H1><PRE>
 based on HLT_v13r11. Intermediate version for testing deferred
 triggering in the pit.
