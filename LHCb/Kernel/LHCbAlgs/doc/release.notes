@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-02-06 - Chris Jones
+ - Protect DataObjectVersionFilter from printing an exception message when
+   the input data does not exist.
+
 !========================= LHCbAlgs v2r47 2012-02-01 =========================
 ! 2012-01-31 - Marco Clemencic
  - Added the algorithm DQFilterByRun. It is equivalent to DQFilter, but rejects

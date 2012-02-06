@@ -42,11 +42,18 @@ StatusCode DataObjectVersionFilter::execute()
 
   try
   {
-    const DataObject * data = get<DataObject>(m_loc);
-    const unsigned int ver = (unsigned int)data->version();
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "version = " << ver << endmsg;
-    OK = ver <= m_maxV && ver >= m_minV;
+    if ( exist<DataObject>(m_loc) )
+    {
+      const DataObject * data = get<DataObject>(m_loc);
+      const unsigned int ver = (unsigned int)data->version();
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "version = " << ver << endmsg;
+      OK = ver <= m_maxV && ver >= m_minV;
+    }
+    else
+    {
+      OK = false;
+    }
   }
   catch ( const GaudiException & )
   {
