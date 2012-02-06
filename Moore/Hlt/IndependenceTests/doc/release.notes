@@ -2,6 +2,8 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Eric van Herwijnen
 Purpose     : HLT application to test indepence of Hlt lines
 
+
+!========================= IndependenceTests v1r2 2012-02-06 =========================
 ! 2011-09-02 - Roel Aaij
  - Add nightly independence test with 10k events.
 
