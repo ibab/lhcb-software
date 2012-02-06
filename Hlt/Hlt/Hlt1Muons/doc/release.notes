@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Muons v1r4 2012-02-06 =========================
 ! 2011-09-19 - Roel Aaij
  - Changes in HltVeloIsMuon and MatchVeloMuon:
    - Fix momentum estimate.
