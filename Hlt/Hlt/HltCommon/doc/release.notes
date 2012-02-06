@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================= HltCommon v8r4 2012-02-06 =========================
+
 ! 2012-01-30 - Eric van Herwijnen
  - Remove the namespace with redefinition of << as this is now done in 
    GaudiKernel/TypeNameString.h
