@@ -1,3 +1,17 @@
+2012-02-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/requirements: release of version v6r6p4
+
+	LbConfiguration:
+	* python/LbConfiguration/SetupProject.py: removed the reference to GaudiPoolDb (deprecated)
+
+	LbRelease:
+	* LbRelease/python/LbRelease/rcs.py: added branch creation for Subversion
+	* LbRelease/scripts/branch_package: new script to branch packages
+
+	LbLegacy:
+	* python/LbLegacy/install_project.py: updated version
+
 2011-12-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v6r6p3
@@ -128,14 +142,14 @@
 	- fixed bug #86875 Added the possibility to pretend we are on CVMFS via an environment
 	  variable (SP_FAKE_CVMFS).
 	- removed DIRAC/LHCbDIRAC hacks
-	* python/LbConfiguration/Package.py: 
+	* python/LbConfiguration/Package.py:
 	- added Det/STSQLDDDB in the list of supported packages.
 	- added SVN fallback to getPackage.
 	- added security check when retrieving packages from SVN. It checks that
 	  the containing project is in the supported ones list.
 	- added flag to prevent exception raising.
 	- filterout external projects for SVN searching
-	* python/LbConfiguration/Project.py: 
+	* python/LbConfiguration/Project.py:
 	- added fallback on SVN for getProject function.
 
 	LbLegacy:
@@ -183,7 +197,7 @@
 	* python/LbUtils/Path.py: added function to remove entries from a given os.pathsep separated path.
 
 	LbScriptsSys:
-	* added cmt/PostInstall.py script for the generation and installation of the 
+	* added cmt/PostInstall.py script for the generation and installation of the
 	login scripts.
 
 
