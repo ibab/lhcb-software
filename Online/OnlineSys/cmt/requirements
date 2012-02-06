@@ -17,7 +17,7 @@ use GaudiObjDesc      v11r12
 #use confDBpython        v1r7     Online
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
-use Camera              v1r22    Online
+use Camera              v1r23    Online
 use Checkpointing       v0r7     Online
 use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
