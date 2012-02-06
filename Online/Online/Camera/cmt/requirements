@@ -52,6 +52,8 @@ document rootcint MessagePresenter MessagePresenter.h
 macro_append ROOT_linkopts " `root-config --glibs` " \
                            WIN32 " libCore.lib libCint.lib libRIO.lib libNet.lib libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libTree.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMathCore.lib libThread.lib libGui.lib"
 
+macro_append Camera_shlibflags " $(Boost_linkopts_regex) "
+
 macro_remove cppflags "-pedantic "
 macro_append cppflags "" WIN32 ' /wd4800 '
 # Linker library.

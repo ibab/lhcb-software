@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2012-02-06 - Chris Jones
+ - Fix linking errors with Boost using Gaudi v23r0
+
 ! 2011-11-18 - Chris Jones
  - Fixes for gcc 4.6. I hope ...
 
