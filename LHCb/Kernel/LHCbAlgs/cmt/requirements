@@ -14,12 +14,13 @@ include_path    none
 #============================================================================
 # Used packages.
 #============================================================================
-use GaudiAlg   v*
-use LHCbKernel v* Kernel -no_auto_imports
-use DAQEvent   v* Event
-use RecEvent   v* Event
-use DetDesc    v* Det
-use HltInterfaces v* Kernel -no_auto_imports
+use GaudiAlg         v*
+use LHCbKernel       v* Kernel -no_auto_imports
+use DAQEvent         v* Event
+use RecEvent         v* Event
+use DetDesc          v* Det
+use HltInterfaces    v* Kernel -no_auto_imports
+use XMLSummaryKernel v* Kernel            # needed by LHCbApp for inheritance
 
 #============================================================================
 # Component library building rule
@@ -32,13 +33,31 @@ library LHCbAlgs ../src/*.cpp -import=LHCbKernel -import=HltInterfaces
 apply_pattern   component_library library=LHCbAlgs
 
 #============================================================================
+# install Configuration.py
+#============================================================================
+private
+# LHCbApp Configurable uses the generated configurables
+macro_append LHCbAlgsGenConfUser_dependencies LHCbAlgsConfDbMerge
+# Have to look in local LHCbAlgsConf.py, install_python has to come later
+path_prepend PYTHONPATH ${LHCBALGSROOT}/genConf
+end_private
+apply_pattern install_python_modules
+
+#============================================================================
 # Testing infrastructure
 #============================================================================
-apply_pattern   QMTest
-# dependencies for tests
 private
-use DetDescSvc v* Det -no_auto_imports
-use DetCond    v* Det -no_auto_imports
-use SQLDDDB    v* Det -no_auto_imports
-use sqlite     v* LCG_Interfaces -no_auto_imports
+# Uses only needed to set up run time environment of tests
+  macro EventSys_use    "" QMTest "EventSys    v*  Event -no_auto_imports"
+  macro DetDescCnv_use  "" QMTest "DetDescCnv  v*  Det   -no_auto_imports"
+  macro DetDescSvc_use  "" QMTest "DetDescSvc  v*  Det   -no_auto_imports"
+  macro DDDB_use        "" QMTest "DDDB        v*  Det   -no_auto_imports"
+  macro GaudiConf_use   "" QMTest "GaudiConf   v*        -no_auto_imports"
+  use $(DetDescSvc_use)
+  use $(DetDescCnv_use)
+  use $(DDDB_use)
+# Next two for FSR tests
+  use $(GaudiConf_use)
+  use $(EventSys_use)
+  apply_pattern QMTest
 end_private
