@@ -5,6 +5,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v12r5 2012-02-06 =========================
 ! 2011-11-21 - Vanya Belyaev
  - add few new streamer features: first_N and reverse 
 

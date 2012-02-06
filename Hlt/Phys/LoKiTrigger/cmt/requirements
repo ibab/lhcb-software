@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiTrigger
-version           v12r4
+version           v12r5
 
 # =============================================================================
 branches          cmt doc src dict python LoKi 
