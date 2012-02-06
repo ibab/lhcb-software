@@ -5,7 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
-! 2011-02-01 - Anton Poluektov
+! 2012-02-06 - Anton Poluektov 
+ - StrippingReport - fix bug with handling bad events 
+
+! 2012-02-01 - Anton Poluektov
  - StrippingReport: 
    * Get rid of using DecReports. 
 

@@ -221,6 +221,7 @@ StatusCode StrippingReport::execute() {
     
     int passed = 0;
     int cand = 0;
+    int executed = 0;
     
     i->avgtime = -1;
 
@@ -229,7 +230,10 @@ StatusCode StrippingReport::execute() {
     StatusCode result = m_algMgr->getAlgorithm( i->name, myIAlg );
     if ( result.isSuccess() ) {
         Algorithm* myAlg = dynamic_cast<Algorithm*>(myIAlg);
-        if (myAlg) passed = myAlg->filterPassed();
+        if (myAlg) {
+          executed = myAlg->isExecuted();
+          passed = myAlg->filterPassed();
+        }
         Selection::Line* strAlg = dynamic_cast<Selection::Line*>(myIAlg);
         if (strAlg) cand = strAlg->numberOfCandidates();
         else {
@@ -247,18 +251,15 @@ StatusCode StrippingReport::execute() {
         } 
     }
     
-    if (cand>=0) {
-
+    if ( executed ) {
+      // Only if the line was executed, i.e. it was not bad event, add to counters
       i->candidates += cand;
       i->decisions += passed;
-
-    } else 
+    }
     if (cand < 0) {
-
       // It is a sequencer
       i->candidates = -1;
       i->decisions  += passed;
-
     }
 
     if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) { 
