@@ -12,7 +12,8 @@ branches          cmt doc python
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use       GaudiPolicy v*                             
+use       GaudiPolicy v*                   
+use       GaudiConf   v*       
 use       Python      v* LCG_Interfaces 
 
 include_path      none

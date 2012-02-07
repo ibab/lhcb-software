@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Chris Jones
+ - Add CMT use statement for GaudiConf
+
 !========================= AnalysisConf v2r1 2011-12-15 =========================
 
 ! 2011-11-29 - Chris Jones
