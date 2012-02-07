@@ -4,9 +4,9 @@
 #
 #
 ##############################################################################
-from GaudiConf.Configuration import *
-
-from Configurables import CombinedParticleMaker, ProtoParticleMUONFilter, ProtoParticleCALOFilter, ProtoParticleRICHFilter, FilterDesktop
+from Configurables import ( CombinedParticleMaker, ProtoParticleMUONFilter,
+                            ProtoParticleCALOFilter, ProtoParticleRICHFilter,
+                            FilterDesktop )
 
 mName = "TaggingMuons"
 eName = "TaggingElectrons"

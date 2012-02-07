@@ -7,7 +7,6 @@ __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
 __all__ = ('TaggingParticlesSelectionBuilder')
 
-from GaudiConf.Configuration import *
 from Configurables import (CombinedParticleMaker,
                            ProtoParticleMUONFilter,
                            ProtoParticleCALOFilter,
