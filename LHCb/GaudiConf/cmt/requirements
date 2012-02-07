@@ -4,7 +4,8 @@ version           v15r6
 branches doc cmt options python src tests
 include_path none
 
-use GaudiPolicy v*
+use LHCbKernel  Kernel v*  # For LHCbConfigurableUser dependency
+use GaudiPolicy        v*
 
 ignore_pattern package_stamps
 
