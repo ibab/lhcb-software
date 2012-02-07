@@ -250,16 +250,15 @@ StatusCode StrippingReport::execute() {
           } 
         } 
     }
-    
-    if ( executed ) {
-      // Only if the line was executed, i.e. it was not bad event, add to counters
-      i->candidates += cand;
-      i->decisions += passed;
-    }
+
     if (cand < 0) {
       // It is a sequencer
       i->candidates = -1;
       i->decisions  += passed;
+    } else if ( executed ) {
+      // Only if the line was executed, i.e. it was not bad event, add to counters
+      i->candidates += cand;
+      i->decisions += passed;
     }
 
     if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) { 
