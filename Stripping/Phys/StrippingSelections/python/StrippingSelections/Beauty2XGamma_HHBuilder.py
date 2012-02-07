@@ -24,7 +24,16 @@ def subPID(name,p,d,inputs):
              % (p,d[0],d[1])
     return filterSelection(name,filter,[sel])
 
-#\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
+def subPIDSels(decays,prefix,suffix,min,max,inputs):
+    min = float(min.split('*')[0])
+    max = float(max.split('*')[0])
+    filter = SubPIDMMFilter(prefix+'SubPIDBeauty2XGamma'+suffix,Code='ALL',
+                            MinMM=min,MaxMM=max,PIDs=decays)
+    presel = Selection(prefix+'SubPIDSelBeauty2XGamma'+suffix,
+                       Algorithm=filter,
+                       RequiredSelections=inputs)
+    mm =  "in_range(%s,MM,%s)" % (min,max)
+    return filterSelection(prefix+suffix,mm,[presel])
 
 class HHBuilder(object):
     '''Produces all HH quasi-particles for the Beauty2xGamma module.'''
@@ -134,7 +143,7 @@ class HHBuilder(object):
         return [MergedSelection('X2KK', RequiredSelections=[presel])]
 
     def _makeHHWS(self):
-        from Beauty2Charm_DBuilder import subPIDSels
+        #from Beauty2Charm_DBuilder import subPIDSels
         protoSels = self._makePiPiWSSels()
         decays = [['pi+','pi+'],['pi+','K+'],['K+','pi+'],['K+','K+']]
         plus = subPIDSels(decays,'X2HHWSPlus','','0*MeV','5200*MeV',
