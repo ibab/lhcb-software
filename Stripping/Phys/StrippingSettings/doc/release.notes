@@ -4,6 +4,19 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-07 - Jibo He
+ - Stripping17b/LineConfigDictionaries_B2OC.py
+   Updated conf dict of Beauty2Charm, as requested by M. Williams 
+ - Stripping17b/LineConfigDictionaries_RD.py
+   Added Beauty2XGamma, Bd2KstarMuMu, B2XMuMu, Bs2MuMuLines, LFVLines,
+   BuToK1MuMu
+ - Stripping17b/LineConfigDictionaries_Charmless.py
+   Updated conf dict of Hb2Charged2Body, as requested by S. Perazzini
+ - Stripping17b/LineConfigDictionaries_Semileptonic.py
+   Added Bd2DstarMuNu, B0q2DplusMuX
+ - Stripping17/LineConfigDictionaries_RDWG.py
+   Removed duplicated B2XTau to aviod confusion, dbase untouched
+
 ! 2012-02-07 - Anton Poluektov 
  - Added B2JpsiKShhConf dict to Stripping17b/LineConfigDictionaries_B2CC.py
 

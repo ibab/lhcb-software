@@ -497,67 +497,6 @@ Bs2MuMuLines = {
     'STREAMS' : [ 'Dimuon' ]
     }
 
-
-# N. Serra, Vava
-B2XTau = { 
-    'BUILDERTYPE' : 'B2XTauConf',
-    'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Semileptonic' ],
-    'CONFIG' :    {
-       'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
-    'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
-    'IPCHI2_HAD_ALL_FINAL_STATE'    : '9',    # dimensionless
-    'TRACKCHI2_HAD_ALL_FINAL_STATE' : '4',    # dimensionless
-    #
-    'PT_MU'                         : '500',  # MeV
-    'P_MU'                          : '6000', # MeV 
-    'IPCHI2_MU'                     : '9',    # MeV   
-    #
-    'PT_B_TT'                       : '5000', # MeV
-    'PT_B_TM'                       : '2000', # MeV
-    'VCHI2_B'                       : '100',  # dimensionless
-    'FDCHI2_B'                      : '144',  # dimensionless
-    'DIRA_B'                        : '0.99', # dimensionless
-    'MASS_LOW_B'                    : '2000', # MeV  
-    'MASS_HIGH_B'                   : '6000', # MeV
-    'MCOR_LOW_B'                    : '4000', # MeV
-    'MCOR_HIGH_B'                   : '7000', # MeV
-    'MIPCHI2_B'                     : '150',  # dimensionless 
-    #
-    'PT_TAU'                        : '1500', # MeV
-    'VCHI2_TAU'                     : '20',   # dimensionless
-    'IPCHI2_TAU'                    : '9',    # dimensionless
-    'FDCHI2_TAU'                    : '144',  # dimensionless
-    'MASS_LOW_TAU'                  : '800',  # MeV
-    'MASS_HIGH_TAU'                 : '1700', # MeV
-    #
-    'PT_B_CHILD_BEST'               : '1800', # MeV
-    'P_B_CHILD_BEST'                : '10000',# MeV
-    'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
-    'PT_B_TAU_CHILD_BEST'           : '3000', # MeV
-    'IPCHI2_B_TAU_CHILD_BEST'       : '16',   # dimensionless
-    #
-    'MASS_LOW_D'                    : '1800', # MeV
-    'MASS_HIGH_D'                   : '2050', # MeV  
-    #
-    'B2TauTau_TOSLinePrescale'          : 1,
-    'B2TauTau_TOSLinePostscale'         : 1,
-    'B2DD_TOSLinePrescale'              : 1,
-    'B2DD_TOSLinePostscale'             : 1,
-    'B2TauMu_TOSLinePrescale'           : 1,
-    'B2TauMu_TOSLinePostscale'          : 1,
-    'B2DMu_TOSLinePrescale'             : 0.2,
-    'B2DMu_TOSLinePostscale'            : 1,
-    'B2TauTau_TISLinePrescale'          : 1,
-    'B2TauTau_TISLinePostscale'         : 1,
-    'B2DD_TISLinePrescale'              : 1,
-    'B2DD_TISLinePostscale'             : 1,
-    'B2TauMu_TISLinePrescale'           : 1,
-    'B2TauMu_TISLinePostscale'          : 1,
-    'B2DMu_TISLinePrescale'             : 1,
-    'B2DMu_TISLinePostscale'            : 1 }
-    }
-
 # Diego + Xabier
 
 KS02MuMu = {
@@ -572,7 +511,7 @@ KS02MuMu = {
     }
 }
 
-
+# N. Serra, Vava
 B2XTau = {
     'BUILDERTYPE' : 'B2XTauConf',
     'STREAMS' : ['Bhadron'],

@@ -73,8 +73,11 @@ Beauty2Charm = {
     'PID' : {
     'P'  : {'PIDp_MIN' : -10},
     'PI' : {'PIDK_MAX' : 20},
-    'K'  : {'PIDK_MIN' : -10}
-    },
+    'K'  : {'PIDK_MIN' : -10},
+    'TIGHT' : {    'P'  : {'PIDp_MIN' : -5},
+                   'PI' : {'PIDK_MAX' : 10},
+                   'K'  : {'PIDK_MIN' : -5}}
+    }, 
     "Prescales" : { # Prescales for individual lines
      'RUN_BY_DEFAULT' : False, # False = lines off by default
     'RUN_RE'         : ['.*KS.*','.*Lb2LcD.*','.*DoubleTopo.*'],  

@@ -140,3 +140,159 @@ B2XuMuNu = {
     'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic'] 
     }
+
+
+Bd2DstarMuNu = {
+    'BUILDERTYPE' : 'Bd2DstarMuNuAllLinesConf',
+    'CONFIG' :
+    { 'Loose' : { 'Prescale'    : 0.3 ,
+                'Postscale'   : 1.0 ,
+                #muon paramters # loose # Tight
+                'MuPT'        : 700, # 800  # MeV
+                'MuTrPID'     :-20,  # -5  
+                #kaon parameters
+                'KPT'         : 350, # 350  # MeV
+                'KTrPID'      : -5,  #-5    
+                #pion parameters
+                'PiPT'        : 350, # MeV
+                #D0-resonance parameters
+                'D0MassW'     : 60, # 40    # MeV
+                'D0_BPVVDCHI2': 50,
+                #Dstar-resonance parameters
+                'Dstar_PT'     : 1250, # 1250 # MeV
+                'Dstar_VCHI2'  : 25, # 20 #
+                'DstarMassW'   : 80, # 50 # MeV
+                #Bd-resonance parameters
+                'B0d_VCHI2'    : 10, # 10 #
+                'B0dD0_DeltaZVtx' : -10, # -2.5  # mm
+                'B0dPV_DeltaZVtx' : -100, # 0.5  # mm
+                  },
+      'Tight'   : {'Prescale'    : 1.0 ,
+                 'Postscale'   : 1.0 ,
+                 #muon paramters #
+                 'MuPT'        : 800, # MeV
+                 'MuTrPID'     :-5,
+                 #kaon parameters
+                 'KPT'         : 350, # MeV
+                 'KTrPID'      :-5,
+                 #pion parameters
+                 'PiPT'        : 350, # MeV
+                 #D0-resonance parameters
+                 'D0MassW'     : 60, # MeV
+                 'D0_BPVVDCHI2': 50,
+                 #Dstar-resonance parameters
+                 'Dstar_PT'     : 1250, #  MeV
+                 'Dstar_VCHI2'  : 20,
+                 'DstarMassW'   : 70,
+                 #Bd-resonance parameters
+                 'B0d_VCHI2'    : 10,
+                 'B0dD0_DeltaZVtx' : -2.5, # mm
+                 'B0dPV_DeltaZVtx' : 0.5 #  mm
+                   }
+      },
+    'STREAMS' : ['Semileptonic'] ,
+    'WGs'    : ['Semileptonic']
+    }
+
+B0q2DplusMuX = {
+    'BUILDERTYPE' : 'B0q2DplusMuXAllLinesConf',
+    'CONFIG' : {
+        'Presel' : { 'Prescale'    : 0.02 ,
+                 'Postscale'   : 1.0 ,
+                 #muon paramters
+                 'MuPT'        : 500, #MeV
+                 'MuPidPi'     : -5.,
+                 'MuPidK'      : -10.,
+                 'MuTrChi2'    : 9,
+                 #kaon parameters
+                 'KPT'         : 300, #MeV
+                 'KIP'         : 0.03, #mm
+                 'KPidPi'      : -5,
+                 'KPidPi2'   : -5,
+                 'KPidMu'      : -40,
+                 'KPidP'       : -40,
+                 'KTrChi2'     : 10, #set in the common particles
+                 'KIPChi2'     : 4,
+                 #pion parameters
+                 'PiPidK'      : -40,
+                 'PiIP'        : 0.01, #mm
+                 'PiPidMu'     : -5,
+                 'PiTrChi2'    : 10, #set in the common particles
+                 'PiIPChi2'    : 4,
+                 #D-resonance parameters
+                 'DPT'         : 1000, #MeV
+                 'D_APT'       : 1000, #MeV
+                 'D_VPCHI2'    : 0.000250,
+                 'D_BPVVDCHI2' : 49,
+                 #B-resonance parameters
+                 'B_VPCHI2'    : 0.000250,
+                 'B_BPVDIRA'   : 0.997
+                 },
+
+           'Tuned'   : { 'Prescale'    : 1.0 ,
+                 'Postscale'   : 1.0 ,
+                 #muon paramters
+                 'MuPT'        : 500, #MeV
+                 'MuPidPi'     : 1., #reduce pion feedthrough to 1%
+                 'MuPidK'      : -5,
+                 'MuTrChi2'    : 5,
+                 #kaon parameters
+                 'KPT'         : 400, #MeV
+                 'KIP'         : 0.04, #mm
+                 'KPidPi'      : 5,
+                 'KPidPi2'     : 10, #Kaon with same charge as pion
+                 'KPidMu'      : 5,
+                 'KPidP'       : -10,
+                 'KTrChi2'     : 5,
+                 'KIPChi2'     : 4,
+                 #pion parameters
+                 'PiPidK'      : -5,
+                 'PiIP'        : 0.04, #mm
+                 'PiPidMu'     : -5,
+                 'PiTrChi2'    : 10,
+                 'PiIPChi2'    : 7,
+                 #D-resonance parameters
+                 'DPT'         : 1500, #MeV
+                 'D_APT'       : 1200, #MeV
+                 'D_VPCHI2'    : 0.010,
+                 'D_BPVVDCHI2' : 144,
+                 #B-resonance parameters
+                 'B_VPCHI2'    : 0.010,
+                 'B_BPVDIRA'   : 0.9980
+                 },
+ 
+     'MC09'   : { 'Prescale'    : 1.0 ,
+                 'Postscale'   : 1.0 ,
+                 #muon paramters
+                 'MuPT'        : 600, #MeV
+                 'MuPidPi'     : 0.,
+                 'MuPidK'      : -10,
+                 'MuTrChi2'    : 2,
+                 #kaon parameters
+                 'KPT'         : 400, #MeV
+                 'KIP'         : 0.03, #mm
+                 'KPidPi'      : 7,
+                 'KPidPi2'     : 7, #Kaon with same charge as pion
+                 'KPidMu'      : 10,
+                 'KPidP'       : -10,
+                 'KTrChi2'     : 3,
+                 'KIPChi2'     : 4,
+                 #pion parameters
+                 'PiPidK'      : -5,
+                 'PiIP'        : 0.01, #mm
+                 'PiPidMu'     : -2,
+                 'PiTrChi2'    : 9,
+                 'PiIPChi2'    : 7,
+                 #D-resonance parameters
+                 'DPT'         : 1500, #MeV
+                 'D_APT'       : 1200, #MeV
+                 'D_VPCHI2'    : 0.0150,
+                 'D_BPVVDCHI2' : 144,
+                 #B-resonance parameters
+                 'B_VPCHI2'    : 0.0150,
+                 'B_BPVDIRA'   : 0.9980
+                  }
+        },
+    'STREAMS' : [ 'Semileptonic' ],
+    'WGs'    : ['Semileptonic']
+    }
