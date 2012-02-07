@@ -46,6 +46,9 @@ int PhaseBinning::createBinning(IDalitzEventList* events
   		_boxSets.push_back(boxSet);
   		boxSet.clear();
     }
+
+	  std::cout << "Created Phase Binning " << std::endl;
+
   return numBins();
 
 }

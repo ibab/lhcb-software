@@ -1,10 +1,11 @@
-#ifndef MINTDALITZ_PHASE_BINNING_HH
-#define MINTDALITZ_PHASE_BINNING_HH
+#ifndef MINTDALITZ_PHASE_DIFF_BINNING_HH
+#define MINTDALITZ_PHASE_DIFF_BINNING_HH
 
 
 #include "Mint/ScpBoxSet.h"
 #include "Mint/ScpBox.h"
 #include "Mint/ScpBinning.h"
+#include "Mint/PhaseBinning.h"
 
 
 
@@ -24,35 +25,36 @@
 #include <iostream>
 #include <algorithm>
 
-class PhaseBinning : public ScpBinning {
+class PhaseDiffBinning : public PhaseBinning {
 
   FitAmpSum* _fas;
 
  public:
-  PhaseBinning()
-  {
-
-  }
-  PhaseBinning(FitAmpSum* fas)
+  PhaseDiffBinning(FitAmpSum* fas)
   {
 	  _fas = fas;
   }
-
-  virtual void fillData(IDalitzEventList* data);
-  virtual void fillDataCC(IDalitzEventList* data);
- 
+  
   int createBinning(IDalitzEventList* events
-		    , int minPerBin = 10
-		    , int maxPerBin = 100
-		    );
+ 		    , int minPerBin = 10
+ 		    , int maxPerBin = 100
+ 		    );
 
-  virtual double setEvents(IDalitzEventList* data
+
+  void fillData(IDalitzEventList* data);
+  void fillDataCC(IDalitzEventList* data);
+// 
+//  int createBinning(IDalitzEventList* events
+//		    , int minPerBin = 10
+//		    , int maxPerBin = 100
+//		    );
+
+  double setEvents(IDalitzEventList* data
 			 , IDalitzEventList* mc
 			 );
 
 };
 
-std::ostream& operator<<(std::ostream& os, const ScpBinning& c2b);
 
 #endif
 //
