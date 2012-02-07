@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-07 - Anton Poluektov 
+ - Added B2JpsiKShhConf dict to Stripping17b/LineConfigDictionaries_B2CC.py
+
 ! 2012-02-04 - Jibo He
  - Draft of Stripping17b, both conf dicts and dbase, almost working
 

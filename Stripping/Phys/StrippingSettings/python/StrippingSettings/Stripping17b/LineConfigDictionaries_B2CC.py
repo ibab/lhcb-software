@@ -90,4 +90,27 @@ B2ChicK = {
     'STREAMS'  : [ 'Bhadron' ]
     }
 
-
+# New line since Stripping17b
+B2ChicK = {
+    'WGs'       :       ['B2CC'],
+    'BUILDERTYPE'       :       'B2JpsiKShhConf',
+    'CONFIG'    :  {
+	'Trk_Chi2'                 : 4.0,
+	'Jpsi_MassWindow'          : 80.0, # 80 by default is the StdMassConstrainedJpsi2MuMu mass window
+        'KS_DD_MassWindow'         : 30.0,
+        'KS_DD_VtxChi2'            : 20.0,
+        'KS_DD_DLS'                : 5.0,
+        'KS_LL_MassWindow'         : 30.0,
+        'KS_LL_VtxChi2'            : 20.0,
+        'KS_LL_DLS'                : 5.0,
+        'Bs_Mlow'                  : 520.0,
+        'Bs_Mhigh'                 : 500.0,
+        'BsDaug_DD_maxDocaChi2'    : 5.0,
+        'BsDaug_LL_maxDocaChi2'    : 5.0,
+        'Bs_VtxChi2'               : 10.0,
+        'Bs_Dira'                  : 0.9999,
+        'Prescale'                 : 1.0,
+        'Postscale'                : 1.0
+    },
+    'STREAMS'  : [ 'Dimuon' ]
+}
