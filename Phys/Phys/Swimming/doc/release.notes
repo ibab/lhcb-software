@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Chris Jones
+ - Adapt to changes in GaudiConf
+
 !====================== Phys/Swimming v2r4p2 2011-12-20 =======================
 ! 2011-12-20 - Roel Aaij
  - Fix Swimming().OutputFile behaviour when swimming the stripping.

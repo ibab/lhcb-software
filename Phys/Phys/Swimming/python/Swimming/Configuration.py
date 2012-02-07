@@ -5,7 +5,6 @@ __author__ = "V. Gligorov <vladimir.gligorov@cern.ch>"
 
 import os
 from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp,
                             DstConf, CaloDstUnPackConf )
