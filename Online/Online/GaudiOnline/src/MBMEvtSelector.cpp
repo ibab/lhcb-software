@@ -358,6 +358,7 @@ StatusCode MBMContext::receiveEvent()  {
 	}
       }
       const MBM::EventDesc& e = m_consumer->event();
+
       // The event is a descriptor event, which must be decoded using the MEP data:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
 	return convertDescriptor(e);

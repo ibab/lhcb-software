@@ -301,6 +301,7 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle) {
 StatusCode HltBufferedIOReader::run()   {  
   int file_handle = 0;
   m_receiveEvts = true;
+  ::lib_rtl_sleep(10000);
   while(1) {
     info("Locking event loop. Waiting for work....");
     ::lib_rtl_lock(m_lock);
