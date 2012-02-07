@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.491 2010-09-08 09:24:45 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2012-02-07 - Marco Cattaneo
+ - Remove unnecessary import in Configuration.py, needed after removal of
+   GaudiConf.Configuration
 
 !========================= HltConf v9r12 2012-01-25 =========================
 ! 2011-11-25 - Marcin Kucharczyk

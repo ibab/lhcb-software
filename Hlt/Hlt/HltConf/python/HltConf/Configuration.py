@@ -6,8 +6,7 @@ __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
+from LHCbKernel.Configuration import LHCbConfigurableUser
 from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
