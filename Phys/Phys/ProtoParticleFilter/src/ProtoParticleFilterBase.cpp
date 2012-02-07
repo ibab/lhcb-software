@@ -86,8 +86,9 @@ StatusCode ProtoParticleFilterBase::initialize()
 
 StatusCode ProtoParticleFilterBase::defineSelections()
 {
-  debug() << "Defining ProtoParticle selection criteria" << endmsg;
-
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "ProtoParticle Selection = " << m_selectionOpts << endmsg;
+  
   if ( !m_selectionOpts.empty() )
   {
     // Loop over all selections
@@ -109,7 +110,8 @@ StatusCode ProtoParticleFilterBase::defineSelections()
 StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & description )
 {
   // seperate into detector and cut data
-  if (msgLevel(MSG::DEBUG)) debug() << "Selection criteria : " << description << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Selection criteria : " << description << endmsg;
 
   // Create a new ProtoParticleSelection for this description
   m_protoSels.push_back( ProtoParticleSelection() );
@@ -126,13 +128,15 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
     const ProtoParticleSelection::DetectorRequirements * detreq = createDetReq(tag,value);
     if ( NULL != detreq )
     {
-      debug() << " -> Detector Requirement : " << tag << " = " << value << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << " -> Detector Requirement : " << tag << " = " << value << endmsg;
       protoSel.addToDetReqs(detreq);
     }
     else
     {
       // Could be an equality cut (IsMuon etc.)
-      debug() << "   -> Not a Det Req - Try a Cut ..." << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "   -> Not a Det Req - Try a Cut ..." << endmsg;
       const ProtoParticleSelection::Cut * cut = createCut( tag, "=", value );
       if ( cut )
       {
@@ -165,7 +169,8 @@ StatusCode ProtoParticleFilterBase::decodeSelOpts( const std::string & descripti
       const std::string & tag   = to_upper((*iT).tag());
       const std::string & value = (*iT).value();
       // proccess this cut
-      debug() << " -> Cut : " << tag << " " << *iDelim << " " << value << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << " -> Cut : " << tag << " " << *iDelim << " " << value << endmsg;
       const ProtoParticleSelection::Cut * cut = createCut( tag, *iDelim, value );
       if ( cut )
       {
@@ -302,7 +307,8 @@ bool ProtoParticleFilterBase::stringToDouble( const std::string value,
   }
   catch ( const std::exception & expt )
   {
-    debug() << value << " cannot be interpreted as a double" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << value << " cannot be interpreted as a double" << endmsg;
     return false;
   }
   return true;

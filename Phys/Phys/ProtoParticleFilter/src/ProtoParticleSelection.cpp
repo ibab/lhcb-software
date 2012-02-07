@@ -132,9 +132,9 @@ ProtoParticleSelection::DetectorRequirements::isSatisfied( const LHCb::ProtoPart
   }
   else if ( requirement() == MustNotHave )
   {
-    if ( (detector() == RICH && hasRichDLL(proto)) ||
+    if ( (detector() == RICH && hasRichDLL(proto))  ||
          (detector() == MUON && hasMuonInfo(proto)) ||
-         (detector() == CALO && hasCaloDLL(proto)) ||
+         (detector() == CALO && hasCaloDLL(proto))  ||
          (detector() == RICHORCALO    && (hasRichDLL(proto) || hasCaloDLL(proto)) ) ||
          (detector() == RICH_AEROGEL  && hasRichAerogel(proto)) ||
          (detector() == RICH_RICH1GAS && hasRich1Gas(proto))    ||
