@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Manuel Tobias Schiller
+ - fix a bug in python/TrackSys/PatChecking.py which causes the
+   TrackEffChecker not to be run on Velo tracks if FastVelo is used
+
 ! 2012-02-07 - Marco Cattaneo
  - Remove unnecessary import from RecoTracking.py
 
@@ -170,23 +174,23 @@ APE=0.0 on MC
 
 ! 2009-11-11 - Kostyantyn Holubyev
  - RecoTracking.py:
-	 if TrackSys().ExpertTracking = [ "fastSequence" ], fast reconstruction 
-	 sequence is run, which postpones all fits until Best container is formed.
-	 TrackCloneFinder decides which track among the two is a clone from the 
+    if TrackSys().ExpertTracking = [ "fastSequence" ], fast reconstruction 
+    sequence is run, which postpones all fits until Best container is formed.
+    TrackCloneFinder decides which track among the two is a clone from the 
    numbers of LHCb IDs only. If the number of LHCb IDs for two track is the 
    same, a clone is assigned randomly. Saves 30-40% of reconstruction time.
 
-! 2009-11-11 - Kostyantyn Holubyev			
+! 2009-11-11 - Kostyantyn Holubyev        
  - RecoTracking.py:
-	 Option to run PatMatch is added.
+    Option to run PatMatch is added.
 
 ! 2009-11-11 - Kostyantyn Holubyev
- - RecoTracking.py:				
+ - RecoTracking.py:           
    In the standard sequence:
-		1) All the track types are fitted using the same configuration of the 
-		   TrackMasterFitter.
-		2) If TrackMatching is used, the additional RefitSeed sequence is introduced 
-		   to refit Seed tracks using the standard fitter configuration.
+      1) All the track types are fitted using the same configuration of the 
+         TrackMasterFitter.
+      2) If TrackMatching is used, the additional RefitSeed sequence is introduced 
+         to refit Seed tracks using the standard fitter configuration.
 
 ! 2009-11-03 - Stephanie Hansmann-Menzemer
  - automatic settings for cosmic reconstruction in Configurables
@@ -376,8 +380,8 @@ APE=0.0 on MC
    tracking sequences
 
 ! 2007-11-05 Johannes Albrecht
-	- options/RecoTracking.opts and NoFieldTracking.opts
-	include parameter file for fast momentum estimate tool
+   - options/RecoTracking.opts and NoFieldTracking.opts
+   include parameter file for fast momentum estimate tool
 
 ! 2007-11-05 Eduardo Rodrigues
  - fixed typo in DSTRefitting.opts

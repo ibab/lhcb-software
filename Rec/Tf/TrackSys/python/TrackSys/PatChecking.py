@@ -23,7 +23,7 @@ def PatChecking():
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
       TrackAssociator("AssocVeloRZ").TracksInContainer     = "Rec/Track/RZVelo";
 
-   if "Velo" in trackAlgs :
+   if "Velo" in trackAlgs or "FastVelo" in trackAlgs:
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVelo") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Velo") ]
       TrackAssociator("AssocVelo").TracksInContainer       = "Rec/Track/Velo";
