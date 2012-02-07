@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 use MDF               v3r32    DAQ
 use MDF_ROOT          v1r6     DAQ
-use DAQEvent          v9r5     Event
+use DAQEvent          v9r6     Event
 use GaudiObjDesc      v11r12
 #=======================================================
 # LHCb Online packages
@@ -46,7 +46,7 @@ use OnlineTasks         v1r43    Online
 use Presenter           v3r2     Online
 use PyDIM               v2r11    Online
 use RawBankSizes        v2r12    Online
-use RootCnv             v1r11    Online
+use RootCnv             v1r12    Online
 use ROMon               v1r34    Online
 use ROLogger            v0r24    Online
 ##macro Stomp_use "" CERN "Stomp v1r2 Online"

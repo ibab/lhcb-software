@@ -10,6 +10,7 @@
 <PRE>
    Based in Gaudi v23r0, 
    Updated packages are:
+     DAQEvent            v9r6     Event
      Camera              v1r23    Online  ! 2012-02-06 - Chris Jones
      DIM                 v19r28   Online
      Gaucho              v7r20    Online
@@ -19,6 +20,7 @@
      OnlineTasks         v1r43    Online
      RawBankSizes        v2r12    Online
      ROMon               v1r34    Online
+     RootCnv             v1r12    Online
 </PRE>
 
 <H1><A NAME=v4r58>2012-01-10 OnlineSys v4r58</A></H1>
