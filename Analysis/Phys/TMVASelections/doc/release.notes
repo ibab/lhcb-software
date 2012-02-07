@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Jibo He
+ - Updated requirements file to use TMVAWeights package
+
 ! 2012-02-05 - Jibo He
  - Removed "BPV" things to fix the segmentation problem:
    https://savannah.cern.ch/bugs/index.php?91172
