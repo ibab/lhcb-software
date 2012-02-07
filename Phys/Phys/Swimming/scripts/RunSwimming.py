@@ -10,7 +10,6 @@ from os import environ
 from pprint import pprint
 import GaudiPython 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 from GaudiPython import InterfaceCast
 from Gaudi import *
 from math import *
