@@ -26,8 +26,7 @@ if __name__ == '__main__' :
     gecLoc.replace('//', '/')
     # Configuration
 
-    from GaudiConf.Configuration import *
-
+    from Configurables import LHCbApp
     from Configurables import MessageSvc
  
     MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

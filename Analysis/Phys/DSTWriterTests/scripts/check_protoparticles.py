@@ -15,8 +15,6 @@ def addEntry(self, key, value) :
 
 if __name__ == '__main__' :
 
-    from GaudiConf.Configuration import *
-    
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
 

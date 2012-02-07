@@ -16,7 +16,7 @@ def addEntry(self, key, value) :
 
 if __name__ == '__main__' :
 
-    from GaudiConf.Configuration import *
+    from Configurables import LHCbApp
     from AnalysisPython import Dir, Functors
     from GaudiPython.Bindings import gbl, AppMgr, Helper
     from GaudiConf import IOHelper

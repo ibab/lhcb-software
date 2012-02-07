@@ -53,8 +53,6 @@ if __name__ == '__main__' :
 
     # Configuration
 
-    from GaudiConf.Configuration import *
-
     from Configurables import MessageSvc
  
     MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
@@ -62,6 +60,7 @@ if __name__ == '__main__' :
     from Gaudi.Configuration import EventSelector
     EventSelector().PrintFreq=100
 
+    from Configurables import LHCbApp
     lhcbApp = LHCbApp()
     lhcbApp.DDDBtag = 'default'
     lhcbApp.CondDBtag = 'default'
