@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Antonis Papanestis
+ - Added sequence control in RichHPDFlashMoni
+
 !========================= RichRecQC v2r56 2011-12-15 ========================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
