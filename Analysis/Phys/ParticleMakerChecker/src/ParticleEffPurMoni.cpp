@@ -226,7 +226,7 @@ StatusCode ParticleEffPurMoni::execute()
     shortProtoLoc(*iProtoLoc);
     // get the protos at this location
     const std::string & tesLoc = (*iProtoLoc);
-    const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( tesLoc );
+    const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( tesLoc, false );
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Looping over " << protos->size() << " ProtoParticles at " << tesLoc << endreq;
     for ( LHCb::ProtoParticles::const_iterator proto = protos->begin();
@@ -281,7 +281,7 @@ StatusCode ParticleEffPurMoni::execute()
         iMCPLoc != mcPLocations.end(); ++iMCPLoc )
   {
     // loop over MCParticles at this TES location
-    const LHCb::MCParticles * mcPs = get<LHCb::MCParticles>( *iMCPLoc );
+    const LHCb::MCParticles * mcPs = get<LHCb::MCParticles>( *iMCPLoc, false );
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Looping over " << mcPs->size() << " MCParticles at " << *iMCPLoc << endreq;
     for ( LHCb::MCParticles::const_iterator iMCP = mcPs->begin();
