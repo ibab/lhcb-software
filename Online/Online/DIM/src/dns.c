@@ -309,7 +309,7 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 				(int)(WATCHDOG_TMOUT_MAX * 1.3), check_validity, conn_id);
 		if(strcmp(Dns_conns[conn_id].task_name,"DIS_DNS"))
 		{
-			dna_set_test_write(conn_id, 10);
+			dna_set_test_write(conn_id, dim_get_keepalive_timeout());
 		}
 		Dns_conns[conn_id].old_n_services = 0;
 /*
@@ -328,7 +328,7 @@ int handle_registration( int conn_id, DIS_DNS_PACKET *packet, int tmout_flag )
 		    vtohl(packet->n_services) )
 		{
 			if(strcmp(Dns_conns[conn_id].task_name,"DIS_DNS"))
-				dna_set_test_write(conn_id, 10);
+				dna_set_test_write(conn_id, dim_get_keepalive_timeout());
 			dim_print_date_time();
 			printf( " Server %s out of error\n",
 				Dns_conns[conn_id].task_name );
@@ -649,7 +649,8 @@ void check_validity(int conn_id)
 			fflush(stdout);
 			release_conn(conn_id);
 		}
-		Dns_conns[conn_id].validity = -Dns_conns[conn_id].validity;
+		else
+			Dns_conns[conn_id].validity = -Dns_conns[conn_id].validity;
 	}
 }		
 
@@ -715,6 +716,11 @@ int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 			dic_packet.node_addr[0] = 0;
 			dic_packet.pid = 0;
 			dic_packet.size = htovl(DNS_DIC_HEADER);
+			dim_print_date_time();
+			printf(" Connection from %s refused, stopping client pid=%s\n",
+					Net_conns[conn_id].node,
+					Net_conns[conn_id].task);
+			fflush(stdout);
 			if( !dna_write_nowait(conn_id, &dic_packet, DNS_DIC_HEADER) )
 			{
 				dim_print_date_time();
@@ -722,13 +728,7 @@ int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 					Net_conns[conn_id].task,
 					Net_conns[conn_id].node);
 				fflush(stdout);
-				release_conn(conn_id);
 			}
-			dim_print_date_time();
-			printf(" Connection from %s refused, stopping client pid=%s\n",
-					Net_conns[conn_id].node,
-					Net_conns[conn_id].task);
-			fflush(stdout);
 			release_conn(conn_id);
 
 			return 0;
@@ -825,6 +825,8 @@ int handle_client_request( int conn_id, DIC_DNS_PACKET *packet )
 	dic_packet.node_addr[0] = 0;
 	dic_packet.pid = 0;
 	dic_packet.size = htovl(DNS_DIC_HEADER);
+	if( Dns_conns[conn_id].src_type == SRC_NONE )
+		dna_set_test_write(conn_id, dim_get_keepalive_timeout());
 	if( !(servp = service_exists(serv_regp->service_name)) ) 
 	{
 		if(Debug)
@@ -985,7 +987,7 @@ void inform_clients(DNS_SERVICE *servp)
 	NODE *full_nodep; 
 	DNS_DIC_PACKET packet;
 	char *ptr;
-	int i;
+	int i, to_release = 0;
 
 	nodep = servp->node_head;
 	prevp = nodep;
@@ -1015,6 +1017,7 @@ void inform_clients(DNS_SERVICE *servp)
 					Net_conns[nodep->conn_id].task,
 					Net_conns[nodep->conn_id].node);
 			fflush(stdout);
+			to_release = nodep->conn_id;
 /*
 release_conn(nodep->conn_id);
 */
@@ -1034,6 +1037,8 @@ release_conn(nodep->conn_id);
 		}
 */
 	}
+	if(to_release)
+		release_conn(to_release);
 }
 
 #ifdef VMS

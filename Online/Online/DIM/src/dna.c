@@ -30,9 +30,13 @@ typedef struct {
 	char task_name[MAX_TASK_NAME];
 	int port;
 	SRC_TYPES src_type;
+	time_t last_used;
 } PENDING_OPEN;
 
+#define TMOUT_PENDING_CONN_TMOUT 3600
+#define MAX_TMOUT_PENDING_CONNS 10
 static PENDING_OPEN Pending_conns[MAX_CONNS];
+static PENDING_OPEN Pending_conns_tmout[MAX_TMOUT_PENDING_CONNS];
 
 static int DNA_Initialized = FALSE;
 
@@ -310,7 +314,7 @@ static int dna_write_bytes( int conn_id, void *buffer, int size, int nowait )
 		  if(wrote == -1)
 		  {
 		    dna_report_error(conn_id, -1,
-				     "Write timeout, disconnecting from", DIM_ERROR, DIMTCPWRTMO);
+				     "Write timeout, writing to", DIM_WARNING, DIMTCPWRTMO);
 		    wrote = 0;
 		  }
 		}
@@ -525,9 +529,20 @@ static void ast_conn_h(int handle, int svr_conn_id, int protocol)
 
 int dna_init()
 {
+	PENDING_OPEN *pending_connp;
+	int i, size;
+	
 	if(!DNA_Initialized)
 	{
 		conn_arr_create(SRC_DNA);
+		pending_connp = &Pending_conns[1];
+		size = MAX_CONNS;
+		for( i = 1; i < size; i++, pending_connp++ )
+			pending_connp->task_name[0] = '\0';
+		pending_connp = &Pending_conns_tmout[1];
+		size = MAX_TMOUT_PENDING_CONNS;
+		for( i = 1; i < size; i++, pending_connp++ )
+			pending_connp->task_name[0] = '\0';
 		DNA_Initialized = TRUE;
 	}
 	return(1);
@@ -539,11 +554,14 @@ int dna_open_server(char *task, void (*read_ast)(), int *protocol, int *port, vo
 	register int tcpip_code;
 	register int conn_id;
 
+	dna_init();
+/*
 	if(!DNA_Initialized)
 	{
 		conn_arr_create(SRC_DNA);
 		DNA_Initialized = TRUE;
 	}
+*/
 	*protocol = PROTOCOL;
 	conn_id = conn_get();
 	dna_connp = &Dna_conns[conn_id];
@@ -599,13 +617,28 @@ void dna_rem_test_write(int conn_id)
 	tcpip_rem_test_write(conn_id);
 }
 
-static int ins_pend_conn( char *node, char *task, int port, SRC_TYPES src_type )
+static int ins_pend_conn( char *node, char *task, int port, SRC_TYPES src_type, int type, time_t last_used )
 {
 	register PENDING_OPEN *pending_connp;
-	register int i;
+	register int i, size;
+	time_t oldest;
+	int oldesti;
 
-	for( i = 1, pending_connp = &Pending_conns[1]; i < MAX_CONNS; 
-		i++, pending_connp++ )
+	if(type == 0)
+	{
+		pending_connp = &Pending_conns[1];
+		size = MAX_CONNS;
+		oldest = 0;
+	}
+	else
+	{
+		pending_connp = &Pending_conns_tmout[1];
+		size = MAX_TMOUT_PENDING_CONNS;
+		oldest = time(NULL);
+		oldesti = 1;
+	}
+
+	for( i = 1; i < size; i++, pending_connp++ )
 	{
 		if( pending_connp->task_name[0] == '\0' )
 		{
@@ -613,19 +646,60 @@ static int ins_pend_conn( char *node, char *task, int port, SRC_TYPES src_type )
 			strcpy(pending_connp->task_name, task);
 			pending_connp->port = port;
 			pending_connp->src_type = src_type;
+			pending_connp->last_used = last_used;
 			return(i);
 		}
+		else
+		{
+			if(pending_connp->last_used < oldest)
+			{
+				oldest = pending_connp->last_used;
+				oldesti = i;
+			}
+		}
+	}
+	if(type != 0)
+	{
+		pending_connp = &Pending_conns_tmout[oldesti];
+		strcpy(pending_connp->node_name, node);
+		strcpy(pending_connp->task_name, task);
+		pending_connp->port = port;
+		pending_connp->src_type = src_type;
+		pending_connp->last_used = last_used;
+		return(oldesti);
 	}
 	return(0);
 }
 
-static int find_pend_conn( char *node, char *task, int port, SRC_TYPES src_type )
+static int find_pend_conn( char *node, char *task, int port, SRC_TYPES src_type, int type )
 {
 	register PENDING_OPEN *pending_connp;
-	register int i;
+	register int i, size;
+	time_t curr_time;
 
-	for( i = 1, pending_connp = &Pending_conns[1]; i < MAX_CONNS; 
-		i++, pending_connp++ )
+	if(type == 0)
+	{
+		pending_connp = &Pending_conns[1];
+		size = MAX_CONNS;
+	}
+	else
+	{
+		pending_connp = &Pending_conns_tmout[1];
+		size = MAX_TMOUT_PENDING_CONNS;
+		curr_time = time(NULL);
+		for( i = 1; i < size; i++, pending_connp++ )
+		{
+			if( pending_connp->task_name[0] != '\0' )
+			{
+				if( curr_time - pending_connp->last_used > TMOUT_PENDING_CONN_TMOUT )
+				{
+					pending_connp->task_name[0] = '\0';
+				}
+			}
+		}
+		pending_connp = &Pending_conns_tmout[1];
+	}
+	for( i = 1; i < size; i++, pending_connp++ )
 	{
 		if( (!strcmp(pending_connp->node_name, node)) &&
 			(!strcmp(pending_connp->task_name, task)) &&
@@ -639,9 +713,19 @@ static int find_pend_conn( char *node, char *task, int port, SRC_TYPES src_type 
 }
 
 
-static void rel_pend_conn( int conn_id )
+static void rel_pend_conn( int id, int type )
 {
-	Pending_conns[conn_id].task_name[0] = '\0';
+	register PENDING_OPEN *pending_connp;
+
+	if(type == 0)
+	{
+		pending_connp = &Pending_conns[id];
+	}
+	else
+	{
+		pending_connp = &Pending_conns_tmout[id];
+	}
+	pending_connp->task_name[0] = '\0';
 }	
 
 
@@ -656,10 +740,13 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 	char src_type_str[64];
 
 	if(server_protocol){}
+	dna_init();
+/*
 	if(!DNA_Initialized) {
 		conn_arr_create(SRC_DNA);
 		DNA_Initialized = TRUE;
 	}
+*/
 	conn_id = conn_get();
 	dna_connp = &Dna_conns[conn_id] ;
 /*
@@ -675,7 +762,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 		if(!strstr(server_node,"fidel"))
 		{
 #endif
-		if(!find_pend_conn(server_node, server_task, port, src_type))
+		if(!find_pend_conn(server_node, server_task, port, src_type, 0))
 		{
 			if(src_type == SRC_DIS)
 				strcpy(src_type_str,"Server");
@@ -689,7 +776,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 				dna_report_error( conn_id, tcpip_code, str, DIM_ERROR, DIMDNSCNERR );
 			else
 				dna_report_error( conn_id, tcpip_code, str, DIM_ERROR, DIMTCPCNERR );
-			ins_pend_conn(server_node, server_task, port, src_type);
+			ins_pend_conn(server_node, server_task, port, src_type, 0, 0);
 		}
 #ifdef VMS
 		}
@@ -698,7 +785,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 		conn_free( conn_id );
 		return(0);
 	}
-	if( (id = find_pend_conn(server_node, server_task, port, src_type)) )
+	if( (id = find_pend_conn(server_node, server_task, port, src_type, 0)) )
 	{
 		if(src_type == SRC_DIS)
 			strcpy(src_type_str,"Server");
@@ -711,7 +798,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 			dna_report_error( conn_id, -1, str, DIM_INFO, DIMDNSCNEST );
 		else
 			dna_report_error( conn_id, -1, str, DIM_INFO, DIMTCPCNEST );
-		rel_pend_conn(id);
+		rel_pend_conn(id, 0);
 	}
 	dna_connp->state = RD_HDR;
 	dna_connp->writing = FALSE;
@@ -733,6 +820,10 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 	tcpip_code = dna_write_nowait(conn_id, &local_buffer, sizeof(local_buffer));
 	if (tcpip_failure(tcpip_code))
 	{
+		dim_print_date_time();
+		printf(" Client Establishing Connection: Couldn't write to Conn %3d : Server %s@%s\n",conn_id,
+			Net_conns[conn_id].task, Net_conns[conn_id].node);
+		fflush(stdout);
 		dna_close(conn_id);
 		return(0);
 	}
@@ -743,7 +834,16 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 int dna_close(int conn_id)
 {
 	if(conn_id > 0)
+	{
+		if(Net_conns[conn_id].write_timedout)
+		{
+		    dna_report_error(conn_id, -1,
+				     "Write timeout, disconnecting from", DIM_ERROR, DIMTCPWRTMO);
+			if(!find_pend_conn(Net_conns[conn_id].node, Net_conns[conn_id].task, 0, 0, 1))
+				ins_pend_conn(Net_conns[conn_id].node, Net_conns[conn_id].task, 0, 0, 1, time(NULL));
+		}
 		release_conn(conn_id);
+	}
 	return(1);
 }
 
@@ -809,7 +909,7 @@ void dna_report_error(int conn_id, int code, char *routine_name, int severity, i
 	{
 		if(Net_conns[conn_id].node[0])
 		{
-			sprintf(str," %s on node %s",
+			sprintf(str," %s@%s",
 		       Net_conns[conn_id].task, Net_conns[conn_id].node);
 			strcat(msg, str);
 		}
@@ -828,7 +928,13 @@ void dna_report_error(int conn_id, int code, char *routine_name, int severity, i
 
 static void save_node_task(int conn_id, DNA_NET *buffer)
 {
+	int id;
 	strcpy(Net_conns[conn_id].node, buffer->node);
 	strcpy(Net_conns[conn_id].task, buffer->task);
+	if((id = find_pend_conn(Net_conns[conn_id].node, Net_conns[conn_id].task, 0, 0, 1)))
+	{
+		dna_report_error( conn_id, -1, "Re-connected to", DIM_INFO, DIMDNSCNEST );
+		rel_pend_conn(id, 1);
+	}
 }
 

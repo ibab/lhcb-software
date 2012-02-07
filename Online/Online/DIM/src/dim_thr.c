@@ -443,6 +443,8 @@ pthread_mutex_t Global_DIM_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t Global_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t Global_cond = PTHREAD_COND_INITIALIZER;
 #endif
+int Global_cond_counter = 0;
+int Global_cond_waiters = 0;
 
 void dim_lock()
 {
@@ -478,14 +480,29 @@ void dim_unlock()
 void dim_wait_cond()
 {
   pthread_mutex_lock(&Global_cond_mutex);
-  pthread_cond_wait(&Global_cond, &Global_cond_mutex);
+  Global_cond_waiters++;
+  if(!Global_cond_counter)
+  {
+	pthread_cond_wait(&Global_cond, &Global_cond_mutex);
+  }
+  Global_cond_waiters--;
+  if(!Global_cond_waiters)
+	  Global_cond_counter--;
   pthread_mutex_unlock(&Global_cond_mutex);
 }
 
 void dim_signal_cond()
 {
   pthread_mutex_lock(&Global_cond_mutex);
-  pthread_cond_broadcast(&Global_cond);
+  if(!Global_cond_waiters)
+  {
+	Global_cond_counter = 1;
+  }
+  else
+  {
+	Global_cond_counter++;
+	pthread_cond_broadcast(&Global_cond);
+  }
   pthread_mutex_unlock(&Global_cond_mutex);
 }
 

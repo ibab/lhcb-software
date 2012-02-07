@@ -24,15 +24,14 @@ typedef struct {
 }TT;
 
 TT t;
-/*
-void big_rout( tag, buf, size )
-int *buf;
-int *tag, *size;
+
+void big_rout( int *tag, int *buf, int *size )
 {
 
-	printf("Received %d for TestMem\n", *buf);
+	if(size){}
+	printf("Received %d for TestMem_%d\n", *buf, *tag);
 }
-*/
+
 
 void got_servers( int *tag, char *list, int *size)
 {
@@ -56,7 +55,8 @@ void rout_list( int *tag, char *buf, int *size )
 
 void version_rout( int *tag, int *buf, int *size)
 {
-  printf("Received VERSION %lx, %d\n", (unsigned long)buf, *size);
+	if(tag){}
+	printf("Received VERSION %lx, %d\n", (long)buf, *size);
 }
 
 void rout( tag, buf, size )
@@ -121,6 +121,7 @@ int main(int argc, char **argv)
 	dic_get_id(aux);
 	printf("%s\n",aux);
 	strcpy(client_str,argv[1]);
+
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str,"%s/Service_%03d",argv[2],i);
@@ -135,10 +136,13 @@ int main(int argc, char **argv)
 	sprintf(str,"%s/VERSION_NUMBER",argv[2]);
 	dic_info_service( str, MONITORED, 0, 0, 0, version_rout, 0,
 			  NULL, 0 );
-/*	
-	sprintf(aux,"%s/TestMem",argv[2]);
-	dic_info_service( aux, MONITORED, 0, 0, 0, big_rout, 0,
+/*
+	for(i = 0; i < 20; i++)
+	{
+		sprintf(aux,"%s/TestMem_%d",argv[2], i);
+		dic_info_service( aux, MONITORED, 0, 0, 0, big_rout, i,
 			  &no_link, 4 );
+	}
 */
 /*
 	sprintf(aux,"DIS_DNS/SERVER_LIST");

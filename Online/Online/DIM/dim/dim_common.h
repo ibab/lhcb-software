@@ -201,6 +201,8 @@ _DIM_PROTOE( int dim_set_read_buffer_size,		(int bytes) );
 _DIM_PROTOE( int dim_get_read_buffer_size,		() );
 _DIM_PROTOE( void dis_set_debug_on,		() );
 _DIM_PROTOE( void dis_set_debug_off,	() );
+_DIM_PROTOE( void dim_set_keepalive_timeout,		(int secs) );
+_DIM_PROTOE( int dim_get_keepalive_timeout,		() );
 
 #ifdef WIN32
 #define getpid _getpid

@@ -96,12 +96,13 @@ void add_serv_str(const string & s1)
 	abc = new DimService("TEST/STRINGVAL_CONST",(char *)s1.c_str());
 }
 
+DimService *bool_serv[10];
 void add_serv_bool(const bool & boolval)
 {
-	DimService *serv;
 
 //	serv = new DimService("TEST/BOOLVAL_CONST",(short &)boolval);
-	serv = new DimService("TEST/BOOLVAL_CONST","C:1", (void *)&boolval, 1);
+	bool_serv[0] = new DimService("TEST/BOOLVAL_CONST","C:1", (void *)&boolval, 1);
+	bool_serv[1] = new DimService("TEST/BOOLVAL_CONST1","C:1", (void *)&boolval, 1);
 }
 
 class ServWithHandler : public DimService
@@ -129,6 +130,9 @@ int main()
 	DimServerDns *newDns;
 	char *extraDns = 0;
 	DimService *new_servint;
+
+//	DimService *dim = new DimService("test","C");
+//	delete dim;
 
 	DimServer::start("TEST");
 	extraDns = DimUtil::getEnvVar("EXTRA_DNS_NODE");
@@ -185,7 +189,6 @@ int main()
 	while(1)
 	{
 		sleep(5);
-
 /*
 		while(cmdsvr.hasNext())
 		{
@@ -199,6 +202,7 @@ int main()
 		else
 			boolval = 0;
 		ival++;
+		bool_serv[1]->updateService();
 		
 		int inCallback = DimServer::inCallback();
 		cout << "main: In callback "<< inCallback << endl; 

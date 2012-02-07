@@ -94,6 +94,7 @@ int DimInfo::getQuality()
 
 int DimInfo::getTimestamp()
 {
+
 	dic_get_timestamp(itsId, &secs, &millisecs);
 	return(secs);
 }

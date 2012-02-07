@@ -1430,7 +1430,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 			}
 #endif
 */
-			dna_set_test_write(conn_id, TEST_TIME_OSK);
+			dna_set_test_write(conn_id, dim_get_keepalive_timeout());
 			dic_connp = &Dic_conns[conn_id];
 			strncpy( dic_connp->node_name, node_name,
 				 MAX_NODE_NAME); 
@@ -1941,6 +1941,13 @@ int send_command(int conn_id, DIC_SERVICE *servp)
 			(servp->user_routine)( &servp->tag, &ret );
 	}
 */
+	if(!ret)
+	{
+		dim_print_date_time();
+		printf(" Client Sending Command: Couldn't write to Conn %3d : Server %s@%s\n",conn_id,
+			Net_conns[conn_id].task, Net_conns[conn_id].node);
+		fflush(stdout);
+	}
 	return(ret);
 }
 

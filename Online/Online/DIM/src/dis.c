@@ -132,6 +132,8 @@ typedef struct exit_ent {
 	struct exit_ent *next;
 	int conn_id;
 	int exit_id;
+	char node[MAX_NODE_NAME];
+	char task[MAX_TASK_NAME];
 } EXIT_H;
 
 static EXIT_H *Exit_h_head = (EXIT_H *)0;
@@ -1386,7 +1388,7 @@ int execute_service( int req_id )
 	register SERVICE *servp;
 	char str[80], def[MAX_NAME];
 	register char *ptr;
-	int last_conn_id;
+	int conn_id, last_conn_id;
 	int *pkt_buffer, header_size, aux;
 #ifdef WIN32
 	struct timeb timebuf;
@@ -1403,8 +1405,19 @@ int execute_service( int req_id )
 		return(0);
 	reqp->delay_delete++;
 	servp = reqp->service_ptr;
+	conn_id = reqp->conn_id;
+
+if(Debug_on)
+{
+dim_print_date_time();
+printf("Updating %s for %s@%s (req_id = %d)\n",
+	   servp->name, 
+	   Net_conns[conn_id].task, Net_conns[conn_id].node, 
+	   reqp->req_id);
+}
+
 	last_conn_id = Curr_conn_id;
-	Curr_conn_id = reqp->conn_id;
+	Curr_conn_id = conn_id;
 	ptr = servp->def;
 	if(servp->type == COMMAND)
 	{
@@ -1488,8 +1501,25 @@ int execute_service( int req_id )
 		pkt_buffer,
 		buffp, size);
 	Dis_packet->size = htovl(header_size + size);
-	if( !dna_write_nowait(reqp->conn_id, Dis_packet, header_size + size) ) 
+	if( !dna_write_nowait(conn_id, Dis_packet, header_size + size) ) 
 	{
+		if(Net_conns[conn_id].write_timedout)
+		{
+			dim_print_date_time();
+			if(reqp->delay_delete > 1)
+			{
+				printf(" Server (Explicitly) Updating Service %s: Couldn't write to Conn %3d : Client %s@%s\n",
+					servp->name, conn_id,
+					Net_conns[conn_id].task, Net_conns[conn_id].node);
+			}
+			else
+			{
+				printf(" Server Updating Service %s: Couldn't write to Conn %3d : Client %s@%s\n",
+					servp->name, conn_id,
+					Net_conns[conn_id].task, Net_conns[conn_id].node);
+			}
+		}
+		fflush(stdout);
 		if(reqp->delay_delete > 1)
 		{
 			reqp->to_delete = 1;
@@ -1497,7 +1527,7 @@ int execute_service( int req_id )
 		else
 		{
 			reqp->delay_delete = 0;
-			release_conn(reqp->conn_id, 1, 0);
+			release_conn(conn_id, 1, 0);
 		}
 	}
 /*
@@ -1510,7 +1540,8 @@ int execute_service( int req_id )
 		}
 	}
 */
-	reqp->delay_delete--;
+	if(reqp->delay_delete > 0)
+		reqp->delay_delete--;
 	return(1);
 }
 
@@ -1705,6 +1736,7 @@ int do_update_service(unsigned service_id, int *client_ids)
 	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
 		(DLL *) reqp)) ) 
 	{
+/*
 if(Debug_on)
 {
 dim_print_date_time();
@@ -1712,6 +1744,7 @@ printf("Updating %s (id = %d, ptr = %08lX) for %s@%s (req_id = %d, req_ptr = %08
 	   servp->name, (int)service_id, (unsigned long)servp, 
 	   Net_conns[reqp->conn_id].task, Net_conns[reqp->conn_id].node, reqp->req_id, (unsigned long)reqp);
 }
+*/
 		if(check_client(reqp, client_ids))
 		{
 			reqp->delay_delete = 1;
@@ -1965,6 +1998,8 @@ int dis_get_timestamp( unsigned serv_id, int *secs, int *millisecs )
 	char str[128];
 
 	DISABLE_AST
+	*secs = 0;
+	*millisecs = 0;
 	if(!serv_id)
 	{
 		sprintf(str,"Get Timestamp - Invalid service id");
@@ -1988,11 +2023,13 @@ int dis_get_timestamp( unsigned serv_id, int *secs, int *millisecs )
 		*secs = servp->user_secs;
 		*millisecs = servp->user_millisecs;
 	}
+/*
 	else
 	{
 		*secs = 0;
 		*millisecs = 0;
 	}
+*/
 	ENABLE_AST
 	return(1);
 }
@@ -2044,6 +2081,10 @@ void dis_send_service(unsigned service_id, int *buffer, int size)
 		conn_id = reqp->conn_id;
 		if( !dna_write_nowait(conn_id, dis_packet, size + DIS_HEADER) )
 		{
+			dim_print_date_time();
+			printf(" Server Sending Service: Couldn't write to Conn %3d : Client %s@%s\n",conn_id,
+				Net_conns[conn_id].task, Net_conns[conn_id].node);
+			fflush(stdout);
 			release_conn(conn_id, 1, 0);
 		}
 		else
@@ -2344,6 +2385,9 @@ CLIENT *create_client(int conn_id, SERVICE *servp, int *new_client)
 	*new_client = 0;
 	if(!(clip = find_client(conn_id)))
 	{
+		/*
+		dna_set_test_write(conn_id, 15);
+		*/
 		clip = (CLIENT *)malloc(sizeof(CLIENT));
 		clip->conn_id = conn_id;
 		clip->dnsp = servp->dnsp;
@@ -2940,84 +2984,131 @@ void service_info(long *tag, int **bufp, int *size, int *first_time)
 		*size = -1;
 	ENABLE_AST
 }
-		
-void add_exit_handler(int *tag, int *bufp, int *size)
+	
+static void add_exit_handler_item(int conn_id, int tag)
 {
 	EXIT_H *newp;
+
+	DISABLE_AST
+	if(!Exit_h_head) 
+	{
+		Exit_h_head = (EXIT_H *)malloc(sizeof(EXIT_H));
+		sll_init( (SLL *) Exit_h_head );
+	}
+	if( (newp = (EXIT_H *)sll_search((SLL *) Exit_h_head, 
+		(char *)&conn_id, 4)) )
+	{
+		newp->conn_id = conn_id;
+		newp->exit_id = tag;
+		strcpy(newp->node, Net_conns[conn_id].node);
+		strcpy(newp->task, Net_conns[conn_id].task);
+	}
+	else
+	{
+		newp = (EXIT_H *)malloc(sizeof(EXIT_H));
+		newp->conn_id = conn_id;
+		newp->exit_id = tag;
+		strcpy(newp->node, Net_conns[conn_id].node);
+		strcpy(newp->task, Net_conns[conn_id].task);
+		sll_insert_queue( (SLL *) Exit_h_head, (SLL *) newp );
+	}
+	ENABLE_AST
+}
+
+static void rem_exit_handler_item(EXIT_H *exitp)
+{
+
+	DISABLE_AST
+	if(!Exit_h_head) 
+	{
+		ENABLE_AST
+		return;
+	}
+	sll_remove( (SLL *) Exit_h_head, (SLL *) exitp );
+	free(exitp);
+	ENABLE_AST
+}
+
+static EXIT_H *find_exit_handler_item(int conn_id)
+{
+	EXIT_H *exitp;
+
+	DISABLE_AST;
+	if(!Exit_h_head)
+	{
+		ENABLE_AST;
+		return((EXIT_H *)0);
+	}
+	if( (exitp = (EXIT_H *) sll_search((SLL *) Exit_h_head, (char *) &conn_id, 4)) )
+	{
+		ENABLE_AST;
+		return(exitp);
+	}
+	ENABLE_AST;
+	return((EXIT_H *)0);
+}
+
+static int check_exit_handler_item(EXIT_H *exitp, int conn_id)
+{
+	if( (!strcmp(exitp->node, Net_conns[conn_id].node)) &&
+		(!strcmp(exitp->task, Net_conns[conn_id].task)))
+	{
+		return exitp->exit_id;
+	}
+	return 0;
+}
+
+void add_exit_handler(int *tag, int *bufp, int *size)
+{
+	EXIT_H *exitp;
 
 	if(size){}
 	if(tag){}
 	if(*bufp)
 	{
-		if(!Exit_h_head) 
-		{
-			Exit_h_head = (EXIT_H *)malloc(sizeof(EXIT_H));
-			sll_init( (SLL *) Exit_h_head );
-		}
-		newp = (EXIT_H *)malloc(sizeof(EXIT_H));
-		newp->conn_id = Curr_conn_id;
-		newp->exit_id = *bufp;
-		sll_insert_queue( (SLL *) Exit_h_head, (SLL *) newp );
+		add_exit_handler_item(Curr_conn_id, *bufp);
 	}
 	else
 	{
-		if(!Exit_h_head) 
-			return;
-		if((newp = (EXIT_H *)sll_search((SLL *) Exit_h_head, 
-			(char *)&Curr_conn_id, 4)) )
-		{
-			sll_remove( (SLL *) Exit_h_head, (SLL *) newp );
-		}
+		if((exitp = find_exit_handler_item(Curr_conn_id)))
+			rem_exit_handler_item(exitp);
 	}
 }
 
 void dis_set_client_exit_handler(int conn_id, int tag)
 {
-	EXIT_H *newp;
+	EXIT_H *exitp;
 
-	DISABLE_AST
 	if(tag)
 	{
-		if(!Exit_h_head) 
-		{
-			Exit_h_head = (EXIT_H *)malloc(sizeof(EXIT_H));
-			sll_init( (SLL *) Exit_h_head );
-		}
-		if( (newp = (EXIT_H *)sll_search((SLL *) Exit_h_head, 
-			(char *)&conn_id, 4)) )
-		{
-			newp->conn_id = conn_id;
-			newp->exit_id = tag;
-		}
-		else
-		{
-			newp = (EXIT_H *)malloc(sizeof(EXIT_H));
-			newp->conn_id = conn_id;
-			newp->exit_id = tag;
-			sll_insert_queue( (SLL *) Exit_h_head, (SLL *) newp );
-		}
+		add_exit_handler_item(conn_id, tag);
 	}
 	else
 	{
-		if(!Exit_h_head) 
-		{
-			ENABLE_AST
-			return;
-		}
-		if( (newp = (EXIT_H *)sll_search((SLL *) Exit_h_head, 
-			(char *)&conn_id, 4)) )
-		{
-			sll_remove( (SLL *) Exit_h_head, (SLL *) newp );
-		}
+		if((exitp = find_exit_handler_item(conn_id)))
+			rem_exit_handler_item(exitp);
 	}
-	ENABLE_AST
 }
+
 
 int do_exit_handler(int conn_id)
 {
 	register EXIT_H *exitp;
+	int exit_id;
 
 	DISABLE_AST;
+	if((exitp = find_exit_handler_item(conn_id)))
+	{
+		if((exit_id = check_exit_handler_item(exitp, conn_id)))
+		{
+			(Client_exit_user_routine)( &exit_id );
+		}
+		else
+		{
+			rem_exit_handler_item(exitp);
+		}
+	}
+/*
 	if(!Exit_h_head)
 	{
 		ENABLE_AST;
@@ -3029,6 +3120,7 @@ int do_exit_handler(int conn_id)
 		(Client_exit_user_routine)( &exitp->exit_id );
 		free(exitp);
 	}
+*/
 	ENABLE_AST
 	return(1);
 }

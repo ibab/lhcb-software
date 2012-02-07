@@ -19,9 +19,9 @@ typedef struct {
 
 TT t;
 
-/*
+
 int big_buff[1024];
-*/
+
 
 void cmnd_rout(int *tag, TT *buf, int *size)
 {
@@ -63,14 +63,19 @@ float atlas_arr[10];
 */
 int main(int argc, char **argv)
 {
-	int i, id, *ptr;
+	int i, id, *ptr/*, big_ids[20]*/;
 	char aux[80];
-	char name[84];
+	char name[84]/*, name1[132]*/;
+/*
 	int on = 0;
+*/
 	long dnsid = 0;
 	char extra_dns[128];
 	int new_dns = 0;
 	int index = 0;
+/*
+	dim_set_write_timeout(1);
+*/
 /*
 	int buf_sz, buf_sz1;
 */
@@ -132,6 +137,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 			(void *)0, 0 );
 	}
 */
+
 /*
 	for(i = 1; i <= 200; i++)
 	{

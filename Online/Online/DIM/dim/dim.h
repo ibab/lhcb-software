@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1925
+#define DIM_VERSION_NUMBER 1928
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -202,6 +202,7 @@ typedef enum { NOSWAP, SWAPS, SWAPL, SWAPD} SWAP_TYPE;
 #define	TEST_TIME_OSK		15		/* Interval to test conn.    */
 #define	TEST_TIME_VMS		30		/* Interval to test conn.    */
 #define	TEST_WRITE_TAG		25		/* DTQ tag for test writes   */
+#define	WRITE_TMOUT			5		/* Interval to wait while writing.    */
 
 #define	OPN_MAGIC		0xc0dec0de	/* Magic value 1st packet    */
 #define	HDR_MAGIC		0xfeadfead	/* Magic value in header     */

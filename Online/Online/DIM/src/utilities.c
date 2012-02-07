@@ -283,3 +283,25 @@ int get_dns_accepted_nodes( char *nodes )
 		return(1);
 	}
 }
+
+int get_keepalive_tmout()
+{
+	char	*p;
+
+	if( (p = getenv("DIM_KEEPALIVE_TMOUT")) == NULL )
+		return(TEST_TIME_OSK);
+	else {
+		return(atoi(p));
+	}
+}
+
+int get_write_tmout()
+{
+	char	*p;
+
+	if( (p = getenv("DIM_WRITE_TMOUT")) == NULL )
+		return(0);
+	else {
+		return(atoi(p));
+	}
+}

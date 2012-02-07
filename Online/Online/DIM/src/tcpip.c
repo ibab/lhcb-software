@@ -88,21 +88,49 @@ static int DIM_IO_path[2] = {-1,-1};
 static int DIM_IO_Done = 0;
 static int DIM_IO_valid = 1;
 
-static int Write_timeout = 5;
+static int Keepalive_timeout_set = 0;
+static int Write_timeout = WRITE_TMOUT;
+static int Write_timeout_set = 0;
 static int Write_buffer_size = TCP_SND_BUF_SIZE;
 static int Read_buffer_size = TCP_RCV_BUF_SIZE;
 
 int Tcpip_max_io_data_write = TCP_SND_BUF_SIZE - 16;
 int Tcpip_max_io_data_read = TCP_RCV_BUF_SIZE - 16;
 
+void dim_set_keepalive_timeout(int secs)
+{
+	Keepalive_timeout_set = secs;
+}
+
+int dim_get_keepalive_timeout()
+{
+	int ret;
+	extern int get_keepalive_tmout();
+
+	if(!(ret = Keepalive_timeout_set))
+	{
+		ret = get_keepalive_tmout();
+	}
+	return(ret);
+}
+
 void dim_set_write_timeout(int secs)
 {
-  Write_timeout = secs;
+	Write_timeout = secs;
+	Write_timeout_set = 1;
 }
 
 int dim_get_write_timeout()
 {
-  return(Write_timeout);
+	int ret;
+	extern int get_write_tmout();
+
+	if(!Write_timeout_set)
+	{
+		if((ret = get_write_tmout()))
+			Write_timeout = ret;
+	}
+	return(Write_timeout);
 }
 
 int dim_set_write_buffer_size(int size)
@@ -195,8 +223,12 @@ int dim_tcpip_init(int thr_flag)
 	void dummy_io_sig_handler();
 	void tcpip_pipe_sig_handler();
 #endif
+	extern int get_write_tmout();
 
-	if(init_done) return(1);
+	if(init_done) 
+		return(1);
+
+	dim_get_write_timeout();
 #ifdef WIN32
 	init_sock();
 	Threads_on = 1;
@@ -461,7 +493,7 @@ void tcpip_set_keepalive( int channel, int tmout )
    setsockopt(channel, IPPROTO_TCP, TCP_KEEPIDLE, (char*)&val, sizeof(val));
    val = 3;
    setsockopt(channel, IPPROTO_TCP, TCP_KEEPCNT, (char*)&val, sizeof(val));
-   val = 2;
+   val = tmout/3;
    setsockopt(channel, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&val, sizeof(val));
 }
 
@@ -489,14 +521,18 @@ static void tcpip_test_write( int conn_id )
 
 void tcpip_set_test_write(int conn_id, int timeout)
 {
+
 #if defined(__linux__) && !defined (darwin)
 	tcpip_set_keepalive(Net_conns[conn_id].channel, timeout);
 #else
+
 	Net_conns[conn_id].timr_ent = dtq_add_entry( queue_id, timeout, 
 		tcpip_test_write, conn_id );
 	Net_conns[conn_id].timeout = timeout;
 	Net_conns[conn_id].last_used = time(NULL);
+
 #endif
+
 }
 
 void tcpip_rem_test_write(int conn_id)
