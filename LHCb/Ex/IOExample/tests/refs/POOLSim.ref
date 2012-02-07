@@ -15,8 +15,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Tue Dec 13 18:07:52 2011
+                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
+                                          running on lxbuild163.cern.ch on Tue Feb  7 17:30:56 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -72,7 +72,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x18106fd0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12340240@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -835,10 +835,10 @@ Vertex:     -106 ID:    1 (X,cT)=+6.88e-03,-5.01e-02,-7.72e+01,+0.00e+00
           10184       22 -8.33e-05,+3.70e-05,-5.31e-05,+1.05e-04 999
 ________________________________________________________________________________
 
-IODataManager        INFO Referring to dataset ROOT.sim by its file ID:227B3900-AD25-E111-9616-003048C9CD62
+IODataManager        INFO Referring to dataset ROOT.sim by its file ID:B82CF925-A951-E111-AA31-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1a1adb10@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x143e51a0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -2363,7 +2363,7 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x19564cb0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x138f5570@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -3300,7 +3300,7 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x18e35560@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x14324de0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -3852,7 +3852,7 @@ ________________________________________________________________________________
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x18b09070@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12686290@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -4034,9 +4034,9 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).
-RootCnvSvc           INFO Disconnected data IO:227B3900-AD25-E111-9616-003048C9CD62 [ROOT.sim]
+ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:4298ECD3-A723-DE11-BD72-000CF1F44509 [root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim?svcClass=default]
+RootCnvSvc           INFO Disconnected data IO:B82CF925-A951-E111-AA31-003048C9CD62 [ROOT.sim]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

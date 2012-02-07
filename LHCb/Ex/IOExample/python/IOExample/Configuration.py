@@ -5,7 +5,7 @@ __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
+from LHCbKernel.Configuration import LHCbConfigurableUser
 from Configurables import SimConf, DigiConf, DstConf
 
 class IOTest(LHCbConfigurableUser):
@@ -34,7 +34,7 @@ class IOTest(LHCbConfigurableUser):
 
     def _defineMonitors(self):
         ApplicationMgr().TopAlg += [ "PrintHeader" ]
-        ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+        ApplicationMgr().ExtSvc += [ "ToolSvc", "DataOnDemandSvc" ]
 
         if self.getProp( "LoadAll" ):
             from Configurables import StoreExplorerAlg, TESFingerPrint

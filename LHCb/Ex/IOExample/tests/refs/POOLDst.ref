@@ -46,8 +46,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Tue Dec 13 17:59:31 2011
+                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
+                                          running on lxbuild163.cern.ch on Tue Feb  7 17:30:19 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -143,7 +143,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader          INFO Run 182001, Event 1
-StoreExplorerAlg     INFO ========= /Event[0xf391a30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1b0e8b40@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -449,9 +449,10 @@ DumpTracks          DEBUG *** Track ***
     1.9029e-09-2.55861e-09 1.04816e-12-3.68938e-13 6.99728e-15 ]
 
 
+IODataManager        INFO Referring to dataset ROOT.dst by its file ID:626E2815-A951-E111-A900-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader          INFO Run 182001, Event 2
-StoreExplorerAlg     INFO ========= /Event[0x10b94260@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2aaab0c71940@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -761,7 +762,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader          INFO Run 182001, Event 3
-StoreExplorerAlg     INFO ========= /Event[0x109fab20@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1ac1c230@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -1071,7 +1072,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader          INFO Run 182001, Event 4
-StoreExplorerAlg     INFO ========= /Event[0x103f0f50@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1c6cc7c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -1379,7 +1380,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader          INFO Run 182001, Event 5
-StoreExplorerAlg     INFO ========= /Event[0x11a881a0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1c8d2aa0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -1698,9 +1699,9 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-ToolSvc              INFO Removing all tools created by ToolSvc
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
-RootCnvSvc           INFO Disconnected data IO:426D386F-7825-E111-BC9A-003048C9CD62 [ROOT.dst]
+ToolSvc              INFO Removing all tools created by ToolSvc
+RootCnvSvc           INFO Disconnected data IO:626E2815-A951-E111-A900-003048C9CD62 [ROOT.dst]
 RootCnvSvc           INFO Disconnected data IO:96219CE3-0330-DE11-9662-00304879EE40 [root://castorlhcb.cern.ch//castor/cern.ch//user/c/cattanem/Brunel/v34r5/00001820_00000001.dst?svcClass=default]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

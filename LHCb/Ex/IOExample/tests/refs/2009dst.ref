@@ -46,8 +46,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Tue Dec 13 17:12:17 2011
+                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
+                                          running on lxbuild163.cern.ch on Tue Feb  7 17:28:56 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -143,7 +143,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab01e8a80@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x7573350@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -361,9 +361,10 @@ DumpTracks          DEBUG *** Track ***
    2.02015e-06-5.74093e-06 1.42358e-08-9.77654e-09 8.73945e-10 ]
 
 
+IODataManager        INFO Referring to dataset ROOT-2009.dst by its file ID:141480DE-A851-E111-8003-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab10c92d0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x83e2600@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -398,7 +399,7 @@ DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Contain
 DumpTracks           INFO There are 0 tracks in Rec/Track/Best
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab121b1e0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8535ed0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -507,7 +508,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab0d40e80@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x8535f40@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -690,7 +691,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x2aaab0d59310@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x76f07c0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -816,9 +817,9 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/30(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/5(Alg/Node/Total).
+RootCnvSvc           INFO Disconnected data IO:141480DE-A851-E111-8003-003048C9CD62 [ROOT-2009.dst]
 RootCnvSvc           INFO Disconnected data IO:A2FEF372-CF47-DF11-98F2-00304879F224 [root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2009/DST/00006290/0000/00006290_00000001_1.dst?svcClass=lhcbdisk]
-RootCnvSvc           INFO Disconnected data IO:B4FE1566-7825-E111-805E-003048C9CD62 [ROOT-2009.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

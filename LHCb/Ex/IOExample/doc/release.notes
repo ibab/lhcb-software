@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-02-07 - Marco Cattaneo
+ - Follow DataOnDemand decoding changes in DstConf. In IOTest, force ToolSvc
+   initialisation before DataOnDemandSvc
+
 !========================= IOExample v4r4 2012-01-31 =========================
 ! 2012-01-24 - Marco Cattaneo
  - Adapt references to RootCnv v1r12 and Gaudi v23
