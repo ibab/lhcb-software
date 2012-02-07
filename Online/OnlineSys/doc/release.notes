@@ -6,8 +6,20 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-! 2012-02-06 - Chris Jones
- - Update Camera to v1r23
+<H1><A NAME=v4r59>2012-02-06 OnlineSys v4r59</A></H1>
+<PRE>
+   Based in Gaudi v23r0, 
+   Updated packages are:
+     Camera              v1r23    Online  ! 2012-02-06 - Chris Jones
+     DIM                 v19r28   Online
+     Gaucho              v7r20    Online
+     GaudiCheckpointing  v0r9     Online
+     GaudiOnline         v2r57    Online
+     OnlineBase          v1r13    Online
+     OnlineTasks         v1r43    Online
+     RawBankSizes        v2r12    Online
+     ROMon               v1r34    Online
+</PRE>
 
 <H1><A NAME=v4r58>2012-01-10 OnlineSys v4r58</A></H1>
 <PRE>
