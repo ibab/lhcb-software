@@ -16,7 +16,6 @@ branches          cmt doc python
 # ============================================================================
 use       GaudiPolicy v*                             
 use       Python      v* LCG_Interfaces 
-
 use 	  GaudiConf   v*
 use       CaloReco    v* Calo
 use       CaloPIDs    v* Calo

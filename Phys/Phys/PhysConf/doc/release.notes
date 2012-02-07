@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Chris Jones
+ - Remove imports from GaudiConf
+
 !========================= PhysConf v1r14 2011-12-15 =========================
 
 ! 2011-12-07 - Chris Jones
