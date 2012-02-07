@@ -79,7 +79,12 @@ class DBuilder(object):
         ds_cf = LoKiCuts.combine([ds_cf,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
         cf = '('+d_cf+') | (' + ds_cf + ')'
         self.hhh_cf_pid = [filterSelection('D2HHHCFPID',cf,self.hhh_pid)]
-        ds = "in_range(%s,MM,%s)" % (ds_min,ds_max)
+        ds = "(((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1)) |"
+        ds += "(NINTREE(ABSID=='K+')==0) | "
+        ds += "((ID=='D+') & (NINTREE(ID=='K+')==1) & (%s)) | "\
+              "((ID=='D-') & (NINTREE(ID=='K-')==1) & (%s)))" % (oneK,oneK)
+        ds = LoKiCuts.combine([ds,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
+        #print 'ds =', ds
         self.ds_hhh_pid = [filterSelection('Ds2HHHPID',ds,self.hhh_pid)]
         # WS decays
         self.kshh_ll_ws = self._makeD2KShhWS("LL")

@@ -361,7 +361,10 @@ class B2DXBuilder(object):
         inputs = {'B2D0D': self.d.hhh_pid+self.d.hh_pid}
         b2d0d = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d,1.0))
-
+        inputs = {'B2D0D': self.d.hhh_pid+self.d.k3pi_pid}
+        b2d0d = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0d,1.0))
+        
     def _makeB02D0D0(self):
         '''Makes B0 -> D0 D0'''
         decays = {'B02D0D0': ["B0 -> D0 D0"]}

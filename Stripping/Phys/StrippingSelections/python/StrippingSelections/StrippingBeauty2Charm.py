@@ -125,7 +125,8 @@ config = {
     'X2LcLcWSBeauty2CharmLine'  : 0.1,
     'B02DKLTUBBeauty2CharmLine' : 0.04,
     'B02D0D0Beauty2CharmLine'   : 1.0,
-    'B02DDWSBeauty2CharmLine'   : 1.0
+    'B02DDWSBeauty2CharmLine'   : 1.0,
+    'B2D0DD02K3PiBeauty2CharmLine' : 1.0
     },
     'GECNTrkMax'   : 500
     }
