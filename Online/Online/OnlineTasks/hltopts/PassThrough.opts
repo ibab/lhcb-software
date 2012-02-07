@@ -31,6 +31,8 @@ CheckpointSvc.PrintLevel             = 3;
 CheckpointSvc.OutputLevel            = 2;
 
 EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+EventSelector.REQ2                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+EventSelector.REQ3                   = "EvType=3;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 //StoreExplorerAlg.Load                = 1;
@@ -42,7 +44,7 @@ SendSequence.Members                 = { "LHCb::DelaySleepAlg/Delay",
 					 "LHCb::OdinPrescaler/Prescaler", 
 					 "LHCb::RawEvent2MBMMergerAlg/Merger"};
 
-Delay.DelayTime                      = 500;  // Delay time in millisecs
+Delay.DelayTime                      = 100;   // Delay time in millisecs
 Delay.MicroDelayTime                 = 0;    // Delay time in musecs
 
 Prescaler.AcceptRate                 = @OnlineEnv.AcceptRate;
