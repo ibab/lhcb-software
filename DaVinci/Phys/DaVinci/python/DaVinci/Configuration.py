@@ -5,9 +5,9 @@ __version__ = "$Id: Configuration.py,v 1.125 2010-09-10 11:31:19 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf,
+from Configurables import ( LHCbConfigurableUser, LHCbApp,
+                            PhysConf, AnalysisConf,
                             DstConf, L0Conf, LumiAlgsConf )
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 import GaudiKernel.ProcessJobOptions
