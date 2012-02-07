@@ -358,6 +358,11 @@ StatusCode MBMContext::receiveEvent()  {
 	}
       }
       const MBM::EventDesc& e = m_consumer->event();
+      if ( e.type != EVENT_TYPE_MEP ) {
+	char txt[32];
+	sprintf(txt,"EvtType=%d",e.type);
+	m_sel->error("Found event with event type != EVENT_TYPE_MEP:"+string(txt));
+      }
 
       // The event is a descriptor event, which must be decoded using the MEP data:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
