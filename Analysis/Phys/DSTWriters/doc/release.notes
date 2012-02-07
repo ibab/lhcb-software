@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Chris Jones
+ - Add CMT use statement for GaudiConf
+
 ! 2012-02-01 - Chris Jones
  - Some small tweaks to how the ParticleTree cloner is configured, to more
    easily allow the deep ProtoParticle cloner to be used, if wanted.

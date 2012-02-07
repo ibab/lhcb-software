@@ -15,7 +15,8 @@ branches          cmt doc python src
 # Used packages. 
 #============================================================================
 use       GaudiPolicy v*     
-use       GaudiAlg    v*                        
+use       GaudiAlg    v*     
+use       GaudiConf   v*                   
 use       Python      v* LCG_Interfaces 
 # =============================================================================
 
