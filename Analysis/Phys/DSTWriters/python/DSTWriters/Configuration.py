@@ -58,9 +58,8 @@ __all__ = ('SelDSTWriter',
            'stripMicroDSTElements',
            'stripDSTElements')
 
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import *
 from Configurables import GaudiSequencer, InputCopyStream, OutputStream
-
 from dstwriters     import DSTWriterSelectionSequence
 from dstwriterutils import MicroDSTElementList
 from seldst         import selDSTStreamConf, selDSTElements

@@ -10,7 +10,6 @@ __all__ = ('microDSTElements',
            'stripMicroDSTStreamConf',
            'stripCalibMicroDSTStreamConf')
 
-from GaudiConf.Configuration import *
 from Configurables import OutputStream
 
 from streamconf import OutputStreamConf

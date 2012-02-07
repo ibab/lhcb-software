@@ -5,7 +5,6 @@ responsible for copying some data to a MicroDST partition.
 
 '''
 
-from GaudiConf.Configuration import *
 from dstwriterutils import ( setCloneFilteredParticlesToTrue,
                              ConfigurableList,
                              MicroDSTElement )

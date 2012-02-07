@@ -7,9 +7,7 @@ __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 __all__ = ('stripDSTElements',
            'stripDSTStreamConf')
 
-from GaudiConf.Configuration import *
 from Configurables import InputCopyStream
-
 from streamconf import OutputStreamConf
 from microdstelements import ( CloneParticleTrees, ClonePVRelations,
                                PackStrippingReports, PackParticlesAndVertices,
