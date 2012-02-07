@@ -51,7 +51,7 @@ import StrippingBs2EtacPhi
 import StrippingBs2ChicPhi_Chic2KKPiPi
 import StrippingBs2ChicPhi_Chic2PiPiPiPi
 import StrippingBs2Q2B
-
+import StrippingB2JpsiKShh
 
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
@@ -66,6 +66,7 @@ import StrippingBu2LLK
 import StrippingBd2eeKstar
 import StrippingBd2eeKstarBDT
 import StrippingBd2MuMuKstarBDT
+import StrippingBeauty2XGamma
 
 import StrippingDiMuonNew
 import StrippingBc2JpsiHNew

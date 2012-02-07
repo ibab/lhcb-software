@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-07 - Jibo He
+ - Added to __init__.py 
+   . StrippingB2JpsiKShh 
+   . StrippingBeauty2XGamma
+
 ! 2012-02-04 - Jibo He
  - Added to __init__.py 
    . StrippingB2ChicK
