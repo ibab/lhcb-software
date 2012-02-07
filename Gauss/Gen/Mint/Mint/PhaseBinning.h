@@ -28,23 +28,22 @@ class PhaseBinning : public ScpBinning {
 
   FitAmpSum* _fas;
 
+  int _nbins;
  public:
   PhaseBinning()
   {
-
+	  _nbins = 9;
   }
-  PhaseBinning(FitAmpSum* fas)
+  PhaseBinning(FitAmpSum* fas, int nbins = 9)
   {
 	  _fas = fas;
+	  _nbins = nbins;
   }
 
   virtual void fillData(IDalitzEventList* data);
   virtual void fillDataCC(IDalitzEventList* data);
  
-  int createBinning(IDalitzEventList* events
-		    , int minPerBin = 10
-		    , int maxPerBin = 100
-		    );
+  int createBinning(IDalitzEventList* events );
 
   virtual double setEvents(IDalitzEventList* data
 			 , IDalitzEventList* mc

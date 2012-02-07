@@ -18,10 +18,7 @@
 using namespace MINT;
 using namespace std;
 
-int PhaseBinning::createBinning(IDalitzEventList* events
-			       , int minPerBin
-			       , int maxPerBin
-			       ){
+int PhaseBinning::createBinning(IDalitzEventList* events ){
 	
 	
 	
@@ -40,7 +37,7 @@ int PhaseBinning::createBinning(IDalitzEventList* events
   std::cout << "Real " << amp.real() << std::endl;
   
   ScpBoxSet boxSet;
-    for(unsigned int i=0; i < 9; i++){
+    for(unsigned int i=0; i < _nbins; i++){
     	ScpBox box(evt0->eventPattern());
   		boxSet.add(box);
   		_boxSets.push_back(boxSet);
@@ -72,9 +69,9 @@ void PhaseBinning::fillData(IDalitzEventList* data){
     	   phase = phase + 2*3.14159265;
        }
        
-       for (int i = 0; i < 9; i++)
+       for (int i = 0; i < _nbins; i++)
        {
-       	if (phase > (2*3.14159265/(9))*i && phase < (2*3.14159265/(9))*(i+1))
+       	if (phase > (2*3.14159265/(_nbins))*i && phase < (2*3.14159265/(_nbins))*(i+1))
        	{
        		_boxSets[i].addData(data->getEvent());
        		_nData++;
@@ -118,9 +115,9 @@ void PhaseBinning::fillDataCC(IDalitzEventList* data){
      	   phase = phase + 2*3.14159265;
         }
            
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < _nbins; i++)
     {
-    	if (phase > (2*3.14159265/(9))*i && phase < (2*3.14159265/(9))*(i+1))
+    	if (phase > (2*3.14159265/(_nbins))*i && phase < (2*3.14159265/(_nbins))*(i+1))
     	{
     		_boxSets[i].addMC((data->getEvent()),1.0);
     		_nDataCC++;

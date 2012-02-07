@@ -53,16 +53,11 @@ using namespace std;
 //}
 
 
-int PhaseDiffBinning::createBinning(IDalitzEventList* events
-			       , int minPerBin
-			       , int maxPerBin
-			       ){
-	
+int PhaseDiffBinning::createBinning(IDalitzEventList* events){
 	
 	
 	  std::cout << "Create Phase Binning " << std::endl;
 
-	
 
   if(0 == events) return 0;
   if(0 == events->size()) return 0;
@@ -75,7 +70,7 @@ int PhaseDiffBinning::createBinning(IDalitzEventList* events
   std::cout << "Real " << amp.real() << std::endl;
   
   ScpBoxSet boxSet;
-    for(unsigned int i=0; i < 9; i++){
+    for(unsigned int i=0; i < _nbins; i++){
     	ScpBox box(evt0->eventPattern());
   		boxSet.add(box);
   		_boxSets.push_back(boxSet);
@@ -147,9 +142,9 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
       
      std::cout << " PhaseDiff: " << phaseDiff << std::endl;
        
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < _nbins; i++)
     {
-    	if (phaseDiff > (2*3.14159265/(9))*i && phaseDiff < (2*3.14159265/(9))*(i+1))
+    	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))
        		{
        			_boxSets[i].addData(data->getEvent());
        			_nData++;
@@ -236,9 +231,9 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
      std::cout << " PhaseDiff: " << phaseDiff << std::endl;
 
            
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < _nbins; i++)
     {
-    	if (phaseDiff > (2*3.14159265/(9))*i && phaseDiff < (2*3.14159265/(9))*(i+1))
+    	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))
     	{
     		_boxSets[i].addMC((data->getEvent()),1.0);
     		_nDataCC++;

@@ -28,17 +28,16 @@
 class PhaseDiffBinning : public PhaseBinning {
 
   FitAmpSum* _fas;
+  int _nbins;
 
  public:
-  PhaseDiffBinning(FitAmpSum* fas)
+  PhaseDiffBinning(FitAmpSum* fas, int nbins = 9)
   {
 	  _fas = fas;
+	  _nbins = nbins;
   }
   
-  int createBinning(IDalitzEventList* events
- 		    , int minPerBin = 10
- 		    , int maxPerBin = 100
- 		    );
+  int createBinning(IDalitzEventList* events );
 
 
   void fillData(IDalitzEventList* data);
