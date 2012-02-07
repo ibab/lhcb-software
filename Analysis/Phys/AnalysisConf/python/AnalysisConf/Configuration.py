@@ -114,7 +114,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         define standard particles on DoD service
         """
-        ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]
         import CommonParticles.StandardBasic
         import CommonParticles.StandardIntermediate
 
@@ -138,8 +137,13 @@ class AnalysisConf(LHCbConfigurableUser) :
         log.info("Applying Analysis configuration")
         log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
+        
         if ( self.getProp("Simulation" )):
             self.configureMC()
+
+        # Setup DataOnDemand, and make sure ToolSvc is done before hand
+        ApplicationMgr().ExtSvc += [ ToolSvc(), DataOnDemandSvc() ]
+                    
         self.tagging()
         self.standardParticles()
 
