@@ -42,6 +42,13 @@ bool TupleToolJetsBase::WriteJetToTuple(const LHCb::Particle*jet,std::string pre
   result &= (*m_tuple)->column( prefix+"_M", SAVEPOINT(jet,momentum().mass()));
   result &= (*m_tuple)->column( prefix+"_MLoKi",jet?m_M(jet):-99.0);
   result &= (*m_tuple)->column( prefix+"_MMLoKi", jet?m_MM(jet):-99.0);
+  result &= (*m_tuple)->column( prefix+"_NTrk", jet->info(9001,-1000));
+  result &= (*m_tuple)->column( prefix+"_N90", jet->info(9002,-1000));
+  result &= (*m_tuple)->column( prefix+"_MTF", jet->info(9003,-1000));
+  result &= (*m_tuple)->column( prefix+"_NSatCells", jet->info(9004,-1000));
+  result &= (*m_tuple)->column( prefix+"_NHasPVInfo", jet->info(9005,-1000));
+  result &= (*m_tuple)->column( prefix+"_JEC_Cor", jet->info(9100,-1000));
+  result &= (*m_tuple)->column( prefix+"_JEC_PV", jet->info(9101,-1000));
   if (m_verbose)
   {
     result &= (*m_tuple)->column( prefix+"_ParticleMultiplicity",  SAVEPOINT(jet,daughters().size()));

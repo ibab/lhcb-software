@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Cedric Potterat
+ - Update TupleToolJetsBase according to the developpement of LoKiJetMakerAlg (Phys/LoKiJets)
+
 ! 2012-01-26 - Chris Jones
  - Remove hack in TupleToolEventInfo to save event number and GPS time as 
    doubles. Gaudi v23r0 supports saving these natively as ulonglong.
