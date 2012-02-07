@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-07 - Chris Jones
- - Add CMT use statement for GaudiConf
+ - Adapt to Configurables changes
 
 !========================= AnalysisConf v2r1 2011-12-15 =========================
 

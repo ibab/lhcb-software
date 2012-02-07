@@ -9,7 +9,6 @@ __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 # =============================================================================
 
 from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
 class AnalysisConf(LHCbConfigurableUser) :
