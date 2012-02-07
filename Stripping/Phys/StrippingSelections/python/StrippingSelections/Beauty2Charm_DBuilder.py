@@ -61,7 +61,9 @@ class DBuilder(object):
         self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
-        self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]        
+        self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
+        self.hhh_pid_tight = [filterPID('D2HHHPIDTIGHT',self.hhh_pid,
+                                        config_pid['TIGHT'])]
         # subset decays
         oneK = "NINTREE(ABSID=='K+') == 1"
         d_cf = "(((ID=='D+') & (NINTREE(ID=='K-')==1) & (%s)) | "\
@@ -85,7 +87,8 @@ class DBuilder(object):
               "((ID=='D-') & (NINTREE(ID=='K-')==1) & (%s)))" % (oneK,oneK)
         ds = LoKiCuts.combine([ds,"in_range(%s,MM,%s)"%(ds_min,ds_max)])
         #print 'ds =', ds
-        self.ds_hhh_pid = [filterSelection('Ds2HHHPID',ds,self.hhh_pid)]
+        self.ds_hhh_pid = [filterSelection('Ds2HHHPIDTIGHT',ds,
+                                           self.hhh_pid_tight)]
         # WS decays
         self.kshh_ll_ws = self._makeD2KShhWS("LL")
         self.kshh_dd_ws = self._makeD2KShhWS("DD")
