@@ -81,9 +81,11 @@ Position::Position(LCDD& lcdd, const std::string& name, double x, double y, doub
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(LCDD& lcdd, const std::string& name, double x, double y, double z)
+Rotation::Rotation(LCDD& lcdd, const std::string& name, double theta, double phi, double psi)
 {
-  assign(new TGeoRotation(name.c_str(),x*RAD_2_DEGREE,y*RAD_2_DEGREE,z*RAD_2_DEGREE),"","rotation");
+  // Note: compact supplies: theta, phi, psi
+  // but root wants:         phi, theta, psi!
+  assign(new TGeoRotation(name.c_str(),phi*RAD_2_DEGREE,theta*RAD_2_DEGREE,psi*RAD_2_DEGREE),"","rotation");
   lcdd.addTransform(*this);
 }
 

@@ -27,6 +27,11 @@ namespace DetDesc {
       double x() const;
       double y() const;
       double z() const;
+      // Functions return defaults rather than throwing exceptions
+      double x(double default_val) const;
+      double y(double default_val) const;
+      double z(double default_val) const;
+
       // Trapezoid:
       double x1() const;
       double x2() const;
@@ -58,6 +63,16 @@ namespace DetDesc {
       int    number() const;
 
       int numsides() const;
+
+      double phi0() const;
+      double phi_tilt() const;
+      int    nphi() const;
+      double rc()  const;
+      double dr()  const;
+      
+      double z0() const;
+      int    nz() const;
+      
     };
 
     struct DetElement : public Element  {

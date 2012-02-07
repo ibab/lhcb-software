@@ -59,6 +59,13 @@ const DetElement::Children& DetElement::children() const   {
   return _data().Attr_children;
 }
 
+/// Access to individual children by name
+DetElement DetElement::child(const std::string& name) const {
+  const Children& c = _data().Attr_children;
+  Children::const_iterator i = c.find(name);
+  return i == c.end() ? DetElement() : (*i).second;
+}
+
 void DetElement::check(bool condition, const string& msg) const  {
   if ( condition )  {
     throw runtime_error(msg);

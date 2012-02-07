@@ -425,10 +425,11 @@ Handle_t Element::addChild(const XMLCh* tag)  const  {
   return e;
 }
 
-Handle_t Element::child(const Strng_t& tag, bool /* throw_exception */) const  {
+Handle_t Element::child(const Strng_t& tag, bool throw_exception) const  {
   DOMNodeList* l=m_element->getElementsByTagName(tag);
   if ( l && l->getLength() > 0 ) return Handle_t((DOMElement*)l->item(0));
-  throw runtime_error("Cannot find the required child node!");
+  if ( throw_exception ) throw runtime_error("Cannot find the required child node!");
+  return Handle_t(0);
 }
 
 Handle_t Element::setChild(const XMLCh* tag)  const  {

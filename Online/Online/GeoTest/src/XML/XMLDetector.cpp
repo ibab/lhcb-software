@@ -19,6 +19,21 @@ double Dimension::z() const  {
   return m_element.attr<double>(Attr_z);
 }
 
+double Dimension::x(double default_val) const  {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_x);
+  return val ? _toDouble(val) : default_val;
+}
+
+double Dimension::y(double default_val) const  {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_y);
+  return val ? _toDouble(val) : default_val;
+}
+
+double Dimension::z(double default_val) const  {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_z);
+  return val ? _toDouble(val) : default_val;
+}
+
 double Dimension::x1() const  {
   return m_element.attr<double>(Attr_x1);
 }
@@ -121,6 +136,34 @@ double Dimension::offset() const {
 
 int Dimension::number() const {
   return m_element.attr<int>(Attr_number);
+}
+
+double Dimension::phi0() const {
+  return m_element.attr<double>(Attr_phi0);
+}
+
+double Dimension::phi_tilt() const {
+  return m_element.attr<double>(Attr_phi_tilt);
+}
+
+int Dimension::nphi() const {
+  return m_element.attr<int>(Attr_nphi);
+}
+
+double Dimension::rc()  const {
+  return m_element.attr<double>(Attr_rc);
+}
+
+double Dimension::dr()  const {
+  return m_element.attr<double>(Attr_dr);
+}
+
+double Dimension::z0() const {
+  return m_element.attr<double>(Attr_z0);
+}
+
+int    Dimension::nz() const {
+  return m_element.attr<int>(Attr_nz);
 }
 
 int DetElement::Component::id()  const  {

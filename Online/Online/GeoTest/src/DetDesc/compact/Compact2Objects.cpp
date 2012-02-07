@@ -339,6 +339,9 @@ namespace DetDesc { namespace Geometry {
     string           type = element.attr<string>(_A(type));
     string           name = element.attr<string>(_A(name));
     SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,element);
+    //if ( type != "EcalBarrel" ) return;
+    //if ( type == "SiTrackerBarrel" ) return;
+    //if ( name != "SiVertexBarrel" ) return;
     DetElement det(Handle<TNamed>(ROOT::Reflex::PluginService::Create<TNamed*>(type,&lcdd,&element,&sd)));
 
     if ( det.isValid() && element.hasAttr(_A(readout)) )  {

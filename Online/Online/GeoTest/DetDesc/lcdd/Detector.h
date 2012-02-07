@@ -127,11 +127,18 @@ namespace DetDesc {
       VisAttr         visAttr() const;
       Readout         readout() const;
       DetElement&     setReadout(const Readout& readout);
+      /// Access the logical volume of the detector element
       Volume          volume() const;
+      /// Set the logical volume of the detector element
       DetElement&     setVolume(const Volume& volume);
+      /// Access the shape of the envelope
       Solid           envelope() const;
+      /// Set envelope shape to the detector element
       DetElement&     setEnvelope(const Solid& solid);
+      /// Access to the list of children
       const Children& children() const;
+      /// Access to individual children by name
+      DetElement      child(const std::string& name) const;
     };
 
   }       /* End namespace Geometry      */

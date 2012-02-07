@@ -387,6 +387,17 @@ namespace DetDesc   { namespace XML  {
   extern const Tag_t Attr_grid_size_y;
   extern const Tag_t Attr_grid_size_z;
 
+  extern const Tag_t Tag_barrel_envelope;
+  extern const Tag_t Tag_module_envelope;
+  extern const Tag_t Tag_rphi_layout;
+  extern const Tag_t Tag_z_layout;
+  extern const Tag_t Attr_phi0;
+  extern const Tag_t Attr_phi_tilt;
+  extern const Tag_t Attr_rc;
+  extern const Tag_t Attr_dr;
+  extern const Tag_t Attr_z0;
+  extern const Tag_t Attr_nz;
+
   // ILCEx
   extern const Tag_t Tag_support;
   extern const Tag_t Tag_ladder;

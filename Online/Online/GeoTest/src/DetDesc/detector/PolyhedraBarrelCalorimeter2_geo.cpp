@@ -41,6 +41,8 @@ namespace DetDesc { namespace Geometry {
     PolyhedraBarrelCalorimeter2 sdet(lcdd,det_name,det_type,x_det.id());
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
 
+    cout << det_name << "  Gap:" << gap << endl;
+
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t x_layer = c;
       int repeat = x_layer.repeat();
@@ -52,29 +54,27 @@ namespace DetDesc { namespace Geometry {
     Volume           envelopeVol(lcdd,det_name+"_envelope",polyhedra,air);
 
     // Add the subdetector envelope to the structure.
-    double halfInnerAngle = M_PI/numSides;
-    double innerAngle     = 2e0*halfInnerAngle;
-    double tan_inner      = tan(halfInnerAngle) * 2e0;
-    double rmax           = rmin + totalThickness;
+    double innerAngle     = 2*M_PI/numSides;
+    double halfInnerAngle = innerAngle/2;
+    double tan_inner      = std::tan(halfInnerAngle) * 2;
     double innerFaceLen   = rmin * tan_inner;
-    double outerFaceLen   = rmax * tan_inner;
+    double outerFaceLen   = (rmin+totalThickness) * tan_inner;
     double staveThickness = totalThickness;
 
     Trapezoid staveTrdOuter(lcdd,det_name+"_stave_trapezoid_outer",
-			    innerFaceLen/2e0,outerFaceLen/2e0,detZ/2e0,detZ/2e0,staveThickness/2e0);
+			    innerFaceLen/2,outerFaceLen/2,detZ/2,detZ/2,staveThickness/2);
     Volume staveOuterVol(lcdd,det_name+"_stave_outer",staveTrdOuter,air);
 
     Trapezoid staveTrdInner(lcdd,det_name+"_stave_trapezoid_inner",
-			    innerFaceLen/2e0-gap,outerFaceLen/2e0-gap,detZ/2e0,detZ/2e0,staveThickness/2e0);
+			    innerFaceLen/2-gap,outerFaceLen/2-gap,detZ/2,detZ/2,staveThickness/2);
     Volume staveInnerVol(lcdd,det_name+"_stave_inner",staveTrdInner,air);
 
-    double layerOuterAngle = (M_PI-innerAngle)/2e0;
-    double layerInnerAngle = (M_PI/2e0 - layerOuterAngle);
+    double layerOuterAngle = (M_PI-innerAngle)/2;
+    double layerInnerAngle = (M_PI/2 - layerOuterAngle);
     double layer_position_z = -(staveThickness / 2);                        
-    double layer_dim_x = innerFaceLen - gap * 2;
+    double layer_dim_x = innerFaceLen/2 - gap * 2;
     int layer_number = 0;
 
-#if 0
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t   x_layer_element = c;
       int          repeat = x_layer_element.repeat();     // Get number of times to repeat this layer.
@@ -90,7 +90,7 @@ namespace DetDesc { namespace Geometry {
 	// Position of layer.
 	Position layer_position(lcdd,layer_name+"_position", 0, 0, layer_position_z);
 	// Layer box.
-	Box layer_box(lcdd,layer_name+"_box", layer_dim_x, detZ, layer_thickness);
+	Box layer_box(lcdd,layer_name+"_box", layer_dim_x, detZ/2, layer_thickness);
 	// Layer volume. 
 	Volume layer_volume(lcdd,layer_name,layer_box,air);
 
@@ -108,16 +108,17 @@ namespace DetDesc { namespace Geometry {
 	  // Slice Position.
 	  Position slice_position(lcdd,slice_name+"_position",0,0,slice_position_z);
 	  // Slice box. 
-	  Box slice_box(lcdd,slice_name + "_box",layer_dim_x,detZ,slice_thickness);
+	  Box slice_box(lcdd,slice_name+"_box",layer_dim_x,detZ/2,slice_thickness);
 
 	  // Slice volume.
 	  Volume slice_volume(lcdd,slice_name,slice_box,slice_material);
 	  if ( x_slice.isSensitive() ) slice_volume.setSensitiveDetector(sens);
 	  // Set region, limitset, and vis.
 	  slice.setAttributes(lcdd, slice_volume,
-			      x_slice.attr<string>(_A(region)),x_slice.attr<string>(_A(limits)),x_slice.visStr());
+			      x_slice.attr<string>(_A(region)),
+			      x_slice.attr<string>(_A(limits)),
+			      x_slice.visStr());
 	  // slice PhysVol
-	  //PhysVol slice_physvol(lcdd,slice_volume);
 	  PhysVol slice_physvol(slice_volume);
 	  slice_physvol.addPhysVolID(_X(slice),slice_number);
 	  layer_volume.addPhysVol(slice_physvol,slice_position);
@@ -128,7 +129,6 @@ namespace DetDesc { namespace Geometry {
 	  // Increment slice number.
 	  ++slice_number;             
 	}
-
 	// Set region, limitset, and vis.
 	layer.setAttributes(lcdd, layer_volume,
 			    x_layer_element.attr<string>(_A(region)),
@@ -138,22 +138,21 @@ namespace DetDesc { namespace Geometry {
 	// Layer physical volume.
 	//PhysVol layer_physvol(lcdd,layer_volume);
 	PhysVol layer_physvol(layer_volume);
-	layer_physvol.addPhysVolID(_X(layer), layer_number);
+	layer_physvol.addPhysVolID(_X(layer),layer_number);
 	staveInnerVol.addPhysVol(layer_physvol,layer_position);
 
 	sdet.add(layer);
 
 	// Increment the layer X dimension.
-	layer_dim_x += layer_thickness * tan(layerInnerAngle) * 2;
+	layer_dim_x += layer_thickness * std::tan(layerInnerAngle);// * 2;
 	// Increment the layer Z position.
 	layer_position_z += layer_thickness / 2;
 	// Increment the layer number.
 	++layer_number;         
       }
     }
-#endif
+
     // Make stave inner physical volume.
-    //PhysVol staveInnerPhysVol(lcdd,staveInnerVol);
     PhysVol staveInnerPhysVol(staveInnerVol);
     // Add stave inner physical volume to outer stave volume.
     staveOuterVol.addPhysVol(staveInnerPhysVol,pos_identity);
@@ -164,22 +163,16 @@ namespace DetDesc { namespace Geometry {
 		       x_det.attr<string>(_A(limits)),
 		       x_det.visStr());
 
-    // Make stave inner physical volume.
-    //PhysVol staveOuterPhysVol(lcdd,staveOuterVol,det_name+"_staves");
-    //PhysVol staveOuterPhysVol(staveOuterVol);
-    //envelopeVol.addPhysVol(staveOuterPhysVol,pos_identity);
-
     // Place the staves.
     sdet.placeStaves(lcdd,det_name,rmin,numSides,totalThickness,envelopeVol,innerAngle,staveOuterVol);
 
     // Set the vis attributes of the outer stave section.
     sdet.setVisAttributes(lcdd,staves.visStr(),staveOuterVol);
 
-    //PhysVol envelopePhysVol(lcdd,envelopeVol);
     PhysVol envelopePhysVol(envelopeVol);
     envelopePhysVol.addPhysVolID(_X(system), sdet.id());
     envelopePhysVol.addPhysVolID(_X(barrel), 0);
-    motherVol.addPhysVol(envelopePhysVol,pos_identity);
+    motherVol.addPhysVol(envelopePhysVol,pos_identity,rot);
 #if 0
     cout << "+++ Staves inner:" << endl;
     staveInnerVol.volume()->PrintNodes();
@@ -203,31 +196,26 @@ namespace DetDesc { namespace Geometry {
 						Volume sectVolume)
   {
     double innerRotation    = innerAngle;
-    double offsetRotation   = -innerRotation / 2e0;
-    double sectCenterRadius = rmin + total_thickness / 2e0;
-    double rotX = -offsetRotation;
-    double rotY =  M_PI / 2e0;
-    double posX = -sectCenterRadius  * sin(rotY);
-    double posY =  sectCenterRadius  * cos(rotY);
+    double offsetRotation   = -innerRotation / 2;
+    double sectCenterRadius = rmin + total_thickness / 2;
+    double rotX =  M_PI / 2;
+    double rotY = -offsetRotation;
+    double posX = -sectCenterRadius  * std::sin(rotY);
+    double posY =  sectCenterRadius  * std::cos(rotY);
     string nam =   sectVolume.name();
-    numsides=0;
-    cout << "Placing staves is DISABLED!!!!" << endl;
+    //numsides = 2;
     for (int module = 0; module < numsides; ++module)  {
-      Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),posX,posY,0);
-      //Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),0,0,0);
-      Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0.);
-      //Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),M_PI/2.,M_PI/2.,0.);
-      cout << position.name() << ": " << posX << " " << posY << endl;
+      Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),-posX,-posY,0);
+      Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0);
 
-      //PhysVol sectPhysVol(lcdd,sectVolume,nam+_toString(module,"_module%d"));
       PhysVol sectPhysVol(sectVolume);
       envelopeVolume.addPhysVol(sectPhysVol,position,rotation);
       sectPhysVol.addPhysVolID(_X(stave), 0);
-      sectPhysVol.addPhysVolID(_X(module), module);
+      sectPhysVol.addPhysVolID(_X(module),module);
 
       rotY -=  innerRotation;
-      posX  = -sectCenterRadius * sin(rotY);
-      posY  =  sectCenterRadius * cos(rotY);
+      posX  = -sectCenterRadius * std::sin(rotY);
+      posY  =  sectCenterRadius * std::cos(rotY);
     }
   }
 }

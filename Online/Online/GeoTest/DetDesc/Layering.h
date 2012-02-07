@@ -60,9 +60,10 @@ namespace DetDesc {
     Layering();
     Layering(XML::Element e);
     virtual ~Layering();
-    std::vector<Layer*>& layers()   { return _stack.layers(); }
-    const Layer* layer(size_t which) const;
+    const LayerStack& stack() const { return _stack;                  }
+    std::vector<Layer*>& layers()   { return _stack.layers();         }
     double totalThickness()  const  { return _stack.totalThickness(); }
+    const Layer* layer(size_t which) const;
     double singleLayerThickness(XML::Element e)  const;
   };
 

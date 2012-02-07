@@ -77,7 +77,8 @@ namespace DetDesc {
       virtual Rotation    rotation(const std::string& name) const = 0;
       virtual Transform   transform(const std::string& name) const = 0;
       virtual Solid       solid(const std::string& name) const = 0;
-      virtual DetElement detector(const std::string& name) const = 0;
+      virtual Volume      volume(const std::string& name) const = 0;
+      virtual DetElement  detector(const std::string& name) const = 0;
 
       virtual LCDD& add(const Constant& constant) = 0;
       //virtual LCDD& add(const Solid& solid) = 0;
