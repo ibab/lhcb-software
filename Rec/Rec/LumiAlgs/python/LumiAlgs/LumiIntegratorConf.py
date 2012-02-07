@@ -5,7 +5,6 @@ __author__  = "Jaap Panman"
 from os import environ, path
 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence

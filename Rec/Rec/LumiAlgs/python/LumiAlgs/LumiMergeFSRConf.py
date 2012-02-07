@@ -5,11 +5,10 @@ __author__  = "Jaap Panman"
 from os import environ, path
 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 from LHCbKernel.Configuration import *
 
 from Configurables import GaudiSequencer as Sequence
-from Configurables import LumiMergeFSR
+from Configurables import LumiMergeFSR, LHCbApp
 from Configurables import EventAccounting
 
 import GaudiKernel.ProcessJobOptions
