@@ -1,6 +1,5 @@
 from os import environ
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
