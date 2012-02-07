@@ -21,17 +21,19 @@
 
 class IJobOptionsSvc;
 
-/** Tool for automatic conversions in the transient store.
+/** @class ParticlesAndVerticesMapper ParticlesAndVerticesMapper.h
  *
- *  Bespoke tool for the UnpackParticlesAndVertices unpacker
+ *  Tool for automatic conversions in the transient store.
+ *
+ *  Bespoke mapping tool for the UnpackParticlesAndVertices unpacker
  *  
  * @author Chris Jones
  * @date 06/02/2012
  */
-class ParticlesAndVerticesMapper: public extends3< GaudiTool, 
-                                                   IDODAlgMapper,
-                                                   IDODNodeMapper,
-                                                   IIncidentListener >
+class ParticlesAndVerticesMapper : public extends3< GaudiTool, 
+                                                    IDODAlgMapper,
+                                                    IDODNodeMapper,
+                                                    IIncidentListener >
 {
 
 public:
@@ -61,10 +63,16 @@ public:
 
 public:
 
+  /** Returns the correctly configured and name instance of the
+   *  Particles and Vertices unpacker, for the given path
+   */
   virtual Gaudi::Utils::TypeNameString algorithmForPath(const std::string &path);
 
 public:
 
+  /** Instruct the DataOnDemandSvc to create DataObjects for the
+   *  intermediate levels of a path we can handle.
+   */
   virtual std::string nodeTypeForPath(const std::string &path);
 
 private:
@@ -79,7 +87,20 @@ private:
   void addPath( const std::string & path );
 
   /// Check if a given path is in the list of data locations created
-  bool pathIsHandled( const std::string & path ) const;
+  inline bool pathIsHandled( const std::string & path ) const
+  { 
+    // See if we have an entry for this path
+    NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
+    return ( it != m_nodeTypeMap.end() );
+  }
+
+  /// Make sure a path starts with /Event/
+  inline std::string fixPath( const std::string & path ) const
+  {
+    std::string tmp = path;
+    if ( tmp.substr(0,7) != "/Event/" ) { tmp = "/Event/"+tmp; }
+    return tmp;
+  }
 
 private:
 
@@ -93,6 +114,9 @@ private:
 
   /// Map to say which stream roots have been processed each event
   std::map<std::string,bool> m_streamsDone;
+
+  /// Unpacker class type
+  std::string m_unpackerType;
 
 };
 

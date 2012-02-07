@@ -12,7 +12,9 @@
 
 class IJobOptionsSvc;
 
-/** Tool for automatic conversions in the transient store.
+/** @class ConversionDODMapper ConversionDODMapper.h
+ *
+ * Tool for automatic conversions in the transient store.
  *
  * Implements the IDODAlgMapper interface to dynamically instruct the DataOnDemandSvc
  * to call conversion algorithms that will convert some input object in the T.S.
@@ -37,13 +39,17 @@ class IJobOptionsSvc;
  * @author Marco Clemencic
  * @date 17/01/2012
  */
-class ConversionDODMapper: public extends2<GaudiTool, IDODAlgMapper, IDODNodeMapper>
+class ConversionDODMapper : public extends2< GaudiTool,
+                                             IDODAlgMapper, 
+                                             IDODNodeMapper >
 {
 
 public:
 
   /// Standard constructor
-  ConversionDODMapper(const std::string& type, const std::string& name, const IInterface* parent);
+  ConversionDODMapper( const std::string& type, 
+                       const std::string& name, 
+                       const IInterface* parent );
 
   /// Destructor
   virtual ~ConversionDODMapper(); 
@@ -88,10 +94,10 @@ private:
   /// string is returned.
   std::string transform(const std::string &input) const;
 
-private:
-
   /// Helper function to get the source candidate.
   DataObject *candidate(const std::string &path) const;
+
+private:
 
   /// @{
   /// Data members corresponding to properties
@@ -109,6 +115,8 @@ private:
   /// It is needed to configure the Algorithm instances.
   SmartIF<IJobOptionsSvc> m_jos;
 
+private:
+
   /// Helper class to manage the regex translation rules.
   class Rule 
   {
@@ -120,12 +128,14 @@ private:
     
     /// Apply the conversion rule to the input string.
     /// If the regex does not match the input, an empty string is returned.
-    inline std::string apply(const std::string &input) const {
+    inline std::string apply(const std::string &input) const
+    {
       return boost::regex_replace(input, regexp, format, boost::match_default | boost::format_no_copy);
     }
     
     /// Helper to create a Rule from a pair of strings.
-    inline static Rule make(const std::pair<std::string, std::string> &p) {
+    inline static Rule make(const std::pair<std::string, std::string> &p) 
+    {
       return Rule(p.first, p.second);
     }
  

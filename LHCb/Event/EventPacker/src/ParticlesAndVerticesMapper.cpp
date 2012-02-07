@@ -26,7 +26,9 @@ DECLARE_TOOL_FACTORY(ParticlesAndVerticesMapper)
                                                          const std::string& name,
                                                          const IInterface* parent)
     : base_class(type, name, parent) 
-{ }
+{
+  declareProperty( "UnpackerType", m_unpackerType = "UnpackParticlesAndVertices" );
+}
 
 // ============================================================================
 // Destructor
@@ -69,15 +71,6 @@ void ParticlesAndVerticesMapper::handle ( const Incident& )
 
 // ============================================================================
 
-bool ParticlesAndVerticesMapper::pathIsHandled( const std::string & path ) const
-{
-  NodeTypeMap::const_iterator it = m_nodeTypeMap.find(path);
-  if ( it == m_nodeTypeMap.end() ) it = m_nodeTypeMap.find("/Event/"+path);
-  return ( it != m_nodeTypeMap.end() );
-}
-
-// ============================================================================
-
 Gaudi::Utils::TypeNameString
 ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
 {
@@ -96,17 +89,14 @@ ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
     std::string algName = streamR + "_Converter";
     std::replace( algName.begin(), algName.end(), '/', '_' );
 
-    // Unpacker Type
-    const std::string algType = "UnpackParticlesAndVertices";
-
     // Add the configuration of algorithm instance to the JobOptionsSvc
     m_jos->addPropertyToCatalogue(algName,StringProperty("InputStream",streamR));
 
     // Return the algorithm type/name.
-    LOG_VERBOSE << " -> Use algorithm type '" << algType << "'"
+    LOG_VERBOSE << " -> Use algorithm type '" << m_unpackerType << "'"
                 << " name '" << algName << "'"
                 << endmsg;
-    return Gaudi::Utils::TypeNameString(algName,algType);
+    return Gaudi::Utils::TypeNameString(algName,m_unpackerType);
   }
 
   return "";
@@ -114,12 +104,12 @@ ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
 
 // ============================================================================
 
-std::string ParticlesAndVerticesMapper::nodeTypeForPath( const std::string & path )
+std::string 
+ParticlesAndVerticesMapper::nodeTypeForPath( const std::string & path )
 {
   updateNodeTypeMap(path);
 
-  NodeTypeMap::const_iterator it = m_nodeTypeMap.find(path);
-  if ( it == m_nodeTypeMap.end() ) it = m_nodeTypeMap.find("/Event/"+path);
+  NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
 
   const std::string retS = ( it != m_nodeTypeMap.end() ? it->second : "" );
 
@@ -214,15 +204,19 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
 
 void ParticlesAndVerticesMapper::addPath( const std::string & path )
 {
-  if ( m_nodeTypeMap.find(path) == m_nodeTypeMap.end() )
+  // Make sure paths start with /Event/
+  const std::string npath = fixPath(path);
+
+  // if not already there, add.
+  if ( m_nodeTypeMap.find(npath) == m_nodeTypeMap.end() )
   {
-    LOG_VERBOSE << " -> Path " << path << endmsg;
+    LOG_VERBOSE << " -> Path " << npath << endmsg;
 
     // Main path
-    m_nodeTypeMap[path] = "";
+    m_nodeTypeMap[npath] = "";
 
     // Data Node paths ...
-    std::string tmp = path;
+    std::string tmp = npath;
     std::string::size_type slash = tmp.find_last_of("/");
     while ( !tmp.empty() && slash != std::string::npos )
     {
