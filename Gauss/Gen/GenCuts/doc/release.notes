@@ -4,6 +4,16 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2012-02-07 - Patrick Robbe
+ - DaughtersInLHCbAndCutsForDstar: new cut applied on D* -> D0 pi decays,
+   cutting on: 
+	  . pT(D0)
+    . ctau(D0)
+    . pT(soft pion)
+    . min(p(D0 daughters))
+    . max(pT(D0 daughters))
+    . min(pT(D0 daughters))
+
 ! 2012-01-31 - Jibo He
  - Added DaughtersInLHCbAndMassCut, works for B->LLHH, e.g., eeKstar at this moment, 
    possible to apply PT cut on daughters, and invariant mass cut on M(ee) (upper cut)
