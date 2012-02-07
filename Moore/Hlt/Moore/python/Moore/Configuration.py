@@ -5,6 +5,7 @@ __version__ = "$Id: Configuration.py,v 1.131 2010-09-01 16:39:02 raaij Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
+from Gaudi.Configuration import *
 from LHCbKernel.Configuration import LHCbConfigurableUser
 from Configurables import HltConf
 from Configurables import GaudiSequencer
