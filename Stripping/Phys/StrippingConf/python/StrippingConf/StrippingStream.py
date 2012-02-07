@@ -8,7 +8,6 @@ __all__ = (
 	    'StrippingStream'
 	  )
 
-from GaudiConf.Configuration import *
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import LHCbConfigurableUser
 from copy import copy

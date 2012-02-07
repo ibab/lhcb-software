@@ -5,13 +5,17 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-02-07 - Chris Jones
+ - Remove import of GaudiConf
+
 ! 2012-02-01 - Anton Poluektov 
-  - Change log level of most annoying messages from info to debug. 
+ - Change log level of most annoying messages from info to debug. 
 
 ! 2012-01-22 - Anton Poluektov 
-  - Remove lots of printout (move to debug stream)
-  - Store DecReports to /Event/<StreamName>/Phys/DecReports by default. 
-    Can be modified by TESPrefix option in StrippingConf, StrippingStream or StrippingLine
+ - Remove lots of printout (move to debug stream)
+ - Store DecReports to /Event/<StreamName>/Phys/DecReports by default. 
+   Can be modified by TESPrefix option in StrippingConf, StrippingStream or 
+   StrippingLine
 
 !========================= StrippingConf v4r2p1 2011-07-20 =========================
 ! 2011-07-20 - Rob Lambert

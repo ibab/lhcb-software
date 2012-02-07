@@ -10,7 +10,6 @@ __author__  = "Anton Poluektov <A.O.Poluektov@warwick.ac.uk>"
 
 from os import environ
 from pprint import *
-from Gaudi.Configuration import *
 from Configurables import StrippingAlg
 from StrippingStream import StrippingStream
 from StrippingLine import StrippingLine
