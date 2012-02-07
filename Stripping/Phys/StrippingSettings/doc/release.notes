@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2012-02-07 - Jibo He
+ - Stripping17b/LineConfigDictionaries_RD.py
+   Beauty2XGamma bug fixed, included again.
+
+! 2012-02-07 - Jibo He
  - Stripping17b/LineConfigDictionaries_B2OC.py
    Updated conf dict of Beauty2Charm, as requested by M. Williams 
  - Stripping17b/LineConfigDictionaries_RD.py
