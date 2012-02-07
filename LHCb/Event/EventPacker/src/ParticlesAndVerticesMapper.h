@@ -26,11 +26,11 @@ class IJobOptionsSvc;
  *  Tool for automatic conversions in the transient store.
  *
  *  Bespoke mapping tool for the UnpackParticlesAndVertices unpacker
- *  
+ *
  * @author Chris Jones
  * @date 06/02/2012
  */
-class ParticlesAndVerticesMapper : public extends3< GaudiTool, 
+class ParticlesAndVerticesMapper : public extends3< GaudiTool,
                                                     IDODAlgMapper,
                                                     IDODNodeMapper,
                                                     IIncidentListener >
@@ -39,12 +39,12 @@ class ParticlesAndVerticesMapper : public extends3< GaudiTool,
 public:
 
   /// Standard constructor
-  ParticlesAndVerticesMapper( const std::string& type, 
-                              const std::string& name, 
+  ParticlesAndVerticesMapper( const std::string& type,
+                              const std::string& name,
                               const IInterface* parent );
 
   /// Destructor
-  virtual ~ParticlesAndVerticesMapper(); 
+  virtual ~ParticlesAndVerticesMapper();
 
   /// Initialize the tool instance.
   virtual StatusCode initialize();
@@ -52,14 +52,14 @@ public:
   /// Initialize the tool instance.
   virtual StatusCode finalize();
 
-  public:
+public:
 
-    /** Implement the handle method for the Incident service.
-     *  This is used to inform the tool of software incidents.
-     *
-     *  @param incident The incident identifier
-     */
-    void handle( const Incident& incident );
+  /** Implement the handle method for the Incident service.
+   *  This is used to inform the tool of software incidents.
+   *
+   *  @param incident The incident identifier
+   */
+  void handle( const Incident& incident );
 
 public:
 
@@ -77,8 +77,14 @@ public:
 
 private:
 
+  /// Get the Stream name from a data path
+  std::string streamName( const std::string & path ) const;
+
   /// Get the stream root from a data path
-  std::string streamRoot( const std::string & path ) const;
+  inline std::string streamRoot( const std::string & path ) const
+  {
+    return "/Event/" + streamName(path);
+  }
 
   /// Load the packed data and update the mappings of paths to Node Type
   void updateNodeTypeMap( const std::string & path );
@@ -88,7 +94,7 @@ private:
 
   /// Check if a given path is in the list of data locations created
   inline bool pathIsHandled( const std::string & path ) const
-  { 
+  {
     // See if we have an entry for this path
     NodeTypeMap::const_iterator it = m_nodeTypeMap.find( fixPath(path) );
     return ( it != m_nodeTypeMap.end() );

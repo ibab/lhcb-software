@@ -25,7 +25,7 @@ DECLARE_TOOL_FACTORY(ParticlesAndVerticesMapper)
   ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
                                                          const std::string& name,
                                                          const IInterface* parent)
-    : base_class(type, name, parent) 
+    : base_class(type, name, parent)
 {
   declareProperty( "UnpackerType", m_unpackerType = "UnpackParticlesAndVertices" );
 }
@@ -74,7 +74,7 @@ void ParticlesAndVerticesMapper::handle ( const Incident& )
 Gaudi::Utils::TypeNameString
 ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
 {
-  LOG_VERBOSE << "ParticlesAndVerticesMapper::algorithmForPath '" 
+  LOG_VERBOSE << "ParticlesAndVerticesMapper::algorithmForPath '"
               << path << "'" << endmsg;
 
   updateNodeTypeMap(path);
@@ -82,15 +82,12 @@ ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
   // Is this path in the list of output locations this packer can create
   if ( pathIsHandled(path) )
   {
-    // The stream TES root
-    const std::string streamR = streamRoot(path);
-
     // Choose a unique name for the algorithm instance
-    std::string algName = streamR + "_Converter";
-    std::replace( algName.begin(), algName.end(), '/', '_' );
+    const std::string algName = streamName(path) + "_Converter";
 
     // Add the configuration of algorithm instance to the JobOptionsSvc
-    m_jos->addPropertyToCatalogue(algName,StringProperty("InputStream",streamR));
+    m_jos->addPropertyToCatalogue( algName,
+                                   StringProperty("InputStream",streamRoot(path)) );
 
     // Return the algorithm type/name.
     LOG_VERBOSE << " -> Use algorithm type '" << m_unpackerType << "'"
@@ -104,7 +101,7 @@ ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
 
 // ============================================================================
 
-std::string 
+std::string
 ParticlesAndVerticesMapper::nodeTypeForPath( const std::string & path )
 {
   updateNodeTypeMap(path);
@@ -195,7 +192,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
         addPath( pPartIds->linkMgr()->link(linkID)->path() );
       }
     }
-    
+
   }
 
 }
@@ -236,15 +233,12 @@ void ParticlesAndVerticesMapper::addPath( const std::string & path )
 // ============================================================================
 
 std::string
-ParticlesAndVerticesMapper::streamRoot( const std::string & path ) const
+ParticlesAndVerticesMapper::streamName( const std::string & path ) const
 {
   std::string tmp = path;
   if ( path.substr(0,7) == "/Event/" ) { tmp = tmp.substr(7); }
   const std::string::size_type slash = tmp.find_first_of( "/" );
-  const std::string retS = "/Event/" + tmp.substr(0,slash);
-  LOG_VERBOSE << "Input path = '" << path 
-              << "' Stream Root = '" << retS << "'" << endmsg;
-  return retS;
+  return tmp.substr(0,slash);
 }
 
 // ============================================================================
