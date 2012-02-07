@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : TMVAWeights
+! Responsible : Jibo He
+! Purpose     : To accommodate weights file of all TMVA based selections 
+!-----------------------------------------------------------------------------
+
+! 2012-02-07 - Jibo He
+ - Created the package 
+ - Added weights file for Bd->eeKstar 
