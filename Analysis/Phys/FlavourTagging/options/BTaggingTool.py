@@ -4,6 +4,7 @@
 #
 #
 ##############################################################################
+from Gaudi.Configuration import *
 from Configurables import ( CombinedParticleMaker, ProtoParticleMUONFilter,
                             ProtoParticleCALOFilter, ProtoParticleRICHFilter,
                             FilterDesktop )
