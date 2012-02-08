@@ -51,5 +51,11 @@ apply_pattern component_library library=DaVinciTools
 #============================================================================
 apply_pattern install_python_modules
 #============================================================================
-apply_pattern QMTest
+#QM tests
+private
+# Uses only needed to set up run time environment of tests
+  macro DDDB_use "" QMTest "DDDB  v*  Det"
+  use $(DDDB_use)
+  apply_pattern QMTest
+end_private
 #============================================================================
