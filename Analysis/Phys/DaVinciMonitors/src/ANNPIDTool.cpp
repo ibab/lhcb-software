@@ -27,7 +27,7 @@ ANNPIDTool::~ANNPIDTool( ) {}
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode ANNPIDTool::fillImpl( const LHCb::Particle* p,
-                                 const std::string& trailer )
+                                 const std::string& /* trailer */ )
 {
   // skip non-stable particles
   if ( !(p->isBasicParticle()) ) return StatusCode::SUCCESS;
