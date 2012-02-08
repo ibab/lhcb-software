@@ -22,7 +22,7 @@ std::string SubstituteEnvVarInPath(const std::string& in) {
 }
 // ============================================================================
 BBDecTreeTool::BBDecTreeTool(const std::string& type, const std::string& name,
-			     const IInterface* parent)
+                             const IInterface* parent)
   : base_class(type,name,parent), m_threshold(-1.0), m_key(-1), m_ntrees(-1),
     m_vars(0){
   // declare configurable properties
@@ -45,7 +45,7 @@ StatusCode BBDecTreeTool::initialize() {
 
   // get tools and algs
   IDistanceCalculator* dist
-     = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+    = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
   const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm(contextSvc());
   if (0 == dva) {
     return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
@@ -111,19 +111,20 @@ StatusCode BBDecTreeTool::initialize() {
   inFile.close();
 
   // print info
-  info() << "Initialized w/ Threshold = "  << m_threshold << ", ParamFile = "
-	 << m_paramFile << " -> " << fnam  << " (" << m_ntrees << " trees,"
-	 << nvar << " vars," << numSplits << " splits)." << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Initialized w/ Threshold = "  << m_threshold << ", ParamFile = "
+            << m_paramFile << " -> " << fnam  << " (" << m_ntrees << " trees,"
+            << nvar << " vars," << numSplits << " splits)." << endmsg;
 
   return StatusCode::SUCCESS ;
 }
 // ===========================================================================
 StatusCode BBDecTreeTool::finalize() {
-   if (m_vars) {
-      delete m_vars;
-      m_vars = 0;
-   }
-   return GaudiTool::finalize();
+  if (m_vars) {
+    delete m_vars;
+    m_vars = 0;
+  }
+  return GaudiTool::finalize();
 }
 // ============================================================================
 int BBDecTreeTool::getVarIndex(int varIndex, double value) const {
@@ -164,7 +165,7 @@ bool BBDecTreeTool::operator()(const LHCb::Particle* p) const {
   if(m_key >= 0){
     if(p->hasInfo(m_key)){
       /* don't write msg b/c it's OK for STD, mu, e lines to write to same
-	 place since they report the same response */
+         place since they report the same response */
     }
     else const_cast<LHCb::Particle*>(p)->addInfo(m_key, response);
   }

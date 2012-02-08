@@ -4,6 +4,10 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2012-02-08 - Chris Jones
+ - To reduce info messages in stripping, downgrade messages during initialize()
+   to debug
+
 !========================= BBDecTreeTool v1r4 2011-12-15 =========================
 
 ! 2011-12-09 - Marco Cattaneo
