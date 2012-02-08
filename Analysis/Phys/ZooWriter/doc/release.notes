@@ -4,6 +4,9 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2012-02-08 - Manuel Tobias Schiller
+ - fix bug in CPU feature detection to set compile flags
+
 ! 2012-01-27 - Manuel Tobias Schiller
  - replace range(0, N) by xrange(0, N) in python code to gain speed
  - further modularise ZooTuplePlayer to avoid code duplication

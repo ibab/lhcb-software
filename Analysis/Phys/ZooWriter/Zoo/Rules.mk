@@ -27,6 +27,9 @@
 # 	progress, either because it does not like root's headers (Sun
 # 	compiler) or the version installed on my system is too ancient
 # 	(clang))
+# v0.7 2012-02-08 Manuel Schiller <manuel.schiller@nikhef.nl>
+# 	fix bug in cpu feature detection and how they get translated
+# 	to optimization flags
 #######################################################################
 
 #######################################################################
@@ -288,7 +291,7 @@ TUNEFLAG += $(shell $(CXX) --version 2>&1 | $(AWK) '// { for (i = 1; \
 	    if ($$i < "4.") tunefl = "-mtune=opteron"; else tunefl = \
 	    "-mtune=native"; }; } END { print tunefl; }')
 TUNEFLAG += $(shell $(GREP) 'flags' /proc/cpuinfo | $(HEAD) -1 | \
-	    $(SED) -e 's/ mmx/ -mmmx/g' -e 's/ sse/ -msse/g' \
+	    $(SED) -e 's/ mmx / -mmmx /g' -e 's/ sse/ -msse/g' \
 	           -e 's/ ssse/ -mssse/g' -e 's/ avx/ -mavx/g' \
 		   -e 's/4_1/4.1/g' -e 's/4_2/4.2/g' -e 's/ /\n/g' | \
 	    $(GREP) -- '-m')
