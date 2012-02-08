@@ -4,6 +4,7 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections 
 !-----------------------------------------------------------------------------
 
+!======================== TMVAWeights v1r0 2012-02-08 ========================
 ! 2012-02-07 - Jibo He
  - Created the package 
  - Added weights file for Bd->eeKstar 
