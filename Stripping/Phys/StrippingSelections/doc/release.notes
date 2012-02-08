@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-08 - Mika Vesterinen
+ - Remove four duplicated lines from StrippingB2DMuNuX.py
+
 ! 2012-02-08 - Chris Jones
  - Remove GaudiConf import from StrippingTrackEffDownMuon.py
 

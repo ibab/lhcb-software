@@ -10,7 +10,7 @@ Lc+ -> L0 H, Lc+ -> pHH
 """
 __author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -337,14 +337,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                         Algorithm = self._D02KsKPiFilter(),
                                         RequiredSelections = [self.selKSDD,self.selKaonloose,self.selPionloose] )           
 
-        self.seld02KsKPiWSLL = Selection( "D02KsKPiWSLLfor" + name,
-                                        Algorithm = self._D02KsKPiWSFilter(),
-                                        RequiredSelections = [self.selKSLL,self.selKaonloose,self.selPionloose] )           
-        
-        self.seld02KsKPiWSDD = Selection( "D02KsKPiWSDDfor" + name,
-                                        Algorithm = self._D02KsKPiWSFilter(),
-                                        RequiredSelections = [self.selKSDD,self.selKaonloose,self.selPionloose] )           
-
         ################## D0 -> HHPi0 WITH RESOLVED PI0 #######################
         
         self.seld02KPiPi0Resolved = Selection( "D02KPiPi0Resolvedfor" + name,
@@ -358,10 +350,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.seld02KKPi0Resolved = Selection( "D02KKPi0Resolvedfor" + name,
                                                Algorithm = self._D02KKPi0Filter(),
                                                RequiredSelections = [self.selKaon,self.selPi0Resolved])
-        
-        self.seld02KPiPi0ResolvedWS = Selection( "D02KPiPi0ResolvedWSfor" + name,
-                                                 Algorithm = self._D02KPiPi0WSFilter(),
-                                                 RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Resolved])
         
         ################## D0 -> HHPi0 WITH MERGED PI0 #######################
         
@@ -377,10 +365,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.seld02KKPi0Merged = Selection( "D02KKPi0Mergedfor" + name,
                                             Algorithm = self._D02KKPi0Filter(),
                                             RequiredSelections = [self.selKaon,self.selPi0Merged])
-        
-        self.seld02KPiPi0MergedWS = Selection( "D02KPiPi0MergedWSfor" + name,
-                                               Algorithm = self._D02KPiPi0WSFilter(),
-                                               RequiredSelections = [self.selKaon,self.selPionTight,self.selPi0Merged])
         
         ################### D+/Ds+ -> Ks H SELECTIONS ######################
         
@@ -570,13 +554,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                             MuSel = self.selmuon, DSel = self.seld02KsKPiDD,
                                             BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
 
-        self.selb2D0MuXKsKPiWSLL = makeb2DMuX('b2D0MuXKsKPiWSLL' + name,DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                            MuSel = self.selmuon, DSel = self.seld02KsKPiWSLL,
-                                            BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
-
-        self.selb2D0MuXKsKPiWSDD = makeb2DMuX('b2D0MuXKsKPiWSDD' + name,DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                            MuSel = self.selmuon, DSel = self.seld02KsKPiWSDD,
-                                            BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
 
         ############### B+ -> MU X D0 -> H H Pi0  #########################
         
@@ -592,10 +569,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                                   MuSel = self.selmuon, DSel = self.seld02KKPi0Resolved,
                                                   BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
         
-        self.selb2D0MuXKPiPi0ResolvedWS = makeb2DMuX('b2D0MuXKPiPi0ResolvedWS' + name,DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                                      MuSel = self.selmuon, DSel = self.seld02KPiPi0ResolvedWS,
-                                                      BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
-        
         self.selb2D0MuXKKPi0Merged = makeb2DMuX('b2D0MuXKKPi0Merged' + name,DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
                                                 MuSel = self.selmuon, DSel = self.seld02KKPi0Merged,
                                                 BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
@@ -608,10 +581,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                                   MuSel = self.selmuon, DSel = self.seld02PiPiPi0Merged,
                                                   BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
 
-        self.selb2D0MuXKPiPi0MergedWS = makeb2DMuX('b2D0MuXKPiPi0MergedWS' + name,DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
-                                                   MuSel = self.selmuon, DSel = self.seld02KPiPi0MergedWS,
-                                                   BVCHI2DOF = config['BVCHI2DOF'],BDIRA = config['BDIRA'],DZ = config['DZ'])
-        
         ############### B0 -> MU X D+ -> Ks H  #########################
 
         self.selb2DsMuXKsLLK = makeb2DMuX('b2DsMuXKsLLK'+name, DecayDescriptors = [ '[B0 -> D+ mu-]cc', '[B0 -> D+ mu+]cc' ],
@@ -701,21 +670,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.b2D0MuXKsKKDD    = StrippingLine('b2D0MuXKsKKDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKKDD)
         self.b2D0MuXKsKPiLL   = StrippingLine('b2D0MuXKsKPiLL'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiLL)
         self.b2D0MuXKsKPiDD   = StrippingLine('b2D0MuXKsKPiDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiDD)
-        self.b2D0MuXKsKPiWSLL = StrippingLine('b2D0MuXKsKPiWSLL'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiWSLL)
-        self.b2D0MuXKsKPiWSDD = StrippingLine('b2D0MuXKsKPiWSDD'+name+'Line',prescale = 1,selection = self.selb2D0MuXKsKPiWSDD)
 
         ########### D0 -> HHPi0 (resolved)
         self.b2D0MuXKPiPi0Resolved = StrippingLine('b2D0MuXKPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0Resolved)
         self.b2D0MuXKKPi0Resolved = StrippingLine('b2D0MuXKKPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXKKPi0Resolved)
         self.b2D0MuXPiPiPi0Resolved = StrippingLine('b2D0MuXPiPiPi0Resolved'+name+'Line',prescale = 1,selection = self.selb2D0MuXPiPiPi0Resolved)
-        self.b2D0MuXKPiPi0ResolvedWS = StrippingLine('b2D0MuXKPiPi0ResolvedWS'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0ResolvedWS)
-        
         
         ########### D0 -> HHPi0 (merged)
         self.b2D0MuXKPiPi0Merged = StrippingLine('b2D0MuXKPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0Merged)
         self.b2D0MuXKKPi0Merged = StrippingLine('b2D0MuXKKPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXKKPi0Merged)
         self.b2D0MuXPiPiPi0Merged = StrippingLine('b2D0MuXPiPiPi0Merged'+name+'Line',prescale = 1,selection = self.selb2D0MuXPiPiPi0Merged)
-        self.b2D0MuXKPiPi0MergedWS = StrippingLine('b2D0MuXKPiPi0MergedWS'+name+'Line',prescale = 1,selection = self.selb2D0MuXKPiPi0MergedWS)
         
         ########### D+ -> KsH
         self.b2DsMuXKsLLKLine = StrippingLine('b2DsMuXKsLLK' + name + 'Line', prescale = 1, selection = self.selb2DsMuXKsLLK)
@@ -766,20 +730,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2D0MuXKsKKDD)
         self.registerLine(self.b2D0MuXKsKPiLL)
         self.registerLine(self.b2D0MuXKsKPiDD)
-        self.registerLine(self.b2D0MuXKsKPiWSLL)
-        self.registerLine(self.b2D0MuXKsKPiWSDD)
         
         ######## D -> H H Pi0 (resolved) ###############
         self.registerLine(self.b2D0MuXKPiPi0Resolved)
         self.registerLine(self.b2D0MuXPiPiPi0Resolved)
         self.registerLine(self.b2D0MuXKKPi0Resolved)
-        self.registerLine(self.b2D0MuXKPiPi0ResolvedWS)
 
         ######## D -> H H Pi0 (merged) #################
         self.registerLine(self.b2D0MuXKPiPi0Merged)
         self.registerLine(self.b2D0MuXPiPiPi0Merged)
         self.registerLine(self.b2D0MuXKKPi0Merged)
-        self.registerLine(self.b2D0MuXKPiPi0MergedWS)
 
         ######## D+ -> Ks H ####################
         self.registerLine(self.b2DsMuXKsLLKLine)
@@ -1149,33 +1109,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         return _d02KsKPi
 
 
-    def _D02KsKPiWSFilter( self ):
-        _decayDescriptors =  [ "[D0 -> KS0 K+ pi-]cc" ]
-        _combinationCut = "(ADAMASS('D0') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 1800.*MeV) & (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
-        _motherCut = "(SUMTREE( PT,  ISBASIC )>1800.*MeV) &(ADMASS('D0') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02KsKPi = CombineParticles( DecayDescriptors = _decayDescriptors,
-                                      CombinationCut = _combinationCut,
-                                      MotherCut = _motherCut)                            
-        return _d02KsKPi
-
-
     def _D02KPiPi0Filter( self ):
         _decayDescriptors = ["[D0 -> K- pi+ pi0]cc"]
-        _combinationCut = "(ADAMASS('D0') < %(D02HHPi0AMassWin)s *MeV) " \
-                          " & (APT> %(D02HHPi0PtCut)s *MeV)" \
-                          " & (ADOCA(1,2) < %(D02HHPi0DocaCut)s)" % self.__confdict__
-        _motherCut = "(ADMASS('D0') < %(D02HHPi0MassWin)s *MeV) " \
-                     "& (SUMTREE( PT,  ISBASIC )> %(D02HHPi0PtCut)s *MeV) " \
-                     "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                     "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
-        _d02KPiPi0 = CombineParticles( DecayDescriptors = _decayDescriptors,
-                                       CombinationCut = _combinationCut,
-                                       MotherCut = _motherCut)
-        return _d02KPiPi0
-
-    def _D02KPiPi0WSFilter( self ):
-        _decayDescriptors = ["[D0 -> K+ pi- pi0]cc"]
         _combinationCut = "(ADAMASS('D0') < %(D02HHPi0AMassWin)s *MeV) " \
                           " & (APT> %(D02HHPi0PtCut)s *MeV)" \
                           " & (ADOCA(1,2) < %(D02HHPi0DocaCut)s)" % self.__confdict__
