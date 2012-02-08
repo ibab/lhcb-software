@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2012-02-08 - Chris Jones
+ - Add "from Gaudi.Configuration import *" to fix problems introduced with the
+   last commit
+
 ! 2012-02-07 - Chris Jones
  - Remove import of GaudiConf
 

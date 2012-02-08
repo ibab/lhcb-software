@@ -11,7 +11,8 @@ __all__ = (
 	  )
 
 import re
-from copy import deepcopy 
+from copy import deepcopy
+from Gaudi.Configuration import *
 from GaudiConfUtils import isConfigurable
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 import Configurables
