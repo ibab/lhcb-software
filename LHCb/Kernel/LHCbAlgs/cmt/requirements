@@ -20,7 +20,8 @@ use DAQEvent         v* Event
 use RecEvent         v* Event
 use DetDesc          v* Det
 use HltInterfaces    v* Kernel -no_auto_imports
-use XMLSummaryKernel v* Kernel            # needed by LHCbApp for inheritance
+use DDDB             v* Det               # needed for LHCbApp imports 
+use XMLSummaryKernel v* Kernel            # needed for LHCbApp imports
 
 #============================================================================
 # Component library building rule
@@ -51,11 +52,9 @@ private
   macro EventSys_use    "" QMTest "EventSys    v*  Event -no_auto_imports"
   macro DetDescCnv_use  "" QMTest "DetDescCnv  v*  Det   -no_auto_imports"
   macro DetDescSvc_use  "" QMTest "DetDescSvc  v*  Det   -no_auto_imports"
-  macro DDDB_use        "" QMTest "DDDB        v*  Det   -no_auto_imports"
   macro GaudiConf_use   "" QMTest "GaudiConf   v*        -no_auto_imports"
   use $(DetDescSvc_use)
   use $(DetDescCnv_use)
-  use $(DDDB_use)
 # Next two for FSR tests
   use $(GaudiConf_use)
   use $(EventSys_use)

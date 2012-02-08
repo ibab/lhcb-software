@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-02-08 - Marco Cattaneo
+ - Add missing dependency for LHCbApp imports
+
 ! 2012-02-06 - Marco Cattaneo
  - Added LHCbApp configurable, moved from GaudiConf
  - Moved from GaudiConf the tests fsr-only-file-root and fsr-small-files-root
