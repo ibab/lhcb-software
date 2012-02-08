@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-02-08 - Marco Cattaneo
+ - Add missing dependencies for tests, following reorganisation of GaudiConf
+
 ! 2012-02-07 - Chris Jones
  - Remove imports from GaudiConf
 
