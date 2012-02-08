@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-02-08 - Chris Jones
+ - Use Warning(...) instead of warning() << for messages in MuonTTTrack, so
+   they eventually get suppressed, and move some info() to debug() (for
+   stripping).
+
 !========================= TrackTools v4r11 2012-01-31 =========================
 ! 2012-01-10 - Wouter Hulsbergen
  - added missing include to TrackHitCollector
