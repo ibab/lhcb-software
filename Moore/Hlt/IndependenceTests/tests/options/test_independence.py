@@ -16,7 +16,6 @@ import random, optparse, subprocess
 
 # Gaudi configuration
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 
 # Local imports
 from IndependenceTests.Tasks import DecisionReporter, time_string

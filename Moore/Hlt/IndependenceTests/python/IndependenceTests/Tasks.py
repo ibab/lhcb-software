@@ -2,7 +2,6 @@ from multiprocessing import Process, Queue, Event, Condition
 import sys, time
 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 
 from HltMonitor.Base import Task
 
