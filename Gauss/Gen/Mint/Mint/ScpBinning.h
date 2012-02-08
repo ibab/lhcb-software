@@ -54,7 +54,7 @@ protected:
   double normFactor() const;
   void setBoxesNormFactors();
   void sortByScp();
-  virtual int createBinning(IDalitzEventList* events
+  int createBinning(IDalitzEventList* events
 		    , int minPerBin = 10
 		    , int maxPerBin = 100
 		    );

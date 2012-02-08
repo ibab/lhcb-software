@@ -19,12 +19,6 @@ using namespace MINT;
 using namespace std;
 
 int PhaseBinning::createBinning(IDalitzEventList* events ){
-	
-	
-	
-	  std::cout << "Create Phase Binning " << std::endl;
-
-	
 
   if(0 == events) return 0;
   if(0 == events->size()) return 0;
@@ -34,7 +28,7 @@ int PhaseBinning::createBinning(IDalitzEventList* events ){
   IDalitzEvent* evt1 = evt0->clone();
 //  IDalitzEvent* evt1 = evt0;
   std::complex<double> amp = _fas->getVal(evt1);
-  std::cout << "Real " << amp.real() << std::endl;
+//  std::cout << "Real " << amp.real() << std::endl;
   
   ScpBoxSet boxSet;
     for(unsigned int i=0; i < _nbins; i++){
@@ -43,9 +37,6 @@ int PhaseBinning::createBinning(IDalitzEventList* events ){
   		_boxSets.push_back(boxSet);
   		boxSet.clear();
     }
-
-	  std::cout << "Created Phase Binning " << std::endl;
-
   return numBins();
 
 }
@@ -101,8 +92,6 @@ void PhaseBinning::fillDataCC(IDalitzEventList* data){
   while(data->Next()){
     bool foundBox=false;
     std::complex<double> amp = _fas->getVal(data->getEvent());
-//    std::cout << "Real " << amp.real() << std::endl;
-//    std::cout << "Imag " << amp.imag() << std::endl;
 
     real =  amp.real();
     im = amp.imag();

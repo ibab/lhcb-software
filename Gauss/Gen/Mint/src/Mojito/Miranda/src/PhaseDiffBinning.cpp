@@ -56,7 +56,7 @@ using namespace std;
 int PhaseDiffBinning::createBinning(IDalitzEventList* events){
 	
 	
-	  std::cout << "Create Phase Binning " << std::endl;
+//	  std::cout << "Create Phase Binning " << std::endl;
 
 
   if(0 == events) return 0;
@@ -67,7 +67,6 @@ int PhaseDiffBinning::createBinning(IDalitzEventList* events){
   IDalitzEvent* evt1 = evt0->clone();
 //  IDalitzEvent* evt1 = evt0;
   std::complex<double> amp = _fas->getVal(evt1);
-  std::cout << "Real " << amp.real() << std::endl;
   
   ScpBoxSet boxSet;
     for(unsigned int i=0; i < _nbins; i++){
@@ -77,7 +76,6 @@ int PhaseDiffBinning::createBinning(IDalitzEventList* events){
   		boxSet.clear();
     }
 
-	  std::cout << "Created Phase Binning " << std::endl;
 
   return numBins();
 
@@ -140,7 +138,6 @@ void PhaseDiffBinning::fillData(IDalitzEventList* data){
     	 phaseDiff = phaseDiff + 2*3.14159265;
      }	
       
-     std::cout << " PhaseDiff: " << phaseDiff << std::endl;
        
     for (int i = 0; i < _nbins; i++)
     {
@@ -193,10 +190,10 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
 
 //    fasCC->CPConjugateSameFitParameters();
     std::complex<double> ampCC = fasCC->getVal(data->getEvent());
-        std::cout << "Real " << amp.real() << std::endl;
-        std::cout << "Imag " << amp.imag() << std::endl;
-        std::cout << "RealCC " << ampCC.real() << std::endl;
-        std::cout << "ImagCC " << ampCC.imag() << std::endl;
+//        std::cout << "Real " << amp.real() << std::endl;
+//        std::cout << "Imag " << amp.imag() << std::endl;
+//        std::cout << "RealCC " << ampCC.real() << std::endl;
+//        std::cout << "ImagCC " << ampCC.imag() << std::endl;
 
     
     real =  amp.real();
@@ -228,9 +225,8 @@ void PhaseDiffBinning::fillDataCC(IDalitzEventList* data){
     	 phaseDiff = phaseDiff + 2*3.14159265;
      }	
       
-     std::cout << " PhaseDiff: " << phaseDiff << std::endl;
+//     std::cout << " PhaseDiff: " << phaseDiff << std::endl;
 
-           
     for (int i = 0; i < _nbins; i++)
     {
     	if (phaseDiff > (2*3.14159265/(_nbins))*i && phaseDiff < (2*3.14159265/(_nbins))*(i+1))

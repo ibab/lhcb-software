@@ -5,6 +5,10 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+! 08-02-2012 - Matt Coombes
+- Added PhaseBinning.h. Allowing users to bin phase space in constant phase
+  and constant phase difference.
+
 ! 24-01-2012 - Matt Coombes
 - Added Capability to Save and open Miranda binning.
   Bins are saved in NTuple format saving the max and min in each projection
