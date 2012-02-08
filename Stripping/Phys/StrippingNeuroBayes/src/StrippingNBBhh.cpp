@@ -58,32 +58,33 @@ StrippingNBBhh::~StrippingNBBhh() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode StrippingNBBhh::initialize() {
+StatusCode StrippingNBBhh::initialize() 
+{
   StatusCode sc = DVAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "==> Initialize" << endmsg;
 
   //
   // print settings
   //
 
-  info() <<  "Expertise      " <<  m_ExpertiseName << endmsg;
-  info() <<  "NetworkVersion " <<  m_netVersion    << endmsg;
-  info() <<  "NetworkCut     " <<  m_NetworkCut    << endmsg;
-  info() <<  "PlotHisto      " <<  m_PlotHisto     << endmsg;
-  info() <<  "PlotMassMin    " <<  m_PlotMassMin   << endmsg;
-  info() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
-  info() <<  "PlotNBins      " <<  m_PlotNBins     << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() <<  "Expertise      " <<  m_ExpertiseName << endmsg;
+    debug() <<  "NetworkVersion " <<  m_netVersion    << endmsg;
+    debug() <<  "NetworkCut     " <<  m_NetworkCut    << endmsg;
+    debug() <<  "PlotHisto      " <<  m_PlotHisto     << endmsg;
+    debug() <<  "PlotMassMin    " <<  m_PlotMassMin   << endmsg;
+    debug() <<  "PlotMassMax    " <<  m_PlotMassMax   << endmsg;
+    debug() <<  "PlotNBins      " <<  m_PlotNBins     << endmsg;
+  }
 
   //
   // get location of primary vertices
   //
   const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
   m_pvLocation = oo->primaryVertexLocation();
-  info() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
-
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
   //
   // setup NeuroBayes
@@ -101,7 +102,8 @@ StatusCode StrippingNBBhh::initialize() {
   // Expertise are in PARAM group of packages
   const std::string paramEnv = "STRIPPINGNEUROBAYESROOT";
   if ( getenv(paramEnv.c_str()) ) {
-    debug() << "found environment for Expertise " << paramEnv << endmsg;
+    //if ( msgLevel(MSG::DEBUG) )
+    // debug() << "found environment for Expertise " << paramEnv << endmsg;
     const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
                                     "/expertise/" + m_netVersion + "/" );
     fullPath = paramRoot+m_ExpertiseName;
@@ -109,8 +111,8 @@ StatusCode StrippingNBBhh::initialize() {
     return Error("PARAM file not found",StatusCode::FAILURE,1);
   } // if paramEnv
 
-
-  info() << "Take Expertise from " << fullPath << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Take Expertise from " << fullPath << endmsg;
 
   // FPE Guard for NB call
   FPE::Guard guard(true);
@@ -120,11 +122,9 @@ StatusCode StrippingNBBhh::initialize() {
   // (easier for switching between different networks)
   m_inArray = new float[NB_MAXNODE];
 
-
 #endif
 
-
-  return StatusCode::SUCCESS;
+  return sc;
 } //initialise
 
 //=============================================================================
