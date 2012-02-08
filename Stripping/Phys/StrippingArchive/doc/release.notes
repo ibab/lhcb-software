@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-08 - Chris Jones
+ - Remove any imports from GaudiConf
+
 !========================= StrippingArchive v1r5 2011-09-30 =========================
 ! 2011-09-30 - Jibo He
  - Updated the Stripping17 files

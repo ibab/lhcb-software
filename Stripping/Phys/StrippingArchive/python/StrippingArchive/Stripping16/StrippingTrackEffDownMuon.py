@@ -28,7 +28,6 @@ from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter
 from os import environ
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from GaudiKernel.SystemOfUnits import mm
 
