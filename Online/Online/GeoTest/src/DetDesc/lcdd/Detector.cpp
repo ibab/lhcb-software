@@ -109,24 +109,16 @@ DetElement& DetElement::setVisAttributes(const LCDD& lcdd, const string& name, c
   }
   else  {
     /*
-    string nam = this->name();
-    TGeoVolume* vol = volume;
-    vol->SetVisibility(kTRUE);
-    vol->SetVisDaughters(kTRUE);
-    vol->SetVisLeaves(kTRUE);
-    vol->SetVisContainers(kTRUE);
-    vol->SetTransparency(50);
-
-    string tag = node.tag();
-    if ( tag == Tag_slice.str() )  // Slices turned off by default
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleNoDaughters));
-    else if ( tag == Tag_layer.str() )  // Layers turned off, but daughters possibly visible
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleWithDaughters));
-    else if ( tag == Tag_module.str() )  // Tracker modules similar to layers
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleWithDaughters));
-    else if ( tag == Tag_module_component.str() )  // Tracker modules components turned off by default
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleNoDaughters));
-  */
+    string tag = this->name();
+    if ( ::strstr(tag.c_str(),"_slice") )       // Slices turned off by default
+      volume.setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
+    else if ( ::strstr(tag.c_str(),"_layer") )  // Layers turned off, but daughters possibly visible
+      volume.setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
+    else if ( ::strstr(tag.c_str(),"_module") ) // Tracker modules similar to layers
+      volume.setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
+    else if ( ::strstr(tag.c_str(),"_module_component") ) // Tracker modules similar to layers
+      volume.setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
+    */
   }
   return *this;
 }

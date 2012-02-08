@@ -25,32 +25,25 @@ using namespace std;
 namespace DetDesc { namespace Geometry {
 
   template <> void Printer<Constant>::operator()(const Constant& val)  const  {
-    os << "++ Constant: " << val->GetName() << "  \"" << val->GetTitle() << "\"  Value:" << _toDouble(val->GetTitle()) << endl;
+    os << "++ Constant:" << val.toString() << endl;
   }
 
   template <> void Printer<Material>::operator()(const Material& mat)  const  {
-    Handle<TGeoMedium>  val(mat);
-    os << "++ Medium:" << val->GetName() << " " << val->GetTitle() << " id:" << hex << val->GetId() 
-       << " Pointer:" << val->GetPointerName() << dec << endl;
-    os << "|  ";
-    val->Print();
+    os << "++ Medium:  " << mat.toString() << "|  " << endl;
+    mat->Print();
   }
 
   template <> void Printer<VisAttr>::operator()(const VisAttr& val)  const  {
-    VisAttr::Object* obj = val.data<VisAttr::Object>();
-    TColor* col = gROOT->GetColor(obj->color);
-    char text[256];
-    ::sprintf(text," RGB:%-8s [%d] %7.2f  Style:%d %d ShowDaughters:%3s Visible:%3s",
-	      col->AsHexString(), obj->color, col->GetAlpha(), int(obj->drawingStyle), int(obj->lineStyle),
-	      obj->showDaughters ? "YES" : "NO", obj->visible ? "YES" : "NO");
-    os << "++ VisAttr:  " << setw(32) << left << val->GetName() << text << endl;
+    os << "++ VisAttr: " << val.toString() << endl;
   }
 
   template <> void Printer<Readout>::operator()(const Readout& val)  const  {
+    os << "++ Readout: ";
     val->Print();
   }
 
   template <> void Printer<Region>::operator()(const Region& val)  const  {
+    os << "++ Region:  ";
     val->Print();
   }
 

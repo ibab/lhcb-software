@@ -82,6 +82,8 @@ namespace DetDesc {
       Constant(LCDD& doc, const std::string& name);
       /// Constructor to be used when creating a new DOM tree
       Constant(LCDD& doc, const std::string& name, const std::string& val);
+      /// String representation of this object
+      std::string toString()  const;
     };
 
     /** @class Transformation Objects.h
@@ -161,6 +163,8 @@ namespace DetDesc {
       Material(const Handle<Q>& e) : Handle<TGeoMaterial>(e) {}
       /// Constructor to be used when reading the already parsed DOM tree
       Material(LCDD& doc, const std::string& name);
+      /// String representation of this object
+      std::string toString()  const;
     };
 
     /** @class VisAttr Objects.h
@@ -204,6 +208,8 @@ namespace DetDesc {
       void setAlpha(float value);
       /// Set object color
       void setColor(float red, float green, float blue);
+      /// String representation of this object
+      std::string toString()  const;
     };
 
     /** @class Limit Objects.h

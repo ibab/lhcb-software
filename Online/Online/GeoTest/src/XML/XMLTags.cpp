@@ -134,6 +134,7 @@ namespace DetDesc   { namespace XML  {
   ATTR(reflect_rot);
   ATTR(region);
   ATTR(repeat);
+  ATTR(zmin);
   ATTR(rmin);
   ATTR(rmax);
   ATTR(rotation);

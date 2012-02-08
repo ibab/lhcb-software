@@ -11,6 +11,7 @@
 #include "DetDesc/IDDescriptor.h"
 
 #include "TMap.h"
+#include "TROOT.h"
 #include "TColor.h"
 #include "TGeoMatrix.h"
 #include "TGeoManager.h"
@@ -18,6 +19,8 @@
 #include "TGeoMaterial.h"
 
 #include <cmath>
+#include <strstream>
+#include <iomanip>
 
 using namespace std;
 using namespace DetDesc::Geometry;
@@ -64,6 +67,14 @@ Constant::Constant(LCDD& lcdd, const string& nam, const string& val)
 Constant::Constant(LCDD& lcdd, const string& name)   {
   m_element = new TNamed(name.c_str(),"");
   lcdd.add(*this);
+}
+
+/// String representation of this object
+string Constant::toString()  const {
+  strstream os;
+  os << m_element->GetName() << "  \"" << m_element->GetTitle() 
+     << "\"  Value:" << _toDouble(m_element->GetTitle());
+  return os.str();
 }
 
 /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
@@ -113,6 +124,15 @@ Material::Material(LCDD& /* lcdd */, const string& name)   {
   m_element = mat;
 }
 
+/// String representation of this object
+string Material::toString()  const {
+  Handle<TGeoMedium>  val(*this);
+  strstream os;
+  os << val->GetName() << " " << val->GetTitle() << " id:" << hex << val->GetId() 
+     << " Pointer:" << val->GetPointerName();
+  return os.str();
+}
+
 /// Constructor to be used when creating a new DOM tree
 VisAttr::VisAttr(LCDD& /* lcdd */, const string& name)    {
   Value<TNamed,Object>* obj = new Value<TNamed,Object>();
@@ -153,6 +173,18 @@ void VisAttr::setAlpha(float /* value */)   {
 /// Set object color
 void VisAttr::setColor(float red, float green, float blue)   {
   _data().color = TColor::GetColor(red,green,blue);
+}
+
+/// String representation of this object
+string VisAttr::toString()  const {
+  const VisAttr::Object* obj = &_data();
+  TColor* col = gROOT->GetColor(obj->color);
+  char text[256];
+  ::sprintf(text,"%-20s RGB:%-8s [%d] %7.2f  Style:%d %d ShowDaughters:%3s Visible:%3s",
+	    ptr()->GetName(),col->AsHexString(), obj->color, col->GetAlpha(), 
+	    int(obj->drawingStyle), int(obj->lineStyle),
+	    obj->showDaughters ? "YES" : "NO", obj->visible ? "YES" : "NO");
+  return text;
 }
 
 /// Constructor to be used when creating a new DOM tree

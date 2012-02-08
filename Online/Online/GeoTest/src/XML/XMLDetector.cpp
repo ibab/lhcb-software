@@ -54,6 +54,10 @@ double Dimension::rmin() const  {
   return m_element.attr<double>(Attr_rmin);
 }
 
+double Dimension::zmin() const  {
+  return m_element.attr<double>(Attr_zmin);
+}
+
 double Dimension::rmax() const  {
   return m_element.attr<double>(Attr_rmax);
 }

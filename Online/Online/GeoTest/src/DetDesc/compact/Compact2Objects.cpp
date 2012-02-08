@@ -336,21 +336,32 @@ namespace DetDesc { namespace Geometry {
     lcdd.addLimitSet(toRefObject<to_type>(lcdd,element));
   }
   template <> void Converter<DetElement>::operator()(const xml_h& element)  const {
+    const char*      req_dets = ::getenv("REQUIRED_DETECTORS");
+    const char*      req_typs = ::getenv("REQUIRED_DETECTOR_TYPES");
     string           type = element.attr<string>(_A(type));
     string           name = element.attr<string>(_A(name));
+    string           name_match = ":"+name+":";
+    string           type_match = ":"+type+":";
     SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,element);
-    //if ( type != "EcalBarrel" ) return;
-    //if ( type == "SiTrackerBarrel" ) return;
-    //if ( name != "SiVertexBarrel" ) return;
-    DetElement det(Handle<TNamed>(ROOT::Reflex::PluginService::Create<TNamed*>(type,&lcdd,&element,&sd)));
+    if ( req_dets && !strstr(name_match.c_str(),req_dets) ) return;
+    if ( req_typs && !strstr(type_match.c_str(),req_typs) ) return;
+    try {
+      DetElement det(Handle<TNamed>(ROOT::Reflex::PluginService::Create<TNamed*>(type,&lcdd,&element,&sd)));
 
-    if ( det.isValid() && element.hasAttr(_A(readout)) )  {
-      string rdo = element.attr<string>(_A(readout));
-      det.setReadout(lcdd.readout(rdo));
+      if ( det.isValid() && element.hasAttr(_A(readout)) )  {
+	string rdo = element.attr<string>(_A(readout));
+	det.setReadout(lcdd.readout(rdo));
+      }
+      cout << (det.isValid() ? "Converted" : "FAILED    ")
+	   << " subdetector:" << name << " of type " << type << endl;
+      lcdd.addDetector(det);
     }
-    cout << (det.isValid() ? "Converted" : "FAILED    ")
-	 << " subdetector:" << name << " of type " << type << endl;
-    lcdd.addDetector(det);
+    catch(const exception& e) {
+      cout << "FAILED    to convert subdetector:" << name << " of type " << type << ": " << e.what() << endl;
+    }
+    catch(...) {
+      cout << "FAILED    to convert subdetector:" << name << " of type " << type << ": UNKNONW Exception" << endl;
+    }
   }
   template <> void Converter<Materials>::operator()(const xml_h& materials)  const  {
     xml_coll_t(materials,_X(element) ).for_each(Converter<Atom>(lcdd));

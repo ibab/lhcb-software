@@ -203,55 +203,10 @@
             <limit name="step_length_max" particles="*" value="5.0" unit="mm" />
         </limitset>
     </limits>
-<!--
-    <display>
-        <vis name="SiVertexBarrelModuleVis" alpha="1.0" r="1.0" g="0.75" b="0.76" drawingStyle="wireframe" showDaughters="false" visible="true"/>
-        <vis name="SiVertexBarrelLayerVis" showDaughters="true" visible="false"/>
-        
-        <vis name="SiVertexEndcapLayerVis" alpha="1.0" r="0.74" g="0.75" b="0.76" showDaughters="false" visible="true"/>
 
-        <vis name="SiTrackerBarrelModuleVis" alpha="1.0" r="0.8" g="1.0" b="0.1" drawingStyle="wireframe" showDaughters="false" visible="true"/>
-        <vis name="SiTrackerBarrelLayerVis" showDaughters="true" visible="false"/>
-        
-        <vis name="SiTrackerEndcapModuleVis" alpha="0.1" r="0.8" g="1.0" b="0.1" drawingStyle="wireframe" showDaughters="false" visible="true"/>        
-            
-        <vis name="SiTrackerForwardVis" alpha="1.0" r="0.8" g="0.1" b="0.1" showDaughters="false" visible="true"/>
-            
-        <vis name="EcalBarrelVis" alpha="1.0" r="0.77" g="0.74" b="0.86" showDaughters="true" visible="false"/>
-        <vis name="EcalBarrelStaveVis" alpha="1.0" r="0.77" g="0.74" b="0.86" showDaughters="false" visible="true"/>
-
-        <vis name="EcalEndcapVis" alpha="1.0" r="0.77" g="0.74" b="0.86" showDaughters="false" visible="true"/>
-        <vis name="HcalBarrelVis" showDaughters="true" visible="false"/>
-        <vis name="HcalBarrelStavesVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
-        <vis name="HcalBarrelLayerVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
-        <vis name="HcalEndcapVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
-        <vis name="HcalEndcapLayerVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
-        
-        <vis name="SolenoidBarrelLayerVis" r="0.20703125" g="0.453125" b="0.77734375" showDaughters="false" visible="true"/>
-        
-        <vis name="MuonBarrelVis" showDaughters="true" visible="false"/>
-        <vis name="MuonBarrelStavesVis" r="0.28125" g="0.390625" b="0.625" showDaughters="true" visible="true"/>
-        <vis name="MuonBarrelLayerVis" showDaughters="true" visible="false"/>
-        <vis name="MuonBarrelSensorVis" r="0.54296875" g="0.41015625" b="0.41015625" visible="true"/>
-        <vis name="MuonBarrelAbsorberVis" r="0.28125" g="0.390625" b="0.625" visible="true"/>        
-                      
-        <vis name="MuonEndcapVis" r="0.28125" g="0.390625" b="0.625" showDaughters="true" visible="true"/>
-        <vis name="MuonEndcapLayerVis" showDaughters="true" visible="false"/>
-        <vis name="MuonEndcapSensorVis" r="0.54296875" g="0.41015625" b="0.41015625" visible="true"/>
-        <vis name="MuonEndcapAbsorberVis" r="0.28125" g="0.390625" b="0.625" visible="true"/>        
-                       
-        
-        <vis name="BeamPipeVis" r="0.7734375" g="0.8671875" b="0.99609375" showDaughters="false" visible="true"/>
-        <vis name="CableVis" showDaughters="false" visible="true"/>
-        
-        <vis name="SupportTubeVis" r="0.5" g="0.1" b="0.1" showDaughters="false" visible="true"/>
-        <vis name="TungstenShieldingVis" r="0.3" g="0.1" b="0.6" showDaughters="false" visible="true"/>
-        
-        <vis name="SupportVis" showDaughters="false" visible="true"/>
-        <vis name="LumiCalVis" showDaughters="false" visible="true"/>
-    </display>
--->
     <display>
+        <vis name="InvisibleNoDaughters"      showDaughters="false" visible="false"/>
+        <vis name="InvisibleWithDaughters"    showDaughters="true" visible="false"/>
         <vis name="SiVertexBarrelModuleVis" alpha="1.0" r="1" g="1" b="0.6" drawingStyle="wireframe" showDaughters="false" visible="true"/>
         <vis name="SiVertexBarrelLayerVis" alpha="1.0" r="1" g="1" b="0.6" showDaughters="true" visible="true"/>
         
@@ -264,21 +219,26 @@
             
         <vis name="SiTrackerForwardVis" alpha="1.0" r="0.8" g="0.1" b="0.1" showDaughters="false" visible="true"/>
             
-        <vis name="EcalBarrelVis" alpha="1.0" r="0.3" g="0.3" b="0.7" showDaughters="true" visible="false"/>
-        <vis name="EcalBarrelStaveVis" alpha="1.0" r="0.3" g="0.3" b="0.7" showDaughters="false" visible="true"/>
+        <vis name="EcalBarrelVis" alpha="1.0" r="0" g="0" b="0.3" showDaughters="true" visible="true"/>
+        <vis name="EcalBarrelStaveVis" alpha="1.0" r="1" g="0.9" b="0.5" showDaughters="false" visible="true"/>
 
         <vis name="EcalEndcapVis"       alpha="1" r="0.77" g="0.74" b="0.86" showDaughters="false" visible="true"/>
-        <vis name="HcalBarrelVis"       alpha="1" r="1"    g="0.1"  b="0.1" showDaughters="true" visible="false"/>
-        <vis name="HcalBarrelStavesVis" alpha="1" r="1"    g="0.1" b="0.1" showDaughters="true" visible="true"/>
-        <vis name="HcalBarrelLayerVis"  alpha="1" r="1"    g="0.5" b="0.5" showDaughters="true" visible="true"/>
+
+        <vis name="HcalBarrelVis"          alpha="1" r="1"    g="1"   b="0.1" showDaughters="true" visible="true"/>
+        <vis name="HcalBarrelStavesVis"    alpha="1" r="1"    g="0"   b="0.3" showDaughters="true" visible="true"/>
+        <vis name="HcalBarrelLayerVis"     alpha="1" r="1"    g="0"   b="0.5" showDaughters="true" visible="true"/>
+        <vis name="HcalBarrelSensorVis"    alpha="1" r="1"    g="1"   b="0.7" showDaughters="true" visible="true"/>
+
         <vis name="HcalEndcapVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
         <vis name="HcalEndcapLayerVis" r="0.296875" g="0.48828125" b="0.4921875" showDaughters="false" visible="true"/>
         
-        <vis name="SolenoidBarrelLayerVis" alpha="1" r="0.0" g="0.99" b="0.99" showDaughters="false" visible="true"/>
+        <vis name="SolenoidBarrelLayerVis" alpha="1" r="0"    g="0.3"  b="0.3" showDaughters="false" visible="true"/>
+        <vis name="SolenoidCoilEndsVis"    alpha="1" r="0"    g="0.9"  b="0.9" showDaughters="false" visible="true"/>
+        <vis name="AntiSolenoidVis"        alpha="1" r="0.3"  g="1"    b="1"   showDaughters="false" visible="true"/>
 
-        <vis name="MuonBarrelVis"          alpha="1" r="1" g="0.390625" b="0.625" showDaughters="true" visible="true"/>
-        <vis name="MuonBarrelStavesVis"    alpha="1" r="0" g="0.7" b="0.3" showDaughters="true" visible="true"/>
-        <vis name="MuonBarrelLayerVis"     alpha="1" r="0" g="1" b="0.3" showDaughters="true" visible="true"/>
+        <vis name="MuonBarrelVis"          alpha="1" r="1" g="0.3906" b="0.625" showDaughters="true" visible="true"/>
+        <vis name="MuonBarrelStavesVis"    alpha="1" r="0" g="0.7"    b="0.3" showDaughters="true" visible="true"/>
+        <vis name="MuonBarrelLayerVis"     alpha="1" r="0" g="1"      b="0.3" showDaughters="true" visible="true"/>
         <vis name="MuonBarrelSensorVis"    alpha="1" r="0.54296875" g="0.41015625" b="0.41015625" visible="true"/>
         <vis name="MuonBarrelAbsorberVis"  alpha="1" r="0.28125" g="0.390625" b="0.625" visible="true"/>        
 
@@ -294,7 +254,7 @@
         <vis name="SupportTubeVis" r="0.1" g="0.1" b="0.99" showDaughters="false" visible="true"/>
         <vis name="TungstenShieldingVis" r="0.99" g="0.1" b="0.2" showDaughters="false" visible="true"/>
         
-        <vis name="SupportVis" r="0.5" g="0.1" b="0.99" showDaughters="false" visible="true"/>
+        <vis name="SupportVis" r="0.8" g="0.8" b="0" showDaughters="false" visible="true"/>
         <vis name="LumiCalVis" showDaughters="false" visible="true"/>
         <vis name="GreenVis" r="0.0" g="1.0" b="0.0" showDaughters="true" visible="true"/>
         <vis name="RedVis" r="1.0" g="0.0" b="0.0" showDaughters="true" visible="true"/>
@@ -720,7 +680,7 @@
             <staves vis="HcalBarrelStavesVis"/>
             <layer repeat="(int) HcalBarrel_layers">
                 <slice material = "TungstenDens24" thickness = "1.00*cm" />
-                <slice material = "Polystyrene" thickness = "0.50*cm" sensitive = "yes" limits="cal_limits"/>       
+                <slice material = "Polystyrene" thickness = "0.50*cm" sensitive = "yes" limits="cal_limits" vis="HcalBarrelSensorVis"/>       
                 <slice material = "Air" thickness = "0.15*cm" />
             </layer>
         </detector>
@@ -1488,7 +1448,7 @@
         			rmax="HcalEndcap_rmin - SupportTube_thickness"
         			z="-MuonEndcap_zmax"/>
 		</detector>
-		<detector name="AntiSolenoid_Forward" type="PolyconeSupport" insideTrackingVolume="false" vis="SolenoidBarrelLayerVis">
+		<detector name="AntiSolenoid_Forward" type="PolyconeSupport" insideTrackingVolume="false" vis="AntiSolenoidVis">
 			<material name="Steel235" />
         	<zplane rmin="HcalEndcap_rmin + 1.0*cm"
         			rmax="MuonEndcap_rmin - 1.0*cm"
@@ -1497,7 +1457,7 @@
         			rmax="MuonEndcap_rmin - 1.0*cm"
         			z="MuonEndcap_zmax"/>
         </detector>
-        <detector name="AntiSolenoid_Backward" type="PolyconeSupport" insideTrackingVolume="false" vis="SolenoidBarrelLayerVis">
+        <detector name="AntiSolenoid_Backward" type="PolyconeSupport" insideTrackingVolume="false" vis="AntiSolenoidVis">
 			<material name="Steel235" />
         	<zplane rmin="HcalEndcap_rmin + 1.0*cm"
         			rmax="MuonEndcap_rmin - 1.0*cm"
@@ -1531,7 +1491,7 @@
             </layer>
         </detector>
         <detector name="SolenoidCoilEnds" type="DiskTracker" reflect="true" insideTrackingVolume="false">
-            <layer id="1" inner_r="SolenoidBarrelInnerRadius" inner_z="SolenoidBarrelOuterZ" outer_r="SolenoidBarrelOuterRadius" vis="SolenoidBarrelLayerVis">
+            <layer id="1" inner_r="SolenoidBarrelInnerRadius" inner_z="SolenoidBarrelOuterZ" outer_r="SolenoidBarrelOuterRadius" vis="SolenoidCoilEndsVis">
                 <slice material="Steel235" thickness="SolenoidEndcapCryostatThickness" />
             </layer>
         </detector>

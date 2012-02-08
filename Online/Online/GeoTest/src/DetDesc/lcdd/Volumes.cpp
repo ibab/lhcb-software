@@ -114,6 +114,12 @@ void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
   if ( attr.isValid() )  {
+    string n = name();
+#if 0
+    if ( n.find("Hcal") != string::npos ) {
+      cout << "+++> " << n << " " << attr.toString() << endl;
+    }
+#endif
     VisAttr::Object* vis = attr.data<VisAttr::Object>();
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
@@ -124,14 +130,14 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     m_element->SetVisibility(vis->visible ? kTRUE : kFALSE);
     m_element->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
-  //#if 0
+  #if 0
   // debug only, but if removed, does not plot nicely anymore....
   m_element->SetVisibility(kTRUE);
   m_element->SetVisDaughters(kTRUE);
   m_element->SetVisLeaves(kTRUE);
   m_element->SetVisContainers(kTRUE);
   m_element->SetTransparency(30);
-  //#endif
+  #endif
   data<Object>()->Attr_vis = attr;
 }
 

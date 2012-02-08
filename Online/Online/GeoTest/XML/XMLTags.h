@@ -38,6 +38,8 @@ namespace DetDesc   { namespace XML  {
   extern const Tag_t Tag_idspecref;
 
   extern const Tag_t Attr_InvisibleNoDaughters;
+  extern const Tag_t Attr_InvisibleWithDaughters;
+
   extern const Tag_t Attr_Z;
 
   extern const Tag_t Attr_1;
@@ -263,6 +265,7 @@ namespace DetDesc   { namespace XML  {
   //================================ Shapes:  ================================
   // Solid:
   // No tags
+  extern const Tag_t Attr_zmin;
 
   // -- ZPlane
   extern const Tag_t Tag_zplane;
