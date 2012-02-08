@@ -6,8 +6,6 @@ __author__ = 'Juan Palacios juan.palacios@cern.ch'
 
 from py.test import raises
 
-from GaudiConf.Configuration import *
-
 from StrippingConf.Configuration import StrippingLine, StrippingStream, StrippingConf
 
 from Configurables import FilterDesktop
