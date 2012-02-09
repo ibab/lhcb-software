@@ -4,6 +4,8 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+!========================= TMVASelections v1r0 2012-02-09 =========================
+
 ! 2012-02-07 - Jibo He
  - Updated requirements file to use TMVAWeights package
 
