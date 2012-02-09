@@ -4,15 +4,15 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r20 2012-02-09 =========================
+
 ! 2012-02-09 - Patrick Koppenburg
  - TupleToolGeometry : fill MINIP only in verbose (allows to switch it
    off for microDST)
 
 ! 2012-02-09 - Patrick Koppenburg
  - Fix bug #91350 : do not follow pv is there isn't any.
-  . Move sumPT method to TupleToolPrimaries
-
-!========================= DecayTreeTuple v3r20 2012-02-09 =========================
+ - Move sumPT method to TupleToolPrimaries
 
 ! 2012-02-07 - Cedric Potterat
  - Update TupleToolJetsBase according to the developpement of LoKiJetMakerAlg 
