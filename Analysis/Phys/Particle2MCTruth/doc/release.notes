@@ -6,6 +6,11 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+!========================= Particle2MCTruth v2r4p1 2012-02-09 =========================
+
+! 2012-02-09 - Chris Jones
+ - Remove obsolete dll.cpp file
+
 !========================= Particle2MCTruth v2r4 2011-12-15 =========================
 
 ! 2011-12-12 - Chris Jones
