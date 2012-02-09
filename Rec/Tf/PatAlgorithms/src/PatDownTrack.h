@@ -24,14 +24,14 @@ public:
   /// Standard constructor
   PatDownTrack( LHCb::Track* tr, 
                 double zTT,
-                std::vector<double> magnetParams,
-                std::vector<double> momentumParams,
-                std::vector<double> yParams,
+                const std::vector<double>& magnetParams,
+                const std::vector<double>& momentumParams,
+                const std::vector<double>& yParams,
                 double errZMag,
                 double magnetScale ); 
   
   virtual ~PatDownTrack( ) {} ///< Destructor
-  
+
   LHCb::Track*      track()      const { return m_track; }
   LHCb::State*      state()      const { return m_state; }
   double      xMagnet()          const { return m_magnet.x(); }
@@ -45,9 +45,9 @@ public:
   double      slopeY()           const { return m_slopeY; }
 
   double      moment()  const { 
-    return ( m_momPar[0] +    
-             m_momPar[1] * m_state->tx() * m_state->tx() +
-             m_momPar[2] * m_state->ty() * m_state->ty() ) / 
+    return ( (*m_momPar)[0] +    
+             (*m_momPar)[1] * m_state->tx() * m_state->tx() +
+             (*m_momPar)[2] * m_state->ty() * m_state->ty() ) / 
       ( m_state->tx() - m_slopeX ) * m_magnetScale;
   }
 
@@ -67,12 +67,12 @@ public:
 
   double sagitta( double z ) const { return m_curvature * ( z-m_zTT) * (z-m_zTT); }
 
-  double distance( const PatTTHit* hit ) {
-    double z =  hit->z();
-    return hit->x() - xAtZ( z );
+  double distance( const PatTTHit* hit ) const {
+    return hit->x() - xAtZ( hit->z() );
   }
 
-  PatTTHits& hits()   { return m_hits; }
+  PatTTHits& hits() { return m_hits; }
+  const PatTTHits& hits() const { return m_hits; }
 
   void startNewCandidate() {
     m_hits.clear();
@@ -102,7 +102,7 @@ public:
   void setChisq( double chisq )         { m_chisq = chisq; }
   double chisq( )                 const { return m_chisq; }
 
-  double initialChisq() {
+  double initialChisq() const {
     return m_displX * m_displX / ( m_errXMag * m_errXMag ) + 
            m_displY * m_displY / ( m_errYMag * m_errYMag );
   }
@@ -113,7 +113,7 @@ public:
     m_slopeX += dsl;
   }
 
-  double dxMagnet() { return m_magnetSave.x() - m_magnet.x(); }
+  double dxMagnet() const { return m_magnetSave.x() - m_magnet.x(); }
 
   void sortFinalHits() {
     std::sort( m_hits.begin(), m_hits.end(), Tf::increasingByZ<PatTTHit>() );
@@ -124,8 +124,8 @@ protected:
 
 private:
   double      m_zTT;
-  std::vector<double> m_magPar;
-  std::vector<double> m_momPar;
+  const std::vector<double>* m_magPar;
+  const std::vector<double>* m_momPar;
   double              m_magnetScale;
   LHCb::Track*        m_track;
   LHCb::State*        m_state;

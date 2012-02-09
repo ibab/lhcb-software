@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <boost/array.hpp>
+
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -143,7 +146,8 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     double firstProj = (*itBeg)->projection();
     goodTT.clear();
     int nbPlane = 0;
-    std::vector<int> firedPlanes(4, 0);
+    boost::array<int, 4> firedPlanes;
+    std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
     PatTTHits::iterator itEnd = itBeg;
 
     double maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
@@ -274,7 +278,8 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
   while ( 1.e10 < chi2 && counter < nHits) {
 
     int nDoF = 0;
-    std::vector<int> differentPlanes(4, 0);
+    boost::array<int, 4> differentPlanes;
+    std::fill(differentPlanes.begin(), differentPlanes.end(), 0);
     double worstDiff = -1.0;
     double mat[6], rhs[3];
 

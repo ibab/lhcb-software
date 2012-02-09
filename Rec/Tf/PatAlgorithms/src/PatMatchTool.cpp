@@ -114,7 +114,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
 	    }
 	}
     }
-    std::sort(cands.begin(), cands.end(), MatchCandidate::lowerByChi2());
+    std::stable_sort(cands.begin(), cands.end(), MatchCandidate::lowerByChi2());
 
     // for each track, tag if used or not.
     std::map<const LHCb::Track*,bool> used;

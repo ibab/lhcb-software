@@ -4,6 +4,22 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-02-09 - Manuel Tobias Schiller
+ - change calls to std::sort where hits were sorted by a potentially unstable
+   sorting criterium to use std::stable_sort; the reason is that there is a
+   possibility that we end up with more than one hit at the same z (e.g. two
+   hits in same layer), so the result of the sort will depend on the
+   implementation of std::sort - using std::stable_sort instead avoids that
+   (these changes have to be applied in addition to those in Tf/TfKernel to
+   fix differences observed between gcc 4.3 and gcc 4.6)
+ - PatFwdTrackCandidate: avoid some memory allocations in handling the vector
+   of PatFwdHits
+ - FastForwardTool, PatAddTTCoord: replace std::vector by boost::array to avoid
+   memory allocations
+ - PatDownTrack: avoid needless copying of parameter vectors, preallocate
+   space for hit container
+ - work on const correctness (where possible)
+
 !========================= PatAlgorithms v4r17 2012-01-31 =========================
 ! 2012-01-31 - Manuel Tobias Schiller
  - PatMatchTool: make sure we copy all three states in T to help the fast fit

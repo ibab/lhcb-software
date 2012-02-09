@@ -1,5 +1,8 @@
 // Include files
 
+#include <algorithm>
+#include "boost/array.hpp"
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -191,7 +194,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   for( itL = m_candidates.begin(); m_candidates.end() != itL; ++itL ) {
     PatFwdTrackCandidate temp = *itL;
-    std::sort( temp.coordBegin(), temp.coordEnd(), LowerByID() );
+    std::stable_sort( temp.coordBegin(), temp.coordEnd(), LowerByID() );
 
     if ( isDebug ) {
       info() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
@@ -377,7 +380,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
   }
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
-    std::sort( goodCandidates.begin(), goodCandidates.end(), sortQuality());
+    std::stable_sort( goodCandidates.begin(), goodCandidates.end(), sortQuality());
     // loop over all candidates
     std::vector<PatFwdTrackCandidate>::iterator iall;
     int cand_count = 0;
@@ -1052,7 +1055,8 @@ double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug 
   for ( itF = ttHits.begin(); itF != ttHits.end() - 3 ;  ++itF ) {
     itL = itF;
     int nbPlanes = 0;
-    std::vector<int> firedPlanes(4, 0);
+    boost::array<int, 4> firedPlanes;
+    std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
     while ( itL < ttHits.end() &&
             (*itL)->projection() <  (*itF)->projection() + tolMatch
             && nbPlanes < 4 ) {
@@ -1176,7 +1180,8 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
 
   //== Get a list of hits compatible together, using also the drift distance.
 
-  std::vector<int> nbInPlane( 12, 0 );
+  boost::array<int, 12> nbInPlane;
+  std::fill(nbInPlane.begin(), nbInPlane.end(), 0);
   double sum = 0.;
   double sw  = 0.;
   for ( itH = temp.begin(); temp.end() > itH; ++itH ) {
@@ -1241,8 +1246,8 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
   }
 
   //== Sort by Z
-
-  std::sort( track.coordBegin(), track.coordEnd(), Tf::increasingByZ<PatForwardHit>() );
+  std::sort( track.coordBegin(), track.coordEnd(),
+	  Tf::increasingByZ<PatForwardHit>() );
 
   return true;
 }

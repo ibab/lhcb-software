@@ -662,7 +662,8 @@ void PatDownstream::findMatchingHits( PatTTHits& MatchingXHits, PatDownTrack& tr
       if ( adist < tol ) MatchingXHits.push_back( hit );
     }
   }
-  std::sort( MatchingXHits.begin(), MatchingXHits.end(), Tf::increasingByZ<PatTTHit>() );
+  std::sort( MatchingXHits.begin(), MatchingXHits.end(),
+	  Tf::increasingByZ<PatTTHit>() );
 }
 
 

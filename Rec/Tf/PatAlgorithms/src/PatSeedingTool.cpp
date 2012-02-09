@@ -404,7 +404,7 @@ void PatSeedingTool::killClonesAndStore(
   outputTracks.reserve(outputTracks.size() + finalSelection.size());
   //== Sort tracks according to their chi2
   if ( finalSelection.size() > 1 )
-    std::sort( finalSelection.begin(), finalSelection.end(),
+    std::stable_sort( finalSelection.begin(), finalSelection.end(),
                PatSeedTrack::decreasingQuality() );
 
   bool debug = msgLevel( MSG::DEBUG );

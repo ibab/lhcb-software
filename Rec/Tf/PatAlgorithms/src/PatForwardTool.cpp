@@ -338,7 +338,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   }
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
-    std::sort( goodCandidates.begin(), goodCandidates.end(), sortQuality());
+    std::stable_sort( goodCandidates.begin(), goodCandidates.end(), sortQuality());
     // loop over all candidates
     std::vector<PatFwdTrackCandidate>::iterator iall;
     int cand_count = 0;
@@ -758,7 +758,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
 
   //== Sort by Z
-
   std::sort( track.coordBegin(), track.coordEnd(), 
 	     Tf::increasingByZ<PatForwardHit>() );
 

@@ -15,14 +15,15 @@
 //=============================================================================
 PatDownTrack::PatDownTrack( LHCb::Track* tr, 
                             double zTT,
-                            std::vector<double> magnetParams,
-                            std::vector<double> momentumParams,
-                            std::vector<double> yParams,
+                            const std::vector<double>& magnetParams,
+                            const std::vector<double>& momentumParams,
+                            const std::vector<double>& yParams,
                             double errZMag,
-                            double magnetScale) {
+                            double magnetScale) :
+    m_magPar(&magnetParams), m_momPar(&momentumParams)
+{
+  m_hits.reserve(8);
   m_zTT    = zTT;
-  m_magPar = magnetParams;
-  m_momPar = momentumParams;
   m_magnetScale = magnetScale;
   
   m_track = tr;
@@ -36,9 +37,9 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   m_state = &tr->closestState( 10000. );
   
   double zMagnet = 
-    m_magPar[0] + 
-    m_magPar[1] * m_state->ty() * m_state->ty() +
-    m_magPar[2] * m_state->tx() * m_state->tx() + m_magPar[3] / m_state->p();
+    (*m_magPar)[0] + 
+    (*m_magPar)[1] * m_state->ty() * m_state->ty() +
+    (*m_magPar)[2] * m_state->tx() * m_state->tx() + (*m_magPar)[3] / m_state->p();
 
   double dz      = zMagnet - m_state->z();
   double xMagnet = m_state->x() + dz * m_state->tx();

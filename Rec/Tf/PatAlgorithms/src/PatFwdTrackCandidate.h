@@ -2,6 +2,8 @@
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
+#include <algorithm>
+
 // Include files
 #include "Event/Track.h"
 #include "PatKernel/PatForwardHit.h"
@@ -16,32 +18,32 @@
    */
 
   class PatFwdTrackCandidate {
+      private:
+	  struct isNotSel {
+	      bool operator()(const PatFwdHit* h) const
+	      { return !h->isSelected(); }
+	  };
   public:
     /// Standard constructor
-    PatFwdTrackCandidate( const LHCb::Track * tr, PatFwdHits& coords){
-      m_coords = coords;
-      init( tr );
-    };
+    PatFwdTrackCandidate( const LHCb::Track * tr, PatFwdHits& coords) :
+	m_track(tr), m_coords(coords)
+    { init(); }
 
-    PatFwdTrackCandidate( const LHCb::Track* tr ) {
-      m_coords.clear();
-      init(tr);
-    };
+    PatFwdTrackCandidate( const LHCb::Track* tr ) :
+	m_track(tr)
+    { m_coords.reserve(32); init(); }
 
-    void cleanCoords() {
-      PatFwdHits temp = m_coords;
-      m_coords.clear();
-      for ( PatFwdHits::const_iterator itH = temp.begin(); temp.end() !=itH; ++itH ) {
-        if ( (*itH)->isSelected() ) {
-          m_coords.push_back ( *itH);
-        }
-      }
+    void cleanCoords()
+    {
+	// Manuel Schiller 2012-02-06: avoid allocation of temp vector
+	m_coords.erase(
+		std::remove_if(m_coords.begin(), m_coords.end(), isNotSel()),
+		m_coords.end());
     }
 
-
-    void init( const LHCb::Track* tr ) {
-      m_track   = tr;
-      const LHCb::State& state = *(tr->stateAt(LHCb::State::EndVelo));
+  private:
+    void init() {
+      const LHCb::State& state = *(m_track->stateAt(LHCb::State::EndVelo));
       m_x0  = state.x();
       m_y0  = state.y();
       m_z0  = state.z();
@@ -69,6 +71,7 @@
       m_chi2PerDoF = 0.;
       m_nDoF = 0;
     }
+  public:
 
     virtual ~PatFwdTrackCandidate( ) {}; ///< Destructor
 
@@ -88,10 +91,11 @@
     PatFwdHits::iterator coordBegin()  { return m_coords.begin(); }
     PatFwdHits::iterator coordEnd()    { return m_coords.end(); }
     void addCoord( PatFwdHit* coord ) { m_coords.push_back( coord ); }
-    void addCoords( PatFwdHits& coords ) {
-      for ( PatFwdHits::iterator itH = coords.begin() ; coords.end() != itH ; itH++ ) {
-        m_coords.push_back( *itH);
-      }
+    void addCoords( PatFwdHits& coords )
+    {
+	// Manuel Schiller 2012-02-06: make sure we have space in m_coords
+	m_coords.reserve(m_coords.size() + coords.size());
+	m_coords.insert(m_coords.end(), coords.begin(), coords.end());
     }
     PatFwdHits& coords() { return m_coords; }
 
