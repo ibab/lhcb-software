@@ -7,9 +7,12 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v1r3 2012-02-09 =========================
+
 ! 2012-01-27 - Victor Coco
  - Add extra info on Saturated calorimeter cells.
- - Update the configuration files to the latest option (especially put JetID and JEC in JetMaker_Config)
+ - Update the configuration files to the latest option (especially put JetID and 
+   JEC in JetMaker_Config)
 
 !========================= JetAccessories v1r2p1 2011-12-15 =========================
 
