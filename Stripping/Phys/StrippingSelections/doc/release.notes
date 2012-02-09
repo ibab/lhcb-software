@@ -4,6 +4,7 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r10 2012-02-09 =========================
 ! 2012-02-09 - Matthew M Reid
  - Modified decay descriptor to stop duplication of charge conjugate states
 
