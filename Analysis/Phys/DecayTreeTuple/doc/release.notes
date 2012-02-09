@@ -4,8 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v3r20 2012-02-09 =========================
+
 ! 2012-02-07 - Cedric Potterat
- - Update TupleToolJetsBase according to the developpement of LoKiJetMakerAlg (Phys/LoKiJets)
+ - Update TupleToolJetsBase according to the developpement of LoKiJetMakerAlg 
+   (Phys/LoKiJets)
 
 ! 2012-01-26 - Chris Jones
  - Remove hack in TupleToolEventInfo to save event number and GPS time as 
