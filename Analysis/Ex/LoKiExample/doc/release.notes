@@ -7,6 +7,11 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiExample v8r8p1 2012-02-09 =========================
+
+! 2012-02-09 - Chris Jones
+ - Remove obsolete dll.cpp file
+
 !========================== LoKiExample v8r8 2011-02-20 ===================
 
 ! 2011-02-05 - Juan Palacios
