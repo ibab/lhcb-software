@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2012-02-09 - Patrick Koppenburg
+ - Fix bug #91350 : do not follow pv is there isn't any.
+  . Move sumPT method to TupleToolPrimaries
+
 !========================= DecayTreeTuple v3r20 2012-02-09 =========================
 
 ! 2012-02-07 - Cedric Potterat
