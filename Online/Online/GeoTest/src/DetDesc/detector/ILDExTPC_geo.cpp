@@ -17,18 +17,15 @@ namespace DetDesc { namespace Geometry {
   
   template <> Ref_t DetElementFactory<ILDExTPC>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector&)  {
     xml_det_t   x_det = e;
-    string      name  = x_det.nameStr();
     xml_comp_t  x_tube (x_det.child(_X(tubs)));
+    string      name  = x_det.nameStr();
     Material    mat    (lcdd.material(x_det.materialStr()));
     ILDExTPC    tpc    (lcdd,name,x_det.typeStr(),x_det.id());
     Tube        tpc_tub(lcdd,name+"_envelope",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
     Volume      tpc_vol(lcdd,name+"_envelope_volume", tpc_tub, mat);
 
-    tpc.setEnvelope(tpc_tub).setVolume(tpc_vol);
-    lcdd.pickMotherVolume(tpc).placeVolume(tpc_vol,IdentityPos());
-
     for(xml_coll_t c(e,_X(detector)); c; ++c)  {
-      xml_det_t   px_det  (c);
+      xml_comp_t  px_det  (c);
       xml_comp_t  px_tube (px_det.child(_X(tubs)));
       xml_dim_t   px_pos  (px_det.child(_X(position)));
       xml_dim_t   px_rot  (px_det.child(_X(rotation)));
@@ -40,12 +37,11 @@ namespace DetDesc { namespace Geometry {
       Position    part_pos(px_pos.x(),px_pos.y(),px_pos.z());
       Rotation    part_rot(px_rot.x(),px_rot.y(),px_rot.z());
 
-      part_det.setVolume(part_vol).setEnvelope(part_tub);
-      part_det.setVisAttributes(lcdd,px_det.visStr(),part_vol);
+      part_vol.setVisAttributes(lcdd,px_det.visStr());
 
       PlacedVolume part_phv = tpc_vol.placeVolume(part_vol,part_pos,part_rot);
       part_phv.addPhysVolID(_A(id),px_det.id());
-
+      part_det.setPlacement(part_phv);
       switch(part_det.id()) {
       case 0:	tpc.setInnerWall(part_det);  break;
       case 1:	tpc.setOuterWall(part_det);  break;
@@ -53,7 +49,9 @@ namespace DetDesc { namespace Geometry {
       }
       tpc.add(part_det);
     }
-    tpc.setVisAttributes(lcdd, x_det.visStr(), tpc_vol);
+    tpc_vol.setVisAttributes(lcdd, x_det.visStr());
+    PlacedVolume phv = lcdd.pickMotherVolume(tpc).placeVolume(tpc_vol);
+    tpc.setPlacement(phv);
     return tpc;
   }
 }}

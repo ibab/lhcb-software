@@ -42,14 +42,14 @@ namespace DetDesc {
      */
     struct SensitiveDetector : public Ref_t  {
       struct Object  {
-        int          Attr_verbose;
-        int          Attr_combine_hits;
-        double       Attr_ecut;
-        std::string  Attr_eunit;
-        std::string  Attr_hits_collection;
-        Segmentation Attr_segmentation;
-        Ref_t  Attr_id;
-        Object() : Attr_verbose(0), Attr_segmentation() {}
+        int          verbose;
+        int          combine_hits;
+        double       ecut;
+        std::string  eunit;
+        std::string  hits_collection;
+        Segmentation segmentation;
+        Ref_t  id;
+        Object() : verbose(0), segmentation() {}
       };
 
       /// Default constructor
@@ -83,16 +83,13 @@ namespace DetDesc {
     struct DetElement : public Ref_t   {
       typedef std::map<std::string,DetElement> Children;
       struct Object  {
-        int               Attr_id;
-        int               Attr_combine_hits;
-        Solid             Attr_envelope;
-        Volume            Attr_volume;
-        Material          Attr_material;
-        VisAttr           Attr_visualization;
-        Readout           Attr_readout;
-	Alignment         Attr_alignment;
-	Conditions        Attr_conditions;
-        Children          Attr_children;
+        int               id;
+        int               combine_hits;
+        PlacedVolume      placement;
+        Readout           readout;
+	Alignment         alignment;
+	Conditions        conditions;
+        Children          children;
         Object();
       };
 
@@ -107,9 +104,13 @@ namespace DetDesc {
 
       /// Additional data accessor
       Object& _data()   const {  return *data<Object>();  }
-      DetElement& setVisAttributes(const LCDD& lcdd, const std::string& solid, const Volume& volume);
+      /// Set Visualization attributes to the detector element
+      DetElement& setVisAttributes(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      /// Set the regional attributes to the detector element
       DetElement& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      /// Set the limits to the detector element
       DetElement& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      /// Set all attributes in one go
       DetElement& setAttributes(const LCDD& lcdd, const Volume& volume,
 				const std::string& region, 
 				const std::string& limits, 
@@ -123,18 +124,13 @@ namespace DetDesc {
       bool            isCalorimeter() const;
       bool            isInsideTrackingVolume() const;
       bool            combineHits() const;
-      Material        material() const;
       VisAttr         visAttr() const;
       Readout         readout() const;
       DetElement&     setReadout(const Readout& readout);
       /// Access the logical volume of the detector element
-      Volume          volume() const;
+      PlacedVolume    placement() const;
       /// Set the logical volume of the detector element
-      DetElement&     setVolume(const Volume& volume);
-      /// Access the shape of the envelope
-      Solid           envelope() const;
-      /// Set envelope shape to the detector element
-      DetElement&     setEnvelope(const Solid& solid);
+      DetElement&     setPlacement(const PlacedVolume& volume);
       /// Access to the list of children
       const Children& children() const;
       /// Access to individual children by name

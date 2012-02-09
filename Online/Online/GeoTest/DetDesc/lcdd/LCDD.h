@@ -48,6 +48,9 @@ namespace DetDesc {
       virtual void endDocument() = 0;
       virtual void addStdMaterials() = 0;
 
+      virtual Material air() const = 0;
+      virtual Material vacuum() const = 0;
+
       virtual Volume   worldVolume() const = 0;
       virtual Volume   trackingVolume() const = 0;
 

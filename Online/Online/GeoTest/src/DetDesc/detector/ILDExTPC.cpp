@@ -12,7 +12,7 @@ namespace DetDesc {
     Value<TNamed,Object>* p = new Value<TNamed,Object>();
     assign(p,name, type);
     p->pressure = 12345.0;
-    p->Attr_id = id;
+    p->id = id;
   }
 
   double ILDExTPC::getVolume() const {

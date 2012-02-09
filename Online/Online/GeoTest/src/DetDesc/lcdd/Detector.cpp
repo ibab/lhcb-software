@@ -9,13 +9,13 @@
 
 #include "DetDesc/IDDescriptor.h"
 #include "DetDesc/lcdd/LCDD.h"
+#include "TGeoVolume.h"
 
 using namespace std;
 using namespace DetDesc::Geometry;
 
 DetElement::Object::Object()  
-: Attr_id(0), Attr_combine_hits(0), Attr_envelope(),
-  Attr_volume(), Attr_material(), Attr_visualization(), Attr_readout()
+: id(0), combine_hits(0), placement(), readout()
 {
 }
 
@@ -23,7 +23,7 @@ DetElement::Object::Object()
 DetElement::DetElement(const LCDD& /* lcdd */, const string& name, const string& type, int id)
 {
   assign(new Value<TNamed,Object>(),name,type);
-  _data().Attr_id = id;
+  _data().id = id;
 }
 
 string DetElement::type() const   {
@@ -31,37 +31,37 @@ string DetElement::type() const   {
 }
 
 int DetElement::id() const   {
-  return _data().Attr_id;
-}
-
-Material DetElement::material() const  {
-  return _data().Attr_material;
+  return _data().id;
 }
 
 bool DetElement::combineHits() const   {
-  return _data().Attr_combine_hits != 0;
+  return _data().combine_hits != 0;
 }
 
 VisAttr DetElement::visAttr() const  {
-  return _data().Attr_visualization;
+  if ( isValid() ) {
+    Object& o = _data();
+    return o.placement.volume().visAttributes();
+  }
+  throw runtime_error("DetElement::visAttr: Self is not defined [Invalid Handle]");
 }
 
 Readout DetElement::readout() const   {
-  return _data().Attr_readout;
+  return _data().readout;
 }
 
 DetElement& DetElement::setReadout(const Readout& readout)   {
-  _data().Attr_readout = readout;
+  _data().readout = readout;
   return *this;
 }
 
 const DetElement::Children& DetElement::children() const   {
-  return _data().Attr_children;
+  return _data().children;
 }
 
 /// Access to individual children by name
 DetElement DetElement::child(const std::string& name) const {
-  const Children& c = _data().Attr_children;
+  const Children& c = _data().children;
   Children::const_iterator i = c.find(name);
   return i == c.end() ? DetElement() : (*i).second;
 }
@@ -74,53 +74,28 @@ void DetElement::check(bool condition, const string& msg) const  {
 
 DetElement& DetElement::add(const DetElement& sdet)  {
   if ( isValid() )  {
-    pair<Children::iterator,bool> r = _data().Attr_children.insert(make_pair(sdet.name(),sdet));
+    pair<Children::iterator,bool> r = _data().children.insert(make_pair(sdet.name(),sdet));
     if ( r.second ) return *this;
     throw runtime_error("DetElement::add: Element "+string(sdet.name())+" is already present [Double-Insert]");
   }
   throw runtime_error("DetElement::add: Self is not defined [Invalid Handle]");
 }
 
-Volume  DetElement::volume() const    {
-  return _data().Attr_volume;
+PlacedVolume DetElement::placement() const    {
+  return _data().placement;
 }
 
-DetElement& DetElement::setVolume(const Volume& volume)  {
-  _data().Attr_volume = volume;
-  _data().Attr_material = volume.material();
+DetElement& DetElement::setPlacement(const PlacedVolume& placement)  {
+  _data().placement = placement;
   return *this;
 }
 
-Solid  DetElement::envelope() const    {
-  return _data().Attr_envelope;
-}
-
-DetElement& DetElement::setEnvelope(const Solid& solid)   {
-  _data().Attr_envelope = solid;
-  return *this;
-}
-
-#include "TGeoVolume.h"
 DetElement& DetElement::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {
-  if ( !name.empty() )   {
-    VisAttr attr = lcdd.visAttributes(name);
-    _data().Attr_visualization = attr;
-    volume.setVisAttributes(attr);
+  if ( isValid() )  {
+    volume.setVisAttributes(lcdd,name);
+    return *this;
   }
-  else  {
-    /*
-    string tag = this->name();
-    if ( ::strstr(tag.c_str(),"_slice") )       // Slices turned off by default
-      volume.setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
-    else if ( ::strstr(tag.c_str(),"_layer") )  // Layers turned off, but daughters possibly visible
-      volume.setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
-    else if ( ::strstr(tag.c_str(),"_module") ) // Tracker modules similar to layers
-      volume.setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
-    else if ( ::strstr(tag.c_str(),"_module_component") ) // Tracker modules similar to layers
-      volume.setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
-    */
-  }
-  return *this;
+  throw runtime_error("DetElement::setRegion: Self is not defined [Invalid Handle]");
 }
 
 DetElement& DetElement::setRegion(const LCDD& lcdd, const string& name, const Volume& volume)  {
@@ -148,14 +123,12 @@ DetElement& DetElement::setAttributes(const LCDD& lcdd, const Volume& volume,
                                         const std::string& limits, 
                                         const std::string& vis)
 {
-  setRegion(lcdd,region,volume);
-  setLimitSet(lcdd,limits,volume);
-  return setVisAttributes(lcdd,vis,volume);
+  return setRegion(lcdd,region,volume).setLimitSet(lcdd,limits,volume).setVisAttributes(lcdd,vis,volume);
 }
 
 DetElement& DetElement::setCombineHits(bool value, SensitiveDetector& sens)   {
   if ( isTracker() )  {
-    _data().Attr_combine_hits = value;
+    _data().combine_hits = value;
     sens.setCombineHits(value);
   }
   return *this;
@@ -164,7 +137,7 @@ DetElement& DetElement::setCombineHits(bool value, SensitiveDetector& sens)   {
 bool DetElement::isTracker() const   {
   if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Tracker") != string::npos && _data().Attr_readout.isValid() )   {
+    if ( typ.find("Tracker") != string::npos && _data().readout.isValid() )   {
       return true;
     }
   }
@@ -174,22 +147,12 @@ bool DetElement::isTracker() const   {
 bool DetElement::isCalorimeter() const   {
   if ( isValid() )  {
     string typ = type();
-    if ( typ.find("Calorimeter") != string::npos && _data().Attr_readout.isValid() ) {
+    if ( typ.find("Calorimeter") != string::npos && _data().readout.isValid() ) {
       return true;
     }
   }
   return false;
 }
-
-//#if 0
-bool DetElement::isInsideTrackingVolume() const  {
-  //if ( isValid() && hasAttr(Attr_insideTrackingVolume) )
-  //  return attr<bool>(Attr_insideTrackingVolume);
-  //else if ( isTracker() )
-  //  return true;
-  return false;
-}
-//#endif
 
 SensitiveDetector::SensitiveDetector(const LCDD& /* lcdd */, const std::string& type, const std::string& name) 
 {
@@ -200,9 +163,9 @@ SensitiveDetector::SensitiveDetector(const LCDD& /* lcdd */, const std::string& 
     </calorimeter>
   */
   assign(new Value<TNamed,Object>(),name,type);
-  _data().Attr_ecut = 0e0;
-  _data().Attr_eunit = "MeV";
-  _data().Attr_verbose = 0;
+  _data().ecut = 0e0;
+  _data().eunit = "MeV";
+  _data().verbose = 0;
 }
 
 /// Access the type of the sensitive detector
@@ -212,27 +175,27 @@ string SensitiveDetector::type() const  {
 
 /// Assign the IDDescriptor reference
 SensitiveDetector& SensitiveDetector::setIDSpec(const Ref_t& spec)  {
-  _data().Attr_id = spec;
+  _data().id = spec;
   return *this;
 }
 
 /// Assign the name of the hits collection
 SensitiveDetector& SensitiveDetector::setHitsCollection(const string& collection)  {
-  _data().Attr_hits_collection = collection;
+  _data().hits_collection = collection;
   return *this;
 }
 
 /// Assign the name of the hits collection
 SensitiveDetector& SensitiveDetector::setCombineHits(bool value)  {
   int v = value ? 1 : 0;
-  _data().Attr_combine_hits = v;
+  _data().combine_hits = v;
   return *this;
 }
 
 /// Assign the readout segmentation reference
 SensitiveDetector& SensitiveDetector::setSegmentation(const Segmentation& segmentation)   {
   if ( segmentation.isValid() )  {
-    _data().Attr_segmentation = segmentation;
+    _data().segmentation = segmentation;
     return *this;
   }
   throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");

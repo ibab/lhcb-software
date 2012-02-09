@@ -120,8 +120,10 @@ void LCDDImp::init()  {
 
   //Ref_t ref_world(lcdd,"world",world.refName());
   //m_setup.append(ref_world);
-  m_worldVol    = world;
-  m_trackingVol = tracking;
+  m_worldVol       = world;
+  m_trackingVol    = tracking;
+  m_materialAir    = air;
+  m_materialVacuum = material("Vacuum");
   gGeoManager->SetTopVolume(m_worldVol);
 }
 

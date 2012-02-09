@@ -15,6 +15,7 @@
 #include "TGeoVolume.h"
 #include "TGeoNode.h"
 #include "TGeoMatrix.h"
+#include "TGeoMedium.h"
 
 // C/C++ include files
 #include <climits>
@@ -122,10 +123,6 @@ void Volume::setLimitSet(const LimitSet& obj)  const   {
   data<Object>()->Attr_limits = obj;
 }
 
-void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
-  data<Object>()->Attr_sens_det = obj;
-}
-
 void Volume::setVisAttributes(const VisAttr& attr) const   {
   if ( attr.isValid() )  {
     VisAttr::Object* vis = attr.data<VisAttr::Object>();
@@ -139,6 +136,42 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     m_element->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
   data<Object>()->Attr_vis = attr;
+}
+
+void Volume::setVisAttributes(const LCDD& lcdd, const string& name)  const {
+  if ( !name.empty() )   {
+    VisAttr attr = lcdd.visAttributes(name);
+    data<Object>()->Attr_vis = attr;
+    setVisAttributes(attr);
+  }
+  else  {
+    /*
+    string tag = this->name();
+    if ( ::strstr(tag.c_str(),"_slice") )       // Slices turned off by default
+      setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
+    else if ( ::strstr(tag.c_str(),"_layer") )  // Layers turned off, but daughters possibly visible
+      setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
+    else if ( ::strstr(tag.c_str(),"_module") ) // Tracker modules similar to layers
+      setVisAttributes(lcdd.visAttributes("InvisibleWithDaughters"));
+    else if ( ::strstr(tag.c_str(),"_module_component") ) // Tracker modules similar to layers
+      setVisAttributes(lcdd.visAttributes("InvisibleNoDaughters"));
+    */
+  }
+}
+
+/// Attach attributes to the volume
+void Volume::setAttributes(const LCDD& lcdd,
+			   const string& region, 
+			   const string& limits, 
+			   const string& vis)   const
+{
+  if ( !region.empty() ) setRegion(lcdd.region(region));
+  if ( !limits.empty() ) setLimitSet(lcdd.limitSet(limits));
+  setVisAttributes(lcdd,vis);
+}
+
+void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
+  data<Object>()->Attr_sens_det = obj;
 }
 
 Solid Volume::solid() const   {
@@ -164,3 +197,19 @@ Region Volume::region() const   {
 PlacedVolume& PlacedVolume::addPhysVolID(const std::string& /* name */, int /* value */) {
   return *this;
 }
+
+/// Volume material
+Material PlacedVolume::material() const {
+  return Material::handle_t(m_element ? m_element->GetMedium()->GetMaterial() : 0);
+}
+
+/// Logical volume of this placement
+Volume   PlacedVolume::volume() const {
+  return Volume::handle_t(m_element ? m_element->GetVolume() : 0);
+}
+
+/// Parent volume (envelope)
+Volume PlacedVolume::motherVol() const {
+  return Volume::handle_t(m_element ? m_element->GetMotherVolume() : 0);
+}
+

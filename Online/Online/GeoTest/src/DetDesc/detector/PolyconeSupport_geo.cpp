@@ -27,7 +27,7 @@ namespace DetDesc { namespace Geometry {
     int num = 0;
 
     for(xml_coll_t c(e,_X(zplane)); c; ++c, ++num)  {
-      xml_dim_t dim(c);
+      xml_comp_t dim(c);
       rmin.push_back(dim.rmin());
       rmax.push_back(dim.rmax());
       z.push_back(dim.z()/2);
@@ -36,9 +36,8 @@ namespace DetDesc { namespace Geometry {
       throw runtime_error("PolyCone["+name+"]> Not enough Z planes. minimum is 2!");
     }
     cone.addZPlanes(rmin,rmax,z);
-    sdet.setEnvelope(cone).setVolume(volume);
-    sdet.setVisAttributes(lcdd, x_det.visStr(), volume);
-    lcdd.pickMotherVolume(sdet).placeVolume(volume,IdentityPos());
+    volume.setVisAttributes(lcdd, x_det.visStr());
+    sdet.setPlacement(lcdd.pickMotherVolume(sdet).placeVolume(volume));
     return sdet;
   }
 }}

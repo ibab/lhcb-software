@@ -85,6 +85,9 @@ namespace DetDesc {
       Volume              m_worldVol;
       Volume              m_trackingVol;
 
+      Material            m_materialAir;
+      Material            m_materialVacuum;
+
       Ref_t          m_setup;
 
       void convertMaterials(const std::string& uri);
@@ -105,8 +108,8 @@ namespace DetDesc {
       virtual Volume         pickMotherVolume(const DetElement& sd) const;
       virtual Volume         worldVolume() const      { return m_worldVol;          }
       virtual Volume         trackingVolume() const   { return m_trackingVol;       }
-      //virtual Rotation       reflection() const       { return m_reflect;           }
-      //virtual Transform      identity() const         { return m_identity;          }
+      virtual Material       air() const              { return m_materialVacuum;    }
+      virtual Material       vacuum() const           { return m_materialAir;       }
 
       virtual LimitSet limitSet(const std::string& name)  const
       {  return getRefChild(m_limits,name);                                         }  

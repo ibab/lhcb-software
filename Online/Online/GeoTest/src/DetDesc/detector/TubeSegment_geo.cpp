@@ -9,7 +9,6 @@
 
 #include "DetDesc/detector/DetFactoryHelper.h"
 #include "DetDesc/detector/CompactDetectors.h"
-
 using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
@@ -22,20 +21,19 @@ namespace DetDesc { namespace Geometry {
     xml_dim_t  x_pos  (x_det.child(_X(position)));
     xml_dim_t  x_rot  (x_det.child(_X(rotation)));
     string     name   = x_det.nameStr();
-    Volume     mother = x_det.isInsideTrackingVolume() ? lcdd.trackingVolume() : lcdd.worldVolume();
     Tube       tub    (lcdd,name+"_tube",x_tube.rmin(),x_tube.rmax(),x_tube.zhalf());
     Volume     vol    (lcdd,name,tub,lcdd.material(x_det.materialStr()));
-    DetElement sdet   (lcdd,name,x_det.typeStr(),x_det.id());
 
-    sdet.setVolume(vol).setEnvelope(tub);
-    sdet.setVisAttributes(lcdd, x_det.visStr(), vol);
+    vol.setVisAttributes(lcdd, x_det.visStr());
 
+    DetElement   sdet(lcdd,name,x_det.typeStr(),x_det.id());
+    Volume       mother = lcdd.pickMotherVolume(sdet);
     PlacedVolume phv =  
       mother.placeVolume(vol,Position(x_pos.x(),x_pos.y(),x_pos.z()),
 			 Rotation(x_rot.x(),x_rot.y(),x_rot.z()));
     phv.addPhysVolID(_A(id),x_det.id());
+    sdet.setPlacement(phv);
     return sdet;
   }
 }}
-
 DECLARE_NAMED_DETELEMENT_FACTORY(DetDesc,TubeSegment);

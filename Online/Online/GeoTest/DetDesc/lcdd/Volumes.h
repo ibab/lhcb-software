@@ -62,6 +62,12 @@ namespace DetDesc {
       PlacedVolume(const PlacedVolume& e) :  Handle<TGeoNode>(e) {}
       /// Add identifier
       PlacedVolume& addPhysVolID(const std::string& name, int value);
+      /// Volume material
+      Material material() const;
+      /// Logical volume of this placement
+      Volume   volume() const;
+      /// Parent volume (envelope)
+      Volume motherVol() const;
     };
   
     /** @class Volume Volume.h  DetDesc/lcdd/Volume.h
@@ -113,12 +119,27 @@ namespace DetDesc {
       /// Place daughter volume. The position and rotation are the identity
       PlacedVolume placeVolume(const Volume& vol, const IdentityRot& pos)  const;
 
+      /// Attach attributes to the volume
+      void setAttributes(const LCDD& lcdd,
+			 const std::string& region, 
+			 const std::string& limits, 
+			 const std::string& vis) const;
+      
+      /// Set the regional attributes to the volume
       void setRegion(const Region& obj)  const;
+      /// Set the limits to the volume
       void setLimitSet(const LimitSet& obj)  const;
-      void setSensitiveDetector(const SensitiveDetector& obj) const;
+      /// Set Visualization attributes to the volume
       void setVisAttributes(const VisAttr& obj) const;
+      /// Set Visualization attributes to the volume
+      void setVisAttributes(const LCDD& lcdd, const std::string& name) const;
+      /// Assign the sensitive detector structure
+      void setSensitiveDetector(const SensitiveDetector& obj) const;
+      /// Access to Solid (Shape)
       Solid solid() const;
+      /// Access to the Volume material
       Material material() const;
+      /// Access the visualisation attributes
       VisAttr  visAttributes() const;
       Ref_t sensitiveDetector() const;
       Region region() const;

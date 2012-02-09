@@ -22,7 +22,7 @@ namespace DetDesc { namespace Geometry {
     Volume      mother= lcdd.pickMotherVolume(vxd);
 
     for(xml_coll_t c(e,_X(layer)); c; ++c)  {
-      xml_det_t   x_layer  (c);
+      xml_comp_t  x_layer  (c);
       xml_comp_t  x_support (x_layer.child(_X(support)));
       xml_comp_t  x_ladder  (x_layer.child(_X(ladder)));
       int         layer_id   = x_layer.id();

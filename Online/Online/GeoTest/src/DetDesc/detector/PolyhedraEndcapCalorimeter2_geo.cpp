@@ -20,20 +20,17 @@ namespace DetDesc { namespace Geometry {
   template <> Ref_t DetElementFactory<PolyhedraEndcapCalorimeter2>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t   x_det     = e;
     xml_dim_t   dim       = x_det.dimensions();
-
     int         det_id    = x_det.id();
     string      det_name  = x_det.nameStr();
     string      det_type  = x_det.typeStr();
-    Material    air       = lcdd.material(_X(Air));
-    Material    gapMat    = air;
+    bool        reflect   = x_det.reflect(true);
+    Material    air       = lcdd.air();
     int         numsides  = dim.numsides();
     double      rmin      = dim.rmin();
     double      rmax      = dim.rmax()*std::cos(M_PI/numsides);
     double      zmin      = dim.zmin();
     Layering    layering(x_det);
     double      totalThickness = layering.totalThickness();
-    DetElement  sdet(lcdd,det_name,det_type,x_det.id());
-    Volume      motherVol = lcdd.pickMotherVolume(sdet);
 
     PolyhedraRegular polyhedra(lcdd,det_name+"_polyhedra",numsides,rmin,rmax,totalThickness);
     Volume           envelopeVol(lcdd,det_name+"_envelope",polyhedra,air);
@@ -49,11 +46,9 @@ namespace DetDesc { namespace Geometry {
       int              l_repeat = x_layer.repeat();
       PolyhedraRegular l_solid(lcdd,l_name+"_solid",numsides,rmin,rmax,l_thick);
       Volume           l_vol  (lcdd,l_name+"_volume", l_solid, air);
-      DetElement       l_elt  (lcdd,l_name,det_type+"/Layer",det_id);
       
       int s_num = 0;
       double sliceZ = -l_thick/2;
-      sdet.add(l_elt.setVolume(l_vol).setEnvelope(l_solid));
       for(xml_coll_t s(x_layer,_X(slice)); s; ++s)  {
 	xml_comp_t x_slice = s;
 	string     s_name  = l_name + _toString(s_num,"_slice%d");
@@ -82,24 +77,24 @@ namespace DetDesc { namespace Geometry {
       ++layerType;
     }
 
-    sdet.setAttributes(lcdd,envelopeVol,
-		       x_det.attr<string>(_A(region)),
-		       x_det.attr<string>(_A(limits)),
-		       x_det.visStr());
-
+    envelopeVol.setAttributes(lcdd,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
+    DetElement sdet    (lcdd,det_name,det_type,x_det.id());
+    Volume motherVol = lcdd.pickMotherVolume(sdet);
     PlacedVolume  physvol = motherVol.placeVolume(envelopeVol,
 						  Position(0,0,zmin+totalThickness/2),
 						  Rotation(0,0,M_PI/numsides));
     physvol.addPhysVolID("system",det_id);
     physvol.addPhysVolID("barrel",1);        
+    sdet.setPlacement(physvol);
         
-    bool reflect = x_det.hasAttr(_A(reflect)) ? x_det.attr<bool>(_A(reflect)) : true;
     if ( reflect ) {
       physvol = motherVol.placeVolume(envelopeVol,
 				      Position(0,0,-(zmin+totalThickness/2)),
 				      Rotation(M_PI,0,M_PI/numsides));
       physvol.addPhysVolID("system",det_id);
       physvol.addPhysVolID("barrel",2);
+      DetElement rdet(lcdd,det_name+"_reflect",det_type,x_det.id());
+      rdet.setPlacement(physvol);
     }
     return sdet;
   }

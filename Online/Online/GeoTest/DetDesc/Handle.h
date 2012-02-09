@@ -70,7 +70,7 @@ namespace DetDesc {
      */
     template <typename T=TNamed> struct Handle  {
       typedef T Implementation;
-
+      typedef Handle<Implementation> handle_t;
       Implementation* m_element;
       Handle() : m_element(0)                 {                         }
       Handle(Implementation* e) : m_element(e){                         }

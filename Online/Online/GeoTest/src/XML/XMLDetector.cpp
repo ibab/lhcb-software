@@ -86,6 +86,11 @@ bool   Dimension::reflect() const  {
   return m_element.attr<bool>(Attr_reflect);
 }
 
+bool Dimension::reflect(bool default_value) const {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_reflect);
+  return val ? _toBool(val) : default_value;
+}
+
 double Dimension::gap() const  {
   return m_element.attr<double>(Attr_gap);
 }
@@ -206,6 +211,11 @@ int DetElement::Component::id()  const  {
   return m_element.attr<int>(Attr_id);
 }
 
+int DetElement::Component::id(int default_value)  const  {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_id);
+  return val ? _toDouble(val) : default_value;
+}
+
 const XMLCh*  DetElement::Component::name()  const  {
   return m_element.attr<cpXMLCh>(Attr_name);
 }
@@ -246,7 +256,7 @@ bool DetElement::Component::isSensitive() const  {
   return m_element.hasAttr(Attr_sensitive) && m_element.attr<bool>(Attr_sensitive);
 }
 
-const XMLCh* DetElement::Component::material() const   {
+const  XMLCh* DetElement::Component::material() const   {
   return m_element.attr<cpXMLCh>(Attr_material);
 }
 
@@ -254,8 +264,20 @@ const  XMLCh* DetElement::Component::vis() const   {
   return m_element.hasAttr(Attr_vis) ? m_element.attr<cpXMLCh>(Attr_vis) : 0;
 }
 
-string  DetElement::Component::visStr()  const  {
+string DetElement::Component::visStr()  const  {
   return m_element.hasAttr(Attr_vis) ? m_element.attr<string>(Attr_vis) : string();
+}
+
+string DetElement::Component::regionStr() const {
+  return m_element.hasAttr(Attr_region) ? m_element.attr<string>(Attr_region) : string();
+}
+
+string DetElement::Component::limitsStr() const {
+  return m_element.hasAttr(Attr_limits) ? m_element.attr<string>(Attr_limits) : string();
+}
+
+Dimension DetElement::Component::dimensions()  const  {
+  return Dimension(m_element.child(Tag_dimensions));
 }
 
 int DetElement::id() const   {
@@ -305,6 +327,14 @@ string DetElement::materialStr() const  {
     return h.attr<string>(Attr_name);
   }
   return "";
+}
+
+string DetElement::regionStr() const {
+  return m_element.hasAttr(Attr_region) ? m_element.attr<string>(Attr_region) : string();
+}
+
+string DetElement::limitsStr() const {
+  return m_element.hasAttr(Attr_limits) ? m_element.attr<string>(Attr_limits) : string();
 }
 
 void DetElement::check(bool condition, const string& msg) const  {

@@ -18,9 +18,9 @@ using namespace DetDesc::Geometry;
 namespace DetDesc { namespace Geometry {
   
   template <> Ref_t DetElementFactory<SiTrackerEndcap2>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector& sens)  {
-    xml_comp_t  x_det     = e;
-    Material    air       = lcdd.material(_X(Air));
-    Material    vacuum    = lcdd.material(_X(Vacuum));
+    xml_det_t   x_det     = e;
+    Material    air       = lcdd.air();
+    Material    vacuum    = lcdd.vacuum();
     int         det_id    = x_det.id();
     string      det_name  = x_det.nameStr();
     string      det_type  = x_det.typeStr();
@@ -98,8 +98,9 @@ namespace DetDesc { namespace Geometry {
 	  pv.addPhysVolID("system",det_id).addPhysVolID("barrel",1);
 	  pv.addPhysVolID("layer", l_id).addPhysVolID("module",mod_num);
 	  DetElement module (lcdd,m_base,det_type+"/Module",det_id);
-	  module.setVolume(m_vol).setEnvelope(m_vol.solid());
+	  module.setPlacement(pv);
 	  sdet.add(module);
+	  
 	  if ( reflect ) {
 	    pv = motherVol.placeVolume(m_vol,
 				       Position(x,y,-zstart-dz),
@@ -107,7 +108,7 @@ namespace DetDesc { namespace Geometry {
 	    pv.addPhysVolID("system",det_id).addPhysVolID("barrel",2);
 	    pv.addPhysVolID("layer", l_id).addPhysVolID("module",mod_num);
 	    DetElement r_module (lcdd,m_base+"_reflect",det_type+"/Module",det_id);
-	    r_module.setVolume(m_vol).setEnvelope(m_vol.solid());
+	    r_module.setPlacement(pv);
 	    sdet.add(r_module);
 	  }
 	  dz = -dz;

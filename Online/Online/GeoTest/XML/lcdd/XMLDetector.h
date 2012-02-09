@@ -54,6 +54,7 @@ namespace DetDesc {
       double r_size() const;
       double phi_size_max() const;
       bool   reflect() const;
+      bool   reflect(bool default_value) const;
       double outgoing_r() const;
       double incoming_r() const;
       double crossing_angle() const;
@@ -84,26 +85,30 @@ namespace DetDesc {
       
     };
 
-    struct DetElement : public Element  {
+    struct DetElement : public Dimension  {
       struct Component : public Dimension {
         Component(Handle_t e) : Dimension(e) {}
         Component(const Element& e) : Dimension(e) {}
         int    id() const;
+        int    id(int default_value) const;
         int    repeat()  const;
         double thickness() const;
         bool   isSensitive() const;
         const  XMLCh* name() const;
         std::string   nameStr() const;
-	const XMLCh* type() const;
-	std::string typeStr() const;
+	const XMLCh*  type() const;
+	std::string   typeStr() const;
         const  XMLCh* module() const;
         std::string   moduleStr() const;
         const  XMLCh* material() const;
         std::string   materialStr() const;
         const  XMLCh* vis() const;
-        std::string visStr() const;
+        std::string   visStr() const;
+        std::string   regionStr() const;
+        std::string   limitsStr() const;
+	Dimension     dimensions()  const;
       };
-      DetElement(Handle_t e) : Element(e)  {}
+      DetElement(Handle_t e) : Dimension(e)  {}
       Handle_t handle()  const { return m_element; }
       void setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);
       void setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);
@@ -119,6 +124,8 @@ namespace DetDesc {
       std::string materialStr() const;
       const  XMLCh* vis() const;
       std::string visStr() const;
+      std::string   regionStr() const;
+      std::string   limitsStr() const;
       Dimension dimensions()  const;
       bool isTracker() const;
       bool isCalorimeter() const;

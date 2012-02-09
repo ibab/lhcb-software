@@ -69,15 +69,16 @@ namespace DetDesc { namespace Geometry {
     if ( obj )  {
       char text[256];
       const DetElement& sd = val;
+      PlacedVolume plc = sd.placement();
       bool vis = sd.visAttr().isValid();
       bool rdo = sd.readout().isValid();
-      bool env = sd.envelope().isValid();
-      bool mat = sd.material().isValid();
+      bool env = plc.isValid();
+      bool mat = plc.isValid();
       ::sprintf(text,"ID:%-3d Combine Hits:%3s Readout:%s Material:%s Envelope:%s VisAttr:%s",
 		sd.id(), yes_no(sd.combineHits()), 
 		rdo ? sd.readout()->GetName()  : yes_no(rdo),
-		mat ? sd.material()->GetName() : yes_no(mat),
-		env ? sd.envelope()->GetName() : yes_no(env),
+		mat ? plc.material()->GetName() : yes_no(mat),
+		env ? plc.motherVol()->GetName() : yes_no(env),
 		yes_no(vis)
 		);
       os << prefix << "+= DetElement: " << val->GetName() << " " << val.type() << endl;
@@ -93,8 +94,8 @@ namespace DetDesc { namespace Geometry {
 		  v->showDaughters ? "YES" : "NO", v->visible ? "YES" : "NO");
 	os << prefix << "|               VisAttr:  " << setw(32) << left << attr.name() << text << endl;
       }
-      if ( sd.volume().isValid() )  {
-	Volume vol = sd.volume();
+      if ( plc.isValid() )  {
+	Volume vol = plc.volume();
 	Solid    s = vol.solid();
 	Material m = vol.material();
 	::sprintf(text,"Volume:%s Shape:%s Material:%s",

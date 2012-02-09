@@ -68,7 +68,7 @@ namespace DetDesc { namespace Geometry {
 
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
       xml_comp_t x_layer = c;
-      int repeat = x_layer.repeat();
+      int repeat   = x_layer.repeat();
       totalRepeat += repeat;
       totalSlices += x_layer.numChildren(_X(slice));
     }
@@ -96,22 +96,18 @@ namespace DetDesc { namespace Geometry {
     double layerInnerAngle = (M_PI/2 - layerOuterAngle);
     double layer_pos_z = -(staveThickness / 2);                        
     double layer_dim_x = innerFaceLen/2 - gap * 2;
-    int layer_number = 0;
+    int layer_num = 0;
 
-    sdet.setVolume(envelopeVol).setEnvelope(polyhedra);
     // Set envelope volume attributes.
-    sdet.setAttributes(lcdd, envelopeVol,
-		       x_det.attr<string>(_A(region)),
-		       x_det.attr<string>(_A(limits)),
-		       x_det.visStr());
+    envelopeVol.setAttributes(lcdd,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
 
     for(xml_coll_t c(x_det,_X(layer)); c; ++c)  {
-      xml_comp_t   x_layer_element = c;
-      int          repeat = x_layer_element.repeat();     // Get number of times to repeat this layer.
-      const Layer* lay    = layering.layer(layer_number); // Get the layer from the layering engine.
+      xml_comp_t   x_layer = c;
+      int          repeat = x_layer.repeat();     // Get number of times to repeat this layer.
+      const Layer* lay    = layering.layer(layer_num); // Get the layer from the layering engine.
       // Loop over repeats for this layer.
       for (int j = 0; j < repeat; j++)    {                
-	string layer_name = det_name+_toString(layer_number,"_stave_layer%d");
+	string layer_name = det_name+_toString(layer_num,"_stave_layer%d");
 	double layer_thickness = lay->thickness();
 	DetElement  layer(lcdd,layer_name,det_name+"/Layer",x_det.id());
 
@@ -125,7 +121,7 @@ namespace DetDesc { namespace Geometry {
 	// Create the slices (sublayers) within the layer.
 	double slice_pos_z = -(layer_thickness / 2);
 	int slice_number = 0;
-	for(xml_coll_t k(x_layer_element,_X(slice)); k; ++k)  {
+	for(xml_coll_t k(x_layer,_X(slice)); k; ++k)  {
 	  xml_comp_t x_slice = k;
 	  string   slice_name      = layer_name + _toString(slice_number,"_slice%d");
 	  double   slice_thickness = x_slice.thickness();
@@ -140,10 +136,7 @@ namespace DetDesc { namespace Geometry {
 	  Volume slice_vol(lcdd,slice_name,slice_box,slice_material);
 	  if ( x_slice.isSensitive() ) slice_vol.setSensitiveDetector(sens);
 	  // Set region, limitset, and vis.
-	  slice.setAttributes(lcdd, slice_vol,
-			      x_slice.attr<string>(_A(region)),
-			      x_slice.attr<string>(_A(limits)),
-			      x_slice.visStr());
+	  slice_vol.setAttributes(lcdd,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
 	  // slice PlacedVolume
 	  PlacedVolume slice_phv = layer_vol.placeVolume(slice_vol,Position(0,0,slice_pos_z));
 	  slice_phv.addPhysVolID(_X(slice),slice_number);
@@ -155,14 +148,11 @@ namespace DetDesc { namespace Geometry {
 	  ++slice_number;             
 	}
 	// Set region, limitset, and vis.
-	layer.setAttributes(lcdd, layer_vol,
-			    x_layer_element.attr<string>(_A(region)),
-			    x_layer_element.attr<string>(_A(limits)),
-			    x_layer_element.visStr());
+	layer_vol.setAttributes(lcdd,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
 	// Layer physical volume.
 	PlacedVolume layer_phv = staveInnerVol.placeVolume(layer_vol,Position(0,0,layer_pos_z));
-	layer_phv.addPhysVolID(_X(layer),layer_number);
+	layer_phv.addPhysVolID(_X(layer),layer_num);
 
 	sdet.add(layer);
 
@@ -171,7 +161,7 @@ namespace DetDesc { namespace Geometry {
 	// Increment the layer Z position.
 	layer_pos_z += layer_thickness / 2;
 	// Increment the layer number.
-	++layer_number;         
+	++layer_num;         
       }
     }
 

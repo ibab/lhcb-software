@@ -40,11 +40,11 @@ namespace DetDesc { namespace Geometry {
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
     PolyhedraRegular hedra(lcdd,det_name+"_polyhedra",nsides,inner_r,inner_r+totThick+tolerance*2e0,x_dim.z());
     Volume      envelope  (lcdd,det_name+"_envelope",hedra,air);
-    PlacedVolume  env_phv = motherVol.placeVolume(envelope,Rotation(0,0,M_PI/nsides));
+    PlacedVolume env_phv  = motherVol.placeVolume(envelope,Rotation(0,0,M_PI/nsides));
 
     env_phv.addPhysVolID("system",det_id);
     env_phv.addPhysVolID("barrel",0);
-    sdet.setVolume(envelope).setEnvelope(hedra);
+    sdet.setPlacement(env_phv);
 
     double dx        = mod_z / std::sin(dphi); // dx per layer
     dx = 0;
@@ -76,9 +76,6 @@ namespace DetDesc { namespace Geometry {
       double tan_beta = std::tan(beta);                      // Primary coefficient for figuring X.
       double l_pos_z  = -(layering.totalThickness() / 2);
 
-      //cout << " trd_x1:" << trd_x1 << " trd_x2:" << trd_x2;
-      //cout << " trd_y1:" << trd_y1 << " trd_y2:" << trd_y2 << " trd_z:" << trd_z << endl;
-
       // Loop over the sets of layer elements in the detector.
       int l_num = 0;
       for(xml_coll_t li(x_det,_X(layer)); li; ++li)  {
@@ -96,10 +93,8 @@ namespace DetDesc { namespace Geometry {
 	  Volume     l_vol(lcdd,l_name,l_box,air);
 	  DetElement layer(lcdd,l_name,det_type+"/Layer",det_id);
 
-	  layer.setVolume(l_vol).setEnvelope(l_box);
 	  sdet.add(layer);
 	  // Loop over the sublayers or slices for this layer.
-
 	  int s_num = 0;
 	  double s_pos_z = -(l_thickness / 2);
 	  for(xml_coll_t si(x_layer,_X(slice)); si; ++si)  {
@@ -110,20 +105,16 @@ namespace DetDesc { namespace Geometry {
 	    Volume     s_vol(lcdd,s_name,s_box,lcdd.material(x_slice.materialStr()));
 	    DetElement slice(lcdd,s_name,det_type+"/Layer/Slice",det_id);
 
-	    slice.setVolume(s_vol).setEnvelope(s_box);
 	    layer.add(slice);
 	    if ( x_slice.isSensitive() ) s_vol.setSensitiveDetector(sens);
 	    
-	    slice.setAttributes(lcdd,s_vol,
-				x_slice.attr<string>(_A(region)),
-				x_slice.attr<string>(_A(limits)),
-				x_slice.visStr());
+	    slice.setAttributes(lcdd,s_vol,x_slice.regionStr(),x_slice.limitsStr(),x_slice.visStr());
 
 	    // Slice placement.
 	    PlacedVolume slice_phv = l_vol.placeVolume(s_vol,Position(0,0,s_pos_z+s_thick/2));					
 	    slice_phv.addPhysVolID("layer", l_num);
 	    slice_phv.addPhysVolID("slice", s_num);
-					
+	    slice.setPlacement(slice_phv);
 	    // Increment Z position of slice.
 	    s_pos_z += s_thick;
 					
@@ -132,13 +123,11 @@ namespace DetDesc { namespace Geometry {
 	  }	
 
 	  // Set region, limitset, and vis of layer.
-	  layer.setAttributes(lcdd,l_vol,
-			      x_layer.attr<string>(_A(region)),
-			      x_layer.attr<string>(_A(limits)),
-			      x_layer.visStr());
+	  layer.setAttributes(lcdd,l_vol,x_layer.regionStr(),x_layer.limitsStr(),x_layer.visStr());
 
 	  PlacedVolume layer_phv = mod_vol.placeVolume(l_vol,l_pos);
 	  layer_phv.addPhysVolID("layer", l_num);
+	  layer.setPlacement(layer_phv);
 	  // Increment to next layer Z position.
 	  l_pos_z += l_thickness;	  
 	  ++l_num;
@@ -169,10 +158,7 @@ namespace DetDesc { namespace Geometry {
     }
 
     // Set envelope volume attributes.
-    sdet.setAttributes(lcdd, envelope,
-		       x_det.attr<string>(_A(region)),
-		       x_det.attr<string>(_A(limits)),
-		       x_det.visStr());
+    envelope.setAttributes(lcdd,x_det.regionStr(),x_det.limitsStr(),x_det.visStr());
     return sdet;
   }
 }}
