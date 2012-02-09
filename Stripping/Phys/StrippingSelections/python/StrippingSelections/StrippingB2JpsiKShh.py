@@ -148,7 +148,7 @@ class B2JpsiKShhConf(LineBuilder) :
         _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
         _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
         _dlsig   = "(BPVDLS>%s)"            % config['KS_DD_DLS']
-        
+
         _allCuts = _massCut+'&'+_vtxCut+'&'+_dlsig
 
         # get the KS's to filter
@@ -176,7 +176,7 @@ class B2JpsiKShhConf(LineBuilder) :
         _dlsig      = "(BPVDLS>%s)"            % config['KS_LL_DLS']
         _trkChi2Cut1 = "(CHILDCUT((TRCHI2DOF<%s),1))" % config['Trk_Chi2']
         _trkChi2Cut2 = "(CHILDCUT((TRCHI2DOF<%s),2))" % config['Trk_Chi2']
-        
+
         _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_vtxCut+'&'+_dlsig
 
         # get the KS's to filter
@@ -199,7 +199,7 @@ class B2JpsiKShhConf(LineBuilder) :
         _massCut = "(ADMASS('J/psi(1S)')<%s*MeV)" % config['Jpsi_MassWindow']
 
         _allCuts = _massCut
-        
+
         # AutomaticData is for data on the DST
         Jpsi_Data = DataOnDemand( Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles" )
 
@@ -241,9 +241,9 @@ class B2JpsiKShhConf(LineBuilder) :
         _motherCuts = _vtxChi2Cut+'&'+_diraCut
 
         _B = CombineParticles()
-        _B.DecayDescriptors = [ "B_s0 -> J/psi(1S) KS0 K+ K-", "B_s0 -> J/psi(1S) KS0 K- K+", \
+        _B.DecayDescriptors = [ "B_s0 -> J/psi(1S) KS0 K+ K-", \
                                 "B_s0 -> J/psi(1S) KS0 K+ pi-", "B_s0 -> J/psi(1S) KS0 K- pi+", \
-                                "B_s0 -> J/psi(1S) KS0 pi+ pi-", "B_s0 -> J/psi(1S) KS0 pi- pi+"]
+                                "B_s0 -> J/psi(1S) KS0 pi+ pi-"]
         #_B.DaughtersCuts = { "K+" : "(TRCHI2DOF<%s)"% config['Trk_Chi2'], "K+" : " (MIPCHI2DV(PRIMARY)> %s)"% config['Daug_Chi2AFPV'], "pi+" : "(TRCHI2DOF<%s)"% config['Trk_Chi2'], "pi+" : " (MIPCHI2DV(PRIMARY)> %s)"% config['Daug_Chi2AFPV']}
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
@@ -276,13 +276,13 @@ class B2JpsiKShhConf(LineBuilder) :
 
         # Define Mother cuts
         _vtxChi2Cut = "(VFASPF(VCHI2PDOF)<%s)"             % config['Bs_VtxChi2']
-        _diraCut    = "(BPVDIRA>%s)"                   % config['Bs_Dira']
+        _diraCut    = "(BPVDIRA>%s)"                       % config['Bs_Dira']
 
         _motherCuts = _vtxChi2Cut+'&'+_diraCut
         _B = CombineParticles()
-        _B.DecayDescriptors = [ "B_s0 -> J/psi(1S) KS0 K+ K-", "B_s0 -> J/psi(1S) KS0 K- K+", \
+        _B.DecayDescriptors = [ "B_s0 -> J/psi(1S) KS0 K+ K-", \
                                 "B_s0 -> J/psi(1S) KS0 K+ pi-", "B_s0 -> J/psi(1S) KS0 K- pi+", \
-                                "B_s0 -> J/psi(1S) KS0 pi+ pi-", "B_s0 -> J/psi(1S) KS0 pi- pi+"]
+                                "B_s0 -> J/psi(1S) KS0 pi+ pi-"]
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
