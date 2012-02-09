@@ -152,7 +152,6 @@ public:
                           const std::string& prefix, 
                           TupleMap& tMap) const;
 
-  double sumPT(const LHCb::RecVertex*) const ; ///< sum of pt in pv
   ///  Fill PV information
   StatusCode fillPV(const LHCb::VertexBase* pv,
                     const std::string& prefix, 

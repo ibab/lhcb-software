@@ -9,7 +9,6 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
-#include "Event/RecVertex.h"
 #include "Event/VertexBase.h"
 #include "Event/Track.h"
 #include "Kernel/IOnOffline.h"
@@ -71,7 +70,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
 
   std::vector<double>  pvx, pvy, pvz;
   std::vector<double>  epvx, epvy, epvz;
-  std::vector<double>  pvchi2, pvndof, pvntracks;
+  std::vector<double>  pvchi2, pvndof, pvntracks, pvsumpt;
 
   const RecVertex::Container* PV = 0 ;
   //if ( ""==m_pvLocation ) PV = m_dva->primaryVertices();   // default
@@ -102,8 +101,8 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
         pvchi2.push_back((*i)->chi2());
         pvndof.push_back((double)(*i)->nDoF());
         pvntracks.push_back((double)(*i)->tracks().size());
+        pvsumpt.push_back(sumPT(*i)) ;
         if (msgLevel(MSG::VERBOSE)) verbose() << "Tracks: "  << (*i)->tracks().size() << endmsg ;
-
       }
     }
     if (msgLevel(MSG::DEBUG)) debug() << "There are " << PV->size() << " PVs at " <<  pvz << endmsg ;
@@ -121,7 +120,25 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
+  test &= tuple->farray( prefix+"PVsumPT", pvsumpt, prefix+"nPV",  maxPV );
 
   return StatusCode(test);
   //  return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Sum PT
+//=============================================================================
+double TupleToolPrimaries::sumPT(const LHCb::RecVertex* pv) const {
+  if (!pv) Exception("Not a RecVertex?");
+  double spt = 0 ;
+  for (SmartRefVector< LHCb::Track >::const_iterator t = pv->tracks().begin() ;
+       t!= pv->tracks().end() ; ++t) {
+    if (0==*t) {
+      Warning("Cannot resolve pointer to Track. Probably a microDST. Set Verbose to false.", 
+              StatusCode::FAILURE,10);
+      return -1;
+    }
+    spt += (*t)->pt();
+  }
+  return spt ;
 }

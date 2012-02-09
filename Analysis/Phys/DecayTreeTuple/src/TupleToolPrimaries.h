@@ -6,6 +6,7 @@
 // from Gaudi
 #include "TupleToolBase.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
+#include "Event/RecVertex.h"
 
 class DVAlgorithm ;
 
@@ -37,6 +38,7 @@ public:
   virtual StatusCode fill( Tuples::Tuple& );
 
 private:
+  double sumPT(const LHCb::RecVertex* pv) const ; ///< sum of Pt of all tracks
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
   //DVAlgorithm* m_dva;
 

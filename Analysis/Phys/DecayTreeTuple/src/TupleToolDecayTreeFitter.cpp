@@ -189,7 +189,6 @@ StatusCode TupleToolDecayTreeFitter::fillPV(const LHCb::VertexBase* pv,
     test &= insert( prefix+"_PV_X", pv->position().X(), tMap );
     test &= insert( prefix+"_PV_Y", pv->position().Y(), tMap );
     test &= insert( prefix+"_PV_Z", pv->position().Z(), tMap );
-    if (pv->isPrimary()) test &= insert( prefix+"_PV_sumPT", sumPT(dynamic_cast<const LHCb::RecVertex*>(pv)), tMap );
   }
   return StatusCode(test);
 }
@@ -377,17 +376,3 @@ std::string TupleToolDecayTreeFitter::getName(int id) const {
                                         << Decays::escape(prop->name()) << endmsg ;
   return Decays::escape(prop->name());
 }
-//=============================================================================
-// Sum PT
-/// @ todo this should be moved to TupleToolPrimaries
-//=============================================================================
-double TupleToolDecayTreeFitter::sumPT(const LHCb::RecVertex* pv) const {
-  if (!pv) Exception("Not a RecVertex?");
-  double spt = 0 ;
-  for (SmartRefVector< LHCb::Track >::const_iterator t = pv->tracks().begin() ;
-       t!= pv->tracks().end() ; ++t) {
-    spt += (*t)->pt();
-  }
-  return spt ;
-}
-
