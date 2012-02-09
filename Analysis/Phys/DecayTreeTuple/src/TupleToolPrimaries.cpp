@@ -101,7 +101,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
         pvchi2.push_back((*i)->chi2());
         pvndof.push_back((double)(*i)->nDoF());
         pvntracks.push_back((double)(*i)->tracks().size());
-        pvsumpt.push_back(sumPT(*i)) ;
+        if (isVerbose()) pvsumpt.push_back(sumPT(*i)) ;
         if (msgLevel(MSG::VERBOSE)) verbose() << "Tracks: "  << (*i)->tracks().size() << endmsg ;
       }
     }
@@ -120,7 +120,7 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple )
   test &= tuple->farray( prefix+"PVCHI2", pvchi2, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNDOF", pvndof, prefix+"nPV",  maxPV );
   test &= tuple->farray( prefix+"PVNTRACKS", pvntracks, prefix+"nPV",  maxPV );
-  test &= tuple->farray( prefix+"PVsumPT", pvsumpt, prefix+"nPV",  maxPV );
+  if (isVerbose()) test &= tuple->farray( prefix+"PVsumPT", pvsumpt, prefix+"nPV",  maxPV );
 
   return StatusCode(test);
   //  return StatusCode::SUCCESS;
