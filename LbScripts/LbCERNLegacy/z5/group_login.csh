@@ -37,9 +37,9 @@ endif
 
 else
   # Post setup, CMTCONFIG specific (compilers setup for example)
-  setenv LOGIN_POST_SCRIPT ${HPX_HEPGROUP_DIR}/post/login
+  setenv LOGIN_POST_SCRIPT ${GROUP_DIR}/post/login
   # Post setup, site wide, does not depend on CMTCONFIG (X509 vars for example)
-  setenv LHCB_POST_SCRIPT ${HPX_HEPGROUP_DIR}/post/site
+  setenv LHCB_POST_SCRIPT ${GROUP_DIR}/post/site
   set lbvers=prod
   if ( -e ${HOME}/.prevLHCBLoginscript ) then
     set lbvers=prev

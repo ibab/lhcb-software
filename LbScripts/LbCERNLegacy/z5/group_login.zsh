@@ -37,7 +37,7 @@ fi
 
 else 
   # Post setup, site wide, does not depend on CMTCONFIG (X509 vars for example)
-  export LHCB_POST_SCRIPT=${HPX_HEPGROUP_DIR}/post/site
+  export LHCB_POST_SCRIPT=${GROUP_DIR}/post/site
   lbvers=prod
   if [ -e ${HOME}/.prevLHCBLoginscript ]; then
     lbvers=prev

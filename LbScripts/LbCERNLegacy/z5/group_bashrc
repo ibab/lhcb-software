@@ -1,9 +1,9 @@
 if ! [ -e ${HOME}/.nogrouplogin -o -e ${HOME}/.noLHCBLoginscript ] ; then
 
   # Post setup, CMTCONFIG specific (compilers setup for example)
-  export LOGIN_POST_SCRIPT=${HPX_HEPGROUP_DIR}/post/login
+  export LOGIN_POST_SCRIPT=${GROUP_DIR}/post/login
   # Post setup, site wide, does not depend on CMTCONFIG (X509 vars for example)
-  export LHCB_POST_SCRIPT=${HPX_HEPGROUP_DIR}/post/site
+  export LHCB_POST_SCRIPT=${GROUP_DIR}/post/site
 
 if [ ! -e ${HOME}/.oldLHCBLoginscript ]; then
   lbvers=prod
