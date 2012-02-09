@@ -121,7 +121,7 @@ StatusCode MuonTTTrack::execute() {
     LHCb::State muonState;
     sc = iterateToPV(track, muonState, PVPos, (*it)->qOverP() ); // -- This is the function that iterates
     if(!sc){
-      Warning( "==> Could not iterate to PV!" ).ignore();
+      Warning( "==> Could not iterate to PV!", StatusCode::SUCCESS, 0 ).ignore();
       delete track;
       continue;
     }
@@ -129,7 +129,7 @@ StatusCode MuonTTTrack::execute() {
     LHCb::State veloState = muonState;
     sc = m_extrapolator->propagate( veloState, PVPos[2]);
     if(!sc){
-      Warning( "==> Could not propagate state to VELO!" ).ignore();
+      Warning( "==> Could not propagate state to VELO!", StatusCode::SUCCESS, 0 ).ignore();
       delete track;
       continue;
     }
