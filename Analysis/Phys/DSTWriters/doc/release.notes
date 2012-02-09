@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r3 2012-02-09 =========================
+
 ! 2012-02-07 - Chris Jones
  - Adapt to changes in Configurables in GaudiConf/LHCbKernel/LHCbAlgs
 
