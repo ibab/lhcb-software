@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2012-02-09 - Wouter Hulsbergen
+- Added StateParameters::zMidTT.
+
 !========================= TrackEvent v5r14 2012-01-31 =======================
 ! 2011-12-19 - Wouter Hulsbergen
  - Replace volatile by static in Track::nodes() to get rid of segfault due to
