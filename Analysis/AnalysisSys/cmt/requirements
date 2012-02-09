@@ -1,18 +1,18 @@
 # $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
-version v7r2
+version v8r0
 
 branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v2r1     Phys   # Patrick Koppenburg, Juan Palacios
-use  DSTWriters                 v4r2     Phys   # Juan Palacios
-use  DSTWriterTests             v2r4     Phys   # Juan Palacios
+use  AnalysisConf               v2r2     Phys   # Patrick Koppenburg, Juan Palacios
+use  DSTWriters                 v4r3     Phys   # Juan Palacios
+use  DSTWriterTests             v2r4p1   Phys   # Juan Palacios
 
-use  FlavourTagging             v12r6    Phys   # Marc Grabalosa
+use  FlavourTagging             v12r8    Phys   # Marc Grabalosa
 
-use  DaVinciMonitors            v1r16    Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r17    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7     Rich   # Chris Jones
 use  KaliCalo                   v4r12    Phys   # Vanya Belyaev
 
@@ -20,18 +20,18 @@ use  KaliCalo                   v4r12    Phys   # Vanya Belyaev
 
 use  DaVinciMCTools     	v10r2    Phys   # Juan Palacios
 use  LoKiAlgoMC                 v9r4     Phys   # Vanya Belyaev
-use  LoKiGenMC                  v9r1     Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r4     Phys   # Vanya Belyaev
+use  LoKiGenMC                  v9r1p1   Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r5     Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r4p2   Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r4     Phys   # Juan Palacios
-use  VertexFitCheck             v1r7     Phys   # Yuehong Xie
+use  Particle2MCTruth           v2r4p1   Phys   # Juan Palacios
+use  VertexFitCheck             v1r8     Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r8     Phys   # Marc Grabalosa
-use  ParticleMakerChecker       v1r4p3   Phys   # Chris Jones
+use  FlavourTaggingChecker      v6r9     Phys   # Marc Grabalosa
+use  ParticleMakerChecker       v1r5     Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p1   Phys   # Victor Coco
-use  DecayTreeTuple             v3r19    Phys   # Rob Lambert
-use  JetAccessories		v1r2p1   Phys   # Victor Coco, Cedric Potterat
-use  JetAccessoriesMC		v1r3	 Phys   # Victor Coco, Cedric Potterat
+use  DecayTreeTuple             v3r20    Phys   # Rob Lambert
+use  JetAccessories		v1r3     Phys   # Victor Coco, Cedric Potterat
+use  JetAccessoriesMC		v1r4	 Phys   # Victor Coco, Cedric Potterat
 
 ####################################################################
 
@@ -39,28 +39,32 @@ use  HltSelChecker              v12r1p1  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r7     Phys
+use  AnalysisPython             v2r8     Phys
 use  PyAna                      v1r3     Analysis
 
 ####################################################################
 
 use  MicroDSTBase        	v3r1p2   MicroDST # Juan Palacios
 use  MicroDSTInterfaces  	v1r7     MicroDST # Juan Palacios
-use  MicroDSTTools      	v2r3     MicroDST # Juan Palacios
+use  MicroDSTTools      	v2r4     MicroDST # Juan Palacios
 use  MicroDSTAlgorithm   	v5r6     MicroDST # Juan Palacios
 use  MicroDSTConf               v2r10p1  MicroDST # Juan Palacios
 
 ####################################################################
 
 use  Analysis                   v10r2p1 Tutorial   # P. Koppenburg
-use  LoKiExample                v8r8    Ex         # Vanya Belyaev
+use  LoKiExample                v8r8p1  Ex         # Vanya Belyaev
 use  MicroDSTExample            v2r14   Ex         # Juan Palacios
 
 ####################################################################
 
 use TrackSmearing               v1r1    Phys   # Alex Shires
 
-use TMVASelections              v*      Phys   # Stripping coordinators 
+####################################################################
+
+use TMVASelections              v1r0    Phys   # Stripping coordinators 
+
+####################################################################
 
 # Declare this as a container package
 apply_pattern container_package

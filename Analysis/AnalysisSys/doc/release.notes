@@ -3,8 +3,94 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
-! 2012-02-01 - Jibo He
- - Added Phys/TMVASelections package
+</PRE><H1><A NAME=v8r0>2012-02-09 Analysis v8r0 </A></H1><PRE>
+
+Based on Phys v14r0
+
+New Packages : Phys/TMVASelections
+
+Updated Packages : MicroDSTTools, AnalysisConf, AnalysisPython,
+                   DSTWriterTests, DSTWriters, DaVinciMonitors,
+                   DecayTreeTuple, FlavourTagging, FlavourTaggingChecker,
+                   JetAccessories, JetAccessoriesMC, LoKiPhysMC,
+                   ParticleMakerChecker, VertexFitCheck
+
+- In MicroDSTTools :
+ . Fix a problem with the CaloHypo cloner, where invalid SmartRefs to originals
+   where being left in the clones. All SmartRef vectors in cloned CaloHypos are 
+   now cleared, when not doing a deep copy.
+ . Update the deep ProtoParticle cloner to properly handle the CALO, RICH and
+   MUON objects.
+
+- In AnalysisConf :
+ . Make sure ToolSvc is initialized before DataOnDemandSvc
+
+- In DSTWriters :
+ . Adapt to changes in Configurables in GaudiConf/LHCbKernel/LHCbAlgs
+ . Some small tweaks to how the ParticleTree cloner is configured, to more
+   easily allow the deep ProtoParticle cloner to be used, if wanted.
+ . Suppress verbose "Set CloneFilteredParticles" printout during python
+   configuration of the stripping ...
+ . Add preliminary support (disabled by default) for full packing of the
+   data objects on stripping (m)DSTs.
+
+- In DaVinciMonitors :
+ . ParticleMonitor : Fix default properties so that it configures properly
+ . python/DaVinciMonitors/TosMonitor.py : monitors some L0 and Hlt1 lines
+ . options/DaVinciMonitoring.py : add TosMonitor
+
+- In DecayTreeTuple :
+ . Update TupleToolJetsBase according to the developpement of LoKiJetMakerAlg 
+   (Phys/LoKiJets)
+ . Remove hack in TupleToolEventInfo to save event number and GPS time as 
+   doubles. Gaudi v23r0 supports saving these natively as ulonglong.
+ . Switch to TrackStateProvider in TupleToolTrackPosition
+ . Extend the TupleToolPid to include all of the main sub-detector PID
+   variables when in verbose mode.
+ . Add RICHDLLbt to variables saved by the TupleToolRICHPid
+ . Explicitly store the above-threshold flag for each PID hypothese, regardless
+   of the Particle type.
+ . Fix bug #91350 : do not follow pv is there isn't any.
+ . Move sumPT method to TupleToolPrimaries
+ . TupleToolGeometry : fill MINIP only in verbose (allows to switch it
+   off for microDST)
+
+- In FlavourTagging :
+ . Fix in BTaggingTool*.cxx: protection against null PV found in bestPV
+ . Fix in Tagger*.cxx: all the events with omega<0 or >1 are set to UNTAGGED
+
+- In FlavourTaggingChecker :
+ . Added protection against null PV (caused by bestPV)
+ . changes in root/src/Tagger*.cxx: set untagged events with pn<0 or >1
+ . added tarfile with the SingleCandidateSelection*
+
+- In JetAccessories :
+ . Add extra info on Saturated calorimeter cells.
+ . Update the configuration files to the latest option (especially put JetID and 
+   JEC in JetMaker_Config)
+
+- In JetAccessoriesMC :
+ . Maintanance of the ConfigureDoD function.
+ . The HepMCJets2Jets code was changed to allow 'rematching'.
+ . WZPlusJetHepMCSelector was added. (can replace ZPlusJetHepMCSelector)
+
+- In LoKiPhysMC :
+ . Adapted HepMCParticleMaker for  https://savannah.cern.ch/task/?20125
+  (changed ParticlePropertySvc)
+
+- In ParticleMakerChecker :
+ . Ignore the RootINTES settings when loading data at TES locations deduced
+   on the fly, since they will have this included.
+
+- In TMVASelections
+ . Added BDT selections for Bd->eeKstar
+ . Removed "BPV" things to fix the segmentation problem:
+   https://savannah.cern.ch/bugs/index.php?91172
+
+
+
+
+
 
 </PRE><H1><A NAME=v7r2>2011-11-10 Analysis v7r2 </A></H1><PRE>
 
