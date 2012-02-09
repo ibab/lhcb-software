@@ -7,6 +7,13 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessoriesMC v1r4 2012-02-09 =========================
+
+! 2012-01-11 - A Bursche
+ - Maintanance of the ConfigureDoD function.
+ - The HepMCJets2Jets code was changed to allow 'rematching'.
+ - WZPlusJetHepMCSelector was added. (can replace ZPlusJetHepMCSelector)
+
 !========================= JetAccessoriesMC v1r3 2011-11-10 =========================
 
 ! 2011-10-21 - Victor Coco
