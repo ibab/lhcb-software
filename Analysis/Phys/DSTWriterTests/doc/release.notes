@@ -4,6 +4,8 @@
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriterTests v2r4p1 2012-02-09 =========================
+
 ! 2012-02-07 - Chris Jones
  - Remove imports from GaudiConf
 
