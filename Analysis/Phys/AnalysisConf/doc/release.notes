@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisConf v2r2 2012-02-09 =========================
+
 ! 2012-02-07 - Chris Jones
  - Adapt to Configurables changes
  - Make sure ToolSvc is initialized before DataOnDemandSvc
