@@ -496,7 +496,6 @@ class Moore(LHCbConfigurableUser):
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
-        ParticlePropertySvc().ParticlePropertiesFile = "conddb:///param/ParticleTable.txt";
         if (self.getProp('L0')) :
             if (self.getProp('RunOnline')) : raise RuntimeError('NEVER try to rerun L0 online! -- aborting ')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels

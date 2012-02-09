@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Eric van Herwijnen
 Purpose     : LHCb HLT application
 
+! 2012-02-09 - Victor Coco
+ - Remove obselete call to ParticlePropertySvc remaining in Configuration.py
+
 ! 2012-02-07 - Marco Cattaneo
  - Remove unnecessary import from Configuration.py, for compatibility with
    LHCb v34r1 (backward compatible)
