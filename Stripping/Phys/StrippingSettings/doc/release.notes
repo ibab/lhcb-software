@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-09 - Jibo He
+ - Stripping17b/LineConfigDictionaries_RD.py
+   Tighten B2MuMuGamma* lines, as requested by K. A. Petridis
+   Tighten Bd2MuMuKPiBDTLine
+
 ! 2012-02-09 - Anton Poluektov 
  - Fixed duplicate name in B2CC dictionary
 

@@ -498,7 +498,7 @@ B2MuMuX = {
     'STREAMS' : [ 'Dimuon' ],
     'WGs'     : [ 'RD' ] ,
     'CONFIG'  : {
-    'MuonsLoose': {
+        'MuonsLoose': {
         'ISMUON' : True,
         'TRCHI2DOF_MAX' : 5,
         'MIPCHI2DV_MIN' : 4,
@@ -536,15 +536,15 @@ B2MuMuX = {
         'ASUMPT_MIN'    : '2000*MeV',
         'VCHI2DOF_MAX'  : 8,
         'BPVVDCHI2_MIN' : 225,
-        'BPVIPCHI2_MAX' : 25,
+        'BPVIPCHI2_MAX' : 17,
         'BPVDIRA_MIN'   : 0.4,
-        'CORRM_MIN'     : '4600*MeV',
-        'CORRM_MAX'     : '6000*MeV',
-        'PTMU'          : '700*MeV'
+        'CORRM_MIN'     : '4800*MeV',
+        'CORRM_MAX'     : '6500*MeV',
+        'PTMU'          : '900*MeV'
         },
     'Photons': {
         'PT_MIN' : '1300*MeV'
-        },    
+        },
     "V0s": { # Cuts for rho, K*, phi
         'MASS_MIN'      : {'KST':'700*MeV','RHO':'600*MeV','PHI':'900*MeV'},
         'MASS_MAX'      : {'KST':'1100*MeV','RHO':'1000*MeV','PHI':'1100*MeV'},
@@ -552,20 +552,20 @@ B2MuMuX = {
                            'MIPCHI2DV_MIN' : 4, 'TRCHI2DOF_MAX' : 4},
         'AMAXDOCA_MAX'  : '0.5*mm',
         'VCHI2DOF_MAX'  : 16,
-        'BPVVDCHI2_MIN' : 16, 
+        'BPVVDCHI2_MIN' : 16,
         'BPVDIRA_MIN'   : 0,
         'ASUMPT_MIN'    : '1000*MeV'
-        },    
-    "B2X3BODY" : { 
-        'SUMPT_MIN'     : '4800*MeV',
+        },
+    "B2X3BODY" : {
+        'SUMPT_MIN'     : '5000*MeV',
         'VCHI2DOF_MAX'  : 10,
-        'BPVIPCHI2_MAX' : 25,
+        'BPVIPCHI2_MAX' : 20,
         'BPVVDCHI2_MIN' : 25,
         'BPVDIRA_MIN'   : 0.4, #0.0
         'MASS_MIN'      : {'B':'4300*MeV'},
         'MASS_MAX'      : {'B':'6400*MeV'},
         },
-    "B2X3BODYLOWM" : { 
+    "B2X3BODYLOWM" : {
         'SUMPT_MIN'     : '3900*MeV',
         'VCHI2DOF_MAX'  : 10,
         'BPVIPCHI2_MAX' : 25,
@@ -574,14 +574,14 @@ B2MuMuX = {
         'MASS_MIN'      : {'J':'2600*MeV'},
         'MASS_MAX'      : {'J':'3600*MeV'},
         },
-    "B2X3BODYHIGHM" : { 
-        'SUMPT_MIN'     : '4800*MeV',
+    "B2X3BODYHIGHM" : {
+        'SUMPT_MIN'     : '5000*MeV',
         'VCHI2DOF_MAX'  : 10,
         'BPVDIRA_MIN'   : 0.0,
         'MASS_MIN'      : {'Y':'9000*MeV'},
         'MASS_MAX'      : {'Y':'10000*MeV'},
         },
-    "B2X4BODY" : { 
+    "B2X4BODY" : {
         'SUMPT_MIN'     : '5000*MeV',
         'VCHI2DOF_MAX'  : 10,
         'BPVIPCHI2_MAX' : 25,
@@ -594,7 +594,7 @@ B2MuMuX = {
         'OS'            : 1.0,
         'SS'            : 0.5
         },
-    'GECNTrkMax'   : 500 }
+    'GECNTrkMax'   : 500}
     }
 
     
@@ -847,7 +847,7 @@ Bd2MuMuKPiBDT = {
         'BVertexCHI2'             :   16.   ,  # /ndf
         'BMassW'                  :  500.   ,  # MeV  
         'BDIRA'                   :    0.999,
-        'BDTCutValue'             :   -0.98 ,
+        'BDTCutValue'             :   -0.97 ,
         'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
     },
     'WGs'    : [ 'RD' ],
