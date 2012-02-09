@@ -6,6 +6,8 @@
 ! $Id: release.notes,v 1.43 2010-08-20 13:59:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTTools v2r4 2012-02-09 =========================
+
 ! 2012-02-01 - Chris Jones
  - Fix a problem with the CaloHypo cloner, where invalid SmartRefs to originals
    where being left in the clones. All SmartRef vectors in cloned CaloHypos are 
