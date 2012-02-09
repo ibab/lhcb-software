@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-09 - Anton Poluektov 
+ - Fixed duplicate name in B2CC dictionary
+
 ! 2012-02-09 - Jibo He
  - To make dimuon stream complete, added missing lines of B2CC, BHQ, RD WG. 
  - dbase updated

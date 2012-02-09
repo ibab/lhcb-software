@@ -202,7 +202,7 @@ B2ChicK = {
     }
 
 # New line since Stripping17b
-B2ChicK = {
+B2JpsiKshh = {
     'WGs'       :       ['B2CC'],
     'BUILDERTYPE'       :       'B2JpsiKShhConf',
     'CONFIG'    :  {
