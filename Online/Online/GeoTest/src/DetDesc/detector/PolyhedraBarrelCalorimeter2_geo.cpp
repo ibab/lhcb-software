@@ -51,8 +51,7 @@ namespace DetDesc { namespace Geometry {
 
     string      det_name  = x_det.nameStr();
     string      det_type  = x_det.typeStr();
-    Material    air       = lcdd.material(_X(Air));
-    Material    gapMat    = air;
+    Material    air       = lcdd.air();
     Layering    layering(x_det);
     double      totalThickness = layering.totalThickness();
     int         totalRepeat = 0;

@@ -20,15 +20,14 @@ namespace DetDesc {  namespace Geometry {
   template <> Ref_t DetElementFactory<ForwardDetector>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t   x_det      = e;
     xml_dim_t   dim        = x_det.dimensions();
-    bool        reflect    = xml_comp_t(x_det).reflect();
-    xml_comp_t  beam       = x_det.child(XML::Tag_beampipe);
+    bool        reflect    = x_det.reflect();
+    xml_comp_t  beam       = x_det.child(_X(beampipe));
     string      det_name   = x_det.nameStr();
     string      det_type   = x_det.typeStr();
     int         id         = x_det.id();
-    Layering    layering(x_det);
-
-    Material    air        = lcdd.material(_X(Air));
+    Material    air        = lcdd.air();
     DetElement  sdet       (lcdd,det_name,det_type,x_det.id());
+    Layering    layering(x_det);
 
     Volume      motherVol  = lcdd.pickMotherVolume(sdet);
 

@@ -15,7 +15,7 @@ using namespace DetDesc;
 using namespace DetDesc::Geometry;
 
 namespace DetDesc { namespace Geometry {
-   
+
   template <> Ref_t DetElementFactory<DiskTracker>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t  x_det     = e;
     Material   air       = lcdd.air();
@@ -35,14 +35,13 @@ namespace DetDesc { namespace Geometry {
       double  z    = zmin, layerWidth = 0.;
       Tube    l_tub(lcdd,l_nam,rmin,rmax,2*z,2*M_PI);
       Volume  l_vol(lcdd,l_nam+"_volume",l_tub,air);
-      int  s_num = 0;
-
-      l_vol.setVisAttributes(lcdd,x_layer.visStr());
+      int     s_num = 0;
 
       for(xml_coll_t j(x_layer,_X(slice)); j; ++j)  {
 	double thickness = xml_comp_t(j).thickness();
 	layerWidth += thickness;
       }
+      l_vol.setVisAttributes(lcdd,x_layer.visStr());
       for(xml_coll_t j(x_layer,_X(slice)); j; ++j, ++s_num)  {
 	xml_comp_t x_slice = j;
 	double thick = x_slice.thickness();

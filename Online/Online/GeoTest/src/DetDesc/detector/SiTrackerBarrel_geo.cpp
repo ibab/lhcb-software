@@ -18,8 +18,7 @@ namespace DetDesc { namespace Geometry {
   
   template <> Ref_t DetElementFactory<SiTrackerBarrel>::create(LCDD& lcdd, const xml_h& e, SensitiveDetector& sens)  {
     xml_det_t   x_det     = e;
-    Material    air       = lcdd.material("Air");
-    Material    vacuum    = lcdd.material("Vacuum");
+    Material    air       = lcdd.air();
     int         det_id    = x_det.id();
     string      det_name  = x_det.nameStr();
     string      det_type  = x_det.typeStr();

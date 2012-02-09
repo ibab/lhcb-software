@@ -20,7 +20,7 @@ namespace DetDesc { namespace Geometry {
     xml_det_t  x_det     = e;
     string     det_name  = x_det.nameStr();
     string     det_type  = x_det.typeStr();
-    Material   air       = lcdd.material(_X(Air));
+    Material   air       = lcdd.air();
     DetElement sdet(lcdd,det_name,det_type,x_det.id());
     Volume     motherVol = lcdd.pickMotherVolume(sdet);
     int n = 0;

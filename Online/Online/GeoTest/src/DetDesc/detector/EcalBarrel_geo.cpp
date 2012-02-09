@@ -22,8 +22,8 @@ namespace DetDesc { namespace Geometry {
     static double tolerance = 0e0;
     Layering    layering (e);
     xml_det_t   x_det     = e;
-    Material    air       = lcdd.material("Air");
-    Material    vacuum    = lcdd.material("Vacuum");
+    Material    air       = lcdd.air();
+    Material    vacuum    = lcdd.vacuum();
     int         det_id    = x_det.id();
     string      det_name  = x_det.nameStr();
     string      det_type  = x_det.typeStr();
