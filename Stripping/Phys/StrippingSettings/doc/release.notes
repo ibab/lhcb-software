@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-09 - Jibo He
+ - To make dimuon stream complete, added missing lines of B2CC, BHQ, RD WG. 
+ - dbase updated
+
 ! 2012-02-07 - Jibo He
  - Stripping17b/LineConfigDictionaries_RD.py
    Beauty2XGamma bug fixed, included again.
