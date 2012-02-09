@@ -5,6 +5,8 @@
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
 
+!========================= DstCalibSel v1r4 2012-02-09 =========================
+
 ! 2010-05013 - Juan Palacios
  - Remove use of deprecated IParticleFilter::filterByPID. Replace with LoKi::select.
 
