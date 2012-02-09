@@ -5,6 +5,8 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+!========================= ParticleMakerChecker v1r5 2012-02-09 =========================
+
 ! 2012-02-03 - Chris Jones
  - Ignore the RootINTES settings when loading data at TES locations deduced
    on the fly, since they will have this included.
