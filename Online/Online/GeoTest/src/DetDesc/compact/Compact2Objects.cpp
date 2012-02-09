@@ -336,16 +336,20 @@ namespace DetDesc { namespace Geometry {
     lcdd.addLimitSet(toRefObject<to_type>(lcdd,element));
   }
   template <> void Converter<DetElement>::operator()(const xml_h& element)  const {
-    const char*      req_dets = ::getenv("REQUIRED_DETECTORS");
-    const char*      req_typs = ::getenv("REQUIRED_DETECTOR_TYPES");
+    static const char* req_dets = ::getenv("REQUIRED_DETECTORS");
+    static const char* req_typs = ::getenv("REQUIRED_DETECTOR_TYPES");
+    static const char* ign_dets = ::getenv("IGNORED_DETECTORS");
+    static const char* ign_typs = ::getenv("IGNORED_DETECTOR_TYPES");
     string           type = element.attr<string>(_A(type));
     string           name = element.attr<string>(_A(name));
     string           name_match = ":"+name+":";
     string           type_match = ":"+type+":";
-    SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,element);
-    if ( req_dets && !strstr(name_match.c_str(),req_dets) ) return;
-    if ( req_typs && !strstr(type_match.c_str(),req_typs) ) return;
+    if ( req_dets && !strstr(req_dets,name_match.c_str()) ) return;
+    if ( req_typs && !strstr(req_typs,type_match.c_str()) ) return;
+    if ( ign_dets &&  strstr(ign_dets,name_match.c_str()) ) return;
+    if ( ign_typs &&  strstr(ign_typs,type_match.c_str()) ) return;
     try {
+      SensitiveDetector  sd = toRefObject<SensitiveDetector>(lcdd,element);
       DetElement det(Handle<TNamed>(ROOT::Reflex::PluginService::Create<TNamed*>(type,&lcdd,&element,&sd)));
 
       if ( det.isValid() && element.hasAttr(_A(readout)) )  {

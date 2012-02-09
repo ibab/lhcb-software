@@ -36,23 +36,17 @@ namespace DetDesc { namespace Geometry {
     double      mod_z     = layering.totalThickness();
     double      outer_r   = inner_r + mod_z;
     double      totThick  = mod_z;
-    Position    ident_pos = lcdd.position("identity_pos");
-    Rotation    ident_rot = lcdd.rotation("identity_rot");
     DetElement  sdet      (lcdd,det_name,det_type,det_id);
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
     PolyhedraRegular hedra(lcdd,det_name+"_polyhedra",nsides,inner_r,inner_r+totThick+tolerance*2e0,x_dim.z());
     Volume      envelope  (lcdd,det_name+"_envelope",hedra,air);
-    PhysVol     env_phv(envelope);
+    PlacedVolume  env_phv = motherVol.placeVolume(envelope,Rotation(0,0,M_PI/nsides));
 
-    sdet.setVolume(envelope).setEnvelope(hedra);
     env_phv.addPhysVolID("system",det_id);
     env_phv.addPhysVolID("barrel",0);
-    motherVol.addPhysVol(env_phv,ident_pos,Rotation(lcdd,det_name+"_rotation",0,0,M_PI/nsides));
-
+    sdet.setVolume(envelope).setEnvelope(hedra);
 
     double dx        = mod_z / std::sin(dphi); // dx per layer
-    cout << "dPhi:" << dphi << " " << std::sin(dphi) << " mod_z:" << mod_z << " dx:" << dx << endl;
-
     dx = 0;
     
     // Compute the top and bottom face measurements.
@@ -95,11 +89,9 @@ namespace DetDesc { namespace Geometry {
 	  string l_name = det_name + _toString(l_num,"_layer%d");
 	  double l_thickness = layering.layer(l_num)->thickness();  // Layer's thickness.
 	  double xcut = (l_thickness / tan_beta);                   // X dimension for this layer.
-	  l_pos_z += l_thickness / 2;                               // Increment the Z position
 	  l_dim_x -= xcut/2;
-	  //cout << l_num << " xcut:" << xcut << " l_thickness:" << l_thickness << endl;
 
-	  Position   l_pos(lcdd,l_name+"_position",0,0,l_pos_z);      // Position of the layer.
+	  Position   l_pos(0,0,l_pos_z+l_thickness/2);      // Position of the layer.
 	  Box        l_box(lcdd,l_name+"_box",l_dim_x*2-tolerance,stave_z*2-tolerance,l_thickness-tolerance);
 	  Volume     l_vol(lcdd,l_name,l_box,air);
 	  DetElement layer(lcdd,l_name,det_type+"/Layer",det_id);
@@ -114,9 +106,6 @@ namespace DetDesc { namespace Geometry {
 	    xml_comp_t x_slice = si;
 	    string     s_name = l_name + _toString(s_num,"_slice%d");
 	    double     s_thick = x_slice.thickness();
-	    s_pos_z += s_thick / 2; 	    // Increment Z position of slice.
-
-	    Position   s_pos(lcdd,s_name+"_position",0,0,s_pos_z);
 	    Box        s_box(lcdd,s_name+"_box",l_dim_x*2-tolerance,stave_z*2-tolerance,s_thick-tolerance);
 	    Volume     s_vol(lcdd,s_name,s_box,lcdd.material(x_slice.materialStr()));
 	    DetElement slice(lcdd,s_name,det_type+"/Layer/Slice",det_id);
@@ -131,13 +120,12 @@ namespace DetDesc { namespace Geometry {
 				x_slice.visStr());
 
 	    // Slice placement.
-	    PhysVol slice_physvol(s_vol);
-	    slice_physvol.addPhysVolID("layer", l_num);
-	    slice_physvol.addPhysVolID("slice", s_num);
-	    l_vol.addPhysVol(slice_physvol,s_pos,ident_rot);					
+	    PlacedVolume slice_phv = l_vol.placeVolume(s_vol,Position(0,0,s_pos_z+s_thick/2));					
+	    slice_phv.addPhysVolID("layer", l_num);
+	    slice_phv.addPhysVolID("slice", s_num);
 					
 	    // Increment Z position of slice.
-	    s_pos_z += s_thick / 2;
+	    s_pos_z += s_thick;
 					
 	    // Increment slice number.
 	    ++s_num;
@@ -149,11 +137,10 @@ namespace DetDesc { namespace Geometry {
 			      x_layer.attr<string>(_A(limits)),
 			      x_layer.visStr());
 
-	  PhysVol layer_physvol(l_vol);
-	  layer_physvol.addPhysVolID("layer", l_num);
-	  mod_vol.addPhysVol(layer_physvol,l_pos);
+	  PlacedVolume layer_phv = mod_vol.placeVolume(l_vol,l_pos);
+	  layer_phv.addPhysVolID("layer", l_num);
 	  // Increment to next layer Z position.
-	  l_pos_z += l_thickness / 2;	  
+	  l_pos_z += l_thickness;	  
 	  ++l_num;
 	}
       }
@@ -169,21 +156,16 @@ namespace DetDesc { namespace Geometry {
     double mod_y_off = inner_r + mod_z/2;  // Stave Y offset
 
     // Create nsides staves.
-    for (int i = 0; i < nsides; i++)      { // i is module number
+    for (int i = 0; i < nsides; i++, phi -= dphi)      { // i is module number
       // Compute the stave position
       double m_pos_x = mod_x_off * std::cos(phi) - mod_y_off * std::sin(phi);
       double m_pos_y = mod_x_off * std::sin(phi) + mod_y_off * std::cos(phi);
-      Position m_pos(lcdd,det_name+_toString(i,"_module%d_position"),-m_pos_x,-m_pos_y,0);
-      Rotation m_rot(lcdd,det_name+_toString(i,"_module%d_rotation"),M_PI * 0.5, phi, 0);
-      //cout << "Position: x:" << m_pos_x << " y:" << m_pos_y << " phi:" << phi << endl;
-
-      PhysVol pv(mod_vol);
+      PlacedVolume pv = envelope.placeVolume(mod_vol,
+					     Position(-m_pos_x,-m_pos_y,0),
+					     Rotation(M_PI*0.5,phi,0));
       pv.addPhysVolID("module",i);
       pv.addPhysVolID("system",det_id);
       pv.addPhysVolID("barrel",0);
-      envelope.addPhysVol(pv,m_pos,m_rot);
-      // increment phi
-      phi -= dphi;
     }
 
     // Set envelope volume attributes.

@@ -77,7 +77,6 @@ namespace DetDesc {
       // GDML fields
       ObjectHandleMap     m_gdml;
       ObjectHandleMap     m_define;
-      ObjectHandleMap     m_transforms;
       ObjectHandleMap     m_structure;
       ObjectHandleMap     m_materials;
       ObjectHandleMap     m_solids;
@@ -85,8 +84,6 @@ namespace DetDesc {
 
       Volume              m_worldVol;
       Volume              m_trackingVol;
-      Rotation            m_reflect;
-      Transform           m_identity;
 
       Ref_t          m_setup;
 
@@ -108,8 +105,8 @@ namespace DetDesc {
       virtual Volume         pickMotherVolume(const DetElement& sd) const;
       virtual Volume         worldVolume() const      { return m_worldVol;          }
       virtual Volume         trackingVolume() const   { return m_trackingVol;       }
-      virtual Rotation       reflection() const       { return m_reflect;           }
-      virtual Transform      identity() const         { return m_identity;          }
+      //virtual Rotation       reflection() const       { return m_reflect;           }
+      //virtual Transform      identity() const         { return m_identity;          }
 
       virtual LimitSet limitSet(const std::string& name)  const
       {  return getRefChild(m_limits,name);                                         }  
@@ -123,18 +120,6 @@ namespace DetDesc {
       {  return getRefChild(m_idDict,name);                                         }
       virtual Volume      volume(const std::string& name)  const
       {  return getRefChild(m_structure,name);                                      }
-      /*
-      virtual Rotation    rotation(const std::string& name) const 
-      {  return getRefChild(m_transforms,name);                                     }
-      virtual Position    position(const std::string& name) const 
-      {  return getRefChild(m_transforms,name);                                     }
-      virtual Transform   transform(const std::string& name) const 
-      {  return getRefChild(m_transforms,name);                                     }
-      */
-      virtual Rotation    rotation(const std::string& name) const;
-      virtual Position    position(const std::string& name) const;
-      virtual Transform   transform(const std::string& name) const;
-
       virtual Solid       solid(const std::string& name) const 
       {  return getRefChild(solids(),name);                                         }
       virtual Constant    constant(const std::string& name) const 
@@ -147,7 +132,6 @@ namespace DetDesc {
       virtual const HandleMap& header()  const        { return m_header;            }
       virtual const HandleMap& constants() const      { return m_define;            }
       virtual const HandleMap& visAttributes() const  { return m_display;           }
-      virtual const HandleMap& transformations() const{ return m_transforms;        }
       virtual const HandleMap& structure()  const     { return m_structure;         }
       virtual const HandleMap& solids()  const        { return m_solids;            }
       virtual const HandleMap& limitsets()  const     { return m_limits;            }
@@ -160,9 +144,6 @@ namespace DetDesc {
       virtual LCDD& add(const Solid& x)               { return addSolid(x);         }
       virtual LCDD& add(const Volume& x)              { return addVolume(x);        }
       virtual LCDD& add(const Material& x)            { return addMaterial(x);      }
-      virtual LCDD& add(const Position& x)            { return addTransform(x);     }
-      virtual LCDD& add(const Rotation& x)            { return addTransform(x);     }
-      virtual LCDD& add(const Transform& x)           { return addTransform(x);     }
       virtual LCDD& add(const LimitSet& x)            { return addLimitSet(x);      }
       virtual LCDD& add(const Region& x)              { return addRegion(x);        }
       virtual LCDD& add(const VisAttr& x)             { return addVisAttribute(x);  }
@@ -173,7 +154,6 @@ namespace DetDesc {
       // These are manager by the TGeoManager
       virtual LCDD& addSolid(const Ref_t& x);       //  { m_solids.append(x);     __R;}
       virtual LCDD& addVolume(const Ref_t& x);      //  { m_structure.append(x);  __R;}
-      virtual LCDD& addTransform(const Ref_t& x);   //  { m_rotations.append(x);  __R;}
 
       // These not:
       virtual LCDD& addConstant(const Ref_t& x)         { m_define.append(x);     __R;}

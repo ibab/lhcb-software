@@ -213,8 +213,8 @@ PolyhedraRegular::PolyhedraRegular(LCDD& lcdd, const string& name, int nsides, d
     throw runtime_error("PolyhedraRegular: Illegal argument rmax:<"+_toString(rmax)+"> is invalid!");
   _assign(lcdd,new TGeoPgon(),name,"polyhedra",false);
   double params[] = {
-    RAD_2_DEGREE * 2e0 * M_PI,
-    RAD_2_DEGREE * 2e0 * M_PI,
+    RAD_2_DEGREE * 2 * M_PI,
+    RAD_2_DEGREE * 2 * M_PI,
     double(nsides),
     2e0,
     zlen/2e0,rmin,rmax,
@@ -244,12 +244,11 @@ SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& 
 /// Constructor to be used when creating a new object
 SubtractionSolid::SubtractionSolid(LCDD& lcdd, const string& name, const Solid& shape1, const Solid& shape2, const Position& pos, const Rotation& rot)
 {
-  Rotation      inv  = lcdd.rotation("inverse_identity_rot");
-  TGeoMatrix* first  = new TGeoCombiTrans((name+"_first").c_str(),0,0,0,inv.ptr());
-  TGeoMatrix* second = new TGeoCombiTrans(pos,rot->Inverse());
-  second->SetName((name+"_secnd").c_str());
-
-  lcdd.addTransform(Transform(first)).addTransform(Transform(second));
+  static TGeoRotation inverse_identity_rot(TGeoRotation("",0,0,0).Inverse());
+  TGeoRotation rotation("",rot.phi*RAD_2_DEGREE,rot.theta*RAD_2_DEGREE,rot.psi*RAD_2_DEGREE);
+  TGeoCombiTrans* first  = new TGeoCombiTrans((name+"_first").c_str(),0,0,0,&inverse_identity_rot);
+  TGeoCombiTrans* second = new TGeoCombiTrans((name+"_secnd").c_str(),pos.x,pos.y,pos.z,0);
+  second->SetRotation(rotation.Inverse());
 
   TGeoSubtraction*    sub  = new TGeoSubtraction(shape1,shape2,first,second);
   TGeoCompositeShape* comp = new TGeoCompositeShape(name.c_str(),sub);

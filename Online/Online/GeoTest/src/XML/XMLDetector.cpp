@@ -134,6 +134,11 @@ double Dimension::radius() const {
   return m_element.attr<double>(Attr_radius);
 }
 
+double Dimension::offset(double default_value) const {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_offset);
+  return val ? _toDouble(val) : default_value;
+}
+
 double Dimension::offset() const {
   return m_element.attr<double>(Attr_offset);
 }
@@ -144,6 +149,11 @@ int Dimension::number() const {
 
 double Dimension::phi0() const {
   return m_element.attr<double>(Attr_phi0);
+}
+
+double Dimension::phi0(double default_value) const {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_phi0);
+  return val ? _toDouble(val) : default_value;
 }
 
 double Dimension::phi_tilt() const {
@@ -162,12 +172,34 @@ double Dimension::dr()  const {
   return m_element.attr<double>(Attr_dr);
 }
 
+double Dimension::dz()  const {
+  return m_element.attr<double>(Attr_dz);
+}
+
+double Dimension::dz(double default_value) const {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_dz);
+  return val ? _toDouble(val) : default_value;
+}
+
+double Dimension::r()  const {
+  return m_element.attr<double>(Attr_r);
+}
+
+double Dimension::r(double default_value) const {
+  const XMLCh* val = m_element.attr_value_nothrow(Attr_r);
+  return val ? _toDouble(val) : default_value;
+}
+
 double Dimension::z0() const {
   return m_element.attr<double>(Attr_z0);
 }
 
 int    Dimension::nz() const {
   return m_element.attr<int>(Attr_nz);
+}
+
+double Dimension::zstart() const {
+  return m_element.attr<double>(Attr_zstart);
 }
 
 int DetElement::Component::id()  const  {
@@ -192,6 +224,14 @@ const XMLCh* DetElement::Component::module()  const  {
 
 string  DetElement::Component::moduleStr()  const  {
   return m_element.hasAttr(Attr_module) ? m_element.attr<string>(Attr_module) : string();
+}
+
+const XMLCh*  DetElement::Component::type()  const  {
+  return m_element.attr<cpXMLCh>(Attr_type);
+}
+
+string  DetElement::Component::typeStr()  const  {
+  return m_element.attr<string>(Attr_type);
 }
 
 int DetElement::Component::repeat()  const  {

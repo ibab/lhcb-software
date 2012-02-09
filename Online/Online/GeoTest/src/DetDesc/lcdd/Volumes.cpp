@@ -24,8 +24,6 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
-static UInt_t unique_physvol_id = INT_MAX-1;
-
 namespace DetDesc  { namespace Geometry  {
   template <> struct Value<TGeoVolume,Volume::Object> 
     : public TGeoVolume, public Volume::Object  
@@ -63,39 +61,55 @@ void Volume::setSolid(const Solid& solid)  const  {
   m_element->SetShape(solid);
 }
 
-void Volume::addPhysVol(const PhysVol& volume, const Position& pos, const Rotation& rot)  const  {
-  if ( volume.isValid() )   {
-    TGeoHMatrix* transform = new TGeoHMatrix();
-    transform->SetTranslation(pos->GetTranslation());
-    transform->SetRotation(rot->GetRotationMatrix());
-#if 0    
-    TGeoCombiTrans* transform = new TGeoCombiTrans(pos,rot);
+static PlacedVolume _addNode(TGeoVolume* parent, TGeoVolume* daughter, TGeoMatrix* transform) {
+  TObjArray* a = parent->GetNodes();
+  Int_t id = a ? a->GetEntries() : 0;
+  parent->AddNode(daughter,id,transform);
+  TGeoNode* n = parent->GetNode(id);
+  return PlacedVolume(n);
+}
 
-    TGeoCombiTrans* transform = new TGeoCombiTrans();
-    transform->SetTranslation(pos->GetTranslation());
-    transform->SetRotation(rot->GetRotationMatrix());
-#endif
-    m_element->AddNode(volume,--unique_physvol_id,transform);
-    return;
+PlacedVolume Volume::placeVolume(const Volume& volume, const Position& pos, const Rotation& rot)  const  {
+  if ( volume.isValid() )   {
+    string nam = string(volume.name())+"_placement";
+    TGeoRotation rotation("",rot.phi*RAD_2_DEGREE,rot.theta*RAD_2_DEGREE,rot.psi*RAD_2_DEGREE);
+    TGeoCombiTrans* transform = new TGeoCombiTrans(nam.c_str(),pos.x,pos.y,pos.z,0);
+    transform->SetRotation(rotation);
+    return _addNode(m_element,volume,transform);
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
-void Volume::addPhysVol(const PhysVol& volume, const Transform& matrix)  const  {
+PlacedVolume Volume::placeVolume(const Volume& volume, const Position& pos)  const  {
   if ( volume.isValid() )   {
-    m_element->AddNode(volume.ptr(),--unique_physvol_id,matrix.ptr());
-    return;
+    string nam = string(volume.name())+"_placement";
+    TGeoTranslation* transform = new TGeoTranslation(nam.c_str(),pos.x,pos.y,pos.z);
+    return _addNode(m_element,volume,transform);
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
 
-void Volume::addPhysVol(const PhysVol& volume, const Position& matrix)  const  {
+PlacedVolume Volume::placeVolume(const Volume& volume, const Rotation& rot)  const  {
   if ( volume.isValid() )   {
-    //TGeoHMatrix* transform = new TGeoHMatrix();
-    //transform->SetTranslation(matrix->GetTranslation());
-    //m_element->AddNode(volume.ptr(),--unique_physvol_id,transform);
-    m_element->AddNode(volume.ptr(),--unique_physvol_id,matrix.ptr());
-    return;
+    string nam = string(volume.name())+"_placement";
+    TGeoRotation* transform = new TGeoRotation(nam.c_str(),rot.phi*RAD_2_DEGREE,rot.theta*RAD_2_DEGREE,rot.psi*RAD_2_DEGREE);
+    return _addNode(m_element,volume,transform);
+  }
+  throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
+}
+
+PlacedVolume Volume::placeVolume(const Volume& volume, const IdentityPos& /* pos */)  const  {
+  if ( volume.isValid() )   {
+    string nam = string(volume.name())+"_placement";
+    return _addNode(m_element,volume,new TGeoIdentity(nam.c_str()));
+  }
+  throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
+}
+
+PlacedVolume Volume::placeVolume(const Volume& volume, const IdentityRot& /* rot */)  const  {
+  if ( volume.isValid() )   {
+    string nam = string(volume.name())+"_placement";
+    return _addNode(m_element,volume,new TGeoIdentity(nam.c_str()));
   }
   throw runtime_error("Volume: Attempt to assign an invalid physical volume.");
 }
@@ -114,12 +128,6 @@ void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
   if ( attr.isValid() )  {
-    string n = name();
-#if 0
-    if ( n.find("Hcal") != string::npos ) {
-      cout << "+++> " << n << " " << attr.toString() << endl;
-    }
-#endif
     VisAttr::Object* vis = attr.data<VisAttr::Object>();
     Color_t bright = TColor::GetColorBright(vis->color);
     Color_t dark   = TColor::GetColorDark(vis->color);
@@ -130,14 +138,6 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     m_element->SetVisibility(vis->visible ? kTRUE : kFALSE);
     m_element->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
-  #if 0
-  // debug only, but if removed, does not plot nicely anymore....
-  m_element->SetVisibility(kTRUE);
-  m_element->SetVisDaughters(kTRUE);
-  m_element->SetVisLeaves(kTRUE);
-  m_element->SetVisContainers(kTRUE);
-  m_element->SetTransparency(30);
-  #endif
   data<Object>()->Attr_vis = attr;
 }
 
@@ -161,6 +161,6 @@ Region Volume::region() const   {
   return data<Object>()->Attr_region;
 }
 
-PhysVol& PhysVol::addPhysVolID(const std::string& /* name */, int /* value */) {
+PlacedVolume& PlacedVolume::addPhysVolID(const std::string& /* name */, int /* value */) {
   return *this;
 }

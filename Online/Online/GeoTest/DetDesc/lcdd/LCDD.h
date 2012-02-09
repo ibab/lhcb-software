@@ -50,15 +50,12 @@ namespace DetDesc {
 
       virtual Volume   worldVolume() const = 0;
       virtual Volume   trackingVolume() const = 0;
-      virtual Rotation reflection() const = 0;
-      virtual Transform identity() const = 0;
 
       virtual const HandleMap& header()  const = 0;
       virtual const HandleMap& constants()  const = 0;
       virtual const HandleMap& regions() const = 0;
       virtual const HandleMap& structure()  const = 0;
       virtual const HandleMap& solids()  const = 0;
-      virtual const HandleMap& transformations() const = 0;
       virtual const HandleMap& materials()  const = 0;
       virtual const HandleMap& detectors()  const = 0;
       virtual const HandleMap& readouts() const = 0;
@@ -73,9 +70,6 @@ namespace DetDesc {
       virtual Ref_t       idSpec(const std::string& name)  const = 0;
       virtual Volume      pickMotherVolume(const DetElement& sd) const = 0;
       virtual Constant    constant(const std::string& name) const = 0;
-      virtual Position    position(const std::string& name) const = 0;
-      virtual Rotation    rotation(const std::string& name) const = 0;
-      virtual Transform   transform(const std::string& name) const = 0;
       virtual Solid       solid(const std::string& name) const = 0;
       virtual Volume      volume(const std::string& name) const = 0;
       virtual DetElement  detector(const std::string& name) const = 0;
@@ -86,13 +80,9 @@ namespace DetDesc {
       //virtual LCDD& add(const Volume& vol) = 0;
       virtual LCDD& add(const Material& mat) = 0;
       virtual LCDD& add(const VisAttr& attr) = 0;
-      //virtual LCDD& add(const Position& pos) = 0;
-      //virtual LCDD& add(const Rotation& rot) = 0;
-      //virtual LCDD& add(const Transform& rot) = 0;
       virtual LCDD& add(const LimitSet& limset) = 0;
       virtual LCDD& add(const DetElement& detector) = 0;
 
-      virtual LCDD& addTransform(const Ref_t& element) = 0;
       virtual LCDD& addIDSpec(const Ref_t& element) = 0;
       virtual LCDD& addConstant(const Ref_t& element) = 0;
       virtual LCDD& addMaterial(const Ref_t& element) = 0;

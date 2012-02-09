@@ -52,23 +52,23 @@ namespace DetDesc {  namespace Geometry {
     // Incoming beampipe solid.
     Tube beamInTube(lcdd,det_name + "_beampipe_incoming_tube",0,outgoingR,thickness * 2);
     // Position of incoming beampipe.
-    Position beamInPos(lcdd,det_name + "_subtraction1_tube_pos",beamPosX,0,0);
+    Position beamInPos(beamPosX,0,0);
     /// Rotation of incoming beampipe.
-    Rotation beamInRot(lcdd,det_name + "_subtraction1_tube_rot",0,xangleHalf,0);
+    Rotation beamInRot(0,xangleHalf,0);
 
     // Second envelope bool subtracion of outgoing beampipe.
     // Outgoing beampipe solid.
     Tube     beamOutTube(lcdd,det_name + "_beampipe_outgoing_tube",0,incomingR,thickness * 2);
     // Position of outgoing beampipe.
-    Position beamOutPos(lcdd,det_name + "_subtraction2_tube_pos",-beamPosX,0,0);
+    Position beamOutPos(-beamPosX,0,0);
     // Rotation of outgoing beampipe.
-    Rotation beamOutRot(lcdd,det_name + "_subtraction2_tube_rot",0,-xangleHalf,0);
+    Rotation beamOutRot(0,-xangleHalf,0);
 
     // First envelope bool subtraction of incoming beampipe.
     SubtractionSolid envelopeSubtraction1(lcdd,det_name+"_subtraction1_tube",
 					  envelopeTube,beamInTube,beamInPos,beamInRot);
     SubtractionSolid envelopeSubtraction2(lcdd,det_name+"_subtraction2_tube",
-					  envelopeSubtraction1,beamOutTube,beamInPos,beamOutRot);
+					  envelopeSubtraction1,beamOutTube,beamOutPos,beamOutRot);
 
     // Final envelope bool volume.
     Volume envelopeVol(lcdd,det_name + "_envelope_volume", envelopeSubtraction2, air);
@@ -94,8 +94,8 @@ namespace DetDesc {  namespace Geometry {
 	DetElement  layer(lcdd,layer_nam,"ForwardDetector/Layer",sdet.id());
 	double      layerGlobalZ = zinner + layerDisplZ;
 	double      layerPosX    = tan(xangleHalf) * layerGlobalZ;
-	Position    layerSubtraction1Pos(lcdd,layer_nam + "_subtraction1_pos", layerPosX,0,0);
-	Position    layerSubtraction2Pos(lcdd,layer_nam + "_subtraction2_pos",-layerPosX,0,0);
+	Position    layerSubtraction1Pos( layerPosX,0,0);
+	Position    layerSubtraction2Pos(-layerPosX,0,0);
 
 	SubtractionSolid layerSubtraction1(lcdd,layer_nam + "_subtraction1",
 					   layerTube,beamInTube,layerSubtraction1Pos,beamInRot);
@@ -124,16 +124,14 @@ namespace DetDesc {  namespace Geometry {
 	  Tube sliceTube(lcdd, slice_nam + "_tube", rmin,rmax,sliceThickness);
 	  DetElement slice(lcdd,slice_nam,"ForwardDetector/Layer/Slice",sdet.id());
 	  double sliceGlobalZ = zinner + (layerDisplZ - layerThickness / 2) + sliceDisplZ;
-	  double slicePosX    = tan(xangleHalf) * sliceGlobalZ;
-	  Position sliceSubtraction1Pos(lcdd,slice_nam + "_subtraction1_pos",slicePosX,0,0);
-	  Position sliceSubtraction2Pos(lcdd,slice_nam + "_subtraction2_pos",-slicePosX,0,0);
+	  double slicePosX    = std::tan(xangleHalf) * sliceGlobalZ;
 
 	  // First slice subtraction solid.
 	  SubtractionSolid sliceSubtraction1(lcdd,slice_nam + "_subtraction1",
-					     sliceTube,beamInTube,sliceSubtraction1Pos,beamInRot);
+					     sliceTube,beamInTube,Position(slicePosX,0,0),beamInRot);
 	  // Second slice subtraction solid.
 	  SubtractionSolid sliceSubtraction2(lcdd,slice_nam + "_subtraction2",
-					     sliceSubtraction1,beamOutTube,sliceSubtraction2Pos,beamOutRot); 
+					     sliceSubtraction1,beamOutTube,Position(-slicePosX,0,0),beamOutRot); 
 	  // Slice LV.
 	  Volume sliceVol(lcdd,slice_nam + "_volume", sliceSubtraction2, slice_mat);
         
@@ -144,9 +142,8 @@ namespace DetDesc {  namespace Geometry {
 			      x_slice.attr<string>(_A(limits)),
 			      x_slice.visStr());
 
-	  // Slice PV.
-	  PhysVol slicePV(sliceVol);
-	  layerVol.addPhysVol(slicePV,Position(lcdd,slice_nam+"_pos",0,0,slicePosZ));
+	  // Place volume in layer
+	  layerVol.placeVolume(sliceVol,Position(0,0,slicePosZ));
 	  layer.add(slice);
 
 	  // Start of next slice.
@@ -161,9 +158,8 @@ namespace DetDesc {  namespace Geometry {
 			    x_layer.visStr());
 
 	// Layer PV.
-	PhysVol layerPV(layerVol);
+	PlacedVolume layerPV = envelopeVol.placeVolume(layerVol,Position(0,0,layerPosZ));
 	layerPV.addPhysVolID(_X(layer), i);
-	envelopeVol.addPhysVol(layerPV,Position(lcdd,layer_nam+"_pos",0,0,layerPosZ));
 	sdet.add(layer);
 
 	// Increment to start of next layer.
@@ -173,18 +169,15 @@ namespace DetDesc {  namespace Geometry {
     }
     sdet.setVisAttributes(lcdd, x_det.visStr(), envelopeVol);
   
-    PhysVol envelopePV(envelopeVol);  // Add envelope PV.
-    envelopePV.addPhysVolID(_X(system), id);
-    envelopePV.addPhysVolID(_X(barrel), 1);
-    motherVol.addPhysVol(envelopePV,Position(lcdd,det_name+"_pos",0,0,zpos));
+    PlacedVolume env_phv = motherVol.placeVolume(envelopeVol,Position(0,0,zpos));
+    env_phv.addPhysVolID(_X(system), id);
+    env_phv.addPhysVolID(_X(barrel), 1);
   
     // Reflect it.
     if ( reflect )  {
-      Rotation reflectRot(lcdd.rotation(_X(reflect_rot)));
-      PhysVol envelopePV2(envelopeVol);
-      envelopePV2.addPhysVolID(_X(system), id);
-      envelopePV2.addPhysVolID(_X(barrel), 2);
-      motherVol.addPhysVol(envelopePV2,Position(lcdd,det_name+"_pos_reflect",0,0,-zpos),reflectRot);
+      env_phv = motherVol.placeVolume(envelopeVol,Position(0,0,-zpos),ReflectRot());
+      env_phv.addPhysVolID(_X(system), id);
+      env_phv.addPhysVolID(_X(barrel), 2);
     }
     return sdet;
   }

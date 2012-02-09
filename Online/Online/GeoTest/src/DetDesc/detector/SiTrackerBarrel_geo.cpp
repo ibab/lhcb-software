@@ -42,17 +42,26 @@ namespace DetDesc { namespace Geometry {
 	Box        c_box (lcdd,c_nam+"_box",x_comp.width(),x_comp.length(),x_comp.thickness());
 	Volume     c_vol (lcdd,c_nam,c_box,lcdd.material(x_comp.materialStr()));
 	DetElement c_elt (lcdd,c_nam,det_type+"/Module/Component",det_id);
-	Position   c_pos  = lcdd.position("identity_pos");
-	Rotation   c_rot  = lcdd.rotation("identity_rot");
-	if (x_pos) c_pos  = Position(lcdd,c_nam+"_position",x_pos.x(0),x_pos.y(0),x_pos.z(0));
-	if (x_rot) c_rot  = Rotation(lcdd,c_nam+"_rotation",x_rot.x(0),x_rot.y(0),x_rot.z(0));
+	PlacedVolume c_phv;
 
-	PhysVol    c_phv(c_vol);
-	if ( x_comp.isSensitive() ) {
-	  c_vol.setSensitiveDetector(sens);
-	  c_phv.addPhysVolID(_X(sensor),sensor_number++);
+	if ( x_pos && x_rot ) {
+	  Position   c_pos(x_pos.x(0),x_pos.y(0),x_pos.z(0));
+	  Rotation   c_rot(x_rot.x(0),x_rot.y(0),x_rot.z(0));
+	  c_phv = m_vol.placeVolume(c_vol, c_pos, c_rot);
 	}
-	m_vol.addPhysVol(c_phv, c_pos, c_rot);
+	else if ( x_rot ) {
+	  c_phv = m_vol.placeVolume(c_vol,Rotation(x_rot.x(0),x_rot.y(0),x_rot.z(0)));
+	}
+	else if ( x_pos ) {
+	  c_phv = m_vol.placeVolume(c_vol,Position(x_pos.x(0),x_pos.y(0),x_pos.z(0)));
+	}
+	else {
+	  c_phv = m_vol.placeVolume(c_vol,IdentityPos());
+	}
+	if ( x_comp.isSensitive() ) {
+	  c_phv.addPhysVolID(_X(sensor),sensor_number++);
+	  c_vol.setSensitiveDetector(sens);
+	}
 	c_elt.setAttributes(lcdd,c_vol,
 			    x_comp.attr<string>(_A(region)),
 			    x_comp.attr<string>(_A(limits)),
@@ -105,14 +114,11 @@ namespace DetDesc { namespace Geometry {
 	  // Create a unique name for the module in this logical volume, layer, phi, and z.
 	  string m_place = lay_nam + _toString(ii,"_phi%d") + _toString(j,"_z%d");
 	  double z = module_z;
-	  // Position of module.
-	  Position m_pos(lcdd,m_place+"_position",x,y,z);	  
-	  // Rotation of module.
-	  Rotation m_rot(lcdd,m_place+"_rotation",M_PI/2,-((M_PI/2)-phic-phi_tilt),0);
 	  // Module PhysicalVolume.
-	  PhysVol  m_physvol(m_env);
+	  PlacedVolume  m_physvol = 
+	    lay_vol.placeVolume(m_env,Position(x,y,z),
+				Rotation(M_PI/2,-((M_PI/2)-phic-phi_tilt),0));
 	  m_physvol.addPhysVolID("module", module++);
-	  lay_vol.addPhysVol(m_physvol,m_pos,m_rot);
 
 	  // Adjust the x and y coordinates of the module.
 	  x += dx;
@@ -138,15 +144,10 @@ namespace DetDesc { namespace Geometry {
 			  x_layer.visStr());
 
       // Create the PhysicalVolume for the layer.
-      PhysVol layer_envelope_physvol(lay_vol);
-      // Set the subdetector system ID.
-      layer_envelope_physvol.addPhysVolID("system", det_id);
-      // Flag this as a barrel subdetector.
-      layer_envelope_physvol.addPhysVolID("barrel", 0);
-      // Set the layer ID.
-      layer_envelope_physvol.addPhysVolID("layer", lay_id);
-      // Put the layer into the mother volume.
-      motherVol.addPhysVol(layer_envelope_physvol,lcdd.identity());
+      PlacedVolume lpv = motherVol.placeVolume(lay_vol); // Place layer in mother
+      lpv.addPhysVolID("system", det_id);      // Set the subdetector system ID.
+      lpv.addPhysVolID("barrel", 0);           // Flag this as a barrel subdetector.
+      lpv.addPhysVolID("layer", lay_id);       // Set the layer ID.
     }
     return sdet;
   }

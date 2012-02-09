@@ -49,12 +49,12 @@ namespace DetDesc { namespace Geometry {
 
   template <> void Printer<Rotation>::operator()(const Rotation& val)  const  {
     os << "++ Rotation: ";
-    val->Print();
+    //val->Print();
   }
 
   template <> void Printer<Position>::operator()(const Position& val)  const  {
     os << "++ Position: ";
-    val->Print();
+    //val->Print();
   }
 
   template <> void Printer<LimitSet>::operator()(const LimitSet& val)  const  {
@@ -116,6 +116,7 @@ namespace DetDesc { namespace Geometry {
       p((*i).second);
   }
 
+  void dumpTopVolume();
   template <> void Printer<const LCDD*>::operator()(const LCDD*const&)  const  {
     //Header(lcdd.header()).fromCompact(doc,compact.child(Tag_info),Strng_t("In memory"));
 #if 0
@@ -129,7 +130,63 @@ namespace DetDesc { namespace Geometry {
     PrintMap<DetElement> (lcdd,os,lcdd.detectors(),    "List of DetElements")();
 #endif
     //PrintMap<DetElement>(lcdd,os,lcdd.detectors(),   "List of DetElements")();
-    PrintMap<VisAttr   > (lcdd,os,lcdd.visAttributes(),"List of Visualization attributes")();
+    //PrintMap<VisAttr   > (lcdd,os,lcdd.visAttributes(),"List of Visualization attributes")();
+    //dumpTopVolume();
   }
 
+  void dumpVolume(TGeoVolume* vol, int level);
+
+  void dumpNode(TGeoNode* n, int level) {
+    TGeoMatrix*  mat = n->GetMatrix();
+    TGeoVolume*  vol = n->GetVolume();
+    TGeoMedium*  med = vol->GetMedium();
+    TGeoShape*   shape = vol->GetShape();
+    TObjArray* nodes = vol->GetNodes();
+    for(int i=0; i<level;++i) cout << " ";
+    cout << " ++Node:|"  << n->GetName() << "| ";
+    cout << " Volume: "  << vol->GetName() 
+	 << " material:" << med->GetName() 
+	 << " shape:"    << shape->GetName()
+	 << endl;
+    for(int i=0; i<level;++i) cout << " ";
+    const Double_t* tr = mat->GetTranslation();
+    cout << "         matrix:|"   << mat->GetName() << "|"
+	 << mat->IsTranslation()
+	 << mat->IsRotation() 
+	 << mat->IsScale() 
+	 << " tr:x=" << tr[0] << " y=" << tr[1] << " z=" << tr[2];
+    if ( mat->IsRotation() ) {
+      Double_t theta,phi,psi;
+      TGeoRotation rot(*mat);
+      rot.GetAngles(phi,theta,psi);
+      cout << " rot: theta:" << theta << " phi:" << phi << " psi:" << psi;
+    }
+    cout << endl;
+    TIter next(nodes);
+    TGeoNode *geoNode;
+    while ((geoNode = (TGeoNode *) next())) {
+      dumpNode(geoNode,level+1);
+    }
+  }
+
+  void dumpVolume(TGeoVolume* vol, int level) {
+    TObjArray*   nodes = vol->GetNodes();
+    TGeoMedium*  med = vol->GetMedium();
+    TGeoShape*   shape = vol->GetShape();
+
+    for(int i=0; i<level;++i) cout << " ";
+    cout << "++Volume: " << vol->GetName() 
+	 << " material:" << med->GetName() 
+	 << " shape:"    << shape->GetName()
+	 << endl;
+    TIter next(nodes);
+    TGeoNode *geoNode;
+    while ((geoNode = (TGeoNode *) next())) {
+      dumpNode(geoNode,level+1);
+    }
+  }
+
+  void dumpTopVolume() {
+    dumpVolume(gGeoManager->GetTopVolume(),0);
+  }
 }}

@@ -17,9 +17,7 @@ using namespace DetDesc::Geometry;
 
 namespace DetDesc { namespace Geometry {
   
-  static void placeStaves(LCDD&         lcdd, 
-			  const string& detName, 
-			  double        rmin, 
+  static void placeStaves(double        rmin, 
 			  int           numsides, 
 			  double        total_thickness, 
 			  Volume        envelopeVolume, 
@@ -36,13 +34,9 @@ namespace DetDesc { namespace Geometry {
     string nam =   sectVolume.name();
     //numsides = 2;
     for (int module = 0; module < numsides; ++module)  {
-      Position position(lcdd, detName + _toString(module,"_stave_module%d_position"),-posX,-posY,0);
-      Rotation rotation(lcdd, detName + _toString(module,"_stave_module%d_rotation"),rotX,rotY,0);
-
-      PhysVol sectPhysVol(sectVolume);
-      envelopeVolume.addPhysVol(sectPhysVol,position,rotation);
-      sectPhysVol.addPhysVolID(_X(stave), 0);
-      sectPhysVol.addPhysVolID(_X(module),module);
+      PlacedVolume pv=envelopeVolume.placeVolume(sectVolume,Position(-posX,-posY,0),Rotation(rotX,rotY,0));
+      pv.addPhysVolID(_X(stave), 0);
+      pv.addPhysVolID(_X(module),module);
 
       rotY -=  innerRotation;
       posX  = -sectCenterRadius * std::sin(rotY);
@@ -67,9 +61,6 @@ namespace DetDesc { namespace Geometry {
     int         numSides    = dim.numsides();
     double      detZ        = dim.z();
     double      rmin        = dim.rmin();
-    double      zrot        = M_PI/numSides;
-    Rotation    rot(lcdd,det_name+"_rotation",0,0,zrot);
-    Position    pos_identity = lcdd.position("identity_pos");
     DetElement  sdet(lcdd,det_name,det_type,x_det.id());
     Volume      motherVol = lcdd.pickMotherVolume(sdet);
 
@@ -126,12 +117,10 @@ namespace DetDesc { namespace Geometry {
 
 	// Layer position in Z within the stave.
 	layer_pos_z += layer_thickness / 2;
-	// Position of layer.
-	Position layer_position(lcdd,layer_name+"_position", 0, 0, layer_pos_z);
 	// Layer box.
 	Box layer_box(lcdd,layer_name+"_box", layer_dim_x, detZ/2, layer_thickness);
 	// Layer volume. 
-	Volume layer_volume(lcdd,layer_name,layer_box,air);
+	Volume layer_vol(lcdd,layer_name,layer_box,air);
 
 	// Create the slices (sublayers) within the layer.
 	double slice_pos_z = -(layer_thickness / 2);
@@ -144,23 +133,20 @@ namespace DetDesc { namespace Geometry {
 	  DetElement slice(lcdd,slice_name,det_name+"/Layer/Slice",x_det.id());
 
 	  slice_pos_z += slice_thickness / 2;
-	  // Slice Position.
-	  Position slice_position(lcdd,slice_name+"_position",0,0,slice_pos_z);
 	  // Slice box. 
 	  Box slice_box(lcdd,slice_name+"_box",layer_dim_x,detZ/2,slice_thickness);
 
 	  // Slice volume.
-	  Volume slice_volume(lcdd,slice_name,slice_box,slice_material);
-	  if ( x_slice.isSensitive() ) slice_volume.setSensitiveDetector(sens);
+	  Volume slice_vol(lcdd,slice_name,slice_box,slice_material);
+	  if ( x_slice.isSensitive() ) slice_vol.setSensitiveDetector(sens);
 	  // Set region, limitset, and vis.
-	  slice.setAttributes(lcdd, slice_volume,
+	  slice.setAttributes(lcdd, slice_vol,
 			      x_slice.attr<string>(_A(region)),
 			      x_slice.attr<string>(_A(limits)),
 			      x_slice.visStr());
-	  // slice PhysVol
-	  PhysVol slice_physvol(slice_volume);
-	  slice_physvol.addPhysVolID(_X(slice),slice_number);
-	  layer_volume.addPhysVol(slice_physvol,slice_position);
+	  // slice PlacedVolume
+	  PlacedVolume slice_phv = layer_vol.placeVolume(slice_vol,Position(0,0,slice_pos_z));
+	  slice_phv.addPhysVolID(_X(slice),slice_number);
 
 	  layer.add(slice);
 	  // Increment Z position for next slice.
@@ -169,15 +155,14 @@ namespace DetDesc { namespace Geometry {
 	  ++slice_number;             
 	}
 	// Set region, limitset, and vis.
-	layer.setAttributes(lcdd, layer_volume,
+	layer.setAttributes(lcdd, layer_vol,
 			    x_layer_element.attr<string>(_A(region)),
 			    x_layer_element.attr<string>(_A(limits)),
 			    x_layer_element.visStr());
 
 	// Layer physical volume.
-	PhysVol layer_physvol(layer_volume);
-	layer_physvol.addPhysVolID(_X(layer),layer_number);
-	staveInnerVol.addPhysVol(layer_physvol,layer_position);
+	PlacedVolume layer_phv = staveInnerVol.placeVolume(layer_vol,Position(0,0,layer_pos_z));
+	layer_phv.addPhysVolID(_X(layer),layer_number);
 
 	sdet.add(layer);
 
@@ -190,21 +175,18 @@ namespace DetDesc { namespace Geometry {
       }
     }
 
-    // Make stave inner physical volume.
-    PhysVol staveInnerPhysVol(staveInnerVol);
     // Add stave inner physical volume to outer stave volume.
-    staveOuterVol.addPhysVol(staveInnerPhysVol,pos_identity);
+    staveOuterVol.placeVolume(staveInnerVol,IdentityPos());
 
     // Set the vis attributes of the outer stave section.
     sdet.setVisAttributes(lcdd,staves.visStr(),staveOuterVol);
 
     // Place the staves.
-    placeStaves(lcdd,det_name,rmin,numSides,totalThickness,envelopeVol,innerAngle,staveOuterVol);
+    placeStaves(rmin,numSides,totalThickness,envelopeVol,innerAngle,staveOuterVol);
 
-    PhysVol envelopePhysVol(envelopeVol);
-    envelopePhysVol.addPhysVolID(_X(system), sdet.id());
-    envelopePhysVol.addPhysVolID(_X(barrel), 0);
-    motherVol.addPhysVol(envelopePhysVol,pos_identity,rot);
+    PlacedVolume env_phv = motherVol.placeVolume(envelopeVol,Rotation(0,0,M_PI/numSides));
+    env_phv.addPhysVolID(_X(system), sdet.id());
+    env_phv.addPhysVolID(_X(barrel), 0);
     return sdet;
   }
 }}

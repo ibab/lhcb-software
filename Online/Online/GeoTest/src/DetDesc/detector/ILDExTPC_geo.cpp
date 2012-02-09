@@ -25,7 +25,7 @@ namespace DetDesc { namespace Geometry {
     Volume      tpc_vol(lcdd,name+"_envelope_volume", tpc_tub, mat);
 
     tpc.setEnvelope(tpc_tub).setVolume(tpc_vol);
-    lcdd.pickMotherVolume(tpc).addPhysVol(PhysVol(tpc_vol),lcdd.identity());
+    lcdd.pickMotherVolume(tpc).placeVolume(tpc_vol,IdentityPos());
 
     for(xml_coll_t c(e,_X(detector)); c; ++c)  {
       xml_det_t   px_det  (c);
@@ -36,16 +36,15 @@ namespace DetDesc { namespace Geometry {
       Material    part_mat(lcdd.material(px_det.materialStr()));
       DetElement  part_det(lcdd,part_nam,px_det.typeStr(),px_det.id());
       Tube        part_tub(lcdd,part_nam+"_tube",px_tube.rmin(),px_tube.rmax(),px_tube.zhalf());
-      Position    part_pos(lcdd,part_nam+"_position",px_pos.x(),px_pos.y(),px_pos.z());
-      Rotation    part_rot(lcdd,part_nam+"_rotation",px_rot.x(),px_rot.y(),px_rot.z());
       Volume      part_vol(lcdd,part_nam,part_tub,part_mat);
+      Position    part_pos(px_pos.x(),px_pos.y(),px_pos.z());
+      Rotation    part_rot(px_rot.x(),px_rot.y(),px_rot.z());
 
       part_det.setVolume(part_vol).setEnvelope(part_tub);
       part_det.setVisAttributes(lcdd,px_det.visStr(),part_vol);
 
-      PhysVol     part_physvol (part_vol);
-      part_physvol.addPhysVolID(_A(id),px_det.id());
-      tpc_vol.addPhysVol(part_physvol,part_pos,part_rot);
+      PlacedVolume part_phv = tpc_vol.placeVolume(part_vol,part_pos,part_rot);
+      part_phv.addPhysVolID(_A(id),px_det.id());
 
       switch(part_det.id()) {
       case 0:	tpc.setInnerWall(part_det);  break;

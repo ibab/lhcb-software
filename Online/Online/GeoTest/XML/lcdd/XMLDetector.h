@@ -62,17 +62,24 @@ namespace DetDesc {
 
       double radius() const;
       double offset() const;
+      double offset(double default_value) const;
       int    number() const;
 
       int numsides() const;
 
       double phi0() const;
+      double phi0(double default_value) const;
       double phi_tilt() const;
       int    nphi() const;
       double rc()  const;
       double dr()  const;
+      double dz()  const;
+      double dz(double default_value)  const;
+      double r()  const;
+      double r(double default_value)  const;
       
       double z0() const;
+      double zstart() const;
       int    nz() const;
       
     };
@@ -87,6 +94,8 @@ namespace DetDesc {
         bool   isSensitive() const;
         const  XMLCh* name() const;
         std::string   nameStr() const;
+	const XMLCh* type() const;
+	std::string typeStr() const;
         const  XMLCh* module() const;
         std::string   moduleStr() const;
         const  XMLCh* material() const;

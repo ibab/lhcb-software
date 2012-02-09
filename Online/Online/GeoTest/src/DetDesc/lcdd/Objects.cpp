@@ -77,36 +77,6 @@ string Constant::toString()  const {
   return os.str();
 }
 
-/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Transform::Transform(LCDD& lcdd, const std::string& name)   
-{
-  assign(new TGeoCombiTrans(name.c_str(),0,0,0,0),"","transformation");
-  lcdd.addTransform(*this);
-}
-
-/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Position::Position(LCDD& lcdd, const std::string& name, double x, double y, double z)
-{
-  assign(new TGeoTranslation(name.c_str(),x,y,z),"","position");
-  lcdd.addTransform(*this);
-}
-
-/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(LCDD& lcdd, const std::string& name, double theta, double phi, double psi)
-{
-  // Note: compact supplies: theta, phi, psi
-  // but root wants:         phi, theta, psi!
-  assign(new TGeoRotation(name.c_str(),phi*RAD_2_DEGREE,theta*RAD_2_DEGREE,psi*RAD_2_DEGREE),"","rotation");
-  lcdd.addTransform(*this);
-}
-
-/// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-Rotation::Rotation(LCDD& lcdd, const std::string& name)
-{
-  assign(new TGeoRotation(name.c_str(),0,0,0),"","rotation");
-  lcdd.addTransform(*this);
-}
-
 /// Constructor to be used when creating a new DOM tree
 Atom::Atom(LCDD& /* lcdd */, const string& name, const string& formula, int Z, int N, double density) {
   TGeoElementTable* t = TGeoElement::GetElementTable();

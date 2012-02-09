@@ -23,17 +23,14 @@ namespace DetDesc { namespace Geometry {
     Polycone   cone   (lcdd,name+"_envelope_polycone");
     Material   mat    (lcdd.material(x_det.materialStr()));
     Volume     volume (lcdd,name+"_envelope_volume", cone, mat);
-
-    int num = 0;
     vector<double> rmin,rmax,z;
-    double v1,v2,v3;
+    int num = 0;
+
     for(xml_coll_t c(e,_X(zplane)); c; ++c, ++num)  {
-      v1 = c.attr<double>(_A(rmin));
-      v2 = c.attr<double>(_A(rmax));
-      v3 = c.attr<double>(_A(z));
-      rmin.push_back(v1);
-      rmax.push_back(v2);
-      z.push_back(v3);
+      xml_dim_t dim(c);
+      rmin.push_back(dim.rmin());
+      rmax.push_back(dim.rmax());
+      z.push_back(dim.z()/2);
     }
     if ( num < 2 )  {
       throw runtime_error("PolyCone["+name+"]> Not enough Z planes. minimum is 2!");
@@ -41,7 +38,7 @@ namespace DetDesc { namespace Geometry {
     cone.addZPlanes(rmin,rmax,z);
     sdet.setEnvelope(cone).setVolume(volume);
     sdet.setVisAttributes(lcdd, x_det.visStr(), volume);
-    lcdd.pickMotherVolume(sdet).addPhysVol(PhysVol(volume),lcdd.identity());
+    lcdd.pickMotherVolume(sdet).placeVolume(volume,IdentityPos());
     return sdet;
   }
 }}

@@ -58,20 +58,15 @@ namespace DetDesc { namespace Geometry {
 	// Set vis attributes of slice
 	slice.setVisAttributes(lcdd, x_slice.visStr(), slice_vol);
 
-	//PhysVol spv(lcdd,slice_vol,slice_name);
-	PhysVol spv(slice_vol);
+	PlacedVolume spv = layer_vol.placeVolume(slice_vol,IdentityPos());
 	spv.addPhysVolID(_X(layer),n);
-	layer_vol.addPhysVol(spv,lcdd.identity());
 	layer.add(slice);
       }
       layer_tub.setDimensions(rmin,r,2.*z,2.*M_PI);
       sdet.setVisAttributes(lcdd, x_layer.visStr(), layer_vol);
 
-      //PhysVol lpv(lcdd,layer_vol,layer_name);
-      PhysVol lpv(layer_vol);
-      lpv.addPhysVolID(_X(system),sdet.id())
-	.addPhysVolID(_X(barrel),0);
-      motherVol.addPhysVol(lpv,lcdd.identity());
+      PlacedVolume lpv = motherVol.placeVolume(layer_vol,IdentityPos());
+      lpv.addPhysVolID(_X(system),sdet.id()).addPhysVolID(_X(barrel),0);
       sdet.add(layer);
     }
     sdet.setCombineHits(x_det.attr<bool>(_A(combineHits)),sens);

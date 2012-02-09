@@ -400,6 +400,10 @@ namespace DetDesc   { namespace XML  {
   extern const Tag_t Attr_dr;
   extern const Tag_t Attr_z0;
   extern const Tag_t Attr_nz;
+  extern const Tag_t Attr_dz;
+  extern const Tag_t Attr_nmodules;
+  extern const Tag_t Attr_zstart;
+  extern const Tag_t Tag_ring;
 
   // ILCEx
   extern const Tag_t Tag_support;

@@ -159,6 +159,9 @@ INSTANTIATE(TGeoIdentity);
 INSTANTIATE(TGeoCombiTrans);
 INSTANTIATE(TGeoGenTrans);
 
+#include "TGeoNode.h"
+INSTANTIATE(TGeoNode);
+
 #include "TGeoBBox.h"
 #include "TGeoPcon.h"
 #include "TGeoPgon.h"

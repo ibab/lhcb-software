@@ -299,12 +299,16 @@ namespace DetDesc   { namespace XML  {
   TAG(barrel_envelope);
   TAG(rphi_layout);
   TAG(z_layout);
+  TAG(ring);
+  ATTR(nmodules);
   ATTR(phi0);
   ATTR(phi_tilt);
   ATTR(rc);
   ATTR(dr);
   ATTR(z0);
   ATTR(nz);
+  ATTR(dz);
+  ATTR(zstart);
 
   void tags_init() {static __Init i; }
 

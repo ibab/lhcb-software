@@ -26,8 +26,6 @@ namespace DetDesc { namespace Geometry {
     string      det_type  = x_det.typeStr();
     Material    air       = lcdd.material(_X(Air));
     Material    gapMat    = air;
-    Position    pos_ident = lcdd.position("identity_pos");
-    Rotation    rot_ident = lcdd.rotation("identity_rot");
     int         numsides  = dim.numsides();
     double      rmin      = dim.rmin();
     double      rmax      = dim.rmax()*std::cos(M_PI/numsides);
@@ -63,26 +61,21 @@ namespace DetDesc { namespace Geometry {
 	Material   s_mat   = lcdd.material(x_slice.materialStr());
 	PolyhedraRegular s_solid(lcdd,s_name+"_solid",numsides,rmin,rmax,s_thick);
 	Volume           s_vol  (lcdd,s_name+"_volume",s_solid,s_mat);
-	DetElement       s_elt  (lcdd,s_name,det_type+"/Layer/Slice",det_id);
 	
-	l_elt.add(s_elt.setVolume(s_vol).setEnvelope(s_solid));
 	if ( x_slice.isSensitive() ) s_vol.setSensitiveDetector(sens);
 	s_vol.setVisAttributes(lcdd.visAttributes(x_slice.visStr()));
 	sliceZ += s_thick/2;
-	Position s_pos(lcdd,s_name+"_position",0,0,sliceZ);
-	PhysVol s_phv(s_vol);
+	PlacedVolume s_phv = l_vol.placeVolume(s_vol,Position(0,0,sliceZ));
 	s_phv.addPhysVolID("slice",s_num);
-	l_vol.addPhysVol(s_phv,s_pos);
 	s_num++;
       }
       l_vol.setVisAttributes(lcdd.visAttributes(x_layer.visStr()));
       if ( l_repeat <= 0 ) throw std::runtime_error(det_name+"> Invalid repeat value");
       for(int j=0; j<l_repeat; ++j) {
 	string phys_lay = det_name + _toString(l_num,"_layer%d");
-	Position l_pos(lcdd,phys_lay+"_position",0,0,layerZ += l_thick/2);
-	PhysVol  phys_vol(l_vol);
+	layerZ += l_thick/2;
+	PlacedVolume  phys_vol = envelopeVol.placeVolume(l_vol,Position(0,0,layerZ));
 	phys_vol.addPhysVolID("layer", l_num);
-	envelopeVol.addPhysVol(phys_vol,l_pos);
 	layerZ += l_thick/2;
 	++l_num;
       }
@@ -94,21 +87,19 @@ namespace DetDesc { namespace Geometry {
 		       x_det.attr<string>(_A(limits)),
 		       x_det.visStr());
 
-    Position phv_pos(lcdd,det_name+"_position",0,0,zmin+totalThickness/2);
-    Rotation phv_rot(lcdd,det_name+"_positive",0,0,M_PI/numsides);
-    PhysVol  physvol(envelopeVol);
+    PlacedVolume  physvol = motherVol.placeVolume(envelopeVol,
+						  Position(0,0,zmin+totalThickness/2),
+						  Rotation(0,0,M_PI/numsides));
     physvol.addPhysVolID("system",det_id);
     physvol.addPhysVolID("barrel",1);        
-    motherVol.addPhysVol(physvol,phv_pos,phv_rot);
         
     bool reflect = x_det.hasAttr(_A(reflect)) ? x_det.attr<bool>(_A(reflect)) : true;
     if ( reflect ) {
-      Position r_phv_pos(lcdd,det_name+"_position",0,0,-(zmin+totalThickness/2));
-      Rotation r_phv_rot(lcdd,det_name + "_negative",M_PI,0,M_PI/numsides);
-      PhysVol  r_physvol(envelopeVol);
-      r_physvol.addPhysVolID("system",det_id);
-      r_physvol.addPhysVolID("barrel",2);
-      motherVol.addPhysVol(physvol,r_phv_pos,r_phv_rot);
+      physvol = motherVol.placeVolume(envelopeVol,
+				      Position(0,0,-(zmin+totalThickness/2)),
+				      Rotation(M_PI,0,M_PI/numsides));
+      physvol.addPhysVolID("system",det_id);
+      physvol.addPhysVolID("barrel",2);
     }
     return sdet;
   }

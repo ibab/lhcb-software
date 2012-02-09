@@ -62,17 +62,14 @@ namespace DetDesc { namespace Geometry {
 	  // Set vis attributes of slice
 	  slice.setVisAttributes(lcdd,x_slice.visStr(),slice_vol);
 	  // Instantiate physical volume
-	  //layer_vol.addPhysVol(PhysVol(lcdd,slice_vol,slice_name),lcdd.identity());
-	  layer_vol.addPhysVol(PhysVol(slice_vol),lcdd.identity());
+	  layer_vol.placeVolume(slice_vol,IdentityPos());
 	  layer.add(slice);
 	}
 	layer.setVisAttributes(lcdd,x_layer.visStr(),layer_vol);
 	layer_tub.setDimensions(rlayer,r,z * 2);
 
-	//PhysVol layer_physvol(lcdd,layer_vol,layer_name);
-	PhysVol layer_physvol(layer_vol);
+	PlacedVolume layer_physvol = envelopeVol.placeVolume(layer_vol,IdentityPos());
 	layer_physvol.addPhysVolID(_A(layer),n);
-	envelopeVol.addPhysVol(layer_physvol,lcdd.identity());
 	sdet.add(layer);
 	++n;
       }
@@ -84,12 +81,8 @@ namespace DetDesc { namespace Geometry {
     // Set vis attributes of slice
     sdet.setVisAttributes(lcdd,x_det.visStr(),envelopeVol);
 
-    //PhysVol physvol(lcdd,envelopeVol,det_name);
-    PhysVol physvol(envelopeVol);
-    physvol.addPhysVolID(_A(system),sdet.id())
-      .addPhysVolID(_A(barrel),0);
-    envelopeVol.addPhysVol(physvol,lcdd.identity());
-    lcdd.pickMotherVolume(sdet).addPhysVol(physvol,lcdd.identity());
+    PlacedVolume physvol = lcdd.pickMotherVolume(sdet).placeVolume(envelopeVol,IdentityPos());
+    physvol.addPhysVolID(_A(system),sdet.id()).addPhysVolID(_A(barrel),0);
     return sdet;
   }
 }}

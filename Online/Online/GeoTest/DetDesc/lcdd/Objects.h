@@ -19,6 +19,12 @@ class TGeoMatrix;
 class TGeoRotation;
 class TGeoTranslation;
 
+// C/C++ include files
+#define _USE_MATH_DEFINES
+#include <cmath>
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
 /*
  *   DetDesc namespace declaration
  */
@@ -86,38 +92,62 @@ namespace DetDesc {
       std::string toString()  const;
     };
 
-    /** @class Transformation Objects.h
-     *  
-     *  @author  M.Frank
-     *  @version 1.0
-     */
-    struct Transform : public Handle<TGeoMatrix> {
-      /// Default constructor
-      Transform() : Handle<TGeoMatrix>() {}
-      /// Default constructor
-      Transform(TGeoMatrix* m) : Handle<TGeoMatrix>(m) {}
-      /// Constructor to be used when reading the already parsed DOM tree
-      template <typename Q> 
-      Transform(const Handle<Q>& e) : Handle<TGeoMatrix>(e) {}
-      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Transform(LCDD& doc, const std::string& name);
-    };
-
     /** @class Position Objects.h
      *  
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct Position : public Handle<TGeoTranslation>  {
+    struct Position  {
+      double x, y, z;
       /// Default constructor
-      Position() : Handle<TGeoTranslation>() {}
-      /// Constructor to be used when reading the already parsed DOM tree
-      template <typename Q> 
-      Position(const Handle<Q>& e) : Handle<TGeoTranslation>(e) {}
-      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Position(LCDD& doc, const std::string& name, double x, double y, double z);
+      Position() : x(0), y(0), z(0) {}
+      /// Initializing constructor
+      Position(double xval, double yval, double zval) : x(xval), y(yval), z(zval) {}
     };
 
+    /** @class IdentityPos Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct IdentityPos {
+      /// Default constructor
+      IdentityPos() {}
+    };
+
+    /** @class Rotation Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct Rotation  {
+      double theta, phi, psi;
+      /// Default constructor
+      Rotation() : theta(0), phi(0), psi(0) {}
+      /// Initializing constructor
+      Rotation(double thetaval, double phival, double psival) : theta(thetaval), phi(phival), psi(psival) {}
+    };
+
+    /** @class IdentityRot Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct IdentityRot {
+      /// Default constructor
+      IdentityRot() {}
+    };
+
+    /** @class ReflectRot Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct ReflectRot : public Rotation {
+      /// Default constructor
+      ReflectRot() : Rotation(M_PI,0.,0.) {}
+    };
+#if 0
     /** @class Rotation Objects.h
      *  
      *  @author  M.Frank
@@ -135,6 +165,24 @@ namespace DetDesc {
       Rotation(LCDD& doc, const std::string& name, double x, double y, double z);
     };
 
+    /** @class Transformation Objects.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct Transform : public Handle<TGeoMatrix> {
+      /// Default constructor
+      Transform() : Handle<TGeoMatrix>() {}
+      /// Default constructor
+      Transform(TGeoMatrix* m) : Handle<TGeoMatrix>(m) {}
+      /// Constructor to be used when reading the already parsed DOM tree
+      template <typename Q> 
+      Transform(const Handle<Q>& e) : Handle<TGeoMatrix>(e) {}
+      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
+      Transform(LCDD& doc, const std::string& name);
+    };
+
+#endif
     /** @class Atom Objects.h
      *  
      *  @author  M.Frank

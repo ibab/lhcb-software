@@ -19,6 +19,8 @@
 #include <map>
 
 #include "TGeoShape.h"
+#include "TGeoNode.h"
+
 // Forward declarations
 class TGeoVolume;
 
@@ -40,11 +42,27 @@ namespace DetDesc {
     struct LimitSet;
     struct Material;
     struct Volume;
-    struct PhysVol;
+    struct PlacedVolume;
     struct Position;
     struct Rotation;
     struct VisAttr;
     struct SensitiveDetector;
+
+    /** @class PlacedVolume Volume.h  DetDesc/lcdd/Volume.h
+     *  
+     *  @author  M.Frank
+     *  @version 1.0
+     */
+    struct PlacedVolume : Handle<TGeoNode> {
+      /// Constructor to be used when reading the already parsed DOM tree
+      PlacedVolume(const TGeoNode* e) : Handle<TGeoNode>(e) {}
+      /// Default constructor
+      PlacedVolume() : Handle<TGeoNode>() {}
+      /// Copy assignment
+      PlacedVolume(const PlacedVolume& e) :  Handle<TGeoNode>(e) {}
+      /// Add identifier
+      PlacedVolume& addPhysVolID(const std::string& name, int value);
+    };
   
     /** @class Volume Volume.h  DetDesc/lcdd/Volume.h
      *  
@@ -75,11 +93,26 @@ namespace DetDesc {
       /// Constructor to be used when creating a new geometry tree. Also sets materuial and solid attributes
       Volume(LCDD& lcddument, const std::string& name, const Solid& s, const Material& m);
 
+      /// Set the volume's solid shape
       void setSolid(const Solid& s)  const;
+      /// Set the volume's material
       void setMaterial(const Material& m)  const;
-      void addPhysVol(const PhysVol& vol, const Transform& tr)  const;
-      void addPhysVol(const PhysVol& vol, const Position& pos)  const;
-      void addPhysVol(const PhysVol& vol, const Position& pos, const Rotation& rot)  const;
+
+      /// Place daughter volume. The position and rotation are the identity
+      PlacedVolume placeVolume(const Volume& vol)  const  
+      { return placeVolume(vol,IdentityPos());                        }
+      /// Place un-rotated daughter volume at the given position.
+      PlacedVolume placeVolume(const Volume& vol, const Position& pos)  const;
+      /// Place rotated daughter volume. The position is automatically the identity position
+      PlacedVolume placeVolume(const Volume& vol, const Rotation& rot)  const;
+      /// Place translated and rotated daughter volume
+      PlacedVolume placeVolume(const Volume& vol, const Position& pos, const Rotation& rot)  const;
+
+      /// Place daughter volume. The position and rotation are the identity
+      PlacedVolume placeVolume(const Volume& vol, const IdentityPos& pos)  const;
+      /// Place daughter volume. The position and rotation are the identity
+      PlacedVolume placeVolume(const Volume& vol, const IdentityRot& pos)  const;
+
       void setRegion(const Region& obj)  const;
       void setLimitSet(const LimitSet& obj)  const;
       void setSensitiveDetector(const SensitiveDetector& obj) const;
@@ -93,19 +126,6 @@ namespace DetDesc {
       operator TGeoVolume*() const     { return m_element; }
     };
 
-    /** @class PhysVol Volume.h  DetDesc/lcdd/Volume.h
-     *  
-     *  @author  M.Frank
-     *  @version 1.0
-     */
-    struct PhysVol : Handle<TGeoVolume> {
-      /// Constructor to be used when reading the already parsed DOM tree
-      template <typename T> PhysVol(const Handle<T>& e) : Handle<TGeoVolume>(e) {}
-      /// Add identifier
-      PhysVol& addPhysVolID(const std::string& name, int value);
-      /// Auto conversion to underlying ROOT object
-      operator TGeoVolume*() const     { return m_element; }
-    };
   }       /* End namespace Geometry           */
 }         /* End namespace DetDesc            */
 #endif    /* DETDESC_GEOMETRY_VOLUMES_H       */
