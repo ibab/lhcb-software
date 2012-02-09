@@ -767,7 +767,7 @@ int FastVeloTracking::extendTrack( FastVeloTrack &newTrack, FastVeloSensor* sens
       newTrack.addRHit( best );
       if ( m_debug ) printCoord( best, "add " );
     } else {
-      ++nMiss;      // no hit found
+      if ( sensor->rSensor()->tell1EventInfo().wasDecoded() ) ++nMiss;      // no hit found
     }
   }
   return nMiss;
@@ -914,6 +914,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
       continue;
     }
     unsigned int module = sensor->number()/2 - 32;
+    goodPhiHits[module].reserve(200); // avoid relocation...
 
     double rPred  = input.rInterpolated( sensor->z() ) - sensor->rOffset( input.zone()%4 );
     double x0     = sensor->xCentre();
@@ -1237,10 +1238,11 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     s2 = s1 + stationStep;
     s3 = s2 + stationStep;
     if ( s1 < 21 && s2 < 21 && s3 < 21 ) {  // protect agains access to no existent modules
-      FastVeloHits all(goodPhiHits[s1]);
-      station = s2;
+      FastVeloHits all;
+      all.reserve(200);
+      station = s1;
       while ( lastStation+stationStep != station ) {
-        for ( itH = goodPhiHits[station].begin(); goodPhiHits[station].end() != itH; ++itH ) all.push_back( *itH );
+        all.insert( all.end(), goodPhiHits[station].begin(), goodPhiHits[station].end() );
         station += stationStep;
         if ( station > 20 ) break;
       }

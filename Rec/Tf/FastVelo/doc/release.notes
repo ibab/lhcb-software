@@ -4,6 +4,11 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-02-09 - Olivier Callot
+ - Use the new 'wasDecoded' flag of the Velo sensor to count missed sensors.
+ - Reserve space in vectors. (Feed back from Sasha Mazuroz's talk on 6/2/2012)
+ - Copy vectors using the insert method.-> -4% time.
+
 !========================= FastVelo v1r6 2011-12-15 ==========================
 ! 2011-11-22 - Marco Cattaneo
  - Fix a gcc46 warning and some icc remarks 
