@@ -52,9 +52,15 @@ namespace Tf
    *  Binary sorting function to sort hits by projection
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  projection should be ordered by LHCbID
    */
-  template<class Hit>
-  class increasingByProjection : public std::binary_function<const Hit*, const Hit*, bool>
+  template<class Hit, bool forceOrder = true>
+  class increasingByProjection :
+    public std::binary_function<const Hit*, const Hit*, bool>
   {
   public:
     /** Comparison operator
@@ -65,17 +71,40 @@ namespace Tf
     inline bool operator() ( const Hit* lhs,
                              const Hit* rhs ) const
     {
-      return lhs->projection() < rhs->projection();
+      if (lhs->projection() < rhs->projection()) return true;
+      if (rhs->projection() < lhs->projection()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
     }
+  };
+
+  template<class Hit>
+  class increasingByProjection<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by projection
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return lhs->projection() < rhs->projection(); }
   };
 
   /** @class increasingByZ TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by z
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  z should be ordered by LHCbID
    */
-  template<class Hit>
-  class increasingByZ : public std::binary_function<const Hit*, const Hit*, bool>
+  template<class Hit, bool forceOrder = true>
+  class increasingByZ :
+    public std::binary_function<const Hit*, const Hit*, bool>
   {
   public:
     /** Comparison operator
@@ -83,20 +112,43 @@ namespace Tf
      *  @param[in] rhs Hit object on rhs of < operator
      *  @return boolean indicating the sorting of lhs and rhs by z
      */
-    inline bool operator() (const Hit*  lhs,
-                            const Hit*  rhs)
+    inline bool operator() ( const Hit* lhs,
+                             const Hit* rhs ) const
     {
-      return lhs->z() < rhs->z();
+      if (lhs->z() < rhs->z()) return true;
+      if (rhs->z() < lhs->z()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
     }
+  };
+
+  template<class Hit>
+  class increasingByZ<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by z
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return lhs->z() < rhs->z(); }
   };
 
   /** @class increasingByX TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by x
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  x should be ordered by LHCbID
    */
-  template<class Hit>
-  class increasingByX : public std::binary_function<const Hit*, const Hit*, bool>
+  template<class Hit, bool forceOrder = true>
+  class increasingByX :
+    public std::binary_function<const Hit*, const Hit*, bool>
   {
   public:
     /** Comparison operator
@@ -104,20 +156,43 @@ namespace Tf
      *  @param[in] rhs Hit object on rhs of < operator
      *  @return boolean indicating the sorting of lhs and rhs by x
      */
-    inline bool operator() (const Hit*  lhs,
-                            const Hit*  rhs)
+    inline bool operator() ( const Hit* lhs,
+                             const Hit* rhs ) const
     {
-      return lhs->x() < rhs->x();
+      if (lhs->x() < rhs->x()) return true;
+      if (rhs->x() < lhs->x()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
     }
+  };
+
+  template<class Hit>
+  class increasingByX<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return lhs->x() < rhs->x(); }
   };
 
   /** @class increasingByXAtYEq0 TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by x at the point y=0
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  x at y= 0 should be ordered by LHCbID
    */
-  template<class Hit>
-  class increasingByXAtYEq0 : public std::binary_function<const Hit*, const Hit*, bool>
+  template<class Hit, bool forceOrder = true>
+  class increasingByXAtYEq0 :
+    public std::binary_function<const Hit*, const Hit*, bool>
   {
   public:
     /** Comparison operator
@@ -125,11 +200,204 @@ namespace Tf
      *  @param[in] rhs Hit object on rhs of < operator
      *  @return boolean indicating the sorting of lhs and rhs by x at the point y=0
      */
-    inline bool operator() (const Hit*  lhs,
-                            const Hit*  rhs)
+    inline bool operator() ( const Hit*  lhs,
+                             const Hit*  rhs ) const
     {
-      return lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0();
+      if (lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0()) return true;
+      if (rhs->hit()->xAtYEq0() < lhs->hit()->xAtYEq0()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
     }
+  };
+
+  template<class Hit>
+  class increasingByXAtYEq0<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x at the point y=0
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return lhs->xAtYEq0() < rhs->xAtYEq0(); }
+  };
+
+  /** @class decreasingByProjection TfKernel/RecoFuncs.h
+   *  Binary sorting function to sort hits by projection
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  projection should be ordered by LHCbID
+   */
+  template<class Hit, bool forceOrder = true>
+  class decreasingByProjection :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by projection
+     */
+    inline bool operator() ( const Hit* lhs,
+                             const Hit* rhs ) const
+    {
+      if (rhs->projection() < lhs->projection()) return true;
+      if (lhs->projection() < rhs->projection()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
+    }
+  };
+
+  template<class Hit>
+  class decreasingByProjection<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by projection
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return rhs->projection() < lhs->projection(); }
+  };
+
+  /** @class decreasingByZ TfKernel/RecoFuncs.h
+   *  Binary sorting function to sort hits by z
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  z should be ordered by LHCbID
+   */
+  template<class Hit, bool forceOrder = true>
+  class decreasingByZ :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by z
+     */
+    inline bool operator() ( const Hit* lhs,
+                             const Hit* rhs ) const
+    {
+      if (rhs->z() < lhs->z()) return true;
+      if (lhs->z() < rhs->z()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
+    }
+  };
+
+  template<class Hit>
+  class decreasingByZ<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by z
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return rhs->z() < lhs->z(); }
+  };
+
+  /** @class decreasingByX TfKernel/RecoFuncs.h
+   *  Binary sorting function to sort hits by x
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  x should be ordered by LHCbID
+   */
+  template<class Hit, bool forceOrder = true>
+  class decreasingByX :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x
+     */
+    inline bool operator() ( const Hit* lhs,
+                             const Hit* rhs ) const
+    {
+      if (rhs->x() < lhs->x()) return true;
+      if (lhs->x() < rhs->x()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
+    }
+  };
+
+  template<class Hit>
+  class decreasingByX<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return rhs->x() < lhs->x(); }
+  };
+
+  /** @class decreasingByXAtYEq0 TfKernel/RecoFuncs.h
+   *  Binary sorting function to sort hits by x at the point y=0
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   *  @author M. Schiller
+   *  @date 2012-02-07
+   *
+   *  the template parameter forceOrder specifies if hits with same
+   *  x at y= 0 should be ordered by LHCbID
+   */
+  template<class Hit, bool forceOrder = true>
+  class decreasingByXAtYEq0 :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x at the point y=0
+     */
+    inline bool operator() ( const Hit*  lhs,
+                             const Hit*  rhs ) const
+    {
+      if (rhs->hit()->xAtYEq0() < lhs->hit()->xAtYEq0()) return true;
+      if (lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0()) return false;
+      return lhs->hit()->lhcbID() < rhs->hit()->lhcbID();
+    }
+  };
+
+  template<class Hit>
+  class decreasingByXAtYEq0<Hit, false> :
+    public std::binary_function<const Hit*, const Hit*, bool>
+  {
+  public:
+    /** Comparison operator
+     *  @param[in] lhs Hit object on lhs of < operator
+     *  @param[in] rhs Hit object on rhs of < operator
+     *  @return boolean indicating the sorting of lhs and rhs by x at the point y=0
+     */
+    inline bool operator() ( const Hit* lhs,
+	                     const Hit* rhs ) const
+    { return rhs->xAtYEq0() < lhs->xAtYEq0(); }
   };
 
   template<class Hit>

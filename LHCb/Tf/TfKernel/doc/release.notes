@@ -4,6 +4,20 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2012-02-09 - Manuel Tobias Schiller
+ - fix (hopefully once and for all) an issue with std::sort not being stable;
+   different compiler (versions) are therefore allowed to produce different
+   "sorted" sequences of hits which can cause variations in results of client
+   code. the following measures were taken to fix that
+   - change the increasingBy... functors in TfKernel/RecoFuncs.h so that they
+     order by LHCbID as a fallback (i.e. increasingByZ will sort hits at the
+     same z by their LHCbID (increasing)); the old behaviour is still
+     available through a template parameter which defaults to the new
+     behaviour
+   - add corresponding decreasingBy... functors which have the same behaviour
+     as their increasingBy... counterparts; they also sort (by default) by
+     increasing LHCbID as a fallback
+
 !========================= TfKernel v2r21 2011-06-14 =========================
 ! 2011-05-18 - Alexandr Kozlinskiy
  - Move code from DeOTModule::propagationTime to OTHit::propagationTime to
