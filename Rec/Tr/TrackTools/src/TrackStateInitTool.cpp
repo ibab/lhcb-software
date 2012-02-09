@@ -1,5 +1,6 @@
 #include "TrackStateInitTool.h"
 #include "STDet/DeSTDetector.h"
+#include "Kernel/HitPattern.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackStateInitTool
@@ -41,60 +42,38 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
   //do nothing  
   if(!clearStates) return sc ;
 
-  // save type and flags since patrec fit may reset those
-  LHCb::Track::Types savedType = track.type();
-  unsigned int flags = track.flags();
-  
   // save the first state such that we have something if procedure fails
   LHCb::State saveState = track.nStates()>0 ? track.firstState() : LHCb::State() ;
 
   // now clean up all fit history
   track.clearStates() ;
   track.setFitResult(0) ;
+  track.setFitStatus( LHCb::Track::FitStatusUnknown );
 
   // create velo states
-  if(savedType <= LHCb::Track::Upstream){
-
-    // why do we need to cache extraInfo and ancestors?
-      LHCb::Track::ExtraInfo extraInfo = track.extraInfo();
-
-      const SmartRefVector<LHCb::Track> ancestors = track.ancestors();      
-
-      sc = createVeloStates( track );
-      if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
-      
-
-      track.clearAncestors();
-      // copy the ancestors
-      for (SmartRefVector<LHCb::Track>::const_iterator it = ancestors.begin();
-         it != ancestors.end();  ++it) track.addToAncestors(*(*it));
+  LHCb::HitPattern hitpattern( track.lhcbIDs() ) ;
+  
+  if(  hitpattern.numVeloStations() > 0 ) {
+    // at states in velo
+    sc = createVeloStates( track );
+    if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
     
-      track.setExtraInfo(extraInfo); 
-  }
-   
-  track.setPatRecStatus( LHCb::Track::PatRecIDs );
-  track.setFitStatus( LHCb::Track::FitStatusUnknown );
-  track.setType(savedType);
-  track.setFlags(flags);
-
-  // set momentum for veloTT tracks
-  if(sc.isSuccess() && savedType == LHCb::Track::Upstream) {
+    // add state in TT
+    if(sc.isSuccess() && hitpattern.numTTHits()>0) {
       sc = createVeloTTStates( track );
       if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
+    }
   }
 
   // set the T-station states
-  if(sc.isSuccess() && (savedType == LHCb::Track::Long ||
-			 savedType == LHCb::Track::Downstream ||
-			 savedType == LHCb::Track::Ttrack) ) {
+  if(sc.isSuccess() && hitpattern.numTLayers()>0) {
+    // add states in T
     sc = createTStationStates( track ) ;
     if( sc.isFailure() ) Warning("TrackStateInitTool fit T failed",sc,0).ignore();
-    else {
-      if( /* savedType == LHCb::Track::Long || */
-	 savedType == LHCb::Track::Downstream ) {
-	sc = createTTState( track ) ;
-	if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
-      }
+    else if( hitpattern.numTTHits()>0 &&  hitpattern.numVeloStations()==0 ) {
+      // add TT state for downstream tracks
+      sc = createTTState( track ) ;
+      if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
     }
   }
 
@@ -109,8 +88,22 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
 
 StatusCode TrackStateInitTool::createVeloStates( LHCb::Track& track ) const
 {
-  // let's just run velo fitter
-  return m_veloFitter->fit(track) ;
+  // need to cache some things that velofitter removes 
+  LHCb::Track::Types savedType = track.type();
+  unsigned int flags = track.flags();
+  LHCb::Track::ExtraInfo extraInfo = track.extraInfo();
+  const SmartRefVector<LHCb::Track> ancestors = track.ancestors();
+  
+  StatusCode sc = m_veloFitter->fit(track) ;
+  
+  track.clearAncestors();
+  for (SmartRefVector<LHCb::Track>::const_iterator it = ancestors.begin();
+       it != ancestors.end();  ++it) track.addToAncestors(*(*it));    
+  track.setExtraInfo(extraInfo); 
+  track.setFlags(flags) ;
+  track.setType(savedType) ;
+
+  return sc ;
 }
 
 StatusCode TrackStateInitTool::createVeloTTStates( LHCb::Track& track) const
@@ -128,21 +121,32 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
   if(sc.isSuccess() && 
      newStates.size()>0 && track.nStates()>0 && 
      track.firstState().location()<=LHCb::State::EndVelo) {
-    double qOverP = newStates.begin()->qOverP();
-    double errQOverP = newStates.begin()->errQOverP2();
+    double qOverP = newStates.front().qOverP();
+    double errQOverP = newStates.front().errQOverP2();
       
-    // replace the first T state by the extrapolated Velo state
+    // replace the first T state by the extrapolated Velo state.
+    // also compute q/p by matching that state in x.
     const LHCb::State* velottstate = track.states().back() ;
     LHCb::StateVector statevec( velottstate->stateVector(), velottstate->z() ) ;
     statevec.setQOverP( qOverP ) ;
     LHCb::State& tstate = newStates.front() ;
-    sc = m_extrapolator->propagate( statevec, tstate.z(), 0 );
+    Gaudi::TrackMatrix jacobian ;
+    sc = m_extrapolator->propagate( statevec, tstate.z(), &jacobian );
+    double dqop = (tstate.x() - statevec.x()) / jacobian(0,4) ;
+    // what is most important is to set the slopes. 'x' we keep fixed
+    // by construction. it may best to leave 'y' actually.
+    for(int i = 0 ; i<=4; ++i ) 
+      statevec.parameters()(i) += dqop * jacobian(i,4) ;
     tstate.stateVector() = statevec.parameters() ;
-    
+
+    // now update q/p of all states
     BOOST_FOREACH( LHCb::State* state, track.states() ) {
-      state->setQOverP( qOverP ) ;
+      state->setQOverP( tstate.qOverP() ) ;
       state->setErrQOverP2(errQOverP) ;
     }
+    for( std::vector<LHCb::State>::iterator istate = newStates.begin();
+	 istate != newStates.end(); ++istate) 
+      istate->setQOverP( tstate.qOverP() ) ;
   }
   
   for( std::vector<LHCb::State>::iterator istate = newStates.begin();
@@ -214,13 +218,14 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
   // first get a reference state: if there are velo hits, take the
   // state end velo, otherwise take a T state
   LHCb::State* refstate = track.stateAt( LHCb::State::EndVelo ) ;
+  if( refstate==0 ) refstate = &(track.closestState(StateParameters::ZMidT )) ;
   if( refstate==0 ) refstate = &(track.firstState()) ;
   
-  const double zref=StateParameters::ZEndTT ;
+  const double zref=StateParameters::ZMidTT ;
   LHCb::StateVector statevec( refstate->stateVector(), refstate->z() ) ;
   Gaudi::TrackMatrix jacobian ;
   StatusCode sc = m_extrapolator->propagate( statevec, zref, &jacobian );
-
+  
   if( sc.isSuccess() ) {
     // collect the TT hits
     std::vector< LHCb::LHCbID > ttids ;
@@ -228,7 +233,9 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
     BOOST_FOREACH( const LHCb::LHCbID& id, track.lhcbIDs() ) 
       if( id.isTT() ) {
 	ttids.push_back( id ) ;
-	ttlayers.insert( id.stID().layer() ) ;
+	LHCb::STChannelID stid = id.stID() ;
+	unsigned int uniquelayer = (stid.station()-1)*2 + stid.layer()-1 ;
+	ttlayers.insert( uniquelayer ) ;
       }
     
     // we'll only try something more complicated if there are enough TT hits
@@ -250,17 +257,26 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
       //ttstatevec(0) = xtt ;
       const bool fixTy = true ;
       fitLine( zref, ttstatevec, tthits, fixTy ) ;
+      double dqop = (ttstatevec(0) - statevec.x()) / jacobian(0,4);
       for(size_t i=0; i<4; ++i) statevec.parameters()(i) = ttstatevec(i) ;
-      
-      // I have also tried to fix q/p but it simply doesn't help anything.
       
       // also fix ty: the ty of the seed track fit is actually quite poor.
       double ty = 
 	(track.states().front()->y() - ttstatevec(1))/
 	(track.states().front()->z() - zref)  ;
-      
       statevec.setTy ( ty ) ;
-      track.states().front()->setTy(  statevec.ty() ) ;
+
+      if( track.type() == LHCb::Track::Downstream ) {
+	// set the ty only in T1. should we also set tx? that requires
+	// another extrapolation.
+	track.states().front()->setTy( ty ) ;
+
+	// set the qop of all states
+	double qop = statevec.qOverP() + dqop ;
+	statevec.setQOverP( qop ) ;
+	BOOST_FOREACH( LHCb::State* state, track.states() ) 
+	  state->setQOverP( qop ) ;
+      }
     }
     
     // now add the TT state
