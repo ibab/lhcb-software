@@ -1,3 +1,7 @@
+2012-02-09 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbLegacy/install_project.py: Fixed option --dev-install
+
 2011-12-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fully implemented the download of the configuration files. Checking

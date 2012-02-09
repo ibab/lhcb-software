@@ -2644,7 +2644,7 @@ def parseArgs():
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', "retrytime=", "nofixperm", "version",
              "compatible-configs", "latest-data-link", "url",
-             "boot-scripts=","tmp-dir="])
+             "boot-scripts=","tmp-dir=", "dev-install"])
 
     except getopt.GetoptError, err:
         print str(err)
