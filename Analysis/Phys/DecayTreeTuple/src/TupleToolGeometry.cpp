@@ -82,6 +82,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
 {
   const std::string prefix=fullName(head);
 
+  StatusCode sc = StatusCode::SUCCESS;
 
   Assert( P && m_dist && m_dva
           , "No mother or particle, or tools misconfigured." );
@@ -89,12 +90,14 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
 
   if( isPureNeutralCalo(P) )
     return Warning("Will not fill geometry tuple for neutral Calo particles. No worry", StatusCode::SUCCESS, 10);
-  verbose() << "TupleToolGeometry::fill " << mother << " " << P << " " << prefix << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "TupleToolGeometry::fill " << mother << " " << P << " " << prefix << endmsg ;
 
   //fill min IP
-  StatusCode sc = fillMinIP(P,prefix,tuple);
-  if (!sc) return sc;
-
+  if (isVerbose()){
+    sc = fillMinIP(P,prefix,tuple);
+    if (!sc) return sc;
+  }
+  
   const VertexBase* aPV = NULL;
 
   //=========================================================================
@@ -206,12 +209,13 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 
   double ipminnextbest = -1;
   double minchi2nextbest = -1;
-
-
+  if(msgLevel(MSG::VERBOSE)) verbose() << "Looking for Min IP"  << endmsg  ;
   const RecVertex::Range PV = m_dva->primaryVertices();
+  if(msgLevel(MSG::VERBOSE)) verbose() << "PV size: "  << PV.size() << endmsg  ;
   if ( !PV.empty() )
   {
-    if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " << P << " PVs:" << PV.size() << endmsg ;
+    if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP : " 
+                                         << P << " PVs:" << PV.size() << endmsg ;
 
     for ( RecVertex::Range::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv)
     {
@@ -258,10 +262,11 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
       }
     }
   }
-  if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
-  if(msgLevel(MSG::VERBOSE)) verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at "
-                                       << minchi2nextbest << endmsg  ;
-
+  if(msgLevel(MSG::VERBOSE)) {
+    verbose() << "Filling IP " << prefix + "_MINIP " << ipmin << " at " << minchi2 << endmsg  ;
+    verbose() << "Filling IP next best " << prefix + "_MINIP " << ipminnextbest << " at "
+              << minchi2nextbest << endmsg  ;
+  }
   test &= tuple->column( prefix + "_MINIP", ipmin );
   test &= tuple->column( prefix + "_MINIPCHI2", minchi2 );
 
