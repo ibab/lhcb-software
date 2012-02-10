@@ -1,0 +1,62 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set><text>-v</text></set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           DQFilterSvc, EventCountAlg, GaudiSequencer,
+                           DQAcceptTool, BasicDQFilter, CondDBDQScanner)
+from Configurables import DetCondTest__TestConditionAlg as TestCond
+DDDBConf()
+
+conddb = CondDB()
+conddb.addAlternative(path = "/Conditions/DQ", dbFile = "../data/DQFLAGS.db")
+conddb.addAlternative(path = "/Conditions/Online/LHCb/RunParameters", dbFile = "../data/DQFLAGS.db")
+
+ecs = EventClockSvc()
+ecs.addTool(FakeEventTime, "EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = 4e9 # seconds
+ecs.EventTimeDecoder.TimeStep =  5e9
+
+dqf = DQFilterSvc(OutputLevel = VERBOSE)
+dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
+dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
+#dqf.AcceptTool.Filter.IgnoredFlags = ["OtherDET"]
+dqf.AcceptTool.addTool(CondDBDQScanner, "Scanner")
+dqf.AcceptTool.Scanner.ConditionPath = "/Conditions/DQ/Flags.xml" # path in the DB
+dqf.AcceptTool.Scanner.OutputLevel = VERBOSE
+
+testCond = TestCond("TestCond")
+testCond.Conditions = [ "Conditions/DQ/Flags" ]
+
+app = ApplicationMgr()
+app.ExtSvc += ["ToolSvc", dqf]
+app.TopAlg = [ GaudiSequencer(Members = [#testCond,
+		                         EventCountAlg()]) ]
+app.EvtSel = "NONE"
+app.EvtMax = 10
+
+#MessageSvc(OutputLevel = 1)
+</text></argument>
+<argument name="validator"><text>
+
+expected = {
+            "filtering on BeginEvent": 1,
+            "Updating Data Quality flags": 4,
+            "good event": 3,
+            "bad event": 7,
+            "Ignoring flag: OtherDet": 0,
+            "Ignoring flag: MyDet": 0,
+           }
+
+exp_eff = (10, 3)
+
+########
+
+from LHCbAlgs.Tests.DQFilterValidator import checkCounts, checkEff
+checkCounts(expected, stdout, result, causes)
+checkEff("efficiency", exp_eff, stdout, result, causes)
+
+</text></argument>
+</extension>

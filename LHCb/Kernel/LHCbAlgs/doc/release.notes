@@ -11,6 +11,8 @@
  - Modified the algorithm DQFilter to use DQAcceptTool and removed DQFilterByRun
    because the difference between the two algorithms is not wrapped in the tool.
  - Factored out the Python code for the validation of DQFilter tests.
+ - Added a simple service using DQAcceptTool to filter events on the BeginEvent
+   incident (DQFilterSvc).
 
 ! 2012-02-08 - Marco Cattaneo
  - Add missing dependency for LHCbApp imports
