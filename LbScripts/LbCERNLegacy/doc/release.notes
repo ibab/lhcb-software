@@ -1,0 +1,12 @@
+2012-02-10  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* doc/release.notes: Updated info for v1r2
+        * z5/group_login.csh: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/group_tcshrc: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/group_zshrc: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/post/login.sh: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/post/login.csh: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/group_login.zsh: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/group_login.sh: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+        * z5/group_bashrc: Changed to replace HPX_HEPGROUP_DIR by GROUP_DIR
+
