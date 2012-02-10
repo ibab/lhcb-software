@@ -5,6 +5,7 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingAlgs v1r8 2012-02-10 =========================
 ! 2012-02-08 - Anton Poluektov 
  - StrippingReport - fix bug with calculating retention for streams 
 
