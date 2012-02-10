@@ -56,8 +56,9 @@ namespace DetDesc {
     struct PlacedVolume : Handle<TGeoNodeMatrix> {
       typedef std::map<std::string,int> VolIDs;
       struct Object  {
-	VolIDs volIDs;
-	Ref_t  detector;
+	unsigned long magic;
+	VolIDs        volIDs;
+	Ref_t         detector;
 	Object() : volIDs(), detector() {}
       };
       /// Constructor to be used when reading the already parsed DOM tree
@@ -94,10 +95,11 @@ namespace DetDesc {
     struct Volume : public Handle<TGeoVolume>  {
       typedef Handle<TGeoVolume> Base;
       struct Object  {
-        Region     region;
-        LimitSet   limits;
-        VisAttr    vis;
-        Ref_t      sens_det;
+	unsigned long magic;
+        Region        region;
+        LimitSet      limits;
+        VisAttr       vis;
+        Ref_t         sens_det;
         Object() : region(), limits(), vis(), sens_det() {}
       };
       /// Default constructor

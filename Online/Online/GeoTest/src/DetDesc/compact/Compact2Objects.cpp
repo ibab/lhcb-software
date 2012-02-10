@@ -40,8 +40,6 @@ using namespace std;
 using namespace DetDesc;
 using namespace DetDesc::Geometry;
 namespace {
-  template <typename Q> Elt_t toRefObject(LCDD& lcdd, const xml_h& h) 
-  {    return toRefObject<Q,xml_h>(lcdd,h);     }
   static UInt_t unique_mat_id = 0xAFFEFEED;
 }
 
@@ -50,7 +48,7 @@ namespace DetDesc { namespace Geometry {
   struct Materials;
   typedef DetDesc::IDDescriptor IDDescriptor;
 
-  template <> Ref_t toRefObject<Constant,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<Constant>(lcdd_t& lcdd, const xml_h& e)  {
     xml_ref_t    constant(e);
     TNamed*      obj = new TNamed(constant.attr<string>(_A(name)).c_str(),
 				  constant.attr<string>(_A(value)).c_str()); 
@@ -60,7 +58,7 @@ namespace DetDesc { namespace Geometry {
     return cons;
   }
 
-  template <> Ref_t toRefObject<Atom,xml_h>(lcdd_t& /* lcdd */, const xml_h& e)  {
+  template <> Ref_t toRefObject<Atom>(lcdd_t& /* lcdd */, const xml_h& e)  {
     /* <element Z="29" formula="Cu" name="Cu" >
        <atom type="A" unit="g/mol" value="63.5456" />
        </element>
@@ -82,7 +80,7 @@ namespace DetDesc { namespace Geometry {
     return Ref_t(element);
   }
 
-  template <> Ref_t toRefObject<Material,xml_h>(lcdd_t& /* lcdd */, const xml_h& e)  {
+  template <> Ref_t toRefObject<Material>(lcdd_t& /* lcdd */, const xml_h& e)  {
     /*  <material name="Air">
 	<D type="density" unit="g/cm3" value="0.0012"/>
 	<fraction n="0.754" ref="N"/>
@@ -135,7 +133,7 @@ namespace DetDesc { namespace Geometry {
     return Ref_t(medium);
   }
 
-  template <> Ref_t toRefObject<IDDescriptor,xml_h>(lcdd_t& /* lcdd */, const xml_h& e)  {
+  template <> Ref_t toRefObject<IDDescriptor>(lcdd_t& /* lcdd */, const xml_h& e)  {
     /*     <id>system:6,barrel:3,module:4,layer:8,slice:5,x:32:-16,y:-16</id>   */
     Value<TNamed,IDDescriptor>* id = new Value<TNamed,IDDescriptor>();
     string dsc = e.text();
@@ -144,7 +142,7 @@ namespace DetDesc { namespace Geometry {
     return Ref_t(id);
   }
 
-  template <> Ref_t toRefObject<Limit,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<Limit>(lcdd_t& lcdd, const xml_h& e)  {
     /*     <limit name="step_length_max" particles="*" value="5.0" unit="mm" />
      */
     Limit limit(lcdd,e.attr<string>(_A(name)));
@@ -154,17 +152,17 @@ namespace DetDesc { namespace Geometry {
     return limit;
   }
 
-  template <> Ref_t toRefObject<LimitSet,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<LimitSet>(lcdd_t& lcdd, const xml_h& e)  {
     /*      <limitset name="...."> ... </limitset>
      */
     LimitSet ls(lcdd,XML::Tag_t(e.attr<string>(_A(name))));
     for (xml_coll_t c(e,XML::Tag_limit); c; ++c)
-      ls.addLimit(toRefObject<Limit,xml_h>(lcdd,c));
+      ls.addLimit(toRefObject<Limit>(lcdd,c));
     return ls;
   }
 
   /// Convert compact visualization attribute to LCDD visualization attribute
-  template <> Ref_t toRefObject<VisAttr,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<VisAttr>(lcdd_t& lcdd, const xml_h& e)  {
     /*    <vis name="SiVertexBarrelModuleVis" alpha="1.0" r="1.0" g="0.75" b="0.76" drawingStyle="wireframe" showDaughters="false" visible="true"/>
      */
     VisAttr attr(lcdd,e.attr<string>(_A(name)));
@@ -193,49 +191,49 @@ namespace DetDesc { namespace Geometry {
     return attr;
   }
 
-  template <> Elt_t toObject<GridXYZ,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<GridXYZ>(lcdd_t& lcdd, const xml_h& e)  {
     GridXYZ obj(lcdd);
     if ( e.hasAttr(_A(gridSizeX)) ) obj.setGridSizeX(e.attr<float>(_A(gridSizeX)));
     if ( e.hasAttr(_A(gridSizeY)) ) obj.setGridSizeY(e.attr<float>(_A(gridSizeY)));
     if ( e.hasAttr(_A(gridSizeZ)) ) obj.setGridSizeZ(e.attr<float>(_A(gridSizeZ)));
     return obj;
   }
-  template <> Elt_t toObject<GlobalGridXY,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<GlobalGridXY>(lcdd_t& lcdd, const xml_h& e)  {
     GlobalGridXY obj(lcdd);
     if ( e.hasAttr(_A(gridSizeX)) ) obj.setGridSizeX(e.attr<float>(_A(gridSizeX)));
     if ( e.hasAttr(_A(gridSizeY)) ) obj.setGridSizeY(e.attr<float>(_A(gridSizeY)));
     return obj;
   }
 
-  template <> Elt_t toObject<CartesianGridXY,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<CartesianGridXY>(lcdd_t& lcdd, const xml_h& e)  {
     CartesianGridXY obj(lcdd);
     if ( e.hasAttr(_A(gridSizeX)) ) obj.setGridSizeX(e.attr<double>(_A(gridSizeX)));
     if ( e.hasAttr(_A(gridSizeY)) ) obj.setGridSizeY(e.attr<double>(_A(gridSizeY)));
     return obj;
   }
 
-  template <> Elt_t toObject<ProjectiveCylinder,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<ProjectiveCylinder>(lcdd_t& lcdd, const xml_h& e)  {
     ProjectiveCylinder obj(lcdd);
     if ( e.hasAttr(_A(phiBins))   ) obj.setPhiBins(e.attr<int>(_A(phiBins)));
     if ( e.hasAttr(_A(thetaBins)) ) obj.setThetaBins(e.attr<int>(_A(thetaBins)));
     return obj;
   }
 
-  template <> Elt_t toObject<NonProjectiveCylinder,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<NonProjectiveCylinder>(lcdd_t& lcdd, const xml_h& e)  {
     NonProjectiveCylinder obj(lcdd);
     if ( e.hasAttr(_A(gridSizePhi)) ) obj.setThetaBinSize(e.attr<double>(_A(gridSizePhi)));
     if ( e.hasAttr(_A(gridSizeZ))   ) obj.setPhiBinSize(e.attr<double>(_A(gridSizeZ)));
     return obj;
   }
 
-  template <> Elt_t toObject<ProjectiveZPlane,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<ProjectiveZPlane>(lcdd_t& lcdd, const xml_h& e)  {
     ProjectiveZPlane obj(lcdd);
     if ( e.hasAttr(_A(phiBins))   ) obj.setThetaBins(e.attr<int>(_A(phiBins)));
     if ( e.hasAttr(_A(thetaBins)) ) obj.setPhiBins(e.attr<int>(_A(thetaBins)));
     return obj;
   }
 
-  template <> Elt_t toObject<Segmentation,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Elt_t toObject<Segmentation>(lcdd_t& lcdd, const xml_h& e)  {
     string seg_typ = e.attr<string>(_A(type));
     if ( seg_typ == "GridXYZ" )
       return toObject<GridXYZ>(lcdd,e);
@@ -258,7 +256,7 @@ namespace DetDesc { namespace Geometry {
     return Elt_t(0);
   }
 
-  template <> Ref_t toRefObject<Readout,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<Readout>(lcdd_t& lcdd, const xml_h& e)  {
     /* <readout name="HcalBarrelHits">
        <segmentation type="RegularNgonCartesianGridXY" gridSizeX="3.0*cm" gridSizeY="3.0*cm" />
        <id>system:6,barrel:3,module:4,layer:8,slice:5,x:32:-16,y:-16</id>
@@ -282,10 +280,10 @@ namespace DetDesc { namespace Geometry {
 
   namespace  {
     template <typename T> static Ref_t toRefObject(LCDD& lcdd, const xml_h& xml, SensitiveDetector& sens) 
-    {  return toRefObject<T,xml_h>(lcdd,xml,sens); }
+    {  return toRefObject<T>(lcdd,xml,sens); }
   }
 
-  template <> Ref_t toRefObject<SensitiveDetector,xml_h>(lcdd_t& lcdd, const xml_h& e)  {
+  template <> Ref_t toRefObject<SensitiveDetector>(lcdd_t& lcdd, const xml_h& e)  {
     string    nam = e.attr<string>(_A(name));
     string    typ = e.attr<string>(_A(type));
 
@@ -308,7 +306,7 @@ namespace DetDesc { namespace Geometry {
     return SensitiveDetector();
   }
 
-  template <> Ref_t toRefObject<Region,xml_h>(lcdd_t& /* lcdd */, const xml_h& e)  {
+  template <> Ref_t toRefObject<Region>(lcdd_t& /* lcdd */, const xml_h& e)  {
     xml_ref_t compact(e);
     return Ref_t(0);
   }

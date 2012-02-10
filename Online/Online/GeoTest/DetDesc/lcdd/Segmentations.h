@@ -30,34 +30,35 @@ namespace DetDesc {
      */
     struct Segmentation : public Ref_t   {
       struct Object  {
-        unsigned char Attr_useForHitPosition;
+	unsigned long magic;
+        unsigned char useForHitPosition;
         union {
           double values[10];
           struct {
-            int Attr_nx;
-            int Attr_ny;
-            int Attr_nz;
+            int nx;
+            int ny;
+            int nz;
           } cartesian;
           struct {
-            double Attr_grid_size_x;
-            double Attr_grid_size_y;
-            double Attr_grid_size_z;
+            double grid_size_x;
+            double grid_size_y;
+            double grid_size_z;
           } cartesian_grid;
           struct {
-            int Attr_nphi;
-            int Attr_ntheta;
-            int Attr_nz;
+            int nphi;
+            int ntheta;
+            int nz;
           } cylindrical_binning;
           struct {
-            double Attr_grid_size_phi;
-            double Attr_grid_size_theta;
-            double Attr_grid_size_z;
+            double grid_size_phi;
+            double grid_size_theta;
+            double grid_size_z;
           } cylindrical_grid;        
         } data;
-        Object() : Attr_useForHitPosition(0) {
-          data.cartesian_grid.Attr_grid_size_x = 0;
-          data.cartesian_grid.Attr_grid_size_y = 0;
-          data.cartesian_grid.Attr_grid_size_z = 0;
+        Object() : useForHitPosition(0) {
+          data.cartesian_grid.grid_size_x = 0;
+          data.cartesian_grid.grid_size_y = 0;
+          data.cartesian_grid.grid_size_z = 0;
         }
       };
       /// Default constructor

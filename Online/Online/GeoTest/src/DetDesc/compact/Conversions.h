@@ -30,33 +30,19 @@ namespace DetDesc {
    */
   namespace Geometry  {
 
-    // Forward declarations
-    struct SensitiveDetector;
-
     // Function prototypes used for object conversions
-    template <typename T, typename Q> Handle<>    toObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> Ref_t toRefObject(LCDD& lcdd, const Q& xml);
-    template <typename T, typename Q> Ref_t toRefObject(LCDD& lcdd, const Q& xml, SensitiveDetector& sens);
-
-
-    /** @class LCDDActor Conversions.h  DetDesc/compact/Conversions.h
-      *
-      *  @author   M.Frank
-      *  @version  1.0
-      */
-    struct LCDDActor  {
-      LCDD&  lcdd;
-      LCDDActor(LCDD& l) : lcdd(l) {}
-    };
+    template <typename T> Handle<> toObject(LCDD& lcdd, const XML::Handle_t& xml);
+    template <typename T> Ref_t    toRefObject(LCDD& lcdd, const XML::Handle_t& xml);
 
     /** @class Converter Conversions.h  DetDesc/compact/Conversions.h
       *
       *  @author   M.Frank
       *  @version  1.0
       */
-    template <typename T> struct Converter : public LCDDActor {
+    template <typename T> struct Converter {
       typedef T to_type;
-      Converter(LCDD& lcdd) : LCDDActor(lcdd) {}
+      LCDD&  lcdd;
+      Converter(LCDD& l) : lcdd(l) {}
       void operator()(const XML::Handle_t& xml) const;
     };
 

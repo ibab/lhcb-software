@@ -63,6 +63,8 @@ namespace DetDesc {
     long num_object_validations();
     void increment_object_validations();
 
+    static unsigned long magic_word() { return 0xFEEDAFFEDEADFACEL; }
+
     /** @class Handle Handle.h
      *  
      *  @author  M.Frank

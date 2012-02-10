@@ -148,23 +148,6 @@ namespace DetDesc {
       ReflectRot() : Rotation(M_PI,0.,0.) {}
     };
 #if 0
-    /** @class Rotation Objects.h
-     *  
-     *  @author  M.Frank
-     *  @version 1.0
-     */
-    struct Rotation : public Handle<TGeoRotation>  {
-      /// Default constructor
-      Rotation() : Handle<TGeoRotation>() {}
-      /// Constructor to be used RefElement reading the already parsed DOM tree
-      template <typename Q> 
-      Rotation(const Handle<Q>& e) : Handle<TGeoRotation>(e) {}
-      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Rotation(LCDD& doc, const std::string& name);
-      /// Constructor to be used when creating a new DOM tree. Automatically sets attributes
-      Rotation(LCDD& doc, const std::string& name, double x, double y, double z);
-    };
-
     /** @class Transformation Objects.h
      *  
      *  @author  M.Frank
@@ -222,9 +205,10 @@ namespace DetDesc {
      */
     struct VisAttr : public Ref_t  {
       struct Object  {
+	unsigned long magic;
         int           color;
         unsigned char drawingStyle, lineStyle, showDaughters, visible;
-        Object() : color(0), drawingStyle(true), showDaughters(true), visible(true)  {}
+        Object() : magic(magic_word()), color(0), drawingStyle(true), showDaughters(true), visible(true)  {}
       };
       enum DrawingStyle { 
         WIREFRAME=0x1,
@@ -301,10 +285,11 @@ namespace DetDesc {
      */
     struct Region : public Ref_t  {
       struct Object  {
-        double      Attr_threshold;
-        double      Attr_cut;
-        bool        Attr_store_secondaries;
-        std::string Attr_lunit, Attr_eunit;
+	unsigned long magic;
+        double        threshold;
+        double        cut;
+        bool          store_secondaries;
+        std::string   lunit, eunit;
       };
       /// Default constructor
       Region() : Ref_t() {}

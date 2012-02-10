@@ -31,14 +31,17 @@ namespace DetDesc  { namespace Geometry  {
   template <> struct Value<TGeoNodeMatrix,PlacedVolume::Object> 
     : public TGeoNodeMatrix, public PlacedVolume::Object  
   {
-    Value(const TGeoVolume* v, const TGeoMatrix* m) : TGeoNodeMatrix(v,m), PlacedVolume::Object() {}
+    Value(const TGeoVolume* v, const TGeoMatrix* m) : TGeoNodeMatrix(v,m), PlacedVolume::Object() {
+      magic = magic_word();
+    }
   };
 
   template <> struct Value<TGeoVolume,Volume::Object> 
     : public TGeoVolume, public Volume::Object  
   {
-    Value(const char* name, TGeoShape* s=0, TGeoMedium* m=0) 
-      : TGeoVolume(name,s,m) {}
+    Value(const char* name, TGeoShape* s=0, TGeoMedium* m=0) : TGeoVolume(name,s,m) {
+      magic = magic_word();
+    }
     virtual ~Value() {}
     virtual void AddNode(const TGeoVolume *vol, Int_t copy_no, TGeoMatrix *mat, Option_t* = "") {
       TGeoMatrix *matrix = mat;

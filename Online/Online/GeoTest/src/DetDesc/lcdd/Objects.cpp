@@ -190,35 +190,36 @@ void LimitSet::addLimit(const Ref_t& limit)   {
 Region::Region(LCDD& /* lcdd */, const string& name)   {
   Value<TNamed,Object>* p = new Value<TNamed,Object>();
   assign(p, name, "region");
-  p->Attr_store_secondaries = false;
-  p->Attr_threshold = 10.0;
-  p->Attr_lunit = "mm";
-  p->Attr_eunit = "MeV";
-  p->Attr_cut = 10.0;
+  p->magic = magic_word();
+  p->store_secondaries = false;
+  p->threshold = 10.0;
+  p->lunit = "mm";
+  p->eunit = "MeV";
+  p->cut = 10.0;
 }
 
 Region& Region::setStoreSecondaries(bool value)  {
-  _data().Attr_store_secondaries = value;
+  _data().store_secondaries = value;
   return *this;
 }
 
 Region& Region::setThreshold(double value)  {
-  _data().Attr_threshold = value;
+  _data().threshold = value;
   return *this;
 }
 
 Region& Region::setCut(double value)  {
-  _data().Attr_cut = value;
+  _data().cut = value;
   return *this;
 }
 
 Region& Region::setLengthUnit(const string& unit)  {
-  _data().Attr_lunit = unit;
+  _data().lunit = unit;
   return *this;
 }
 
 Region& Region::setEnergyUnit(const string& unit)  {
-  _data().Attr_eunit = unit;
+  _data().eunit = unit;
   return *this;
 }
 #undef setAttr

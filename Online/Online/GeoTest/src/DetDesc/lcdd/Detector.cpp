@@ -15,7 +15,7 @@ using namespace std;
 using namespace DetDesc::Geometry;
 
 DetElement::Object::Object()  
-: id(0), combine_hits(0), readout(), placements()
+  : magic(magic_word()), id(0), combine_hits(0), readout(), placements()
 {
 }
 

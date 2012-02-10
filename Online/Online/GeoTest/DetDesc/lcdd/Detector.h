@@ -42,6 +42,7 @@ namespace DetDesc {
      */
     struct SensitiveDetector : public Ref_t  {
       struct Object  {
+	unsigned int magic;
         int          verbose;
         int          combine_hits;
         double       ecut;
@@ -49,7 +50,7 @@ namespace DetDesc {
         std::string  hits_collection;
         Segmentation segmentation;
         Ref_t  id;
-        Object() : verbose(0), segmentation() {}
+        Object() : magic(magic_word()), verbose(0), segmentation() {}
       };
 
       /// Default constructor
@@ -92,6 +93,7 @@ namespace DetDesc {
       typedef std::map<std::string,DetElement> Children;
       typedef std::vector<PlacedVolume>        Placements;
       struct Object  {
+	unsigned int      magic;
         int               id;
         int               combine_hits;
         Readout           readout;
