@@ -495,18 +495,41 @@ def tisTos ( self             ,
     
     if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
     if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
-    
     #
     ## start actual Tis/Tos/Tob'ing
     #
-    l0_tos     = l0tistos.triggerTisTos ( p , lines [ 'L0TOS'   ]  )
-    l0_tis     = l0tistos.triggerTisTos ( p , lines [ 'L0TIS'   ]  )
+    l0tistos . setOfflineInput ( p )
+    tistos   . setOfflineInput ( p )
+    #
+    ## L0
+    # 
+    l0tistos . setTriggerInput ( lines [ 'L0TOS'   ]  )
+    l0_tos   = l0tistos.tisTosTobTrigger ()
+    l0tistos . setTriggerInput ( lines [ 'L0TIS'   ]  )
+    l0_tis   = l0tistos.tisTosTobTrigger () 
+    #
+    ## L1
+    #
+    tistos   . setTriggerInput ( lines [ 'Hlt1TOS' ]  )
+    l1_tos   =   tistos.tisTosTobTrigger ()
+    tistos   . setTriggerInput ( lines [ 'Hlt1TIS' ]  )
+    l1_tis   =   tistos.tisTosTobTrigger ()
+    #
+    ## L2
+    #
+    tistos   . setTriggerInput ( lines [ 'Hlt2TOS' ]  )
+    l2_tos   =   tistos.tisTosTobTrigger ()
+    tistos   . setTriggerInput ( lines [ 'Hlt2TIS' ]  )
+    l2_tis   =   tistos.tisTosTobTrigger ()
     
-    l1_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TOS' ]  )
-    l1_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TIS' ]  )
+    ##     l0_tos     = l0tistos.triggerTisTos ( p , lines [ 'L0TOS'   ]  )
+    ##     l0_tis     = l0tistos.triggerTisTos ( p , lines [ 'L0TIS'   ]  )
     
-    l2_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TOS' ]  )
-    l2_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TIS' ]  )
+    ##     l1_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TOS' ]  )
+    ##     l1_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt1TIS' ]  )
+    
+    ##     l2_tos     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TOS' ]  )
+    ##     l2_tis     =   tistos.triggerTisTos ( p , lines [ 'Hlt2TIS' ]  )
     
     #
     ## main TOS & TIS categories:
@@ -540,23 +563,23 @@ def tisTos ( self             ,
     ## TPS & TUS categories:
     #
 
-    ## ntuple.column ( label + 'l0tps_1' , l0_tos.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l0tus_1' , l0_tos.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l0tps_1' , l0_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l0tus_1' , l0_tos.tus      () , 0 , 1 )
 
-    ## ntuple.column ( label + 'l0tps_2' , l0_tis.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l0tus_2' , l0_tis.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l0tps_2' , l0_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l0tus_2' , l0_tis.tus      () , 0 , 1 )
     
-    ## ntuple.column ( label + 'l1tps_1' , l1_tos.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l1tus_1' , l1_tos.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l1tps_1' , l1_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l1tus_1' , l1_tos.tus      () , 0 , 1 )
 
-    ## ntuple.column ( label + 'l1tps_2' , l1_tis.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l1tus_2' , l1_tis.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l1tps_2' , l1_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l1tus_2' , l1_tis.tus      () , 0 , 1 )
 
-    ## ntuple.column ( label + 'l2tps_1' , l2_tos.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l2tus_1' , l2_tos.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l2tps_1' , l2_tos.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l2tus_1' , l2_tos.tus      () , 0 , 1 )
 
-    ## ntuple.column ( label + 'l2tps_2' , l2_tis.tps      () , 0 , 1 )
-    ## ntuple.column ( label + 'l2tus_2' , l2_tis.tus      () , 0 , 1 )
+    ntuple.column ( label + 'l2tps_2' , l2_tis.tps      () , 0 , 1 )
+    ntuple.column ( label + 'l2tus_2' , l2_tis.tus      () , 0 , 1 )
 
     return SUCCESS
 
