@@ -43,8 +43,8 @@ ApplicationMgr.TopAlg                = { "Sequencer/SendSequence" };
 SendSequence.Members                 = { "LHCb::DelaySleepAlg/Delay",
 					 "LHCb::OdinPrescaler/Prescaler", 
 					 "LHCb::RawEvent2MBMMergerAlg/Merger"};
-
-Delay.DelayTime                      = 100;   // Delay time in millisecs
+// Delay time in millisecs
+Delay.DelayTime                      = @OnlineEnv.passThroughDelay;
 Delay.MicroDelayTime                 = 0;    // Delay time in musecs
 
 Prescaler.AcceptRate                 = @OnlineEnv.AcceptRate;
