@@ -23,11 +23,6 @@ namespace DetDesc {
   */
   namespace XML  {
 
-    struct SensitiveDetector;
-    struct Detector;
-    struct Volume;
-    struct LCDD;
-
     struct Dimension : public Element  {
       Dimension() : Element(Handle_t(0)) {}
       Dimension(Handle_t e) : Element(e) {}
