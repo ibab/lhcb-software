@@ -66,10 +66,15 @@
   <class name="std::vector<LoKi::Interface<IAlgorithm> >" />
   
   <enum name="LHCb::L0DUDecision::Type" />
- 
+  
+  <class name = "LoKi::Odin::RunEvtNumber::runevt_pair" /> 
+  <class name = "LoKi::Odin::RunEvtNumber::runevt_list" /> 
+   
+  <class pattern = "std::vector<unsigned long long,*>" /> 
+  
   <exclusion>
     
-    <class name="LoKi::HLT::RoutingBits::Bits"   />
+    <class name="LoKi::HLT::RoutingBits::Bits"     />
     <class name="LoKi::HLT::HasSelection::Names"   />
     <class name="LoKi::HLT::HasDecision::Names"    />
     <class name="LoKi::HLT::DecisionBut::Names"    />

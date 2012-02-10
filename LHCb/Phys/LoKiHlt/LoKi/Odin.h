@@ -382,21 +382,21 @@ namespace LoKi
     public:
       // ======================================================================
       /// the actual type for event_type
-      typedef ulonglong                      event_type ;
+      typedef unsigned long long             event_type ;
       /// the actual type of event list
-      typedef std::vector<event_type>        EventList  ;
+      typedef std::vector<event_type>        event_list ;
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from the run number 
-      EvtNumber ( const event_type evt    ) ;
       /// constructor from the run range 
-      EvtNumber ( const event_type begin , 
-                  const event_type end    ) ;
+      EvtNumber ( const event_type  begin  , 
+                  const event_type  end    ) ;
       /// constructor from event list
-      EvtNumber ( const EventList& events ) ;
+      EvtNumber ( const event_list& events ) ;
       /// constructor from event list
-      EvtNumber ( const std::vector<unsigned int>& events ) ;
+      EvtNumber ( const std::vector<unsigned int>&  events ) ;
+      /// constructor from the event number 
+      EvtNumber ( const event_type  evt    ) ;
       /// MANDATORY: virtual destructor 
       virtual ~EvtNumber() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -414,14 +414,12 @@ namespace LoKi
     private:
       // ======================================================================
       Flag           m_flag  ;
-      /// the event number 
-      event_type     m_evt   ;                            // the event number 
       /// the range: begin 
       event_type     m_begin ;                            // the range: begin 
       /// the range: end
       event_type     m_end   ;                            // the range: end 
       /// the event list 
-      EventList      m_evts  ;                            // the event list 
+      event_list     m_evts  ;                            // the event list 
       // ======================================================================
     };
     // ========================================================================
@@ -436,13 +434,19 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// the actual type of the run 
+      typedef unsigned int            run_type ;
+      typedef std::vector<run_type>   run_list ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// constructor from the run number 
-      RunNumber ( const unsigned int run   ) ;
+      RunNumber ( const run_type  run   ) ;
       /// constructor from the run range 
-      RunNumber ( const unsigned int begin , 
-                  const unsigned int end   ) ;
+      RunNumber ( const run_type  begin , 
+                  const run_type  end   ) ;
       /// constructor from the run list
-      RunNumber ( const std::vector<unsigned int>& runs ) ;
+      RunNumber ( const run_list& runs  ) ;
       /// MANDATORY: virtual destructor 
       virtual ~RunNumber() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -460,9 +464,8 @@ namespace LoKi
     private:
       // ======================================================================
       Flag                      m_flag  ;
-      unsigned int              m_run   ;
-      unsigned int              m_begin ;
-      unsigned int              m_end   ;
+      run_type                  m_begin ;
+      run_type                  m_end   ;
       std::vector<unsigned int> m_runs  ;
       // ======================================================================
     } ;
@@ -478,26 +481,26 @@ namespace LoKi
     public:
       // ======================================================================
       /// the actual type of run-number 
-      typedef unsigned int                                         run_type   ;
+      typedef RunNumber::run_type                             run_type     ;
       /// the actual type of event-number  
-      typedef ulonglong                                            evt_type   ;
+      typedef EvtNumber::event_type                           evt_type     ;
       /// the actual type of run-event pair 
-      typedef std::pair<run_type,evt_type>                         RunEvtPair ;
+      typedef std::pair<run_type,evt_type>                    runevt_pair  ;
       // the actual type of run-event list 
-      typedef std::vector<RunEvtPair>                              RunEvtList ;
+      typedef std::vector<runevt_pair>                        runevt_list  ;
       // ======================================================================
     public:
       // ======================================================================
       /// constructor from the run/event number 
-      RunEvtNumber ( const run_type    run     , 
-                     const evt_type    evt     ) ;
+      RunEvtNumber ( const run_type      run     , 
+                     const evt_type      evt     ) ;
       /// constructor from the run/event number 
-      RunEvtNumber ( const RunEvtPair& runevt  ) ;
+      RunEvtNumber ( const runevt_pair&  runevt  ) ;
       /// constructor from the run/event range 
-      RunEvtNumber ( const RunEvtPair& begin   , 
-                     const RunEvtPair& end     ) ;
+      RunEvtNumber ( const runevt_pair&  begin   , 
+                     const runevt_pair&  end     ) ;
       /// constructor from the run-event  list
-      RunEvtNumber ( const RunEvtList& runevts ) ;
+      RunEvtNumber ( const runevt_list& runevts ) ;
       /// MANDATORY: virtual destructor 
       virtual ~RunEvtNumber() ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -515,14 +518,12 @@ namespace LoKi
     private:
       // ======================================================================
       Flag                      m_flag      ;
-      /// the run-event pair
-      RunEvtPair                m_runevt    ;           //   the run-event pair 
       /// the range: begin 
-      RunEvtPair                m_begin     ;           //     the range: begin 
+      runevt_pair               m_begin     ;           //     the range: begin 
       /// the range: end 
-      RunEvtPair                m_end       ;           //       the range: end 
+      runevt_pair               m_end       ;           //       the range: end 
       /// the run-event list 
-      RunEvtList                m_runevts   ;           //   the run-event list 
+      runevt_list               m_runevts   ;           //   the run-event list 
       // ======================================================================
     } ;
     // ========================================================================

@@ -262,6 +262,11 @@ namespace
     /// fictive non-existent constructor 
     _Instantiations() ;
     // ========================================================================
+    std::vector<unsigned long long>  m_l1 ;
+    std::vector<         long long>  m_l2 ;
+    std::vector<unsigned      long>  m_l3 ;
+    std::vector<              long>  m_l4 ;
+    // ========================================================================
   };  
   // ==========================================================================
 } //                                                 end of anonymous namespace 

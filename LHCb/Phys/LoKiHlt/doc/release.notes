@@ -4,6 +4,10 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-10 - Vanya Belyaev
+ - ODIN_EVNTNUMBER fix 
+
+
 !========================= LoKiHlt v3r7 2011-04-26 =========================
 ! 2011-04-20 - Marco Cattaneo
  - Remove dependency on DaVinciInterfaces, no longer needed because 

@@ -217,12 +217,16 @@ ODIN_RUN       = LoKi.Odin.Run ()
 
 ## @see LoKi::Cuts::ODIN_RUNNUMBER 
 ODIN_RUNNUMBER = LoKi.Odin.RunNumber 
+ODIN_RUNNUMBER.run_list   = std.vector     ('unsigned int') 
 
 ## @see LoKi::Cuts::ODIN_EVTNUMBER 
 ODIN_EVTNUMBER = LoKi.Odin.EvtNumber 
+ODIN_EVTNUMBER.event_list   = std.vector   ('unsigned long long') 
 
 ## @see LoKi::Cuts::ODIN_RUNEVTNUMBER 
 ODIN_RUNEVTNUMBER = LoKi.Odin.RunEvtNumber 
+ODIN_RUNEVTNUMBER.runevt_pair = std.pair   ( 'unsigned int' , 'unsigned long long' )
+ODIN_RUNEVTNUMBER.runevt_list = std.vector (  ODIN_RUNEVTNUMBER.runevt_pair )
 
 ## @see LoKi::Cuts::ODIN_TCK
 ODIN_TCK       = LoKi.Odin.TrgConfKey () 
