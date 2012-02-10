@@ -1,10 +1,12 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set><text>-v</text></set></argument>
 <argument name="options"><text>
 from Gaudi.Configuration import *
 from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
-                           DQFilterByRun, EventCountAlg, GaudiSequencer)
+                           DQFilterByRun, EventCountAlg, GaudiSequencer,
+                           DQAcceptTool, BasicDQFilter, CondDBDQScanner)
 from Configurables import DetCondTest__TestConditionAlg as TestCond
 DDDBConf()
 
@@ -18,9 +20,12 @@ ecs.EventTimeDecoder.StartTime = 4e9 # seconds
 ecs.EventTimeDecoder.TimeStep =  5e9
 
 dqf = DQFilterByRun(OutputLevel = VERBOSE)
-dqf.Filter.IgnoredFlags = ["MyDet"]
-#dqf.Scanner.OutputLevel = VERBOSE
-dqf.Scanner.ConditionPath = "/Conditions/DQ/Flags.xml" # path in the DB
+dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
+dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
+dqf.AcceptTool.Filter.IgnoredFlags = ["MyDet"]
+dqf.AcceptTool.addTool(CondDBDQScanner, "Scanner")
+dqf.AcceptTool.Scanner.ConditionPath = "/Conditions/DQ/Flags.xml" # path in the DB
+#dqf.AcceptTool.Scanner.OutputLevel = VERBOSE
 
 testCond = TestCond("TestCond")
 testCond.Conditions = [ "Conditions/DQ/Flags" ]
@@ -64,7 +69,7 @@ def count(keys, lines):
     return result
 
 ## Check DQFilter messages
-dqf = re.compile(r"^DQFilter")
+dqf = re.compile(r"^(DQFilter|ToolSvc\.DQAccep)")
 lines = [ l.rstrip() for l in stdout.splitlines() if dqf.match(l) ]
 
 counts = count(expected.keys(), lines)

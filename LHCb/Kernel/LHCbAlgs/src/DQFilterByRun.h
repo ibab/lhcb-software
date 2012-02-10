@@ -12,8 +12,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "Kernel/IDQFilter.h"
-#include "Kernel/IDQScanner.h"
+#include "Kernel/IAccept.h"
 
 class Condition;
 class IIncidentSvc;
@@ -46,26 +45,16 @@ public:
   virtual void handle(const Incident&);
 
 private:
-  /// Path to the condition object mapped to the run.
-  std::string m_condPath;
-
   /// Flag to state if we have to filter at the level of the Begin Event
   /// incident or during the execute.
   bool m_beginEvent;
 
-  ToolHandle<IDQFilter> m_filter;
-  ToolHandle<IDQScanner> m_scanner;
+  /// Type/Name of the (public) IAccept tool used to choose if the event has to
+  /// be accepted or not (default: DQAcceptTool).
+  std::string m_acceptToolName;
 
-  /// Call-back function passed to the UpdateManagerSvc to update the current
-  /// filtering status (good or bad).
-  StatusCode i_checkFlags();
-
-  /// Transient flag updated every time the run condition changes to state
-  /// if the currently processed event is good or bad.
-  bool m_bad;
-
-  /// Pointer to the run condition (filled by the UpdateManagerSvc).
-  Condition *m_run;
+  /// Pointer to the IAccept tool.
+  IAccept *m_acceptTool;
 
   /// Pointer to the IncidentSvc.
   SmartIF<IIncidentSvc> m_incSvc;

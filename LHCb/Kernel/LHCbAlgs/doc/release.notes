@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2012-01-31 - Marco Clemencic
+ - Added a new tool (DQAcceptTool) implementing IAccept to wrap the calls to
+   IDQFilter and IDQScanner in one simple function.
+   The new tool can work both by run and by event.
+ - Modified the algorithm DQFilterByRun to use DQAcceptTool.
+
 ! 2012-02-08 - Marco Cattaneo
  - Add missing dependency for LHCbApp imports
 
@@ -24,7 +30,7 @@
  - Added tests for DQFilterByRun.
 
 ! 2012-01-31 - Chris Jones
- - Add new algorithm EmptyEventNodeCleaner that searches the TES for empty 
+ - Add new algorithm EmptyEventNodeCleaner that searches the TES for empty
    data nodes and removes them.
 
 ! 2012-01-30 - Marco Clemencic

@@ -6,23 +6,15 @@
 #include "DetDesc/Condition.h"
 
 DQFilterByRun::DQFilterByRun(const std::string & name, ISvcLocator *pSvcLocator):
-  base_class(name, pSvcLocator), m_filter("BasicDQFilter", this),
-  m_scanner("CondDBDQScanner", this), m_bad(false)
+  base_class(name, pSvcLocator)
 {
-  declareProperty("ConditionPath",
-                  m_condPath = "Conditions/Online/LHCb/RunParameters",
-                  "Path in the Detector Transient Store where to find the run "
-                  "condition.");
   declareProperty("UseBeginEvent",
                   m_beginEvent = true,
                   "If set to true, the filtering is done at the level of the "
                   "BeginEvent incident.");
-  declareProperty("Filter",
-                  m_filter,
-                  "IDQFilter Tool defining the acceptance rules.");
-  declareProperty("Scanner",
-                  m_scanner,
-                  "IDQScanner Tool defining the acceptance rules.");
+  declareProperty("AcceptTool",
+                  m_acceptToolName = "DQAcceptTool",
+                  "IAccept Tool to filter the events.");
 }
 
 
@@ -31,11 +23,15 @@ StatusCode DQFilterByRun::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
 
-  registerCondition(m_condPath, m_run, &DQFilterByRun::i_checkFlags);
+  // Instantiate the public tool.
+  // It is better to get it soon because it should require the UMS, and it must
+  // be registered to he incident svc before us.
+  m_acceptTool = tool<IAccept>(m_acceptToolName);
 
-  // We must register to the UMS *before* registering to IncidentSvc to
+  // We must ensure that the UMS is up *before* registering to IncidentSvc to
   // have the correct order of calls.
   if (m_beginEvent) {
+    updMgrSvc();
     m_incSvc = service("IncidentSvc");
     if (!m_incSvc) {
       error() << "Failed to load IncidentSvc" << endmsg;
@@ -47,26 +43,24 @@ StatusCode DQFilterByRun::initialize()
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << "DQFilterByRun/" << name() << " initialized:" << endmsg;
-    debug() << "  using condition at '" << m_condPath << "'" << endmsg;
     debug() << "  filtering on " << ((m_beginEvent) ? "BeginEvent" : "execute") << endmsg;
-    debug() << "  using " << m_filter.typeAndName() << endmsg;
-    debug() << "  on the results of " << m_scanner.typeAndName() << endmsg;
+    debug() << "  using " << m_acceptToolName << endmsg;
   }
   return sc;
 }
 
 StatusCode DQFilterByRun::execute()
 {
+  const bool accepted = m_acceptTool->accept();
   // Print the message only if we do not use the BeginEvent incident
   // otherwise it gets printed twice for good events.
   if ((!m_beginEvent) && (msgLevel() <= MSG::VERBOSE)) {
     verbose() << "Filter event: "
-              << ((m_bad) ? "bad" : "good") << " event" << endmsg;
+              << ((accepted) ? "good" : "bad") << " event" << endmsg;
   }
-  setFilterPassed(!m_bad);
+  setFilterPassed(accepted);
   return StatusCode::SUCCESS;
 }
-
 
 StatusCode DQFilterByRun::finalize()
 {
@@ -74,32 +68,21 @@ StatusCode DQFilterByRun::finalize()
     m_incSvc->removeListener(this, IncidentType::BeginEvent);
     m_incSvc.reset();
   }
-  m_filter.release().ignore();
+  if (m_acceptTool) {
+    releaseTool(m_acceptTool).ignore();
+    m_acceptTool = 0;
+  }
 
   return GaudiAlgorithm::finalize();
 }
 
-StatusCode DQFilterByRun::i_checkFlags()
-{
-  if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-    verbose() << "Updating Data Quality flags for run " << m_run->param<int>("RunNumber") << endmsg;
-
-  const IDQFilter::FlagsType& flags = m_scanner->scan(m_run->validSince(), m_run->validTill());
-  if (UNLIKELY(msgLevel(MSG::VERBOSE)))
-    verbose() << "-> " << flags << endmsg;
-
-  m_bad = !m_filter->accept(flags);
-  // we successfully updated the m_bad state
-  return StatusCode::SUCCESS;
-}
-
 void DQFilterByRun::handle(const Incident&) {
+  const bool accepted = m_acceptTool->accept();
   if (msgLevel() <= MSG::VERBOSE) {
     verbose() << "Handling incident: "
-              << ((m_bad) ? "bad" : "good") << " event" << endmsg;
+              << ((accepted) ? "good" : "bad") << " event" << endmsg;
   }
-  // note that m_bad is automatically updated when the DQ Flag condition changes
-  if (m_bad) {
+  if (!accepted) {
     m_incSvc->fireIncident(Incident(name(), IncidentType::AbortEvent));
   }
 }
