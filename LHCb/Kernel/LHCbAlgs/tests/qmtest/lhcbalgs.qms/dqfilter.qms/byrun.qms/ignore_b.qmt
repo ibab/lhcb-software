@@ -5,7 +5,7 @@
 <argument name="options"><text>
 from Gaudi.Configuration import *
 from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
-                           DQFilterByRun, EventCountAlg, GaudiSequencer,
+                           DQFilter, EventCountAlg, GaudiSequencer,
                            DQAcceptTool, BasicDQFilter, CondDBDQScanner)
 from Configurables import DetCondTest__TestConditionAlg as TestCond
 DDDBConf()
@@ -19,7 +19,7 @@ ecs.addTool(FakeEventTime, "EventTimeDecoder")
 ecs.EventTimeDecoder.StartTime = 4e9 # seconds
 ecs.EventTimeDecoder.TimeStep =  5e9
 
-dqf = DQFilterByRun(OutputLevel = VERBOSE)
+dqf = DQFilter(OutputLevel = VERBOSE)
 dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
 dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
 dqf.AcceptTool.Filter.IgnoredFlags = ["MyDet"]

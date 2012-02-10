@@ -4,7 +4,8 @@
 <argument name="options"><text>
 from Gaudi.Configuration import *
 from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
-                           DQFilter, EventCountAlg, GaudiSequencer)
+                           DQFilter, EventCountAlg, GaudiSequencer,
+                           DQAcceptTool, BasicDQFilter, CondDBDQScanner)
 from Configurables import DetCondTest__TestConditionAlg as TestCond
 DDDBConf()
 
@@ -17,7 +18,13 @@ ecs.EventTimeDecoder.StartTime = 5e9 # seconds
 ecs.EventTimeDecoder.TimeStep = 10e9
 
 dqf = DQFilter(OutputLevel = VERBOSE)
-#dqf.Filter.IgnoredFlags = ["OtherDET"]
+dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
+dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
+#dqf.AcceptTool.Filter.IgnoredFlags = ["OtherDET"]
+
+# Note: both these options are needed to switch from "ByRun" (default) to "by event".
+dqf.AcceptTool.ByRun = False
+dqf.AcceptTool.ConditionPath = "Conditions/DQ/Flags"
 
 testCond = TestCond("TestCond")
 testCond.Conditions = [ "Conditions/DQ/Flags" ]
@@ -61,7 +68,7 @@ def count(keys, lines):
     return result
 
 ## Check DQFilter messages
-dqf = re.compile(r"^DQFilter")
+dqf = re.compile(r"^(DQFilter|ToolSvc\.DQAccep)")
 lines = [ l.rstrip() for l in stdout.splitlines() if dqf.match(l) ]
 
 counts = count(expected.keys(), lines)

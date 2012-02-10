@@ -1,7 +1,7 @@
 /*
  * DQFilter.h
  *
- *  Created on: Jan 24, 2011
+ *  Created on: Jan 31, 2012
  *      Author: marcocle
  */
 
@@ -12,20 +12,20 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "Kernel/IDQFilter.h"
+#include "Kernel/IAccept.h"
 
 class Condition;
 class IIncidentSvc;
 
 /** @class DQFilter
  *  Small algorithm to filter events according to the Data Quality flags stored
- *  in the conditions database.
+ *  in the conditions database on a run-by-run basis.
  *
  *  When initialized, the algorithm register itself as user of the DQ Flags
  *  conditions and, by default, it listens for BeginEvent incidents.
  *
  *  @author Marco Clemencic
- *  @date   Jan 24, 2011
+ *  @date   Jan 31, 2012
  */
 class DQFilter: public extends1<GaudiAlgorithm, IIncidentListener> {
 public:
@@ -45,28 +45,19 @@ public:
   virtual void handle(const Incident&);
 
 private:
-  /// Path to the condition object containing the Data Quality flags.
-  std::string m_condPath;
-
   /// Flag to state if we have to filter at the level of the Begin Event
   /// incident or during the execute.
   bool m_beginEvent;
 
-  ToolHandle<IDQFilter> m_filter;
+  /// Type/Name of the (public) IAccept tool used to choose if the event has to
+  /// be accepted or not (default: DQAcceptTool).
+  std::string m_acceptToolName;
 
-  /// Call-back function passed to the UpdateManagerSvc to update the current
-  /// filtering status (good or bad).
-  StatusCode i_checkFlags();
-
-  /// Transient flag updated every time the DQ Flags condition changes to state
-  /// if the currently processed event is good or bad.
-  bool m_bad;
-
-  /// Pointer to the Data Quality Flags condition (filled by the UpdateManagerSvc).1
-  Condition *m_flags;
+  /// Pointer to the IAccept tool.
+  IAccept *m_acceptTool;
 
   /// Pointer to the IncidentSvc.
   SmartIF<IIncidentSvc> m_incSvc;
 };
 
-#endif // DQFILTER_H_
+#endif // DQFILTERBYRUN_H_

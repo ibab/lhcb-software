@@ -4,7 +4,8 @@
 <argument name="options"><text>
 from Gaudi.Configuration import *
 from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
-                           DQFilter, EventCountAlg, GaudiSequencer)
+                           DQFilter, EventCountAlg, GaudiSequencer,
+                           DQAcceptTool, BasicDQFilter, CondDBDQScanner)
 from Configurables import DetCondTest__TestConditionAlg as TestCond
 DDDBConf()
 
@@ -17,15 +18,23 @@ ecs.EventTimeDecoder.StartTime = 5e9 # seconds
 ecs.EventTimeDecoder.TimeStep = 10e9
 
 dqf = DQFilter(OutputLevel = VERBOSE)
-dqf.Filter.IgnoredFlags = ["OtherDET"]
+dqf.UseBeginEvent = False
+dqf.AcceptTool = DQAcceptTool(OutputLevel = VERBOSE) # public tool
+dqf.AcceptTool.addTool(BasicDQFilter, "Filter")
+dqf.AcceptTool.Filter.IgnoredFlags = ["OtherDET"]
+
+# Note: both these options are needed to switch from "ByRun" (default) to "by event".
+dqf.AcceptTool.ByRun = False
+dqf.AcceptTool.ConditionPath = "Conditions/DQ/Flags"
 
 testCond = TestCond("TestCond")
 testCond.Conditions = [ "Conditions/DQ/Flags" ]
 
 app = ApplicationMgr()
-app.TopAlg = [ GaudiSequencer(Members = [dqf,
+app.TopAlg = [ GaudiSequencer(Members = [EventCountAlg("Counter1", CounterName = "efficiency1"),
+                                         dqf,
 		                         #testCond,
-		                         EventCountAlg()]) ]
+		                         EventCountAlg("Counter2", CounterName = "efficiency2")]) ]
 app.EvtSel = "NONE"
 app.EvtMax = 5
 
@@ -34,7 +43,7 @@ app.EvtMax = 5
 <argument name="validator"><text>
 
 expected = {
-            "filtering on BeginEvent": 1,
+            "filtering on execute": 1,
             "Updating Data Quality flags": 5,
             "good event": 3,
             "bad event": 2,
@@ -42,7 +51,8 @@ expected = {
             "Ignoring flag: MyDet": 0,
            }
 
-exp_eff = (5,3)
+exp_eff1 = (5,5)
+exp_eff2 = (5,3)
 
 ########
 
@@ -61,7 +71,7 @@ def count(keys, lines):
     return result
 
 ## Check DQFilter messages
-dqf = re.compile(r"^DQFilter")
+dqf = re.compile(r"^(DQFilter|ToolSvc\.DQAccep)")
 lines = [ l.rstrip() for l in stdout.splitlines() if dqf.match(l) ]
 
 counts = count(expected.keys(), lines)
@@ -76,18 +86,24 @@ if failed:
     result["GaudiTest.DQFilterOut.failure_on"] = result.Quote(msg)
 
 ## Check computed efficiency
-eff = None
-for l in stdout.splitlines():
-    if '"efficiency"' in l:
-        eff = filter(None, map(string.strip, l.split("|")))
-        eff = tuple(map(int,eff[1:3]))
-        break
+def checkEff(name, expected, stdout, result):
+    from pprint import pformat
+    eff = None
+    name = name.strip('"')
+    qname = '"%s"' % (name)
+    for l in stdout.splitlines():
+        if qname in l:
+            eff = filter(None, map(string.strip, l.split("|")))
+            eff = tuple(map(int, eff[1:3]))
+            break
 
-result["GaudiTest.efficiency.expected"] = result.Quote(pformat(exp_eff))
+    result["GaudiTest.%s.expected" % name] = result.Quote(pformat(expected))
 
-if eff != exp_eff:
-    causes.append("efficiency")
-    result["GaudiTest.efficiency.found"] = result.Quote(pformat(eff))
+    if eff != expected:
+        causes.append(name)
+        result["GaudiTest.%s.found" % name] = result.Quote(pformat(eff))
 
+checkEff("efficiency1", exp_eff1, stdout, result)
+checkEff("efficiency2", exp_eff2, stdout, result)
 </text></argument>
 </extension>
