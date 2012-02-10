@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2012-02-10 - Marco Clemencic
+ - Minor clean up in IAccept.
+
 !========================= LHCbKernel v13r8 2012-01-31 =========================
 ! 2012-01-31 - Olivier Callot
  - New method in StandardPacker to pack a SmartRef

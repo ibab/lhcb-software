@@ -16,12 +16,12 @@
  *  @author Vanya Belyaev
  *  @date   2010-08-02
  */
-class GAUDI_API IAccept : virtual public extend_interfaces1<IAlgTool>
+class GAUDI_API IAccept : virtual public IAlgTool
 {
 public:
   // ==========================================================================
   /// InterfaceID
-  DeclareInterfaceIDMultiBase(IAccept,3,0);
+  DeclareInterfaceID(IAccept, 4, 0);
   // ==========================================================================
 public:
   // ==========================================================================
