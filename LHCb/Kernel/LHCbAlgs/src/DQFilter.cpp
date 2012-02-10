@@ -6,7 +6,7 @@
 #include "DetDesc/Condition.h"
 
 DQFilter::DQFilter(const std::string & name, ISvcLocator *pSvcLocator):
-  base_class(name, pSvcLocator)
+  base_class(name, pSvcLocator), m_acceptTool(0)
 {
   declareProperty("UseBeginEvent",
                   m_beginEvent = true,
@@ -25,7 +25,7 @@ StatusCode DQFilter::initialize()
 
   // Instantiate the public tool.
   // It is better to get it soon because it should require the UMS, and it must
-  // be registered to he incident svc before us.
+  // be registered to the incident svc before us.
   m_acceptTool = tool<IAccept>(m_acceptToolName);
 
   // We must ensure that the UMS is up *before* registering to IncidentSvc to

@@ -22,7 +22,7 @@ DECLARE_TOOL_FACTORY(DQAcceptTool)
 // Standard constructor, initializes variables
 // ============================================================================
 DQAcceptTool::DQAcceptTool(const std::string& type, const std::string& name, const IInterface* parent)
-  : base_class(type, name, parent), m_accepted(true), m_cond(0)
+  : base_class(type, name, parent), m_filter(0), m_scanner(0), m_accepted(true), m_cond(0)
 {
   declareProperty("ConditionPath",
                   m_condPath = "Conditions/Online/LHCb/RunParameters",
