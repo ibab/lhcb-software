@@ -10,6 +10,7 @@
    The new tool can work both by run and by event.
  - Modified the algorithm DQFilter to use DQAcceptTool and removed DQFilterByRun
    because the difference between the two algorithms is not wrapped in the tool.
+ - Factored out the Python code for the validation of DQFilter tests.
 
 ! 2012-02-08 - Marco Cattaneo
  - Add missing dependency for LHCbApp imports
