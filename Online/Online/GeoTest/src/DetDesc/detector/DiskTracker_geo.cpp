@@ -62,13 +62,13 @@ namespace DetDesc { namespace Geometry {
       lpv.addPhysVolID(_X(system),sdet.id());
       lpv.addPhysVolID(_X(barrel),1);
       DetElement layer(lcdd,l_nam,det_type+"/Layer",l_num);
-      sdet.add(layer.setPlacement(lpv));
+      sdet.add(layer.addPlacement(lpv));
       if ( reflect )  {
 	PlacedVolume lpvR = motherVol.placeVolume(l_vol,Position(0,0,-zmin-layerWidth/2),ReflectRot());
 	lpvR.addPhysVolID(_X(system),sdet.id());
 	lpvR.addPhysVolID(_X(barrel),2);
 	DetElement layerR(lcdd,l_nam+"_reflect",det_type+"/Layer",l_num);
-	sdet.add(layerR.setPlacement(lpvR));
+	sdet.add(layerR.addPlacement(lpvR));
       }
     }
     sdet.setCombineHits(x_det.attr<bool>(_A(combineHits)),sens);

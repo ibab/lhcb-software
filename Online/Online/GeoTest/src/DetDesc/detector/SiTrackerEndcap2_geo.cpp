@@ -98,7 +98,7 @@ namespace DetDesc { namespace Geometry {
 	  pv.addPhysVolID("system",det_id).addPhysVolID("barrel",1);
 	  pv.addPhysVolID("layer", l_id).addPhysVolID("module",mod_num);
 	  DetElement module (lcdd,m_base,det_type+"/Module",det_id);
-	  module.setPlacement(pv);
+	  module.addPlacement(pv);
 	  sdet.add(module);
 	  
 	  if ( reflect ) {
@@ -108,7 +108,7 @@ namespace DetDesc { namespace Geometry {
 	    pv.addPhysVolID("system",det_id).addPhysVolID("barrel",2);
 	    pv.addPhysVolID("layer", l_id).addPhysVolID("module",mod_num);
 	    DetElement r_module (lcdd,m_base+"_reflect",det_type+"/Module",det_id);
-	    r_module.setPlacement(pv);
+	    r_module.addPlacement(pv);
 	    sdet.add(r_module);
 	  }
 	  dz = -dz;

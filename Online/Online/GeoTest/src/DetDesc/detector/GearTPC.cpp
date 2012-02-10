@@ -23,12 +23,12 @@ namespace DetDesc {
 
   double GearTPC::innerRadius() const {
     DetElement gas   = data<Object>()->gas;
-    Tube       tube  = gas.placement().volume().solid();
+    Tube       tube  = gas.volume().solid();
     return tube->GetRmin();
   }
   double GearTPC::outerRadius() const {
     DetElement gas   = data<Object>()->gas;
-    Tube       tube  = gas.placement().volume().solid();
+    Tube       tube  = gas.volume().solid();
     return tube->GetRmax();
   }
   double GearTPC::pressure() const {

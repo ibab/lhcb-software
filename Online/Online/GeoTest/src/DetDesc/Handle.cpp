@@ -161,6 +161,8 @@ INSTANTIATE(TGeoGenTrans);
 
 #include "TGeoNode.h"
 INSTANTIATE(TGeoNode);
+INSTANTIATE(TGeoNodeMatrix);
+INSTANTIATE(TGeoNodeOffset);
 
 #include "TGeoBBox.h"
 #include "TGeoPcon.h"

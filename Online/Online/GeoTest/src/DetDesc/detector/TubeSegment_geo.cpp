@@ -32,7 +32,7 @@ namespace DetDesc { namespace Geometry {
       mother.placeVolume(vol,Position(x_pos.x(),x_pos.y(),x_pos.z()),
 			 Rotation(x_rot.x(),x_rot.y(),x_rot.z()));
     phv.addPhysVolID(_A(id),x_det.id());
-    sdet.setPlacement(phv);
+    sdet.addPlacement(phv);
     return sdet;
   }
 }}

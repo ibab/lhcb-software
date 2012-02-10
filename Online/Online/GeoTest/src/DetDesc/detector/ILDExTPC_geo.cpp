@@ -41,7 +41,7 @@ namespace DetDesc { namespace Geometry {
 
       PlacedVolume part_phv = tpc_vol.placeVolume(part_vol,part_pos,part_rot);
       part_phv.addPhysVolID(_A(id),px_det.id());
-      part_det.setPlacement(part_phv);
+      part_det.addPlacement(part_phv);
       switch(part_det.id()) {
       case 0:	tpc.setInnerWall(part_det);  break;
       case 1:	tpc.setOuterWall(part_det);  break;
@@ -51,7 +51,7 @@ namespace DetDesc { namespace Geometry {
     }
     tpc_vol.setVisAttributes(lcdd, x_det.visStr());
     PlacedVolume phv = lcdd.pickMotherVolume(tpc).placeVolume(tpc_vol);
-    tpc.setPlacement(phv);
+    tpc.addPlacement(phv);
     return tpc;
   }
 }}

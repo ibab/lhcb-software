@@ -37,7 +37,7 @@ namespace DetDesc { namespace Geometry {
     }
     cone.addZPlanes(rmin,rmax,z);
     volume.setVisAttributes(lcdd, x_det.visStr());
-    sdet.setPlacement(lcdd.pickMotherVolume(sdet).placeVolume(volume));
+    sdet.addPlacement(lcdd.pickMotherVolume(sdet).placeVolume(volume));
     return sdet;
   }
 }}

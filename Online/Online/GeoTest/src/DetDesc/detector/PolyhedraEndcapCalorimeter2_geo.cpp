@@ -85,7 +85,7 @@ namespace DetDesc { namespace Geometry {
 						  Rotation(0,0,M_PI/numsides));
     physvol.addPhysVolID("system",det_id);
     physvol.addPhysVolID("barrel",1);        
-    sdet.setPlacement(physvol);
+    sdet.addPlacement(physvol);
         
     if ( reflect ) {
       physvol = motherVol.placeVolume(envelopeVol,
@@ -94,7 +94,7 @@ namespace DetDesc { namespace Geometry {
       physvol.addPhysVolID("system",det_id);
       physvol.addPhysVolID("barrel",2);
       DetElement rdet(lcdd,det_name+"_reflect",det_type,x_det.id());
-      rdet.setPlacement(physvol);
+      rdet.addPlacement(physvol);
     }
     return sdet;
   }

@@ -53,13 +53,21 @@ namespace DetDesc {
      *  @author  M.Frank
      *  @version 1.0
      */
-    struct PlacedVolume : Handle<TGeoNode> {
+    struct PlacedVolume : Handle<TGeoNodeMatrix> {
+      typedef std::map<std::string,int> VolIDs;
+      struct Object  {
+	VolIDs volIDs;
+	Ref_t  detector;
+	Object() : volIDs(), detector() {}
+      };
       /// Constructor to be used when reading the already parsed DOM tree
-      PlacedVolume(const TGeoNode* e) : Handle<TGeoNode>(e) {}
+      PlacedVolume(const TGeoNode* e) : Handle<TGeoNodeMatrix>(e) {}
       /// Default constructor
-      PlacedVolume() : Handle<TGeoNode>() {}
+      PlacedVolume() : Handle<TGeoNodeMatrix>() {}
       /// Copy assignment
-      PlacedVolume(const PlacedVolume& e) :  Handle<TGeoNode>(e) {}
+      PlacedVolume(const PlacedVolume& e) : Handle<TGeoNodeMatrix>(e) {}
+      /// Copy assignment from other handle type
+      template <typename T> PlacedVolume(const Handle<T>& e) : Handle<TGeoNodeMatrix>(e) {}
       /// Add identifier
       PlacedVolume& addPhysVolID(const std::string& name, int value);
       /// Volume material
@@ -68,6 +76,14 @@ namespace DetDesc {
       Volume   volume() const;
       /// Parent volume (envelope)
       Volume motherVol() const;
+      /// Access to the volume IDs
+      const VolIDs& volIDs() const;
+      /// Set the detector handle
+      void setDetElement(Ref_t detector)  const;
+      /// Access to the corresponding detector element (maybe invalid)
+      Ref_t detElement() const;
+      /// String dump
+      std::string toString() const;
     };
   
     /** @class Volume Volume.h  DetDesc/lcdd/Volume.h
@@ -78,11 +94,11 @@ namespace DetDesc {
     struct Volume : public Handle<TGeoVolume>  {
       typedef Handle<TGeoVolume> Base;
       struct Object  {
-        Region            Attr_region;
-        LimitSet          Attr_limits;
-        VisAttr           Attr_vis;
-        Ref_t       Attr_sens_det;
-        Object() : Attr_region(), Attr_limits(), Attr_vis(), Attr_sens_det() {}
+        Region     region;
+        LimitSet   limits;
+        VisAttr    vis;
+        Ref_t      sens_det;
+        Object() : region(), limits(), vis(), sens_det() {}
       };
       /// Default constructor
       Volume() : Base(0) {}
@@ -98,11 +114,6 @@ namespace DetDesc {
 
       /// Constructor to be used when creating a new geometry tree. Also sets materuial and solid attributes
       Volume(LCDD& lcddument, const std::string& name, const Solid& s, const Material& m);
-
-      /// Set the volume's solid shape
-      void setSolid(const Solid& s)  const;
-      /// Set the volume's material
-      void setMaterial(const Material& m)  const;
 
       /// Place daughter volume. The position and rotation are the identity
       PlacedVolume placeVolume(const Volume& vol)  const  
@@ -127,22 +138,36 @@ namespace DetDesc {
       
       /// Set the regional attributes to the volume
       void setRegion(const Region& obj)  const;
+      /// Access to the handle to the region structure
+      Region region() const;
+
       /// Set the limits to the volume
       void setLimitSet(const LimitSet& obj)  const;
+      /// Access to the limit set
+      LimitSet limitSet() const;
+
       /// Set Visualization attributes to the volume
       void setVisAttributes(const VisAttr& obj) const;
       /// Set Visualization attributes to the volume
       void setVisAttributes(const LCDD& lcdd, const std::string& name) const;
-      /// Assign the sensitive detector structure
-      void setSensitiveDetector(const SensitiveDetector& obj) const;
-      /// Access to Solid (Shape)
-      Solid solid() const;
-      /// Access to the Volume material
-      Material material() const;
       /// Access the visualisation attributes
       VisAttr  visAttributes() const;
+
+      /// Assign the sensitive detector structure
+      void setSensitiveDetector(const SensitiveDetector& obj) const;
+      /// Access to the handle to the sensitive detector
       Ref_t sensitiveDetector() const;
-      Region region() const;
+
+      /// Set the volume's solid shape
+      void setSolid(const Solid& s)  const;
+      /// Access to Solid (Shape)
+      Solid solid() const;
+
+      /// Set the volume's material
+      void setMaterial(const Material& m)  const;
+      /// Access to the Volume material
+      Material material() const;
+
       /// Auto conversion to underlying ROOT object
       operator TGeoVolume*() const     { return m_element; }
     };

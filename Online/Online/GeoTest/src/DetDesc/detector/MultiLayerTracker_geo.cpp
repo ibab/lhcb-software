@@ -57,7 +57,7 @@ namespace DetDesc { namespace Geometry {
 
       PlacedVolume lpv = motherVol.placeVolume(l_vol,IdentityPos());
       lpv.addPhysVolID(_X(system),sdet.id()).addPhysVolID(_X(barrel),0);
-      sdet.add(layer.setPlacement(lpv));
+      sdet.add(layer.addPlacement(lpv));
     }
     sdet.setCombineHits(x_det.attr<bool>(_A(combineHits)),sens);
     return sdet;

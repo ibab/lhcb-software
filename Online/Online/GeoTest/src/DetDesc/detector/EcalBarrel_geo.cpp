@@ -44,7 +44,7 @@ namespace DetDesc { namespace Geometry {
 
     env_phv.addPhysVolID("system",det_id);
     env_phv.addPhysVolID("barrel",0);
-    sdet.setPlacement(env_phv);
+    sdet.addPlacement(env_phv);
 
     double dx        = mod_z / std::sin(dphi); // dx per layer
     dx = 0;
@@ -114,7 +114,7 @@ namespace DetDesc { namespace Geometry {
 	    PlacedVolume slice_phv = l_vol.placeVolume(s_vol,Position(0,0,s_pos_z+s_thick/2));					
 	    slice_phv.addPhysVolID("layer", l_num);
 	    slice_phv.addPhysVolID("slice", s_num);
-	    slice.setPlacement(slice_phv);
+	    slice.addPlacement(slice_phv);
 	    // Increment Z position of slice.
 	    s_pos_z += s_thick;
 					
@@ -127,7 +127,7 @@ namespace DetDesc { namespace Geometry {
 
 	  PlacedVolume layer_phv = mod_vol.placeVolume(l_vol,l_pos);
 	  layer_phv.addPhysVolID("layer", l_num);
-	  layer.setPlacement(layer_phv);
+	  layer.addPlacement(layer_phv);
 	  // Increment to next layer Z position.
 	  l_pos_z += l_thickness;	  
 	  ++l_num;

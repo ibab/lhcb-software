@@ -77,21 +77,34 @@ namespace DetDesc {
 
     /** @class SubDetector Detector.h DetDesc/lcdd/Detector.h
      *
+     *  Please note: 
+     *  Though nowhere enforced, it is obvious that only placements
+     *  of the **SAME** logical volume should be added.
+     *
+     *  We explicitly rely here on the common sense of the user
+     *  of this class. People without a brain can always screw 
+     *  things completely - nothing one can do about!
+     *
      *  @author  M.Frank
      *  @version 1.0
      */
     struct DetElement : public Ref_t   {
       typedef std::map<std::string,DetElement> Children;
+      typedef std::vector<PlacedVolume>        Placements;
       struct Object  {
         int               id;
         int               combine_hits;
-        PlacedVolume      placement;
         Readout           readout;
 	Alignment         alignment;
+	Volume            volume;
 	Conditions        conditions;
+        Placements        placements;
         Children          children;
         Object();
       };
+
+      /// Additional data accessor
+      Object& _data()   const {  return *data<Object>();  }
 
       void check(bool condition, const std::string& msg) const;
 
@@ -102,20 +115,6 @@ namespace DetDesc {
       /// Constructor for a new subdetector element
       DetElement(const LCDD& lcdd, const std::string& name, const std::string& type, int id);
 
-      /// Additional data accessor
-      Object& _data()   const {  return *data<Object>();  }
-      /// Set Visualization attributes to the detector element
-      DetElement& setVisAttributes(const LCDD& lcdd, const std::string& name, const Volume& volume);
-      /// Set the regional attributes to the detector element
-      DetElement& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
-      /// Set the limits to the detector element
-      DetElement& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);
-      /// Set all attributes in one go
-      DetElement& setAttributes(const LCDD& lcdd, const Volume& volume,
-				const std::string& region, 
-				const std::string& limits, 
-				const std::string& vis);
-
       DetElement&     setCombineHits(bool value, SensitiveDetector& sens);
       DetElement&     add(const DetElement& sub_element);
       int             id() const;
@@ -124,13 +123,32 @@ namespace DetDesc {
       bool            isCalorimeter() const;
       bool            isInsideTrackingVolume() const;
       bool            combineHits() const;
-      VisAttr         visAttr() const;
+
+      /// Set all attributes in one go
+      DetElement& setAttributes(const LCDD& lcdd, const Volume& volume,
+				const std::string& region, 
+				const std::string& limits, 
+				const std::string& vis);
+
+      /// Set Visualization attributes to the detector element
+      DetElement& setVisAttributes(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      /// Set the regional attributes to the detector element
+      DetElement& setRegion(const LCDD& lcdd, const std::string& name, const Volume& volume);
+      /// Set the limits to the detector element
+      DetElement& setLimitSet(const LCDD& lcdd, const std::string& name, const Volume& volume);
+
+      /// Access the readout structure 
       Readout         readout() const;
+      /// Assign readout definition
       DetElement&     setReadout(const Readout& readout);
-      /// Access the logical volume of the detector element
-      PlacedVolume    placement() const;
-      /// Set the logical volume of the detector element
-      DetElement&     setPlacement(const PlacedVolume& volume);
+
+      /// Access the physical volumes of the detector element
+      Placements      placements() const;
+      /// Set the physical volumes of the detector element
+      DetElement&     addPlacement(const PlacedVolume& volume);
+      /// Access to the logical volume of the placements (all daughters have the same!)
+      Volume          volume() const;
+
       /// Access to the list of children
       const Children& children() const;
       /// Access to individual children by name

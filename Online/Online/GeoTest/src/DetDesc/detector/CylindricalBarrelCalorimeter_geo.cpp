@@ -67,7 +67,7 @@ namespace DetDesc { namespace Geometry {
 
     PlacedVolume physvol = lcdd.pickMotherVolume(sdet).placeVolume(envelopeVol,IdentityPos());
     physvol.addPhysVolID(_A(system),sdet.id()).addPhysVolID(_A(barrel),0);
-    sdet.setPlacement(physvol);
+    sdet.addPlacement(physvol);
     return sdet;
   }
 }}

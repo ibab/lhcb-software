@@ -21,19 +21,59 @@
 #include <climits>
 #include <iostream>
 #include <stdexcept>
+#include <strstream>
 
 using namespace std;
 using namespace DetDesc::Geometry;
 
 namespace DetDesc  { namespace Geometry  {
+
+  template <> struct Value<TGeoNodeMatrix,PlacedVolume::Object> 
+    : public TGeoNodeMatrix, public PlacedVolume::Object  
+  {
+    Value(const TGeoVolume* v, const TGeoMatrix* m) : TGeoNodeMatrix(v,m), PlacedVolume::Object() {}
+  };
+
   template <> struct Value<TGeoVolume,Volume::Object> 
     : public TGeoVolume, public Volume::Object  
   {
     Value(const char* name, TGeoShape* s=0, TGeoMedium* m=0) 
       : TGeoVolume(name,s,m) {}
     virtual ~Value() {}
+    virtual void AddNode(const TGeoVolume *vol, Int_t copy_no, TGeoMatrix *mat, Option_t* = "") {
+      TGeoMatrix *matrix = mat;
+      if (matrix==0) matrix = gGeoIdentity;
+      else           matrix->RegisterYourself();
+      if (!vol) {
+	Error("AddNode", "Volume is NULL");
+	return;
+      }
+      if (!vol->IsValid()) {
+	Error("AddNode", "Won't add node with invalid shape");
+	printf("### invalid volume was : %s\n", vol->GetName());
+	return;
+      }   
+      if (!fNodes) fNodes = new TObjArray();   
+
+      if (fFinder) {
+	// volume already divided.
+	Error("AddNode", "Cannot add node %s_%i into divided volume %s", vol->GetName(), copy_no, GetName());
+	return;
+      }
+
+      TGeoNodeMatrix *node = new Value<TGeoNodeMatrix,PlacedVolume::Object>(vol, matrix);
+      //node = new TGeoNodeMatrix(vol, matrix);
+      node->SetMotherVolume(this);
+      fNodes->Add(node);
+      TString name = TString::Format("%s_%d", vol->GetName(), copy_no);
+      if (fNodes->FindObject(name))
+	Warning("AddNode", "Volume %s : added node %s with same name", GetName(), name.Data());
+      node->SetName(name);
+      node->SetNumber(copy_no);
+    }
   };
 }}
+
 
 Volume::Volume(LCDD& lcdd, const string& name)    {
   m_element = new Value<TGeoVolume,Volume::Object>(name.c_str());
@@ -62,11 +102,12 @@ void Volume::setSolid(const Solid& solid)  const  {
   m_element->SetShape(solid);
 }
 
-static PlacedVolume _addNode(TGeoVolume* parent, TGeoVolume* daughter, TGeoMatrix* transform) {
+static PlacedVolume _addNode(TGeoVolume* par, TGeoVolume* daughter, TGeoMatrix* transform) {
+  Value<TGeoVolume,Volume::Object>* parent = (Value<TGeoVolume,Volume::Object>*)par;
   TObjArray* a = parent->GetNodes();
   Int_t id = a ? a->GetEntries() : 0;
   parent->AddNode(daughter,id,transform);
-  TGeoNode* n = parent->GetNode(id);
+  TGeoNodeMatrix* n = dynamic_cast<TGeoNodeMatrix*>(parent->GetNode(id));
   return PlacedVolume(n);
 }
 
@@ -116,11 +157,11 @@ PlacedVolume Volume::placeVolume(const Volume& volume, const IdentityRot& /* rot
 }
 
 void Volume::setRegion(const Region& obj)  const   {
-  data<Object>()->Attr_region = obj;
+  data<Object>()->region = obj;
 }
 
 void Volume::setLimitSet(const LimitSet& obj)  const   {
-  data<Object>()->Attr_limits = obj;
+  data<Object>()->limits = obj;
 }
 
 void Volume::setVisAttributes(const VisAttr& attr) const   {
@@ -135,13 +176,13 @@ void Volume::setVisAttributes(const VisAttr& attr) const   {
     m_element->SetVisibility(vis->visible ? kTRUE : kFALSE);
     m_element->SetVisDaughters(vis->showDaughters ? kTRUE : kFALSE);
   }
-  data<Object>()->Attr_vis = attr;
+  data<Object>()->vis = attr;
 }
 
 void Volume::setVisAttributes(const LCDD& lcdd, const string& name)  const {
   if ( !name.empty() )   {
     VisAttr attr = lcdd.visAttributes(name);
-    data<Object>()->Attr_vis = attr;
+    data<Object>()->vis = attr;
     setVisAttributes(attr);
   }
   else  {
@@ -171,7 +212,7 @@ void Volume::setAttributes(const LCDD& lcdd,
 }
 
 void Volume::setSensitiveDetector(const SensitiveDetector& obj) const  {
-  data<Object>()->Attr_sens_det = obj;
+  data<Object>()->sens_det = obj;
 }
 
 Solid Volume::solid() const   {
@@ -183,18 +224,24 @@ Material Volume::material() const   {
 }
 
 VisAttr Volume::visAttributes() const   {
-  return data<Object>()->Attr_vis;
+  return data<Object>()->vis;
 }
 
 Ref_t Volume::sensitiveDetector() const    {
-  return data<Object>()->Attr_sens_det;
+  return data<Object>()->sens_det;
 }
 
 Region Volume::region() const   {
-  return data<Object>()->Attr_region;
+  return data<Object>()->region;
 }
 
-PlacedVolume& PlacedVolume::addPhysVolID(const std::string& /* name */, int /* value */) {
+LimitSet Volume::limitSet() const   {
+  return data<Object>()->limits;
+}
+
+PlacedVolume& PlacedVolume::addPhysVolID(const std::string& name, int value) {
+  Object* obj = data<Object>();
+  obj->volIDs[name] = value;
   return *this;
 }
 
@@ -213,3 +260,29 @@ Volume PlacedVolume::motherVol() const {
   return Volume::handle_t(m_element ? m_element->GetMotherVolume() : 0);
 }
 
+/// Access to the volume IDs
+const PlacedVolume::VolIDs& PlacedVolume::volIDs() const {
+  return data<Object>()->volIDs;
+}
+
+/// Set the detector handle
+void PlacedVolume::setDetElement(Ref_t detector)   const {
+  data<Object>()->detector = detector;
+}
+
+/// Access to the corresponding detector element (maybe invalid)
+Ref_t PlacedVolume::detElement() const {
+  return data<Object>()->detector;
+}
+
+/// String dump
+string PlacedVolume::toString() const {
+  strstream s;
+  Object* obj = data<Object>();
+  s << m_element->GetName() << ":  vol='" << m_element->GetVolume()->GetName()
+    << "' mat:'" << m_element->GetMatrix()->GetName() << "' volID[" << obj->volIDs.size() << "] ";
+  for(VolIDs::const_iterator i=obj->volIDs.begin(); i!=obj->volIDs.end();++i)
+    s << (*i).first << "=" << (*i).second << "  ";
+  s << ends;
+  return s.str();
+}

@@ -15,7 +15,7 @@ using namespace std;
 using namespace DetDesc::Geometry;
 
 DetElement::Object::Object()  
-: id(0), combine_hits(0), placement(), readout()
+: id(0), combine_hits(0), readout(), placements()
 {
 }
 
@@ -36,14 +36,6 @@ int DetElement::id() const   {
 
 bool DetElement::combineHits() const   {
   return _data().combine_hits != 0;
-}
-
-VisAttr DetElement::visAttr() const  {
-  if ( isValid() ) {
-    Object& o = _data();
-    return o.placement.volume().visAttributes();
-  }
-  throw runtime_error("DetElement::visAttr: Self is not defined [Invalid Handle]");
 }
 
 Readout DetElement::readout() const   {
@@ -81,13 +73,29 @@ DetElement& DetElement::add(const DetElement& sdet)  {
   throw runtime_error("DetElement::add: Self is not defined [Invalid Handle]");
 }
 
-PlacedVolume DetElement::placement() const    {
-  return _data().placement;
+DetElement::Placements DetElement::placements() const    {
+  return _data().placements;
 }
 
-DetElement& DetElement::setPlacement(const PlacedVolume& placement)  {
-  _data().placement = placement;
-  return *this;
+DetElement& DetElement::addPlacement(const PlacedVolume& placement)  {
+  if ( isValid() ) {
+    if ( placement.isValid() ) {
+      _data().placements.push_back(placement);
+      _data().volume = placement.volume();
+      placement.setDetElement(*this);
+      return *this;
+    }
+    throw runtime_error("DetElement::addPlacement: Placement is not defined [Invalid Handle]");
+  }
+  throw runtime_error("DetElement::addPlacement: Self is not defined [Invalid Handle]");
+}
+
+/// Access to the logical volume of the placements (all daughters have the same!)
+Volume DetElement::volume() const {
+  if ( isValid() )  {
+    return _data().volume;
+  }
+  throw runtime_error("DetElement::volume: Self is not defined [Invalid Handle]");
 }
 
 DetElement& DetElement::setVisAttributes(const LCDD& lcdd, const string& name, const Volume& volume)  {

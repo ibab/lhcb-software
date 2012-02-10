@@ -69,9 +69,9 @@ namespace DetDesc { namespace Geometry {
     if ( obj )  {
       char text[256];
       const DetElement& sd = val;
-      PlacedVolume plc = sd.placement();
-      bool vis = sd.visAttr().isValid();
+      PlacedVolume plc = sd.placements()[0];
       bool rdo = sd.readout().isValid();
+      bool vis = plc.isValid();
       bool env = plc.isValid();
       bool mat = plc.isValid();
       ::sprintf(text,"ID:%-3d Combine Hits:%3s Readout:%s Material:%s Envelope:%s VisAttr:%s",
@@ -85,7 +85,7 @@ namespace DetDesc { namespace Geometry {
       os << prefix << "|               " << text << endl;
 
       if ( vis )   {
-	VisAttr attr  = sd.visAttr();
+	VisAttr attr = plc.volume().visAttributes();
 	VisAttr::Object* v = attr.data<VisAttr::Object>();
 	TColor* col = gROOT->GetColor(v->color);
 	char text[256];
@@ -132,7 +132,7 @@ namespace DetDesc { namespace Geometry {
 #endif
     //PrintMap<DetElement>(lcdd,os,lcdd.detectors(),   "List of DetElements")();
     //PrintMap<VisAttr   > (lcdd,os,lcdd.visAttributes(),"List of Visualization attributes")();
-    //dumpTopVolume();
+    //mpTopVolume();
   }
 
   void dumpVolume(TGeoVolume* vol, int level);
@@ -162,6 +162,10 @@ namespace DetDesc { namespace Geometry {
       rot.GetAngles(phi,theta,psi);
       cout << " rot: theta:" << theta << " phi:" << phi << " psi:" << psi;
     }
+    cout << endl;
+    PlacedVolume plv(n);
+    for(int i=0; i<level;++i) cout << " ";
+    cout << "         volume:" << plv.toString();
     cout << endl;
     TIter next(nodes);
     TGeoNode *geoNode;
