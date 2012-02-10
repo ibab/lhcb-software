@@ -50,7 +50,7 @@ private:
   bool _initialised;
   int _tauPDG, _nTauolaModes;
 
-  HepMC::GenParticle* createGenParticle(EvtParticle* theParticle, bool incoming);
+  HepMC::GenParticle* createGenParticle(EvtParticle* theParticle);
 
   void setUpPossibleTauModes();
 

@@ -253,10 +253,13 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 
   // Assign the parent particle as the incoming particle to the vertex.
   if (theParent != 0) {
-    HepMC::GenParticle* hepMCParent = this->createGenParticle(theParent, true);
+    HepMC::GenParticle* hepMCParent = this->createGenParticle(theParent);
     theVertex->add_particle_in(hepMCParent);
   } else {
-    theVertex->add_particle_in(0);
+    // The tau particle has no parent. Set "itself" as the incoming particle for the first vertex.
+    // This is needed, otherwise Tauola warns of momentum non-conservation for this (1st) vertex.    
+    HepMC::GenParticle* tauGenInit = this->createGenParticle(tauParticle);
+    theVertex->add_particle_in(tauGenInit);
   }
 
   // Find all daughter particles and assign them as outgoing particles to the vertex.
@@ -287,7 +290,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
     
       if (theDaughter != 0) {
         
-	HepMC::GenParticle* hepMCDaughter = this->createGenParticle(theDaughter, false);
+	HepMC::GenParticle* hepMCDaughter = this->createGenParticle(theDaughter);
 	theVertex->add_particle_out(hepMCDaughter);
 
 	EvtId theId = theDaughter->getId();
@@ -297,6 +300,9 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 	  // Delete any siblings for the tau particle
 	  if (theDaughter->getNDaug() > 0) {theDaughter->deleteDaughters(false);}
 	  tauMap[hepMCDaughter] = theDaughter;
+	} else {
+	  // Treat all other particles as "stable"
+	  hepMCDaughter->set_status(TauolaParticle::STABLE);
 	}
 		
       } // theDaughter != 0
@@ -305,7 +311,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
   } else {
 
     // We only have the one tau particle. Store only this in the map.
-    HepMC::GenParticle* singleTau = this->createGenParticle(tauParticle, false);
+    HepMC::GenParticle* singleTau = this->createGenParticle(tauParticle);
     theVertex->add_particle_out(singleTau);
     tauMap[singleTau] = tauParticle;
 
@@ -314,7 +320,7 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
   // Now pass the event to Tauola for processing
   // Create a Tauola event object
   TauolaHepMCEvent tauolaEvent(theEvent);
-  
+
   // Run the Tauola algorithm
   tauolaEvent.decayTaus();
   
@@ -341,10 +347,9 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 
       if (tauEvtParticle != 0) {
 
-	// Get the tau 4-momentum (in its parents rest frame). We need to boost
-	// all the tau daughters to this frame, since the original rest frame from 
-	// the HepMC event is actually the parent of the tau.
-	EvtVector4R tauP4CM = tauEvtParticle->getP4();
+	// Get the tau 4-momentum in the lab (first mother) frame. We need to boost
+	// all the tau daughters to this frame, such that daug.getP4() is in the tau restframe.
+	EvtVector4R tauP4CM = tauEvtParticle->getP4Lab();
 	tauP4CM.set(tauP4CM.get(0), -tauP4CM.get(1), -tauP4CM.get(2), -tauP4CM.get(3));
       
 	// Get the decay vertex for the tau particle
@@ -412,18 +417,13 @@ void EvtTauolaEngine::decayTauEvent(EvtParticle* tauParticle) {
 
 }
 
-HepMC::GenParticle* EvtTauolaEngine::createGenParticle(EvtParticle* theParticle, bool incoming) {
+HepMC::GenParticle* EvtTauolaEngine::createGenParticle(EvtParticle* theParticle) {
 
   // Method to create an HepMC::GenParticle version of the given EvtParticle.
   if (theParticle == 0) {return 0;}
 
   // Get the 4-momentum (E, px, py, pz) for the EvtParticle
-  EvtVector4R p4(0.0, 0.0, 0.0, 0.0);
-  if (incoming == true) {
-    p4 = theParticle->getP4Restframe();
-  } else {
-    p4 = theParticle->getP4();
-  }
+  EvtVector4R p4 = theParticle->getP4Lab();
 
   // Convert this to the HepMC 4-momentum
   double E = p4.get(0);
@@ -437,7 +437,6 @@ HepMC::GenParticle* EvtTauolaEngine::createGenParticle(EvtParticle* theParticle,
 
   // Set the status flag for the particle.
   int status = TauolaParticle::HISTORY;
-  if (incoming == false) {status = TauolaParticle::STABLE;}
 
   HepMC::GenParticle* genParticle = new HepMC::GenParticle(hepMC_p4, PDGInt, status);
 

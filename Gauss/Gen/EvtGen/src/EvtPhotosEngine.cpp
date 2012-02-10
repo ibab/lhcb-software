@@ -23,10 +23,10 @@
 #include "EvtGenBase/EvtPhotonParticle.hh"
 #include "EvtGenBase/EvtReport.hh"
 
-#include "Photos.h"
-#include "PhotosHepMCEvent.h"
-#include "PhotosHepMCParticle.h"
-#include "PhotosParticle.h"
+#include "Photos/Photos.h"
+#include "Photos/PhotosHepMCEvent.h"
+#include "Photos/PhotosHepMCParticle.h"
+#include "Photos/PhotosParticle.h"
 
 #include "HepMC/GenVertex.h"
 #include "HepMC/SimpleVector.h"

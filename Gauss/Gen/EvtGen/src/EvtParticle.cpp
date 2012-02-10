@@ -917,7 +917,7 @@ void EvtParticle::printTreeRec(unsigned int level) const {
       report(INFO,"") << EvtPDL::name(_daug[i]->getId()).c_str()<<" ";
     }
     for(i=0;i<_ndaug;i++){
-      report(INFO,"") << _daug[i]->mass()<<" " << _daug[i]->getSpinStates() << " ";
+      report(INFO,"") << _daug[i]->mass()<< " " << _daug[i]->getP4() << " " <<_daug[i]->getSpinStates() << endl;
     }
     report(INFO,"")<<endl;
     for(i=0;i<_ndaug;i++){
