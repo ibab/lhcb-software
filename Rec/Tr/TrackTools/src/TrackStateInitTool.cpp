@@ -58,8 +58,8 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
     sc = createVeloStates( track );
     if( sc.isFailure() ) Warning("TrackStateInitTool fit Velo failed",sc,0).ignore();
     
-    // add state in TT
-    if(sc.isSuccess() && hitpattern.numTTHits()>0) {
+    // add state in TT, but not for long tracks since the fit is actually rather poor
+    if(sc.isSuccess() && hitpattern.numTTHits()>0 && hitpattern.numTLayers()==0 ) {
       sc = createVeloTTStates( track );
       if( sc.isFailure() ) Warning("TrackStateInitTool fit TT failed",sc,0).ignore();
     }
@@ -123,30 +123,62 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
      track.firstState().location()<=LHCb::State::EndVelo) {
     double qOverP = newStates.front().qOverP();
     double errQOverP = newStates.front().errQOverP2();
-      
-    // replace the first T state by the extrapolated Velo state.
-    // also compute q/p by matching that state in x.
-    const LHCb::State* velottstate = track.states().back() ;
-    LHCb::StateVector statevec( velottstate->stateVector(), velottstate->z() ) ;
-    statevec.setQOverP( qOverP ) ;
-    LHCb::State& tstate = newStates.front() ;
-    Gaudi::TrackMatrix jacobian ;
-    sc = m_extrapolator->propagate( statevec, tstate.z(), &jacobian );
-    double dqop = (tstate.x() - statevec.x()) / jacobian(0,4) ;
-    // what is most important is to set the slopes. 'x' we keep fixed
-    // by construction. it may best to leave 'y' actually.
-    for(int i = 0 ; i<=4; ++i ) 
-      statevec.parameters()(i) += dqop * jacobian(i,4) ;
-    tstate.stateVector() = statevec.parameters() ;
+    
+    // I want to get a better estimate for q/p. This is done by
+    // propgating from A to B, and then adapt qop to get delta-x =0
+    // However, the result seems rather senstive to where you start
+    // from. Things I tried:
+    // - extrapolate velo-TT state to T1. this works very poorly,
+    //   probably because the slope in TT is so bad.
+    // - extrapolate velo-end state to T1 and match in X. this works
+    //   better, but is still 2x worse than the pT kick.
+    // - extrapolate T1 to velo. still a it worse than pT kick.
+    // - extrapolate T2 to velo-end. this works better than the pT
+    //   kick, but it is a bit biased.
+    // - extrapolate T2 to velo-TT.  this works about as good as just
+    //   the pT kick. (strange ... what's wrong with TT?!)
+    // - extrapolate velo to T2. this works still a bit worse than the
+    //   pT kick. (strange ... is velo slope worse than T slope?)
+    
+    // Maybe this pattern can partially be explained by how material
+    // is distributed. In that case, it should get better if you match
+    // slopes. So, that's what I tried next:
+    // - extrapolate velo-TT to T2. this still works very poorly. the
+    //   TT state is just so bad that I think I need to remove it again.
+    // - extrapolate velo to T2. this now works about as good as T2 to
+    //   velo matching x. reso a bit worse, but less outliers. bias
+    //   the same.
+    // - extrapolate T2 to velo. that gives about the same result
+    // 
 
-    // now update q/p of all states
+    // So, in the end I have chosen to propagate the TMid state to
+    // velo and match in X. That's also close to what we do for
+    // Downstream.
+    
+    const LHCb::State* velostate = track.stateAt( LHCb::State::EndVelo ) ;
+    const LHCb::State& t2state = newStates[1] ; // this is middle of T
+    LHCb::StateVector statevec( t2state.stateVector(), t2state.z() ) ;
+    Gaudi::TrackMatrix jacobian ;
+    sc = m_extrapolator->propagate( statevec, velostate->z(), &jacobian );
+    double dqop = (velostate->x() - statevec.x()) / jacobian(0,4) ;
+    qOverP += dqop ;
+    
+    // using this momentum, we can now improve the T1 state. it
+    // doesn't make any real difference, even w/o updating transport.
+    statevec = LHCb::StateVector( t2state.stateVector(), t2state.z() ) ;
+    statevec.setQOverP( qOverP ) ;
+    LHCb::State& t1state = newStates[0] ;
+    sc = m_extrapolator->propagate( statevec, t1state.z(), 0);
+    t1state.stateVector() = statevec.parameters() ;
+    
+    // now update q/p of all other states
     BOOST_FOREACH( LHCb::State* state, track.states() ) {
-      state->setQOverP( tstate.qOverP() ) ;
+      state->setQOverP( qOverP ) ;
       state->setErrQOverP2(errQOverP) ;
     }
     for( std::vector<LHCb::State>::iterator istate = newStates.begin();
 	 istate != newStates.end(); ++istate) 
-      istate->setQOverP( tstate.qOverP() ) ;
+      istate->setQOverP( qOverP ) ;
   }
   
   for( std::vector<LHCb::State>::iterator istate = newStates.begin();
@@ -260,18 +292,20 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
       double dqop = (ttstatevec(0) - statevec.x()) / jacobian(0,4);
       for(size_t i=0; i<4; ++i) statevec.parameters()(i) = ttstatevec(i) ;
       
-      // also fix ty: the ty of the seed track fit is actually quite poor.
-      double ty = 
-	(track.states().front()->y() - ttstatevec(1))/
-	(track.states().front()->z() - zref)  ;
-      statevec.setTy ( ty ) ;
-
       if( track.type() == LHCb::Track::Downstream ) {
+	// also fix ty: the ty of the seed track fit is actually quite poor.
+	double ty = 
+	  (track.states().front()->y() - ttstatevec(1))/
+	  (track.states().front()->z() - zref)  ;
+	statevec.setTy ( ty ) ;
+	
 	// set the ty only in T1. should we also set tx? that requires
 	// another extrapolation.
 	track.states().front()->setTy( ty ) ;
+      }
 
-	// set the qop of all states
+      // set the qop of all states
+      if( track.type() != LHCb::Track::Long ) {
 	double qop = statevec.qOverP() + dqop ;
 	statevec.setQOverP( qop ) ;
 	BOOST_FOREACH( LHCb::State* state, track.states() ) 

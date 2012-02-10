@@ -4,7 +4,7 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-! 2012-02-09 - Wouter Hulsbergen
+! 2012-02-10 - Wouter Hulsbergen
  - several changes to TrackStateInitTool to get better track initialization
 
 ! 2012-02-08 - Chris Jones
