@@ -9,9 +9,7 @@
 #ifndef DETDESC_DETECTOR_DETFACTORYHELPER_H
 #define DETDESC_DETECTOR_DETFACTORYHELPER_H
 
-#include "XML/XMLTags.h"
-#include "XML/XMLElements.h"
-#include "XML/lcdd/XMLDetector.h"
+#include "XML/XMLDetector.h"
 #include "DetDesc/lcdd/LCDD.h"
 #include "DetDesc/lcdd/Factories.h"
 
@@ -20,12 +18,13 @@
 #define _A(a) DetDesc::XML::Attr_##a
 
 // Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t          xml_coll_t;
-typedef DetDesc::XML::Handle_t              xml_h;
-typedef DetDesc::XML::DetElement            xml_det_t;
-typedef DetDesc::XML::DetElement::Component xml_comp_t;
-typedef DetDesc::XML::Dimension             xml_dim_t;
-typedef DetDesc::Geometry::LCDD             lcdd_t;
+typedef DetDesc::XML::Collection_t  xml_coll_t;
+typedef DetDesc::XML::Handle_t      xml_h;
+typedef DetDesc::XML::RefElement    xml_ref_t;
+typedef DetDesc::XML::DetElement    xml_det_t;
+typedef xml_det_t::Component        xml_comp_t;
+typedef DetDesc::XML::Dimension     xml_dim_t;
+typedef DetDesc::Geometry::LCDD     lcdd_t;
 
 /*
  *   DetDesc namespace declaration

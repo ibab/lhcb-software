@@ -38,7 +38,7 @@ namespace DetDesc { namespace Geometry {
 
       for(xml_coll_t j(x_layer,_X(slice)); j; ++j, ++m)  {
 	xml_comp_t x_slice = j;
-	Material mat = lcdd.material(_toString(x_slice.material()));
+	Material mat = lcdd.material(x_slice.materialStr());
 	string s_name= l_name+_toString(m,"_slice%d");
 	Tube   s_tub(lcdd,s_name);
 	Volume s_vol(lcdd,s_name+"_volume", s_tub, mat);

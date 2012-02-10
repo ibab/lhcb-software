@@ -7,7 +7,7 @@
 //
 //====================================================================
 
-#include "XML/lcdd/XMLDetector.h"
+#include "XML/XMLDetector.h"
 #include "DetDesc/Layering.h"
 #include <algorithm>
 #include <stdexcept>
@@ -86,7 +86,7 @@ void LayeringCnv::fromCompact(Layering& layering)   const  {
     ++count;
     for(Collection_t s(c,Tag_slice); s; ++s)  {
       DetElement::Component slice = s;
-      string mat = _toString(slice.material());
+      string mat = slice.materialStr();
       LayerSlice lslice(slice.isSensitive(), slice.thickness(), mat);
       lay.add(lslice);
     }

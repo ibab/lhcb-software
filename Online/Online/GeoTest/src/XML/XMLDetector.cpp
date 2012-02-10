@@ -1,7 +1,4 @@
-#include "XML/lcdd/XMLDetector.h"
-#include "XML/lcdd/XMLObjects.h"
-#include "XML/lcdd/XMLVolumes.h"
-#include "XML/lcdd/XMLLCDD.h"
+#include "XML/XMLDetector.h"
 #include "xercesc/dom/DOM.hpp"
 
 using namespace std;
@@ -216,10 +213,6 @@ int DetElement::Component::id(int default_value)  const  {
   return val ? _toDouble(val) : default_value;
 }
 
-const XMLCh*  DetElement::Component::name()  const  {
-  return m_element.attr<cpXMLCh>(Attr_name);
-}
-
 string  DetElement::Component::nameStr()  const  {
   return m_element.attr<string>(Attr_name);
 }
@@ -228,16 +221,8 @@ string DetElement::Component::materialStr() const   {
   return m_element.attr<string>(Attr_material);
 }
 
-const XMLCh* DetElement::Component::module()  const  {
-  return m_element.attr<cpXMLCh>(Attr_module);
-}
-
 string  DetElement::Component::moduleStr()  const  {
   return m_element.hasAttr(Attr_module) ? m_element.attr<string>(Attr_module) : string();
-}
-
-const XMLCh*  DetElement::Component::type()  const  {
-  return m_element.attr<cpXMLCh>(Attr_type);
 }
 
 string  DetElement::Component::typeStr()  const  {
@@ -254,14 +239,6 @@ double DetElement::Component::thickness() const  {
 
 bool DetElement::Component::isSensitive() const  {
   return m_element.hasAttr(Attr_sensitive) && m_element.attr<bool>(Attr_sensitive);
-}
-
-const  XMLCh* DetElement::Component::material() const   {
-  return m_element.attr<cpXMLCh>(Attr_material);
-}
-
-const  XMLCh* DetElement::Component::vis() const   {
-  return m_element.hasAttr(Attr_vis) ? m_element.attr<cpXMLCh>(Attr_vis) : 0;
 }
 
 string DetElement::Component::visStr()  const  {
@@ -285,24 +262,12 @@ int DetElement::id() const   {
   return a ? m_element.attr<int>(Attr_id) : -1;
 }
 
-const XMLCh* DetElement::name() const   {
-  return m_element.attr<cpXMLCh>(Attr_name);
-}
-
 string DetElement::nameStr() const   {
   return m_element.attr<string>(Attr_name);
 }
 
-const XMLCh*  DetElement::type()  const  {
-  return m_element.attr<cpXMLCh>(Attr_type);
-}
-
 string  DetElement::typeStr()  const  {
   return m_element.attr<string>(Attr_type);
-}
-
-const XMLCh*  DetElement::vis()  const  {
-  return m_element.attr<cpXMLCh>(Attr_vis);
 }
 
 string  DetElement::visStr()  const  {
@@ -311,14 +276,6 @@ string  DetElement::visStr()  const  {
 
 Dimension DetElement::dimensions()  const  {
   return Dimension(m_element.child(Tag_dimensions));
-}
-
-const XMLCh* DetElement::material() const  {
-  Handle_t   h = m_element.child(Tag_material);
-  if ( h && h.hasAttr(Attr_name) )  {
-    return h.attr<cpXMLCh>(Attr_name);
-  }
-  return 0;
 }
 
 string DetElement::materialStr() const  {
@@ -340,52 +297,6 @@ string DetElement::limitsStr() const {
 void DetElement::check(bool condition, const string& msg) const  {
   if ( condition )  {
     throw runtime_error(msg);
-  }
-}
-
-void DetElement::setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
-  setRegion(lcdd, node, volume);
-  setLimitSet(lcdd, node, volume);
-  setVisAttributes(lcdd, node, volume);
-}
-
-void DetElement::setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
-  Attribute attr = node.attr_nothrow(Attr_vis);
-  if ( attr )   {
-    volume.setVisAttributes(lcdd.visAttributes(attr->getValue()));
-  }
-  else  {
-    string tag = node.tag();
-    if ( tag == Tag_slice.str() )  // Slices turned off by default
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleNoDaughters));
-    else if ( tag == Tag_layer.str() )  // Layers turned off, but daaughters possibly visible
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleWithDaughters));
-    else if ( tag == Tag_module.str() )  // Traker modules similar to layers
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleWithDaughters));
-    else if ( tag == Tag_module_component.str() )  // Traker modules components turned off by default
-      volume.setVisAttributes(lcdd.visAttributes(Attr_InvisibleNoDaughters));
-  }
-}
-
-void DetElement::setRegion(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
-  Attribute attr = node.attr_nothrow(Attr_region);
-  if ( attr )  {
-    volume.setRegion(lcdd.region(attr->getValue()));
-  }
-}
-
-void DetElement::setLimitSet(const LCDD& lcdd, Handle_t node, const Volume& volume)  {
-  Attribute attr = node.attr_nothrow(Attr_limits);
-  if ( attr )  {
-    volume.setLimitSet(lcdd.limitSet(attr->getValue()));
-  }
-}
-
-void DetElement::setCombineHits(Handle_t node, const SensitiveDetector& sens)   {
-  if ( node.hasAttr(Attr_combineHits) )  {
-    if ( isTracker() )  {
-      sens.setAttr(Attr_combine_hits,node.attr<Attribute>(Attr_combineHits));
-    }
   }
 }
 
@@ -415,44 +326,4 @@ bool DetElement::isInsideTrackingVolume() const  {
   else if ( isTracker() )
     return true;
   return false;
-}
-
-SensitiveDetector::SensitiveDetector(const Document& doc, const XMLCh* type, const XMLCh* name) 
-: RefElement(doc, type, name)
-{
-  setAttr(Attr_ecut,Tag_NULL);
-  setAttr(Attr_eunit,"MeV");
-  setAttr(Attr_verbose,Tag_NULL);
-}
-
-void SensitiveDetector::setIDSpec(const RefElement& spec)  {
-  Handle_t e = document().createElt(Tag_idspecref);
-  e.setAttr(Attr_ref,spec.refName());
-  append(e);
-}
-
-void SensitiveDetector::setHitsCollection(const RefElement& spec)  {
-  setAttr(Attr_hits_collection,spec.refName());
-}
-
-void SensitiveDetector::setSegmentation(Element seg)   {
-  if ( seg )  {
-    Handle_t h = m_element.child(seg.tagName(),false);
-    if ( h ) m_element->replaceChild(h,seg);
-    else m_element.append(seg);
-    return;
-  }
-  throw runtime_error("Readout::setSegmentation: Cannot assign segmentation [Invalid Handle]");
-}
-
-const XMLCh* CompactDetector::readout()  const  {
-  return hasAttr(Attr_readout) ? attr<cpXMLCh>(Attr_readout) : 0;
-}
-
-const XMLCh* CompactDetector::name() const  {
-  return attr<cpXMLCh>(Attr_name);
-}
-
-const XMLCh* CompactDetector::type() const  {
-  return attr<cpXMLCh>(Attr_type);
 }

@@ -7,13 +7,10 @@
 //
 //====================================================================
 
-#include "XML/lcdd/XMLLCDD.h"
-#include "XML/XMLTags.h"
-
-#include "DetDesc/lcdd/LCDD.h"
+#include "DetDesc/detector/DetFactoryHelper.h"
 #include "DetDesc/IDDescriptor.h"
-#include "Conversions.h"
 
+#include "Conversions.h"
 #include "TGeoManager.h"
 #include "TGeoElement.h"
 #include "TGeoMaterial.h"
@@ -22,16 +19,6 @@
 #include <climits>
 #include <iostream>
 #include <set>
-
-// Helpers to access tags and attributes quickly without specifying explicitly namespaces
-#define _X(a) DetDesc::XML::Tag_##a
-#define _A(a) DetDesc::XML::Attr_##a
-
-// Shortcuts to elements of the XML namespace
-typedef DetDesc::XML::Collection_t     xml_coll_t;
-typedef DetDesc::XML::Handle_t         xml_h;
-typedef DetDesc::XML::RefElement       xml_ref_t;
-typedef DetDesc::Geometry::LCDD        lcdd_t;
 
 using namespace std;
 using namespace DetDesc;

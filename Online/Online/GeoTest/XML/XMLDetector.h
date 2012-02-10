@@ -11,6 +11,7 @@
 
 // Framework include files
 #include "XML/XMLTags.h"
+#include "XML/XMLElements.h"
 
 /*
  *   DetDesc namespace declaration
@@ -102,15 +103,10 @@ namespace DetDesc {
         int    repeat()  const;
         double thickness() const;
         bool   isSensitive() const;
-        const  XMLCh* name() const;
         std::string   nameStr() const;
-	const XMLCh*  type() const;
 	std::string   typeStr() const;
-        const  XMLCh* module() const;
         std::string   moduleStr() const;
-        const  XMLCh* material() const;
         std::string   materialStr() const;
-        const  XMLCh* vis() const;
         std::string   visStr() const;
         std::string   regionStr() const;
         std::string   limitsStr() const;
@@ -118,22 +114,13 @@ namespace DetDesc {
       };
       DetElement(Handle_t e) : Dimension(e)  {}
       Handle_t handle()  const { return m_element; }
-      void setAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);
-      void setVisAttributes(const LCDD& lcdd, Handle_t node, const Volume& volume);
-      void setRegion(const LCDD& lcdd, Handle_t node, const Volume& volume);
-      void setLimitSet(const LCDD& lcdd, Handle_t node, const Volume& volume);
-      void setCombineHits(Handle_t node, const SensitiveDetector& sens);
       int  id() const;
-      const XMLCh* name() const;
       std::string nameStr() const;
-      const XMLCh* type() const;
       std::string typeStr() const;
-      const XMLCh* material() const;
       std::string materialStr() const;
-      const  XMLCh* vis() const;
       std::string visStr() const;
-      std::string   regionStr() const;
-      std::string   limitsStr() const;
+      std::string regionStr() const;
+      std::string limitsStr() const;
       Dimension dimensions()  const;
       bool isTracker() const;
       bool isCalorimeter() const;
@@ -141,23 +128,6 @@ namespace DetDesc {
       void check(bool condition, const std::string& msg) const;
       template <typename T> T attr(const XMLCh* tag) const { return m_element.attr<T>(tag); }
     };
-
-    struct SensitiveDetector : public RefElement  {
-      SensitiveDetector() : RefElement(Handle_t(0)) {}
-      SensitiveDetector(Handle_t e) : RefElement(e) {}
-      SensitiveDetector(const Document& doc, const XMLCh* type, const XMLCh* name);
-      void setHitsCollection(const RefElement& spec);
-      void setIDSpec(const RefElement& spec);
-      void setSegmentation(Element seg);
-    };
-
-    struct CompactDetector : public RefElement  {
-      CompactDetector(Element e) : RefElement(e) {}
-      const  XMLCh* name() const;
-      const  XMLCh* type() const;
-      const  XMLCh* readout()  const;
-    };
-
   }
 }         /* End namespace DetDesc       */
 #endif    /* DETDESC_XMLDETECTOR_H    */
