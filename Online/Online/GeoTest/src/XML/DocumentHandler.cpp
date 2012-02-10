@@ -15,7 +15,6 @@
 #include "xercesc/dom/DOM.hpp"
 #include "xercesc/sax/ErrorHandler.hpp"
 
-#include <cmath>
 #include <iostream>
 #include <stdexcept>
 #include <sys/types.h>

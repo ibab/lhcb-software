@@ -14,11 +14,6 @@
 #include "DetDesc/Handle.h"
 
 // C/C++ include files
-#define _USE_MATH_DEFINES
-#include <cmath>
-#ifndef M_PI
-  #define M_PI 3.14159265358979323846
-#endif
 #include <vector>
 
 // Forward declarations
@@ -38,32 +33,13 @@ class TGeoCompositeShape;
 namespace DetDesc {
 
   /*
-  *   Geometry namespace declaration
-  */
+   *   Geometry namespace declaration
+   */
   namespace Geometry  {
 
     // Forward declarations
     struct Position;
     struct Rotation;
-
-    /**@class ZPlane Shapes.h 
-     *  Not identifyable object - no RefElement
-     *
-     *   @author  M.Frank
-     *   @version 1.0
-     */
-    struct ZPlane  {
-      double m_rmin, m_rmax, m_z;
-      /// Constructor to be used when creating a new object
-      ZPlane(double rmin, double rmax, double z);
-      /// Set values
-      ZPlane& setRmin(double value);
-      ZPlane& setRmax(double value);
-      ZPlane& setZ(double value);
-      double rmin() const { return m_rmin; }
-      double rmax() const { return m_rmax; }
-      double z()    const { return m_z;    }
-    };
 
     /**@class Solid_type Shapes.h 
      *

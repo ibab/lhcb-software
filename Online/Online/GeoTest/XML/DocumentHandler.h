@@ -1,3 +1,11 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef DETDESC_XML_DOCUMENTHANDLER_H
 #define DETDESC_XML_DOCUMENTHANDLER_H
 
@@ -7,13 +15,6 @@
 #include "XML/XMLElements.h"
 #include <memory>
 
-#if 0
-namespace xercesc {
-  class ErrorHandler;
-  class XercesDOMParser;
-  class DOMDocument;
-}
-#endif
 /*
  *   DetDesc namespace declaration
  */

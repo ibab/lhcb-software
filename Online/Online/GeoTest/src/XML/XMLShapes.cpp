@@ -1,8 +1,6 @@
-#define _USE_MATH_DEFINES
 #include "XML/lcdd/XMLShapes.h"
 #include "XML/lcdd/XMLObjects.h"
 #include <stdexcept>
-#include <cmath>
 
 using namespace std;
 using namespace DetDesc::XML;

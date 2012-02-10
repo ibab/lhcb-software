@@ -1,6 +1,5 @@
 #include "XML/lcdd/XMLObjects.h"
 #include "DetDesc/IDDescriptor.h"
-#include <cmath>
 
 using namespace std;
 using namespace DetDesc::XML;

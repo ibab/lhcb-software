@@ -1,12 +1,28 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef DETDESC_HandleS_H
 #define DETDESC_HandleS_H
 
+#include <cmath>
 #include <string>
 #include <stdexcept>
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/dom/DOMElement.hpp"
 #include "xercesc/dom/DOMDocument.hpp"
 #include "xercesc/dom/DOMNodeList.hpp"
+
+#ifndef RAD_2_DEGREE
+  #define RAD_2_DEGREE 57.295779513082320876798154814105
+#endif
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
 
 /*
  *   Gaudi namespace declaration

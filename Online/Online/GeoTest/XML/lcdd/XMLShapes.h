@@ -1,3 +1,11 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef DETDESC_XMLSHAPES_H
 #define DETDESC_XMLSHAPES_H
 #include "XML/XMLTags.h"

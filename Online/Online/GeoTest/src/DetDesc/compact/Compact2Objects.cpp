@@ -31,10 +31,7 @@
 typedef DetDesc::XML::Collection_t     xml_coll_t;
 typedef DetDesc::XML::Handle_t         xml_h;
 typedef DetDesc::XML::RefElement       xml_ref_t;
-typedef DetDesc::XML::Element          xml_elem_t;
 typedef DetDesc::Geometry::LCDD        lcdd_t;
-typedef DetDesc::Geometry::Handle<>    Elt_t;
-typedef DetDesc::Geometry::Ref_t Ref_t;
 
 using namespace std;
 using namespace DetDesc;
@@ -47,6 +44,8 @@ namespace DetDesc { namespace Geometry {
   struct Compact;
   struct Materials;
   typedef DetDesc::IDDescriptor IDDescriptor;
+
+  template <typename T> Handle<> toObject(LCDD& lcdd, const XML::Handle_t& xml);
 
   template <> Ref_t toRefObject<Constant>(lcdd_t& lcdd, const xml_h& e)  {
     xml_ref_t    constant(e);
@@ -95,7 +94,7 @@ namespace DetDesc { namespace Geometry {
     TGeoManager*   mgr      = gGeoManager;
     XML::Tag_t     mname    = m.name();
     const char*    matname  = mname.c_str();
-    xml_elem_t     density  = m.child(XML::Tag_D);
+    xml_h     density  = m.child(XML::Tag_D);
     TGeoElementTable* table = mgr->GetElementTable();
     TGeoMaterial*     mat   = mgr->GetMaterial(matname);
     TGeoMixture*      mix   = dynamic_cast<TGeoMixture*>(mat);

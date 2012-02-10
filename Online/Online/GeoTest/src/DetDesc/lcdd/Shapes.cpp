@@ -28,28 +28,7 @@
 using namespace std;
 using namespace DetDesc::Geometry;
 
-ZPlane::ZPlane(double rmin, double rmax, double z)
-: m_rmin(rmin), m_rmax(rmax), m_z(z)
-{
-}
-
-ZPlane& ZPlane::setRmin(double value)  {
-  m_rmin = value;
-  return *this;
-}
-
-ZPlane& ZPlane::setRmax(double value)  {
-  m_rmax = value;
-  return *this;
-}
-
-ZPlane& ZPlane::setZ(double value)  {
-  m_z = value;
-  return *this;
-}
-
-template<typename T> 
-void Solid_type<T>::_setDimensions(double* param) {
+template<typename T> void Solid_type<T>::_setDimensions(double* param) {
   this->ptr()->SetDimensions(param);
   this->ptr()->ComputeBBox();
 }

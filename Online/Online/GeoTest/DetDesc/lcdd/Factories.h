@@ -1,3 +1,11 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description 
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef DETDESC_FACTORIES_H
 #define DETDESC_FACTORIES_H
 
@@ -5,32 +13,46 @@
 #include "RVersion.h"
 #include "DetDesc/lcdd/Detector.h"
 
+/*
+ *   DetDesc namespace declaration
+ */
 namespace DetDesc {
-  namespace Geometry {
-    struct LCDD;
-    struct SensitiveDetector;
-    struct DetElement;
-  }
+  /*
+   *   XML sub-namespace declaration
+   */
   namespace XML {
     struct Handle_t;
   }
-}
 
-namespace DetDesc { namespace Geometry {
-template <typename T> class DetElementFactory  {
-public:
-  static DetDesc::Geometry::Handle<TNamed> create(DetDesc::Geometry::LCDD& lcdd, const DetDesc::XML::Handle_t& e, DetDesc::Geometry::SensitiveDetector& sens);
-};
-  }  }
+  /*
+   *   Geometry sub-namespace declaration
+   */
+  namespace Geometry {
+
+    // Forward declarations
+    struct LCDD;
+    struct SensitiveDetector;
+    struct DetElement;
+
+
+    template <typename T> class DetElementFactory  {
+    public:
+      static Ref_t create(LCDD& lcdd, const XML::Handle_t& e, SensitiveDetector& sens);
+    };
+  }  
+}
 
 namespace {
   template < typename P > class Factory<P, TNamed*(DetDesc::Geometry::LCDD*,const DetDesc::XML::Handle_t*,DetDesc::Geometry::SensitiveDetector*)> {
   public:
+    typedef DetDesc::Geometry::LCDD  LCDD;
+    typedef DetDesc::XML::Handle_t   xml_h;
+    typedef DetDesc::Geometry::Ref_t Ref_t;
     static void Func(void *retaddr, void*, const std::vector<void*>& arg, void*) {
-      DetDesc::Geometry::LCDD* lcdd = (DetDesc::Geometry::LCDD*)arg[0];
-      DetDesc::XML::Handle_t*  elt  = (DetDesc::XML::Handle_t*)arg[1];
+      LCDD*  lcdd = (LCDD* )arg[0];
+      xml_h* elt  = (xml_h*)arg[1];
       DetDesc::Geometry::SensitiveDetector* sens = (DetDesc::Geometry::SensitiveDetector*)arg[2];
-      DetDesc::Geometry::Handle<TNamed> handle = DetDesc::Geometry::DetElementFactory<P>::create(*lcdd,*elt,*sens);
+      Ref_t handle = DetDesc::Geometry::DetElementFactory<P>::create(*lcdd,*elt,*sens);
       *(void**)retaddr = handle.ptr();
     }
   };

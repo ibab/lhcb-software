@@ -34,7 +34,7 @@ namespace DetDesc {
   class IDDescriptor;
 
   /*
-   *   XML namespace declaration
+   *   Geoemtry namespace declaration
    */
   namespace Geometry  {
 

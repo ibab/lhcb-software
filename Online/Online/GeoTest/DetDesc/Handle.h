@@ -20,13 +20,21 @@ class TObjArray;
 class TGeoManager;
 
 // Conversion factor from radians to degree: 360/(2*PI)
-#define RAD_2_DEGREE 57.295779513082320876798154814105
+#ifndef RAD_2_DEGREE
+  #define RAD_2_DEGREE 57.295779513082320876798154814105
+#endif
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
 
 /*
- *   Gaudi namespace declaration
+ *   DetDesc namespace declaration
  */
 namespace DetDesc {
 
+  /*
+   *   Geometry sub-namespace declaration
+   */
   namespace Geometry  {
     struct  LCDD;
 
@@ -103,6 +111,7 @@ namespace DetDesc {
       const char* name() const;
       void  assign(Implementation* n, const std::string& nam, const std::string& title);
     };
+    typedef Handle<>       Elt_t;
     typedef Handle<TNamed> Ref_t;
 
   }       /* End namespace Geometry  */

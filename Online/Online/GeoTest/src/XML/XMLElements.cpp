@@ -3,7 +3,6 @@
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/dom/DOM.hpp"
 
-#include <cmath>
 #include <iostream>
 #include <stdexcept>
 

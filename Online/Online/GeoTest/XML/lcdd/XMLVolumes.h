@@ -1,3 +1,11 @@
+// $Id:$
+//====================================================================
+//  AIDA Detector description implementation
+//--------------------------------------------------------------------
+//
+//  Author     : M.Frank
+//
+//====================================================================
 #ifndef DETDESC_XMLVOLUMES_H
 #define DETDESC_XMLVOLUMES_H
 #include "XML/XMLElements.h"

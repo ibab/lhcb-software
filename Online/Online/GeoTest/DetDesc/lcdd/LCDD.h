@@ -28,7 +28,7 @@
 namespace DetDesc {
   
   /*
-   *   XML namespace declaration
+   *   Geometry namespace declaration
    */
   namespace Geometry  {
 

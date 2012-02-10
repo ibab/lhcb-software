@@ -20,9 +20,10 @@
  *   DetDesc namespace declaration
  */
 namespace DetDesc {
+
   /*
-  *   Geometry namespace declaration
-  */
+   *   Geometry namespace declaration
+   */
   namespace Geometry  {
 
     /** @class Readout  Readout.h DetDesc/lcdd/Readout.h

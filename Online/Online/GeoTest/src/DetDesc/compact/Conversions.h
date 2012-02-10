@@ -31,7 +31,6 @@ namespace DetDesc {
   namespace Geometry  {
 
     // Function prototypes used for object conversions
-    template <typename T> Handle<> toObject(LCDD& lcdd, const XML::Handle_t& xml);
     template <typename T> Ref_t    toRefObject(LCDD& lcdd, const XML::Handle_t& xml);
 
     /** @class Converter Conversions.h  DetDesc/compact/Conversions.h

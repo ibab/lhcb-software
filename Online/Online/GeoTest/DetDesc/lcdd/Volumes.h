@@ -18,22 +18,17 @@
 // C/C++ include files
 #include <map>
 
-#include "TGeoShape.h"
+// ROOT include file (includes TGeoVolume + TGeoShape)
 #include "TGeoNode.h"
-
-// Forward declarations
-class TGeoVolume;
 
 /*
  *   DetDesc namespace declaration
  */
 namespace DetDesc {
 
-  class IDDescriptor;
-
   /*
-  *   XML namespace declaration
-  */
+   *   Geometry namespace declaration
+   */
   namespace Geometry  {
 
     // Forward declarations
