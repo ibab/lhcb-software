@@ -4,6 +4,7 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v4r3 2012-02-10 ====================
 ! 2012-02-08 - Marco Cattaneo
  - Remove import of GaudiConf from QMtest
 
