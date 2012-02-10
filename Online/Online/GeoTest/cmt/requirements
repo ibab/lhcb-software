@@ -1,5 +1,5 @@
 package GeoTest
-version v0r3
+version v0r4
 
 branches  cmt doc src
 use GaudiPolicy v*
@@ -14,16 +14,11 @@ apply_pattern install_more_includes more=XML
 
 apply_pattern ld_library_path
 
-##macro_append GeomConverterApplinkopts      " ../$(CMTCONFIG)/GeomConverter.lib $(ROOT_linkopts) "
-##macro_append GeomConverterApp_dependencies " GeomConverter "
-
 library      GeomConverterLib \
              XML/*.cpp               \
-             XML/lcdd/*.cpp          \
-             XML/compact/*.cpp       \
              DetDesc/*.cpp           \
              DetDesc/lcdd/*.cpp      \
-             DetDesc/detector/*.cpp      \
+             DetDesc/detector/*.cpp  \
              DetDesc/compact/*.cpp   \
              Evaluator/*.cpp 
 
@@ -33,8 +28,6 @@ apply_pattern generate_rootmap library=GeomConverterLib
 application  GeomConverterApp ../main/main.cpp
 #  \
 #             XML/*.cpp               \
-#             XML/lcdd/*.cpp          \
-#             XML/compact/*.cpp       \
 #             DetDesc/*.cpp           \
 #             DetDesc/lcdd/*.cpp      \
 #             DetDesc/compact/*.cpp   \
