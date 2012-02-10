@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r9 2012-02-10 ===================
+! 2012-02-10 - Jibo He
+ - Copied stripping17b dbase to strippingdev to fix the test.
+
 ! 2012-02-09 - Jibo He
  - Stripping17b/LineConfigDictionaries_RD.py
    Tighten B2MuMuGamma* lines, as requested by K. A. Petridis
