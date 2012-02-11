@@ -6,12 +6,12 @@ branches doc cmt tests
 ####################################################################
 # Framework
 use  CommonParticles             v8r6     Phys   # Patrick Koppenburg, WGs
-use  StandardParticles           v2r0     Phys   # Juan Palacios
+use  StandardParticles           v2r1     Phys   # Juan Palacios
 
 ####################################################################
 # Internal Packages
 use  DisplVertices 		 v7r8	  Phys	 # Neal Gauvin
-use  MvaPreSelB2DH               v1r1     Phys   # Sajan Easo
+use  MvaPreSelB2DH               v1r2     Phys   # Sajan Easo
 
 ####################################################################
 # Stripping packages
@@ -21,8 +21,8 @@ use  StrippingConf               v4r3     Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r4     Phys   # Ulrich Kerzel
 use  StrippingSelections         v3r10    Phys   # Tom Blake, Jibo He
 use  StrippingSettings           v2r9     Phys   # Tom Blake, Jibo He
-use  StrippingTCK                v1r2     Phys   # Anton Poluektov
-use  StrippingUtils              v1r4     Phys   # Juan Palacios
+use  StrippingTCK                v1r3     Phys   # Anton Poluektov
+use  StrippingUtils              v1r5     Phys   # Juan Palacios
 ####################################################################
 
 # Declare this as a container package
