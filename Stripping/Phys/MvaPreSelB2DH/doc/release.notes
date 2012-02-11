@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!=========================== MvaPreSelB2DH v1r2 2012-02-10 ===================
+! 2012-02-11 - Jibo He
+ - Looks like some changes are not documented  
+
 !=========================== MvaPreSelB2DH v1r1 2010-11-09 ===================
 ! 2010-11-1 - Sajn Easo
   - fixed deleting a pointer in B2DHMvaPreSelectionParamTool.cpp
