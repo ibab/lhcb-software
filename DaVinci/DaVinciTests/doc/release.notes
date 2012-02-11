@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-02-11 - Chris Jones
+ - Remove test_read_dst test
+ - update references for test_tag_mc10 and test_standardintermediate_run
+
 ! 2011-12-17 - Chris Jones
  - Remove DB tag test
 
