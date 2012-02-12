@@ -4,6 +4,82 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v41r2">2012-02-12 - GaussSys v41r2</A></H1><PRE>
+<H2><A NAME="Note">Release for MC11a, to fix bug.</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v33r0 (and Gaudi v22r4)</b>
+   AppConfig v3r*,
+   <b>DecFiles v25r*</b>, 
+   ParamFiles v8r5, 
+   SQLDDDB v6r*, FieldMap v5r*,
+   pythia 6.425.2, photos 215.4, lhapdf 5.8.5 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.06.05 (via LCG_Interfaces)
+   <b>Geant4 v94r2p2 (based on geant4.9.4.p02)</b> and Geant4Files v94r0
+   XmlVis v1r13,
+   herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)
+   hijing 1.36.a.2 (via LCG_GeneratorsInterfaces),
+   pythia8 153< (via LCG_GeneratorsInterfaces)
+</A></H3>
+
+!========================= Gauss v41r2 2012-02-12 ============================
+! 2012-01-05 - Marc-Olivier Bettler
+ - Update scripts/GaussStat.py to be working with MC11a, specifically:
+   -- locally modified the float() function to be compatible with fortran 
+      scientific notation with Double
+   -- modified the way the eventype is retrieved to be working on MC11 
+      and MC10 logs
+
+
+! 2011-12-07 - Patrick Robbe
+ - Gauss-DEV.py: remove import of Beam parameters, use default ones instead
+ - QMTests: use new Beam options for MC11
+
+!========================== GenCuts v1r4 2012-02-12 ========================== 
+! 2012-02-07 - Patrick Robbe
+ - DaughtersInLHCbAndCutsForDstar: new cut applied on D* -> D0 pi decays,
+   cutting on: 
+	  . pT(D0)
+    . ctau(D0)
+    . pT(soft pion)
+    . min(p(D0 daughters))
+    . max(pT(D0 daughters))
+    . min(pT(D0 daughters))
+
+! 2012-01-31 - Jibo He
+ - Added DaughtersInLHCbAndMassCut, works for B->LLHH, e.g., eeKstar at this moment, 
+   possible to apply PT cut on daughters, and invariant mass cut on M(ee) (upper cut)
+   and M(eeKstar) (lower cut). 
+
+!======================== EvtGen v12r8 2012-01-28 ===========================
+! 2012-01-28 - John Back
+ - Add K_1+/- vector modes for EvtbTosllBallFF::getVectorFF. 
+   Check for null pointers when printing debug info when checking the spin 
+   density matrix rho in EvtDecayAmp.
+   Include fix from Anders for EvtAmp::getSpinDensity().
+
+!======================= EvtGenExtras v3r2 2012-02-12 ========================
+! 2012-01-31 - Nikolai Nikitin
+ - Added new models for B -> K_1(1270) Mu Mu and B -> K_1 (1400) Mu Mu decays
+   in the BTOSLLMSEXT model.
+
+! 2012-01-18 - Nikolai Nikitin
+ - Added new models for B -> K_1(1270) Mu Mu and B -> K_1 (1400) Mu Mu decays
+
+!======================= Generators v11r4 2012-02-12 =========================
+! 2012-02-12 - Gloria Corti
+ - Few changes in Generation.cpp and GenCounters for counting in Pythia8 and 
+   excited particles in November by Aureliens Martens
+
+! 2012-02-04 - Patrick Robbe
+ - Fix decayHeavyParticle function in ExternalGenerator for generation
+   of signal Ks.
+
+!========================= LbPythia v10r3 2011-11-11 =========================
+! 2011-12-20 - Patrick Robbe
+ - Pysubs.cpp: fix bug in accessing the KFIN Pythia common block
+
+!=============================================================================
 </PRE><H1><A NAME="v41r1">2011-11-24 - GaussSys v41r1</A></H1><PRE>
 <H2><A NAME="Note">Release for MC11a, to fix bug.</A></H2>
 <H3><A NAME="Use">This version uses:
