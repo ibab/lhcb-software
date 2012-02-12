@@ -4,6 +4,7 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v1r4 2012-02-12 ========================== 
 ! 2012-02-07 - Patrick Robbe
  - DaughtersInLHCbAndCutsForDstar: new cut applied on D* -> D0 pi decays,
    cutting on: 
