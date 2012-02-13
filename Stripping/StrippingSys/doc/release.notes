@@ -3,10 +3,10 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v4r0 2012-02-10 =========================
 ! 2012-02-13 - Marco Cattaneo
  - Add TMVASelections package
 
-!========================= StrippingSys v4r0 2012-02-10 =========================
 ! 2012-02-11 - Jibo He
  - Updated configurables.ref, this time only with Stripping env. 
 
