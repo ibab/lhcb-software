@@ -47,8 +47,7 @@
   <class name = "LHCb::TTNames"   />
   <class name = "LHCb::ITNames"   />
   <class name = "LHCb::Inspector" />
-  <class name = "IAccept"                      />
-  <class name = "extend_interfaces1<IAlgTool>" />
+  <class name = "IAccept"                />
   <class name = "ICountContainedObjects" />
 
   <variable pattern="Rich::NRadiatorTypes"  />

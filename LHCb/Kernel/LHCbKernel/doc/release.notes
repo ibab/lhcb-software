@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2012-02-13 - Marco Cattaneo
+ - Fix dictionary warning from previous commit
+
 ! 2012-02-10 - Marco Clemencic
  - Minor clean up in IAccept.
 
