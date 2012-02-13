@@ -4,7 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingSelections v3r10 2012-02-09 =========================
+!========================= StrippingSelections v3r10 2012-02-13 =========================
+! 2012-02-13 - Jibo He
+ - StrippingB2JpsiKShh.py
+  . Filter Jpsi firstly to save CPU time
+
 ! 2012-02-09 - Matthew M Reid
  - Modified decay descriptor to stop duplication of charge conjugate states
 

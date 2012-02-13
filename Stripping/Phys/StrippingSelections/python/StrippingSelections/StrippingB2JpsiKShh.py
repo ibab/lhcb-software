@@ -248,7 +248,7 @@ class B2JpsiKShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2JpsiKSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.selJpsi, self.pions, self.kaons ])
+        self.selB2JpsiKSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2DD, self.kaons, self.pions ])
 
 ################################################################################################################################################
     def makeB2JpsiKSLLhh( self, name, config ) :
@@ -286,4 +286,4 @@ class B2JpsiKShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2JpsiKSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.selJpsi, self.pions, self.kaons ])
+        self.selB2JpsiKSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2LL, self.kaons, self.pions ])
