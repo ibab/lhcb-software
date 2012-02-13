@@ -15,7 +15,7 @@ __all__ = 'B2JpsiKShhConf'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
@@ -107,6 +107,9 @@ class B2JpsiKShhConf(LineBuilder) :
 
         self.pions = Pions
         self.kaons = Kaons
+
+        self.hadrons = MergedSelection("HadronsFor" + name,
+                                       RequiredSelections = [ self.pions, self.kaons ] )
 
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )
@@ -248,7 +251,7 @@ class B2JpsiKShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2JpsiKSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2DD, self.kaons, self.pions ])
+        self.selB2JpsiKSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2DD, self.hadrons ])
 
 ################################################################################################################################################
     def makeB2JpsiKSLLhh( self, name, config ) :
@@ -286,4 +289,4 @@ class B2JpsiKShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2JpsiKSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2LL, self.kaons, self.pions ])
+        self.selB2JpsiKSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selJpsi, self.selKS2LL, self.hadrons ])
