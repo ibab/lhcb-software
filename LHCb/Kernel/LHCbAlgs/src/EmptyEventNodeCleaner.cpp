@@ -34,12 +34,13 @@ EmptyEventNodeCleaner::~EmptyEventNodeCleaner() {}
 //=============================================================================
 StatusCode EmptyEventNodeCleaner::execute()
 {
-  // Root of the TES
-  DataObject * root = get<DataObject*>( m_inputStream );
+  // Try and load the root DataObject for the configured stream
+  SmartDataPtr<DataObject> root( eventSvc(), m_inputStream );
 
-  // recursively clean
+  // if found, recursively clean
   if ( root ) cleanNodes( root, m_inputStream );
 
+  // return
   return StatusCode::SUCCESS;
 }
 
