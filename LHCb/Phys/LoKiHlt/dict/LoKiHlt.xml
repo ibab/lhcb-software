@@ -1,5 +1,4 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.11 2010-05-18 07:13:33 cattanem Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -29,7 +28,26 @@
   <class pattern   = "LoKi::Dicts::*Ops_<*LHCb::ODIN*>"    />
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::ODIN*>"   />
   
-  <class pattern   = "LoKi::Odin::*"   />
+  <class name = "LoKi::Odin::Orbit" />
+  <class name = "LoKi::Odin::EventType" />
+  <class name = "LoKi::Odin::Prescale" />
+  <class name = "LoKi::Odin::BunchId" />
+  <class name = "LoKi::Odin::TriggerType" />
+  <class name = "LoKi::Odin::TrgConfKey" />
+  <class name = "LoKi::Odin::ForceBit" />
+  <class name = "LoKi::Odin::RoutingBits" />
+  <class name = "LoKi::Odin::BXType" />
+  <class name = "LoKi::Odin::ReadOutType" />
+  <class name = "LoKi::Odin::RunNumber" />
+  <class name = "LoKi::Odin::EvtNumber" />
+  <class name = "LoKi::Odin::BunchCurrent" />
+  <class name = "LoKi::Odin::ErrorBits" />
+  <class name = "LoKi::Odin::Run" />
+  <class name = "LoKi::Odin::BXId" />
+  <class name = "LoKi::Odin::InTime" />
+  <class name = "LoKi::Odin::RunEvtNumber" />
+  <class name = "LoKi::Odin::CalibrationStep" />
+  <class name = "LoKi::Odin::Tck" />
 
   <class name = "LoKi::Functor<const LHCb::L0DUReport*,double>" />
   <class name = "LoKi::Functor<const LHCb::L0DUReport*,bool>"   />
@@ -67,11 +85,10 @@
   
   <enum name="LHCb::L0DUDecision::Type" />
   
-  <class name = "LoKi::Odin::RunEvtNumber::runevt_pair" /> 
-  <class name = "LoKi::Odin::RunEvtNumber::runevt_list" /> 
-   
-  <class pattern = "std::vector<unsigned long long,*>" /> 
-  
+  <class name = "std::vector<unsigned long long>" />
+  <class name = "std::pair<unsigned int,unsigned long long>" />
+  <class name = "std::vector<std::pair<unsigned int,unsigned long long> >" />
+
   <exclusion>
     
     <class name="LoKi::HLT::RoutingBits::Bits"     />
