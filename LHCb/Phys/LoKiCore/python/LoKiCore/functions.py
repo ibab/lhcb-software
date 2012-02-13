@@ -1063,8 +1063,46 @@ def mark ( tree ) :
     return tree.__mark__()
 
 # =============================================================================
+# make various vectors 
+# =============================================================================
+## build vector of certain type  
+def _make_vct_ ( results             ,
+                 arg1                ,
+                 func = lambda v,a : s.push_back ( a ) ,
+                 *arg                ) :
+    """
+    Make vector/container of certain type from the arguments 
+    """
+    ## 
+    if issubclass ( type ( arg1 ) , ( list , tuple, set ) ) :
+        for a in arg1 : results = func ( results , a    ) 
+    else :              results = func ( results , arg1 ) 
+    ##
+    if arg : return _make_vct_ ( results , arg[0] , func , *arg[1:] )
+    ##
+    return results
+
+# ==============================================================================
+## check the arguments for presense of some elements
+def _check_arg_ ( check , 
+                  arg1  ,
+                  *arg  ) :
+    """
+    Check the arguments
+    """
+    if issubclass ( type ( arg1 ) , ( list , tuple, set ) ) :
+        for a in arg1 :
+            if check ( a    ) : return True  
+    elif       check ( arg1 ) : return True  
+    ##
+    if arg : return _check_arg_ ( check , arg[0] , *arg[1:] )
+    ##
+    return False
+
+
+# =============================================================================
 ## construct std::vector<std::string> from the arguments 
-def strings ( arg1 , *args ) :
+def strings ( arg1 , *arg ) :
     """
     Construct the std::vector<std::string> from the arguments
     
@@ -1073,21 +1111,16 @@ def strings ( arg1 , *args ) :
     >>> v3 = strings ( [ 'sadfsdf' , 'sadf' , 'afadf' ] )
     
     """
-    from LoKiCore.basic import std
-    _vt = std.vector('std::string')
-    vct = _vt () 
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( str ( a ) )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
+    VT  = std.vector('std::string')
+    vct = VT()
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v.push_back ( str ( s ) ) ,
+                        *arg ) 
 
 # =============================================================================
 ## construct std::vector<double> from the arguments 
-def doubles ( arg1 , *args ) :
+def doubles ( arg1 , *arg ) :
     """
     Construct the std::vector<double> from the arguments
     
@@ -1096,21 +1129,16 @@ def doubles ( arg1 , *args ) :
     >>> v3 = doubles ( [ 1.01 , 1.02 , 1.03 ] )
     
     """
-    from LoKiCore.basic import std
-    _vt = std.vector('double')
-    vct = _vt () 
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
+    VT  = std.vector('double')
+    vct = VT()
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v.push_back ( float ( s ) ) ,
+                        *arg ) 
 
 # =============================================================================
 ## construct std::vector<int> from the arguments 
-def ints ( arg1 , *args ) :
+def ints ( arg1 , *arg ) :
     """
     Construct the std::vector<int> from the arguments
     
@@ -1119,22 +1147,16 @@ def ints ( arg1 , *args ) :
     >>> v3 = ints ( [ 1 , 2 , 3 ] )
     
     """
-    from LoKiCore.basic import std
-    _vt = std.vector('int')
-    vct = _vt ()
-    #
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
+    VT  = std.vector('int')
+    vct = VT()
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v.push_back ( int ( s ) ) ,
+                        *arg ) 
 
 # =============================================================================
 ## construct std::vector<unsigned int> from the arguments 
-def uints ( arg1 , *args ) :
+def uints ( arg1 , *arg ) :
     """
     Construct the std::vector<unsigned int> from the arguments
     
@@ -1143,124 +1165,43 @@ def uints ( arg1 , *args ) :
     >>> v3 = uints ( [ 1 , 2 , 3 ] )
     
     """
-    from LoKiCore.basic import std
-    _vt = std.vector('unsigned int')
-    vct = _vt ()
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
+    VT  = std.vector('unsigned int')
+    vct = VT()
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v.push_back ( int ( s ) ) ,
+                        *arg ) 
 
 # =============================================================================
-## construct std::vector<long long> from the arguments 
-def llongs ( arg1 , *args ) :
+## check the presence of at least one string argument:
+def _has_string ( arg1 , *arg ) :
     """
-    Construct the std::vector<long long> from the arguments
-    
-    >>> v1 = llongs ( 1 )
-    >>> v2 = llongs ( 1 , 1 , 10  )
-    >>> v3 = llongs ( [ 1 , 2 , 3 ] )
-    
+    Check the presence of at least one string argument 
     """
-    from LoKiCore.basic import std
-    _vt = std.vector('long long')
-    vct = _vt ()
-    #
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
-
-# =============================================================================
-## construct std::vector<unsigned long long> from the arguments 
-def ullongs ( arg1 , *args ) :
-    """
-    Construct the std::vector<unsigned long long> from the arguments
-    
-    >>> v1 = ullongs ( 1 )
-    >>> v2 = ullongs ( 1 , 1 , 10  )
-    >>> v3 = ullongs ( [ 1 , 2 , 3 ] )
-    
-    """
-    from LoKiCore.basic import std
-    _vt = std.vector('unsigned long long')
-    vct = _vt ()
-    #
-    #
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 : vct.push_back ( a    )
-    else :              vct.push_back ( arg1 ) 
-    #
-    for a in args : vct.push_back ( a )
-    #
-    return vct 
-
-# =============================================================================
-## check the presence of at leatst one string argument:
-def _has_string ( arg1 , *args ) :
-    ##
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 :
-            if issubclass ( type(a) , str ) : return True
-    elif issubclass ( type(arg1) , str )    : return True
-    ## 
-    for a in args :
-        if issubclass ( type(a) , str ) : return True
-    ##
-    return False
+    return _check_arg_  ( lambda s : issubclass ( type(s) , str ) ,
+                          arg1 ,
+                          *arg ) 
 
 ## ============================================================================
-## check the presence of at leatst one float argument:
-def _has_float ( arg1 , *args ) :
+## check the presence of at least one float argument:
+def _has_float ( arg1 , *arg ) :
     ##
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 :
-            if   issubclass ( type(a) , float ) : return True
-    elif   isinstance ( arg1 , float ) : return True
-    ## 
-    for a in args :
-        if isinstance ( a , float ) : return True
-    ##
-    return False 
+    """
+    Check the presence of at least one float argument 
+    """
+    return _check_arg_  ( lambda s : issubclass ( type(s) , float ) ,
+                          arg1 ,
+                          *arg ) 
+
 ## ============================================================================
-def _has_long ( arg1 , *args ) :
+def _has_nega ( arg1 , *arg ) :
     ##
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 :
-            if issubclass ( type ( a ) , ( int ,long ) ) :
-                if a >=  2**32 : return True
-                if a <= -2**32 : return True
-    else:
-        if arg1 >=  2**32 : return True
-        if arg1 <= -2**32 : return True
-        
-    ## 
-    for a in args :
-        if issubclass ( type ( a ) , ( int , long ) ) : 
-            if a >=  2**32 : return True
-            if a <= -2**32 : return True
-    ##
-    return False
-## ============================================================================
-def _has_nega ( arg1 , *args ) :
-    ##
-    if issubclass ( type ( arg1 ) , ( list , tuple ) ) :
-        for a in arg1 :
-            if a < 0 : return True
-    elif arg1 < 0    : return True  
-    ## 
-    for a in args :
-        if a < 0 : return True
-    ##
-    return False 
+    """
+    Check the presence of at least one negative argument 
+    """
+    return _check_arg_  ( lambda s : s<0 ,
+                          arg1 ,
+                          *arg ) 
     
 # =============================================================================
 ## convert the "list" into C++ vector of primitives 
@@ -1278,19 +1219,13 @@ def vct_from_list  ( lst , *args ) :
     ##
     ok = True 
     try : 
-        if _hn : return ints    ( lst , *args )
+        if _hn : return  ints   ( lst , *args )
         else   : return uints   ( lst , *args )
     except TypeError :
         ok = False
         print ' Error here: ', lst, args  
         pass
     ##
-    if _has_long ( lst , *args ) or not ok : 
-        try : 
-            if _hn : return llongs  ( lst , *args )
-            else   : return ullongs ( lst , *args )
-        except TypeError      : pass
-    ## 
     return doubles ( lst , *args )
 
 
