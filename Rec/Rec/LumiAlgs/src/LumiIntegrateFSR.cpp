@@ -284,10 +284,10 @@ StatusCode LumiIntegrateFSR::add_file() {
       	    float factor = 0;     // indicates the primary BX - already used
       	    if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
       	      factor = 1.;
+              if ( m_calibCoefficients[LHCb::LumiMethods::CorrectionFlag] != 0) {
+                factor = 0;      // no subtraction of EE
       	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) {
       	      factor = -1.;
-              if ( m_calibRelative[LHCb::LumiMethods::CorrectionFlag] != 0) {
-                factor = 0;      // no subtraction of EE
               }
             }
       	    if ( factor != 0) {
