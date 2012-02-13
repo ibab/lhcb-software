@@ -169,6 +169,110 @@ namespace LoKi
      */
     const LoKi::Odin::EventType                                   ODIN_EVTTYP ;
     // ========================================================================
+    /** @var ODIN_EVTNUMBER
+     *  Simple checkfor event number 
+     *  @code
+     * 
+     *  const LHCb::ODIN* odin = ... ;
+     * 
+     *  // event number 
+     *  const ODIN_EVTNUMBER n1 = ODIN_EVTNUMBER ( 1 ) ;
+     * 
+     *  // event range 
+     *  const ODIN_EVTNUMBER n2 = ODIN_EVTNUMBER ( 1 , 10 ) ;
+     *
+     *  // event list
+     *  LoKi::Numbers::EvtNumList lst = ... 
+     *  const ODIN_EVTNUMBER n3 = ODIN_EVTNUMBER ( lst ) ;
+     * 
+     *  // use it!
+     *  
+     *  const bool ok1 = n1 ( odin ) ;
+     *  const bool ok2 = n2 ( odin ) ;
+     *  const bool ok3 = n3 ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Odin::EvtNumber 
+     *  @see LHCb::ODIN
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-02-13     
+     */
+    typedef LoKi::Odin::EvtNumber                              ODIN_EVTNUMBER ;
+    // ========================================================================
+    /** @var ODIN_RUNEVT
+     *  Simple checkfor event number 
+     *  @code
+     * 
+     *  const LHCb::ODIN* odin = ... ;
+     * 
+     *  // event number 
+     *  LoKi::Numbers::RunEvt e1 = ... ;
+     *  const ODIN_RUNEVT n1 = ODIN_RUNEVT ( e1 ) ;
+     * 
+     *  // event range 
+     *  LoKi::Numbers::RunEvt begin = ... ;
+     *  LoKi::Numbers::RunEvt end   = ... ;
+     *  const ODIN_RUNEVT n2 = ODIN_RUNEVT ( begin , end  ) ;
+     *
+     *  // event list
+     *  LoKi::Numbers::RunEvtList lst = ... 
+     *  const ODIN_RUNEVT n3 = ODIN_RUNEVT ( lst ) ;
+     * 
+     *  // use it!
+     *  
+     *  const bool ok1 = n1 ( odin ) ;
+     *  const bool ok2 = n2 ( odin ) ;
+     *  const bool ok3 = n3 ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Odin::RunEvtNumber 
+     *  @see LHCb::ODIN
+     *  @see LoKi::Cuts::ODIN_RUNEVTNUMBER 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-02-13     
+     */
+    typedef LoKi::Odin::RunEvtNumber                              ODIN_RUNEVT ;
+    // ========================================================================
+    /** @var ODIN_RUNEVT
+     *  Simple checkfor event number 
+     *  @code
+     * 
+     *  const LHCb::ODIN* odin = ... ;
+     * 
+     *  // event number 
+     *  LoKi::Numbers::RunEvt e1 = ... ;
+     *  const ODIN_RUNEVTNUMBER n1 = ODIN_RUNEVTNUMBER ( e1 ) ;
+     * 
+     *  // event range 
+     *  LoKi::Numbers::RunEvt begin = ... ;
+     *  LoKi::Numbers::RunEvt end   = ... ;
+     *  const ODIN_RUNEVTNUMBER n2 = ODIN_RUNEVTNUMBER ( begin , end  ) ;
+     *
+     *  // event list
+     *  LoKi::Numbers::RunEvtList lst = ... 
+     *  const ODIN_RUNEVTNUMBER n3 = ODIN_RUNEVTNUMBER ( lst ) ;
+     * 
+     *  // use it!
+     *  
+     *  const bool ok1 = n1 ( odin ) ;
+     *  const bool ok2 = n2 ( odin ) ;
+     *  const bool ok3 = n3 ( odin ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Odin::RunEvtNumber  
+     *  @see LoKi::Cuts::ODIN_RUNEVT 
+     *  @see LHCb::ODIN
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-02-13     
+     */
+    typedef LoKi::Odin::RunEvtNumber                        ODIN_RUNEVTNUMBER ;
+    // ========================================================================
     /** @var ODIN_ERRBITS
      *  Simple accessor to error bits 
      *  @code

@@ -16,9 +16,27 @@
 #include "LoKi/Odin.h"
 // ============================================================================
 /** @file 
+ *
  *  Implementation file for classes from namesapce LoKi::Odin
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @date 2008-09-17 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
  */
 // ============================================================================
 // the constructor from the start/stop times
@@ -331,23 +349,8 @@ LoKi::Odin::EvtNumber::EvtNumber
   , m_flag  ( List ) 
   , m_begin ( 0    ) 
   , m_end   ( 0    ) 
-  , m_evts  ( evts.begin() , evts.end() ) 
-{
-  std::sort ( m_evts.begin() , m_evts.end() ) ;
-}
-// ============================================================================
-// constructor from event list 
-// ============================================================================
-LoKi::Odin::EvtNumber::EvtNumber
-( const std::vector<unsigned int>& evts ) 
-  : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
-  , m_flag  ( List ) 
-  , m_begin ( 0    ) 
-  , m_end   ( 0    ) 
-  , m_evts  ( evts.begin() , evts.end() ) 
-{
-  std::sort ( m_evts.begin() , m_evts.end() ) ;
-}
+  , m_evts  ( evts ) 
+{}
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
@@ -366,20 +369,28 @@ LoKi::Odin::EvtNumber::operator()
   ( LoKi::Odin::EvtNumber::argument o ) const 
 {
   // 
+  event_type evt ( o->eventNumber() ) ;
+  //
   switch ( m_flag ) 
   {
   case One   : ;
   case Range :
-    return m_begin <= o->eventNumber() && o->eventNumber() < m_end ; // RETURN
+    //
+    return m_begin <= evt && evt < m_end ; // RETURN
+    //
   case List:
-    return std::binary_search 
-      ( m_evts.begin() , m_evts.end() , o->eventNumber() ) ;         // RETURN
+    //
+    return m_evts.contains ( evt )      ; // RETURN 
+    //
   default:
+    //
     break ;
   }
+  //
   return false ;
-
-}// ============================================================================
+  //
+}
+// ============================================================================
 // OPTIONAL: the nice printout 
 // ============================================================================
 std::ostream& LoKi::Odin::EvtNumber::fillStream ( std::ostream& s ) const 
@@ -417,19 +428,19 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
 // constructor from the run/event number 
 // ============================================================================
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
-( const LoKi::Odin::RunEvtNumber::runevt_pair& runevt )  
+( const LoKi::Odin::RunEvtNumber::runevt_type& runevt )  
   : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( One    ) 
   , m_begin   ( runevt ) 
-  , m_end     ( runevt.first , runevt.second + 1 ) 
+  , m_end     ( runevt.run() , runevt.evt() + 1 ) 
   , m_runevts (        ) 
 {}
 // ============================================================================
 // constructor from the run/event range
 // ============================================================================
 LoKi::Odin::RunEvtNumber::RunEvtNumber 
-( const LoKi::Odin::RunEvtNumber::runevt_pair& begin, 
-  const LoKi::Odin::RunEvtNumber::runevt_pair& end  ) 
+( const LoKi::Odin::RunEvtNumber::runevt_type& begin, 
+  const LoKi::Odin::RunEvtNumber::runevt_type& end  ) 
   : LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate() 
   , m_flag    ( Range ) 
   , m_begin   ( begin ) 
@@ -446,9 +457,7 @@ LoKi::Odin::RunEvtNumber::RunEvtNumber
   , m_begin   () 
   , m_end     () 
   , m_runevts ( runevts )  
-{
-  std::sort ( m_runevts.begin() , m_runevts.end() ) ;
-}
+{}
 // ============================================================================
 // MANDATORY: virtual destructor 
 // ============================================================================
@@ -467,7 +476,7 @@ LoKi::Odin::RunEvtNumber::operator()
   ( LoKi::Odin::RunEvtNumber::argument o ) const 
 {
   // 
-  runevt_pair runevt ( o->runNumber() , o->eventNumber() );
+  runevt_type runevt ( o->runNumber() , o->eventNumber() );
   //
   switch ( m_flag ) 
   {
@@ -478,8 +487,7 @@ LoKi::Odin::RunEvtNumber::operator()
     //
   case List:
     //
-    return std::binary_search 
-      ( m_runevts.begin() , m_runevts.end() , runevt ) ;              // RETURN
+    return m_runevts.contains ( runevt ) ;                            // RETURN 
     //
   default:
     break ;
@@ -491,13 +499,13 @@ LoKi::Odin::RunEvtNumber::operator()
 // ============================================================================
 std::ostream& LoKi::Odin::RunEvtNumber::fillStream ( std::ostream& s ) const 
 {
-  s << "ODIN_RUNEVTNUMBER ( " ;
+  s << "ODIN_RUNEVT ( " ;
   //
   switch ( m_flag ) 
   {
   case One :
     //
-    return s << m_begin.first << " , " << m_begin.second << " ) " ; // RETURN 
+    return s << m_begin.run() << " , " << m_begin.event() << " ) " ; // RETURN 
     //
   case Range :
     //
@@ -507,7 +515,7 @@ std::ostream& LoKi::Odin::RunEvtNumber::fillStream ( std::ostream& s ) const
     //
   case List :
     //
-    return s << Gaudi::Utils::toString ( m_runevts ) << " ) " ;       // RETURN
+    return Gaudi::Utils::toStream ( m_runevts , s ) << " ) " ;       // RETURN
     //
   default: break ;
   }

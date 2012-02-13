@@ -15,6 +15,7 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
 __version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  "
 # =============================================================================
 
+
 import LoKiCore.decorators as _LoKiCore 
 
 # Namespaces:
@@ -26,6 +27,7 @@ LHCb     = _LoKiCore.LHCb
 _o1  = 'const LHCb::ODIN*'
 _l0  = 'const LHCb::L0DUReport*'
 _hlt = 'const LHCb::HltDecReports*'
+
 
 # =============================================================================
 ## "The main" types
@@ -165,8 +167,11 @@ L0_VALID         = LoKi.L0.Valid()
 ## @see LoKi::Cuts::ODIN_ALL
 ODIN_ALL       = LoKi.Constant( _o1 + ',bool'  ) ( True  )
 
+
+
 ## @see LoKi::Cuts::ODIN_BUNCH
 ODIN_BUNCH     = LoKi.Odin.BunchId      ()
+
 
 ## @see LoKi::Cuts::ODIN_BXCURRENT
 ODIN_BXCURRENT = LoKi.Odin.BunchCurrent ()
@@ -190,7 +195,6 @@ ODIN_EVTTYP    = LoKi.Odin.EventType ()
 ODIN_ERRBITS   = LoKi.Odin.ErrorBits () 
 
 
-
 ## @see LoKi::Cuts::ODIN_FALSE
 ODIN_FALSE     = LoKi.Constant( _o1 + ',bool'  ) ( False )
 
@@ -212,21 +216,21 @@ ODIN_PRESCALE  = LoKi.Odin.Prescale
 ## @see LoKi::Cuts::ODIN_ROTYP
 ODIN_ROTYP     = LoKi.Odin.ReadOutType () 
 
+
 ## @see LoKi::Cuts::ODIN_RUN 
 ODIN_RUN       = LoKi.Odin.Run ()
 
 ## @see LoKi::Cuts::ODIN_RUNNUMBER 
 ODIN_RUNNUMBER = LoKi.Odin.RunNumber 
-ODIN_RUNNUMBER.run_list   = std.vector     ('unsigned int') 
 
 ## @see LoKi::Cuts::ODIN_EVTNUMBER 
 ODIN_EVTNUMBER = LoKi.Odin.EvtNumber 
-ODIN_EVTNUMBER.event_list   = std.vector   ('unsigned long long') 
 
 ## @see LoKi::Cuts::ODIN_RUNEVTNUMBER 
 ODIN_RUNEVTNUMBER = LoKi.Odin.RunEvtNumber 
-ODIN_RUNEVTNUMBER.runevt_pair = std.pair   ( 'unsigned int' , 'unsigned long long' )
-ODIN_RUNEVTNUMBER.runevt_list = std.vector (  ODIN_RUNEVTNUMBER.runevt_pair )
+## @see LoKi::Cuts::ODIN_RUNEVT
+ODIN_RUNEVT       = LoKi.Odin.RunEvtNumber 
+
 
 ## @see LoKi::Cuts::ODIN_TCK
 ODIN_TCK       = LoKi.Odin.TrgConfKey () 
@@ -248,7 +252,6 @@ ODIN_ZERO      = LoKi.Constant( _o1 + ',double') ( 0 )
 
 ## @see LoKi::Cuts::ODIN_ROUTINBITS
 ODIN_ROUTINGBITS    = LoKi.Odin.RoutingBits
-
 
 
 # =============================================================================
@@ -329,32 +332,125 @@ HLT_COUNT_ERRORBITS_RE = LoKi.HLT.CountErrorBitsRegex
 HLT_ROUTINGBITS        = LoKi.HLT.HltRoutingBits
 
 
+
+
+
 ## @see LoKi::Cuts::ROUTINBITS
 ROUTINGBITS            = LoKi.HLT.RoutingBits
 
-# =========================================================================
+## @see LoKi::Numbers::EvtNum 
+EvtNum     = LoKi.Numbers.EvtNum 
+## @see LoKi::Numbers::EvtNumList
+EvtNumList = LoKi.Numbers.EvtNumList 
+## @see LoKi::Numbers::RunEvt
+RunEvt     = LoKi.Numbers.RunEvt
+## @see LoKi::Numbers::RunEvtList
+RunEvtList = LoKi.Numbers.RunEvtList 
+
+## Make event-number list from fragments :
+def _add_1_ ( o1 , o2 ) :
+    """
+    Make event-number list from fragments :
+    >>> o1 = ...
+    >>> o2 = ...
+    >>> o  = o1 + o2 
+    """
+    return LoKi.Numbers.add1 ( o1 , o2 )
+
+## Make event-number list from fragments :
+def _add_2_ ( o1 , o2 ) :
+    """
+    Make run/event list from fragments :
+    >>> o1 = ...
+    >>> o2 = ...
+    >>> o  = o1 + o2 
+    """
+    return LoKi.Numbers.add2 ( o1 , o2 )
+
+_add_1_  . __doc__ += '\n' + LoKi.Numbers.add1.__doc__
+_add_2_  . __doc__ += '\n' + LoKi.Numbers.add2.__doc__
+
+def _iter_ ( s ) :
+    """
+    Iterate over (run)event list
+    """
+    _s = len ( s )
+    _i = 0
+    while _i < _s :
+        yield s.at( _i )
+        _i += 1
+        
+for t in ( EvtNum , EvtNumList ) :
+    t.__add__  = _add_1_
+    t.__radd__ = _add_1_
+    
+for t in ( RunEvt , RunEvtList ) :
+    t.__add__  = _add_2_
+    t.__radd__ = _add_2_
+
+for t in ( EvtNumList , RunEvtList ) :
+    t.__len__      = t.size 
+    t.__iter__     = _iter_
+    t.__contains__ = t.contains  
+
+for t in ( EvtNum , EvtNumList ,
+           RunEvt , RunEvtList ) :
+    t.__str__  = t.toString
+    t.__repr__ = t.toString
+    t.__hash__ = t.hash
+    if hasattr ( t , '__cpp_eq__' ) :  t.__eq__   = t.__cpp_eq__
+    if hasattr ( t , '__cpp_ne__' ) :  t.__ne__   = t.__cpp_ne__
+
+
+# =============================================================================
+## build the vector of event-numbers from fragments 
+def evtnum_lst ( arg1 , *arg ) :
+    """
+    Build the vector of event-numbers from fragments
+    """
+    from LoKiCore.functions import _make_vct_ 
+    vct = EvtNumList () 
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v + s ,
+                        *arg )
+
+# =============================================================================
+## build the vector of event-numbers from fragments 
+def runevt_lst ( arg1 , *arg ) :
+    """
+    Build the vector of event-numbers from fragments
+    """
+    from LoKiCore.functions import _make_vct_ 
+    vct = RunEvtList ()
+    ## 
+    return _make_vct_ ( vct  ,
+                        arg1 ,
+                        lambda v,s : v + s ,
+                        *arg ) 
+    
+# =============================================================================
 ## helper function to define properly ODIN_EVTNUMBER predicate
 #  @see LoKi::Cuts::ODIN_EVTNUMBER
 #  @see LoKi::Odin::EvtNumber
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2010-03-07
-def odin_events ( arg1 , *args ) :
+def odin_events ( arg1 , *arg ) :
     """
     Helper function to define properly ODIN_EVTNUMBER predicate
     """
+    if   0 == len ( arg ) and issubclass ( type(arg1) , ( int , long , EvtNum ) ) : 
+        return ODIN_EVTNUMBER ( EvtNum ( arg1 ) )
+    elif 1 == len ( arg ) :
+        if issubclass ( type(arg1) , ( int , long , EvtNum ) ) :
+            arg2=arg[0]
+            if issubclass ( type(arg2) , ( int , long , EvtNum ) ) :
+                return ODIN_EVTNUMBER ( EvtNum ( arg1 )  , EvtNum ( arg2  ) )
+        raise TypeError ("invalid signature")
     
-    if   0 == len ( args ) and issubclass ( type(arg1) , ( int , long ) ) : 
-        return ODIN_EVTNUMBER ( arg1 )
-    elif 1 == len ( args ) :
-        if issubclass ( type(arg1) , ( int , long ) ) :
-            arg2=args[0]
-            if issubclass ( type(arg2) , ( int , long ) ) :
-                return ODIN_EVTNUMBER ( arg1 , arg2 )
-        raise TypeError ("invalid signature") 
-                        
-    from LoKiCore.functions import ullongs    
-    evts = ullongs ( arg1 , *args )
-    
+    ##
+    evts = evtnum_lst ( arg1 , *arg ) 
+    ##
     return ODIN_EVTNUMBER ( evts )
 
 # =========================================================================
@@ -377,10 +473,11 @@ def odin_runs ( arg1 , *args ) :
                 return ODIN_RUNNUMBER ( arg1 , arg2 )
         raise TypeError ("invalid signature") 
                         
-    from LoKiCore.functions import uints
-    evts = uints ( arg1 , *args )
+    from LoKiCore.functions import uings 
+
+    runs = uints ( arg1 , *args )
     
-    return ODIN_RUNNUMBER ( evts )
+    return ODIN_RUNNUMBER ( runs )
 
 
 # =========================================================================
@@ -389,21 +486,22 @@ def odin_runs ( arg1 , *args ) :
 #  @see LoKi::Odin::RunEvtNumber
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date 2010-03-07
-def odin_runevts ( arg1 ) :
+def odin_runevts ( arg1 , *arg ) :
     """
     Helper function to define properly ODIN_RUNEVTNUMBER predicate
     """
-    _rep = ODIN_RUNEVTNUMBER.RunEvtPair
-    _rel = ODIN_RUNEVTNUMBER.RunEvtList
-
-    if issubclass ( type ( arg1 ) , _rel ) :
-        return ODIN_RUNEVTNUMBER ( arg1 )
-    
-    rel = _rel()
-    for a in arg1 :
-        rel.push_back( _rep( a[0] , a[1] ) ) 
+    if   0 == len ( arg ) and issubclass ( type(arg1) ,  ( RunEvt , RunEvtList ) ) : 
+        return ODIN_RUNEVT ( arg1 )
+    elif 1 == len ( arg ) :
+        if issubclass ( type(arg1) , EvtRun  ) :
+            arg2=arg[0]
+            if issubclass ( type(arg2) , EvtRun  ) :
+                return ODIN_RUNEVT ( arg1 , arg2 )
+        raise TypeError ("invalid signature") 
+                        
+    evts = runevt_lst ( arg1 , *arg ) 
         
-    return ODIN_RUNEVTNUMBER( rel )
+    return ODIN_RUNEVT ( evts )
     
 # =============================================================================
 ## helper function to define (void)functor  for routing bits 
