@@ -166,10 +166,5 @@ private:
    StatusCode garbage();
 
    File* createFile( const std::string& filename );
-
-   bool createPFN( std::string& remote, std::string& command );
-
-   bool createLFN( std::string& remote, std::string& command );
-
 };
 #endif // FILESTAGER_H

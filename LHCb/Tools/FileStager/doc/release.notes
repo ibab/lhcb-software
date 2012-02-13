@@ -4,6 +4,12 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+! 2012-02-13 - Roel Aaij
+ - Move two descriptor mangling functions into a separate library
+ - Move source files around.
+ - Add hash_particle.exe which outputs the temporary filename used for a given
+   PFN or LFN.
+
 !========================= FileStager v1r6 2011-12-14 =========================
 ! 2011-12-09 - Marco Cattaneo
  - In requirements:

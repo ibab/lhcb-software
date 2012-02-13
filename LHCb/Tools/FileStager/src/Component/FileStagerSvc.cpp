@@ -35,6 +35,7 @@
 #include <boost/iostreams/stream.hpp>
 
 // local
+#include <FileStager/FileStagerFunctions.h>
 #include "File.h"
 #include "FileStagerSvc.h"
 
@@ -696,14 +697,14 @@ File* FileStagerSvc::createFile( const string& filename )
       // convert LFN to lowercase
       ba::erase_range( file, result );
       remote = file;
-      success = createLFN( remote, command );
+      success = FileStager::createLFN( remote, command );
    } else if ( result = ba::find_first( file, "PFN:" ) ) {
       // strip PFN
       ba::erase_range( file, result );
       remote = file;
-      success = createPFN( remote, command );
+      success = FileStager::createPFN( remote, command, m_stageLocalFiles );
    } else {
-      success = createPFN( remote, command );
+      success = FileStager::createPFN( remote, command, m_stageLocalFiles );
    }
 
    if ( !success ) {
@@ -737,95 +738,6 @@ File* FileStagerSvc::createFile( const string& filename )
       f->setGood( true );
    }
    return f;
-}
-
-//=============================================================================
-bool FileStagerSvc::createPFN( string& remote, string& command )
-{
-   boost::match_flag_type flags = match_default;
-   boost::match_results< string::iterator > match;
-   boost::regex re( "^(root:)((?:root:)|(?:dcap:))" );
-
-   boost::iterator_range< string::iterator > result;
-   if ( result = ba::find_first( remote, "gfal:" ) ) {
-      // strip gfal:
-      ba::erase_range( remote, result );
-   } else if ( regex_search( remote.begin(), remote.end(), match, re, flags ) ) {
-      // in case of root:root: or root:dcap, remove the first root
-      boost::iterator_range< string::iterator >
-         range( match[ 1 ].first, match[ 1 ].second );
-      ba::erase_range( remote, range );
-   } else if ( result = ba::find_first( remote, "mdf:" ) ) {
-      // strip mdf:
-      ba::erase_range( remote, result );
-   }
-
-   re = "^((?:rfio)|(?:castor):)//(?:\\w\\.\\w\\.\\w:\\d+/+castor)";
-   if ( regex_search( remote.begin(), remote.end(), match, re, flags ) ) {
-      boost::iterator_range< string::iterator >
-         range( match[ 1 ].first, match[ 1 ].second );
-      ba::replace_range( remote, range, "rfio:" );
-      command = "rfcp";
-      return true;
-   } else if ( result = ba::find_first( remote, "castor:" ) ) {
-      // erase castor
-      ba::erase_range( remote, result );
-      command = "rfcp";
-      return true;
-   } else if ( result = ba::find_first( remote, "rfio:" ) ) {
-      // erase rfio
-      ba::erase_range( remote, result );
-      command = "rfcp";
-      return true;
-   } else if ( result = ba::find_first( remote, "root:" ) ) {
-      // xrootd needs no changes, command is xrdcp
-      command = "xrdcp -s";
-      return true;
-   } else if ( result = ba::find_first( remote, "srm:" ) ) {
-      // srm does not need changes, command is lcg-cp
-      command = "lcg-cp -V lhcb";
-      return true;
-   } else if ( result = ba::find_first( remote, "dcap:" ) ) {
-      // gsidcap or dcap needs no changes, command is dccp
-      command = "dccp -A";
-      return true;
-   } else if ( result = ba::find_first( remote, "/castor" ) ) {
-      // castor file, no protocol specification
-      command = "rfcp";
-      return true;
-  } else if ( m_stageLocalFiles && ( result = ba::find_first( remote, "file:" ) ) ) {
-      // local file, perhaps nfs or other networked filesystem
-      ba::erase_range( remote, result );
-      command = "cp";
-      return true;
-   } else if ( m_stageLocalFiles ) {
-      // assume local file, perhaps nfs or other networked filesystem
-      command = "cp";
-      return true;
-   }
-   return false;
-}
-
-//=============================================================================
-bool FileStagerSvc::createLFN( string& remote, string& command )
-{
-   // The input are only lfns which are not in the catalog.
-
-   boost::iterator_range< string::iterator > result;
-   if ( result = ba::find_first( remote, "gfal:" ) ) {
-      // strip gfal
-      ba::erase_range( remote, result );
-   }
-
-   // Add /grid to start of lfn path
-   if ( remote.substr( 0, 5 ) != "/grid" ) {
-      remote = "/grid" + remote;
-   }
-   // add lfn: to remote
-   remote = "lfn:" + remote;
-
-   command = "lcg-cp -V lhcb";
-   return true;
 }
 
 #else
@@ -907,17 +819,5 @@ StatusCode FileStagerSvc::garbage()
 File* FileStagerSvc::createFile( const string& )
 {
    return 0;
-}
-
-//=============================================================================
-bool FileStagerSvc::createPFN( string&, string& )
-{
-   return false;
-}
-
-//=============================================================================
-bool FileStagerSvc::createLFN( string&, string& )
-{
-   return false;
 }
 #endif
