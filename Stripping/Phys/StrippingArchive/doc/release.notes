@@ -4,7 +4,10 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingArchive v1r6 2012-02-10 =========================
+!========================= StrippingArchive v1r6 2012-02-13 =========================
+! 2012-02-13 - Jibo He
+ - Recopied Stripping17b
+
 ! 2012-02-10 - Jibo He
  - Updated the tests refs 
 
