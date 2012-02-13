@@ -269,7 +269,18 @@ GVTIME     = LoKi.GenVertices.PositionT()
 ## @see LoKi::Cuts::GVCOUNT
 GVCOUNT    = LoKi.GenVertices.CountIF
 ## @see LoKi::Cuts::GVSUM
-GVSUM      = LoKi.GenVertices.SumIF 
+GVSUM      = LoKi.GenVertices.SumIF
+
+## @see LoKi::Cuts::GVX 
+GVX        = LoKi.GenVertices.PositionX () 
+## @see LoKi::Cuts::GVY 
+GVY        = LoKi.GenVertices.PositionY () 
+## @see LoKi::Cuts::GVZ 
+GVZ        = LoKi.GenVertices.PositionZ () 
+## @see LoKi::Cuts::GVRHO
+GVRHO      = LoKi.GenVertices.Rho       ()  
+## @see LoKi::Cuts::GVT
+GVT        = LoKi.GenVertices.PositionT()
 
 ## @see LoKi::Cuts::GCOSPOL
 GCOSPOL     = LoKi.GenParticles.PolarizationAngle 
@@ -287,8 +298,6 @@ GSINPHITR   = LoKi.GenParticles.SinPhiTr
 GCOSPHITR   = LoKi.GenParticles.CosPhiTr
 ## @see LoKi::Cuts::GANGLEPHITR 
 GANGLEPHITR = LoKi.GenParticles.AnglePhiTr
-
-
 
 
 ## functional part

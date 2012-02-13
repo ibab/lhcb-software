@@ -178,6 +178,32 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Rho
+     *
+     *  the most primitive function - it return the rho-position (cylindrical) 
+     *  HepMC::GenVertex object
+     *
+     *  @see LoKi::Cuts::GVRHO
+     *  @see HepMC::GenVertex
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2012-02-13
+     */
+    class GAUDI_API Rho : public LoKi::GenTypes::GVFunc 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: clone method ("virtual" constructor")
+      virtual  Rho* clone() const ;
+      /// MANDATORY: virtual destructor 
+      virtual ~Rho() ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
     // ========================================================================    
     /** @class CountIF
      *  simple class which counts how many particles 

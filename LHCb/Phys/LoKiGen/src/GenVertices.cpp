@@ -179,6 +179,39 @@ LoKi::GenVertices::PositionT::operator()
 std::ostream& 
 LoKi::GenVertices::PositionT::fillStream( std::ostream& stream ) const 
 { return stream << "GVT" ; }
+
+
+// ============================================================================
+//  MANDATORY: clone method ("virtual" constructor")
+// ============================================================================
+LoKi::GenVertices::Rho*
+LoKi::GenVertices::Rho:: clone() const 
+{ return new Rho ( *this ) ; }
+// ============================================================================
+//  MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::GenVertices::Rho::~Rho(){}
+// ============================================================================
+//  MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenVertices::Rho::result_type 
+LoKi::GenVertices::Rho::operator() 
+  ( LoKi::GenVertices::Rho::argument v ) const 
+{
+  if ( 0 == v ) 
+  {
+    Error ( "HepMC::GenVertex* points to NULL; return 'InvalidDistance'" ) ;
+    return LoKi::Constants::InvalidDistance ;
+  }
+  return v->position().perp() ;  
+} 
+// ============================================================================
+//  "SHORT" representation, @see LoKi::AuxFunBase
+// ============================================================================
+std::ostream& 
+LoKi::GenVertices::Rho::fillStream( std::ostream& stream ) const 
+{ return stream << "GVRHO" ; }
+
 // ============================================================================
 /*  constructor from the criteria and "range"
  *  @param cut the criteria

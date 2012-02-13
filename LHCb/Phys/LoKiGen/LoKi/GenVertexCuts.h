@@ -178,6 +178,16 @@ namespace LoKi
      */     
     const   LoKi::GenVertices::PositionZ                   GVZ    ;
     // ========================================================================
+    /** @var GVRHO
+     *  trivial function which returns the rho(zylindrical)-position of 
+     *  HepMC::GenVertex 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::GenVertices::Rho
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-02-13
+     */     
+    const   LoKi::GenVertices::Rho                        GVRHO  ;
+    // ========================================================================
     /** @var GVT
      *  trivial function which returns the T-position of 
      *  HepMC::GenVertex 
