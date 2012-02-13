@@ -170,7 +170,7 @@ ConversionDODMapper::algorithmForPath(const std::string & path)
       std::ostringstream msg;
       msg << " -> Unknown packer algorithm for ClassID " << obj->clID()
           << " (" << System::typeinfoName(typeid(*obj)) << "), IGNORED";
-      Warning(msg.str()).ignore();
+      Warning(msg.str(),StatusCode::SUCCESS).ignore();
 
     }
   }

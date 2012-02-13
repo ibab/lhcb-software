@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-02-13 - Chris Jones
+ - Protect PackParticlesAndVertices against completely missing streams
+
 ! 2012-02-06 - Chris Jones
  - Add a new mapping tool to support the many to one Particle and Vertex packer
 

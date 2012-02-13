@@ -12,7 +12,6 @@
 //
 // 17/01/2012: Marco Clemencic
 // ----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(ParticlesAndVerticesMapper)
 
 #define ON_VERBOSE if (UNLIKELY(msgLevel(MSG::VERBOSE)))
 #define ON_DEBUG   if (UNLIKELY(msgLevel(MSG::DEBUG)))
@@ -22,12 +21,13 @@ DECLARE_TOOL_FACTORY(ParticlesAndVerticesMapper)
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-  ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
-                                                         const std::string& name,
-                                                         const IInterface* parent)
-    : base_class(type, name, parent)
+ParticlesAndVerticesMapper::ParticlesAndVerticesMapper(const std::string& type,
+                                                       const std::string& name,
+                                                       const IInterface* parent)
+  : base_class(type, name, parent)
 {
-  declareProperty( "UnpackerType", m_unpackerType = "UnpackParticlesAndVertices" );
+  declareProperty( "UnpackerType",
+                   m_unpackerType = "UnpackParticlesAndVertices" );
 }
 
 // ============================================================================
@@ -72,7 +72,7 @@ void ParticlesAndVerticesMapper::handle ( const Incident& )
 // ============================================================================
 
 Gaudi::Utils::TypeNameString
-ParticlesAndVerticesMapper::algorithmForPath(const std::string & path)
+ParticlesAndVerticesMapper::algorithmForPath( const std::string & path )
 {
   LOG_VERBOSE << "ParticlesAndVerticesMapper::algorithmForPath '"
               << path << "'" << endmsg;
@@ -240,5 +240,9 @@ ParticlesAndVerticesMapper::streamName( const std::string & path ) const
   const std::string::size_type slash = tmp.find_first_of( "/" );
   return tmp.substr(0,slash);
 }
+
+// ============================================================================
+
+DECLARE_TOOL_FACTORY(ParticlesAndVerticesMapper)
 
 // ============================================================================
