@@ -1,0 +1,18 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/TMVASelections
+! Responsible : Stripping coordinators 
+! Purpose     : To accommodate all TMVA based selections used in stripping
+!-----------------------------------------------------------------------------
+
+!========================= TMVASelections v1r0 2012-02-09 =========================
+
+! 2012-02-07 - Jibo He
+ - Updated requirements file to use TMVAWeights package
+
+! 2012-02-05 - Jibo He
+ - Removed "BPV" things to fix the segmentation problem:
+   https://savannah.cern.ch/bugs/index.php?91172
+
+! 2012-02-01 - Jibo He
+ - Created the package
+ - Added BDT selections for Bd->eeKstar

@@ -1,0 +1,38 @@
+#============================================================================
+# Created    : 2012-01-19
+# Maintainer : Stripping coordinators 
+#============================================================================
+package           TMVASelections
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use GaudiKernel         v*
+use GaudiAlg            v*
+use DaVinciKernel       v*  Phys
+use LoKi                v*  Phys
+use TMVAWeights         v* 
+
+private 
+macro_append   ROOT_linkopts   " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
+ WIN32   " libMLP.lib libTMVA.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
+
+end_private
+
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TMVASelections    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TMVASelections
