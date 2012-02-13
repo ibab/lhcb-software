@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-13 - Jaap Panman
+ - put 2011 behaviour for Brunel behind DataType check
+ - initialize 2012 behaviour with safest possible condition
+ - update unittest for new database tag
+
+! 2012-02-13 - Jaap Panman
  - Fix bug with minor effect (1E-4) in LumiIntegrateFSR
 
 ! 2012-02-08 - Marco Cattaneo

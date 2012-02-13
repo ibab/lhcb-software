@@ -95,13 +95,22 @@ class LumiAlgsConf(LHCbConfigurableUser):
                 if i == 'Beam2': OppositeBeam = '1'
                 
                 if OppositeBeam != '0':
-                    fillingfilter = FilterFillingScheme('Filling'+i, 
-                                                        Beam = OppositeBeam,                       # check the opposite beam
-                                                        MagnetState = 'UP',                        # only for magnet UP
-                                                        BXOffset = -1,                             # check earlier bunch
-                                                        OutputLevel = self.getProp("OutputLevel"), # self.getProp("OutputLevel")
-                                                        )
-                    seqMembers.append( fillingfilter )
+                    if self.getProp("DataType") == "2011":
+                        fillingfilter = FilterFillingScheme('Filling'+i, 
+                                                            Beam = OppositeBeam,                       # check the opposite beam
+                                                            MagnetState = 'UP',                        # only for magnet UP
+                                                            BXOffset = -1,                             # check earlier bunch
+                                                            OutputLevel = self.getProp("OutputLevel"), # self.getProp("OutputLevel")
+                                                            )
+                        seqMembers.append( fillingfilter )
+                    elif self.getProp("DataType") == "2012":
+                        fillingfilter = FilterFillingScheme('Filling'+i, 
+                                                            Beam = OppositeBeam,                       # check the opposite beam
+                                                            MagnetState = 'ALL',                       # all magnet states
+                                                            BXOffset = -1,                             # check earlier bunch
+                                                            OutputLevel = self.getProp("OutputLevel"), # self.getProp("OutputLevel")
+                                                            )
+                        seqMembers.append( fillingfilter )
                                                     
                 
                 accounting = LumiAccounting('LumiCount'+i,

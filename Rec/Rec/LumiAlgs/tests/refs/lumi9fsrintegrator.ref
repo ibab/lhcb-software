@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator9.py'
-# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiFsrIntegrator9.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0p1/Rec/LumiAlgs/job/LumiFsrIntegrator9.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0p1/Rec/LumiAlgs/job/LumiFsrIntegrator9.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
@@ -12,7 +12,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x13d25330>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x16e50f30>  (default: None)
 # |-InputType         = 'DST'  (default: 'MDF')
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
@@ -24,7 +24,7 @@
 # |-SkipEvents  = 0
 # |-OutputLevel = 3
 # |-EvtMax      = -1
-# |-CondDBtag   = 'head-20110407'  (default: '')
+# |-CondDBtag   = 'head-20111111'  (default: '')
 # |-DQFLAGStag  = ''
 # |-XMLSummary  = 'summary.xml'  (default: None)
 # |-Simulation  = False
@@ -33,7 +33,7 @@
 # applying configuration of LumiIntegratorConf
 # /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
 # |-TupleFile     = ''
-# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x13d266d0>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x16e522d0>  (default: None)
 # |-InputType     = 'DST'
 # |-UseOnline     = False  (default: True)
 # \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
@@ -50,8 +50,8 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r3/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r3/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -71,8 +71,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
-                                          running on lxbuild163.cern.ch on Tue Jan 24 17:05:10 2012
+                                                   Welcome to Brunel version v42r0
+                                          running on lxplus425.cern.ch on Mon Feb 13 15:36:43 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -82,7 +82,7 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.95 times the speed of a 2.8 GHz Xeon.
 LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
 IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
 IntegrateBeamCr...   INFO Add      BXType NoBeam
@@ -90,10 +90,10 @@ IntegrateBeamCr...   INFO Subtract BXType Beam1
 IntegrateBeamCr...   INFO Subtract BXType Beam2
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20101206"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20110407"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "head-20111111"
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:mergeout.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
@@ -103,19 +103,19 @@ FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
 IntegrateBeamCr...   INFO run: [81430] RandomFrequencyBB 697.9 CollidingBunches 344
-IntegrateBeamCr...   INFO Luminosity scale used: 1.692e-11 relative uncertainty 0.035
-IntegrateBeamCr...   INFO Integrated luminosity: 7.67048e-05 +/- 2.68467e-06 [pb-1]
+IntegrateBeamCr...   INFO Luminosity scale used: 1.7007e-11 relative uncertainty 0.035
+IntegrateBeamCr...   INFO Integrated luminosity: 7.70992e-05 +/- 2.69847e-06 [pb-1]
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: END ==========
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.95 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.001 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.004 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO LumiSeq                       |     0.004 |     0.003 |    0.003       0.0 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   EventAccount                |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.004 |     0.003 |    0.002       0.1 |    1000 |     0.003 |
 ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.001 |     0.001 |    0.001       0.0 |    1000 |     0.001 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...

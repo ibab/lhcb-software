@@ -14,7 +14,8 @@ from Configurables import LHCbApp
 
 LHCbApp().XMLSummary = 'summary.xml'
 #-- set explicit CondDB tag
-LHCbApp().CondDBtag = 'head-20110407'
+# LHCbApp().CondDBtag = 'head-20110407'
+LHCbApp().CondDBtag = 'head-20111111'
 
 #--- determine application to run
 from Configurables import LumiAlgsConf, DumpFSR
