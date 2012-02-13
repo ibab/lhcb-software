@@ -9,6 +9,8 @@
  - StrippingB2JpsiKShh.py
   . Filter Jpsi firstly to save CPU time
   . Switched to MergedSelection for hadrons
+ - StrippingB2KShh.py 
+  . Fixed the same bug
 
 ! 2012-02-09 - Matthew M Reid
  - Modified decay descriptor to stop duplication of charge conjugate states

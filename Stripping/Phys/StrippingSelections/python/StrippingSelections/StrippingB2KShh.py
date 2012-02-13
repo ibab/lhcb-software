@@ -1,4 +1,3 @@
-
 """
 Module for construction of Bd/Bs->KShh stripping Selections and StrippingLines.
 Provides functions to build KS->DD, KS->LL, Bd/Bs selections.
@@ -16,7 +15,7 @@ __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
@@ -121,6 +120,10 @@ class B2KShhConf(LineBuilder) :
         self.pions = Pions
         self.kaons = Kaons
 
+        self.hadrons = MergedSelection("HadronsFor" + name,
+                                       RequiredSelections = [ self.pions, self.kaons ] )
+        
+
         self.makeKS2DD( 'KSfor'+dd_name, config )
         self.makeKS2LL( 'KSfor'+ll_name, config )
 
@@ -213,7 +216,7 @@ class B2KShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions, self.kaons ])
+        self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.hadrons ])
 
     def makeB2KSLLhh( self, name, config ) :
         """
@@ -250,5 +253,5 @@ class B2KShhConf(LineBuilder) :
         _B.CombinationCut = _combCuts
         _B.MotherCut = _motherCuts
 
-        self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions, self.kaons ])
+        self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.hadrons ])
 
