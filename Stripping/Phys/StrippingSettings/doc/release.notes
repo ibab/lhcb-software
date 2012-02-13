@@ -4,7 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+
 !========================= StrippingSettings v2r9 2012-02-10 ===================
+! 2012-02-13 - Jibo He
+ - Added B2KShh to Stripping17b
+ - dbase updated as well
+
 ! 2012-02-10 - Jibo He
  - Copied stripping17b dbase to strippingdev to fix the test.
 

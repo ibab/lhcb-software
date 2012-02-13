@@ -83,6 +83,45 @@ B2KPhiPhi = {
     'STREAMS' : [ 'Bhadron' ]
     }
 
+##
+## B->Kshh
+##
+B2KShh = {
+    'BUILDERTYPE' : 'B2KShhConf',
+    'CONFIG' : {  'Trk_Chi2'                : 4.0,
+                  'KS_DD_MassWindow'        : 30.0,
+                  'KS_DD_VtxChi2'           : 12.0,
+                  'KS_DD_FDChi2'            : 50.0,
+                  'KS_DD_Pmin'              : 6000.0,
+                  'KS_LL_MassWindow'        : 20.0,
+                  'KS_LL_VtxChi2'           : 12.0,
+                  'KS_LL_FDChi2'            : 80.0,
+                  'B_Mlow'                  : 500.0,
+                  'B_Mhigh'                 : 587.0,
+                  'B_APTmin'                : 1000.0,
+                  'B_PTmin'                 : 1500.0,
+                  'BDaug_MedPT_PT'          : 800.0,
+                  'BDaug_MaxPT_IP'          : 0.05,
+                  'BDaug_DD_maxDocaChi2'    : 5.0,
+                  'BDaug_LL_maxDocaChi2'    : 5.0,
+                  'BDaug_DD_PTsum'          : 3000.0,
+                  'BDaug_LL_PTsum'          : 3000.0,
+                  'B_VtxChi2'               : 12.0,
+                  'B_Dira'                  : 0.9999,
+                  'B_DD_IPCHI2wrtPV'        : 8.0,
+                  'B_LL_IPCHI2wrtPV'        : 8.0,
+                  'B_FDwrtPV'               : 1.0,
+                  'B_DD_FDChi2'             : 50.0,
+                  'B_LL_FDChi2'             : 50.0,
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Postscale'               : 1.0
+                 },
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : ['Chamless']
+    }
+
+
 
 
 
