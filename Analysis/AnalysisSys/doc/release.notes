@@ -10,8 +10,6 @@ Purpose     : LHCb analysis packages
 
 Based on Phys v14r0
 
-New Packages : Phys/TMVASelections
-
 Updated Packages : MicroDSTTools, AnalysisConf, AnalysisPython,
                    DSTWriterTests, DSTWriters, DaVinciMonitors,
                    DecayTreeTuple, FlavourTagging, FlavourTaggingChecker,
@@ -84,16 +82,6 @@ Updated Packages : MicroDSTTools, AnalysisConf, AnalysisPython,
 - In ParticleMakerChecker :
  . Ignore the RootINTES settings when loading data at TES locations deduced
    on the fly, since they will have this included.
-
-- In TMVASelections
- . Added BDT selections for Bd->eeKstar
- . Removed "BPV" things to fix the segmentation problem:
-   https://savannah.cern.ch/bugs/index.php?91172
-
-
-
-
-
 
 </PRE><H1><A NAME=v7r2>2011-11-10 Analysis v7r2 </A></H1><PRE>
 
