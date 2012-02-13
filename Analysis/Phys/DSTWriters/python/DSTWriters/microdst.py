@@ -109,7 +109,7 @@ def stripMicroDSTStreamConf() :
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
                                           '/Event/Rec/Summary#1',
-                                          #'/Event/Strip/Phys/DecReports#1',
+                                          '/Event/Strip/Phys/DecReports#1',
                                           '/Event/Trigger/RawEvent#1'
                                           ])
 
@@ -119,7 +119,7 @@ def stripCalibMicroDSTStreamConf() :
                             extraItems = ['/Event/Rec/Header#1',
                                           '/Event/Rec/Status#1',
                                           '/Event/Rec/Summary#1',
-                                          #'/Event/Strip/Phys/DecReports#1',
+                                          '/Event/Strip/Phys/DecReports#1',
                                           "/Event/Trigger/RawEvent#1",
                                           "/Event/Muon/RawEvent#1"
                                           ])

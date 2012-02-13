@@ -26,6 +26,6 @@ def stripDSTElements(pack=False) :
 
 def stripDSTStreamConf() :
     return OutputStreamConf( streamType = InputCopyStream,
-                             extraItems = ['/Event/DAQ/RawEvent#1'] )
-##                             extraItems = ['/Event/DAQ/RawEvent#1',
-##                                           '/Event/Strip/Phys/DecReports#1'])
+                             ##extraItems = ['/Event/DAQ/RawEvent#1'] )
+                             extraItems = ['/Event/DAQ/RawEvent#1',
+                                           '/Event/Strip/Phys/DecReports#1'])
