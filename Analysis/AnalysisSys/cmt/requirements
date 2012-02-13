@@ -1,4 +1,3 @@
-# $Id: requirements,v 1.211 2010-09-07 17:13:04 jpalac Exp $
 package AnalysisSys
 version v8r0
 
@@ -59,10 +58,6 @@ use  MicroDSTExample            v2r14   Ex         # Juan Palacios
 ####################################################################
 
 use TrackSmearing               v1r1    Phys   # Alex Shires
-
-####################################################################
-
-use TMVASelections              v1r0    Phys   # Stripping coordinators 
 
 ####################################################################
 

@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2012-02-13 - Marco Cattaneo
+ - Removed TMVASelections...
+
 </PRE><H1><A NAME=v8r0>2012-02-09 Analysis v8r0 </A></H1><PRE>
 
 Based on Phys v14r0
