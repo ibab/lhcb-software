@@ -23,6 +23,11 @@ use  StrippingSelections         v3r10    Phys   # Tom Blake, Jibo He
 use  StrippingSettings           v2r9     Phys   # Tom Blake, Jibo He
 use  StrippingTCK                v1r3     Phys   # Anton Poluektov
 use  StrippingUtils              v1r5     Phys   # Juan Palacios
+
+####################################################################
+
+use  TMVASelections              v1r0     Phys   # Stripping coordinators 
+
 ####################################################################
 
 # Declare this as a container package
