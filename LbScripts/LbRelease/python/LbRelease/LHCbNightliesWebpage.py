@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#@PydevCodeAnalysisIgnore
+
 #############################################################################
 # File moved from LCG Nightlies repository, as the original is not used any #
 # more in the LCG Nightlies and the modifications done are LHCb specific.   #
@@ -15,6 +15,21 @@ from optparse import OptionParser
 from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName, getParentMountPoint, NotInAFS, isMountPoint, Directory, isAFSDir, isAFSFile
 from LbUtils.afs.volume import Volume
 from NightliesXML import messageXML, unique
+
+sqliteLoaded = 0
+try:
+    import sqlite
+    sqliteLoaded = 1
+except ImportError:
+    print "no module sqlite -- try sqlite3"
+    try:
+        import sqlite3
+        sqliteLoaded = 2
+    except ImportError:
+        print "no module sqlite3 -- gave up"
+        
+print sys.version
+print os.__file__
 
 log=logging.getLogger("nightlies.shownightlies")
 h=logging.FileHandler("showNightlies.log")
@@ -40,8 +55,81 @@ systemHealth['Error']['FileSystem'] = {'Header':('volume/path','total space','fr
 # # Pathes to check for their health
 #systemHealthPathes = ['/afs/cern.ch/lhcb/software/nightlies', '/afs/cern.ch/lhcb/software/nightlies/www','/tmp/certainly/missing/path']
 systemHealthPathes = ['/afs/cern.ch/lhcb/software/nightlies', '/afs/cern.ch/lhcb/software/nightlies/www']
-
 # --------------------------------------------------------------------------------
+def getLocalMount(localPath):
+  localPath = os.path.abspath(localPath)
+  while localPath != os.path.sep:
+    if os.path.ismount(localPath):
+      return localPath
+    localPath = os.path.abspath(os.path.join(localPath, os.pardir))
+  return localPath
+
+def getPathSpaceInfo(directoryPath):
+    """Get the available space for a directory/its volume in AFS or in the local file system"""
+    pathInfos = {'Name' : directoryPath,'Path' : directoryPath, 'SizeTotal' : -1, 'SizeFree' : -1, 'SizeUsed' : -1, 'SizeFreeRel' : -1, 'SizeUsedRel' : -1}
+    if os.path.exists(directoryPath):
+        try:
+            afsDirectory = Directory(directoryPath)
+            afsVolume = Volume(dirname=afsDirectory.getParentMountPoint())
+            afsMountPointList = []
+            for afsMountPoints in afsVolume.mountPoints():
+                afsMountPointList.append(afsMountPoints.name())
+            pathInfos['Name'] = afsVolume.name()
+            pathInfos['Path'] = directoryPath
+            pathInfos['SizeTotal'] = float(afsVolume.quota())
+            pathInfos['SizeUsed'] = float(afsVolume.usedSpace())
+            pathInfos['SizeFree']  = pathInfos['SizeTotal'] - pathInfos['SizeUsed']
+            pathInfos['SizeFreeRel'] = pathInfos['SizeFree']/pathInfos['SizeTotal']
+            pathInfos['SizeUsedRel'] = pathInfos['SizeUsed']/pathInfos['SizeTotal']            
+        except NotInAFS :
+            try:
+                localMountPoint = getLocalMount(directoryPath)
+                localMountInfo = os.statvfs(localMountPoint)
+                pathInfos['Name'] = localMountPoint
+                pathInfos['Path'] = directoryPath
+                # calculate the total and free space on the volume in kb
+                pathInfos['SizeTotal'] = float(localMountInfo.f_bsize * localMountInfo.f_blocks / 1024)
+                pathInfos['SizeFree']  = float(localMountInfo.f_bsize * localMountInfo.f_bavail / 1024)
+                pathInfos['SizeUsed']  = pathInfos['SizeTotal'] - pathInfos['SizeFree']
+                pathInfos['SizeFreeRel'] = pathInfos['SizeFree']/pathInfos['SizeTotal']
+                pathInfos['SizeUsedRel'] = pathInfos['SizeUsed']/pathInfos['SizeTotal'] 
+            except OSError:
+                print 'Path %s not accessible' % directoryPath
+    else:
+        print 'Path %s not in AFS or in the local file system' % directoryPath
+    return pathInfos
+
+def testRSSFile():
+    databaseFile = '/afs/cern.ch/lhcb/software/nightlies/db/nightlies.results'
+    if sqliteLoaded == 1:
+        dbconn = sqlite.connect(databaseFile)
+    elif sqliteLoaded == 2:
+        dbconn = sqlite3.connect(databaseFile)
+    else:
+        return -1
+    dbc = dbconn.cursor()
+    query = "select * from results where slot='lhcb-branches'"
+    dbOK = 0
+    try:
+      dbc.execute(query)
+    except:
+      dbOK = 1
+    return dbOK
+# --------------------------------------------------------------------------------
+
+def uniqDictionaryList(inputListOfDictionaries):
+    outputListOfDictionaries = []
+    for inputDictionary in inputListOfDictionaries:
+        includedCounter = 0
+        for outputDictionary in outputListOfDictionaries:
+            includedBool = len(set(inputDictionary.values()) - set(outputDictionary.values()))
+            if includedBool == 0: 
+                continue
+            else:
+                includedCounter = includedCounter + 1
+        if includedCounter == len(outputListOfDictionaries):
+            outputListOfDictionaries.append(inputDictionary)
+    return outputListOfDictionaries
 
 def getBuildSummary(slotObj, day, pkgName, plat):
     nWarn   = None
@@ -116,7 +204,7 @@ def showAll(htmlFile, xmlData, generalConf, slotList, historyFromSvn = False):
         for sl in configHistory[dayn]._slotList:
             if sl.getName() not in slots and sl.getName() not in hideSlots:
                 slots.append(sl.getName())
-                slotList.append(sl)
+                slotList.append(sl)		
                 for p in sl.getProjects(hideDisabled=False):
                     pName = p.getName()
                     if pName not in projList: projList.append(pName)
@@ -138,14 +226,14 @@ def showAll(htmlFile, xmlData, generalConf, slotList, historyFromSvn = False):
     htmlFile.write( '</title>'+"\n")
 
     htmlFile.write( """
-        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css">
+        <link rel="stylesheet" type="text/css" href="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/css/screen.css"> 
+ 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script> 
+        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script> 
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script> 
 
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/helpers.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/date.js"></script>
-        <script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/form.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-
-<script type="text/javascript">
+<script type="text/javascript"> 
 function genrss() {
     $.typ = 'all'
     if ($("input[id='build']:checked").val() == 'build') { $.typ = 'build' }
@@ -169,7 +257,7 @@ $(document).ready(function() {
   $('#left input, #left select, #left radio, #right input, #right select, #right radio').bind('blur keyup change', genrss);
 genrss();
 });
-</script>
+</script> 
 """)
 
     htmlFile.write( '    <META HTTP-EQUIV="expires" CONTENT="Wed, 19 Feb 2003 08:00:00 GMT">'+"\n")
@@ -205,6 +293,7 @@ genrss();
     htmlFile.write( '          text-decoration:none;' + "\n")
     htmlFile.write( '          color:#000000;' + "\n")
     htmlFile.write( '      }'+"\n")
+    htmlFile.write( '      .warningclass { background-color:#ff1c00; }'+"\n")
     htmlFile.write( '    </style>'+"\n")
     htmlFile.write( '  '+"\n")
     htmlFile.write( '<script language="JavaScript1.2">'+" \n")
@@ -319,7 +408,8 @@ genrss();
     htmlFile.write( '<div align="center">'+" \n")
     htmlFile.write( '<table width="100%" border="0">'+" \n")
     htmlFile.write( '  <tr>'+" \n")
-    htmlFile.write( '    <td align="center" width="1%" nowrap><table><tr><td valign="top" bgcolor="#990000"><a href="https://twiki.cern.ch/twiki/bin/view/SPI/SpiNightlyBuilds"><font face="Arial" color="#FFFFFF"><b>News</b></font></a></td></tr></table></td>'+" \n")
+  #  htmlFile.write( '    <td align="center" width="1%" nowrap><table><tr><td valign="top" bgcolor="#990000"><a href="https://twiki.cern.ch/twiki/bin/view/SPI/SpiNightlyBuilds"><font face="Arial" color="#FFFFFF"><b>News</b></font></a></td></tr></table></td>'+" \n")
+    htmlFile.write( '    <td align="center" width="15%" nowrap><table><tr><td valign="top" bgcolor="#990000"><font face="Arial" color="#FFFFFF"><b>News</b></font></td></tr></table></td>'+" \n")
     htmlFile.write( '    <td align="center"><img border="0" src="http://lcgapp.cern.ch/NBlogo.jpg" height="80" style="vertical-align:middle"><font face="Arial" color="#006699" size="6">')
     if generalConf.has_key('wwwtitle'): htmlFile.write(generalConf['wwwtitle'])
     else: htmlFile.write( 'Summaries of nightly builds for LCG AA projects')
@@ -339,8 +429,13 @@ genrss();
         htmlFile.write( '<a class="header_link" href="https://svnweb.cern.ch/trac/lhcb/browser/LHCbNightlyConf/trunk/configuration.xml" target="_blank" >Configuration SVN</a>')
         htmlFile.write( '<a class="header_link" href="http://lhcb-coverity.cern.ch:8080" target="_blank" >LHCb Coverity</a>')
         htmlFile.write( '<a class="header_link" href="https://lhcb-nightlies.web.cern.ch/lhcb-nightlies/index-LHCb-cache.xml" target="_blank" >XML</a>')
+        htmlFile.write( '<a class="header_link" href="https://lhcb-nightlies.web.cern.ch/lhcb-nightlies/diskSpace.html" target="_blank" >Disk Usage</a>')
         htmlFile.write( '<hr/>')
-
+    if sqliteLoaded != 0:
+        if testRSSFile() > 0:
+            htmlFile.write('<p class="warningclass">Warning: rss database file seems to be corrupted.</p>')
+        elif testRSSFile() < 0:
+            htmlFile.write('<p class="warningclass">Warning: modules necessary for accessing rss-database could not been loaded.</p>')
     htmlFile.write('<h3>[<a id="dc_toggle" href="#" onClick="'+"toggleMe('dc')"+'">+</a>] Display Criteria</h3>'+" \n")
     htmlFile.write('<div id="dc" style="display: none; font-family: arial; font-size: 10pt;">'+" \n")
     htmlFile.write( '<form action="nightlies.py" method="get" enctype="multipart/form-data" name="display_criteria">'+" \n")
@@ -493,13 +588,13 @@ genrss();
                     </div>
                     <div id="live-result"></div>""")
 
-#    htmlFile.write("""
+#    htmlFile.write("""        
 #                    <div id="d_clip_button" style="border:1px solid black; padding:1px;">copy</div>
 #                <script language="JavaScript">
 #                        var clip = new ZeroClipboard.Client();
 #                        clip.setHandCursor( true );
 #                        clip.setCSSEffects( true );
-#                        clip.addEventListener( 'mouseDown', function(client) {
+#                        clip.addEventListener( 'mouseDown', function(client) { 
 #                            clip.setText( document.getElementById('live-result').value );
 #                        } );
 #//                        clip.setText( $('#live-result').val() );
@@ -529,6 +624,14 @@ genrss();
     htmlFile.write( '<td bgcolor="#D3D3D3"> project disabled (not built, taken from Release Area instead) </td> '+" \n")
     htmlFile.write( '</tr></table>'+" \n")
     htmlFile.write( '</div>'+" \n")
+
+    wwwDir = '/afs/cern.ch/lhcb/software/nightlies/www'
+    wwwDirSpaceInfo = getPathSpaceInfo(wwwDir)
+    if wwwDirSpaceInfo['SizeFreeRel']<0.1:
+        htmlFile.write( '<h4 style="color: #ffffff;background-color:#ff1c00" >'+'volume with directory '+wwwDir+' has only ' +"%.2f" % wwwDirSpaceInfo['SizeFreeRel']+'% free space left!'+'</h4>')
+
+    freeSpaceList = []
+    freeSpaceList.append(wwwDirSpaceInfo)
 
     statdivs = []
 
@@ -563,6 +666,13 @@ genrss();
             htmlFile.write( "\n<!-- start SLOT div for " + day + '_' + slot + " -->\n")
             htmlFile.write( '<div id="' + day + '_' + slot + '" style="margin-left: 10px;">')
             htmlFile.write( '<h4>'+day+'   Slot : '+slotObj.getDescription(returnNameIfNoDescription=True)+'</h4>')
+
+            slotDir = slotObj.releaseDir() 
+            slotDirSpaceInfo = getPathSpaceInfo(os.path.join(slotDir))
+            if slotDirSpaceInfo['SizeFreeRel']<0.1:
+                htmlFile.write( '<h4 style="color: #ffffff;background-color:#ff1c00" >'+'volume for slot directory '+str(slotDir)+' has only ' +"%.2f" % slotDirSpaceInfo['SizeFreeRel']+'% free space left!'+'</h4>')
+            freeSpaceList.append(slotDirSpaceInfo)
+
             htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s" target="_blank">%s</a> ' % (slotObj.getName(), rssHtml))
 
 #            motdFile = os.path.join(topDir, slot, day[:3], "motd" )
@@ -578,9 +688,9 @@ genrss();
             htmlFile.write( '      <td><b>Version</b></td> ')
 
             stampDay = day[:3]
-
+          
             xmlSlotNode = xmlData.appendSpecificNode("slot",xmlDayNode,{"name":strStrip(slotObj.getName())})
-
+          
             for platObj in slotObj.getPlatforms():
                 plat = platObj.getName()
                 timeStamp = None
@@ -614,11 +724,12 @@ genrss();
                             #timeStamp = None
 
                 waitForPlat = ""
+                # i.e. /afs/cern.ch/sw/lcg/app/nightlies/dev1/Wed/...
                 waitForIs = False
                 for iter in slotObj.waitForFlag():
                     if iter is not None:
                         waitForPlat = iter+plat
-                        waitForIs = True
+                        waitForIs = True                    
 
                 if timeStamp:
                     # get rid of seconds
@@ -631,7 +742,7 @@ genrss();
                         htmlFile.write( '<br/>('+timeStamp+')')
                     else:
                         htmlFile.write( '<br/><font style="background-color: yellow">(%s)</font>' % timeStamp)
-
+                        
                     htmlFile.write( '&nbsp;&nbsp;<a href="http://cern.ch/lhcb-nightlies/cgi-bin/rss.py?slot=%s&plat=%s" target="_blank">%s</a> ' % (slotObj.getName(), plat, rssHtml))
                     if waitForIs:
                         if os.path.exists(waitForPlat):
@@ -675,20 +786,20 @@ genrss();
                     htmlFile.write( '      <td bgcolor="#D3D3D3">'+projectTag+'</td>\n')
                 else:
                     htmlFile.write( '      <td bgcolor="'+wheat+'">'+projectTag+'</td>\n')
-
+                    
                 for platObj in slotObj.getPlatforms():
                     xmlPlatformNode = xmlData.appendSpecificNode("platform",xmlProjectNode,{"name":strStrip(plat)})
                     if timeStamp:
                         xmlData.modifySpecificNode(xmlPlatformNode,{"platCompleted":strStrip(timeStamp),"platReady":"True"})
                         if waitForIs:
-                            xmlData.modifySpecificNode(xmlSlotNode,{"platDepends":"True"})
+                            xmlData.modifySpecificNode(xmlSlotNode,{"platDepends":"True"})          
                             if os.path.exists(waitForPlat):
                                 xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"True"})
                             else:
                                 xmlData.modifySpecificNode(xmlSlotNode,{"LCGReady":"False"})
                     else:
                         if string.upper(str(generalConf.get('shownotfinishedplatforms', False))) != 'FALSE' and os.path.exists(stampFileNameStarted):
-                            xmlData.modifySpecificNode(xmlPlatformNode,{"platReady":"False"})
+                            xmlData.modifySpecificNode(xmlPlatformNode,{"platReady":"False"})          
 
                     plat = platObj.getName()
 
@@ -905,7 +1016,7 @@ genrss();
         htmlFile.write(str(divdata))
     htmlFile.write( "\n<!-- end STAT divs -->\n")
 
-
+    
     htmlFile.write( '<table width="80%" border="0">'+" \n")
     htmlFile.write( '  <tr>'+" \n")
     htmlFile.write( '    <td align="left"><span style="font-family:Arial; color=#000000; font-weight: bold; font-size: 13pt" >System health messages</span></td>'+" \n")
@@ -944,7 +1055,7 @@ genrss();
     xmlData.modifySpecificNode(xmlMetaTimeNode,{"processingSecs":strStrip(time.clock() - startTime)})
 
     trailer = """
-        <address><a href="mailto:Stefan.Roiser@cern.ch">Stefan ROISER</a></address> <address><a href="mailto:thomas.hartmann@cern.ch">Thomas Hartmann</a></address> <address><a href="mailto:piotr.kolet@cern.ch">Piotr Kolet</a></address>
+        <p><address><a href="mailto:thomas.hartmann@cern.ch">Thomas Hartmann</a></address></p>
       </body>
     </html>
     """
@@ -955,6 +1066,26 @@ genrss();
     #"""
 
     htmlFile.write( trailer )
+
+    uniqFreeSpaceList = uniqDictionaryList(freeSpaceList)
+    freeSpaceFile = open('/afs/cern.ch/lhcb/software/nightlies/www/diskSpace.html','w')
+
+    freeSpaceFile.write( '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'+"\n"+'<html>'+"\n"+'  <head>'+"\n"+'<title>'+"\n"+"Current disk space usage"+"\n"+'</title>'+"\n"+'<body>'+"\n")
+    freeSpaceFile.write('<p><font size="2">')
+    freeSpaceFile.write("\n<br><b>Current disk space usage<b></br>\n")
+    freeSpaceFile.write( '<table width="100%" border="1">'+" \n")
+    freeSpaceFile.write( '  <tr><th>Path</th><th>Volume</th><th>Free</th><th>Free %</th></tr>'+" \n")
+    for pathes in uniqFreeSpaceList:
+        freeSpaceFile.write("<tr")
+        if pathes['SizeFreeRel']<0.1:
+          freeSpaceFile.write('  style="color: #ffffff;background-color:#ff1c00" ')
+        freeSpaceFile.write(">"+" \n"+"<td>" +str(pathes['Path'])+"</td>"+"<td>"+str(pathes['Name'])+"</td>"+"<td>"+str(pathes['SizeFree'])+"</td>"+"<td>"+str(pathes['SizeFreeRel'])+"</td>")
+        freeSpaceFile.write("</tr>"+" \n")
+    freeSpaceFile.write('</table">')
+    freeSpaceFile.write('</font"></p>')
+    freeSpaceFile.write('<p><b>Previous days<b></p>')
+    freeSpaceFile.write( trailer )
+    freeSpaceFile.close()
 
 def getConfigurationContents(svnDate=None):
     #svnPath = 'http://svnweb.cern.ch/guest/lhcb/LHCbNightlyConf/trunk/configuration.xml'
@@ -984,12 +1115,10 @@ def getConfigurationContents(svnDate=None):
 def generateIndex(mainConfigFileName, resultFileName):
     global configuration
     confContents = None
-    #tmpFileName = resultFileName + '.tmp.html'
     tmpFileName = resultFileName + "_" + time.strftime("%a%H%M") + '.tmp.html'
     tmpFileNameLink = resultFileName + '.tmp.html'
 
     xmlFileName = resultFileName.rstrip('.html')+'.xml'
-    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
     xmlTmpFileName = xmlFileName + "_" + time.strftime("%a%H%M") + '.tmp.xml'
     xmlTmpFileNameLink = xmlFileName + '.tmp.html'
 
@@ -1010,8 +1139,6 @@ def generateIndex(mainConfigFileName, resultFileName):
         if os.path.lexists(tmpFileNameLink): os.remove(tmpFileNameLink)
         os.rename(xmlTmpFileName, xmlFileName)
         if os.path.lexists(xmlTmpFileNameLink): os.remove(xmlTmpFileNameLink)
-        #os.rename(tmpFileName, resultFileName)
-        #os.rename(xmlTmpFileName, xmlFileName)
     except:
         print "ERROR moving index file."
         raise
@@ -1031,16 +1158,10 @@ def generateIndexSVN(resultFileName, svnNow=False):
         else:
             configHistory[x].readConf(configFile=None, configContents=getConfigurationContents(None))
 
-    #xmlFileName = resultFileName.rstrip('.html')+'.xml'
-    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
-    #tmpFileName = resultFileName + '.tmp.html'
-
-    #tmpFileName = resultFileName + '.tmp.html'
     tmpFileName = resultFileName + "_" + time.strftime("%a%H%M") + '.tmp.html'
     tmpFileNameLink = resultFileName + '.tmp.html'
 
     xmlFileName = resultFileName.rstrip('.html')+'.xml'
-    #xmlTmpFileName = xmlFileName  + '.tmp.xml'
     xmlTmpFileName = xmlFileName + "_" + time.strftime("%a%H%M") + '.tmp.xml'
     xmlTmpFileNameLink = xmlFileName + '.tmp.html'
 
@@ -1051,7 +1172,7 @@ def generateIndexSVN(resultFileName, svnNow=False):
 
     indexFile = open(tmpFileName, 'w')
     xmlData = messageXML()
-
+    
     showAll(indexFile, xmlData, configHistory[0]._generalConfig, configHistory[0]._slotList, historyFromSvn = True)
     indexFile.close()
     xmlData.writeDoc(xmlTmpFileName)

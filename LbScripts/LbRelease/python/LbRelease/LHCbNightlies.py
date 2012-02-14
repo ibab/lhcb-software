@@ -1,4 +1,4 @@
-#@PydevCodeAnalysisIgnore
+
 import os, sys, shutil
 import re, pickle, time, datetime
 import codecs, cgi
@@ -18,7 +18,7 @@ def fork_call(func):
             time.sleep(10)
             sys.exit()
     return f
-def ignore_exception(func):
+def ignore_exception(func): 
     def f(self, *args, **kwargs):
         try:
             return func(self, *args, **kwargs)
@@ -32,7 +32,7 @@ def ignore_exception(func):
     return f
 
 ##########################################################################################
-# before in LCG part: LHCbCheckLogFiles.py
+# before in LCG part: LHCbCheckLogFiles.py 
 
 def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = True, createSummaryLogFile = True):
     tagName = projObj.getTag()
@@ -58,7 +58,7 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
                  ]
     regexWarning = [re.compile('.*warning[: ].*', re.I)
                    ]
-
+    
     regexCoverity = [re.compile('.*cov-.*', re.I)
                      ,re.compile('.*Coverity warning[: ].*', re.I)
                      ,re.compile('.*Coverity error[: ].*', re.I)
@@ -67,24 +67,8 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
     # + filter for further Coverity annotations
     # + mismatch between checked and existing files --> append to the general log
     # # --> add coverity to packagesList as pseudo-Package? --> ad regexp to packageStart
-
-
-#    ignoreErrors = config.get('ignoreErrors', [])
-#    ignoreErrorsCounters = [0]*len(ignoreErrors)
-#    ignoreWarnings = config.get('ignoreWarnings', [])
-#    ignoreWarningsCounters = [0]*len(ignoreWarnings)
-#    ignoreErrorsRegex = config.get('ignoreErrorsRegex', [])
-#    ignoreErrorsRegexCounters = [0]*len(ignoreErrorsRegex)
-#    ignoreWarningsRegex = config.get('ignoreWarningsRegex', [])
-#    ignoreWarningsRegexCounters = [0]*len(ignoreWarningsRegex)
-    #ignoreErrorsGlob = config.get('ignoreErrorsGlob', [])
-    #ignoreErrorsGlobCounters = [0]*len(ignoreErrorsGlob)
-    #ignoreWarningsGlob = config.get('ignoreWarningsGlob', [])
-    #ignoreWarningsGlobCounters = [0]*len(ignoreWarningsGlob)
-#    errorList = []   # elements should be pairs: [['error/warn. message', [line number, line number, ...]]
-#    warningList = []
-
-
+    
+    
     class StringMatcher(object):
         def __init__(self, s):
             self.string = s
@@ -111,10 +95,10 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
     errorExclusions = map(StringMatcher, config.get('ignoreErrors', [])) + map(REMatcher, config.get('ignoreErrorsRegex', []))
     warningExclusions = map(StringMatcher, config.get('ignoreWarnings', [])) + map(REMatcher, config.get('ignoreWarningsRegex', []))
     # Exclusions for coverity-expressions --> would need to change BaseConfiguration as well -- thartman - 2011.05.19
-    # implement some unifying scheme for all types of warnings/errors/etc.
+    # implement some unifying scheme for all types of warnings/errors/etc. 
     coverityExclusions = map(StringMatcher, config.get('ignoreCoverity', [])) + map(REMatcher, config.get('ignoreCoverityRegex', []))
     # coverityExclusions = ()
-
+    
     def isIgnored(matchers, test):
         for m in matchers:
             if m(test):
@@ -129,8 +113,8 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
     warningList = {}
     coverityList = {}
 
-    def matchAny(s, rexps):
-        return filter(None, map(lambda x: x.match(s), rexps))
+    #def matchAny(s, rexps):
+    #    return filter(None, map(lambda x: x.match(s), rexps))
 
     def matchAny(s, rexps):
         for x in rexps:
@@ -152,7 +136,7 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
 
     for counter, line in enumerate(logData):
         countLine(regexError, errorList, line, counter) or countLine(regexWarning, warningList, line, counter) or countLine(regexCoverity, coverityList, line, counter)
-
+    
     for k in filter(errorIgnored, errorList.keys()):
         del errorList[k]
     for k in filter(warningIgnored, warningList.keys()):
@@ -192,7 +176,40 @@ def checkBuildLogs(slotObj, projObj, day, platform, config, createHTMLLogFile = 
             pName = found.group(1)
             pBegin = lineNo
             pEnd = None
-            packagesList.append([pName, pBegin-1, pEnd])
+            svnURL = 'noURL'
+            svnRev = 'noRev'
+            if 'URL' in str(logData[lineNo-12]):
+                svnURL = str(logData[lineNo-12].split()[1]).strip('cmt/')
+            else:
+                svnURL = 'noURLFound'
+            if 'Revision' in str(logData[lineNo-9]):
+                svnRev = str(logData[lineNo-9].split()[1])
+            else:
+                svnRev = 'noRevFound'
+            # add SVN URL
+            # not sure if the svn URL stays 11 lines before 'Building package'-line
+            #
+            #
+            # #first find the revision
+            #
+            # revLine = -1
+            # while lineNo+revLine > 0:
+            #     if 'Revision: ' in logData[lineNo+revLine]:
+            #         svnRev = str(logData[lineNo+revLine].split()[1])
+            #         # when revision found search for url
+            #         for urlLine in range(0,-20,-1):
+            #             if 'URL: ' in logData[lineNo+revLine+urlLine]:
+            #                 svnURL = str(logData[lineNo+revLine+urlLine].split()[1])
+            #                 break
+            #         # else:
+            #         #     svnURL = 'noURLFound'
+            #     else:
+            #         break
+            #     revLine = revLine - 1
+            # else:
+            #     svnRev = 'noRevFound'
+            svnDict = {'url':svnURL,'rev':svnRev}
+            packagesList.append([pName, pBegin-1, pEnd,svnDict])
             if len(packagesList)>1 and packagesList[len(packagesList)-2][2] == None:
                 packagesList[len(packagesList)-2][2] = lineNo-4
     packagesList[len(packagesList)-1][2] = len(logData)-1
@@ -237,37 +254,28 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
     htmlData.append('{id: "checkout", f: %s, l: %s, desc: "Show getpack log"},' % (str(getBegin), str(getEnd),))
 
     ## sort the lines in errorList & warningList  ~~> how to sort dictionary...?! ~~> get the list of keys or values and sort that?
-
-    #packagesList.sort()
+    
+    #for x in sorted(packagesList.keys()):
     for x in packagesList:
         htmlData.append('{id: "package%s", f: %s, l: %s, name: "%s"},' % (str(x[1]), str(x[1]), str(x[2]), x[0]))
     htmlData.append('];')
     htmlData.append('var codeLinks = [')
+
     ecounter = 1
-#    for e in errorList:
-#        if not e[1]: continue
-#        for x in xrange(len(e[1])):
-#            package = packagesList[packageInfo(e[1][x])]
-#            htmlData.append('{id: "error%s", block: "package%s", line: %s},' % (str(ecounter), str(package[1]), str(e[1][x]) ))
-#            ecounter += 1
     for e in errorList:
         if errorList[e].count == 0: continue
-        errorList[e].sort()
-        for x in errorList[e]:
+        #sortedTuple = sorted(zip(errorList[e]))
+        sortedTuple = sorted(tuple(errorList[e]))
+        for x in sortedTuple:
             package = packagesList[packageInfo(x)]
             htmlData.append('{id: "error%s", block: "package%s", line: %s},' % (str(ecounter), str(package[1]), str(x) ))
             ecounter += 1
+
     wcounter = 1
-#    for w in warningList:
-#        if not w[1]: continue
-#        for x in xrange(len(w[1])):
-#            package = packagesList[packageInfo(w[1][x])]
-#            htmlData.append('{id: "warning%s", block: "package%s", line: %s},' % (str(wcounter), str(package[1]), str(w[1][x]) ))
-#            wcounter += 1
     for w in warningList:
         if warningList[w].count == 0: continue
-        warningList[w].sort()
-        for x in warningList[w]:
+        sortedTuple = sorted(tuple(warningList[w]))
+        for x in sortedTuple:
             package = packagesList[packageInfo(x)]
             htmlData.append('{id: "warning%s", block: "package%s", line: %s},' % (str(wcounter), str(package[1]), str(x) ))
             wcounter += 1
@@ -275,11 +283,14 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
     coverityCounter = 1
     for iterator1 in coverityList:
         if coverityList[iterator1].count == 0: continue
-        coverityList[iterator1].sort()
-        for iterator2 in coverityList[iterator1]:
+        #coverityList[iterator1].sort()
+        #for iterator2 in coverityList[iterator1]:
+        sortedTuple = sorted(tuple(coverityList[iterator1]))
+        for x in sortedTuple:
             package = packagesList[packageInfo(iterator2)]
             htmlData.append('{id: "coverity%s", block: "package%s", line: %s},' % (str(coverityCounter), str(package[1]), str(iterator2) ))
             coverityCounter += 1
+
     htmlData.append('];')
     htmlData.append('</script>')
     htmlData.append('<script type="text/javascript" src="http://lhcb-nightlies.web.cern.ch/lhcb-nightlies/js/logFileJQ.js"></script>')
@@ -287,21 +298,10 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
     htmlData.append('<h3>LogCheck for package %s on %s</h3>' % (tagName, os.environ.get('HOST')))
     htmlData.append('<p>Warnings : %s<br /> Errors   : %s<br /> Coverity messages   : %s<br /></p>' % (str(warningTypeCount), str(errorTypeCount), str(coverityTypeCount) ))
 
-#    if len(ignoreErrors) and sum(ignoreErrorsCounters):
-#        htmlData.append('<h3>Ignored errors:</h3>')
-#    for w in xrange(len(ignoreErrors)):
-#        if ignoreErrorsCounters[w]:
-#            htmlData.append('<strong>%sx</strong>&nbsp;&rArr;&nbsp;%s<br />' % (str(ignoreErrorsCounters[w]), ignoreErrors[w]))
     if len(errorExclusions):
         htmlData.append('<h3>Ignored errors:</h3>')
     for e in errorExclusions:
         if e.count > 0: htmlData.append(e.html())
-
-#    if len(ignoreWarnings) and sum(ignoreWarningsCounters):
-#        htmlData.append('<h3>Ignored warnings:</h3>')
-#    for w in xrange(len(ignoreWarnings)):
-#        if ignoreWarningsCounters[w]:
-#            htmlData.append('<strong>%sx</strong>&nbsp;&rArr;&nbsp;%s<br />' % (str(ignoreWarningsCounters[w]), ignoreWarnings[w]))
     if len(warningExclusions):
         htmlData.append('<h3>Ignored warnings:</h3>')
     for w in warningExclusions:
@@ -311,7 +311,7 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
         htmlData.append('<h3>Ignored warnings:</h3>')
     for iterator1 in coverityExclusions:
         if iterator1.count > 0: htmlData.append(iterator1.html())
-
+        
     htmlData.append('<h3>Shortcuts:</h3>')
     htmlData.append('<ul>')
     if errorTypeCount: htmlData.append('<li><a href="#summary_errors">Summary of errors</a>')
@@ -322,69 +322,80 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
     htmlData.append('<li><a href="#packages_list">List of packages (logs)</a>')
     htmlData.append('<li><a href="#environment" onclick="javascript:$(\'.packageLink\').click();">Show all (may take long time)</a>')
     htmlData.append('</ul>')
+
+ 
     ecounter = 1
     if errorTypeCount:
         htmlData.append('<h3 id="summary_errors">Summary of errors:</h3><hr />')
-#        for e in errorList:
-#            if not e[1]: continue
-#            htmlData.append('<ul class="errorul">')
-#            for x in xrange(len(e[1])):
-#                context = ''
-#                for cx in xrange(-4,0):
-#                    context += '%s\n' % cgi.escape(logData[e[1][x]+cx])
-#                context += '<strong>%s</strong>\n' % cgi.escape(logData[e[1][x]])
-#                package = packagesList[packageInfo(e[1][x])]
-#                htmlData.append('<li class="errorli"><a class="codeLink" id="error%s"><pre>%s</pre></a></li>' % ( str(ecounter), context, ))
-#                ecounter += 1
-#            htmlData.append('</ul><hr />')
-        for e in errorList:
+        #for e in errorList:
+        for e in sorted(errorList.keys()):
             if not e[1]: continue
             htmlData.append('<ul class="errorul">')
-            for x in errorList[e]:
+            #for x in errorList[e]:
+            sortedTuple = sorted(tuple(errorList[e]))
+            for x in sortedTuple:
                 context = ''
                 for cx in xrange(-4,0):
                     context += '%s\n' % cgi.escape(logData[x+cx])
                 context += '<strong>%s</strong>\n' % cgi.escape(logData[x])
                 package = packagesList[packageInfo(x)]
                 htmlData.append('<li class="errorli"><a class="codeLink" id="error%s"><pre>%s</pre></a></li>' % ( str(ecounter), context, ))
+                svnFileName = ''
+                svnFileLine = '' 
+                svnBase = packagesList[packageInfo(x)][3]
+                svnBasePack = svnBase['url'].split('/')[-1] # # --> RootCnv
+                svnFileNameBase = ''
+                svnFileNameLineRef = ''
+                if svnBasePack in svnFileName:
+                    svnFileNameBase = svnFileName.split(svnBasePack)[1]
+                    svnFileLine = logData[x].split(':')[1]
+                    svnFileNameLineRef = str(svnFileNameBase)+'?'+str(svnFileLine)
+                    # # /merge/merge.C
+                htmlData.append('<li><a href="%s/%s">Code Line</a></li>' % (str(svnBase['url']),svnFileNameLineRef))
                 ecounter += 1
             htmlData.append('</ul><hr />')
+
     wcounter = 1
     if warningTypeCount:
         htmlData.append('<h3 id="summary_warnings">Summary of warnings:</h3><hr />')
-#        for w in warningList:
-#            if not w[1]: continue
-#            htmlData.append('<ul class="warningul">')
-#            for x in xrange(len(w[1])):
-#                context = ''
-#                for cx in xrange(-4,0):
-#                    context += '%s\n' % cgi.escape(logData[w[1][x]+cx])
-#                context += '<strong>%s</strong>\n' % cgi.escape(logData[w[1][x]])
-#                package = packagesList[packageInfo(w[1][x])]
-#                htmlData.append('<li class="warningli"><a class="codeLink" id="warning%s"><pre>%s</pre></a></li>' % ( str(wcounter), context, ))
-#                wcounter += 1
-#            htmlData.append('</ul><hr />')
-        for w in warningList:
+        #for w in warningList:
+        for w in sorted(warningList.keys()):
             if warningList[w].count == 0: continue
             htmlData.append('<ul class="warningul">')
-            for x in warningList[w]:
+            #for x in warningList[w]:
+            sortedTuple = sorted(tuple(warningList[w]))
+            for x in sortedTuple:
                 context = ''
                 for cx in xrange(-4,0):
                     context += '%s\n' % cgi.escape(logData[x+cx])
                 context += '<strong>%s</strong>\n' % cgi.escape(logData[x])
                 package = packagesList[packageInfo(x)]
                 htmlData.append('<li class="warningli"><a class="codeLink" id="warning%s"><pre>%s</pre></a></li>' % ( str(wcounter), context, ))
+
+                svnFileName = ''
+                svnFileLine = '' 
+                svnBase = packagesList[packageInfo(x)][3]
+                svnBasePack = svnBase['url'].split('/')[-1]
+                svnFileNameBase = ''
+                svnFileNameLineRef = ''
+                if svnBasePack in svnFileName:
+                    svnFileNameBase = svnFileName.split(svnBasePack)[1]
+                    svnFileLine = logData[x].split(':')[1]
+                    svnFileNameLineRef = str(svnFileNameBase)+'?'+str(svnFileLine)
+                htmlData.append('<li><a href="%s/%s">Code Line</a></li>' % (str(svnBase['url']),svnFileNameLineRef))
+
                 wcounter += 1
             htmlData.append('</ul><hr />')
 
-
-    coverityCounter = 1
+    Coveritycounter = 1
     if coverityTypeCount:
         htmlData.append('<h3 id="summary_coverity">Summary of Coverity messages:</h3><hr />')
-        for iterator1 in coverityList:
+        #for iterator1 in coverityList:
+        for iterator1 in sorted(coverityList.keys()):
             if coverityList[iterator1].count == 0: continue
             htmlData.append('<ul class="coveritygul">')
-            for iterator2 in coverityList[iterator1]:
+            sortedTuple = sorted(tuple(coverityList[iterator1]))
+            for iterator2 in sortedTuple:
                 context = ''
                 for iterator3 in xrange(-4,0):
                     context += '%s\n' % cgi.escape(logData[iterator2+iterator3])
@@ -393,6 +404,7 @@ a.morebtn { color: red; cursor:pointer; cursor:hand; }
                 htmlData.append('<li class="warningli"><a class="codeLink" id="warning%s"><pre>%s</pre></a></li>' % ( str(coverityCounter), context, ))
                 coverityCounter += 1
             htmlData.append('</ul><hr />')
+
     htmlData.append('<div id="logfile"/>')
     htmlData.append('</body>')
     htmlData.append('</html>')
@@ -471,7 +483,7 @@ class LHCbProjectBuilder(object):
         self.localDirsOnWindows['Z:\\LOCALCOPY\\releases'] = 'C:\\local\\releases;D:\\local\\lib\\lhcb'
 
         self.cmtCommand = 'cmt -disable_warnings'
-        self.getpackCommand = 'getpack --no-config --batch -p anonymous'
+        self.getpackCommand = 'getpack --branches --no-config --batch -p anonymous'
         self.pythonCommand = 'python '
         # moved coverityPath setting into coverity check in def build  -- thartman 2011.05.11
 
@@ -482,16 +494,25 @@ class LHCbProjectBuilder(object):
         for p in listOfProjectNames:
             self.projectNamesDict[p.upper()] = p
 
+        print "=x"*30
         self.slot = slot
+        print "slot "+ str(self.slot)
         self.minusj = 50 #thread
         self.minusl = 15 #load
         self.slotName = slot.getName()
+        print "slotName "+str(self.slotName)
         self.project = slot.getProject(proj)
+        print "project "+str(self.project)
         self.projName = self.projectNamesDict[proj.upper()]
+        print "projName "+str(self.projName)
         self.tagName = tag
+        print "tag "+str(self.tagName)
         self.disabled = self.project.getDisabledFlag()
         self.config = conf
+        print "config "+str(self.config)
         self.plat = platIn
+        print "plat "+str(self.plat )
+        print "=x"*30
         if self.plat.find('win') != -1:
             self.systemType = 'windows'
         else:
@@ -531,7 +552,7 @@ class LHCbProjectBuilder(object):
             except OSError:
                 self.system('echo "warning: OSError while changing permissions for removing"' )
                 pass
-
+        
         if '%CMTCONFIG%' in self.slot._buildDir:
             _fixPerms((os.sep.join([self.slot.buildDir(), projectName])))
             shutil.rmtree(os.sep.join([self.slot.buildDir(), projectName]), ignore_errors=True)
@@ -660,11 +681,14 @@ class LHCbProjectBuilder(object):
 
         os.system('ls %s' % os.path.abspath(os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.project.getName()), '..'])))
 
+        # print ">>> Project checkout path %s" % (os.path.abspath(os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.project.getName()), '..'])))
+
         if self.project.getRename() is not None:
             os.chdir(os.path.abspath(os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.project.getName()), '..'])))
             os.rename(self.project.getTag(),self.project.getRename())
 
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
+        # print ">>> Project checkout path cd %s" % (  os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName())))
 
         containerPackageName = self.containerPackage('.')
         self.getpackget(containerPackageName, self.project.getVersion())
@@ -770,6 +794,7 @@ class LHCbProjectBuilder(object):
         os.chdir(self.generatePath(self.slot, p, 'SYSPACKAGECMT', self.projName))
         os.system(self.cmtCommand + ' br "' + self.cmtCommand + ' config"')
 
+ 
         # creating 'done' flag; removing 'working' flag
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.project.getName()))
         fW = open('checkout.done','w')
@@ -805,7 +830,7 @@ class LHCbProjectBuilder(object):
             derivedModelsDir = os.sep.join([self.slot.buildDir(), 'COVERITY_DERIVED_MODELS'])
         else:
             self.coverityBuild = False
-
+        
         os.environ['CMTCONFIG'] = self.plat
         logdir = os.sep.join([self.generatePath(self.slot, self.project, 'TAG', self.projName), 'logs'])
         if not os.path.exists(logdir):
@@ -814,7 +839,7 @@ class LHCbProjectBuilder(object):
         self.disableLCG_NIGHTLIES_BUILD()
         self.setCMTEXTRATAGS(self.slotName)
         self.setCmtProjectPath(self.slot)
-
+        
         if '-icc' in os.environ['CMTCONFIG']:
             self.iccSetup()
             os.environ['CMTEXTRATAGS'] = os.environ['CMTEXTRATAGS'].replace('use-distcc,','').replace('use-distcc','')
@@ -855,6 +880,11 @@ class LHCbProjectBuilder(object):
         self.system('echo "INCLUDE:          '+os.environ.get('INCLUDE','')+'"')
         self.system('echo "PATH:             '+os.environ.get('PATH','')+'"')
         self.system('echo "LBUTILSROOT:      '+os.environ.get('LBUTILSROOT','')+'"')
+        self.system('echo "' + '*'*80 + ' svn head "')
+        self.system('echo "svn info for: '+self.generatePath(self.slot, self.project, 'TAG', self.projName)+ '"')
+        self.system('echo "svn info in current path: '+os.getcwd()+ '"')
+        self.system("svn info")
+        self.system('echo "' + '*'*80 + ' svn head "')
         self.system('echo "' + '*'*80 + '"')
         self.system('cmt show macro LCG_releases')
         self.system('echo "' + '*'*80 + '"')
@@ -880,7 +910,7 @@ class LHCbProjectBuilder(object):
             os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
         else:
             os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-
+            
         if self.coverityBuild is True:
             #make list of derived model files in 'derivedModelsDir':
             if os.path.exists(derivedModelsDir):
@@ -902,7 +932,7 @@ class LHCbProjectBuilder(object):
             #    shutil.rmtree(coverityDirINT, ignore_errors=True)
             self.system('echo "(1) Created intermediate directory %s"' % (coverityDirINT))
             os.makedirs(coverityDirINT)
-
+            
             self.system('echo "(1) cov-build --dir %s make -j 20 -l 16"' % (coverityDirINT))
             #########################################
             ###returnCode = self.system('%scov-build --dir %s/INT make -j 20 -l 16' % (self.coverityPath, coverityDir))
@@ -936,12 +966,12 @@ class LHCbProjectBuilder(object):
                     prev = ''
                 file('%s/../strip-path.list' % (coverityDir),'w').write('%s --strip-path %s/ --strip-path %s/' % (prev, self.generatePath(self.slot, self.project, 'TAG', self.projName),self.generatePath(self.slot, self.project, 'TAG', self.projName.upper()) ) )
 
-
+                
                 self.system('echo "(2) ***************************************************"')
                 ### cov-analyze via analyze-submit.sh
                 self.system('echo "(2) starting cov-analyze with "')
                 self.system('echo "(2) /build/coverity/analyze-submit.sh %s %s"' % (coverityDirINT,derivedModelsDir))
-                self.system('/build/coverity/analyze-submit.sh %s %s' % (coverityDirINT,derivedModelsDir) )
+                self.system('/build/coverity/analyze-submit.sh %s %s' % (coverityDirINT,derivedModelsDir) ) 
                 ### cov-analyze directly
                 #self.system('echo "%scov-analyze --dir %s  --enable-callgraph-metrics --enable-parse-warnings --all %s"' % (self.coverityPath, coverityDirINT, derivedModelsList))
                 #self.system('%scov-analyze --dir %s  --enable-callgraph-metrics --enable-parse-warnings --all %s' % (self.coverityPath, coverityDirINT, derivedModelsList))
@@ -955,7 +985,7 @@ class LHCbProjectBuilder(object):
                 #    self.system('echo "(3) %s not ready; wait 60 seconds"' % (os.sep.join([coverityDirINT,'c/output/.cache/models'])))
                 #if waitTimer==15:
                 #    self.system('echo "(3) %s not ready after 15 minutes; gave up waiting"' % (os.sep.join([coverityDirINT,'c/output/.cache/models'])))
-
+                    
                 self.system('echo "(3) cov-collect-models --dir %s -of %s/%s.xmldb"' % (coverityDirINT, derivedModelsDir, covName))
                 self.system('%scov-collect-models --dir %s -of %s/%s.xmldb' % (self.coverityPath ,coverityDirINT, derivedModelsDir, covName))
                 if os.path.exists('%s/%s_trunk.xmldb.lock' % (derivedModelsDir,covName)):
@@ -994,19 +1024,39 @@ class LHCbProjectBuilder(object):
             self.system('make -k -j%s -l%s Package_failure_policy=ignore logging=enabled > make.%s.log' % (str(self.minusj), str(self.minusl), str(os.environ['CMTCONFIG']),) )
         os.chdir(self.generatePath(self.slot, self.project, 'TAG', self.projName))
         logFiles = []
+        svnInfoPath = []
         for r, d, f in os.walk("."):
             if r == ".": continue
             elif "cmt" in d: d[:] = ["cmt"]
             else:
                 if "build.%(CMTCONFIG)s.log" % os.environ in f:
                     logFiles.append((os.stat(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)).st_mtime, os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ)))
-        logFiles.sort()
+                    # packageBuildSVN = []
+                    # packageBuildSVN.append('svn build ' + '*'*80 + ' ')
+                    # packageBuildSVN.append('svn info for:  %s ' % (svnInfoPath[svnInfoCounter]))
+                    # packageBuildSVN.append('svn info in current path: %s/%s ' % (os.getcwd(),svnInfoPath[svnInfoCounter]))
+                    # packageBuildSVN.append('svn info %s' % (svnInfoPath[svnInfoCounter]))
+                    # packageBuildSVN.append('svn build ' + '*'*80 + ' ')
+                    # # # svn
+                    # packageBuildLog = open(os.path.join(r, "build.%(CMTCONFIG)s.log" % os.environ), 'a')
+                    # packageBuildLog.write('\n'.join(packageBuildSVN))
+                    # packageBuildLog.close()
+                    svnInfoPath.append(r)
+        # logFiles.sort()
         sys.stdout.flush()
         sys.stderr.flush()
+        svnInfoCounter = 0
         for x in logFiles:
             self.system('echo "' + '-'*80 + '"')
             self.system('echo "Logfile: ' + x[1] + '"')
             self.system('echo "' + '-'*80 + '"')
+            # # svn info
+            self.system('echo "svn package ' + '*'*80 + '"')
+            self.system('echo "svn info for:  %s " ' % str(svnInfoPath[svnInfoCounter]))
+            self.system('echo "svn info in current path: %s/%s" ' % (os.getcwd(),str(svnInfoPath[svnInfoCounter])))
+            self.system("svn info %s" % str(svnInfoPath[svnInfoCounter]))
+            self.system('echo "svn package ' + '*'*80 + '"')
+            svnInfoCounter = svnInfoCounter + 1
             self.system('cat ' + x[1])
             sys.stdout.flush()
             sys.stderr.flush()
@@ -1048,15 +1098,15 @@ class LHCbProjectBuilder(object):
             coverityLogPath = os.path.join(coverityDir,'INT','build-log.txt')
         else:
            self.system('echo "Coverity error: Did not find build log in %s nor in %s, please check"' % (coverityDirINT,os.path.join(coverityDir,'INT','build-log.txt')))
-
+            
         self.system('echo "Coverity message: search for build-log %s"' % (coverityLogPath))
 
         try:
             if os.path.exists(coverityLogPath):
                 self.system('echo "Coverity message: compare analyzed and existing source files from %s"' % (coverityLogPath))
-                coverityBuildLogFile = open(coverityLogPath,'r')
+                coverityBuildLogFile = open(coverityLogPath,'r') 
                 checkedFileList = []
-
+                        
                 for line in coverityBuildLogFile:
                     if line.find("Emit") > -1:
                         checkedFileList.append(line.split("'")[1])
@@ -1069,7 +1119,7 @@ class LHCbProjectBuilder(object):
                     if os.path.exists(coveritySourcePath):
                         sourceFileList = []
                         sourceFileCounter = 0
-
+            
                         for PathIterator in os.walk(coveritySourcePath):
                             for FileIterator in PathIterator[2]:
                                 if FileIterator.endswith(".cpp"):
@@ -1095,14 +1145,14 @@ class LHCbProjectBuilder(object):
 ##         except IOError as (errno, strerror):
 ##              self.system('echo "Coverity error: IOError while comparing checked and existing files: %s -- %s"' (errno, strerror))
 ##         except Exception as (errno, strerror):
-##              self.system('echo "Coverity error: unexpected error. Break with exception: %s -- %s' % (errno,strerror))
+##              self.system('echo "Coverity error: unexpected error. Break with exception: %s -- %s' % (errno,strerror))                
 ##              pass
         except IOError:
             self.system('echo "Coverity error: IOError while comparing checked and existing files"' )
         except Exception:
-            self.system('echo "Coverity error: unexpected error. Break with exception"')
+            self.system('echo "Coverity error: unexpected error. Break with exception"')                
             pass
-
+        
 
     @ignore_exception
     def docs(self):
@@ -1206,10 +1256,10 @@ class LHCbProjectBuilder(object):
                 logData = ''.join(file(os.path.join(self.slot.buildDir(), 'www', '%s.%s_%s-%s.log' % (self.slot.getName(), self.day, tagName, self.plat)), 'r').readlines())
                 server.saveLog(self.day, self.slot.getName(), tagName, self.plat, 3, logData)
 ##             except Exception as (errno, strerror):
-##                 self.system('echo "warning: writing Windows logs to nightlies server failed: %s -- %s' % (errno,stderror))
+##                 self.system('echo "warning: writing Windows logs to nightlies server failed: %s -- %s' % (errno,stderror))     
 ##                 pass
             except Exception:
-                self.system('echo "warning: writing Windows logs to nightlies server failed"')
+                self.system('echo "warning: writing Windows logs to nightlies server failed"')     
                 pass
         #end of: writing logs directly to Nightlies server (for Windows)
 
@@ -1254,7 +1304,7 @@ class LHCbProjectBuilder(object):
                                    os.path.join(releasePath, self.projName.upper(), tagName),
                                    lambda path: (copyNotShared and pathBinaryMatch(path, self.plat)) or (copyShared and pathSharedMatch(path))
                     )
-
+    
                 if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 ##         except IOError as (errno, strerror): #no AFS token on Windows
 ##             self.system('echo "warning: IOError: probably no AFS token on Windows, writing logs failed: %s -- %s' % (errno,stderror))
@@ -1277,7 +1327,7 @@ class LHCbProjectBuilder(object):
 
     @fork_call
     def test(self):
-        from checkTestLogs import checkTestLogs
+        from checkTestLogs import checkTestLogs 
         import datetime
         print "[LHCb] test"
         self.disableLCG_NIGHTLIES_BUILD()
@@ -1589,7 +1639,7 @@ class LHCbProjectBuilder(object):
             if files:
                 fullPath = root+os.sep
                 path = fullPath.replace(sourceDir, '')
-                files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo' and check(fullPath+x)]
+                files = [x for x in files if x[-4:] != '.pyc' and x[-4:] != '.pyo' and x[-2:] != '.a' and x[-2:] != '.o' and check(fullPath+x)]
                 if len(' '.join(files)) > 30720: # to be on the safe side: 30K limit (Win: 32K, Red Hat 128K)
                     maxFilesPerCopyCmd = 200 # files
                     listOfLists = [files[i:i+maxFilesPerCopyCmd] for i in range(0, len(files), maxFilesPerCopyCmd)]
@@ -1632,9 +1682,7 @@ class LHCbProjectBuilder(object):
             else:
                 os.environ[x] = "%s%s%s" % (envChange[x], os.pathsep, os.environ[x])
 
-
-
-
+            
 import BaseServer
 
 class LHCbServer(BaseServer.Server):
@@ -1660,7 +1708,7 @@ class LHCbServer(BaseServer.Server):
         # find a slot object in configuration
         from configuration import Configuration
         conf = Configuration()
-        conf.readConf(configFile=None, configContents=self.config)
+        conf.readConf(configFile=None, configContents=self.config) 
         slotObj = conf.findSlot(slot, conf._slotList)
 
         # if doesn't exist, create isStarted file
