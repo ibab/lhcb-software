@@ -1,5 +1,5 @@
 package LbUtils
-version v3r6
+version v3r7
 
 use LbScriptsPolicy v*
 

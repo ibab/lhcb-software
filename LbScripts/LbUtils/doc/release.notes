@@ -1,3 +1,7 @@
+2012-02-14  Ben Couturier  <ben.couturier@cern.ch>
+
+       * cmt/requirements: release of version v3r7
+
 2012-01-18  Ben Couturier  <ben.couturier@cern.ch>
 
     * python/LbUtils/Script.py: added profiling to Script ancestor. All classes inheriting can now be profiled
