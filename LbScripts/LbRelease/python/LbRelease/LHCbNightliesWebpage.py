@@ -16,6 +16,21 @@ from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName, ge
 from LbUtils.afs.volume import Volume
 from NightliesXML import messageXML, unique
 
+from killtree import killTree
+try:
+    import subprocess
+    def getcmdoutput(cmd, params):
+        return subprocess.Popen([cmd, params], stdout=subprocess.PIPE).communicate()[0]
+    def getPIDRunTime(pid):
+        'get the runtime of a process from its PID creation date in /date -- not very  '
+        startTime = subprocess.Popen(['ls','-ld','/proc/'+pid], stdout=subprocess.PIPE).communicate()[0].split()[-2].split(':')
+        currentTime = getcmdoutput('date','+\%k:%M').strip('\n\\').split(':')
+        runTime = (int(currentTime[0])-int(startTime[0]))*60 + int(currentTime[1])-int(startTime[1])
+        return runTime
+except ImportError:
+    print "subprocess: no module."
+    raise SystemExit
+
 sqliteLoaded = 0
 try:
     import sqlite
@@ -28,8 +43,6 @@ except ImportError:
     except ImportError:
         print "no module sqlite3 -- gave up"
         
-print sys.version
-print os.__file__
 
 log=logging.getLogger("nightlies.shownightlies")
 h=logging.FileHandler("showNightlies.log")
@@ -130,6 +143,9 @@ def uniqDictionaryList(inputListOfDictionaries):
         if includedCounter == len(outputListOfDictionaries):
             outputListOfDictionaries.append(inputDictionary)
     return outputListOfDictionaries
+
+# --------------------------------------------------------------------------------
+
 
 def getBuildSummary(slotObj, day, pkgName, plat):
     nWarn   = None
@@ -1188,20 +1204,53 @@ def generateIndexSVN(resultFileName, svnNow=False):
         raise
 
 
+def checkRunningWebpages(resultFileName='/afs/cern.ch/lhcb/software/nightlies/www/test-index-LHCb-cache.html'):
+    isRunningFileName = resultFileName.rstrip('html')+'isRunning'
+    killAfterMinutes = 65
+    currentPID = str(os.getpid())
+    runningWebpagesPIDs = getRunningProcesses('LHCbNightliesWebpage.py')
+    runningWebpagesPIDs.remove(currentPID)
+    if len(runningWebpagesPIDs) > 0:
+        print "%i other instances running" % len(runningWebpagesPIDs)
+        for pids in runningWebpagesPIDs:
+            runTime = getPIDRunTime(pids)
+            print 'PID: %s running for %s minutes' % (pids,runTime)
+            if runTime > killAfterMinutes:
+                print 'killing process %s after running for more than %s minutes' % (pids,killAfterMinutes)
+                killTree(pids)
+            else:
+                print 'wait for %s more minutes for previous webpage update to finish' % (killAfterMinutes-runTime)
+                sys.exit()
+
+def getRunningProcesses(processName="LHCbNightliesWebpage.py"):
+    runningPIDs = []
+    for runningProcesses in getcmdoutput('ps', '-eo '+' '+'%p%a'+'').split('\n'):
+        if processName in runningProcesses:
+            runningPIDs.append(runningProcesses.split()[0])
+    return runningPIDs
 
 if __name__ == "__main__":
     parser = OptionParser()
     parser.set_usage("usage: %prog XML_FILE OUTPUT_HTML_FILE\n       %prog OUTPUT_HTML_FILE")
     parser.set_description("Creates html file containing summary of nightly builds.")
     (options, args) = parser.parse_args()
-    if len(args) == 1: # SVN
+    makeRunningCheck = True
+    if len(args)>0:
+        resultFileName = str(args[0])
+        for argument in args:
+            if argument == 'force':
+                makeRunningCheck = False
+        if makeRunningCheck:
+            checkRunningWebpages(resultFileName)
+
+    if (len(args) == 1) or (len(args) == 2 and args[1] == 'force'): # SVN
         generateIndexSVN(args[0])
-    elif len(args) == 2 and args[1] == 'SVN':
+    elif (len(args) == 2 and args[1] == 'SVN') or (len(args) == 3 and args[1] == 'SVN' and args[2] == 'force'):
         generateIndexSVN(args[0], True)
-    elif len(args) == 2:
-        generateIndex(args[0], args[1])
+    elif (len(args) == 2 and args[1]!='force') or (len(args) == 3 and args[1]!='force' and args[2]=='force'):
+        generateIndex(args[0], args[1]) 
     else:
         parser.print_help()
         sys.exit()
-
-
+    if len(args)>0 and os.path.lexists(str(args[0]).rstrip('html')+'isRunning'):
+        os.remove(str(args[0]).rstrip('html')+'isRunning')
