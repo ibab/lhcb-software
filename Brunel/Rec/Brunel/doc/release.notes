@@ -9,6 +9,10 @@ Purpose: LHCb reconstruction program
   . Use wasDecoded flag to count missed Velo sensors, improves speed (FastVelo)
   . Fix gcc4.3/4.6 differences due to sort order (TfKernel, PatAlgorithms)
   . Improvements in track fit initialization and clone rejection (TrackTools)
+  . Set q/p of long tracks by extrapolating from T, not from velo (TrackTools)
+  . Do not apply FilterFillingScheme in data prior to 2011 since information
+    not available in CondDB (LumiAlgs)
+  . Update FilterFillingScheme for 2012 (LumiAlgs)
 
 </PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,
