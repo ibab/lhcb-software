@@ -296,3 +296,28 @@ B0q2DplusMuX = {
     'STREAMS' : [ 'Semileptonic' ],
     'WGs'    : ['Semileptonic']
     }
+
+D0ForBXX = {
+    'BUILDERTYPE'       : 'D0forBXXLinesConf',
+    'CONFIG'    : {
+    "PreScale"      : 0.005   # adimensiional
+    ,"PreScaleRS"   : 1.0    # adimensiional
+    ,"PreScaleWS"   : 0.2    # adimensiional
+    ,"MINIPCHI2"     : 9.0   # adimensiional
+    ,"TRCHI2"        : 3.0   # adimensiional
+    ,"KaonPIDK"      : 4.0   # adimensiional
+    ,"PionPIDK"      : 10.0   # adimensiional
+    ,"PT"            : 300.0  # MeV
+    ,"D0DIRA"        : 0.9999    # adimensiional
+    ,"D0DIRAK3Pi"    : 0.9999    # adimensiional
+    ,"FDCHI2"        : 100.0   # adimensiional
+    ,"D0AMassWin"    : 100.0   # MeV
+    ,"D0MassWin"     : 80.0  # MeV
+    ,"D0IP"          : 0.2    #mm
+    ,"D0K3PiIP"      : 0.2    #mm
+    ,"D0VCHI2DOF"    : 6.0   # adimensiional
+    ,"DDocaChi2Max" : 20   #adimensiional 
+     },
+    'STREAMS' : ['CharmCompleteEvent'],
+    'WGs'    : ['Semileptonic'] 
+    }
