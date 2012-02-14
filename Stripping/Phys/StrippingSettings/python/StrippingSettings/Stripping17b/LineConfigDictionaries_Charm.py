@@ -258,3 +258,109 @@ PromptD2hh = {
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'CharmCompleteEvent' ]
     }
+
+D2hhhMicroKKPi = { 
+   'BUILDERTYPE' : 'D2hhhConf' ,
+   'CONFIG' : {
+   'DaughterPT'                :  250.,
+   'DaughterP'                 : 2000.,
+   'DaughterIPChi2'            :    4.,
+   'Daughter2IPChi2'           :   10.,
+   'D2KKKDaughterIPChi2'       :    2.,
+   'D2KKKDaughter2IPChi2'      :    4.,
+   'KPIDK'                     :    7.,
+   'piPIDK'                    :    3.,
+   'PTSum'                     : 1800.,
+   'DOCAChi2'                  :   50.,
+   'DPt'                       : 1000.,
+   'DIPChi2'                   :   15.,
+   'DdcaFDChi2'                :  100.,
+   'DDIRA'                     :    0.0,
+   'DVXChi2NDOF'               :   10.,
+   'MinMassPosFit'             : 1800.,
+   'MaxMassPosFit'             : 2040.,
+   'D2KPPMaxMassPosFit'        : 1940.,
+   'Ds2KKPosMinMassPosFit'     : 1900.,
+   'D2HHHIncMinMassPosFit'     : 1100.,
+   'D2HHHIncMaxMassPosFit'     : 2070.,
+   'MaxTracksInEvent'          :  500,
+   'D2KKPLinePrescale'         :    0.01,
+   'D2KKPLinePostscale'        :    1.0,
+   'D2KPPLinePrescale'         :    0.0,
+   'D2KPPLinePostscale'        :    0.0,
+   'D2PPPLinePrescale'         :    0.0,
+   'D2PPPLinePostscale'        :    0.0,
+   'D2KPPosLinePrescale'       :    0.0,
+   'D2KPPosLinePostscale'      :    0.0,
+   'D2KKKLinePrescale'         :    0.0,
+   'D2KKKLinePostscale'        :    0.0,
+   'Ds2KKPosLinePrescale'      :    0.0,
+   'Ds2KKPosLinePostscale'     :    0.0,
+   'D2KPPosLinePrescale'       :    0.0,
+   'D2KPPosLinePostscale'      :    0.0,
+   'D2HHHIncLinePrescale'      :    0.0,
+   'D2HHHIncLinePostscale'     :    0.0,
+   'HLT'                       : None
+   },
+   'WGs' : [ 'Charm' ],
+   'STREAMS' : [ 'CharmCompleteEvent' ]
+   }
+
+DstarD2KShh = {
+    'BUILDERTYPE' : 'DstarD2KShhBuilder',
+    'CONFIG'      : {
+    'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
+    ,'KSLLCutDIRA'          :    0.9997   ## unitless
+    ,'KSDDCutDIRA'          :    0.99995  ## unitless
+    ,'KSLLCutMass'          :   11.4      ## in MeV
+    ,'KSDDCutMass'          :   24.9      ## in MeV
+    ,'KSLLCutFDChi2'        :  100        ## unitless
+    ,'KSDDCutFDChi2'        :  100        ## unitless
+    ,'trackFromDCutP'       : 1500.0      ## in MeV
+    ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
+    ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
+    ,'pionFromDCutPIDK'     :   -1.0
+    ,'kaonFromDCutPIDpi'    :   -3.0
+    ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
+    ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
+    ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0
+    ,'DCutTau'              :    0.3      ## ps
+    ,'DCutVtxChi2_KK'       :   21.0      ## unitless
+    ,'DCutVtxChi2_KP'       :   15.0      ## unitless
+    ,'DCutVtxChi2_PP'       :   13.0      ## unitless
+    ,'preFitDCutPT'         : 1500.0      ## in MeV
+    ,'preFitDMassCut_LL'    :  130        ## in MeV
+    ,'preFitDMassCut_DD'    :  270        ## in MeV
+    ,'wideDMassCut_KKLL'    :   57.2      ## in MeV
+    ,'wideDMassCut_KPLL'    :   92.0      ## in MeV
+    ,'wideDMassCut_PPLL'    :  110.0      ## in MeV
+    ,'wideDMassCut_KKDD'    :   72.0      ## in MeV
+    ,'wideDMassCut_KPDD'    :  120.0      ## in MeV
+    ,'wideDMassCut_PPDD'    :  140.0      ## in MeV
+    ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
+    ,'wideDMCutLower'       :    0.0      ## in MeV
+    ,'wideDMCutUpper'       :   15.0      ## in MeV
+    ,'DstarCutPT_KK'        : 2200.0      ## in MeV
+    ,'DstarCutPT_KP'        : 2200.0      ## in MeV
+    ,'DstarCutPT_PP'        : 2200.0      ## in MeV
+    ,'DstarCutChi2NDOF_KK'  :   60.0      ## unitless
+    ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
+    ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
+    ,'SoftPionCutPIDe'      :    5.0      ## unitless
+    ,'KKLLPrescale'         :    1.0
+    ,'KKLLPostscale'        :    1.0
+    ,'KPLLPrescale'         :    1.0
+    ,'KPLLPostscale'        :    1.0
+    ,'PPLLPrescale'         :    1.0
+    ,'PPLLPostscale'        :    1.0
+    ,'KKDDPrescale'         :    1.0
+    ,'KKDDPostscale'        :    1.0
+    ,'KPDDPrescale'         :    1.0
+    ,'KPDDPostscale'        :    1.0
+    ,'PPDDPrescale'         :    1.0
+    ,'PPDDPostscale'        :    1.0
+    },
+    'WGs' : ['Charm'],
+    'STREAMS' : [ 'CharmCompleteEvent' ]
+    }
+
