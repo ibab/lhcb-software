@@ -185,6 +185,9 @@ std::vector<Vertex> bJetSeeds::build3PartSV(
                                            (*ip3)->momentum();
           if(delZPVSV < m_dZSVPV) continue;
           if(sumMom123.Pt() / Gaudi::Units::GeV < m_sumMomSV) continue;
+          double sumCh = (*ip1)->charge() + (*ip2)->charge() + 
+                         (*ip3)->charge();
+          if(fabs(sumCh) == 3) continue;
           if(sVtx.chi2PerDoF() > m_vtxChi2) continue;
           // Push back secondary vertices
           seedVrtcs.push_back(sVtx); 

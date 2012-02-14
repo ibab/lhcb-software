@@ -6,6 +6,9 @@
 !========================= HighPtJets v1r6 2012-02-03 =========================
 
 ! 2012-02-01 - Marcin Kucharczyk
+- Add new cut into bJetSeeds algo
+
+! 2012-02-01 - Marcin Kucharczyk
  - Add new algorithm bJetSeeds as an external algo for InclbJets stripping 
    line
 
