@@ -1,3 +1,7 @@
+2012-02-14 Ben Couturier <Ben.Couturier@cern.ch> 
+
+        * cmt/requirements: release of version v4r7
+
 2012-02-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease/python/LbRelease/rcs.py: added branch creation for Subversion
