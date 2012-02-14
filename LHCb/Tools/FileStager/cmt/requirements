@@ -34,9 +34,11 @@ apply_pattern    linker_library library=FileStagerFunctions
 #============================================================================
 application           garbage              "../src/app/garbage.cpp"
 macro_append garbage_use_linkopts "${Boost_linkopts_program_options} "
+macro_append garbage_dependencies "FileStagerFunctions"
 
 application           hash_filename        "../src/app/hash_filename.cpp"
 macro_append hash_filename_use_linkopts "${Boost_linkopts_program_options} "
+macro_append hash_filename_dependencies "FileStagerFunctions"
 
 macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_regex) $(Boost_linkopts_iostreams) $(Boost_linkopts_thread) $(Boost_linkopts_filesystem) "
 
