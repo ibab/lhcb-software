@@ -39,4 +39,7 @@ use $(XMLSummaryKernel_use_RELAX)
 
 macro XMLSummaryKernel_use_HepMC "" QMTest "HepMC v* LCG_Interfaces"
 use $(XMLSummaryKernel_use_HepMC)
+
+macro XMLSummaryKernel_use_DDDB "" QMTest "DDDB v* Det"
+use $(XMLSummaryKernel_use_DDDB)
 end_private

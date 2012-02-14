@@ -7,7 +7,7 @@
 		<stat unit="KB" useOf="MemoryMaximum">540616.0</stat>
 	</usage>
 	<input>
-		<file GUID="96219CE3-0330-DE11-9662-00304879EE40" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst" status="part">3</file>
+		<file GUID="96219CE3-0330-DE11-9662-00304879EE40" name="PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/Brunel/v34r5/00001820_00000001.dst?svcClass=default" status="part">3</file>
 	</input>
 	<output>
 		<file GUID="96E7B1D9-9AC5-DF11-96BF-003048673256" name="PFN:RootDst.root" status="part">3</file>
