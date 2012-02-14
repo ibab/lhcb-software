@@ -40,7 +40,8 @@ package_names = ['XmlDDDB',
                  'jre',
                  'CPConfig',
                  'RDConfig',
-                 'CharmConfig']
+                 'CharmConfig',
+		 'TMVAWeights']
 
 class PackageConfException(Exception):
     pass
@@ -272,6 +273,8 @@ Geant4Files.setProject("PARAM")#IGNORE:E0602
 Geant4Files.disableDereferenceTar()#IGNORE:E0602
 
 MIBData.setProject("PARAM")#IGNORE:E0602
+
+TMVAWeights.setProject("PARAM")#IGNORE:E0602
 
 L0TCK.setHat("TCK")#IGNORE:E0602
 L0TCK.setProject("DBASE")#IGNORE:E0602

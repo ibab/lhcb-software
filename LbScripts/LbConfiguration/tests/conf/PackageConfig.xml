@@ -15,6 +15,7 @@
  <package name="LHCbBkg" project="PARAM"/>
  <package name="Geant4Files" project="PARAM"/>
  <package name="MIBData" project="PARAM"/>
+ <package name="TMVAWeights" project="PARAM"/>
  <package hat="TCK" name="L0TCK" project="DBASE"/>
  <package hat="TCK" name="HltTCK" project="DBASE"/>
  <package name="AppConfig" project="DBASE"/>

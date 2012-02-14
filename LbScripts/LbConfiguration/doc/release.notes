@@ -1,3 +1,7 @@
+2012-02-14 Ben Couturier <Ben.Couturier@cern.ch>
+
+        * python/LbConfiguration/Package.py: Added new package TMVAWeights 
+
 2012-01-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: removed the reference to GaudiPoolDb (deprecated)
