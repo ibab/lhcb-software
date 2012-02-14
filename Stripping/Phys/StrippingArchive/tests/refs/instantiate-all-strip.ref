@@ -517,14 +517,14 @@ Muon cut:               (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)
 
 KstarFilter cut:     (VFASPF(VCHI2/VDOF) < 12.0) & (BPVDIRA> -0.9) & (M > 600.0 * MeV) & (M < 2000.0 * MeV) & (BPVVDCHI2 > 9.0) & (MIPCHI2DV(PRIMARY) > 0.0) & (MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> 9.0 ) & (INTREE(ABSID=='K+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0)) & (INTREE(ABSID=='pi+') & (TRCHI2DOF < 5.0) & (MIPCHI2DV(PRIMARY) > 9.0))
 Created lines
-Creating Bhadron stream with 92 lines
+Creating Bhadron stream with 94 lines
 Creating Semileptonic stream with 52 lines
 Creating PID stream with 12 lines
 Creating Dimuon stream with 131 lines
 Creating Radiative stream with 22 lines
 Creating Charm stream with 39 lines
 Creating EW stream with 4 lines
-Creating CharmCompleteEvent stream with 17 lines
+Creating CharmCompleteEvent stream with 34 lines
 =============================================
 Stripping13Calib :
 =============================================
