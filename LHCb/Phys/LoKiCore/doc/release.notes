@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2012-02-14 - Vanya Belyaev
+ - small fix 
+
 ! 2012-02-13 - Vanya Belyaev
 
  - improve treatment of vector-like argument 

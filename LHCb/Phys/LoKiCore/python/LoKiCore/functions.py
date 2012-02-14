@@ -1065,11 +1065,39 @@ def mark ( tree ) :
 # =============================================================================
 # make various vectors 
 # =============================================================================
-## build vector of certain type  
-def _make_vct_ ( results             ,
-                 arg1                ,
-                 func = lambda v,a : s.push_back ( a ) ,
-                 *arg                ) :
+def _append_   ( v , o ) :
+    """
+    Generic ``append''-function
+    """
+
+    ## list 
+    if issubclass ( type(v) , list ) :
+        if issubclass ( type(o) , list ) :
+            v += o
+        else : v.append ( o )
+        return v
+
+    ## std.vector
+    if hasattr ( v , 'push_back' ) :
+        if hasattr ( o , 'push_back' ) :
+            for i in o : v.push_back ( i )
+        else : v.push_back ( o )
+        return v
+
+    ## increment 
+    if hasattr ( v , '__iadd__' ) :
+        v += o
+        return v
+
+    ## everything else
+    v = v + o 
+    return v 
+        
+## build vector of certain type
+def _make_vct_ ( results         ,
+                 arg1            ,
+                 func = _append_ ,
+                 *arg            ) :
     """
     Make vector/container of certain type from the arguments 
     """
@@ -1115,7 +1143,7 @@ def strings ( arg1 , *arg ) :
     vct = VT()
     return _make_vct_ ( vct  ,
                         arg1 ,
-                        lambda v,s : v.push_back ( str ( s ) ) ,
+                        lambda v,s :  _append_ ( v , str ( s ) ) ,
                         *arg ) 
 
 # =============================================================================
@@ -1133,7 +1161,7 @@ def doubles ( arg1 , *arg ) :
     vct = VT()
     return _make_vct_ ( vct  ,
                         arg1 ,
-                        lambda v,s : v.push_back ( float ( s ) ) ,
+                        lambda v,s :  _append_ ( v , s ) ,
                         *arg ) 
 
 # =============================================================================
@@ -1151,7 +1179,7 @@ def ints ( arg1 , *arg ) :
     vct = VT()
     return _make_vct_ ( vct  ,
                         arg1 ,
-                        lambda v,s : v.push_back ( int ( s ) ) ,
+                        lambda v,s :  _append_ ( v , s ) ,
                         *arg ) 
 
 # =============================================================================
@@ -1169,7 +1197,7 @@ def uints ( arg1 , *arg ) :
     vct = VT()
     return _make_vct_ ( vct  ,
                         arg1 ,
-                        lambda v,s : v.push_back ( int ( s ) ) ,
+                        lambda v,s :  _append_ ( v , s ) ,
                         *arg ) 
 
 # =============================================================================
@@ -1233,7 +1261,7 @@ def vct_from_list  ( lst , *args ) :
 ## @see LoKi::FirstN
 def first_n ( N ) :
     """
-    helper object to selexct the first N-elements from the stream 
+    helper object to select the first N-elements from the stream 
     """
     return LoKi.FirstN( N )
 
@@ -1244,6 +1272,42 @@ dump    = LoKi.Dump ()
 ## @see LoKi::Reverse 
 reverse = LoKi.Reverse()
 
+
+## add the sequence to the vector 
+def _iadd_ ( v , o ) :
+    """
+    add the sequence to the vector
+    """
+    if hasattr ( o , '__len__' ) and not issubclass ( type(o) , str ) : 
+        for i in o : v.push_back ( i )
+    else :           v.push_back ( o )
+    return v
+
+## Summation of the vector and the sequence
+def _add_  ( v , o ) :
+    """
+    Summation of the vector and the sequence
+    """
+    #
+    v2 = type(v)( v )
+    if hasattr ( o , '__len__' ) and not issubclass ( type(o) , str ) : 
+        for i in o : v2.push_back ( i )
+    else :           v2.push_back ( o )
+    #
+    return v2    
+    
+## minor decorations 
+for t in ( 'int'    ,
+           'double' ,
+           'long'   ,
+           'string' ) :
+    
+    k = std.vector( t )
+    k.__str__  = lambda s : str( [ i for i in s ] )
+    k.__repr__ = k.__str__
+    k.__iadd__ = _iadd_
+    k.__add__  = _add_
+    
 # =============================================================================
 if '__main__' == __name__ :
 
