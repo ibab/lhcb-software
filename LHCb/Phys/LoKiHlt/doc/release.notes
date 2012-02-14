@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-14 - Vanya Belyaev
+ - small fix 
+
 ! 2012-02-13 - Vanya Belyaev
  - fix event numbers 
 

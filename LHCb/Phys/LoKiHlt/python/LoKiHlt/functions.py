@@ -408,12 +408,12 @@ def evtnum_lst ( arg1 , *arg ) :
     """
     Build the vector of event-numbers from fragments
     """
-    from LoKiCore.functions import _make_vct_ 
+    from LoKiCore.functions import _make_vct_ , _append_ 
     vct = EvtNumList () 
-    return _make_vct_ ( vct  ,
-                        arg1 ,
-                        lambda v,s : v + s ,
-                        *arg )
+    return _make_vct_ ( vct      ,
+                        arg1     ,
+                        _append_ , 
+                        *arg     )
 
 # =============================================================================
 ## build the vector of event-numbers from fragments 
@@ -421,13 +421,13 @@ def runevt_lst ( arg1 , *arg ) :
     """
     Build the vector of event-numbers from fragments
     """
-    from LoKiCore.functions import _make_vct_ 
+    from LoKiCore.functions import _make_vct_ , _append_
     vct = RunEvtList ()
     ## 
-    return _make_vct_ ( vct  ,
-                        arg1 ,
-                        lambda v,s : v + s ,
-                        *arg ) 
+    return _make_vct_ ( vct      ,
+                        arg1     ,
+                        _append_ , 
+                        *arg     ) 
     
 # =============================================================================
 ## helper function to define properly ODIN_EVTNUMBER predicate
