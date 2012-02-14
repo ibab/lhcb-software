@@ -140,7 +140,11 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     }
 
     double qOverP( const PatFwdTrackCandidate& track ) const;
-
+    double zMagnet( const PatFwdTrackCandidate& track ) const;
+    double magscalefactor() const { return m_magFieldSvc->signedRelativeCurrent();} ;
+    
+    
+    
   protected:
 
   private:

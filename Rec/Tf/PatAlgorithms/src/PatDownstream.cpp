@@ -25,6 +25,7 @@ using ROOT::Math::CholeskyDecomp;
 #include "PatKernel/IPatDebugTTTool.h"
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/ITTHitCreator.h"
+#include "Event/StateParameters.h"
 
 // local
 #include "PatDownTrack.h"
@@ -789,27 +790,33 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
 //=========================================================================
 void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, LHCb::Track* tr ){
   //=== Store the tracks
+  //== new LHCb::Track
   LHCb::Track* dTr = new LHCb::Track();
-  dTr->addToAncestors( tr );                // set the seed as ancestor
-  dTr->setLhcbIDs(  tr->lhcbIDs()      );   // copy those from the Seed
-  LHCb::State tState = *track.state();
-  // check for FPE and magnet off
-  double QOverP = 1e-5;
-  if (std::abs(track.moment()) >  1e-6){
-      QOverP = 1.0 / track.moment();
-  }
-  tState.setQOverP( QOverP ); 
-  dTr->addToStates( tState     );   // copy the state of the seed
+  //== add ancestor
+  dTr->addToAncestors( tr );   
   //== Adjust flags
   dTr->setType(         LHCb::Track::Downstream  );
   dTr->setHistory(      LHCb::Track::PatDownstream   );
   dTr->setPatRecStatus( LHCb::Track::PatRecIDs   );
+  //== add Seed LHCbIDs
+  dTr->addSortedToLhcbIDs(  tr->lhcbIDs()      );  
   //== add new LHCbIDs
   for ( PatTTHits::iterator itH = track.hits().begin(); 
         track.hits().end() != itH; ++itH ){
     dTr->addToLhcbIDs( (*itH)->hit()->lhcbID() );
   }
-  // create a state at zTTa
+  
+  
+  //== add states
+  // S. Stahl added 3 T-States
+  
+  // check for FPE and magnet off
+  double QOverP = 1e-5;
+  if (std::abs(track.moment()) >  1e-6){
+      QOverP = 1.0 / track.moment();
+  }
+
+  //== create a state at zTTa
   LHCb::State ttState;
   ttState.setState( track.xAtZ( m_zTTa ),
                     track.yAtZ( m_zTTa ),
@@ -826,9 +833,36 @@ void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, 
   cov(4,4) = errQOverP * errQOverP;
   
   ttState.setCovariance( cov );
-  dTr->addToStates( ttState );
+  dTr->addToStates( ttState );   
   
-  finalTracks->insert( dTr);
+  //== add seed states
+  std::vector<LHCb::State*> newstates;
+  newstates.reserve(3);
+  newstates.push_back(tr->closestState(StateParameters::ZBegT).clone());
+  newstates.push_back(tr->closestState(StateParameters::ZMidT).clone());
+  // make sure we don't include same state twice
+  if (std::abs(newstates[newstates.size() - 2]->z() -
+               newstates.back()->z()) < 300.) {
+    delete newstates.back();
+    newstates.pop_back();
+  }
+  newstates.push_back(tr->closestState(StateParameters::ZEndT).clone());
+  // make sure we don't include same state twice
+  if (std::abs(newstates[newstates.size() - 2]->z() -
+               newstates.back()->z()) < 300.) {
+    delete newstates.back();
+    newstates.pop_back();
+  }
+  
+  // adjust q/p and its uncertainty
+  BOOST_FOREACH(LHCb::State* st, newstates) {
+    st->covariance()(4,4) = errQOverP * errQOverP;
+    st->setQOverP(QOverP);
+  }
+  dTr->addToStates(newstates);
+
+  //== Save track
+  finalTracks->insert( dTr );
 }
 
 

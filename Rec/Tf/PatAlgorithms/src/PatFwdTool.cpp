@@ -635,6 +635,19 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
 }
 
 //=========================================================================
+//  Returns center of magnet for velo track
+//=========================================================================
+double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
+{
+  //== correction behind magnet neglected
+  const double zMagnet    = ( m_zMagnetParams[0] +
+			  m_zMagnetParams[2] * track.slX2() +
+			  m_zMagnetParams[4] * track.slY2() );
+  return zMagnet;
+}
+
+
+//=========================================================================
 //  Set the RL flag for OT candidates, if obvious.
 //=========================================================================
 

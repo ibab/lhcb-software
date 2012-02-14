@@ -1,5 +1,8 @@
+
 // Include files
 
+// from boost
+#include <boost/assign/list_of.hpp>
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -61,9 +64,12 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "MaxDeltaYSlope"        , m_maxDeltaYSlope        =  300.      );
   declareProperty( "MaxXCandidateSize"     , m_maxXCandidateSize     =  50       );
 
-  declareProperty( "RangePerMeV"           , m_rangePerMeV           =  5250. * Gaudi::Units::GeV );
-  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
-  declareProperty( "RangeErrorFraction"    , m_rangeErrorFraction    =  0.60        );
+  declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  
+                   boost::assign::list_of(1255 * Gaudi::Units::MeV)(175 * Gaudi::Units::MeV));
+
+  declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.2 );
+  declareProperty( "MinRange"              , m_minRange              =   30. * Gaudi::Units::mm  );
 
   declareProperty("StateErrorX2",  m_stateErrorX2  =   4.0);
   declareProperty("StateErrorY2",  m_stateErrorY2  = 400.);
@@ -194,7 +200,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         bool inCenter = m_centerOTYSize > fabs( temp.y( 0. ) );
 
         if ( minOTX <= nbHit || inCenter ) {
-          xCandidates.push_back( temp );
+          
+          const double momentum=1.0/fabs(m_fwdTool->qOverP( temp ));
+          const double pt = track.sinTrack()*momentum;
+
+          //== reject if below threshold
+          if (m_withoutBField || (momentum>m_minMomentum && pt>m_minPt) ) xCandidates.push_back( temp );
           if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
             debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
         } else {
@@ -330,6 +341,10 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     int nbPlanes = fullCount.nbDifferent();
     if ( maxPlanes < nbPlanes ) maxPlanes = nbPlanes;
 
+    //== reject if below threshold
+    const double momentum=1.0/fabs(m_fwdTool->qOverP( temp ));
+    const double pt = track.sinTrack()*momentum;
+    if ( !m_withoutBField && ((momentum<m_minMomentum) || (pt<m_minPt)) ) continue;
     goodCandidates.push_back( temp );
 
     //== Update requirement according to already found good solutions...
@@ -497,7 +512,13 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
 
-void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, double xMax ) {
+void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, 
+                                 double kick, double maxRangeRef, double zMagnet ) {
+  double xExtrapRef = track.xStraight( m_fwdTool->zReference() );
+  // == propagate kick if momentum estimate given
+  if (kick > 0.0) xExtrapRef += kick ; 
+  const double xMin = xExtrapRef - maxRangeRef;
+  const double xMax = xExtrapRef + maxRangeRef;
 
   PatFwdHits::const_iterator itFwdH;
 
@@ -509,7 +530,12 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doubl
 
         double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
         double yRegion = track.yStraight( regionB->z() );
-        double xHitMin = xMin * regionB->z() / m_fwdTool->zReference();
+        
+        double xExtrapStation  = track.xStraight( regionB->z() );
+        // == propagate kick if momentum estimate given
+        if (kick > 0.0) xExtrapStation += kick *( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
+        const double deltaX = maxRangeRef * ( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
+        double xHitMin = xExtrapStation - deltaX;
         xHitMin        = xHitMin - fabs( yRegion * regionB->sinT() ) - 20.;
         double ty = track.slY();
         double y0 = track.yStraight( 0. );
@@ -807,29 +833,36 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   m_xHitsAtReference.clear();
 
   double xExtrap  = track.xStraight( m_fwdTool->zReference() );
+  //== calculate if minPt or minMomentum sets the window size
   double minMom = m_minPt / track.sinTrack();
   if ( m_minMomentum > minMom ) minMom = m_minMomentum;
-  double maxRange = m_rangePerMeV / minMom;
+  //== calculate center of magnet from Velo track
+  const double zMagnet =  m_fwdTool->zMagnet( track );
+  const double dSlope =  m_magnetKickParams[0] / ( minMom - m_magnetKickParams[1] ) ;
+  double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
 
-  if ( 0 != track.qOverP() && !m_withoutBField) {
+  double kick = 0.0;
+  if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
+    const double q = track.track()->charge();
+    const double magscalefactor = m_fwdTool->magscalefactor() ;
+    double kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
+    kick *= ( m_fwdTool->zReference() - zMagnet);
+    maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
+  
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug() << "   xExtrap = " << xExtrap
               << " q/p " << track.qOverP()
-              << " predict " << xExtrap + (m_rangePerMeV * track.qOverP()) << endmsg;
-    xExtrap += m_rangePerMeV * track.qOverP();
-    maxRange = m_minRange + m_rangeErrorFraction * m_rangePerMeV * fabs( track.qOverP() );
+              << " predict " << xExtrap + kick << endmsg;
+
   }
 
-  double minProj  = xExtrap - maxRange;
-  double maxProj  = xExtrap + maxRange;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "Search X coordinates, xMin " << minProj
-            << " xMax " << maxProj << endmsg;
+    debug() << "Search X coordinates, xMin " << xExtrap - maxRange
+            << " xMax " << xExtrap + maxRange << endmsg;
 
-
-  fillXList( track, minProj, maxProj );
-
+  fillXList( track, kick, maxRange, zMagnet );
+  
   if ( m_minXPlanes > m_xHitsAtReference.end() -  m_xHitsAtReference.begin() ) return;
 
   PatFwdHits::iterator itP, itB, itE, itF;

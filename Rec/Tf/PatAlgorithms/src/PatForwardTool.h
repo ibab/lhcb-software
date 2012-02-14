@@ -79,7 +79,10 @@ protected:
 
   void buildXCandidatesList( PatFwdTrackCandidate& track );
 
-  void fillXList( PatFwdTrackCandidate& track, double xMin, double xMax );
+  void fillXList ( PatFwdTrackCandidate& track, 
+                   double kick, double maxRangeRef, double zMagnet );
+  
+
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol );
 
@@ -98,6 +101,8 @@ private:
 
   //== Parameters of the algorithm
   bool   m_secondLoop;
+  bool   m_useMomentumEstimate;
+  double m_momentumEstimateError;
   double m_zAfterVelo;
   double m_yCompatibleTol;
   double m_yCompatibleTolFinal;
@@ -120,9 +125,10 @@ private:
   double m_maxDeltaYSlope;
   int    m_maxXCandidateSize;
 
-  double m_rangePerMeV;
+
+  std::vector<double>  m_magnetKickParams ;
   double m_minRange;
-  double m_rangeErrorFraction;
+
 
 
   // setting the cov matrix of the state
@@ -133,9 +139,6 @@ private:
   double m_stateErrorP;
 
   PatFwdHits  m_xHitsAtReference;
-  PatFwdHits  m_liste;
-  PatFwdHits  m_liste1;
-  PatFwdHits  m_liste2;
 
   std::vector<PatFwdTrackCandidate> m_candidates;
 

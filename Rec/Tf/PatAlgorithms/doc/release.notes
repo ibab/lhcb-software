@@ -4,6 +4,18 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2012-02-14 - Sascha Stahl
+ - PatDownstream: make sure we copy all three states in T to help the fast fit
+   in HLT
+ - PatForwardTool: Changed parametrisation of first search window in x. Required 
+	 to add property "MagnetKickParams" to PatForwardTool. 
+ - PatForwardTool, PatFwdTool: Fixed part which uses momentum estimate. 
+   This part of the code was not used anywhere or if it was used it could not 
+   work.
+   Removed property "RangeErrorFraction" and changed default value of "MinRange".
+	 To make sure that the user knows that a momentum estimate is used, 
+   added property "UseMomentumEstimate" which is false by default.
+	
 ! 2012-02-09 - Manuel Tobias Schiller
  - change calls to std::sort where hits were sorted by a potentially unstable
    sorting criterium to use std::stable_sort; the reason is that there is a
