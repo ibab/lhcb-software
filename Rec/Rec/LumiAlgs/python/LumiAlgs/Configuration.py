@@ -33,7 +33,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2011"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011']
+       ,"DataType"      : "2012"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011', '2012']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"MergeFSR"      : False      # merge FSRs into one container (incompatible with Integrate)
@@ -95,7 +95,14 @@ class LumiAlgsConf(LHCbConfigurableUser):
                 if i == 'Beam2': OppositeBeam = '1'
                 
                 if OppositeBeam != '0':
-                    if self.getProp("DataType") == "2011":
+
+                    if self.getProp("DataType") == "2008":
+                        pass
+                    elif self.getProp("DataType") == "2009":
+                        pass
+                    elif self.getProp("DataType") == "2010":
+                        pass
+                    elif self.getProp("DataType") == "2011":
                         fillingfilter = FilterFillingScheme('Filling'+i, 
                                                             Beam = OppositeBeam,                       # check the opposite beam
                                                             MagnetState = 'UP',                        # only for magnet UP
@@ -103,6 +110,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                             OutputLevel = self.getProp("OutputLevel"), # self.getProp("OutputLevel")
                                                             )
                         seqMembers.append( fillingfilter )
+                    
                     elif self.getProp("DataType") == "2012":
                         fillingfilter = FilterFillingScheme('Filling'+i, 
                                                             Beam = OppositeBeam,                       # check the opposite beam
@@ -112,6 +120,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                             )
                         seqMembers.append( fillingfilter )
                                                     
+                    else:
+                        assert False , "*** The luminosity logic is not yet set up for this datatype ***"
                 
                 accounting = LumiAccounting('LumiCount'+i,
                                             OutputDataContainer = "/FileRecords/LumiFSR"+i,

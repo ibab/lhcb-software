@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Jaap Panman
+ - make explicit that FilterFillingScheme is not used before 2011
+ - add protection for data beyond 2012, requiring explicit update
+
 ! 2012-02-13 - Jaap Panman
  - put 2011 behaviour for Brunel behind DataType check
  - initialize 2012 behaviour with safest possible condition
