@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v30r0>2012-02-15 DaVinci v30r0</A></H1><PRE>
+
+New release, based on Gaudi v23r0. For stripping 17b. 
+
 </PRE><H1><A NAME=v29r3p1>2012-01-12 DaVinci v29r3p1</A></H1><PRE>
 
 Patch release, including Phys/FlavourTagging v12r7
