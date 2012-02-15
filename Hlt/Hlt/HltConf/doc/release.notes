@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-15 Marcin Kucharczyk
+ - Adding new Hlt1 line selecting events with 1 PV
+
 ! 2012-02-07 - Marco Cattaneo
  - Remove unnecessary import in Configuration.py, needed after removal of
    GaudiConf.Configuration
