@@ -23,7 +23,28 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v18r4>2012-01-06 Bender v18r4p1 based on the DaVinci v29r3</A>
+<A NAME=v19r0>2012-02-15 Bender v19r0 based on the DaVinci v30r0</A>
+
+<PRE>		
+The version is similar  to v18r* with few bug-fixes.
+
+<li>
+Redesign TisTos moduel to use "new"-interface and to access 
+TPS/TUS categories (in addition to the standard TIS/TOS)
+</li>
+
+<li>
+Add the realistic Tis/Tos-example, use chi_b to Upsilon+gamma as test
+</li>
+
+<li>
+Add pyroot script (copy from DiCharm).
+</li>
+
+</PRE>
+
+
+<A NAME=v18r4p1>2012-01-06 Bender v18r4p1 based on the DaVinci v29r3</A>
 
 <PRE>		
 The version is similar  to v18r4 with few bug-fixes 
