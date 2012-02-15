@@ -217,39 +217,37 @@ class StrippingBuToK1MuMuConf(LineBuilder):
                                            postscale = config['Postscale_BuToK1MuMuSS'],
                                            selection = Sel_BuToK1MuMuSS )
         self.registerLine(Line_BuToK1MuMuSS)
+               
+        #self.printCuts()
         
-                
-        """
-        self.printCuts()
+    def printCuts(self):
+            
+        '''Print the compiled cut values'''
         
-        def printCuts(self):
-            
-            '''Print the compiled cut values'''
-            
-            print "-----------------------------------------"
-            print "--  Bu -> K1 mu mu stripping line cuts --"
-            print "-----------------------------------------"
-            print " "
-            print "Bu cut:                ", self.BuCut
-            print "Bu combination cut:    ", self.BuCombCut
-            print "K1 cut:                ", self.K1Cut
-            print "K1 combination cut   : ", self.K1CombCut
-            print "DiMuon cut:            ", self.DiMuonCut
-            print "Kaon cut:              ", self.KaonCut
-            print "Pion cut:              ", self.PionCut
-            print "Muon cut:              ", self.MuonCut
-            
-            print " "
-            print "-----------------------------------------------------------"
-            print "-- the cuts below should be compiled from the ones above --"
-            print "-----------------------------------------------------------"
-            print " "
-        #print "DiMuonFilter cut:   ", self.DiMuonFilterCut
+        print "-----------------------------------------"
+        print "--  Bu -> K1 mu mu stripping line cuts --"
+        print "-----------------------------------------"
+        print " "
+        print "Bu cut:                ", self.BuCut
+        print "Bu combination cut:    ", self.BuCombCut
+        print "K1 cut:                ", self.K1Cut
+        print "K1 combination cut   : ", self.K1CombCut
+        print "DiMuon cut:            ", self.DiMuonCut
+        print "Kaon cut:              ", self.KaonCut
+        print "Pion cut:              ", self.PionCut
+        print "Muon cut:              ", self.MuonCut
+        
+        print " "
+        print "-----------------------------------------------------------"
+        print "-- the cuts below should be compiled from the ones above --"
+        print "-----------------------------------------------------------"
+        print " "
+        
+        print "DiMuonFilter cut:   ", self.DiMuonFilterCut
         
         print "K1Filter cut:       ", self.K1FilterCut
         
-        return# True
-        """
+        return True
     
     ##########################################
     ## Create selections for StrippingLines ##

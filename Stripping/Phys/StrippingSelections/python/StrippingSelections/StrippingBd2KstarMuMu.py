@@ -284,7 +284,7 @@ class StrippingBdToKstarMuMuConf(LineBuilder):
         selection =  Sel_BuToKMuMuSS)
         self.registerLine(Line_BuToKMuMuSS)
 
-        self.printCuts()
+        #self.printCuts()
         
     def printCuts(self):
         

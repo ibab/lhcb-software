@@ -301,7 +301,7 @@ class StrippingBu2KX3872Conf(LineBuilder):
                                         selection = Sel_BuPsi2SK)
         self.registerLine(Line_BuToPsi2S)
 
-        self.printCuts()
+        #self.printCuts()
         
     def printCuts(self):
 
