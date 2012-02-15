@@ -22,6 +22,9 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+! 2012-02-15 - Vanya Belyaev
+ - add Chib.py example with TisTos
+
 !  ====================== Ex/BenderExample v18r0 2011-09-26 ==================
 
 ! 2011-09-26 - Vanya Belyaev
