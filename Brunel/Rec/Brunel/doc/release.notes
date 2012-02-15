@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
   . Do not apply FilterFillingScheme in data prior to 2011 since information
     not available in CondDB (LumiAlgs)
   . Update FilterFillingScheme for 2012 (LumiAlgs)
+  . Changes in PatForward X search window parameterisation (PatAlgorithms) 
 
 </PRE><H1><A NAME=v43r0>2012-02-03 Brunel v42r0</A></H1><PRE>
 This version uses projects LCG 62a, Gaudi v23r0, LHCb v34r0, Lbcom v12r0,

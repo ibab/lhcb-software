@@ -13,7 +13,7 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":3, "ERROR":2})
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":2})
 #"IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues"
 #"IODataManager       ERROR Referring to existing dataset root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw by its physical name"
 </text></argument>
