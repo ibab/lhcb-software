@@ -32,6 +32,7 @@ from microdstelements import ( CloneRecHeader,
                                CleanEmptyEventNodes )
 
 from GaudiConfUtils.ConfigurableGenerators import LoKi__CounterAlg as CounterAlg
+
 _gecConfig = CounterAlg(
     Preambulo = [
     "from LoKiTracks.decorators  import *" ,
@@ -63,15 +64,17 @@ _gecConfig = CounterAlg(
     }
     )
 
-def microDSTElements(pack=False) :
-    elements = [ CloneRecHeader(),
-                 CloneRecSummary(),
-                 CloneODIN(),
-                 GlobalEventCounters(configGenerator=_gecConfig),
+def microDSTElements(pack=True) :
+    elements = [ #CloneRecHeader(),
+                 #CloneRecSummary(),
+                 #CloneODIN(),
+                 #GlobalEventCounters(configGenerator=_gecConfig),
                  ClonePVs(),
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations("Particle2VertexRelations",True),
-                 CloneRawBanks( banks = ['ODIN'] )
+                 CloneLHCbIDs(fullDecayTree = True),
+                 ReFitAndClonePVs()
+                 #CloneRawBanks( banks = ['ODIN'] )
                  ]
     if pack :
         elements += [ PackStrippingReports(),
@@ -85,7 +88,7 @@ def microDSTStreamConf() :
                             fileExtension = '.mdst',
                             extraItems = ['/Event/Rec/Header#1'])
 
-def stripMicroDSTElements(pack=False) :
+def stripMicroDSTElements(pack=True) :
     '''
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
@@ -94,7 +97,7 @@ def stripMicroDSTElements(pack=False) :
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations("Particle2VertexRelations", True),
                  CloneLHCbIDs(fullDecayTree = True),
-                 ReFitAndClonePVs(),
+                 ReFitAndClonePVs()
                  ]
     if pack :
         elements += [ PackStrippingReports(),
@@ -103,23 +106,29 @@ def stripMicroDSTElements(pack=False) :
                       CleanEmptyEventNodes() ]
     return elements
 
-def stripMicroDSTStreamConf() :
-    return OutputStreamConf(streamType = OutputStream,
-                            fileExtension = '.mdst',
-                            extraItems = ['/Event/Rec/Header#1',
-                                          '/Event/Rec/Status#1',
-                                          '/Event/Rec/Summary#1',
-                                          '/Event/Strip/Phys/DecReports#1',
-                                          '/Event/Trigger/RawEvent#1'
-                                          ])
+def stripMicroDSTStreamConf(pack=True) :
+    eItems = [ '/Event/Rec/Header#1',
+               '/Event/Rec/Status#1',
+               '/Event/Rec/Summary#1',
+               '/Event/Trigger/RawEvent#1' ]
+    if pack :
+        eItems += ['/Event/Strip/pPhys/DecReports#1']
+    else :
+        eItems += ['/Event/Strip/Phys/DecReports#1']
+    return OutputStreamConf( streamType    = OutputStream,
+                             fileExtension = '.mdst',
+                             extraItems    = eItems )
 
-def stripCalibMicroDSTStreamConf() :
-    return OutputStreamConf(streamType = OutputStream,
-                            fileExtension = '.mdst',
-                            extraItems = ['/Event/Rec/Header#1',
-                                          '/Event/Rec/Status#1',
-                                          '/Event/Rec/Summary#1',
-                                          '/Event/Strip/Phys/DecReports#1',
-                                          "/Event/Trigger/RawEvent#1",
-                                          "/Event/Muon/RawEvent#1"
-                                          ])
+def stripCalibMicroDSTStreamConf(pack=True) :
+    eItems = [ '/Event/Rec/Header#1',
+               '/Event/Rec/Status#1',
+               '/Event/Rec/Summary#1',
+               '/Event/Trigger/RawEvent#1',
+               '/Event/Muon/RawEvent#1' ]
+    if pack :
+        eItems += ['/Event/Strip/pPhys/DecReports#1']
+    else :
+        eItems += ['/Event/Strip/Phys/DecReports#1']
+    return OutputStreamConf( streamType    = OutputStream,
+                             fileExtension = '.mdst',
+                             extraItems    = eItems )

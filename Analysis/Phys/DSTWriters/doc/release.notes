@@ -4,6 +4,12 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Chris Jones
+ - Make the packing of stripping (m)DSTs the default.
+ - Make the default configuraition of MicroDSTWriter the same as used in the
+   stripping.
+ - Support packing of either stream dependant or independant DecReports.
+
 !========================= DSTWriters v4r3 2012-02-09 =========================
 
 ! 2012-02-07 - Chris Jones

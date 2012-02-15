@@ -357,11 +357,19 @@ class PackStrippingReports(MicroDSTElement) :
     """
     def __call__(self, sel):
         from Configurables import PackDecReport
-        packer = PackDecReport(self.personaliseName(sel,"PackStripReps"))
-        packer.InputName   = self.branch + "/Phys/DecReports"
-        packer.OutputName  = self.branch + "/pPhys/DecReports"
-        packer.DeleteInput = True
-        return [packer]
+        # Packer for the full object, at /Event/Strip/
+        fpacker = PackDecReport("PackFullStripReps")
+        fpacker.InputName   = "Strip/Phys/DecReports"
+        fpacker.OutputName  = "Strip/pPhys/DecReports"
+        fpacker.DeleteInput = True
+        # Packer for stream dependant location, if present
+        # Probably will not be used, so could be removed eventually,
+        # but keep for the moment
+        spacker = PackDecReport(self.personaliseName(sel,"PackStripReps"))
+        spacker.InputName   = self.branch + "/Phys/DecReports"
+        spacker.OutputName  = self.branch + "/pPhys/DecReports"
+        spacker.DeleteInput = True
+        return [fpacker,spacker]
 
 class PackParticlesAndVertices(MicroDSTElement) :
     """

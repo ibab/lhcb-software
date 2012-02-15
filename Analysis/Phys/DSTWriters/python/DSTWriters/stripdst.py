@@ -13,7 +13,7 @@ from microdstelements import ( CloneParticleTrees, ClonePVRelations,
                                PackStrippingReports, PackParticlesAndVertices,
                                PackRecObjects, CleanEmptyEventNodes )
 
-def stripDSTElements(pack=False) :
+def stripDSTElements(pack=True) :
     elements = [ CloneParticleTrees( ProtoParticleConer = "NONE" ),
                  ClonePVRelations("Particle2VertexRelations",True),
                  ]
@@ -24,8 +24,11 @@ def stripDSTElements(pack=False) :
                       CleanEmptyEventNodes() ]
     return elements
 
-def stripDSTStreamConf() :
+def stripDSTStreamConf(pack=True) :
+    eItems = [ '/Event/DAQ/RawEvent#1' ]
+    if pack :
+        eItems += ['/Event/Strip/pPhys/DecReports#1']
+    else :
+        eItems += ['/Event/Strip/Phys/DecReports#1']
     return OutputStreamConf( streamType = InputCopyStream,
-                             ##extraItems = ['/Event/DAQ/RawEvent#1'] )
-                             extraItems = ['/Event/DAQ/RawEvent#1',
-                                           '/Event/Strip/Phys/DecReports#1'])
+                             extraItems = eItems )
