@@ -3,6 +3,12 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2012-02-15 - Olivier Callot
+ - New tool for a fast decoding of L0DU for Hlt1
+ - Call the Hlt1 tool in L0DUFromRawAlg if option Hlt1 set.
+ - Option 'CompareTools" to be used with Hlt1 to comapre the results of the 
+   two decoding algorithms.
+
 !========================= L0DU v10r17p1 2012-01-31 =========================
 ! 2012-01-17 - Marco Cattaneo
  - Fix trivial UNINIT_CTOR warnings

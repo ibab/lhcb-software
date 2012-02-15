@@ -35,6 +35,8 @@ L0DUFromRawAlg::L0DUFromRawAlg( const std::string& name,
   declareProperty( "L0DUReportLocation"   , m_L0DUReportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "ProcessorDataLocation", m_procDataLocation   =  LHCb::L0ProcessorDataLocation::L0DU );
   declareProperty( "L0DUFromRawToolType"  , m_fromRawTool = "L0DUFromRawTool" );
+  declareProperty( "Hlt1"                 , m_hlt1        = false );
+  declareProperty( "CompareTools"         , m_compare     = false );
 }
 
   //=============================================================================
@@ -51,9 +53,15 @@ StatusCode L0DUFromRawAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   debug() << "==> Initialize" << endmsg;
+
+  if ( m_hlt1 &&
+       m_fromRawTool == "L0DUFromRawTool" ) { 
+    m_fromRawTool = "L0DUFromRawHlt1Tool";
+  }
   
   // get the decoding tool
   m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  , this);
+  if ( m_compare ) m_fromRaw2 = tool<IL0DUFromRawTool>( "L0DUFromRawTool"  , "L0DUFromRawTool" , this);
 
   return StatusCode::SUCCESS;
 }
@@ -63,17 +71,19 @@ StatusCode L0DUFromRawAlg::initialize() {
 //=============================================================================
 StatusCode L0DUFromRawAlg::execute() {
 
-
-  // decode the bank
-  std::string rawEventLocation;
-  if ( selectRawEventLocation(rawEventLocation).isFailure() )
-    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
-  if ( m_fromRaw->_setProperty("RawLocation",rawEventLocation ).isFailure() )
-    return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
-  if ( m_fromRaw->_setProperty("StatusOnTES",Gaudi::Utils::toString(m_statusOnTES)).isFailure() )
-    return Error("Unable to set StatusOnTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
-  if ( m_fromRaw->_setProperty("UseRootInTES",Gaudi::Utils::toString(m_useRootInTES)).isFailure() )
-    return Error("Unable to set UseRootInTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
+  if ( !m_hlt1 ) {
+    
+    // decode the bank
+    std::string rawEventLocation;
+    if ( selectRawEventLocation(rawEventLocation).isFailure() )
+      return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+    if ( m_fromRaw->_setProperty("RawLocation",rawEventLocation ).isFailure() )
+      return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
+    if ( m_fromRaw->_setProperty("StatusOnTES",Gaudi::Utils::toString(m_statusOnTES)).isFailure() )
+      return Error("Unable to set StatusOnTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
+    if ( m_fromRaw->_setProperty("UseRootInTES",Gaudi::Utils::toString(m_useRootInTES)).isFailure() )
+      return Error("Unable to set UseRootInTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
+  }
   
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
 
@@ -85,6 +95,8 @@ StatusCode L0DUFromRawAlg::execute() {
     std::string loc = dataLocation( m_L0DUReportLocation);
     put (report , loc , IgnoreRootInTES);
   }
+
+  if ( m_compare ) compareReports();
 
   // Clone Processor Data and put it on TES 
   // WARNING : PROCESSOR DATA ARE NOT CONTEXT DEPENDANT
@@ -150,4 +162,70 @@ StatusCode L0DUFromRawAlg::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+
+//=========================================================================
+//  Compare the report produced by two versions of the tool
+//=========================================================================
+void L0DUFromRawAlg::compareReports ( ) {
+  m_fromRaw2->decodeBank();
+
+  LHCb::L0DUReport rep  = m_fromRaw->report();
+  LHCb::L0DUReport rep2 = m_fromRaw2->report();
+  
+  if ( rep.decisionValue() != rep2.decisionValue() ) {
+    info() << "!= decisionValue : hlt " << rep.decisionValue() << " pro " << rep2.decisionValue()  << endmsg;
+  }
+  if ( rep.timingTriggerBit() != rep2.timingTriggerBit() ) {
+    info() << "!= timingTriggerBit : hlt " << rep.timingTriggerBit() << " pro " << rep2.timingTriggerBit()  << endmsg;
+  }
+  if ( rep.forceBit() != rep2.forceBit() ) {
+    info() << "!= forceBit : hlt " << rep.forceBit() << " pro " << rep2.forceBit()  << endmsg;
+  }
+  if ( rep.tck() != rep2.tck() ) {
+    info() << "!= tck : hlt " << rep.tck() << " pro " << rep2.tck()  << endmsg;
+  }
+  if ( rep.sumEt() != rep2.sumEt() ) {
+    info() << "!= sumEt : hlt " << rep.sumEt() << " pro " << rep2.sumEt()  << endmsg;
+  }
+  if ( rep.channelsPreDecisionSummaries() != rep2.channelsPreDecisionSummaries() ) {
+    info() << "!= channelsPreDecisionSummaries : hlt " << rep.channelsPreDecisionSummaries() 
+           << " pro " << rep2.channelsPreDecisionSummaries()  << endmsg;
+  }
+  if ( rep.channelsDecisionSummaries() != rep2.channelsDecisionSummaries() ) {
+    info() << "!= channelsDecisionSummaries : hlt " << rep.channelsDecisionSummaries() 
+           << " pro " << rep2.channelsDecisionSummaries()  << endmsg;
+  }
+  if ( rep.conditionsValueSummaries() != rep2.conditionsValueSummaries() ) {
+    info() << "!= conditionsValueSummaries : hlt " << rep.conditionsValueSummaries() 
+           << " pro " << rep2.conditionsValueSummaries()  << endmsg;
+  }
+  if ( rep.valid() != rep2.valid() ) {
+    info() << "!= valid : hlt " << rep.valid() << " pro " << rep2.valid()  << endmsg;
+  }
+  if ( rep.bankVersion() != rep2.bankVersion() ) {
+    info() << "!= bankVersion : hlt " << rep.bankVersion() << " pro " << rep2.bankVersion()  << endmsg;
+  }
+  if ( rep.dataMap() != rep2.dataMap() ) {
+    for(std::map<std::string, std::pair<int,double> >::const_iterator imap = rep.dataMap().begin();
+        imap!= rep.dataMap().end();imap++){
+      if ( int(rep2.dataDigit(imap->first)) != imap->second.first ) {
+        info() << "!= dataMap : For name " << imap->first 
+               << " hlt: " << imap->second.first << " pro " <<   rep2.dataDigit(imap->first) << endmsg;
+      }
+    }
+    for(std::map<std::string, std::pair<int,double> >::const_iterator imap = rep2.dataMap().begin();
+        imap!= rep2.dataMap().end();imap++){
+      if ( int(rep.dataDigit(imap->first)) != imap->second.first ) {
+        info() << "!= dataMap : For name " << imap->first 
+               << " pro: " << imap->second.first << " hlt " <<   rep.dataDigit(imap->first) << endmsg;
+      }
+    }
+  }
+  if ( rep.bcid() != rep2.bcid() ) {
+    info() << "!= bcid : hlt " << rep.bcid() << " pro " << rep2.bcid()  << endmsg;
+  }
+  if ( rep.configuration() != rep2.configuration() ) {
+    info() << "!= configuration : hlt " << rep.configuration() << " pro " << rep2.configuration()  << endmsg;
+  }
+}
 //=============================================================================

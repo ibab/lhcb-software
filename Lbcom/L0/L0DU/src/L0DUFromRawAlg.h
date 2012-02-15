@@ -35,11 +35,15 @@ public:
 
 protected:
 
-
+  void compareReports();
+  
 private:
   std::string m_L0DUReportLocation;
   std::string m_procDataLocation   ;
   std::string m_fromRawTool;
   IL0DUFromRawTool* m_fromRaw;
+  IL0DUFromRawTool* m_fromRaw2;
+  bool m_hlt1;
+  bool m_compare;
 };
 #endif // L0DUFROMRAWALG_H
