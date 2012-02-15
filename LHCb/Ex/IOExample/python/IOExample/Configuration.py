@@ -46,7 +46,7 @@ class IOTest(LHCbConfigurableUser):
             from Configurables import DumpTracks
             dumpTracks = DumpTracks( OutputLevel = 2 )
             ApplicationMgr().TopAlg += [ "DumpTracks" ]
-            DstConf().EnableUnpack = True
+            DstConf().EnableUnpack = [ "Reconstruction", "Stripping" ]
 
         if self.getProp( "WithMC" ):
             DigiConf().EnableUnpack = True

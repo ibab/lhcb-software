@@ -4,6 +4,9 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-02-15 - Marco Cattaneo
+ - Follow change to DstConf().EnableUnpack option
+
 ! 2012-02-07 - Marco Cattaneo
  - Follow DataOnDemand decoding changes in DstConf. In IOTest, force ToolSvc
    initialisation before DataOnDemandSvc
