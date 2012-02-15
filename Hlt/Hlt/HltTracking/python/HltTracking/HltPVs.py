@@ -58,8 +58,10 @@ def PV3D():
     proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
-    recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
+    recoPV3D.PVOfflineTool.UseBeamSpotRCut = True
+    recoPV3D.PVOfflineTool.PVSeedingName = "PVSeedTool"
     recoPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
+    recoPV3D.PVOfflineTool.addTool(LSAdaptPV3DFitter, "LSAdaptPV3DFitter")
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices

@@ -5,6 +5,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Mariusz Witek
+ - turn on beam spot info for PatPV3D in HltPVs.py. It makes PatPV3D 2x faster.
+
 !========================= HltTracking v9r10 2012-01-25 =========================
 ! 2011-01-25 - V. Gligorov
   - Move tracking options for forward, downstream, seeding to HltReco for
