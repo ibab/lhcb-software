@@ -21,9 +21,9 @@
 #  @date   2004-07-11
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #
-#                    $Revision: 129470 $
-#  Last modification $Date: 2011-09-26 12:40:16 +0200 (Mon, 26 Sep 2011) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 The helper module for Bender application.
@@ -46,7 +46,7 @@ with the smear campaign of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 __date__    = "2004-07-11"
-__version__ = '$Revision: 129470 $'
+__version__ = '$Revision$'
 __all__     = ()
 # =============================================================================
 
