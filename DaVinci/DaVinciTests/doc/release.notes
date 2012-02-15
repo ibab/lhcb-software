@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTests v2r12 2012-02-15 =========================
+
 ! 2012-02-11 - Chris Jones
  - Remove test_read_dst test
  - update references for test_tag_mc10 and test_standardintermediate_run
