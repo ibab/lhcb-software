@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Marco Cattaneo
+ - Remove import from GaudiConf.Configuration from two fsr tests
+
 ! 2012-02-15 - Chris Jones
  - Remove import from GaudiConf.Configuration from two stripping tests
 

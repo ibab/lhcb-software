@@ -1,4 +1,4 @@
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import *
 importOptions('$APPCONFIGOPTS/Merging/DV-Stripping12-Merging.py')
 importOptions('$APPCONFIGOPTS/Merging/WriteFSR.py')
 importOptions('$DAVINCITESTSROOT/tests/options/fsrs/davinci-merge.py')
