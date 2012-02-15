@@ -1,4 +1,4 @@
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import *
 importOptions("$APPCONFIGOPTS/DaVinci/DVMonitor-RealData.py")
 importOptions("$APPCONFIGOPTS/DaVinci/DataType-2010.py")
 from Configurables import DaVinci

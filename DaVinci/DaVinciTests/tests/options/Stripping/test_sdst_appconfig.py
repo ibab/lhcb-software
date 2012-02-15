@@ -1,4 +1,4 @@
-from GaudiConf.Configuration import *
+from Gaudi.Configuration import *
 #importOptions('$APPCONFIGOPTS/DaVinci/StrippingLinesPrescales-1003.py')
 #importOptions('$APPCONFIGOPTS/DaVinci/DVStrippingDST-RealData.py')
 #importOptions('$APPCONFIGOPTS/DaVinci/DataType-2010.py')
@@ -10,7 +10,6 @@ from GaudiConf.Configuration import *
 """
 Options for building Stripping14
 """
-from Gaudi.Configuration import *
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
