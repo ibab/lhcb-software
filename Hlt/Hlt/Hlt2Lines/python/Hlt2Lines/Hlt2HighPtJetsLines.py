@@ -53,7 +53,7 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
         Hlt2TrkFinder.NrPVs = self.getProp('NrPVsCut')
         Hlt2TrkFinder.MinSumEt = self.getProp('MinSumEtCut')
 
-        Hlt1HighPtJets = "HLT_PASS_RE('Hlt1SinglePV.*Decision')"
+        Hlt1HighPtJets = "HLT_PASS_RE('Hlt1HighPtJetsSinglePV.*Decision')"
 
         line = Hlt2Line('HighPtJets'
                         , prescale = self.prescale

@@ -11,6 +11,9 @@
 !========================= Hlt2Lines v8r9 2012-01-25 =========================
 
 ! 2012-02-15 - Marcin Kucharczyk
+ - Rename Hlt1SinglePV into Hlt1HighPtJetsSinglePV in Hlt2HighPtJets line
+
+! 2012-02-15 - Marcin Kucharczyk
  - Force Hlt2HighPtJets line to take events only from Hlt1SinglePV line
 
 ! 2012-01-16 - Marcin Kucharczyk
