@@ -321,13 +321,12 @@ class DaVinci(LHCbConfigurableUser) :
         # if property set explcicitly - use it! 
         if self.isPropertySet('EnableUnpack') :
             unPack = self.getProp('EnableUnpack')
-            DstConf           ( EnableUnpack = unPack )
-            PhysConf ( EnableUnpack = unPack)
-            
+            DstConf  ( EnableUnpack = unPack )
+            PhysConf ( EnableUnpack = unPack )
         elif inputType != "MDST" and inputType != "MDF":
-            # DST unpacking
-            DstConf           ( EnableUnpack = True )
-            PhysConf ( EnableUnpack = True)
+            defaultUnpacking = ["Reconstruction","Stripping"]
+            DstConf  ( EnableUnpack = defaultUnpacking )
+            PhysConf ( EnableUnpack = defaultUnpacking )
             if self.getProp("Simulation") :
                 DstConf().setProp("SimType","Full")
         return inputType

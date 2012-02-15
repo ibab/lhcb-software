@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Chris Jones
+ - Update the EnableUnpack property of the DaVinci configurable to accept a
+   list of options, instead of just True or False. valid options are
+   "Reconstruction" and/or "Stripping", to enable the unpacking of the 
+   related data objects.
+
 !========================= DaVinci v30r0 2012-02-15 =========================
 
 ! 2012-02-07 - Chris Jones
