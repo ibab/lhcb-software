@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2012-02-15 - Chris Jones
+ - Adapt to changes in EnableUnpack property of DstConf
+
 ! 2012-02-07 - Chris Jones
  - Remove imports from GaudiConf
 

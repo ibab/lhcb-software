@@ -87,7 +87,8 @@ class PhysConf(LHCbConfigurableUser) :
         unpack = CaloDstUnPackConf()
 
         if self.isPropertySet('EnableUnpack') :
-            unpack.setProp('Enable', self.getProp('EnableUnpack') )
+            if "Reconstruction" in self.getProp('EnableUnpack') :
+                unpack.setProp('Enable',True)
 
         if unpack.getProp( 'Enable' ) : 
             hypos    = unpack   .getProp( 'Hypos'   )
