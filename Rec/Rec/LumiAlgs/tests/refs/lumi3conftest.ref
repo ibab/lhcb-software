@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency = None
@@ -19,7 +19,7 @@
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
 # |-ForceFullSequence = False
-# |-DataType          = '2011'
+# |-DataType          = '2012'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 1  (default: 3)
 # |-MergeFSR          = False
@@ -27,7 +27,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x84c69b0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0xa8e0e80>  (default: None)
 # |-InputType         = 'MDF'
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
@@ -42,8 +42,8 @@
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
@@ -63,8 +63,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.77 $
-                                          running on lxbuild163.cern.ch on Mon Sep  5 10:58:00 2011
+                                                   Welcome to Brunel version v42r0
+                                          running on lxplus404.cern.ch on Wed Feb 15 14:07:10 2012
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -73,7 +73,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.69 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -190,9 +190,9 @@ LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service DetectorD
 LumiCountNoBeam     DEBUG ==> Register DB
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20101206"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "head-20110614"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
@@ -339,7 +339,7 @@ FillingBeam1        DEBUG Initialize base class GaudiCommon<Algorithm>
 FillingBeam1        DEBUG could not locate CounterSummarySvc, no counter summary will be made
 FillingBeam1        DEBUG List of ALL properties of FilterFillingScheme/FillingBeam1  #properties = 35
 FillingBeam1        DEBUG Property ['Name': Value] =  'BXOffset':-1
-FillingBeam1        DEBUG Property ['Name': Value] =  'MagnetState':UP
+FillingBeam1        DEBUG Property ['Name': Value] =  'MagnetState':ALL
 FillingBeam1        DEBUG Property ['Name': Value] =  'Beam':2
 FillingBeam1        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 FillingBeam1        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
@@ -376,8 +376,8 @@ FillingBeam1        DEBUG Property ['Name': Value] =  'OutputLevel':1
 FillingBeam1        DEBUG ==> Initialize
 FillingBeam1      VERBOSE ServiceLocatorHelper::service: found service DetectorDataSvc
 FillingBeam1        DEBUG ==> Register DB
-ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
-ONLINE_2011          INFO Using TAG ""
+ONLINE_2009          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/ONLINE-2009.db/ONLINE"
+ONLINE_2009          INFO Using TAG ""
 FillingBeam1        DEBUG Conditions/Online/LHCb/LHCFillingScheme
 FillingBeam1        DEBUG Conditions/Online/LHCb/Magnet/Measured
 LumiCountBeam1      DEBUG Property update for OutputLevel : new value = 1
@@ -478,7 +478,7 @@ FillingBeam2        DEBUG Initialize base class GaudiCommon<Algorithm>
 FillingBeam2        DEBUG could not locate CounterSummarySvc, no counter summary will be made
 FillingBeam2        DEBUG List of ALL properties of FilterFillingScheme/FillingBeam2  #properties = 35
 FillingBeam2        DEBUG Property ['Name': Value] =  'BXOffset':-1
-FillingBeam2        DEBUG Property ['Name': Value] =  'MagnetState':UP
+FillingBeam2        DEBUG Property ['Name': Value] =  'MagnetState':ALL
 FillingBeam2        DEBUG Property ['Name': Value] =  'Beam':1
 FillingBeam2        DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 FillingBeam2        DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
@@ -793,7 +793,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.90 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.69 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -824,6 +824,5 @@ ToolSvc.Sequenc...   INFO     TimeSpanFilter            |     0.000 |     0.000 
 ToolSvc.Sequenc...   INFO     TimeSpanAccounting        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-FileRecordCnvSvc     INFO File sharing enabled. Do not retire files.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

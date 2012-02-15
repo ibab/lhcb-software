@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-15 - Jaap Panman
+ - introduce logic in LumiIntegrateFSR to skip integration based on DQflags  
+ - update unittests
+
+! 2012-02-15 - Jaap Panman
  - make explicit that FilterFillingScheme is not used before 2011
  - add protection for data beyond 2012, requiring explicit update
 

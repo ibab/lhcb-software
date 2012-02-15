@@ -8,6 +8,7 @@
 
 // for DB
 #include "GaudiKernel/IDetDataSvc.h"
+#include "Kernel/IAccept.h"
 
 // for TCK
 #include "Kernel/IPropertyConfigSvc.h"
@@ -58,12 +59,14 @@ protected:
   SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
   ILumiIntegrator *m_integratorTool;            ///< tool to integrate luminosity
   IGetLumiParameters *m_databaseTool;           ///< tool to query luminosity database
+  IAccept *m_acceptTool;                        ///< Pointer to the IAccept tool
 
   std::string m_FileRecordName;                 ///< location of FileRecords
   std::string m_FSRName;                        ///< specific tag of summary data in FSR
   std::string m_EventCountFSRName;              ///< specific tag of event summary data in FSR
   std::string m_TimeSpanFSRName;                ///< specific tag of event summary data in FSR
   std::string m_ToolName;                       ///< name of tool for normalization
+  std::string m_acceptToolName;                 ///< Name of the (public) IAccept data quality tool
   std::string m_PrimaryBXType;                  ///< BXType to normalize
   std::vector<std::string> m_BXTypes;           ///< list of bunch crossing types
   std::vector<std::string> m_addBXTypes;        ///< list of bunch crossing types to be added
@@ -84,5 +87,7 @@ private:
   double m_calibRevolutionFrequency;            ///< revolution frequency (Hz)
   double m_calibRandomFrequencyBB;              ///< random lumi event frequency of BB crossings (Hz)
   int    m_calibCollidingBunches;               ///< number of colliding bunches
+  bool   m_DQaccepted;                          ///< DQ flag accepted 
+  
 };
 #endif // LUMIINTEGRATEFSR_H
