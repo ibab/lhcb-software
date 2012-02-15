@@ -371,8 +371,6 @@ class D2XMuMuConf(LineBuilder) :
         self.registerLine( self.K2PiLine )
         self.registerLine( self.TwoKPiLine )
 
-        print "Created lines"
-
 #####################################################
     def _makeD2PiPiPi(self, name, pionSel, muonSel, config):
         """

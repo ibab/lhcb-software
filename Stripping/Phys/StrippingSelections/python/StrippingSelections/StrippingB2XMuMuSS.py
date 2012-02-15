@@ -171,8 +171,6 @@ class B2XMuMuSSConf(LineBuilder) :
         self.registerLine( self.KOSLine )
         self.registerLine( self.KSSLine )
 
-        print "Created lines"
-
 #####################################################
     def _makeB2PiMuMuOS(self, name, pionSel, muonSel, config):
         """

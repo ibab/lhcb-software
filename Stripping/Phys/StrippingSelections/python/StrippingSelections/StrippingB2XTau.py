@@ -239,8 +239,6 @@ class B2XTauConf(LineBuilder) :
         self.registerLine( self.TauMu_TISLine )
         self.registerLine( self.DMu_TISLine ) 
 
-        print "Created lines"
-
     #####################################################
     def _makeB2XX(self, name, tauSel, DSel, config):
    

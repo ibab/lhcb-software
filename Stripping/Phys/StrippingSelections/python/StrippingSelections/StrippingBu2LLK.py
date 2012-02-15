@@ -105,8 +105,6 @@ class Bu2LLKConf(LineBuilder) :
         # 5 : register Line
         self.registerLine( self.eeLine )
         self.registerLine( self.mmLine )
-
-        print "Created lines"
         
 #####################################################
     def _makeBu2LLK(self, name, dileptonSel, kaonSel, config):
