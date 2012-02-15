@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSelections v3r10 2012-02-13 =========================
+
+! 2012-02-15 - Macin Kucharczyk
+ - Adding stripping selection for inclusive b-jets
+
 ! 2012-02-13 - Jibo He
  - StrippingB2JpsiKShh.py
   . Filter Jpsi firstly to save CPU time
