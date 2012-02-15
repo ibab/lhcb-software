@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file BenderExample/Chib.py
 #  The simple Bender-based example to look for Chi_b-peak 
@@ -50,7 +50,7 @@ Last modification $Date$
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = " 2012-02-15 " 
-__version__ = " Version $Revision"
+__version__ = " Version $Revision$"
 # =============================================================================
 ## import everything from bender 
 from   Bender.Main               import *
@@ -186,7 +186,7 @@ class Chib(Algo) :
             ## fill TisTos info
             self.tisTos ( ups               ,
                           tup               ,
-                          'Ups'             ,
+                          'Ups_'            ,
                           self.lines['Ups'] ) 
             
             tup.write()
@@ -250,8 +250,8 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
 ##     CondDB ( UseLatestTags = ["2011"] , 
 ##              UseOracle     = True     )
     
-##     from Configurables import Gaudi__IODataManager as IODataManager
-##     IODataManager().AgeLimit = 2 
+    from Configurables import Gaudi__IODataManager as IODataManager
+    IODataManager().AgeLimit = 2 
     
     # come back to Bender 
     setData ( datafiles , catalogs , castor )
