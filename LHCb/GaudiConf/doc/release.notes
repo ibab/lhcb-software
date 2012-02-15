@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2012-02-15 - Chris Jones
+ - Extend the EnableUnpack option in DstConf, to take a list of unpacking types.
+   Allowed values are [ "Reconstruction", "Stripping" ]. Allows for each to be
+   turned on and off independantly.
+
 ! 2012-02-6 - Chris Jones
  - Add unpacking options for striping (m)DST information
 

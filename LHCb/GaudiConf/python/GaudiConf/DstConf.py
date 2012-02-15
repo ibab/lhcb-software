@@ -23,7 +23,7 @@ class DstConf(LHCbConfigurableUser):
     __slots__ = {
          "DstType"        : "NONE"
        , "SimType"        : "None"
-       , "EnableUnpack"   : False
+       , "EnableUnpack"   : [ ]
        , "EnablePackingChecks" : False
        , "PackType"       : "TES"
        , "PackSequencer"  : None
@@ -59,9 +59,10 @@ class DstConf(LHCbConfigurableUser):
         DigiConf
         ]
 
-    KnownSimTypes  = ['None','Minimal','Full']
-    KnownDstTypes  = ['NONE','DST','XDST','SDST','MDST']
-    KnownPackTypes = ['NONE','TES','MDF']
+    KnownSimTypes       = ['None','Minimal','Full']
+    KnownDstTypes       = ['NONE','DST','XDST','SDST','MDST']
+    KnownPackTypes      = ['NONE','TES','MDF']
+    KnownUnpackingTypes = ["Reconstruction","Stripping"]
 
     def _doWrite( self, dType, pType, sType ):
         """
@@ -361,7 +362,7 @@ class DstConf(LHCbConfigurableUser):
 
     def _doUnpack( self ):
         """
-        Set up DataOnDemandSvc to unpack a packed (r,s,s)DST
+        Set up DataOnDemandSvc to unpack reconstruction information
         """
         from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
                                     UnpackRecVertex, UnpackTwoProngVertex,
@@ -397,9 +398,6 @@ class DstConf(LHCbConfigurableUser):
                                    InputName  = "/Event/pRec/Track/Muon",
                                    AncestorFor= "/Event/pRec/Track/Muon" )
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
-
-        # Stripping Data
-        self._unpackStripping()
 
     def _unpackMuonPIDs(self):
 
@@ -495,8 +493,8 @@ class DstConf(LHCbConfigurableUser):
         from Configurables import ( ConversionDODMapper,
                                     ParticlesAndVerticesMapper )
                                     
-        mapper   = ConversionDODMapper()
-        pvmapper = ParticlesAndVerticesMapper()
+        mapper   = ConversionDODMapper("UnpackRecPhysMapper")
+        pvmapper = ParticlesAndVerticesMapper("UnpackPsAndVsMapper")
 
         # The input <-> output mappings
         mapper.Transformations = [ ( '(.*)/Rec(.*)',  '$1/pRec$2'  ),
@@ -513,9 +511,9 @@ class DstConf(LHCbConfigurableUser):
         mapper.Algorithms[1581] = "UnpackParticlesAndVertices"
         mapper.Algorithms[1559] = "UnpackDecReport"
 
-        # Add the tool to DOD
-        DataOnDemandSvc().NodeMappingTools = [pvmapper,mapper]
-        DataOnDemandSvc().AlgMappingTools  = [pvmapper,mapper]
+        # Add the tools to the DOD service tools lists
+        DataOnDemandSvc().NodeMappingTools += [pvmapper,mapper]
+        DataOnDemandSvc().AlgMappingTools  += [pvmapper,mapper]
 
     def __apply_configuration__(self):
 
@@ -525,8 +523,8 @@ class DstConf(LHCbConfigurableUser):
         if sType not in self.KnownSimTypes:
             raise TypeError( "Unknown SimType '%s'"%sType )
         if sType != "None":
-            DigiConf().setProp("EnableUnpack",True)
-            SimConf().setProp("EnableUnpack", DigiConf().getProp("EnableUnpack") )
+            DigiConf().setProp("EnableUnpack",True )
+            SimConf().setProp("EnableUnpack",DigiConf().getProp("EnableUnpack"))
 
         dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
@@ -540,7 +538,12 @@ class DstConf(LHCbConfigurableUser):
         if pType not in self.KnownPackTypes:
             raise TypeError( "Unknown PackType '%s'"%pType )
 
-        if self.getProp( "EnableUnpack" ) : self._doUnpack()
+        # Unpacking options
+        for unpackT in self.getProp("EnableUnpack") :
+            if unpackT not in self.KnownUnpackingTypes :
+                raise TypeError( "Unknown Unpacking type '%s'"%unpackT )
+        if "Reconstruction" in self.getProp("EnableUnpack") : self._doUnpack()
+        if "Stripping"      in self.getProp("EnableUnpack") : self._unpackStripping()
 
         if dType != 'NONE':
             if hasattr( self, "PackSequencer" ): self._doPack()
