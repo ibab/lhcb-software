@@ -199,8 +199,8 @@ def buildStreams( stripping, WGs = None ):
     strippingStreams=[]
     for stream in streams:
         lines = [ line for line in streams[stream] ]
-        print ( 'Creating ' + stream + ' stream with '
-                + str( len(lines) ) + ' lines' )
+         print ( 'Creating ' + stream + ' stream with '
+                 + str( len(lines) ) + ' lines' )
         strippingStreams.append( StrippingStream( stream, Lines = lines ) )
     return strippingStreams
 

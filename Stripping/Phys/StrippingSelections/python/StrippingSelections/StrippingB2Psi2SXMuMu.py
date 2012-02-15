@@ -174,10 +174,10 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        print 'self.name ' + self.name  
+        #print 'self.name ' + self.name  
 
         incl = self.name +'_InclPsi2SToMuMu'
-        print 'inclusiveline ' + incl  
+        #print 'inclusiveline ' + incl  
         incl_detatched_name = incl + 'Detatched'
 
         sig = self.name +'_Bs2Psi2SPhiMuMu'

@@ -265,8 +265,6 @@ class Z02TauTauProngConf(LineBuilder) :
             """
         selectionCuts   = self._hadFinalStateKinematicCutsProng(config)
         
-        print name
-        
         _filter         = FilterDesktop(Code                      = selectionCuts
                                         )
         
