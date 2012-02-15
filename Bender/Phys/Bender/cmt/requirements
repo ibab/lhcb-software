@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v18r4p1
+version             v19r0
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -46,6 +46,8 @@ alias Dst_Explorer "dst_explorer"
 alias check_trg    "trg_check" 
 alias dump_dst     "dst_dump" 
 alias dst_content  "dst_dump" 
+
+alias pyroot       "ipython $(BENDERROOT)/python/Bender/PyRoot.py" 
 
 
 # =============================================================================

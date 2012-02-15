@@ -24,6 +24,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v19r0 2012-02-15 ===========================
+
+! 2012-02-15 - Vanya Belyaev
+ - add pyroot script 
+ - restore TisTos functionality, use new interface
+
 ! 2011-12-18 - Eduardo Rodrigues
  - Minor fix in CheckTrg.py
 
