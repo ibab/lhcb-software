@@ -38,14 +38,16 @@ UnpackDecReport::~UnpackDecReport() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode UnpackDecReport::execute() {
+StatusCode UnpackDecReport::execute() 
+{
 
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::PackedDecReport>(m_inputName) ) return StatusCode::SUCCESS;
-  const LHCb::PackedDecReport* dst = getOrCreate<LHCb::PackedDecReport,LHCb::PackedDecReport>( m_inputName );
+  const LHCb::PackedDecReport* dst = 
+    getOrCreate<LHCb::PackedDecReport,LHCb::PackedDecReport>( m_inputName );
   LHCb::HltDecReports* newReport = new LHCb::HltDecReports();
   put( newReport, m_outputName );
 
@@ -58,8 +60,10 @@ StatusCode UnpackDecReport::execute() {
     LinkManager::Link* myLink = dst->linkMgr()->link( tmp.intDecisionID()-1 );  // Was stored with +1.
     if ( NULL == myLink )
     {
-      info() << "No link tabel entry for " << tmp.intDecisionID() << endmsg;
-    } else {
+      info() << "No link table entry for " << tmp.intDecisionID() << endmsg;
+    }
+    else
+    {
       const std::string & name = myLink->path();
       tmp.setIntDecisionID( 1 );
       newReport->insert( name, tmp );
