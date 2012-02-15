@@ -1444,18 +1444,4 @@
      </logical>
    </File>
 
-  <File ID="28FEB13D-93B6-DF11-B410-002421857517">
-    <physical>
-      <pfn filetype="ROOT_All" name="/tmp/roldeman/000000.Test.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="FE561D8D-47B9-DF11-8FB8-001E4F3E5C33">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc.root"/>
-    </physical>
-    <logical/>
-  </File>
-
 </POOLFILECATALOG>

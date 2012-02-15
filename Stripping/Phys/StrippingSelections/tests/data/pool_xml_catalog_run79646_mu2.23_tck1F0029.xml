@@ -2290,25 +2290,4 @@
      </logical>
    </File>
 
-  <File ID="9E5933ED-26CB-DF11-9E8A-001E4F3DD7AB">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc_run79646.root"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="B4EB12AE-52CF-DF11-A80E-000423D99862">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc.root"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="80AFA99B-7AE8-DF11-84CA-000423D986F4">
-    <physical>
-      <pfn filetype="ROOT_All" name="000000.Test.dst"/>
-    </physical>
-    <logical/>
-  </File>
-
 </POOLFILECATALOG>

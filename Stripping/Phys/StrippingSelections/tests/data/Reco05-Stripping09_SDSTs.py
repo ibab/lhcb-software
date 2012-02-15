@@ -37,5 +37,6 @@ EventSelector().Input   = [
 "   DATAFILE='LFN:/lhcb/data/2010/SDST/00007590/0004/00007590_00044113_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'",
 "   DATAFILE='LFN:/lhcb/data/2010/SDST/00007590/0004/00007590_00044114_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]
-FileCatalog().Catalogs= ["xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_reco05_stripping09.xml"]
+FileCatalog().Catalogs= [ 'xmlcatalog_file:out.xml',
+                          "xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_reco05_stripping09.xml"]
 

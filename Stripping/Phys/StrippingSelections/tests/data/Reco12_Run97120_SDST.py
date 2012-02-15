@@ -88,5 +88,5 @@ EventSelector().Input   = [
 
 EventSelector().Input.reverse()
 
-FileCatalog().Catalogs = [
-    'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_Reco12_Run97120.xml']
+FileCatalog().Catalogs = [ 'xmlcatalog_file:out.xml',
+                           'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_Reco12_Run97120.xml']

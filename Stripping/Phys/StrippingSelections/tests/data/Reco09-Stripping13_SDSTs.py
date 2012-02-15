@@ -26,6 +26,5 @@ EventSelector().Input = [
     "DATAFILE='LFN:/lhcb/LHCb/Collision11/SDST/00010035/0000/00010035_00003110_1.sdst' TYP='POOL_ROOTTREE' OPT='READ'" 
     ]
 
-
-FileCatalog().Catalogs = [
-    'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_reco09_stripping13.xml' ]
+FileCatalog().Catalogs = [ 'xmlcatalog_file:out.xml',
+                           'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/pool_xml_catalog_reco09_stripping13.xml' ]

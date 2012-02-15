@@ -2488,18 +2488,4 @@
      </logical>
    </File>
 
-  <File ID="56658D07-91C9-DF11-9652-000423D30656">
-    <physical>
-      <pfn filetype="ROOT_All" name="etc_run79647.root"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="9CD30530-27CF-DF11-B695-00304867340C">
-    <physical>
-      <pfn filetype="ROOT_All" name="79647.Muons.mdst"/>
-    </physical>
-    <logical/>
-  </File>
-
 </POOLFILECATALOG>

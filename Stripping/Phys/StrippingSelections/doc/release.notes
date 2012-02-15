@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2012-02-15 - Chris Jones
+ - Fix possible XML catalogue problems due to attempts to write to read-only
+   filesystems.
+
 !========================= StrippingSelections v3r10 2012-02-13 =========================
 
 ! 2012-02-15 - Macin Kucharczyk
