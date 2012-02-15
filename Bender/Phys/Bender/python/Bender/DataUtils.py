@@ -135,9 +135,9 @@ def extendfile1 ( filename , castor = False ) :
     if   0 == filename.find ( '/castor/cern.ch/grid/lhcb/user/' ) :
         filename = 'PFN:root://castorlhcb.cern.ch/%s?svcClass=lhcbuser' % filename
 
-    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/data/' )                or \
-            0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision10' )  or \
-            0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision11' )  :
+    elif 0 == filename.find ( '/castor/cern.ch/grid/lhcb/data/' )             or \
+         0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision10' )  or \
+         0 == filename.find ( '/castor/cern.ch/grid/lhcb/LHCb/Collision11' )  :
         
         _len = len(filename) 
         if   _len - 4  == filename.find ( '.raw'  ) :
@@ -165,6 +165,7 @@ def extendfile1 ( filename , castor = False ) :
     elif os.path.exists ( filename )          : filename = 'PFN:' + filename
     
     elif 0 == filename.find ( '/lhcb/data/'       ) or \
+         0 == filename.find ( '/lhcb/LHCb/'       ) or \
          0 == filename.find ( '/lhcb/MC/'         ) or \
          0 == filename.find ( '/lhcb/user/'       ) or \
          0 == filename.find ( '/lhcb/validation/' ) :
