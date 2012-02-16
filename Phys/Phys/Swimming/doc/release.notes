@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2012-02-16 - Roel Aaij
+ - Add configuration options for use in production to obtain the CondDB tag,
+   DDDB tag and TCK from a database using the run number.
  - Add explicit import of EventNodeKiller to ConfigureMoore.
 
 ! 2012-02-07 - Chris Jones
