@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Roel Aaij
+ - Add explicit import of EventNodeKiller to ConfigureMoore.
+
 ! 2012-02-07 - Chris Jones
  - Adapt to changes in GaudiConf
 

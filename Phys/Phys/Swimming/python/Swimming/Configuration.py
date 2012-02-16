@@ -200,6 +200,7 @@ def ConfigureMoore():
     from Configurables import Moore,HltConfigSvc
 
     #Global configuration
+    from Configurables import EventNodeKiller
     mykiller    = EventNodeKiller("killHlt")
     mykiller.Nodes          = config.getProp('HltNodesToKill')
     deathstar               = GaudiSequencer("killHltSeq")
