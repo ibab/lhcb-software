@@ -1,5 +1,5 @@
-#ifndef READNTUPLE_HH
-#define READNTUPLE_HH
+#ifndef READMINTTUPLE_HH
+#define READMINTTUPLE_HH
 
 #include "TFile.h"
 #include "TTree.h"
@@ -9,7 +9,7 @@
 #include "TBranch.h"
 #include "TEntryList.h"
 
-#include <vector.h>
+#include <vector>
 
 #include <string>
 
@@ -23,7 +23,7 @@
 using namespace std;
 using namespace MINT;
 
-class ReadNTuple
+class ReadMintTuple
 {
 private:
 	  TFile* _file0;
@@ -34,11 +34,11 @@ private:
 	  long int _maxEvents;
 
 	  // Variables to read in
-	  std::vector<std::vector<float> > m_input_var;
-	  std::vector<int> m_pdg;
+	  std::vector<std::vector<double> > m_input_var;
+	  std::vector<double> m_pdg;
 	  std::vector<int> set_pat;
-	  std::vector<float> m_mother_var;
-	  int m_mother_pdg;
+	  std::vector<double> m_mother_var;
+	  double m_mother_pdg;
 
 	  int m_particle;
 	  const char* _cuts;
@@ -53,14 +53,14 @@ public:
 
 	  std::string newFilename() const;
 
-	  ReadNTuple( DalitzEventPattern*
+	  ReadMintTuple( DalitzEventPattern*
 			    , std::string fname
 	  		    , std::string ntpName = "DalitzEventList"
 	  		    , const char* = ""
 	  		    , long int maxEvents = -1 // -1 means: read all
 	  		    );
 
-	  ~ReadNTuple();
+	  ~ReadMintTuple();
 
 	  bool getTree();
 
@@ -84,7 +84,7 @@ public:
 };
 
 
-ReadNTuple::ReadNTuple( DalitzEventPattern* pat
+ReadMintTuple::ReadMintTuple( DalitzEventPattern* pat
 					  ,	std::string fname
 				      , std::string ntpName
 				      , const char* cuts
@@ -100,7 +100,7 @@ ReadNTuple::ReadNTuple( DalitzEventPattern* pat
 {
 
   for (int i = 0; i < 5; i++) {
-      vector<float> row; // Create an empty row
+      vector<double> row; // Create an empty row
       for (int j = 0; j < 5; j++) {
           row.push_back(i * j); // Add an element (column) to the row
       }
@@ -122,13 +122,18 @@ ReadNTuple::ReadNTuple( DalitzEventPattern* pat
 }
 
 
-std::string ReadNTuple::newFilename() const{
+std::string ReadMintTuple::newFilename() const{
   string newFilename(_fname);
   newFilename.insert(newFilename.find_last_of('.'), "_reweighted");
+
+  stringstream ss;//create a stringstream
+  ss << set_pat[0];//add number to the stream
+  std::string motherId = ss.str();
+  newFilename.insert(newFilename.find_last_of('.'), motherId.c_str());
   return newFilename;
 }
 
-bool ReadNTuple::AddFriend(std::string fname
+bool ReadMintTuple::AddFriend(std::string fname
 	      	  	  	  	  , std::string ntpName)
 {
 	TFile* f = TFile::Open(fname.c_str(), "READ");
@@ -139,20 +144,21 @@ bool ReadNTuple::AddFriend(std::string fname
 
 }
 
-bool ReadNTuple::getTree(){
+bool ReadMintTuple::getTree(){
   TFile* f = TFile::Open(_fname.c_str(), "READ");
   if(0 == f) return false;
   _oldTree = dynamic_cast<TTree*>(f->Get(_ntpName.c_str()));
   return (0 != _oldTree);
 
+  f->Close();
 }
 
-bool ReadNTuple::getUpdatedTree()
+bool ReadMintTuple::getUpdatedTree()
 {
 
   TEntryList* elist=0;
 
-  _oldTree->SetBranchStatus("*",1);
+//  _oldTree->SetBranchStatus("*",1);
   if (_cuts&&strcmp(_cuts,"")!=0) {
 	  _oldTree->Draw(">>elist",_cuts,"entryList");
 	  elist = (TEntryList*)gDirectory->Get("elist");
@@ -169,48 +175,52 @@ bool ReadNTuple::getUpdatedTree()
 	  std::cout << "No entries after cuts " << _cuts << std::endl;
   }
 
+  std::cout << "NEntires: " << nentries << std::endl;
 //  attachit();
-//  cout << "ReadNTuple::getTree(): Reading from " << _fname
+//  cout << "ReadMintTuple::getTree(): Reading from " << _fname
 //       << ", writing to: " << newFilename() << endl;
   _file0 = TFile::Open(newFilename().c_str(), "RECREATE");
   cout << "opened new file " << _file0 << endl;
   if(0 == _file0) return false;
   _file0->cd();
   cout << "cd'ed to new file " << endl;
-//  _tree = _oldTree->CloneTree(1000);
+//  _tree = _oldTree->CloneTree(50);
   _tree = _oldTree->CopyTree(_cuts);
-//  _tree = _oldTree->CopyTree();
 
 //  _tree->SetDirectory(_file0);
 //  //_tree->CopyEntries(ot, _maxEvents);
 //  cout << "cloned tree from old file" << endl;
   return (0 != _tree);
+//  return 1;
 }
 
-bool ReadNTuple::SetEventPattern(DalitzEventPattern* pat)
+bool ReadMintTuple::SetEventPattern(DalitzEventPattern* pat)
 {
 	m_pat = pat;
 	set_pat = pat->getVectorOfInts();
+
+	std::cout << " Got Pattern " << pat << std::endl;
+	std::cout << " Got Pattern " << set_pat[0] << std::endl;
 
 
 	return true;
 }
 
-void ReadNTuple::ApplyFiducalCuts()
+void ReadMintTuple::ApplyFiducalCuts()
 {
 	_applyFiducalCuts = true;
 }
 // Fiducal Cuts
-bool ReadNTuple::passFiducalCuts()
+bool ReadMintTuple::passFiducalCuts()
 {
 
 	bool passCuts = true;
 
 	for (int i = 0; i<4; i++)
 	{
-		float dx = m_input_var[0][i];
-		float dy = m_input_var[1][i];
-		float dz = m_input_var[2][i];
+		double dx = m_input_var[0][i];
+		double dy = m_input_var[1][i];
+		double dz = m_input_var[2][i];
 
 		if (fabs(dx) > 0.317*(dz - 2400))
 		{
@@ -235,34 +245,34 @@ bool ReadNTuple::passFiducalCuts()
 	return passCuts;
 }
 
-bool ReadNTuple::SetDaughterBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
+bool ReadMintTuple::SetDaughterBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
 {
 
-	_oldTree->SetBranchAddress(Px,(float*)&m_input_var[0][m_particle]);
-	_oldTree->SetBranchAddress(Py,(float*)&m_input_var[1][m_particle]);
-	_oldTree->SetBranchAddress(Pz,(float*)&m_input_var[2][m_particle]);
-	_oldTree->SetBranchAddress(E,(float*)&m_input_var[3][m_particle]);
-	_oldTree->SetBranchAddress(pdg,(int*)&m_pdg[m_particle]);
+	_oldTree->SetBranchAddress(Px,(double*)&m_input_var[0][m_particle]);
+	_oldTree->SetBranchAddress(Py,(double*)&m_input_var[1][m_particle]);
+	_oldTree->SetBranchAddress(Pz,(double*)&m_input_var[2][m_particle]);
+	_oldTree->SetBranchAddress(E,(double*)&m_input_var[3][m_particle]);
+	_oldTree->SetBranchAddress(pdg,(double*)&m_pdg[m_particle]);
 	m_particle++;
 
 	return true;
 }
 
-bool ReadNTuple::SetMotherBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
+bool ReadMintTuple::SetMotherBranchAddress(const char* Px, const char* Py, const char* Pz, const char* E, const char* pdg )
 {
 
-	_oldTree->SetBranchAddress(Px,(float*)&m_mother_var[0]);
-	_oldTree->SetBranchAddress(Py,(float*)&m_mother_var[1]);
-	_oldTree->SetBranchAddress(Pz,(float*)&m_mother_var[2]);
-	_oldTree->SetBranchAddress(E,(float*)&m_mother_var[3]);
-	_oldTree->SetBranchAddress(pdg,(int*)&m_mother_pdg);
+	_oldTree->SetBranchAddress(Px,(double*)&m_mother_var[0]);
+	_oldTree->SetBranchAddress(Py,(double*)&m_mother_var[1]);
+	_oldTree->SetBranchAddress(Pz,(double*)&m_mother_var[2]);
+	_oldTree->SetBranchAddress(E,(double*)&m_mother_var[3]);
+	_oldTree->SetBranchAddress(pdg,(double*)&m_mother_pdg);
 
 	return true;
 }
 
 
 MINT::counted_ptr<DalitzEvent>
-ReadNTuple::readEntry(unsigned int entry){
+ReadMintTuple::readEntry(unsigned int entry){
 
   // we read the MC-truth 4-momenta as we want to re-weight
   // according to the trugh.
@@ -292,14 +302,15 @@ ReadNTuple::readEntry(unsigned int entry){
 
   if (dbThis)
   {
-	  if (!(entry%1000))
+	  if (!(entry%10000))
 	  {
+		  std::cout << "entry: " << entry << std::endl;
 		  cout << "PDG: " << (int)m_pdg[0] << " Px: " << m_input_var[0][0] << std::endl;
 		  cout << "PDG: " << (int)m_pdg[1] << " Px: " << m_input_var[0][1] << std::endl;
 		  cout << "PDG: " << (int)m_pdg[2] << " Px: " << m_input_var[0][2] << std::endl;
 		  cout << "PDG: " << (int)m_pdg[3] << " Px: " << m_input_var[0][3] << std::endl;
 		  cout << "Mother PDG: " << m_mother_pdg << " Px: " << m_mother_var[0] << std::endl;
-
+		  cout << "Mother PDG: " << m_mother_pdg << " Px: " << m_mother_var[0] << std::endl;
 	  }
   }
    vector<TLorentzVector> PArray(5);
@@ -312,14 +323,14 @@ ReadNTuple::readEntry(unsigned int entry){
 
    if (dbThis)
    {
-	   if (!(entry%1000))
+	   if (!(entry%10000))
 		{
 		   std::cout << "PArray Px: " << PArray[0].Px() << std::endl;
 		   std::cout << "Mother Px: " << mother.Px() << std::endl;
 		}
    }
    std::vector<int> passed_pat = set_pat;
-   std::vector<int> this_pat = m_pdg;
+   std::vector<double> this_pat = m_pdg;
 
    if (set_pat.size() == 0)
    {
@@ -342,7 +353,7 @@ ReadNTuple::readEntry(unsigned int entry){
 			   this_pat[i] = 0;
 			   if (dbThis)
 			      {
-				   if (!(entry%1000))
+				   if (!(entry%10000))
 					{
 					  cout << "Pdg: " << passed_pat[j]<< std::endl;
 					  cout << "Px: " << PArray[j].Px() << std::endl;
@@ -380,7 +391,7 @@ ReadNTuple::readEntry(unsigned int entry){
 		}
 	  }
 
-	  if (!(entry%1000))
+	  if (!(entry%10000))
 		{
 		  for(unsigned int i = 0; i < 5; i++){
 				cout << " mass " << i << ") " << PArray[i].M()
@@ -396,19 +407,25 @@ ReadNTuple::readEntry(unsigned int entry){
 }
 
 
-bool ReadNTuple::readit(DiskResidentEventList* listPtr, int maxEvents){
+bool ReadMintTuple::readit(DiskResidentEventList* listPtr, int maxEvents){
   getUpdatedTree();
+
+
   if(0 == listPtr) return false;
   int numEvents = 0;
 
-  std::cout << "Entries " << _oldTree->GetEntries() << " " << _tree->GetEntries() << std::endl;
+  std::cout << "Entries " << _tree->GetEntries() << " "  << std::endl;
   for(unsigned int i=0; i < _tree->GetEntries(); i++){
 
     counted_ptr<DalitzEvent> evtPtr = readEntry(i);
+    if(! evtPtr) continue;
 
 //    if(!passFiducalCuts()) continue;
 //    if(! passCuts()) continue;
     numEvents++;
+    std::cout << "Adding Entry: " << numEvents << std::endl;
+    std::cout << "Size EventList: " << listPtr->size() << std::endl;
+    (evtPtr.get())->print();
     listPtr->Add(*(evtPtr.get()));
     if(maxEvents > 0 && numEvents > maxEvents) break;
   }
