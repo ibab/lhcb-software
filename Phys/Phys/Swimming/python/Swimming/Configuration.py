@@ -21,6 +21,8 @@ class Swimming(LHCbConfigurableUser) :
         , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
+        , "RunNumber"          : None            # Run number to be used to obtain CondDB tag, DDDB tag and TCK.
+        , "TagDatabase"        : "$CHARMCONFIGROOT/db/tag_database.db" # Python shelve database to be used to obtain CondDB tag, DDDB tag and TCK from the run number.
         # Persistency
         , "Persistency"        : None            # ROOT or POOL, steers the setup of services
         # Input
@@ -79,6 +81,8 @@ class Swimming(LHCbConfigurableUser) :
         , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
         , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
+        , "RunNumber"          : """ Run number to be used to retrieved CondDB tag, DDDB tag and TCK """
+        , "TagDatabase"        : """ Python shelve database to be used to obtain CondDB tag, DDDB tag and TCK from the run number."""
         , "Input"              : """ Input data. Can also be passed as a second option file. """
         , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST' or 'SDST'. Nothing means the input type is compatible with being a DST.  """
         , "Persistency"        : """ ROOT or POOL, steers the setup of services """
@@ -207,11 +211,32 @@ def ConfigureMoore():
     deathstar.Members       = [mykiller]
     from Swimming import MooreSetup
     #
-    Moore().InitialTCK  = config.getProp('TCK')
+    dddb = config.getProp('DDDBtag')
+    conddb = config.getProp('CondDBtag')
+    tck = config.getProp('TCK')
+    run = config.getProp('RunNumber')
+    if not dddb and not conddb and not tck and run:
+        import shelve
+        tag_db = os.path.expandvars(config.getProp('TagDatabase'))
+        if not os.path.exists(tag_db):
+            raise OSError, "Tag database file %s does not exist" % config.getProp('TagDatabase')
+        tag_db = shelve.open(tag_db)
+        info = tag_db['info']
+        tags = info[run]
+        Moore().DDDBtag = tags['DDDBtag']
+        Moore().CondDBtag = tags['CondDBtag']
+        Moore().InitialTCK = tags['TCK']
+        Swimming().TCK = tags['TCK']
+    elif dddb and conddb and tck and not run:
+        Moore().DDDBtag     = dddb
+        Moore().CondDBtag   = conddb
+        Moore().InitialTCK  = tck
+    else:
+        raise TypeError, 'You must specify either the CondDB tag, DDDB tag and TCK and _not_ the run number' + \
+              ' or only the run number.'
+
     Moore().Simulation  = config.getProp('Simulation')
     Moore().DataType    = config.getProp('DataType')
-    Moore().DDDBtag     = config.getProp('DDDBtag')
-    Moore().CondDBtag   = config.getProp('CondDBtag')
     Moore().outputFile  = config.getProp('OutputFile')
     Moore().WriteFSR    = config.getProp('WriteFSR')
     Moore().Persistency = config.getProp('Persistency')

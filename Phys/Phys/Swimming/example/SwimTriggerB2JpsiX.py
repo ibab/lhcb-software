@@ -2,29 +2,24 @@ from Configurables import Swimming
 from Gaudi.Configuration import *
 
 Swimming().DataType = '2011'
-Swimming().EvtMax = 50
+Swimming().EvtMax = 400
 Swimming().Simulation = False
-Swimming().DDDBtag = "head-20110722"
-Swimming().CondDBtag = "head-20110901"
+Swimming().RunNumber = 89346
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
 Swimming().OutputFile = 'SwimTrigDST.dst'
 Swimming().SwimStripping = False
-Swimming().TCK = '0x00790038'
 Swimming().Hlt1Triggers = ["Hlt1DiMuonHighMassDecision", "Hlt1TrackAllL0Decision", "Hlt1TrackMuonDecision"]
 Swimming().Hlt2Triggers = ["Hlt2DiMuonJPsiDecision", "Hlt2DiMuonDetachedJPsiDecision"]
-Swimming().OffCands = "/Event/SingleCandidate"
+Swimming().OffCands = "/Event/Dimuon/Phys/BetaSBs2JpsiPhiDetachedLine/Particles"
 Swimming().TransformName = '2011_WithBeamSpotFilter'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
 Swimming().UseFileStager = True
-Swimming().Debug = True
+Swimming().Debug = False
 
 ## from Configurables import FileStagerSvc
 ## FileStagerSvc().OutputLevel = 1
-
-from Configurables import CondDB
-CondDB(UseOracle = True)
 
 # Configure Moore to swim the trigger
 from Swimming.Configuration import ConfigureMoore
