@@ -69,11 +69,13 @@ def microDSTElements(pack=True) :
                  #CloneRecSummary(),
                  #CloneODIN(),
                  #GlobalEventCounters(configGenerator=_gecConfig),
-                 ClonePVs(),
+                 ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks" ),
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
-                 ClonePVRelations("Particle2VertexRelations",True),
+                 ClonePVRelations(location = "Particle2VertexRelations",
+                                  clonePVs = True,
+                                  RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks"),
                  CloneLHCbIDs(fullDecayTree = True),
-                 ReFitAndClonePVs()
+                 ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  #CloneRawBanks( banks = ['ODIN'] )
                  ]
     if pack :
@@ -93,11 +95,13 @@ def stripMicroDSTElements(pack=True) :
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
-    elements = [ ClonePVs(),
+    elements = [ ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks" ),
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
-                 ClonePVRelations("Particle2VertexRelations", True),
+                 ClonePVRelations(location = "Particle2VertexRelations",
+                                  clonePVs = True,
+                                  RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks"),
                  CloneLHCbIDs(fullDecayTree = True),
-                 ReFitAndClonePVs()
+                 ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  ]
     if pack :
         elements += [ PackStrippingReports(),

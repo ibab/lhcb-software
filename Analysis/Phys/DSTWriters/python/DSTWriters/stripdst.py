@@ -9,13 +9,18 @@ __all__ = ('stripDSTElements',
 
 from Configurables import InputCopyStream
 from streamconf import OutputStreamConf
-from microdstelements import ( CloneParticleTrees, ClonePVRelations,
-                               PackStrippingReports, PackParticlesAndVertices,
-                               PackRecObjects, CleanEmptyEventNodes )
+from microdstelements import ( CloneParticleTrees,
+                               ClonePVRelations,
+                               PackStrippingReports,
+                               PackParticlesAndVertices,
+                               PackRecObjects,
+                               CleanEmptyEventNodes )
 
 def stripDSTElements(pack=True) :
     elements = [ CloneParticleTrees( ProtoParticleConer = "NONE" ),
-                 ClonePVRelations("Particle2VertexRelations",True),
+                 ClonePVRelations( location = "Particle2VertexRelations",
+                                   clonePVs = True,
+                                   RecVertexCloner = "VertexBaseFromRecVertexCloner" )
                  ]
     if pack :
         elements += [ PackStrippingReports(),

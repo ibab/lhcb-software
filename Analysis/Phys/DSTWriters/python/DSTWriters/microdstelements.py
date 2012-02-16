@@ -111,19 +111,16 @@ class CloneParticleTrees(MicroDSTElement) :
 
 class ClonePVs(MicroDSTElement) :
     
-    def __init__(self, branch='', copyTracks=False) :
+    def __init__( self, branch='', RecVertexCloner = "RecVertexCloner" ) :
         MicroDSTElement.__init__(self, branch)
-        self._copyTracks = copyTracks
+        self.clonerType = RecVertexCloner
         
     def __call__(self, sel) :
         from Configurables import CopyPrimaryVertices, CopyPVWeights
-        clonePV=CopyPrimaryVertices(self.personaliseName(sel,
-                                                         'CopyPrimaryVertices'))
-        if self._copyTracks :
-            clonePV.ClonerType = 'RecVertexClonerWithTracks'
+        clonePV = CopyPrimaryVertices( name = self.personaliseName(sel,'CopyPrimaryVertices'),
+                                       ClonerType = self.clonerType )
         self.setOutputPrefix(clonePV)
-        cloneWeights = CopyPVWeights(self.personaliseName(sel,
-                                                          'CopyPVWeights'))
+        cloneWeights = CopyPVWeights( name = self.personaliseName(sel,'CopyPVWeights') )
         self.setOutputPrefix(cloneWeights)
         return [clonePV, cloneWeights]
 
@@ -179,25 +176,32 @@ class ClonePVRelations(MicroDSTElement) :
     location : name of the TES leaf where the Particle->PV relations are stored.
     clonePVs : Clone the target primary vertices?
     branch   : TES branch for output relations table, appended to '/Event'.
+    RecVertexCloner : The vertex cloner to use
     """
-    def __init__(self, location, clonePVs=True, branch = '') :
+    def __init__( self,
+                  location,
+                  clonePVs = True,
+                  branch = '',
+                  RecVertexCloner = "VertexBaseFromRecVertexCloner" ) :
         MicroDSTElement.__init__(self, branch)
         self.location = location
         self.clonePVs = clonePVs
+        self.clonerType = RecVertexCloner
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations
-        cloner = CopyParticle2PVRelations(self.personaliseName(sel, "CopyP2PV_"+self.location))
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel,"CopyP2PV_"+self.location))
         cloner.InputLocations = self.dataLocations(sel, self.location)
-        clonerType = cloner.getProp('ClonerType')
+        #clonerType = cloner.getProp('ClonerType')
+        cloner.ClonerType = self.clonerType
         if self.clonePVs == False :
             cloner.ClonerType = 'NONE'
             if hasattr(sel,'algorithm') :
                 alg = sel.algorithm()
                 refitPVs = False
                 if alg != None and alg.properties().has_key('ReFitPVs') :
-                    refitPVs =  alg.getProp('ReFitPVs')
+                    refitPVs = alg.getProp('ReFitPVs')
                 if refitPVs :
-                    cloner.ClonerType = clonerType
+                    cloner.ClonerType = self.clonerType
         self.setOutputPrefix(cloner)
         return [cloner]
 
@@ -235,16 +239,30 @@ class ReFitAndClonePVs(MicroDSTElement) :
     Relations tables go to locations "<branch>/<location>/BestPV_<sel.name()>P2PV", where
     <location> is each of the entries in sel.outputLocations().
     '''
-
+    
+    def __init__( self,
+                  branch = '',
+                  RecVertexCloner = "VertexBaseFromRecVertexCloner" ) :
+        MicroDSTElement.__init__(self, branch)
+        self.clonerType = RecVertexCloner
+        
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations, PVReFitterAlg, BestPVAlg
+
+        # Reftter
         refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'))
         refitPVs.ParticleInputLocations = self.dataLocations(sel, 'Particles')
+
+        # Pick the best
         bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
         bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
+
+        # Clone to stream
         cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
+        cloner.ClonerType = self.clonerType
         cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
         self.setOutputPrefix(cloner)
+
         return [refitPVs, bestPV, cloner]
         
 class CloneL0DUReport(MicroDSTElement) :
