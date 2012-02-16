@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file Analysis/Models.py
 #  Module with some useful fit-models
@@ -9,14 +9,14 @@
 #  @date   2011-12-01
 #
 #                    $Revision$
-#  Last modification $Date:$
-#  by                $Author:$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """
 Module with some useful fit-models 
 """
 # =============================================================================
-__version__ = "$Revision:$"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-12-01"
 # =============================================================================
