@@ -37,14 +37,8 @@ StatusCode RecVertexClonerWithTracks::initialize()
   const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "Going to get TrackCloner" << endmsg;
-
   m_trackCloner = tool<ICloneTrack>( m_trackClonerType,
                                      this->parent() );
-  if (!m_trackCloner) 
-  {
-    return Error("Failed to find TrackCloner");
-  }
 
   return sc;
 }
@@ -64,7 +58,7 @@ LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
 
   LHCb::RecVertex* vertexClone =
     cloneKeyedContainerItem<MicroDST::BasicRecVertexCloner>(vertex);
-
+  
   if (!vertexClone) return NULL;
 
   const SmartRefVector<LHCb::Track> & tracks = vertex->tracks();

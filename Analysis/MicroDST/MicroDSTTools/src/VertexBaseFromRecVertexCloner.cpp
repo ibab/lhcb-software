@@ -26,7 +26,8 @@ VertexBaseFromRecVertexCloner::VertexBaseFromRecVertexCloner( const std::string&
 
 //=============================================================================
 
-LHCb::VertexBase* VertexBaseFromRecVertexCloner::operator() (const LHCb::VertexBase* vertex)
+LHCb::VertexBase*
+VertexBaseFromRecVertexCloner::operator() ( const LHCb::VertexBase* vertex )
 {
   const LHCb::RecVertex* recVertex = dynamic_cast<const LHCb::RecVertex*>(vertex);
   return ( recVertex ? this->clone(recVertex) : NULL );
@@ -34,18 +35,18 @@ LHCb::VertexBase* VertexBaseFromRecVertexCloner::operator() (const LHCb::VertexB
 
 //=============================================================================
 
-LHCb::RecVertex* VertexBaseFromRecVertexCloner::operator() (const LHCb::RecVertex* vertex)
+LHCb::RecVertex*
+VertexBaseFromRecVertexCloner::operator() ( const LHCb::RecVertex* vertex )
 {
   return this->clone(vertex);
 }
 
 //=============================================================================
 
-LHCb::RecVertex* VertexBaseFromRecVertexCloner::clone(const LHCb::RecVertex* vertex)
+LHCb::RecVertex* 
+VertexBaseFromRecVertexCloner::clone( const LHCb::RecVertex* vertex )
 {
-  LHCb::RecVertex* vertexClone =
-    cloneKeyedContainerItem<PVCloner>(vertex);
-  return vertexClone;
+  return cloneKeyedContainerItem<PVCloner>(vertex);
 }
 
 //=============================================================================

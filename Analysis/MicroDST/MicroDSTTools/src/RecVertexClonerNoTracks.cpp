@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.cpp,v 1.8 2010-08-11 12:51:28 jpalac Exp $
+// $Id: RecVertexClonerNoTracks.cpp,v 1.8 2010-08-11 12:51:28 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -8,10 +8,10 @@
 #include "Event/RecVertex.h"
 
 // local
-#include "RecVertexCloner.h"
+#include "RecVertexClonerNoTracks.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RecVertexCloner
+// Implementation file for class : RecVertexClonerNoTracks
 //
 // 2007-12-05 : Juan PALACIOS
 //-----------------------------------------------------------------------------
@@ -19,31 +19,26 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RecVertexCloner::RecVertexCloner( const std::string& type,
+RecVertexClonerNoTracks::RecVertexClonerNoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : base_class ( type, name , parent ) { }
+  : RecVertexCloner ( type, name , parent ) { }
 
 //=============================================================================
 
-LHCb::RecVertex* RecVertexCloner::operator() ( const LHCb::RecVertex* vertex )
+LHCb::RecVertex* RecVertexClonerNoTracks::clone(const LHCb::RecVertex* vertex)
 {
-  return this->clone(vertex);
-}
-
-//=============================================================================
-
-LHCb::RecVertex* RecVertexCloner::clone(const LHCb::RecVertex* vertex)
-{
-  return cloneKeyedContainerItem<PVCloner>(vertex);
+  LHCb::RecVertex* new_vert = RecVertexCloner::clone(vertex);
+  if ( new_vert ) { new_vert->clearTracks(); }
+  return new_vert;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-RecVertexCloner::~RecVertexCloner() {}
+RecVertexClonerNoTracks::~RecVertexClonerNoTracks() {}
 
 //=============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RecVertexCloner )
+DECLARE_TOOL_FACTORY( RecVertexClonerNoTracks )

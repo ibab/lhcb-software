@@ -31,13 +31,18 @@ public:
 
   virtual ~RecVertexCloner( ); ///< Destructor
 
+public:
+
   virtual LHCb::RecVertex* operator() (const LHCb::RecVertex* vertex);
 
 private:
 
   typedef MicroDST::RecVertexClonerShallowTracks PVCloner;
 
-  LHCb::RecVertex* clone (const LHCb::RecVertex* vertex);
+protected:
+
+  virtual LHCb::RecVertex* clone (const LHCb::RecVertex* vertex);
 
 };
+
 #endif // RECVERTEXCLONER_H
