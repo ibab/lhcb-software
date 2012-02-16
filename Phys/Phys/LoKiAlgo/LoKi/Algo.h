@@ -51,6 +51,10 @@ namespace Decays { class Decay ; }
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
+  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-14 
@@ -58,16 +62,19 @@ namespace Decays { class Decay ; }
 // ============================================================================
 namespace LoKi 
 {
+  // ===========================================================================
   class LoopObj ;
-  class Loop    ;  
+  class Loop    ;
+  // ==========================================================================
   /** @class Algo LoKi/Algo.h
    *  The basic "working horse" of the whole LoKi project
    *  @see DVAlgorithm
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-14
    */
-  class Algo : public DVAlgorithm
+  class GAUDI_API Algo : public DVAlgorithm
   {
+    // ========================================================================
   public:    
     // ========================================================================
     /** 'Select' the particles to be used in local storage

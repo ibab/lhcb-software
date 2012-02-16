@@ -29,6 +29,10 @@ class MsgStream ;
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-05-26 
  */
@@ -62,6 +66,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     std::ostream& printDecay 
     ( const LoKi::Loop&            particle            , 
       std::ostream&                stream              , 
@@ -84,6 +89,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     std::ostream& 
     printDecay 
     ( const LoKi::Loop&            particle  , 
@@ -107,6 +113,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     MsgStream& 
     printDecay 
     ( const LoKi::Loop&            particle            , 
@@ -130,6 +137,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     MsgStream& 
     printDecay 
     ( const LoKi::Loop&     particle  , 
@@ -152,6 +160,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     std::string 
     printDecay 
     ( const LoKi::Loop&            particle            , 
@@ -173,21 +182,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
+    GAUDI_API 
     std::string 
     printDecay 
     ( const LoKi::Loop&            particle ) ;
     // ========================================================================
-  } // end of namespace LoKi::PrintLoop 
+  } //                                         end of namespace LoKi::PrintLoop 
   // ==========================================================================
   namespace Print
   {
     // ========================================================================
     using namespace LoKi::PrintLoop ;
     // ========================================================================
-  } // end of namespace LoKi::Print 
-} // end of namespace LoKi
+  } //                                             end of namespace LoKi::Print 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_PRINTLOOPDECAY_H
 // ============================================================================

@@ -5,6 +5,10 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2012-02-16 - Vanya Belyaev
+
+ - add more decorators for tuples 
+
 !========================= LoKiAlgo v9r4 2011-06-16 =========================
 ! 2011-06-05 - Vanya Belyaev
  - fix ICC warnings 

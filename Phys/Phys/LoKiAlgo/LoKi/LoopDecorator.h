@@ -15,7 +15,7 @@ namespace LoKi
   namespace Dicts
   {
     // ========================================================================
-    class DictsLoop
+    class GAUDI_API DictsLoop
     {
     public:
       // ======================================================================
@@ -165,7 +165,7 @@ namespace LoKi
       static const LoKi::Loop& restore ( const LoKi::Loop& l ) ;
       /// access to the combination 
       static const LHCb::Particle::ConstVector& 
-	combination ( const LoKi::Loop& l ) ; 
+      combination ( const LoKi::Loop& l ) ; 
       /// access to the combination 
       static LHCb::Particle::Range comb  ( const LoKi::Loop& l ) ; 
       // ======================================================================

@@ -9,9 +9,29 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
+/** @file
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
 namespace LoKi 
 {
+  // ==========================================================================
   class Loop ;
+  // ==========================================================================
   namespace LoopChild 
   {
     // ========================================================================
@@ -21,6 +41,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */   
+    GAUDI_API 
     std::size_t nChildren ( const LoKi::Loop& particle ) ;
     // ========================================================================
     /** Trivial accessor to the dauthter particles for the given "particle"
@@ -34,6 +55,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */
+    GAUDI_API 
     LHCb::Particle* child
     ( const LoKi::Loop& particle , 
       const size_t      index    ) ;
@@ -50,6 +72,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */    
+    GAUDI_API 
     LHCb::Particle* child
     ( const LoKi::Loop& particle , 
       const size_t      index1   , 
@@ -68,6 +91,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */    
+    GAUDI_API 
     LHCb::Particle* child
     ( const LoKi::Loop& particle , 
       const size_t      index1   , 
@@ -88,6 +112,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */    
+    GAUDI_API 
     LHCb::Particle* child
     ( const LoKi::Loop&  particle , 
       const size_t       index1   , 
@@ -99,6 +124,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */    
+    GAUDI_API 
     LHCb::Particle::ConstVector
     children ( const LoKi::Loop& particle ) ;
     // ========================================================================
@@ -106,18 +132,22 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-02
      */    
+    GAUDI_API 
     LHCb::Particle::ConstVector
     descendants ( const LoKi::Loop& particle ) ;
     // ========================================================================
-  } // end of namespace LoKi::LoopChild 
-  // ========================================================================
+  } //                                         end of namespace LoKi::LoopChild 
+  // ==========================================================================
   namespace Child 
   {
+    // ========================================================================
     using namespace LoKi::LoopChild ;
-  } // end of namespace LoKi::Child 
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                             end of namespace LoKi::Child 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_LOOPCHILD_H
 // ============================================================================

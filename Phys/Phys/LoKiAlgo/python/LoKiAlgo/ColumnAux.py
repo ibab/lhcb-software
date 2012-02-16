@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id$ 
+# $Id:$
 # =============================================================================
-## @file decorators.py LoKiAlgo/functions.py
-#  The set of basic decorator for objects from LoKiAlgo library
-#  The file is a part of LoKi and Bender projects
+## @file
+#  helper module for decoration of standard N-tuples
 #
-#        This file is a part of LoKi project - 
+#  This file is a part of LoKi project - 
 #    "C++ ToolKit  for Smart and Friendly Physics Analysis"
 #
 #  The package has been designed with the kind help from
@@ -18,18 +17,18 @@
 #  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
-#
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2012-02-16
 #
 #                   $Revision$
 # Last modification $Date$
 #                by $Author$
 # =============================================================================
 """
-The set of basic decorators for objects from LoKiAlgo library
+Helper module for decoration of standard N-tuples
 
-         This file is a part of LoKi project - 
-'C++ ToolKit  for Smart and Friendly Physics Analysis'
+This file is a part of LoKi project - 
+``C++ ToolKit  for Smart and Friendly Physics Analysis''
 
 The package has been designed with the kind help from
 Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
@@ -42,16 +41,51 @@ with the smear campaign of Dr.O.Callot et al.:
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
-__date__    = "2008-06-11"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru "
+__date__    = "2012-02-16"
 __version__ = "$Revision$"
 # =============================================================================
-from LoKiCore.basic import cpp, LoKi, LHCb 
+from LoKiCore.basic import cpp
+
+
+_Tuple  = cpp.Tuples.Tuple
+_ColAux = cpp.LoKi.Dicts.TupleAux 
+
+## simple function for decoration of "Tuples::Tuple::farray" method 
+def _colAux_ ( self , *args ) :
+    """
+    Simple function for decoration of 'Tuples::Tuple::column_aux' method
+    
+    time = ...                    ## Gaudi::Time object
+    tup.column_aux ( 't' , time ) ## name/prefix is optional
+    tup.column_aux ( time )
+
+    odin = ...                    ## LHCb::Odin object
+    tup.column_aux ( 'o' , odin ) ## name/prefix is optional
+    tup.column_aux ( odin )
+    
+    rhdr = ...                     ## LHCb::RecHeader object  
+    tup.column_aux ( 'r' , rhdr )  ## name/prefix is optional
+    tup.column_aux ( rhdr )
+
+    rsum = ...                     ## LHCb::RecSummary object  
+    tup.column_aux ( 's' , rsum )  ## name/prefix is optional
+    tup.column_aux ( rsum )
+
+    rnum = ...                     ## Gaudi::Numbers object  
+    tup.column_aux ( 'n' , rnum )  ## name/prefix is optional
+    tup.column_aux ( rnum )
+    
+    """
+    return _ColAux.column ( self ,*args )
+
+_colAux_ . __doc__ += '\n' + _ColAux_ . column . __doc__
 
 # =============================================================================
-if '__main__' == __name__ :
-    for o in dir() : print o        
-        
+## finally decorate tuple 
+_Tuple.column_aux   = _colAux_
+
+
 # =============================================================================
 # The END 
 # =============================================================================

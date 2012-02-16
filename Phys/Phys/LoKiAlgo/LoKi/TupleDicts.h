@@ -14,6 +14,25 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/PhysRangeTypes.h"
 // ============================================================================
+/** @file LoKi/TupleDicts.h
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the smear campaign of Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$
+ */
+// ============================================================================
 namespace LoKi
 {
   // ==========================================================================
@@ -25,7 +44,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-06-11
      */
-    class TupleArray
+    class GAUDI_API TupleArray
     {
     public:
       // ======================================================================
@@ -216,12 +235,170 @@ namespace LoKi
         const size_t               maxlen ) ;
       // ======================================================================
     };
-    // ========================================================================
-  } //end of namespace LoKi:Dicts 
+  } //                                              end of namespace LoKi:Dicts 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+namespace LHCb
+{
+  // ==========================================================================
+  class ODIN       ;
+  class RecHeader  ;
+  class RecSummary ;
+  // ==========================================================================
+}
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  class Numbers ;
+  // ==========================================================================
+}
+// ============================================================================
+namespace LoKi
+{
+  // ==========================================================================
+  namespace Dicts 
+  {
+    // ========================================================================
+    /** @class TupleAux
+     *  set of helper columns for n-tuple 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-02-16
+     */
+    class GAUDI_API TupleAux
+    {
+    public:
+      // ======================================================================
+      /** add "time" into n-tuple 
+       *  @param tuple the reference to the -tuple 
+       *  @param name the column name 
+       *  @param time the time 
+       *  @return status code 
+       *  @see Gaudi::Time 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const std::string&        name   , 
+        const Gaudi::Time&        time   ) ;
+      // ======================================================================
+      /** add "time" into n-tuple 
+       *  @param tuple the reference to the -tuple 
+       *  @param time the time 
+       *  @return status code 
+       *  @see Gaudi::Time 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const Gaudi::Time&        time   ) ;
+      // ======================================================================
+      /** add basic ODIN  into n-tuple:
+       *  - run&evt numebrs 
+       *  - tck
+       *  - bxtype & trigger types
+       *  - event time 
+       *  @param tuple the reference to the -tuple 
+       *  @param name the column name 
+       *  @param odin ODIN-object
+       *  @return status code 
+       *  @see LHCb::ODIN
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const std::string&        name   , 
+        const LHCb::ODIN*         odin   ) ;
+      // ======================================================================
+      /** add basic ODIN  into n-tuple:
+       *  - run&evt numebrs 
+       *  - tck
+       *  - bxtype & trigger types
+       *  - event time 
+       *  @param tuple the reference to the -tuple 
+       *  @param odin ODIN-object
+       *  @return status code 
+       *  @see LHCb::ODIN
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const LHCb::ODIN*         odin   ) ;
+      // ======================================================================
+      /** add basic RecHeader information 
+       *  - run&evt numebrs 
+       *  - event time 
+       *  @param tuple the reference to the -tuple 
+       *  @param name the column name 
+       *  @param hdr  run header 
+       *  @return status code 
+       *  @see LHCb::RecHeader 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const std::string&        name   , 
+        const LHCb::RecHeader*    hdr    ) ;
+      // ======================================================================
+      /** add basic RecHeader information 
+       *  - run&evt numebrs 
+       *  - event time 
+       *  @param tuple the reference to the -tuple 
+       *  @param hdr  run header 
+       *  @return status code 
+       *  @see LHCb::RecHeader 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple  , 
+        const LHCb::RecHeader*    hdr    ) ;
+      // ======================================================================
+      /** add basic RecSummary information 
+       *  @param tuple the reference to the -tuple 
+       *  @param name    the column name 
+       *  @param summary the rec-summary object  
+       *  @return status code 
+       *  @see LHCb::RecSummary 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple   , 
+        const std::string&        name    , 
+        const LHCb::RecSummary*   summary ) ;
+      // ======================================================================
+      /** add basic RecSummary information 
+       *  @param tuple the reference to the -tuple 
+       *  @param summary the rec-summary object  
+       *  @return status code 
+       *  @see LHCb::RecSummary 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple   , 
+        const LHCb::RecSummary*   summary ) ;
+      // ======================================================================
+      /** add basic information from counters  { name : value } 
+       *  @param tuple the reference to the -tuple 
+       *  @param name the column name 
+       *  @param cnts the counters 
+       *  @return status code 
+       *  @see Gaudi::Numbers 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple   , 
+        const std::string&        name    , 
+        const Gaudi::Numbers*     cnts    ) ;
+      // ======================================================================
+      /** add basic information from counters  { name : value } 
+       *  @param tuple the reference to the -tuple 
+       *  @param cnts the counters 
+       *  @return status code 
+       *  @see Gaudi::Numbers 
+       */
+      static StatusCode column 
+      ( const Tuples::Tuple&      tuple   , 
+        const Gaudi::Numbers*     cnts    ) ;
+      // ======================================================================
+    };
+    // ========================================================================
+  } //                                              end of namespace LoKi:Dicts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
+//                                                                      The END 
 // ============================================================================
 #endif // LOKI_TUPLEDICTS_H
 // ============================================================================
