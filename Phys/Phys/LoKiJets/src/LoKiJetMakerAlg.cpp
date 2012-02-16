@@ -322,14 +322,13 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
     }
     iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
     itemspt.push_back(pt);
-    for(int ii=0; ii<iitems; ii++) if(itemspt[ii]<pt) {
-      float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;}
   }
 
   mtf = auxptmax / jet->momentum().Pt(); mtf = 0 > mtf ? 0 : mtf; mtf = 1 < mtf ? 1 : mtf;
 
+  sort (itemspt.begin(), itemspt.end());
   float auxptsum = 0; n90=0;
-  for(int ii=0; ii<iitems; ii++) {auxptsum+=itemspt[ii]; n90++; if(auxptsum/sumpt>0.9) break; } 
+  for(int ii=iitems-1; ii>=0; ii--) {auxptsum+=itemspt[ii]; n90++; if(auxptsum/sumpt>0.9) break; }
 
   LoKi::Types::Fun NsatCells = LoKi::Cuts::SUMTREE(LoKi::Cuts::INFO(955,0.),LoKi::Cuts::Q==0, 0.);
   LoKi::Types::Fun N_HasPVInfo = LoKi::Cuts::NINTREE(( LoKi::Cuts::ABSID == 310 ||LoKi::Cuts::ABSID == 3122 ) || 
