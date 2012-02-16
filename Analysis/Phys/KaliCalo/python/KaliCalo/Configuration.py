@@ -697,8 +697,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             EvtMax          = self.getProp ( 'EvtMax'     ) ,
             PrintFreq       = self.getProp ( 'PrintFreq'  ) ,
             Lumi            = False                         ,
-            EnableUnpack    = unPack 
-            ) 
+            EnableUnpack    = []
+            )
+        if unPack : dv.EnableUnpack = ["Reconstruction"]
         
         ## 7. The configuration of femtoDST
         if self.getProp('FemtoDST'):
