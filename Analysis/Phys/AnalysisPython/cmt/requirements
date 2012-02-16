@@ -50,7 +50,7 @@ apply_pattern      reflex_dictionary_lib dictionary=AnalysisPython
 
 apply_pattern      install_more_includes more=Analysis
 apply_pattern      install_python_modules
-
+apply_pattern      install_scripts
 
 #============================================================================
 apply_pattern install_python_modules

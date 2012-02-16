@@ -134,6 +134,11 @@ __all__ = (
     'open'         ## helper function to hide the actual DB
     )
 # =============================================================================
+import logging 
+logger = logging.getLogger(__name__)
+if not logger.handlers : logging.basicConfig()
+logger.setLevel(logging.INFO)
+# =============================================================================
 
 try:
     from cPickle import Pickler, Unpickler, HIGHEST_PROTOCOL
@@ -178,7 +183,7 @@ class ZipShelf(shelve.Shelf):
         self.__opened        = False 
 
         if not self.__silent :
-            print 'ZipShelve: ', filename
+            logger.info ( 'Open DB: %s' % filename ) 
         
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
             
@@ -186,11 +191,11 @@ class ZipShelf(shelve.Shelf):
                 ## gunzip into temporary location
                 filename_ = self._gunzip ( filename ) 
                 if not os.path.exists ( filename_ ) :
-                    raise TypeError ( "Unable to gunzip properly:" + filename )
+                    raise TypeError ( "Unable to gunzip properly: %s" % filename )
                 if not self.__silent : 
                     size1 = os.path.getsize ( filename  ) 
                     size2 = os.path.getsize ( filename_ )
-                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) 
+                    logger.info("GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) )
                 filename        = filename_ 
                 self.__filename = filename_
                 self.__remove   = True
@@ -204,10 +209,10 @@ class ZipShelf(shelve.Shelf):
                 self.__in_place_gunzip  ( filename ) 
                 ##
                 if not os.path.exists ( filename_ ) :
-                    raise TypeError ( "Unable to gunzip properly:" + filename )
+                    raise TypeError ( "Unable to gunzip properly: %s" % filename )
                 if not self.__silent : 
                     size2 = os.path.getsize ( filename_ )
-                    print "GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 )
+                    logger.info("GZIP uncompression %s: %.1f%%" %  ( filename , (size2*100.0)/size1 ) ) 
                 filename        = filename_ 
                 self.__gzip     = True 
                 self.__filename = filename_
@@ -272,10 +277,10 @@ class ZipShelf(shelve.Shelf):
             self.__in_place_gzip ( self.__filename ) 
             #
             if not os.path.exists ( self.__filename + '.gz' ) :
-                print 'Unable to compress the file ', self.__filename   
+                logger.warning( 'Unable to compress the file %s ' % self.__filename  )
             size2 = os.path.getsize( self.__filename + '.gz' )
             if not self.__silent : 
-                print 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 )
+                logger.info( 'GZIP compression %s: %.1f%%' % ( self.__filename, (size2*100.0)/size1 ) ) 
 
     ## gzip the file (``in-place'') 
     def __in_place_gzip   ( self , filein ) :

@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Vanya Belyaev
+ - improve logging, pyroot 
+
 !========================= AnalysisPython v2r8 2012-02-09 =========================
 
 ! 2012-01-15 - Vanya Belyaev

@@ -56,7 +56,6 @@ SE             = cpp.StatEntity
 ValueWithError = cpp.Gaudi.Math.ValueWithError
 binomEff       = cpp.Gaudi.Math.binomEff
 import math
-
 # =============================================================================
 ## global identifier for ROOT objects 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -1229,8 +1228,6 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     """
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
-    #
-    print ' h2', h2, type(h2) , VE(h2,0)
     #
     if   isinstance ( h2 , ( int , long , float ) ) :
         v1 = float  ( h2 ) 
