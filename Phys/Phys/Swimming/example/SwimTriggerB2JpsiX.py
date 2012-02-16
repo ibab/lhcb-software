@@ -2,9 +2,11 @@ from Configurables import Swimming
 from Gaudi.Configuration import *
 
 Swimming().DataType = '2011'
-Swimming().EvtMax = 400
+Swimming().EvtMax = 5000
 Swimming().Simulation = False
-Swimming().RunNumber = 89346
+Swimming().DDDBtag     = 'head-20110302'
+Swimming().CondDBtag   = 'head-20110331'
+Swimming().TCK = '0x005d0033'
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
 Swimming().OutputFile = 'SwimTrigDST.dst'
@@ -17,9 +19,6 @@ Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
 Swimming().UseFileStager = True
 Swimming().Debug = False
-
-## from Configurables import FileStagerSvc
-## FileStagerSvc().OutputLevel = 1
 
 # Configure Moore to swim the trigger
 from Swimming.Configuration import ConfigureMoore
