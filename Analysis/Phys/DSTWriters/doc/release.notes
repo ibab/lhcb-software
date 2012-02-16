@@ -6,6 +6,8 @@
 
 ! 2012-02-16 - Chris Jones
  - Update the PV related uDST elements to not keep the Track SmartRefVector
+ - Add an option to stripDSTStreamConf() to allow a full DST stream to opt
+   out of including the full DAQ/RawEvent. Default is to included it.
 
 ! 2012-02-15 - Chris Jones
  - Make the packing of stripping (m)DSTs the default.

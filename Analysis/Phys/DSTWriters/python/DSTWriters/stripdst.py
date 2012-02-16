@@ -29,11 +29,14 @@ def stripDSTElements(pack=True) :
                       CleanEmptyEventNodes() ]
     return elements
 
-def stripDSTStreamConf(pack=True) :
-    eItems = [ '/Event/DAQ/RawEvent#1' ]
+def stripDSTStreamConf( pack = True,
+                        saveFullRawEvent = True ) :
+    eItems = [ ]
+    if saveFullRawEvent :
+        eItems += [ '/Event/DAQ/RawEvent#1' ]
     if pack :
-        eItems += ['/Event/Strip/pPhys/DecReports#1']
+        eItems += [ '/Event/Strip/pPhys/DecReports#1' ]
     else :
-        eItems += ['/Event/Strip/Phys/DecReports#1']
+        eItems += [ '/Event/Strip/Phys/DecReports#1' ]
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems )
