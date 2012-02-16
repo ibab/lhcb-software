@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Wouter Hulsbergen
+ - bugfix in TrackStateInitTool for magnet off data
+
 ! 2012-02-10 - Wouter Hulsbergen
  - several changes to TrackStateInitTool to get better track initialization
 
@@ -187,6 +190,7 @@
 !======================== TrackTools v3r34p2 2010-08-03 =======================
 ! 2010-08-13 - Wouter Hulsbergen
  - restore TrackInterpolator to r52948
+ - make TrackStateInitAlg/Tool deal properly with failures
 
 ! 2010-08-07 - Stephanie Hansmann-Menzemer
  - reverted changes from W.H. from 2010-07-23 as they screw up the 

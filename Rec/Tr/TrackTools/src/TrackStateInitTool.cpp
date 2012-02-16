@@ -160,8 +160,10 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
     LHCb::StateVector statevec( t2state.stateVector(), t2state.z() ) ;
     Gaudi::TrackMatrix jacobian ;
     sc = m_extrapolator->propagate( statevec, velostate->z(), &jacobian );
-    double dqop = (velostate->x() - statevec.x()) / jacobian(0,4) ;
-    qOverP += dqop ;
+    if( jacobian(0,4)!=0 ) {
+      double dqop = (velostate->x() - statevec.x()) / jacobian(0,4) ;
+      qOverP += dqop ;
+    }
     
     // using this momentum, we can now improve the T1 state. it
     // doesn't make any real difference, even w/o updating transport.
@@ -289,7 +291,7 @@ StatusCode TrackStateInitTool::createTTState(LHCb::Track& track ) const
       //ttstatevec(0) = xtt ;
       const bool fixTy = true ;
       fitLine( zref, ttstatevec, tthits, fixTy ) ;
-      double dqop = (ttstatevec(0) - statevec.x()) / jacobian(0,4);
+      double dqop = jacobian(0,4) != 0 ? (ttstatevec(0) - statevec.x()) / jacobian(0,4) : 0 ;
       for(size_t i=0; i<4; ++i) statevec.parameters()(i) = ttstatevec(i) ;
       
       if( track.type() == LHCb::Track::Downstream ) {
