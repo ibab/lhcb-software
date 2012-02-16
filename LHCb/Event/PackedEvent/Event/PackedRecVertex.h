@@ -2,15 +2,23 @@
 #ifndef EVENT_PACKEDRECVERTEX_H
 #define EVENT_PACKEDRECVERTEX_H 1
 
-// Include files
-#include "GaudiKernel/DataObject.h"
 #include <string>
 #include <vector>
+
+#include "GaudiKernel/DataObject.h"
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
+#include "Event/RecVertex.h"
 
 namespace LHCb
 {
 
-  /** @class PackedRecVertex PackedRecVertex.h Event/PackedRecVertex.h
+  // -----------------------------------------------------------------------
+
+  /** @class PackedRecVertex Event/PackedRecVertex.h
    *
    *  Structure to describe a reconstructed vertex
    *
@@ -61,6 +69,8 @@ namespace LHCb
 
   };
 
+  // -----------------------------------------------------------------------
+
   static const CLID CLID_PackedRecVertices = 1553;
 
   // Namespace for locations in TDS
@@ -72,6 +82,11 @@ namespace LHCb
 
   class PackedRecVertices : public DataObject 
   {
+
+  public:
+
+    /// Vector of packed objects
+    typedef std::vector<LHCb::PackedRecVertex> Vector;
   
   public:
   
@@ -114,6 +129,64 @@ namespace LHCb
     std::vector<std::pair<int,int> > m_extra;
 
   };
+
+  // -----------------------------------------------------------------------
+
+  /** @class RecVertexPacker Event/PackedRecVertex.h
+   *
+   *  Utility class to handle the packing and unpacking of the RecVertices
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2009-10-13
+   */
+  class RecVertexPacker
+  {
+
+  public:
+
+    // These are required by the templated algorithms
+    typedef LHCb::RecVertex                     Data;
+    typedef LHCb::PackedRecVertex         PackedData;
+    typedef LHCb::RecVertices             DataVector;
+    typedef LHCb::PackedRecVertices PackedDataVector;
+    static const std::string& packedLocation()   { return LHCb::PackedRecVertexLocation::Primary; }
+    static const std::string& unpackedLocation() { return LHCb::RecVertexLocation::Primary; }
+
+  public:
+
+    /// Default Constructor
+    RecVertexPacker() {}
+
+  public:
+
+    /// Pack a Vertex
+    void pack( const Data & vert,
+               PackedData & pvert,
+               const DataVector & verts, 
+               PackedDataVector & pverts ) const;
+
+    /// Pack Vertices
+    void pack( const DataVector & verts,
+               PackedDataVector & pverts ) const;
+
+    /// Unpack a Vertex
+    void unpack( const PackedData       & pvert,
+                 Data                   & vert,
+                 const PackedDataVector & pverts,
+                 DataVector             & verts ) const;
+
+    /// Unpack Vertices
+    void unpack( const PackedDataVector & pverts,
+                 DataVector             & verts ) const;
+
+  private:
+
+    /// Standard packing of quantities into integers ...
+    StandardPacker m_pack;
+
+  };
+
+  // -----------------------------------------------------------------------
 
 }
 

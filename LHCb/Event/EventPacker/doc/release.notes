@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Chris Jones
+ - Reorganise things a bit w.r.t. the Particle and Vertex packing, to avoid
+   some code duplication
+
 ! 2012-02-13 - Chris Jones
  - Protect PackParticlesAndVertices against completely missing streams
 

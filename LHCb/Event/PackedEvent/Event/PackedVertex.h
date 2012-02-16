@@ -29,20 +29,26 @@ namespace LHCb
    */
   struct PackedVertex
   {
+
     /// Default constructor
     PackedVertex()
       : key(0),
         technique(0),
-        firstOutgoingPart(0), lastOutgoingPart(0)
+        firstOutgoingPart(0), 
+        lastOutgoingPart(0)
     {}
     
-    int key; ///< Key and possibly container index.
+    /// Key and possibly container index.
+    int key; 
 
-    // packed data members
+    /// packed technique
     int technique;
 
-    // outgoing particles
-    unsigned short int firstOutgoingPart, lastOutgoingPart;
+    /// first outgoing particle
+    unsigned short int firstOutgoingPart;
+
+    /// last outgoing particle
+    unsigned short int lastOutgoingPart;
 
   };
 
@@ -133,6 +139,7 @@ namespace LHCb
    */
   class VertexPacker
   {
+
   public:
 
     // These are required by the templated algorithms
@@ -150,9 +157,20 @@ namespace LHCb
 
   public:
 
+    /// Pack a Vertex
+    void pack( const Data & vert,
+               PackedData & pvert,
+               PackedDataVector & pverts ) const;
+
     /// Pack Vertices
     void pack( const DataVector & verts,
                PackedDataVector & pverts ) const;
+
+    /// Unpack a Vertex
+    void unpack( const PackedData       & pvert,
+                 Data                   & vert,
+                 const PackedDataVector & pverts,
+                 DataVector             & verts ) const;
 
     /// Unpack Vertices
     void unpack( const PackedDataVector & pverts,

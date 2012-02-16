@@ -211,9 +211,21 @@ namespace LHCb
     ParticlePacker() {}
 
   public:
+
+    /// Pack a single Particle
+    void pack( const Data & part,
+               PackedData & ppart,
+               PackedDataVector & pparts ) const;
+
     /// Pack Particles
     void pack( const DataVector & parts,
                PackedDataVector & pparts ) const;
+
+    /// Unpack a single Particle
+    void unpack( const PackedData       & ppart,
+                 Data                   & part,
+                 const PackedDataVector & pparts,
+                 DataVector             & parts ) const;
 
     /// Unpack Particles
     void unpack( const PackedDataVector & pparts,

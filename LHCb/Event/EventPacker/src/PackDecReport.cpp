@@ -45,7 +45,8 @@ StatusCode PackDecReport::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::HltDecReports>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && 
+       !exist<LHCb::HltDecReports>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_inputName );
   LHCb::PackedDecReport* out = new LHCb::PackedDecReport();
@@ -67,7 +68,7 @@ StatusCode PackDecReport::execute()
       out->linkMgr()->addLink( (*itR).first, NULL );
       myLink = out->linkMgr()->link( (*itR).first );
     }
-    tmp.setIntDecisionID( myLink->ID()+1 );   // Store numbers starting at 1 as HltDecReport dislike 0!
+    tmp.setIntDecisionID( myLink->ID()+1 ); // Store numbers starting at 1 as HltDecReport dislike 0!
     out->addReport( tmp.decReport() );
     if ( msgLevel( MSG::DEBUG ) ) 
     {

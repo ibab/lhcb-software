@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Chris Jones
+ - Reorganise things a bit w.r.t. the Particle and Vertex packing, to avoid
+   some code duplication
+
 !========================= PackedEvent v4r6 2012-01-31 =========================
 ! 2012-01-31 - Chris Jones
  - Update CLID for PackedParticle2Ints to 1591, to avoid a clash

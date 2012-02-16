@@ -55,8 +55,9 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbContainer = 0;
   int nbPart = 0;
   int prevLink = -1;
-  LHCb::Particles* parts = NULL;
 
+  LHCb::Particles* parts = NULL;
+  static const LHCb::ParticlePacker pPacker;
   if ( exist<LHCb::PackedParticles>(m_inputStream+LHCb::PackedParticleLocation::InStream) )
   {
     LHCb::PackedParticles* pparts =
@@ -65,8 +66,8 @@ StatusCode UnpackParticlesAndVertices::execute()
           pparts->data().end() != itP; ++itP )
     {
       const LHCb::PackedParticle& ppart = *itP;
-      int key    = ppart.key & 0x0000FFFF;
-      int linkID = ppart.key >> 16;
+      const int key    = ppart.key & 0x0000FFFF;
+      const int linkID = ppart.key >> 16;
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
@@ -83,106 +84,15 @@ StatusCode UnpackParticlesAndVertices::execute()
         put( parts, containerName );
         ++nbContainer;
       }
-      //== Construct with particle ID and key.
-      LHCb::Particle* part = new LHCb::Particle( LHCb::ParticleID(ppart.particleID), key );
-      parts->add( part );
+
+      // Make new object and insert into the output container
+      LHCb::Particle* part = new LHCb::Particle();
+      parts->insert( part, key );
       ++nbPart;
 
-      // Mass and error
-      part->setMeasuredMass   ( m_pack.mass(ppart.measMass) );
-      part->setMeasuredMassErr( m_pack.mass(ppart.measMassErr) );
+      // Unpack the physics info
+      pPacker.unpack( ppart, *part, *pparts, *parts );
 
-      // Lorentz momentum vector
-      const double pz   = m_pack.energy( ppart.lv_pz );
-      const double px   = m_pack.slope( ppart.lv_px ) * pz;
-      const double py   = m_pack.slope( ppart.lv_py ) * pz;
-      const double mass = ppart.lv_mass;
-      part->setMomentum( Gaudi::LorentzVector( px, py, pz,
-                                               std::sqrt(px*px+py*py+pz*pz+mass*mass) ) );
-
-      // reference point
-      part->setReferencePoint( Gaudi::XYZPoint( m_pack.position(ppart.refx),
-                                                m_pack.position(ppart.refy),
-                                                m_pack.position(ppart.refz) ) );
-
-      // Mom Cov
-      Gaudi::SymMatrix4x4 & momCov = *(const_cast<Gaudi::SymMatrix4x4*>(&part->momCovMatrix()));
-      const double merr00 = m_pack.slope( ppart.momCov00 ) * px;
-      const double merr11 = m_pack.slope( ppart.momCov11 ) * py;
-      const double merr22 = m_pack.energy( ppart.momCov22 );
-      const double merr33 = m_pack.energy( ppart.momCov33 );
-      momCov(0,0) = std::pow( merr00, 2 );
-      momCov(1,1) = std::pow( merr11, 2 );
-      momCov(2,2) = std::pow( merr22, 2 );
-      momCov(3,3) = std::pow( merr33, 2 );
-      momCov(1,0) = merr11*merr00 * m_pack.fraction( ppart.momCov10 );
-      momCov(2,0) = merr22*merr00 * m_pack.fraction( ppart.momCov20 );
-      momCov(2,1) = merr22*merr11 * m_pack.fraction( ppart.momCov21 );
-      momCov(3,0) = merr33*merr00 * m_pack.fraction( ppart.momCov30 );
-      momCov(3,1) = merr33*merr11 * m_pack.fraction( ppart.momCov31 );
-      momCov(3,2) = merr33*merr22 * m_pack.fraction( ppart.momCov32 );
-
-      // Pos Cov
-      Gaudi::SymMatrix3x3 & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&part->posCovMatrix()));
-      const double perr00 = m_pack.position( ppart.posCov00 );
-      const double perr11 = m_pack.position( ppart.posCov11 );
-      const double perr22 = m_pack.position( ppart.posCov22 );
-      posCov(0,0) = std::pow( perr00, 2 );
-      posCov(1,1) = std::pow( perr11, 2 );
-      posCov(2,2) = std::pow( perr22, 2 );
-      posCov(1,0) = perr11*perr00 * m_pack.fraction( ppart.posCov10 );
-      posCov(2,0) = perr22*perr00 * m_pack.fraction( ppart.posCov20 );
-      posCov(2,1) = perr22*perr11 * m_pack.fraction( ppart.posCov21 );
-
-      // Pos Mom Cov
-      Gaudi::Matrix4x3 & pmCov = *(const_cast<Gaudi::Matrix4x3*>(&part->posMomCovMatrix()));
-      pmCov(0,0) = m_pack.fltPacked( ppart.pmCov00 );
-      pmCov(0,1) = m_pack.fltPacked( ppart.pmCov01 );
-      pmCov(0,2) = m_pack.fltPacked( ppart.pmCov02 );
-      pmCov(1,0) = m_pack.fltPacked( ppart.pmCov10 );
-      pmCov(1,1) = m_pack.fltPacked( ppart.pmCov11 );
-      pmCov(1,2) = m_pack.fltPacked( ppart.pmCov12 );
-      pmCov(2,0) = m_pack.fltPacked( ppart.pmCov20 );
-      pmCov(2,1) = m_pack.fltPacked( ppart.pmCov21 );
-      pmCov(2,2) = m_pack.fltPacked( ppart.pmCov22 );
-      pmCov(3,0) = m_pack.fltPacked( ppart.pmCov30 );
-      pmCov(3,1) = m_pack.fltPacked( ppart.pmCov31 );
-      pmCov(3,2) = m_pack.fltPacked( ppart.pmCov32 );
-
-      // extra info
-      for ( int iE = ppart.firstExtra; iE < ppart.lastExtra; ++iE )
-      {
-        const LHCb::PackedParticles::PackedExtraInfo& pInfo =  pparts->extra()[iE];
-        part->addInfo( pInfo.first, m_pack.fltPacked(pInfo.second) );
-      }
-
-      // end vertex
-      if ( -1 != ppart.vertex ) 
-      {
-        int hintID(0), key(0);
-        m_pack.hintAndKey( ppart.vertex, pparts, parts, hintID, key );
-        SmartRef<LHCb::Vertex> ref(parts,hintID,key);
-        part->setEndVertex( ref );
-      }
-
-      // protoparticle
-      if ( -1 != ppart.proto ) 
-      {
-        int hintID(0), key(0);
-        m_pack.hintAndKeyLong( ppart.proto, pparts, parts, hintID, key );
-        SmartRef<LHCb::ProtoParticle> ref(parts,hintID,key);
-        part->setProto( ref );
-      }
-
-      // daughters
-      for ( unsigned short int iiD = ppart.firstDaughter; iiD < ppart.lastDaughter; ++iiD ) 
-      {
-        const int & iD1 = pparts->daughters()[iiD];
-        int hintID(0), key(0);
-        m_pack.hintAndKeyLong( iD1, pparts, parts, hintID, key );
-        SmartRef<LHCb::Particle> ref(parts,hintID,key);
-        part->addToDaughters( ref );
-      }
     }
   }
 
@@ -193,6 +103,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbVert = 0;
   prevLink = -1;
   LHCb::Vertices* verts = NULL;
+  static const LHCb::VertexPacker vPacker;
   if ( exist<LHCb::PackedVertices>( m_inputStream + LHCb::PackedVertexLocation::InStream ) )
   {
     LHCb::PackedVertices* pverts = 
@@ -201,32 +112,23 @@ StatusCode UnpackParticlesAndVertices::execute()
           pverts->data().end() != itV; ++itV )
     {
       const LHCb::PackedVertex& pvert = *itV;
-      int key    = pvert.key & 0x0000FFFF;
-      int linkID = pvert.key >> 16;
+      const int key    = pvert.key & 0x0000FFFF;
+      const int linkID = pvert.key >> 16;
       if ( linkID != prevLink ) 
       {
         prevLink = linkID;
         const std::string & containerName = pverts->linkMgr()->link( linkID )->path() + m_postFix;
         verts = new LHCb::Vertices();
         put( verts, containerName );
-        nbVertContainer++;
+        ++nbVertContainer;
       }
       //== Construct with verticle ID and key.
-      LHCb::Vertex* vert = new LHCb::Vertex( key );
-      verts->add( vert );
-      nbVert++;
+      LHCb::Vertex* vert = new LHCb::Vertex();
+      verts->insert( vert, key );
+      ++nbVert;
 
-      // technique
-      vert->setTechnique( static_cast<LHCb::Vertex::CreationMethod>(pvert.technique) );
-
-      // outgoing particles
-      for ( unsigned short int iiP = pvert.firstOutgoingPart; iiP < pvert.lastOutgoingPart; ++iiP ) {
-        const int & iP = pverts->outgoingParticles()[iiP];
-        int hintID(0), key(0);
-        m_pack.hintAndKey( iP, pverts, verts, hintID, key );
-        SmartRef<LHCb::Particle> ref(verts,hintID,key);
-        vert->addToOutgoingParticles( ref );
-      }
+      // unpack the physics info
+      vPacker.unpack( pvert, *vert, *pverts, *verts );
     }
   }
 
@@ -237,6 +139,7 @@ StatusCode UnpackParticlesAndVertices::execute()
   int nbRecVert = 0;
   prevLink = -1;
   LHCb::RecVertices* recVerts = NULL;
+  static const LHCb::RecVertexPacker rvPacker;
   if ( exist<LHCb::PackedRecVertices>( m_inputStream + LHCb::PackedRecVertexLocation::InStream ) )
   {
     LHCb::PackedRecVertices* pRecVerts =
@@ -255,43 +158,14 @@ StatusCode UnpackParticlesAndVertices::execute()
         put( recVerts, containerName );
         ++nbRecVertContainer;
       }
-      //== Construct with RecVerticle ID and key.
+
+      //== Construct with RecVertex ID and key.
       LHCb::RecVertex* recVert = new LHCb::RecVertex( key );
       recVerts->add( recVert );
-      nbRecVert++;
-      recVert->setTechnique( (LHCb::RecVertex::RecVertexType) pRecVert.technique );
-      recVert->setChi2AndDoF( m_pack.fltPacked( pRecVert.chi2), pRecVert.nDoF );
-      Gaudi::XYZPoint pos( m_pack.position( pRecVert.x ), m_pack.position( pRecVert.y ),
-                           m_pack.position( pRecVert.z ) );
-      recVert->setPosition( pos );
+      ++nbRecVert;
 
-      // convariance Matrix
-      double err0 = m_pack.position( pRecVert.cov00 );
-      double err1 = m_pack.position( pRecVert.cov11 );
-      double err2 = m_pack.position( pRecVert.cov22 );
-      Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&recVert->covMatrix()));
-      cov(0,0) = err0 * err0;
-      cov(1,0) = err1 * err0 * m_pack.fraction( pRecVert.cov10 );
-      cov(1,1) = err1 * err1;
-      cov(2,0) = err2 * err0 * m_pack.fraction( pRecVert.cov20 );
-      cov(2,1) = err2 * err1 * m_pack.fraction( pRecVert.cov21 );
-      cov(2,2) = err2 * err2;
-
-      //== Store the Tracks
-      int hintID;
-      int tKey;
-      for ( int kk = pRecVert.firstTrack; pRecVert.lastTrack > kk; ++kk ) {
-        const int trk = *(pRecVerts->beginRefs()+kk);
-        m_pack.hintAndKey( trk, pRecVerts, recVerts, hintID, tKey );
-        SmartRef<LHCb::Track> ref( recVerts, hintID, tKey );
-        recVert->addToTracks( ref );
-      }
-
-      //== Handles the ExtraInfo
-      for ( int kEx = pRecVert.firstInfo; pRecVert.lastInfo > kEx; ++kEx ) {
-        const std::pair<int,int>& info = *(pRecVerts->beginExtra()+kEx);
-        recVert->addInfo( info.first, m_pack.fltPacked( info.second ) );
-      }
+      // Physics Info
+      rvPacker.unpack( pRecVert, *recVert, *pRecVerts, *recVerts );
     }
   }
 
