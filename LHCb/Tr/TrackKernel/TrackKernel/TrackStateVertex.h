@@ -35,6 +35,10 @@ namespace LHCb
     /// Construct vertex from set of states. also fits the vertex.
     TrackStateVertex(const std::vector<const LHCb::State*>& states, double maxdchisq=0.01, size_t maxiterations=10) ;
 
+    /// Construct from a reference vertex. Then add track states
+    /// later. If you use inverse of cov matrix, specify 'isweight=true'.
+    TrackStateVertex(const Gaudi::XYZPoint& refposition, const Gaudi::SymMatrix3x3& refcovariance, bool isweight=false) ;
+ 
     /// Copy constructor
     TrackStateVertex(const TrackStateVertex& vertex) ;
 
@@ -44,8 +48,11 @@ namespace LHCb
     /// assignment
     TrackStateVertex& operator=(const TrackStateVertex& vertex) ;
 
+    /// add a track. invalidates any existing fit. (call 'fitOneStep' afterwards)
+    void addTrack( const LHCb::State& state, const Gaudi::TrackVector& reference ) ;
+    
     /// add a track. invalidates any existing fit. (call 'fit' afterwards)
-    void addTrack( const LHCb::State& state ) ;
+    void addTrack( const LHCb::State& state ) { addTrack(state,state.stateVector()) ; }
     
     /// fit a single iteration. returns the delta-chisquare.
     double fitOneStep() ;
@@ -60,8 +67,9 @@ namespace LHCb
     double chi2() const ;
 
     /// number of dofs in vertex fit
-    int nDoF() const { return nTracks()*2 - 3 ; }
+    int nDoF() const { return nTracks()*2 - 3 + ( hasReference() ? 3 : 0 ) ; }
 
+    /// number of tracks in vertex
     size_t nTracks() const { return m_tracks.size() ; }
 
     /// Fitted state vector of track i
@@ -72,6 +80,8 @@ namespace LHCb
     Gaudi::Matrix5x5 stateCovariance(size_t i, size_t j) const ;
     /// Fitted state for track i
     LHCb::State state(size_t i) const ;
+    /// Fitted state at vertex z position for track i
+    LHCb::State stateAtVertex(size_t i) const ;
     /// Input state for track i
     const LHCb::State& inputState(size_t i) const ;
     /// Position of the vertex
@@ -114,6 +124,7 @@ namespace LHCb
   private:
     size_t symIndex( size_t i, size_t j ) const { return i*(i+1)/2 + j ; }
     const Gaudi::Matrix3x3& computeMomMomCov(size_t i, size_t j) const ;
+    bool hasReference() const { return (m_refweight(0,0)+m_refweight(1,1)+m_refweight(2,2))>0 ; }
   private:
     typedef TrackVertexHelpers::VertexTrack VertexTrack ;
     typedef std::vector< TrackVertexHelpers::VertexTrack* > VertexTrackContainer ;
@@ -127,6 +138,8 @@ namespace LHCb
     mutable std::vector< Gaudi::Matrix3x3 > m_mommomcov ;
     FitStatus m_fitStatus ;
     mutable double m_chi2 ;
+    PositionParameters m_refpos ;    // position of reference position
+    PositionCovariance m_refweight ; // weight (inverse cov) of reference position
   } ;
   
 } // namespace LHCb;

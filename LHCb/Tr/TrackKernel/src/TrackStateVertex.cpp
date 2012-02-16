@@ -127,6 +127,7 @@ namespace LHCb
       // compute the weight matrix (inverse of V)
       m_G = state.covariance() ;
       Gaudi::Math::invertPosDefSymMatrix( m_G ) ;
+      // set the initial momentum
       m_q(0) = state.tx() ;
       m_q(1) = state.ty() ;
       m_q(2) = state.qOverP() ;
@@ -211,15 +212,19 @@ namespace LHCb
     const size_t N = rhs.m_tracks.size();
     m_tracks.resize( N ) ;
     for(size_t i=0; i<N; ++i) m_tracks[i] = new VertexTrack(*(rhs.m_tracks[i])) ;
+    m_refpos    = rhs.m_refpos ;
+    m_refweight = rhs.m_refweight ;
     return *this ;
   }
-  
+
   TrackStateVertex::TrackStateVertex(const TrackStateVertex& rhs)
     : m_pos(rhs.m_pos),
       m_poscov(rhs.m_poscov),
       m_mommomcov(rhs.m_mommomcov),
       m_fitStatus(rhs.m_fitStatus),
-      m_chi2(rhs.m_chi2)
+      m_chi2(rhs.m_chi2),
+      m_refpos(rhs.m_refpos),
+      m_refweight(rhs.m_refweight)
   {
     const size_t N = rhs.m_tracks.size();
     m_tracks.resize( N ) ;
@@ -242,22 +247,44 @@ namespace LHCb
       addTrack( **istate ) ;
     fit( maxdchisq, maxnumiter ) ;
   }
+
+  TrackStateVertex::TrackStateVertex( const Gaudi::XYZPoint& reference,
+				      const Gaudi::SymMatrix3x3& refcovariance,
+				      bool isweightmatrix )
+    : m_fitStatus(UnFitted), m_chi2(-1)
+  {
+    m_refpos(0) =  reference.x() ;
+    m_refpos(1) =  reference.y() ;
+    m_refpos(2) =  reference.z() ;
+    m_refweight = refcovariance ;
+    if(!isweightmatrix) m_refweight.InvertChol() ;
+    m_pos    = m_refpos ;
+    //m_poscov = refcovariance ;
+  }
   
-  void TrackStateVertex::addTrack( const LHCb::State& inputstate )
+  void TrackStateVertex::addTrack( const LHCb::State& inputstate,
+				   const Gaudi::TrackVector& reference)
   {
     m_tracks.push_back( new VertexTrack( inputstate, m_poscov) ) ;
     m_fitStatus = UnFitted ;
-    int N = m_tracks.size() ;
-    m_pos(0) = ( (N-1) * m_pos(0) + inputstate.x())/N ;
-    m_pos(1) = ( (N-1) * m_pos(1) + inputstate.y())/N ;
-    m_pos(2) = ( (N-1) * m_pos(2) + inputstate.z())/N ;
+    // set the reference, used in the _first_ iteration only
+    for(int i=0; i<3; ++i) m_tracks.back()->mom()(i) = reference(i+2) ;
+    // if there is a reference vertex, we use that. otherwise
+    // initialize the vertex position with information in the tracks
+    if( !hasReference() ) {
+      int N = m_tracks.size() ;
+      m_pos(0) = ( (N-1) * m_pos(0) + reference(0))/N ;
+      m_pos(1) = ( (N-1) * m_pos(1) + reference(1))/N ;
+      m_pos(2) = ( (N-1) * m_pos(2) + inputstate.z())/N ;
+    }
   }
 
   double TrackStateVertex::fitOneStep()
   {
     // This implements the Billoir-Fruhwirth-Regler algorithm.
-    Gaudi::SymMatrix3x3 halfD2ChisqDX2 ;
-    ROOT::Math::SVector<double,3> halfDChisqDX ;
+    // adds the reference position
+    Gaudi::SymMatrix3x3 halfD2ChisqDX2 = m_refweight ;
+    ROOT::Math::SVector<double,3> halfDChisqDX = m_refweight * (m_pos - m_refpos ) ;
     // add all the tracks
     for( VertexTrackContainer::iterator itrack = m_tracks.begin() ;
          itrack != m_tracks.end(); ++itrack ) 
@@ -292,6 +319,8 @@ namespace LHCb
       for( VertexTrackContainer::const_iterator itrack = m_tracks.begin() ;
 	   itrack != m_tracks.end(); ++itrack ) 
 	m_chi2 += (*itrack)->chisq(m_pos) ;
+      if(hasReference()) 
+	m_chi2 += ROOT::Math::Similarity(m_refweight,(m_pos - m_refpos )) ;
     }
     return m_chi2 ;
   }
@@ -345,6 +374,27 @@ namespace LHCb
     return rc ;
   }
   
+  LHCb::State 
+  TrackStateVertex::stateAtVertex(size_t i) const
+  {
+    const VertexTrack& track = *(m_tracks[i]) ;
+    LHCb::State state( LHCb::State::Vertex ) ;
+    state.setZ( m_pos(2) ) ;
+    Gaudi::TrackVector& par = state.stateVector() ;
+    Gaudi::SymMatrix5x5& cov = state.covariance() ;
+    for(int i=0;i<2; ++i) par(i)   = m_pos(i) ;
+    for(int j=0;j<3; ++j) par(j+2) = track.mom()(j) ;
+    // now we need to recompute B for this z-position
+    const ROOT::Math::SMatrix<double,5,3>& A = track.A() ;
+    ROOT::Math::SMatrix<double,5,3> B ;
+    B(2,0) = B(3,1) = B(4,2) = 1 ;
+    Gaudi::Matrix5x5 tmp = A * ROOT::Math::Transpose(track.momposcov()) * ROOT::Math::Transpose(B) ;
+    ROOT::Math::AssignSym::Evaluate( cov, tmp + ROOT::Math::Transpose(tmp) ) ;
+    cov += ROOT::Math::Similarity( A, m_poscov ) ;
+    cov += ROOT::Math::Similarity( B, track.momcov() ) ;
+    return state ;
+  }
+
   const Gaudi::Matrix3x3& TrackStateVertex::computeMomMomCov(size_t i, size_t j) const
   {
     assert( i >= j ) ;

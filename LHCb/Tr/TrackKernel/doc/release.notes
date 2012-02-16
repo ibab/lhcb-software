@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2012-02-16 - Wouter Hulsbergen
+ - add functionality to vertex a track with an existing vertex to TrackStateVertex
+
 !========================= TrackKernel v1r8 2011-09-19 =========================
 ! 2011-09-19 - Maurizio Martinelli
  - Modified 'constrainMass' in TrackStateVertex to consider the natural width of
