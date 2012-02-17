@@ -133,7 +133,7 @@ void BusySvc::calcIdle()
 {
   char line[256];
   long dtimes[7],times[7];
-  double p_id;
+  double p_id=0.0;
   FILE *f = fopen("/proc/stat","r");
   char *stat = line;
   while (stat != 0)
