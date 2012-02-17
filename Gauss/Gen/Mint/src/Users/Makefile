@@ -64,7 +64,7 @@ $(PROG): $(OBJS)
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $(PROG)
 	@echo ""; echo " =============== linking done ==============="; echo ""
 
-include .depend
+#include .depend
 
 %.(ObjSuf): %.$(SrcSuf)
 	$(CXX) $(CXXFLAGS) -c $<

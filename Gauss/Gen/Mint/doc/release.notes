@@ -5,6 +5,10 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+
+! 17-02-2012 - Matt Coombes
+- Fixed bug in ReadNTuple.h to allow any NTuple to be read by MINT
+  
 ! 08-02-2012 - Matt Coombes
 - Added PhaseBinning.h. Allowing users to bin phase space in constant phase
   and constant phase difference.
