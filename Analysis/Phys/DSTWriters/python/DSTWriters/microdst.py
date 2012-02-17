@@ -69,7 +69,8 @@ def microDSTElements(pack=True) :
                  #CloneRecSummary(),
                  #CloneODIN(),
                  #GlobalEventCounters(configGenerator=_gecConfig),
-                 ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks" ),
+                 ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
+                           ClonePVWeights  = False ),
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations(location = "Particle2VertexRelations",
                                   clonePVs = True,
@@ -78,11 +79,10 @@ def microDSTElements(pack=True) :
                  ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  #CloneRawBanks( banks = ['ODIN'] )
                  ]
-    if pack :
-        elements += [ PackStrippingReports(),
-                      PackParticlesAndVertices(),
-                      PackRecObjects(),
-                      CleanEmptyEventNodes() ]
+    if pack : elements += [ PackStrippingReports(),
+                            PackParticlesAndVertices(),
+                            PackRecObjects(),
+                            CleanEmptyEventNodes() ]
     return elements
 
 def microDSTStreamConf() :
@@ -95,7 +95,8 @@ def stripMicroDSTElements(pack=True) :
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
-    elements = [ ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks" ),
+    elements = [ ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
+                           ClonePVWeights  = False ),
                  CloneParticleTrees(ProtoParticleConer = "ProtoParticleCloner"),
                  ClonePVRelations(location = "Particle2VertexRelations",
                                   clonePVs = True,
@@ -103,11 +104,10 @@ def stripMicroDSTElements(pack=True) :
                  CloneLHCbIDs(fullDecayTree = True),
                  ReFitAndClonePVs(RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks")
                  ]
-    if pack :
-        elements += [ PackStrippingReports(),
-                      PackParticlesAndVertices(),
-                      PackRecObjects(),
-                      CleanEmptyEventNodes() ]
+    if pack : elements += [ PackStrippingReports(),
+                            PackParticlesAndVertices(),
+                            PackRecObjects(),
+                            CleanEmptyEventNodes() ]
     return elements
 
 def stripMicroDSTStreamConf(pack=True) :

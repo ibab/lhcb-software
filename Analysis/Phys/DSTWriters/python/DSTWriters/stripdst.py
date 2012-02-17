@@ -22,11 +22,10 @@ def stripDSTElements(pack=True) :
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )
                  ]
-    if pack :
-        elements += [ PackStrippingReports(),
-                      PackParticlesAndVertices(),
-                      PackRecObjects(),
-                      CleanEmptyEventNodes() ]
+    if pack : elements += [ PackStrippingReports(),
+                            PackParticlesAndVertices(),
+                            PackRecObjects(),
+                            CleanEmptyEventNodes() ]
     return elements
 
 def stripDSTStreamConf( pack = True,
