@@ -4,6 +4,14 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2012-02-17 - Olivier Callot
+ - Improve for lareg IP tracks:
+   o Allow change of zone in RZ tracks, but at least 3 in the same zone
+     Remove the test that all R hits should be in the same zone later...
+   o Count the total cluster size. If average > 1.9, allow tracks with 
+     higher quality factor (+1.0) (i.e. when two tracks overlap in RZ)
+   o Reduce the deltaPhi tolerance for backward tracks (speed)
+
 ! 2012-02-09 - Olivier Callot
  - Use the new 'wasDecoded' flag of the Velo sensor to count missed sensors.
  - Reserve space in vectors. (Feed back from Sasha Mazuroz's talk on 6/2/2012)

@@ -569,9 +569,15 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
             }
           }
 
-          //== More demanding for minimal tracks of 3 clusters
+          //== More demanding for minimal tracks of 3 clusters. Allow change of zone...
           if ( 3 == newTrack.nbRHits() ) {
             int nMissBack = extendTrack( newTrack, sensor0, zone, !forward );
+            if ( m_maxMissed <  nMissBack ) {
+              if ( 0 != zone ) nMissBack = extendTrack( newTrack, sensor0, zone-1, !forward );
+            }
+            if ( m_maxMissed <  nMissBack ) {
+              if ( 3 != zone ) nMissBack = extendTrack( newTrack, sensor0, zone+1, !forward );
+            }
             if ( m_maxMissed <  nMissBack ) {
               if ( m_debug ) info() << "Short track with missed sensors before." << endmsg;
               continue;
@@ -834,11 +840,11 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   int nbRight = 0;
   unsigned int lowSensor = 1000;
   unsigned int highSensor = 0;
-
+  int sumSize = 0;
   for ( itH = input.rHits().begin(); input.rHits().end() != itH; ++itH ) {
     if ( (*itH)->sensor() > highSensor ) highSensor =  (*itH)->sensor();
     if ( (*itH)->sensor() < lowSensor )  lowSensor  =  (*itH)->sensor();
-
+    sumSize += (*itH)->cluster().pseudoSize();
     if ( m_hitManager->sensor( (*itH)->sensor() )->isRight() ) {
       ++nbRight;
     } else {
@@ -1057,6 +1063,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
       z1 = (*itH1)->z();
       double rPred = input.rInterpolated( z1 );
       double minDelta2 = m_maxDelta2;
+      if ( input.backward() ) minDelta2 = 0.01;
       FastVeloHit* best2 = NULL;
       for ( itH2 = goodPhiHits[s2].begin(); goodPhiHits[s2].end() != itH2; ++itH2 ) {
         if ( 0 == iCase && 0 != (*itH2)->nbUsed() ) continue;
@@ -1175,29 +1182,6 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           //== Overall quality should be good enough...
           if ( m_maxQFactor < temp.qFactor() ) {
             if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-            continue;
-          }
-
-          //== Check that the R hits are within the correct zone
-          int nbOutOfZone = 0;
-          for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-            FastVeloSensor* _sensor = m_hitManager->sensor( (*itH)->sensor() );
-            double x = temp.xAtHit( *itH ) - _sensor->xCentre();
-            double y = temp.yAtHit( *itH ) - _sensor->yCentre();
-            if ( isVertical && fabs(x) > fabs(y) + 0.1 ) ++nbOutOfZone;
-            if (!isVertical && fabs(x) < fabs(y) - 0.1 ) ++nbOutOfZone;
-          }
-          if ( nbOutOfZone > 1 ) {
-            if ( m_debug ) {
-              info() << "The azimuth is incompatible with the R zone" << endmsg;
-              for ( itH = input.rHits().begin(); input.rHits().end() != itH ; ++itH ) {
-                FastVeloSensor* _sensor = m_hitManager->sensor( (*itH)->sensor() );
-                double x = temp.xAtHit( *itH ) - _sensor->xCentre();
-                double y = temp.yAtHit( *itH ) - _sensor->yCentre();
-                info() << format( "x%8.3f y%8.3f ", x, y );
-                printCoord( *itH, "Out" );
-              }
-            }
             continue;
           }
           //== Check that there are phi hits on the same side as the R hits...
@@ -1326,8 +1310,11 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     }
   }
 
-  if ( 3 < maxLen ) maxQual += m_deltaQuality;
-
+  if ( 3 < maxLen ) {
+    maxQual += m_deltaQuality;
+    if ( sumSize > 1.9 * input.rHits().size() ) maxQual += 1. ;
+  }
+  
   //== Store the good candidates
   bool foundSpaceTrack = false;
   for ( itTr = newTracks.begin(); newTracks.end() != itTr; ++itTr ) {
