@@ -26,20 +26,20 @@ WeightsVectorCloner::WeightsVectorCloner( const std::string& type,
 
 //=============================================================================
 
-LHCb::WeightsVector* WeightsVectorCloner::operator() (const LHCb::WeightsVector* track)
+LHCb::WeightsVector* 
+WeightsVectorCloner::operator() (const LHCb::WeightsVector* weights)
 {
-  return this->clone(track);
+  return this->clone(weights);
 }
 
 //=============================================================================
 
-LHCb::WeightsVector* WeightsVectorCloner::clone(const LHCb::WeightsVector* track)
+LHCb::WeightsVector* 
+WeightsVectorCloner::clone( const LHCb::WeightsVector* weights )
 {
-  LHCb::WeightsVector* trackClone =
-    cloneKeyedContainerItem<BasicWeightsVectorCloner>(track);
-
-  return trackClone;
-
+  LHCb::WeightsVector* clone =
+    cloneKeyedContainerItem<BasicWeightsVectorCloner>(weights);
+  return clone;
 }
 
 //=============================================================================

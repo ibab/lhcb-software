@@ -33,7 +33,7 @@ LHCb::RecVertex* RecVertexCloner::operator() ( const LHCb::RecVertex* vertex )
 
 //=============================================================================
 
-LHCb::RecVertex* RecVertexCloner::clone(const LHCb::RecVertex* vertex)
+LHCb::RecVertex* RecVertexCloner::clone( const LHCb::RecVertex* vertex )
 {
   return cloneKeyedContainerItem<PVCloner>(vertex);
 }
