@@ -21,7 +21,7 @@ class Swimming(LHCbConfigurableUser) :
         , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
-        , "RunNumber"          : None            # Run number to be used to obtain CondDB tag, DDDB tag and TCK.
+        , "RunNumber"          : 0               # Run number to be used to obtain CondDB tag, DDDB tag and TCK.
         , "TagDatabase"        : "$CHARMCONFIGROOT/db/tag_database.db" # Python shelve database to be used to obtain CondDB tag, DDDB tag and TCK from the run number.
         # Persistency
         , "Persistency"        : None            # ROOT or POOL, steers the setup of services
