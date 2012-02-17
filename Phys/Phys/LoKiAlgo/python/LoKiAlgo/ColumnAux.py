@@ -79,13 +79,24 @@ def _colAux_ ( self , *args ) :
     """
     return _ColAux.column ( self ,*args )
 
-_colAux_ . __doc__ += '\n' + _ColAux_ . column . __doc__
+_colAux_ . __doc__ += '\n' + _ColAux . column . __doc__
 
 # =============================================================================
 ## finally decorate tuple 
 _Tuple.column_aux   = _colAux_
 
-
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
+    print _Tuple.column_aux .__doc__ 
+    print 80*'*'
+ 
 # =============================================================================
 # The END 
 # =============================================================================

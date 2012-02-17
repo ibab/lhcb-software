@@ -48,7 +48,6 @@ __version__ = "$Revision$"
 # =============================================================================
 
 import LoKiPhys.decorators   as     _LoKiPhys
-#import LoKiPhysMC.decorators as     _LoKiPhysMC 
 from   LoKiAlgo.functions    import * 
 
 
@@ -520,8 +519,13 @@ _decorated  = _decorate ( _LoKiPhys   . __name__ )
 #_decorated |= _decorate ( _LoKiPhysMC . __name__ ) 
 # =============================================================================
 if '__main__' == __name__ :
-    print 'Number of properly decorated types: %s'%len(_decorated)
-    for o in _decorated : print o
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print 80*'*'
     
 # =============================================================================
 # The END 
