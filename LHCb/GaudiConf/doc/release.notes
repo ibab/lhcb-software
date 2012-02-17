@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2012-02-17 - Chris Jones
+ - Update DstConf to no longer include the PV weights vector in DSTs. 
+   Weights are now included directly in the RecVertex class.
+
 ! 2012-02-15 - Chris Jones
  - Extend the EnableUnpack option in DstConf, to take a list of unpacking types.
    Allowed values are [ "Reconstruction", "Stripping" ]. Allows for each to be
