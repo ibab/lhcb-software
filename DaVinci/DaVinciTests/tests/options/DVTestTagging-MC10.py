@@ -68,6 +68,6 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
 # example data file
 # bsjpsiphi
 #DaVinci().Input = [ "DATAFILE='PFN:/usera/jonesc/NFS/data/MC/MC10/TaggingTest/00008922_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/freezer/lhcb/MC/MC10/ALLSTREAMS.DST/00008922/0000/00008922_00000001_1.allstreams.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/freezer/lhcb/MC/MC10/ALLSTREAMS.DST/00008922/0000/00008922_00000001_1.allstreams.dst?svcClass=lhcbdisk' TYP='POOL_ROOTTREE' OPT='READ'" ]
 #from Configurables import CondDB
 #CondDB().LocalTags['SIMCOND'] = ['sim-20100429-vc-md100']

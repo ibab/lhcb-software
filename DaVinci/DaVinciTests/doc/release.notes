@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2012-02-17 - Marco Cattaneo
+ - fix tagging.test_tag_mc10 test to take input file from svcClass=lhcbdisk,
+   was default disk pool.
+
 ! 2012-02-15 - Marco Cattaneo
  - Remove import from GaudiConf.Configuration from two fsr tests
 
