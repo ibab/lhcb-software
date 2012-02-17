@@ -163,7 +163,7 @@ def SwimmingEventLoop(gaudi, nEvents):
         eventNumber += 1
 
         # Check if we've hit the maximum
-        if (nEvents != -1 and eventNumber > nEvents):
+        if (nEvents != -1 and eventNumber >= nEvents):
             print "Finished processing events"
             break
         elif (eventNumber % 100) == 0: 

@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2012-02-17 - Roel Aaij
+ - Fix tiny bug in event counting when running a set number of events; one too
+   many was always processed.
+
 ! 2012-02-16 - Roel Aaij
  - Add configuration options for use in production to obtain the CondDB tag,
    DDDB tag and TCK from a database using the run number.
