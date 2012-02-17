@@ -15,7 +15,8 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
                                 PackedDataVector & pweightsV ) const
 {
   pweightsV.data().reserve( weightsV.size() );
-  if ( 0 == pweightsV.packingVersion() )
+  if ( 1 == pweightsV.packingVersion() ||
+       0 == pweightsV.packingVersion() )
   {
     for ( DataVector::const_iterator iD = weightsV.begin();
           iD != weightsV.end(); ++iD )
@@ -26,6 +27,9 @@ void WeightsVectorPacker::pack( const DataVector & weightsV,
       // new packed data
       pweightsV.data().push_back( PackedData() );
       PackedData & pweights = pweightsV.data().back();
+
+      // Save the PV key
+      pweights.pvKey = weights.key();
 
       // fill packed data
       pweights.firstWeight = pweightsV.weights().size();
@@ -52,7 +56,8 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
                                   DataVector       & weightsV ) const
 {
   weightsV.reserve( pweightsV.data().size() );
-  if ( 0 == pweightsV.packingVersion() )
+  if ( 1 == pweightsV.packingVersion() ||
+       0 == pweightsV.packingVersion() )
   {
    for ( PackedDataVector::WeightsVector::const_iterator iD = pweightsV.data().begin();
           iD != pweightsV.data().end(); ++iD )
@@ -62,7 +67,14 @@ void WeightsVectorPacker::unpack( const PackedDataVector & pweightsV,
 
       // make and save new unpacked data
       Data * weights  = new Data();
-      weightsV.add( weights );
+      if ( 0 == pweightsV.packingVersion() )
+      {
+        weightsV.insert( weights );
+      }
+      else
+      { 
+        weightsV.insert( weights, pweights.pvKey );
+      }
 
       // fill the unpacked weights vector
       LHCb::WeightsVector::WeightDataVector & wWeights = 

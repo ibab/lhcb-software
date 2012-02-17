@@ -131,6 +131,7 @@ StatusCode PackParticlesAndVertices::execute()
   {
     LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
     put( prverts, m_inputStream + LHCb::PackedRecVertexLocation::InStream );
+    prverts->setVersion( 2 ); // CRJ - Increment version for new RecVertex with weights
     if ( msgLevel( MSG::DEBUG ) ) 
       debug() << "=== Process RecVertices containers :" << endmsg;
     for ( std::vector<std::string>::const_iterator itS = names.begin(); 

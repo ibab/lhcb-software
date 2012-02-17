@@ -29,6 +29,7 @@ DECLARE_ALGORITHM_FACTORY( PackRecVertex )
   declareProperty( "OutputName", m_outputName = LHCb::PackedRecVertexLocation::Primary );
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
+  declareProperty( "Version",                    m_version = 2              );
 }
 //=============================================================================
 // Destructor
@@ -43,14 +44,16 @@ StatusCode PackRecVertex::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::RecVertices>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::RecVertices>(m_inputName) ) 
+    return StatusCode::SUCCESS;
 
-  LHCb::RecVertices* verts = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
+  LHCb::RecVertices* verts = 
+    getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
 
   LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
   out->vertices().reserve(verts->size());
   put( out, m_outputName );
-  out->setVersion( 1 );
+  out->setVersion( (unsigned char)m_version ); 
 
   static const LHCb::RecVertexPacker rvPacker;
 

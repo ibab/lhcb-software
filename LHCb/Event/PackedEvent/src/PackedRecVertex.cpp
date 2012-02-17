@@ -31,23 +31,29 @@ void RecVertexPacker::pack( const Data & vert,
   pvert.cov20 = m_pack.fraction( vert.covMatrix()(2,0)/err2/err0 );
   pvert.cov21 = m_pack.fraction( vert.covMatrix()(2,1)/err2/err1 );
 
-  //== Store the Tracks
-  pvert.firstTrack = pverts.sizeRefs();
+  //== Store the Tracks and weights
+  pvert.firstTrack = pverts.refs().size();
+  //std::cout << verts.registry()->identifier() << std::endl;
+  std::vector<float>::const_iterator iW = vert.weights().begin();
   for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
-        vert.tracks().end() != itT; ++itT )
+        vert.tracks().end() != itT; ++itT, ++iW )
   {
     pverts.addRef( m_pack.reference( &pverts, (*itT)->parent(), (*itT)->key() ) );
+    pverts.addWeight( m_pack.fraction(*iW) );
+//     std::cout << " -> " << (*itT)->parent()->registry()->identifier() 
+//               << " " << (*itT)->key() << " " << *iW
+//               << std::endl;
   }
-  pvert.lastTrack = pverts.sizeRefs();
+  pvert.lastTrack = pverts.refs().size();
 
   //== Handles the ExtraInfo
-  pvert.firstInfo = pverts.sizeExtra();
+  pvert.firstInfo = pverts.extras().size();
   for ( GaudiUtils::VectorMap<int,double>::iterator itE = vert.extraInfo().begin();
         vert.extraInfo().end() != itE; ++itE )
   {
     pverts.addExtra( (*itE).first, m_pack.fltPacked( (*itE).second ) );
   }
-  pvert.lastInfo = pverts.sizeExtra();
+  pvert.lastInfo = pverts.extras().size();
 
 }
 
@@ -97,20 +103,25 @@ void RecVertexPacker::unpack( const PackedData       & pvert,
   cov(2,1) = err2 * err1 * m_pack.fraction( pvert.cov21 );
   cov(2,2) = err2 * err2;
 
-  //== Store the Tracks
+  //== Store the Tracks and weights
   int hintID(0), tKey(0);
-  for ( int kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
+  for ( unsigned short int kk = pvert.firstTrack; pvert.lastTrack > kk; ++kk )
   {
-    const int trk = *(pverts.beginRefs()+kk);
+    // Get the track
+    const int trk = *(pverts.refs().begin()+kk);
     m_pack.hintAndKey( trk, &pverts, &verts, hintID, tKey );
     SmartRef<LHCb::Track> ref( &verts, hintID, tKey );
-    vert.addToTracks( ref );
+    // If available, get the weight
+    const float weight = (float)( (int)pverts.version()>1 ? 
+                                  m_pack.fraction(pverts.weights()[kk]) : 1.0 );
+    // save with weight
+    vert.addToTracks( ref, weight );
   }
 
   //== Handles the ExtraInfo
-  for ( int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
+  for ( unsigned short int kEx = pvert.firstInfo; pvert.lastInfo > kEx; ++kEx )
   {
-    const std::pair<int,int>& info = *(pverts.beginExtra()+kEx);
+    const std::pair<int,int>& info = *(pverts.extras().begin()+kEx);
     vert.addInfo( info.first, m_pack.fltPacked( info.second ) );
   }
 }

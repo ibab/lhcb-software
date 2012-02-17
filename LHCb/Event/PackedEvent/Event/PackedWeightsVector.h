@@ -51,11 +51,12 @@ namespace LHCb
   {
     /// Default constructor
     PackedWeights() 
-      : firstWeight(0), lastWeight(0)
+      : firstWeight(0), lastWeight(0), pvKey(0)
     {}
 
     unsigned short int firstWeight;  ///< index to first weight
     unsigned short int lastWeight;   ///< index to last weight
+    unsigned int pvKey;              ///< The PV Key
 
   };
 

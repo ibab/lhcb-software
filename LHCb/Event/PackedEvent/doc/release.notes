@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2012-02-17 - Chris Jones
+ - Update the RecVertex packed class to support the new RecVertex class 
+   with track weights
+
 ! 2012-02-16 - Chris Jones
  - Reorganise things a bit w.r.t. the Particle and Vertex packing, to avoid
    some code duplication
