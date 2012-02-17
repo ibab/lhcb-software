@@ -4,6 +4,10 @@
 ! Purpose: Demonstrate how to write and read back event data
 !-------------------------------------------------------------------------------
 
+! 2012-02-17 - Marco Cattaneo
+ - ioexample.copymc10dsttoroot now takes input file from svcClass=lhcbdisk, 
+   was default.
+
 ! 2012-02-15 - Marco Cattaneo
  - Follow change to DstConf().EnableUnpack option
 
