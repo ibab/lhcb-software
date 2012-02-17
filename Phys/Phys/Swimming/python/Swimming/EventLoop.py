@@ -112,6 +112,7 @@ def SwimmingEventLoop(gaudi, nEvents):
                             DEBUGMODE, startingEvent, swimStripping, Swimming().getProp('SwimOffSel'),
                             Swimming().getProp('OffSelModuleName'), offCands, offlinePVs
                           )
+    gaudi.__dict__['globs'] = myGlobs
 
     # Import the utilities
     from Swimming.SwimmingUtils import (getBinfo, runSwimmingStep,
