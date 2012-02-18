@@ -24,7 +24,7 @@ public:
     m_track(0)
   {
   }
-  
+
 
   explicit PVFitTrack(const LHCb::Track* track)
     :
@@ -34,11 +34,13 @@ public:
     m_slopes(ROOT::Math::SVector<double, 2>(m_state.tx(), m_state.ty()) )
   {
   }
-  
 
-  inline const LHCb::Track* getTrack() const { return m_track;  }
 
-  inline const LHCb::State& getState() const { return m_state;  }
+  inline const LHCb::Track* getTrack() const { return m_track; }
+
+  inline const LHCb::State& getState() const { return m_state; }
+
+  inline LHCb::State& getState() { return m_state; }
 
   inline double getWeight() const { return m_weight;  }
 
@@ -57,7 +59,7 @@ public:
   inline void setWeight(double w) { m_weight = w;  }
 
   inline void setFittedSlopes(const ROOT::Math::SVector<double,2>& sl) { m_slopes = sl;  }
-  
+
 };
 
 #endif

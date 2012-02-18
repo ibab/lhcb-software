@@ -206,20 +206,25 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "weight " << wk << endreq;
 
-      const LHCb::State& statetr =  tr->firstState();
-      LHCb::State newstate = statetr;
+      const LHCb::State& statetr = tr->firstState();
+      LHCb::State& newstate = aFitTrack.getState();
+      newstate = statetr;
 
       const bool isVeloOnly = (tr->checkType( Track::Velo )) || (tr->checkType( Track::VeloR ));
-      if(isVeloOnly) sc = m_veloExtrapolator->propagate( newstate, zref );
-      else sc = m_fullExtrapolator->propagate( newstate, zref );
-      if( sc.isFailure ()) 
+      if ( isVeloOnly )
+      {
+        sc = m_veloExtrapolator->propagate( newstate, zref );
+      }
+      else 
+      {
+        sc = m_fullExtrapolator->propagate( newstate, zref );
+      }
+      if ( sc.isFailure() ) 
       {
         if ( msgLevel(MSG::DEBUG) )
           debug() << "failed to propagate tarck state in addTr!" << endreq;
         return sc;
       }
-
-      aFitTrack.setState(newstate);
 
       //pk is the measurements vector
       ROOT::Math::SVector<double, 4> pk(newstate.x(),
