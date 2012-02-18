@@ -35,7 +35,7 @@ ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
   // Input data
   declareProperty( "Inputs", m_tracksPath );
 
-  // output data, new scheme
+  // output data
   declareProperty( "Output", m_protoPath );
 
 }
@@ -168,7 +168,7 @@ StatusCode ChargedProtoParticleMaker::execute()
       {
         verbose() << " -> Created ProtoParticle : " << *proto << endmsg;
       }
-      count++;
+      ++count;
     }
     counter(loc +" ==> " + m_protoPath )+= count;
   }
