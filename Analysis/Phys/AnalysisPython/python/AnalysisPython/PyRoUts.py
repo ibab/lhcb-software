@@ -8,14 +8,19 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 #
+#  
 #                    $Revision$
 #  Last modification $Date$
 #  by                $Author$
 # =============================================================================
 """
 
- Module with decoration of some ROOT objects for efficient use in PyROOT
- 
+Module with decoration of some ROOT objects for efficient use in PyROOT
+
+Many native  root classes are equipped with new useful methods and operators,
+in particular TH1(x) , TH2(x) , TAxis, TGraph(Errors), etc...
+
+see also GaudiPython.HistoUtils 
 """
 # =============================================================================
 __version__ = "$Revision$"
@@ -2036,6 +2041,31 @@ def _edges_ ( axis ) :
 ROOT.TAxis.edges = _edges_
 
 # =============================================================================
+## make axis from bin-edges 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def axis_bins ( bins         ) :
+    """
+    Make axis according to the binning 
+    
+    >>> bins = [ ... ] 
+    >>> axis = axis_bins ( bins )  
+    
+    """
+    #
+    bins = set  ( bins )
+    bins = [ i for i in bins ]
+    bins.sort()
+    # 
+    assert ( 1 < len ( bins ) )
+    #
+    from numpy import array
+    #
+    return ROOT.TAxis ( 
+        len ( bins ) - 1 , array ( bins , dtype='d' )
+        ) 
+
+# =============================================================================
 ## make 2D-histogram from axes
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
@@ -2054,6 +2084,10 @@ def h2_axes ( x_axis       ,
     #
     if not name : name = hID() 
     #
+    if not issubclass ( type ( x_axis ) , ROOT.TAxis ) : x_axis = axis_bins   ( x_axis )
+    if not issubclass ( type ( y_axis ) , ROOT.TAxis ) : y_axis = axis_bins   ( y_axis )
+    #
+    # 
     x_bins  = x_axis.edges()
     y_bins  = y_axis.edges()
     #
@@ -2079,36 +2113,16 @@ def h1_axis ( axis         ,
     
     """
     #
-    if not name : name = hID() 
+    if not name : name = hID()
     #
+    if not issubclass ( type ( axis ) , ROOT.TAxis ) : axis = axis_bins   ( axis )
+    # 
     bins  = axis.edges()
     #
     from numpy import array
     return ROOT.TH1F ( name  ,
                        title ,
                        len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
-
-
-# =============================================================================
-## make axis form bins 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def axis_bins ( bins         ) :
-    """
-    Make axis according to the binning 
-    
-    >>> bins = [ ... ] 
-    >>> axis = axis_bins ( bins )  
-    
-    """
-    #
-    assert ( 1 < len ( bins ) )
-    #
-    from numpy import array
-    #
-    return ROOT.TAxis ( 
-        len ( bins ) - 1 , array ( bins , dtype='d' )
-        ) 
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 

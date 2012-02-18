@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2012-02-18 - Vanya Belyaev
+
+ - minor extension/fix for h1_aixs and axis_bins method 
+
 ! 2012-02-16 - Vanya Belyaev
  - improve logging, pyroot 
 
