@@ -10,21 +10,6 @@
 // 2012-02-17 : Chris Jones
 //-----------------------------------------------------------------------------
 
-void LHCb::RecVertex::setTracks(const SmartRefVector<LHCb::Track>& tracks)
-{
-  // Set the track smart refs
-  m_tracks = tracks;
-  // set implicit weights of 1 for each
-  m_weights = std::vector<float>( tracks.size(), 1.0 );
-}
-
-void LHCb::RecVertex::addToTracks(const LHCb::Track* track,
-                                  const float weight)
-{
-  m_tracks.push_back(track);
-  m_weights.push_back(weight);
-}
-
 void LHCb::RecVertex::removeFromTracks(const LHCb::Track * track)
 {
   if ( !m_tracks.empty() )
@@ -64,4 +49,18 @@ LHCb::RecVertex::tracksWithWeights() const
     twV.push_back( TrackWithWeight(track,*iW) );
   }
   return twV;
+}
+
+void 
+LHCb::RecVertex::setTracksWithWeights(const TrackWithWeightVector& tracksAndWeights)
+{
+  // Clear the current vectors
+  clearTracks();
+
+  // Loop over the tracks and weights and store them
+  for ( TrackWithWeightVector::const_iterator iTW = tracksAndWeights.begin();
+        iTW != tracksAndWeights.end(); ++iTW )
+  {
+    addToTracks( iTW->first, iTW->second );
+  }
 }

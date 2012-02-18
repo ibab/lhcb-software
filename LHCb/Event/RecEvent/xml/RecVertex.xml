@@ -131,6 +131,10 @@
 	type = "void"
 	desc = "Set the tracks for this PV. Weights are implicitly set to 1 for each" >
         <arg const="TRUE" name="tracks" type="SmartRefVector&lt;LHCb::Track&gt;"/>
+        <code>
+          m_tracks = tracks;
+          m_weights = std::vector&lt;float&gt;( tracks.size(), 1.0 );
+        </code>
       </method>
 
       <method 
@@ -146,6 +150,10 @@
 	type = "void"
         argList="const LHCb::Track* track, const float weight"
 	desc = "Add a track to the track list, with the given weight" >
+        <code>
+          m_tracks.push_back(track);
+          m_weights.push_back(weight);
+        </code>
       </method>
 
       <method 
@@ -159,14 +167,25 @@
 	name = "clearTracks" 
 	type = "void"
 	desc = "Remove all tracks, and their associated weights, from this vertex" >
-        <code>  m_tracks.clear(); m_weights.clear();</code>
+        <code>  
+          m_tracks.clear(); 
+          m_weights.clear();
+        </code>
       </method>
 
       <method 
-	name = "tracksWithWeights" 
-	type = "TrackWithWeightVector"
+	name  = "tracksWithWeights" 
+	type  = "TrackWithWeightVector"
         const = "TRUE"
-	desc = "Access the tracks with their associated weights" >
+	desc  = "Access the tracks with their associated weights" >
+      </method>
+
+      <method 
+	name  = "setTracksWithWeights" 
+	type  = "void"
+        const = "FALSE"
+        argList="const TrackWithWeightVector&amp; tracksAndWeights"
+	desc  = "Set the tracks with their associated weights" >
       </method>
 
     </class>
