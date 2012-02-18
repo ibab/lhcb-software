@@ -11,11 +11,15 @@
 
 // end include files
 
-namespace {
-  struct _Instantiations {
+namespace 
+{
+  struct _Instantiations 
+  {
     // begin instantiations
     std::vector<const LHCb::RecVertex*>  _i1;
     std::vector<const LHCb::VertexBase*> _i2;
+    std::pair<int,float>                 _i3;
+    std::vector<std::pair<int,float> >   _i4;
     // end instantiations
   };
 }

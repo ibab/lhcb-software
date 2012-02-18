@@ -8,6 +8,7 @@
  - Update RecVertex class to natively store the weights associated with each
    track. The weights are optional, to preserve backwards compatibility. If
    a weight is not given 1.0 is implicitly used.
+ - Add some additional types to the LCG dictionary.
 
 !========================= RecEvent v2r39p1 2011-12-14 =======================
 ! 2011-11-23 - Marco Cattaneo
